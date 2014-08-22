@@ -1,0 +1,96 @@
+<?php
+/**
+* @version 			SEBLOD 3.x Core ~ $Id: match.php sebastienheraud $
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
+
+defined( '_JEXEC' ) or die;
+
+$name	=	$this->item->name;
+$lang   =	JFactory::getLanguage();
+$lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
+$lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
+Helper_Include::addDependencies( 'box', 'edit' );
+Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
+
+$doc	=	JFactory::getDocument();
+$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$js		=	'
+			(function ($){
+				JCck.Dev = {
+					reset: function() {
+						parent.jQuery("#'.$name.'_match_collection").val("");
+						parent.jQuery("#'.$name.'_match_value").val("");
+						this.close();
+					},
+					submit: function() {
+						var data = $("#match_collection").val();
+						parent.jQuery("#'.$name.'_match_collection").val(data);
+						var data = $("#match_value").val();
+						parent.jQuery("#'.$name.'_match_value").val(data);
+						var data = {};
+						$(".match_options").each(function(i) {
+							var id = $(this).attr("id");
+							var k = id.substring(14);
+							data[k] = $("#"+id).myVal();
+						});
+						var encoded = $.toJSON(data);
+						parent.jQuery("#'.$name.'_match_options").val(encoded);
+						this.close();
+						return;
+					}
+    			}
+				$(document).ready(function(){
+					var data = parent.jQuery("#'.$name.'_match_collection").val();
+					$("#match_collection").val(data);
+					var data = parent.jQuery("#'.$name.'_match_value").val();
+					$("#match_value").val(data);
+					$("#match_mode").val(parent.jQuery("#'.$name.'_match_mode").val());
+					var encoded = parent.jQuery("#'.$name.'_match_options").val();
+					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
+					$.each(data, function(k, v) {
+						var elem = "match_options_"+k;
+						$("#"+elem).myVal(v);
+					});
+					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
+					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact");
+					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each");
+				});
+			})(jQuery);
+			';
+$doc->addScriptDeclaration( $js );
+
+$options			=	array();
+$options[] 			=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) );
+$options[] 			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'PLG_CCK_FIELD_FIELD_X_LABEL' ) );
+$opts				=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_fields AS a WHERE a.type = "field_x" AND a.published = 1 ORDER BY a.title ASC' );
+if ( count( $opts ) ) {
+	$options		=	array_merge( $options, $opts );
+}
+$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+$options[] 			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'PLG_CCK_FIELD_GROUP_X_LABEL' ) );
+$opts				=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_fields AS a WHERE a.type = "group_x" AND a.published = 1 ORDER BY a.title ASC' );
+if ( count( $opts ) ) {
+	$options		=	array_merge( $options, $opts );
+}
+$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'size="1" class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
+?>
+
+<div class="seblod">
+	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'COM_CCK_SEARCH_OPTIONS' ) ); ?>
+    <input type="hidden" id="match_mode" name="match_mode" value="" />
+    <ul class="adminformlist adminformlist-2cols">
+        <?php
+		echo '<li><label>'.JText::_( 'PLG_CCK_FIELD_GROUP_COLLECTION' ).'</label>'.$form.'</li>';
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
+		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
+        ?>
+    </ul>
+</div>

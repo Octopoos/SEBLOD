@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CCK_FORM_VIEW_EDIT_TITLE" option="COM_CCK_FORM_VIEW_EDIT_OPTION">
+		<help key = "..." />
+		<message><![CDATA[COM_CCK_FORM_VIEW_EDIT_DESC]]></message>
+	</layout>
+
+	<!-- Request variables. -->
+	<fields name="request">
+		<fieldset name="request" label="COM_CCK_CONFIG_FIELDSET_REQUIRED_SETTINGS" addfieldpath="/libraries/cck/construction/field">
+			<field name="type" type="cck" construction="core_content_type" label="COM_CCK_CONFIG_TYPE" description="Select a Form (Content Type)." id="jform_trigger_type" class="inputbox" required="true" />
+		</fieldset>
+	</fields>
+
+	<!-- Parameters object. -->
+	<fields name="params">
+		<fieldset name="basic" label="COM_CCK_CONFIG_FIELDSET_BASIC_OPTIONS">
+			<field name="show_form_title" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_FORM_TITLE" description="COM_CCK_CONFIG_SHOW_FORM_TITLE_DESC" class="inputbox" />
+			<field name="tag_form_title" type="cck" construction="core_tag_title" default="" label="" description="" class="inputbox" />
+			<field name="class_form_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" />
+			<field name="cckjs" type="cckjs" label="" description=""
+				   js_appendto="jform_params_show_form_title=J(as tag),#jform_params_tag_form_title,J(with class),#jform_params_class_form_title"
+				   js_isvisiblewhen="div#jform_params_cckjs-more='jform_params_show_form_title','1',false" js_format="html" hidden="true" />
+			<field name="show_form_desc" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION_DESC" class="inputbox" />
+			<field name="form_desc" type="cck" construction="core_description" default="" label="" description="..." class="inputbox" cck_selectlabel="Edit"
+				   js_appendto="jform_params_show_form_desc=a.wysiwyg_editor_box"
+				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc','1,2',false" js_format="html" hidden="true" />
+		</fieldset>
+		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
+			<field name="live" type="cckhidden" label="" description="" />
+			<field name="variation" type="cckhidden" label="" description="" />
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
+			<option value="0">JNO</option>
+				<option	value="1">JYES</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

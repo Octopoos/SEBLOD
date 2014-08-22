@@ -1,0 +1,157 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/* ui-big */
+hr {background-color:#cccccc; border:0; color:#cccccc; height:1px; width:100%;}
+
+/* ui-big (configuration) */
+#config-tabs-com_cck_configuration dt,
+#config-tabs-com_cck_developer_configuration dt,
+#config-tabs-com_cck_ecommerce_configuration dt,
+#config-tabs-com_cck_exporter_configuration dt,
+#config-tabs-com_cck_importer_configuration dt,
+#config-tabs-com_cck_manager_configuration dt,
+#config-tabs-com_cck_multilingual_configuration dt,
+#config-tabs-com_cck_packager_configuration dt,
+#config-tabs-com_cck_toolbox_configuration dt,
+#config-tabs-com_cck_updater_configuration dt,
+#config-tabs-com_cck_webservices_configuration dt {-webkit-border-top-left-radius:5px; -webkit-border-top-right-radius:5px; -moz-border-radius-topleft:5px; -moz-border-radius-topright:5px;
+	border-top-left-radius:3px;	border-top-right-radius:3px; padding-bottom:5px !important; padding-left:12px !important; padding-right:12px !important; padding-top:5px !important;
+	background-color:#ffffff !important;}
+#config-tabs-com_cck_configuration dt.open,
+#config-tabs-com_cck_developer_configuration dt.open,
+#config-tabs-com_cck_ecommerce_configuration dt.open,
+#config-tabs-com_cck_exporter_configuration dt.open,
+#config-tabs-com_cck_importer_configuration dt.open,
+#config-tabs-com_cck_manager_configuration dt.open,
+#config-tabs-com_cck_multilingual_configuration dt.open,
+#config-tabs-com_cck_packager_configuration dt.open,
+#config-tabs-com_cck_toolbox_configuration dt.open,
+#config-tabs-com_cck_updater_configuration dt.open,
+#config-tabs-com_cck_webservices_configuration dt.open {border-bottom-color:#ffffff;}
+#config-tabs-com_cck_configuration dt.open h3 a,
+#config-tabs-com_cck_developer_configuration dt.open h3 a,
+#config-tabs-com_cck_ecommerce_configuration dt.open h3 a,
+#config-tabs-com_cck_exporter_configuration dt.open h3 a,
+#config-tabs-com_cck_importer_configuration dt.open h3 a,
+#config-tabs-com_cck_manager_configuration dt.open h3 a,
+#config-tabs-com_cck_multilingual_configuration dt.open h3 a,
+#config-tabs-com_cck_packager_configuration dt.open h3 a,
+#config-tabs-com_cck_toolbox_configuration dt.open h3 a,
+#config-tabs-com_cck_updater_configuration dt.open h3 a,
+#config-tabs-com_cck_webservices_configuration dt.open h3 a {color:#0088CC !important;	font-weight:bold !important;}
+div.configuration {padding-top:6px !important;}
+fieldset button {-webkit-border-radius:3px;	-moz-border-radius:3px; border-radius:3px;	padding:2px 4px;}
+fieldset button:hover {background-color: #ffffdd !important;}
+p.tab-description {color:#0088CC; font-size:1.10em; font-style:italic;}
+span.legend {color:#0088CC;	font-size:1.10em; font-weight:700; }
+dd.tabs .inputbox, dd.tabs select {-webkit-border-radius: 3px; -moz-border-radius: 3px;	border-radius:3px; padding: 5px;}
+dd.tabs textarea.inputbox {font-size: 100%;}
+dd.tabs #jform_description-lbl {margin-top: 8px;!important}
+div.current dd.tabs label, div.current dd.tabs span.faux-label {min-width: 180px;}
+div.tab-content div.tab-pane div.control-label label, div.tab-content div.tab-pane div.control-label span.faux-label {min-width: 180px;}
+
+/* ui-big (menu|module) */
+div.pane-sliders .inputbox {-webkit-border-radius: 3px; -moz-border-radius: 3px;	border-radius:3px; padding: 5px;}
+fieldset.panelform label, fieldset.panelform div.paramrow label, fieldset.panelform span.faux-label {margin-top:6px;}
+body:not(.admin) a.wysiwyg_editor_box{float:left; padding-left:2px; line-height:34px;}
+div.textdesc{float:left;line-height:34px;padding:0 6px 0 2px;text-transform:lowercase;}
+button.jform-rightbtn {margin-left:5px;}
+
+div.current dd.tabs input, div.current dd.tabs select, div.current dd.tabs textarea {margin-top:6px; margin-bottom:6px;}
+dd.tabs fieldset.checkboxes {margin-left:10px;}
+dd.tabs fieldset.checkboxes {margin-left:10px;}
+dd.tabs fieldset.checkboxes label {min-width:25px!important;padding-right:5px;}
+dd.tabs fieldset.checkboxes input {padding:1px!important; float:left!important; clear:none!important;}
+div.current dd.tabs fieldset.radio label{min-width: 80px;}
+
+ul#objects fieldset.disabled label{color:silver; font-weight: normal;}
+ul#objects fieldset.radios label { 
+	clear: none;
+	float: left;
+	margin: 3px 0px 0px 5px;
+	min-width: 120px;
+}
+#integration-sliders ul#objects table.group-rules td { 
+	border: 1px solid #CCCCCC;
+	overflow: hidden;
+	padding: 4px;
+	text-align: left;
+	vertical-align: middle;
+}
+#integration-sliders ul#objects table.group-rules { 
+	border-collapse: collapse;
+	width: 100%;
+	margin: 5px;
+}
+#integration-sliders ul#objects table.group-rules th { 
+	padding: 4px;
+	text-align: left;
+	background: #DDDDDD;
+	border: 1px solid #DDDDDD;
+	color: #025A8D;
+	font-size: 0.9em;
+	overflow: hidden;
+}
+#integration-sliders ul#objects, #integration-sliders ul#objects ul {
+	background: #FFFFFF;
+	border: 0px solid #CCCCCC;
+	list-style-type: none;
+	margin: 0px !important;
+	padding: 0px !important;
+}
+#integration-sliders p.rule-desc { 
+	font-size: 1.09em;
+	margin-left: 0px;
+}
+/* ******** */
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"] {
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+	background-color: #5bb75b;
+	background-image: -moz-linear-gradient(top,#62c462,#51a351);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#62c462),to(#51a351));
+	background-image: -webkit-linear-gradient(top,#62c462,#51a351);
+	background-image: -o-linear-gradient(top,#62c462,#51a351);
+	background-image: linear-gradient(to bottom,#62c462,#51a351);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+	border-color: #51a351 #51a351 #387038;
+	*background-color: #51a351;
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:hover,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:focus,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].disabled,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"][disabled] {
+	color: #fff;
+	background-color: #51a351;
+	*background-color: #499249;
+}
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].active {
+	background-color: #408140 \9;
+}
+#attrib-cck-overrides div.control-label{display:none;}
+#attrib-cck-overrides div.controls{margin-left:0;}
+#attrib-cck-overrides div.controls label{float: left; width:180px; padding-left:0px;}
+#attrib-cck-overrides div.controls div.clear{margin-bottom: 18px;}
+#attrib-cck-overrides div.controls .live_values{margin-right: 10px;}
+body.admin div.controls div.chzn-container{float:left;}
+body.admin a.wysiwyg_editor_box{line-height: normal; margin-left:10px;}
+body.admin [id*="-more"] > input.text {margin-left: 10px;}
+body.admin div.chzn-container > .chzn-single{height: 26px;}
+
+body.com_config div#fs_media #jform_media_preset1_extensions,
+body.com_config div#fs_media #jform_media_preset2_extensions,
+body.com_config div#fs_media #jform_media_preset3_extensions{float:left;}
+body.com_config div#fs_media #jform_cckjsm1-more,
+body.com_config div#fs_media #jform_cckjsm2-more,
+body.com_config div#fs_media #jform_cckjsm3-more{float:left; padding-left:8px;}

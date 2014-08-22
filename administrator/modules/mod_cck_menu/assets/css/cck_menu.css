@@ -1,0 +1,59 @@
+/* common styling */
+.cck_menu, .cck_menu ul, .cck_menu li {margin:0; padding:0; border:0 none;}
+.cck_menu {position:relative; z-index:100;}
+.cck_menu li {float:left; position:relative; list-style:none; display:inline;}
+.cck_menu li a {display:block; white-space:nowrap;}
+.cck_menu li li {/*width: 100%;*/ clear:both;/*FF 1.0.7 needs this */}
+.cck_menu li ul {visibility:hidden; position:absolute;}
+.cck_menu li li ul {top:0; left:0;}
+.cck_menu li.hover ul {visibility: visible;}
+.cck_menu li.hover ul li ul {visibility:hidden;}
+.cck_menu li.hover li.hover ul {visibility:visible; left:100%;}
+.cck_menu li li {min-width:91px;}
+
+/* cck_menu layout */
+.cck_menu li {border-left:1px solid #fff; border-right:1px solid #d8d8d8;}
+.cck_menu li li {border: 0;}
+.cck_menu ul    { border: 0.1em solid #ccc; background: #f6f6f6 url(../images/bg-menu.gif) repeat-y left;}
+.cck_menu ul li.node { background: url(../images/j_arrow.png) no-repeat right 50%; }
+.cck_menu ul li.separator { background: #DDE1E6 url(../images/bg-menu.gif); height: 2px;}
+.cck_menu a, .cck_menu div {padding: 0.35em 1em 0.35em; margin:0 1px 0 1px; line-height:1.6em; vertical-align:middle; font-size:11px; font-weight:bold;
+text-decoration:none !important; cursor: default; background-repeat:no-repeat; background-position:left 50%;}
+.cck_menu li.first a {color: #025a8d !important;}
+.cck_menu li.first li a {color: #333333 !important;}
+.cck_menu li.disabled a {color: gray !important;}
+.cck_menu ul a {font-size:11px; font-weight:normal; padding-left:25px; padding-right:20px; line-height:1.2em;}
+.cck_menu li.hover a {background-color: #dbe4e9; border-left: 1px solid #025a8d;  border-right:1px solid #025a8d; margin: 0;} /* 1 level - hover */
+.cck_menu li.hover li a {background-color: transparent; border: 0 none;   margin: 2px;} /* 2 level - normal */
+.cck_menu li.hover li.hover a {background-color: #dbe4e9; border: 1px solid #025a8d; margin: 1px;} /* 2 level - hover */
+.cck_menu li.hover li.hover li a {background-color: transparent; border: 0 none; margin: 2px;} /* 3 level - normal */
+.cck_menu li.hover li.hover li a:hover {background-color: #dbe4e9; border: 1px solid #025a8d;  margin: 1px;} /* 3 level - hover */
+
+/* subcck_menu styling */
+#subcck_menu {list-style: none; padding: 0; margin: 0;}
+#subcck_menu li {float: left; padding: 0; margin: 0;}
+#subcck_menu li a, #subcck_menu span.nolink {cursor: pointer; padding: 0px 15px; border-right: 1px solid #ccc; font-weight: bold; color: #0B55C4; line-height: 12px; height: 12px;}
+#subcck_menu span.nolink {color: #999;}
+#subcck_menu a.active, #subcck_menu span.nolink.active {color: #000; text-decoration: underline;}
+
+.icon-16-j_arrow_red {background-image: url(../images/j_arrow.png);}
+.icon-16-content-manager {background-image: url(../images/icon-16-content.png);}
+.icon-16-template-manager {background-image: url(../images/icon-16-templates.png);}
+.icon-16-type-manager {background-image: url(../images/icon-16-types.png);}
+.icon-16-field-manager {background-image: url(../images/icon-16-fields.png);}
+.icon-16-search-manager {background-image: url(../images/icon-16-searchs.png);}
+.icon-16-folder-manager {background-image: url(../images/icon-16-folders.png);}
+.icon-16-site-manager {background-image: url(../images/icon-16-sites.png);}
+.icon-16-cck {background-image: url(../images/icon-16-seblod.png);}
+
+/* Add-on */
+.icon-16-cart-manager {background-image: url(../images/icon-16-carts.png);}
+.icon-16-order-manager {background-image: url(../images/icon-16-orders.png);}
+.icon-16-payment-manager {background-image: url(../images/icon-16-payments.png);}
+.icon-16-product-manager {background-image: url(../images/icon-16-products.png);}
+.icon-16-shipping-manager {background-image: url(../images/icon-16-shippings.png);}
+.icon-16-store-manager {background-image: url(../images/icon-16-stores.png);}
+
+.icon-16-joomla {background-image: url(../images/icon-16-joomla.png);}
+.icon-16-seblod {background-image: url(../images/icon-16-seblod.png);}
+.root-icon-position{background-position: 4px 50%!important; height:16px; width:3px!important;}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="template" version="2.5" method="upgrade">
+	<name>seb_table</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.0.0</version>
+	
+	<files>
+		<folder>css</folder>
+		<folder>fields</folder>
+		<folder>images</folder>
+		<folder>includes</folder>
+		<folder>languages</folder>
+		<folder>positions</folder>
+		<folder>variations</folder>
+		
+		<filename>config.php</filename>
+		<filename>index.php</filename>
+		<filename>template_picker.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.tpl_seb_table.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_seb_table.ini</language>
+	</languages>
+	
+	<positions>
+		<position>column-a</position>
+		<position>column-b</position>
+		<position>column-c</position>
+		<position>column-d</position>
+		<position>column-e</position>
+		<position>column-f</position>
+		<position>column-g</position>
+		<position>column-h</position>
+		<position>column-i</position>
+		<position>column-j</position>
+		<position>column-k</position>
+		<position>column-l</position>
+		<position>column-m</position>
+		<position>column-n</position>
+		<position>column-o</position>
+		<position>column-p</position>
+		<position>hidden</position>
+	</positions>
+	
+	<config addfieldpath="/libraries/cck/construction/field">
+		<fields name="params">
+			<fieldset name="fields" label="TPL_SEB_TABLE_LEGEND_STYLE">
+				<field name="cck_client_item" type="hidden" default="0" />
+				<field name="class_table" type="cck" construction="core_class_table" default="category zebra table" label="TPL_SEB_TABLE_CLASS_TABLE" description="" class="inputbox" />
+				<field name="class_table_tr_even" type="cck" construction="core_class_table_tr_even" default="cat-list-row%i" label="TPL_SEB_TABLE_CLASS_TR_EVEN" description="" class="inputbox" />
+				<field name="table_layout" type="list" default="" label="TPL_SEB_TABLE_TABLE_LAYOUT" description="TPL_SEB_TABLE_TABLE_LAYOUT_DESC" class="inputbox">
+					<option value="">TPL_SEB_TABLE_TABLE_LAYOUT_AUTO</option>
+					<option value="fixed">TPL_SEB_TABLE_TABLE_LAYOUT_FIXED</option>
+				</field>
+				<field name="class_table_tr_odd" type="cck" construction="core_class_table_tr_odd" default="cat-list-row%i" label="TPL_SEB_TABLE_CLASS_TR_ODD" description="" class="inputbox" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

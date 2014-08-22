@@ -1,0 +1,117 @@
+<?php
+/**
+* @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
+
+defined( '_JEXEC' ) or die;
+
+// View
+class CCKViewCck extends JCckBaseLegacyView
+{
+    // prepareSidebar
+    protected function prepareSidebar()
+    {
+        if ( !JCck::on() ) {
+            return;
+        }
+        $buttons        =   array();
+        if ( JCck::getUIX() == 'compact' ) {
+            $core       =   array(
+                                array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_' )
+                            );
+        } else {
+            $core       =   array(
+                                array( 'val'=>'0', 'pre'=>'', 'key'=>'COM_CCK_', 'img'=>'cck-application' ),
+                                array( 'val'=>'2', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-form' ),
+                                array( 'val'=>'3', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-plugin' ),
+                                array( 'val'=>'4', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-search' ),
+                                array( 'val'=>'1', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-template' ),
+                                array( 'val'=>'5', 'pre'=>'', 'key'=>'', 'img'=>'cck-multisite' )
+                            );
+        }
+        $components     =   JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element'
+                                                        . ' FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
+                                                        . ' WHERE a.link LIKE "index.php?option=com_cck\_%" ORDER BY a.title ASC' );
+        $groupedButtons =   array();
+        $more           =   array(
+                                'ADDON'=>16,
+                                'PLUGIN_FIELD'=>19,
+                                'PLUGIN_LINK'=>20,
+                                'PLUGIN_LIVE'=>21,
+                                /*
+                                'PLUGIN_OBJECT'=>22,
+                                */
+                                'PLUGIN_RESTRICTION'=>112,
+                                /*
+                                'PLUGIN_STORAGE'=>23,
+                                */
+                                'PLUGIN_TYPOGRAPHY'=>24,
+                                'PLUGIN_VALIDATION'=>25,
+                                'TEMPLATE'=>27,
+                            );
+
+        foreach ( $core as $k=>$v ) {
+            $buttons[]  =   array(
+                                'access'=>array( 'core.manage', 'com_cck' ),
+                                'group' =>'COM_CCK_CORE',
+                                'image' =>$v['img'],
+                                'link'  =>JRoute::_( constant( '_C'.$v['val'].'_LINK' ) ),
+                                'target'=>'_self',
+                                'text'  =>$v['pre'].JText::_( $v['key'].constant( '_C'.$v['val'].'_TEXT' ).'S' )
+                            );
+        }
+        foreach ( $components as $k=>$v ) {
+            $buttons[]  =   array(
+                                'access'=>array( 'core.manage', $v->element ),
+                                'group' =>'COM_CCK_SEBLOD_MORE',
+                                'image' =>'cck-addon',
+                                'link'  =>JRoute::_( $v->link ),
+                                'target'=>'_self',
+                                'text'  =>$v->title
+                            );
+        }
+        foreach ( $more as $k=>$v ) {
+            $buttons[]  =   array(
+                                'access'=>array( 'core.manage', 'com_cck' ),
+                                'group' =>'COM_CCK_SEBLOD_COM',
+                                'image' =>'download',
+                                'link'  =>JRoute::_( 'http://www.seblod.com/products?seb_item_category='.$v ),
+                                'target'=>'_blank',
+                                'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
+                            );
+        }
+
+        foreach ( $buttons as $button ) {
+            $groupedButtons[$button['group']][] =   $button;
+        }
+
+        $this->sidebar  =   '<div class="sidebar-nav quick-icons">'
+                        .   JHtml::_( 'links.linksgroups', $groupedButtons )
+                        .   '</div>';
+    }
+
+	// prepareToolbar
+	protected function prepareToolbar()
+	{
+		$bar	=	JToolBar::getInstance( 'toolbar' );
+		$canDo	=	Helper_Admin::getActions();
+		
+		if ( JCck::on() ) {
+			JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		} else {
+			JToolBarHelper::title( '&nbsp;', 'seblod.png' );
+		}
+		if ( $canDo->get( 'core.admin' ) ) {
+			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
+		}
+		
+		Helper_Admin::addToolbarHistoryButton();
+		// Helper_Admin::addToolbarSupportButton();
+	}
+}
+?>

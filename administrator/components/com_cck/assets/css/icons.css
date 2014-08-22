@@ -1,0 +1,30 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+.icon-32-seblod {background-image: url(../../assets/images/32/icon-32-seblod.png);}
+.icon-48-seblod {background-image: url(../../assets/images/48/icon-48-seblod-banner.png);}
+
+.icon-32-download {background-image: url(../../assets/images/32/icon-32-download.png);}
+.icon-32-eye-open {background-image: url(../../assets/images/32/icon-32-preview.png);}
+.icon-32-folder {background-image: url(../../assets/images/32/icon-32-folders.png);}
+.icon-32-plus {background-image: url(../../assets/images/32/icon-32-new-alt.png);}
+.icon-32-refresh {background-image: url(../../assets/images/32/icon-32-refresh.png)!important;}
+.icon-32-star {background-image: url(../../assets/images/32/icon-32-support.png);}
+
+.icon-48-component {background-image: url(../../assets/images/48/icon-48-component.png);}
+.icon-48-fields {background-image: url(../../assets/images/48/icon-48-fields.png);}
+.icon-48-folders {background-image: url(../../assets/images/48/icon-48-folders.png);}
+.icon-48-form {background-image: url(../../assets/images/48/icon-48-form.png);}
+.icon-48-searchs {background-image: url(../../assets/images/48/icon-48-searchs.png);}
+.icon-48-sites {background-image: url(../../assets/images/48/icon-48-sites.png);}
+.icon-48-templates {background-image: url(../../assets/images/48/icon-48-templates.png);}
+.icon-48-types {background-image: url(../../assets/images/48/icon-48-types.png);}
+.icon-48-versions {background-image: url(../../assets/images/48/icon-48-versions.png);}
+
+div.copyright {color:#000; text-align:center; font-size:90%; margin-top:10px;}
+#toolbar-folder .icon-folder:before {color: #f89406;}

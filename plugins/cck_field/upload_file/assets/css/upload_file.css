@@ -1,0 +1,6 @@
+/* switch linkage */
+a.switch:hover, a.switch:focus{background:none!important;}
+a.switch span.linkage {display:inline-block; height:24px; width:24px; position:relative;}
+a.switch span.linked {background-image: url("../../../../../administrator/components/com_cck/assets/images/24/icon-24-lock.png");}
+a.switch span.notice {background-position:left; background-repeat:no-repeat; text-indent: 25px;}
+a.switch span.unlinked {background-image: url("../../../../../administrator/components/com_cck/assets/images/24/icon-24-unlock.png");}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="position_style" label="VAR_SEB_CSS3_LEGEND_POSITION_STYLE">
+		<field name="background_color" type="cck" construction="core_background_color" label="VAR_SEB_CSS3_BACKGROUND_COLOR" description="VAR_SEB_CSS3_BACKGROUND_COLOR_DESC" class="inputbox" />
+		<field name="border_color" type="cck" construction="core_border_color" label="VAR_SEB_CSS3_BORDER_COLOR" description="VAR_SEB_CSS3_BORDER_COLOR_DESC" class="inputbox" />
+		<field name="border_size" type="cck" construction="core_border_size" more="px" label="VAR_SEB_CSS3_BORDER_SIZE" description="VAR_SEB_CSS3_BORDER_SIZE_DESC" class="inputbox" />
+		<field name="border_style" type="cck" construction="core_border_style" label="VAR_SEB_CSS3_BORDER_STYLE" description="VAR_SEB_CSS3_BORDER_STYLE_DESC" class="inputbox" />
+		<field name="border_radius" type="cck" construction="core_border_radius" more="px" label="VAR_SEB_CSS3_BORDER_RADIUS" description="VAR_SEB_CSS3_BORDER_RADIUS_DESC" class="inputbox" />
+		<field name="position_padding" type="cck" construction="core_position_padding" label="VAR_SEB_CSS3_PADDING" description="VAR_SEB_CSS3_PADDING_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="position_legend" label="VAR_SEB_CSS3_LEGEND_POSITION_LEGEND">
+		<field name="legend_align" type="cck" construction="core_legend_align" label="VAR_SEB_CSS3_LEGENG_ALIGN" description="VAR_SEB_CSS3_LEGENG_ALIGN_DESC" class="inputbox" />
+		<field name="legend_fieldname" type="cck" construction="core_legend_fieldname" label="VAR_SEB_CSS3_LEGENG_FIELD_NAME" description="VAR_SEB_CSS3_LEGENG_FIELD_NAME_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="fields" label="VAR_SEB_CSS3_LEGEND_FIELDS">
+		<field name="field_orientation" type="cck" construction="core_field_orientation" label="VAR_SEB_CSS3_FIELD_ORIENTATION" description="VAR_SEB_CSS3_FIELD_ORIENTATION_DESC" class="inputbox" />
+		<field name="field_width" type="cck" construction="core_field_width" more="px / %" label="VAR_SEB_CSS3_FIELD_WIDTH" description="VAR_SEB_CSS3_FIELD_WIDTH_DESC" class="inputbox" />
+		<field name="field_label" type="cck" construction="core_field_label2" default="" label="VAR_SEB_CSS3_FIELD_LABEL" description="VAR_SEB_CSS3_FIELD_LABEL_DESC" class="inputbox" />
+		<field name="field_label_position" type="cck" construction="core_field_label_position" label="VAR_SEB_CSS3_FIELD_LABEL_POSITION" description="VAR_SEB_CSS3_FIELD_LABEL_POSITION_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="field_label" label="VAR_SEB_CSS3_LEGEND_FIELDS_LABEL">
+		<field name="field_label_align" type="cck" construction="core_field_label_align" label="VAR_SEB_CSS3_FIELD_LABEL_ALIGN" description="VAR_SEB_CSS3_FIELD_LABEL_ALIGN_DESC" class="inputbox" />
+		<field name="field_label_width" type="cck" construction="core_field_label_width" more="px / %" label="VAR_SEB_CSS3_FIELD_LABEL_WIDTH" description="VAR_SEB_CSS3_FIELD_LABEL_WIDTH_DESC" class="inputbox" />
+		<field name="field_label_color" type="cck" construction="core_field_label_color" label="VAR_SEB_CSS3_FIELD_LABEL_COLOR" description="VAR_SEB_CSS3_FIELD_LABEL_COLOR_DESC" class="inputbox" />
+		<field name="field_label_padding" type="cck" construction="core_field_label_padding" label="VAR_SEB_CSS3_FIELD_LABEL_PADDING" description="VAR_SEB_CSS3_FIELD_LABEL_PADDING_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="field_input" label="VAR_SEB_CSS3_LEGEND_FIELDS_FORM">
+		<field name="field_focus_border_color" type="cck" construction="core_field_focus_border_color" label="VAR_SEB_CSS3_FIELD_FOCUS_BORDER_COLOR" description="VAR_SEB_CSS3_FIELD_FOCUS_BORDER_COLOR_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="field_value" label="VAR_SEB_CSS3_LEGEND_FIELDS_VALUE">
+	</fieldset>
+</form>

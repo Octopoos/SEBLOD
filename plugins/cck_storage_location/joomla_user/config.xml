@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="integration">
+		<field name="registration" type="cck" construction="core_dev_radio" default="1" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_USER_INTEGRATION_REGISTRATION"
+			description="PLG_CCK_STORAGE_LOCATION_JOOMLA_USER_INTEGRATION_REGISTRATION_DESC" cck_options="Yes=1||No=0" />
+		<field name="profile_itemid" type="cck" construction="core_menuitem" default="" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_USER_INTEGRATION_PROFILE_MENUITEM"
+			description="PLG_CCK_STORAGE_LOCATION_JOOMLA_USER_INTEGRATION_PROFILE_MENUITEM_DESC" />
+	</fieldset>
+</config>

@@ -1,0 +1,13 @@
+
+ALTER TABLE `#__cck_core_search_field` CHANGE `match_target` `match_options` VARCHAR( 512 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'search';
+
+INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
+(484, 'Article Associations', 'art_associations', 22, 'jform_associations', '', 1, '', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', 'joomla_article', '#__content', 'associations', '', '', '', 0, '0000-00-00 00:00:00'),
+(485, 'Category Associations', 'cat_associations', 23, 'jform_associations', '', 1, '', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', 'joomla_category', '#__categories', 'associations', '', '', '', 0, '0000-00-00 00:00:00');
+
+UPDATE `#__cck_core_fields` SET `options2` = '{"preparecontent":"","prepareform":"$opts    = array();\\r\\n$prefix  = JFactory::getApplication()->getCfg( ''dbprefix'' );\\r\\n$tables  = JCckDatabase::loadColumn( ''SHOW TABLES'' );\\r\\nif ( trim( $field->selectlabel ) ) {\\r\\n  $opts[] = JHtml::_( ''select.option'',  '''', ''- ''.$field->selectlabel.'' -'' );\\r\\n}\\r\\nif ( count( $tables ) ) {\\r\\n  foreach ( $tables as $table ) {\\r\\n    $t = str_replace( $prefix, ''#__'', $table );\\r\\n    $opts[] = JHtml::_( ''select.option'', $t, $t, ''value'', ''text'' );\\r\\n  }\\r\\n}\\r\\n$class = $field->css ? '' ''.$field->css : '''';\\r\\n$attr = ''class=\\"inputbox select''.$class.''\\" size=\\"1\\" ''.$field->attributes;\\r\\n$form = JHtml::_( ''select.genericlist'', $opts, $name, $attr, ''value'', ''text'', $value, $id );","preparestore":""}' WHERE `id` = 274;
+
+UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field' AND `element` IN ("jform_associations");
+
+UPDATE `#__cck_core_fields` SET `storage` = 'json' WHERE `id` IN (472,473,474,475);
+UPDATE `#__cck_core_fields` SET `storage_field` = 'metadata', `storage_field2` = 'tags' WHERE `id` IN (472,473);

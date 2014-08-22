@@ -1,0 +1,103 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/*toggle*/
+div.seblod fieldset.toggle{background-color:#FFFFFF;}
+fieldset.toggle label.selected{background: none repeat scroll 0 0 #cccccc;border: 1px solid #999999;color: #666666;}
+fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border: 1px solid #999999;color: #cccccc;text-decoration: line-through; cursor: default!important;}
+fieldset.toggle label{background: none repeat scroll 0 0 #FBFBFB;border: 1px solid #CCCCCC;color: #666666;}
+fieldset.toggle label:hover{background-color: #999;color: #ffffff;}
+fieldset.toggle label.first{-webkit-border-top-left-radius:5px; -webkit-border-bottom-left-radius:5px; -moz-border-radius-topleft:5px; -moz-border-radius-bottomleft:5px; border-top-left-radius:5px; border-bottom-left-radius:5px;}
+fieldset.toggle label.last{-webkit-border-top-right-radius:5px; -webkit-border-bottom-right-radius:5px; -moz-border-radius-topright:5px; -moz-border-radius-bottomright:5px; border-top-right-radius:5px; border-bottom-right-radius:5px;}
+
+.loading{top:68px!important;}
+
+/*sortable*/
+a:link.icons, a:visited.icons{background: url(images/icons.png); font-size:0px!important;}
+ul.sortable li{background-color: #F6F6F6 ;border: 1px solid #999999 ; -moz-border-radius: 5px 5px 5px 5px;-webkit-border-radius: 5px 5px 5px 5px;border-radius:5px;}
+ul.sortable li.div_clear{background-color: #e1e1e1 ;border: 1px solid #999999 ;}
+ul.sortable li span.title{color: #1B60E1 !important;}
+ul.sortable li span.subtitle{color: #ccc !important;}
+ul.sortable li.panel_slider span.title{color: #000000 !important;}
+ul.sortable li.drop-highlight{background-color: #ffffff !important;border: 1px dashed #999999 !important;}
+li.ui-selecting{background: #FFFFDD !important;}
+li.ui-selected{background: #FFFFDD !important;}
+li.ui-sortable-helper{background: #FFFFDD !important;}
+li:hover.ui-selectee{background: #FFFFDD !important;}
+ul.sortable li.position{background-color: #CCCCCC !important;}
+ul.sortable li.position span.title{color: #666666 !important;}
+div.seblod .selector{background-color: #f6f6f6 !important;border-color: #999999 !important;}
+div.seblod .thin.blue{background-color: #FFFFFF;border-color: #CCCCCC;color: #000000;}
+div.pane span.c_cond{cursor: pointer;font-size:0.95em;}
+div.pane span.c_cond:hover{text-decoration:underline;}
+div.seblod input[type="radio"].selector:checked{color: #666666 !important;}
+ul.sortable_header li{color: #666666 !important;}
+ul.sortable_header li div.pane div{background-color: #CCCCCC !important;border-left: 1px solid #999999 !important;border-right: 1px solid #999999 !important;border-top: 1px solid #999999 !important;} */
+
+ul.sortable li.field div.drag{cursor:move;position:absolute;right:9px;top:4px;width:23px;height:23px;}
+ul.sortable li.field div.drag{background: url(images/grip.png) no-repeat scroll 0 0 transparent;}
+ul.sortable li.field div:hover.drag{background: url(images/grip.png) no-repeat scroll 0 -23px transparent;}
+div#seblod-main ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 35px;top: 7px;width: 16px;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 0 transparent;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -17px transparent;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 -34px transparent;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -51px transparent;}
+div#seblod-sidebar ul.sortable li.field div.move {cursor: pointer;height: 17px;position: absolute;right: 33px;top: 7px;width: 16px;}
+
+ul.sortable li span.c_var {color: #666666; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
+ul.sortable li span.c_val, ul.sortable li span.c_link, ul.sortable li span.c_typo{color: #666666; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
+
+ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
+ul.sortable li.field div.drag {cursor: move;height: 23px;position: absolute;right: 9px;top: 4px;width: 23px;}
+ul.sortable li div.pane div.col1{height: 30px;right: 301px;}
+ul.sortable li div.pane div.col2{height: 30px;right: 49px;}
+ul.sortable li div.pane div{color: #666666; font-weight: bold;}
+
+/*sidebar*/
+a:link.icons.icon-add, a:visited.icons.icon-add{background-position: 0 0;}
+a:hover.icons.icon-add{background-position: 0 -20px;}
+a:link.icons.icon-add2, a:visited.icons.icon-add2{background-position: 0 0;}
+a:hover.icons.icon-add2{background-position: 0 -20px;}
+a:link.icons.icon-right, a:visited.icons.icon-right{background-position: 0 -40px;}
+a:hover.icons.icon-right{background-position: 0 -60px;}
+a:link.icons.icon-left, a:visited.icons.icon-left{background-position: 0 -80px;}
+a:hover.icons.icon-left{background-position: 0 -100px;}
+a:link.icons.icon-up, a:visited.icons.icon-up{background-position: 0 -120px;}
+a:hover.icons.icon-up{background-position: 0 -140px;}
+a:link.icons.icon-down, a:visited.icons.icon-down{background-position: 0 -160px;}
+a:hover.icons.icon-down{background-position: 0 -180px;}
+a:link.icons.icon-one, a:visited.icons.icon-one{background-position: 0 -200px;}
+a:hover.icons.icon-one{background-position: 0 -220px;}
+a:link.icons.icon-two, a:visited.icons.icon-two{background-position: 0 -240px;}
+a:hover.icons.icon-two{background-position: 0 -260px;}
+a:link.icons.icon-three, a:visited.icons.icon-three{background-position: 0 -280px;}
+a:hover.icons.icon-three{background-position: 0 -300px;}
+a:link.icons.icon-four,a:visited.icons.icon-four{background-position: 0 -320px;}
+a:hover.icons.icon-four{background-position: 0 -340px;}
+a:link.icons.icon-five,a:visited.icons.icon-five{background-position: 0 -360px;}
+a:hover.icons.icon-five{background-position: 0 -380px;}
+a:link.icons.icon-six, a:visited.icons.icon-six{background-position: 0 -400px;}
+a:hover.icons.icon-six{background-position: 0 -420px;}
+a:link.icons.icon-seven, a:visited.icons.icon-seven{background-position: 0 -440px;}
+a:hover.icons.icon-seven{background-position: 0 -460px;}
+a:link.icons.icon-eight, a:visited.icons.icon-eight{background-position: 0 -480px;}
+a:hover.icons.icon-eight{background-position: 0 -500px;}
+a:link.icons.icon-nine, a:visited.icons.icon-nine{background-position: 0 -520px;}
+a:hover.icons.icon-nine{background-position: 0 -540px;}
+a:link.icons.icon-a, a:visited.icons.icon-a{background-position: 0 -560px;}
+a:hover.icons.icon-a{background-position: 0 -580px;}
+a:link.icons.icon-b, a:visited.icons.icon-b{background-position: 0 -600px;}
+a:hover.icons.icon-b{background-position: 0 -620px;}
+a:link.icons.icon-c, a:visited.icons.icon-c{background-position: 0 -640px;}
+a:hover.icons.icon-c{background-position: 0 -660px;}
+a:link.icons.icon-d, a:visited.icons.icon-d{background-position: 0 -680px;}
+a:hover.icons.icon-d{background-position: 0 -700px;}
+a:link.icons.icon-e, a:visited.icons.icon-e{background-position: 0 -720px;}
+a:hover.icons.icon-e{background-position: 0 -740px;}
+a:link.icons.icon-f, a:visited.icons.icon-f{background-position: 0 -760px;}
+a:hover.icons.icon-f{background-position: 0 -780px;}

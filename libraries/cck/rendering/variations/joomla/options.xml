@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldpath="/libraries/cck/construction/field">	
+	<fieldset name="position_style" label="VAR_JOOMLA_LEGEND_POSITION_STYLE">
+	</fieldset>
+	
+	<fieldset name="position_legend" label="VAR_JOOMLA_LEGEND_POSITION_LEGEND">
+		<field name="legend_fieldname" type="cck" construction="core_legend_fieldname" label="VAR_JOOMLA_LEGENG_FIELD_NAME" description="VAR_JOOMLA_LEGENG_FIELD_NAME_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="fields" label="VAR_JOOMLA_LEGEND_FIELDS">
+		<field name="field_orientation" type="cck" construction="core_field_orientation" label="VAR_JOOMLA_FIELD_ORIENTATION" description="VAR_JOOMLA_FIELD_ORIENTATION_DESC" class="inputbox" />
+		<field name="field_width" type="cck" construction="core_field_width" more="px / %" label="VAR_JOOMLA_FIELD_WIDTH" description="VAR_JOOMLA_FIELD_WIDTH_DESC" class="inputbox" />
+		<field name="field_label" type="cck" construction="core_field_label2" default="" label="VAR_JOOMLA_FIELD_LABEL" description="VAR_JOOMLA_FIELD_LABEL_DESC" class="inputbox" />
+		<field name="field_label_position" type="cck" construction="core_field_label_position" label="VAR_JOOMLA_FIELD_LABEL_POSITION" description="VAR_JOOMLA_FIELD_LABEL_POSITION_DESC" class="inputbox" />
+	</fieldset>
+	
+	<fieldset name="field_label" label="VAR_JOOMLA_LEGEND_FIELDS_LABEL">
+		<field name="field_label_align" type="cck" construction="core_field_label_align" label="VAR_JOOMLA_FIELD_LABEL_ALIGN" description="VAR_JOOMLA_FIELD_LABEL_ALIGN_DESC" class="inputbox" />
+		<field name="field_label_width" type="cck" construction="core_field_label_width" more="px / %" label="VAR_JOOMLA_FIELD_LABEL_WIDTH" description="VAR_JOOMLA_FIELD_LABEL_WIDTH_DESC" class="inputbox" />
+		<field name="field_label_color" type="cck" construction="core_field_label_color" label="VAR_JOOMLA_FIELD_LABEL_COLOR" description="VAR_JOOMLA_FIELD_LABEL_COLOR_DESC" class="inputbox" />
+		<field name="field_label_padding" type="cck" construction="core_field_label_padding" label="VAR_JOOMLA_FIELD_LABEL_PADDING" description="VAR_JOOMLA_FIELD_LABEL_PADDING_DESC" class="inputbox" />
+	</fieldset>
+</form>

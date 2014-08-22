@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>mod_cck_breadcrumbs</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2005 - 2012 Open Source Matters.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2012</creationDate>
+	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>	
+	<version>1.0.0</version>
+	
+	<files>
+		<folder>tmpl</folder>
+		
+		<filename module="mod_cck_breadcrumbs">mod_cck_breadcrumbs.php</filename>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.mod_cck_breadcrumbs.ini</language>
+		<language tag="en-GB">en-GB/en-GB.mod_cck_breadcrumbs.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.mod_cck_breadcrumbs.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.mod_cck_breadcrumbs.sys.ini</language>
+	</languages>
+	
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="showHere" type="radio" default="1" label="MOD_CCK_BREADCRUMBS_FIELD_SHOWHERE_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_SHOWHERE_DESC" class="btn-group btn-group-yesno">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="showHome" type="radio" default="1" label="MOD_CCK_BREADCRUMBS_FIELD_SHOWHOME_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_SHOWHOME_DESC" class="btn-group btn-group-yesno">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="homeText" type="text" label="MOD_CCK_BREADCRUMBS_FIELD_HOMETEXT_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_HOMETEXT_DESC" class="inputbox" />
+				<field name="showLast" type="radio" default="1" label="MOD_CCK_BREADCRUMBS_FIELD_SHOWLAST_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_SHOWLAST_DESC" class="btn-group btn-group-yesno">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="separator" type="text" label="MOD_CCK_BREADCRUMBS_FIELD_SEPARATOR_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_SEPARATOR_DESC" class="inputbox" />
+				<field name="pathway" type="list" default="0" label="MOD_CCK_BREADCRUMBS_FIELD_PATHWAY_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_PATHWAY_DESC" class="inputbox chzn-color chzn-color-permissive">
+					<option value="0">MOD_CCK_BREADCRUMBS_OPTION_PATHWAY_DEFAULT</option>
+					<option	value="1">MOD_CCK_BREADCRUMBS_OPTION_PATHWAY_DEFAULT_CLEAN</option>
+					<option	value="2">MOD_CCK_BREADCRUMBS_OPTION_PATHWAY_MENUITEMID</option>
+				</field>
+				<field name="separator_class" type="text" default="separator" label="MOD_CCK_BREADCRUMBS_FIELD_SEPARATOR_CLASS_LABEL" description="MOD_CCK_BREADCRUMBS_FIELD_SEPARATOR_CLASS_DESC" class="inputbox" />
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" class="inputbox" />
+				<field name="moduleclass_sfx" type="textarea" rows="3" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" class="inputbox" />
+				<field name="force_moduleclass_sfx" type="list" label="LIB_CCK_MODULES_FORCE_MODULECLASS_SFX" default="0" description="LIB_CCK_MODULES_FORCE_MODULECLASS_SFX_DESC" class="inputbox">
+					<option value="0">JNO</option>
+					<option	value="1">JYES</option>
+				</field>
+				<field name="cache" type="list" default="1" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC" class="inputbox">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" class="inputbox" />
+				<field name="cachemode" type="hidden" default="itemid" class="inputbox">
+					<option value="itemid"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

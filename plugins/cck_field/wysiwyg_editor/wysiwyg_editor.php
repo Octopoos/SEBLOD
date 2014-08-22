@@ -1,0 +1,234 @@
+<?php
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
+
+defined( '_JEXEC' ) or die;
+
+// Plugin
+class plgCCK_FieldWysiwyg_editor extends JCckPluginField
+{
+	protected static $type		=	'wysiwyg_editor';
+	protected static $path;
+	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
+	
+	// onCCK_FieldConstruct
+	public function onCCK_FieldConstruct( $type, &$data = array() )
+	{
+		if ( self::$type != $type ) {
+			return;
+		}
+		parent::g_onCCK_FieldConstruct( $data );
+		
+		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+	}
+	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
+	
+	// onCCK_FieldPrepareContent
+	public function onCCK_FieldPrepareContent( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		parent::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		$field->value	=	$value;
+	}
+	
+	// onCCK_FieldPrepareForm
+	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		self::$path	=	parent::g_getPath( self::$type.'/' );
+		parent::g_onCCK_FieldPrepareForm( $field, $config );
+		
+		// Init
+		if ( count( $inherit ) ) {
+			$id			=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
+			$name		=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
+			$inherited	=	true;
+		} else {
+			$id			=	$field->name;
+			$name		=	$field->name;
+			$inherited	=	false;
+		}
+		$value		=	( $value != '' ) ? htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ) : @$field->defaultvalue;
+		$value		=	( $value != ' ' ) ? $value : '';
+		
+		// Validate
+		$validate	=	'';
+		if ( $config['doValidation'] > 1 ) {
+			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+		}
+		
+		// Prepare
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+		$user		=	JFactory::getUser();
+		if ( $config['pk'] && @$options2['import'] && $field->storage_location ) {
+			if ( ! JCckDatabase::loadResult( 'SELECT pk FROM #__cck_core WHERE pk='.(int)$config['pk'].' AND storage_location="'.(string)$field->storage_location.'"' ) ) {
+				$properties	=	array( 'custom', 'table' );
+				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
+				$custom		=	( $options2['import'] == 2 ) ? 'fulltext' : $properties['custom'];
+				$value		=	$config['storages'][$properties['table']]->$custom;
+			}
+		}
+		
+		if ( !$user->id && $this->params->get( 'guest_access', 0 ) == 0 ) {
+			$form	=	'';
+		} else {
+			$width				=	@$options2['width'] ? str_replace( 'px', '', $options2['width'] ) : '100%';
+			$height				=	@$options2['height'] ? str_replace( 'px', '', $options2['height'] ) : '280';
+			$asset				=	( $config['asset_id'] > 0 ) ? $config['asset_id'] : $config['asset'];
+			if ( $field->bool ) {
+				// Default
+				$buttons		=	array( 'pagebreak', 'readmore' );
+				$editor			=	JFactory::getEditor( @$options2['editor'] ? $options2['editor'] : null );
+				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
+			} else {
+				// Modal Box
+				$app			=	JFactory::getApplication();
+				if ( trim( $field->selectlabel ) ) {
+					if ( $config['doTranslation'] ) {
+						$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+					}
+					$buttonlabel	=	$field->selectlabel;
+				} else {
+					$buttonlabel	=	JText::_( 'COM_CCK_EDITOR' );
+				}
+				
+				$e_type					=	( @$options2['editor'] != '' ) ? '&type='.$options2['editor'] : '';
+				$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
+										.	'&id='.$id.'&name='.$name.$e_type.'&params='.$width.'||'.$height.'||'.$asset;
+				
+				$class					=	'wysiwyg_editor_box variation_href';
+				if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { // todo: remove later
+					$class				.=	' btn';
+				}
+				$class					=	'class="'.$class.'" ';
+				$attr					=	$class;
+				$form					=	'<textarea style="display: none;" id="'.$id.'" name="'.$name.'">'.$value.'</textarea>';
+				$form					.=	'<a href="'.$link.'" '.$attr.'>'.$buttonlabel.'</a>';
+				$field->markup_class	.=	' cck_form_wysiwyg_editor_box';
+			}
+		}
+		
+		// Set
+		if ( ! $field->variation ) {
+			$field->form	=	$form;
+			self::_addScripts( $field->bool, array( 'height'=>@$height, 'inherited'=>$inherited ), $config );
+		} else {
+			$hidden	=	'<textarea class="inputbox" style="display: none;" id="'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<textarea', $hidden, '', $config );
+		}
+		$field->value	=	$value;
+		
+		// Return
+		if ( $return === true ) {
+			return $field;
+		}
+	}
+	
+	// onCCK_FieldPrepareSearch
+	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		
+		// Prepare
+		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+		
+		// Return
+		if ( $return === true ) {
+			return $field;
+		}
+	}
+	
+	// onCCK_FieldPrepareStore
+	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		
+		// Init
+		if ( count( $inherit ) ) {
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
+		} else {
+			$name	=	$field->name;
+			$value	=	JRequest::getVar( $name, '', 'post', 'string', JREQUEST_ALLOWRAW );
+		}
+		
+		// Validate
+		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
+		
+		// Set or Return
+		if ( $return === true ) {
+			return $value;
+		}
+		$field->value	=	$value;
+		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+	}
+	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Render
+	
+	// onCCK_FieldRenderContent
+	public static function onCCK_FieldRenderContent( $field, &$config = array() )
+	{
+		return parent::g_onCCK_FieldRenderContent( $field );
+	}
+	
+	// onCCK_FieldRenderForm
+	public static function onCCK_FieldRenderForm( $field, &$config = array() )
+	{		
+		return parent::g_onCCK_FieldRenderForm( $field );
+	}
+	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
+	
+	// _addScript
+	protected static function _addScripts( $inline, $params = array(), &$config = array() )
+	{
+		$doc	=	JFactory::getDocument();
+		$height	=	( isset( $params['height'] ) && $params['height'] ) ? $params['height'] + 140 : '420';
+		
+		$doc->addStyleSheet( self::$path.'assets/css/cck_wysiwyg_editor.css' );
+		
+		if ( !$inline ) {
+			if ( empty( $config['client'] ) ) {
+				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
+					$doc->addScript( JURI::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+				}
+				$doc->addStyleSheet( JURI::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
+			
+				$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
+					.	' $.fn.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
+			} elseif ( $params['inherited'] == true ) {
+				JCck::loadModalBox();
+				$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
+					.	' $.fn.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
+			} else {
+				JCck::loadModalBox();
+				$js	=	'
+						jQuery(document).ready(function($){
+							$(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){$("#cboxClose").remove();}});
+						});
+						';
+				$doc->addScriptDeclaration( $js );
+			}
+		}
+	}
+}
+?>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="template" version="2.5" method="upgrade">
+	<name>seb_one</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.0.0</version>
+	
+	<files>
+		<folder>css</folder>
+		<folder>fields</folder>
+		<folder>images</folder>
+		<folder>includes</folder>
+		<folder>languages</folder>
+		<folder>positions</folder>
+		<folder>variations</folder>
+		
+		<filename>config.php</filename>
+		<filename>index.php</filename>
+		<filename>template_picker.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.tpl_seb_one.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_seb_one.ini</language>
+	</languages>
+	
+	<positions>
+		<position>mainbody</position>
+		<position>topbody</position>
+		<position>bottombody</position>
+		<position>sidebody-a</position>
+		<position>sidebody-b</position>
+		<position toggle="position_header">header-a</position>
+		<position toggle="position_header">header-b</position>
+		<position toggle="position_header">header-c</position>
+		<position toggle="position_header">header-d</position>
+		<position toggle="position_header">header-e</position>
+		<position toggle="position_header">header-f</position>
+		<position toggle="position_top">top-a</position>
+		<position toggle="position_top">top-b</position>
+		<position toggle="position_top">top-c</position>
+		<position toggle="position_top">top-d</position>
+		<position toggle="position_top">top-e</position>
+		<position toggle="position_top">top-f</position>
+		<position toggle="position_left">left-a</position>
+		<position toggle="position_left">left-b</position>
+		<position toggle="position_left">left-c</position>
+		<position toggle="position_left">left-d</position>
+		<position toggle="position_left">left-e</position>
+		<position toggle="position_left">left-f</position>
+		<position toggle="position_right">right-a</position>
+		<position toggle="position_right">right-b</position>
+		<position toggle="position_right">right-c</position>
+		<position toggle="position_right">right-d</position>
+		<position toggle="position_right">right-e</position>
+		<position toggle="position_right">right-f</position>
+		<position toggle="position_bottom">bottom-a</position>
+		<position toggle="position_bottom">bottom-b</position>
+		<position toggle="position_bottom">bottom-c</position>
+		<position toggle="position_bottom">bottom-d</position>
+		<position toggle="position_bottom">bottom-e</position>
+		<position toggle="position_bottom">bottom-f</position>
+		<position toggle="position_footer">footer-a</position>
+		<position toggle="position_footer">footer-b</position>
+		<position toggle="position_footer">footer-c</position>
+		<position toggle="position_footer">footer-d</position>
+		<position toggle="position_footer">footer-e</position>
+		<position toggle="position_footer">footer-f</position>
+		<position>modal</position>
+		<position>hidden</position>
+		<position>clear</position>
+	</positions>
+	
+	<config addfieldpath="/libraries/cck/construction/field">
+		<fields name="params">
+			<fieldset name="fields" label="TPL_SEB_ONE_LEGEND_FIELDS">
+				<field name="field_label" type="cck" construction="core_field_label" default="1" label="TPL_SEB_ONE_SHOW_LABEL" description="" class="inputbox" />
+				<field name="field_description" type="cck" construction="core_field_description" default="0" label="TPL_SEB_ONE_SHOW_DESCRIPTION" description="" class="inputbox" />
+			</fieldset>
+			
+			<fieldset name="positions" label="TPL_SEB_ONE_LEGEND_POSITIONS">
+				<field name="variation_default" type="cck" construction="core_variation" default="seb_css3" label="TPL_SEB_ONE_DEFAULT_VARIATION" description="" class="inputbox" />
+				<field name="position_force_height" type="hidden" default="1" label="Force Height" description="" />
+				<field name="position_margin" type="cck" construction="core_position_margin" default="8" more="px" label="TPL_SEB_ONE_MARGIN" description="" class="inputbox" />
+				<field name="positions_spacer" type="spacer" label="" hr="false" />
+				<field name="positions_spacer2" type="spacer" label="" hr="false" />
+				<field name="position_header" type="cck" construction="core_position_header" default="0" label="TPL_SEB_ONE_HEADER_LINE" description="" class="inputbox" />
+				<field name="position_header_variation" type="cck" construction="core_position_header_variation" default="" label="TPL_SEB_ONE_HEADER_LINE_VARIATION" description="" class="inputbox" />
+				<field name="position_left" type="cck" construction="core_position_left" more="px" default="0" label="TPL_SEB_ONE_LEFT_COLUMN" description="" class="inputbox" />
+				<field name="position_left_variation" type="cck" construction="core_position_left_variation" default="" label="TPL_SEB_ONE_LEFT_COLUMN_VARIATION" description="" class="inputbox" />
+				<field name="position_top" type="cck" construction="core_position_top" default="1" label="TPL_SEB_ONE_TOP_LINE" description="" class="inputbox" />
+				<field name="position_top_variation" type="cck" construction="core_position_top_variation" default="" label="TPL_SEB_ONE_TOP_LINE_VARIATION" description="" class="inputbox" />
+				<field name="position_sidebody_a" type="cck" construction="core_position_sidebody" default="0" label="TPL_SEB_ONE_SIDEBODY_A" description="" class="inputbox" />
+				<field name="position_sidebody_b" type="cck" construction="core_position_sidebody" default="0" label="TPL_SEB_ONE_SIDEBODY_B" description="" class="inputbox" />
+				<field name="position_bottom" type="cck" construction="core_position_bottom" default="1" label="TPL_SEB_ONE_BOTTOM_LINE" description="" class="inputbox" />
+				<field name="position_bottom_variation" type="cck" construction="core_position_bottom_variation" default="" label="TPL_SEB_ONE_BOTTOM_LINE_VARIATION" description="" class="inputbox" />
+				<field name="position_right" type="cck" construction="core_position_right" more="px" default="400" label="TPL_SEB_ONE_RIGHT_COLUMN" description="" class="inputbox" />
+				<field name="position_right_variation" type="cck" construction="core_position_right_variation" default="" label="TPL_SEB_ONE_RIGHT_COLUMN_VARIATION" description="" class="inputbox" />
+				<field name="position_footer" type="cck" construction="core_position_footer" default="0" label="TPL_SEB_ONE_FOOTER_LINE" description="" class="inputbox" />
+				<field name="position_footer_variation" type="cck" construction="core_position_footer_variation" default="" label="TPL_SEB_ONE_FOOTER_LINE_VARIATION" description="" class="inputbox" />
+				<field name="debug" type="hidden" default="0" label="Debug" description="" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

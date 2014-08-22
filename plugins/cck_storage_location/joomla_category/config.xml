@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="integration">
+		<field name="exclude" type="cck" construction="core_dev_text" default="" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_CATEGORY_INTEGRATION_EXCLUDE_COMPONENTS" size="48"
+			description="PLG_CCK_STORAGE_LOCATION_JOOMLA_CATEGORY_INTEGRATION_EXCLUDE_COMPONENTS_DESC" />
+	</fieldset>
+</config>

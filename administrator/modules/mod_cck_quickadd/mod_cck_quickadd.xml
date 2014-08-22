@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="administrator" version="2.5" method="upgrade">
+	<name>mod_cck_quickadd</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
+	<version>3.0.0</version>
+	
+	<files>
+		<folder>tmpl</folder>
+		
+		<filename module="mod_cck_quickadd">mod_cck_quickadd.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+			<language tag="en-GB">en-GB/en-GB.mod_cck_quickadd.ini</language>
+			<language tag="en-GB">en-GB/en-GB.mod_cck_quickadd.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.mod_cck_quickadd.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.mod_cck_quickadd.sys.ini</language>
+	</languages>
+	
+	<config>
+		<fields name="params" addfieldpath="/libraries/cck/construction/field">
+			<fieldset name="basic">
+				<field name="modal_box_layout" type="radio" default="icon" label="MOD_CCK_QUICKADD_MODAL_BOX_LAYOUT" description="MOD_CCK_QUICKADD_MODAL_BOX_LAYOUT_DESC" class="btn-group">
+					<option value="icon">MOD_CCK_QUICKADD_OPTION_ICON</option>
+					<option value="list">MOD_CCK_QUICKADD_OPTION_LIST</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

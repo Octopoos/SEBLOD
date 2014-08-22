@@ -1,0 +1,9 @@
+#submenu a { border: 0 !important; }
+#submenu a:hover, #submenu a:active, #submenu span.nolink.active { background: none !important; text-decoration: none; }
+#submenu a.active {	height: 15px; }
+.lavaLampNoImage { position: relative; height: 14px; }
+.lavaLampNoImage li { float: left; list-style: none; }
+.lavaLampNoImage li a.active { background: none !important; }
+.lavaLampNoImage li.back { width: 9px; height: 15px; z-index: 8; position: absolute; }
+.lavaLampNoImage li a { color: #000; text-align: center; letter-spacing: 0; z-index: 10; display: block; float: left; height: 18px; position: relative; }
+.lavaLampNoImage li a:hover, .lavaLampNoImage li a:active, .lavaLampNoImage li a:visited { border: none; }

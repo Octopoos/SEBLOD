@@ -1,0 +1,393 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/*ADMIN ONLY*/
+div#element-box div.m{padding: 0px 3px;}
+div.vertical,
+div.horizontal{padding:15px;}
+
+/*ADMIN GENERIQUE FONT SIZE*/
+div.cck_forms.cck_admin div.cck_label,
+div.cck_forms.cck_admin div.cck_form input,
+div.cck_forms.cck_admin div.cck_form textarea,
+div.cck_forms.cck_admin div.cck_form select,
+div.cck_forms.cck_admin div.cck_form option,
+div.cck_forms.cck_admin div.cck_form span,
+div.cck_forms.cck_admin div.cck_form a:not(.btn),
+div.cck_forms.cck_admin div.cck_desc
+{font-size:1em;}
+div.cck_forms.cck_admin div.cck_form input.input-large-text{font-size:18px; height:auto;}
+
+/*ADMIN GENERIQUE FORM/LABEL/VALUE*/
+div.vertical div.cck_forms{float:left;padding-bottom:10px;width:100%;}
+div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
+div.cck_forms.cck_admin div.cck_label{float:left;line-height:25px;width:145px;}
+div.cck_forms.cck_admin div.cck_form a.cck_preview,div.cck_forms.cck_admin div.cck_form span.cck_preview{float:left;line-height:25px;width:145px;}
+div.cck_forms.cck_admin div.cck_form{float:left;width:auto;}
+div.cck_forms.cck_admin div.cck_desc{clear:both;width:auto;}
+div.cck_forms.cck_admin div.cck_desc p{ margin:8px 0px 0px 0px;}
+div.vertical div.cck_forms.cck_admin div.cck_label { width: 145px; text-align: left; padding: 0px 0px 0px 0px; }
+div.cck_forms.cck_admin div.cck_form span.variation_value{line-height:26px;}
+div.cck_forms.cck_admin div.cck_desc .hasPopover{padding:3px 0 0 5px;}
+
+/*ADMIN DIV.CLEAR*/
+div.vertical div.clear{clear:none;}
+div.horizontal div.clear{clear:both;}
+
+/*ADMIN GENERIQUE CALENDAR*/
+div.cck_forms.cck_admin div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_admin div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+
+/*ADMIN GENERIQUE CHECKBOX*/
+div.cck_forms.cck_admin div.cck_form.cck_form_checkbox fieldset,
+div.cck_forms.cck_admin div.cck_form.cck_form_checkbox fieldset.checkboxes{border: none;margin:0;text-align:left;padding: 0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_checkbox fieldset.checkboxes.vertical input{ clear:both;}
+div.cck_forms.cck_admin div.cck_form.cck_form_checkbox input{float:left;padding: 1px;margin: 5px 5px 0 0 !important; min-height:0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_checkbox label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+/*ADMIN GENERIQUE RADIO*/
+div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset,
+div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset.radio{border: none;margin:0;text-align:left;padding: 0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset.radios.vertical input{clear:both;}
+div.cck_forms.cck_admin div.cck_form.cck_form_radio input{float:left;margin: 5px 5px 0 0 !important; padding-left:0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_radio label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset.radios.btn-group label{line-height:120%;padding-right:14px;}
+
+/*ADMIN GENERIQUE WYSIWYG*/
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:hover.wysiwyg_editor_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*ADMIN GENERIQUE FIELD X*/
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_label label {height:25px;margin:0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_form {clear:none;}
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:0px!important;margin-top:12px!important;padding:1px;}
+
+/*ADMIN GENERIQUE JFORM USER*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_user div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}
+
+/*ADMIN GENERIQUE JFORM MEDIA*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview{padding-left:2px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview span{line-height:26px;}
+
+/*ADMIN GENERIQUE JFORM USER GROUP*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul{padding:0;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}
+
+/*ADMIN GENERIQUE JFORM RULES*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:link.jform_rules_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:visited.jform_rules_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*ADMIN GENERIQUE JOOMLA ROUTE*/
+div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:link.joomla_route_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:visited.joomla_route_box,
+div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*SITE GENERIQUE UPLOAD FILE */
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_file div.cck_forms{clear:both;float:none;}
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_file span input[type="checkbox"].inputbox{margin-left:5px!important;margin-top:6px!important;padding:1px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_file span.linkage {top:5px;}
+
+/*SITE GENERIQUE UPLOAD IMAGE */
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_image div.cck_forms{clear:both;float:none;}
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_image span input[type="checkbox"].inputbox{margin-left:5px!important;margin-top:6px!important;padding:1px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_upload_image span.linkage {top:5px;}
+
+/*SITE GENERIQUE LINK */
+div.cck_forms.cck_admin div.cck_form.cck_form_link div.cck_forms{clear:both;}
+
+/* UI */
+div.vertical, div.horizontal {
+	padding-bottom: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 15px;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:5px;
+	text-align: left;
+}
+div.vertical.ct, 
+div.horizontal.ct
+{overflow: visible;}
+
+div.vertical dl.tabs dt, div.horizontal dl.tabs dt {
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	padding-bottom: 5px;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 5px;
+	background-color: #ffffff;
+}
+
+div.vertical dl.tabs dt.open, 
+div.horizontal dl.tabs dt.open { 
+	border-bottom-color: #ffffff;
+	color: #146295;
+	font-weight: bold;
+}
+
+div.vertical .adminformlist input, 
+div.vertical .adminformlist textarea, 
+div.vertical .adminformlist select, 
+div.vertical .adminformlist button,
+div.horizontal .adminformlist input, 
+div.horizontal .adminformlist textarea, 
+div.horizontal .adminformlist select, 
+div.horizontal .adminformlist button { 
+	float: left;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 5px;
+	margin-top: 5px;
+	width: auto;
+	/*font-size: 11px;*/
+}
+
+
+div.vertical .adminformlist fieldset.radios,
+div.horizontal .adminformlist fieldset.radios{ 
+	border: 0;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+div.vertical .adminformlist fieldset.radios label,
+div.horizontal .adminformlist fieldset.radios label{ 
+	clear: none;
+	display: inline;
+	float: left;
+	min-width: 30px;
+	width: auto;
+	margin-right: 10px;
+}
+
+div.vertical .adminformlist fieldset.radios input,
+div.horizontal .adminformlist fieldset.radios input { 
+	margin-top: 10px;
+}
+
+div.vertical .adminformlist fieldset.radios.vertical input,
+div.horizontal .adminformlist fieldset.radios.vertical input{
+	clear: left;
+}
+
+div.vertical .adminformlist fieldset.checkboxes,
+div.horizontal .adminformlist fieldset.checkboxes{
+	border: 0;
+	float: left;
+	padding: 0;
+	margin: 0;
+	clear:right;
+}
+
+div.vertical .adminformlist fieldset.checkboxes label,
+div.horizontal .adminformlist fieldset.checkboxes label{
+	clear: right;
+	min-width: 30px;
+	width: auto;
+	margin-right: 10px;
+}
+
+div.vertical .adminformlist fieldset.checkboxes input,
+div.horizontal .adminformlist fieldset.checkboxes input{
+	padding: 1px;
+	float: left;
+	/*clear: left;*/
+	margin-top: 10px;
+}
+
+div.vertical .adminformlist fieldset.checkboxes.vertical input,
+div.horizontal .adminformlist fieldset.checkboxes.vertical input{
+	clear: left;
+}
+
+div.vertical .adminformlist span input[type="checkbox"],
+div.horizontal .adminformlist span input[type="checkbox"]{
+	margin-left: 8px;
+	margin-top: 10px;
+}
+
+div.vertical .inputbox,
+div.horizontal .inputbox{
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+	padding: 4px 6px;
+}
+
+div.vertical textarea.inputbox,
+div.seblod textarea.inputbox{
+	font-size: 100%;
+}
+
+div.vertical .inputbutton,
+div.seblod .inputbutton{
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+	font-size: 12px;
+	height: 25px;
+	padding: 4px;
+	margin-top: 0;
+}
+
+div.vertical .adminformlist label,
+div.seblod .adminformlist label{
+	width: 145px;
+	clear: left;
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 5px;
+	line-height: 23px;
+	height:30px;
+}
+
+div.horizontal .adminformlist label{
+	width: 70px;
+	text-align:right;
+	padding-right:5px;
+}
+div.horizontal .adminformlist li {
+	float:left;
+}
+
+div.vertical span.legend,
+div.horizontal span.legend{
+	color: #146295;
+	font-size: 1.18em;
+	font-weight: 700;
+}
+div.vertical div.legend,
+div.horizontal div.legend {
+	color: #146295;
+	font-size: 1.18em;
+	font-weight: 700;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	width:100%;
+}
+div.vertical div.legend .inputbox,
+div.horizontal div.legend .inputbox {
+	font-size: 10px;
+	font-weight: normal;
+}
+div.vertical div.left,
+div.horizontal div.left{
+	text-align:left;
+}
+div.vertical div.center,
+div.horizontal div.center{
+	text-align:center;
+}
+div.vertical div.right,
+div.horizontal div.right{
+	text-align:right;
+}
+div.seblod div.top {
+}
+div.vertical div.top.left.plus, 
+div.vertical div.top.center.plus, 
+div.vertical div.top.right.plus,
+div.horizontal div.top.left.plus, 
+div.horizontal div.top.center.plus, 
+div.horizontal div.top.right.plus{
+	margin-bottom:6px;	
+}
+div.vertical div.bottom,
+div.horizontal div.bottom{
+	margin-top:10px;
+}
+div.vertical table.aclmodify-table td, 
+div.vertical table.aclsummary-table td,
+div.horizontal table.aclmodify-table td, 
+div.horizontal table.aclsummary-table td{
+	height: 30px;
+}
+
+div.vertical div.current,
+div.horizontal div.current{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:5px;
+}
+
+div.vertical ul.checklist li label,
+div.horizontal ul.checklist li label{ 
+	width: auto;
+}
+
+div.vertical ul.checklist label,
+div.horizontal ul.checklist label { 
+	clear: none;
+}
+
+div.vertical ul.checklist label,
+div.horizontal ul.checklist label{ 
+	display: block;
+	float: left;	
+}
+
+div.vertical ul.checklist input,
+div.horizontal ul.checklist input{
+	clear: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 100px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+}
+
+div.vertical .adminformlist li span.variation_value,
+div.horizontal .adminformlist li span.variation_value{
+	float: left;
+	line-height: 32px;
+}
+
+div.vertical .adminformlist li a:link.variation_href,
+div.vertical .adminformlist li a:hover.variation_href,
+div.vertical .adminformlist li a:visited.variation_href,
+div.horizontal .adminformlist li a:link.variation_href,
+div.horizontal .adminformlist li a:hover.variation_href,
+div.horizontal .adminformlist li a:visited.variation_href{
+	float: left;
+	line-height: 32px;
+	font-weight: bold;
+}
+
+div.vertical .adminformlist li a:link.cck_preview, 
+div.vertical .adminformlist li a:visited.cck_preview,
+div.horizontal .adminformlist li a:link.cck_preview, 
+div.horizontal .adminformlist li a:visited.cck_preview{
+	float: left;
+	margin-left: 8px;
+	line-height: 32px;
+}

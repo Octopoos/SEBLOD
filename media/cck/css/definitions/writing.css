@@ -1,0 +1,17 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/* FONT */
+.cck-font-style-italic{font-style:italic!important;}.cck-font-style-normal{font-style:normal!important;}
+.cck-font-weight-bold{font-weight:bold!important}.cck-font-weight-normal{font-weight:normal!important}
+.cck-font-size-0-9em{font-size:0.9em!important;}.cck-font-size-1em, .cck-font-size-1-0em{font-size:1.0em!important;}.cck-font-size-1-1em{font-size:1.1em!important;}.cck-font-size-1-2em{font-size:1.2em!important;}
+
+/* TEXT */
+.cck-text-align-center{text-align:center!important;}.cck-text-align-justify{text-align:justify!important;}.cck-text-align-left{text-align:left!important;}.cck-text-align-right{text-align:right!important;}
+.cck-text-transform-capitalize{text-transform:capitalize!important;}.cck-text-transform-lowercase{text-transform:lowercase!important;}.cck-text-transform-uppercase{text-transform:uppercase!important;}
+.cck-text-decoration-none{text-decoration:none!important;}.cck-text-decoration-line-through{text-decoration:line-through!important;}.cck-text-decoration-underline{text-decoration:underline!important;}

@@ -1,0 +1,26 @@
+ALTER TABLE `#__cck_core_type_field` ADD `variation_override` VARCHAR( 1024 ) NOT NULL AFTER `variation`;
+ALTER TABLE `#__cck_core_type_field` ADD `live_options` VARCHAR( 1024 ) NOT NULL AFTER `live`;
+ALTER TABLE `#__cck_core_type_field` ADD `computation` VARCHAR( 255 ) NOT NULL AFTER `access`;
+ALTER TABLE `#__cck_core_type_field` ADD `computation_options` VARCHAR( 1024 ) NOT NULL AFTER `computation`;
+
+ALTER TABLE `#__cck_core_search_field` ADD `variation_override` VARCHAR( 1024 ) NOT NULL AFTER `variation`;
+ALTER TABLE `#__cck_core_search_field` ADD `live_options` VARCHAR( 1024 ) NOT NULL AFTER `live`;
+ALTER TABLE `#__cck_core_search_field` ADD `computation` VARCHAR( 255 ) NOT NULL AFTER `access`;
+ALTER TABLE `#__cck_core_search_field` ADD `computation_options` VARCHAR( 1024 ) NOT NULL AFTER `computation`;
+
+
+INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
+(263, 'Core Languages', 'core_languages', 3, 'select_dynamic', '', 0, 'Languages', 'Select', 3, '', '', '', '', '{"query":"","table":"#__languages","name":"title","where":"published=1","value":"lang_code","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'languages', '', '', '', 0, '0000-00-00 00:00:00'),
+(264, 'Core Variable Type', 'core_variable_type', 3, 'select_simple', '', 0, 'Type', ' ', 3, '', '', 'string', 'Float=float||Int=int||String=string||Word=word', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00'),
+(265, 'Core Computation Presets', 'core_computation_presets', 3, 'select_simple', '', 0, 'Presets', 'Select', 3, 'required', '', '', 'Computation Presets 01=a + b||Computation Presets 02=a - b||Computation Presets 03=a * b||Computation Presets 04=a / b||Computation Presets 05=a - (b / c)||Computation Presets 06=a - (a * b) / 100||Computation Presets 07=(a + b).pow(2)||Computation Presets 08=a.sqrt() + b', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'presets', '', '', '', 0, '0000-00-00 00:00:00'),
+(266, 'Core Computation Format', 'core_computation_format', 3, 'select_simple', '', 0, 'Format', 'Auto', 3, '', '', '', 'Ceil=ceil||Floor=floor||Round=round||ToFixed=toFixed', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'format', '', '', '', 0, '0000-00-00 00:00:00'),
+(267, 'Core Computation Precision', 'core_computation_precision', 3, 'text', '', 0, 'Precision', ' ', 3, '', '', '', '', '', 0, 10, 5, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'precision', '', '', '', 0, '0000-00-00 00:00:00'),
+(268, 'Core Computation Event', 'core_computation_event', 3, 'select_simple', '', 0, 'Trigger Event', ' ', 3, '', '', 'keyup', 'Change=change||Keyup=keyup', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'event', '', '', '', 0, '0000-00-00 00:00:00'),
+(269, 'Core Conditional Event', 'core_conditional_event', 3, 'select_simple', '', 0, 'Event', ' ', 3, '', '', 'change', 'Change=change||Keyup=keyup', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'event', '', '', '', 0, '0000-00-00 00:00:00'),
+(270, 'Core Computation Recalc', 'core_computation_recalc', 3, 'select_simple', '', 0, 'Rule', ' ', 3, '', '', 'global', 'Self=0||Function=optgroup||Global=global', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'recalc', '', '', '', 0, '0000-00-00 00:00:00'),
+(271, 'Core JGrid Type', 'core_jgrid_type', 3, 'select_simple', '', 0, 'Type', 'Select', 3, '', '', '', 'Featured=featured||Status=state||Selection=selection', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00');
+
+UPDATE `#__cck_core_fields` SET `options2` = '{"preparecontent":"","prepareform":"require_once JPATH_ADMINISTRATOR.DS. ''components'' .DS. ''com_cck'' .DS. ''helpers'' .DS. ''helper_workshop.php'';\\r\\n$options = Helper_Workshop::getPositionVariations( @$config[''item'']->template, false );\\r\\n$attr = ''class=\\"inputbox\\" size=\\"1\\"'';\\r\\n$form = JHtml::_( ''select.genericlist'', $options, $name, $attr, ''value'', ''text'', $value, $id );","preparestore":""}' WHERE `id` = 107;
+
+UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field_live' AND ( `element` = 'joomla_user' OR `element` = 'url_variable' );
+UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field_link' AND ( `element` = 'content_delete' );

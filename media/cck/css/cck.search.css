@@ -1,0 +1,120 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/*SITE ONLY*/
+div.cck_forms .inputbox {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 5px;
+}
+div.cck_forms input.inputbox,
+div.cck_forms textarea.inputbox,
+div.cck_forms select.inputbox,
+div.cck_forms button.inputbox {
+    float: left !important;
+    margin: 0 !important;
+	padding: 4px 6px !important;
+    background: none repeat scroll 0 0 #fff !important;
+}
+
+div.cck_forms input.inputbox:focus,
+div.cck_forms textarea.inputbox:focus,
+div.cck_forms select.inputbox:focus,
+div.cck_forms button.inputbox:focus {
+    float: left !important;
+    margin: 0 !important;
+	padding: 4px 6px !important;
+    background: none repeat scroll 0 0 #ffffff !important;
+}
+
+/*SITE DIV.CLEAR*/
+div.vertical div.clear{clear:none;}
+div.horizontal div.clear{clear:both;}
+
+/*SITE GENERIQUE FONT SIZE*/
+div.cck_forms.cck_search div.cck_label,
+div.cck_forms.cck_search div.cck_label label,
+div.cck_forms.cck_search div.cck_form input,
+div.cck_forms.cck_search div.cck_form textarea,
+div.cck_forms.cck_search div.cck_form select,
+div.cck_forms.cck_search div.cck_form option,
+div.cck_forms.cck_search div.cck_form span,
+div.cck_forms.cck_search div.cck_form p,
+div.cck_forms.cck_search div.cck_desc
+{font-size:1em !important;}
+
+/*SITE GENERIQUE LINE-HEIGHT*/
+div.cck_forms.cck_search div.cck_label,
+div.cck_forms.cck_search div.cck_label label
+{line-height:30px;}
+div.cck_forms.cck_search div.cck_form input,
+div.cck_forms.cck_search div.cck_form textarea,
+div.cck_forms.cck_search div.cck_form select,
+div.cck_forms.cck_search div.cck_form option,
+div.cck_forms.cck_search div.cck_form span,
+div.cck_forms.cck_search div.cck_desc,
+div.cck_forms.cck_search div.cck_value.cck_value_wysiwyg_editor p,
+div.cck_forms.cck_search div.cck_label,
+div.cck_forms.cck_search div.cck_value
+{line-height:1.2em;}
+
+div.cck_forms.cck_search div.cck_label label{margin-bottom: 0px;}
+
+div.cck_forms.cck_search div.cck_form span[class^="icon-"],
+div.cck_forms.cck_search div.cck_form span[class*=" icon-"] 
+{line-height:1.0em;}
+
+/*SITE GENERIQUE FORM/LABEL/VALUE*/
+div.vertical div.cck_forms{float:left;padding-bottom:10px;width:100%;}
+div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
+div.cck_forms.cck_search div.cck_label{float:left;width:145px;}
+div.cck_forms.cck_search div.cck_form{float:left;width:auto;}
+div.cck_forms.cck_search div.cck_desc{clear:both;width:auto;}
+div.cck_forms.cck_search div.cck_desc p{margin:8px 0px 0px 0px;}
+div.vertical div.cck_forms.cck_search div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
+div.cck_forms.cck_search div.cck_form span.variation_value{line-height:1.2em;}
+div.cck_forms.cck_search div.cck_desc .hasPopover{padding:3px 0 0 5px;}
+
+/*SITE GENERIQUE CALENDAR*/
+div.cck_forms.cck_search div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_search div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
+div.cck_forms.cck_search div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+
+/*SITE GENERIQUE CHECKBOX*/
+div.cck_forms.cck_search div.cck_form.cck_form_checkbox fieldset,
+div.cck_forms.cck_search div.cck_form.cck_form_checkbox fieldset.checkboxes{border: none;margin:0;text-align:left;padding:0;}
+div.cck_forms.cck_search div.cck_form.cck_form_checkbox fieldset.checkboxes.vertical input{clear:both;}
+div.cck_forms.cck_search div.cck_form.cck_form_checkbox input{float:left; padding: 1px !important; margin: 5px 5px 0 0 !important; min-height:0;}
+div.cck_forms.cck_search div.cck_form.cck_form_checkbox label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+/*SITE GENERIQUE RADIO*/
+div.cck_forms.cck_search div.cck_form.cck_form_radio fieldset,
+div.cck_forms.cck_search div.cck_form.cck_form_radio fieldset.radio{border: none;margin:0;text-align:left;padding: 0;}
+div.cck_forms.cck_search div.cck_form.cck_form_radio fieldset.radios.vertical input{ clear:both;}
+div.cck_forms.cck_search div.cck_form.cck_form_radio input{float:left;margin: 5px 5px 0 0 !important; padding-left:0!important;}
+div.cck_forms.cck_search div.cck_form.cck_form_radio label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+/*SITE GENERIQUE WYSIWYG*/
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor div.cck_wysiwyg_editor_box{ background: #EEEEEE;border: 1px solid #CCCCCC;border-radius: 3px 3px 3px 3px;line-height: 25px;width: 100px;}
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box{text-decoration:none; color:#146295; display:block;}
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{text-decoration: none;}
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor div.cck_wysiwyg_editor_box a:hover.wysiwyg_editor_box{background: #ddd;}
+
+/*SITE GENERIQUE FIELD X*/
+div.cck_forms.cck_search div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
+
+/*SITE GENERIQUE JFORM USER*/
+div.cck_forms.cck_search div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+
+/*SITE GENERIQUE JFORM USER GROUP*/
+div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul{ padding:0;}
+div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
+div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}

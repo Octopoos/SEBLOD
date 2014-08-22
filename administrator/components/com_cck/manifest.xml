@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5" method="upgrade">
+	<name>com_cck</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.3.7</version>
+	
+	<scriptfile>script.php</scriptfile>
+	
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install/install.sql</file>
+			<file driver="mysql" charset="utf8">install/sql/countries.sql</file>
+			<file driver="mysql" charset="utf8">install/sql/sessions.sql</file>
+		</sql>
+	</install>
+	
+	<files folder="site">
+		<folder>assets</folder>
+		<folder>controllers</folder>
+		<folder>helpers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		
+		<filename>controller.php</filename>
+		<filename>cck.php</filename>
+		<filename>download.php</filename>
+		<filename>router.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB/en-GB.com_cck.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_cck_default.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_article.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_category.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_user.ini</language>
+		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_user_group.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_cck.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_cck_default.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_article.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_category.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_user.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_user_group.ini</language>
+	</languages>
+	
+	<administration>
+		<menu img="components/com_cck/assets/images/16/icon-16-seblod.png">SEBLOD</menu>
+		
+		<files folder="admin">
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>install</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+	
+			<filename>_CHANGELOG.php</filename>
+			<filename>_VERSION.php</filename>
+			<filename>access.xml</filename>
+			<filename>cck.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>download.php</filename>
+			<filename>index.html</filename>
+		</files>
+		
+		<languages folder="admin/languages">
+			<language tag="en-GB">en-GB/en-GB.com_cck.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_cck.sys.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_cck_core.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_cck.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_cck.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_cck_core.ini</language>
+		</languages>
+	</administration>	
+	
+	<media destination="cck" folder="media">
+		<folder>apps</folder>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>scripts</folder>
+		
+		<filename>index.html</filename>
+	</media>
+</extension>

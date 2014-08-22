@@ -1,0 +1,164 @@
+<?php
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
+
+defined( '_JEXEC' ) or die;
+
+jimport( 'cck.base.install.install' );
+
+// Script
+class JCckInstallerScriptPlugin
+{
+	protected $cck;
+	protected $core;
+	
+	// install
+	function install( $parent )
+	{
+		if ( $this->core === true ) {
+			return;
+		}
+		
+		$db		=	JFactory::getDbo();
+		$where	=	'WHERE type = "'.$this->cck->type.'" AND element = "'.$this->cck->element.'"';
+		if ( $this->cck->group ) {
+			$where	.=	' AND folder = "'.$this->cck->group.'"';
+		}
+
+		// Publish
+		$query	=	'UPDATE #__extensions SET enabled = 1 '.$where;
+		$db->setQuery( $query );
+		$db->query();
+
+		// Post Install Log
+		self::postInstallMessage( 'install' );
+
+		// Integration
+		if ( $this->cck->group == 'cck_storage_location' ) {
+			if ( isset( $this->cck->xml->cck_integration ) ) {
+				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB' );
+				$integration	=	array( 'component', 'options', 'vars', 'view' );
+				$title			=	JText::_( 'PLG_CCK_STORAGE_LOCATION_'.$this->cck->element.'_LABEL2' );
+				foreach ( $integration as $i=>$elem ) {
+					if ( isset( $this->cck->xml->cck_integration->$elem ) ) {
+						$integration[$elem]	=	(string)$this->cck->xml->cck_integration->$elem;
+						unset( $integration[$i] );
+					}
+				}
+				$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`options`,`vars`,`view`)'
+								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
+				$db->setQuery( $query );
+				$db->query();
+			}
+		}
+	}
+	
+	// uninstall
+	function uninstall( $parent )
+	{	
+		$db		=	JFactory::getDbo();
+		$where	=	'WHERE type = "'.$this->cck->type.'" AND element = "'.$this->cck->element.'"';
+		if ( $this->cck->group ) {
+			$where	.=	' AND folder = "'.$this->cck->group.'"';
+		}
+
+		// Integration
+		if ( $this->cck->group == 'cck_storage_location' ) {
+			$db->setQuery( 'DELETE FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' );
+			$db->query();
+		}
+
+		if ( $this->core === true ) {
+			return;
+		}
+
+		// Post Install Log
+		self::postInstallMessage( 'uninstall' );
+	}
+	
+	// update
+	function update( $parent )
+	{
+		if ( $this->core === true ) {
+			return;
+		}
+		
+		// Post Install Log
+		self::postInstallMessage( 'update' );
+	}
+	
+	// preflight
+	function preflight( $type, $parent )
+	{
+		$app		=	JFactory::getApplication();
+		$this->core	=	( isset( $app->cck_core ) ) ? $app->cck_core : false;
+		if ( $this->core === true ) {
+			return;
+		}
+		$this->cck	=	CCK_Install::init( $parent );
+	}
+	
+	// postflight
+	function postflight( $type, $parent )
+	{
+		if ( $this->core === true ) {
+			return;
+		}
+		CCK_Install::import( $parent, 'install', $this->cck );
+	}
+
+	// postInstallMessage
+	function postInstallMessage( $event, $pk = 0 )
+	{
+		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
+			return;
+		}
+		if ( !$pk ) {
+			$db		=	JFactory::getDbo();
+			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+
+			$db->setQuery( $query );
+			$pk		=	$db->loadResult();
+			if ( !$pk ) {
+				return false;
+			}
+		}
+
+		$lang		=	JFactory::getLanguage();
+		$title		=	(string)$this->cck->xml->name;
+		$lang->load( $title );
+		$lang->load( 'lib_cck', JPATH_SITE, 'en-GB', true );
+		$title		=	JText::_( $title );
+		if ( isset( $this->cck->xml->version ) ) {
+			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
+		}
+		$user		=	JFactory::getUser();
+		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank">'.$user->name.'</a>';
+		$version	=	'3.2.0';
+		jimport( 'joomla.filesystem.file' );
+		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
+			$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+		}
+		
+		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
+		require_once JPATH_SITE.'/libraries/cms/cck/database.php';
+		require_once JPATH_SITE.'/libraries/cms/cck/table.php';
+		$table						=	JCckTable::getInstance( '#__postinstall_messages' );
+		$table->extension_id		=	$pk;
+		$table->title_key			=	$title;
+		$table->description_key		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
+		$table->language_extension	=	'lib_cck';
+		$table->type				=	'message';
+		$table->version_introduced	=	$version;
+		$table->store();
+
+		return true;
+	}
+}
+?>

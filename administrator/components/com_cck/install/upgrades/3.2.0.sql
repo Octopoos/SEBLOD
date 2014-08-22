@@ -1,0 +1,64 @@
+
+ALTER TABLE  `#__cck_core_type_field` ADD  `restriction` VARCHAR( 512 ) NOT NULL COMMENT 'admin,site,intro,content' AFTER `access`;
+ALTER TABLE  `#__cck_core_type_field` ADD  `restriction_options` TEXT NOT NULL COMMENT 'admin,site,intro,content' AFTER `restriction`;
+
+ALTER TABLE  `#__cck_core_search_field` ADD  `restriction` VARCHAR( 512 ) NOT NULL COMMENT 'search,list,item' AFTER `access`;
+ALTER TABLE  `#__cck_core_search_field` ADD  `restriction_options` TEXT NOT NULL COMMENT 'search,list,item' AFTER `restriction`;
+
+
+INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
+(486, 'Core Task', 'core_task', 3, 'select_simple', '', 0, 'Task', ' ', 3, '', '', 'save', 'Task Cancel=cancel||Task Save=apply||Task Save and Close=save||Task Save and New=save2new||Task Save and View=save2view||SEBLOD Exporter Addon=optgroup||Task Export=export||SEBLOD Toolbox Addon=optgroup||Task Processing=process', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'json[options2][task]', '', '', '', 0, '0000-00-00 00:00:00'),
+(487, 'Button Save & Close', 'button_save_close', 3, 'button_submit', '', 1, 'Save And Close', ' ', 3, '', '', '', '', '{"icon":"","task":"save","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 1, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'button_save_close', '', '', '', 0, '0000-00-00 00:00:00'),
+(488, 'Button Save & New', 'button_save_new', 3, 'button_submit', '', 1, 'Save And New', ' ', 3, '', '', '', '', '{"icon":"","task":"save2new","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 1, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'button_save_new', '', '', '', 0, '0000-00-00 00:00:00'),
+(489, 'Button Save & View', 'button_save_view', 3, 'button_submit', '', 1, 'Save And View', ' ', 3, '', '', '', '', '{"icon":"","task":"save2view","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 1, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'button_save_view', '', '', '', 0, '0000-00-00 00:00:00'),
+(490, 'Button Cancel', 'button_cancel', 3, 'button_submit', '', 1, 'Cancel', ' ', 3, '', '', '', '', '{"icon":"","task":"cancel","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 1, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'button_cancel', '', '', '', 0, '0000-00-00 00:00:00'),
+(491, 'Button Grp (Form)', 'button_grp_form', 3, 'group', '', 1, 'clear', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 1, 0, 0, '', 0, '', 'button_grp_form', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'button_grp_form', '', '', '', 0, '0000-00-00 00:00:00'),
+(494, 'Tab Media (Panel)', 'tab_media', 3, 'tabs', '', 1, 'Media', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'tab_media', '', '', '', 0, '0000-00-00 00:00:00'),
+(496, 'Category Version Note', 'cat_version_note', 11, 'text', '', 1, 'Version Note', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'cat_version_note', '', '', '', 0, '0000-00-00 00:00:00'),
+(495, 'Article Version Note', 'art_version_note', 10, 'text', '', 1, 'Version Note', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'art_version_note', '', '', '', 0, '0000-00-00 00:00:00'),
+(498, 'Tab Profile (Panel)', 'tab_profile', 3, 'tabs', '', 1, 'Profile', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'tab_profile', '', '', '', 0, '0000-00-00 00:00:00'),
+(497, 'Category Hits', 'cat_hits', 11, 'text', '', 1, 'Hits', ' ', 3, '', '', '', '', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', 'joomla_category', '#__categories', 'hits', '', '', '', 0, '0000-00-00 00:00:00'),
+(502, 'Div Start', 'div_start', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_start', '', '', '', 0, '0000-00-00 00:00:00'),
+(503, 'Div In Between', 'div_in_between', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_in_between', '', '', '', 0, '0000-00-00 00:00:00'),
+(504, 'Div End', 'div_end', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_end', '', '', '', 0, '0000-00-00 00:00:00'),
+(505, 'Div Start (2)', 'div_start_2', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_start_2', '', '', '', 0, '0000-00-00 00:00:00'),
+(506, 'Div In Between (2)', 'div_in_between_2', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_in_between_2', '', '', '', 0, '0000-00-00 00:00:00'),
+(507, 'Div End (2)', 'div_end_2', 3, 'div', '', 1, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_end_2', '', '', '', 0, '0000-00-00 00:00:00'),
+(508, 'Div Start (3)', 'div_start_3', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_start_3', '', '', '', 0, '0000-00-00 00:00:00'),
+(509, 'Div In Between (3)', 'div_in_between_3', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_in_between_3', '', '', '', 0, '0000-00-00 00:00:00'),
+(510, 'Div End (3)', 'div_end_3', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_end_3', '', '', '', 0, '0000-00-00 00:00:00'),
+(511, 'Div Start (4)', 'div_start_4', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_start_4', '', '', '', 0, '0000-00-00 00:00:00'),
+(512, 'Div In Between (4)', 'div_in_between_4', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_in_between_4', '', '', '', 0, '0000-00-00 00:00:00'),
+(513, 'Div End (4)', 'div_end_4', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_end_4', '', '', '', 0, '0000-00-00 00:00:00'),
+(514, 'Div Start (5)', 'div_start_5', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_start_5', '', '', '', 0, '0000-00-00 00:00:00'),
+(515, 'Div In Between (5)', 'div_in_between_5', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_in_between_5', '', '', '', 0, '0000-00-00 00:00:00'),
+(516, 'Div End (5)', 'div_end_5', 3, 'div', '', 0, '', ' ', 1, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'div_end_5', '', '', '', 0, '0000-00-00 00:00:00'),
+(517, 'Article Title (Back-end)', 'art_title_backend', 22, 'text', '', 1, 'Title', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'input-xxlarge input-large-text', '', 'standard', 'joomla_article', '#__content', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
+(518, 'Category Title (Back-end)', 'cat_title_backend', 23, 'text', '', 1, 'Title', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'input-xxlarge input-large-text', '', 'standard', 'joomla_category', '#__categories', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
+(519, 'User Name (Back-end)', 'user_name_backend', 24, 'text', '', 1, 'Name', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'input-xxlarge input-large-text', '', 'standard', 'joomla_user', '#__users', 'name', '', '', '', 0, '0000-00-00 00:00:00'),
+(520, 'User Group Title (Back-end)', 'user_group_title_backend', 26, 'text', '', 1, 'Title', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'input-xxlarge input-large-text', '', 'standard', 'joomla_user_group', '#__usergroups', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
+(521, 'Core Task (Exporter)', 'core_task_exporter', 3, 'select_dynamic', '', 0, 'Session', 'Select', 3, 'required', '', '', '', '{"query":"","table":"#__cck_more_sessions","name":"title","where":"extension=\\"com_cck_exporter\\"","value":"id","orderby":"title","orderby_direction":"ASC","attr1":"","attr2":"","attr3":"","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'task_id', '', '', '', 0, '0000-00-00 00:00:00'),
+(522, 'Core Task (Processing)', 'core_task_processing', 3, 'select_dynamic', '', 0, 'Processing', 'Select', 3, 'required', '', '', '', '{"query":"","table":"#__cck_more_toolbox_processings","name":"title","where":"published=1","value":"id","orderby":"title","orderby_direction":"ASC","attr1":"","attr2":"","attr3":"","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'task_id', '', '', '', 0, '0000-00-00 00:00:00');
+
+
+UPDATE `#__cck_core_fields` SET `type` = 'radio', `label` = 'clear', `options` = 'On=1||Off=0', `options2` = '{"options":[]}', `bool2` = '1', `css` = 'btn-group btn-group-yesno', `script` = '' WHERE `id` = 43;
+UPDATE `#__cck_core_fields` SET `options` = 'No Process=0||Resized=optgroup||Crop=crop||Shrink=shrink||Stretch=stretch||Resized Dynamic=optgroup||Crop Dynamic=crop_dynamic||Max Fit=maxfit||Shrink=shrink_dynamic||Stretch=stretch_dynamic' WHERE `id` = 117;
+UPDATE `#__cck_core_fields` SET `options` = 'Resized=optgroup||Crop=crop||Shrink=shrink||Stretch=stretch||Resized Dynamic=optgroup||Crop Dynamic=crop_dynamic||Max Fit=maxfit||Shrink=shrink_dynamic||Stretch=stretch_dynamic' WHERE `id` = 120;
+UPDATE `#__cck_core_fields` SET `css` = 'btn-group btn-group-yesno' WHERE `id` = 222;
+UPDATE `#__cck_core_fields` SET `attributes` = 'onchange="this.form.submit();"' WHERE `id` = 258;
+UPDATE `#__cck_core_fields` SET `options` = 'Title=e_title||Name=e_name||IDS=e_id' WHERE `id` = 259;
+UPDATE `#__cck_core_fields` SET `options` = 'OFF=0||ON=optgroup||Global=1||Self=2' WHERE `id` = 277;
+UPDATE `#__cck_core_fields` SET `attributes` = 'onchange="JCck.Dev.switchDisplay(this); JCck.Dev.doSubmit();"' WHERE `id` = 454;
+UPDATE `#__cck_core_fields` SET `options` = 'Alphanumeric=alnum||Array=array||Float=float||Int=int||String=string||Word=word' WHERE `id` = 264;
+UPDATE `#__cck_core_fields` SET `options` = 'Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Status=state' WHERE `id` = 271;
+
+
+INSERT INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `location`, `storage_location`, `version`, `checked_out`, `checked_out_time`) VALUES
+(35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 'none', 1, 0, '0000-00-00 00:00:00');
+
+
+ALTER IGNORE TABLE `#__cck_store_item_users` ADD `birthdate` DATETIME NOT NULL AFTER `website`;
+ALTER IGNORE TABLE `#__cck_store_item_users` ADD `birthplace` VARCHAR( 255 ) NOT NULL AFTER  `birthdate`;
+
+
+UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field' AND `element` IN ("div");

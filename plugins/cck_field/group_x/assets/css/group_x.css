@@ -1,0 +1,131 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+div.cck_forms.cck_admin div.cck_form.cck_form_group_x {
+    float: left;
+    width: 100%;
+}
+div.collection-group-form div div{
+	clear: both;
+    float: left;
+}
+div.cck_forms.cck_site.cck_group_x div.collection-group-form div div label{
+ 	float: left;
+    line-height: 25px;
+    padding: 0 15px 10px 0;
+    width: 145px;
+}
+div.cck_forms.cck_site.cck_group_x div.collection-group-form div div fieldset{
+    float: left;
+	clear:both;
+	margin:0;
+	padding: 10px 0;	
+}
+div.cck_forms.cck_site.cck_group_x div.collection-group-form div div fieldset label{
+	padding: 0 15px 0 5px ;
+	line-height: 15px;
+	width:auto;
+}
+
+div.cck_contents.cck_content.cck_group_x div.gxi label,
+div.cck_contents.cck_item.cck_group_x div.gxi label {
+	width:145px;
+	float:left;
+}
+
+div.collection-group-form div div a:link.cck_preview, div.collection-group-form div div a:visited.cck_preview, div.collection-group-form div div a:hover.cck_preview{
+	 line-height: 35px;
+}
+div.collection-group-button {
+	float: right;
+	padding-top:13px;
+}
+div.cck_forms.cck_site.cck_group_x div.collection-group-button {
+	float: right;
+	padding-top:5px;
+}
+
+div.adminformlist {
+    float: left;
+    padding-left: 1px;
+    position: relative;
+	width:100%;
+}
+
+div.cck_group_x div.gxi {
+	border-bottom:1px dotted #CCCCCC;
+	margin-bottom:5px !important;
+	overflow:hidden;
+	clear:both;
+	padding-bottom: 5px;
+}
+
+div.cck_group_x div.gx {
+    float: left;
+    padding-left: 1px;
+    position: relative;
+	width:100%;
+}
+
+div.cck_group_x div.elem_gxi {
+    float: left;
+	padding-bottom:5px;
+}
+aside.cck_cgx_button{float:right;width:52px; position:relative;}
+div.cck_button{
+	background: url("../images/del_add_drag.png") no-repeat scroll 0 0 transparent;
+	float: left;
+	height: 16px;
+	width: 16px;
+	display:block;
+	overflow: hidden;
+	position: relative;
+}
+div.cck_button.cck_button_del{
+	cursor:pointer;
+	background-position: 0 0;
+	height: 16px;
+}
+div.cck_button.cck_button_del:hover{
+	cursor:pointer;
+	background-position: 0 -16px;
+	height: 16px;
+}
+div.cck_button.cck_button_add{
+	cursor:pointer;
+	background-position: 0 -32px;
+	height: 16px;
+	margin-left: 2px;
+}
+div.cck_button.cck_button_add:hover{
+	cursor:pointer;
+	background-position: 0 -48px;
+	height: 16px;
+	margin-left: 2px;
+}
+div.cck_button.cck_button_drag{
+	cursor:move;
+	background-position: 0 -64px;
+	height: 16px;
+	margin-left: 2px;
+}
+div.cck_button.cck_button_drag:hover{
+	cursor:move;
+	background-position: 0 -80px;
+	height: 16px;
+	margin-left: 2px;
+}
+div.horizontal_gx{overflow:auto;}
+div.vertical_gx{overflow:auto;}
+
+div.vertical div.horizontal_gx div.cck_forms {
+    float: left;
+    padding:0 10px 10px 0;	
+    width: auto;
+}
+div.cck_cgx_form{ float:left;}

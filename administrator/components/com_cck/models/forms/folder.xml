@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="details" addfieldpath="/libraries/cck/construction/field">
+		<field name="id" type="hidden" default="0" readonly="true" class="readonly"	label="JGLOBAL_FIELD_ID_LABEL" description="JGLOBAL_FIELD_ID_DESC" />
+		<field name="asset_id" type="hidden" filter="unset" />
+		<field id="rules" name="rules" type="rules" label="JFIELD_RULES_LABEL" description="JFIELD_RULES_DESC" filter="rules" class="inputbox" component="com_cck" section="folder" />
+	</fieldset>
+</form>

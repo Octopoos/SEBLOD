@@ -1,0 +1,17 @@
+
+ALTER TABLE `#__cck_core_search_position` ADD `css` VARCHAR( 50 ) NOT NULL AFTER `height`;
+ALTER TABLE `#__cck_core_type_position` ADD `css` VARCHAR( 50 ) NOT NULL AFTER `height`;
+
+INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
+(234, 'Core Class Total', 'core_class_total', 3, 'text', '', 0, 'Class', ' ', 3, '', '', 'total', '', '', 0, 255, 8, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'class_total', '', '', '', 0, '0000-00-00 00:00:00'),
+(235, 'Core Class Table', 'core_class_table', 3, 'text', '', 0, 'Class', ' ', 3, '', '', 'category zebra', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'class_table', '', '', '', 0, '0000-00-00 00:00:00'),
+(236, 'Core Class Table Tr Odd', 'core_class_table_tr_odd', 3, 'text', '', 0, 'Class', ' ', 3, '', '', 'cat-list-row%i', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'class_table_tr_odd', '', '', '', 0, '0000-00-00 00:00:00'),
+(237, 'Core Class Table Tr Even', 'core_class_table_tr_even', 3, 'text', '', 0, 'Class', ' ', 3, '', '', 'cat-list-row%i', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'class_table_tr_even', '', '', '', 0, '0000-00-00 00:00:00'),
+(238, 'Core Class Title', 'core_class_title', 3, 'text', '', 0, 'Class', ' ', 3, '', '', '', '', '', 0, 255, 8, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'class_title', '', '', '', 0, '0000-00-00 00:00:00'),
+(239, 'Core Tag Title', 'core_tag_title', 3, 'select_simple', '', 0, 'Tag', ' ', 3, '', '', 'h2', 'H1=h1||H2=h2||H3=h3', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'tag_title', '', '', '', 0, '0000-00-00 00:00:00');
+
+UPDATE `#__cck_core_fields` SET `options2` = '{"preparecontent":"","prepareform":"require_once JPATH_ADMINISTRATOR.DS. ''components'' .DS. CCK_COM .DS. ''models'' .DS. ''fields'' .DS. ''core.php'';\\r\\n$value = ( $value ) ? $value : ''joomla_article'';\\r\\n$options = array();\\r\\n$options = array_merge( $options, JFormFieldCore::getPluginTypes( ''storage_location'', ''cck_'', false, false, true ) );\\r\\n$form = JHtml::_( ''select.genericlist'', $options, $name, ''class=\\"inputbox select\\" size=\\"1\\" ''.$field->attributes, ''value'', ''text'', $value, $id );","preparestore":""}' WHERE `id` = 66;
+
+-- --------------------------------------------------------
+
+UPDATE `#__template_styles` SET `params` = '{"cck_client_item":"0","class_table":"category zebra","class_table_tr_even":"cat-list-row%i","class_table_tr_odd":"cat-list-row%i"}' WHERE `template` = "seb_table";

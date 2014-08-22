@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CCK_LIST_VIEW_DEFAULT_TITLE" option="COM_CCK_LIST_VIEW_DEFAULT_OPTION">
+		<help key = "..." />
+		<message><![CDATA[COM_CCK_LIST_VIEW_DEFAULT_DESC]]></message>
+	</layout>
+
+	<!-- Request variables. -->
+	<fields name="request">
+		<fieldset name="request" label="COM_CCK_CONFIG_FIELDSET_REQUIRED_SETTINGS" addfieldpath="/libraries/cck/construction/field">
+			<field name="search" type="cck" construction="core_search_type" label="COM_CCK_CONFIG_SEARCH" description="COM_CCK_CONFIG_SEARCH_DESC" id="jform_trigger_search" class="inputbox" required="true" />
+			<field name="task" type="radio" default="search" label="COM_CCK_CONFIG_SEARCH_TASK" description="COM_CCK_CONFIG_SEARCH_TASK_DESC" class="btn-group btn-group-yesno">
+				<option	value="no">JNO</option>
+				<option	value="search">JYES</option>
+			</field>
+		</fieldset>
+	</fields>
+
+	<!-- Parameters object. -->
+	<fields name="params" addfieldpath="/libraries/cck/construction/field">
+		<fieldset name="basic" label="COM_CCK_CONFIG_FIELDSET_BASIC_OPTIONS">
+			<field name="show_list_title" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_LIST_TITLE" description="COM_CCK_CONFIG_SHOW_LIST_TITLE_DESC" class="inputbox" />
+			<field name="tag_list_title" type="cck" construction="core_tag_title" default="" label="" description="" class="inputbox" />
+			<field name="class_list_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" />
+			<field name="cckjs" type="cckjs" label="" description=""
+				   js_appendto="jform_params_show_list_title=J(as tag),#jform_params_tag_list_title,J(with class),#jform_params_class_list_title"
+				   js_isvisiblewhen="div#jform_params_cckjs-more='jform_params_show_list_title','1',false" js_format="html" hidden="true" />
+			<field name="show_list_desc" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_LIST_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_LIST_DESCRIPTION_DESC" class="inputbox" />
+			<field name="list_desc" type="cck" construction="core_description" default="" label="Edit Description" description="..." class="inputbox" cck_selectlabel="Edit"
+				   js_appendto="jform_params_show_list_desc=a.wysiwyg_editor_box"
+				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" />
+			<field name="show_form" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global" cck_options="Hide=0||Prepare=-1||Show=optgroup||Above=1||Below=2"
+				   label="COM_CCK_CONFIG_SHOW_SEARCH_FORM" description="COM_CCK_CONFIG_SHOW_SEARCH_FORM_DESC" class="inputbox" />
+			<field name="auto_redirect" type="cck" construction="core_auto_redirection" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_AUTO_REDIRECTION" description="COM_CCK_CONFIG_AUTO_REDIRECTION_DESC" class="inputbox" />
+			<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="COM_CCK_CONFIG_ORDERING" default="" description="COM_CCK_CONFIG_ORDERING_DESC" class="inputbox" />
+			<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
+				   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
+			
+			<field name="show_items_number" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER" description="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER_DESC" class="inputbox" />
+			<field name="show_items_number_label" type="cck" construction="core_label_total" default="" label="" description="" class="inputbox" />
+			<field name="cckjs2" type="cckjs" label="" description=""
+				   js_appendto="jform_params_show_items_number=J(with label),#jform_params_show_items_number_label"
+				   js_isvisiblewhen="div#jform_params_cckjs2-more='jform_params_show_items_number','1',false" js_format="html" hidden="true" />
+			<field name="class_items_number" type="cck" construction="core_class_total" default="" label="" description="" class="inputbox" />
+			<field name="cckjs3" type="cckjs" label="" description=""
+				   js_appendto="jform_params_show_items_number=J(with label),#jform_params_class_items_number"
+				   js_isvisiblewhen="div#jform_params_cckjs3-more='jform_params_show_items_number','1',false" js_format="html" hidden="true" />
+			<field name="show_pages_number" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_PAGES_NUMBER" description="COM_CCK_CONFIG_SHOW_PAGES_NUMBER_DESC" class="inputbox" />
+			<field name="show_pagination" type="cck" construction="core_show_pagination" default="" cck_selectlabel="Use Global"
+				   label="COM_CCK_CONFIG_SHOW_PAGINATION" description="COM_CCK_CONFIG_SHOW_PAGINATION_DESC" class="inputbox" />
+			<field name="class_pagination" type="cck" construction="core_class_pagination" default="" label="" description="" class="inputbox" 
+				   js_appendto="jform_params_show_pagination=#jform_params_class_pagination" js_isvisiblewhen="div#jform_params_class_pagination-more='jform_params_show_pagination','-1,0,1',false" js_format="html" hidden="true" />
+			
+			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
+		</fieldset>
+		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
+			<field name="live" type="cckhidden" label="" description="" />
+			<field name="variation" type="cckhidden" label="" description="" />
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
+			<option value="0">JNO</option>
+				<option	value="1">JYES</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

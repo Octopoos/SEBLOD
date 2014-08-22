@@ -1,0 +1,197 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/*SITE ONLY*/
+div.cck_forms .inputbox {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 5px;
+}
+div.cck_forms input.inputbox,
+div.cck_forms textarea.inputbox,
+div.cck_forms select.inputbox,
+div.cck_forms button.inputbox {
+    float: left !important;
+    margin: 0 !important;
+	padding: 4px 6px !important;
+    background: none repeat scroll 0 0 #fff !important;
+}
+
+div.cck_forms input.inputbox:focus,
+div.cck_forms textarea.inputbox:focus,
+div.cck_forms select.inputbox:focus,
+div.cck_forms button.inputbox:focus {
+    float: left !important;
+    margin: 0 !important;
+	padding: 4px 6px !important;
+    background: none repeat scroll 0 0 #ffffff !important;
+}
+
+/*SITE DIV.CLEAR*/
+div.vertical div.clear{clear:none;}
+div.horizontal div.clear{clear:both;}
+
+/*SITE GENERIQUE FONT SIZE*/
+div.cck_forms.cck_site div.cck_label,
+div.cck_forms.cck_site div.cck_label label,
+div.cck_forms.cck_site div.cck_form input,
+div.cck_forms.cck_site div.cck_form textarea,
+div.cck_forms.cck_site div.cck_form select,
+div.cck_forms.cck_site div.cck_form option,
+div.cck_forms.cck_site div.cck_form span,
+div.cck_forms.cck_site div.cck_form p,
+div.cck_forms.cck_site div.cck_desc
+{font-size:1em !important;}
+
+/*SITE GENERIQUE LINE-HEIGHT*/
+div.cck_forms.cck_site div.cck_label,
+div.cck_forms.cck_site div.cck_label label
+{line-height:30px;}
+div.cck_forms.cck_site div.cck_form input,
+div.cck_forms.cck_site div.cck_form textarea,
+div.cck_forms.cck_site div.cck_form select,
+div.cck_forms.cck_site div.cck_form option,
+div.cck_forms.cck_site div.cck_form span,
+div.cck_forms.cck_site div.cck_form a.cck_preview,
+div.cck_forms.cck_site div.cck_form span.cck_preview,
+div.cck_forms.cck_site div.cck_desc,
+div.cck_forms.cck_site div.cck_value.cck_value_wysiwyg_editor p,
+div.cck_forms.cck_site div.cck_value
+{line-height:1.2em;}
+
+div.cck_forms.cck_site div.cck_label label{margin-bottom: 0px;}
+
+div.cck_forms.cck_site div.cck_form span[class^="icon-"],
+div.cck_forms.cck_site div.cck_form span[class*=" icon-"] 
+{line-height:1.0em;}
+
+/*SITE GENERIQUE FORM/LABEL/VALUE*/
+div.vertical div.cck_forms{float:left;padding-bottom:10px;width:100%;}
+div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
+div.cck_forms.cck_site div.cck_label{float:left;width:145px;}
+div.cck_forms.cck_site div.cck_form{float:left;width:auto;}
+div.cck_forms.cck_site div.cck_desc{clear:both;width:auto;}
+div.cck_forms.cck_site div.cck_desc p{margin:8px 0px 0px 0px;}
+div.vertical div.cck_forms.cck_site div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
+div.cck_forms.cck_site div.cck_form span.variation_value{line-height:1.2em;}
+div.cck_forms.cck_site div.cck_desc .hasPopover{padding:3px 0 0 5px;}
+
+/*SITE GENERIQUE CALENDAR*/
+div.cck_forms.cck_site div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_site div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+
+/*SITE GENERIQUE CHECKBOX*/
+div.cck_forms.cck_site div.cck_form.cck_form_checkbox fieldset,
+div.cck_forms.cck_site div.cck_form.cck_form_checkbox fieldset.checkboxes{border: none;margin:0;text-align:left;padding:0;}
+div.cck_forms.cck_site div.cck_form.cck_form_checkbox fieldset.checkboxes.vertical input{clear:both;}
+div.cck_forms.cck_site div.cck_form.cck_form_checkbox input{float:left; padding: 1px !important; margin: 5px 5px 0 0 !important; min-height:0;}
+div.cck_forms.cck_site div.cck_form.cck_form_checkbox label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+/*SITE GENERIQUE RADIO*/
+div.cck_forms.cck_site div.cck_form.cck_form_radio fieldset,
+div.cck_forms.cck_site div.cck_form.cck_form_radio fieldset.radio{border: none;margin:0;text-align:left;padding: 0;}
+div.cck_forms.cck_site div.cck_form.cck_form_radio fieldset.radios.vertical input{clear:both;}
+div.cck_forms.cck_site div.cck_form.cck_form_radio input{float:left;margin: 5px 5px 0 0 !important; padding-left:0!important;}
+div.cck_forms.cck_site div.cck_form.cck_form_radio label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+/*SITE GENERIQUE TEXTAREA*/
+div.cck_forms.cck_site div.cck_form.cck_form_textarea textarea{height:auto;}
+
+/*SITE GENERIQUE WYSIWYG*/
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
+div.cck_forms.cck_site div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
+div.cck_forms.cck_site div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,
+div.cck_forms.cck_site div.cck_form.cck_form_field_x a:hover.wysiwyg_editor_box,
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box,
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*SITE GENERIQUE FIELD X*/
+div.cck_forms.cck_site div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
+div.cck_forms.cck_site div.cck_form.cck_form_field_x div.cck_forms div.cck_label label {height:25px;margin:0;}
+div.cck_forms.cck_site div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:5px!important;margin-top:6px!important;padding:1px;}
+
+/*SITE GENERIQUE JFORM MEDIA*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.button2-left a{margin-top:1px!important; margin-left:4px!important;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.media-preview span{margin-left:4px; line-height:26px;}
+
+/*SITE GENERIQUE JFORM USER*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+
+/*SITE GENERIQUE JFORM USER GROUP*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul{ padding:0;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul li label{}
+
+/*ADMIN GENERIQUE JFORM RULES*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul {padding: 0!important;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul li {list-style:none;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:link.jform_rules_box,
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:visited.jform_rules_box,
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*SITE GENERIQUE JOOMLA ROUTE*/
+div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:link.joomla_route_box,
+div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:visited.joomla_route_box,
+div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+
+/*SITE GENERIQUE CAPTCHA MATH*/
+div.cck_forms.cck_site div.cck_form.cck_form_captcha_math span.variation_value{ float:left; padding-right:5px;}
+
+/*SITE GENERIQUE UPLOAD FILE*/
+div.cck_forms.cck_site div.cck_form.cck_form_upload_file div.cck_forms{clear:both;float:none;}
+div.cck_forms.cck_site div.cck_form.cck_form_upload_file span input[type="checkbox"].inputbox{margin-left:5px!important;margin-top:6px!important;padding:1px;}
+div.cck_forms.cck_site div.cck_form.cck_form_upload_file span.linkage {margin-left:3px;}
+
+/*SITE GENERIQUE UPLOAD IMAGE*/
+div.cck_forms.cck_site div.cck_form.cck_form_upload_image div.cck_forms{clear:both;float:none;}
+div.cck_forms.cck_site div.cck_form.cck_form_upload_image span input[type="checkbox"].inputbox{margin-left:5px!important;margin-top:6px!important;padding:1px;}
+div.cck_forms.cck_site div.cck_form.cck_form_upload_image span.linkage {margin-left:3px;}
+
+/*SITE GENERIQUE LINK*/
+div.cck_forms.cck_site div.cck_form.cck_form_link div.cck_forms{clear:both;}
+
+/*SITE GENERIQUE PRODUCTS*/
+div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products{width:100%;}
+
+/*FIELDSET*/
+fieldset div.cck_forms.cck_site{
+ float:left; width:50%; }
+fieldset div.cck_forms.cck_site .cck_form, fieldset div.cck_forms.cck_site .cck_label{
+ padding:5px; } 
+fieldset div.cck_forms.cck_site span.variation_value{
+ float:left; padding-right:5px; }
+fieldset div.cck_forms.cck_site fieldset input.radio,
+fieldset div.cck_forms.cck_site fieldset input.checkbox{
+  }
+fieldset div.cck_forms.cck_site fieldset.radio label, fieldset div.cck_forms.cck_site fieldset.checkboxes label{
+ line-height:100% !important; padding-left:5px;
+ }
+fieldset div.cck_forms.cck_site div.cck_form.cck_form_radio fieldset, fieldset div.cck_forms.cck_site div.cck_form.cck_form_radio fieldset.radio{
+    border: medium none;
+    margin: 0;
+    padding: 5px 0 2px 10px;
+    text-align: left;
+}
+fieldset div.cck_forms.cck_site ul.adminformlist{
+ list-style:none; margin:0;}
+fieldset div.cck_forms.cck_site ul.adminformlist label,
+fieldset div.cck_forms.cck_site ul.adminformlist fieldset.radio label{
+ float:left; line-height:25px;
+ }
+fieldset div.cck_forms.cck_site ul.adminformlist fieldset{
+ margin:0; padding:0; border:none;
+ }
+ 
+/* TEMPORARY.. until a proper group markup */
+ul.adminformlist, ul.adminformlist li {margin:0; padding:0; width:auto; list-style:none;}
+div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0px 5px 0px; line-height:23px; height:30px;}

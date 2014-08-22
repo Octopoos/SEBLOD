@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="cck_storage_location" version="2.5" method="upgrade">
+	<name>plg_cck_storage_location_joomla_article</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.0.0</version>
+	
+	<scriptfile>install/script.php</scriptfile>
+	
+	<files>
+		<folder>classes</folder>
+		<folder>install</folder>
+		<folder>tmpl</folder>
+		
+		<filename plugin="joomla_article">joomla_article.php</filename>
+		<filename>config.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_article.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_article.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_storage_location_joomla_article.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_storage_location_joomla_article.sys.ini</language>
+	</languages>
+	
+	<config>
+		<fields name="params" addfieldpath="/libraries/cck/construction/field">
+			<fieldset name="basic">
+				<field name="base_default-access" type="sql" default="1" label="LIB_CCK_STORAGE_LOCATION_DEFAULT_ACCESS" description="LIB_CCK_STORAGE_LOCATION_DEFAULT_ACCESS_DESC"
+					   key_field="id" value_field="title" class="inputbox" query="select id, title from #__viewlevels order by title ASC">
+				</field>
+				<field name="base_default-created_by" type="sql" default="0" label="LIB_CCK_STORAGE_LOCATION_DEFAULT_AUTHOR" description="LIB_CCK_STORAGE_LOCATION_DEFAULT_AUTHOR_DESC"
+					   key_field="id" value_field="name" class="inputbox" query="select id, name from #__users where id IN (select distinct(user_id) from #__user_usergroup_map where group_id = 8) order by name ASC">
+					<option value="0">JOPTION_USE_DEFAULT</option>
+				</field>
+				<field name="base_default-catid" type="category" default="2" extension="com_content" label="LIB_CCK_STORAGE_LOCATION_DEFAULT_CATEGORY" description="LIB_CCK_STORAGE_LOCATION_DEFAULT_CATEGORY_DESC"
+					   class="inputbox" />
+				<field name="base_default-state" type="list" default="1" label="LIB_CCK_STORAGE_LOCATION_DEFAULT_STATE" description="LIB_CCK_STORAGE_LOCATION_DEFAULT_STATE_DESC" class="inputbox">
+					<option value="1">JPUBLISHED</option>
+					<option value="0">JUNPUBLISHED</option>
+					<option value="2">JARCHIVED</option>
+					<option value="-2">JTRASHED</option>
+				</field>
+				<field name="spacer" type="spacer" hr="false" label="" />
+				<field name="auto_readmore" type="list" default="1" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE" description="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE_DESC" class="inputbox">
+					<option value="1">JYES</option>
+					<option value="2">PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE_LEGACY</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="ordering" type="list" default="0" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_ORDERING" description="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_ORDERING_DESC" class="inputbox">
+					<option value="0">PLG_CCK_STORAGE_LOCATION_OPTION_DEFAULT</option>
+					<option value="1">PLG_CCK_STORAGE_LOCATION_OPTION_LAST</option>
+				</field>
+				<field name="" type="spacer" hr="true" />
+				<field name="item_tag_title" type="cck" construction="core_tag_title" default="h2" label="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS" description="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS_DESC" class="inputbox" />
+				<field name="item_class_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox"  js_appendto="jform_params_item_tag_title" js_format="html" hidden="true" />
+				<field name="item_separator" type="radio" default="1" label="LIB_CCK_STORAGE_LOCATION_ITEM_SEPARATOR" description="LIB_CCK_STORAGE_LOCATION_ITEM_SEPARATOR_DESC" class="btn-group">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+				<field name="item_params" type="radio" default="0" label="LIB_CCK_STORAGE_LOCATION_ITEM_PARAMS" description="LIB_CCK_STORAGE_LOCATION_ITEM_PARAMS_DESC" class="btn-group">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+			</fieldset>
+			
+			<fieldset name="advanced">
+				<field name="group" type="text" default="PLG_CCK_STORAGE_LOCATION_GROUP_JOOMLA" label="LIB_CCK_GROUP_LABEL" size="60" description="LIB_CCK_STORAGE_LOCATION_GROUP_DESC" />
+				<field name="export" type="cckexport" default="" label="LIB_CCK_EXPORT_LABEL" description="LIB_CCK_STORAGE_LOCATION_EXPORT_DESC" />
+			</fieldset>
+		</fields>
+	</config>
+
+	<cck_integration>
+		<component>com_content</component>
+		<options>{"default_type":"article","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}</options>
+		<vars />
+		<view />
+	</cck_integration>
+</extension>

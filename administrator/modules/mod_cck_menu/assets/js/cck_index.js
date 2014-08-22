@@ -1,0 +1,1 @@
+function cckjs_menu_init(a){try{document.execCommand("BackgroundImageCache",false,true)}catch(b){}document.cckjseblod_menu=null;window.addEvent("load",function(){element=$(a);if(!element.hasClass("disabled")){var b=new JCCKjSeblod_Menu(element);document.cckjseblod_menu=b}})}

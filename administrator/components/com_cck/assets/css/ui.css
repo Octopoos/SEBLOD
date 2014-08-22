@@ -1,0 +1,484 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/* UI */
+div.seblod {
+	padding-bottom: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 15px;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:5px;
+	text-align: left;
+}
+div.seblod.inverted { background-color:#f0f0f0; color:#666666; }
+div.seblod.ct{overflow: visible;}
+div.first {
+	margin-top: 0px;
+}
+div.seblod dl.tabs dt {
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	padding-bottom: 5px;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 5px;
+	background-color: #ffffff;
+}
+div.seblod dl.tabs dt.open { 
+	border-bottom-color: #ffffff;
+	color: #146295;
+	font-weight: bold;
+}
+div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist textarea, div.seblod .adminformlist select, div.seblod .adminformlist button { 
+	float: left;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 5px;
+	margin-top: 5px;
+	width: auto;
+	/*font-size: 11px;*/
+}
+div.seblod .adminformlist input.input-small { 
+	width: 150px;
+}
+/*options {overflow:hide !important;}*/
+div.seblod .adminformlist fieldset.radios { 
+	border: 0;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+div.seblod .adminformlist fieldset.radios label { 
+	clear: none;
+	display: inline;
+	float: left;
+	min-width: 30px;
+	width: auto;
+	margin-right: 10px;
+}
+div.seblod .adminformlist fieldset.radios input { 
+	margin-top: 10px;
+}
+div.seblod .adminformlist fieldset.radios.vertical input {
+	clear: left;
+}
+div.seblod .adminformlist fieldset.checkboxes {
+	border: 0;
+	float: left;
+	padding: 0;
+	margin: 0;
+	clear:right;
+}
+div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.checkboxes label {
+	clear: right;
+	min-width: 30px;
+	width: auto;
+	margin-right: 10px;
+}
+body.contentpane.component div.seblod .adminformlist fieldset.checkboxes label {
+	line-height:28px;
+}
+div.seblod .adminformlist fieldset.checkboxes input {
+	padding: 1px;
+	float: left;
+	/*clear: left;*/
+	margin-top: 10px;
+}
+div.seblod .adminformlist fieldset.checkboxes.vertical input {
+	clear: left;
+}
+div.seblod .adminformlist span input[type="checkbox"] {
+	margin-left: 8px;
+	margin-top: 10px;
+}
+fieldset.toggle { 
+	border: 0;
+	float: left;
+	margin: 0;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+fieldset.toggle label {
+	clear: none;
+	display: inline;
+	float: left;
+	min-width: 80px;
+	max-width: 80px;
+	text-align: center;
+	padding: 6px;
+	cursor:pointer;
+	font-size: 11px;
+	font-weight: 700;
+	-webkit-transition: background-color 0.3s linear;
+	-moz-transition: background-color 0.3s linear;
+	-o-transition: background-color 0.3s linear;
+	transition: background-color 0.3s linear;
+	margin-bottom: 0;
+}
+div.seblod .inputbox {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+	padding: 4px 6px;
+}
+div.seblod .thin {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+	padding: 3px;
+}
+div.seblod select.thin {
+	padding-right: 5px !important;
+}
+div.seblod .thin.empty {
+	background-color: #ffffff;
+}
+div.seblod input.thin:focus, div.seblod select.thin:focus, div.seblod textarea.thin:focus { 
+	background-color: #ffffff !important;
+}
+div.seblod textarea.inputbox {
+	font-size: 100%;
+}
+div.seblod .inputbutton {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+	font-size: 12px;
+	height: 23px;
+	padding: 3px 4px 4px 4px;
+	margin-top: 0;
+	position:relative;
+	top:1px;
+}
+div.seblod .adminformlist button.inputbutton {
+	top:0px;
+} 
+div.seblod .adminformlist label {
+	width: 145px;
+	clear: left;
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 5px;
+	line-height: 23px;
+	height:30px;
+}
+div.seblod.horizontal .adminformlist label {
+	width: 70px;
+	text-align:right;
+	padding-right:5px;
+}
+div.seblod.horizontal .adminformlist li {
+	float:left;
+}
+div#bottombody.seblod .adminformlist input {
+}
+body.admin div.seblod .adminformlist fieldset.radios.btn-group { 
+	padding-top:2px;
+}
+body.admin div.seblod .adminformlist fieldset.radios.btn-group input {
+	margin:0;
+}
+body.admin div.seblod .adminformlist fieldset.radios.btn-group label { 
+	clear: none;
+	display: inline;
+	float: left;
+	min-width:0;
+	width: auto;
+	height:auto;
+	line-height:normal;
+	margin:0;
+}
+div.seblod span.legend {
+	color: #08c;
+	font-size: 1.18em;
+	font-weight: 700;
+}
+div.seblod div.legend {
+	color: #08c;
+	font-size: 1.18em;
+	font-weight: 700;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	width:100%;
+}
+div.seblod div.legend .inputbox {
+	font-size: 10px;
+	font-weight: normal;
+}
+div.seblod div.legend span.mini {
+	font-size: 11px;
+	font-weight: normal;
+	margin-left: 8px;
+	font-style: italic;
+}
+div.seblod div.left {
+	text-align:left;
+}
+div.seblod div.center {
+	text-align:center;
+}
+div.seblod div.right {
+	text-align:right;
+}
+div.seblod div.top {
+}
+div.seblod div.top.left.plus, div.seblod div.top.center.plus, div.seblod div.top.right.plus {
+	margin-bottom:6px;	
+}
+div.seblod div.bottom {
+	margin-top:10px;
+}
+div.seblod table.aclmodify-table td, div.seblod table.aclsummary-table td {
+	height: 30px;
+}
+div.seblod div.current {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:5px;
+}
+div.seblod ul.checklist li label { 
+	width: auto;
+}
+div.seblod ul.checklist label { 
+	clear: none;
+}
+div.seblod ul.checklist label { 
+	display: block;
+	float: left;	
+}
+div.seblod ul.checklist input {
+	clear: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 100px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius:3px;
+}
+.adminformlist ul, .adminformlist li {
+	list-style: none;
+}
+ul.adminformlist-1col, ul.adminformlist-2cols {
+	padding-left: 26px !important;
+	float:left;
+	margin:0;
+}
+.adminformlist-1col li {
+	padding: 0 48px 0 0 !important;
+}
+.adminformlist-2cols li {
+  float: left;
+  width: 32em;
+  min-height: 36px;
+  margin: 10px;
+  padding: 0 48px 0 0 !important;
+}
+.adminformlist-2cols li label {
+	min-height: 26px;
+}
+body.admin div.seblod .adminformlist-2cols fieldset.radios.btn-group label { 
+	min-height:0;
+}
+ul.adminformlist li.w100, ul.adminformlist-2cols li.w100 {
+	display: inline-block;
+	width: 100% !important;
+}
+ul.adminformlist li.col2, ul.adminformlist-2cols li.col2 {
+	float: right;
+	position: relative;
+	right: 19px;
+}
+body.contentpane.component ul.adminformlist li.col2, body.contentpane.component ul.adminformlist-2cols li.col2, 
+body.com_cck ul.adminformlist li.col2, body.com_cck ul.adminformlist-2cols li.col2 {
+	right: 52px;
+}
+
+div.seblod .adminformlist li span.variation_value {
+	float: left;
+	line-height: 32px;
+	margin-right: 5px;
+}
+div.seblod .adminformlist li a:link.variation_href,
+div.seblod .adminformlist li a:hover.variation_href,
+div.seblod .adminformlist li a:visited.variation_href {
+	float: left;
+	background: 0px 0px #FFFFFF;
+	border: 1px solid #C0C0C0;
+	border-radius: 3px;
+	font-size: 1em;
+	position:relative;
+	top:4px;
+	padding: 4px;
+}
+div.seblod .adminformlist li a:link.cck_preview, div.seblod .adminformlist li a:visited.cck_preview {
+	float: left;
+	margin-left: 8px;
+	line-height: 32px;
+}
+div.seblod-less {
+	margin-left: 10px;
+	margin-right: 10px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	text-align: left;
+	margin-top:0;
+}
+fieldset.adminform {
+	background-color: #ffffff;
+}
+ul.adminformlist li div.button2-left {
+	margin-top: 6px;
+}
+#ajaxMessage span {
+	color: #146295;
+}
+#ajaxMessage img {
+	padding: 2px 2px 0px 0px;
+}
+.sebwrapper{width:917px; margin:0 auto;}
+div.full div.togglebar{position:relative; left: 91px; padding-top: 14px; float:left;}
+body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important;}
+div.compact div.togglebar{position:relative; left: 200px; padding-top: 14px;}
+div.togglebar > div{float:left; position:relative;}
+div.togglebar fieldset#layer{margin-left: 10px;float:left;}
+ul.spe, ul.spe li{list-style: none outside none; margin: 0; padding: 0;}
+ul.spe li{float:left;}
+ul.spe label{float:left; display:block; line-height: 23px;}
+ul.spe_title li{width:29em;padding-left:7px;}
+ul.spe_title label{width:100px;}
+ul.spe_folder li{width:28em;}
+ul.spe_folder label{width:100px;}
+ul.spe_description li{width:137px;}
+ul.spe_description label{width:80px;}
+ul.spe_state li{width:70px;}
+ul.spe_state label{width:45px;}
+ul.spe_state span.state{ margin-top:4px;}
+ul.spe_name li{width:29em;padding-left:7px;margin-top:15px; clear:left;}
+ul.spe_name label{width:100px;}
+ul.spe_name span.variation_value{line-height: 24px;}
+ul.spe_type li{width:28em; margin-top:15px;}
+ul.spe_type label{width:100px;}
+ul.spe_second li{width:40em;}
+ul.spe_second label{width:100px;}
+ul.spe_third li{width:20em;}
+ul.spe_third label{width:80px;}
+ul.spe_sixth li{width:20em; margin-top:15px;}
+ul.spe_sixth label{width:80px;}
+ul.spe span.variation_value{line-height: 24px;}
+ul.adminformlist span.state{margin-top:8px;}
+ul.adminformlist a > span.state{margin-top:0;}
+.loading{position:absolute; right:50px; top:63px;}
+body:not(.admin):not(.component) ul.spe_description a:link,
+body:not(.admin):not(.component) ul.spe_description a:visited,
+body:not(.admin):not(.component) ul.spe_third a:link,
+body:not(.admin):not(.component) ul.spe_third a:visited,
+body:not(.admin):not(.component) ul.spe_sixth a:link,
+body:not(.admin):not(.component) ul.spe_sixth a:visited{background: none repeat scroll 0 0 #FFFFFF; border: 1px solid silver; font-size: 1em;border-radius: 3px; padding: 4px; line-height:25px;}
+.adminlist.mediamanager tr { height: 28px; }
+.adminlist.mediamanager td { padding: 0 30px; }
+span.c_live,span.c_live2 {width:11px;cursor:pointer;}
+span.c_mat{display:inline-block;}
+.insidebox {color:#a8a8a8; font-size:10px; position:relative; top:6px; left:-19px;}
+div.conditional table.adminlist tr.row2 td {background-color:#f0f0f0;}
+div.conditional table.adminlist tr td.states {vertical-align:top;}
+div.conditional table.adminlist tr td.states .begin{float:left; position:relative; top:8px;}
+div.conditional table.adminlist tr td.states div.conditional_states{padding:0px; height:30px;}
+div.conditional table.adminlist tr td.states div.define{float: right; padding-right:10px;}
+div.conditional table.adminlist tr td.states div.selector{float:right; position:relative; top:4px; margin-right:10px;}
+div.conditional table.adminlist tr td.states div.selector input{padding:2px;}
+div.conditional table.adminlist tr td.ope{font-weight:bold; text-transform:uppercase; padding: 14px 4px 6px 4px; vertical-align:top;}
+div.conditional table.adminlist tr td.ope .inputbox{width:48px; margin-top:12px; padding:1px 2px; text-transform:lowercase}
+div.conditional table.adminlist tr td .inputbox.blue{color:#146295; font-size:1em;}
+div.conditional table.adminlist tr td.triggers {vertical-align:top;}
+div.conditional table.adminlist tr td.triggers div.conditional_conditions{padding:0px; height:30px;}
+div.conditional table.adminlist tr td.triggers span.equal{padding-left: 5px; padding-right: 8px;}
+div.conditional table.adminlist tr td.triggers span.fill{font-size:15px; position:relative; top:2px; cursor:pointer; color:#eb8207;}
+div.conditional table.adminlist tr td span.del{float:right; position:relative; right:4px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/del-default.gif); background-repeat:no-repeat; cursor:pointer; }
+span.add{float:right; position:relative; top:2px; right:6px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/add-default.gif); background-repeat:no-repeat; cursor:pointer; }
+span.star{font-size:1.2em!important;}
+span.star2{color:#eb8207; font-size:0.90em!important; text-transform:uppercase;}
+div.info{float:left;color:#eb8207;}
+ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207; cursor: pointer; font-size:15px; position:relative; top:9px;}
+#layer div.seblod div.attr{padding-top:3px;}
+
+div.seblod div.attr{display:none;float:left;max-width:240px;}
+body.com_cck div.seblod div.attr,
+body.contentpane.component div.seblod div.attr{max-width: 270px;}
+div.seblod input.inputbox.mini{padding:2px;margin-right:3px;}
+div.seblod input.inputbox.mini.valign{margin-top:8px;}
+div.seblod input.inputbox.mini2{padding:2px;margin:0px 7px 5px 0px;}
+div.seblod input.inputbox.mini2.middle{padding:2px;margin:0px 9px 5px 1px;}
+div.seblod.conditional .button-add{display:none;}
+div.seblod input#toggle_attr {position:relative; top:6px;}
+div.seblod label.toggle_attr{clear:none;color:#eb8207;font-size:11px;position:relative;top:2px;}
+div#layer div.seblod label.toggle_attr{width:167px;height:auto; margin-bottom:0px;}
+div.attr span.star{float:left;}
+div.attr input[type="checkbox"]{position:relative; top:3px;margin-left:4px;}
+img#storage_alter_table_notice{position:relative; top:8px;}
+div.seblod span.fill.trigger-value{font-size:15px; font-weight:bold; position:relative; top:8px; left:-22px; cursor:pointer; color:#eb8207;}
+div.seblod input.trigger-type{padding-right: 15px;} 
+.font-size-109{font-size:1.09em;}
+
+/* Joomla 3.x */
+body.com_cck div.seblod div.legend,
+body.com_cck_ecommerce div.seblod div.legend,
+body.com_cck_webservices div.seblod div.legend,
+body.contentpane.component div.seblod div.legend,
+div.accordion div.seblod div.legend {color:#0088CC; font-size:1em;}
+div.accordion div.seblod{border:0;}
+
+body.contentpane.component ul.adminformlist-1col,
+body.contentpane.component ul.adminformlist-2cols{padding-left:0px!important;}
+
+body.com_cck ul.adminformlist-2cols li,
+body.contentpane.component ul.adminformlist-2cols li{padding:0!important; margin:10px 0px 10px 0px; width: 32em;}
+body.com_cck ul.adminformlist-2cols li input[type="text"],
+body.contentpane.component ul.adminformlist-2cols li input[type="text"]{max-width:220px;}
+
+body.com_cck .insidebox, body.contentpane.component .insidebox {top:2px;}
+
+body.com_cck ul.adminformlist li span.c_link,
+body.contentpane.component ul.adminformlist li span.c_link,
+body.com_cck ul.adminformlist li span.c_link2,
+body.contentpane.component ul.adminformlist li span.c_link2 {color:#0088CC;}
+
+body.com_cck div.seblod label.toggle_attr,
+body.contentpane.component div.seblod label.toggle_attr{color:#0088CC;font-size:1em;}
+
+body.com_cck div.seblod input.inputbox.mini2,
+body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 18px 5px 0;}
+body.com_cck div.seblod input.inputbox.mini2.middle,
+body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 19px 5px 2px;}
+
+ul.spe.spe_latest li{width:70px; margin-top: 15px;}
+ul.spe.spe_description .btn{width:76px;}
+ul.spe fieldset.btn-group > label{float:none; display:inline-block; line-height:18px}
+ul.spe fieldset.btn-group > label{width:auto; min-width:25px;}
+ul.spe_state.spe_third li {width: 140px;}
+body.contentpane.component ul.spe_title li,
+body.contentpane.component ul.spe_name li{width:28em;}
+
+body:not(.admin):not(.component) ul.spe fieldset{border:0;}
+body:not(.admin):not(.component) ul.spe fieldset.btn-group > label,
+body:not(.admin):not(.component) ul.spe fieldset.btn-group > input{clear:none; float:left; display:block;}
+body:not(.admin):not(.component) ul.spe fieldset.btn-group > label{display:table;}
+body:not(.admin):not(.component) ul.spe_state li{width:140px;}
+body:not(.admin):not(.component) ul.spe_state fieldset{margin-bottom:0; padding:0;}
+body:not(.admin):not(.component) ul.spe_state.spe_third li {width: 100px;}
+body:not(.admin):not(.component) ul.spe_description:not(.spe_latest) li {width: 100px;}

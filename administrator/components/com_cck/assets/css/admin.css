@@ -1,0 +1,190 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+/* Cpanel */
+div.seblod ul.menu_types{width:600px; margin-left:auto; margin-right:auto; margin-top:8px; padding-left:35px;}
+div#cpanel{padding-left:16px; padding-top:12px; margin-left:auto; margin-right:auto; position:relative;}
+div.cpanel.box{width:640px;margin-top:8px;}
+div.cpanel.full{width:540px; height:195px;}
+div.cpanel.compact{width:540px; height:124px;}
+div.seblod.cpanel_news,div.seblod-less.cpanel_news{margin-left:auto!important;margin-right:auto!important;position:relative;}
+div.cpanel_news.full{width:568px;}
+div.seblod-less.cpanel_news.full{width:600px;}
+div.cpanel_news.compact{width:350px;}
+div.seblod-less.cpanel_news.compact{width:380px;}
+div.seblod-less.cpanel_news.compact div.cpanel.compact{width:270px;}
+div.seblod.beta{background-image: url("../images/beta.png"); background-position:0px 0px; background-repeat:no-repeat;}
+div.seblod.first.cpanel_news{margin-top:0 !important;}
+div#cckOptions, div.accordion-group{margin-bottom:10px;}
+div.cpanel_news div.alert a.close, div.cpanel_news div.alert a.close span{color:#08c; width: 20px; height: 20px; line-height: 22px; text-shadow:none; opacity: 1; font-weight: normal;}
+div.cpanel_news div.alert{color:#08c;}
+div.pane-slider.content ul.inline > li{float:left; margin:0 5px;}
+
+/* Admin */
+.bg-dark div.seblod, .bg-dark div.first {margin: 8px !important;}
+div.width-25 {width:25%;}
+div.limit select {margin-top:0 !important; margin-bottom:0 !important; margin-left:3px;}
+img.grip {cursor: move;}
+#system-message dd ul {-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
+span.qtip_cck {cursor: help;}
+table.adminlist {-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}
+table.adminlist div.title-left {float: left;}
+table.adminlist div.title-right {float: right; padding-top:10px; padding-right:14px;}
+table.adminlist tr td span {font-size: 1.1em;}
+input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius:3px;}
+
+/* switch linkage */
+.switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}
+.switch span.linked {background-image: url("../images/24/icon-24-lock.png");}
+.switch span.notice {background-position:left; background-repeat:no-repeat; text-indent: 25px;}
+.switch span.unlinked {background-image: url("../images/24/icon-24-unlock.png");}
+
+.cck_radius2 {-webkit-border-radius: 2px!important; -moz-border-radius: 2px!important; border-radius: 2px!important;}
+#permissions-sliders ul#rules li h3 {-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
+div.pane-slider.content.pane-down {border-bottom: 1px solid #ccc !important;}
+table.adminlist tr.last td {border-bottom: 1px solid #999999;}
+table.adminlist tr:last-child.last td {border-bottom:none!important;}
+table.adminlist thead tr{height:51px;}
+table.adminlist thead tr.half{height:25px;}
+table.adminlist tbody tr{height:64px;}
+table.adminlist tbody tr.half{height:32px;}
+
+div.preview fieldset.checkboxes, div.preview fieldset.radios{ border: none;margin:0;text-align:left;padding: 0;}
+div.preview fieldset.checkboxes.vertical input.inputbox, div.preview fieldset.radios.vertical input.inputbox{ clear:both;}
+div.preview fieldset.checkboxes input.inputbox, div.preview fieldset.radios input.inputbox{float:left;padding: 1px;margin: 5px 5px 0 0 !important;}
+div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:none;display:block;float:left;line-height:190%;margin:0;padding-right:20px;}
+
+input#storage_field{padding-right: 15px; margin-right:0px;}
+span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-13px; float:left; padding:0; margin:0;}
+span.value-picker{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
+
+table.adminlist td div.title-left{padding-left: 9px;}
+table.adminlist .folder-parent{font-size:0.95em!important;}
+.folder-parent{color:#666666!important; text-transform:uppercase;}
+.storage-format{color:#666666!important; font-size:1em!important; text-transform:capitalize;}
+.elements-count{font-weight:bold; position:relative; top:-6px; left:6px;}
+.edit-view{color:#666666!important;}
+/*.sebwrapper div.collection-group-wrap{padding-left:30px;}*/
+.flt-right{float:right;}
+div.seblod.first div.cck_forms.cck_search div.cck_label label{font-size:1.09em!important;}
+div.how-to-setup {float:right;}
+div.how-to-setup a{color:#eb8207;cursor:help;font-size:10px;text-transform:uppercase;font-weight:bold;}
+div.get-more-online {float:right;margin-top:8px;}
+div.get-more-online a{color:#eb8207;cursor:pointer;font-size:10px;font-weight:bold;}
+div.toggle-selection {float:right;margin-top:10px;}
+div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
+.cck-highlighted{color:#eb8207;}
+.adminformlist-maxwidth{max-width:200px;}
+
+#toggle_more{top:76px;}
+#toggle_more_workshop{top:98px;}
+.toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle.png"); background-repeat:no-repeat;}
+.toggle_more.closed{background-position:0 0;}
+.toggle_more.open{background-position:0 -10px;}
+
+#featured_session{position:relative; top:10px; cursor:pointer;}
+body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session{top:0;}
+.featured_sessions_del{float:right; position:relative; top:-2px; cursor:pointer;}
+
+div.seblod.preview div.cck_forms.cck_admin div.cck_desc{padding-bottom:8px; color:#eb8207;}
+.max-width-200{max-width:200px;}
+.max-width-190{max-width:190px;}
+.max-width-180{max-width:180px;}
+.max-width-150{max-width:150px;}
+span.gtr2{margin-right:16px; visibility:hidden;}
+.mr-3{margin-right:3px!important;}
+.legend-desc{font-size:1.09em; padding-top:10px;}
+
+#bool8.jgrid:not(.btn) span.publish {background-image: url("../images/16/icon-16-language.png");}
+#bool8.jgrid:not(.btn) span.unpublish {background-image: url("../images/16/icon-16-disabled.png");}
+#bool8.jgrid:not(.btn){position:relative; top:8px;}
+
+pre.cck-xml{font-family: "Arial", "Helvetica", sans-serif; font-size:12px; padding-left: 26px;}
+
+/* Joomla 3.x */
+.img-action{max-width: inherit;}
+ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #0088cc; margin-bottom: 6px;}
+ul.nav.nav-list li a[href='#']:hover{background:none;}
+div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
+div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
+#core_filter_go i.icon-checkmark:before{color: #333333;}
+div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
+div.filter-search.pull-left div.chzn-container{padding-right:6px;}
+div.filter-search.pull-left div.chzn-container > a{height:25px;}
+div.btn-toolbar div.chzn-container{padding-right:6px;}
+div.btn-toolbar div#limit_chzn{padding-right:0;}
+body.contentpane.component div.seblod span.publish.icon-flag,
+body.com_cck div.seblod span.publish.icon-flag {color:#51a351;}
+body.contentpane.component div.seblod span.unpublish.icon-flag,
+body.com_cck div.seblod span.unpublish.icon-flag {color:#bd362f;}
+body.contentpane.component div.seblod a.btn.btn-micro.jgrid,
+.hidden-important{display:none!important;}
+body.com_cck div.preview{width:100%;}
+body.com_cck ul.adminformlist{margin: 0;}
+#adminForm .chzn-container-single .chzn-single {-webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
+#adminForm .chzn-container-active .chzn-single-with-drop {-webkit-border-radius:3px 3px 0px 0px; -moz-border-radius:3px 3px 0px 0px; border-radius:3px 3px 0px 0px;}
+#adminForm .chzn-container-single .chzn-drop{-webkit-border-radius:0px 0px 3px 3px; -moz-border-radius:0px 0px 3px 3px; border-radius:0px 0px 3px 3px;}
+body.com_cck div.how-to-setup a,
+body.com_cck_exporter div.how-to-setup a,
+body.com_cck_importer div.how-to-setup a,
+body.contentpane.component div.how-to-setup a,
+body.com_cck span#storage_field_pick,
+body.contentpane.component span#storage_field_pick {color:#0088CC;}
+body.com_cck span#storage_field_pick,
+body.contentpane.component span#storage_field_pick {top:10px;}
+
+body.contentpane.component div.seblod.preview div.cck_forms.cck_admin div.cck_desc{color:#0088CC;}
+body.contentpane.component div.toggle-selection a{color:#0088CC;}
+
+.sly-wrapper .sly { height: 145px; }
+.sly-wrapper .sly ul { height: 100%; }
+.sly-wrapper .sly ul li { float: left; width: 181px; height: 100%; margin: 0 2px 0 0; font-size: 18px; line-height: 28px; }
+.sly-wrapper .sly ul li.span { padding-top:2px; }
+.sly-wrapper .scrollbar { margin: 1em 0; height: 5px; }
+.sly-wrapper .scrollbar .handle { width: 100px; height: 100%; }
+.sly-wrapper .pages{margin-bottom: 0;}
+
+.mini-desc{color:#0088CC; font-size: 11px; font-style: italic;}
+body.com_cck div#status{box-shadow:none;}
+
+div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5px;}
+
+body.com_cck fieldset.checkboxes input,body.com_cck fieldset.radios input{float:left; margin-top:0;}
+body.com_cck fieldset.checkboxes label,body.com_cck fieldset.radios label{float:left;}
+body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.vertical input{float:left; margin-top:0; margin-right:5px; clear:left;}
+.modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
+.modal-footer .btn-group .btn + .btn {padding-top:3px; font-size:0px;}
+
+#toolbar #toolbar-cck-form,
+#toolbar #toolbar-cck-search,
+#toolbar #toolbar-cck-template,
+#toolbar #toolbar-cck-variation,
+#toolbar #toolbar-folder,
+#toolbar #toolbar-archive:nth-last-child(2){float:right;}
+h1.page-title small{color: #fff; font-size:smaller;}
+h1.page-title, h1.page-title small{text-shadow:none;}
+
+body.com_cck fieldset.btn-group-yesno .btn-success:hover,
+body.com_cck fieldset.btn-group-yesno .btn-success:focus,
+body.com_cck fieldset.btn-group-yesno .btn-success:active,
+body.com_cck fieldset.btn-group-yesno .btn-success.active,
+body.com_cck fieldset.btn-group-yesno .btn-success.disabled,
+body.com_cck fieldset.btn-group-yesno .btn-success[disabled] {
+	color: #fff;
+	background-color: #17568c;
+	*background-color: #17568c;
+	border-color: #1a3867 #1a3867 #1a3867;
+}
+
+body.contentpane.component .span{margin-left:0px;}
+body.contentpane.component .span12{margin-left:0px; width:100%;}
+
+body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; position:relative; top:6px;}
+
+body.com_cck span.value-picker {color: #0088CC; top:9px;}
+body:not(.com_cck) div.alert.alert-info > div{text-align: center};

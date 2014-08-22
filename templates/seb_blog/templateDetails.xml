@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="template" version="2.5" method="upgrade">
+	<name>seb_blog</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.0.0</version>
+	
+	<files>
+		<folder>css</folder>
+		<folder>fields</folder>
+		<folder>images</folder>
+		<folder>includes</folder>
+		<folder>languages</folder>
+		<folder>positions</folder>
+		<folder>variations</folder>
+		
+		<filename>config.php</filename>
+		<filename>index.php</filename>
+		<filename>template_picker.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.tpl_seb_blog.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_seb_blog.ini</language>
+	</languages>
+	
+	<positions>
+		<position />
+	</positions>
+	
+	<config addfieldpath="/libraries/cck/construction/field">
+		<fields name="params">
+			<fieldset name="top" label="TPL_SEB_BLOG_LEGEND_TOP">
+				<field name="top_items" type="text" default="1" label="TPL_SEB_BLOG_ITEM_NUM" description="" class="inputbox" size="2" />
+				<field name="top_display" type="cck" construction="core_item_display" default="renderItem" label="TPL_SEB_BLOG_ITEM_DISPLAY" description="" class="inputbox" />
+				<field name="top_display_field_name" type="text" default="" label="" description="" class="inputbox" size="16" />
+				<field name="top_cckjs0" type="cckjs" label="" description=""
+					   js_appendto="params_top_display=#params_top_display_field_name"
+					   js_isvisiblewhen="div#params_top_cckjs0-more='params_top_display','renderItemField_Html,renderItemField_Typo,renderItemField_Value',false" js_format="raw" hidden="true" />
+				<field name="top_columns" type="cck" construction="core_numeric_6" default="1" label="TPL_SEB_BLOG_COLUMN_NUM" description="" class="inputbox" size="2" />
+				<field name="top_column_width" type="cck" construction="core_auto_custom" default="0" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" />
+				<field name="top_column_width_custom" type="text" default="50,50" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" size="16" />
+				<field name="top_cckjs1" type="cckjs" label="" description=""
+					   js_appendto="params_top_column_width=#params_top_column_width_custom,J(percent_sign)"
+					   js_isvisiblewhen="div#params_top_cckjs1-more='params_top_column_width','1',false" js_format="raw" hidden="true" />
+				<field name="top_item_order" type="cck" construction="core_across_down" default="0" label="TPL_SEB_BLOG_ITEM_ORDER" description="" class="inputbox" />
+				<field name="top_item_height" type="cck" construction="core_auto_deepest" default="1" label="TPL_SEB_BLOG_ITEM_HEIGHT" description="" class="inputbox"
+					   js_isdisabledwhen="#params_top_item_height='params_top_item_order','1'" js_format="raw" />
+				<field name="top_cckjs2" type="cckjs" label="" description=""
+					   js_isvisiblewhen="#params_top_column_width,#params_top_item_order,#params_top_item_height='params_top_columns','2,3,4,5,6'" js_format="raw" hidden="true" />
+			</fieldset>
+			<fieldset name="middle" label="TPL_SEB_BLOG_LEGEND_MIDDLE">
+				<field name="middle_items" type="text" default="4" label="TPL_SEB_BLOG_ITEM_NUM" description="" class="inputbox" size="2" />
+				<field name="middle_display" type="cck" construction="core_item_display" default="renderItem" label="TPL_SEB_BLOG_ITEM_DISPLAY" description="" class="inputbox" />
+				<field name="middle_display_field_name" type="text" default="" label="" description="" class="inputbox" size="16" />
+				<field name="middle_cckjs0" type="cckjs" label="" description=""
+					   js_appendto="params_middle_display=#params_middle_display_field_name"
+					   js_isvisiblewhen="div#params_middle_cckjs0-more='params_middle_display','renderItemField_Html,renderItemField_Typo,renderItemField_Value',false" js_format="raw" hidden="true" />
+				<field name="middle_columns" type="cck" construction="core_numeric_6" default="2" label="TPL_SEB_BLOG_COLUMN_NUM" description="" class="inputbox" size="2" />
+				<field name="middle_column_width" type="cck" construction="core_auto_custom" default="0" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" />
+				<field name="middle_column_width_custom" type="text" default="50,50" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" size="16" />
+				<field name="middle_cckjs1" type="cckjs" label="" description=""
+					   js_appendto="params_middle_column_width=#params_middle_column_width_custom,J(percent_sign)"
+					   js_isvisiblewhen="div#params_middle_cckjs1-more='params_middle_column_width','1',false" js_format="raw" hidden="true" />
+				<field name="middle_item_order" type="cck" construction="core_across_down" default="0" label="TPL_SEB_BLOG_ITEM_ORDER" description="" class="inputbox" />
+				<field name="middle_item_height" type="cck" construction="core_auto_deepest" default="1" label="TPL_SEB_BLOG_ITEM_HEIGHT" description="" class="inputbox"
+					   js_isdisabledwhen="#params_middle_item_height='params_middle_item_order','1'" js_format="raw" />
+				<field name="middle_cckjs2" type="cckjs" label="" description=""
+					   js_isvisiblewhen="#params_middle_column_width,#params_middle_item_order,#params_middle_item_height='params_middle_columns','2,3,4,5,6'" js_format="raw" hidden="true" />
+			</fieldset>
+			<fieldset name="bottom" label="TPL_SEB_BLOG_LEGEND_BOTTOM">
+				<field name="bottom_items" type="text" default="" label="TPL_SEB_BLOG_ITEM_NUM" description="" class="inputbox" size="2" />
+				<field name="bottom_display" type="cck" construction="core_item_display" default="renderItem" label="TPL_SEB_BLOG_ITEM_DISPLAY" description="" class="inputbox" />
+				<field name="bottom_display_field_name" type="text" default="" label="" description="" class="inputbox" size="16" />
+				<field name="bottom_cckjs0" type="cckjs" label="" description=""
+					   js_appendto="params_bottom_display=#params_bottom_display_field_name"
+					   js_isvisiblewhen="div#params_bottom_cckjs0-more='params_bottom_display','renderItemField_Html,renderItemField_Typo,renderItemField_Value',false" js_format="raw" hidden="true" />
+				<field name="bottom_columns" type="cck" construction="core_numeric_6" default="3" label="TPL_SEB_BLOG_COLUMN_NUM" description="" class="inputbox" size="2" />
+				<field name="bottom_column_width" type="cck" construction="core_auto_custom" default="0" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" />
+				<field name="bottom_column_width_custom" type="text" default="33,34,33" label="TPL_SEB_BLOG_COLUMN_WIDTH" description="" class="inputbox" size="16" />
+				<field name="bottom_cckjs1" type="cckjs" label="" description=""
+					   js_appendto="params_bottom_column_width=#params_bottom_column_width_custom,J(percent_sign)"
+					   js_isvisiblewhen="div#params_bottom_cckjs1-more='params_bottom_column_width','1',false" js_format="raw" hidden="true" />
+				<field name="bottom_item_order" type="cck" construction="core_across_down" default="0" label="TPL_SEB_BLOG_ITEM_ORDER" description="" class="inputbox" />
+				<field name="bottom_item_height" type="cck" construction="core_auto_deepest" default="1" label="TPL_SEB_BLOG_ITEM_HEIGHT" description="" class="inputbox"
+					   js_isdisabledwhen="#params_bottom_item_height='params_bottom_item_order','1'" js_format="raw" />				
+				<field name="bottom_cckjs2" type="cckjs" label="" description=""
+					   js_isvisiblewhen="#params_bottom_column_width,#params_bottom_item_order,#params_bottom_item_height='params_bottom_columns','2,3,4,5,6'" js_format="raw" hidden="true" />
+			</fieldset>
+			<fieldset name="items" label="TPL_SEB_BLOG_LEGEND_ITEMS">
+				<field name="cck_client_item" type="hidden" default="1" />
+				<field name="debug" type="hidden" default="0" label="Debug" description="" />
+				<field name="item_margin" type="cck" construction="core_position_margin" default="8" more="px" label="TPL_SEB_BLOG_MARGIN" description="" class="inputbox" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -1,0 +1,5 @@
+
+INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
+(463, 'Core Dev Color', 'core_dev_color', 3, 'colorpicker', '', 0, 'clear', ' ', 3, '', '', '', '', '', 0, 255, 16, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'color', '', '', '', 0, '0000-00-00 00:00:00');
+
+UPDATE `#__cck_core_fields` SET `options` = "Checkbox=selection||Featured=featured||Status=state" WHERE `id` = 271;

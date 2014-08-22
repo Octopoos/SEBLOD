@@ -1,0 +1,84 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+**/
+
+div.cck_forms.cck_admin div.cck_form.cck_form_group {
+    float: left;
+    width: 100%;
+}
+div.collection-group-form div div{
+	clear: both;
+    float: left;
+}
+div.cck_forms.cck_site.cck_group div.collection-group-form div div label{
+ 	float: left;
+    line-height: 25px;
+    padding: 0 15px 10px 0;
+    width: 145px;
+}
+div.cck_forms.cck_site.cck_group div.collection-group-form div div fieldset{
+    float: left;
+	clear:both;
+	margin:0;
+	padding: 10px 0;	
+}
+div.cck_forms.cck_site.cck_group div.collection-group-form div div fieldset label{
+	padding: 0 15px 0 5px ;
+	line-height: 15px;
+	width:auto;
+}
+
+div.cck_contents.cck_content.cck_group div.gxi label,
+div.cck_contents.cck_item.cck_group div.gxi label {
+	width:145px;
+	float:left;
+}
+
+div.collection-group-form div div a:link.cck_preview, div.collection-group-form div div a:visited.cck_preview, div.collection-group-form div div a:hover.cck_preview{
+	 line-height: 35px;
+}
+div.collection-group-button {
+	float: right;
+	padding-top:13px;
+}
+div.cck_forms.cck_site.cck_group div.collection-group-button {
+	float: right;
+	padding-top:5px;
+}
+
+div.adminformlist {
+    float: left;
+    padding-left: 1px;
+    position: relative;
+	width:100%;
+}
+
+div.cck_group div.gxi {
+	overflow:hidden;
+	clear:both;
+}
+
+div.cck_group div.gx {
+    float: left;
+    padding-left: 1px;
+    position: relative;
+	width:100%;
+}
+
+div.cck_group div.elem_gxi {
+    float: left;
+	padding-bottom:5px;
+}
+div.horizontal_gx{}
+div.vertical_gx{}
+
+div.vertical div.horizontal_gx div.cck_forms {
+    float: left;
+    padding:0 10px 10px 0;	
+    width: auto;
+}
+div.cck_cgx_form{ float:left;}

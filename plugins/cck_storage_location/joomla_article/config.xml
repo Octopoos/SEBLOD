@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="integration">
+		<field name="multilanguage" type="cck" construction="core_dev_radio" default="0" label="LIB_CCK_INTEGRATION_MULTILANGUAGE"
+			description="LIB_CCK_INTEGRATION_MULTILANGUAGE_DESC" cck_options="Yes=1||No=0" />
+	</fieldset>
+</config>

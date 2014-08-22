@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="cck_storage_location" version="2.5" method="upgrade">
+	<name>plg_cck_storage_location_%name%</name>
+	<author>%author%</author>
+	<authorEmail>%author_email%</authorEmail>
+	<authorUrl>%author_url%</authorUrl>
+	<copyright>%copyright%</copyright>
+	<license>%license%</license>
+	<creationDate>%creation_date%</creationDate>
+	<description>%description%</description>
+	<version>%version%</version>
+	
+	<scriptfile>install/script.php</scriptfile>
+	
+	<files>
+		<folder>classes</folder>
+		<folder>install</folder>
+		<folder>tmpl</folder>
+		
+		<filename plugin="%name%">%name%.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_%name%.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_%name%.sys.ini</language>
+	</languages>
+	
+	<config>
+		<fields name="params" addfieldpath="/libraries/cck/construction/field">
+			<fieldset name="basic">
+				<field name="item_tag_title" type="cck" construction="core_tag_title" default="h2" label="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS" description="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS_DESC" class="inputbox" />
+				<field name="item_class_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox"  js_appendto="jform_params_item_tag_title" js_format="html" hidden="true" />
+				<field name="item_separator" type="radio" default="1" label="LIB_CCK_STORAGE_LOCATION_ITEM_SEPARATOR" description="LIB_CCK_STORAGE_LOCATION_ITEM_SEPARATOR_DESC" class="btn-group">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+			</fieldset>
+			
+			<fieldset name="advanced">
+				<field name="group" type="text" default="PLG_CCK_STORAGE_LOCATION_GROUP_%GROUP%" label="LIB_CCK_GROUP_LABEL" size="60" description="LIB_CCK_STORAGE_LOCATION_GROUP_DESC" />
+				<field name="export" type="cckexport" default="" label="LIB_CCK_EXPORT_LABEL" description="LIB_CCK_STORAGE_LOCATION_EXPORT_DESC" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>
