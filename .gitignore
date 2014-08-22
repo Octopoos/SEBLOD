@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-######## Joomla! 3.x
+######## Joomla!
+
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_admin/*
@@ -1007,6 +1008,7 @@
 <<<<<<< HEAD
 
 ######## SublimeText
+
 # workspace files are user-specific
 *.sublime-workspace
 
@@ -1018,6 +1020,7 @@
 sftp-config.json
 
 ######## OSX
+
 .DS_Store
 .AppleDouble
 .LSOverride
