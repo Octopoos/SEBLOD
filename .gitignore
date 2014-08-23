@@ -6,7 +6,6 @@
 /administrator/components/com_admin/*
 /administrator/components/com_ajax/*
 =======
-/.gitignore
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_admin/*
