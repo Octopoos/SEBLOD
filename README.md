@@ -6,7 +6,9 @@ SEBLOD is a Web Application Builder &amp; Content Construction Kit (CCK) for Joo
 Getting Started
 ======
 
-http://www.seblod.com
+<a href="http://www.seblod.com" target="_blank">Homepage</a>
+<a href="http://www.seblod.com/resources/manuals" target="_blank">Manuals</a>
+<a href="http://www.seblod.com/resources/videos" target="_blank">Videos</a>
 
 Useful links
 ======
