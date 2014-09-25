@@ -52,7 +52,6 @@
 /administrator/components/index.html
 /administrator/help/*
 /administrator/includes/*
-/administrator/language/en-GB/
 /administrator/language/en-GB/en-GB.com_admin.ini
 /administrator/language/en-GB/en-GB.com_admin.sys.ini
 <<<<<<< HEAD
@@ -309,7 +308,6 @@
 /administrator/language/en-GB/en-GB.xml
 /administrator/language/en-GB/index.html
 /administrator/language/en-GB/install.xml
-/administrator/language/fr-FR/fr-FR/
 /administrator/language/fr-FR/fr-FR.com_admin.ini
 /administrator/language/fr-FR/fr-FR.com_admin.sys.ini
 /administrator/language/fr-FR/fr-FR.com_ajax.ini
