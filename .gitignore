@@ -1001,8 +1001,10 @@
 /templates/index.html
 /tmp/*
 /configuration.php
+/CONTRIBUTING.md
 /index.php
 /joomla.xml
+/robots.txt.dist
 /*.txt
 <<<<<<< HEAD
 
