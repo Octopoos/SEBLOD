@@ -22,6 +22,8 @@ class CCKController extends JControllerLegacy
 
 		$this->registerTask( 'apply', 'save' );
 		$this->registerTask( 'save2new', 'save' );
+		$this->registerTask( 'save2redirect', 'save' );
+		$this->registerTask( 'save2skip', 'save' );
 		$this->registerTask( 'save2view', 'save' );
 	}
 
@@ -391,7 +393,7 @@ class CCKController extends JControllerLegacy
 				$msg		=	'';
 				$msgType	=	'';
 			}
-			if ( $config['stage'] > -1 ) {
+			if ( $config['stage'] > -1 && $task != 'save2skip' ) {
 				if ( $config['url'] ) {
 					$link	=	$config['url'];
 				} elseif ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
@@ -405,7 +407,11 @@ class CCKController extends JControllerLegacy
 					$link	=	JRoute::_( $link );
 				}
 				if ( $link != '' ) {
-					$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
+					if ( $msg != '' ) {
+						$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
+					} else {
+						$this->setRedirect( htmlspecialchars_decode( $link ) );
+					}
 					return;
 				}
 			}
@@ -428,6 +434,9 @@ class CCKController extends JControllerLegacy
 		} elseif ( $task == 'save2view' ) {
 			$link		=	'';
 			$redirect	=	'content';
+		} elseif ( $task == 'save2redirect' ) {
+			$link		=	'';
+			$redirect	=	'';
 		}
 		if ( !$link ) {
 			switch ( $redirect ) {
@@ -491,14 +500,20 @@ class CCKController extends JControllerLegacy
 		if ( $id ) {
 			$char	=	( strpos( $link, '?' ) > 0 ) ? '&' : '?';
 			if ( isset( $config['thanks'] ) ) {
-				$thanks			=	( @$config['thanks']->name ) ? $config['thanks']->name : 'thanks';
-				$thanks_value	=	( @$config['thanks']->value ) ? $config['thanks']->value : $preconfig['type'];
-				$link			.=	$char.$thanks.'='.$thanks_value;
+				if ( !empty( $config['thanks'] ) ) {
+					$thanks			=	( @$config['thanks']->name ) ? $config['thanks']->name : 'thanks';
+					$thanks_value	=	( @$config['thanks']->value ) ? $config['thanks']->value : $preconfig['type'];
+					$link			.=	$char.$thanks.'='.$thanks_value;
+				}
 			} else {
 				$link			.=	$char.'thanks='.$preconfig['type'];
 			}
 		}
-		$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
+		if ( $msg != '' ) {
+			$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
+		} else {
+			$this->setRedirect( htmlspecialchars_decode( $link ) );
+		}
 	}
 	
 	// search

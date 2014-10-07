@@ -83,8 +83,8 @@ function CckParseRoute( $segments )
 		$vars['layout']	=	'edit';
 		$vars['type']	=	$segments[1];
 	} else {
-		$legacy	=	0;
-		if ( !( $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] = 'list' ) ) {
+		$legacy	=	0; // check later
+		if ( !( $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] == 'list' ) ) {
 			$legacy	=	0;
 		}
 		if ( !$legacy ) {
