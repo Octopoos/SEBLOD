@@ -230,8 +230,8 @@ class CCK_Item
 			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
 		}
 
-		$pos2 = $this->path.'positions/'.$this->type.'/list/'.$position.'.php';
-		$pos1 = $this->path.'positions/'.$position.'.php';
+		$pos2		=	$this->path.'positions/'.$this->type.'/list/'.$position.'.php';
+		$pos1 		=	$this->path.'positions/'.$position.'.php';
 		
 		if ( $this->isFile( $pos2 ) && ! $force ) {
 			$html	.=	$this->renderPos( $pos2 );
