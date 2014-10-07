@@ -39,7 +39,7 @@ class CCK_Item
 		$this->config		=	array();
 		$this->id			=	'cck'.$pk;
 		$this->mode			=	'content';
-		$this->path			=	JPATH_THEMES.'/'.$template.'/';
+		$this->path 		= 	JPATH_SITE.'/templates/'.$template;
 		$this->path_lib		=	dirname(__FILE__);
 		$this->template		=	$template;
 		$this->theme		=	JFactory::getApplication()->getTemplate();
@@ -229,7 +229,7 @@ class CCK_Item
 		if ( ! $variation ) {
 			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
 		}
-		
+
 		$pos2		=	$this->path.'/positions/'.$this->type.'/list/'.$position.'.php';
 		$pos1		=	$this->path.'/positions/'.$position.'.php';
 		
