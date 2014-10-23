@@ -19,4 +19,4 @@ Going Further
 
 Get Involved?
 ======
-Anyone that want to help and to get involved in the development on SEBLOD should use the "Dev" branch, and Pull Request only on the "Dev" branch. Any PR on the "Master" or "Next" branches will be closed.
+Anyone that want to help & get involved in the development of SEBLOD should use the "Dev" branch, and Pull Request only to the "Dev" branch. Any PR to the "Master" or "Next" branches will be closed.
