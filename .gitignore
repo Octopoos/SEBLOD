@@ -943,7 +943,9 @@ Temporary Items
 
 /administrator/components/com_cck_packager/*
 /administrator/language/en-GB/en-GB.com_cck_packager.ini
+/administrator/language/en-GB/en-GB.com_cck_packager.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cck_packager.ini
+/administrator/language/fr-FR/fr-FR.com_cck_packager.sys.ini
 /components/com_cck_packager/*
 /language/en-GB/en-GB.com_cck_packager.ini
 /language/fr-FR/fr-FR.com_cck_packager.ini
