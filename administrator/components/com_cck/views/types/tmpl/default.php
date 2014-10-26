@@ -10,19 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
-$uix		=	JCck::getUIX();
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$label		=	strtolower( JText::_( 'COM_CCK_FIELDS' ) );
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$title2		=	JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$uix			=	JCck::getUIX();
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$label			=	strtolower( JText::_( 'COM_CCK_FIELDS' ) );
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$template_name	=	Helper_Admin::getDefaultTemplate();
+$title2			=	JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' );
+$top			=	( !JCck::on() ) ? 'border-top' : 'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_folder_filter', 'core_state_filter', 'core_folder', 'core_dev_text', 'core_storage_location2', 'core_client_filter' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
@@ -178,10 +179,10 @@ Helper_Display::quickCopyright();
 (function ($){
 	JCck.Dev = {
 		addNew: function(id) {
-			var tpl_a = "seb_one";
-			var tpl_s = "seb_one";
-			var tpl_c = "seb_one";
-			var tpl_i = "seb_one";
+			var tpl_a = "<?php echo $template_name; ?>";
+			var tpl_s = "<?php echo $template_name; ?>";
+			var tpl_c = "<?php echo $template_name; ?>";
+			var tpl_i = "<?php echo $template_name; ?>";
 			var url = "index.php?option=com_cck&task=type.add&skeleton_id="+id+"&tpl_a="+tpl_a+"&tpl_s="+tpl_s+"&tpl_c="+tpl_c+"&tpl_i="+tpl_i;
 			window.location.href = url;
 			return false;

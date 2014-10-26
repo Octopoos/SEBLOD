@@ -68,6 +68,7 @@ class JCckPluginLocation extends JPlugin
 		
 		static $already		=	0;
 		$config['author']	=	( (int)$config['author'] > 0 ) ? $config['author'] : JCck::getConfig_Param( 'integration_user_default_author', 42 );
+		$config['parent']	=	( isset( $config['parent'] ) && (int)$config['parent'] > 0 ) ? $config['parent'] : 0;
 		$table				=	$location['_']->table;
 
 		// Core

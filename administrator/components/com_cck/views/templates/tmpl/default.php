@@ -48,9 +48,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_POSITIONS' ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_VARIATIONS' ); ?></th>
 			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.mode', $listDir, $listOrder ); ?></th>
+			<th width="10%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_DETAILS' ); ?></th>
+			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_FEATURED', 'a.featured', $listDir, $listOrder ); ?></th>
 			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -66,10 +66,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEditOwn		=	'';
 		
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
-		$link2			=	JRoute::_( JURI::root().'/templates/'.$item->name.'/template_preview.png' );
+		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file='.JURI::root().'/templates/'.$item->name.'/template_preview.png' );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
-		
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
@@ -112,39 +111,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 										: '<span>' . $this->escape( $item->folder_title ) . '</span>' . $folder_parent;
                 ?>
 			</td>
-			<td class="center hidden-phone">
-	            <?php
-				$positions	=	'-';
-                $path		=	JPATH_SITE.'/templates/'.$item->name.'/templateDetails.xml';
-				if ( file_exists( $path ) ) {
-					$xml	=	simplexml_load_file( $path );
-					if ( isset( $xml->positions[0] ) ) {
-						$count		=	count( $xml->positions[0] );
-						$positions	=	( $count > 0 ) ? $count : '-';
-					}
-				}
-				$overrides	=	'';
-				$path		=	JPATH_SITE.'/templates/'.$item->name.'/positions';
-				if ( file_exists( $path ) ) {
-					$overrides	=	JFolder::files( $path, '^[^_]*\.php$', true, false );
-					$count		=	count( $overrides );
-					$overrides	=	( $count > 0 ) ? ' ('.$count.')' : '';
-				}
-				echo $positions.$overrides;
-                ?>
-			</td>
-			<td class="center hidden-phone">
-				<?php
-				$variations	=	'-';
-				$path		=	JPATH_SITE.'/templates/'.$item->name.'/variations';
-				if ( file_exists( $path ) ) {
-					$variations	=	JFolder::folders( $path, '.', false, false );
-					$count		=	count( $variations );
-					$variations	=	( $count > 0 ) ? $count : '-';
-				}
-				echo $variations;
-				?>
-			</td>
 			<td class="center hidden-phone small">
 				<?php
 				switch ( $item->mode ) {
@@ -154,6 +120,35 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				}
                 ?>
 			</td>
+			<td class="center hidden-phone small">
+	            <?php
+				$positions	=	'-';
+                $path		=	JPATH_SITE.'/templates/'.$item->name.'/templateDetails.xml';
+				if ( file_exists( $path ) ) {
+					$xml	=	simplexml_load_file( $path );
+					if ( isset( $xml->positions[0] ) ) {
+						$count		=	count( $xml->positions[0] );
+						$positions	=	( $count > 0 ) ? JText::_( 'COM_CCK_POSITIONS' ).': '.$count : '-';
+					}
+				}
+				$overrides	=	'-';
+				$path		=	JPATH_SITE.'/templates/'.$item->name.'/positions';
+				if ( file_exists( $path ) ) {
+					$overrides	=	JFolder::files( $path, '^[^_]*\.php$', true, false );
+					$count		=	count( $overrides );
+					$overrides	=	( $count > 0 ) ? JText::_( 'COM_CCK_OVERRIDES' ).': '.$count : '-';
+				}
+				$variations	=	'-';
+				$path		=	JPATH_SITE.'/templates/'.$item->name.'/variations';
+				if ( file_exists( $path ) ) {
+					$variations	=	JFolder::folders( $path, '.', false, false );
+					$count		=	count( $variations );
+					$variations	=	( $count > 0 ) ? JText::_( 'COM_CCK_VARIATIONS' ).': '.$count : '-';
+				}
+				echo $overrides.'<br />'.$positions.'<br />'.$variations;
+				?>
+			</td>
+			<td class="center hidden-phone"><?php Helper_Display::quickJGrid( 'featured', $item->featured, $i, false ); ?></td>
 			<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>

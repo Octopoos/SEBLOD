@@ -13,6 +13,56 @@ defined( '_JEXEC' ) or die;
 // JCckDev
 abstract class JCckDev
 {
+	public static $_urls		=	array();
+	
+	// addScript
+	public static function addScript( $url, $type = "text/javascript", $defer = false, $async = false )
+	{
+		$app	=	JFactory::getApplication();
+
+		if ( !isset( $app->cck_document ) ) {
+			$app->cck_document	=	array();
+		}
+		
+		// Make sure to have only one inclusion of special external scripts
+		if ( strpos( $url, 'http' ) !== false ) {
+			if ( strpos( $url, '//maps.googleapis.com/maps/api/js?' ) !== false ) {
+				if ( isset( self::$_urls['google_maps'] ) ) {
+					$cur		=	self::$_urls['google_maps'];
+					$vars2		=	JCckDevHelper::getUrlVars( $url );
+					if ( !$vars2->def( 'libraries' ) ) {
+						return;
+					}
+					$vars		=	JCckDevHelper::getUrlVars( $cur );
+					$libraries	=	array();
+					$libraries[$vars->get( 'libraries' )]	=	'';
+					$libraries[$vars2->get( 'libraries' )]	=	'';
+					$libraries	=	 array_keys( $libraries );
+					$url		=	str_replace( 'libraries='.$vars2->get( 'libraries' ), 'libraries='.implode( ',', $libraries ), $url );
+					unset( $app->cck_document['scripts'][$cur] );
+				}
+				self::$_urls['google_maps']	=	$url;
+			}
+		}
+		
+		$app->cck_document['scripts'][$url]['mime']			=	$type;
+		$app->cck_document['scripts'][$url]['defer']		=	$defer;
+		$app->cck_document['scripts'][$url]['async']		=	$async;
+	}
+
+	// addStyleSheet
+	public static function addStyleSheet( $url, $type = 'text/css', $media = null, $attribs = array() )
+	{
+		$app	=	JFactory::getApplication();
+
+		if ( !isset( $app->cck_document ) ) {
+			$app->cck_document	=	array();
+		}
+		$app->cck_document['styleSheets'][$url]['mime']		=	$type;
+		$app->cck_document['styleSheets'][$url]['media']	=	$media;
+		$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+	}
+
 	// forceStorage
 	public static function forceStorage( $value = 'none' )
 	{
@@ -340,6 +390,8 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
+		// require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php'; // todo: include for manual use of JCckDev (but not for add-on.. :/)
+		
 		Helper_Include::addValidation( $config['validation'], $config['validation_options'], $id );
 		
 		if ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
@@ -543,7 +595,7 @@ abstract class JCckDev
 	}
 	
 	// toSafeSTRING
-	public static function toSafeSTRING( $string, $char = '_' )
+	public static function toSafeSTRING( $string, $char = '_', $case = 0 )
 	{
 		$len	=	strlen( $char );
 		if ( $len > 1 ) {
@@ -553,15 +605,24 @@ abstract class JCckDev
 			}
 			$char	=	$chars[0];
 			$str	=	str_replace( $char, ' ', $string );
-			$str	=	JFactory::getLanguage()->transliterate( $str );
+			if ( $case != 2 ) {
+				$str	=	JFactory::getLanguage()->transliterate( $str );	
+			}
 			$str	=	preg_replace( array( '/\s+/', '/[^A-Za-z0-9'.$chars.']/' ), array( $char, '' ), $str );
 		} else {
 			$str	=	str_replace( $char, ' ', $string );
-			$str	=	JFactory::getLanguage()->transliterate( $str );
+			if ( $case != 2 ) {
+				$str	=	JFactory::getLanguage()->transliterate( $str );
+			}
 			$str	=	preg_replace( array( '/\s+/', '/[^A-Za-z0-9'.$char.']/' ), array( $char, '' ), $str );
 		}
-		$str		=	trim( strtolower( $str ) );
-		
+		if ( $case == 1 ) {
+			$str	=	strtoupper( $str );
+		} elseif ( $case == 0 ) {
+			$str	=	strtolower( $str );
+		}
+		$str		=	trim( $str );
+
 		return $str;
 	}
 	

@@ -353,7 +353,7 @@ ul.adminformlist li div.button2-left {
 }
 .sebwrapper{width:917px; margin:0 auto;}
 div.full div.togglebar{position:relative; left: 91px; padding-top: 14px; float:left;}
-body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important;}
+body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important; padding: 0;}
 div.compact div.togglebar{position:relative; left: 200px; padding-top: 14px;}
 div.togglebar > div{float:left; position:relative;}
 div.togglebar fieldset#layer{margin-left: 10px;float:left;}

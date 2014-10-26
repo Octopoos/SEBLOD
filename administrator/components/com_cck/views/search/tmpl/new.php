@@ -21,6 +21,7 @@ if ( count( $options2 ) ) {
 	$options	=	array_merge( $options, $options2 );
 	$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 }
+$template			=	Helper_Admin::getDefaultTemplate();
 $lists['featured']	=	JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox" size="1"', 'value', 'text', '', 'featured' );
 
 $doc	=	JFactory::getDocument();
@@ -61,10 +62,10 @@ $doc->addScriptDeclaration( $js );
 </div>
 <div class="clr"></div>
 
-<input type="hidden" id="tpl_search" name="tpl_search" value="seb_one" />
-<input type="hidden" id="tpl_filter" name="tpl_filter" value="seb_one" />
+<input type="hidden" id="tpl_search" name="tpl_search" value="<?php echo $template; ?>" />
+<input type="hidden" id="tpl_filter" name="tpl_filter" value="<?php echo $template; ?>" />
 <input type="hidden" id="tpl_list" name="tpl_list" value="" />
-<input type="hidden" id="tpl_item" name="tpl_item" value="seb_one" />
+<input type="hidden" id="tpl_item" name="tpl_item" value="<?php echo $template; ?>" />
 <input type="hidden" id="task" name="task" value="" />
 <?php echo JHtml::_('form.token'); ?>
 </form>

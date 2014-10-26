@@ -19,6 +19,7 @@ $options2			=	Helper_Admin::getFolderOptions( false, false, true, true, '', true
 if ( count( $options2 ) ) {
 	$options		=	array_merge( $options, $options2 );
 }
+$template			=	Helper_Admin::getDefaultTemplate();
 $lists['featured']	=	JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox" size="1"', 'value', 'text', 10, 'featured' );
 
 $doc	=	JFactory::getDocument();
@@ -59,10 +60,10 @@ $doc->addScriptDeclaration( $js );
 </div>
 <div class="clr"></div>
 
-<input type="hidden" id="tpl_admin" name="tpl_admin" value="seb_one" />
-<input type="hidden" id="tpl_site" name="tpl_site" value="seb_one" />
-<input type="hidden" id="tpl_content" name="tpl_content" value="seb_one" />
-<input type="hidden" id="tpl_intro" name="tpl_intro" value="seb_one" />
+<input type="hidden" id="tpl_admin" name="tpl_admin" value="<?php echo $template; ?>" />
+<input type="hidden" id="tpl_site" name="tpl_site" value="<?php echo $template; ?>" />
+<input type="hidden" id="tpl_content" name="tpl_content" value="<?php echo $template; ?>" />
+<input type="hidden" id="tpl_intro" name="tpl_intro" value="<?php echo $template; ?>" />
 <input type="hidden" id="task" name="task" value="" />
 <?php echo JHtml::_('form.token'); ?>
 </form>

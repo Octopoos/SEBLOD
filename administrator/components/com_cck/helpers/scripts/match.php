@@ -60,6 +60,7 @@ $js		=	'
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
 					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact");
 					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each");
+					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
 			})(jQuery);
 			';
@@ -91,6 +92,12 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
 		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
+
+		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Latitude Field', 'storage_field'=>'match_options[fieldname1]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Longitude Field', 'storage_field'=>'match_options[fieldname2]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Radius Field', 'storage_field'=>'match_options[fieldname3]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Unit', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Kilometers=0||Miles=1', 'storage_field'=>'match_options[var_unit]', 'css'=>'match_options' ) );
         ?>
     </ul>
 </div>

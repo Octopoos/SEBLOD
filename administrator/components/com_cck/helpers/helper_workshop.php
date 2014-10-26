@@ -71,7 +71,7 @@ class Helper_Workshop
                     <div class="pane ph3 hide"><div><?php echo JText::_( 'COM_CCK_STAGE' ); ?></div><div><?php echo JText::_( 'COM_CCK_MATCH' ); ?></div></div>
                     <div class="pane ph2 hide"><div><?php echo JText::_( 'COM_CCK_LIVE_VALUE' ); ?></div><div><?php echo JText::_( 'COM_CCK_LIVE' ); ?></div></div>
                     <div class="pane ph1"><div><?php echo JText::_( 'COM_CCK_VARIATION' ); ?></div><div><?php echo JText::_( 'COM_CCK_LABEL' ); ?></div></div>
-					<div class="pane ph11 hide"><div><?php echo JText::_( 'COM_CCK_WIDTH_HEIGHT_PX_PC' ); ?></div><div><?php echo '-'; ?></div></div>
+					<div class="pane ph11 hide"><div><?php echo JText::_( 'COM_CCK_WIDTH_HEIGHT_PX_PC' ); ?></div><div><?php echo JText::_( 'COM_CCK_CLASS' ); ?></div></div>
                 <?php } ?>
                 </li>
             </ul>
@@ -186,11 +186,25 @@ class Helper_Workshop
 	{
 		static $styles	=	array();
 		
+		if ( !$template ) {
+			$template			=	self::getDefaultTemplate();
+		}
 		if ( !isset( $styles[$template] ) ) {
 			$styles[$template]	=	JCckDatabase::loadObject( 'SELECT id, params, template FROM #__template_styles WHERE template = "'.(string)$template.'" ORDER BY id asc' );
 		}
 		
 		return $styles[$template];
+	}
+
+	// getDefaultTemplate
+	public static function getDefaultTemplate()
+	{
+		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		if ( !$name) {
+			$name	=	'seb_one';
+		}
+
+		return $name;
 	}
 	
 	// getFields
@@ -357,6 +371,10 @@ class Helper_Workshop
 											   JHtml::_( 'select.option', 'not_null', JText::_( 'COM_CCK_MATCH_NOT_NULL' ) ),
 											   JHtml::_( 'select.option', 'not_any_exact', JText::_( 'COM_CCK_MATCH_NOT_ANY_WORDS_EXACT' ) ),
 											   JHtml::_( 'select.option', 'not_like', JText::_( 'COM_CCK_MATCH_NOT_LIKE' ) ),
+											   JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_GEO_DISTANCE' ) ),
+											   JHtml::_( 'select.option', 'radius_higher', JText::_( 'COM_CCK_MATCH_RADIUS_HIGHER' ) ),
+											   JHtml::_( 'select.option', 'radius_lower', JText::_( 'COM_CCK_MATCH_RADIUS_LOWER' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_NULL' ) ),
 											   JHtml::_( 'select.option', 'is_null', JText::_( 'COM_CCK_MATCH_IS_NULL' ) ),

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_countries` (
 -- --------------------------------------------------------
 
 
-INSERT INTO `#__cck_more_countries` (`id`, `name_en`, `name_fr`, `code2`, `code3`) VALUES
+INSERT IGNORE INTO `#__cck_more_countries` (`id`, `name_en`, `name_fr`, `code2`, `code3`) VALUES
 (1, 'Afghanistan', 'Afghanistan', 'AF', 'AFG'),
 (2, 'Aland Islands', 'Åland, îles', 'AX', 'ALA'),
 (3, 'Albania', 'Albanie', 'AL', 'ALB'),
