@@ -939,7 +939,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-######## SEBLOD Add-ons
+######## SEBLOD Add-ons >> Packager
 
 /administrator/components/com_cck_packager/*
 /administrator/language/en-GB/en-GB.com_cck_packager.ini
@@ -949,3 +949,5 @@ Temporary Items
 /components/com_cck_packager/*
 /language/en-GB/en-GB.com_cck_packager.ini
 /language/fr-FR/fr-FR.com_cck_packager.ini
+
+######## SEBLOD Add-ons >> Toolbox
