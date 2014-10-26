@@ -34,7 +34,7 @@ $cck->addStyleDeclaration( $css );
 
 // -- Render
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
+<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>"<?php echo $cck->id_attributes; ?>>
 	<div>
     <?php // header-line
     if ( $cck->getStyleParam( 'position_header' ) ) {

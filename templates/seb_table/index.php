@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core
+* @version 			SEBLOD 3.x Core ~ $Id: index.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
@@ -15,8 +15,10 @@ require_once dirname(__FILE__).'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
+$table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
-$isFixed		=	( $table_layout == 'fixed' ) ? 1 : 0;
+$table_width	=	0;
+$isFixed		=	( $table_layout == 'fixed' ) ? 1 : ( ( $table_layout == 'calculated' ) ? 2 : 0 );
 $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' ) );
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
@@ -33,7 +35,10 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
 <div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
     <div>
     <?php
-	$css		=	array();
+	$attr		=	array(
+						'class'=>array(),
+						'width'=>array()
+					);
 	$items		=	$cck->getItems();
 	$positions	=	$cck->getPositions();
 	unset( $positions['hidden'] );
@@ -43,20 +48,37 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
 			$head	=	'';
 			$thead	=	false;
 			foreach ( $positions as $name=>$position ) {
-				$class		=	$position->css;
-				$css[$name]	=	$class ? ' class="'.$class.'"' : '';
-				$legend		=	( $position->legend ) ? $position->legend : ( ( $position->legend2 ) ? $position->legend2 : '' );
-				$width		=	$cck->w( $name );
-				$width		=	( $width ) ? ' width="'.$width.'"' : '';
+				$class					=	$position->css;
+				$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
+				$legend					=	( $position->legend ) ? $position->legend : ( ( $position->legend2 ) ? $position->legend2 : '' );
+				$width					=	$cck->w( $name );
 				if ( $legend || $width ) {
 					if ( $legend ) {
 						$thead	=	true;
 					}
-					$head		.=	'<th'.$css[$name].$width.'>'.$legend.'</th>';
+					if ( $position->variation != '' ) {
+						$var		=	$cck->renderVariation( $position->variation, $legend, '', $position->variation_options, $name );
+						$matches	=	array();
+						preg_match( '#<th class="([a-zA-Z0-9\-\ _]*)"(.*)>#U', $var, $matches );
+						if ( isset( $matches[1] ) && $matches[1] != '' ) {
+							$class	=	$matches[1];
+							if ( $isFixed == 2 && $width && strpos( ' '.$class.' ', ' hide ' ) === false ) {
+								$table_width	+=	(int)$width;
+							}
+						} else {
+							$class	=	'';
+						}
+						$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
+						$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
+						$head					.=	$var;
+					} else {
+						$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
+						$head					.=	'<th'.$attr['class'][$name].$attr['width'][$name].'>'.$legend.'</th>';	
+					}
 				}
 			}
             ?>
-            <?php if ( $head && $thead ) { ?>
+            <?php if ( $head && $thead && ( $table_header == 0 || $table_header == 1 ) ) { ?>
             <thead>
                 <tr><?php echo $head; ?></tr>
 			</thead>
@@ -74,8 +96,7 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
                     $html		=	'';
                     $width		=	'';
                     if ( $isFixed ) {
-						$width	=	$cck->w( $name );
-						$width	=	( $width ) ? ' width="'.$width.'"' : '';
+						$width	=	$attr['width'][$name];
                     }
                     foreach ( $fieldnames as $fieldname ) {
 						$content	=	$item->renderField( $fieldname );
@@ -87,17 +108,26 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
 							}
 						}
                     }
-                    echo '<td'.$css[$name].$width.'>'.$html.'</td>';
+                    echo '<td'.$attr['class'][$name].$width.'>'.$html.'</td>';
                 }
                 ?>
                 </tr>
             <?php $i++; } ?>
 			</tbody>
+			<?php
+			if ( $head && $thead && ( $table_header == -1 || $table_header == 1 ) ) { ?>
+            <tfoot>
+                <tr><?php echo $head; ?></tr>
+			</tfoot>
+			<?php } ?>
 		</table>
 	<?php } ?>
     </div>
 </div>
 <?php
 // -- Finalize
+if ( $table_width ) {
+	$cck->addCSS( '#'.$cck->id.' table {min-width:'.$table_width.'px;}' );
+}
 $cck->finalize();
 ?>
