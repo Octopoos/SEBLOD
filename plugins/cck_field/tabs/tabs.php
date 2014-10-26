@@ -75,7 +75,6 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$id			=	$field->name;
 		
 		// Prepare
-		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
 			$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
@@ -124,7 +123,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		}
 
 		// Set
-		$field->form	=	$form;
+		$field->form	=	$form;	// todo: '<div class="tabbable tabs-left">'
 		$field->value	=	$field->label;
 		$field->label	=	'';
 		

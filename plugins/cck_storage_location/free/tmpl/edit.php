@@ -10,5 +10,5 @@
 
 defined( '_JEXEC' ) or die;
 
-echo JCckDev::getForm( $cck['core_storage_table'], $table, $config, array( 'required'=>'required' ) );
+echo JCckDev::getForm( $cck['core_storage_table'], $table, $config, array( 'selectlabel'=>'None' ) );
 ?>

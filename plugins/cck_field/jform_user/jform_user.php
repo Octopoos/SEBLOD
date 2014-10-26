@@ -64,8 +64,10 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		$value		=	( $value !== '' ) ? $value : $field->defaultvalue;
 		$userid		=	JFactory::getUser()->get( 'id' );
 		
-		if ( ( ! $value && $userid && !( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) || ( $config['pk'] > 0 && ( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) ) { // todo: this must be changed asap!
-			$value	=	$userid;
+		if ( $config['client'] != 'search' ) {
+			if ( ( ! $value && $userid && !( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) || ( $config['pk'] > 0 && ( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) ) { // todo: this must be changed asap!
+				$value	=	$userid;
+			}	
 		}
 		
 		// Validate
@@ -76,34 +78,40 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		}
 		
 		// Prepare
-		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );	
-		$xml	=	'
-					<form>
-						<field
-							type="'.self::$type2.'"
-							name="'.$name.'"
-							id="'.$id.'"
-							label="'.htmlspecialchars( $field->label ).'"
-							class="'.$class.'"
-							size="18"
-						/>
-					</form>
-				';
-		$form	=	JForm::getInstance( $id, $xml );
-		$form	=	$form->getInput( $name, '', $value );
-		
-		// Set
-		if ( ! $field->variation ) {
-			if ( JFactory::getApplication()->isSite() ) {
-				$form		=	str_replace( 'index.php?', 'administrator/index.php?', $form );
-			}
-			$field->form	=	$form;
-			if ( $field->script ) {
-				parent::g_addScriptDeclaration( $field->script );
-			}
-		} else {
+		if ( parent::g_isStaticVariation( $field, $field->variation, true ) ) {
+			$form			=	'';
 			$field->text	=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value );
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
+		} else {	
+			$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+			$xml	=	'
+						<form>
+							<field
+								type="'.self::$type2.'"
+								name="'.$name.'"
+								id="'.$id.'"
+								label="'.htmlspecialchars( $field->label ).'"
+								class="'.$class.'"
+								size="18"
+							/>
+						</form>
+					';
+			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	$form->getInput( $name, '', $value );
+		
+			// Set
+			if ( ! $field->variation ) {
+				if ( JFactory::getApplication()->isSite() ) {
+					$form		=	str_replace( 'index.php?', 'administrator/index.php?', $form );
+				}
+				$field->form	=	$form;
+				if ( $field->script ) {
+					parent::g_addScriptDeclaration( $field->script );
+				}
+			} else {
+				$field->text	=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value );
+				parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
+			}
 		}
 		$field->value	=	$value;
 		

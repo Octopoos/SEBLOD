@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+$count		=	JCck::getConfig_Param( 'development_attr', 6 );
 $location	=	JCckDev::fromSTRING( $this->item->location );
 $options	=	JCckDev::fromSTRING( $this->item->options );
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
@@ -34,11 +35,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		.	 JCckDev::getForm( 'core_options_orderby', @$options2['orderby'], $config )
 		.	 JCckDev::getForm( 'core_options_orderby_direction', @$options2['orderby_direction'], $config )
 		.	 '</li>';
-		echo '<li><label>'.JText::_( 'COM_CCK_OPTIONS_ATTRIBUTES' ).'</label>'
-		.	 JCckDev::getForm( 'core_dev_text', @$options2['attr1'], $config, array( 'size'=>7, 'storage_field'=>'json[options2][attr1]' ) )
-		.	 JCckDev::getForm( 'core_dev_text', @$options2['attr2'], $config, array( 'size'=>7, 'storage_field'=>'json[options2][attr2]' ) )
-		.	 JCckDev::getForm( 'core_dev_text', @$options2['attr3'], $config, array( 'size'=>7, 'storage_field'=>'json[options2][attr3]' ) )
-		.	 '</li>';
+		echo '<li><label>'.JText::_( 'COM_CCK_OPTIONS_ATTRIBUTES' ).'</label><a href="javascript:void(0);" id="custom_attr_toggle"><span class="variation_value">'.JText::_( 'COM_CCK_TOGGLE' ).'</span></a></li>';
 		echo JCckDev::renderForm( 'core_options_limit', @$options2['limit'], $config );
 		
 		// Multiple
@@ -55,13 +52,20 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 
 		// Static
 		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Static Options', 'options'=>'No=0||Yes=optgroup||Above=1||Below=2' ) );
-		echo '<li><label>'.JText::_( 'COM_CCK_CUSTOM_ATTRIBUTES' ).'</label>'
-		.	 JCckDev::getForm( 'core_dev_text', @$location[0], $config, array( 'size'=>7, 'storage_field'=>'string[location][]' ) )
-		.	 JCckDev::getForm( 'core_dev_text', @$location[1], $config, array( 'size'=>7, 'storage_field'=>'string[location][]' ) )
-		.	 JCckDev::getForm( 'core_dev_text', @$location[2], $config, array( 'size'=>7, 'storage_field'=>'string[location][]' ) )
-		.	 '</li>';
+		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		
+		if ( $count ) {
+			for ( $i = 0; $i < $count; $i++ ) {
+				echo '<li class="w100 custom_attr_mapping"><label>'.JText::_( 'COM_CCK_OPTIONS_ATTR_COLUMN' ).'</label>';
+				echo JCckDev::getForm( 'core_dev_text', @$location[$i], $config, array( 'size'=>7, 'storage_field'=>'string[location][]' ) );
+				$j	=	$i;
+				$j++;
+				echo JCckDev::getForm( 'core_dev_text', @$options2['attr'.$j], $config, array( 'size'=>7, 'storage_field'=>'json[options2][attr'.$j.']' ) );
+				echo '</li>';
+			}
+		}
+
 		echo JCckDev::renderHelp( 'field', '1496-select-dynamic.html' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
@@ -75,5 +79,9 @@ jQuery(document).ready(function($) {
 	$('#json_options2_table, #json_options2_name, #json_options2_value, #json_options2_where, #json_options2_orderby, #json_options2_limit, #json_options2_attr1, #blank_li').isVisibleWhen('bool2','0');
 	$('#rows, #divider').isVisibleWhen('bool3','1');
 	$('#sortable_core_options').isVisibleWhen('bool4','1,2');
+	$('.custom_attr_mapping').toggle();
+	$("#adminForm").on("click", "#custom_attr_toggle", function() {
+		$('.custom_attr_mapping').toggle();
+	});
 });
 </script>

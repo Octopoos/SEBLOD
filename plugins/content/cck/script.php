@@ -441,6 +441,13 @@ class plgContentCCKInstallerScript
 				}
 			}
 
+			if ( $i2 < 66 ) {
+				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
+				if ( JFile::exists( $path ) ) {
+					JFile::delete( $path );
+				}
+			}
+
 			// Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}

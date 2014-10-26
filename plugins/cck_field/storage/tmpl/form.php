@@ -161,7 +161,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 </script>
 
 <div class="seblod" id="storage_more" <?php echo ( $value == 'dev' ) ? '' : 'style="display: none;"'?>>
-	<div class="legend top left"><span><?php echo JText::_( 'COM_CCK_STUFF' ); ?></span></div>
+	<div class="legend top left"><span class="hasTooltip qtip_cck" title="<?php echo htmlspecialchars( JText::_( 'COM_CCK_STUFF_DESC' ) ); ?>"><?php echo JText::_( 'COM_CCK_STUFF' ); ?></span></div>
 	<ul class="adminformlist adminformlist-2cols">
         <?php
         $required	=	JCckDev::get( $cck['core_required'], $config['item']->required, $config );

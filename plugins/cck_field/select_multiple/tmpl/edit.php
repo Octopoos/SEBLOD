@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'doTranslation'=>1, 'customAttr'=>6 ) );
+JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'doTranslation'=>1, 'customAttr'=>JCck::getConfig_Param( 'development_attr', 6 ) ) );
 $options	=	JCckDev::fromSTRING( $this->item->options );
 ?>
 

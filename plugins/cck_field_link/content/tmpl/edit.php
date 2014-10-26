@@ -19,7 +19,9 @@ require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_sef', '', $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'sef' ) );
-		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
+		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2' ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'itemid_fieldname' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Use Value=optgroup||Field=2', 'storage_field'=>'content' ) );
 		// echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Next=4||Previous=5||Use Value=optgroup||Field=2', 'storage_field'=>'content' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'content_fieldname' ) );
@@ -42,6 +44,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#itemid').isDisabledWhen('sef','0');
+	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');
 	$('#content_fieldname,#content_location,#blank_li').isVisibleWhen('content','2');
 });
 </script>
