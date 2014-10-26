@@ -128,6 +128,36 @@ class CCK_Item
 		return $count;	//return $this->isDesc( $position );
 	}
 
+	// getFields
+	public function getFields( $position = '', $type = '', $prepare = true )
+	{
+		$fields	=	array();
+		
+		if ( isset( $this->positions[$position] ) ) {
+			if ( $type ) {
+				foreach ( $this->positions[$position] as $name ) {
+					if ( $type == $this->getType( $name ) ) {
+						if ( $prepare === true ) {
+							$fields[$name]	=	$this->get( $name );
+						} else {
+							$fields[]		=	$name;
+						}
+					}
+				}
+			} else {
+				if ( $prepare === true ) {
+					foreach ( $this->positions[$position] as $name ) {
+						$fields[$name]	=	$this->get( $name );
+					}
+				} else {
+					return $this->positions[$position];
+				}
+			}
+		}
+		
+		return $fields;
+	}
+
 	// getLabel
 	public function getLabel( $fieldname = '', $html = false, $suffix = '' )
 	{
@@ -196,6 +226,18 @@ class CCK_Item
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Positions
 
+	// getPosition
+	public function getPosition( $name )
+	{
+		return ( isset( $this->positions_m[$name] ) ) ? $this->positions_m[$name] : new stdClass;
+	}
+
+	// forcePosition
+	public function forcePosition( $position = '', $variation = 'none', $height = '', $excluded = array() )
+	{
+		return $this->renderPosition( $position, 'none', $height, $excluded, true );
+	}
+
 	// renderPos
 	protected function renderPos( $pos = '' )
 	{
@@ -212,12 +254,8 @@ class CCK_Item
 	}
 
 	// renderPosition
-	public function renderPosition( $position, $variation = '' )
+	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false )
 	{
-		$excluded	=	array();
-		$height 	=	'';
-		$force		=	false;
-
 		$html		=	'';		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : '';
 		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
@@ -348,6 +386,10 @@ class CCK_Item
 						$legend	=	$this->{'get'.$target}( $legend2 );	
 					}
 				}
+			} elseif ( is_string( $options ) ) {
+				$options2	=	$options;
+				$options	=	new JRegistry;
+				$options->loadString( $options2 );
 			} else {
 				$options				=	new JRegistry;
 				$orientation			=	'vertical';

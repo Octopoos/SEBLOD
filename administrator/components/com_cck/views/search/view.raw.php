@@ -113,13 +113,13 @@ class CCKViewSearch extends JViewLegacy
 			$this->item->master	=	( $this->item->client == 'list' || $this->item->client == 'item' ) ? 'content' : ( ( $this->item->client == 'order' ) ? 'order' : 'search' );
 			$this->item->layer	=	$app->input->getString( 'layer', 'fields' );
 			$P					=	'template_'.$this->item->client;
-			$force_template		=	( $this->item->client == 'list' ) ? $this->state->get( 'tpl.list' ) : 'seb_one';
+			$force_template		=	( $this->item->client == 'list' ) ? $this->state->get( 'tpl.list' ) : Helper_Workshop::getDefaultTemplate();
 		} else {
 			$this->item->client		=	( $this->isNew ) ? 'search' : $app->input->getString( 'client', $app->input->cookie->getString( 'cck_search'.$name.'_client', 'search' ) );
 			$this->item->master		=	( $this->item->client == 'list' || $this->item->client == 'item' ) ? 'content' : ( ( $this->item->client == 'order' ) ? 'order' : 'search' );
 			$this->item->layer		=	$app->input->getString( 'layer', 'fields' );
 			$P						=	'template_'.$this->item->client;
-			$force_template			=	( $this->item->client == 'list' ) ? '' : 'seb_one';
+			$force_template			=	( $this->item->client == 'list' ) ? '' : Helper_Workshop::getDefaultTemplate();
 		}
 		$this->style			=	( $this->item->client != 'order' ) ? Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, $force_template ) ) : '';
 		$this->item->template	=	( isset( $this->style->template ) ) ? $this->style->template : '';
@@ -191,11 +191,7 @@ class CCKViewSearch extends JViewLegacy
 		$variat	.=	'<input type="hidden" id="pos-'.$name.'_variation_options" name="ffp[pos-'.$name.'][variation_options]" value="'.htmlspecialchars( @$this->positions[$name]->variation_options ).'" />';
 		$width	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][width]" value="'.@$this->positions[$name]->width.'" size="8" style="text-align:center;" /> x&nbsp;';
 		$height	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
-		if ( $this->item->client == 'list' ) {
-			$css	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
-		} else {
-			$css	=	'';
-		}
+		$css	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
 		
 		Helper_Workshop::displayPosition( $this->p, $name, '# '.$title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css );
 		$this->p++;

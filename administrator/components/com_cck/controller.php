@@ -87,7 +87,7 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
-		$style						=	Helper_Workshop::getDefaultStyle( 'seb_one' );
+		$style						=	Helper_Workshop::getDefaultStyle();
 		
 		$table						=	JTable::getInstance( 'type', 'CCK_Table' );
 		$table->title				=	$title;

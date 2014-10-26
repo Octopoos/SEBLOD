@@ -1,15 +1,12 @@
-<<<<<<< HEAD
 ######## Joomla!
 
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_admin/*
 /administrator/components/com_ajax/*
-=======
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_admin/*
->>>>>>> FETCH_HEAD
 /administrator/components/com_banners/*
 /administrator/components/com_cache/*
 /administrator/components/com_categories/*
@@ -17,17 +14,14 @@
 /administrator/components/com_config/*
 /administrator/components/com_contact/*
 /administrator/components/com_content/*
-<<<<<<< HEAD
 /administrator/components/com_contenthistory/*
 /administrator/components/com_cpanel/*
 /administrator/components/com_finder/*
 /administrator/components/com_installer/*
 /administrator/components/com_joomlaupdate/*
-=======
 /administrator/components/com_cpanel/*
 /administrator/components/com_finder/*
 /administrator/components/com_installer/*
->>>>>>> FETCH_HEAD
 /administrator/components/com_languages/*
 /administrator/components/com_login/*
 /administrator/components/com_media/*
@@ -35,17 +29,14 @@
 /administrator/components/com_messages/*
 /administrator/components/com_modules/*
 /administrator/components/com_newsfeeds/*
-<<<<<<< HEAD
 /administrator/components/com_postinstall/*
 /administrator/components/com_plugins/*
 /administrator/components/com_redirect/*
 /administrator/components/com_search/*
 /administrator/components/com_tags/*
-=======
 /administrator/components/com_plugins/*
 /administrator/components/com_redirect/*
 /administrator/components/com_search/*
->>>>>>> FETCH_HEAD
 /administrator/components/com_templates/*
 /administrator/components/com_users/*
 /administrator/components/com_weblinks/*
@@ -54,11 +45,8 @@
 /administrator/includes/*
 /administrator/language/en-GB/en-GB.com_admin.ini
 /administrator/language/en-GB/en-GB.com_admin.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.com_ajax.ini
 /administrator/language/en-GB/en-GB.com_ajax.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.com_banners.ini
 /administrator/language/en-GB/en-GB.com_banners.sys.ini
 /administrator/language/en-GB/en-GB.com_cache.ini
@@ -73,22 +61,16 @@
 /administrator/language/en-GB/en-GB.com_contact.sys.ini
 /administrator/language/en-GB/en-GB.com_content.ini
 /administrator/language/en-GB/en-GB.com_content.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.com_contenthistory.ini
 /administrator/language/en-GB/en-GB.com_contenthistory.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.com_cpanel.ini
 /administrator/language/en-GB/en-GB.com_cpanel.sys.ini
 /administrator/language/en-GB/en-GB.com_finder.ini
 /administrator/language/en-GB/en-GB.com_finder.sys.ini
 /administrator/language/en-GB/en-GB.com_installer.ini
 /administrator/language/en-GB/en-GB.com_installer.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.com_joomlaupdate.ini
 /administrator/language/en-GB/en-GB.com_joomlaupdate.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.com_languages.ini
 /administrator/language/en-GB/en-GB.com_languages.sys.ini
 /administrator/language/en-GB/en-GB.com_login.ini
@@ -106,20 +88,14 @@
 /administrator/language/en-GB/en-GB.com_newsfeeds.sys.ini
 /administrator/language/en-GB/en-GB.com_plugins.ini
 /administrator/language/en-GB/en-GB.com_plugins.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.com_postinstall.ini
 /administrator/language/en-GB/en-GB.com_postinstall.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.com_redirect.ini
 /administrator/language/en-GB/en-GB.com_redirect.sys.ini
 /administrator/language/en-GB/en-GB.com_search.ini
 /administrator/language/en-GB/en-GB.com_search.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.com_tags.ini
 /administrator/language/en-GB/en-GB.com_tags.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.com_templates.ini
 /administrator/language/en-GB/en-GB.com_templates.sys.ini
 /administrator/language/en-GB/en-GB.com_users.ini
@@ -151,11 +127,8 @@
 /administrator/language/en-GB/en-GB.mod_popular.sys.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.mod_stats_admin.ini
 /administrator/language/en-GB/en-GB.mod_stats_admin.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.mod_status.ini
 /administrator/language/en-GB/en-GB.mod_status.sys.ini
 /administrator/language/en-GB/en-GB.mod_submenu.ini
@@ -168,11 +141,8 @@
 /administrator/language/en-GB/en-GB.mod_unread.sys.ini
 /administrator/language/en-GB/en-GB.mod_version.ini
 /administrator/language/en-GB/en-GB.mod_version.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_authentication_cookie.ini
 /administrator/language/en-GB/en-GB.plg_authentication_cookie.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_authentication_example.ini
 /administrator/language/en-GB/en-GB.plg_authentication_example.sys.ini
 /administrator/language/en-GB/en-GB.plg_authentication_gmail.ini
@@ -183,17 +153,14 @@
 /administrator/language/en-GB/en-GB.plg_authentication_ldap.sys.ini
 /administrator/language/en-GB/en-GB.plg_captcha_recaptcha.ini
 /administrator/language/en-GB/en-GB.plg_captcha_recaptcha.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_content_contact.ini
 /administrator/language/en-GB/en-GB.plg_content_contact.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_finder.ini
 /administrator/language/en-GB/en-GB.plg_content_finder.sys.ini
-=======
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.sys.ini
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_content_geshi.ini
 /administrator/language/en-GB/en-GB.plg_content_geshi.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_joomla.ini
@@ -222,7 +189,6 @@
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.sys.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_finder_categories.ini
 /administrator/language/en-GB/en-GB.plg_finder_categories.sys.ini
 /administrator/language/en-GB/en-GB.plg_finder_contacts.ini
@@ -241,10 +207,8 @@
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_joomlaupdate.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_joomlaupdate.sys.ini
-=======
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_search_categories.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_contacts.ini
@@ -253,11 +217,8 @@
 /administrator/language/en-GB/en-GB.plg_search_content.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_newsfeeds.ini
 /administrator/language/en-GB/en-GB.plg_search_newsfeeds.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_search_tags.ini
 /administrator/language/en-GB/en-GB.plg_search_tags.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_search_weblinks.ini
 /administrator/language/en-GB/en-GB.plg_search_weblinks.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_cache.ini
@@ -266,11 +227,8 @@
 /administrator/language/en-GB/en-GB.plg_system_debug.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_highlight.ini
 /administrator/language/en-GB/en-GB.plg_system_highlight.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_system_languagecode.ini
 /administrator/language/en-GB/en-GB.plg_system_languagecode.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_system_languagefilter.ini
 /administrator/language/en-GB/en-GB.plg_system_languagefilter.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_log.ini
@@ -285,13 +243,10 @@
 /administrator/language/en-GB/en-GB.plg_system_remember.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_yubikey.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_yubikey.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /administrator/language/en-GB/en-GB.plg_user_contactcreator.ini
 /administrator/language/en-GB/en-GB.plg_user_contactcreator.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_joomla.ini
@@ -302,7 +257,6 @@
 /administrator/language/en-GB/en-GB.tpl_bluestork.sys.ini
 /administrator/language/en-GB/en-GB.tpl_hathor.ini
 /administrator/language/en-GB/en-GB.tpl_hathor.sys.ini
-<<<<<<< HEAD
 /administrator/language/en-GB/en-GB.tpl_isis.ini
 /administrator/language/en-GB/en-GB.tpl_isis.sys.ini
 /administrator/language/en-GB/en-GB.xml
@@ -523,10 +477,8 @@
 /administrator/language/fr-FR/fr-FR.xml
 /administrator/language/fr-FR/index.html
 /administrator/language/fr-FR/install.xml
-=======
 /administrator/language/en-GB/en-GB.xml
 /administrator/language/en-GB/index.html
->>>>>>> FETCH_HEAD
 /administrator/language/overrides/*
 /administrator/language/index.html
 /administrator/manifests/*
@@ -540,10 +492,7 @@
 /administrator/modules/mod_online/*
 /administrator/modules/mod_popular/*
 /administrator/modules/mod_quickicon/*
-<<<<<<< HEAD
 /administrator/modules/mod_stats_admin/*
-=======
->>>>>>> FETCH_HEAD
 /administrator/modules/mod_status/*
 /administrator/modules/mod_submenu/*
 /administrator/modules/mod_title/*
@@ -553,7 +502,6 @@
 /administrator/modules/index.html
 /administrator/templates/bluestork/*
 /administrator/templates/hathor/*
-<<<<<<< HEAD
 /administrator/templates/isis/*
 /administrator/templates/system/*
 /administrator/templates/index.html
@@ -567,7 +515,6 @@
 /components/com_contact/*
 /components/com_content/*
 /components/com_contenthistory/*
-=======
 /administrator/templates/system/*
 /administrator/templates/index.html
 /administrator/index.php
@@ -576,55 +523,41 @@
 /components/com_banners/*
 /components/com_contact/*
 /components/com_content/*
->>>>>>> FETCH_HEAD
 /components/com_finder/*
 /components/com_mailto/*
 /components/com_media/*
 /components/com_newsfeeds/*
 /components/com_search/*
-<<<<<<< HEAD
 /components/com_tags/*
-=======
->>>>>>> FETCH_HEAD
 /components/com_users/*
 /components/com_weblinks/*
 /components/com_wrapper/*
 /components/index.html
 /images/banners/*
-<<<<<<< HEAD
 /images/headers/*
-=======
->>>>>>> FETCH_HEAD
 /images/sampledata/*
 /images/joomla*
 /images/index.html
 /images/powered_by.png
 /includes/*
 /installation/*
-<<<<<<< HEAD
 /language/en-GB/en-GB.com_ajax.ini
 /language/en-GB/en-GB.com_config.ini
 /language/en-GB/en-GB.com_contact.ini
 /language/en-GB/en-GB.com_content.ini
 /language/en-GB/en-GB.com_finder.ini
-=======
 /language/en-GB/en-GB.com_contact.ini
 /language/en-GB/en-GB.com_content.ini
->>>>>>> FETCH_HEAD
 /language/en-GB/en-GB.com_mailto.ini
 /language/en-GB/en-GB.com_media.ini
 /language/en-GB/en-GB.com_messages.ini
 /language/en-GB/en-GB.com_newsfeeds.ini
 /language/en-GB/en-GB.com_search.ini
-<<<<<<< HEAD
 /language/en-GB/en-GB.com_tags.ini
-=======
->>>>>>> FETCH_HEAD
 /language/en-GB/en-GB.com_users.ini
 /language/en-GB/en-GB.com_weblinks.ini
 /language/en-GB/en-GB.com_wrapper.ini
 /language/en-GB/en-GB.files_joomla.sys.ini
-<<<<<<< HEAD
 /language/en-GB/en-GB.finder_cli.ini
 /language/en-GB/en-GB.ini
 /language/en-GB/en-GB.lib_fof.sys.ini
@@ -635,10 +568,8 @@
 /language/en-GB/en-GB.lib_phpass.sys.ini
 /language/en-GB/en-GB.lib_phputf8.sys.ini
 /language/en-GB/en-GB.lib_simplepie.sys.ini
-=======
 /language/en-GB/en-GB.ini
 /language/en-GB/en-GB.lib_joomla.ini
->>>>>>> FETCH_HEAD
 /language/en-GB/en-GB.localise.php
 /language/en-GB/en-GB.mod_articles_archive.ini
 /language/en-GB/en-GB.mod_articles_archive.sys.ini
@@ -660,11 +591,8 @@
 /language/en-GB/en-GB.mod_custom.sys.ini
 /language/en-GB/en-GB.mod_feed.ini
 /language/en-GB/en-GB.mod_feed.sys.ini
-<<<<<<< HEAD
 /language/en-GB/en-GB.mod_finder.ini
 /language/en-GB/en-GB.mod_finder.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /language/en-GB/en-GB.mod_footer.ini
 /language/en-GB/en-GB.mod_footer.sys.ini
 /language/en-GB/en-GB.mod_languages.ini
@@ -683,13 +611,10 @@
 /language/en-GB/en-GB.mod_stats.sys.ini
 /language/en-GB/en-GB.mod_syndicate.ini
 /language/en-GB/en-GB.mod_syndicate.sys.ini
-<<<<<<< HEAD
 /language/en-GB/en-GB.mod_tags_popular.ini
 /language/en-GB/en-GB.mod_tags_popular.sys.ini
 /language/en-GB/en-GB.mod_tags_similar.ini
 /language/en-GB/en-GB.mod_tags_similar.sys.ini
-=======
->>>>>>> FETCH_HEAD
 /language/en-GB/en-GB.mod_users_latest.ini
 /language/en-GB/en-GB.mod_users_latest.sys.ini
 /language/en-GB/en-GB.mod_weblinks.ini
@@ -702,7 +627,6 @@
 /language/en-GB/en-GB.tpl_atomic.sys.ini
 /language/en-GB/en-GB.tpl_beez_20.ini
 /language/en-GB/en-GB.tpl_beez_20.sys.ini
-<<<<<<< HEAD
 /language/en-GB/en-GB.tpl_beez3.ini
 /language/en-GB/en-GB.tpl_beez3.sys.ini
 /language/en-GB/en-GB.tpl_beez5.ini
@@ -810,8 +734,40 @@
 /layouts/libraries/cms/index.html
 /layouts/libraries/index.html
 /layouts/index.html
-/libraries/cms.php
-/libraries/cms/*
+/language/en-GB/en-GB.tpl_beez5.ini
+/language/en-GB/en-GB.tpl_beez5.sys.ini
+/language/en-GB/en-GB.xml
+/language/en-GB/index.html
+/language/en-GB/install.xml
+/language/overrides/*
+/language/index.html
+/libraries/cms/application/*
+/libraries/cms/captcha/*
+/libraries/cms/component/*
+/libraries/cms/editor/*
+/libraries/cms/error/*
+/libraries/cms/form/*
+/libraries/cms/help/*
+/libraries/cms/helper/*
+/libraries/cms/html/*
+/libraries/cms/installer/*
+/libraries/cms/language/*
+/libraries/cms/layout/*
+/libraries/cms/library/*
+/libraries/cms/menu/*
+/libraries/cms/module/*
+/libraries/cms/pagination/*
+/libraries/cms/pathway/*
+/libraries/cms/plugin/*
+/libraries/cms/response/*
+/libraries/cms/router/*
+/libraries/cms/schema/*
+/libraries/cms/search/*
+/libraries/cms/table/*
+/libraries/cms/toolbar/*
+/libraries/cms/ucm/*
+/libraries/cms/version/*
+/libraries/cms/index.html
 /libraries/compat/*
 /libraries/fof/*
 /libraries/framework/*
@@ -823,31 +779,14 @@
 /libraries/phputf8/*
 /libraries/simplepie/*
 /libraries/classmap.php
+/libraries/cms.php
 /libraries/index.html
 /libraries/import.php
 /libraries/import.legacy.php
-=======
-/language/en-GB/en-GB.tpl_beez5.ini
-/language/en-GB/en-GB.tpl_beez5.sys.ini
-/language/en-GB/en-GB.xml
-/language/en-GB/index.html
-/language/en-GB/install.xml
-/language/overrides/*
-/language/index.html
-/libraries/cms.php
-/libraries/cms/*
-/libraries/joomla/*
-/libraries/phpmailer/*
-/libraries/phputf8/*
-/libraries/simplepie/*
-/libraries/index.html
-/libraries/import.php
->>>>>>> FETCH_HEAD
 /libraries/loader.php
 /libraries/platform.php
 /logs/*
 /media/cms/*
-<<<<<<< HEAD
 /media/com_banners/*
 /media/com_contenthistory/*
 /media/com_finder/*
@@ -855,11 +794,9 @@
 /media/contacts/*
 /media/editors/*
 /media/jui/*
-=======
 /media/com_finder/*
 /media/contacts/*
 /media/editors/*
->>>>>>> FETCH_HEAD
 /media/mailto/*
 /media/media/*
 /media/mod_languages/*
@@ -889,31 +826,22 @@
 /modules/mod_search/*
 /modules/mod_stats/*
 /modules/mod_syndicate/*
-<<<<<<< HEAD
 /modules/mod_tags_popular/*
 /modules/mod_tags_similar/*
-=======
->>>>>>> FETCH_HEAD
 /modules/mod_users_latest/*
 /modules/mod_weblinks/*
 /modules/mod_whosonline/*
 /modules/mod_wrapper/*
 /modules/index.html
-<<<<<<< HEAD
 /plugins/authentication/cookie/*
-=======
->>>>>>> FETCH_HEAD
 /plugins/authentication/example/*
 /plugins/authentication/gmail/*
 /plugins/authentication/joomla/*
 /plugins/authentication/ldap/*
 /plugins/authentication/index.html
 /plugins/captcha/recaptcha/*
-<<<<<<< HEAD
 /plugins/captcha/index.html
 /plugins/content/contact/*
-=======
->>>>>>> FETCH_HEAD
 /plugins/content/emailcloak/*
 /plugins/content/example/*
 /plugins/content/finder/*
@@ -941,26 +869,20 @@
 /plugins/finder/contacts/*
 /plugins/finder/content/*
 /plugins/finder/newsfeeds/*
-<<<<<<< HEAD
 /plugins/finder/tags/*
 /plugins/finder/weblinks/*
 /plugins/installer/webinstaller/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
 /plugins/quickicon/index.html
-=======
 /plugins/finder/weblinks/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
->>>>>>> FETCH_HEAD
 /plugins/search/categories/*
 /plugins/search/contacts/*
 /plugins/search/content/*
 /plugins/search/newsfeeds/*
-<<<<<<< HEAD
 /plugins/search/tags/*
-=======
->>>>>>> FETCH_HEAD
 /plugins/search/weblinks/*
 /plugins/search/index.html
 /plugins/system/cache/*
@@ -975,26 +897,20 @@
 /plugins/system/remember/*
 /plugins/system/sef/*
 /plugins/system/index.html
-<<<<<<< HEAD
 /plugins/twofactorauth/totp/*
 /plugins/twofactorauth/yubikey/*
 /plugins/twofactorauth/index.html
-=======
->>>>>>> FETCH_HEAD
 /plugins/user/contactcreator/*
 /plugins/user/example/*
 /plugins/user/joomla/*
 /plugins/user/profile/*
 /plugins/user/index.html
 /plugins/index.html
-<<<<<<< HEAD
 /templates/beez3/*
 /templates/protostar/*
-=======
 /templates/atomic/*
 /templates/beez_20/*
 /templates/beez5/*
->>>>>>> FETCH_HEAD
 /templates/system/*
 /templates/index.html
 /tmp/*
@@ -1004,7 +920,10 @@
 /joomla.xml
 /robots.txt.dist
 /*.txt
-<<<<<<< HEAD
+
+######## SEBLOD
+
+/administrator/components/com_cck/install/cms/*
 
 ######## SublimeText
 
@@ -1040,5 +959,16 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-=======
->>>>>>> FETCH_HEAD
+
+######## SEBLOD Add-ons >> Packager
+
+/administrator/components/com_cck_packager/*
+/administrator/language/en-GB/en-GB.com_cck_packager.ini
+/administrator/language/en-GB/en-GB.com_cck_packager.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_packager.ini
+/administrator/language/fr-FR/fr-FR.com_cck_packager.sys.ini
+/components/com_cck_packager/*
+/language/en-GB/en-GB.com_cck_packager.ini
+/language/fr-FR/fr-FR.com_cck_packager.ini
+
+######## SEBLOD Add-ons >> Toolbox

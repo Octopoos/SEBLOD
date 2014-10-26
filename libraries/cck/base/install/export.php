@@ -419,7 +419,7 @@ class CCK_Export
 				}
 			} else {
 				if ( $s > 0 ) {
-					$t			=	'seb_one';
+					$t		=	'seb_one';
 				}
 				$tpl[$v]	=	$t;
 			}

@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // Template
+$idx			=	( isset( $config['idx'] ) ) ? $config['idx'] : '_';
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
 if ( ! $templateStyle ) {

@@ -28,10 +28,20 @@ abstract class JCckEcommercePromotion
 			foreach ( $promotions as $p ) {
 				if ( isset( $params['target'] ) && $params['target'] ) {
 					if ( $params['target'] == 'order' && $p->target == 0 ) {
-						//
+						// OK
 					} elseif ( $params['target'] == 'product' ) {
-						if ( $p->target == 1 || $p->target == 2 ) {
-							//
+						if ( $p->target == 1 ) {
+							// OK
+						} elseif ( $p->target == 2 ) {
+							$products	=	self::getTargets( $p->id );
+							if ( !isset( $products[$params['target_id']] ) ) {
+								continue;
+							}
+						} elseif ( $p->target == -2 ) {
+							$products	=	self::getTargets( $p->id );
+							if ( isset( $products[$params['target_id']] ) ) {
+								continue;
+							}
 						} else {
 							continue;
 						}
@@ -74,6 +84,19 @@ abstract class JCckEcommercePromotion
 	public static function count( $type )
 	{	
 		return count( JCckEcommerce::getPromotions( $type ) );
+	}
+
+	// getTargets
+	public static function getTargets( $id )
+	{
+		static $cache	=	array();
+
+		if ( !isset( $cache[$id] ) ) {
+			$cache[$id]	=	JCckDatabase::loadColumn( 'SELECT product_id FROM #__cck_more_ecommerce_promotion_product WHERE promotion_id = '.(int)$id );
+			$cache[$id]	=	array_flip( $cache[$id] );
+		}
+
+		return $cache[$id];
 	}
 }
 ?>

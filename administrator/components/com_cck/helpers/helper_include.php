@@ -85,7 +85,7 @@ class Helper_Include extends CommonHelper_Include
 				if ( $view == 'fields' ) {
 					Helper_Include::addColorbox( '500', '300', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				} elseif ( $view == 'templates' ) {
-					Helper_Include::addColorbox( '850', '585', $script );
+					Helper_Include::addColorbox( '850', '585', $script, 'cbox', ', scrolling:false, onLoad: function(){ $("#cboxClose").remove();}' );
 				} elseif ( $view == 'types' || $view == 'searchs' ) {
 					Helper_Include::addColorbox( '850', '430', true, 'cbox_button', ', scrolling:false' );
 				} elseif ( $view == 'variations' ) {

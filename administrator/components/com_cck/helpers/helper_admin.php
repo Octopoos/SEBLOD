@@ -22,7 +22,7 @@ class Helper_Admin extends CommonHelper_Admin
 			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
 			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
 			$css[$id]	=	'.folderColor'.$id.' { width: '.$width.'px; height: 14px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
-						.	'vertical-align: middle; border: none; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; text-align:center; } ';
+						.	'vertical-align: middle; border: none; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; text-align:center; margin-left:auto; margin-right:auto; } ';
 		}
 	}
 	
@@ -283,6 +283,17 @@ class Helper_Admin extends CommonHelper_Admin
 		}
 		
 		return $result;
+	}
+
+	// getDefaultTemplate
+	public static function getDefaultTemplate()
+	{
+		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		if ( !$name) {
+			$name	=	'seb_one';
+		}
+
+		return $name;
 	}
 }
 ?>

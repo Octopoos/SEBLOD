@@ -119,7 +119,7 @@ class CCKViewType extends JViewLegacy
 		$this->item->master		=	( $this->item->client == 'content' || $this->item->client == 'intro' ) ? 'content' : 'form';
 		$this->item->layer		=	$app->input->getString( 'layer', 'fields' );
 		$P						=	'template_'.$this->item->client;
-		$this->style			=	Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, 'seb_one' ) );
+		$this->style			=	Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, Helper_Workshop::getDefaultTemplate() ) );
 		$this->item->template	=	$this->style->template;
 		$this->insidebox		=	Helper_Admin::addInsidebox( $this->isNew );
 

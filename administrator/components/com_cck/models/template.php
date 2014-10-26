@@ -105,6 +105,18 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
 		
+		if ( $data['mode'] ) {
+			$data['featured']	=	0;
+		} else {
+			if ( $data['featured'] ) {
+				JCckDatabase::execute( 'UPDATE #__cck_core_templates SET featured = 0 WHERE id' );
+			} else {
+				if ( !JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core_templates WHERE featured = 1 AND id != '.(int)$data['id'] ) ) {
+					$data['featured']	=	1;
+				}
+			}
+		}
+
 		return $data;
 	}
 	

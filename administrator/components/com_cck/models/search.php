@@ -137,7 +137,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			foreach ( $clients as $c ) {
 				$P				=	'template_'.$c;
 				if ( ! $data[$P] ) {
-					$default	=	Helper_Workshop::getDefaultStyle( 'seb_one' );
+					$default	=	Helper_Workshop::getDefaultStyle();
 					$data[$P]	=	$default->id;
 				}
 			}
@@ -311,7 +311,11 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 				$property	=	'template_'.$client;
 				$style		=	$styles[$table->$property];
 				if ( !( is_object( $style ) && $style->id ) ) {
-					$style	=	Helper_Workshop::getDefaultStyle( ( $client == 'list' ) ? 'seb_table' : 'seb_one' );
+					if ( $client == 'list' ) {
+						$style	=	Helper_Workshop::getDefaultStyle( 'seb_table' );
+					} else {
+						$style	=	Helper_Workshop::getDefaultStyle();
+					}
 				}
 				$table->$property	=	Helper_Workshop::getTemplateStyleInstance( $style->id, $style->template, $style->template, $style->params, $table->name.' ('.$client.')', true );
 			}

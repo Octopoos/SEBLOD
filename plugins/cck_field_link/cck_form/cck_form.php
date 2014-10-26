@@ -61,13 +61,6 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
 			$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
 			$canEditOwnContent	=	'';
-			
-			// canEditOwn
-			if ( $canEditOwn ) {
-				if ( $config['author'] != $user->get( 'id' ) ) {
-					$canEditOwn	=	false;
-				}
-			}
 
 			// canEditOwnContent
 			jimport( 'cck.joomla.access.access' );
@@ -101,7 +94,10 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			}
 
 			// Check Permissions
-			if ( !( $canEdit || $canEditOwn || $canEditOwnContent ) ) {
+			if ( !( $canEdit && $canEditOwn
+				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->get( 'id' ) ) )
+				|| ( $canEditOwn && ( $config['author'] == $user->get( 'id' ) ) )
+				|| ( $canEditOwnContent ) ) ) {
 				if ( !$link->get( 'no_access', 1 ) ) {
 					$field->display	=	0;
 				}
@@ -119,6 +115,10 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$tmpl			=	$tmpl ? '&tmpl='.$tmpl : '';
 		$vars			=	$tmpl;	// + live
 		
+		if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
+			$redirection		=	'-1'; // todo
+		}
+
 		// Set
 		if ( is_array( $field->value ) ) {
 			foreach ( $field->value as $f ) {

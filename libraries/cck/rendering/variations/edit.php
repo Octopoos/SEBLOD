@@ -40,19 +40,20 @@ $js		=	'
 			';
 $doc->addScriptDeclaration( $js );
 
+require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
+
 Helper_Include::addTooltip( 'label[title]', 'top left', 'bottom left' );
 JFactory::getLanguage()->load( 'files_var_cck_'.$this->item->name.'.sys', JPATH_SITE );
 JFactory::getLanguage()->load( 'files_var_cck_seb_css3.sys', JPATH_SITE );
-?>
 
-<?php
 $template	=	( isset( $this->item->type ) && $this->item->type != '' ) ? $this->item->type : 'seb_one';
 $path		=	JPATH_SITE.'/templates/'.$template.'/variations/'.$this->item->name.'/options.xml';
 if ( ! file_exists( $path ) ) {
 	$path	=	JPATH_LIBRARIES_CCK.'/rendering/variations/'.$this->item->name.'/options.xml';
+} else {
+	JFactory::getLanguage()->load( 'tpl_'.$template, JPATH_SITE );
 }
 $xml		=	JPath::clean( $path );
 
-require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
 Helper_Workshop::getTemplateParams( $xml, '//form' );
 ?>

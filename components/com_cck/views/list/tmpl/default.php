@@ -17,22 +17,25 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validati
 	$js	=	'Joomla.submitform((task=="save"?"search":task), document.getElementById("seblod_form"));';
 }
 $app	=	JFactory::getApplication();
+$doc	=	JFactory::getDocument();
 $id		=	str_replace( ' ', '_', trim( $this->pageclass_sfx ) );
 $id		=	( $id ) ? 'id="'.$id.'" ' : '';
 ?>
-<script type="text/javascript">
-<?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
-Joomla.submitbutton = function(task, cid)
-{
-	if (task == "delete") {
-		if (!confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-			return false;
-		}
-	}
-	jQuery("#seblod_form").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JFactory::getURI() ); ?>">');
-	Joomla.submitform(task,document.getElementById('seblod_form'));
-}
-</script>
+<?php if ( $this->show_form ) {
+$js		=	$this->config['submit'].' = function(task) {'. $js.' };'
+		.	'Joomla.submitbutton = function(task, cid)'
+		.	'{'
+		.	'if (task == "delete") {'
+		.			'if (!confirm(Joomla.JText._(\'COM_CCK_CONFIRM_DELETE\'))) {'
+		.				'return false;'
+		.			'}'
+		.		'}'
+		.		'jQuery("#seblod_form").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
+		.		'Joomla.submitform(task,document.getElementById(\'seblod_form\'));'
+		.	'}'
+		.	'';
+$doc->addScriptDeclaration( $js );
+} ?>
 <?php if ( !$this->raw_rendering ) { ?>
 <div <?php echo $id; ?>class="cck_page cck-clrfix"><div>
 <?php }
@@ -48,12 +51,16 @@ if ( $this->show_list_title ) {
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="seblod_form" name="seblod_form">';
+if ( $this->show_form ) {
+	echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="seblod_form" name="seblod_form">';
+}
 if ( $this->show_form == 1 ) {
 	echo ( $this->raw_rendering ) ? $this->form : '<div class="cck_page_search'.$this->pageclass_sfx.' cck-clrfix">' . $this->form . '</div><div class="clr"></div>';
 }
 ?>
-<?php if ( !$this->raw_rendering ) { ?>
+<?php
+if ( $this->show_form ) {
+if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
 <input type="hidden" name="boxchecked" value="0" />
@@ -71,6 +78,8 @@ if ( $tmpl ) { ?>
 <input type="hidden" name="task" value="search" />
 <?php if ( !$this->raw_rendering ) { ?>
 </div>
+<?php } }
+if ( !$this->raw_rendering ) { ?>
 <div class="cck_page_list<?php echo $this->pageclass_sfx; ?> cck-clrfix" id="system">
 <?php } ?>
 	<?php
@@ -129,9 +138,11 @@ if ( $tmpl ) { ?>
 if ( $this->show_form == 2 ) {
 	echo ( $this->raw_rendering ) ? $this->form : '<div class="clr"></div><div class="cck_page_search'.$this->pageclass_sfx.'">' . $this->form . '</div>';
 }
+if ( $this->show_form ) {
 ?>
 </form>
 <?php
+}
 if ( $this->show_list_desc == 2 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }

@@ -47,6 +47,8 @@ if ( isset( $options2['task'] ) ) {
 		 .	 '<input type="hidden" id="json_options2_alt_link_options" name="json[options2][alt_link_options]" value="'.htmlspecialchars( @$options2['alt_link_options'] ).'" />'
 		 .	 '<span class="c_link" id="json_options2_alt" name="json_options2_alt">+</span>'
 		 .	 '</li>';
+		echo JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'label'=>'Redirection', 'selectlabel'=>'None', 'storage_field'=>'json[options2][itemid]' ) );
+		echo JCckDev::renderForm( 'core_dev_textarea', @$options2['custom'], $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][custom]' ), array(), 'w100' );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

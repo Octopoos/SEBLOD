@@ -162,8 +162,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'date_past':
 			case 'date_future':
 			case 'date_future_only':
-				$app		=	JFactory::getApplication();
-				$app->enqueueMessage( JText::_( 'COM_CCK_DATE_AND_TIME_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
+				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_DATE_AND_TIME_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;
 			case 'nested_exact':
 				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
@@ -242,6 +241,10 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				break;
 			case 'is_not_null':
 				// todo
+				break;
+			case 'radius_higher':
+			case 'radius_lower':
+				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_RADIUS_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;
 			case 'none':
 				return;

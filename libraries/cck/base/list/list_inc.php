@@ -147,6 +147,13 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);
+if ( isset( $preconfig['idx'] ) ) {
+	$config['idx']	=	$preconfig['idx'];
+	if ( !isset( $app->cck_idx ) ) {
+		$app->cck_idx	=	array();	
+	}
+	$app->cck_idx[]	=	$preconfig['idx'];
+}
 jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
