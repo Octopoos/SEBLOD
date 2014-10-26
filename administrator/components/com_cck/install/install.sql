@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_fields` (
   `sorting` int(11) NOT NULL DEFAULT '0',
   `divider` varchar(50) NOT NULL,
   `bool` tinyint(4) NOT NULL,
-  `location` varchar(255) NOT NULL,
+  `location` varchar(1024) NOT NULL,
   `extended` varchar(50) NOT NULL,
   `style` varchar(512) NOT NULL,
   `script` text NOT NULL,
