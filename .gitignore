@@ -734,8 +734,40 @@
 /layouts/libraries/cms/index.html
 /layouts/libraries/index.html
 /layouts/index.html
-/libraries/cms.php
-/libraries/cms/*
+/language/en-GB/en-GB.tpl_beez5.ini
+/language/en-GB/en-GB.tpl_beez5.sys.ini
+/language/en-GB/en-GB.xml
+/language/en-GB/index.html
+/language/en-GB/install.xml
+/language/overrides/*
+/language/index.html
+/libraries/cms/application/*
+/libraries/cms/captcha/*
+/libraries/cms/component/*
+/libraries/cms/editor/*
+/libraries/cms/error/*
+/libraries/cms/form/*
+/libraries/cms/help/*
+/libraries/cms/helper/*
+/libraries/cms/html/*
+/libraries/cms/installer/*
+/libraries/cms/language/*
+/libraries/cms/layout/*
+/libraries/cms/library/*
+/libraries/cms/menu/*
+/libraries/cms/module/*
+/libraries/cms/pagination/*
+/libraries/cms/pathway/*
+/libraries/cms/plugin/*
+/libraries/cms/response/*
+/libraries/cms/router/*
+/libraries/cms/schema/*
+/libraries/cms/search/*
+/libraries/cms/table/*
+/libraries/cms/toolbar/*
+/libraries/cms/ucm/*
+/libraries/cms/version/*
+/libraries/cms/index.html
 /libraries/compat/*
 /libraries/fof/*
 /libraries/framework/*
@@ -747,24 +779,10 @@
 /libraries/phputf8/*
 /libraries/simplepie/*
 /libraries/classmap.php
+/libraries/cms.php
 /libraries/index.html
 /libraries/import.php
 /libraries/import.legacy.php
-/language/en-GB/en-GB.tpl_beez5.ini
-/language/en-GB/en-GB.tpl_beez5.sys.ini
-/language/en-GB/en-GB.xml
-/language/en-GB/index.html
-/language/en-GB/install.xml
-/language/overrides/*
-/language/index.html
-/libraries/cms.php
-/libraries/cms/*
-/libraries/joomla/*
-/libraries/phpmailer/*
-/libraries/phputf8/*
-/libraries/simplepie/*
-/libraries/index.html
-/libraries/import.php
 /libraries/loader.php
 /libraries/platform.php
 /logs/*
@@ -903,6 +921,9 @@
 /robots.txt.dist
 /*.txt
 
+######## SEBLOD
+
+/administrator/components/com_cck/install/cms/*
 
 ######## SublimeText
 
