@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $config	=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck	=	JCckDev::preload( array( 'core_title_template', 'core_folder', 'core_description', 'core_state', 'core_name_template', 'core_type_template' ) );
+$cck	=	JCckDev::preload( array( 'core_title_template', 'core_folder', 'core_description', 'core_state', 'core_name_template', 'core_type_template', 'core_featured' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -25,8 +25,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <ul class="spe spe_folder">
 			<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
         </ul>
-        <ul class="spe spe_state">
+        <ul class="spe spe_state spe_third">
             <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
+        </ul>
+        <ul class="spe spe_description">
+            <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
         </ul>
         <ul class="spe spe_name">
             <?php echo JCckDev::renderForm( $cck['core_name_template'], $this->item->name, $config ); ?>
@@ -34,8 +37,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <ul class="spe spe_type">
             <?php echo JCckDev::renderForm( $cck['core_type_template'], $this->item->mode, $config ); ?>
         </ul>
-        <ul class="spe spe_description spe_latest">
-            <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
+        <ul class="spe spe_type spe_latest">
+            <?php echo JCckDev::renderForm( $cck['core_featured'], $this->item->featured, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'Featured=1||No=0', 'css'=>'btn-group btn-group-yesno' ) ); ?>
         </ul>
 	</div>
     
@@ -91,5 +94,8 @@ Helper_Display::quickCopyright();
             Joomla.submitform(task, document.getElementById('adminForm'));
         }
     }
+    $(document).ready(function() {
+        $("#featured").isVisibleWhen('mode','0');
+    });
 })(jQuery);
 </script>

@@ -6,12 +6,16 @@
 * @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
 **/
 
-table.zebra{width:100%;}
-table.zebra th{text-align:center;}
-table.zebra th.left,
-table.zebra td.left{text-align:left;}
-table.zebra th.right,
-table.zebra td.right{text-align:right;}
+table.table,table.zebra{width:100%;}
+table.table th,table.zebra th{text-align:center;}
+table.table td.center{text-align:center;}
+table.table th.left,table.zebra th.left,
+table.table td.left,table.zebra td.left{text-align:left;}
+table.table th.right,table.zebra th.right,
+table.table td.right,table.zebra td.right{text-align:right;}
+
 table.fixed{table-layout: fixed;}
-td.center{text-align:center;}
-td.nowrap{white-space: nowrap;}
+table.table td.nowrap{white-space: nowrap;}
+
+.scroll-x > div {overflow-x: auto;overflow-y: hidden;}
+.scroll-y > div {overflow-y: hidden;overflow-y: auto;}

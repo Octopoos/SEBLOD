@@ -143,7 +143,7 @@ abstract class JCckDevHelper
 	}
 
 	// getUrlVars
-	public static function getUrlVars( $url )
+	public static function getUrlVars( $url, $force = false )
 	{
 		if ( ( $pos = strpos( $url, '?') ) !== false ) {
 			$url	=	substr( $url, $pos + 1 );
@@ -154,11 +154,14 @@ abstract class JCckDevHelper
 			foreach ( $vars as $var ) {
 				$v	=	explode( '=', $var );
 				if ( $v[0] ) {
-					$url[$v[0]]	=	$v[1];
+					if ( $force ) {
+						$url[$v[0]]	=	(string)$v[1];
+					} else {
+						$url[$v[0]]	=	$v[1];
+					}
 				}
 			}
 		}
-		
 		$url	=	new JRegistry( $url );
 		
 		return $url;
@@ -173,12 +176,23 @@ abstract class JCckDevHelper
 		$count	=	count( $vars );
 
 		if ( $count ) {
+			if ( $custom === false ) {
+				$url	=	JUri::getInstance();
+			}
+			$query		=	self::getUrlVars( $url->toString(), true );
+
 			foreach ( $vars as $var ) {
 				if ( $var ) {
-					$v	=	explode( '=', $var );
-					$x	=	( $custom !== false ) ? $url->get( $v[0], '' ) : $app->input->get( $v[0], '' );
-					if ( $x == $v[1] ) {
-						$count--;
+					if ( strpos( $var, '=' ) !== false ) {
+						$v	=	explode( '=', $var );
+						$x	=	( $custom !== false ) ? $url->get( $v[0], '' ) : $app->input->get( $v[0], '' );
+						if ( $x == $v[1] ) {
+							$count--;
+						}
+					} else {
+						if ( $query->exists( $var ) ) {
+							$count--;
+						}
 					}
 				}
 			}

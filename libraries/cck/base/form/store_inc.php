@@ -20,7 +20,9 @@ $id			=	(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
 $hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
-$session->clear( 'cck_hash_'.$unique );
+if ( $id && $preconfig['id'] ) {
+	$session->clear( 'cck_hash_'.$unique );
+}
 if ( $app->isSite() && ( $hash != $hashed ) ) {
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
@@ -33,6 +35,10 @@ JPluginHelper::importPlugin( 'cck_field_restriction' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
 $dispatcher	=	JDispatcher::getInstance();
 $integrity	=	array();
+$processing	=	array();
+if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+}
 $storages	=	array();
 $config		=	array( 'author'=>0,
 					   'client'=>$client,
@@ -139,10 +145,24 @@ if ( $config['validate'] ) {
 }
 
 // BeforeStore
+if ( isset( $processing['onCckPreBeforeStore'] ) ) {
+	foreach ( $processing['onCckPreBeforeStore'] as $p ) {
+		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+		}
+	}
+}
 if ( isset( $config['process']['beforeStore'] ) && count( $config['process']['beforeStore'] ) ) {
 	foreach ( $config['process']['beforeStore'] as $process ) {
 		if ( $process->type ) {
 			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeStore', array( $process->params, &$fields, &$config['storages'], &$config ) );
+		}
+	}
+}
+if ( isset( $processing['onCckPostBeforeStore'] ) ) {
+	foreach ( $processing['onCckPostBeforeStore'] as $p ) {
+		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
 }
@@ -165,10 +185,24 @@ if ( !$k ) {
 }
 
 // AfterStore
+if ( isset( $processing['onCckPreAfterStore'] ) ) {
+	foreach ( $processing['onCckPreAfterStore'] as $p ) {
+		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+		}
+	}
+}
 if ( isset( $config['process']['afterStore'] ) && count( $config['process']['afterStore'] ) ) {
 	foreach ( $config['process']['afterStore'] as $process ) {
 		if ( $process->type ) {
 			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'AfterStore', array( $process->params, &$fields, &$config['storages'], &$config ) );
+		}
+	}
+}
+if ( isset( $processing['onCckPostAfterStore'] ) ) {
+	foreach ( $processing['onCckPostAfterStore'] as $p ) {
+		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
 }

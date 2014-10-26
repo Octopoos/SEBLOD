@@ -24,6 +24,58 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.4.1 Upgrade Release [20-Oct-2014] -------------
+
++ "Index, Follow, No archive", "Index, No follow, No archive" added to "Robots" fields.
++ "Index, Follow, No ODP", "Index, No follow, No ODP" added to "Robots" fields.
++ "Index, Follow, No snippet", "Index, No follow, No snippet" added to "Robots" fields.
+
+# Missing "Decimal (10,8)" Storage Type (for Latitude) added.
+# Missing "Decimal (11,8)" Storage Type (for Longitude) added.
+
+-------------------- 3.4.0 Upgrade Release [17-Oct-2014] -------------
+
++ Geo Distance ("Radius Higher", "Radius Lower") Match modes added on Search Types.
++ Ordering on Table (seb_table) Columns >> Search Ordering plug-in required.
+
++ "onCckPreBeforeStore", "onCckPostBeforeStore" events added.
++ "onCckPreAfterStore", "onCckPostAfterStore" events added.
++ "odt", "ods", "odp", "xlsm" included in download.php.
++ "save2redirect", "save2skip" Tasks added on Forms.
+
++ Allowed Case (Media) added to SEBLOD Options.
++ Custom Attributes (Component) added to SEBLOD Options.
++ "Featured" parameter added to Templates to set any Content/Form template as default.
+
++ "Custom variables", "Redirection" parameters added on Submit Button plug-in.
++ $cck->getSafe[...] syntax added on "HTML" Typography plug-in.
++ $user->... $uri->... syntaxes processed added on Select Dynamic plug-in.
++ ->values property available on Select Multiple plug-in.
+
++ Custom Attributes added to One (seb_one) template.
++ "column-q" to "column-z" positions adde to Table (seb_table) template.
++ Heading Variation added on Table (seb_table) template.
++ "Header", "Layout", "Margin" parameters added on Table (seb_table) template.
++ "no_result.php" updated on Blog (seb_blog), Table (seb_table) templates.
+
+^ Mobile Detect updated from 2.7.8 to 2.8.3.
+
+! "download.php" file (from back-end component) removed.
+! No <form> tag anymore when Search Form option is set to hide.
+! No JS included anymore when Search Form option is set to hide.
+! Rendering improved >> nested lists properly rendered.
+! Template Manager updated.
+
+# Data integrity check issue fixed (allowing n submissions per Form).
+# Hard coded live removed on "JForm User" plug-in (on Search Form).
+# Message markup (when empty message) issue fixed.
+# Minor issues fixed on Search system.
+# Multi-value mode issue fixed on Upload File plug-in.
+# "Static" Variation issue fixed on "JForm User" plug-in.
+# Reinstalling (after uninstall) issue fixed >> we suggest to reinstall the same version, though!
+# Router legacy mode issue fixed.
+# Various improvements or issues fixed.
+
 -------------------- 3.3.7 Upgrade Release [6-Aug-2014] -------------
 
 + Custom Attributes added on Heading Typography plug-in.

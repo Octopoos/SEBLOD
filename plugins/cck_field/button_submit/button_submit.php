@@ -123,10 +123,31 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		} else {
 			if ( $task == 'export' ) {
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_id'=>$task_id ) );
+			} elseif ( $task == 'save2redirect' ) {
+				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
+					$custom	=	JCckDevHelper::replaceLive( $options2['custom'] );
+					$custom	=	$custom ? '&'.$custom : '';
+				}
+				$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 			}
-			$click	=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';	
+			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';	
 		}
 		// $click	=	isset( $config['formId'] ) ? ' onclick="if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ).'\');}else{ Joomla.submitbutton(\''.$task.'\')};return false;"' : '';
+		if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
+			$matches	=	array();
+			$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
+			preg_match( $search, $field->attributes, $matches );
+			if ( count( $matches ) && $matches[0] ) {
+				if ( $matches[0] == $field->attributes ) {
+					$field->attributes	=	substr( trim( $field->attributes ), 0, -1 );
+					$click				=	' '.$field->attributes.'"';
+					$field->attributes	=	'';
+				} else {
+					$click				=	' onclick="'.$matches[1].'"';
+					$field->attributes	=	trim( str_replace( $matches[0], '', $field->attributes ) );
+				}
+			}
+		}
 		$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
 		if ( $field->bool ) {
 			$label	=	$value;

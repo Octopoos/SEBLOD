@@ -125,7 +125,14 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 						}
 					}
 				} else {
-					$value	=	$fields[$fieldname]->{$target};
+					$pos						=	strpos( $target, 'safe' );
+					if ( $pos !== false && $pos == 0 ) {
+						$target					=	substr( $target, 4 );
+						$value					=	$fields[$fieldname]->{$target};
+						$value					=	JCckDev::toSafeID( $value );
+					} else {
+						$value					=	$fields[$fieldname]->{$target};
+					}
 				}
 				$fields[$name]->typo	=	str_replace( $process['matches'][0][$k], $value, $fields[$name]->typo );
 			}

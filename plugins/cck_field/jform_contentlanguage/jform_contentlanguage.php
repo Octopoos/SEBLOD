@@ -60,7 +60,7 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$app	=	JFactory::getApplication();
-		$auto	=	( $config['translate_id'] && isset( $config['language'] ) && $config['language'] ) ? $config['language'] : '';
+		$auto	=	( @$config['translate_id'] && isset( $config['language'] ) && $config['language'] ) ? $config['language'] : '';
 		if ( $auto ) {
 			$value		=	$auto;
 		} else {

@@ -92,28 +92,56 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 		}
 		
 		// Prepare
-		$opt	=	'';
+		$opt		=	'';
+		$options	=	explode( '||', $field->options );
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
 				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
 			$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
 		}
-		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );	
-		$xml	=	'
-					<form>
-						<field
-							type="'.self::$type2.'"
-							name="'.$name.'"
-							id="'.$id.'"
-							label="'.htmlspecialchars( $field->label ).'"
-							class="'.$class.'"
-							size="1"
-						>'.$opt.'</field>
-					</form>
-				';
-		$form	=	JForm::getInstance( $id, $xml );
-		$form	=	$form->getInput( $name, '', $value );
+		$class		=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		if ( count( $options ) ) {
+			$group	=	false;
+			foreach ( $options as $i=>$val ) {
+				if ( trim( $val ) != '' ) {
+					if ( JString::strpos( $val, '=' ) !== false ) {
+						$o		=	explode( '=', $val );
+					} else {
+						$o		=	array( 0=>$val, 1=>$val );	
+					}
+					if ( $field->bool8 && trim( $o[0] ) ) {
+						$o[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o[0] ) ) );
+					}
+					if ( $o['1'] == 'optgroup' ) {
+						if ( $group ) {
+							$opt	.=	'</group>';
+						}
+						$opt	.=	'<group label="'.$o['0'].'">';
+						$group	=	true;
+					} else {
+						$opt	.=	'<option value="'.$o['1'].'">'.$o['0'].'</option>';
+					}
+				}
+			}
+			if ( $group ) {
+				$opt	.=	'</group>';
+			}
+		}
+		$xml		=	'
+						<form>
+							<field
+								type="'.self::$type2.'"
+								name="'.$name.'"
+								id="'.$id.'"
+								label="'.htmlspecialchars( $field->label ).'"
+								class="'.$class.'"
+								size="1"
+							>'.$opt.'</field>
+						</form>
+					';
+		$form		=	JForm::getInstance( $id, $xml );
+		$form		=	$form->getInput( $name, '', $value );
 		if ( strpos( $id, '-' ) !== false ) {
 			$id2	=	str_replace( '-', '_', $id );
 			$form	=	str_replace( 'id="'.$id2.'"', 'id="'.$id.'"', $form );

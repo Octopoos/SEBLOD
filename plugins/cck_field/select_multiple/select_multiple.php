@@ -49,9 +49,21 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 			$config['doTranslation']=	$field->bool8;
 		}
 
+		// Prepare
+		$divider					=	( $field->divider != '' ) ? $field->divider : ',';
+
 		// Set
-		$field->text				=	parent::g_getOptionText( $value, $field->options, ( ( $field->divider != '' ) ? $field->divider : ',' ), $config );
+		$field->text				=	parent::g_getOptionText( $value, $field->options, $divider, $config );
 		$field->value				=	$value;
+		
+		$texts						=	explode( $divider, $field->text );
+		$values						=	explode( $divider, $field->value );
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>$texts[$k], 'typo_target'=>'text', 'value'=>$v );
+			}
+		}
 		$field->typo_target			=	'text';
 		$config['doTranslation']	=	$doTranslation;
 	}

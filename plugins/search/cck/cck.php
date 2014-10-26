@@ -101,8 +101,8 @@ class plgSearchCCK extends JPlugin
 			$Pf		=	$field->storage_field;
 			$Pt		=	$field->storage_table;
 			
-			if ( ((( $value !== '' && $field->match_mode != 'none' ) /*|| ( $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )*/) && $field->storage != 'none' )
-			|| ( $field->type == 'search_operator' && $field->match_mode != 'none' ) ) {
+			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
+			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
 				$glue	=	'';
 				$sql	=	'';
 				
@@ -157,7 +157,7 @@ class plgSearchCCK extends JPlugin
 									$value2		=	$value;
 								}
 								require_once JPATH_PLUGINS.'/cck_storage/'.$child->storage.'/'.$child->storage.'.php';
-								$sql	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target ) );
+								$sql	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, $fields, &$config ) );
 							}
 							$k++;
 						}
@@ -202,7 +202,7 @@ class plgSearchCCK extends JPlugin
 					}
 					
 					require_once JPATH_PLUGINS.'/cck_storage/'.$field->storage.'/'.$field->storage.'.php';
-					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target ) );
+					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, $fields, &$config ) );
 				}
 				$where			.=	$sql;
 				$where2[++$w]	=	$sql;
@@ -219,6 +219,7 @@ class plgSearchCCK extends JPlugin
 		if ( $doClean !== false ) {
 			$where	=	preg_replace( '/\s+/', ' ', $where );
 			$where	=	str_replace( 'AND (  )', '', $where );
+			$where	=	str_replace( 'AND ( )', '', $where );
 			$where	=	str_replace( 'OR OR', 'OR', $where );
 			$where	=	str_replace( '( OR', '(', $where );
 			$where	=	str_replace( 'OR )', ')', $where );
@@ -229,7 +230,7 @@ class plgSearchCCK extends JPlugin
 		if ( ! $order ) {
 			$order	=	' t1.title ASC';
 		}
-
+		
 		$inherit	=	array( 'bridge'=>'', 'query'=>'' );
 		$query		=	NULL;
 		$results	=	array();
@@ -242,14 +243,20 @@ class plgSearchCCK extends JPlugin
 		if ( $config['doQuery'] !== false ) {
 			if ( $current['stage'] == 0 ) {
 				$query	=	$db->getQuery( true );
-				$query->select( 't0.id as pid, t0.pk as pk, t0.pkb as pkb' );
+				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb' );
 				$query->from( '`#__cck_core` AS t0' );
 				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
-				$query->select( 't0.cck as cck, t0.storage_location as loc' );
-				$query->select( 'tt.id AS type_id, tt.alias AS type_alias' );
+				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
+				$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
 				$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
+				if ( isset( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' ) {
+					$query->select( $config['query_parts']['select'] );
+				}
 				if ( $where != '' ) {
 					$query->where( $where );
+				}
+				if ( isset( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' ) {
+					$query->having( $config['query_parts']['having'] );
 				}
 				$query->group( 't0.pk' );
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
@@ -276,7 +283,9 @@ class plgSearchCCK extends JPlugin
 		
 		// Debug
 		if ( $options->get( 'debug' ) ) {
-			echo str_replace( array( 'FROM', 'LEFT JOIN', 'WHERE', 'ORDER BY' ), array( '<br />FROM', '<br />LEFT JOIN', '<br />WHERE', '<br />ORDER BY' ), (string)$query ).'<br /><br />';
+			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'WHERE', 'ORDER BY', 'UNION' ),
+							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />WHERE', '<br />ORDER BY', '<br />UNION' ),
+							  (string)$query ).'<br /><br />';
 		}
 		
 		unset( $fields );
@@ -340,7 +349,11 @@ class plgSearchCCK extends JPlugin
 				}
 			}
 		} else {
+			$ordered	=	false;
 			if ( count( $fields_order ) ) {
+				$str		=	(string)$query;
+				$str		=	explode( 'FROM', $str );
+				$str		=	$str[0];
 				foreach ( $fields_order as $field ) {
 					$order		=	'';
 					$dir		=	$field->match_mode;
@@ -349,6 +362,7 @@ class plgSearchCCK extends JPlugin
 						$s_field	=	$field->storage_field;
 						$s_table	=	$field->storage_table;
 						
+						// Prepare
 						if ( ! isset( $tables[$s_table] ) && $s_table ) {
 							$tables[$s_table]['_']		=	't'.$t;
 							$tables[$s_table]['fields']	=	array();
@@ -358,11 +372,20 @@ class plgSearchCCK extends JPlugin
 							$t++;
 						}
 						
-						$order		=	$tables[$s_table]['_'] .'.'. $s_field .' '. $dir;
-						$query->order( $order );
+						// Set
+						if ( isset( $tables[$s_table]['_'] ) && $tables[$s_table]['_'] != '' && $tables[$s_table]['_'] != '_' ) {
+							$order	.=	$tables[$s_table]['_'].'.'.$s_field.' '.$dir;
+						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
+							$order	.=	$s_field.' '.$dir;
+						}
+						if ( $order != '' ) {
+							$ordered	=	true;
+							$query->order( $order );
+						}	
 					}
 				}
-			} else {
+			}
+			if ( !$ordered ) {
 				$ordering	=	'alpha';
 				if ( @$config['location'] ) {
 					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );

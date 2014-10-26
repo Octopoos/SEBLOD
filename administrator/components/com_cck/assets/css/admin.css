@@ -66,7 +66,7 @@ span.value-picker{color: #eb8207; cursor: pointer; font-weight: bold; font-size:
 table.adminlist td div.title-left{padding-left: 9px;}
 table.adminlist .folder-parent{font-size:0.95em!important;}
 .folder-parent{color:#666666!important; text-transform:uppercase;}
-.storage-format{color:#666666!important; font-size:1em!important; text-transform:capitalize;}
+.storage-format{font-size:1em!important; text-transform:capitalize;}
 .elements-count{font-weight:bold; position:relative; top:-6px; left:6px;}
 .edit-view{color:#666666!important;}
 /*.sebwrapper div.collection-group-wrap{padding-left:30px;}*/

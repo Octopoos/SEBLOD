@@ -46,8 +46,18 @@
 	</fieldset>
 	
 	<fieldset name="fs_component" label="COM_CCK_CONFIG_FIELDSET_COMPONENT" description="COM_CCK_CONFIG_FIELDSET_COMPONENT_DESC">
+		<field name="COM_CCK_CONFIG_LEGEND_APP_FOLDER" type="spacer" hr="false" />
+		<field name="filename_date" type="radio" default="0" label="COM_CCK_CONFIG_FILENAME_DATE" description="COM_CCK_CONFIG_FILENAME_DATE_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="filename_version" type="radio" default="0" label="COM_CCK_CONFIG_FILENAME_VERSION_NUMBER" description="COM_CCK_CONFIG_FILENAME_VERSION_NUMBER_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_CONSTRUCTION" type="spacer" hr="false" />
 		<field name="development_prefix" type="text" size="8" default="" label="COM_CCK_CONFIG_DEV_PREFIX" class="inputbox" maxlength="3" description="COM_CCK_CONFIG_DEV_PREFIX_DESC" />
+		<field name="development_attr" type="text" size="8" default="6" label="COM_CCK_CONFIG_DEV_ATTR" class="inputbox" maxlength="2" description="COM_CCK_CONFIG_DEV_ATTR_DESC" />
 		<field name="COM_CCK_CONFIG_LEGEND_DEVELOPMENT" type="spacer" hr="false" />
 		<field name="storage_dev" type="radio" default="0" label="COM_CCK_CONFIG_DEV_STORAGE" description="COM_CCK_CONFIG_DEV_STORAGE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
@@ -91,6 +101,11 @@
 	</fieldset>
 
 	<fieldset name="fs_media" label="COM_CCK_CONFIG_FIELDSET_MEDIA" description="COM_CCK_CONFIG_FIELDSET_MEDIA_DESC">
+		<field name="media_case" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_LEGAL_CASE" description="COM_CCK_CONFIG_MEDIA_LEGAL_CASE_DESC" class="btn-group btn-group-yesno">
+			<option value="0">COM_CCK_LOWERCASE</option>
+			<option value="1">COM_CCK_UPPERCASE</option>
+			<option value="2">COM_CCK_BOTH</option>
+		</field>
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_archive_extensions" type="text" size="98" default="7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE_DESC" class="inputbox input-xlarge" />

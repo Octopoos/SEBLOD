@@ -10,19 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$label		=	JText::_( 'COM_CCK_FIELDS' );
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$title2		=	JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
-$templates	=	JCckDatabase::loadObjectList( 'SELECT name, title FROM #__cck_core_templates WHERE mode = 2 AND published = 1 ORDER BY name', 'name' );
-$scroll		=	( count( $templates ) >= 3 ) ? 1 : 0;
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$label			=	JText::_( 'COM_CCK_FIELDS' );
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$template_name	=	Helper_Admin::getDefaultTemplate();
+$title2			=	JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' );
+$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$templates		=	JCckDatabase::loadObjectList( 'SELECT name, title FROM #__cck_core_templates WHERE mode = 2 AND published = 1 ORDER BY name', 'name' );
+$scroll			=	( count( $templates ) >= 3 ) ? 1 : 0;
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_folder_filter', 'core_state_filter', 'core_folder', 'core_dev_text', 'core_storage_location2', 'core_client_filter' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
@@ -168,12 +169,12 @@ Helper_Display::quickCopyright();
 	JCck.Dev = {
 		status:0,
 		addNew: function(skip) {
+			var tpl_s = "<?php echo $template_name; ?>";
+			var tpl_f = "<?php echo $template_name; ?>";
+			var tpl_l = $("#tpl_list").val();
+			var tpl_i = "<?php echo $template_name; ?>";
 			var skip = skip || "";
 			var featured = $("#featured").val();
-			var tpl_s = "seb_one";
-			var tpl_f = "seb_one";
-			var tpl_l = $("#tpl_list").val();
-			var tpl_i = "seb_one";
 			var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
 			window.location.href = url;
 			return false;

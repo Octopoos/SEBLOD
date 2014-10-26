@@ -25,6 +25,7 @@ class CCKModelTemplates extends JModelList
 				'name', 'a.name',
 				'folder', 'a.folder', 'folder_title',
 				'mode', 'a.mode',
+				'featured', 'a.featured',
 				'published', 'a.published',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
@@ -58,6 +59,7 @@ class CCKModelTemplates extends JModelList
 				'a.name as name,' .
 				'a.folder as folder,' .
 				'a.mode as mode,' .
+				'a.featured as featured,' .
 				'a.published as published,' .
 				'a.checked_out as checked_out,' .
 				'a.checked_out_time as checked_out_time'
@@ -206,13 +208,15 @@ class CCKModelTemplates extends JModelList
 	// getItemsSelection
 	public function getItemsSelect()
 	{
-		$items	=	array();
-		
+		$items				=	array();
+		$template			=	Helper_Workshop::getDefaultTemplate();
+
 		$options			=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_templates AS a WHERE a.mode = 1 AND a.published = 1 ORDER BY a.title asc' );
-		$items['admin']		=	Jhtml::_( 'select.genericlist', $options, 'template_admin', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', 'seb_one' );
-		$items['site']		=	Jhtml::_( 'select.genericlist', $options, 'template_site', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', 'seb_one' );
+		$items['admin']		=	Jhtml::_( 'select.genericlist', $options, 'template_admin', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
+		$items['site']		=	Jhtml::_( 'select.genericlist', $options, 'template_site', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
+		
 		$options			=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_templates AS a WHERE a.mode = 0 AND a.published = 1 ORDER BY a.title asc' );
-		$items['content']	=	Jhtml::_( 'select.genericlist', $options, 'template_content', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', 'seb_one' );
+		$items['content']	=	Jhtml::_( 'select.genericlist', $options, 'template_content', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
 		
 		return $items;
 	}

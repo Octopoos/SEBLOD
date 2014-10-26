@@ -400,6 +400,19 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 	
+	// onBeforeRender
+	public function onBeforeRender()
+	{
+		$app	=	JFactory::getApplication();
+		$doc	=	JFactory::getDocument();
+		
+		if ( ( $app->isAdmin() || ( $app->isSite() && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
+			$head	=	$doc->getHeadData();
+
+			JCckToolbox::setHead( $head );
+		}
+	}
+
 	// onAfterRender
 	public function onAfterRender()
 	{

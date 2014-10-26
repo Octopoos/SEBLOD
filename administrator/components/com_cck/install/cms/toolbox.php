@@ -26,12 +26,45 @@ abstract class JCckToolbox
 				self::$_config	=	JComponentHelper::getParams( 'com_'.self::$_me );
 			} else {
 				self::$_config	=	new JRegistry;
+				self::$_config->set( 'KO', true );
 			}
 		}
 		
 		return self::$_config;
 	}
-	
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Head
+
+	// setHead
+	public static function setHead( &$head )
+	{
+		$app	=	JFactory::getApplication();
+		$doc	=	JFactory::getDocument();
+
+		if ( isset( $app->cck_document ) ) {
+			if ( isset( $app->cck_document['styleSheets'] ) && count( $app->cck_document['styleSheets'] ) ) {
+				foreach ( $app->cck_document['styleSheets'] as $k=>$v ) {
+					$head['styleSheets'][$k]	=	$v;
+				}
+				if ( JCck::on() ) {
+					$doc->setHeadData( array( 'styleSheets'=>$head['styleSheets'] ) );
+				} else {
+					$doc->_styleSheets			=	$head['styleSheets'];
+				}
+			}
+			if ( isset( $app->cck_document['scripts'] ) && count( $app->cck_document['scripts'] ) ) {
+				foreach ( $app->cck_document['scripts'] as $k=>$v ) {
+					$head['scripts'][$k]		=	$v;
+				}
+				if ( JCck::on() ) {
+					$doc->setHeadData( array( 'scripts'=>$head['scripts'] ) );
+				} else {
+					$doc->_scripts				=	$head['scripts'];
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Processing
 	
 	// process

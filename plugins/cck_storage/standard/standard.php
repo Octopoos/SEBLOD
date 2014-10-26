@@ -60,7 +60,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target )
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
 	{
 		$sql	=	'';
 		
@@ -212,6 +212,34 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				break;
 			case 'is_not_null':
 				$sql	=	$target.' IS NOT NULL';
+				break;
+			case 'radius_higher':
+			case 'radius_lower':
+				$t			=	explode( '.', $target );
+				$f_lat		=	$field->match_options->get( 'fieldname1', '' );
+				$f_lng		=	$field->match_options->get( 'fieldname2', '' );
+				$f_rad		=	$field->match_options->get( 'fieldname3', '' );
+				$lat		=	( isset( $fields[$f_lat] ) ) ? $fields[$f_lat]->value : '';
+				$lng		=	( isset( $fields[$f_lng] ) ) ? $fields[$f_lng]->value : '';
+				$s_lat		=	( isset( $fields[$f_lat]->storage_field ) && $fields[$f_lat]->storage_field ) ? $fields[$f_lat]->storage_field : $f_lat;
+				$s_lng		=	( isset( $fields[$f_lng]->storage_field ) && $fields[$f_lng]->storage_field ) ? $fields[$f_lng]->storage_field : $f_lng;
+				if ( $lat != '' && $lng != '' ) {
+					$alias		=	'distance';
+					$mod		=	( $field->match_options->get( 'var_unit', '1' ) ) ? '' : '*1.609344';
+					$radius		=	( isset( $fields[$f_rad] ) ) ? $fields[$f_rad]->value : '';
+					$sign		=	( $match == 'radius_higher' ) ? '>' : '<';
+					$config['query_parts']['select'][]	=	'(((acos(sin(('.(float)$lat.'*pi()/180)) * sin(('.$t[0].'.'.$s_lat.'*pi()/180))+cos(('.(float)$lat.'*pi()/180)) * cos(('.$t[0].'.'.$s_lat.'*pi()/180)) * cos((('.(float)$lng.'- '.$t[0].'.'.$s_lng.')*pi()/180))))*180/pi())*60*1.1515'.$mod.') AS '.$alias;						
+					if ( (int)$radius > 0 ) {
+						$config['query_parts']['having'][]	=	$alias.' '.$sign.' '.$radius;
+						$sql		=	'()'; // todo
+					} else {
+						$lat		=	number_format( $lat, 8 );
+						$lng		=	number_format( $lng, 8 );
+						$sql		=	'('.$t[0].'.'.$s_lat.' = '.JCckDatabase::quote( $lat ).' AND '.$t[0].'.'.$s_lng.' = '.JCckDatabase::quote( $lng ).')';
+					}
+				} else {
+					$sql			=	'()'; // todo
+				}
 				break;
 			case 'none':
 				return;

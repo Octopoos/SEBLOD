@@ -4,7 +4,7 @@ if ( !( isset( $name ) && $name != '' && isset( $path ) && $path != '' ) ) {
 }
 $allowed_ext  = array(
   // archives
-  'zip' => 'application/zip',
+  'zip' => 'application/octet-stream',
   'tgz' => 'application/x-compressed',
   'rar' => 'application/x-rar-compressed',
   'gz' => 'application/x-gzip',
@@ -14,11 +14,15 @@ $allowed_ext  = array(
   'doc' => 'application/msword',
   'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'xls' => 'application/vnd.ms-excel',
+  'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
   'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'ppt' => 'application/vnd.ms-powerpoint',
   'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'pps' => 'application/vnd.ms-powerpoint',
   'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+  'odt' => 'application/vnd.oasis.opendocument.text',
+  'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+  'odp' => 'application/vnd.oasis.opendocument.presentation',
   'txt' => 'text/plain',
   'csv' => 'text/csv',
 
@@ -70,6 +74,7 @@ header( "Content-Description: File Transfer" );
 header( "Content-Type: $mtype" );
 header( "Content-Disposition: attachment; filename=\"$name\"" );
 /*
+header( "Content-Transfer-Encoding: binary" );
 header( "Content-Length: " . filesize($path) );
 */
 if ( file_exists( $path ) ) {

@@ -263,7 +263,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			}
 		} else {
 			$field->text	=	( $preview ) ? $preview : $value;
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', $form_more, $config );
+			$value2			=	( is_array( $value ) && isset( $value['file_location'] ) ) ? $value['file_location'] : $value;
+			parent::g_getDisplayVariation( $field, $field->variation, $value2, $field->text, $form, $id, $name, '<input', '', $form_more, $config );
 		}
 		$field->value	=	$value;
 		self::_addScripts( $params );
@@ -322,6 +323,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$itemPrePath	.=	( @$options2['path_content'] )	? $config['pk'].'/' : '';
 		}
 		$item_custom_dir	=	$itemPrePath;
+		$item_custom_title 	=	'';
 		
 		if ( count( $inherit ) ) {
 			$name		=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
@@ -331,8 +333,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$array_x	=	( isset( $inherit['array_x'] ) ) ? $inherit['array_x'] : 0;
 			$itemPath	=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_hidden'] : @$config['post'][$name.'_hidden'];
 			$deleteBox	=	( isset( $inherit['post'] ) ) ? @$inherit['post'][$name.'_delete'] : @$config['post'][$name.'_delete'];
-			$item_custom_dir	.=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_path'] : @$config['post'][$name.'_path'];
-			$item_custom_title	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_title'] 	: @$config['post'][$name.'_title'];
+			if ( $options2['multivalue_mode'] ) {
+				$item_custom_dir	.=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_path'] : @$config['post'][$name.'_path'];
+				$item_custom_title	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_title'] 	: @$config['post'][$name.'_title'];
+			}
 		} else {
 			$name		=	$field->name;
 			$xk			=	-1;
@@ -341,8 +345,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$array_x	=	0;
 			$itemPath	=	@$config['post'][$name.'_hidden'];
 			$deleteBox	=	@$config['post'][$name.'_delete'];
-			$item_custom_dir	.=	@$config['post'][$name.'_path'];
-			$item_custom_title	=	@$config['post'][$name.'_title'];
+			if ( $options2['multivalue_mode'] ) {
+				$item_custom_dir	.=	@$config['post'][$name.'_path'];
+				$item_custom_title	=	@$config['post'][$name.'_title'];
+			}
 		}
 		
 		// Prepare
@@ -387,11 +393,14 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				if ( is_array( $itemPath ) ) {
 					$itemPath	=	$itemPath[$xk];
 				}
-				if ( is_array( $item_custom_dir ) ) {
-					$item_custom_dir	=	trim( $item_custom_dir[$xk] );
-				}
-				if ( is_array( $item_custom_title ) ) {
-					$item_custom_title	=	trim( $item_custom_title[$xk] );
+
+				if ( $options2['multivalue_mode'] ) {
+					if ( is_array( $item_custom_dir ) ) {
+						$item_custom_dir	=	trim( $item_custom_dir[$xk] );
+					}
+					if ( is_array( $item_custom_title ) ) {
+						$item_custom_title	=	trim( $item_custom_title[$xk] );
+					}
 				}
 				if ( is_array( $deleteBox ) ) {
 					$deleteBox	=	$deleteBox[$xk];

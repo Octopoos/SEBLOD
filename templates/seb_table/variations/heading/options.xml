@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="position_style" label="VAR_SEB_TABLE_HEADING_LEGEND">
+		<field name="type" type="list" default="" label="VAR_SEB_TABLE_HEADING_TYPE" description="VAR_SEB_TABLE_HEADING_TYPE_DESC" class="inputbox">
+			<option value="selection">VAR_SEB_TABLE_HEADING_SELECTION</option>
+			<option value="">VAR_SEB_TABLE_HEADING_LABEL</option>
+			<option value="ordering">VAR_SEB_TABLE_HEADING_ORDERING</option>
+		</field>
+		<field name="ordering" type="sql" default="" label="VAR_SEB_TABLE_HEADING_SEARCH_ORDERING" description="VAR_SEB_TABLE_HEADING_SEARCH_ORDERING_DESC"
+			   key_field="name" value_field="title" class="inputbox" query="SELECT name, title FROM #__cck_core_fields WHERE type = 'search_ordering' AND published = 1 ORDER BY title ASC">
+			<option value="">COM_CCK_SELECT_SL</option>
+		</field>
+		<field name="order_by" type="list" default="asc" label="VAR_SEB_TABLE_HEADING_ORDER_BY" description="VAR_SEB_TABLE_HEADING_ORDER_BY_DESC" class="inputbox">
+			<option value="">COM_CCK_INHERITED</option>
+			<option value="1">COM_CCK_CUSTOM</option>
+		</field>
+		<field name="order_by_fieldname" type="text" label="VAR_SEB_TABLE_HEADING_ORDER_BY_FIELDNAME" description="VAR_SEB_TABLE_HEADING_ORDER_BY_FIELDNAME_DESC" class="inputbox" />
+		<field name="order_dir" type="list" default="asc" label="VAR_SEB_TABLE_HEADING_ORDER_DIR" description="VAR_SEB_TABLE_HEADING_ORDER_DIR_DESC" class="inputbox">
+			<option value="asc">COM_CCK_ASCENDING</option>
+			<option value="desc">COM_CCK_DESCENDING</option>
+		</field>
+	</fieldset>
+
+	<fieldset name="position_display" label="VAR_SEB_TABLE_HEADING_LEGEND_POSITION">
+		<field name="display" type="list" default="0" label="VAR_SEB_TABLE_HEADING_DISPLAY" description="VAR_SEB_TABLE_HEADING_DISPLAY_DESC" class="inputbox">
+			<option value="0">COM_CCK_ALWAYS</option>
+			<option value="1">COM_CCK_CONDITIONAL</option>
+		</field>
+		<field name="display_trigger" type="text" default="" label="VAR_SEB_TABLE_HEADING_DISPLAY_TRIGGER" description="VAR_SEB_TABLE_HEADING_DISPLAY_TRIGGER_DESC" class="inputbox" />
+	</fieldset>
+</form>
