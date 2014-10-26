@@ -25,7 +25,11 @@ require_once JPATH_SITE.'/libraries/cck/rendering/rendering_item.php';
 $count		=	count( $items );
 $count2		=	count( $fields );
 $count3		=	( $client == 'item' && $go_for_both ) ? count( $fields2 ) : 0;
-$doc->list	=	array();
+if ( !isset( $doc->list ) ) {
+	$doc->list			=	array();
+}
+$doc->list[$idx]		=	array();
+
 $ids		=	'';
 $pks		=	'';
 if ( $list['isCore'] ) {
@@ -83,28 +87,28 @@ for ( $i = 0; $i < $count; $i++ ) {
 			$value				=	'';
 			$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 			if ( $fieldName ) {
-				$Pt	=	$field->storage_table;
+				$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 				if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 					if ( ! isset( $storages[$Pt] ) ) {
-						$storages[$Pt]							=	'';
-						if ( $list['isCore'] ) {
+						$storages[$Pt]					=	'';
+						if ( !$list['isCore'] || $Pt == '_' ) {
+							$config['storages'][$Pt]	=	$items[$i];
+						} else {
 							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 							$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 							if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 								$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 							}
-						} else {
-							$config['storages'][$Pt]	=	$items[$i];
 						}
 					} else {
-						if ( $list['isCore'] ) {
+						if ( !$list['isCore'] || $Pt == '_' ) {
+							$config['storages'][$Pt]	=	$items[$i];						
+						} else {
 							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 							$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 							if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 								$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 							}
-						} else {
-							$config['storages'][$Pt]	=	$items[$i];
 						}
 					}
 				}
@@ -184,28 +188,28 @@ for ( $i = 0; $i < $count; $i++ ) {
 			$value				=	'';
 			$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 			if ( $fieldName ) {
-				$Pt	=	$field->storage_table;
+				$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 				if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 					if ( ! isset( $storages[$Pt] ) ) {
 						$storages[$Pt]					=	'';
-						if ( $list['isCore'] ) {
+						if ( !$list['isCore'] || $Pt == '_' ) {
+							$config['storages'][$Pt]	=	$items[$i];
+						} else {
 							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 							$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 							if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 								$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 							}
-						} else {
-							$config['storages'][$Pt]	=	$items[$i];
 						}
 					} else {
-						if ( $list['isCore'] ) {
+						if ( !$list['isCore'] || $Pt == '_' ) {
+							$config['storages'][$Pt]	=	$items[$i];
+						} else {
 							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 							$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 							if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 								$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 							}
-						} else {
-							$config['storages'][$Pt]	=	$items[$i];
 						}
 					}
 				}
@@ -264,11 +268,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 	// --
 	
 	$item->initialize();
-	$doc->list[$PK]				=	$item;
-	$doc->list[$PK]->pid		=	$items[$i]->pid;
-	$doc->list[$PK]->pk			=	(string)$items[$i]->pk;
-	$doc->list[$PK]->pkb		=	$items[$i]->pkb;
-	$doc->list[$PK]->cck		=	$items[$i]->cck;
-	$doc->list[$PK]->location	=	$items[$i]->loc;
+	$doc->list[$idx][$PK]			=	$item;
+	$doc->list[$idx][$PK]->pid		=	$items[$i]->pid;
+	$doc->list[$idx][$PK]->pk		=	(string)$items[$i]->pk;
+	$doc->list[$idx][$PK]->pkb		=	$items[$i]->pkb;
+	$doc->list[$idx][$PK]->cck		=	$items[$i]->cck;
+	$doc->list[$idx][$PK]->location	=	$items[$i]->loc;
 }
 ?>

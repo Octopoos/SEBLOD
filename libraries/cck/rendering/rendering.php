@@ -134,6 +134,10 @@ class CCK_Rendering
 	{	
 		$app				=	JFactory::getApplication();
 		
+		$idx				=	'_';
+		if ( isset( $app->cck_idx ) && count( $app->cck_idx ) ) {
+			$idx			=	array_pop( $app->cck_idx );
+		}
 		$me					=	CCK_Document::getInstance( 'html' );
 		$this->me			=	( isset( $me->fields ) ) ? $me->fields : array();
 		$this->config		=	array( 'doComputation'=>0, 'mode'=>$me->cck_mode );
@@ -162,19 +166,33 @@ class CCK_Rendering
 		$this->profiler		=	@$me->profiler;
 		$this->profiler_log	=	@$me->profiler_log;
 		$this->translate	=	JCck::getConfig_Param( 'language_jtext', 0 );
-		
-		if ( isset( $me->list ) ) {
-			$this->list				=	$me->list;
-			$this->i_infos			=	@$me->i_infos;
-			$this->i_params			=	@$me->i_params;
-			$this->i_positions		=	@$me->i_positions;
-			$this->i_positions_more	=	@$me->i_positions_more;
+
+		// Nested Lists.. yeah!
+		if ( isset( $me->list[$idx] ) ) {
+			$this->list			=	$me->list[$idx];
+		} elseif ( isset( $me->list ) ) {
+			$this->list			=	$me->list;
+		}
+
+		// Additional parameters (renderItem)
+		if ( isset( $me->i_infos ) ) {
+			$this->i_infos			=	$me->i_infos;
+		}
+		if ( isset( $me->i_params ) ) {
+			$this->i_params			=	$me->i_params;	
+		}
+		if ( isset( $me->i_positions ) ) {
+			$this->i_positions		=	$me->i_positions;
+		}
+		if ( isset( $me->i_positions_more ) ) {
+			$this->i_positions_more	=	$me->i_positions_more;
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
 			$this->params['variation_default']	=	'seb_css3';
 		}
-		$this->id_class	=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
+		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
+		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';		
 		
 		if ( $this->initRendering() === false ) {
 			$app	=	JFactory::getApplication();
@@ -891,6 +909,10 @@ class CCK_Rendering
 						}
 					}
 				}
+			} elseif ( is_string( $options ) ) {
+				$options2	=	$options;
+				$options	=	new JRegistry;
+				$options->loadString( $options2 );
 			} else {
 				$options				=	new JRegistry;
 				$orientation			=	'vertical';
