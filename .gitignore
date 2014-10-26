@@ -924,6 +924,8 @@
 
 ######## SEBLOD
 
+/administrator/components/com_cck/install/cms/*
+
 ######## SublimeText
 
 # workspace files are user-specific
