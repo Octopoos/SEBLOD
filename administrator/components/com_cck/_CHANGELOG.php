@@ -24,6 +24,12 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.4.2 Upgrade Release [27-Oct-2014] -------------
+
+# Custom Attributes (>3) issue fixed on Select Dynamic plug-in.
+# install.sql updated >> `location` column (#__cck_core_fields) now VARCHAR(1024)
+# Wrong template path (for overrides on back-end) issue fixed.
+
 -------------------- 3.4.1 Upgrade Release [20-Oct-2014] -------------
 
 + "Index, Follow, No archive", "Index, No follow, No archive" added to "Robots" fields.
