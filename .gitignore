@@ -960,6 +960,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+######## SEBLOD Deprecated
+
+/plugins/system/blank/*
+
 ######## SEBLOD Add-ons >> Packager
 
 /administrator/components/com_cck_packager/*
