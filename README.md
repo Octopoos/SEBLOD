@@ -14,7 +14,7 @@ Going Further
 ======
 - <a href="http://www.seblod.com/community/forums" target="_blank">Forums</a>
 - <a href="http://www.seblod.com/products/vip" target="_blank">Memberships</a>
-- <a href="http://www.seblod.com/products" target="_blank">Products</a>
+- <a href="http://www.seblod.com/products" target="_blank">Marketplace</a>
 - <a href="http://www.seblod.com/enterprise/support" target="_blank">Support</a>
 
 Get Involved?
