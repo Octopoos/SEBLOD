@@ -126,7 +126,8 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$siteName	=	$app->getCfg('sitename');
 		$valid		=	0;
-		$send		=	isset( $options2['send'] ) ? $options2['send'] : 0;
+		$disabled	=	JFactory::getApplication()->input->post->get($field->name);
+		$send		=	isset( $options2['send'] ) && $disabled !==null ? $options2['send'] : 0;
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
 		$isNew		=	( $config['pk'] ) ? 0 : 1;
 		$sender		=	0;
