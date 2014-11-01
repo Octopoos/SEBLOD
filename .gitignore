@@ -964,6 +964,17 @@ Temporary Items
 
 /plugins/system/blank/*
 
+######## SEBLOD Add-ons >> Developer
+
+/administrator/components/com_cck_developer/*
+/administrator/language/en-GB/en-GB.com_cck_developer.ini
+/administrator/language/en-GB/en-GB.com_cck_developer.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_developer.ini
+/administrator/language/fr-FR/fr-FR.com_cck_developer.sys.ini
+/components/com_cck_developer/*
+/language/en-GB/en-GB.com_cck_developer.ini
+/language/fr-FR/fr-FR.com_cck_developer.ini
+
 ######## SEBLOD Add-ons >> Exporter
 
 /administrator/components/com_cck_exporter/*
@@ -974,6 +985,17 @@ Temporary Items
 /components/com_cck_exporter/*
 /language/en-GB/en-GB.com_cck_exporter.ini
 /language/fr-FR/fr-FR.com_cck_exporter.ini
+
+######## SEBLOD Add-ons >> Importer
+
+/administrator/components/com_cck_importer/*
+/administrator/language/en-GB/en-GB.com_cck_importer.ini
+/administrator/language/en-GB/en-GB.com_cck_importer.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_importer.ini
+/administrator/language/fr-FR/fr-FR.com_cck_importer.sys.ini
+/components/com_cck_importer/*
+/language/en-GB/en-GB.com_cck_importer.ini
+/language/fr-FR/fr-FR.com_cck_importer.ini
 
 ######## SEBLOD Add-ons >> Packager
 
@@ -1010,6 +1032,41 @@ Temporary Items
 /plugins/system/cck_toolbox/*
 /plugins/user/cck_toolbox/*
 
+######## SEBLOD Add-ons >> Updater
+
+/administrator/components/com_cck_updater/*
+/administrator/language/en-GB/en-GB.com_cck_updater.ini
+/administrator/language/en-GB/en-GB.com_cck_updater.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_updater.ini
+/administrator/language/fr-FR/fr-FR.com_cck_updater.sys.ini
+/components/com_cck_updater/*
+/language/en-GB/en-GB.com_cck_updater.ini
+/language/fr-FR/fr-FR.com_cck_updater.ini
+
+######## SEBLOD Plug-ins >> Field >> Address to Coordinates
+
+/administrator/language/en-GB/en-GB.plg_cck_field_address_to_coordinates.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_address_to_coordinates.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_address_to_coordinates.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_address_to_coordinates.sys.ini
+/plugins/cck_field/address_to_coordinates/*
+
+######## SEBLOD Plug-ins >> Field >> Author
+
+/administrator/language/en-GB/en-GB.plg_cck_field_author.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_author.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_author.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_author.sys.ini
+/plugins/cck_field/author/*
+
+######## SEBLOD Plug-ins >> Field >> Button Cancel
+
+/administrator/language/en-GB/en-GB.plg_cck_field_button_cancel.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_button_cancel.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_button_cancel.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_button_cancel.sys.ini
+/plugins/cck_field/button_cancel/*
+
 ######## SEBLOD Plug-ins >> Field >> Button Free
 
 /administrator/language/en-GB/en-GB.plg_cck_field_button_free.ini
@@ -1017,6 +1074,38 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_button_free.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_button_free.sys.ini
 /plugins/cck_field/button_free/*
+
+######## SEBLOD Plug-ins >> Field >> Button Reset
+
+/administrator/language/en-GB/en-GB.plg_cck_field_button_reset.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_button_reset.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_button_reset.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_button_reset.sys.ini
+/plugins/cck_field/button_reset/*
+
+######## SEBLOD Plug-ins >> Field >> Captcha Recaptcha
+
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_recaptcha.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_recaptcha.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_recaptcha.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_recaptcha.sys.ini
+/plugins/cck_field/captcha_recaptcha/*
+
+######## SEBLOD Plug-ins >> Field >> Checkbox Dynamic
+
+/administrator/language/en-GB/en-GB.plg_cck_field_checkbox_dynamic.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_checkbox_dynamic.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_checkbox_dynamic.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_checkbox_dynamic.sys.ini
+/plugins/cck_field/checkbox_dynamic/*
+
+######## SEBLOD Plug-ins >> Field >> Checkbox Numeric
+
+/administrator/language/en-GB/en-GB.plg_cck_field_checkbox_numeric.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_checkbox_numeric.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_checkbox_numeric.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_checkbox_numeric.sys.ini
+/plugins/cck_field/checkbox_numeric/*
 
 ######## SEBLOD Plug-ins >> Field >> Code (Pack)
 
@@ -1046,6 +1135,22 @@ Temporary Items
 /plugins/cck_field/code_css/*
 /plugins/cck_field/code_js/*
 
+######## SEBLOD Plug-ins >> Field >> Div Clear
+
+/administrator/language/en-GB/en-GB.plg_cck_field_div_clear.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_div_clear.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_div_clear.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_div_clear.sys.ini
+/plugins/cck_field/div_clear/*
+
+######## SEBLOD Plug-ins >> Field >> Folder
+
+/administrator/language/en-GB/en-GB.plg_cck_field_folder.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_folder.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_folder.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_folder.sys.ini
+/plugins/cck_field/folder/*
+
 ######## SEBLOD Plug-ins >> Field >> Form Action
 
 /administrator/language/en-GB/en-GB.plg_cck_field_form_action.ini
@@ -1053,6 +1158,30 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_form_action.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_form_action.sys.ini
 /plugins/cck_field/form_action/*
+
+######## SEBLOD Plug-ins >> Field >> Form HTML
+
+/administrator/language/en-GB/en-GB.plg_cck_field_form_html.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_form_html.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_form_html.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_form_html.sys.ini
+/plugins/cck_field/form_html/*
+
+######## SEBLOD Plug-ins >> Field >> IFrame
+
+/administrator/language/en-GB/en-GB.plg_cck_field_iframe.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_iframe.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_iframe.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_iframe.sys.ini
+/plugins/cck_field/iframe/*
+
+######## SEBLOD Plug-ins >> Field >> Radio Numeric
+
+/administrator/language/en-GB/en-GB.plg_cck_field_radio_numeric.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_radio_numeric.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_radio_numeric.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_radio_numeric.sys.ini
+/plugins/cck_field/radio_numeric/*
 
 ######## SEBLOD Plug-ins >> Field >> Search Generic
 
@@ -1086,6 +1215,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_ordering.sys.ini
 /plugins/cck_field/search_ordering/*
 
+######## SEBLOD Plug-ins >> Field >> Search Pagination
+
+/administrator/language/en-GB/en-GB.plg_cck_field_search_pagination.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_search_pagination.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_pagination.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_pagination.sys.ini
+/plugins/cck_field/search_pagination/*
+
 ######## SEBLOD Plug-ins >> Field >> Search Query
 
 /administrator/language/en-GB/en-GB.plg_cck_field_search_query.ini
@@ -1093,6 +1230,30 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_query.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_query.sys.ini
 /plugins/cck_field/search_query/*
+
+######## SEBLOD Plug-ins >> Field >> Search Total
+
+/administrator/language/en-GB/en-GB.plg_cck_field_search_total.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_search_total.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_total.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_total.sys.ini
+/plugins/cck_field/search_total/*
+
+######## SEBLOD Plug-ins >> Field >> Search Variables
+
+/administrator/language/en-GB/en-GB.plg_cck_field_search_variables.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_search_variables.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_variables.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_variables.sys.ini
+/plugins/cck_field/search_variables/*
+
+######## SEBLOD Plug-ins >> Field >> SEBLOD Canonical
+
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_canonical.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_canonical.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_canonical.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_canonical.sys.ini
+/plugins/cck_field/cck_canonical/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD Form & List (Pack)
 
@@ -1115,6 +1276,110 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_select_dynamic_cascade.sys.ini
 /plugins/cck_field/select_dynamic_cascade/*
 
+######## SEBLOD Plug-ins >> Link >> Custom
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_custom.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_custom.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_custom.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_custom.sys.ini
+/plugins/cck_field_link/custom/*
+
+######## SEBLOD Plug-ins >> Link >> Custom (JS)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_custom_js.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_custom_js.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_custom_js.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_custom_js.sys.ini
+/plugins/cck_field_link/custom_js/*
+
+######## SEBLOD Plug-ins >> Link >> Download
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_download.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_download.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_download.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_download.sys.ini
+/plugins/cck_field_link/download/*
+
+######## SEBLOD Plug-ins >> Link >> History Back (JS)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_history_back_js.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_history_back_js.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.sys.ini
+/plugins/cck_field_link/history_back_js/*
+
+######## SEBLOD Plug-ins >> Link >> Joomla! Menu Item
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_joomla_menuitem.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_joomla_menuitem.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_menuitem.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_menuitem.sys.ini
+/plugins/cck_field_link/joomla_menuitem/*
+
+######## SEBLOD Plug-ins >> Link >> SEBLOD Search (JS)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_search_js.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_search_js.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_search_js.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_search_js.sys.ini
+/plugins/cck_field_link/cck_search_js/*
+
+######## SEBLOD Plug-ins >> Live >> Datetime
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_datetime.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_datetime.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.sys.ini
+/plugins/cck_field_live/datetime/*
+
+######## SEBLOD Plug-ins >> Live >> Lorem Ipsum
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_lorem_ipsum.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_lorem_ipsum.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_lorem_ipsum.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_lorem_ipsum.sys.ini
+/plugins/cck_field_live/lorem_ipsum/*
+
+######## SEBLOD Plug-ins >> Live >> Random Number
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_number.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_number.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_number.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_number.sys.ini
+/plugins/cck_field_live/random_number/*
+
+######## SEBLOD Plug-ins >> Live >> Random Option
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_option.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_option.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_option.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_option.sys.ini
+/plugins/cck_field_live/random_option/*
+
+######## SEBLOD Plug-ins >> Live >> SEBLOD Site
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_site.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_site.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_site.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_site.sys.ini
+/plugins/cck_field_live/cck_site/*
+
+######## SEBLOD Plug-ins >> Live >> URL
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_url.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_url.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.sys.ini
+/plugins/cck_field_live/url/*
+
+######## SEBLOD Plug-ins >> Object >> Joomla! User Note
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_user_note.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_user_note.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.sys.ini
+/plugins/cck_storage_location/joomla_user_note/*
+
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_access.ini
@@ -1132,6 +1397,22 @@ Temporary Items
 /plugins/cck_field_restriction/joomla_access/*
 /plugins/cck_field_restriction/joomla_permissions/*
 /plugins/cck_field_restriction/joomla_user_group/*
+
+######## SEBLOD Plug-ins >> Restriction >> Joomla! Language
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_language.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_language.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.sys.ini
+/plugins/cck_field_restriction/joomla_language/*
+
+######## SEBLOD Plug-ins >> Restriction >> Mobile Device
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_mobile_device.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_mobile_device.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_mobile_device.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_mobile_device.sys.ini
+/plugins/cck_field_restriction/mobile_device/*
 
 ######## SEBLOD Plug-ins >> Restriction >> SEBLOD Fields
 
@@ -1169,6 +1450,14 @@ Temporary Items
 /plugins/cck_field_typo/joomla_message/*
 /plugins/cck_field_typo/joomla_pathway/*
 
+######## SEBLOD Plug-ins >> Typography >> PHP String
+
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_php_string.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_php_string.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_php_string.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_php_string.sys.ini
+/plugins/cck_field_typo/php_string/*
+
 ######## SEBLOD Plug-ins >> Typography >> Popover
 
 /administrator/language/en-GB/en-GB.plg_cck_field_typo_popover.ini
@@ -1176,6 +1465,69 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_popover.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_popover.sys.ini
 /plugins/cck_field_typo/popover/*
+
+######## SEBLOD Plug-ins >> Typography >> Pre
+
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_pre.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_pre.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_pre.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_pre.sys.ini
+/plugins/cck_field_typo/pre/*
+
+######## SEBLOD Plug-ins >> Validation >> Checkbox
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_checkbox.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_checkbox.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_checkbox.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_checkbox.sys.ini
+/plugins/cck_field_validation/checkbox/*
+
+######## SEBLOD Plug-ins >> Validation >> Credit Cards (Pack)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_american_express.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_american_express.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_american_express.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_american_express.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_mastercard.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_mastercard.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_mastercard.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_mastercard.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_visa.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_credit_card_visa.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_visa.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_credit_card_visa.sys.ini
+/plugins/cck_field_validation/credit_card/*
+/plugins/cck_field_validation/credit_card_american_express/*
+/plugins/cck_field_validation/credit_card_mastercard/*
+/plugins/cck_field_validation/credit_card_visa/*
+
+######## SEBLOD Plug-ins >> Validation >> Date
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_date.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_date.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_date.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_date.sys.ini
+/plugins/cck_field_validation/date/*
+
+######## SEBLOD Plug-ins >> Validation >> Function
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_function.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_function.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_function.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_function.sys.ini
+/plugins/cck_field_validation/function/*
+
+######## SEBLOD Plug-ins >> Validation >> IPv4
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_ipv4.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_ipv4.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_ipv4.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_ipv4.sys.ini
+/plugins/cck_field_validation/ipv4/*
 
 ######## SEBLOD Plug-ins >> Validation >> Letters (Pack)
 
@@ -1273,6 +1625,22 @@ Temporary Items
 /plugins/cck_field_validation/number_only/*
 /plugins/cck_field_validation/number_space/*
 
+######## SEBLOD Plug-ins >> Validation >> Phone
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_phone.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_phone.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_phone.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_phone.sys.ini
+/plugins/cck_field_validation/phone/*
+
+######## SEBLOD Plug-ins >> Validation >> Regex
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_regex.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_regex.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_regex.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_regex.sys.ini
+/plugins/cck_field_validation/regex/*
+
 ######## SEBLOD Plug-ins >> Validation >> Window Box
 
 /administrator/language/en-GB/en-GB.plg_cck_field_validation_window_box.ini
@@ -1281,11 +1649,25 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_validation_window_box.sys.ini
 /plugins/cck_field_validation/window_box/*
 
+######## SEBLOD Plug-ins >> Validation >> Zip Code
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_zipcode.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_zipcode.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_zipcode.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_zipcode.sys.ini
+/plugins/cck_field_validation/zipcode/*
+
 ######## SEBLOD Templates >> Accordion
 
 /language/en-GB/en-GB.tpl_seb_accordion.ini
 /language/fr-FR/fr-FR.tpl_seb_accordion.ini
 /templates/seb_accordion/*
+
+######## SEBLOD Templates >> Backstretch
+
+/language/en-GB/en-GB.tpl_seb_backstretch.ini
+/language/fr-FR/fr-FR.tpl_seb_backstretch.ini
+/templates/seb_backstretch/*
 
 ######## SEBLOD Templates >> Chart
 
@@ -1299,6 +1681,18 @@ Temporary Items
 /language/fr-FR/fr-FR.tpl_seb_cloud.ini
 /templates/seb_cloud/*
 
+######## SEBLOD Templates >> HTML
+
+/language/en-GB/en-GB.tpl_seb_html.ini
+/language/fr-FR/fr-FR.tpl_seb_html.ini
+/templates/seb_html/*
+
+######## SEBLOD Templates >> List
+
+/language/en-GB/en-GB.tpl_seb_list.ini
+/language/fr-FR/fr-FR.tpl_seb_list.ini
+/templates/seb_list/*
+
 ######## SEBLOD Templates >> Map
 
 /language/en-GB/en-GB.tpl_seb_map.ini
@@ -1310,6 +1704,12 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_masonry.ini
 /language/fr-FR/fr-FR.tpl_seb_masonry.ini
 /templates/seb_masonry/*
+
+######## SEBLOD Templates >> Minima
+
+/language/en-GB/en-GB.tpl_seb_minima.ini
+/language/fr-FR/fr-FR.tpl_seb_minima.ini
+/templates/seb_minima/*
 
 ######## SEBLOD Templates >> Tabs
 
