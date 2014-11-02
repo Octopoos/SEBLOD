@@ -73,7 +73,21 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 			$name	=	$field->name;
 		}
 		if ( $config['client'] == 'admin' && ! $config['pk'] && !$value ) {
-			$value		=	array( 8 );
+			/* $value		=	array( 8 ); //original */
+
+			/* -------------------------------------------------------------
+			 * desc:		changed the default usertype to the default joomla! settings usertype
+								so allways can change the default usertype thru the joomla! settings
+			 * reason:	the default usertype "8" is the Super User.
+								whenever i create a new user in the backend, the default usergroup
+								ist "8", this is not good.
+			 * autor:	paulbr
+			 * date:		2014/11/02
+			------------------------------------------------------------- */
+			$userconfig	=	JComponentHelper::getParams('com_users');
+			$value				=	array( $userconfig->get('new_usertype', 2) );
+			/* ---------------------------------------------------------- */
+
 		} elseif ( $value && is_string( $value ) && strpos( $value, ',' ) !== false ) {
 			$value	=	explode( ',', $value );
 		}
