@@ -128,8 +128,11 @@ abstract class JCckDevHelper
 	public static function getRouteParams( $name )
 	{
 		static $params	=	array();
-
-		if ( !isset( $params[$name] ) ) {
+		
+		if ( $name == '' ) {
+			return array();
+		}
+		if ( !isset( $params[$name] )  ) {
 			$object				=	JCckDatabase::loadObject( 'SELECT a.storage_location, a.options FROM #__cck_core_searchs AS a WHERE a.name = "'.$name.'"' );
 			$object->options	=	json_decode( $object->options );
 
