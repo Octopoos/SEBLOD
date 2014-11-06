@@ -90,12 +90,13 @@ if ( $description != '' ) {
 		}
 	}
 }
-$show_more			=	$params->get( 'show_link_more', 0 );
+$show_more			=	$params->get( 'show_more', 1 );
+$show_link_more		=	$params->get( 'show_link_more', 0 );
 $show_more_class	=	$params->get( 'link_more_class', '' );
 $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
 $show_more_link		=	'';
-if ( $show_more ) {
-	$show_more_link	=	'index.php?Itemid='.$show_more;
+if ( ( $show_more == 1 || ( $show_more == 2 && count( $items ) ) ) && $show_link_more ) {
+	$show_more_link	=	'index.php?Itemid='.$show_link_more;
 	$show_more_link	=	JRoute::_( $show_more_link );
 	$show_more_vars	=	$params->get( 'link_more_variables', '' );
 	if ( $show_more_vars ) {
