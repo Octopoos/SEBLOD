@@ -144,13 +144,25 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				}
 				break;
 			case 'each':
+			case 'each_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
 				if ( count( $values ) ) {
 					$fragments	=	array();
-					foreach ( $values as $v ) {
-						if ( strlen( $v ) > 0 ) {
-							$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+					if ( $match == 'each_exact' ) {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.$v.$TZ.'"' : $target.' REGEXP "'.$TA.$v.$TZ.'"' )
+												.	$target.' REGEXP "'.$TA.$v.$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$TZ.'"';
+							}
+						}
+					} else {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+							}
 						}
 					}
 					if ( count( $fragments ) ) {
