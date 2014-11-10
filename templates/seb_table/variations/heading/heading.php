@@ -36,7 +36,9 @@ if ( $type == 'ordering' ) {
 	}
 	$value		=	$column.':'.( ( $order == $column ) ? ( ( $order_dir == 'asc' ) ? 'desc' : 'asc' ) : $options->get( 'order_dir', 'asc' ) );
 	
-	JHtml::_( 'bootstrap.tooltip' );
+	if ( JCck::on() ) {
+		JHtml::_( 'bootstrap.tooltip' );
+	}
 	
 	if ( $column == $order ) {
 		$legend	.=	'<i class="icon-arrow-'.( ( $order_dir == 'asc' ) ? 'up' : 'down' ).'-3"></i>';
