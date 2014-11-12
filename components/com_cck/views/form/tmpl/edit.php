@@ -29,8 +29,11 @@ if ( $this->show_form_title ) {
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
-if ( @$this->config['error'] === true ) {
-	return;
+if ( @$this->config['error'] === true ) { ?>
+   <?php if ( !$this->raw_rendering ) { ?>
+   	</div></div>
+   <?php }
+   return;
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
