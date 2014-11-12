@@ -58,6 +58,7 @@ if ( isset( $options2['task'] ) ) {
 
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
+		$('#bool6').isVisibleWhen('bool','1');
 		$('#json_options2_icon').isVisibleWhen('bool6','1,2,3',false);
 		$('#bool3').isVisibleWhen('bool2','1,2');
 		$('#blank_li').isVisibleWhen('json_options2_task','export,process');
