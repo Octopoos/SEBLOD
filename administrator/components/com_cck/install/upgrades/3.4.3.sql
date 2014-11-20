@@ -1,0 +1,2 @@
+
+UPDATE `#__cck_core_fields` SET `options` = 'Task Cancel=cancel||Task Save=apply||Task Save and Close=save||Task Save and New=save2new||Task Save and Redirect=save2redirect||Task Save and Skip=save2skip||Task Save and View=save2view||SEBLOD Exporter Addon=optgroup||Task Export=export||SEBLOD Toolbox Addon=optgroup||Task Processing=process' WHERE `id` = 486;

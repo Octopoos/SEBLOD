@@ -32,7 +32,7 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 		.		'}'
 		.		'jQuery("#seblod_form").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
 		.		'Joomla.submitform(task,document.getElementById(\'seblod_form\'));'
-		.	'}'
+		.	'};'
 		.	'';
 $doc->addScriptDeclaration( $js );
 } ?>

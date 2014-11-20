@@ -24,6 +24,13 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
+
+# "JHtml: :bootstrap not supported. File not found" on Joomla 2.5 issue fixed.
+# Javascript issue fixed on Lists (regression)
+# Markup fixed when "No Access" set to none on Forms.
+# Missing "save2redirect", "save2skip" in SQL
+
 -------------------- 3.4.2 Upgrade Release [27-Oct-2014] -------------
 
 # Custom Attributes (>3) issue fixed on Select Dynamic plug-in.
