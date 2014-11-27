@@ -13,6 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckDevHelper
 abstract class JCckDevHelper
 {
+	// createFolder
+	public static function createFolder( $path, $mode = 0755 )
+	{
+		jimport( 'joomla.filesystem.folder' );
+		
+		if ( ! JFolder::exists( $path ) ) {
+			JFolder::create( $path, $mode );
+			$buffer	=	'<!DOCTYPE html><title></title>';
+			JFile::write( $path.'/index.html', $buffer );
+		}
+		
+		return $path;
+	}
+
+	// formatBytes
 	public static function formatBytes( $bytes, $precision = 2 )
 	{ 
 		$units	=	array( 'B', 'KB', 'MB', 'GB', 'TB' ); 
