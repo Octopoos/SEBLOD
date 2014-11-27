@@ -58,8 +58,17 @@ include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
 if ( !is_object( @$options ) ) {
 	$options	=	new JRegistry;
 }
-$description	=	'';
-$show_list_desc	=	$params->get( 'show_list_desc' );
+$description		=	'';
+$show_list_desc		=	$params->get( 'show_list_desc' );
+$show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : 0;
+if ( $show_list_title == '' ) {
+	$show_list_title	=	$options->get( 'show_list_title', '1' );
+	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$options->get( 'class_list_title' );
+} elseif ( $show_list_title ) {
+	$tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$params->get( 'class_list_title' );
+}
 if ( $show_list_desc == '' ) {
 	$show_list_desc	=	$options->get( 'show_list_desc', '1' );
 	$description	=	@$search->description;
