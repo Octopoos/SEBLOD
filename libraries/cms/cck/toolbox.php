@@ -70,7 +70,7 @@ abstract class JCckToolbox
 	// process
 	public static function process( $event )
 	{
-		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 		if ( isset( $processing[$event] ) ) {
 			foreach ( $processing[$event] as $p ) {
@@ -84,7 +84,7 @@ abstract class JCckToolbox
 	// processById
 	public static function processById( $id = 0 )
 	{
-		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 AND id = '.(int)$id );
+		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$id );
 
 		if ( is_object( $processing ) && is_file( JPATH_SITE.$processing->scriptfile ) ) {
 			include_once JPATH_SITE.$processing->scriptfile;

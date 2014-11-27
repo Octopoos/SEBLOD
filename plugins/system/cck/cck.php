@@ -95,7 +95,15 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 	}
-	
+
+	// onAfterLoad
+	public function onAfterLoad()
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterLoad' );
+		}
+	}
+
 	// onAfterInitialise
 	public function onAfterInitialise()
 	{
@@ -105,6 +113,10 @@ class plgSystemCCK extends JPlugin
 			$router->attachBuildRule( array( $this, 'buildRule' ) );
 		} elseif ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
 			JFactory::getLanguage()->load( 'com_cck_core' );
+		}
+		
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
+			JCckToolbox::process( 'onAfterInitialise' );
 		}
 		
 		if ( $this->multisite !== true ) {
@@ -192,6 +204,9 @@ class plgSystemCCK extends JPlugin
 	// onAfterDispatch
 	public function onAfterDispatch()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterDispatch' );
+		}
 		$app		=	JFactory::getApplication();
 		$doc		=	JFactory::getDocument();
 		$id			=	$app->input->getInt( 'id', 0 );
@@ -403,6 +418,9 @@ class plgSystemCCK extends JPlugin
 	// onBeforeRender
 	public function onBeforeRender()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onBeforeRender' );
+		}
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
@@ -416,6 +434,9 @@ class plgSystemCCK extends JPlugin
 	// onAfterRender
 	public function onAfterRender()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterRender' );
+		}
 		$app		=	JFactory::getApplication();
 		$option		=	$app->input->get( 'option', '' );
 		$view		=	$app->input->get( 'view', '' );
@@ -515,6 +536,23 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 	
+	// onContentPrepareForm
+	public function onContentPrepareForm( $form, $data )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onContentPrepareForm';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+	}
+
 	// _reSubmenu
 	protected function _reSubmenu( $buffer, $search, $replace )
 	{
