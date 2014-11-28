@@ -43,7 +43,7 @@ $ -> Language fix or change
 ^ Include inline scripts for Validation when tmpl=raw
 ^ Implement JCckVersion class.
 ^ Move Processings from Toolbox Add-on to Core.
-! Rename #__cck_more_toolbox_processing to #__cck_more_processing.
+! Rename #__cck_more_toolbox_processings to #__cck_more_processings.
 
 # Notices removed in Router.
 # Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
