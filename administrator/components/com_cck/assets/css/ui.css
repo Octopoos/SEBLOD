@@ -392,7 +392,7 @@ body:not(.admin):not(.component) ul.spe_sixth a:link,
 body:not(.admin):not(.component) ul.spe_sixth a:visited{background: none repeat scroll 0 0 #FFFFFF; border: 1px solid silver; font-size: 1em;border-radius: 3px; padding: 4px; line-height:25px;}
 .adminlist.mediamanager tr { height: 28px; }
 .adminlist.mediamanager td { padding: 0 30px; }
-span.c_live,span.c_live2 {width:11px;cursor:pointer;}
+span.c_live,span.c_live2,span.c_mat2{width:11px;cursor:pointer;}
 span.c_mat{display:inline-block;}
 .insidebox {color:#a8a8a8; font-size:10px; position:relative; top:6px; left:-19px;}
 div.conditional table.adminlist tr.row2 td {background-color:#f0f0f0;}

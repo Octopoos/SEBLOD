@@ -56,7 +56,7 @@ class Helper_Workshop
                 <li>
                 <?php
 				if ( $master == 'order' ) { ?>
-					<div class="pane ph1"><div>-</div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
+					<div class="pane ph1"><div><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
                 <?php } elseif ( $master == 'content' ) { ?>
                     <div class="pane ph4 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                     <div class="pane ph3 hide"><div><?php echo JText::_( 'COM_CCK_MARKUP_CLASS' ); ?></div><div><?php echo JText::_( 'COM_CCK_MARKUP' ); ?></div></div>
@@ -331,7 +331,13 @@ class Helper_Workshop
 			}
 		} else {
 			if ( $master == 'order' ) {
-				$data['match_mode']	=	array( JHtml::_( 'select.option', 'ASC', JText::_( 'COM_CCK_ASCENDING' ) ), JHtml::_( 'select.option', 'DESC', JText::_( 'COM_CCK_DESCENDING' ) ) );
+				$data['match_mode']	=	array(
+											JHtml::_( 'select.option', 'ASC', JText::_( 'COM_CCK_ASCENDING' ) ),
+											JHtml::_( 'select.option', 'DESC', JText::_( 'COM_CCK_DESCENDING' ) ),
+											JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) ),
+											JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_BY_FIELD' ) ),
+											JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true ) );
 				$data['typo']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true ) );
