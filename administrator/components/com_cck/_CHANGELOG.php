@@ -24,6 +24,21 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.5.0 Upgrade Release [28-Nov-2014] -------------
+
++ Add XML format on List View.
++ Ordering By "Custom Values" added.
++ Ordering Modifiers (Length, Numeric) added >> natural sorting.
+
++ "Count" parameter added on List View.
+
+^ Include inline validation scripts when tmpl=raw
+^ Implement JCckVersion class.
+^ Move Processings from Toolbox Add-on to Core.
+! Rename #__cck_more_toolbox_processing to #__cck_more_processing.
+
+# Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
+
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
 
 # "JHtml: :bootstrap not supported. File not found" on Joomla 2.5 issue fixed.
