@@ -107,6 +107,9 @@ if ( JCck::on() ) { ?>
             <?php } ?>
         </div>
         <div class="modal-footer">
+            <button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://www.seblod.com/products?seb_item_category=27', '_blank'); return false;">
+                <?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_TEMPLATES' ); ?>
+            </button>
             <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
             <div class="btn-group dropup pull-right">
                 <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>
