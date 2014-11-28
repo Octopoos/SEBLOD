@@ -335,7 +335,7 @@ class Helper_Workshop
 											JHtml::_( 'select.option', 'ASC', JText::_( 'COM_CCK_ASCENDING' ) ),
 											JHtml::_( 'select.option', 'DESC', JText::_( 'COM_CCK_DESCENDING' ) ),
 											JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) ),
-											JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_BY_FIELD' ) ),
+											JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
 											JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 			} elseif ( $master == 'content' ) {
