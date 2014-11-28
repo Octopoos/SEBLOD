@@ -31,12 +31,19 @@ $ -> Language fix or change
 + Ordering Modifiers (Length, Numeric) added >> natural sorting.
 
 + "Count" parameter added on List View.
++ "Each Word Exact" Match mode added on Search Types.
 
-^ Include inline validation scripts when tmpl=raw
+"Show Title", "Class", "Tag" added to List module.
+"Show Title", "Class", "Tag" added to Search module.
+"Show Description" added to Search module.
+
+^ Image Quality (JPG, PNG) moved to SEBLOD Options (Media).
+^ Include inline scripts for Validation when tmpl=raw
 ^ Implement JCckVersion class.
 ^ Move Processings from Toolbox Add-on to Core.
 ! Rename #__cck_more_toolbox_processing to #__cck_more_processing.
 
+# Notices removed in Router.
 # Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
 
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
