@@ -33,9 +33,11 @@ $ -> Language fix or change
 + "Count" parameter added on List View.
 + "Each Word Exact" Match mode added on Search Types.
 
-"Show Title", "Class", "Tag" added to List module.
-"Show Title", "Class", "Tag" added to Search module.
-"Show Description" added to Search module.
++ "Show Title", "Class", "Tag" added to List module.
++ "Show Title", "Class", "Tag" added to Search module.
++ "Show Description" added to Search module.
+
++ JCckDevImage class added for Images processing.
 
 ^ Image Quality (JPG, PNG) moved to SEBLOD Options (Media).
 ^ Include inline scripts for Validation when tmpl=raw
