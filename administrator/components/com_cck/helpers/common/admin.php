@@ -13,6 +13,17 @@ defined( '_JEXEC' ) or die;
 // CommonHelper
 class CommonHelper_Admin
 {
+	// addFolderClass
+	public static function addFolderClass( &$css, $id, $color, $colorchar, $width = '20' )
+	{
+		if ( ! isset( $css[$id] ) ) {
+			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
+			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
+			$css[$id]	=	'.folderColor'.$id.' { width: '.$width.'px; height: 14px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
+						.	'vertical-align: middle; border: none; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; text-align:center; margin-left:auto; margin-right:auto; } ';
+		}
+	}
+	
 	// addIcon
 	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left' )
 	{
