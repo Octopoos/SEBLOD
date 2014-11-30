@@ -24,7 +24,7 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.5.0 Upgrade Release [28-Nov-2014] -------------
+-------------------- 3.5.0 Upgrade Release [1-Dec-2014] -------------
 
 + Add XML format on List View.
 + Ordering By "Custom Values" added.
@@ -39,6 +39,7 @@ $ -> Language fix or change
 
 + JCckDevImage class added for Images processing.
 
+! Complete Processing Task >> SEBLOD Toolbox Add-on required.
 ^ Image Quality (JPG, PNG) moved to SEBLOD Options (Media).
 ^ Include inline scripts for Validation when tmpl=raw
 ^ Implement JCckVersion class.
@@ -47,6 +48,7 @@ $ -> Language fix or change
 
 # Notices removed in Router.
 # Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
+# Remove Match modes on Div, Tabs plug-ins.
 
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
 
