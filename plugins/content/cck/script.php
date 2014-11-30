@@ -433,7 +433,7 @@ class plgContentCCKInstallerScript
 					JCckDatabase::doQuery( 'UPDATE #__cck_core_objects SET options = "'.$db->escape( json_encode( $params ) ).'" WHERE name = "'.$k.'"' );
 				}
 			}
-
+			
 			if ( $i2 < 45 ) {
 				$table		=	'#__cck_store_item_users';
 				$columns	=	$db->getTableColumns( $table );
@@ -441,14 +441,25 @@ class plgContentCCKInstallerScript
 					JCckDatabase::doQuery( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' DROP '.JCckDatabase::quoteName( 'password2' ) );
 				}
 			}
-
+			
 			if ( $i2 < 66 ) {
 				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
 				if ( JFile::exists( $path ) ) {
 					JFile::delete( $path );
 				}
 			}
+			
+			if ( $i2 < 70 ) {
+				$plg_image	=	JPluginHelper::getPlugin( 'cck_field', 'upload_image' );
+				$plg_params	=	new JRegistry( $plg_image->params );
 
+				$com_cck	=	JComponentHelper::getComponent( 'com_cck' );
+				$com_cck->params->set( 'media_quality_jpeg', $plg_params->get( 'quality_jpeg', '90' ) );
+				$com_cck->params->set( 'media_quality_png', $plg_params->get( 'quality_png', '3' ) );
+				
+				JCckDatabase::doQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $com_cck->params->toString() ).'" WHERE type = "component" AND element = "com_cck"' );
+			}
+			
 			// Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
