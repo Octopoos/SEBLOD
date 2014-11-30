@@ -215,6 +215,7 @@ class CommonHelper_Admin
 	// getFolderOptions
 	public static function getFolderOptions( $selectlabel = false, $quickfolder = true, $top = false, $published = true, $element = '', $featured = false, $more = '' )
 	{
+		$component	=	JFactory::getApplication()->input->getCmd( 'option' );
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
@@ -238,7 +239,7 @@ class CommonHelper_Admin
 						. ' GROUP BY s.id ORDER BY s.title'
 						;
 		} else {
-			if ( $element ) {
+			if ( $component == 'com_cck' && $element ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
 			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
@@ -253,7 +254,8 @@ class CommonHelper_Admin
 			if ( $top && $options2[0]->value == '2' ) {
 				$options2[0]->text	=	JText::_( 'COM_CCK_'.$options2[0]->text );
 			}
-			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'._C0_TEXT.'S' ) );
+			$optgroup			=	( defined( '_C0_TEXT' ) ) ? 'COM_CCK_'._C0_TEXT.'S' : 'COM_CCK_APP_FOLDERS';
+			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $optgroup ) );
 			$options			=	array_merge( $options, $options2 );
 			$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		}
