@@ -15,4 +15,8 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_toolbox_processings` (
 
 RENAME TABLE `#__cck_more_toolbox_processings` TO `#__cck_more_processings`;
 
+ALTER TABLE `#__cck_more_processings` ADD `folder` INT NOT NULL AFTER `name`;
+
 UPDATE `#__cck_core_fields` SET `options2` = '{"query":"","table":"#__cck_more_processings","name":"title","where":"published=1","value":"id","orderby":"title","orderby_direction":"ASC","attr1":"","attr2":"","attr3":"","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}' WHERE `id` = 522;
+
+UPDATE `#__extensions` SET `enabled` = '0' WHERE `type` = "plugin" AND `element` = "cck_toolbox" AND `folder` = "user";
