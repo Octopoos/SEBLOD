@@ -1276,6 +1276,24 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_select_dynamic_cascade.sys.ini
 /plugins/cck_field/select_dynamic_cascade/*
 
+######## SEBLOD Plug-ins >> Field >> SQL (Pack)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_sql_query.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_sql_query.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_sql_query.sys.ini
+/plugins/cck_field/sql_query/*
+/plugins/cck_field_live/sql_query/*
+/plugins/cck_field_restriction/sql_query/*
+
 ######## SEBLOD Plug-ins >> Link >> Custom
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_custom.ini
