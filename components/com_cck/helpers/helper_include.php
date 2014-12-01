@@ -69,8 +69,8 @@ class Helper_Include
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="/media/cck/css/cck.validation.css" type="text/css" />';
-			echo '<script src="/media/cck/js/cck.validation-3.2.0.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.JURI::root( true ).'/media/cck/css/cck.validation.css" type="text/css" />';
+			echo '<script src="'.JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation.css' );
