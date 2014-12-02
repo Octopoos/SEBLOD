@@ -28,8 +28,11 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 <div class="clr"></div>
 <div>
 <?php } ?>
-<input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" />
-<input type="hidden" name="task" value="search" />
+	<input type="hidden" value="com_cck" name="option">
+	<input type="hidden" value="list" name="view">
+	<input type="hidden" value="<?php echo $params->get( 'menu_item', '' ); ?>" name="Itemid">
+	<input type="hidden" value="<?php echo $preconfig['search']; ?>" name="search">
+	<input type="hidden" value="search" name="task">
 <?php if ( !$raw_rendering ) { ?>
 </div>
 <?php } ?>
