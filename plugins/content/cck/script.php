@@ -96,17 +96,19 @@ class plgContentCCKInstallerScript
 			$addons	=	$db->loadObjectList();
 			if ( count( $addons ) ) {			
 				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-				$titles	=	array( 'com_cck_developer'=>'Developer',
-								   'com_cck_ecommerce'=>'eCommerce',
-								   'com_cck_exporter'=>'Exporter',
-								   'com_cck_importer'=>'Importer',
-								   'com_cck_manager'=>'Manager',
-								   'com_cck_multilingual'=>'Multilingual',
-								   'com_cck_packager'=>'Packager',
-								   'com_cck_toolbox'=>'Toolbox',
-								   'com_cck_updater'=>'Updater',
-								   'com_cck_webservices'=>'WebServices'
-								);
+				$titles	=	array(
+								'com_cck_builder'=>'Builder',
+								'com_cck_developer'=>'Developer',
+								'com_cck_ecommerce'=>'eCommerce',
+								'com_cck_exporter'=>'Exporter',
+								'com_cck_importer'=>'Importer',
+								'com_cck_manager'=>'Manager',
+								'com_cck_multilingual'=>'Multilingual',
+								'com_cck_packager'=>'Packager',
+								'com_cck_toolbox'=>'Toolbox',
+								'com_cck_updater'=>'Updater',
+								'com_cck_webservices'=>'WebServices'
+							);
 				foreach ( $addons as $addon ) {
 					$addon->title	=	$titles[$addon->element];
 					self::_addAddon( $addon, $seblod );

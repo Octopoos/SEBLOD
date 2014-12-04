@@ -223,7 +223,8 @@ class plgSystemCCK extends JPlugin
 					break;
 				case 'com_config':
 					$com	=	$app->input->get( 'component', '' );
-					if ( $com == 'com_cck' || $com == 'com_cck_developer'
+					if ( $com == 'com_cck' || $com == 'com_cck_builder'
+										   || $com == 'com_cck_developer'
 										   || $com == 'com_cck_ecommerce'
 										   || $com == 'com_cck_exporter'
 										   || $com == 'com_cck_importer'
@@ -462,6 +463,7 @@ class plgSystemCCK extends JPlugin
 			
 			switch ( $option ) {
 				case 'com_cck':
+				case 'com_cck_builder':
 				case 'com_cck_developer':
 				case 'com_cck_ecommerce':
 				case 'com_cck_exporter':
