@@ -68,6 +68,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'exact':
 				$sql	=	$target.' = '.JCckDatabase::quote( $value );
 				break;
+			case 'empty':
+				$sql	=	$target.' = ""';
+				break;
 			case 'alpha':
 				$sql	=	$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $value, true ).'%', false );
 				break;

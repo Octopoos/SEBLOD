@@ -101,7 +101,7 @@ class plgSearchCCK extends JPlugin
 			$Pf		=	$field->storage_field;
 			$Pt		=	$field->storage_table;
 			
-			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
+			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
 			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
 				$glue	=	'';
 				$sql	=	'';

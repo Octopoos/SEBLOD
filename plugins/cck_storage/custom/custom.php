@@ -107,6 +107,9 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'exact':
 				$sql		=	( !$TA ) ? $target.' = "'.$TA.$value.$TZ.'"' : $target.' REGEXP "'.$TA.$value.$TZ.'"';
 				break;
+			case 'empty':
+				$sql		=	$target.' REGEXP "'.$TA.$TZ.'"';
+				break;
 			case 'alpha':
 				$sql		=	$target.' REGEXP "'.$TA.$value.'.*'.$TZ.'"';
 				break;

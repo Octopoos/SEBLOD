@@ -359,6 +359,7 @@ class Helper_Workshop
 				$data['match_mode']	=	array( JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),
 											   JHtml::_( 'select.option', 'alpha', JText::_( 'COM_CCK_MATCH_BEGINNING_WITH' ) ),
+											   JHtml::_( 'select.option', 'empty', JText::_( 'COM_CCK_MATCH_EMPTY' ) ),
 											   JHtml::_( 'select.option', 'zeta', JText::_( 'COM_CCK_MATCH_ENDING_WITH' ) ),
 											   JHtml::_( 'select.option', 'exact', JText::_( 'COM_CCK_MATCH_EXACT_PHRASE' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_MATCH_DEFAULT_PHRASE' ) ),
