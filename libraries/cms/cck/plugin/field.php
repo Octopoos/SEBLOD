@@ -485,8 +485,12 @@ class JCckPluginField extends JPlugin
 		$field->params		=	array();
 		
 		// 1
-		$column1			=	JHtml::_( 'select.genericlist', $data['match_mode'], 'ffp['.$name.'][match_mode]', 'size="1" class="thin"', 'value', 'text', @$field->match_mode );
-		$column2			=	'';
+		$column1			=	JHtml::_( 'select.genericlist', $data['match_mode'], 'ffp['.$name.'][match_mode]', 'size="1" class="thin"', 'value', 'text', @$field->match_mode, $name.'_match_mode' );
+		$column2			=	'<span class="text blue c_mat2" name="'.$name.'">'.$data['_']['configure'].'</span>'
+							.	'<input type="hidden" id="'.$name.'_match_value" name="ffp['.$name.'][match_value]" value="'.@$field->match_value.'" />'
+							.	'<input type="hidden" id="'.$name.'_match_collection" name="ffp['.$name.'][match_collection]" value="" />'
+							.	'<input type="hidden" id="'.$name.'_match_options" name="ffp['.$name.'][match_options]" value="'.htmlspecialchars( @$field->match_options ).'" />';
+
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 	}
 	

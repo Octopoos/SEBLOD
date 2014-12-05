@@ -261,8 +261,13 @@ abstract class JCck
 		}
 		
 		$doc	=	JFactory::getDocument();
-		if ( $key == 'cck.ecommerce' ) {	// todo: explode & dispatch
-			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-1.0.0.js' );
+		if ( $key == 'cck.ecommerce' ) { // todo: explode & dispatch
+			$version	=	'1.0.0';
+			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php' ) ) {
+				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
+				$version	=	new JCckEcommerceVersion;
+			}
+			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getShortVersion().'.js' );
 		}
 		
 		$loaded[$key]	=	true;

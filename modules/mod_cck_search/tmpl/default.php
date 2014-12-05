@@ -10,6 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( $show_list_title ) {
+	$tag		=	$tag_list_title;
+	$class		=	trim( $class_list_title );
+	$class		=	$class ? ' class="'.$class.'"' : '';
+	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
+}
+if ( $show_list_desc == 1 && $description != '' ) {
+	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
+}
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
 	Helper_Include::addValidation( $config['validation'], $config['validation_options'], $formId );
 	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { Joomla.submitform("search", document.getElementById("'.$formId.'")); }';

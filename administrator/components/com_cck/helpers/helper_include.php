@@ -114,18 +114,6 @@ class Helper_Include extends CommonHelper_Include
 			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) { '.$js.' });' );
 		}
 	}
-
-	// addStyleDeclaration
-	public static function addStyleDeclaration( $css, $minify = false )
-	{
-		$doc	=	JFactory::getDocument();
-		
-		if ( $minify === true ) {
-			$css	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
-		}
-		
-		$doc->addStyleDeclaration( $css );
-	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
 	

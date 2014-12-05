@@ -101,7 +101,7 @@ class plgSearchCCK extends JPlugin
 			$Pf		=	$field->storage_field;
 			$Pt		=	$field->storage_table;
 			
-			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
+			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
 			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
 				$glue	=	'';
 				$sql	=	'';
@@ -356,13 +356,39 @@ class plgSearchCCK extends JPlugin
 				$str		=	$str[0];
 				foreach ( $fields_order as $field ) {
 					$order		=	'';
-					$dir		=	$field->match_mode;
+					$modifier	=	'';
+					$modifier2	=	'';
+					$modifier3	=	$field->match_mode; // direction
 					
-					if ( $dir ) {
+					if ( $modifier3 ) {
 						$s_field	=	$field->storage_field;
 						$s_table	=	$field->storage_table;
 						
 						// Prepare
+						if ( $field->match_options == '' ) {
+							$field->match_options	=	'{}';
+						}
+						$field->match_options	=	new JRegistry( $field->match_options );	
+
+						if ( $field->match_options->get( 'var_type' ) == '1' ) {
+							$modifier2		=	'+0';
+						} elseif ( $field->match_options->get( 'var_type' ) == '0' ) {
+							$modifier		=	' LENGTH(';
+							$modifier2		=	')';
+						}
+						if ( $modifier3 == 'FIELD' ) {
+							$modifier		=	' FIELD(';
+							$modifier2		=	',';
+							$s_opts			=	array();
+							$s_options		=	explode( '||', ( ( $field->match_options->get( 'by_field' ) == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
+							foreach ( $s_options as $s_o ) {
+								$s_opt		=	explode( '=', $s_o );
+								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
+							}
+							$modifier3		=	'"'.implode( '","', $s_opts ).'"'.')';
+						} else {
+							$modifier3		=	' '.$modifier3;
+						}
 						if ( ! isset( $tables[$s_table] ) && $s_table ) {
 							$tables[$s_table]['_']		=	't'.$t;
 							$tables[$s_table]['fields']	=	array();
@@ -374,14 +400,14 @@ class plgSearchCCK extends JPlugin
 						
 						// Set
 						if ( isset( $tables[$s_table]['_'] ) && $tables[$s_table]['_'] != '' && $tables[$s_table]['_'] != '_' ) {
-							$order	.=	$tables[$s_table]['_'].'.'.$s_field.' '.$dir;
+							$order	.=	$modifier.$tables[$s_table]['_'].'.'.$s_field.$modifier2.$modifier3;
 						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
-							$order	.=	$s_field.' '.$dir;
+							$order	.=	$modifier.$s_field.$modifier2.$modifier3;
 						}
 						if ( $order != '' ) {
 							$ordered	=	true;
 							$query->order( $order );
-						}	
+						}
 					}
 				}
 			}

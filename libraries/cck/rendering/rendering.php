@@ -63,7 +63,7 @@ class CCK_Rendering
 	public function __call( $method, $args )
 	{
 		$prefix		=	strtolower( substr( $method, 0, 3 ) );
-        $property	=	strtolower( substr( $method, 3 ) );
+		$property	=	strtolower( substr( $method, 3 ) );
 		
 		if ( empty( $prefix ) ) {
 			return;
@@ -91,8 +91,8 @@ class CCK_Rendering
 											  : @$this->me[$fieldname]->{$this->mode_property}[$args[1]][$args[2]]->$property;
 				}
 			}
-        }
-    }
+		}
+	}
 	
 	// __get
     public function __get( $property ) {
@@ -107,7 +107,7 @@ class CCK_Rendering
 		return $this->debug;
 	}
 		
-	// doDesc
+	// isDesc
 	protected function isDesc( $position = '' )
 	{
 		return ( $this->desc && $this->desc == $position ) ? -1 : 0;
@@ -989,6 +989,20 @@ class CCK_Rendering
 		}
 
 		return $paths[$path];
+	}
+
+	// isGoingtoLoadMore
+	public function isGoingtoLoadMore()
+	{	
+		return 1;
+	}
+
+	// isLoadingMore
+	public function isLoadingMore()
+	{
+		$app	=	JFactory::getApplication();
+		
+		return ( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) ) ? 1 : 0;
 	}
 
 	// fakeModule (deprecated)

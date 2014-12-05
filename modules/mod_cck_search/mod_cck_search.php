@@ -57,6 +57,47 @@ $limitstart			=	-1;
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
 
+// Set
+if ( !is_object( @$options ) ) {
+	$options	=	new JRegistry;
+}
+$description		=	'';
+$show_list_desc		=	$params->get( 'show_list_desc' );
+$show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+if ( $show_list_title == '' ) {
+	$show_list_title	=	$options->get( 'show_list_title', '1' );
+	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$options->get( 'class_list_title' );
+} elseif ( $show_list_title ) {
+	$tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$params->get( 'class_list_title' );
+}
+if ( $show_list_desc == '' ) {
+	$show_list_desc	=	$options->get( 'show_list_desc', '1' );
+	$description	=	@$search->description;
+} else {
+	$description	=	$params->get( 'list_desc', @$search->description );
+}
+if ( $description != '' ) {
+	$description	=	str_replace( '[title]', $module->title, $description );
+	$description	=	str_replace( '$cck->get', '$cck-&gt;get', $description );
+	if ( strpos( $description, '$cck-&gt;get' ) !== false ) {
+		$matches	=	'';
+		$regex		=	'#\$cck\-\&gt;get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
+		preg_match_all( $regex, $description, $matches );
+		if ( count( $matches[1] ) ) {
+			foreach ( $matches[1] as $k=>$v ) {
+				$fieldname		=	$matches[2][$k];
+				$target			=	strtolower( $v );
+				if ( count( @$doc->list ) ) {
+					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->{$target}, $description );
+				} else {
+					$description	=	str_replace( $matches[0][$k], '', $description );
+				}
+			}
+		}
+	}
+}
 if ( $target ) {
 	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $itemId ) );
 	if ( isset( $target->query['option'] ) && $target->query['option'] == 'com_cck'

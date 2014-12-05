@@ -38,6 +38,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
 	{
+		$data['match_mode']	=	NULL;
 		$data['markup']		=	NULL;
 		$data['validation']	=	NULL;
 
