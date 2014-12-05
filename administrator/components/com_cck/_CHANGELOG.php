@@ -24,6 +24,33 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.5.0 Upgrade Release [1-Dec-2014] -------------
+
++ Add XML format on List View.
++ Ordering By "Custom Values" added.
++ Ordering Modifiers (Length, Numeric) added >> natural sorting.
+
++ "Count" parameter added on List View.
++ "Each Word Exact" Match mode added on Search Types.
+
++ "Show Title", "Class", "Tag" added to List module.
++ "Show Title", "Class", "Tag" added to Search module.
++ "Show Description" added to Search module.
+
++ JCckDevImage class added for Images processing.
+
+! Complete Processing Task >> SEBLOD Toolbox Add-on required.
+^ Image Quality (JPG, PNG) moved to SEBLOD Options (Media).
+^ Include inline scripts for Validation when tmpl=raw
+^ Implement JCckVersion class.
+^ Move Processings from Toolbox Add-on to Core.
+! Rename #__cck_more_toolbox_processings to #__cck_more_processings.
+
+# Export of Restriction plug-ins issue fixed on Search Types.
+# Notices removed in Router.
+# Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
+# Remove Match modes on Div, Tabs plug-ins.
+
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
 
 # "JHtml: :bootstrap not supported. File not found" on Joomla 2.5 issue fixed.

@@ -29,6 +29,18 @@ class CommonHelper_Include
 		Helper_Include::addStyleSheets( true );
 	}
 	
+	// addStyleDeclaration
+	public static function addStyleDeclaration( $css, $minify = false )
+	{
+		$doc	=	JFactory::getDocument();
+		
+		if ( $minify === true ) {
+			$css	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
+		}
+		
+		$doc->addStyleDeclaration( $css );
+	}
+	
 	// addStyleSheets
 	public static function addStyleSheets( $component, $paths = array() )
 	{

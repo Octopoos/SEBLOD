@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( $show_list_title ) {
+	$tag		=	$tag_list_title;
+	$class		=	trim( $class_list_title );
+	$class		=	$class ? ' class="'.$class.'"' : '';
+	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
+}
 if ( $show_list_desc == 1 && $description != '' ) {
 	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
 }

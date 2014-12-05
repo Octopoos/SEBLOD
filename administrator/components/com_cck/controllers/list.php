@@ -58,19 +58,19 @@ class CCKControllerList extends JControllerAdmin
 	public function export()
 	{
 		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
+		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 			return;
 		}
-
+		
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
 		jimport('joomla.utilities.arrayhelper');
 		JArrayHelper::toInteger( $ids );
-
+		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
@@ -92,26 +92,27 @@ class CCKControllerList extends JControllerAdmin
 	public function process()
 	{
 		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
+		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 			return;
 		}
 		
-		$app	=	JFactory::getApplication();
-		$ids	=	$app->input->get( 'cid', array(), 'array' );
+		$app		=	JFactory::getApplication();
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
 		jimport('joomla.utilities.arrayhelper');
 		JArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
-		$model	=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
-		$params	=	JComponentHelper::getParams( 'com_cck_toolbox' );
-		$output	=	0; // $params->get( 'output', 0 );
+		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
+		$output		=	1; // $params->get( 'output', 0 );
 		
-		if ( $file = $model->prepareProcess( $params, $ids ) ) {
+		if ( $file = $model->prepareProcess( $params, $task_id, $ids ) ) {
 			if ( $output > 0 ) {
-				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_EXPORTED' ), 'message' );
+				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );

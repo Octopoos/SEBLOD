@@ -88,10 +88,17 @@ function CckParseRoute( $segments )
 			$legacy	=	0;
 		}
 		if ( !$legacy ) {
-			$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-			JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );
-		} else {
+			if ( isset( $menuItem->query['search'] ) ) {
+				$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
+			}
+			if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );	
+			} else {
+				$legacy	=	1;
+			}
+		}
+		if ( $legacy ) {
 			if ( $count == 2 ) {
 				$vars['option']		=	'com_content';
 				$vars['view']		=	'article';

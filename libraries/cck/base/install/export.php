@@ -547,6 +547,9 @@ class CCK_Export
 			if ( $el->live != '' ) {
 				self::exportPlugin( 'cck_field_live', $el->live, $data, $extensions );
 			}
+			if ( $el->restriction != '' ) {
+				self::exportPlugin( 'cck_field_restriction', $el->restriction, $data, $extensions );
+			}
 			if ( $el->typo != '' ) {
 				self::exportPlugin( 'cck_field_typo', $el->typo, $data, $extensions );
 			}

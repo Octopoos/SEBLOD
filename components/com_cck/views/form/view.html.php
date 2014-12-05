@@ -17,11 +17,17 @@ class CCKViewForm extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app					=	JFactory::getApplication();
+		$layout					=	$app->input->get( 'tmpl' );
+		$uniqId					=	'';
+		if ( $layout == 'raw' ) {
+			$uniqId				=	'_'.$layout;
+		}
+		
 		$preconfig				=	array();
 		$preconfig['action']	=	'';
 		$preconfig['client']	=	'site';
-		$preconfig['formId']	=	'seblod_form';
-		$preconfig['submit']	=	'JCck.Core.submit';
+		$preconfig['formId']	=	'seblod_form'.$uniqId;
+		$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 		$preconfig['task']		=	$app->input->get( 'task', '' );
 		$preconfig['type']		=	$app->input->get( 'type', '' );
 		$preconfig['url']		=	'';
@@ -86,7 +92,7 @@ class CCKViewForm extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-		$unique	=	'seblod_form_'.$type->name;
+		$unique	=	$preconfig['formId'].'_'.$type->name;
 		if ( isset( $config['id'] ) ) {
 			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
 		}
@@ -117,6 +123,7 @@ class CCKViewForm extends JViewLegacy
 
 		$this->config				=	&$config;
 		$this->data					=	&$data;
+		$this->form_id				=	$preconfig['formId'];
 		$this->id					=	&$id;
 		$this->params				=	&$params;
 		$this->skip					=	( $app->input->get( 'skip' ) ) ? '1' : '0';

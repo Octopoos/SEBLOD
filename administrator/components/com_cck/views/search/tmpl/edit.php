@@ -290,7 +290,7 @@ Helper_Display::quickCopyright();
 			});
 			$("#sortable1, #sortable2").selectable({
 				filter		: "li.field",
-				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled",
+				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_mat2,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled",
 			});
 			/* -- */
 			$(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
@@ -557,6 +557,12 @@ Helper_Display::quickCopyright();
 			var field = $(this).attr("name");
 			var match_mode = $("#"+field+"_match_mode").val();
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/match.php&id="+id+"&name="+field+"&validation=1";
+			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+		});
+		$("div#layers").on("click", "span.c_mat2", function() {
+			var id = $("#jform_id").val();
+			var field = $(this).attr("name");
+			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/ordering.php&id="+id+"&name="+field+"&validation=1";
 			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
 		$("div#layers").on("click", "span.c_comp", function() {

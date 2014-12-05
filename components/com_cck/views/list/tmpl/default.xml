@@ -35,6 +35,7 @@
 				   label="COM_CCK_CONFIG_SHOW_SEARCH_FORM" description="COM_CCK_CONFIG_SHOW_SEARCH_FORM_DESC" class="inputbox" />
 			<field name="auto_redirect" type="cck" construction="core_auto_redirection" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_AUTO_REDIRECTION" description="COM_CCK_CONFIG_AUTO_REDIRECTION_DESC" class="inputbox" />
+			<field name="limit2" type="text" default="0" label="COM_CCK_CONFIG_LIMIT2" description="COM_CCK_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
 			<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="COM_CCK_CONFIG_ORDERING" default="" description="COM_CCK_CONFIG_ORDERING_DESC" class="inputbox" />
 			<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 				   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />

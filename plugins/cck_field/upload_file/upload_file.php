@@ -31,12 +31,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$data['json']['options2']['path']		=	trim( $data['json']['options2']['path'] );
 		
-		jimport( 'joomla.filesystem.folder' );
-		if ( ! JFolder::exists( JPATH_SITE.'/'.$data['json']['options2']['path'] ) ) {
-			JFolder::create( JPATH_SITE.'/'.$data['json']['options2']['path'] );
-			$buffer	=	'<!DOCTYPE html><title></title>';
-			JFile::write( JPATH_SITE.'/'.$data['json']['options2']['path'].'/'.'index.html', $buffer );
-		}
+		JCckDevHelper::createFolder( JPATH_SITE.'/'.$data['json']['options2']['path'] );
 		
 		parent::g_onCCK_FieldConstruct( $data );
 	}

@@ -96,7 +96,6 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
 			} else {
 				// Modal Box
-				$app			=	JFactory::getApplication();
 				if ( trim( $field->selectlabel ) ) {
 					if ( $config['doTranslation'] ) {
 						$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
@@ -110,8 +109,11 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
 										.	'&id='.$id.'&name='.$name.$e_type.'&params='.$width.'||'.$height.'||'.$asset;
 				
+				$app					=	JFactory::getApplication();
 				$class					=	'wysiwyg_editor_box variation_href';
-				if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { // todo: remove later
+				$component				=	$app->input->get( 'option' );
+				if ( ( $component == 'com_cck' && $app->input->get( 'view' ) != 'form' )
+					|| $component == 'com_cck_ecommerce' || $component == 'com_cck_toolbox' || $component == 'com_cck_webservices' ) { // todo: remove later
 					$class				.=	' btn';
 				}
 				$class					=	'class="'.$class.'" ';

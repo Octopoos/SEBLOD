@@ -37,7 +37,7 @@ $dispatcher	=	JDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
 $config		=	array( 'author'=>0,
