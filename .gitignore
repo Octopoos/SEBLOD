@@ -964,6 +964,17 @@ Temporary Items
 
 /plugins/system/blank/*
 
+######## SEBLOD Add-ons >> Builder
+
+/administrator/components/com_cck_builder/*
+/administrator/language/en-GB/en-GB.com_cck_builder.ini
+/administrator/language/en-GB/en-GB.com_cck_builder.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_builder.ini
+/administrator/language/fr-FR/fr-FR.com_cck_builder.sys.ini
+/components/com_cck_builder/*
+/language/en-GB/en-GB.com_cck_builder.ini
+/language/fr-FR/fr-FR.com_cck_builder.ini
+
 ######## SEBLOD Add-ons >> Developer
 
 /administrator/components/com_cck_developer/*
