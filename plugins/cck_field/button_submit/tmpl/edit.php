@@ -31,6 +31,7 @@ if ( isset( $options2['task'] ) ) {
 		 																			  'options'=>'Hide=0||Show=optgroup||Prepend=1||Append=2||Replace=3', 'storage_field'=>'bool6' ) )
 		 .	 JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) )
 		 .	 '</li>';
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
 		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'TYPE', 'defaultvalue'=>'0', 'options'=>'Input=0||Button=1' ) );
 		echo JCckDev::renderForm( 'core_task', @$options2['task'], $config );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
@@ -59,6 +60,7 @@ if ( isset( $options2['task'] ) ) {
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#bool6').isVisibleWhen('bool','1');
+	$('#blank_li3').isVisibleWhen('bool','0');
 	$('#json_options2_icon').isVisibleWhen('bool6','1,2,3',false);
 	$('#bool3').isVisibleWhen('bool2','1,2');
 	$('#blank_li').isVisibleWhen('json_options2_task','export,process');
