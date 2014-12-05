@@ -46,10 +46,12 @@ $ -> Language fix or change
 ^ Move Processings from Toolbox Add-on to Core.
 ! Rename #__cck_more_toolbox_processings to #__cck_more_processings.
 
+# Append/Prepend issue fixed on Submit Button plug-in.
 # Export of Restriction plug-ins issue fixed on Search Types.
 # Notices removed in Router.
 # Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
 # Remove Match modes on Div, Tabs plug-ins.
+# Tooltip issue (Heading variation) fixed (Joomla 2.5).
 
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
 
