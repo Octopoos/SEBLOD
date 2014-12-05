@@ -26,12 +26,12 @@ $ -> Language fix or change
 
 -------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
 
-+ Add XML format on List View.
++ XML format added on List View.
 + Ordering By "Custom Values" added.
 + Ordering Modifiers (Length, Numeric) added >> natural sorting.
 
 + "Count" parameter added on List View.
-+ "Each Word Exact" Match mode added on Search Types.
++ "Empty", "Each Word Exact" Match mode added on Search Types.
 
 + "Show Title", "Class", "Tag" added to List module.
 + "Show Title", "Class", "Tag" added to Search module.
