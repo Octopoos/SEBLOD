@@ -964,6 +964,17 @@ Temporary Items
 
 /plugins/system/blank/*
 
+######## SEBLOD Add-ons >> Builder
+
+/administrator/components/com_cck_builder/*
+/administrator/language/en-GB/en-GB.com_cck_builder.ini
+/administrator/language/en-GB/en-GB.com_cck_builder.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_builder.ini
+/administrator/language/fr-FR/fr-FR.com_cck_builder.sys.ini
+/components/com_cck_builder/*
+/language/en-GB/en-GB.com_cck_builder.ini
+/language/fr-FR/fr-FR.com_cck_builder.ini
+
 ######## SEBLOD Add-ons >> Developer
 
 /administrator/components/com_cck_developer/*
@@ -1276,6 +1287,40 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_select_dynamic_cascade.sys.ini
 /plugins/cck_field/select_dynamic_cascade/*
 
+######## SEBLOD Plug-ins >> Field >> SQL (Pack)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_sql_query.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_sql_query.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_sql_query.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_sql_query.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_sql_query.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_sql_query.sys.ini
+/plugins/cck_field/sql_query/*
+/plugins/cck_field_live/sql_query/*
+/plugins/cck_field_restriction/sql_query/*
+
+######## SEBLOD Plug-ins >> Field >> Video Dailymotion
+
+/administrator/language/en-GB/en-GB.plg_cck_field_video_dailymotion.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_video_dailymotion.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_dailymotion.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_dailymotion.sys.ini
+/plugins/cck_field/video_dailymotion/*
+
+######## SEBLOD Plug-ins >> Field >> Video Vimeo
+
+/administrator/language/en-GB/en-GB.plg_cck_field_video_vimeo.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_video_vimeo.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_vimeo.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_vimeo.sys.ini
+/plugins/cck_field/video_vimeo/*
+
 ######## SEBLOD Plug-ins >> Link >> Custom
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_custom.ini
@@ -1315,6 +1360,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_menuitem.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_menuitem.sys.ini
 /plugins/cck_field_link/joomla_menuitem/*
+
+######## SEBLOD Plug-ins >> Link >> Joomla! Print
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_joomla_print.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_joomla_print.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_print.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_print.sys.ini
+/plugins/cck_field_link/joomla_print/*
 
 ######## SEBLOD Plug-ins >> Link >> SEBLOD Search (JS)
 
@@ -1421,6 +1474,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_fields.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_fields.sys.ini
 /plugins/cck_field_restriction/cck_fields/*
+
+######## SEBLOD Plug-ins >> Restriction >> URL Variable
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_url_variable.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_url_variable.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.sys.ini
+/plugins/cck_field_restriction/url_variable/*
 
 ######## SEBLOD Plug-ins >> Typography >> Joomla! (Pack)
 
