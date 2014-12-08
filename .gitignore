@@ -925,6 +925,10 @@
 
 /administrator/components/com_cck/install/cms/*
 
+######## Aptana Studio
+
+.project
+
 ######## SublimeText
 
 # workspace files are user-specific
