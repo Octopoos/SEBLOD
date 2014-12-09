@@ -91,14 +91,16 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		// Prepare
 		if ( $load ) {
 			if ( $table == '#__cck_core' ) {
-				$keys				=	'ids';
-				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
+				$keys						=	'ids';
+				$storages[$table]			=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
 			} else {
-				$keys				=	'pks';
-				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', self::$key );
+				$keys						=	'ids';
+				$storages['#__cck_core']	=	JCckDatabase::loadObjectList( 'SELECT author_id, pk FROM #__cck_core WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
+				$keys						=	'pks';
+				$storages[$table]			=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', self::$key ); //#				
 			}
 		}
-		//$config['author']	=	'';
+		$config['author']	=	( isset( $storages['#__cck_core'][$config['pk']] ) ) ? (int)$storages['#__cck_core'][$config['pk']]->author_id : 0;
 	}
 	
 	// onCCK_Storage_LocationPrepareList
