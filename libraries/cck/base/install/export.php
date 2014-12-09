@@ -359,7 +359,7 @@ class CCK_Export
 			}
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 	}
 	
@@ -394,7 +394,7 @@ class CCK_Export
 			$xml->{$elemtype}->asset_id	=	'';
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 		
 		// Views
@@ -680,7 +680,7 @@ class CCK_Export
 			$xml->{$elemtype}->hits	=	0;
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 
 		$app	=	$elem->name;
@@ -729,7 +729,7 @@ class CCK_Export
 			$xml->{$elemtype}->hits	=	0;
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 
 		$app	=	$elem->name;

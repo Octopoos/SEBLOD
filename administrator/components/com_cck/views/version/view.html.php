@@ -34,7 +34,7 @@ class CCKViewVersion extends JCckBaseLegacyViewForm
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$type					=	$this->item->e_type ? $this->item->e_type : 'type';
-		$this->item->title		=	JCckDatabase::loadResult( 'SELECT title FROM #__cck_core_'.$type.'s WHERE id = '.$this->item->e_id );
+		$this->item->title		=	JCckDatabase::loadResult( 'SELECT title FROM #__cck_core_'.$type.'s WHERE id = '.(int)$this->item->e_id );
 		
 		Helper_Admin::addToolbarEdit( $this->vName, _C6_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>0, 'checked_out'=>$this->item->checked_out ) );
 	}

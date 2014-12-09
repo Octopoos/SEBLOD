@@ -69,7 +69,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$id] ) ) {
-			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.$id );
+			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.(int)$id );
 		}
 		
 		return $cache[$id];
@@ -236,7 +236,7 @@ abstract class JCckEcommerce
 		
 		if ( !isset( $cache[$id] ) ) {
 			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, home, parent_id, parent_fee, parent_amount, options'
-															. ' FROM #__cck_more_ecommerce_stores WHERE id = '.$id );
+															. ' FROM #__cck_more_ecommerce_stores WHERE id = '.(int)$id );
 			$cache[$id]->options	=	new JRegistry( $cache[$id]->options );
 		}
 		

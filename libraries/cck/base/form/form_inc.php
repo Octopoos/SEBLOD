@@ -57,7 +57,7 @@ if ( $id > 0 ) {
 		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
 		$canEditOwnContent	=	false;
 		if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
-			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.$id );
+			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$id );
 			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.$related_content_id );
 
 			if ( $related_content->author_id == $user->get( 'id' ) ) {

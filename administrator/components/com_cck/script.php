@@ -82,7 +82,7 @@ class com_cckInstallerScript
 					$id		=	(int)$f->id;
 					$id2	=	(int)'100'.$id;
 
-					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.$id;
+					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.(int)$id;
 					$db->setQuery( $query );
 
 					if ( $db->execute() !== false ) {
