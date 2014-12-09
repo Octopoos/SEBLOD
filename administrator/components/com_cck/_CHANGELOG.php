@@ -24,6 +24,10 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.5.1 Upgrade Release [x-Dec-2014] -------------
+
+# Various SQL queries fixed.
+
 -------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
 
 + XML format added on List View.
