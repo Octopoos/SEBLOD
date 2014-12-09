@@ -26,6 +26,7 @@ $ -> Language fix or change
 
 -------------------- 3.5.1 Upgrade Release [x-Dec-2014] -------------
 
+# "Edit Own" issue fixed on Free Object.
 # Various SQL queries fixed.
 
 -------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
