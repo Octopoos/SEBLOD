@@ -26,6 +26,9 @@ $ -> Language fix or change
 
 -------------------- 3.5.1 Upgrade Release [x-Dec-2014] -------------
 
++ "More" Link handled more intelligently >> "only if results", "only if more resuslts".
++ "More" Link Text parameter added on List module.
+
 # "Edit Own" issue fixed on Free Object.
 # Various SQL queries fixed.
 
