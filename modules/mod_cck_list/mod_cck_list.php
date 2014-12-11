@@ -103,8 +103,14 @@ $show_more			=	$params->get( 'show_more', 1 );
 $show_link_more		=	$params->get( 'show_link_more', 0 );
 $show_more_class	=	$params->get( 'link_more_class', '' );
 $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
+$show_more_text		=	$params->get( 'link_more_text', '' );
+if ( $show_more_text == '' ) {
+	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
+} elseif ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
+}
 $show_more_link		=	'';
-if ( ( $show_more == 1 || ( $show_more == 2 && count( $items ) ) ) && $show_link_more ) {
+if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && $total_items > $preconfig['limit2'] ) ) && $show_link_more ) {
 	$show_more_link	=	'index.php?Itemid='.$show_link_more;
 	$show_more_link	=	JRoute::_( $show_more_link );
 	$show_more_vars	=	$params->get( 'link_more_variables', '' );
