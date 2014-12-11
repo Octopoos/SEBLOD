@@ -275,14 +275,16 @@ if ( $preconfig['task'] == 'search' ) {
 		$current['stage']	=	0;
 		$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
 	}
-	$total	=	count( $items );
+	$total					=	count( $items );
+	
 	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
-		$limitstart	=	-1;
-		$limitend	=	0;
-		$total		=	$config['total'];
+		$limitstart			=	-1;
+		$limitend			=	0;
+		$total				=	$config['total'];
 	} else {
 		$config['total']	=	$total;
 	}
+	$total_items			=	$total;
 	
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
