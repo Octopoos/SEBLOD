@@ -70,10 +70,12 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		
 		// Prepare
 		$assoc = 0;
+
 		if (class_exists('JLanguageAssociations'))
 		{
 			$assoc = JLanguageAssociations::isEnabled();
 		}
+
 		$form	=	'';
 
 		if ( $assoc && $config['pk'] ) {
