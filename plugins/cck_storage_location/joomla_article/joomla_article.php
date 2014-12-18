@@ -712,8 +712,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 		}
 		if ( self::$sef[$config['doSEF']] == 'full' ) {
-			list( $id, $alias )		=	explode( ':', $segments[$n - 1], 2 );
-			$vars['id']				=	$id;
+			$idArray 				= explode( ':', $segments[$n - 1], 2 );
+			$vars['id'] 			= (int)$idArray[0];
 		} else {
 			if ( is_numeric( $segments[$n - 1] ) ) {
 				$vars['id']			=	$segments[$n - 1];
