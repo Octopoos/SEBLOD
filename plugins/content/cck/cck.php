@@ -13,7 +13,6 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgContentCCK extends JPlugin
 {
-	protected $cache	=	false;
 	protected $loaded	=	array();
 	protected $title	=	'';
 	
@@ -125,7 +124,7 @@ class plgContentCCK extends JPlugin
 						.	$join
 						.	' WHERE a.id = "'.(string)$matches[1].'"'
 						;
-		$cck			=	JCckDatabase::loadObject( $query );
+		$cck			=	JCckDatabaseCache::loadObject( $query );
 		$contentType	=	(string)$cck->cck;
 		$article->id	=	(int)$cck->pk;
 		if ( ! $contentType ) {
@@ -158,16 +157,16 @@ class plgContentCCK extends JPlugin
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
-		if ( $client == 'intro' && $this->cache ) {
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
-						.	' FROM #__cck_core_type_field AS c'
-						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
-						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
-						.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
-						.	' ORDER BY c.ordering ASC'
-						;
+		$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+					.	' FROM #__cck_core_type_field AS c'
+					.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
+					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
+					.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
+					.	' ORDER BY c.ordering ASC'
+					;
+		if ( $client === 'intro' ) {
 			$fields		=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
-			if ( ! count( $fields ) && $client == 'intro' ) {
+			if ( ! count( $fields ) ) {
 				$client	=	'content';
 				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
@@ -179,26 +178,9 @@ class plgContentCCK extends JPlugin
 				$fields	=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
 			}
 		} else {
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
-						.	' FROM #__cck_core_type_field AS c'
-						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
-						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
-						.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
-						.	' ORDER BY c.ordering ASC'
-						;
-			$fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
-			if ( ! count( $fields ) && $client == 'intro' ) {
-				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
-						.	' FROM #__cck_core_type_field AS c'
-						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
-						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
-						.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
-						.	' ORDER BY c.ordering ASC'
-						;
-				$fields	=	JCckDatabase::loadObjectList( $query, 'name' );	//#
-			}
+		    $fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 		}
+
 		if ( !isset( $this->loaded[$contentType.'_'.$client.'_options'] ) ) {
 			$lang->load( 'pkg_app_cck_'.$cck->folder_app, JPATH_SITE, null, false, false );
 			$registry	=	new JRegistry;
@@ -262,12 +244,12 @@ class plgContentCCK extends JPlugin
 		jimport( 'cck.rendering.document.document' );
 		$doc		=	CCK_Document::getInstance( 'html' );
 		$positions	=	array();
-		if ( $client == 'intro' /* && $this->cache */ ) {
-			$positions_more	=	JCckDatabaseCache::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-																 . ' WHERE b.name = "'.$contentType.'" AND a.client ="'.$client.'"', 'position' );	// todo::improve
+		$query		=	'SELECT * FROM #__cck_core_type_position AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
+					.	' WHERE b.name = "'.$contentType.'" AND a.client ="'.$client.'"';	// todo::improve
+		if ( $client === 'intro' ) {
+			$positions_more	=	JCckDatabaseCache::loadObjectList( $query, 'position' );
 		} else {
-			$positions_more	=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-															. ' WHERE b.name = "'.$contentType.'" AND a.client ="'.$client.'"', 'position' );	// todo::improve
+			$positions_more	=	JCckDatabase::loadObjectList( $query, 'position' );
 		}
 		
 		// Fields
