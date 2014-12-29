@@ -70,7 +70,9 @@ class JCckContent
 		
 		$this->_type	=	$cck;
 		$this->_instance_core	=	JTable::getInstance( $this->_object_table[$this->_object] );
-		$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+		if ( is_array( $data_more ) ) { // Note: Not All Content Type have extra table
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+		}
 		
 		$author_id 		=	0; // TODO : Get default author id
 		$parent_id		=	0;
