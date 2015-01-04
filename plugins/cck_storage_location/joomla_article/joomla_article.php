@@ -786,6 +786,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 									'contexts'=>'',
 									'custom'=>'',
 									'key'=>'',
+									'ordering'=>'',
 									'parent'=>'',
 									'routes'=>'',
 									'status'=>'',

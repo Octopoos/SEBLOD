@@ -594,7 +594,20 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
-		static $autorized	=	array( 'key'=>'', 'table'=>'', 'access'=>'', 'custom'=>'', 'status'=>'', 'to_route'=>'', 'contexts'=>'' );
+		static $autorized	=	array(	
+									'access'=>'',
+									'author'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									'routes'=>'',
+									'status'=>'',
+									'table'=>'',
+									'to_route'=>''
+								);
 
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
