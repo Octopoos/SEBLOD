@@ -194,7 +194,11 @@ class JCckPluginField extends JPlugin
 					if ( $data['storage_table'] && $data['storage_field'] ) {
 						$columns	=	$db->getTableColumns( $data['storage_table'] );
 						if ( !isset( $columns[$data['storage_field']] ) ) {
-							JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+							if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
+								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+							} else {
+								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+							}							
 						} else {
 							JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
 						}

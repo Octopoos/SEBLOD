@@ -127,6 +127,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 				$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
 			}
 			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
+			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
 			echo '<span id="storage_field_pick" name="storage_field_pick">&laquo;</span>';
 			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );
