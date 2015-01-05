@@ -24,7 +24,9 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.5.1 Upgrade Release [x-Dec-2014] -------------
+-------------------- 3.5.1 Upgrade Release [6-Jan-2014] -------------
+
+* Security Release: 2 missing JEXEC security checks added.
 
 + "More" Link handled more intelligently >> "only if results", "only if more resuslts".
 + "More" Link Text parameter added on List module.
