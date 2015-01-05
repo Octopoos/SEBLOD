@@ -59,7 +59,7 @@ function CckBuildRoute( &$query )
 	} else {
 		$params		=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-		JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params ) );
+		JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
 	}
 	
 	unset( $query['view'] );

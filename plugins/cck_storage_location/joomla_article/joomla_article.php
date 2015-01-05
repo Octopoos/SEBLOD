@@ -557,18 +557,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
 	{
 		if ( isset( $query['typeid'] ) ) {
 			$segments[]	=	$query['typeid'];
 			unset( $query['typeid'] );
 		} elseif ( isset( $query['catid'] ) ) {
-			//if ( $config['doSEF'] == '1' ) {
-				$catid	=	$query['catid'];
-			//} else {
-			//	list( $tmp, $catid )	=	explode( ':', $query['catid'], 2 );
-			//}
-			$segments[]	=	$catid;
+			if ( is_object( $menuItem ) && $menuItem->alias != $query['catid'] ) {
+				$segments[]	=	$query['catid'];
+			}
 			unset( $query['catid'] );
 		}
 		
