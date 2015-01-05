@@ -29,6 +29,8 @@ $ -> Language fix or change
 + "More" Link handled more intelligently >> "only if results", "only if more resuslts".
 + "More" Link Text parameter added on List module.
 
+! "defines.php" file (from back-end component) removed.
+# Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
 # Various SQL queries fixed.
 
