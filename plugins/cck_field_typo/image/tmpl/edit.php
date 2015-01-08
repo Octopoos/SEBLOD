@@ -22,20 +22,24 @@ JCckDev::initScript( 'typo', $this->item );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'options'=>'Fixed=1', 'storage_field'=>'thumb_custom' ) )
 		 .	 '<div id="thumb_width_custom">'
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>6, 'required'=>'required', 'storage_field'=>'thumb_width', 'attributes'=>'style="text-align:center"' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>3, 'required'=>'required', 'storage_field'=>'thumb_width', 'attributes'=>'style="text-align:center"' ) )
 		 .	 '<span class="variation_value" style="margin-right: 5px;">x</span>'
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>6, 'required'=>'required', 'storage_field'=>'thumb_height', 'attributes'=>'style="text-align:center"' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>3, 'required'=>'required', 'storage_field'=>'thumb_height', 'attributes'=>'style="text-align:center"' ) )
 		 .	 '<span class="variation_value">px</span>'
 		 .	 '</div></li>';
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Display as Default 2x', 'defaultvalue'=>'thumb1', 'selectlabel'=>'None',
+																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10', 'storage_field'=>'thumb_2x' ) );
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Display as Default 3x', 'defaultvalue'=>'thumb1', 'selectlabel'=>'None',
+																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10', 'storage_field'=>'thumb_3x' ) );
 		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Modal Box', 'defaultvalue'=>'value',
 																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10||None=none', 
 																   'storage_field'=>'image' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'options'=>'Fixed=1||Inner=2||Max=3', 'storage_field'=>'image_custom' ) )
 		 .	 '<div id="image_width_custom">'
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>6, 'required'=>'required', 'storage_field'=>'image_width', 'attributes'=>'style="text-align:center"' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>3, 'required'=>'required', 'storage_field'=>'image_width', 'attributes'=>'style="text-align:center"' ) )
 		 .	 '<span class="variation_value" style="margin-right: 5px;">x</span>'
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>6, 'required'=>'required', 'storage_field'=>'image_height', 'attributes'=>'style="text-align:center"' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>3, 'required'=>'required', 'storage_field'=>'image_height', 'attributes'=>'style="text-align:center"' ) )
 		 .	 '<span class="variation_value">px</span>'
 		 .	 '</div></li>';
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>0, 'options'=>'Absolute=1||Relative=0',

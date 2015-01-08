@@ -42,6 +42,8 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		// Prepare
 		$root			=	$typo->get( 'path_type', 0 ) ? JURI::root() : '';
 		$thumb_array	=	array( 'thumb'=>$typo->get( 'thumb', 'thumb1' ),
+								   'thumb_2x'=>$typo->get( 'thumb_2x', '' ),
+								   'thumb_3x'=>$typo->get( 'thumb_3x', '' ),
 								   'thumb_custom'=>$typo->get( 'thumb_custom', 0 ),
 								   'thumb_width'=>$typo->get( 'thumb_width', '' ),
 								   'thumb_height'=>$typo->get( 'thumb_height', '' ),
@@ -75,13 +77,21 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$img_description	=	( $img_description != '' ) ? $img_description : $img_title;
 		$box_description	=	$img_description;
 
-		$width		=	'';
-		$height		=	'';
+		$height				=	'';
+		$srcset				=	'';
+		$width				=	'';
 		if ( $params['thumb_custom'] == 1 ) {
 			$width	=	' width="'.$params['thumb_width'].'"';
 			$height	=	' height="'.$params['thumb_height'].'"';
 		}
-		$img		=	'<img title="'.$img_title.'" alt="'.$img_description.'" src="'.self::_availableThumb( $field, $params['thumb'], $root ).'"'.$width.$height.' />';
+		if ( $params['thumb_2x'] ) {
+			$srcset	=	self::_availableThumb( $field, $params['thumb_2x'], $root ).' 2x';
+			if ( $params['thumb_3x'] ) {
+				$srcset	.=	', '.self::_availableThumb( $field, $params['thumb_3x'], $root ).' 3x';
+			}
+			$srcset	=	' srcset="'.$srcset.'"';
+		}
+		$img		=	'<img title="'.$img_title.'" alt="'.$img_description.'" src="'.self::_availableThumb( $field, $params['thumb'], $root ).'"'.$srcset.$width.$height.' />';
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
 		} elseif ( $params['image'] == 'none' ) {
