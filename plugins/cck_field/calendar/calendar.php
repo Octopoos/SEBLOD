@@ -246,7 +246,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-		$value	=	( $options2['storage_format'] == '0' ) ? date( 'Y-m-d H:i:s', strtotime( $value ) ) : strtotime( $value );
+		$value	=	( $options2['storage_format'] == '0' ) ? ( $value )? date( 'Y-m-d H:i:s', strtotime( $value ) ) : $value : strtotime( $value );
     		
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
