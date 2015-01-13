@@ -603,7 +603,7 @@ abstract class JCckDev
 			for ( $i = 0; $i < $len; $i++ ) {
 				$chars	.=	'\\'.$char[$i];
 			}
-			$char	=	$chars[0];
+			$char	=	$chars[1];
 			$str	=	str_replace( $char, ' ', $string );
 			if ( $case != 2 ) {
 				$str	=	JFactory::getLanguage()->transliterate( $str );	
