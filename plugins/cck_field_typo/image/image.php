@@ -37,7 +37,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 		
 	// _typo
-	protected static function _typo( $typo, $field, $value, &$config = array() )
+	protected static function _typo( $typo, &$field, $value, &$config = array() )
 	{
 		// Prepare
 		$root			=	$typo->get( 'path_type', 0 ) ? JURI::root() : '';
@@ -50,16 +50,55 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 								   'image'=>$typo->get( 'image', 'value' ),
 								   'image_custom'=>$typo->get( 'image_custom', 0 ),
 								   'image_width'=>$typo->get( 'image_width', '' ),
-								   'image_height'=>$typo->get( 'image_height', '' )
-								);		
-		
+								   'image_height'=>$typo->get( 'image_height', '' ),
+								   'image_title'=>$typo->get( 'image_title', 1 )
+								);
+		$alt_fieldname	= 	$typo->get( 'image_alt_fieldname', '' );
+
 		if ( is_array( $field->value ) ) {
 			$typo	=	self::_addImages( $field, $thumb_array, $root );
 		} else {
 			$typo	=	self::_addImage( $field, $thumb_array, $root );
 		}
+		if ( $alt_fieldname != '' ) {
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'alt_fieldname'=>$alt_fieldname  ) );
+		}
 		
 		return $typo;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_Field_TypoBeforeRenderContent
+	public static function onCCK_Field_TypoBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		if ( $fields[$process['alt_fieldname']] ) {
+			if ( is_array( $fields[$process['name']]->value ) ) {
+				foreach ( $fields[$process['name']]->value as $k=>$field ) {
+					if ( isset( $field->image_alt ) && $field->image_alt ) {
+						$search 						= 	'alt="'.$field->image_alt.'"';
+						$replace						=	'alt="'.htmlspecialchars( $fields[$process['alt_fieldname']]->value ).'"';
+						$fields[$process['name']]->typo	=	str_replace( $search, $replace, $fields[$process['name']]->typo );	
+					}
+					if ( isset( $field->image_title ) && $field->image_title ) {
+						$search 						= 	'title="'.$field->image_title.'"';
+						$replace						=	'title="'.htmlspecialchars( $fields[$process['alt_fieldname']]->value ).'"';
+						$fields[$process['name']]->typo	=	str_replace( $search, $replace, $fields[$process['name']]->typo );
+					}
+				}
+			} else {
+				if ( isset( $fields[$process['name']]->image_alt ) && $fields[$process['name']]->image_alt ) {
+					$search 						= 	'alt="'.$fields[$process['name']]->image_alt.'"';
+					$replace						=	'alt="'.htmlspecialchars( $fields[$process['alt_fieldname']]->value ).'"';
+					$fields[$process['name']]->typo	=	str_replace( $search, $replace, $fields[$process['name']]->typo );	
+				}
+				if ( isset( $fields[$process['name']]->image_title ) && $fields[$process['name']]->image_title ) {
+					$search 						= 	'title="'.$fields[$process['name']]->image_title.'"';
+					$replace						=	'title="'.htmlspecialchars( $fields[$process['alt_fieldname']]->value ).'"';
+					$fields[$process['name']]->typo	=	str_replace( $search, $replace, $fields[$process['name']]->typo );
+				}
+			}
+		}
 	}
 
 	// _addImage
@@ -71,11 +110,12 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$filename			=	substr( strrchr( $field->value, "/" ), 1 );
 		$filename			=	str_replace('.'.$ext,'',$filename);
 		
-		$img_title			=	( isset( $field->image_title ) ) ? $field->image_title : '';
-		$img_title			=	( $img_title != '' ) ? $img_title : $filename;
-		$img_description	=	( isset( $field->image_alt ) ) ? $field->image_alt : '';
-		$img_description	=	( $img_description != '' ) ? $img_description : $img_title;
-		$box_description	=	$img_description;
+		$image_title		=	( isset( $field->image_title ) ) ? $field->image_title : '';
+		$field->image_title	=	( $image_title != '' ) ? $image_title : $filename;
+		$image_alt			=	( isset( $field->image_alt ) ) ? $field->image_alt : '';
+		$field->image_alt	=	( $image_alt != '' ) ? $image_alt : $image_title;
+		$field->image_title	=	( $params['image_title'] && $field->image_title ) ? $field->image_title : '';
+		$attr_title			=	( $field->image_title ) ? 'title="'.$field->image_title.'" ' : '';
 
 		$height				=	'';
 		$srcset				=	'';
@@ -91,13 +131,14 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
 		}
-		$img		=	'<img title="'.$img_title.'" alt="'.$img_description.'" src="'.self::_availableThumb( $field, $params['thumb'], $root ).'"'.$srcset.$width.$height.' />';
+		$img		=	'<img '.$attr_title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $root ).'"'.$srcset.$width.$height.' />';
+
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
 		} elseif ( $params['image'] == 'none' ) {
 			$typo	=	$img;
 		} else {
-			$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $root ).'" rel="colorBox'.$field->id.'" title="'.$box_description.'">'.$img.'</a>';
+			$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $root ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
 		}
 		if ( $params['image'] != 'none' ) {
 			self::_addScripts( array( 'id'=>$field->id ), $params );
@@ -112,8 +153,8 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		// Prepare
 		$value	=	$field->value;
 		$typo	=	'';
-
-		foreach ($field->value as $value_img) {
+		
+		foreach ( $field->value as $value_img ) {
 			$typo	.=	self::_addImage( $value_img, $params, $root );
 		}
 		

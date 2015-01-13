@@ -42,6 +42,8 @@ JCckDev::initScript( 'typo', $this->item );
 		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>3, 'required'=>'required', 'storage_field'=>'image_height', 'attributes'=>'style="text-align:center"' ) )
 		 .	 '<span class="variation_value">px</span>'
 		 .	 '</div></li>';
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Image Alt Field',  'defaultvalue'=>'', 'storage_field'=>'image_alt_fieldname' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Image Title', 'defaultvalue'=>'1', 'selectlabel'=>'', 'options'=>'None=0||Auto=1', 'storage_field'=>'image_title' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>0, 'options'=>'Absolute=1||Relative=0',
 																		 'storage_field'=>'path_type' ) );
         ?>
