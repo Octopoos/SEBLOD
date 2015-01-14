@@ -69,30 +69,34 @@ class JCckContent
 		}
 		
 		$this->_type	=	$cck;
+		if ( empty( $this->_object ) ) {
+			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			if ( $this->_object == 'joomla_article' ) { // TODO
+				if ( !isset( $this->_columns['custom'] ) ) {
+					$this->_columns['custom']	=	'introtext';
+				}
+			}
+		}
 		$this->_instance_core	=	JTable::getInstance( $this->_object_table[$this->_object] );
 		$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 		
-		$author_id 		=	0; // TODO : Get default author id
-		$parent_id		=	0;
+		$author_id 		=	0; // TODO: Get default author id
+		$parent_id		=	0; // TODO: Get default parent_id
 		
 		// Set the author_id
-		$author_key =	$this->_columns['author'];
-		
-		if ( isset( $data_content[$author_key] ) ) {
-			$author_id	=	$data_content[$author_key];
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] && isset( $data_content[$this->_columns['author']] ) ) {
+			$author_id	=	$data_content[$this->_columns['author']];
 		} else {
-			$user_id	=	JFactory::getUser()->get('id');
+			$user_id	=	JFactory::getUser()->get( 'id' );
 			
 			if ( $user_id ) {
 				$author_id	=	$user_id;
 			}
 		}
 		
-		//Set the parent_id
-		$parent_key = $this->_columns['parent'];
-		
-		if ( isset( $data_content[$parent_key] ) ) {
-			$parent_id	=	$data_content[$parent_key];
+		// Set the parent_id
+		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] && isset( $data_content[$this->_columns['parent']] ) ) {
+			$parent_id	=	$data_content[$this->_columns['parent']];
 		}
 		
 		// -------- -------- --------
