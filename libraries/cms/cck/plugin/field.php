@@ -17,6 +17,16 @@ class JCckPluginField extends JPlugin
 	protected static $convertible	=	0;
 	protected static $friendly		=	0;
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		$field->data	=	$value;
+	}
+
 	// getValueFromOptions
 	public static function getValueFromOptions( $field, $value, $config = array() )
 	{

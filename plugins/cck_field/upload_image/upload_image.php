@@ -294,6 +294,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepape
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+		
+		$field->data	=	JUri::root().$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
