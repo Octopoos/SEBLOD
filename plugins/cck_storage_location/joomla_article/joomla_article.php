@@ -15,28 +15,30 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 // Plugin
 class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 {
-	protected static $type		=	'joomla_article';
-	protected static $table		=	'#__content';
-	protected static $key		=	'id';
+	protected static $type			=	'joomla_article';
+	protected static $table			=	'#__content';
+	protected static $key			=	'id';
 	
-	protected static $access	=	'access';
-	protected static $author	=	'created_by';
-	protected static $custom	=	'introtext';
-	protected static $parent	=	'catid';
-	protected static $status	=	'state';
-	protected static $to_route	=	'a.id as pk, a.title, a.alias, a.catid, a.language';
+	protected static $access		=	'access';
+	protected static $author		=	'created_by';
+	protected static $created_at	=	'created';
+	protected static $custom		=	'introtext';
+	protected static $modified_at	=	'modified';
+	protected static $parent		=	'catid';
+	protected static $status		=	'state';
+	protected static $to_route		=	'a.id as pk, a.title, a.alias, a.catid, a.language';
 	
-	protected static $context	=	'com_content.article';
-	protected static $contexts	=	array( 'com_content.article' );
-	protected static $error		=	false;
-	protected static $ordering	=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
-	protected static $pk		=	0;
-	protected static $sef		=	array( '1'=>'full',
-										   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
-										   '3'=>'full', '32'=>'id', '33'=>'alias',
-										   '4'=>'full', '42'=>'id', '43'=>'alias'
-									);
-	protected static $routes	=	array();
+	protected static $context		=	'com_content.article';
+	protected static $contexts		=	array( 'com_content.article' );
+	protected static $error			=	false;
+	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
+	protected static $pk			=	0;
+	protected static $sef			=	array( '1'=>'full',
+											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
+											   '3'=>'full', '32'=>'id', '33'=>'alias',
+											   '4'=>'full', '42'=>'id', '43'=>'alias'
+										);
+	protected static $routes		=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -779,16 +781,18 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',
 									'custom'=>'',
 									'key'=>'',
+									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
-									'to_route'=>''	
+									'to_route'=>''
 								);
 		
 		if ( count( $properties ) ) {

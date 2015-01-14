@@ -13,22 +13,24 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_Storage_LocationFree extends JCckPluginLocation
 {
-	protected static $type		=	'free';
-	protected static $table		=	'';
-	protected static $key		=	'id';
+	protected static $type			=	'free';
+	protected static $table			=	'';
+	protected static $key			=	'id';
 	
-	protected static $access	=	'';
-	protected static $author	=	'';
-	protected static $custom	=	'';
-	protected static $parent	=	'';
-	protected static $status	=	'';
-	protected static $to_route	=	'';
+	protected static $access		=	'';
+	protected static $author		=	'';
+	protected static $created_at	=	'';
+	protected static $custom		=	'';
+	protected static $modified_at	=	'';
+	protected static $parent		=	'';
+	protected static $status		=	'';
+	protected static $to_route		=	'';
 	
-	protected static $context	=	'';
-	protected static $contexts	=	array();
-	protected static $error		=	false;
-	protected static $ordering	=	array();
-	protected static $pk		=	0;
+	protected static $context		=	'';
+	protected static $contexts		=	array();
+	protected static $error			=	false;
+	protected static $ordering		=	array();
+	protected static $pk			=	0;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -322,13 +324,30 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND storage_table="'.(string)$config['base']->table.'" AND pk='.(int)$config['pk'] );
 	}
-
+	
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									/*'routes'=>'',*/
+									'status'=>'',
+									'table'=>'',
+									'to_route'=>''
+								);
+		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
-				if ( $p == 'key' || $p == 'table' || $p == 'access' || $p == 'custom' || $p == 'status' || $p == 'to_route' || $p == 'contexts' ) {
+				if ( isset( $autorized[$p] ) ) {
 					$properties[$p]	=	self::${$p};
 				}
 				unset( $properties[$i] );

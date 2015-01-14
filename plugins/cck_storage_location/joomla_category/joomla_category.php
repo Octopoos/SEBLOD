@@ -15,27 +15,29 @@ JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/cate
 // Plugin
 class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 {
-	protected static $type		=	'joomla_category';
-	protected static $table		=	'#__categories';
-	protected static $key		=	'id';
+	protected static $type			=	'joomla_category';
+	protected static $table			=	'#__categories';
+	protected static $key			=	'id';
 	
-	protected static $access	=	'access';
-	protected static $author	=	'created_user_id';
-	protected static $custom	=	'description';
-	protected static $parent	=	'parent_id';
-	protected static $status	=	'published';
-	protected static $to_route	=	'a.id as pk, a.title, a.alias';
+	protected static $access		=	'access';
+	protected static $author		=	'created_user_id';
+	protected static $created_at	=	'created_time';
+	protected static $custom		=	'description';
+	protected static $modified_at	=	'modified_time';
+	protected static $parent		=	'parent_id';
+	protected static $status		=	'published';
+	protected static $to_route		=	'a.id as pk, a.title, a.alias';
 	
-	protected static $context	=	'com_categories.category';
-	protected static $contexts	=	array();
-	protected static $error		=	false;
-	protected static $ordering	=	array( 'alpha'=>'title ASC', 'newest'=>'created_time DESC', 'oldest'=>'created_time ASC', 'ordering'=>'lft ASC', 'popular'=>'hits DESC' );
-	protected static $pk		=	0;
-	protected static $sef		=	array( '1'=>'full',
-										   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
-										   '3'=>'full', '32'=>'id', '33'=>'alias',
-										   '4'=>'full', '42'=>'id', '43'=>'alias'
-									);
+	protected static $context		=	'com_categories.category';
+	protected static $contexts		=	array();
+	protected static $error			=	false;
+	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created_time DESC', 'oldest'=>'created_time ASC', 'ordering'=>'lft ASC', 'popular'=>'hits DESC' );
+	protected static $pk			=	0;
+	protected static $sef			=	array( '1'=>'full',
+											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
+											   '3'=>'full', '32'=>'id', '33'=>'alias',
+											   '4'=>'full', '42'=>'id', '43'=>'alias'
+										);
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -594,13 +596,15 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
-		static $autorized	=	array(	
+		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',
 									'custom'=>'',
 									'key'=>'',
+									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
 									'routes'=>'',
@@ -608,7 +612,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'table'=>'',
 									'to_route'=>''
 								);
-
+		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {

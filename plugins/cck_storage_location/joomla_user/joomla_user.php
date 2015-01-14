@@ -15,23 +15,25 @@ JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 // Plugin
 class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 {
-	protected static $type		=	'joomla_user';
-	protected static $table		=	'#__users';
-	protected static $key		=	'id';
+	protected static $type			=	'joomla_user';
+	protected static $table			=	'#__users';
+	protected static $key			=	'id';
 	
-	protected static $access	=	'';
-	protected static $author	=	'';
-	protected static $custom	=	'';
-	protected static $parent	=	'';
-	protected static $status	=	'';
-	protected static $to_route	=	'';
+	protected static $access		=	'';
+	protected static $author		=	'';
+	protected static $created_at	=	'registerDate';
+	protected static $custom		=	'';
+	protected static $modified_at	=	'';
+	protected static $parent		=	'';
+	protected static $status		=	'';
+	protected static $to_route		=	'';
 	
-	protected static $context	=	'';
-	protected static $contexts	=	array( 'com_content.article' );
-	protected static $error		=	false;
-	protected static $ordering	=	array( 'alpha'=>'name ASC' );
-	protected static $ordering2	=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
-	protected static $pk		=	0;
+	protected static $context		=	'';
+	protected static $contexts		=	array( 'com_content.article' );
+	protected static $error			=	false;
+	protected static $ordering		=	array( 'alpha'=>'name ASC' );
+	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
+	protected static $pk			=	0;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -601,7 +603,22 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
-		static $autorized	=	array( 'key'=>'', 'table'=>'', 'access'=>'', 'custom'=>'', 'status'=>'', 'to_route'=>'', 'contexts'=>'' );
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									/*'routes'=>'',*/
+									'status'=>'',
+									'table'=>'',
+									'to_route'=>''
+								);
 		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
