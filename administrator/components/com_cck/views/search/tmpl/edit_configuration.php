@@ -47,6 +47,8 @@ $options	=	JCckDev::fromJSON( $this->item->options );
              .	 JCckDev::getForm( $cck['core_class_title'], @$options['class_list_title'], $config, array( 'size'=>16, 'storage_field'=>'options[class_list_title]' ) )
              .	 '</li>';
             echo JCckDev::renderForm( $cck['core_show_hide2'], @$options['show_list_desc'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc]' ) );
+            echo JCckDev::renderBlank();
+            echo JCckDev::renderForm( 'core_show_hide', @$options['show_list'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_SEARCH_LIST', 'storage_field'=>'options[show_list]' ) );
             echo JCckDev::renderForm( 'core_show_hide2', @$options['show_form'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_SEARCH_FORM', 'options'=>'Hide=0||Prepare=-1||Show=optgroup||Above=1||Below=2', 'storage_field'=>'options[show_form]' ) );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_items_number'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_ITEMS_NUMBER', 'storage_field'=>'options[show_items_number]' ) );
             echo '<li><label>'.JText::_( 'COM_CCK_CONFIG_ITEMS_NUMBER_LABEL_CLASS' ).'</label>'

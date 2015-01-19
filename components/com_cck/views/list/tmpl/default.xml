@@ -33,6 +33,8 @@
 				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" />
 			<field name="show_form" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global" cck_options="Hide=0||Prepare=-1||Show=optgroup||Above=1||Below=2"
 				   label="COM_CCK_CONFIG_SHOW_SEARCH_FORM" description="COM_CCK_CONFIG_SHOW_SEARCH_FORM_DESC" class="inputbox" />
+			<field name="show_list" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global" 
+				   label="COM_CCK_CONFIG_SHOW_SEARCH_LIST" description="COM_CCK_CONFIG_SHOW_SEARCH_LIST_DESC" class="inputbox" />
 			<field name="auto_redirect" type="cck" construction="core_auto_redirection" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_AUTO_REDIRECTION" description="COM_CCK_CONFIG_AUTO_REDIRECTION_DESC" class="inputbox" />
 			<field name="limit2" type="text" default="0" label="COM_CCK_CONFIG_LIMIT2" description="COM_CCK_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />

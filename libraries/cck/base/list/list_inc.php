@@ -43,7 +43,7 @@ $lang->load( 'pkg_app_cck_'.$search->folder_app, JPATH_SITE, null, false, false 
 $options					=	new JRegistry;
 $options->loadString( $search->options );
 $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['show_form'] : (int)$options->get( 'show_form', 1 );
-$preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? $preconfig['show_list'] : 1;
+$preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfig['show_list'] : (int)$options->get( 'show_list', 1 );
 $preconfig['auto_redirect']	=	( $preconfig['auto_redirect'] != '' ) ? $preconfig['auto_redirect'] : $options->get( 'auto_redirect', 0 );
 
 // ACL
