@@ -24,16 +24,28 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.5.1 Upgrade Release [6-Jan-2014] -------------
+-------------------- 3.6.0 Upgrade Release [22-Jan-2014] -------------
 
 * Security Release: 2 missing JEXEC security checks added.
+
++ "Change Column" (Alter Storage Field) added.
++ "PrepareResource" methods added >> SEBLOD WebServices Add-on required.
 
 + "More" Link handled more intelligently >> "only if results", "only if more resuslts".
 + "More" Link Text parameter added on List module.
 
-! "defines.php" file (from back-end component) removed.
++ "Image Alt Fieldname" added on Image Typography plug-in.
++ "Image Title" added on Image Typography plug-in.
++ Srcset (2x, 3x) added on Image Typography plug-in.
+
+^ A few more properties available from Object plug-ins.
+- "defines.php" file (from back-end component) removed.
+
 # Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
+# Multiple "Allowed Characters" issue fixed.
+# Safe string issue (multiple allowed characters) fixed on Upload File/Image plug-ins.
+# Various issues fixed on JCckContent class.
 # Various SQL queries fixed.
 
 -------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
