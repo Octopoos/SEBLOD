@@ -118,8 +118,11 @@ class plgCCK_FieldTabs extends JCckPluginField
 				$form	=	JCckDevTabs::end();
 			} elseif ( $field->bool == 1 ) {
 				$form	=	JCckDevTabs::open( $group_id, $id, $field->label );
+				$form	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $form );
 			} else {
 				$form	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
+				$form	=	str_replace( 'class="nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $form );
+				$form	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $form );
 			}
 		}
 
