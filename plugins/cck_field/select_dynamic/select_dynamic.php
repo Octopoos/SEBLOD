@@ -260,7 +260,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						if ( $attrib ) {
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
-								$ka				=	'attr'.( $k + 1 );
+								$ka				=	isset($options2['attr'.( $k + 1 )]) ? $options2['attr'.( $k + 1 )] : 'somefalse';
 								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
 							}
 							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
@@ -276,7 +276,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						foreach ( $items as $o ) {
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
-								$ka				=	'attr'.( $k + 1 );
+								$ka				=	isset($options2['attr'.( $k + 1 )]) ? $options2['attr'.( $k + 1 )] : 'somefalse';
 								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
 							}
 							$opts[]		=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );
