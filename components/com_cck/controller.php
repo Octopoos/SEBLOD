@@ -30,7 +30,21 @@ class CCKController extends JControllerLegacy
 	// display
 	public function display( $cachable = false, $urlparams = false )
 	{
-		parent::display( true );
+		$cachable = true;
+
+		$vName = $this->input->getCmd('view', 'form');
+
+		// disable caching on forms and in search&list where search is performed
+		if ($vName == "form" || $this->input->getMethod() == 'POST' || ($this->input->getCmd('cck', null) && $this->task == 'search'))
+		{
+			$cachable = false;
+		}
+
+		$safeurlparams = array('catid' => 'INT', 'task' => 'CMD', 'type' => 'STRING', 'search' => 'STRING',
+			'boxchecked' => 'INT', 'lang' => 'CMD', 'Itemid' => 'INT');
+
+		parent::display($cachable, $safeurlparams);
+
 	}
 	
 	// ajax
@@ -515,12 +529,6 @@ class CCKController extends JControllerLegacy
 		} else {
 			$this->setRedirect( htmlspecialchars_decode( $link ) );
 		}
-	}
-	
-	// search
-	public function search()
-	{
-		parent::display( true );
 	}
 	
 	// _download_hits
