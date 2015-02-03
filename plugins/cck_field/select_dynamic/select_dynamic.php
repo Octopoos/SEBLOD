@@ -300,6 +300,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			}
 			
 			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+			if ( $value != '' ) {
+				$class	.=	' has-value';
+			}
 			$multi	=	( @$field->bool3 ) ? ' multiple="multiple"' : '';
 			$size	=	( !@$field->bool3 ) ? '1' : ( ( @$field->rows ) ? $field->rows : count( $opts ) );
 			
