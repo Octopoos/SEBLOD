@@ -267,7 +267,7 @@ abstract class JCck
 				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
 				$version	=	new JCckEcommerceVersion;
 			}
-			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getShortVersion().'.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.js' );
 		}
 		
 		$loaded[$key]	=	true;
