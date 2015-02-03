@@ -24,27 +24,38 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.6.0 Upgrade Release [22-Jan-2014] -------------
+-------------------- 3.6.0 Upgrade Release [6-Feb-2014] -------------
 
 * Security Release: 2 missing JEXEC security checks added.
 
++ Load More (Infinite Pagination) added on Search Types.
+  >> supported templates: Accordion, List, Masonry, Table.
+
 + "Change Column" (Alter Storage Field) added.
++ Multilanguage Associations available for to Joomla! Category object.
 + "PrepareResource" methods added >> SEBLOD WebServices Add-on required.
 
-+ "More" Link handled more intelligently >> "only if results", "only if more resuslts".
++ "More" Link handled more intelligently >> "only if results", "only if more results".
 + "More" Link Text parameter added on List module.
++ "Show List View" parameter added on List View.
 
++ "has-value" class added on Select Dynamic/Simple, Text.. (when value != '')
 + "Image Alt Fieldname" added on Image Typography plug-in.
 + "Image Title" added on Image Typography plug-in.
 + Srcset (2x, 3x) added on Image Typography plug-in.
 
 ^ A few more properties available from Object plug-ins.
+^ jQuery Validation script and style updated.
+^ "template_preview.png" updated for One (seb_one) template.
 - "defines.php" file (from back-end component) removed.
+! Table (seb_table) updated with "Load More" capabilities.
 
 # Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
-# Multiple "Allowed Characters" issue fixed.
+# Inherit Search Type issue fixed on Search module.
+# Multilanguage issue fixed on Joomla! Article object (regression).
 # Safe string issue (multiple allowed characters) fixed on Upload File/Image plug-ins.
+# Validation rules fixed for fields inside Tabs.
 # Various issues fixed on JCckContent class.
 # Various SQL queries fixed.
 
