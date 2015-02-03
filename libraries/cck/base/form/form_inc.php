@@ -48,7 +48,11 @@ $stage			=	-1;
 if ( $id > 0 ) {
 	$isNew				=	0;
 	$canAccess			=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
-	$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+	//if ( $user->id && !$user->guest ) {
+		$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+	//} else {
+	//	$canEditOwn		=	false; // todo: guest
+	//}
 	
 	// canEditOwnContent
 	jimport( 'cck.joomla.access.access' );
