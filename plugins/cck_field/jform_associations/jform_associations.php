@@ -69,55 +69,22 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		}
 		
 		// Prepare
-		$app	=	JFactory::getApplication();
-		$assoc	=	isset( $app->item_associations ) ? $app->item_associations : 0;
+		$assoc	=	JCckDevHelper::hasLanguageAssociations();
 		$form	=	'';
-
+		
 		if ( $assoc && $config['pk'] ) {
-			$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-
-			// Create Form
-			$addform	=	new SimpleXMLElement( '<form />' );
-			$fields		=	$addform->addChild( 'fields' );
-			$fields->addAttribute( 'name', $name );
-			$fieldset	=	$fields->addChild( 'fieldset' );
-			$fieldset->addAttribute( 'name', 'item_associations' );
-			$fieldset->addAttribute( 'description', 'COM_CONTENT_ITEM_ASSOCIATIONS_FIELDSET_DESC' );
-			$fieldset->addAttribute( 'addfieldpath', '/administrator/components/com_content/models/fields' );
-			$hasForm	=	false;
-			foreach ( $languages as $tag=>$language ) {
-				if ( empty( $config['language'] ) || $tag != $config['language'] ) {
-					$hasForm	=	true;
-					$f			=	$fieldset->addChild( 'field' );
-					$f->addAttribute( 'name', $tag );
-					$f->addAttribute( 'type', 'modal_article' );
-					$f->addAttribute( 'language', $tag );
-					$f->addAttribute( 'label', $language->title );
-					$f->addAttribute( 'translate_label', 'false' );
-				}
+			if ( isset( $config['base']->location ) && $config['base']->location ) {
+				$location	=	$config['base']->location;
+			} else {
+				$location	=	JCckdatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
 			}
-			$form	=	JForm::getInstance( $id, $addform->asXML() );
-			if ( $hasForm ) {
-				$form->load( $addform, false );
-				$associations	=	JLanguageAssociations::getAssociations( 'com_content', '#__content', 'com_content.item', $config['pk'] );
-				if ( count( $associations ) ) {
-					foreach ( $associations as $tag=>$association ) {
-						$form->setValue( $tag, $name, $association->id );
-					}
-				}
-				if ( $config['translate_id'] && isset( $config['translate'] ) ) {
-					$form->setValue( $config['translate'], $name, $config['translate_id'] );
-				}
-			}
-			
-			// Render Form
-			$fields	=	$form->getFieldset( 'item_associations' );
-			$form	=	'';
-			foreach ( $fields as $f ) {
-				$form	.=	'<div class="control-group"><div class="control-label">'.$f->label.'</div><div class="controls">'.$f->input.'</div></div>';
+			if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/classes/helper.php' ) ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/classes/helper.php';
+				
+				$form		=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location.'_Helper', 'getAssociationsForm', array( $id, $name, $config ) );
 			}
 		}
-
+		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;

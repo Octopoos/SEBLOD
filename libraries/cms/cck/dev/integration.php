@@ -308,7 +308,8 @@ abstract class JCckDevIntegration
 		$items			=	array();
 		$list2			=	array();
 		$multilanguage	=	0;
-		if ( isset( $app->item_associations ) && $app->item_associations ) {
+		
+		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			$multilanguage	=	( isset( $data['multilanguage'] ) && $data['multilanguage'] ) ? 1 : 0;
 		}
 		$pks				=	'';

@@ -185,6 +185,17 @@ abstract class JCckDevHelper
 		return $url;
 	}
 	
+	// hasLanguageAssociations
+	public static function hasLanguageAssociations()
+	{
+		if ( class_exists( 'JLanguageAssociations' ) ) {
+			return JLanguageAssociations::isEnabled();
+		} else {
+			$app	=	JFactory::getApplication();
+			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );
+		}
+	}
+	
 	// matchUrlVars
 	public static function matchUrlVars( $vars, $url = NULL )
 	{
