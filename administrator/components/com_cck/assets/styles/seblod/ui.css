@@ -40,10 +40,12 @@ div.seblod-less .pane-sliders .panel div.seblod {margin-bottom:0!important;borde
 
 /* Joomla 3.x */
 body.com_cck div.seblod,
+body.com_cck_builder div.seblod,
 body.com_cck_developer div.seblod,
+body.com_cck_ecommerce div.seblod,
 body.com_cck_exporter div.seblod,
 body.com_cck_importer div.seblod,
-body.com_cck_ecommerce div.seblod,
+body.com_cck_packager div.seblod,
 body.com_cck_toolbox div.seblod,
 body.com_cck_updater div.seblod,
 body.com_cck_webservices div.seblod,
