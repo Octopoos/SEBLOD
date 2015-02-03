@@ -86,7 +86,7 @@ if ( JCck::on() ) { ?>
                     <div class="sly">
                         <ul>
                             <li data-name="" class="active"><?php echo JText::_( 'COM_CCK_NONE' ); ?>
-                                <img src="components/com_cck/assets/images/template_picker_none.png" alt="None" width="175" height="115" />
+                                <img src="components/com_cck/assets/images/template_picker_none.png" alt="<?php echo JText::_( 'COM_CCK_NONE' ); ?>" width="175" height="115" />
                             </li>
                             <?php
                             foreach ( $templates as $template ) {
