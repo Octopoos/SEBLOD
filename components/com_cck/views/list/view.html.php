@@ -92,6 +92,9 @@ class CCKViewList extends JViewLegacy
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
 		
+		// Pagination
+		$pagination	=	$params->get( 'show_pagination' );
+
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
@@ -169,6 +172,7 @@ class CCKViewList extends JViewLegacy
 		$this->form						=	&$form;
 		$this->home						=	&$home;
 		$this->items					=	&$items;
+		$this->limitend					=	$config['limitend'];
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;

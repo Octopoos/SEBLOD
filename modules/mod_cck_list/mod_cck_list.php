@@ -47,9 +47,10 @@ $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
-$live		=	urldecode( $params->get( 'live' ) );
-$variation	=	$params->get( 'variation' );
 $limitstart	=	-1;
+$live		=	urldecode( $params->get( 'live' ) );
+$pagination	=	-2;
+$variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';

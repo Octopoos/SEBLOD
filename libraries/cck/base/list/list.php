@@ -234,8 +234,7 @@ class CCK_List
 	public static function redirect( $action, $url, $message = '', $type = 'error', &$config )
 	{
 		$app				=	JFactory::getApplication();
-		$config['error']	=	true;
-		
+		$config['error']	=	true;		
 		
 		if ( ! $message ) {
 			$message	=	JText::_( 'COM_CCK_NO_ACCESS' );

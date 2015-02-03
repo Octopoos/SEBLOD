@@ -51,6 +51,7 @@ class CCK_Rendering
 	var $positions;
 	
 	var $grid;
+	var $infinite;
 	
 	var $css;
 	var $browser;
@@ -153,6 +154,7 @@ class CCK_Rendering
 		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
+		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
 		$this->path_lib		=	dirname(__FILE__);
@@ -993,8 +995,8 @@ class CCK_Rendering
 
 	// isGoingtoLoadMore
 	public function isGoingtoLoadMore()
-	{	
-		return 1;
+	{
+		return $this->infinite;
 	}
 
 	// isLoadingMore

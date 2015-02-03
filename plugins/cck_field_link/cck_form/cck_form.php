@@ -36,15 +36,20 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	protected static function _link( $link, &$field, &$config )
 	{
 		$app			=	JFactory::getApplication();
+		$custom			=	$link->get( 'custom', '' );
 		$form			=	$link->get( 'form', '' );
 		$edit			=	$link->get( 'form_edition', 1 );
 		$edit			=	( !$form && $edit ) ? '&id='.$config['pk'] : '';
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
-		$uri			=	JFactory::getURI();
-		$return			=	base64_encode( $uri );
-		$custom			=	$link->get( 'custom', '' );
 		$redirection	=	$link->get( 'redirection', '' );
+		$uri			=	(string)JFactory::getUri();
+
+		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
+			$return		=	$app->input->get( 'return' );
+		} else {
+			$return		=	base64_encode( $uri );
+		}
 		
 		if ( !( $form ) ) {
 			return;
@@ -59,7 +64,11 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			}
 			$user 				=	JCck::getUser();
 			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
-			$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+			// if ( $user->id && !$user->guest ) {
+				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+			// } else {
+			//	$canEditOwn		=	false; // todo: guest
+			// }
 			$canEditOwnContent	=	'';
 
 			// canEditOwnContent

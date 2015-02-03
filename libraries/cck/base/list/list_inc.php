@@ -90,8 +90,10 @@ if ( ! $count ) {
 	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
 }
 
-// INIT
+// Init
 $limitend	=	(int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
+$isInfinite	=	( $pagination == 2 ) ? true : false;
 if ( $limitstart != -1 ) {
 	if ( $limitend != -1 ) {
 		$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
@@ -312,6 +314,7 @@ if ( $preconfig['task'] == 'search' ) {
 		$profiler	=	JProfiler::getInstance();
 	}
 	if ( $preconfig['show_list'] ) {
+		$config['infinite']	=	$isInfinite;
 		if ( $total ) {
 			// Limit2 + Random
 			if( $preconfig['limit2'] > 0 ) {
