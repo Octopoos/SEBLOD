@@ -19,6 +19,7 @@ $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
 $table_width	=	0;
 $isFixed		=	( $table_layout == 'fixed' ) ? 1 : ( ( $table_layout == 'calculated' ) ? 2 : 0 );
+$class_body		=	'';
 $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' ) );
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
@@ -30,11 +31,18 @@ $class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
 
+// Set
+$isMore			=	$cck->isLoadingMore();
+if ( $cck->isGoingToLoadMore() ) {
+	$class_body	=	' class="cck-loading-more"';
+}
+
 // -- Render
+if ( !$isMore ) {
 ?>
 <div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
     <div>
-    <?php
+    <?php }
 	$attr		=	array(
 						'class'=>array(),
 						'width'=>array()
@@ -42,9 +50,11 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
 	$items		=	$cck->getItems();
 	$positions	=	$cck->getPositions();
 	unset( $positions['hidden'] );
-	if ( count( $items ) ) { ?>
-		<table<?php echo $class_table; ?>>
+	if ( count( $items ) ) {
+		if ( !$isMore ) { ?>
+			<table<?php echo $class_table; ?>>
 			<?php
+			}
 			$head	=	'';
 			$thead	=	false;
 			foreach ( $positions as $name=>$position ) {
@@ -78,13 +88,15 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
 				}
 			}
             ?>
-            <?php if ( $head && $thead && ( $table_header == 0 || $table_header == 1 ) ) { ?>
+            <?php if ( !$isMore && $head && $thead && ( $table_header == 0 || $table_header == 1 ) ) { ?>
             <thead>
                 <tr><?php echo $head; ?></tr>
 			</thead>
-			<?php } ?>
-            <tbody>
+			<?php }
+			if ( !$isMore ) { ?>
+				<tbody<?php echo $class_body; ?>>
             <?php
+        	}
 			$i	=	0;
             foreach ( $items as $item ) {
 				?>
@@ -112,19 +124,24 @@ $doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'s
                 }
                 ?>
                 </tr>
-            <?php $i++; } ?>
-			</tbody>
+            <?php $i++; }
+            if ( !$isMore ) { ?>
+				</tbody>
 			<?php
+			}
 			if ( $head && $thead && ( $table_header == -1 || $table_header == 1 ) ) { ?>
             <tfoot>
                 <tr><?php echo $head; ?></tr>
 			</tfoot>
-			<?php } ?>
-		</table>
-	<?php } ?>
+			<?php }
+			if ( !$isMore ) { ?>
+			</table>
+	<?php } }
+	if ( !$isMore ) { ?>
     </div>
 </div>
 <?php
+}
 // -- Finalize
 if ( $table_width ) {
 	$cck->addCSS( '#'.$cck->id.' table {min-width:'.$table_width.'px;}' );
