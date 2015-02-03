@@ -249,14 +249,20 @@ class plgSearchCCK extends JPlugin
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
 				$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
 				$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
-				if ( isset( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' ) {
-					$query->select( $config['query_parts']['select'] );
+				if ( isset( $config['query_parts']['select'] ) ) {
+					if ( ( is_string( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' )
+						|| count( $config['query_parts']['select'] ) ) {
+						$query->select( $config['query_parts']['select'] );
+					}
 				}
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
-				if ( isset( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' ) {
-					$query->having( $config['query_parts']['having'] );
+				if ( isset( $config['query_parts']['having'] ) ) {
+					if ( ( is_string( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' )
+						|| count( $config['query_parts']['having'] ) ) {
+						$query->having( $config['query_parts']['having'] );	
+					}
 				}
 				$query->group( 't0.pk' );
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
