@@ -360,7 +360,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 
 		// Associations
-		if ( isset( $app->item_associations ) && $app->item_associations ) {
+		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			self::_setAssociations( $table, $data, $isNew, $config );
 		}
 	}
@@ -644,8 +644,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
 
 			// Multilanguage Associations
-			$app		=	JFactory::getApplication();
-			if ( isset( $app->item_associations ) && $app->item_associations ) {
+			if ( JCckDevHelper::hasLanguageAssociations() ) {
+				$app		=	JFactory::getApplication();
 				$pk			=	$storage[self::$table]->id;
 				if ( $app->input->get( 'view' ) == 'article' && $app->input->get( 'id' ) == $storage[self::$table]->id && !count( self::$routes ) ) {
 					JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php' );
