@@ -120,15 +120,21 @@ class CommonHelper_Include
 				}
 			}
 			if ( $position != 'inline' && $bgcolor != '' ) {
-				$doc->addStyleDeclaration( '.formError .formErrorContent, .formError .formErrorArrow div{background: '.$bgcolor.'}' );
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
 			}
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
 		} else {
 			$options	=	'{}';
 		}
 		
-		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation.css' );
-		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js' );
+		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.5.0.css' );
+		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js' );
 		
 		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		$doc->addScriptDeclaration( $js );
