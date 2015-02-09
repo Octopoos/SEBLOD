@@ -305,8 +305,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			}
 			$multi	=	( @$field->bool3 ) ? ' multiple="multiple"' : '';
 			$size	=	( !@$field->bool3 ) ? '1' : ( ( @$field->rows ) ? $field->rows : count( $opts ) );
+			$size	=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
 			
-			$attr	=	'class="'.$class.'" size="'.$size.'"'.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
+			$attr	=	'class="'.$class.'"'.$size.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
 			$count	=	count( $opts );
 			$form	=	'';
 			if ( $field->variation == 'hidden_auto' ) {

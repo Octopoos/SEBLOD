@@ -227,7 +227,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}
-		$attr	=	'class="'.$class.'" size="1"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {
 			if ( $attrib ) {
