@@ -129,6 +129,7 @@ body.com_cck ul.adminformlist{margin: 0;}
 #adminForm .chzn-container-single .chzn-single {-webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
 #adminForm .chzn-container-active .chzn-single-with-drop {-webkit-border-radius:3px 3px 0px 0px; -moz-border-radius:3px 3px 0px 0px; border-radius:3px 3px 0px 0px;}
 #adminForm .chzn-container-single .chzn-drop{-webkit-border-radius:0px 0px 3px 3px; -moz-border-radius:0px 0px 3px 3px; border-radius:0px 0px 3px 3px;}
+#sidebar .chzn-container-active > .chzn-single{border-bottom-left-radius: 0; border-bottom-right-radius: 0;}
 body.com_cck div.how-to-setup a,
 body.com_cck_exporter div.how-to-setup a,
 body.com_cck_importer div.how-to-setup a,

@@ -83,7 +83,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 									   'filter_select_separator'=>'<hr class="hr-condensed" />'
 								);
 			$this->js		=	array( 'filter'=>'jQuery(document).ready(function($) { $("#sidebar div.sidebar-nav").append("<hr />"); $("div.filter-select").appendTo("#sidebar div.sidebar-nav").removeClass("hidden-important");'
-												.'var w = $("div.sidebar-nav").width(); $("div.filter-select,div.sidebar-nav div.chzn-container").css("width",w+"px"); $("div.sidebar-nav div.chzn-drop").css("width",(w-2)+"px");  $("div.sidebar-nav div.chzn-search > input").css("width",(w-37)+"px"); });'
+												.'var w = $("div.sidebar-nav").width()-28; $("div.filter-select,div.sidebar-nav div.chzn-container").css("width",w+"px"); $("div.sidebar-nav div.chzn-drop").css("width",(w)+"px");  $("div.sidebar-nav div.chzn-search > input").css("width",(w-10)+"px"); });'
 								);
 			$this->sidebar	=	JHtmlSidebar::render();
 		} else {
