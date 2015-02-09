@@ -29,7 +29,7 @@ $ -> Language fix or change
 * Security Release: 2 missing JEXEC security checks added.
 
 + Load More (Infinite Pagination) added on Search Types.
-  >> supported templates: Accordion, List, Masonry, Table.
+  >> supported templates: Accordion, List, Masonry, Table, Tabs.
 
 + "Change Column" (Alter Storage Field) added.
 + Multilanguage Associations available for to Joomla! Category object.
@@ -45,10 +45,13 @@ $ -> Language fix or change
 + Srcset (2x, 3x) added on Image Typography plug-in.
 
 ^ A few more properties available from Object plug-ins.
+^ Default User Group set as Registered (2) on User (Admin Form).
 ^ jQuery Validation script and style updated.
-^ "template_preview.png" updated for One (seb_one) template.
-- "defines.php" file (from back-end component) removed.
 ! Table (seb_table) updated with "Load More" capabilities.
+
+- "defines.php" file (from back-end component) removed.
+- "size="1" attribute removed on JForm Category/MenuItem, Select Dynamic/Numeric/Simple.
+^ "template_preview.png" updated for One (seb_one) template.
 
 # Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
