@@ -27,10 +27,11 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 		// Init
 		$live		=	'';
 		$options	=	parent::g_getLive( $field->live_options );
-		
+
 		// Prepare
 		$excluded	=	$options->get( 'excluded' );
 		$property	=	$options->get( 'property' );
+
 		if ( $property ) {
 			$user	=	JCck::getUser();
 			if ( $user->id > 0 && $user->guest == 1 ) {
@@ -49,18 +50,29 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 				} else {
 					$live	=	implode( ',', $viewlevels );	
 				}
-			} elseif ( isset( $user->$property ) ) {
-				$live		=	$user->$property;
-				if ( is_array( $live ) ) {
-					if ( $excluded != '' ) {
-						$excluded	=	explode( ',', $excluded );
-						$live		=	array_diff( $live, $excluded );
+			} else {
+				if ( strpos( $property, '[' ) !== false ) {
+					$prop		= 	explode( '[', $property );
+					$property 	=	$prop[0];	
+				}
+				if ( isset( $user->$property ) ) {
+					$live		=	$user->$property;
+					if ( is_array( $live ) ) {
+						if ( $excluded != '' ) {
+							$excluded	=	explode( ',', $excluded );
+							$live		=	array_diff( $live, $excluded );
+						}
+						if ( empty( $live ) ) {
+							$live	=	$options->get( 'default_value', '' );
+						} else {
+							$live	=	implode( ',', $live );	
+						}
 					}
-					if ( empty( $live ) ) {
-						$live	=	$options->get( 'default_value', '' );
-					} else {
-						$live	=	implode( ',', $live );	
+					if ( isset( $prop ) ) {
+						$prop[0] 	= 	json_decode( $live, true );
+						$live 		= 	$prop[0][substr( $prop[1], 0, -1 )];
 					}
+
 				}
 			}
 		}
