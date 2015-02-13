@@ -641,7 +641,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			} else {
 				$path	=	'';
 			}
-			$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+			if ( is_object( $storage[self::$table] ) ) {
+				$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+			}
 
 			// Multilanguage Associations
 			if ( JCckDevHelper::hasLanguageAssociations() ) {
