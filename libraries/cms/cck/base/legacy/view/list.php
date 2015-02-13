@@ -66,7 +66,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	public function prepareUI()
 	{
 		if ( JCck::on() ) {
-			$this->css		=	array( 'batch'=>'modal hide fade',
+			$this->css		=	array( 'batch'=>'modal modal-small hide fade',
 									   'filter'=>'btn-toolbar',
 									   'filter_search'=>'filter-search btn-group pull-left hidden-phone input-append',
 									   'filter_search_button'=>'tip hasTooltip',

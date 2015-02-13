@@ -161,6 +161,10 @@ body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.ver
 .modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
 .modal-footer .btn-group .btn + .btn {padding-top:3px; font-size:0px;}
 
+.modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
+.modal.modal-small .modal-body{padding: 15px; width: auto;}
+div.modal.modal-small.fade.in{top:10%;}
+
 #toolbar #toolbar-cck-form,
 #toolbar #toolbar-cck-search,
 #toolbar #toolbar-cck-template,
