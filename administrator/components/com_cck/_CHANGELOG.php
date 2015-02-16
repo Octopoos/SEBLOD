@@ -24,8 +24,9 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.6.0 Upgrade Release [6-Feb-2014] -------------
+-------------------- 3.6.0 Upgrade Release [19-Feb-2014] -------------
 
+! Joomla! 3.4 ready.
 * Security Release: 2 missing JEXEC security checks added.
 
 + Load More (Infinite Pagination) added on Search Types.
