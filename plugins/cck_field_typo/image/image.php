@@ -40,7 +40,10 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	protected static function _typo( $typo, &$field, $value, &$config = array() )
 	{
 		// Prepare
-		$root			=	$typo->get( 'path_type', 0 ) ? JURI::root() : '';
+		$options		=	array(
+								'base'=>JUri::root( true ).'/',
+								'root'=>( $typo->get( 'path_type', 0 ) ? JUri::root() : '' )
+							);
 		$thumb_array	=	array( 'thumb'=>$typo->get( 'thumb', 'thumb1' ),
 								   'thumb_2x'=>$typo->get( 'thumb_2x', '' ),
 								   'thumb_3x'=>$typo->get( 'thumb_3x', '' ),
@@ -56,9 +59,9 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$alt_fieldname	= 	$typo->get( 'image_alt_fieldname', '' );
 
 		if ( is_array( $field->value ) ) {
-			$typo	=	self::_addImages( $field, $thumb_array, $root );
+			$typo	=	self::_addImages( $field, $thumb_array, $options );
 		} else {
-			$typo	=	self::_addImage( $field, $thumb_array, $root );
+			$typo	=	self::_addImage( $field, $thumb_array, $options );
 		}
 		if ( $alt_fieldname != '' ) {
 			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'alt_fieldname'=>$alt_fieldname  ) );
@@ -102,7 +105,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImage
-	protected static function _addImage( &$field, $params, $root )
+	protected static function _addImage( &$field, $params, $options )
 	{
 		$value				=	$field->value;
 		
@@ -125,20 +128,20 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			$height	=	' height="'.$params['thumb_height'].'"';
 		}
 		if ( $params['thumb_2x'] ) {
-			$srcset	=	( $root ? '' : '/' ).self::_availableThumb( $field, $params['thumb_2x'], $root ).' 2x';
+			$srcset	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options ).' 2x';
 			if ( $params['thumb_3x'] ) {
-				$srcset	.=	', '.( $root ? '' : '/' ).self::_availableThumb( $field, $params['thumb_3x'], $root ).' 3x';
+				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options ).' 3x';
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
 		}
-		$img		=	'<img '.$attr_title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $root ).'"'.$srcset.$width.$height.' />';
+		$img		=	'<img '.$attr_title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $options ).'"'.$srcset.$width.$height.' />';
 
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
 		} elseif ( $params['image'] == 'none' ) {
 			$typo	=	$img;
 		} else {
-			$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $root ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
+			$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $options ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
 		}
 		if ( $params['image'] != 'none' ) {
 			self::_addScripts( array( 'id'=>$field->id ), $params );
@@ -148,14 +151,14 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImages
-	protected static function _addImages( &$field, $params, $root )
+	protected static function _addImages( &$field, $params, $options )
 	{
 		// Prepare
 		$value	=	$field->value;
 		$typo	=	'';
 		
 		foreach ( $field->value as $value_img ) {
-			$typo	.=	self::_addImage( $value_img, $params, $root );
+			$typo	.=	self::_addImage( $value_img, $params, $options );
 		}
 		
 		return $typo;
@@ -184,34 +187,34 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _availableThumb
-	protected static function _availableThumb( $field, $thumb, $root )
+	protected static function _availableThumb( $field, $thumb, $options )
 	{
 		if ( isset( $field->$thumb ) && $field->$thumb ) {
-			return $root.$field->$thumb;
+			return $options['root'].$field->$thumb;
 		} else {
 			for ( $i = 1; $i < self::$thumb_count; $i++ ) {
 				if ( isset( $field->{'thumb'.$i} ) && $field->{'thumb'.$i} ) {
-					return $root.$field->{'thumb'.$i};
+					return $options['root'].$field->{'thumb'.$i};
 				}
 			}
 			if ( isset( $field->value ) && $field->value ) {
-				return $root.$field->value;
+				return $options['root'].$field->value;
 			}		
 		}
 	}
 
 	// _availableValue
-	protected static function _availableValue( $field, $thumb, $root )
+	protected static function _availableValue( $field, $thumb, $options )
 	{
 		if ( isset( $field->$thumb ) && $field->$thumb ) {
-			return $root.$field->$thumb;
+			return $options['root'].$field->$thumb;
 		} else {
 			if ( isset( $field->value ) && $field->value ) {
-				return $root.$field->value;
+				return $options['root'].$field->value;
 			} else {
 				for ( $i = 1 ; $i < self::$thumb_count; $i++ ) {
 					if ( isset( $field->{'thumb'.$i} ) && $field->{'thumb'.$i} ) {
-						return $root.$field->{'thumb'.$i};
+						return $options['root'].$field->{'thumb'.$i};
 					}
 				}
 			}
