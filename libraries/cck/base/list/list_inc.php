@@ -344,11 +344,13 @@ if ( $preconfig['task'] == 'search' ) {
 			// Redirect
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
+					// Content
 					$sef			=	( $app->getCfg( 'sef' ) ) ? $config['doSEF'] : 0;
-					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0], $sef, $config['Itemid'] ) );
+					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
 					$app->redirect( $redirect_url );
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {
+					// Form
 					$uri			=	$_SERVER["HTTP_REFERER"];
 					$return			=	base64_encode( $uri );
 					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].'&return='.$return );
