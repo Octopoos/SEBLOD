@@ -63,6 +63,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
 		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {

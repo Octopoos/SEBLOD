@@ -21,7 +21,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
 		echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config );
 		echo JCckDev::renderForm( 'core_options_path', @$options2['path'], $config, array( 'required'=>'required' ) );
-		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_PATH_PER_CONTENT' ).'</label>'
 		 .	 JCckDev::getForm( 'core_options_path_content', @$options2['path_content'], $config )
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['folder_permissions'], $config, array( 'defaultvalue'=>'0755', 'size'=>4, 'storage_field'=>'json[options2][folder_permissions]' ) )
@@ -103,5 +103,7 @@ jQuery(document).ready(function($) {
 	$('#json_options2_path_label').isVisibleWhen('json_options2_custom_path','1',false);
 	$('#json_options2_title_label').isVisibleWhen('json_options2_title_image','1',false);
 	$('#json_options2_desc_label').isVisibleWhen('json_options2_desc_image','1',false);
+	$('#json_options2_storage_format').isDisabledWhen('json_options2_path_user','1' );
+	$('#json_options2_path_user').isDisabledWhen('json_options2_storage_format','1' );
 });
 </script>
