@@ -11,7 +11,6 @@
 defined( '_JEXEC' ) or die;
 
 // Prepare
-$app	=	JFactory::getApplication();
 if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	if ( $this->item->id == 'dev_map' ) {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br />'.JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
@@ -28,7 +27,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	} else {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
 		$location				=	$this->item->title;
-		$prefix					=	$app->getCfg( 'dbprefix' );
+		$prefix					=	JFactory::getConfig()->get( 'dbprefix' );
 		if ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
 			$properties				=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
 		} else {

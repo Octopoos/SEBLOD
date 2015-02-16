@@ -37,7 +37,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	{
 		$app		=	JFactory::getApplication();
 		$sef		=	$link->get( 'sef', $config['doSEF'] );
-		if ( !JFactory::getApplication()->getCfg( 'sef' ) ) {
+		if ( !JFactory::getConfig()->get( 'sef' ) ) {
 			$sef	=	0;
 		}
 		$itemId		=	( $sef ) ? $link->get( 'itemid', '' ) : '';

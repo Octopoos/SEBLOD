@@ -30,7 +30,7 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		$data['divider']	=	'';
-		$prefix				=	JFactory::getApplication()->getCfg( 'dbprefix' );
+		$prefix				=	JFactory::getConfig()->get( 'dbprefix' );
 		$table				=	'cck_store_join_'.( ( $data['storage_field2'] != '' ) ? $data['storage_field2'] : $data['storage_field'] );
 		JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$prefix.$table.' ( `id` int(11) NOT NULL, `id2` int(11) NOT NULL, PRIMARY KEY (`id`,`id2`) )'
 							 . ' ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
@@ -111,7 +111,7 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 																	. ' AS a LEFT JOIN #__cck_store_join_'.$name.' AS b ON b.id = a.id'
 																	. ' WHERE b.id2 = '.(int)$config['pk'].$and.$language.$order.$limit );
 					if ( count( $items ) ) {
-						$sef	=	( JFactory::getApplication()->getCfg( 'sef' ) ) ? $options3->get( 'sef', 2 ) : 0;
+						$sef	=	( JFactory::getConfig()->get( 'sef' ) ) ? $options3->get( 'sef', 2 ) : 0;
 						JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'setRoutes', array( &$items, $sef, $options3->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) ) ) );
 						foreach ( $items as $item ) {
 							$text		.=	', ' . '<a href="'.$item->link.'">'.$item->title.'</a>';

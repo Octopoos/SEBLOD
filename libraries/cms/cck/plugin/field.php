@@ -235,8 +235,7 @@ class JCckPluginField extends JPlugin
 						}
 						$columns	=	$db->getTableColumns( $data['storage_table'] );
 						if ( !isset( $columns[$data['storage_field']] ) ) {
-							$app	=	JFactory::getApplication();
-							$prefix	=	$app->getCfg( 'dbprefix' );
+							$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 							if ( $data['storage_cck'] != '' ) {
 								// #__cck_store_form_
 								$table	=	'#__cck_store_form_'.$data['storage_cck'];

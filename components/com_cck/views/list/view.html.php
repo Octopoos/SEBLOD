@@ -37,6 +37,7 @@ class CCKViewList extends JViewLegacy
 	protected function prepareDisplay( $preconfig )
 	{
 		$app			=	JFactory::getApplication();
+		$config			=	JFactory::getConfig();
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
@@ -72,12 +73,13 @@ class CCKViewList extends JViewLegacy
 		$title	=	$params->get( 'page_title' );
 		
 		if ( empty( $title ) ) {
-			$title	=	$app->getCfg( 'sitename' );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $app->getCfg( 'sitename' ), $title );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $app->getCfg( 'sitename' ) );
+			$title	=	$config->get( 'sitename' );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
+		$config		=	NULL;
 		$this->document->setTitle( $title );
 		
 		if ( $params->get( 'menu-meta_description' ) ) {

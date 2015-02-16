@@ -106,8 +106,7 @@ $js		=	'
 			'
 			;
 
-$app	=	JFactory::getApplication();
-$prefix	=	$app->getCfg( 'dbprefix' );
+$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
 } else {

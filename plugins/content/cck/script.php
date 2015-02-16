@@ -266,7 +266,7 @@ class plgContentCCKInstallerScript
 			$i2			=	$i;
 			$n			=	array_search( $new, $versions );
 			if ( $i < 7 ) {		// ONLY < 2.0 GA
-				$prefix	=	JFactory::getApplication()->getCfg( 'dbprefix' );
+				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 				$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
 				if ( count( $tables ) ) {
 					foreach ( $tables as $table ) {

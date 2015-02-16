@@ -64,7 +64,7 @@ if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
 <input type="hidden" name="boxchecked" value="0" />
-<?php if ( !JFactory::getApplication()->getCfg( 'sef' ) || !$this->config['Itemid'] ) { ?>
+<?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
 <input type="hidden" name="option" value="com_cck" />
 <input type="hidden" name="view" value="list" />
 <?php if ( $this->home === false ) { ?>

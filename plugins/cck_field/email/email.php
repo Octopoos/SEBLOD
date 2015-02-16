@@ -122,9 +122,8 @@ class plgCCK_FieldEmail extends JCckPluginField
 		} else {
 			$name	=	$field->name;
 		}
-		$app		=	JFactory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$siteName	=	$app->getCfg('sitename');
+		$siteName	=	JFactory::getConfig()->get( 'sitename' );
 		$valid		=	0;
 		$send		=	isset( $options2['send'] ) ? $options2['send'] : 0;
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
@@ -284,11 +283,10 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 		}
 		$n	=	count( array_filter( $dest ) );
-		if ( $n ) {
-			$app	= JFactory::getApplication();
-	
-			$cfg_MailFrom	=	$app->getCfg( 'mailfrom' );
-			$cfg_FromName	=	$app->getCfg( 'fromname' );
+		if ( $n ) {	
+			$config2		=	JFactory::getConfig();
+			$cfg_MailFrom	=	$config2->get( 'mailfrom' );
+			$cfg_FromName	=	$config2->get( 'fromname' );
 			if ( $cfg_MailFrom != '' && $cfg_FromName != '') {
 				$mailFrom	=	$cfg_MailFrom;
 				$fromName	=	$cfg_FromName;
@@ -300,7 +298,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			
 			$subject	=	str_replace( '[id]', $config['id'], $subject );
 			$subject	=	str_replace( '[pk]', $config['pk'], $subject );
-			$subject	=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $subject );
+			$subject	=	str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
 			$subject	=	str_replace( '[siteurl]', JURI::base(), $subject );
 			
 			// J(translate) for subject
@@ -317,7 +315,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			
 			$body		=	str_replace( '[id]', $config['id'], $body );
 			$body		=	str_replace( '[pk]', $config['pk'], $body );
-			$body		=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $body );
+			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
 			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
 
 			if ( isset( $config['registration_activation'] ) ) {

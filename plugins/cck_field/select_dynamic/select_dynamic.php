@@ -29,8 +29,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		// Add Database Process
 		if ( $data['bool2'] == 0 ) {
-			$app 	= 	JFactory::getApplication();
-			$ext	=	$app->getCfg( 'dbprefix' );
+			$ext	=	JFactory::getConfig()->get( 'dbprefix' );
 
 			if ( isset( $data['json']['options2']['table'] ) ) {
 				$data['json']['options2']['table']	=	str_replace( $ext, '#__', $data['json']['options2']['table'] );

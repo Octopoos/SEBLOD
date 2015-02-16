@@ -287,6 +287,7 @@ class plgSystemCCK extends JPlugin
 			$user	=	JFactory::getUser();
 			
 			if ( $this->multisite === true ) {
+				$config		=	JFactory::getConfig();
 				$site_title	=	$this->site_cfg->get( 'sitename', '' );
 				$site_pages	=	$this->site_cfg->get( 'sitename_pagetitles', 0 );
 				$site_desc	=	$this->site_cfg->get( 'metadesc', '' );
@@ -299,10 +300,10 @@ class plgSystemCCK extends JPlugin
 					$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
 					$doc->setTitle( $title );
 				}
-				if ( $site_desc && ( !$meta_desc || $meta_desc == $app->getCfg( 'MetaDesc' ) ) ) {
+				if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
 					$doc->setMetaData( 'description', $site_desc );
 				}
-				if ( $site_keys && ( !$meta_keys || $meta_keys == $app->getCfg( 'MetaKeys' ) ) ) {
+				if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
 					$doc->setMetaData( 'keywords', $site_keys );
 				}
 				if ( $this->site_cfg->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {

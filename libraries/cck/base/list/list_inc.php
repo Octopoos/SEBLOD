@@ -345,7 +345,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
 					// Content
-					$sef			=	( $app->getCfg( 'sef' ) ) ? $config['doSEF'] : 0;
+					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
 					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
 					$app->redirect( $redirect_url );
 					return;
