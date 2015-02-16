@@ -125,9 +125,9 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			$height	=	' height="'.$params['thumb_height'].'"';
 		}
 		if ( $params['thumb_2x'] ) {
-			$srcset	=	self::_availableThumb( $field, $params['thumb_2x'], $root ).' 2x';
+			$srcset	=	( $root ? '' : '/' ).self::_availableThumb( $field, $params['thumb_2x'], $root ).' 2x';
 			if ( $params['thumb_3x'] ) {
-				$srcset	.=	', '.self::_availableThumb( $field, $params['thumb_3x'], $root ).' 3x';
+				$srcset	.=	', '.( $root ? '' : '/' ).self::_availableThumb( $field, $params['thumb_3x'], $root ).' 3x';
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
 		}
