@@ -143,6 +143,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		
 		$count	=	count( $opts );
+		$count2	=	0;
+		$form	=	'';
 		if ( $field->bool ) {
 			$orientation	=	' vertical';
 			$field->bool2	=	( !$field->bool2 ) ? 1 : $field->bool2;
@@ -151,9 +153,6 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		} else {
 			$orientation	=	'';
 		}
-		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
-		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
 		if ( JCck::on() ) {
 			$attr	=	'class="checkbox'.$validate.'" size="1"';
 		} else {
@@ -174,7 +173,12 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 				}
 				$k++;
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-				$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+				if ( in_array( (string)$o->value, (array)$value ) ) {
+					$checked	=	'checked="checked" ';
+					$count2++;
+				} else {
+					$checked	=	'';
+				}
 				$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 
 				$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label>';
@@ -184,19 +188,45 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			if ( $count == 1 && strpos( $optionsSorted[0], '=' ) === false ) {
 				foreach ( $opts as $i=>$o ) {
 					$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-					$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+					if ( in_array( (string)$o->value, (array)$value ) ) {
+						$checked	=	'checked="checked" ';
+						$count2++;
+					} else {
+						$checked	=	'';
+					}
 					$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 				}
 			} else {
 				foreach ( $opts as $i=>$o ) {
 					$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-					$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+					if ( in_array( (string)$o->value, (array)$value ) ) {
+						$checked	=	'checked="checked" ';
+						$count2++;
+					} else {
+						$checked	=	'';
+					}
 					$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 					$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label>';
 				}
 			}
 		}
-		$form	.=	'</fieldset>';
+		if ( $field->bool7 ) {
+			$checked	=	( $count == $count2 ? '1' : '' ) ? 'checked="checked" ' : '';
+			$attr		=	'onclick="Joomla.checkAll(this,\''.$id.'\');"';
+			$check_all	=	'<input type="checkbox" id="'.$id.'_toggle'.'" name="'.$name.'_toggle" value="" '.$checked.$attr.' />'
+						.	'<label for="'.$id.'_toggle">'.JText::_( 'COM_CCK_CHECK_ALL' ).'</label>';
+			if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
+				$check_all	=	'<div class="cck-clrfix">'.$check_all.'</div>';
+			}
+			if ( $field->bool7 == 2 ) {
+				$form	.=	$check_all;
+			} else {
+				$form	=	$check_all.$form;
+			}
+		}
+		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
+		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$form		=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
 		
 		// Set
 		if ( ! $field->variation ) {

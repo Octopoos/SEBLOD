@@ -27,7 +27,8 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
          .   '</li>';
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		echo JCckDev::renderForm( 'core_separator', $this->item->divider, $config );
-		
+        echo JCckDev::renderForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Check All Toggle', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=optgroup||Above=1||Below=2', 'storage_field'=>'bool7' ) );
+        
 		echo JCckDev::renderHelp( 'field', '2693-checkbox.html' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
