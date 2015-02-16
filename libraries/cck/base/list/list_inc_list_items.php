@@ -30,6 +30,7 @@ if ( !isset( $doc->list ) ) {
 }
 $doc->list[$idx]		=	array();
 
+$debug		=	JCck::getConfig_Param( 'debug', 0 );
 $ids		=	'';
 $pks		=	'';
 if ( $list['isCore'] ) {
@@ -41,6 +42,14 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 }
 $storages		=	array( '_'=>'' );
+$suffix			=	'';
+
+if ( $debug == -1 ) {
+	$suffix		=	'Debug';
+	foreach ( $fields as $field ) {
+		$field->storage	=	'lipsum';
+	}
+}
 for ( $i = 0; $i < $count; $i++ ) {
 	if ( isset( $items[$i]->pk ) ) {
 		$PK						=	$items[$i]->pk;
@@ -118,7 +127,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$value		=	trim( $value );
 				}
 				$hasLink	=	( $field->link != '' ) ? 1 : 0;
-				$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+				$dispatcher->trigger( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 				$target		=	$field->typo_target;
 				if ( $hasLink ) {
 					$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );

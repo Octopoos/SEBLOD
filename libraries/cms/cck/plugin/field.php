@@ -16,6 +16,18 @@ class JCckPluginField extends JPlugin
 	protected static $construction	=	'cck_field';
 	protected static $convertible	=	0;
 	protected static $friendly		=	0;
+
+	// onCCK_FieldPrepareContentDebug
+	public function onCCK_FieldPrepareContentDebug( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		self::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		// Set
+		$field->value	=	$value;
+	}
 	
 	// onCCK_FieldPrepareResource
 	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
@@ -685,6 +697,16 @@ class JCckPluginField extends JPlugin
 		}
 
 		$field->markup		=	'';
+		$field->state		=	1;
+		
+		// Restriction
+		if ( isset( $field->restriction ) && $field->restriction ) {
+			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareForm', array( &$field, &$config ) );
+			if ( !$field->authorised ) {
+				$field->display	=	0;
+				$field->state	=	0;
+			}
+		}
 	}
 	
 	// g_onCCK_FieldPrepareStore

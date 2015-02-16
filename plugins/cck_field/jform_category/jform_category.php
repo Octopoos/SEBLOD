@@ -45,8 +45,22 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		if ( $field->storage == 'standard' && isset( $config['storages'][$field->storage_table]->category_title ) ) {
 			$field->text	=	$config['storages'][$field->storage_table]->category_title;
 		} else {
-			$field->text	=	JCckDatabase::loadResult( 'SELECT title FROM #__categories WHERE id = '.(int)$value );
+			$field->text	=	JCckDatabase::loadResult( 'SELECT title FROM #__categories WHERE id = '.(int)$value ); // #
 		}
+		$field->typo_target	=	'text';
+	}
+
+	// onCCK_FieldPrepareContentDebug
+	public function onCCK_FieldPrepareContentDebug( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		parent::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		// Set
+		$field->value		=	$value;
+		$field->text		=	plgCCK_StorageLipsum::getLipsum( 2 );
 		$field->typo_target	=	'text';
 	}
 	
@@ -105,6 +119,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 			}
 			$multiple	=	( $field->bool3 == 1 ) ? 'multiple="multiple"' : '';
 			$size		=	( $field->rows ) ? $field->rows : 1;
+			$size		=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
 			$extension	=	$app->input->getString( 'extension', @$options2['extension'] );
 			$extension	=	( $extension ) ? $extension : 'com_content';
 			
@@ -118,8 +133,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 								label="'.htmlspecialchars( $field->label ).'"
 								extension="'.$extension.'"
 								'.$multiple.'
-								class="'.$class.'"
-								size="'.$size.'"
+								class="'.$class.'"'.$size.'
 							>'.$opt.'</field>
 						</form>
 					';
