@@ -58,12 +58,13 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 			$tag					=	'';
 		}
 		
+		$class					=	JCck::on( '3.4' ) ? ' class="hasTooltip"' : '';
 		$data['doIntegration']	=	false;
 		$data['multilanguage']	=	$data['options']->get( 'multilanguage', 0 );
 		if ( $data['multilanguage'] ) {
-			$data['search']		=	'#<a href="(.*)index.php\?option=com_content&amp;task=article.edit'.$tag.'&amp;id=([0-9]*)" (.*)>#U';
+			$data['search']		=	'#<a'.$class.' href="(.*)index.php\?option=com_content&amp;task=article.edit'.$tag.'&amp;id=([0-9]*)" (.*)>#U';
 		} else {
-			$data['search']		=	'#<a href="(.*)index.php\?option=com_content&amp;task=article.edit'.$tag.'&amp;id=([0-9]*)"#';
+			$data['search']		=	'#<a'.$class.' href="(.*)index.php\?option=com_content&amp;task=article.edit'.$tag.'&amp;id=([0-9]*)"#';
 		}
 		$data['search_alt']		=	'#<a href = "javascript://" onclick="listItemTask\(\'cb([0-9]*)\', \'articles.archive\'\)">(.*)</a>#sU';
 		

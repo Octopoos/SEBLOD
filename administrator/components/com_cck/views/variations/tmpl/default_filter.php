@@ -23,7 +23,7 @@ if ( $this->js['filter'] ) {
 		echo JCckDev::getForm( $cck['core_filter_input'], $this->escape( $this->state->get( 'filter.search' ) ), $config, array( 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_ITEMS_SEARCH_FILTER' ).'" style="text-align:center;"' ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_go'], '', $config, array( 'css'=>$this->css['filter_search_button'] ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_search'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="'.$clear.'this.form.submit();"' ), array( 'after'=>"\n" ) );
-		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="this.form.getElementById(\'filter_search\').value=\'\';this.form.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
+		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="document.getElementById(\'filter_search\').value=\'\';document.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
 		?>
 	</div>
 	<?php if ( JCck::on() ) { ?>
