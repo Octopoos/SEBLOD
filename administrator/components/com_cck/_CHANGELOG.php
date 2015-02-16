@@ -40,6 +40,7 @@ $ -> Language fix or change
 + "More" Link Text parameter added on List module.
 + "Show List View" parameter added on List View.
 
++ "CheckAll" toggle added on Checkbox plug-in.
 + "has-value" class added on Select Dynamic/Simple, Text.. (when value != '')
 + "Image Alt Fieldname" added on Image Typography plug-in.
 + "Image Title" added on Image Typography plug-in.
@@ -58,6 +59,9 @@ $ -> Language fix or change
 # "Edit Own" issue fixed on Free Object.
 # Inherit Search Type issue fixed on Search module.
 # Multilanguage issue fixed on Joomla! Article object (regression).
+# Retriving "Bridge" Author SQL query fixed.
+# Routing issue (Auto Redirection: Content) fixed.
+# Routing issue (when SEF is OFF) fixed on Search Module.
 # Safe string issue (multiple allowed characters) fixed on Upload File/Image plug-ins.
 # Validation rules fixed for fields inside Tabs.
 # Various issues fixed on JCckContent class.
