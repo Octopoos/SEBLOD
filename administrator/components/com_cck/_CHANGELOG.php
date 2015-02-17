@@ -32,8 +32,11 @@ $ -> Language fix or change
 + Load More (Infinite Pagination) added on Search Types.
   >> supported templates: Accordion, List, Masonry, Table, Tabs.
 
+^ SQL table storage engine switched from MyISAM to InnoDB in install.sql
+^ SQL table storage engine switched from MyISAM to InnoDB for newly created tables.
+
 + "Change Column" (Alter Storage Field) added.
-+ Multilanguage Associations available for to Joomla! Category object.
++ Multilanguage Associations available for Joomla! Category object.
 + "PrepareResource" methods added >> SEBLOD WebServices Add-on required.
 
 + "More" Link handled more intelligently >> "only if results", "only if more results".
@@ -405,7 +408,7 @@ $ -> Language fix or change
 -------------------- 3.1.0 Upgrade Release [25-Apr-2013] -------------
 
 + Friendly Multilanguage Management added on Article Manager.
-+ Multilanguage Associations available for to Joomla! Article object.
++ Multilanguage Associations available for Joomla! Article object.
 + Native Tag system available for Joomla! Article & Category objects.
 
 + "Nested Exact" Match modes added on Search Types.
