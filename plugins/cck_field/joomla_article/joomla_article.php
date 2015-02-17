@@ -33,7 +33,7 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 		$prefix				=	JFactory::getConfig()->get( 'dbprefix' );
 		$table				=	'cck_store_join_'.( ( $data['storage_field2'] != '' ) ? $data['storage_field2'] : $data['storage_field'] );
 		JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$prefix.$table.' ( `id` int(11) NOT NULL, `id2` int(11) NOT NULL, PRIMARY KEY (`id`,`id2`) )'
-							 . ' ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
+							 . ' ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
