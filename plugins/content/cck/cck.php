@@ -278,6 +278,7 @@ class plgContentCCK extends JPlugin
    							   'doSEF'=>$p_sef,
 							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							   'doTypo'=>$p_typo,
+							   'error'=>0,
 							   'fields'=>array(),
 							   'id'=>$cck->id,
 							   'isNew'=>0,
@@ -314,7 +315,6 @@ class plgContentCCK extends JPlugin
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
-					// -- CONDITIONS
 					if ( $hasLink ) {
 						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
 						if ( $field->link ) {
@@ -328,6 +328,11 @@ class plgContentCCK extends JPlugin
 					}
 					$position					=	$field->position;
 					$positions[$position][]		=	$fieldName;
+
+					// Was it the last one?
+					if ( $config['error'] ) {
+						break;
+					}
 				}
 			}
 			

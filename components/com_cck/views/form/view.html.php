@@ -122,7 +122,7 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
-
+		
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form_id				=	$preconfig['formId'];

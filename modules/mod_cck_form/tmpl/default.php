@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( $config['error'] === true ) {
+if ( (int)$config['error'] == 1 ) {
 	return;
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {

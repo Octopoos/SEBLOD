@@ -100,7 +100,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 				   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
-   				   'error'=>false,
+   				   'error'=>0,
 				   'fields'=>array(),
 				   'formId'=>$preconfig['formId'],
 				   'isNew'=>$isNew,
@@ -256,6 +256,11 @@ foreach ( $fields as $field ) {
 	
 	$position				=	$field->position;
 	$positions[$position][]	=	$field->name;
+
+	// Was it the last one?
+	if ( $config['error'] ) {
+		break;
+	}
 }
 
 // Merge

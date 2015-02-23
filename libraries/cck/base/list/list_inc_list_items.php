@@ -73,6 +73,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
@@ -146,6 +147,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$positions[$pos][]			=	$field->name;
 					$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
 				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
+				}
 			}
 		}
 		
@@ -174,6 +180,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
@@ -248,6 +255,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 					if ( isset( $positions_p[$pos] ) ) {
 						$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
 					}
+				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
 				}
 			}
 		}
