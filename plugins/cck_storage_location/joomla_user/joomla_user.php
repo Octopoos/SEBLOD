@@ -300,7 +300,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			}
 			
 			if ( $isNew ) {
-				self::_sendMails( $table, $activation, $params['auto_email'], $parameters->get( 'mail_to_admin' ) );
+				self::_sendMails( $table, $activation, $params['auto_email'], $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
 			}
 			
 			self::$pk	=	$table->{self::$key};
@@ -449,7 +449,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	}
 	
 	// _sendMail
-	protected static function _sendMails( $table, $activation, $auto_email, $admin_emails )
+	protected static function _sendMails( $table, $activation, $auto_email, $admin_emails, $sendpassword )
 	{
 		$config				=	JFactory::getConfig();
 		$data				=	$table->getProperties();
@@ -464,21 +464,65 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$base				=	JURI::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
 					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
 					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
-					$body				=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY', $data['name'], $data['sitename'],
+					if ( $sendpassword ) {
+						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY',
+															$data['name'],
+															$data['sitename'],
 															$data['activate'],
-															$data['siteurl'], $data['username'], $data['password_clear'] );
+															$data['siteurl'],
+															$data['username'],
+															$data['password_clear']
+											);
+					} else {
+						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY_NOPW',
+															$data['name'],
+															$data['sitename'],
+															$data['activate'],
+															$data['siteurl'],
+															$data['username']
+											);
+					}
 					break;
 				case 1:
 					$base				=	JURI::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
 					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
 					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
-					$body				=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY', $data['name'], $data['sitename'],
+					if ( $sendpassword ) {
+						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY',
+															$data['name'],
+															$data['sitename'],
 															$data['activate'],
-															$data['siteurl'], $data['username'], $data['password_clear'] );
+															$data['siteurl'],
+															$data['username'],
+															$data['password_clear']
+											);
+					} else {
+						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY_NOPW',
+															$data['name'],
+															$data['sitename'],
+															$data['activate'],
+															$data['siteurl'],
+															$data['username']
+											);
+					}
 					break;
 				default:
 					$subject	=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
-					$body		=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY', $data['name'], $data['sitename'], $data['siteurl'] );
+					if ( $sendpassword ) {
+						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
+													$data['name'],
+													$data['sitename'],
+													$data['siteurl'],
+													$data['username'],
+													$data['password_clear']
+									);
+					} else {
+						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY_NOPW',
+													$data['name'],
+													$data['sitename'],
+													$data['siteurl']
+									);
+					}
 					break;
 			}
 			JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $data['email'], $subject, $body );
