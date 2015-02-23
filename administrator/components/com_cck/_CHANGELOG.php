@@ -52,6 +52,7 @@ $ -> Language fix or change
 ^ A few more properties available from Object plug-ins.
 ^ Default User Group set as Registered (2) on User (Admin Form).
 ^ jQuery Validation script and style updated.
+! "onCCK_FieldPrepareExport" added on Field plug-ins.
 ! Table (seb_table) updated with "Load More" capabilities.
 
 - "defines.php" file (from back-end component) removed.
@@ -66,6 +67,7 @@ $ -> Language fix or change
 # Routing issue (Auto Redirection: Content) fixed.
 # Routing issue (when SEF is OFF) fixed on Search Module.
 # Safe string issue (multiple allowed characters) fixed on Upload File/Image plug-ins.
+# "sendpassword" parameter supported on Joomla! User registration.
 # Validation rules fixed for fields inside Tabs.
 # Various issues fixed on JCckContent class.
 # Various SQL queries fixed.
