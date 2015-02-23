@@ -49,7 +49,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		}
 		$field->typo_target	=	'text';
 	}
-
+	
 	// onCCK_FieldPrepareContentDebug
 	public function onCCK_FieldPrepareContentDebug( &$field, $value = '', &$config = array() )
 	{
@@ -64,6 +64,18 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		$field->typo_target	=	'text';
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		

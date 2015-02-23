@@ -29,6 +29,16 @@ class JCckPluginField extends JPlugin
 		$field->value	=	$value;
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		$field->output	=	$value;
+	}
+
 	// onCCK_FieldPrepareResource
 	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
 	{
