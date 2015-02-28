@@ -403,9 +403,9 @@ if ( $preconfig['task'] == 'search' ) {
 					}
 					return;
 				} elseif ( $no_action == 'file' ) {
-					$templateStyle	=	CCK_List::getTemplateStyle( $search->template_list, array( 'rendering_css_core'=>$search->stylesheets ) );
-					$file1			=	JPATH_SITE.'/templates/'.$templateStyle->name.'/includes/'.$search->name.'/no_result.php';
-					$file2			=	JPATH_SITE.'/templates/'.$templateStyle->name.'/includes/no_result.php';
+					$templateStyle2	=	CCK_List::getTemplateStyle( $search->template_list, array( 'rendering_css_core'=>$search->stylesheets ) );
+					$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.$search->name.'/no_result.php';
+					$file2			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/no_result.php';
 					
 					if ( file_exists( $file1 ) ) {
 						$file	=	$file1;

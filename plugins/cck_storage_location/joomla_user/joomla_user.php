@@ -457,7 +457,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$data['mailfrom']	=	$config->get( 'mailfrom' );
 		$data['sitename']	=	$config->get( 'sitename' );
 		$data['siteurl']	=	JUri::root();
-
+		
 		if ( $auto_email ) {
 			switch ( $activation ) {
 				case 2:
@@ -554,7 +554,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 		plgCCK_Storage_LocationJoomla_Article::buildRoute( $query, $segments, $config, $menuItem );
 	}
-
+	
 	// getRoute	//todo: make a parent::getBridgeRoute..
 	public static function getRoute( $item, $sef, $itemId, $config = array() )
 	{
