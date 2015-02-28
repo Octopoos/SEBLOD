@@ -44,6 +44,7 @@ $ -> Language fix or change
 + "Show List View" parameter added on List View.
 
 + "CheckAll" toggle added on Checkbox plug-in.
++ "Group Required" (at least one field of..) capability added.
 + "has-value" class added on Select Dynamic/Simple, Text.. (when value != '')
 + "Image Alt Fieldname" added on Image Typography plug-in.
 + "Image Title" added on Image Typography plug-in.
@@ -71,6 +72,7 @@ $ -> Language fix or change
 # Validation rules fixed for fields inside Tabs.
 # Various issues fixed on JCckContent class.
 # Various SQL queries fixed.
+# Wrong params for "Include File action" issue fixed.
 
 -------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
 
