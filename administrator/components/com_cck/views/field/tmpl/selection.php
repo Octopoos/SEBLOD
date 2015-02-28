@@ -50,7 +50,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	}
 	$field						=	new stdClass;
 	$field->type				=	'select_simple';
-	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
+	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
 } else {
 	$desc						=	'';
 	$field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );

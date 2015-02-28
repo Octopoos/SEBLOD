@@ -80,7 +80,7 @@ if ( count( $opts ) ) {
 	$options		=	array_merge( $options, $opts );
 }
 $options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'size="1" class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
+$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
 ?>
 
 <div class="seblod">

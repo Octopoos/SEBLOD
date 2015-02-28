@@ -58,9 +58,9 @@ if ( JCck::on() ) { ?>
         if ( count( $options2 ) ) {
             $options    =   array_merge( $options, $options2 );
         }
-        $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox no-chosen" size="1"', 'value', 'text', '', 'featured' );
+        $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox no-chosen"', 'value', 'text', '', 'featured' );
         $options        =   JCckDatabase::loadObjectList( 'SELECT a.name AS text, a.name AS value FROM #__cck_core_templates AS a WHERE a.published = 1 AND a.mode = 2 ORDER BY a.title' );
-        $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen" size="1"', 'value', 'text', '', 'template_search' );
+        $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen"', 'value', 'text', '', 'template_search' );
     ?>
     <div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
         <div class="modal-header">
