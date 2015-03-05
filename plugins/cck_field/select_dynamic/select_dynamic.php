@@ -206,7 +206,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				if ( $count2 ) {
 					foreach ( $opt_attrs as $k=>$v ) {
 						if ( $v != '' ) {
-							$v			=	str_replace( '[lang]', $lang_code, $v ).' AS attr'.( $k + 1 );
+							$v			=	str_replace( '[lang]', $lang_code, $attribs[$k] ).' AS ' . $v;
 							$opt_attr	.=	','.$v;
 						}
 					}
