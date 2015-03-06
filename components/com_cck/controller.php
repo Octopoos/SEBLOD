@@ -329,6 +329,7 @@ class CCKController extends JControllerLegacy
 		}
 		
 		$app		=	JFactory::getApplication();
+		$config		=	array();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
@@ -340,15 +341,17 @@ class CCKController extends JControllerLegacy
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
 		$output		=	1; // $params->get( 'output', 0 );
 		
-		if ( $file = $model->prepareProcess( $params, $task_id, $ids ) ) {
+		$file		=	$model->prepareProcess( $params, $task_id, $ids, $config );
+		$link		=	( isset( $config['url'] ) && $config['url'] ) ? $config['url'] : $this->_getReturnPage();
+		if ( $file ) {
 			if ( $output > 0 ) {
-				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
+				$this->setRedirect( $link, JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
 			}
 		} else {
-			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			$this->setRedirect( $link, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
 	}
 
