@@ -88,6 +88,9 @@ div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.che
 	width: auto;
 	margin-right: 10px;
 }
+div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.checkboxes.small label {
+	min-width: 15px;
+}
 body.contentpane.component div.seblod .adminformlist fieldset.checkboxes label {
 	line-height:28px;
 }
