@@ -178,11 +178,12 @@ class JCckPluginLink extends JPlugin
 				$target		=	$f->typo_target;
 				if ( isset( $f->link ) ) {
 					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+					$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
 					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
 					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
 					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
 					$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
+					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
 					$attr			=	( $attr != '' ) ? ' '.$attr : '';
 					
 					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
@@ -194,11 +195,12 @@ class JCckPluginLink extends JPlugin
 				$target		=	$f->typo_target;
 				if ( isset( $f->link ) ) {
 					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+					$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
 					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
 					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
 					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
 					$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
+					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
 					$attr			=	( $attr != '' ) ? ' '.$attr : '';
 					
 					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
@@ -210,12 +212,13 @@ class JCckPluginLink extends JPlugin
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 			
 			if ( $applyLink ) {
+				$link_attr		=	( isset( $field->link_attributes ) && $field->link_attributes != '' ) ? $field->link_attributes : '';
 				$link_class		=	( isset( $field->link_class ) && $field->link_class != '' ) ? 'class="'.$field->link_class.'" ' : '';
 				$link_onclick	=	( isset( $field->link_onclick ) && $field->link_onclick != '' ) ? 'onclick="'.$field->link_onclick.'" ' : '';
 				$link_rel		=	( isset( $field->link_rel ) && $field->link_rel != '' ) ? 'rel="'.$field->link_rel.'" ' : '';
 				$link_target	=	( isset( $field->link_target ) && $field->link_target != '' ) ? 'target="'.$field->link_target.'" ' : '';
 				$link_title		=	( isset( $field->link_title ) && $field->link_title != '' ) ? 'title="'.$field->link_title.'" ' : '';
-				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
+				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
 				$attr			=	( $attr != '' ) ? ' '.$attr : '';
 
 				$field->html	=	( $field->$target != '' ) ? '<a href="'.$field->link.'"'.$attr.'>'.$field->$target.'</a>' : '';
