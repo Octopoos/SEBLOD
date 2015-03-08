@@ -194,8 +194,9 @@ class CCK_Rendering
 			$this->params['variation_default']	=	'seb_css3';
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
-		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';		
-		
+		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
+		$this->item_attributes	=	( isset( $this->params['rendering_item_attributes'] ) && $this->params['rendering_item_attributes'] ) ? ' '.$this->params['rendering_item_attributes'].' ' : '';
+
 		if ( $this->initRendering() === false ) {
 			$app	=	JFactory::getApplication();
 			$app->enqueueMessage( 'Oops! Template Init. failed.. ; (', 'error' );
