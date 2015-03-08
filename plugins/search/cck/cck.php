@@ -371,7 +371,7 @@ class plgSearchCCK extends JPlugin
 						$s_table	=	$field->storage_table;
 						
 						// Prepare
-						if ( $field->match_options == '' ) {
+						if ( empty( $field->match_options ) ) {
 							$field->match_options	=	'{}';
 						}
 						$field->match_options	=	new JRegistry( $field->match_options );	
