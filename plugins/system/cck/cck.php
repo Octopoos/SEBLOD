@@ -430,6 +430,12 @@ class plgSystemCCK extends JPlugin
 			$head	=	$doc->getHeadData();
 
 			JCckToolbox::setHead( $head );
+		} elseif ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+			if ( count( $app->cck_app['Header'] ) ) {
+				foreach ( $app->cck_app['Header'] as $k=>$v ) {
+					$app->setHeader( $k, $v, true );
+				}
+			}
 		}
 	}
 
