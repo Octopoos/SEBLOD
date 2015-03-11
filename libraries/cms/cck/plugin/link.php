@@ -175,36 +175,42 @@ class JCckPluginLink extends JPlugin
 	{
 		if ( is_array( $field->value ) ) {
 			foreach ( $field->value as $f ) {
-				$target		=	$f->typo_target;
-				if ( isset( $f->link ) ) {
-					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-					$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
-					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-					$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
-					$attr			=	( $attr != '' ) ? ' '.$attr : '';
-					
-					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+				if ( is_object( $f ) ) {
+					if ( isset( $f->link ) ) {
+						$target			=	$f->typo_target;
+
+						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
+						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
+						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
+						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
+						$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
+						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
+						$attr			=	( $attr != '' ) ? ' '.$attr : '';
+						
+						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+					}
 				}
 			}
 		} elseif ( isset( $field->values ) && count( $field->values ) ) {
 			$html	=	'';
 			foreach ( $field->values as $f ) {
-				$target		=	$f->typo_target;
-				if ( isset( $f->link ) ) {
-					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-					$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
-					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-					$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
-					$attr			=	( $attr != '' ) ? ' '.$attr : '';
-					
-					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
-					$html			.=	$f->html.', ';
+				if ( is_object( $f ) ) {
+					if ( isset( $f->link ) ) {
+						$target			=	$f->typo_target;
+
+						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
+						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
+						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
+						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
+						$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
+						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
+						$attr			=	( $attr != '' ) ? ' '.$attr : '';
+						
+						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+						$html			.=	$f->html.', ';
+					}
 				}
 			}
 			$field->html	=	$html ? substr( $html, 0, -2 ) : '';
