@@ -37,6 +37,7 @@ $ -> Language fix or change
 
 + "Change Column" (Alter Storage Field) added.
 + Multilanguage Associations available for Joomla! Category object.
+! "PrepareExport" method added >> SEBLOD Export Add-on required.
 + "PrepareResource" methods added >> SEBLOD WebServices Add-on required.
 
 + "More" Link handled more intelligently >> "only if results", "only if more results".
@@ -44,25 +45,35 @@ $ -> Language fix or change
 + "Show List View" parameter added on List View.
 
 + "CheckAll" toggle added on Checkbox plug-in.
++ Default/Live values used to set the "Active" tab on Tabs plug-in.
 + "Group Required" (at least one field of..) capability added.
 + "has-value" class added on Select Dynamic/Simple, Text.. (when value != '')
 + "Image Alt Fieldname" added on Image Typography plug-in.
 + "Image Title" added on Image Typography plug-in.
 + Srcset (2x, 3x) added on Image Typography plug-in.
++ Ukrainian language file added to Calendar Plug-in.
+
++ Ability to override HTTP Header fields.
++ Custom Attributes applied on Links plug-ins.
++ Custom Attributes applied on List views' items.
+
+! Table (seb_table) updated with "Custom Attributes" & "Load More" capabilities.
 
 ^ A few more properties available from Object plug-ins.
+^ Chosen script loaded on List views (back-end).
 ^ Default User Group set as Registered (2) on User (Admin Form).
 ^ jQuery Validation script and style updated.
-! "onCCK_FieldPrepareExport" added on Field plug-ins.
-! Table (seb_table) updated with "Load More" capabilities.
+^ "template_preview.png" updated for One (seb_one) template.
 
 - "defines.php" file (from back-end component) removed.
 - "size="1" attribute removed on JForm Category/MenuItem, Select Dynamic/Numeric/Simple.
-^ "template_preview.png" updated for One (seb_one) template.
 
 # Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
+# HTML output fixed on Group when markup=none.
 # Inherit Search Type issue fixed on Search module.
+# Minor CSS issues fixed.
+# Missing icons added on Form & List views (back-end).
 # Multilanguage issue fixed on Joomla! Article object (regression).
 # Retriving "Bridge" Author SQL query fixed.
 # Routing issue (Auto Redirection: Content) fixed.
