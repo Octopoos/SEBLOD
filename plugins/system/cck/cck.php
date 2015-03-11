@@ -456,8 +456,13 @@ class plgSystemCCK extends JPlugin
 				$uri		=	JFactory::getURI();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-				JResponse::setBody( $this->offline_buffer );
+				if ( JCck::on() ) {
+					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					$app->setBody( $this->offline_buffer );
+				} else {
+					JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					JResponse::setBody( $this->offline_buffer );
+				}
 			}
 			return;
 		}
@@ -465,7 +470,7 @@ class plgSystemCCK extends JPlugin
 		// admin
 		if ( $app->isAdmin() && JFactory::getDocument()->getType() == 'html' ) {
 			
-			$buffer	=	JResponse::getBody();
+			$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
 			$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
 			
 			switch ( $option ) {
@@ -539,7 +544,11 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
-			JResponse::setBody( $buffer );
+			if ( JCck::on() ) {
+				$app->setBody( $buffer );
+			} else {
+				JResponse::setBody( $buffer );
+			}
 			
 			return;
 		}
