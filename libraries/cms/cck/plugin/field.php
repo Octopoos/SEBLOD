@@ -797,7 +797,7 @@ class JCckPluginField extends JPlugin
 		} else {
 			if ( isset( $field->link ) && $field->link ) {
 				if ( !isset( $field->link_state ) || $field->link_state ) {
-					return $field->html;
+					return ( isset( $field->html ) ) ? $field->html : '';
 				}
 			}
 		}

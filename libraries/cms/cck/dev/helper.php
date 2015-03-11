@@ -173,9 +173,9 @@ abstract class JCckDevHelper
 				$v	=	explode( '=', $var );
 				if ( $v[0] ) {
 					if ( $force ) {
-						$url[$v[0]]	=	(string)$v[1];
+						$url[$v[0]]	=	(string)@$v[1];
 					} else {
-						$url[$v[0]]	=	$v[1];
+						$url[$v[0]]	=	@$v[1];
 					}
 				}
 			}

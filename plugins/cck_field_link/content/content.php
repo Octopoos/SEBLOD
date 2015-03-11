@@ -112,7 +112,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$pk			=	isset( $fields[$fieldname] ) ? (int)$fields[$fieldname]->value : 0;
 
 		if ( !$pk ) {
-			if ( count( $process['matches'][1] ) ) {
+			if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
 				parent::g_setCustomVars( $process, $fields, $name );
 			}
 			return;
@@ -130,7 +130,8 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			JCckPluginLink::g_setHtml( $fields[$name], $target );
 		}
 		if ( $fields[$name]->typo ) {
-			$fields[$name]->typo		=	str_replace( $fields[$name]->$target, $fields[$name]->html, $fields[$name]->typo );
+			$html						=	( isset( $fields[$name]->html ) ) ? $fields[$name]->html : '';
+			$fields[$name]->typo		=	str_replace( $fields[$name]->$target, $html, $fields[$name]->typo );
 		}
 		if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
 			parent::g_setCustomVars( $process, $fields, $name );
