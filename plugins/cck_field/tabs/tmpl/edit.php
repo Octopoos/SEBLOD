@@ -18,8 +18,11 @@ JCckDev::forceStorage();
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'attributes'=>'style="text-align:center;"' ) );
-        echo JCckDev::renderForm( 'core_pane_behavior', $this->item->bool, $config );
+        echo JCckDev::renderBlank();
+        echo '<li><label>'.JText::_( 'COM_CCK_BEHAVIOR' ).'</label>'
+         .   JCckDev::getForm( 'core_pane_behavior', $this->item->bool, $config )
+         .   JCckDev::getForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'attributes'=>'style="text-align:center;"' ) )
+         .   '</li>';
         echo JCckDev::renderForm( 'core_dev_text', $this->item->location, $config, array( 'label'=>'GROUP_IDENTIFIER', 'storage_field'=>'location' ) );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
@@ -27,3 +30,9 @@ JCckDev::forceStorage();
         ?>
     </ul>
 </div>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $('#defaultvalue').isVisibleWhen('bool','0',false);
+});
+</script>
