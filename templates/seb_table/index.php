@@ -15,6 +15,7 @@ require_once dirname(__FILE__).'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
+$attributes		=	$cck->item_attributes ? ' '.$cck->item_attributes : '';
 $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
 $table_width	=	0;
@@ -100,7 +101,7 @@ if ( !$isMore ) {
 			$i	=	0;
             foreach ( $items as $item ) {
 				?>
-                <tr <?php echo ${'class_row'.($i % 2)}; ?>>
+                <tr <?php echo ${'class_row'.($i % 2)}.$item->replaceLive( $attributes ); ?>>
 				<?php
                 foreach ( $positions as $name=>$position ) {
                     $fieldnames	=	$cck->getFields( $name, '', false );
