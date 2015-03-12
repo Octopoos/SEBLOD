@@ -197,9 +197,18 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$values		=	explode( $separator, $value );
 				if ( count( $values ) ) {
 					$fragments	=	array();
-					foreach ( $values as $v ) {
-						if ( strlen( $v ) > 0 ) {
-							$fragments[] 	=	JCckDatabase::quote( $v );
+					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+					if ( !$var_type ) {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[] 	=	$v;
+							}
+						}
+					} else {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[] 	=	JCckDatabase::quote( $v );
+							}
 						}
 					}
 					if ( count( $fragments ) ) {

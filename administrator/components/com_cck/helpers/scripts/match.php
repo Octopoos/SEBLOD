@@ -58,7 +58,7 @@ $js		=	'
 						$("#"+elem).myVal(v);
 					});
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
-					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact");
+					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact","not_any_exact");
 					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact");
 					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
