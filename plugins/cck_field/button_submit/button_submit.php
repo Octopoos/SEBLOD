@@ -124,11 +124,16 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			if ( $task == 'export' ) {
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_id'=>$task_id ) );
 			} elseif ( $task == 'save2redirect' ) {
+				$custom		=	'';
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
 					$custom	=	JCckDevHelper::replaceLive( $options2['custom'] );
 					$custom	=	$custom ? '&'.$custom : '';
 				}
-				$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+				if ( $config['client'] == 'search' ) {
+					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+				} else {
+					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+				}
 			}
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';	
 		}
