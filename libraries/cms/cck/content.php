@@ -137,7 +137,13 @@ class JCckContent
 
 		return $default;
 	}
-
+	
+	// getId
+	public function getId()
+	{
+		return $this->_id;
+	}
+	
 	// getTable
 	public function getTable()
 	{
