@@ -89,7 +89,6 @@ class plgCCK_FieldField_X extends JCckPluginField
 		// Prepare
 		$f		=	self::_getChild( $field, $config );
 		$xn		=	( $value ) ? ( ( is_array( $value ) ? count( $value ) : $value ) ) : $field->rows;
-		$xn 	=	( $xn < $field->minlength ) ? $field->minlength : $xn;
 		$form	=	array();
 		if ( $xn > 0 && is_object( $f ) ) {
 			for ( $xi = 0; $xi < $xn; $xi++ ) {
