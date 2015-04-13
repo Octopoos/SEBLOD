@@ -146,6 +146,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		if ( $params['image'] != 'none' ) {
 			self::_addScripts( array( 'id'=>$field->id ), $params );
 		}
+		$field->html	=	$img;
 		
 		return $typo;
 	}

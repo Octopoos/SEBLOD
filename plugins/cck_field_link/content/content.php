@@ -172,7 +172,11 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		}
 		if ( $fields[$name]->typo ) {
 			$html						=	( isset( $fields[$name]->html ) ) ? $fields[$name]->html : '';
-			$fields[$name]->typo		=	str_replace( $fields[$name]->$target, $html, $fields[$name]->typo );
+			if ( strpos( $fields[$name]->typo, $fields[$name]->$target ) === false ) {
+				$fields[$name]->typo	=	$html;
+			} else {
+				$fields[$name]->typo	=	str_replace( $fields[$name]->$target, $html, $fields[$name]->typo );
+			}
 		}
 		if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
 			parent::g_setCustomVars( $process, $fields, $name );
