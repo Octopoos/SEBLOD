@@ -181,7 +181,7 @@ abstract class JCckDev
 						$n		=	0;
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
 							$attribs	.=	'<div class="attr">'
-										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+val['.$i.']+\'"'
+										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
 										.	' class="inputbox mini" size="10" />'
 										.	'</div>';
 							$keys[]		=	$customAttr;
