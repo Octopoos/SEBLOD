@@ -173,6 +173,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 					$(".cck_page_list .pagination").hide();
 				}
 				$("#seblod_form_loading_more").hide(); $(elem).append(response);
+				<?php echo $this->callback_pagination ? $this->callback_pagination.'(response);' : ''; ?>
 			},
 			error:function(){}
 		});
