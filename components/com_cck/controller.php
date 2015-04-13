@@ -21,6 +21,7 @@ class CCKController extends JControllerLegacy
 		parent::__construct( $config );
 
 		$this->registerTask( 'apply', 'save' );
+		$this->registerTask( 'save2copy', 'save' );
 		$this->registerTask( 'save2new', 'save' );
 		$this->registerTask( 'save2redirect', 'save' );
 		$this->registerTask( 'save2skip', 'save' );
@@ -345,7 +346,7 @@ class CCKController extends JControllerLegacy
 		$preconfig	=	$app->input->post->get( 'config', array(), 'array' );
 		$task		=	$this->getTask();
 		
-		$config		=	$model->store( $preconfig );
+		$config		=	$model->store( $preconfig, $task );
 		$id			=	$config['pk'];
 		$itemId		=	$preconfig['itemId'];
 		
@@ -407,7 +408,7 @@ class CCKController extends JControllerLegacy
 		$link		=	$this->_getReturnPage( false );
 		$redirect	=	$config['options']['redirection'];
 		$return		=	'';
-		if ( $task == 'apply' ) {
+		if ( $task == 'apply' || $task == 'save2copy' ) {
 			$link		=	'';
 			$redirect	=	'form_edition';
 			$return		=	$app->input->getBase64( 'return' );

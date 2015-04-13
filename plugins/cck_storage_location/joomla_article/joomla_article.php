@@ -312,6 +312,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Prepare
 		if ( is_array( $data ) ) {
+			if ( $config['task'] == 'save2copy' ) {
+				$empty		=	array( self::$key, 'alias', 'created', 'created_by', 'hits', 'modified', 'modified_by', 'version' );
+				foreach ( $empty as $k ) {
+					$data[$k]	=	'';
+				}
+			}
 			$table->bind( $data );
 		}
 		if ( $isNew && !isset( $data['rules'] ) ) {

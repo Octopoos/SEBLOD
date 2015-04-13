@@ -23,6 +23,11 @@ $hashed		=	$session->get( 'cck_hash_'.$unique );
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
 }
+if ( $task == 'save2copy' ) {
+	$id					=	0;
+	$isNew				=	1;
+	$preconfig['id']	=	0;
+}
 if ( $app->isSite() && ( $hash != $hashed ) ) {
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
@@ -57,6 +62,7 @@ $config		=	array( 'author'=>0,
 					   'process'=>array(),
 					   'stage'=>-1,
 					   'storages'=>array(),
+					   'task'=>$task,
 					   'type'=>$preconfig['type'],
 					   'url'=>@$preconfig['url'],
 					   'validate'=>''
