@@ -93,10 +93,21 @@ class CckRouter extends JComponentRouterBase
 			if ( !$legacy ) {
 				if ( isset( $menuItem->query['search'] ) ) {
 					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
+					if ( $count == 1 && $params['doSEF'][0] == '4'  ) {
+						if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+							require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+							$properties			=	array( 'parent_object' );
+							$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+							if ( $properties['parent_object'] != '' ) {
+								$params['doSEF'][0]	=	'2';
+								$params['location']	=	$properties['parent_object'];
+							}
+						}
+					}
 				}
 				if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
 					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-					JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );	
+					JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );
 				} else {
 					$legacy	=	1;
 				}
