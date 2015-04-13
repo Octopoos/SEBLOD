@@ -151,9 +151,63 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		// TODO
+		$app		=	JFactory::getApplication();
+		$dispatcher	=	JDispatcher::getInstance();
 		
-		return false;
+		$item		=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
+		if ( !is_object( $item ) ) {
+			return false;
+		}
+		$table		=	JCckTable::getInstance( $item->storage_table, 'id' );
+		$table->load( $pk );
+		
+		if ( !$table ) {
+			return false;
+		}
+		
+		// Check
+		$user 			=	JCck::getUser();
+		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
+		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
+		if ( ( !$canDelete && !$canDeleteOwn ) ||
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			return;
+		}
+		
+		// Process
+		// -- onContentBeforeDelete?
+		if ( !$table->delete( $pk ) ) {
+			return false;
+		}
+
+		// Delete Core
+		if ( $item->id ) {
+			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $item->id );
+			$table->delete();
+		}
+
+		// Delete More
+		$base		=	str_replace( '#__', '', $item->storage_table );
+		$tables		=	JCckDatabase::loadColumn( 'SHOW TABLES' );
+		$prefix		= 	JFactory::getConfig()->get( 'dbprefix' );
+
+		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		if ( in_array( $prefix.'cck_store_form_'.$item->type, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$item->type, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		// -- onContentAfterDelete?
+		
+		return true;
 	}
 	
 	// onCCK_Storage_LocationSearch
