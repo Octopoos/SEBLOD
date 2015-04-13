@@ -108,22 +108,37 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$values		=	explode( $separator, $value );
 				if ( count( $values ) ) {
 					$fragments	=	array();
+					$var_mode	=	( $field->match_options ) ? $field->match_options->get( 'var_mode', '0' ) : '0';
 					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
-					if ( !$var_type ) {
+					if ( $var_mode == '1' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	$v;
+								$fragments[] 	=	$target.' = '.JCckDatabase::quote( $v )
+												.	' OR '.$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
+												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
+												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
 							}
+						}
+						if ( count( $fragments ) ) {
+							$sql	=	'((' . implode( ') OR (', $fragments ) . '))';
 						}
 					} else {
-						foreach ( $values as $v ) {
-							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	JCckDatabase::quote( $v );
+						if ( !$var_type ) {
+							foreach ( $values as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									$fragments[] 	=	$v;
+								}
+							}
+						} else {
+							foreach ( $values as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									$fragments[] 	=	JCckDatabase::quote( $v );
+								}
 							}
 						}
-					}
-					if ( count( $fragments ) ) {
-						$sql	=	$target.' IN ('.implode( ',', $fragments ).')';
+						if ( count( $fragments ) ) {
+							$sql	=	$target.' IN ('.implode( ',', $fragments ).')';
+						}
 					}
 				}
 				break;
