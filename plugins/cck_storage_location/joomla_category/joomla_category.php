@@ -25,11 +25,12 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $custom		=	'description';
 	protected static $modified_at	=	'modified_time';
 	protected static $parent		=	'parent_id';
+	protected static $parent_object	=	'joomla_category';
 	protected static $status		=	'published';
 	protected static $to_route		=	'a.id as pk, a.title, a.alias';
 	
 	protected static $context		=	'com_categories.category';
-	protected static $contexts		=	array();
+	protected static $contexts		=	array( 'com_content.categories' );
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created_time DESC', 'oldest'=>'created_time ASC', 'ordering'=>'lft ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
@@ -640,7 +641,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				$query				=	'SELECT a.id FROM '.self::$table.' AS a'
 									.	$join
 									.	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
-				$vars['id']			=	JCckDatabaseCache::loadResult( $query );
+				$vars['id']			=	(int)JCckDatabaseCache::loadResult( $query );
+				if ( $vars['id'] == 0 ) {
+					return JError::raiseError( 404, JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ) );
+				}
 			}
 		}
 	}
@@ -672,7 +676,13 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
-
+	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return JFactory::getUser()->authorise( $rule, 'com_content.category.'.$pk );
+	}
+	
 	// checkIn
 	public static function checkIn( $pk = 0 )
 	{
@@ -705,6 +715,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',

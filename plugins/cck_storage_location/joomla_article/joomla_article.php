@@ -25,6 +25,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $custom		=	'introtext';
 	protected static $modified_at	=	'modified';
 	protected static $parent		=	'catid';
+	protected static $parent_object	=	'joomla_category';
 	protected static $status		=	'state';
 	protected static $to_route		=	'a.id as pk, a.title, a.alias, a.catid, a.language';
 	
@@ -723,7 +724,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$query				=	'SELECT a.id FROM '.self::$table.' AS a'
 									.	$join
 									.	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
-				$vars['id']			=	JCckDatabaseCache::loadResult( $query );
+				$vars['id']			=	(int)JCckDatabaseCache::loadResult( $query );
 			}
 		}
 	}
@@ -759,6 +760,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return JFactory::getUser()->authorise( $rule, 'com_content.article.'.$pk );
+	}
+
 	// checkIn
 	public static function checkIn( $pk = 0 )
 	{
@@ -791,6 +798,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
