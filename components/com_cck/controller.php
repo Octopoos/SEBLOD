@@ -130,35 +130,40 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 		} else {
-			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
-			$query	=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id'
-					.	' FROM #__cck_core AS a'
-					.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
-					.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
-					.	' WHERE a.id ='.(int)$id;
-			$core	=	JCckDatabase::loadObject( $query );
-			switch ( $field->storage ) { //todo: call plugins!
-				case 'custom':
-					if ( $collection != '' ) {
-						$regex	=	CCK_Content::getRegex_Group( $fieldname, $collection, $xi );
-						preg_match( $regex, $core->value, $matches );
-						$value	=	$matches[1];
-					} else {
-						$regex	=	CCK_Content::getRegex_Field( $fieldname );
-						preg_match( $regex, $core->value, $matches );
-						$value	=	$matches[1];
-					}
-					break;
-				case 'standard':
-				default:
-					$value	=	$core->value;
-					break;
-			}
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
+			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id'
+						.	' FROM #__cck_core AS a'
+						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
+						.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
+						.	' WHERE a.id ='.(int)$id;
+			$core		=	JCckDatabase::loadObject( $query );
+
+			$config		=	array(
+								'author'=>$core->author_id,
+								'client'=>$client,
+								'collection'=>$collection,
+								'fieldname'=>$fieldname,
+								'id'=>$core->id,
+								'isNew'=>0,
+								'location'=>$core->storage_location,
+								'pk'=>$core->pk,
+								'pkb'=>0,
+								'task'=>'download',
+								'type'=>$core->type,
+								'type_id'=>$core->type_id,
+								'xi'=>$xi
+							);
+			$dispatcher		=	JDispatcher::getInstance();
+			$field->value	=	$core->value;
+			$pk			=	$core->pk;
+			$value			=	'';
+
+			JPluginHelper::importPlugin( 'cck_storage' );
+			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
-			// $current	=	JSite::getMenu()->getActive()->id;
 			$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$core->type.'"', 'client' );
+														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
 			$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
 			$autorised	=	$user->getAuthorisedViewLevels();
 			$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
@@ -167,19 +172,7 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 			JPluginHelper::importPlugin( 'cck_field' );
-			$dispatcher	=	JDispatcher::getInstance();
-			$config		=	array(
-								'author'=>$core->author_id,
-								'client'=>$client,
-								'id'=>$core->id,
-								'isNew'=>0,
-								'location'=>$core->storage_location,
-								'pk'=>$core->pk,
-								'pkb'=>0,
-								'task'=>'download',
-								'type'=>$core->type,
-								'type_id'=>$core->type_id
-							);
+			
 			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' ); //#
 			
 			if ( $restricted ) {
@@ -192,24 +185,11 @@ class CCKController extends JControllerLegacy
 					return;
 				}
 			}
-			$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
-
-			// Path Folder
-			if ( $collection != '' ) {
-				$group_x	=	JCckDatabase::loadObject( 'SELECT a.options2 FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
-				$f_opt2		=	JCckDev::fromJSON( $group_x->options2 );
-			} else {
-				$f_opt2		=	JCckDev::fromJSON( $field->options2 );
-			}
-			$file	=	'';
-			if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
-				$file	.=	$f_opt2['path'];
-				$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $core->author_id.'/' : '';
-				$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $core->pk.'/' : '';
-			}
-			$file	.=	$field->value;
+			
+			$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
+			$file	=	$field->filename;
 		}
-		
+
 		$path	=	JPATH_ROOT.'/'.$file;
 		if ( is_file( $path ) && $file ) {
 			$size	=	filesize( $path ); 
