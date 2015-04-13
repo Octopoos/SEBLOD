@@ -93,6 +93,7 @@ $js		=	'
 						var storage_location = parent.jQuery("#storage_location").val();
 						$("#storage_location").val(storage_location);
 						if (storage_location == "free") {
+							$("#storage_table").parent().show();
 							$("#storage_table").show();
 						}
 						if ($("#storage").val() == "custom") {
