@@ -101,7 +101,7 @@ class JCckPluginLink extends JPlugin
 						$custom		=	str_replace( $matches[0][$k], $request, $custom );						
 					} else {
 						$request	=	'get'.$v;
-						$custom		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $custom );
+						$custom		=	str_replace( $matches[0][$k], urlencode( $app->input->$request( $variable, '' ) ), $custom );
 					}
 				}
 			}
@@ -122,7 +122,7 @@ class JCckPluginLink extends JPlugin
 				$replace				=	$fields[$fieldname]->{$target};
 				$replace				=	JCckDev::toSafeID( $replace );
 			} else {
-				$replace				=	$fields[$fieldname]->{$target};
+				$replace				=	urlencode( $fields[$fieldname]->{$target} );
 			}
 			$fields[$name]->link        =	str_replace( $process['matches'][0][$k], $replace, $fields[$name]->link );
 			if ( isset( $fields[$name]->form ) ) {
