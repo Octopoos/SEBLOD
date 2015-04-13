@@ -242,6 +242,14 @@ class plgSearchCCK extends JPlugin
 		}
 		if ( $config['doQuery'] !== false ) {
 			if ( $current['stage'] == 0 ) {
+				if ( isset( $config['query_variables'] ) && count( $config['query_variables'] ) ) {
+					foreach ( $config['query_variables'] as $var ) {
+						if ( $var !='' ) {
+							$db->setQuery( $var );
+							$db->execute();		
+						}
+					}
+				}
 				$query	=	$db->getQuery( true );
 				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb' );
 				$query->from( '`#__cck_core` AS t0' );
@@ -265,6 +273,9 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 				$query->group( 't0.pk' );
+				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
+					$query->group( $config['query_parts']['group'] );
+				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
 				if ( $doLimit ) {
 					$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
