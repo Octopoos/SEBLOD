@@ -78,7 +78,7 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 	// onCCK_Field_ValidationPrepareStore
 	public static function onCCK_Field_ValidationPrepareStore( &$field, $name, $value, &$config )
 	{
-		if ( $value != '' || $field->state == 'disabled' ) {
+		if ( $value != '' || $field->state == 'disabled' || strpos( $field->required, '[' ) !== false ) {
 			// OK
 		} else {
 			$app	=	JFactory::getApplication();
