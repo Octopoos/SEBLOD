@@ -33,6 +33,17 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			$value	=	$storage->$P;
 		}
 	}
+
+	// onCCK_StoragePrepareDownload
+	public function onCCK_StoragePrepareDownload( &$field, &$value, &$config = array() )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		
+		// Set
+		$value	=	$field->value;
+	}
 	
 	// onCCK_StoragePrepareForm
 	public function onCCK_StoragePrepareForm( &$field, &$value, &$storage, $config = array() )

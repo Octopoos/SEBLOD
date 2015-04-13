@@ -41,6 +41,25 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			$value	=	$storage->values[$P][2][$k];
 		}
 	}
+
+	// onCCK_StoragePrepareDownload
+	public function onCCK_StoragePrepareDownload( &$field, &$value, &$config = array() )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		
+		// Set
+		if ( $config['collection'] != '' ) {
+			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );
+			preg_match( $regex, $field->value, $matches );
+			$value	=	$matches[1];
+		} else {
+			$regex	=	CCK_Content::getRegex_Field( $config['fieldname'] );
+			preg_match( $regex, $field->value, $matches );
+			$value	=	$matches[1];
+		}
+	}
 	
 	// onCCK_StoragePrepareForm
 	public function onCCK_StoragePrepareForm( &$field, &$value, &$storage, $config = array() )
