@@ -10,7 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.framework' );
+if ( !JCck::on( '3.4' ) ) {
+	JHtml::_( 'behavior.framework' );
+}
 
 $app			=	JFactory::getApplication();
 $data			=	'';
@@ -165,6 +167,11 @@ $dispatcher	=	JDispatcher::getInstance();
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
 if ( $preconfig['show_form'] ) {
+	
+	if ( JCck::on( '3.4' ) ) {
+		JHtml::_( 'behavior.core' );
+	}
+
 	// Template
 	$P				=	'template_'.$preconfig['client'];
 	$templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
@@ -314,11 +321,17 @@ if ( $preconfig['task'] == 'search' ) {
 		$profiler	=	JProfiler::getInstance();
 	}
 	if ( $preconfig['show_list'] ) {
-		$config['infinite']	=	$isInfinite;
+		$config['infinite']		=	$isInfinite;
+		$target					=	'search';
+		if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
+			$target				=	'search2';
+			$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );	
+			$search->content	=	$search2->content;
+		}
 		if ( $total ) {
 			// Limit2 + Random
 			if( $preconfig['limit2'] > 0 ) {
-				$total	=	( $preconfig['limit2'] > $total ) ? $total : $preconfig['limit2'];
+				$total		=	( $preconfig['limit2'] > $total ) ? $total : $preconfig['limit2'];
 				if ( $preconfig['ordering2'] == 'random' || $preconfig['ordering2'] == 'random_shuffle' ) {
 					// Random
 					$rand_keys	=	array_rand( $items, $total );
@@ -365,11 +378,11 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options );
+				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options );
 				$isCached	=	' [Cache=ON]';
 			} else {
-				if ( $search->content > 0 ) {
-					$data	=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+				if ( ${$target}->content > 0 ) {
+					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
@@ -403,8 +416,8 @@ if ( $preconfig['task'] == 'search' ) {
 					}
 					return;
 				} elseif ( $no_action == 'file' ) {
-					$templateStyle2	=	CCK_List::getTemplateStyle( $search->template_list, array( 'rendering_css_core'=>$search->stylesheets ) );
-					$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.$search->name.'/no_result.php';
+					$templateStyle2	=	CCK_List::getTemplateStyle( ${$target}->template_list, array( 'rendering_css_core'=>${$target}->stylesheets ) );
+					$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.${$target}->name.'/no_result.php';
 					$file2			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/no_result.php';
 					
 					if ( file_exists( $file1 ) ) {
@@ -420,7 +433,7 @@ if ( $preconfig['task'] == 'search' ) {
 						$data	=	ob_get_clean();
 					}
 				} else {
-					$data		=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+					$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
 				}
 			}
 		}

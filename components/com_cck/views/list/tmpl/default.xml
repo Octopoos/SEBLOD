@@ -66,6 +66,7 @@
 			<field name="variation" type="cckhidden" label="" description="" />
 		</fieldset>
 		<fieldset name="advanced">
+			<field name="search2" type="cck" construction="core_search_type" label="COM_CCK_CONFIG_SEARCH_ALT" description="COM_CCK_CONFIG_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
 			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 			<option value="0">JNO</option>
 				<option	value="1">JYES</option>

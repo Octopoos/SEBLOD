@@ -51,6 +51,7 @@ class CCKViewList extends JViewLegacy
 		if ( $params->get( 'show_list', '' ) != '' ) {
 			$preconfig['show_list']	=	(int)$params->get( 'show_list' );
 		}
+		$preconfig['search2']		=	$params->get( 'search2' );
 		$preconfig['show_form']		=	$params->get( 'show_form', '' );
 		$preconfig['auto_redirect']	=	$params->get( 'auto_redirect', '' );
 		$preconfig['limit2']		=	$params->get( 'limit2', 0 );
@@ -167,6 +168,7 @@ class CCKViewList extends JViewLegacy
 		if ( $this->show_pagination == '' ) {
 			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
 			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
+			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
 		}
 		
 		$this->config					=	&$config;
