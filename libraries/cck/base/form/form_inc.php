@@ -10,7 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.framework' );
+if ( !JCck::on( '3.4' ) ) {
+	JHtml::_( 'behavior.framework' );
+} else {
+	JHtml::_( 'behavior.core' );
+}
 
 $app			=	JFactory::getApplication();
 $data			=	'';
