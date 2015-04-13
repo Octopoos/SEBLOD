@@ -107,7 +107,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->get( 'id' ) ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->get( 'id' ) ) )
 				|| ( $canEditOwnContent ) ) ) {
-				if ( !$link->get( 'no_access', 1 ) ) {
+				if ( !$link->get( 'no_access', 0 ) ) {
 					$field->display	=	0;
 				}
 				return;
