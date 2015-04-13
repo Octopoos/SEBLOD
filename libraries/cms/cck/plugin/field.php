@@ -29,6 +29,16 @@ class JCckPluginField extends JPlugin
 		$field->value	=	$value;
 	}
 	
+	// onCCK_FieldPrepareDownload
+	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		$field->filename	=	$value;
+	}
+	
 	// onCCK_FieldPrepareExport
 	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
 	{
@@ -865,6 +875,9 @@ class JCckPluginField extends JPlugin
 			} else {
 				$parent		=	( JFactory::getApplication()->isAdmin() ) ? 'adminForm' : 'seblod_form';	
 				$submit		=	'JCck.Core.submit';
+			}
+			if ( $field->script ) {
+				self::g_addScriptDeclaration( $field->script );
 			}
 			self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 		} elseif ( $variation == 'clear' ) {
