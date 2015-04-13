@@ -77,6 +77,8 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		$value		=	$field->defaultvalue;
 		
 		// Prepare
+		$value		=	JCckDevHelper::replaceLive( $value );
+		
 		if ( $field->bool8 ) {
 			$field->bool8	=	$config['doTranslation'];
 		}
