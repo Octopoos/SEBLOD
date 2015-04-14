@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
 	protected static $parent		=	'';
+	protected static $parent_object	=	'';
 	protected static $status		=	'';
 	protected static $to_route		=	'';
 	
@@ -58,6 +59,20 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, ( $table == '#__cck_core' ? $config['id'] : $pk ) );
 	}
 	
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( self::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, ( $table == '#__cck_core' ? $config['id'] : $pk ) );
+	}
+
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
 	{
@@ -398,6 +413,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									/*'routes'=>'',*/
 									'status'=>'',
 									'table'=>'',

@@ -25,6 +25,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
 	protected static $parent		=	'';
+	protected static $parent_object	=	'';
 	protected static $status		=	'';
 	protected static $to_route		=	'';
 	
@@ -470,6 +471,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									/*'routes'=>'',*/
 									'status'=>'',
 									'table'=>'',
