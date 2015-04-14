@@ -968,6 +968,29 @@ class CCK_Rendering
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// replaceLive
+	public function replaceLive( $attr )
+	{
+		if ( $attr != '' ) {
+			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				preg_match_all( $search, $attr, $matches );
+
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[2] as $k=>$fieldname ) {
+						$target		=	$matches[1][$k];
+						$get		=	'get'.$target;
+						$replace	=	$this->getValue( $fieldname );
+						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
+					}
+				}
+			}
+		}
+
+		return $attr;
+	}
+	
 	// getBrowser
 	public function getBrowser( $property = 'name' )
 	{
