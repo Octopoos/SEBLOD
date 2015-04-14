@@ -64,7 +64,7 @@ $ -> Language fix or change
 + $user->... $uri->... syntaxes processed added on Freetext plug-in.
 
 + "Delete" method added (to Field plug-ins). (!)
-
++ "PrepareDelete" method added (to Object plug-ins). (!)
 + "PrepareDownload" method added (to Field & Object plug-ins). (!)
 + "PrepareExport" method added >> SEBLOD Export Add-on required. (!)
 + "PrepareResource" method added >> SEBLOD WebServices Add-on required. (!)
