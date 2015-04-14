@@ -36,6 +36,28 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 							 . ' ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		// Process
+		$table	=	'#__cck_store_join_'.( $field->storage_field2 ? $field->storage_field2 : $field->storage_field );
+		if ( JCckDatabase::execute( 'DELETE a.* FROM '.$table.' AS a WHERE a.id = '.(int)$config['pk'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent

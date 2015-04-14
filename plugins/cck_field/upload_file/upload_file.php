@@ -36,6 +36,61 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+		
+		// Init
+		$value_json			=	JCckDev::fromJSON( $value );
+		$options2			=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value			=	( trim($value_json['file_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['file_location'] ) ;
+			$file_name		=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value			=	( trim($value) == '' ) ? trim($field->defaultvalue) : trim( $value ) ;
+			$file_name		=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		$file		=	$value;
+		$path		=	@$options2['path'];
+		if ( @$options2['storage_format'] ) {
+			$path	.=	( @$options2['path_content'] ) ? $config['pk'].'/' : '';
+			$file	=	$path.$value;
+		}
+		
+		// Process
+		if ( $file != '' && JFile::exists( JPATH_SITE.'/'.$file ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					/*
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+					*/
+				}
+			} else {
+				/*
+				if ( JFile::delete( JPATH_SITE.'/'.$file ) ) {
+					return true;
+				}
+				*/
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent

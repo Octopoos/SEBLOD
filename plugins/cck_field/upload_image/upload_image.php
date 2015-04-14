@@ -36,6 +36,64 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		// Init
+		$value_json		=	JCckDev::fromJSON( $value );
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+
+		// Process
+		if ( $value != '' && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					/*
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+					*/
+				}
+			} else {
+				/*
+				JFile::delete( JPATH_SITE.'/'.$value );
+				*/
+				
+				for ( $i = 1; $i <= 10; $i++ ) {
+					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						/*
+						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
+						*/
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent

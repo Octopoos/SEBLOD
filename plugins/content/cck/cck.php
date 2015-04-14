@@ -44,6 +44,41 @@ class plgContentCCK extends JPlugin
 		
 		$table	=	JCckTable::getInstance( '#__cck_core', 'id', $id );
 		$type	=	$table->cck;
+
+		// -- Leave nothing behind
+		if ( $table->pk > 0 ) {
+			require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+			JPluginHelper::importPlugin( 'cck_field' );
+			JPluginHelper::importPlugin( 'cck_storage' );
+			JPluginHelper::importPlugin( 'cck_storage_location' );
+
+			$config		=	array(
+								'pk'=>$table->pk,
+								'storages'=>array(),
+								'type'=>$table->cck
+							);
+			$dispatcher	=	JDispatcher::getInstance();
+			$fields		=	CCK_Form::getFields( $type, 'all', -1, '', true );
+			if ( count( $fields ) ) {
+				foreach ( $fields as $field ) {
+					$Pt		=	$field->storage_table;
+					$value	=	'';
+					
+					/* Yes but, .. */
+
+					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+						$config['storages'][$Pt]	=	'';
+						
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );
+					}
+					$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+					$dispatcher->trigger( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
+				}
+			}
+		}
+		// -- Leave nothing behind
+
 		$table->delete();
 		
 		// Processing

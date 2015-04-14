@@ -47,6 +47,31 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		}
 	}
 
+	// onCCK_StoragePrepareDelete
+	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		parent::g_onCCK_StoragePrepareContent( $field, $config );
+		
+		// Init
+		$P	=	$field->storage_field;
+		
+		// Prepare
+		if ( ! isset( $storage->values[$P] ) ) {
+			$storage->values[$P]	=	( isset( $storage->$P ) ) ? self::_initValues( $storage->$P ) : array();
+		}
+		
+		// Set
+		if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
+			$value	=	$storage->values[$P][$field->storage_field2];
+			if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
+				$value	=	$value[$field->storage_field3];
+			}
+		}
+	}
+
 	// onCCK_StoragePrepareDownload
 	public function onCCK_StoragePrepareDownload( &$field, &$value, &$config = array() )
 	{

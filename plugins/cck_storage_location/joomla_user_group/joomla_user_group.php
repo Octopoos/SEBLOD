@@ -73,6 +73,24 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		}
 	}
 	
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( self::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		if ( $table == self::$table ) {
+			$storage	=	self::_getTable( $pk );
+		} else {
+			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
+		}
+	}
+
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
 	{
