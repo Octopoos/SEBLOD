@@ -246,7 +246,7 @@ class plgSearchCCK extends JPlugin
 					foreach ( $config['query_variables'] as $var ) {
 						if ( $var !='' ) {
 							$db->setQuery( $var );
-							$db->execute();		
+							$db->execute();
 						}
 					}
 				}
@@ -272,7 +272,6 @@ class plgSearchCCK extends JPlugin
 						$query->having( $config['query_parts']['having'] );	
 					}
 				}
-				$query->group( 't0.pk' );
 				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
 					$query->group( $config['query_parts']['group'] );
 				}
@@ -291,8 +290,6 @@ class plgSearchCCK extends JPlugin
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
-				$query->group( 't0.pk' );
-				
 				$db->setQuery( $query );
 				$results	=	$db->loadColumn();
 			}
