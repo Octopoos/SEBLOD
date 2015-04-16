@@ -235,7 +235,9 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( $config['doQuery'] === false && isset( $config['query'] ) && $config['query'] ) {
 			if ( isset( $config['query_variables'] ) && count( $config['query_variables'] ) ) {
 				foreach ( $config['query_variables'] as $var ) {
-					JCckDatabase::execute( $var );
+					if ( $var != '' ) {
+						JCckDatabase::execute( $var );
+					}
 				}
 			}
 			$results			=	JCckDatabase::loadObjectList( $config['query'] );
