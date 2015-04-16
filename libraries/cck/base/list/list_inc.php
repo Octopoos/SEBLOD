@@ -330,7 +330,7 @@ if ( $preconfig['task'] == 'search' ) {
 		}
 		if ( $total ) {
 			// Limit2 + Random
-			if( $preconfig['limit2'] > 0 ) {
+			if ( $preconfig['limit2'] > 0 ) {
 				$total		=	( $preconfig['limit2'] > $total ) ? $total : $preconfig['limit2'];
 				if ( $preconfig['ordering2'] == 'random' || $preconfig['ordering2'] == 'random_shuffle' ) {
 					// Random
