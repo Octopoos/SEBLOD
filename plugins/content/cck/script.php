@@ -399,8 +399,6 @@ class plgContentCCKInstallerScript
 				if ( $table->rules ) {
 					$rules	=	(array)json_decode( $table->rules );
 					$rules['core.delete.own']	=	array( 6=>"1" );
-					$rules['core.export']		=	array( 7=>"1" );
-					$rules['core.process']		=	array( 7=>"1" );
 					$table->rules	=	json_encode( $rules );
 					$table->store();
 				}
