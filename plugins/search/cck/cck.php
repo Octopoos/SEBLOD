@@ -244,7 +244,7 @@ class plgSearchCCK extends JPlugin
 			if ( $current['stage'] == 0 ) {
 				if ( isset( $config['query_variables'] ) && count( $config['query_variables'] ) ) {
 					foreach ( $config['query_variables'] as $var ) {
-						if ( $var !='' ) {
+						if ( $var != '' ) {
 							$db->setQuery( $var );
 							$db->execute();
 						}
