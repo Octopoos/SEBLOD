@@ -85,11 +85,13 @@ $ -> Language fix or change
 ^ Chosen script loaded on List views (back-end).
 ^ Include inline scripts for Tabs when tmpl=raw
 ^ jQuery Validation script and style updated.
+^ Mobile Detect updated from 2.8.3 to 2.8.12.
 ^ "template_preview.png" updated for One (seb_one) template.
 
 - "defines.php" file (from back-end component) removed.
 - "size="1" attribute removed on JForm Category/MenuItem, Select Dynamic/Numeric/Simple.
 
+# Broken rendering issue fixed for nested lists.
 # Custom Redirection issue fixed Search Form (Submit Button).
 # Default set up of "Export" & "Process" permissions forced after installation.
 # Duplicated path segments issue fixed on router.
