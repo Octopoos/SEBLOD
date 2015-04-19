@@ -628,7 +628,8 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 (528, 'Icon Trash', 'icon_trash', 3, 'icon', '', 1, 'Trash', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'trash', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'icon_trash', '', '', '', 0, '0000-00-00 00:00:00'),
 (525, 'Icon Download', 'icon_download', 3, 'icon', '', 1, 'Download', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'download', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'icon_download', '', '', '', 0, '0000-00-00 00:00:00'),
 (530, 'Button Save as New', 'button_save_as_new', 3, 'button_submit', '', 1, 'Save as New', ' ', 3, '', '', '', '', '{"icon":"copy","task":"save2copy","task_id_export":"","task_id_process":"","alt_link_text":"","alt_link":"","alt_link_options":"","itemid":"","custom":"","task_id":""}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 1, 0, 1, '', '', 'none', '', '', 'button_save_as_new', '', '', '', 0, '0000-00-00 00:00:00'),
-(531, 'Core Parent (Type)', 'core_parent_type', 3, 'select_dynamic', '', 0, 'Parent', 'None', 3, '', '', '', '', '{"query":"","table":"#__cck_core_types","name":"title","where":"parent = \\"\\" AND storage_location != \\"none\\"","value":"name","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'parent', '', '', '', 0, '0000-00-00 00:00:00');
+(531, 'Core Parent (Type)', 'core_parent_type', 3, 'select_dynamic', '', 0, 'Parent', 'None', 3, '', '', '', '', '{"query":"","table":"#__cck_core_types","name":"title","where":"parent = \\"\\" AND storage_location != \\"none\\"","value":"name","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'parent', '', '', '', 0, '0000-00-00 00:00:00'),
+(532, 'Icon Add', 'icon_add', 3, 'icon', '', 1, '', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'plus', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'icon_add', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -936,7 +937,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `options_site` text NOT NULL,
   `options_content` text NOT NULL,
   `options_intro` text NOT NULL,
-  `access` int(10) unsigned NOT NULL DEFAULT '3',
   `location` varchar(50) NOT NULL,
   `parent` varchar(50) NOT NULL,
   `storage_location` varchar(50) NOT NULL,
@@ -944,6 +944,11 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `version` int(11) NOT NULL DEFAULT '1',
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL,
+  `access` int(10) unsigned NOT NULL DEFAULT '3',
+  `created_date` datetime NOT NULL,
+  `created_user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `modified_date` datetime NOT NULL,
+  `modified_user_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `idx_folder` (`folder`),
@@ -954,20 +959,20 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=500 ;
 
 
-INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `access`, `location`, `parent`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`) VALUES
-(1, 0, 'Article', 'article', '', 10, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '3', '', '', 'joomla_article', '', 2, 0, '0000-00-00 00:00:00'),
-(28, 0, 'User Grp Basic', 'user_grp_basic', '', 13, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(5, 0, 'Category', 'category', '', 11, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '3', '', '', 'joomla_category', '', 2, 0, '0000-00-00 00:00:00'),
-(8, 0, 'User', 'user', '', 13, 7, 7, 7, 7, '', '', 1, '', '', '', '', '3', '', '', 'joomla_user', '', 2, 0, '0000-00-00 00:00:00'),
-(25, 0, 'Category Grp Publishing', 'category_grp_publishing', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(26, 0, 'Category Grp Basic', 'category_grp_basic', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(21, 0, 'Article Grp Basic', 'article_grp_basic', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(11, 0, 'User Group', 'user_group', '', 14, 7, 7, 7, 7, '', '', 1, '', '', '', '', '3', '', '', 'joomla_user_group', '', 2, 0, '0000-00-00 00:00:00'),
-(20, 0, 'Article Grp Publishing', 'article_grp_publishing', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(22, 0, 'Article Grp Metadata', 'article_grp_metadata', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(27, 0, 'Category Grp Metadata', 'category_grp_metadata', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00'),
-(35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', '3', 'none', '', 'none', '', 1, 0, '0000-00-00 00:00:00');
+INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `location`, `parent`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`, `access`, `created_date`, `created_user_id`, `modified_date`, `modified_user_id`) VALUES
+(1, 0, 'Article', 'article', '', 10, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', '', 'joomla_article', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(28, 0, 'User Grp Basic', 'user_grp_basic', '', 13, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(5, 0, 'Category', 'category', '', 11, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', '', 'joomla_category', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(8, 0, 'User', 'user', '', 13, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', '', 'joomla_user', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(25, 0, 'Category Grp Publishing', 'category_grp_publishing', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(26, 0, 'Category Grp Basic', 'category_grp_basic', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(21, 0, 'Article Grp Basic', 'article_grp_basic', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(11, 0, 'User Group', 'user_group', '', 14, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', '', 'joomla_user_group', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(20, 0, 'Article Grp Publishing', 'article_grp_publishing', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(22, 0, 'Article Grp Metadata', 'article_grp_metadata', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(27, 0, 'Category Grp Metadata', 'category_grp_metadata', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', '', '', 'none', '', 2, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', '', 'none', '', 1, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
 
 
 -- --------------------------------------------------------
