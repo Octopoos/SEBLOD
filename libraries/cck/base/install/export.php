@@ -598,11 +598,14 @@ class CCK_Export
 			$file['src']		=	JPATH_SITE.'/plugins/'.$type.'/'.$name;
 			$file['lang_src']	=	$file['src'].'/'.$name.'.xml';
 			$file['lang_root']	=	JPATH_ADMINISTRATOR;
-			if ( !isset( $extensions[$file['src']] ) ) {
-				$extensions[$file['src']]	=	(object)array( 'type'=>'plugin', 'id'=>'plg_'.$type.'_'.$name, 'group'=>$type, '_file'=>$file['_'] );
-			}
-			if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
-				self::exportFile( 'plugin', $data, $file );
+			
+			if ( file_exists( $file['src'] ) ) {
+				if ( !isset( $extensions[$file['src']] ) ) {
+					$extensions[$file['src']]	=	(object)array( 'type'=>'plugin', 'id'=>'plg_'.$type.'_'.$name, 'group'=>$type, '_file'=>$file['_'] );
+				}
+				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+					self::exportFile( 'plugin', $data, $file );
+				}
 			}
 		}
 	}
@@ -622,11 +625,16 @@ class CCK_Export
 				}
 				$file['src']	=	JPATH_SITE.'/templates/'.$template.'/variations/'.$name;
 			}
-			if ( !isset( $extensions[$file['src']] ) ) {
-				$extensions[$file['src']]	=	(object)array( 'type'=>'file', 'id'=>'var_cck_'.$name, '_file'=>$file['_'] );
+			if ( $file['src'] == JPATH_SITE.'/templates/seb_table/variations/heading' ) {
+				return;
 			}
-			if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
-				self::exportFile( 'variation', $data, $file );
+			if ( file_exists( $file['src'] ) ) {
+				if ( !isset( $extensions[$file['src']] ) ) {
+					$extensions[$file['src']]	=	(object)array( 'type'=>'file', 'id'=>'var_cck_'.$name, '_file'=>$file['_'] );
+				}
+				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+					self::exportFile( 'variation', $data, $file );
+				}
 			}
 		}
 	}
