@@ -121,8 +121,10 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		if ( $task == 'cancel' ) {
 			$click	=	' onclick="Joomla.submitform(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
 		} else {
-			if ( $task == 'export' ) {
-				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_id'=>$task_id ) );
+			if ( $task == 'export' || $task == 'process' ) {
+				if ( $field->variation != 'toolbar_button' ) {
+					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_id'=>$task_id ) );
+				}				
 			} elseif ( $task == 'save2redirect' ) {
 				$custom		=	'';
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
@@ -201,8 +203,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$field->form	=	'';
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
 				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$pre_task.'JCck.Core.submit(\''.$task.'\')" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
-				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, @$options2['icon'] );
-				// JToolBar::getInstance( 'toolbar' )->appendButton( 'Standard', $options2['icon'], $value, $task, true ); todo: check
+				
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'button'=>array( 'html'=>$html, 'icon'=>@$options2['icon'] ), 'pre_task'=>$pre_task, 'task'=>$task, 'task_id'=>$task_id ) );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );
 			}
@@ -258,13 +260,20 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_Field_BeforeRenderForm
 	public static function onCCK_FieldBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
 	{
-		if ( $process['task'] == 'export' ) {
+		$process['task']	=	str_replace( 'list.', '', $process['task'] );
+		if ( $process['task'] == 'export' || $process['task'] == 'process' ) {
 			if ( isset( $config['ids'] ) && $config['ids'] != '' ) {
 				$name					=	$process['name'];
 				$search					=	'onclick="';
 				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config['ids'].'">\');' );
 				$fields[$name]->form	=	str_replace( $search, $replace, $fields[$name]->form );
 			}
+		}
+		if ( isset( $process['button'] ) && is_array( $process['button'] ) ) {
+			if ( isset( $search ) && isset( $replace ) ) {
+				$process['button']['html']	=	str_replace( $search, $replace, $process['button']['html'] );
+			}
+			JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $process['button']['html'], $process['button']['icon'] );
 		}
 	}
 }
