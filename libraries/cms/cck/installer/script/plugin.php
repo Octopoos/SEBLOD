@@ -43,7 +43,7 @@ class JCckInstallerScriptPlugin
 		if ( $this->cck->group == 'cck_storage_location' ) {
 			if ( isset( $this->cck->xml->cck_integration ) ) {
 				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB' );
-				$integration	=	array( 'component', 'options', 'vars', 'view' );
+				$integration	=	array( 'component', 'context', 'options', 'vars', 'view' );
 				$title			=	JText::_( 'PLG_CCK_STORAGE_LOCATION_'.$this->cck->element.'_LABEL2' );
 				foreach ( $integration as $i=>$elem ) {
 					if ( isset( $this->cck->xml->cck_integration->$elem ) ) {
@@ -51,8 +51,8 @@ class JCckInstallerScriptPlugin
 						unset( $integration[$i] );
 					}
 				}
-				$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`options`,`vars`,`view`)'
-								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
+				$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`context`,`options`,`vars`,`view`)'
+								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$integration['context'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
 				$db->setQuery( $query );
 				$db->query();
 			}
