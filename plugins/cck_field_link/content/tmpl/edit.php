@@ -50,6 +50,7 @@ JCckDev::initScript( 'link', $this->item );
 jQuery(document).ready(function($) {
 	$('#itemid').isDisabledWhen('sef','0');
 	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');
+	$('#sortable_core_dev_texts').isVisibleWhen('itemid','-3');
 	$('#content_fieldname,#content_location,#blank_li').isVisibleWhen('content','2');
 });
 </script>
