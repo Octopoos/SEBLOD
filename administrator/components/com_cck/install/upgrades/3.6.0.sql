@@ -18,3 +18,11 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 (530, 'Button Save as New', 'button_save_as_new', 3, 'button_submit', '', 1, 'Save as New', ' ', 3, '', '', '', '', '{"icon":"copy","task":"save2copy","task_id_export":"","task_id_process":"","alt_link_text":"","alt_link":"","alt_link_options":"","itemid":"","custom":"","task_id":""}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 1, 0, 1, '', '', 'none', '', '', 'button_save_as_new', '', '', '', 0, '0000-00-00 00:00:00'),
 (531, 'Core Parent (Type)', 'core_parent_type', 3, 'select_dynamic', '', 0, 'Parent', 'None', 3, '', '', '', '', '{"query":"","table":"#__cck_core_types","name":"title","where":"parent = \\"\\" AND storage_location != \\"none\\"","value":"name","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'parent', '', '', '', 0, '0000-00-00 00:00:00'),
 (532, 'Icon Add', 'icon_add', 3, 'icon', '', 1, '', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'plus', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', 'icon_add', '', '', '', 0, '0000-00-00 00:00:00');
+
+-- --------
+
+ALTER TABLE `#__cck_core_objects` ADD `context` VARCHAR(50) NOT NULL AFTER `component`;
+UPDATE `#__cck_core_objects` SET `context` = "com_content.article" WHERE `name` = "joomla_article";
+UPDATE `#__cck_core_objects` SET `context` = "com_categories.category" WHERE `name` = "joomla_category";
+UPDATE `#__cck_core_fields` SET `options` = 'Never=0||Always=3||Workflow=optgroup||Add=1||Edit=2' WHERE `id` = 123;
+UPDATE `#__cck_core_fields` SET `options` = 'Joomla=optgroup||Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Increment=increment||Sort=sort||Status=state||SEBLOD=optgroup||Form=form' WHERE `id` = 271;

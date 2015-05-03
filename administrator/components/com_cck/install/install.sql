@@ -317,7 +317,7 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 (120, 'Core Options Image Process', 'core_options_image_process', 3, 'select_simple', '', 0, 'Image', 'Original', 3, '', '', '', 'Resized=optgroup||Crop=crop||Shrink=shrink||Stretch=stretch||Resized Dynamic=optgroup||Crop Dynamic=crop_dynamic||Max Fit=maxfit||Shrink=shrink_dynamic||Stretch=stretch_dynamic', '{"options":[]}', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'max-width-190', '', 'dev', '', '', 'json[options2][image_process]', '', '', '', 0, '0000-00-00 00:00:00'),
 (121, 'Core Options Image Width', 'core_options_image_width', 3, 'text', '', 0, 'Width', ' ', 3, '', '', '200', '', '', 0, 255, 8, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', 'style="text-align: center"', 'dev', '', '', 'json[options2][image_width]', '', '', '', 0, '0000-00-00 00:00:00'),
 (122, 'Core Options Image Height', 'core_options_image_height', 3, 'text', '', 0, 'Height', ' ', 3, '', '', '200', '', '', 0, 255, 8, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', 'style="text-align: center"', 'dev', '', '', 'json[options2][image_height]', '', '', '', 0, '0000-00-00 00:00:00'),
-(123, 'Core Options Send', 'core_options_send', 3, 'select_simple', '', 0, 'Send Email', ' ', 3, '', '', '0', 'Never=0||Submission=1||Edition=2||Always=3', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'json[options2][send]', '', '', '', 0, '0000-00-00 00:00:00'),
+(123, 'Core Options Send', 'core_options_send', 3, 'select_simple', '', 0, 'Send Email', ' ', 3, '', '', '0', 'Never=0||Always=3||Workflow=optgroup||Add=1||Edit=2', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'json[options2][send]', '', '', '', 0, '0000-00-00 00:00:00'),
 (124, 'Core Options From', 'core_options_from', 3, 'select_simple', '', 0, 'From', ' ', 3, '', '', '0', 'Default=0||Email=1||Field=3', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'json[options2][from]', '', '', '', 0, '0000-00-00 00:00:00'),
 (125, 'Core Options To Admin', 'core_options_to_admin', 3, 'select_dynamic', '', 0, 'To Admin', ' ', 3, '', '', '', '', '{"query":"SELECT us.username AS text, us.id AS value FROM #__users us, #__user_usergroup_map gr WHERE gr.group_id = 8 AND gr.user_id = us.id","table":"#__content","name":"","where":"","value":"","orderby":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 0, 255, 32, 0, 6, 0, 0, ',', 0, '', '', '', '', 1, 1, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'json[options2][to_admin]', '', '', '', 0, '0000-00-00 00:00:00'),
 (126, 'Core Options To', 'core_options_to', 3, 'textarea', '', 0, 'To', ' ', 3, '', '', '', '', '', 0, 255, 32, 25, 3, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', 'json[options2][to]', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -496,7 +496,7 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 (268, 'Core Computation Event', 'core_computation_event', 3, 'select_simple', '', 0, 'Trigger Event', ' ', 3, '', '', '0', '_=||Event Change=change||Event Keyup=keyup||None=none', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'event', '', '', '', 0, '0000-00-00 00:00:00'),
 (269, 'Core Conditional Event', 'core_conditional_event', 3, 'select_simple', '', 0, 'Event', ' ', 3, '', '', 'change', 'Change=change||Keyup=keyup', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'event', '', '', '', 0, '0000-00-00 00:00:00'),
 (270, 'Core Computation Recalc', 'core_computation_recalc', 3, 'select_simple', '', 0, 'Rule', ' ', 3, '', '', 'global', 'Global=global||Self=0', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'recalc', '', '', '', 0, '0000-00-00 00:00:00'),
-(271, 'Core JGrid Type', 'core_jgrid_type', 3, 'select_simple', '', 0, 'Type', 'Select', 3, 'required', '', '', 'Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Increment=increment||Status=state', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00'),
+(271, 'Core JGrid Type', 'core_jgrid_type', 3, 'select_simple', '', 0, 'Type', 'Select', 3, 'required', '', '', 'Joomla=optgroup||Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Increment=increment||Sort=sort||Status=state||SEBLOD=optgroup||Form=form', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00'),
 (295, 'Core Module Style', 'core_module_style', 3, 'select_simple', '', 0, 'Style', 'Select', 3, '', '', '', 'None=none||Outline=outline||Rounded=rounded||Table=table||Xhtml=xhtml', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', 'style', '', '', '', 0, '0000-00-00 00:00:00'),
 (294, 'Button Search', 'button_search', 3, 'button_submit', '', 1, 'Search', ' ', 3, '', '', '', '', '{"icon":"search","task":"save","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 1, 0, 0, 1, 0, 1, 'btn-primary', '', 'none', '', '', 'button_search', '', '', '', 0, '0000-00-00 00:00:00'),
 (293, 'Button Save', 'button_save', 3, 'button_submit', '', 1, 'Save', ' ', 3, '', '', '', '', '{"icon":"checkmark","task":"apply","alt_link_text":"","alt_link":"","alt_link_options":""}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 1, 0, 0, 1, 0, 1, 'btn-primary', '', 'none', '', '', 'button_save', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -697,6 +697,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_objects` (
   `title` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `component` varchar(50) NOT NULL,
+  `context` varchar(50) NOT NULL,
   `options` text NOT NULL,
   `vars` varchar(255) NOT NULL,
   `view` varchar(50) NOT NULL,
@@ -707,11 +708,11 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_objects` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=500 ;
 
 
-INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `options`, `vars`, `view`) VALUES
-(1, 'Joomla! Article', 'joomla_article', 'com_content', '{"default_type":"article","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}', '', ''),
-(2, 'Joomla! Category', 'joomla_category', 'com_categories', '{"default_type":"category","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","exclude":""}', '', ''),
-(3, 'Joomla! User', 'joomla_user', 'com_users', '{"default_type":"user","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","registration":"1"}', '', 'users'),
-(4, 'Joomla! User Group', 'joomla_user_group', 'com_users', '{"default_type":"user_group","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}', '', 'groups');
+INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `context`, `options`, `vars`, `view`) VALUES
+(1, 'Joomla! Article', 'joomla_article', 'com_content', 'com_content.article', '{"default_type":"article","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}', '', ''),
+(2, 'Joomla! Category', 'joomla_category', 'com_categories', 'com_categories.category', '{"default_type":"category","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","exclude":""}', '', ''),
+(3, 'Joomla! User', 'joomla_user', 'com_users', '', '{"default_type":"user","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","registration":"1"}', '', 'users'),
+(4, 'Joomla! User Group', 'joomla_user_group', 'com_users', '', '{"default_type":"user_group","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}', '', 'groups');
 
 
 -- --------------------------------------------------------
