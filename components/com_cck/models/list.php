@@ -67,5 +67,37 @@ class CCKModelList extends JModelLegacy
 		
 		return $nb;
 	}
+
+	// saveOrder
+	public function saveOrder( $pks = array(), $lft = array() )
+	{
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+
+		$db 	= 	JFactory::getDbo();
+		$query	= 	$db->getQuery( true );
+		$query->select( 'id, pk, storage_location' )
+			  ->from( '#__cck_core' )
+			  ->where( 'id IN (' . implode( ',', $pks ) . ')' );
+
+		$db->setQuery($query);
+		$results 	= 	$db->loadAssocList( 'id' );
+
+		if ( !empty( $results ) ) {
+			$ids 		= 	array();
+			$location 	= 	null;
+
+			foreach ( $pks as $pk ) {
+				$ids[] 	= 	$results[$pk]['pk'];
+
+				if ( null === $location ) {
+					$location 	= 	$results[$pk]['storage_location'];
+				}
+			}
+
+			return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'onCCK_Storage_LocationSaveOrder', array( $ids, $lft ) );
+		}
+
+		return false;
+	}
 }
 ?>

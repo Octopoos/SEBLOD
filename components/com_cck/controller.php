@@ -244,7 +244,7 @@ class CCKController extends JControllerLegacy
 		
 		jimport('joomla.utilities.arrayhelper');
 		JArrayHelper::toInteger( $ids );
-		
+
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
@@ -505,6 +505,31 @@ class CCKController extends JControllerLegacy
 	public function search()
 	{
 		parent::display( true );
+	}
+
+	// saveOrderAjax
+	public function saveOrderAjax()
+	{
+		$app	=	JFactory::getApplication();
+		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
+		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
+
+		// Sanitize the input
+		JArrayHelper::toInteger( $pks );
+		JArrayHelper::toInteger( $order );
+
+		// Get the model
+		$model 	= 	$this->getModel( 'list' );
+
+		// Save the ordering
+		$return	= 	$model->saveOrder( $pks, $order );
+
+		if ( $return ) {
+			echo '1';
+		}
+
+		// Close the application
+		$app->close();
 	}
 	
 	// _download_hits
