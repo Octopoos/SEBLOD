@@ -53,7 +53,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 JCckDev::getForm( 'core_options_path', @$options2['desc_label'], $config, array( 'defaultvalue'=>'Description alt', 'size'=>18, 'storage_field'=>'json[options2][desc_label]' ) )
 		 .	 '</li>';
 
-		echo JCckDev::renderHelp( 'field', '2440-upload-image.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-upload-image-field' );
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'COM_CCK_PROCESSING_DESC_UPLOAD_IMAGE' ), 2 );
 		echo JCckDev::renderForm( 'core_options_force_thumb_creation', @$options2['force_thumb_creation'], $config, array( 'label'=>'FORCE_THUMB_CREATION' ) );
 		echo JCckDev::renderForm( 'core_options_preview_image', @$options2['content_preview'], $config, array( 'defaultvalue'=>'1', 'label'=>'DISPLAY_AS_DEFAULT',

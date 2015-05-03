@@ -24,7 +24,7 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
 		echo JCckDev::renderForm( 'core_selectlabel', $this->item->selectlabel, $config );
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		
-		echo JCckDev::renderHelp( 'field', '3019-select-simple.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-select-simple-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

@@ -49,7 +49,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 '</li>';
 		// core_options_path_box (useless)
 		
-		echo JCckDev::renderHelp( 'field', '2557-upload-file.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-upload-file-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>
