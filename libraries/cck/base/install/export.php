@@ -815,52 +815,54 @@ class CCK_Export
 		$dest		=	CCK_Export::createDir( $data['root_elements'].'/'.$plural );
 		
 		foreach ( $data['elements']['tables'] as $name=>$fields ) {
-			if ( $name && $name != '#__cck_core' && !isset( $data['tables_excluded'][$name] ) ) {
-				$table			=	JCckTable::getInstance( $name );
-				$table_fields	=	$table->getFields();
-				$table_keys		=	$db->getTableKeys( $name );
-				$table_pkeys	=	array();
-				
-				$xml	=	new JCckDevXml( '<cck />' );
-				$xml->addAttribute( 'type', $plural );
-				$xml->addChild( 'author', 'Octopoos' );
-				$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-				$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
-				$xml->addChild( 'copyright', 'Copyright (C) 2013 SEBLOD. All Rights Reserved.' );
-				$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
-				$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
-				
-				$xml2	=	$xml->addChild( $elemtype );
-				$xml2->addChild( 'name', $name );
-				
-				$xml3	=	$xml->addChild( 'indexes' );
-				$i		=	1;
-				foreach ( $table_keys as $k=>$v ) {
-					if ( $v->Key_name == 'PRIMARY' ) {
-						$table_pkeys[]	=	$v->Column_name;
-					}
-					$index	=	$xml3->addChild( 'index'.$i, $v->Key_name );
-					$index->addAttribute( 'column_name', $v->Column_name );
-					$index->addAttribute( 'index_type', $v->Index_type );
-					$index->addAttribute( 'seq_in_type', $v->Seq_in_index );
-					$i++;
-				}
-				
-				$xml4	=	$xml->addChild( 'fields' );
-				$i		=	1;
-				foreach ( $table_fields as $k=>$v ) {
-					if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) || $k == 'cck'  ) {
-						$field	=	$xml4->addChild( 'field'.$i, $k );
-						$field->addAttribute( 'type', $v->Type );
-						$field->addAttribute( 'default', $v->Default );
+			if ( isset( $data['tables'][(str_replace( '#__', $data['db_prefix'], $name ))] ) ) {
+				if ( $name && $name != '#__cck_core' && !isset( $data['tables_excluded'][$name] ) ) {
+					$table			=	JCckTable::getInstance( $name );
+					$table_fields	=	$table->getFields();
+					$table_keys		=	$db->getTableKeys( $name );
+					$table_pkeys	=	array();
+					
+					$xml	=	new JCckDevXml( '<cck />' );
+					$xml->addAttribute( 'type', $plural );
+					$xml->addChild( 'author', 'Octopoos' );
+					$xml->addChild( 'authorEmail', 'contact@seblod.com' );
+					$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+					$xml->addChild( 'copyright', 'Copyright (C) 2013 SEBLOD. All Rights Reserved.' );
+					$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
+					$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
+					
+					$xml2	=	$xml->addChild( $elemtype );
+					$xml2->addChild( 'name', $name );
+					
+					$xml3	=	$xml->addChild( 'indexes' );
+					$i		=	1;
+					foreach ( $table_keys as $k=>$v ) {
+						if ( $v->Key_name == 'PRIMARY' ) {
+							$table_pkeys[]	=	$v->Column_name;
+						}
+						$index	=	$xml3->addChild( 'index'.$i, $v->Key_name );
+						$index->addAttribute( 'column_name', $v->Column_name );
+						$index->addAttribute( 'index_type', $v->Index_type );
+						$index->addAttribute( 'seq_in_type', $v->Seq_in_index );
 						$i++;
 					}
+					
+					$xml4	=	$xml->addChild( 'fields' );
+					$i		=	1;
+					foreach ( $table_fields as $k=>$v ) {
+						if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) || $k == 'cck'  ) {
+							$field	=	$xml4->addChild( 'field'.$i, $k );
+							$field->addAttribute( 'type', $v->Type );
+							$field->addAttribute( 'default', $v->Default );
+							$i++;
+						}
+					}
+					
+					// Set
+					$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
+					$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
+					JFile::write( $path, $buffer );
 				}
-				
-				// Set
-				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
-				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
-				JFile::write( $path, $buffer );
 			}
 		}
 	}
