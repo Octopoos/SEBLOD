@@ -126,6 +126,9 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		}
 
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		if ( $value != '' ) {
+			$class	.=	' has-value';
+		}
 		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	( count( $opts ) ) ? JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id ) : '';
 		
