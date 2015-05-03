@@ -251,12 +251,16 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 				$query	=	$db->getQuery( true );
-				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb' );
+				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb,t0.parent_id as parent' );
 				$query->from( '`#__cck_core` AS t0' );
 				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
-				$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
-				$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
+				if ( $config['location'] == 'cck_type' ) {
+					$query->select( $tables['#__cck_core_types']['_'].'.id AS type_id,'.$tables['#__cck_core_types']['_'].'.alias AS type_alias' );
+				} else {
+					$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
+					$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
+				}
 				if ( isset( $config['query_parts']['select'] ) ) {
 					if ( ( is_string( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' )
 						|| count( $config['query_parts']['select'] ) ) {
