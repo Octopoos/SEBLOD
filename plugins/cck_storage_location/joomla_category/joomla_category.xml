@@ -64,6 +64,7 @@
 	
 	<cck_integration>
 		<component>com_categories</component>
+		<context>com_categories.category</context>
 		<options>{"default_type":"category","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","exclude":""}</options>
 		<vars />
 		<view />

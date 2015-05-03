@@ -79,6 +79,7 @@
 
 	<cck_integration>
 		<component>com_users</component>
+		<context></context>
 		<options>{"default_type":"user_group","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}</options>
 		<vars />
 		<view>groups</view>
