@@ -105,11 +105,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 		$value			=	$field->label;
 		$field->label	=	'';
-		
+
 		// Prepare
 		$pre_task	=	'';
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
+		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
 		if ( JFactory::getApplication()->isAdmin() ) {
 			$task	=	( $config['client'] == 'admin' ) ? 'form.'.$task : 'list.'.$task;
@@ -121,10 +122,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		if ( $task == 'cancel' ) {
 			$click	=	' onclick="Joomla.submitform(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
 		} else {
-			if ( $task == 'export' || $task == 'process' ) {
+			if ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
+				$click	=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
 				if ( $field->variation != 'toolbar_button' ) {
-					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_id'=>$task_id ) );
-				}				
+					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
+				}
+				if ( !$task_auto ) {
+					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$click.'}';
+				}
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$click.'"' : '';
 			} elseif ( $task == 'save2redirect' ) {
 				$custom		=	'';
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
@@ -136,10 +142,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				} else {
 					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 				}
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
+			} else {
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
 			}
-			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';	
 		}
-		// $click	=	isset( $config['formId'] ) ? ' onclick="if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ).'\');}else{ Joomla.submitbutton(\''.$task.'\')};return false;"' : '';
 		if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
 			$matches	=	array();
 			$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
@@ -202,9 +209,13 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			if ( $field->variation == 'toolbar_button' ) {
 				$field->form	=	'';
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
-				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$pre_task.'JCck.Core.submit(\''.$task.'\')" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
+				$onclick		=	$pre_task.'JCck.Core.submit(\''.$task.'\')';
+				if ( !$task_auto ) {
+					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$onclick.'}';
+				}
+				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
 				
-				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'button'=>array( 'html'=>$html, 'icon'=>@$options2['icon'] ), 'pre_task'=>$pre_task, 'task'=>$task, 'task_id'=>$task_id ) );
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'button'=>array( 'html'=>$html, 'icon'=>@$options2['icon'] ), 'pre_task'=>$pre_task, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );
 			}
@@ -260,8 +271,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_Field_BeforeRenderForm
 	public static function onCCK_FieldBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
 	{
-		$process['task']	=	str_replace( 'list.', '', $process['task'] );
-		if ( $process['task'] == 'export' || $process['task'] == 'process' ) {
+		$process['task']	=	str_replace( array( 'form.', 'list.' ), '', $process['task'] );
+		
+		if ( $process['task_auto'] && ( $process['task'] == 'export' || $process['task'] == 'process' ) ) {
 			if ( isset( $config['ids'] ) && $config['ids'] != '' ) {
 				$name					=	$process['name'];
 				$search					=	'onclick="';
