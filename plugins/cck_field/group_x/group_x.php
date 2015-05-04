@@ -281,22 +281,30 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						if ( $elem->display ) {
 							$value	=	JCck::callFunc( 'plgCCK_Field'.$elem->type, 'onCCK_FieldRenderContent', $elem );
 							if ( $value != '' ) {
-								$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
-								if ( $elem->label != '' ) {
-									$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+								if ( $elem->markup == 'none' ) {
+									$row	.=	$elem->label.$value;
+								} else {
+									$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
+									if ( $elem->label != '' ) {
+										$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+									}
+									$row	.=	$value
+											.	'</div>';
 								}
-								$row	.=	$value
-										.	'</div>';
-								$isRow	=	true;
 							}
+							$isRow	=	true;
 						}
 					}
 					if ( $isRow ) {
-						$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
+						if ( $field->markup == 'none' ) {
+							$html	.=	$row;
+						} else {
+							$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
+						}
 					}
 					$i++;
 				}
-				if ( $html ) {
+				if ( $html && $field->markup != 'none' ) {
 					$html	=	'<div id="'.$field->name.'" class="gx">' .$html. '</div>';
 				}
 			}
