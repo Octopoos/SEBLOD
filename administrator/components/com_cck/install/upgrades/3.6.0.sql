@@ -6,6 +6,14 @@ ALTER TABLE `#__cck_core_types` ADD `created_user_id` INT(10) UNSIGNED NOT NULL 
 ALTER TABLE `#__cck_core_types` ADD `modified_date` DATETIME NOT NULL AFTER `created_user_id`;
 ALTER TABLE `#__cck_core_types` ADD `modified_user_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `modified_date`;
 
+-- --------
+
+ALTER TABLE `#__cck_core_objects` ADD `context` VARCHAR(50) NOT NULL AFTER `component`;
+UPDATE `#__cck_core_objects` SET `context` = "com_content.article" WHERE `name` = "joomla_article";
+UPDATE `#__cck_core_objects` SET `context` = "com_categories.category" WHERE `name` = "joomla_category";
+
+-- --------
+
 UPDATE `#__cck_core_fields` SET `options` = 'Hide=-2||Standard=optgroup||Above=-1||Below=0||Both=1||Infinite=optgroup||Click=2' WHERE `id` = 244;
 
 UPDATE `#__cck_core_fields` SET `published` = 1 WHERE `id` IN (508,509,510,511,512,513,514,515,516);
@@ -21,8 +29,5 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 
 -- --------
 
-ALTER TABLE `#__cck_core_objects` ADD `context` VARCHAR(50) NOT NULL AFTER `component`;
-UPDATE `#__cck_core_objects` SET `context` = "com_content.article" WHERE `name` = "joomla_article";
-UPDATE `#__cck_core_objects` SET `context` = "com_categories.category" WHERE `name` = "joomla_category";
 UPDATE `#__cck_core_fields` SET `options` = 'Never=0||Always=3||Workflow=optgroup||Add=1||Edit=2' WHERE `id` = 123;
 UPDATE `#__cck_core_fields` SET `options` = 'Joomla=optgroup||Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Increment=increment||Sort=sort||Status=state||SEBLOD=optgroup||Form=form' WHERE `id` = 271;
