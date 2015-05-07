@@ -112,6 +112,15 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				}
 				return;
 			}
+		} elseif ( $form != '' ) {
+			$user 		=	JCck::getUser();
+			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+			$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+
+			// Check Permissions
+			if ( !$canCreate ) {
+				return;
+			}
 		}
 		
 		// Prepare
