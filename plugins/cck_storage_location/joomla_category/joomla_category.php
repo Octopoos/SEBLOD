@@ -17,6 +17,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_category';
 	protected static $table			=	'#__categories';
+	protected static $table_object	=	array( 'Category', 'JTable' );
 	protected static $key			=	'id';
 	
 	protected static $access		=	'access';
@@ -743,13 +744,24 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
+									'table_object'=>'',
 									'to_route'=>''
 								);
+		static $legacy	=	-1;
+		if ( $legacy < 0 ) {
+			$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', 'joomla_category' );
+			$plg_params	=	new JRegistry( $plg->params );
+			$legacy		=	$plg_params->get( 'routing_context', 0 );
+		}
 		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
+					if ( $p == 'contexts' && $legacy == 0 ) {
+						$properties[$p]	=	array();
+					} else {
+						$properties[$p]	=	self::${$p};
+					}
 				}
 				unset( $properties[$i] );
 			}
