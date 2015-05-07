@@ -31,3 +31,4 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 
 UPDATE `#__cck_core_fields` SET `options` = 'Never=0||Always=3||Workflow=optgroup||Add=1||Edit=2' WHERE `id` = 123;
 UPDATE `#__cck_core_fields` SET `options` = 'Joomla=optgroup||Checkbox=selection||Checkbox Label For=selection_label||Featured=featured||Increment=increment||Sort=sort||Status=state||SEBLOD=optgroup||Form=form' WHERE `id` = 271;
+UPDATE `#__cck_core_fields` SET `defaultvalue` = 'none', `options` = 'None=none||Smart Search Indexing=optgroup||Content=content||Intro=intro' WHERE `id` = 257;
