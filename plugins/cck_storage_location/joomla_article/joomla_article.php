@@ -17,6 +17,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_article';
 	protected static $table			=	'#__content';
+	protected static $table_object	=	array( 'Content', 'JTable' );
 	protected static $key			=	'id';
 	
 	protected static $access		=	'access';
@@ -826,6 +827,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
+									'table_object'=>'',
 									'to_route'=>''
 								);
 		
