@@ -24,13 +24,14 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.6.0 Upgrade Release [xx-Apr-2014] -------------
+-------------------- 3.6.0 Upgrade Release [8-May-2014] -------------
 
 ! Joomla! 3.4 ready.
 * Security Release: 2 missing JEXEC security checks added.
 
 + "Alternative Search Type" added for Lists/Items rendering on Menu Items.
-+ "Leave nothing behind" crowdfunding project implemented (Thanks to the community!)
++ Content Type inheritance (Parent/Childs) implemented. (Thanks to pulsarinformatique!)
++ "Leave nothing behind" crowdfunding project implemented. (Thanks to the SEBLOD community!)
 + Load More (Infinite Pagination) added on Search Types.
   >> supported templates: Accordion, List, Masonry, Table, Tabs.
 + "save2copy" Task added on Forms.
@@ -49,6 +50,7 @@ $ -> Language fix or change
 + "More" Link Text parameter added on List module.
 + "Show List View" parameter added on List View.
 
++ "Auto Selection" added on Submit Button plug-in.
 + "CheckAll" toggle added on Checkbox plug-in.
 + Custom Attributes applied on Links plug-ins.
 + Default/Live values used to set the "Active" tab on Tabs plug-in.
@@ -56,11 +58,11 @@ $ -> Language fix or change
 + "PrepareDownload", "PrepareResource" methods added to "Joomla Article", Upload File/Image Field plug-ins.
 + Dynamic Itemid mode based on fields' mapping added on Content Link plug-in.
 + "Group Required" (at least one field of..) capability added.
-+ "has-value" class added on Select Dynamic/Simple, Text.. (when value != '')
++ "has-value" class added on Select Dynamic/Numeric/Simple, Text.. (when value != '')
 + "Image Alt Fieldname" added on Image Typography plug-in.
 + "Image Title" added on Image Typography plug-in.
 + Srcset (2x, 3x) added on Image Typography plug-in.
-+ Ukrainian language file added to Calendar Plug-in.
++ Ukrainian language file added to Calendar plug-in.
 + $user->... $uri->... syntaxes processed added on Freetext plug-in.
 
 + "Delete" method added (to Field plug-ins). (!)
@@ -92,16 +94,19 @@ $ -> Language fix or change
 - "size="1" attribute removed on JForm Category/MenuItem, Select Dynamic/Numeric/Simple.
 
 # Broken rendering issue fixed for nested lists.
+# "Create" permission check now applied on SEBLOD Form Link.
+# Check state of Email field before sending (disabled = no email).
 # Custom Redirection issue fixed Search Form (Submit Button).
 # Default set up of "Export" & "Process" permissions forced after installation.
 # Duplicated path segments issue fixed on router.
 # "Edit Own" issue fixed on Free Object.
-# HTML output fixed on Group when markup=none.
+# HTML output fixed on "Group" & "Group X" Field plug-ins when markup=none.
 # Inherit Object automatically when creating a new Search Type based on a Content Type.
 # Inherit Search Type issue fixed on Search module.
 # Minor CSS issues fixed.
 + Missing "Delete" methods added to Free, User, User Group Object plug-ins.
 # Missing icons added on Form & List views (back-end).
+# Missing computation rules now applied on "Group" Field plug-in.
 # Multilanguage issue fixed on Joomla! Article object (regression).
 # Retriving "Bridge" Author SQL query fixed.
 # Routing issue (Auto Redirection: Content) fixed.
@@ -111,7 +116,8 @@ $ -> Language fix or change
 # "undefined" javascript issue fixed on various plug-ins configuration.
 # Unsafe Characters issues fixed on Links' Custom Variables.
 # Validation rules fixed for fields inside Tabs.
-# Various issues fixed on JCckContent class.
+# Various issues fixed on App Export.
+# Various issues fixed, and code refactored on JCckContent class.
 # Various SQL queries fixed.
 # Wrong params for "Include File action" issue fixed.
 
