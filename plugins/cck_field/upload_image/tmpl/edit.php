@@ -21,7 +21,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
 		echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config );
 		echo JCckDev::renderForm( 'core_options_path', @$options2['path'], $config, array( 'required'=>'required' ) );
-		echo JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config );
+		echo JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config, array( 'options'=>'Full Path=0' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_PATH_PER_CONTENT' ).'</label>'
 		 .	 JCckDev::getForm( 'core_options_path_content', @$options2['path_content'], $config )
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['folder_permissions'], $config, array( 'defaultvalue'=>'0755', 'size'=>4, 'storage_field'=>'json[options2][folder_permissions]' ) )
