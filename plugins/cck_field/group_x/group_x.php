@@ -45,6 +45,47 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$field->params	=	implode( '', $field->params );
 	}
 	
+	// onCCK_FieldPrepareContent
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		$name		=	$field->name;
+		$dispatcher	=	JDispatcher::getInstance();
+		$fields		=	self::_getChildren( $field, $config, false );
+
+		// TODO: call storage plugin.
+		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
+		$content	=	array();
+		for ( $xi = 0; $xi < $xn; $xi++ ) {
+			foreach ( $fields as $f ) {
+				if ( is_object( $f ) ) {
+					$f_name					=	$f->name;
+					$f_value				=	'';
+					$inherit				=	array( 'parent' => $field->name, 'xi' => $xi );
+					$content[$xi][$f_name]	=	clone $f;
+					//
+					if ( $field->storage == 'custom' ) {
+						$f->storage				=	$field->storage;
+						$f->storage_table		=	$field->storage_table;
+						$f->storage_field		=	$field->storage_field;
+					}
+					$table					=	$f->storage_table;
+					if ( $table && ! isset( $config['storages'][$table] ) ) {
+						$config['storages'][$table]	=	'';
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+					}
+					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi, $field ) );
+
+					$dispatcher->trigger( 'onCCK_FieldDelete', array( &$content[$xi][$f_name], $f_value, &$config ) );
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -623,14 +664,20 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	}
 	
 	// _getChildren
-	protected static function _getChildren( $parent, $config = array() )
+	protected static function _getChildren( $parent, $config = array(), $isClient = true )
 	{
 		$db		=	JFactory::getDbo();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
-		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
-		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
+		if ( !$isClient ) {
+			$client_w	=	'';
+		} else {
+			$client		=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
+			$client_w	=	'c.client = "'.$client.'" AND ';
+		}
+		
+		$where	=	' WHERE '.$client_w.'b.name = "'.$parent->extended.'"'
 				.	' AND a.type != "form_action"'
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';
