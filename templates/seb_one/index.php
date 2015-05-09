@@ -15,6 +15,7 @@ require_once dirname(__FILE__).'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
+// -- Prepare
 $attributes =   $cck->id_attributes ? ' '.$cck->id_attributes : '';
 $attributes =   $cck->replaceLive( $attributes );
 $nLeft      =	$cck->countFields( 'left', true );
