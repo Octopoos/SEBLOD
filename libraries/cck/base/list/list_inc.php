@@ -359,12 +359,8 @@ if ( $preconfig['task'] == 'search' ) {
 			// Redirect
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
-<<<<<<< HEAD
-					$sef			=	( $app->getCfg( 'sef' ) ) ? $config['doSEF'] : 0;
-=======
 					// Content
 					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
->>>>>>> next
 					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
 					$app->redirect( $redirect_url );
 					return;
@@ -384,19 +380,11 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-<<<<<<< HEAD
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, $search, $path, $preconfig['client'], $config['Itemid'], $options );
-				$isCached	=	' [Cache=ON]';
-			} else {
-				if ( $search->content > 0 ) {
-					$data	=	CCK_List::render( $items, $search, $path, $preconfig['client'], $config['Itemid'], $options, $config );
-=======
 				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( ${$target}->content > 0 ) {
 					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
->>>>>>> next
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
@@ -447,11 +435,7 @@ if ( $preconfig['task'] == 'search' ) {
 						$data	=	ob_get_clean();
 					}
 				} else {
-<<<<<<< HEAD
-					$data		=	CCK_List::render( $items, $search, $path, $preconfig['client'], $config['Itemid'], $options, $config );
-=======
 					$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
->>>>>>> next
 				}
 			}
 		}
