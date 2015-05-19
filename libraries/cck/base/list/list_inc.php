@@ -380,11 +380,11 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options );
+				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( ${$target}->content > 0 ) {
-					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
@@ -435,7 +435,7 @@ if ( $preconfig['task'] == 'search' ) {
 						$data	=	ob_get_clean();
 					}
 				} else {
-					$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+					$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 			}
 		}
