@@ -84,7 +84,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
 		} else {
-			$hidden	=	'<textarea class="inputbox" style="display: none;" id="'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
+			$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
 		}
 		$field->value	=	$value;

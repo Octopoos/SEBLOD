@@ -36,6 +36,58 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		// Init
+		$value_json		=	JCckDev::fromJSON( $value );
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+
+		// Process
+		if ( $value != '' && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+				}
+			} else {
+				JFile::delete( JPATH_SITE.'/'.$value );
+				
+				for ( $i = 1; $i <= 10; $i++ ) {
+					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -62,6 +114,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
 		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
@@ -90,6 +145,29 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$field->typo_target	=	'html';
 	}
 	
+	// onCCK_FieldPrepareDownload
+	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+
+		// Path Folder
+		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
+		$file		=	'';
+		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
+			$file	.=	$f_opt2['path'];
+			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
+			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
+		}
+		$file		.=	$field->value;
+		
+		$field->filename	=	$file;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
@@ -294,6 +372,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepape
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+		
+		$field->data	=	JUri::root().$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{

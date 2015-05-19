@@ -15,28 +15,32 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 // Plugin
 class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 {
-	protected static $type		=	'joomla_article';
-	protected static $table		=	'#__content';
-	protected static $key		=	'id';
+	protected static $type			=	'joomla_article';
+	protected static $table			=	'#__content';
+	protected static $table_object	=	array( 'Content', 'JTable' );
+	protected static $key			=	'id';
 	
-	protected static $access	=	'access';
-	protected static $author	=	'created_by';
-	protected static $custom	=	'introtext';
-	protected static $parent	=	'catid';
-	protected static $status	=	'state';
-	protected static $to_route	=	'a.id as pk, a.title, a.alias, a.catid, a.language';
+	protected static $access		=	'access';
+	protected static $author		=	'created_by';
+	protected static $created_at	=	'created';
+	protected static $custom		=	'introtext';
+	protected static $modified_at	=	'modified';
+	protected static $parent		=	'catid';
+	protected static $parent_object	=	'joomla_category';
+	protected static $status		=	'state';
+	protected static $to_route		=	'a.id as pk, a.title, a.alias, a.catid, a.language';
 	
-	protected static $context	=	'com_content.article';
-	protected static $contexts	=	array( 'com_content.article' );
-	protected static $error		=	false;
-	protected static $ordering	=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
-	protected static $pk		=	0;
-	protected static $sef		=	array( '1'=>'full',
-										   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
-										   '3'=>'full', '32'=>'id', '33'=>'alias',
-										   '4'=>'full', '42'=>'id', '43'=>'alias'
-									);
-	protected static $routes	=	array();
+	protected static $context		=	'com_content.article';
+	protected static $contexts		=	array( 'com_content.article' );
+	protected static $error			=	false;
+	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
+	protected static $pk			=	0;
+	protected static $sef			=	array( '1'=>'full',
+											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
+											   '3'=>'full', '32'=>'id', '33'=>'alias',
+											   '4'=>'full', '42'=>'id', '43'=>'alias'
+										);
+	protected static $routes		=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -85,6 +89,24 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 	}
 	
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( self::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		if ( $table == self::$table ) {
+			$storage	=	self::_getTable( $pk );
+		} else {
+			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
+		}
+	}
+
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
 	{
@@ -309,6 +331,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Prepare
 		if ( is_array( $data ) ) {
+			if ( $config['task'] == 'save2copy' ) {
+				$empty		=	array( self::$key, 'alias', 'created', 'created_by', 'hits', 'modified', 'modified_by', 'version' );
+				foreach ( $empty as $k ) {
+					$data[$k]	=	'';
+				}
+			}
 			$table->bind( $data );
 		}
 		if ( $isNew && !isset( $data['rules'] ) ) {
@@ -358,7 +386,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 
 		// Associations
-		if ( isset( $app->item_associations ) && $app->item_associations ) {
+		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			self::_setAssociations( $table, $data, $isNew, $config );
 		}
 	}
@@ -557,18 +585,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
 	{
 		if ( isset( $query['typeid'] ) ) {
 			$segments[]	=	$query['typeid'];
 			unset( $query['typeid'] );
 		} elseif ( isset( $query['catid'] ) ) {
-			//if ( $config['doSEF'] == '1' ) {
-				$catid	=	$query['catid'];
-			//} else {
-			//	list( $tmp, $catid )	=	explode( ':', $query['catid'], 2 );
-			//}
-			$segments[]	=	$catid;
+			if ( is_object( $menuItem ) && $menuItem->alias != $query['catid'] ) {
+				$segments[]	=	$query['catid'];
+			}
 			unset( $query['catid'] );
 		}
 		
@@ -642,11 +667,13 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			} else {
 				$path	=	'';
 			}
-			$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+			if ( is_object( $storage[self::$table] ) ) {
+				$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+			}
 
 			// Multilanguage Associations
-			$app		=	JFactory::getApplication();
-			if ( isset( $app->item_associations ) && $app->item_associations ) {
+			if ( JCckDevHelper::hasLanguageAssociations() ) {
+				$app		=	JFactory::getApplication();
 				$pk			=	$storage[self::$table]->id;
 				if ( $app->input->get( 'view' ) == 'article' && $app->input->get( 'id' ) == $storage[self::$table]->id && !count( self::$routes ) ) {
 					JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php' );
@@ -722,7 +749,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$query				=	'SELECT a.id FROM '.self::$table.' AS a'
 									.	$join
 									.	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
-				$vars['id']			=	JCckDatabaseCache::loadResult( $query );
+				$vars['id']			=	(int)JCckDatabaseCache::loadResult( $query );
 			}
 		}
 	}
@@ -758,6 +785,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return JFactory::getUser()->authorise( $rule, 'com_content.article.'.$pk );
+	}
+
 	// checkIn
 	public static function checkIn( $pk = 0 )
 	{
@@ -782,15 +815,20 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',
 									'custom'=>'',
 									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
-									'to_route'=>''	
+									'table_object'=>'',
+									'to_route'=>''
 								);
 		
 		if ( count( $properties ) ) {

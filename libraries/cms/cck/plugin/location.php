@@ -15,6 +15,12 @@ class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
 	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return true;
+	}
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// g_onCCK_Storage_LocationPrepareContent

@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 // Template
 $idx			=	( isset( $config['idx'] ) ) ? $config['idx'] : '_';
+$isInfinite		=	$config['infinite'];
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
 if ( ! $templateStyle ) {
@@ -104,7 +105,7 @@ if ( $go_for_item || $go_for_both ) {
 }
 
 // Finalize
-$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+$infos			=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'content', $search->name, 'list', $positions, $positions_p, $infos );
 $data			=	$doc->render( false, $rparams );
 ?>

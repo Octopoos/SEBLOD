@@ -94,6 +94,9 @@ class plgCCK_FieldText extends JCckPluginField
 		
 		// Prepare
 		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		if ( $value != '' ) {
+			$class	.=	' has-value';
+		}
 		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$maxlen;
 		if ( $field->attributes != '' ) {

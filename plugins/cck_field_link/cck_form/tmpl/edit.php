@@ -38,7 +38,7 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'custom' ), array(), 'w100' );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONFIG_NO_ACCESS' ) );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'1', 'label'=>'Show Value', 'selectlabel'=>'', 'options'=>'Hide=0||Show=1', 'storage_field'=>'no_access' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Show Value', 'selectlabel'=>'', 'options'=>'Hide=0||Show=1', 'storage_field'=>'no_access' ) );
         ?>
     </ul>
 </div>

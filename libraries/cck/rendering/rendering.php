@@ -51,6 +51,7 @@ class CCK_Rendering
 	var $positions;
 	
 	var $grid;
+	var $infinite;
 	
 	var $css;
 	var $browser;
@@ -153,6 +154,7 @@ class CCK_Rendering
 		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
+		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
 		$this->path_lib		=	dirname(__FILE__);
@@ -192,8 +194,9 @@ class CCK_Rendering
 			$this->params['variation_default']	=	'seb_css3';
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
-		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';		
-		
+		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
+		$this->item_attributes	=	( isset( $this->params['rendering_item_attributes'] ) && $this->params['rendering_item_attributes'] ) ? ' '.$this->params['rendering_item_attributes'].' ' : '';
+
 		if ( $this->initRendering() === false ) {
 			$app	=	JFactory::getApplication();
 			$app->enqueueMessage( 'Oops! Template Init. failed.. ; (', 'error' );
@@ -965,6 +968,29 @@ class CCK_Rendering
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// replaceLive
+	public function replaceLive( $attr )
+	{
+		if ( $attr != '' ) {
+			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				preg_match_all( $search, $attr, $matches );
+
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[2] as $k=>$fieldname ) {
+						$target		=	$matches[1][$k];
+						$get		=	'get'.$target;
+						$replace	=	$this->getValue( $fieldname );
+						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
+					}
+				}
+			}
+		}
+
+		return $attr;
+	}
+	
 	// getBrowser
 	public function getBrowser( $property = 'name' )
 	{
@@ -993,8 +1019,8 @@ class CCK_Rendering
 
 	// isGoingtoLoadMore
 	public function isGoingtoLoadMore()
-	{	
-		return 1;
+	{
+		return $this->infinite;
 	}
 
 	// isLoadingMore

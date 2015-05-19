@@ -118,16 +118,19 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Init
 		if ( count( $inherit ) ) {
-			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )		?	$inherit['name'] 		:	$field->name;
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )	? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
 		}
-		$app		=	JFactory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$siteName	=	$app->getCfg('sitename');
+		$siteName	=	JFactory::getConfig()->get( 'sitename' );
 		$valid		=	0;
+<<<<<<< HEAD
 		$disabled	=	JFactory::getApplication()->input->post->get($field->name);
 		$send		=	isset( $options2['send'] ) && $disabled !==null ? $options2['send'] : 0;
+=======
+		$send		=	( isset( $options2['send'] ) && $field->state != 'disabled' ) ? $options2['send'] : 0;
+>>>>>>> next
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
 		$isNew		=	( $config['pk'] ) ? 0 : 1;
 		$sender		=	0;
@@ -154,18 +157,18 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
 		$new_message	=	( strlen( $options2['message_field'] ) > 0 ) ? $options2['message_field'] : '';
 
-		$dest		=	array();
-		$from		=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
-		$from_param	=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
-		$from_name	=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
+		$dest				=	array();
+		$from				=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
+		$from_param			=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
+		$from_name			=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
 		$from_name_param	=	( isset( $options2['from_name_param'] ) ) ? $options2['from_name_param'] : '';
-		$cc			=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
-		$cc_param	=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
-		$bcc		=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
-		$bcc_param	=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
-		$moredest	=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
-		$send_attach	=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
-		$moreattach		=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
+		$cc					=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
+		$cc_param			=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
+		$bcc				=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
+		$bcc_param			=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
+		$moredest			=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
+		$send_attach		=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
+		$moreattach			=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
 		
 		// Prepare
 		if ( $options2['to'] != '' ) {
@@ -285,11 +288,10 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 		}
 		$n	=	count( array_filter( $dest ) );
-		if ( $n ) {
-			$app	= JFactory::getApplication();
-	
-			$cfg_MailFrom	=	$app->getCfg( 'mailfrom' );
-			$cfg_FromName	=	$app->getCfg( 'fromname' );
+		if ( $n ) {	
+			$config2		=	JFactory::getConfig();
+			$cfg_MailFrom	=	$config2->get( 'mailfrom' );
+			$cfg_FromName	=	$config2->get( 'fromname' );
 			if ( $cfg_MailFrom != '' && $cfg_FromName != '') {
 				$mailFrom	=	$cfg_MailFrom;
 				$fromName	=	$cfg_FromName;
@@ -301,7 +303,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			
 			$subject	=	str_replace( '[id]', $config['id'], $subject );
 			$subject	=	str_replace( '[pk]', $config['pk'], $subject );
-			$subject	=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $subject );
+			$subject	=	str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
 			$subject	=	str_replace( '[siteurl]', JURI::base(), $subject );
 			
 			// J(translate) for subject
@@ -318,7 +320,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			
 			$body		=	str_replace( '[id]', $config['id'], $body );
 			$body		=	str_replace( '[pk]', $config['pk'], $body );
-			$body		=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $body );
+			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
 			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
 
 			if ( isset( $config['registration_activation'] ) ) {

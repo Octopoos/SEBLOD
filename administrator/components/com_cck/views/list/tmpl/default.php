@@ -22,7 +22,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validati
 $app	=	JFactory::getApplication();
 $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.seblod.pagination{text-align:center;}'
 		.	'form div.pagination div.button2-left,form div.pagination div.button2-right, form div.pagination div.limit{margin-right:10px!important;}'
-		.	'div.cck_page_list div.pagination .total{float:right; line-height:24px;}';
+		.	'div.cck_page_list div.pagination .total{float:right; line-height:28px;}';
 JFactory::getDocument()->addStyleDeclaration( $css );
 ?>
 
@@ -70,7 +70,11 @@ echo '<div class="seblod first">' . $this->form . '</div>';
 		}	
 	    echo '<div class="seblod '.$this->class_pagination.'">';
 		if ( $this->show_pagination > -1 ) {
-			echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
+			if ( JCck::on() ) {
+				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $this->pagination->getListFooter() );
+			} else {
+				echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
+			}
 		}
 	    echo '</div>';
 	}

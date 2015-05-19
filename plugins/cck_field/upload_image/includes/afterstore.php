@@ -91,7 +91,7 @@ if ( JFile::upload( $tmp_name, $location ) ) {
 		$width_name		=	'thumb'.$i.'_width';
 		$height_name	=	'thumb'.$i.'_height';
 
-		if ( $i == 0 && $src_w == $options[$width_name] && $src_h == $optixons[$height_name] ) {
+		if ( $i == 0 && $src_w == $options[$width_name] && $src_h == $options[$height_name] ) {
 			continue;
 		}
 		if ( trim( $options[$format_name] ) ) {

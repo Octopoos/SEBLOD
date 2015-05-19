@@ -158,6 +158,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 </div>
 
 <?php
+JFactory::getDocument()->addStyleDeclaration('.sly > ul{position:relative; left:274px;}');
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
 ?>
@@ -182,17 +183,20 @@ Helper_Display::quickCopyright();
 		addScroll: function() {
 			var sly = new Sly('.sly',{
 				horizontal: 1,
-				activeMiddle: 1,
-				itemNav: "centered",
-				smart: 0,
+				itemNav: 'forceCentered',
+				smart: 1,
+				activateOn: 'click',
+				mouseDragging: 1,
+				touchDragging: 1,
+				releaseSwing: 1,
+				startAt: 2,
+				scrollBar: null,
+				scrollBy: 1,
+				speed: 300,
+				elasticBounds: 1,
 				dragHandle: 1,
 				dynamicHandle: 1,
-				dragContent: 1,
-				startAt: 75,
-				scrollBy: <?php echo $scroll; ?>,
-				moveBy: 600,
-				speed: 300,
-				activateOn: "click"
+				clickBar: 1,
 			}).init();
 		}
 	}

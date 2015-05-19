@@ -136,7 +136,6 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 								id="'.$id.'"
 								label="'.htmlspecialchars( $field->label ).'"
 								class="'.$class.'"
-								size="1"
 							>'.$opt.'</field>
 						</form>
 					';

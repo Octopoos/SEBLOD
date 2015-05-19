@@ -109,7 +109,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	{
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
-		$data['storage_table']	=	str_replace( JFactory::getApplication()->getCfg( 'dbprefix' ), '#__', $data['storage_table'] );
+		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 		
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );

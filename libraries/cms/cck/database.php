@@ -43,7 +43,7 @@ abstract class JCckDatabase
 	{
 		$res	=	JFactory::getDbo()->getTableCreate( $tables );
 		
-		$res	=	str_replace( JFactory::getApplication()->getCfg( 'dbprefix' ), '#__', $res );
+		$res	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $res );
 		$res	=	str_replace( 'CREATE TABLE `#__', 'CREATE TABLE IF NOT EXISTS `#__', $res );
 		
 		return $res;

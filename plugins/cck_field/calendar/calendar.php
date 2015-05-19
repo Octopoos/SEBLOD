@@ -137,6 +137,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		$field->data	=	( $value != '' && $value != '0000-00-00 00:00:00' ) ? JFactory::getDate( $value )->format( 'Y-m-d\TH:i:s\Z' ) : '0000-00-00T00:00:00Z';
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{

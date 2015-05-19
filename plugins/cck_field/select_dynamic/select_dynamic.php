@@ -29,8 +29,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		// Add Database Process
 		if ( $data['bool2'] == 0 ) {
-			$app 	= 	JFactory::getApplication();
-			$ext	=	$app->getCfg( 'dbprefix' );
+			$ext	=	JFactory::getConfig()->get( 'dbprefix' );
 
 			if ( isset( $data['json']['options2']['table'] ) ) {
 				$data['json']['options2']['table']	=	str_replace( $ext, '#__', $data['json']['options2']['table'] );
@@ -98,6 +97,18 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		/* tmp */
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -300,10 +311,14 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			}
 			
 			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+			if ( $value != '' ) {
+				$class	.=	' has-value';
+			}
 			$multi	=	( @$field->bool3 ) ? ' multiple="multiple"' : '';
 			$size	=	( !@$field->bool3 ) ? '1' : ( ( @$field->rows ) ? $field->rows : count( $opts ) );
+			$size	=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
 			
-			$attr	=	'class="'.$class.'" size="'.$size.'"'.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
+			$attr	=	'class="'.$class.'"'.$size.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
 			$count	=	count( $opts );
 			$form	=	'';
 			if ( $field->variation == 'hidden_auto' ) {

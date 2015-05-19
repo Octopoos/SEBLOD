@@ -106,6 +106,12 @@ class CCKViewSearch extends JViewLegacy
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
+			if ( $this->item->cck_type != '' ) {
+				$this->item->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->item->cck_type.'"' );
+				if ( $this->item->storage_location == 'none' ) {
+					$this->item->storage_location	=	'';
+				}
+			}
 			$this->tpl_list		=	$this->state->get( 'tpl.list' );
 		}
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );

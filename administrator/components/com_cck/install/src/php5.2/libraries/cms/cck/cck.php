@@ -247,7 +247,7 @@ abstract class JCck
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.3.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.5.0.min.js' );
 			$app->cck_jquery_more	=	true;
 		}
 	}

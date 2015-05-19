@@ -78,3 +78,7 @@ div.cpanel-right {width: 45%; float: right;}
 
 div.modal-body .row-fluid div.wrapper-icon img {padding: 10px 0px 6px 0px;}
 div.modal-body .row-fluid div.wrapper-icon a > span {font-size: 12px;}
+
+.modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
+.modal.modal-small .modal-body{padding: 15px; width: auto;}
+div.modal.modal-small.fade.in{top:10%;}

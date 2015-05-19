@@ -105,6 +105,7 @@ class CCKViewType extends JViewLegacy
 			$this->panel_style	=	'';
 			$name				=	'';
 			$featured			=	$this->state->get( 'skeleton_id', 0 );
+			$this->item->access	=	3;
 			if ( $featured == 11 ) {
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {

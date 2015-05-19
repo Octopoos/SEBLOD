@@ -106,7 +106,6 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
 		
@@ -135,15 +134,14 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 
 	// preStore
 	public function preStore( $data )
-	{		
-		$app		=	JFactory::getApplication();
+	{
 		$mode		=	JCck::getConfig_Param( 'multisite_integration', '1' );
 		
 		$groups		=	explode( ',', $data['type'] );
 		$guest_only	=	( count( $groups ) > 1 ) ? 1 : 0;
 		$sitetitle	=	$data['title'];
 		$sitename	=	$data['name'];
-		$sitemail	=	$app->getCfg( 'mailfrom' );
+		$sitemail	=	JFactory::getConfig()->get( 'mailfrom' );
 		$sitemail	=	substr( $sitemail, strpos( $sitemail, '@' ) );
 		
 		$users		=	array();
@@ -336,11 +334,11 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// _sendSiteMail
 	protected function _sendSiteMail( $data, $accounts )
 	{
-		$app		=	JFactory::getApplication();
+		$config		=	JFactory::getConfig();
 		
-		$email		=	$app->getCfg( 'mailfrom' );
-		$fromname	=	$app->getCfg( 'fromname' );
-		$sitename	=	$app->getCfg( 'sitename' );
+		$email		=	$config->get( 'mailfrom' );
+		$fromname	=	$config->get( 'fromname' );
+		$sitename	=	$config->get( 'sitename' );
 		
 		$url		=	'http://'.$data['name'];
 		

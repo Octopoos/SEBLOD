@@ -65,6 +65,40 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$field->value	=	$content;
 	}
 	
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		$name		=	$field->name;
+		$dispatcher	=	JDispatcher::getInstance();
+		$f			=	self::_getChild( $field, $config );
+		$xn			=	$value;
+		$content	=	array();
+		if ( $xn > 0 && is_object( $f ) ) {
+			for ( $xi = 0; $xi < $xn; $xi++ ) {
+				$f_value			=	'';
+				$inherit			=	array( 'parent' => $field->name, 'xi' => $xi );
+				$content[$xi]		=	clone $f;
+				//
+				$table				=	$f->storage_table;
+				if ( $table && ! isset( $config['storages'][$table] ) ) {
+					$config['storages'][$table]	=	'';
+					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+				}
+				$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+				//
+				$dispatcher->trigger( 'onCCK_FieldDelete', array( &$content[$xi], $f_value, &$config ) );
+			}
+		}
+	}
+	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{

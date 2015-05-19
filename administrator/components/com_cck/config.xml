@@ -143,6 +143,7 @@
 	<fieldset name="fs_site" label="COM_CCK_CONFIG_FIELDSET_SITE" description="COM_CCK_CONFIG_FIELDSET_SITE_DESC">
 		<field name="debug" type="list" default="0" label="COM_CCK_CONFIG_DEBUG" description="COM_CCK_CONFIG_DEBUG_DESC" class="inputbox chzn-color">
 			<option value="1">COM_CCK_YES_FOR_EVERYONE</option>
+			<option value="-1">COM_CCK_YES_LIPSUM_FOR_EVERYONE</option>
 			<option value="2">COM_CCK_YES_FOR_SUPER_ADMIN</option>
 			<option value="0">JNO</option>
 		</field>
