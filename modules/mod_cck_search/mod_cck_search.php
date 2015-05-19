@@ -99,7 +99,7 @@ if ( $description != '' ) {
 	}
 }
 if ( $target ) {
-	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $itemId ) );
+	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $params->get( 'menu_item', $itemId ) ) );
 	if ( isset( $target->query['option'] ) && $target->query['option'] == 'com_cck'
 	  && isset( $target->query['view'] ) && $target->query['view'] == 'list'
 	  && isset( $target->query['search'] ) && $target->query['search'] ) {

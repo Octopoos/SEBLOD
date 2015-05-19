@@ -69,7 +69,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
 			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
 			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
-			if ( !$link->get( 'no_access', 1 ) ) {
+			if ( !$link->get( 'no_access', 0 ) ) {
 				$field->display	=	0;
 			}
 			return;

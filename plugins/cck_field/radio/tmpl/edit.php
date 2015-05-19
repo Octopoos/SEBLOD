@@ -27,7 +27,7 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
          .   '</li>';
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		
-		echo JCckDev::renderHelp( 'field', '2715-radio.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-radio-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

@@ -242,23 +242,43 @@ class plgSearchCCK extends JPlugin
 		}
 		if ( $config['doQuery'] !== false ) {
 			if ( $current['stage'] == 0 ) {
+				if ( isset( $config['query_variables'] ) && count( $config['query_variables'] ) ) {
+					foreach ( $config['query_variables'] as $var ) {
+						if ( $var != '' ) {
+							$db->setQuery( $var );
+							$db->execute();
+						}
+					}
+				}
 				$query	=	$db->getQuery( true );
-				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb' );
+				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb,t0.parent_id as parent' );
 				$query->from( '`#__cck_core` AS t0' );
 				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
-				$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
-				$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
-				if ( isset( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' ) {
-					$query->select( $config['query_parts']['select'] );
+				if ( $config['location'] == 'cck_type' ) {
+					$query->select( $tables['#__cck_core_types']['_'].'.id AS type_id,'.$tables['#__cck_core_types']['_'].'.alias AS type_alias' );
+				} else {
+					$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
+					$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
+				}
+				if ( isset( $config['query_parts']['select'] ) ) {
+					if ( ( is_string( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' )
+						|| count( $config['query_parts']['select'] ) ) {
+						$query->select( $config['query_parts']['select'] );
+					}
 				}
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
-				if ( isset( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' ) {
-					$query->having( $config['query_parts']['having'] );
+				if ( isset( $config['query_parts']['having'] ) ) {
+					if ( ( is_string( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' )
+						|| count( $config['query_parts']['having'] ) ) {
+						$query->having( $config['query_parts']['having'] );	
+					}
 				}
-				$query->group( 't0.pk' );
+				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
+					$query->group( $config['query_parts']['group'] );
+				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
 				if ( $doLimit ) {
 					$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
@@ -274,8 +294,6 @@ class plgSearchCCK extends JPlugin
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
-				$query->group( 't0.pk' );
-				
 				$db->setQuery( $query );
 				$results	=	$db->loadColumn();
 			}
@@ -365,7 +383,7 @@ class plgSearchCCK extends JPlugin
 						$s_table	=	$field->storage_table;
 						
 						// Prepare
-						if ( $field->match_options == '' ) {
+						if ( empty( $field->match_options ) ) {
 							$field->match_options	=	'{}';
 						}
 						$field->match_options	=	new JRegistry( $field->match_options );	

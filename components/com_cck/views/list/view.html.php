@@ -37,6 +37,7 @@ class CCKViewList extends JViewLegacy
 	protected function prepareDisplay( $preconfig )
 	{
 		$app			=	JFactory::getApplication();
+		$config			=	JFactory::getConfig();
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
@@ -47,6 +48,10 @@ class CCKViewList extends JViewLegacy
 		$live			=	urldecode( $params->get( 'live' ) );
 		$variation		=	$params->get( 'variation' );
 		
+		if ( $params->get( 'show_list', '' ) != '' ) {
+			$preconfig['show_list']	=	(int)$params->get( 'show_list' );
+		}
+		$preconfig['search2']		=	$params->get( 'search2' );
 		$preconfig['show_form']		=	$params->get( 'show_form', '' );
 		$preconfig['auto_redirect']	=	$params->get( 'auto_redirect', '' );
 		$preconfig['limit2']		=	$params->get( 'limit2', 0 );
@@ -69,12 +74,13 @@ class CCKViewList extends JViewLegacy
 		$title	=	$params->get( 'page_title' );
 		
 		if ( empty( $title ) ) {
-			$title	=	$app->getCfg( 'sitename' );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $app->getCfg( 'sitename' ), $title );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $app->getCfg( 'sitename' ) );
+			$title	=	$config->get( 'sitename' );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
+		$config		=	NULL;
 		$this->document->setTitle( $title );
 		
 		if ( $params->get( 'menu-meta_description' ) ) {
@@ -89,6 +95,9 @@ class CCKViewList extends JViewLegacy
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
 		
+		// Pagination
+		$pagination	=	$params->get( 'show_pagination' );
+
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
@@ -159,6 +168,7 @@ class CCKViewList extends JViewLegacy
 		if ( $this->show_pagination == '' ) {
 			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
 			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
+			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
 		}
 		
 		$this->config					=	&$config;
@@ -166,6 +176,7 @@ class CCKViewList extends JViewLegacy
 		$this->form						=	&$form;
 		$this->home						=	&$home;
 		$this->items					=	&$items;
+		$this->limitend					=	$config['limitend'];
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;

@@ -209,7 +209,7 @@ echo '<div class="seblod"><div class="legend top center">'.$field->title.'</div>
  .	 '</li>'
  .	 '<li><label>'.JText::_( 'COM_CCK_FIELDS' ).'</label>'
  .	 JCckDev::getForm( 'core_options', $selectors, $config, array( 'label'=>'Fields', 'rows'=>1, 'storage_field'=>'fields' ) )
- .	 JHtml::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
+ .	 JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
  .	 '<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" /><label for="toggle_attr" class="toggle_attr">'.JText::_( 'COM_CCK_CUSTOM_ATTRIBUTE_AND_EVENT' ).'</label>'
  .	 '</li>'
  .	 '<li><label>'.JText::_( 'COM_CCK_FORMAT_PRECISION' ).'</label>'

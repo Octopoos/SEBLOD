@@ -74,7 +74,14 @@ class plgCCK_FieldTabs extends JCckPluginField
 		
 		// Init
 		$id			=	$field->name;
-		
+		$value		=	(int)$field->defaultvalue;
+		$value		=	( $value ) ? $value - 1 : 0;
+		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
+		static $groups	=	array();
+		if ( !isset( $groups[$group_id] ) ) {
+			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0 );
+		}
+
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
@@ -83,9 +90,14 @@ class plgCCK_FieldTabs extends JCckPluginField
 				$html	=	JCckDevTabs::end();
 			} elseif ( $field->bool == 1 ) {
 				$html	=	JCckDevTabs::open( $group_id, $id, $field->label );
+				if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
+					$js	=	'(function($){ $(document).ready(function() { $("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active"); }); })(jQuery);';
+					JFactory::getDocument()->addScriptDeclaration( $js );
+				}
 			} else {
 				$html	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
 			}
+			$groups[$group_id]['current']++;
 		}
 
 		// Set
@@ -109,18 +121,32 @@ class plgCCK_FieldTabs extends JCckPluginField
 		} else {
 			$id		=	$field->name;
 		}
-		
+		$value		=	( $value != '' ) ? (int)$value : (int)$field->defaultvalue;
+		$value		=	( $value ) ? $value - 1 : 0;
+		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
+		static $groups	=	array();
+		if ( !isset( $groups[$group_id] ) ) {
+			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0 );
+		}
+
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
-			$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
 			if ( $field->bool == 2 ) {
 				$form	=	JCckDevTabs::end();
 			} elseif ( $field->bool == 1 ) {
 				$form	=	JCckDevTabs::open( $group_id, $id, $field->label );
+				$form	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $form );
+				if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
+					$js	=	'(function($){ $(document).ready(function() { $("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active"); }); })(jQuery);';
+					JFactory::getDocument()->addScriptDeclaration( $js );
+				}
 			} else {
 				$form	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
+				$form	=	str_replace( 'class="nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $form );
+				$form	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $form );
 			}
+			$groups[$group_id]['current']++;
 		}
 
 		// Set

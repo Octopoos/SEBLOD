@@ -59,7 +59,7 @@ abstract class JCckWebservice
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$name] ) ) {
-			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.request, a.request_object, a.request_options, a.response'
+			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.request, a.request_object, a.request_options, a.response, a.response_format'
 														. 'FROM #__cck_more_webservices_calls AS a'
 														. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 														. ' WHERE a.name = "'.$name.'"' );

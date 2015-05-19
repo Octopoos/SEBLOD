@@ -129,6 +129,7 @@ body.com_cck ul.adminformlist{margin: 0;}
 #adminForm .chzn-container-single .chzn-single {-webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
 #adminForm .chzn-container-active .chzn-single-with-drop {-webkit-border-radius:3px 3px 0px 0px; -moz-border-radius:3px 3px 0px 0px; border-radius:3px 3px 0px 0px;}
 #adminForm .chzn-container-single .chzn-drop{-webkit-border-radius:0px 0px 3px 3px; -moz-border-radius:0px 0px 3px 3px; border-radius:0px 0px 3px 3px;}
+#sidebar .chzn-container-active > .chzn-single{border-bottom-left-radius: 0; border-bottom-right-radius: 0;}
 body.com_cck div.how-to-setup a,
 body.com_cck_exporter div.how-to-setup a,
 body.com_cck_importer div.how-to-setup a,
@@ -160,6 +161,10 @@ body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.ver
 .modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
 .modal-footer .btn-group .btn + .btn {padding-top:3px; font-size:0px;}
 
+.modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
+.modal.modal-small .modal-body{padding: 15px; width: auto;}
+div.modal.modal-small.fade.in{top:10%;}
+
 #toolbar #toolbar-cck-form,
 #toolbar #toolbar-cck-search,
 #toolbar #toolbar-cck-template,
@@ -180,6 +185,17 @@ body.com_cck fieldset.btn-group-yesno .btn-success[disabled] {
 	*background-color: #17568c;
 	border-color: #1a3867 #1a3867 #1a3867;
 }
+
+body.admin.view-list div.seblod.first,
+body.admin.view-list div.seb_css3{overflow: visible;}
+body.admin.view-list table.table td input,
+body.admin.view-list table.table th input,
+body.admin.view-list table.table td select,
+body.admin.view-list table.table th select{margin: 0;}
+body.admin.view-list table.table tbody td{vertical-align: middle;}
+body.admin.view-list table.table tbody td .btn-group.btn-group-micro{height:18px;}
+
+body.admin.com_cck .chzn-container-single .chzn-drop{margin-top: -2px;}
 
 body.contentpane.component .span{margin-left:0px;}
 body.contentpane.component .span12{margin-left:0px; width:100%;}

@@ -107,7 +107,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				
 				$e_type					=	( @$options2['editor'] != '' ) ? '&type='.$options2['editor'] : '';
 				$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
-										.	'&id='.$id.'&name='.$name.$e_type.'&params='.$width.'||'.$height.'||'.$asset;
+										.	'&id='.$id.'&name='.$name.$e_type.'&params='.urlencode( urlencode( $width ) ).'||'.$height.'||'.$asset;
 				
 				$app					=	JFactory::getApplication();
 				$class					=	'wysiwyg_editor_box variation_href';

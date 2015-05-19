@@ -30,7 +30,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo JCckDev::renderForm( 'core_place', $this->item->bool, $config, array( 'label'=>'DISPLAY_MODE' ) );
 		echo JCckDev::renderForm( 'core_selectlabel', $this->item->selectlabel, $config );
 
-		echo JCckDev::renderHelp( 'field', '3147-wysiwyg-editor.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-wysiwyg-editor-field' );
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC_PROCESSING' ), 2 );
 		echo JCckDev::renderForm( 'core_options_import', @$options2['import'], $config );
 		

@@ -93,6 +93,7 @@ $js		=	'
 						var storage_location = parent.jQuery("#storage_location").val();
 						$("#storage_location").val(storage_location);
 						if (storage_location == "free") {
+							$("#storage_table").parent().show();
 							$("#storage_table").show();
 						}
 						if ($("#storage").val() == "custom") {
@@ -106,8 +107,7 @@ $js		=	'
 			'
 			;
 
-$app	=	JFactory::getApplication();
-$prefix	=	$app->getCfg( 'dbprefix' );
+$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
 } else {
@@ -127,6 +127,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 				$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
 			}
 			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
+			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
 			echo '<span id="storage_field_pick" name="storage_field_pick">&laquo;</span>';
 			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );

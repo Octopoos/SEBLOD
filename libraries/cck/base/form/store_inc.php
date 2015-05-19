@@ -23,6 +23,11 @@ $hashed		=	$session->get( 'cck_hash_'.$unique );
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
 }
+if ( $task == 'save2copy' ) {
+	$id					=	0;
+	$isNew				=	1;
+	$preconfig['id']	=	0;
+}
 if ( $app->isSite() && ( $hash != $hashed ) ) {
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
@@ -57,6 +62,7 @@ $config		=	array( 'author'=>0,
 					   'process'=>array(),
 					   'stage'=>-1,
 					   'storages'=>array(),
+					   'task'=>$task,
 					   'type'=>$preconfig['type'],
 					   'url'=>@$preconfig['url'],
 					   'validate'=>''
@@ -68,7 +74,8 @@ $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stage
 if ( $stages > 1 ) {
 	$stage	=	$preconfig['stage'];
 }
-$fields		=	CCK_Form::getFields( $preconfig['type'], $client, $stage, '', true );
+$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$preconfig['type'].'"' );
+$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $stage, '', true );
 
 if ( count( $fields ) ) {
 	foreach ( $fields as $field ) {
@@ -83,7 +90,7 @@ if ( count( $fields ) ) {
 			}
 		}
 
-		if ( ( $field->variation == 'hidden' || $field->variation == 'hidden_auto' || $field->variation == 'disabled' || $field->variation == 'value' ) && ! $field->live && $field->live_value != '' ) {
+		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_auto' || $field->variation == 'disabled' || $field->variation == 'value' ) && ! $field->live && $field->live_value != '' ) {
 			$value	=	$field->live_value;
 		} else {
 			if ( isset( $post[$name] ) ) {

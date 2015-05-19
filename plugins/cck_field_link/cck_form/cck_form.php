@@ -36,15 +36,20 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	protected static function _link( $link, &$field, &$config )
 	{
 		$app			=	JFactory::getApplication();
+		$custom			=	$link->get( 'custom', '' );
 		$form			=	$link->get( 'form', '' );
 		$edit			=	$link->get( 'form_edition', 1 );
 		$edit			=	( !$form && $edit ) ? '&id='.$config['pk'] : '';
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
-		$uri			=	JFactory::getURI();
-		$return			=	base64_encode( $uri );
-		$custom			=	$link->get( 'custom', '' );
 		$redirection	=	$link->get( 'redirection', '' );
+		$uri			=	(string)JFactory::getUri();
+
+		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
+			$return		=	$app->input->get( 'return' );
+		} else {
+			$return		=	base64_encode( $uri );
+		}
 		
 		if ( !( $form ) ) {
 			return;
@@ -59,7 +64,11 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			}
 			$user 				=	JCck::getUser();
 			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
-			$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+			// if ( $user->id && !$user->guest ) {
+				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+			// } else {
+			//	$canEditOwn		=	false; // todo: guest
+			// }
 			$canEditOwnContent	=	'';
 
 			// canEditOwnContent
@@ -98,9 +107,18 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->get( 'id' ) ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->get( 'id' ) ) )
 				|| ( $canEditOwnContent ) ) ) {
-				if ( !$link->get( 'no_access', 1 ) ) {
+				if ( !$link->get( 'no_access', 0 ) ) {
 					$field->display	=	0;
 				}
+				return;
+			}
+		} elseif ( $form != '' ) {
+			$user 		=	JCck::getUser();
+			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+			$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+
+			// Check Permissions
+			if ( !$canCreate ) {
 				return;
 			}
 		}

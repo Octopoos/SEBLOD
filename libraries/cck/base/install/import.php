@@ -608,7 +608,7 @@ class CCK_Import
 						}
 						
 						$sql_query	=	( $sql_query ) ? substr( $sql_query, 0, -1 ) : '';
-						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
+						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
 					}
 				}
 			}

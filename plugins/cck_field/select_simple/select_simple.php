@@ -57,6 +57,18 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		$config['doTranslation']	=	$doTranslation;
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -224,7 +236,10 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		}
 		
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$attr	=	'class="'.$class.'" size="1"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		if ( $value != '' ) {
+			$class	.=	' has-value';
+		}
+		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {
 			if ( $attrib ) {

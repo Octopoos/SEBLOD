@@ -359,7 +359,7 @@ class CCK_Export
 			}
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 	}
 	
@@ -394,7 +394,7 @@ class CCK_Export
 			$xml->{$elemtype}->asset_id	=	'';
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 		
 		// Views
@@ -598,11 +598,14 @@ class CCK_Export
 			$file['src']		=	JPATH_SITE.'/plugins/'.$type.'/'.$name;
 			$file['lang_src']	=	$file['src'].'/'.$name.'.xml';
 			$file['lang_root']	=	JPATH_ADMINISTRATOR;
-			if ( !isset( $extensions[$file['src']] ) ) {
-				$extensions[$file['src']]	=	(object)array( 'type'=>'plugin', 'id'=>'plg_'.$type.'_'.$name, 'group'=>$type, '_file'=>$file['_'] );
-			}
-			if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
-				self::exportFile( 'plugin', $data, $file );
+			
+			if ( file_exists( $file['src'] ) ) {
+				if ( !isset( $extensions[$file['src']] ) ) {
+					$extensions[$file['src']]	=	(object)array( 'type'=>'plugin', 'id'=>'plg_'.$type.'_'.$name, 'group'=>$type, '_file'=>$file['_'] );
+				}
+				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+					self::exportFile( 'plugin', $data, $file );
+				}
 			}
 		}
 	}
@@ -622,11 +625,16 @@ class CCK_Export
 				}
 				$file['src']	=	JPATH_SITE.'/templates/'.$template.'/variations/'.$name;
 			}
-			if ( !isset( $extensions[$file['src']] ) ) {
-				$extensions[$file['src']]	=	(object)array( 'type'=>'file', 'id'=>'var_cck_'.$name, '_file'=>$file['_'] );
+			if ( $file['src'] == JPATH_SITE.'/templates/seb_table/variations/heading' ) {
+				return;
 			}
-			if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
-				self::exportFile( 'variation', $data, $file );
+			if ( file_exists( $file['src'] ) ) {
+				if ( !isset( $extensions[$file['src']] ) ) {
+					$extensions[$file['src']]	=	(object)array( 'type'=>'file', 'id'=>'var_cck_'.$name, '_file'=>$file['_'] );
+				}
+				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+					self::exportFile( 'variation', $data, $file );
+				}
 			}
 		}
 	}
@@ -680,7 +688,7 @@ class CCK_Export
 			$xml->{$elemtype}->hits	=	0;
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 
 		$app	=	$elem->name;
@@ -729,7 +737,7 @@ class CCK_Export
 			$xml->{$elemtype}->hits	=	0;
 		}
 		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$elem->asset_id ) : '{}';
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 
 		$app	=	$elem->name;
@@ -807,52 +815,54 @@ class CCK_Export
 		$dest		=	CCK_Export::createDir( $data['root_elements'].'/'.$plural );
 		
 		foreach ( $data['elements']['tables'] as $name=>$fields ) {
-			if ( $name && $name != '#__cck_core' && !isset( $data['tables_excluded'][$name] ) ) {
-				$table			=	JCckTable::getInstance( $name );
-				$table_fields	=	$table->getFields();
-				$table_keys		=	$db->getTableKeys( $name );
-				$table_pkeys	=	array();
-				
-				$xml	=	new JCckDevXml( '<cck />' );
-				$xml->addAttribute( 'type', $plural );
-				$xml->addChild( 'author', 'Octopoos' );
-				$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-				$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
-				$xml->addChild( 'copyright', 'Copyright (C) 2013 SEBLOD. All Rights Reserved.' );
-				$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
-				$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
-				
-				$xml2	=	$xml->addChild( $elemtype );
-				$xml2->addChild( 'name', $name );
-				
-				$xml3	=	$xml->addChild( 'indexes' );
-				$i		=	1;
-				foreach ( $table_keys as $k=>$v ) {
-					if ( $v->Key_name == 'PRIMARY' ) {
-						$table_pkeys[]	=	$v->Column_name;
-					}
-					$index	=	$xml3->addChild( 'index'.$i, $v->Key_name );
-					$index->addAttribute( 'column_name', $v->Column_name );
-					$index->addAttribute( 'index_type', $v->Index_type );
-					$index->addAttribute( 'seq_in_type', $v->Seq_in_index );
-					$i++;
-				}
-				
-				$xml4	=	$xml->addChild( 'fields' );
-				$i		=	1;
-				foreach ( $table_fields as $k=>$v ) {
-					if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) || $k == 'cck'  ) {
-						$field	=	$xml4->addChild( 'field'.$i, $k );
-						$field->addAttribute( 'type', $v->Type );
-						$field->addAttribute( 'default', $v->Default );
+			if ( isset( $data['tables'][(str_replace( '#__', $data['db_prefix'], $name ))] ) ) {
+				if ( $name && $name != '#__cck_core' && !isset( $data['tables_excluded'][$name] ) ) {
+					$table			=	JCckTable::getInstance( $name );
+					$table_fields	=	$table->getFields();
+					$table_keys		=	$db->getTableKeys( $name );
+					$table_pkeys	=	array();
+					
+					$xml	=	new JCckDevXml( '<cck />' );
+					$xml->addAttribute( 'type', $plural );
+					$xml->addChild( 'author', 'Octopoos' );
+					$xml->addChild( 'authorEmail', 'contact@seblod.com' );
+					$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+					$xml->addChild( 'copyright', 'Copyright (C) 2013 SEBLOD. All Rights Reserved.' );
+					$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
+					$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
+					
+					$xml2	=	$xml->addChild( $elemtype );
+					$xml2->addChild( 'name', $name );
+					
+					$xml3	=	$xml->addChild( 'indexes' );
+					$i		=	1;
+					foreach ( $table_keys as $k=>$v ) {
+						if ( $v->Key_name == 'PRIMARY' ) {
+							$table_pkeys[]	=	$v->Column_name;
+						}
+						$index	=	$xml3->addChild( 'index'.$i, $v->Key_name );
+						$index->addAttribute( 'column_name', $v->Column_name );
+						$index->addAttribute( 'index_type', $v->Index_type );
+						$index->addAttribute( 'seq_in_type', $v->Seq_in_index );
 						$i++;
 					}
+					
+					$xml4	=	$xml->addChild( 'fields' );
+					$i		=	1;
+					foreach ( $table_fields as $k=>$v ) {
+						if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) || $k == 'cck'  ) {
+							$field	=	$xml4->addChild( 'field'.$i, $k );
+							$field->addAttribute( 'type', $v->Type );
+							$field->addAttribute( 'default', $v->Default );
+							$i++;
+						}
+					}
+					
+					// Set
+					$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
+					$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
+					JFile::write( $path, $buffer );
 				}
-				
-				// Set
-				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
-				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
-				JFile::write( $path, $buffer );
 			}
 		}
 	}

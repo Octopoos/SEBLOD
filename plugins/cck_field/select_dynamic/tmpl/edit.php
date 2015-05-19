@@ -66,7 +66,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 			}
 		}
 
-		echo JCckDev::renderHelp( 'field', '1496-select-dynamic.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-select-dynamic-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

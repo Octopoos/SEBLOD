@@ -64,7 +64,7 @@ abstract class JCckUser
 			$tables	=	array_flip( $tables );
 			
 			if ( isset( $tables[$prefix.'cck_store_item_users'] ) ) {
-				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_item_users WHERE id = '.$user->id );
+				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_item_users WHERE id = '.(int)$user->id );
 				if ( count( $fields ) ) {
 					foreach ( $fields as $k=>$v ) {
 						$user->$k	=	$v;
@@ -72,7 +72,7 @@ abstract class JCckUser
 				}
 			}
 			if ( isset( $tables[$prefix.'cck_store_form_'.$content_type] ) ) {
-				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.$user->id );
+				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.(int)$user->id );
 				if ( count( $fields ) ) {
 					foreach ( $fields as $k=>$v ) {
 						$user->$k	=	$v;

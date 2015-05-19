@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" version="2.5" method="upgrade">
+	<name>pkg_cck</name>
+	<packagename>cck</packagename>
+	<packager>Octopoos</packager>
+	<packagerurl>http://www.seblod.com</packagerurl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description></description>
+	<version>3.6.0</version>
+	
+	<scriptfile>pkg_script.php</scriptfile>
+	
+	<!-- EXTENSIONS -->
+	<files folder="extensions">
+		<!-- Plugin // System -->
+		<file type="plugin" id="cck" group="system">plg_system_cck.zip</file>
+		
+		<!-- START HERE -->
+			<!-- Variation -->
+			<file type="file" id="var_cck_joomla" src="libraries/cck/rendering/variations">var_cck_joomla.zip</file>
+			<file type="file" id="var_cck_seb_css3" src="libraries/cck/rendering/variations">var_cck_seb_css3.zip</file>
+			<!-- Component -->
+			<file type="component" id="com_cck">com_cck.zip</file>
+			<!-- Module // Admin -->
+			<file type="module" id="mod_cck_menu" client="administrator">mod_cck_menu.zip</file>
+			<file type="module" id="mod_cck_quickadd" client="administrator">mod_cck_quickadd.zip</file>
+			<file type="module" id="mod_cck_quickicon" client="administrator">mod_cck_quickicon.zip</file>
+			<!-- Module // Site -->
+			<file type="module" id="mod_cck_breadcrumbs" client="site">mod_cck_breadcrumbs.zip</file>
+			<file type="module" id="mod_cck_form" client="site">mod_cck_form.zip</file>
+			<file type="module" id="mod_cck_list" client="site">mod_cck_list.zip</file>
+			<file type="module" id="mod_cck_search" client="site">mod_cck_search.zip</file>
+			<!-- Template // Site -->
+			<file type="template" id="seb_one" client="site">tpl_seb_one.zip</file>
+			<file type="template" id="seb_blog" client="site">tpl_seb_blog.zip</file>
+			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
+			<!-- Plugin // CCK Field -->
+			<file type="plugin" id="42" group="cck_field">plg_cck_field_42.zip</file>
+			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
+			<file type="plugin" id="calendar" group="cck_field">plg_cck_field_calendar.zip</file>
+			<file type="plugin" id="captcha_math" group="cck_field">plg_cck_field_captcha_math.zip</file>
+			<file type="plugin" id="checkbox" group="cck_field">plg_cck_field_checkbox.zip</file>
+			<file type="plugin" id="colorpicker" group="cck_field">plg_cck_field_colorpicker.zip</file>
+			<file type="plugin" id="div" group="cck_field">plg_cck_field_div.zip</file>
+			<file type="plugin" id="email" group="cck_field">plg_cck_field_email.zip</file>
+			<file type="plugin" id="freetext" group="cck_field">plg_cck_field_freetext.zip</file>
+			<file type="plugin" id="field_x" group="cck_field">plg_cck_field_field_x.zip</file>
+			<file type="plugin" id="group" group="cck_field">plg_cck_field_group.zip</file>
+			<file type="plugin" id="group_x" group="cck_field">plg_cck_field_group_x.zip</file>
+			<file type="plugin" id="hidden" group="cck_field">plg_cck_field_hidden.zip</file>
+			<file type="plugin" id="icon" group="cck_field">plg_cck_field_icon.zip</file>
+			<file type="plugin" id="jform_accesslevel" group="cck_field">plg_cck_field_jform_accesslevel.zip</file>
+			<file type="plugin" id="jform_associations" group="cck_field">plg_cck_field_jform_associations.zip</file>
+			<file type="plugin" id="jform_category" group="cck_field">plg_cck_field_jform_category.zip</file>
+			<file type="plugin" id="jform_componentlayout" group="cck_field">plg_cck_field_jform_componentlayout.zip</file>
+			<file type="plugin" id="jform_contentlanguage" group="cck_field">plg_cck_field_jform_contentlanguage.zip</file>
+			<file type="plugin" id="jform_editors" group="cck_field">plg_cck_field_jform_editors.zip</file>
+			<file type="plugin" id="jform_helpsite" group="cck_field">plg_cck_field_jform_helpsite.zip</file>
+			<file type="plugin" id="jform_groupparent" group="cck_field">plg_cck_field_jform_groupparent.zip</file>
+			<file type="plugin" id="jform_media" group="cck_field">plg_cck_field_jform_media.zip</file>
+			<file type="plugin" id="jform_menuitem" group="cck_field">plg_cck_field_jform_menuitem.zip</file>
+			<file type="plugin" id="jform_rules" group="cck_field">plg_cck_field_jform_rules.zip</file>
+			<file type="plugin" id="jform_tag" group="cck_field">plg_cck_field_jform_tag.zip</file>
+			<file type="plugin" id="jform_templatestyle" group="cck_field">plg_cck_field_jform_templatestyle.zip</file>
+			<file type="plugin" id="jform_timezone" group="cck_field">plg_cck_field_jform_timezone.zip</file>
+			<file type="plugin" id="jform_user" group="cck_field">plg_cck_field_jform_user.zip</file>
+			<file type="plugin" id="jform_usergroups" group="cck_field">plg_cck_field_jform_usergroups.zip</file>
+			<file type="plugin" id="joomla_article" group="cck_field">plg_cck_field_joomla_article.zip</file>
+			<file type="plugin" id="joomla_module" group="cck_field">plg_cck_field_joomla_module.zip</file>
+			<file type="plugin" id="link" group="cck_field">plg_cck_field_link.zip</file>
+			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
+			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
+			<file type="plugin" id="select_dynamic" group="cck_field">plg_cck_field_select_dynamic.zip</file>
+			<file type="plugin" id="select_multiple" group="cck_field">plg_cck_field_select_multiple.zip</file>
+			<file type="plugin" id="select_numeric" group="cck_field">plg_cck_field_select_numeric.zip</file>
+			<file type="plugin" id="select_simple" group="cck_field">plg_cck_field_select_simple.zip</file>
+			<file type="plugin" id="storage" group="cck_field">plg_cck_field_storage.zip</file>
+			<file type="plugin" id="tabs" group="cck_field">plg_cck_field_tabs.zip</file>
+			<file type="plugin" id="text" group="cck_field">plg_cck_field_text.zip</file>
+			<file type="plugin" id="textarea" group="cck_field">plg_cck_field_textarea.zip</file>
+			<file type="plugin" id="upload_file" group="cck_field">plg_cck_field_upload_file.zip</file>
+			<file type="plugin" id="upload_image" group="cck_field">plg_cck_field_upload_image.zip</file>
+			<file type="plugin" id="video_youtube" group="cck_field">plg_cck_field_video_youtube.zip</file>
+			<file type="plugin" id="wysiwyg_editor" group="cck_field">plg_cck_field_wysiwyg_editor.zip</file>
+			<!-- Plugin // CCK Field Link -->
+			<file type="plugin" id="content" group="cck_field_link">plg_cck_field_link_content.zip</file>
+			<file type="plugin" id="content_delete" group="cck_field_link">plg_cck_field_link_content_delete.zip</file>
+			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
+			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
+			<!-- Plugin // CCK Field Live -->
+			<file type="plugin" id="joomla_user" group="cck_field_live">plg_cck_field_live_joomla_user.zip</file>
+			<file type="plugin" id="url_variable" group="cck_field_live">plg_cck_field_live_url_variable.zip</file>
+			<!-- Plugin // CCK Field Restriction -->
+			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
+			<!-- Plugin // CCK Field Typo -->
+			<file type="plugin" id="bold" group="cck_field_typo">plg_cck_field_typo_bold.zip</file>
+			<file type="plugin" id="clear" group="cck_field_typo">plg_cck_field_typo_clear.zip</file>
+			<file type="plugin" id="date" group="cck_field_typo">plg_cck_field_typo_date.zip</file>
+			<file type="plugin" id="heading" group="cck_field_typo">plg_cck_field_typo_heading.zip</file>
+			<file type="plugin" id="html" group="cck_field_typo">plg_cck_field_typo_html.zip</file>
+			<file type="plugin" id="image" group="cck_field_typo">plg_cck_field_typo_image.zip</file>
+			<file type="plugin" id="italic" group="cck_field_typo">plg_cck_field_typo_italic.zip</file>
+			<file type="plugin" id="underline" group="cck_field_typo">plg_cck_field_typo_underline.zip</file>
+			<!-- Plugin // CCK Storage -->
+			<file type="plugin" id="custom" group="cck_storage">plg_cck_storage_custom.zip</file>
+			<file type="plugin" id="json" group="cck_storage">plg_cck_storage_json.zip</file>
+			<file type="plugin" id="standard" group="cck_storage">plg_cck_storage_standard.zip</file>
+			<!-- Plugin // CCK Storage Location -->
+			<file type="plugin" id="free" group="cck_storage_location">plg_cck_storage_location_free.zip</file>
+			<file type="plugin" id="joomla_article" group="cck_storage_location">plg_cck_storage_location_joomla_article.zip</file>
+			<file type="plugin" id="joomla_category" group="cck_storage_location">plg_cck_storage_location_joomla_category.zip</file>
+			<file type="plugin" id="joomla_user" group="cck_storage_location">plg_cck_storage_location_joomla_user.zip</file>
+			<file type="plugin" id="joomla_user_group" group="cck_storage_location">plg_cck_storage_location_joomla_user_group.zip</file>
+			<!-- Plugin // CCK Validation -->
+			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
+			<file type="plugin" id="confirm" group="cck_field_validation">plg_cck_field_validation_confirm.zip</file>
+			<file type="plugin" id="email" group="cck_field_validation">plg_cck_field_validation_email.zip</file>
+			<file type="plugin" id="letter_number_only" group="cck_field_validation">plg_cck_field_validation_letter_number_only.zip</file>
+			<file type="plugin" id="required" group="cck_field_validation">plg_cck_field_validation_required.zip</file>
+			<file type="plugin" id="url" group="cck_field_validation">plg_cck_field_validation_url.zip</file>
+			<!-- Plugin // Authentication -->
+			<!-- Plugin // Search -->
+			<file type="plugin" id="cck" group="search">plg_search_cck.zip</file>
+			<!-- Plugin // User -->
+			<file type="plugin" id="cck" group="user">plg_user_cck.zip</file>
+		<!-- END HERE -->
+		
+		<!-- Library -->
+		<file type="library" id="cck">lib_cck.zip</file>
+		<!-- Plugin // Content -->
+		<file type="plugin" id="cck" group="content">plg_content_cck.zip</file>
+	</files>
+	
+	<updateservers>
+		<server type="extension" priority="1" name="SEBLOD 3.x Core Updates">http://update.seblod.com/pkg_cck.xml</server>
+	</updateservers>
+</extension>

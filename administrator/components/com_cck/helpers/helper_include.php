@@ -96,6 +96,9 @@ class Helper_Include extends CommonHelper_Include
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
 				}
 				break;
+			case 'list':
+				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+				break;
 			case 'cck':
 				$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
 				JCck::loadjQuery();
