@@ -118,14 +118,14 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Init
 		if ( count( $inherit ) ) {
-			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )		?	$inherit['name'] 		:	$field->name;
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )	? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
 		}
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$siteName	=	JFactory::getConfig()->get( 'sitename' );
 		$valid		=	0;
-		$send		=	isset( $options2['send'] ) ? $options2['send'] : 0;
+		$send		=	( isset( $options2['send'] ) && $field->state != 'disabled' ) ? $options2['send'] : 0;
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
 		$isNew		=	( $config['pk'] ) ? 0 : 1;
 		$sender		=	0;
@@ -152,18 +152,18 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
 		$new_message	=	( strlen( $options2['message_field'] ) > 0 ) ? $options2['message_field'] : '';
 
-		$dest		=	array();
-		$from		=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
-		$from_param	=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
-		$from_name	=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
+		$dest				=	array();
+		$from				=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
+		$from_param			=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
+		$from_name			=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
 		$from_name_param	=	( isset( $options2['from_name_param'] ) ) ? $options2['from_name_param'] : '';
-		$cc			=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
-		$cc_param	=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
-		$bcc		=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
-		$bcc_param	=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
-		$moredest	=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
-		$send_attach	=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
-		$moreattach		=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
+		$cc					=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
+		$cc_param			=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
+		$bcc				=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
+		$bcc_param			=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
+		$moredest			=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
+		$send_attach		=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
+		$moreattach			=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
 		
 		// Prepare
 		if ( $options2['to'] != '' ) {
