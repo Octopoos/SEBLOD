@@ -30,7 +30,7 @@ if ( $search->content > 0 ) {
 }
 ?>
 <?php if ( $show_more_link ) { ?>
-	<div class="more"><a<?php echo $show_more_class; ?> href="<?php echo $show_more_link; ?>"><?php echo JText::_( 'MOD_CCK_LIST_VIEW_ALL' ); ?></a></div>
+	<div class="more"><a<?php echo $show_more_class; ?> href="<?php echo $show_more_link; ?>"><?php echo $show_more_text; ?></a></div>
 <?php } if ( !$raw_rendering ) { ?>
 </div>
 <?php }

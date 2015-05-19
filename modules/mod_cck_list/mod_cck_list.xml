@@ -40,11 +40,19 @@
 				<field name="list_desc" type="cck" construction="core_description" default="" label="Edit Description" description="..." class="inputbox" cck_selectlabel="Edit"
 					   js_appendto="jform_params_show_list_desc=a.wysiwyg_editor_box"
 					   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" />
+				<field name="show_more" type="list" label="MOD_CCK_LIST_CONFIG_SHOW_MORE" default="1" class="inputbox"
+					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+					<option value="2">MOD_CCK_LIST_CONFIG_SHOW_MORE_ONLY_IF_RESULTS</option>
+					<option value="3">MOD_CCK_LIST_CONFIG_SHOW_MORE_ONLY_IF_MORE_RESULTS</option>
+				</field>
 				<field name="show_link_more" type="menuitem" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK" default="" class="inputbox"
 					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_DESC">
 					<option value="">JNONE</option>
 				</field>
 				<field name="link_more_class" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS_DESC" class="inputbox" />
+				<field name="link_more_text" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT_DESC" class="inputbox" />
 				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" />
 				<field name="" label="" type="spacer" hr="false" />
 				<field name="limit2" type="text" default="5" label="MOD_CCK_LIST_CONFIG_LIMIT2" description="MOD_CCK_LIST_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />

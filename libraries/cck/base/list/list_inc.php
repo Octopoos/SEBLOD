@@ -275,14 +275,16 @@ if ( $preconfig['task'] == 'search' ) {
 		$current['stage']	=	0;
 		$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
 	}
-	$total	=	count( $items );
+	$total					=	count( $items );
+	
 	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
-		$limitstart	=	-1;
-		$limitend	=	0;
-		$total		=	$config['total'];
+		$limitstart			=	-1;
+		$limitend			=	0;
+		$total				=	$config['total'];
 	} else {
 		$config['total']	=	$total;
 	}
+	$total_items			=	$total;
 	
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
@@ -340,7 +342,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
 					$sef			=	( $app->getCfg( 'sef' ) ) ? $config['doSEF'] : 0;
-					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0], $sef, $config['Itemid'] ) );
+					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
 					$app->redirect( $redirect_url );
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {
@@ -358,11 +360,11 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options );
+				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, $search, $path, $preconfig['client'], $config['Itemid'], $options );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( $search->content > 0 ) {
-					$data	=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+					$data	=	CCK_List::render( $items, $search, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
@@ -413,7 +415,7 @@ if ( $preconfig['task'] == 'search' ) {
 						$data	=	ob_get_clean();
 					}
 				} else {
-					$data		=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+					$data		=	CCK_List::render( $items, $search, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 			}
 		}
