@@ -102,7 +102,8 @@ abstract class JCckDevHelper
 	// getRelativePath
 	public static function getRelativePath( $path, $prepend = true )
 	{
-		$path	=	str_ireplace( JPATH_ROOT, '', $path );
+		$root=str_replace( '\\', '/', JPATH_ROOT ); //on Windows, JPATH_ROOT is using '\' instead of '/', we need to force it
+		$path	=	str_ireplace( $root, '', $path );
 		$path	=	str_replace( '\\', '/', $path );
 		
 		if ( !$path ) {
