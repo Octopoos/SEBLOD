@@ -70,22 +70,16 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			if ( $options2['path_content'] ) {
 				jimport( 'joomla.filesystem.folder' );
 				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
-					/*
 					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
 						return true;
 					}
-					*/
 				}
 			} else {
-				/*
 				JFile::delete( JPATH_SITE.'/'.$value );
-				*/
 				
 				for ( $i = 1; $i <= 10; $i++ ) {
 					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
-						/*
 						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
-						*/
 					}
 				}
 			}
