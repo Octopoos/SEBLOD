@@ -82,6 +82,12 @@ class CckRouter extends JComponentRouterBase
 		
 		unset( $query['view'] );
 		
+		$total	=	count( $segments );
+		
+		for ( $i = 0; $i < $total; $i++ ) {
+			$segments[$i]	=	str_replace( ':', '-', $segments[$i] );
+		}
+		
 		return $segments;
 	}
 
