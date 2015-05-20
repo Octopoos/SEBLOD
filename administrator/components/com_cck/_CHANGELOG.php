@@ -24,7 +24,14 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.6.0 Upgrade Release [8-May-2014] -------------
+-------------------- 3.6.1 Upgrade Release [20-May-2015] -------------
+
+^ Mobile Detect updated from 2.8.12 to 2.8.13.
+
+# Notice removed on "Joomla Article" Object plug-in.
+# Routing issue fixed (regression).
+
+-------------------- 3.6.0 Upgrade Release [8-May-2015] -------------
 
 ! Joomla! 3.4 ready.
 * Security Release: 2 missing JEXEC security checks added.
