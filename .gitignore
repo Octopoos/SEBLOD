@@ -525,6 +525,7 @@
 /administrator/manifests/packages/pkg_seb_masonry.xml
 /administrator/manifests/packages/pkg_seb_minima.xml
 /administrator/manifests/packages/pkg_seb_tabs.xml
+/administrator/manifests/packages/pkg_weblinks.xml
 /administrator/manifests/packages/index.html
 /administrator/manifests/index.html
 /administrator/modules/mod_custom/*
@@ -778,6 +779,7 @@
 /layouts/libraries/cms/html/*
 /layouts/libraries/cms/index.html
 /layouts/libraries/index.html
+/layouts/plugins/user/profile/*
 /layouts/index.html
 /language/en-GB/en-GB.tpl_beez5.ini
 /language/en-GB/en-GB.tpl_beez5.sys.ini
@@ -798,6 +800,7 @@
 /libraries/cms/installer/*
 /libraries/cms/language/*
 /libraries/cms/layout/*
+/libraries/cms/less/*
 /libraries/cms/library/*
 /libraries/cms/menu/*
 /libraries/cms/module/*
@@ -823,6 +826,9 @@
 /libraries/phpmailer/*
 /libraries/phputf8/*
 /libraries/simplepie/*
+/libraries/vendor/*
+/libraries/ClassLoader.php
+/libraries/composer_autoload.php
 /libraries/classmap.php
 /libraries/cms.php
 /libraries/index.html
@@ -1307,6 +1313,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_variables.sys.ini
 /plugins/cck_field/search_variables/*
 
+######## SEBLOD Plug-ins >> Field >> SEBLOD Break
+
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_break.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_break.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_break.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_break.sys.ini
+/plugins/cck_field/cck_break/*
+
 ######## SEBLOD Plug-ins >> Field >> SEBLOD Canonical
 
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_canonical.ini
@@ -1516,6 +1530,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_mobile_device.sys.ini
 /plugins/cck_field_restriction/mobile_device/*
 
+######## SEBLOD Plug-ins >> Restriction >> Search Total
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_search_total.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_search_total.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_search_total.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_search_total.sys.ini
+/plugins/cck_field_restriction/search_total/*
+
 ######## SEBLOD Plug-ins >> Restriction >> SEBLOD Fields
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_fields.ini
@@ -1531,6 +1553,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.sys.ini
 /plugins/cck_field_restriction/url_variable/*
+
+######## SEBLOD Plug-ins >> Typography >> Highlight
+
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_highlight.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_highlight.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_highlight.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_highlight.sys.ini
+/plugins/cck_field_typo/highlight/*
 
 ######## SEBLOD Plug-ins >> Typography >> Joomla! (Pack)
 
@@ -1559,6 +1589,14 @@ Temporary Items
 /plugins/cck_field_typo/joomla_jtext/*
 /plugins/cck_field_typo/joomla_message/*
 /plugins/cck_field_typo/joomla_pathway/*
+
+######## SEBLOD Plug-ins >> Typography >> List
+
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_list.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_typo_list.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_list.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_list.sys.ini
+/plugins/cck_field_typo/list/*
 
 ######## SEBLOD Plug-ins >> Typography >> PHP String
 
