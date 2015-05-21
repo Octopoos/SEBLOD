@@ -24,7 +24,9 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.6.1 Upgrade Release [20-May-2015] -------------
+-------------------- 3.6.1 Upgrade Release [21-May-2015] -------------
+
++ J(...) support added for Custom Attributes on Textarea Field.
 
 ^ Mobile Detect updated from 2.8.12 to 2.8.13.
 
