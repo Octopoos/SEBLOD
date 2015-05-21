@@ -24,6 +24,10 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.6.2 Upgrade Release [21-May-2015] -------------
+
+# Remove temporary comments.
+
 -------------------- 3.6.1 Upgrade Release [21-May-2015] -------------
 
 + J(...) support added for Custom Attributes on Textarea Field.
