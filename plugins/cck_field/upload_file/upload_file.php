@@ -73,18 +73,14 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			if ( $options2['path_content'] ) {
 				jimport( 'joomla.filesystem.folder' );
 				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
-					/*
 					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
 						return true;
 					}
-					*/
 				}
 			} else {
-				/*
 				if ( JFile::delete( JPATH_SITE.'/'.$file ) ) {
 					return true;
 				}
-				*/
 			}
 		}
 
