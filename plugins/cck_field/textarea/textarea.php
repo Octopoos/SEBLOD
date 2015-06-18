@@ -77,7 +77,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
 		$rows	=	( $field->rows ) ? $field->rows : 3;
-		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'"';
 		if ( $field->attributes != '' ) {
 			if ( strpos( $field->attributes, 'J(' ) !== false ) {
 				$matches	=	'';
