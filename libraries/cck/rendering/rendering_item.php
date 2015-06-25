@@ -441,7 +441,7 @@ class CCK_Item
 					foreach ( $matches[2] as $k=>$fieldname ) {
 						$target		=	$matches[1][$k];
 						$get		=	'get'.$target;
-						$replace	=	$this->getValue( $fieldname );
+						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}
 				}
