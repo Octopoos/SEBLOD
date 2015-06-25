@@ -15,9 +15,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 {
 	protected static $type		=	'textarea';
 	protected static $path;
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
-
+	
 	// onCCK_FieldConstruct
 	public function onCCK_FieldConstruct( $type, &$data = array() )
 	{
@@ -25,12 +25,12 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldConstruct( $data );
-
+		
 		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
-
+	
 	// onCCK_FieldPrepareContent
 	public function onCCK_FieldPrepareContent( &$field, $value = '', &$config = array() )
 	{
@@ -44,7 +44,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		$field->value	=	$value;
 	}
-
+	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -53,7 +53,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
-
+		
 		// Init
 		if ( count( $inherit ) ) {
 			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
@@ -64,7 +64,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		$value		=	( $value != '' ) ? ( ( $field->bool2 ) ? self::_p2nl( $value ) : self::_br2nl( $value ) ) : $field->defaultvalue;
 		$value		=	( $value != ' ' ) ? $value : '';
-
+		
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
@@ -72,7 +72,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true, 'maxSize'=>true ) );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-
+		
 		// Prepare
 		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
@@ -92,7 +92,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$attr	.=	' '.$field->attributes;
 		}
 		$form	= 	'<textarea id="'.$id.'" name="'.$name.'" cols="'.$cols.'" rows="'.$rows.'" '.$attr.'>'.$value.'</textarea>';
-
+		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
@@ -104,36 +104,36 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
 		}
 		$field->value	=	$value;
-
+		
 		// Return
 		if ( $return === true ) {
 			return $field;
 		}
 	}
-
+	
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
 			return;
 		}
-
+		
 		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-
+		
 		// Return
 		if ( $return === true ) {
 			return $field;
 		}
 	}
-
+	
 	// onCCK_FieldPrepareStore
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
 			return;
 		}
-
+		
 		// Init
 		if ( count( $inherit ) ) {
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
@@ -141,10 +141,10 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$name	=	$field->name;
 			$value	=	JRequest::getVar( $name, '', 'post', 'string', JREQUEST_ALLOWRAW );
 		}
-
+		
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
-
+		
 		// Set or Return
 		if ( $return === true ) {
 			return $value;
@@ -152,23 +152,23 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		$field->value	=	$value;
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render
-
+	
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
 		return parent::g_onCCK_FieldRenderContent( $field );
 	}
-
+	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
-
+	
 	// _br2nl
 	protected static function _br2nl( $text )
 	{
