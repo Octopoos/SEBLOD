@@ -217,7 +217,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				if ( $count2 ) {
 					foreach ( $opt_attrs as $k=>$v ) {
 						if ( $v != '' ) {
-							$v			=	str_replace( '[lang]', $lang_code, $v ).' AS attr'.( $k + 1 );
+							$v			=	str_replace( '[lang]', $lang_code, $attribs[$k] ).' AS ' . $v;
 							$opt_attr	.=	','.$v;
 						}
 					}
@@ -271,12 +271,12 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						if ( $attrib ) {
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
-								$ka				=	'attr'.( $k + 1 );
+								$ka				=	isset($options2['attr'.( $k + 1 )]) ? $options2['attr'.( $k + 1 )] : 'somefalse';
 								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
 							}
 							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
 						} else {
-							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );	
+							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );
 						}
 					}
 					if ( $group ) {
@@ -287,7 +287,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						foreach ( $items as $o ) {
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
-								$ka				=	'attr'.( $k + 1 );
+								$ka				=	isset($options2['attr'.( $k + 1 )]) ? $options2['attr'.( $k + 1 )] : 'somefalse';
 								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
 							}
 							$opts[]		=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );
