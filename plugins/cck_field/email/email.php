@@ -507,6 +507,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 	// _split
 	protected static function _split( $string )
 	{
+		$string		=	str_replace( array( ' ', "\r" ), '', $string );
 		if ( strpos( $string, ',' ) !== false ) {
 			$tab	=	explode( ',', $string );
 		} else if ( strpos( $string, ';' ) !== false ) {
