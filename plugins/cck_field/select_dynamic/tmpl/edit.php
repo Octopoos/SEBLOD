@@ -51,7 +51,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		 .	 '</li>';
 
 		// Static
-		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Static Options', 'options'=>'No=0||Yes=optgroup||Above=1||Below=2' ) );
+		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Static Options', 'options'=>'No=0||Yes=optgroup||Above=1||Below=2||Both=3' ) );
 		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		
@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
 	$('#json_options2_query').isVisibleWhen('bool2','1');
 	$('#json_options2_table, #json_options2_name, #json_options2_value, #json_options2_where, #json_options2_orderby, #json_options2_limit, #json_options2_attr1, #blank_li').isVisibleWhen('bool2','0');
 	$('#rows, #divider').isVisibleWhen('bool3','1');
-	$('#sortable_core_options').isVisibleWhen('bool4','1,2');
+	$('#sortable_core_options').isVisibleWhen('bool4','1,2,3');
 	$('.custom_attr_mapping').toggle();
 	$("#adminForm").on("click", "#custom_attr_toggle", function() {
 		$('.custom_attr_mapping').toggle();
