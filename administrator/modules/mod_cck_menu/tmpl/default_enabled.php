@@ -134,9 +134,7 @@ if ( $mode == 1 || $mode == 2 ) {
 		foreach ( $items as $item ) {
 			if ( $user->authorise( 'core.create', 'com_cck.form.'.$item->id ) ) {
 				$empty	=	 false;
-				$text	=	JText::_( $item->text );
-				$text	=	( strlen( $text ) > 30 ) ? substr( $text, 0, 30 ) . '..' : $text;
-				$menu->addChild( new JMenuNode( $text, $link.$item->name ) );
+				$menu->addChild( new JMenuNode( JText::_( $item->text ), $link.$item->name ) );
 			}
 		}
 	}
@@ -148,9 +146,7 @@ if ( $mode == 1 || $mode == 2 ) {
 	if ( count( $items ) ) {
 		foreach ( $items as $item ) {
 			$empty	=	 false;
-			$text	=	JText::_( $item->text );
-			$text	=	( strlen( $text ) > 30 ) ? substr( $text, 0, 30 ) . '..' : $text;
-			$menu->addChild( new JMenuNode( $text, $link.$item->name ) );
+			$menu->addChild( new JMenuNode( JText::_( $item->text ), $link.$item->name ) );
 		}
 	}
 	if ( $options['inline'] ) {
