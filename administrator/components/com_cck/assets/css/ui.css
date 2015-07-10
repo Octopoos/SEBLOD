@@ -51,6 +51,9 @@ div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist text
 	width: auto;
 	/*font-size: 11px;*/
 }
+.input-xsmall {
+  width: 60px!important;
+}
 div.seblod .adminformlist input.input-small { 
 	width: 150px;
 }
@@ -375,6 +378,9 @@ ul.spe_state span.state{ margin-top:4px;}
 ul.spe_name li{width:29em;padding-left:7px;margin-top:15px; clear:left;}
 ul.spe_name label{width:100px;}
 ul.spe_name span.variation_value{line-height: 24px;}
+ul.spe_double li {width: 57em; padding-left: 7px; margin-top: 15px; clear: left;}
+ul.spe_double label{width:100px;}
+ul.spe_double input{width:auto;}
 ul.spe_type li{width:28em; margin-top:15px;}
 ul.spe_type label, ul.spe_name.adminformlist label, ul.spe_type.adminformlist label{width:100px;}
 ul.spe_second li{width:40em;}
