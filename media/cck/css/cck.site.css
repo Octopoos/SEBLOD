@@ -163,6 +163,15 @@ div.cck_forms.cck_site div.cck_form.cck_form_link div.cck_forms{clear:both;}
 /*SITE GENERIQUE PRODUCTS*/
 div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products{width:100%;}
 
+/*SITE GENERIQUE CCK_FIELD_PARAMS*/
+div.cck_form_cck_field_params ul.adminformlist,
+div.cck_form_cck_field_params ul.adminformlist li {display:block; float:left; position:relative;  width:100%;}
+
+/*SITE GENERIQUE CCK_FIELDS*/
+div.cck_forms.cck_site div.cck_form.cck_form_cck_fields{width: 100%;}
+div.cck_form_cck_fields .btn .caret{margin-top: 7px;}
+div.cck_form_cck_fields div.btn-group.cck-fr.open .dropdown-menu{left:initial; right:0;}
+
 /*FIELDSET*/
 fieldset div.cck_forms.cck_site{
  float:left; width:50%; }
