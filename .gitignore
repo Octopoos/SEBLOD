@@ -791,6 +791,7 @@
 /language/index.html
 /libraries/cms/application/*
 /libraries/cms/captcha/*
+/libraries/cms/class/*
 /libraries/cms/component/*
 /libraries/cms/editor/*
 /libraries/cms/error/*
