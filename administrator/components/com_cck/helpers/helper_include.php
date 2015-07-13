@@ -185,27 +185,6 @@ class Helper_Include extends CommonHelper_Include
 		$doc->addScriptDeclaration( $js );
 	}
 	
-	// addTooltip
-	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
-	{
-		if ( !JCck::on() ) {
-			$doc	=	JFactory::getDocument();
-			
-			if ( $script === true ) {
-				$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/css/jquery.qtip.css' );
-				$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/js/jquery.qtip.min.js' );
-			}
-			if ( $elem ) {
-				$js	=	'jQuery(document).ready(function($){ $("'.$elem.'").qtip({ style: {classes: "'.$classes.'"}, position: {my: "'.$pos_my.'", at: "'.$pos_at.'"} }); });';
-				if ( $tmpl == 'ajax' ) {
-					echo '<script type="text/javascript">'.$js.'</script>';
-				} else {
-					$doc->addScriptDeclaration( $js );
-				}
-			}
-		}
-	}
-	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
 	
 	// autoSave
