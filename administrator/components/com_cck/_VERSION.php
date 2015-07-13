@@ -13,14 +13,16 @@ defined( '_JEXEC' ) or die;
 // JCckVersion
 final class JCckVersion
 {
-	public $RELEASE = '3.6';
+	public $RELEASE = '3.7';
 	
-	public $DEV_LEVEL = '2';
+	public $DEV_LEVEL = '0';
+
+	public $DEV_STATUS = 'Beta11';
 	
 	// getShortVersion
 	public function getShortVersion()
 	{
-		return $this->RELEASE . '.' . $this->DEV_LEVEL;
+		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
 	}
 }
 ?>
