@@ -20,7 +20,7 @@ JCckDev::initScript( 'typo', $this->item );
         echo JCckDev::renderForm( 'core_options_html', '', $config, array( 'rows'=>8, 'required'=>'required', 'storage_field'=>'html' ), array(), 'w100' );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
-		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Typo Label', 'selectlabel'=>'', 'defaultvalue'=>'0', 'storage_field'=>'typo_label' ) );
+		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Typo Label=1||Always=-2', 'storage_field'=>'typo_label' ) );
 		echo JCckDev::renderBlank();
 		?>
     </ul>
