@@ -273,6 +273,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 	// _addScriptDeclaration
 	protected static function _addScripts( $id, $params = array(), &$config = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
 		$search					=	array( '.' , '<', '>', '"', '%', ';' );
@@ -350,6 +351,9 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$js		.=	'});';
 		
 		if ( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) {
+			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {

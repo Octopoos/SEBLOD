@@ -19,7 +19,8 @@ class CCKViewForm extends JViewLegacy
 		$app					=	JFactory::getApplication();
 		$layout					=	$app->input->get( 'tmpl' );
 		$uniqId					=	'';
-		if ( $layout == 'raw' ) {
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
 			$uniqId				=	'_'.$layout;
 		}
 		
@@ -94,7 +95,7 @@ class CCKViewForm extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-		$unique	=	$preconfig['formId'].'_'.$type->name;
+		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		if ( isset( $config['id'] ) ) {
 			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
 		}

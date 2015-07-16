@@ -33,11 +33,12 @@ $user 			=	JCck::getUser();
 
 // Type
 $type			=	CCK_Form::getType( $preconfig['type'], $id );
-$lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 if ( ! $type ) {
 	$config		=	array( 'action'=>$preconfig['action'], 'core'=>true, 'formId'=>$preconfig['formId'], 'javascript'=>'', 'submit'=>$preconfig['submit'], 'validation'=>array(), 'validation_options'=>array() );
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
+$lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
+
 $options	=	new JRegistry;
 $options->loadString( $type->{'options_'.$preconfig['client']} );
 

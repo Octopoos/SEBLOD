@@ -336,19 +336,44 @@ class CCKController extends JControllerLegacy
 		}
 	}
 
-	// save	
-	public function save()
+	// saveAjax
+	public function saveAjax()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		$config		=	$this->save( true );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@$config['id'],
+							'isNew'=>@$config['isNew'],
+							'pk'=>$config['pk']
+						);
+		
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
+	}
+
+	// save	
+	public function save( $isAjax = false )
+	{
+		if ( $isAjax !== true ) {
+			JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		$app		=	JFactory::getApplication();
 		$model		=	$this->getModel( 'form' );
-		$preconfig	=	$app->input->post->get( 'config', array(), 'array' );
+		$preconfig	=	$this->_getPreconfig();
 		$task		=	$this->getTask();
 		
 		$config		=	$model->store( $preconfig, $task );
 		$id			=	$config['pk'];
 		$itemId		=	$preconfig['itemId'];
+
+		// Return Now for Ajax..
+		if ( $isAjax ) {
+			return $config;
+		}
 		
 		if ( $config['validate'] == 'retry' ) {
 			if ( $app->input->get( 'option', '' ) == 'com_cck' ) {
@@ -404,9 +429,8 @@ class CCKController extends JControllerLegacy
 			$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
 			$msgType	= 'error';
 		}
-		
 		$link		=	$this->_getReturnPage( false );
-		$redirect	=	$config['options']['redirection'];
+		$redirect	=	( isset( $config['options']['redirection'] ) ) ? $config['options']['redirection'] : '';
 		$return		=	'';
 		if ( $task == 'apply' || $task == 'save2copy' ) {
 			$link		=	'';
@@ -548,6 +572,21 @@ class CCKController extends JControllerLegacy
 		return $hits;
 	}
 	
+	// _getPreconfig
+	protected function _getPreconfig()
+	{
+		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+
+		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
+		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
+		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
+		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];
+		
+		return $data;
+	}
+
 	// _getReturnPage
 	protected function _getReturnPage( $base = true )
 	{
@@ -556,7 +595,7 @@ class CCKController extends JControllerLegacy
 		
 		/* Joomla! 3.2 FIX */
 		$check	=	base64_decode( $return );
-		$check	=	( strpos( $check, '?' ) === false && $check[count($check) - 1] != '/' ) ? $check.'/' : $check;
+		$check	=	( strpos( $check, '?' ) === false && @$check[count($check) - 1] != '/' ) ? $check.'/' : $check;
 		/* Joomla! 3.2 FIX */
 
 		if ( empty( $return ) || !JUri::isInternal( $check ) ) {

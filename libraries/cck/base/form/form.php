@@ -73,7 +73,7 @@ class CCK_Form
 				.	' ORDER BY'
 				;
 		if ( $parent != '' ) {
-			$query	.=	' b.id ASC,';
+			$query	.=	' c.typeid ASC,';
 		}
 		$query		.=	' c.ordering ASC';
 		

@@ -19,14 +19,17 @@ class plgCCK_FieldFreeText extends JCckPluginField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// onCCK_FieldConstruct
-	public function onCCK_FieldConstruct( $type, &$data = array() )
+	public function onCCK_FieldConstruct( $type, &$data = array(), $config = array() )
 	{
 		if ( self::$type != $type ) {
 			return;
 		}
+		$data['storage']			=	'none';
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		if ( !isset( $config['inherit'] ) ) {
+			$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare

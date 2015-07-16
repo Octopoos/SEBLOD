@@ -124,12 +124,17 @@ abstract class JCckDev
 	// initScript
 	public static function initScript( $type, &$elem, $options = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$css	=	'';
 		$js		=	'';
 		$js2	=	'';
 		$js3	=	'';
 		if ( $type == 'field' ) {
+			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+				unset( $options['doTranslation'] );
+				unset( $options['hasOptions'] );
+			}
 			if ( isset( $options['doTranslation'] ) ) {
 				if ( is_array( $options['doTranslation'] ) ) {
 					$flag		=	'&nbsp;';
@@ -466,6 +471,12 @@ abstract class JCckDev
 	// renderBlank
 	public static function renderBlank( $html = '', $label = '' )
 	{
+		$app	=	JFactory::getApplication();
+
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		return '<li><label>'.$label.'</label>'.$html.'</li>';
 	}
 	
@@ -478,6 +489,11 @@ abstract class JCckDev
 		
 		$app	=	JFactory::getApplication();
 		$raw	=	false;
+
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		switch ( $type ) {
 			case 'addon':
 				$raw	=	true;
@@ -509,6 +525,12 @@ abstract class JCckDev
 	// renderLegend
 	public static function renderLegend( $legend, $tooltip = '', $tag = '1' )
 	{
+		$app	=	JFactory::getApplication();
+		
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		if ( $tooltip != '' ) {
 			$tag		=	'<span class="star"> &sup'.$tag.';</span>';
 			$tooltip	=	' class="hasTooltip qtip_cck" title="'.$tooltip.'"';
@@ -525,6 +547,10 @@ abstract class JCckDev
 	{
 		$app	=	JFactory::getApplication();
 		
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		if ( isset( $app->cck_markup_closed ) && $app->cck_markup_closed === true ) {
 			$close					=	'';
 			$app->cck_markup_closed	=	false;
