@@ -240,7 +240,7 @@ class CommonHelper_Admin
 						. ' GROUP BY s.id ORDER BY s.title'
 						;
 		} else {
-			if ( $component == 'com_cck' && $element ) {
+			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
 			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'

@@ -27,6 +27,7 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 		$this->item		=	$this->get( 'Item' );
 		$this->option	=	$app->input->get( 'option', '' );
 		
+		Helper_Session::loadExtensionLang( $this->item->extension );
 		Helper_Session::loadExtensionLang( $this->item->type );
 		
 		// Check Errors

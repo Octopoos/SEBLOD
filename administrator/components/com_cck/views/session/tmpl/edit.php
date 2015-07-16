@@ -12,9 +12,8 @@ defined( '_JEXEC' ) or die;
 
 $extension_short_name	=	Helper_Session::getExtensionShortName( $this->item->extension );
 
-$config	=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );	
-$cck	=	JCckDev::preload( array( 'core_title_field', 'core_folder', 'core_session_extension', 'more_'.$extension_short_name.'_storage_location' ) );
-
+$config		=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );	
+$cck		=	JCckDev::preload( array( 'core_title_field', 'core_folder', 'core_session_extension', 'more_'.$extension_short_name.'_storage_location' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -29,7 +28,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
 	    </ul>
         <ul class="spe spe_third">
-			<?php echo JCckDev::renderForm( $cck['core_session_extension'], $this->item->extension, $config ); ?>
+			<?php echo JCckDev::renderForm( $cck['core_session_extension'], $this->item->extension, $config, array( 'attributes'=>'disabled="disabled"' ) ); ?>
 	    </ul>
         
 	</div>
