@@ -153,7 +153,7 @@ class JCckPluginField extends JPlugin
 		$db					=	JFactory::getDbo();
 		$data['display']	=	3;
 		$data['script']		=	JRequest::getVar( 'script', '', '', 'string', JREQUEST_ALLOWRAW );
-		if ( $data['selectlabel'] == '' ) {
+		if ( isset( $data['selectlabel'] ) && $data['selectlabel'] == '' ) {
 			$data['selectlabel']	=	' ';
 		}
 		
@@ -203,15 +203,20 @@ class JCckPluginField extends JPlugin
 		} else {
 			// No Table for None!
 			if ( $data['storage'] == 'none' ) {
-				$data['storage_table']	=	'';
+				$data['storage_location']	=	'';
+				$data['storage_table']		=	'';
 			}
 			
 			// Storage Field is required!
-			if ( ! $data['storage_field'] ) {
-				$data['storage_field']	=	$data['name'];
-				$dev_prefix				=	JCck::getConfig_Param( 'development_prefix', '' );
-				if ( $dev_prefix ) {
-					$data['storage_field']	=	str_replace( $dev_prefix.'_', '', $data['storage_field'] );
+			if ( ! @$data['storage_field'] ) {
+				if ( $data['storage'] == 'none' && $data['storage_field_prev'] ) {
+					$data['storage_field']	=	$data['storage_field_prev'];
+				} else {
+					$data['storage_field']	=	$data['name'];
+					$dev_prefix				=	JCck::getConfig_Param( 'development_prefix', '' );
+					if ( $dev_prefix ) {
+						$data['storage_field']	=	str_replace( $dev_prefix.'_', '', $data['storage_field'] );
+					}	
 				}
 			}
 			
@@ -229,10 +234,13 @@ class JCckPluginField extends JPlugin
 			if ( !isset( $data['alterTable'] ) ) {
 				$data['alterTable']			=	true;
 			}
+			if ( $data['storage_location'] == '' && $data['storage_table'] == '' ) {
+				$data['storage']			=	'none';
+			}
 			if ( $data['alterTable'] ) {
-				$data['storage_alter_type']	=	$data['storage_alter_type'] ? $data['storage_alter_type'] : 'VARCHAR(255)';
-				$alter						=	$data['storage_alter'] && in_array( 1, $data['storage_alter'] );
-				if ( $data['storage_alter_table'] && $alter ) {
+				$data['storage_alter_type']	=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
+				$alter						=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
+				if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
 					if ( $data['storage_table'] && $data['storage_field'] ) {
 						$columns	=	$db->getTableColumns( $data['storage_table'] );
 						if ( !isset( $columns[$data['storage_field']] ) ) {
@@ -881,7 +889,34 @@ class JCckPluginField extends JPlugin
 			}
 			self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 		} elseif ( $variation == 'list' ) {
-			// TODO: this will have to wait..
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
+			$field->form	=	'';
+			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
+			if ( count( $options ) ) {
+				
+				static $loaded	=	0;
+				if ( !$loaded ) {
+					$doc		=	JFactory::getDocument();
+					$js			=	'$("form#seblod_form").on("click", ".set-and-submit", function() { $("#'.$id.'").val($(this).parent().attr("data-value")); JCck.Core.submit("search"); });';
+					$js			=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
+					$doc->addScriptDeclaration( $js );
+					$loaded		=	1;
+				}
+				foreach ( $options as $opt ) {
+					$o		=	explode( '=', $opt );
+					$class	=	'';
+					if ( @$o[1] == $value ) {
+						$class		=	' class="active"';
+					} 
+					if ( $o[0] != '' ) {
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="set-and-submit" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+					}
+				}
+				if ( $field->form != '' ) {
+					$field->form	=	'<ul'.( ( $field->css != '' ) ? ' class="'.$field->css.'"' : '' ).'>'.$field->form.'</ul>';
+				}
+			}
+			$field->form	.=	$base;
 		} elseif ( $variation == 'clear' ) {
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	$base;
