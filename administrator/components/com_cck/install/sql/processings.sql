@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_processings` (
   `folder` int(11) NOT NULL DEFAULT '1',
   `type` varchar(50) NOT NULL,
   `description` varchar(5120) NOT NULL,
+  `options` text NOT NULL,
   `ordering` int(11) NOT NULL DEFAULT '0',
   `published` tinyint(3) NOT NULL DEFAULT '0',
   `scriptfile` text NOT NULL,
