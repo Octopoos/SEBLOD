@@ -73,6 +73,10 @@ class CCKModelList extends JModelLegacy
 	{
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 
+		if ( !count( $pks ) ) {
+			return false;
+		}
+
 		$db 	= 	JFactory::getDbo();
 		$query	= 	$db->getQuery( true );
 		$query->select( 'id, pk, storage_location' )
