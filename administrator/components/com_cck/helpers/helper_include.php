@@ -59,6 +59,7 @@ class Helper_Include extends CommonHelper_Include
 				Helper_Include::addColorpicker( $script );
 				Helper_Include::addTooltip( '', '', '', '', $script );
 				break;
+			case 'session':
 			case 'version':
 				JCck::loadjQuery( true, true, true );
 				break;
@@ -70,6 +71,7 @@ class Helper_Include extends CommonHelper_Include
 			case 'folders':
 			case 'sites':
 			case 'variations':
+			case 'sessions':
 			case 'versions':
 				if ( $view == 'folders' ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
@@ -94,6 +96,9 @@ class Helper_Include extends CommonHelper_Include
 				if ( $view == 'searchs' || $view == 'sites' ) {
 					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
+				}
+				if ( $view == 'sessions' ) {
+					$doc->addStyleDeclaration( '#system-message-container.j-toggle-main.span10{width: 100%;}' );
 				}
 				break;
 			case 'list':
