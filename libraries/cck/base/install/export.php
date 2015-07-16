@@ -344,6 +344,10 @@ class CCK_Export
 			$data['elements']['tables'][$elem->storage_table][$elem->storage_field]	=	'';
 		}
 		
+		if ( $elem->storage ) {
+			self::exportPlugin( 'cck_storage', $elem->storage, $data, $extensions );
+		}
+		
 		if ( $elem->storage_location ) {
 			self::exportPlugin( 'cck_storage_location', $elem->storage_location, $data, $extensions );
 		}
@@ -361,6 +365,10 @@ class CCK_Export
 		
 		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
+
+		if ( isset( $data['processings'][$elem->id] ) ) {
+			$data['elements']['processings'][$elem->id]	=	'';
+		}
 	}
 	
 	// exportTemplate
@@ -640,11 +648,11 @@ class CCK_Export
 	}
 	
 	// exportFile
-	public static function exportFile( $type, &$data, $file )
+	public static function exportFile( $type, &$data, $file, $extensions = array() )
 	{
 		$path	=	$data['root_extensions'].'/_temp';
 		if ( $file['src'] && JFolder::exists( $file['src'] ) ) {
-			if ( $type == 'variation' ) {
+			if ( $type == 'variation' || $type == 'processing' ) {
 				JFolder::copy( $file['src'], $path.'/'.$file['name'] );
 				$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/'.$file['filename'].'.xml';
 				if ( JFile::exists( $manifest ) ) {
@@ -653,7 +661,17 @@ class CCK_Export
 					$xml		=	CCK_Export::prepareFile( (object)array( 'title'=>$file['name'] ) );
 					$fileset	=	$xml->addChild( 'fileset' );
 					$files		=	$fileset->addChild( 'files' );
-					$files->addAttribute( 'target', 'libraries/cck/rendering/variations' );
+
+					if ( $type == 'processing' ) {
+						$target	=	'media/cck/processings';
+						if ( isset( $extensions[$file['src']]->src ) ) {
+							$target	=	$extensions[$file['src']]->src;
+						}
+					} else {
+						$target	=	'libraries/cck/rendering/variations';
+					}
+					$files->addAttribute( 'target', $target );
+
 					$addfile	=	$files->addChild( 'folder', $file['name'] );
 					
 					CCK_Export::createFile( $path.'/'.$file['filename'].'.xml', '<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML() );
@@ -772,6 +790,81 @@ class CCK_Export
 	// exportJoomla_Module
 	public static function exportJoomla_Module( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
 	{
+	}
+
+	// exportProcessings
+	public static function exportProcessings( &$data, &$extensions )
+	{
+		$elemtype	=	'processing';
+		$plural		=	$elemtype.'s';
+		$dest		=	CCK_Export::createDir( $data['root_elements'].'/'.$plural );
+
+		foreach ( $data['elements']['processings'] as $k=>$v ) {
+			$name		=	$data['processings'][$k]->name;
+			$filename	=	JFile::getName( $data['processings'][$k]->scriptfile );
+			$filename	=	substr( $filename, 0, strrpos( $filename, '.' ) );
+			
+			if ( $filename && $name && strpos( $data['processings'][$k]->scriptfile, $filename.'/'.$filename.'.php' ) !== false ) {
+				$folder =   str_replace( $filename.'/'.$filename.'.php', '', $data['processings'][$k]->scriptfile );
+				if ( $folder && $folder[0] == '/' ) {
+					$folder	=	substr( $folder, 1 );
+				}
+
+				$xml	=	new JCckDevXml( '<cck />' );
+				$xml->addAttribute( 'type', $plural );
+				$xml->addChild( 'author', 'Octopoos' );
+				$xml->addChild( 'authorEmail', 'contact@seblod.com' );
+				$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+				$xml->addChild( 'copyright', 'Copyright (C) 2013 SEBLOD. All Rights Reserved.' );
+				$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
+				$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
+
+				$xml2	=	$xml->addChild( $elemtype );
+				$xml2->addChild( 'title', htmlspecialchars( $data['processings'][$k]->title ) );
+				$xml2->addChild( 'name', $name );
+				$app_folder	=	$data['processings'][$k]->folder;
+				$app_folder	=	( isset( $data['folders'][$app_folder] ) ) ? $data['folders'][$app_folder]->path : 'quick_folder';
+				$xml2->addChild( 'folder', $app_folder );
+				$xml2->addChild( 'type', $data['processings'][$k]->type );
+				$xml2->addChild( 'description', htmlspecialchars( $data['processings'][$k]->description ) );
+				$xml2->addChild( 'options', htmlspecialchars( $data['processings'][$k]->options ) );
+				$xml2->addChild( 'ordering', 0 );
+				$xml2->addChild( 'published', $data['processings'][$k]->published );
+				$xml2->addChild( 'scriptfile', $data['processings'][$k]->scriptfile );
+
+				// Set
+				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
+				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
+				JFile::write( $path, $buffer );
+
+				if ( $folder ) {
+					$path	=	JPATH_SITE.'/'.$folder;
+
+					if ( JFolder::exists( $path ) ) {
+						$file				=	array();
+						$file['_']			=	'pro_cck_'.$name.'.zip';
+						$file['filename']	=	'pro_cck_'.$name;
+						$file['name']		=	$name;
+						$file['src']		=	$path.$name;
+
+						if ( file_exists( $file['src'] ) ) {
+							if ( !isset( $extensions[$file['src']] ) ) {
+								$extensions[$file['src']]	=	(object)array(
+																	'type'=>'file',
+																	'id'=>'pro_cck_'.$name,
+																	'_file'=>$file['_'],
+																	'src'=>$folder
+															);
+
+								if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+									self::exportFile( 'processing', $data, $file, $extensions );
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// exportRootCategory
