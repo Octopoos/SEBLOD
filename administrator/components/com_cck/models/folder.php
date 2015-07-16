@@ -116,6 +116,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			return;
 		}
 		$isApp		=	false;
+		$isCck		=	false;
 		$name		=	$folders[0]->name;
 		if ( !$name ) {
 			return;
@@ -138,6 +139,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['folders2']							=	JCckDatabase::loadObjectList( 'SELECT id, name, path FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['plugins']							=	CCK_Export::getCorePlugins();
 		$data['plugins']['cck_field_live']['stage']	=	true;
+		$data['processings']						=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_more_processings', 'folder' );
 		$data['styles']								=	JCckDatabase::loadObjectList( 'SELECT * FROM #__template_styles', 'id' );
 		$data['tables']								=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
@@ -198,11 +200,21 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			CCK_Export::exportTables( $data );
 		}
 
+		if ( count( $data['elements']['processings'] ) ) {
+			$isCck	=	true;
+
+			CCK_Export::exportProcessings( $data, $extensions );
+		}
+
 		// Name & Root
 		if ( $isApp ) {
 			$filename				=	'app_cck_'.$name;
 		} else {
-			$filename				=	$name;
+			if ( $isCck ) {
+				$filename			=	'cck_'.$name;
+			} else {
+				$filename			=	$name;	
+			}
 			if ( isset( $dependencies['categories'] ) && file_exists( $data['root_content'].'/joomla_category' ) ) {
 				$items	=	JFolder::files( $data['root_content'].'/joomla_category', '\.xml$' );
 				if ( count( $items ) == 1 && isset( $items[0] ) && $data['root_category'] != ''
