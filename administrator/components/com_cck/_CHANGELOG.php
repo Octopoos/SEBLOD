@@ -24,6 +24,50 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.7.0 Upgrade Release [17-Jul-2015] -------------
+
++ Ability to create/link a new field to a specific Content Type... from Field Manager (or Search Type).
++ Ability to join the same table more than once added >> Search Join plug-in required.
++ Force Typography even if value is empty.
++ Session Manager added >> "Edit" capabilities for sessions created from Exporter/Importer add-on.
+
++ Export of Processings implemented.
++ Export of Storage (Format) plug-ins implemented.
++ Import of Processings implemented.
+
++ "Custom Attribute" added on "Content", "SEBLOD Form" Link plug-ins.
++ "List" Variation added on "Select Dynamic/Simple"
++ "Prepare Content" parameter added on "Joomla! Module" plug-in.
++ "Static Options" placement added on "Select Dynamic".
++ "Use Value (Field)" added on "SEBLOD Form" Link plug-in.
++ Text input forced for Search Form, on "Wysiwyg Editor" plug-in.
++ ->values property available on "Checkbox" plug-in.
+
+! Table (seb_table) updated to render <table></table> even if no items.
+
++ "CckModal" (Bootstrap Modal Box) added in cck.core-x.x.x.min.js
++ "JCck.Core.baseURI" javascript property added.
+
+^ <form> ID suffixed on Form View when tmpl=component OR tmpl=raw.
+^ JCckContent class updated >> "delete" method added and issues fixed.
+^ Mobile Detect updated from 2.8.13 to 2.8.15.
+^ Various Core improvement for upcoming Builder App.
+^ Various Script/Styles improvemented when tmpl=raw.
+
+- Limit of characters removed in "Admin Menu" module.
+
+# "->get(...)" syntax fixed in "$cck->replaceLive()" method.
+# A few PHP notices fixed/removed.
+# Custom Attributes issue fixed on "Textarea" plug-in.
+# Minor CSS issues fixed.
+# Minor issue (related to attachments) fixed on "Email" plug-in.
+# Minor issues fixed on "Select Dynamic".
+# Missing Script (JS) from Stuff applied on "Textarea" plug-in.
+# Javascript issues fixed for Free Storage (back-end).
+# Javascript issues fixed on "Group X" plug-in.
+# Router issue (related to 2 segments URLs) fixed.
+# Various improvements or issues fixed.
+
 -------------------- 3.6.2 Upgrade Release [21-May-2015] -------------
 
 # Remove temporary comments.
