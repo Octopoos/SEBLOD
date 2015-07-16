@@ -24,6 +24,7 @@ $options    =   JCckDev::fromSTRING( $this->item->options );
 		echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'label'=>'NAMETITLE_OR_POSITION' ) );
         //echo JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Modules' ) );
 		echo JCckDev::renderForm( 'core_module_style', $this->item->style, $config );
+        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Prepare Content', 'defaultvalue'=>'0' ) );
 		
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
