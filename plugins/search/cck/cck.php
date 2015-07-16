@@ -69,7 +69,9 @@ class plgSearchCCK extends JPlugin
 			foreach ( $config['joins'][$current['stage']] as $j ) {
 				if ( $j->table ) {
 					if ( !isset( $tables[$j->table] ) ) {
-						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2 );
+						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and );
+					} elseif ( $j->and != '' ) {
+						$tables[$j->table.'@'.md5( $j->and )]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and );
 					}
 				}
 			}
@@ -82,6 +84,7 @@ class plgSearchCCK extends JPlugin
 			if ( $current['stage'] != (int)$field->stage ) {
 				continue;
 			}
+			$hasSQL	=	true;
 			$name2	=	( $field->match_collection != '' ) ? '\\\|[0-9]+\\\|'.$field->match_collection : '';
 			// -
 			if ( $field->live == 'stage' ) {
@@ -199,13 +202,27 @@ class plgSearchCCK extends JPlugin
 					if ( $Pt != '' ) {
 						$target	=	$tables[$Pt]['_'].'.'.$Pf;
 						$tables[$Pt]['fields'][$Pf]	=	( $Pt == '#__cck_core' ) ? $value : $name;
+					} else {
+						$target	=	$Pf;
+						$hasSQL	=	false;
 					}
 					
 					require_once JPATH_PLUGINS.'/cck_storage/'.$field->storage.'/'.$field->storage.'.php';
 					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, $fields, &$config ) );
 				}
-				$where			.=	$sql;
-				$where2[++$w]	=	$sql;
+				if ( $hasSQL === false ) {
+					if ( $glues == 1 ) {
+						if ( $where != '' ) {
+							$where		=	substr( $where, 0, -3 );
+							$where2[$w]	=	'';
+						}
+					}
+					$config['query_parts']['having'][]	=	$sql;
+					$sql								=	'';
+				} else {
+					$where			.=	$sql;
+					$where2[++$w]	=	$sql;	
+				}
 			} else {
 				if (  @$glue ) {
 					$where2[$w]	=	'';
@@ -222,6 +239,7 @@ class plgSearchCCK extends JPlugin
 			$where	=	str_replace( 'AND ( )', '', $where );
 			$where	=	str_replace( 'OR OR', 'OR', $where );
 			$where	=	str_replace( '( OR', '(', $where );
+			$where	=	str_replace( 'OR ) )', ')', $where );
 			$where	=	str_replace( 'OR )', ')', $where );
 		}
 		$where		=	str_replace( 'AND ()', '', $where );
@@ -344,7 +362,21 @@ class plgSearchCCK extends JPlugin
 				$key		=	( isset( $tables[$tk]['key'] ) ) ? $tables[$tk]['key'] : 'id';
 				$join_table	=	( isset( $tables[$tk]['join_table'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
 				$join_key	=	( isset( $tables[$tk]['join_key'] ) ) ? $tables[$tk]['join_key'] : ( ( $tk == $inherit['bridge'] ) ? 'pkb' : 'pk' );
-				$query->join( 'LEFT', '`'.$tk.'` AS '.$tv['_'].' ON '.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key );
+				$join_and	=	( isset( $tables[$tk]['join_and'] ) ) ? $tables[$tk]['join_and'] : '';
+
+				if ( $join_table != '' && $join_key != '' ) {
+					if ( $join_and != '' && strpos( $tk, '@' ) !== false ) {
+						$tk_table	=	explode( '@', $tk );
+						$tk			=	$tk_table[0];
+					}
+					if ( $tk != '' ) {
+						if ( $join_and != '' ) {
+							$query->join( 'LEFT', '`'.$tk.'` AS '.$tv['_'].' ON ('.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key.' AND '.$tv['_'].'.'.$join_and.')' );
+						} else {
+							$query->join( 'LEFT', '`'.$tk.'` AS '.$tv['_'].' ON '.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key );
+						}	
+					}
+				}
 			}
 		}
 	}
