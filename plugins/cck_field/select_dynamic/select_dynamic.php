@@ -54,8 +54,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_HTML' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_LIST' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 
 		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );

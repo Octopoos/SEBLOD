@@ -220,7 +220,7 @@ foreach ( $fields as $field ) {
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
 		
 	// Value
-	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'list' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
+	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'list' || $field->variation == 'list_filter' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
 	} else {
 		if ( isset( $lives[$name] ) ) {

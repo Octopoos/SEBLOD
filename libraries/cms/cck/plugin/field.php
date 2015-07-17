@@ -888,7 +888,7 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( $field->script );
 			}
 			self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
-		} elseif ( $variation == 'list' ) {
+		} elseif ( $variation == 'list' || $variation == 'list_filter' ) {
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	'';
 			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
@@ -897,7 +897,12 @@ class JCckPluginField extends JPlugin
 				static $loaded	=	0;
 				if ( !$loaded ) {
 					$doc		=	JFactory::getDocument();
-					$js			=	'$("form#seblod_form").on("click", ".set-and-submit", function() { $("#'.$id.'").val($(this).parent().attr("data-value")); JCck.Core.submit("search"); });';
+					if ( $variation == 'list' ) {
+						$then	=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
+					} else {
+						$then	=	' JCck.Core.submit("search");';
+					}
+					$js			=	'$("form#seblod_form").on("click", ".list-variation-items > li a", function() { $("#'.$id.'").val($(this).parent().attr("data-value"));'.$then.' });';
 					$js			=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
 					$doc->addScriptDeclaration( $js );
 					$loaded		=	1;
@@ -909,11 +914,13 @@ class JCckPluginField extends JPlugin
 						$class		=	' class="active"';
 					} 
 					if ( $o[0] != '' ) {
-						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="set-and-submit" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
 					}
 				}
 				if ( $field->form != '' ) {
-					$field->form	=	'<ul'.( ( $field->css != '' ) ? ' class="'.$field->css.'"' : '' ).'>'.$field->form.'</ul>';
+					$class			=	'list-variation-items';
+					$class			=	( $field->css != '' ) ? $class.' '.$field->css : $class;
+					$field->form	=	'<ul class="'.$class.'">'.$field->form.'</ul>';
 				}
 			}
 			$field->form	.=	$base;
