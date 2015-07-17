@@ -45,7 +45,6 @@ $ -> Language fix or change
 
 ! Table (seb_table) updated to render <table></table> even if no items.
 
-+ "CckModal" (Bootstrap Modal Box) added in cck.core-x.x.x.min.js
 + "JCck.Core.baseURI" javascript property added.
 
 ^ <form> ID suffixed on Form View when tmpl=component OR tmpl=raw.
