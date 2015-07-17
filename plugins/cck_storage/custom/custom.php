@@ -70,18 +70,18 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 		if ( self::$type != $field->storage ) {
 			return;
 		}
-		
+
 		// Init
-		if ( is_object( $field ) && $field->storage_field2 ) {
-			$config['fieldname']	=	$field->storage_field2;
-		}
 
 		// Set
 		if ( $config['collection'] != '' ) {
-			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );
+			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );			
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
 		} else {
+			if ( is_object( $field ) && $field->storage_field2 ) {
+				$config['fieldname']	=	$field->storage_field2;
+			}
 			$regex	=	CCK_Content::getRegex_Field( $config['fieldname'] );
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
