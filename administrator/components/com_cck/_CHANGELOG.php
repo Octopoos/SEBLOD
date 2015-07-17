@@ -58,12 +58,15 @@ $ -> Language fix or change
 # "->get(...)" syntax fixed in "$cck->replaceLive()" method.
 # A few PHP notices fixed/removed.
 # Custom Attributes issue fixed on "Textarea" plug-in.
+# Download issue fixed in Custom storage.
+# Minimum number of rows forced on "Field X" plug-in.
 # Minor CSS issues fixed.
 # Minor issue (related to attachments) fixed on "Email" plug-in.
 # Minor issues fixed on "Select Dynamic".
 # Missing Script (JS) from Stuff applied on "Textarea" plug-in.
 # Javascript issues fixed for Free Storage (back-end).
 # Javascript issues fixed on "Group X" plug-in.
+# Prevent default value to be removed in "Upload File/Image" plug-ins.
 # Router issue (related to 2 segments URLs) fixed.
 # Various improvements or issues fixed.
 
