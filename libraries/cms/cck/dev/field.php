@@ -46,7 +46,9 @@ abstract class JCckDevField
 			return '';
 		}
 		
-		$inherit['name']	=	$field->storage_field;
+		if ( ! isset( $inherit['name'] ) ) {
+			$inherit['name']	=	$field->storage_field;
+		}
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $field->storage_field );
 		}
