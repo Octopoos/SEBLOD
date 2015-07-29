@@ -58,39 +58,51 @@ class JCckDevImage
 	}
 
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat, $quality = 100 )
-	{
-		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
+	public function createThumb($image, $tnumber, $twidth, $theight, $tformat, $watermark = null, $k = 1, $quality = 100) {
+		if (!( $twidth && trim($twidth) != '' && is_numeric($twidth) ) && !( $theight && trim($theight) != '' && is_numeric($theight) )) {
 			return false;
 		}
-		
-		$path 			=	$this->_pathinfo['dirname'];
-		$resImage 		= 	$this->_resource;
+		//var_dump($image);
+		if ($watermark) {
+			$watermark_obj = new JCckDevImage($watermark);
+		}
+		$path		 = $this->_pathinfo['dirname'];
+		$resImage	 = $this->_resource;
 
 		// Calcul Thumb Size
-		$values = $this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
+		$values = $this->_prepareDimensions($this->_width, $this->_height, $twidth, $theight, $tformat);
 		list( $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight ) = $values;
 
 		// Add transparence for PNG
-		$thumbImage	=	imageCreateTrueColor( $thumbWidth, $thumbHeight );
-		if ( $this->_extension == 'png' ) {
-			imagealphablending( $thumbImage, false );
+		$thumbImage = imageCreateTrueColor($thumbWidth, $thumbHeight);
+		if ($this->_extension == 'png') {
+			imagealphablending($thumbImage, false);
 		}
 
 		// Generate thumb ressource
-		imagecopyresampled( $thumbImage, $resImage, $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight );
+		imagecopyresampled($thumbImage, $resImage, $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight);
 
 		// Set Folder
 		// $file_path ='';
-		if ( $tnumber == 0 ) {
-			$thumbLocation	=	$path . '/' . $this->_pathinfo['basename'];
+		if ($tnumber == 0) {
+			$thumbLocation = $path . '/' . $this->_pathinfo['basename'];
 		} else {
-			JCckDevHelper::createFolder( $path . '/_thumb'.$tnumber );
-			$thumbLocation	=	$path . '/_thumb'.$tnumber . '/' . $this->_pathinfo['basename'];
+			JCckDevHelper::createFolder($path . '/_thumb' . $tnumber);
+			$thumbLocation = $path . '/_thumb' . $tnumber . '/' . $this->_pathinfo['basename'];
 		}
-		
+
+		if ($watermark) {
+			$wmImage		 = $watermark_obj->_resource;
+			$wm_width		 = $watermark_obj->_width;
+			$wm_height		 = $watermark_obj->_height;
+			$WmImgKoeff		 = $wm_height / $wm_width;
+			$new_wm_width	 = $k * $thumbWidth;
+			$new_wm_height	 = $new_wm_width * $WmImgKoeff;
+
+			imagecopyresized($thumbImage, $wmImage, ($thumbWidth - $new_wm_width) / 2, ($thumbHeight - $new_wm_height) / 2, 0, 0, $new_wm_width, $new_wm_height, $wm_width, $wm_height); // Копируем изображение водяного знака на изображение источник
+		}
 		// Create image
-		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation, $quality );
+		$this->_generateThumb($this->_extension, $thumbImage, $thumbLocation, $quality);
 
 		return true;
 	}
@@ -131,7 +143,27 @@ class JCckDevImage
 
 		JFile::write( $file, $output );
 	}
+	public function createWatermark($image, $watermark, $k, $quality = 100) {
 
+		$path			 = $this->_pathinfo['dirname'];
+		$file			 = $this->_pathinfo['basename'];
+		$resImage		 = $this->_resource;
+		$wmImage		 = $watermark->_resource;
+		$thumbWidth		 = $this->_width;
+		$thumbHeight	 = $this->_height;
+		$wm_width		 = $watermark->_width;
+		$wm_height		 = $watermark->_height;
+		$WmImgKoeff		 = $wm_height / $wm_width;
+		$new_wm_width	 = $k * $thumbWidth;
+		$new_wm_height	 = $new_wm_width * $WmImgKoeff;
+
+		imagecopyresized($resImage, $wmImage, ($thumbWidth - $new_wm_width) / 2, ($thumbHeight - $new_wm_height) / 2, 0, 0, $new_wm_width, $new_wm_height, $wm_width, $wm_height); 
+		// Create image
+		$this->_generateThumb($this->_extension, $resImage, $path . '/' . $file, $quality);
+
+
+		return true;
+	}
 	// _prepareDimensions
 	protected function _prepareDimensions( $src_w, $src_h, $dest_w, $dest_h, $action ) 
 	{
