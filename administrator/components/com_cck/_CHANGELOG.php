@@ -29,7 +29,7 @@ $ -> Language fix or change
 + Ability to create/link a new field to a specific Content Type... from Field Manager (or Search Type).
 + Ability to join the same table more than once added >> Search Join plug-in required.
 + Force Typography even if value is empty.
-+ Session Manager added >> "Edit" capabilities for sessions created from Exporter/Importer add-on.
++ Session Manager added >> "Edit" capabilities for sessions created from Exporter/Importer add-ons.
 
 + Export of Processings implemented.
 + Export of Storage (Format) plug-ins implemented.
@@ -50,7 +50,7 @@ $ -> Language fix or change
 ^ <form> ID suffixed on Form View when tmpl=component OR tmpl=raw.
 ^ JCckContent class updated >> "delete" method added and issues fixed.
 ^ Mobile Detect updated from 2.8.13 to 2.8.15.
-^ Various Core improvement for upcoming Builder App.
+^ Various Core improvements for upcoming Builder App.
 ^ Various Script/Styles improvemented when tmpl=raw.
 
 - Limit of characters removed in "Admin Menu" module.
