@@ -39,6 +39,13 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 <?php } ?>
 <input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" />
 <input type="hidden" name="task" value="search" />
+<?php if ( !JFactory::getConfig()->get( 'sef' ) ) { ?>
+<input type="hidden" name="option" value="com_cck" />
+<input type="hidden" name="view" value="list" />
+<?php if ( $params->get( 'menu_item', '' ) ) { ?>
+<input type="hidden" name="Itemid" value="<?php echo $params->get( 'menu_item', '' ); ?>" />
+<?php } ?>
+<?php } ?>
 <?php if ( !$raw_rendering ) { ?>
 </div>
 <?php } ?>

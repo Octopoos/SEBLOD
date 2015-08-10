@@ -124,17 +124,17 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->adminFields.' '.$label.' / '.$item->adminTemplate;
-                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=admin" title="'.$client.'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
+				$client	=	'<strong>'.$item->adminTemplate.'</strong><br />'.$item->adminFields.' '.$label;
+                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=admin" title="'.htmlspecialchars( $client ).'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->siteFields.' '.$label.' / '.$item->siteTemplate;
-                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=site" title="'.$client.'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
+				$client	=	'<strong>'.$item->siteTemplate.'</strong><br />'.$item->siteFields.' '.$label;
+                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=site" title="'.htmlspecialchars( $client ).'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->introFields.' '.$label.' / '.$item->introTemplate;
-                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=intro" title="'.$client.'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
+				$client	=	'<strong>'.$item->introTemplate.'</strong><br />'.$item->introFields.' '.$label;
+                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=intro" title="'.htmlspecialchars( $client ).'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->contentFields.' '.$label.' / '.$item->contentTemplate;
-                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=content" title="'.$client.'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
+				$client	=	'<strong>'.$item->contentTemplate.'</strong><br />'.$item->contentFields.' '.$label;
+                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
 				<?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?>
 			</td>

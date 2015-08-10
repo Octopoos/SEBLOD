@@ -31,10 +31,10 @@ abstract class JCckContentArticle
 		$row->load( $id );
 		
 		if ( !$content_type ) {
-			$content_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.$row->id );
+			$content_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.(int)$row->id );
 		}
 		if ( $content_type ) {
-			$fields		=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.$row->id );
+			$fields		=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.(int)$row->id );
 			if ( count( $fields ) ) {
 				foreach ( $fields as $k=>$v ) {
 					$row->$k	=	$v;

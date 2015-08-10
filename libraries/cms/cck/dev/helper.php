@@ -173,9 +173,9 @@ abstract class JCckDevHelper
 				$v	=	explode( '=', $var );
 				if ( $v[0] ) {
 					if ( $force ) {
-						$url[$v[0]]	=	(string)$v[1];
+						$url[$v[0]]	=	(string)@$v[1];
 					} else {
-						$url[$v[0]]	=	$v[1];
+						$url[$v[0]]	=	@$v[1];
 					}
 				}
 			}
@@ -183,6 +183,17 @@ abstract class JCckDevHelper
 		$url	=	new JRegistry( $url );
 		
 		return $url;
+	}
+	
+	// hasLanguageAssociations
+	public static function hasLanguageAssociations()
+	{
+		if ( class_exists( 'JLanguageAssociations' ) ) {
+			return JLanguageAssociations::isEnabled();
+		} else {
+			$app	=	JFactory::getApplication();
+			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );
+		}
 	}
 	
 	// matchUrlVars

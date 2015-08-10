@@ -98,7 +98,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		$core	=	JCckDev::fromJSON( $table->e_core );
 		
 		if ( isset( $row->asset_id ) && $row->asset_id && isset( $core['rules'] ) ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.$row->asset_id );
+			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.(int)$row->asset_id );
 		}
 		
 		// More

@@ -95,7 +95,7 @@ class CCKViewForm extends JViewLegacy
 				$key	=	'COM_CCK_TITLE_FORM_ADD_'.str_replace( ' ', '_', $title );
 				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_ADD' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'form.png' );
+			JToolBarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CANCEL', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		} else {
 			$key	=	'APP_CCK_FORM_'.$name.'_TITLE_EDIT';
@@ -105,7 +105,7 @@ class CCKViewForm extends JViewLegacy
 				$key	=	'COM_CCK_TITLE_FORM_EDIT_'.str_replace( ' ', '_', $title );
 				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_EDIT' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'form.png' );
+			JToolBarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CLOSE', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		}
 		$bar->prependButton( 'CckLink', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', 'javascript:JCck.Core.submit(\'form.save2new\');' );

@@ -13,22 +13,26 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_Storage_LocationFree extends JCckPluginLocation
 {
-	protected static $type		=	'free';
-	protected static $table		=	'';
-	protected static $key		=	'id';
+	protected static $type			=	'free';
+	protected static $table			=	'';
+	protected static $table_object	=	array();
+	protected static $key			=	'id';
 	
-	protected static $access	=	'';
-	protected static $author	=	'';
-	protected static $custom	=	'';
-	protected static $parent	=	'';
-	protected static $status	=	'';
-	protected static $to_route	=	'';
+	protected static $access		=	'';
+	protected static $author		=	'';
+	protected static $created_at	=	'';
+	protected static $custom		=	'';
+	protected static $modified_at	=	'';
+	protected static $parent		=	'';
+	protected static $parent_object	=	'';
+	protected static $status		=	'';
+	protected static $to_route		=	'';
 	
-	protected static $context	=	'';
-	protected static $contexts	=	array();
-	protected static $error		=	false;
-	protected static $ordering	=	array();
-	protected static $pk		=	0;
+	protected static $context		=	'';
+	protected static $contexts		=	array();
+	protected static $error			=	false;
+	protected static $ordering		=	array();
+	protected static $pk			=	0;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -56,6 +60,20 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, ( $table == '#__cck_core' ? $config['id'] : $pk ) );
 	}
 	
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( self::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, ( $table == '#__cck_core' ? $config['id'] : $pk ) );
+	}
+
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
 	{
@@ -91,14 +109,16 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		// Prepare
 		if ( $load ) {
 			if ( $table == '#__cck_core' ) {
-				$keys				=	'ids';
-				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
+				$keys						=	'ids';
+				$storages[$table]			=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
 			} else {
-				$keys				=	'pks';
-				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', self::$key );
+				$keys						=	'ids';
+				$storages['#__cck_core']	=	JCckDatabase::loadObjectList( 'SELECT author_id, pk FROM #__cck_core WHERE '.self::$key.' IN ('.$config[$keys].')', 'pk' );	//#
+				$keys						=	'pks';
+				$storages[$table]			=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.self::$key.' IN ('.$config[$keys].')', self::$key ); //#				
 			}
 		}
-		//$config['author']	=	'';
+		$config['author']	=	( isset( $storages['#__cck_core'][$config['pk']] ) ) ? (int)$storages['#__cck_core'][$config['pk']]->author_id : 0;
 	}
 	
 	// onCCK_Storage_LocationPrepareList
@@ -147,9 +167,63 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		// TODO
+		$app		=	JFactory::getApplication();
+		$dispatcher	=	JDispatcher::getInstance();
 		
-		return false;
+		$item		=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
+		if ( !is_object( $item ) ) {
+			return false;
+		}
+		$table		=	JCckTable::getInstance( $item->storage_table, 'id' );
+		$table->load( $pk );
+		
+		if ( !$table ) {
+			return false;
+		}
+		
+		// Check
+		$user 			=	JCck::getUser();
+		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
+		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
+		if ( ( !$canDelete && !$canDeleteOwn ) ||
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			return;
+		}
+		
+		// Process
+		// -- onContentBeforeDelete?
+		if ( !$table->delete( $pk ) ) {
+			return false;
+		}
+
+		// Delete Core
+		if ( $item->id ) {
+			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $item->id );
+			$table->delete();
+		}
+
+		// Delete More
+		$base		=	str_replace( '#__', '', $item->storage_table );
+		$tables		=	JCckDatabase::loadColumn( 'SHOW TABLES' );
+		$prefix		= 	JFactory::getConfig()->get( 'dbprefix' );
+
+		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		if ( in_array( $prefix.'cck_store_form_'.$item->type, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$item->type, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		// -- onContentAfterDelete?
+		
+		return true;
 	}
 	
 	// onCCK_Storage_LocationSearch
@@ -160,6 +234,13 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		}
 
 		if ( $config['doQuery'] === false && isset( $config['query'] ) && $config['query'] ) {
+			if ( isset( $config['query_variables'] ) && count( $config['query_variables'] ) ) {
+				foreach ( $config['query_variables'] as $var ) {
+					if ( $var != '' ) {
+						JCckDatabase::execute( $var );
+					}
+				}
+			}
 			$results			=	JCckDatabase::loadObjectList( $config['query'] );
 			$inherit['query']	=	$config['query'];
 
@@ -276,7 +357,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
 	{
 	}
 	
@@ -320,13 +401,32 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND storage_table="'.(string)$config['base']->table.'" AND pk='.(int)$config['pk'] );
 	}
-
+	
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									'parent_object'=>'',
+									/*'routes'=>'',*/
+									'status'=>'',
+									'table'=>'',
+									'table_object'=>'',
+									'to_route'=>''
+								);
+		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
-				if ( $p == 'key' || $p == 'table' || $p == 'access' || $p == 'custom' || $p == 'status' || $p == 'to_route' || $p == 'contexts' ) {
+				if ( isset( $autorized[$p] ) ) {
 					$properties[$p]	=	self::${$p};
 				}
 				unset( $properties[$i] );

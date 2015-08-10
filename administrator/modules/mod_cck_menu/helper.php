@@ -102,7 +102,7 @@ class modCckMenuHelper
 			$menu->addChild( new JCCKMenuNode( '- Blog', 'http://www.seblod.com/community/blog', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Events', 'http://www.seblod.com/community/events', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Forums', 'http://www.seblod.com/community/forums', '', false, '_blank' ) );
-			// $menu->addChild( new JCCKMenuNode( '- Showcase', 'http://www.seblod.com/community/showcase', '', false, '_blank' ) );
+			$menu->addChild( new JCCKMenuNode( '- Showcase', 'http://www.seblod.com/community/showcase', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Social Hub', 'http://www.seblod.com/community/social-hub', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Testimonials', 'http://www.seblod.com/community/testimonials', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Users', 'http://www.seblod.com/community/users', '', false, '_blank' ) );
@@ -114,17 +114,13 @@ class modCckMenuHelper
 			$menu->addChild( new JCCKMenuNode( '- Top', 'http://www.seblod.com/products/top', '', false, '_blank' ) );
 			$menu->addSeparator();
 			$menu->addChild( new JCCKMenuNode( 'Resources', 'http://www.seblod.com/resources', 'class:cck', false, '_blank' ) );
-			$menu->addChild( new JCCKMenuNode( '- FAQ', 'http://www.seblod.com/resources/faq', '', false, '_blank' ) );
+			$menu->addChild( new JCCKMenuNode( '- Books', 'http://www.seblod.com/resources/books', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Manuals', 'http://www.seblod.com/resources/manuals', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Marketing', 'http://www.seblod.com/resources/marketing', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Tracker', 'http://www.seblod.com/resources/tracker', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Tutorials', 'http://www.seblod.com/resources/tutorials', '', false, '_blank' ) );
 			$menu->addChild( new JCCKMenuNode( '- Videos', 'http://www.seblod.com/resources/videos', '', false, '_blank' ) );
 			$menu->addSeparator();
-			// $menu->addChild( new JCCKMenuNode( 'Services', 'http://www.seblod.com/services', 'class:cck', false, '_blank' ) );
-			// $menu->addChild( new JCCKMenuNode( '- Support', 'http://www.seblod.com/services/support', '', false, '_blank' ) );
-			// $menu->addChild( new JCCKMenuNode( '- Webinars', 'http://www.seblod.com/services/webinars', '', false, '_blank' ) );
-			// $menu->addChild( new JCCKMenuNode( '- Worldwide', 'http://www.seblod.com/services/worldwide', '', false, '_blank' ) );
 			$menu->getParent();
 		} elseif ( $mode == 3 ) {
 			$uix_ecommerce		=	JCckEcommerce::getUIX();

@@ -30,12 +30,34 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		$data['divider']	=	'';
-		$prefix				=	JFactory::getApplication()->getCfg( 'dbprefix' );
+		$prefix				=	JFactory::getConfig()->get( 'dbprefix' );
 		$table				=	'cck_store_join_'.( ( $data['storage_field2'] != '' ) ? $data['storage_field2'] : $data['storage_field'] );
 		JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$prefix.$table.' ( `id` int(11) NOT NULL, `id2` int(11) NOT NULL, PRIMARY KEY (`id`,`id2`) )'
-							 . ' ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
+							 . ' ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		// Process
+		$table	=	'#__cck_store_join_'.( $field->storage_field2 ? $field->storage_field2 : $field->storage_field );
+		if ( JCckDatabase::execute( 'DELETE a.* FROM '.$table.' AS a WHERE a.id = '.(int)$config['pk'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -111,7 +133,7 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 																	. ' AS a LEFT JOIN #__cck_store_join_'.$name.' AS b ON b.id = a.id'
 																	. ' WHERE b.id2 = '.(int)$config['pk'].$and.$language.$order.$limit );
 					if ( count( $items ) ) {
-						$sef	=	( JFactory::getApplication()->getCfg( 'sef' ) ) ? $options3->get( 'sef', 2 ) : 0;
+						$sef	=	( JFactory::getConfig()->get( 'sef' ) ) ? $options3->get( 'sef', 2 ) : 0;
 						JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'setRoutes', array( &$items, $sef, $options3->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) ) ) );
 						foreach ( $items as $item ) {
 							$text		.=	', ' . '<a href="'.$item->link.'">'.$item->title.'</a>';
@@ -203,7 +225,7 @@ class plgCCK_FieldJoomla_Article extends JCckPluginField
 		}
 		
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$attr	=	'class="'.$class.'" size="1"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	( count( $opts ) ) ? JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id ) : '';
 				
 		// Set

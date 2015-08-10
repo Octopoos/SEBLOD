@@ -18,7 +18,7 @@
 			var position;
 			var Child;
 			var GrandChildren;
-			$('.cck_button_add_'+name).live('click', function() {
+			$("body").on('click', '.cck_button_add_'+name, function() {
 				elem = $(this).parent().parent();
 				length = ( elem.parent().children().length );
 				id = $(this).parent().attr("id");
@@ -64,7 +64,7 @@
 			var Child;
 			var GrandChildren;
 			var ind;
-			$('.cck_button_del_'+name).live('click', function() {
+			$("body").on('click', '.cck_button_del_'+name, function() {
 				elem	=	$(this).parent().parent();
 				var n	=	elem.parent().children().length;
 				if (n > min_element) {
@@ -102,8 +102,8 @@
 		var last_index;
 		var ind_group;
 		if ( id ) {
-			last_index	=	id.lastIndexOf('_');	
-			ind_group = id.slice(last_index+1).toInt();
+			last_index = id.lastIndexOf('_');	
+			ind_group = parseInt(id.slice(last_index+1));
 		} else {
 			ind_group	=	'';
 		}
@@ -274,7 +274,7 @@
 		var new_ind_group;
 		num_group = num_group+'';
 		var length_ind = num_group.length;
-		num_group = num_group.toInt();
+		num_group = parseInt(num_group);
 		switch ( op_type ) {
 			case 'add' : new_ind_group = num_group + 1; break;
 			case 'del' : new_ind_group = num_group - 1; break;

@@ -103,7 +103,7 @@ class CCKViewList extends JViewLegacy
 		require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
-		JToolBarHelper::title( $title, 'component' );
+		JToolBarHelper::title( $title, 'stack' );
 		
 		if ( !( is_object( $search ) && $search->id ) ) {
 			return;

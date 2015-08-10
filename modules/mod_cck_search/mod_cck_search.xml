@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.0.0</version>
+	<version>3.7.0</version>
 	
 	<files>
 		<folder>tmpl</folder>
@@ -32,7 +32,7 @@
 					<option value="">JCURRENT</option>
 				</field>
 				<field name="menu_item_search" type="cck" construction="core_dev_radio" default="0" cck_selectlabel="" cck_options="No=0||Yes=1"
-				   label="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH" description="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH_DESC" class="inputbox" />
+				   label="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH" description="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH_DESC" class="btn-group btn-group-yesno" />
 				<field name="show_list_title" type="cck" construction="core_show_hide" default="0" cck_selectlabel="Use Global"
 					   label="COM_CCK_CONFIG_SHOW_LIST_TITLE" description="COM_CCK_CONFIG_SHOW_LIST_TITLE_DESC" class="inputbox" />
 				<field name="tag_list_title" type="cck" construction="core_tag_title" default="" label="" description="" class="inputbox" />

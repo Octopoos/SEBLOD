@@ -59,6 +59,7 @@ class Helper_Include extends CommonHelper_Include
 				Helper_Include::addColorpicker( $script );
 				Helper_Include::addTooltip( '', '', '', '', $script );
 				break;
+			case 'session':
 			case 'version':
 				JCck::loadjQuery( true, true, true );
 				break;
@@ -70,6 +71,7 @@ class Helper_Include extends CommonHelper_Include
 			case 'folders':
 			case 'sites':
 			case 'variations':
+			case 'sessions':
 			case 'versions':
 				if ( $view == 'folders' ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
@@ -95,6 +97,12 @@ class Helper_Include extends CommonHelper_Include
 					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
 				}
+				if ( $view == 'sessions' ) {
+					$doc->addStyleDeclaration( '#system-message-container.j-toggle-main.span10{width: 100%;}' );
+				}
+				break;
+			case 'list':
+				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				break;
 			case 'cck':
 				$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
@@ -180,27 +188,6 @@ class Helper_Include extends CommonHelper_Include
 					});
 					';
 		$doc->addScriptDeclaration( $js );
-	}
-	
-	// addTooltip
-	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
-	{
-		if ( !JCck::on() ) {
-			$doc	=	JFactory::getDocument();
-			
-			if ( $script === true ) {
-				$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/css/jquery.qtip.css' );
-				$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/js/jquery.qtip.min.js' );
-			}
-			if ( $elem ) {
-				$js	=	'jQuery(document).ready(function($){ $("'.$elem.'").qtip({ style: {classes: "'.$classes.'"}, position: {my: "'.$pos_my.'", at: "'.$pos_at.'"} }); });';
-				if ( $tmpl == 'ajax' ) {
-					echo '<script type="text/javascript">'.$js.'</script>';
-				} else {
-					$doc->addScriptDeclaration( $js );
-				}
-			}
-		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //

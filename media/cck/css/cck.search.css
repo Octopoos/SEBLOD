@@ -33,6 +33,13 @@ div.cck_forms button.inputbox:focus {
     background: none repeat scroll 0 0 #ffffff !important;
 }
 
+div.cck_forms table.table input.inputbox,
+div.cck_forms table.table textarea.inputbox,
+div.cck_forms table.table select.inputbox,
+div.cck_forms table.table button.inputbox {
+    float: none !important;
+}
+
 /*SITE DIV.CLEAR*/
 div.vertical div.clear{clear:none;}
 div.horizontal div.clear{clear:both;}

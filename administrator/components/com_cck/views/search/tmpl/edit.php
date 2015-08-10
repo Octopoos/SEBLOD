@@ -290,7 +290,7 @@ Helper_Display::quickCopyright();
 			});
 			$("#sortable1, #sortable2").selectable({
 				filter		: "li.field",
-				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_mat2,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled",
+				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_mat2,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled,span.c_cancelled",
 			});
 			/* -- */
 			$(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});

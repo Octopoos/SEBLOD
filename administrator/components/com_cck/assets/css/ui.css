@@ -51,6 +51,9 @@ div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist text
 	width: auto;
 	/*font-size: 11px;*/
 }
+.input-xsmall {
+  width: 60px!important;
+}
 div.seblod .adminformlist input.input-small { 
 	width: 150px;
 }
@@ -88,10 +91,13 @@ div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.che
 	width: auto;
 	margin-right: 10px;
 }
+div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.checkboxes.small label {
+	min-width: 15px;
+}
 body.contentpane.component div.seblod .adminformlist fieldset.checkboxes label {
 	line-height:28px;
 }
-div.seblod .adminformlist fieldset.checkboxes input {
+div.seblod .adminformlist:not(.spe) fieldset.checkboxes input {
 	padding: 1px;
 	float: left;
 	/*clear: left;*/
@@ -166,7 +172,7 @@ div.seblod .inputbutton {
 div.seblod .adminformlist button.inputbutton {
 	top:0px;
 } 
-div.seblod .adminformlist label {
+div.seblod .adminformlist:not(.spe) label {
 	width: 145px;
 	clear: left;
 	display: block;
@@ -372,8 +378,11 @@ ul.spe_state span.state{ margin-top:4px;}
 ul.spe_name li{width:29em;padding-left:7px;margin-top:15px; clear:left;}
 ul.spe_name label{width:100px;}
 ul.spe_name span.variation_value{line-height: 24px;}
+ul.spe_double li {width: 57em; padding-left: 7px; margin-top: 15px; clear: left;}
+ul.spe_double label{width:100px;}
+ul.spe_double input{width:auto;}
 ul.spe_type li{width:28em; margin-top:15px;}
-ul.spe_type label{width:100px;}
+ul.spe_type label, ul.spe_name.adminformlist label, ul.spe_type.adminformlist label{width:100px;}
 ul.spe_second li{width:40em;}
 ul.spe_second label{width:100px;}
 ul.spe_third li{width:20em;}
@@ -468,6 +477,8 @@ body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;ma
 
 ul.spe.spe_latest li{width:70px; margin-top: 15px;}
 ul.spe.spe_description .btn{width:76px;}
+ul.spe_name.adminformlist li{width:29em;}
+ul.spe_type.spe_latest li{width:33em;}
 ul.spe fieldset.btn-group > label{float:none; display:inline-block; line-height:18px}
 ul.spe fieldset.btn-group > label{width:auto; min-width:25px;}
 ul.spe_state.spe_third li {width: 140px;}

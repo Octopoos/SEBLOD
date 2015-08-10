@@ -19,7 +19,8 @@ class CCKViewForm extends JViewLegacy
 		$app					=	JFactory::getApplication();
 		$layout					=	$app->input->get( 'tmpl' );
 		$uniqId					=	'';
-		if ( $layout == 'raw' ) {
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
 			$uniqId				=	'_'.$layout;
 		}
 		
@@ -42,6 +43,7 @@ class CCKViewForm extends JViewLegacy
 	protected function prepareDisplay( $preconfig )
 	{
 		$app				=	JFactory::getApplication();
+		$config				=	JFactory::getConfig();
 		$this->form			=	$this->get( 'Form' );
 		$this->option		=	$app->input->get( 'option', '' );
 		$this->item			=	$this->get( 'Item' );
@@ -69,12 +71,13 @@ class CCKViewForm extends JViewLegacy
 		$title	=	$params->get( 'page_title' );
 		
 		if ( empty( $title ) ) {
-			$title	=	$app->getCfg( 'sitename' );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $app->getCfg( 'sitename' ), $title );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $app->getCfg( 'sitename' ) );
+			$title	=	$config->get( 'sitename' );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
+		$config		=	NULL;
 		$this->document->setTitle( $title );
 		
 		if ( $params->get( 'menu-meta_description' ) ) {
@@ -92,7 +95,7 @@ class CCKViewForm extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-		$unique	=	$preconfig['formId'].'_'.$type->name;
+		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		if ( isset( $config['id'] ) ) {
 			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
 		}
@@ -120,7 +123,7 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
-
+		
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form_id				=	$preconfig['formId'];

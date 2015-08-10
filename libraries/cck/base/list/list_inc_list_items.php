@@ -30,6 +30,7 @@ if ( !isset( $doc->list ) ) {
 }
 $doc->list[$idx]		=	array();
 
+$debug		=	JCck::getConfig_Param( 'debug', 0 );
 $ids		=	'';
 $pks		=	'';
 if ( $list['isCore'] ) {
@@ -41,6 +42,14 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 }
 $storages		=	array( '_'=>'' );
+$suffix			=	'';
+
+if ( $debug == -1 ) {
+	$suffix		=	'Debug';
+	foreach ( $fields as $field ) {
+		$field->storage	=	'lipsum';
+	}
+}
 for ( $i = 0; $i < $count; $i++ ) {
 	if ( isset( $items[$i]->pk ) ) {
 		$PK						=	$items[$i]->pk;
@@ -64,12 +73,14 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$itemId,
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
+							'parent_id'=>$items[$i]->parent,
 							'pk'=>$items[$i]->pk,
 							'pkb'=>$items[$i]->pkb,
 							'pks'=>$pks,
@@ -118,7 +129,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$value		=	trim( $value );
 				}
 				$hasLink	=	( $field->link != '' ) ? 1 : 0;
-				$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+				$dispatcher->trigger( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 				$target		=	$field->typo_target;
 				if ( $hasLink ) {
 					$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
@@ -126,7 +137,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';
@@ -136,6 +147,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$pos						=	$field->position;
 					$positions[$pos][]			=	$field->name;
 					$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
+				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
 				}
 			}
 		}
@@ -165,12 +181,14 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$itemId,
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
+							'parent_id'=>$items[$i]->parent,
 							'pk'=>$items[$i]->pk,
 							'pkb'=>$items[$i]->pkb,
 							'pks'=>$pks,
@@ -227,7 +245,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';
@@ -239,6 +257,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 					if ( isset( $positions_p[$pos] ) ) {
 						$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
 					}
+				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
 				}
 			}
 		}

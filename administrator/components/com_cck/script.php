@@ -82,7 +82,7 @@ class com_cckInstallerScript
 					$id		=	(int)$f->id;
 					$id2	=	(int)'100'.$id;
 
-					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.$id;
+					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.(int)$id;
 					$db->setQuery( $query );
 
 					if ( $db->execute() !== false ) {
@@ -142,7 +142,7 @@ class com_cckInstallerScript
 				$db->execute();
 			}
 		} elseif ( 'install' ) {
-			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[]}';			
+			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[],"core.export":{"7":1},"core.process":{"7":1}}';
 			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
 			$db->setQuery( $query );
 			$db->execute();

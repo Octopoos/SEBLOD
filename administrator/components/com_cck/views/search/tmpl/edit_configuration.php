@@ -47,6 +47,8 @@ $options	=	JCckDev::fromJSON( $this->item->options );
              .	 JCckDev::getForm( $cck['core_class_title'], @$options['class_list_title'], $config, array( 'size'=>16, 'storage_field'=>'options[class_list_title]' ) )
              .	 '</li>';
             echo JCckDev::renderForm( $cck['core_show_hide2'], @$options['show_list_desc'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc]' ) );
+            echo JCckDev::renderBlank();
+            echo JCckDev::renderForm( 'core_show_hide', @$options['show_list'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_SEARCH_LIST', 'storage_field'=>'options[show_list]' ) );
             echo JCckDev::renderForm( 'core_show_hide2', @$options['show_form'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_SEARCH_FORM', 'options'=>'Hide=0||Prepare=-1||Show=optgroup||Above=1||Below=2', 'storage_field'=>'options[show_form]' ) );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_items_number'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_ITEMS_NUMBER', 'storage_field'=>'options[show_items_number]' ) );
             echo '<li><label>'.JText::_( 'COM_CCK_CONFIG_ITEMS_NUMBER_LABEL_CLASS' ).'</label>'
@@ -56,6 +58,8 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
             echo JCckDev::renderForm( $cck['core_show_pagination'], @$options['show_pagination'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_PAGINATION', 'storage_field'=>'options[show_pagination]' ) );
             echo JCckDev::renderForm( $cck['core_class_pagination'], @$options['class_pagination'], $config, array( 'label'=>'CONFIG_PAGINATION_CLASS', 'size'=>16, 'storage_field'=>'options[class_pagination]' ) );
+            echo JCckDev::renderBlank( '<input type="hidden" id="blank_li6" value="" />' );
+            echo JCckDev::renderForm( 'core_dev_text', @$options['callback_pagination'], $config, array( 'label'=>'Config Pagination Callback', 'storage_field'=>'options[callback_pagination]' ) );
             ?>
         </ul>
 	</div>

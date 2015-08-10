@@ -287,6 +287,7 @@ class plgSystemCCK extends JPlugin
 			$user	=	JFactory::getUser();
 			
 			if ( $this->multisite === true ) {
+				$config		=	JFactory::getConfig();
 				$site_title	=	$this->site_cfg->get( 'sitename', '' );
 				$site_pages	=	$this->site_cfg->get( 'sitename_pagetitles', 0 );
 				$site_desc	=	$this->site_cfg->get( 'metadesc', '' );
@@ -299,10 +300,10 @@ class plgSystemCCK extends JPlugin
 					$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
 					$doc->setTitle( $title );
 				}
-				if ( $site_desc && ( !$meta_desc || $meta_desc == $app->getCfg( 'MetaDesc' ) ) ) {
+				if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
 					$doc->setMetaData( 'description', $site_desc );
 				}
-				if ( $site_keys && ( !$meta_keys || $meta_keys == $app->getCfg( 'MetaKeys' ) ) ) {
+				if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
 					$doc->setMetaData( 'keywords', $site_keys );
 				}
 				if ( $this->site_cfg->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {
@@ -429,6 +430,12 @@ class plgSystemCCK extends JPlugin
 			$head	=	$doc->getHeadData();
 
 			JCckToolbox::setHead( $head );
+		} elseif ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+			if ( count( $app->cck_app['Header'] ) ) {
+				foreach ( $app->cck_app['Header'] as $k=>$v ) {
+					$app->setHeader( $k, $v, true );
+				}
+			}
 		}
 	}
 
@@ -449,8 +456,13 @@ class plgSystemCCK extends JPlugin
 				$uri		=	JFactory::getURI();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-				JResponse::setBody( $this->offline_buffer );
+				if ( JCck::on() ) {
+					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					$app->setBody( $this->offline_buffer );
+				} else {
+					JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					JResponse::setBody( $this->offline_buffer );
+				}
 			}
 			return;
 		}
@@ -458,7 +470,7 @@ class plgSystemCCK extends JPlugin
 		// admin
 		if ( $app->isAdmin() && JFactory::getDocument()->getType() == 'html' ) {
 			
-			$buffer	=	JResponse::getBody();
+			$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
 			$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
 			
 			switch ( $option ) {
@@ -532,7 +544,11 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
-			JResponse::setBody( $buffer );
+			if ( JCck::on() ) {
+				$app->setBody( $buffer );
+			} else {
+				JResponse::setBody( $buffer );
+			}
 			
 			return;
 		}

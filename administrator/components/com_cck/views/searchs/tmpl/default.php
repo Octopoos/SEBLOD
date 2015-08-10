@@ -116,17 +116,17 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->searchFields.' '.$label.' / '.$item->searchTemplate;
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=search" title="'.$client.'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+				$client	=	'<strong>'.$item->searchTemplate.'</strong><br />'.$item->searchFields.' '.$label;
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	$item->orderFields.' '.$label;
-                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=order" title="'.$client.'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
+                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->listFields.' '.$label.' / '.$item->listTemplate;
-                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=list" title="'.$client.'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
+				$client	=	'<strong>'.$item->listTemplate.'</strong><br />'.$item->listFields.' '.$label;
+                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->itemFields.' '.$label.' / '.$item->itemTemplate;
-                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=item" title="'.$client.'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
+				$client	=	'<strong>'.$item->itemTemplate.'</strong><br />'.$item->itemFields.' '.$label;
+                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
 			<td width="3%" class="center hidden-phone">
 				<?php echo ( $item->versions ) ? '<a href="'.$linkVersion.'"><img class="img-action" src="components/'.CCK_COM.'/assets/images/16/icon-16-version.png" border="0" alt="" /></a>' : ''; ?>
@@ -158,6 +158,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 </div>
 
 <?php
+JFactory::getDocument()->addStyleDeclaration('.sly > ul{position:relative; left:274px;}');
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
 ?>
@@ -182,17 +183,20 @@ Helper_Display::quickCopyright();
 		addScroll: function() {
 			var sly = new Sly('.sly',{
 				horizontal: 1,
-				activeMiddle: 1,
-				itemNav: "centered",
-				smart: 0,
+				itemNav: 'forceCentered',
+				smart: 1,
+				activateOn: 'click',
+				mouseDragging: 1,
+				touchDragging: 1,
+				releaseSwing: 1,
+				startAt: 2,
+				scrollBar: null,
+				scrollBy: 1,
+				speed: 300,
+				elasticBounds: 1,
 				dragHandle: 1,
 				dynamicHandle: 1,
-				dragContent: 1,
-				startAt: 75,
-				scrollBy: <?php echo $scroll; ?>,
-				moveBy: 600,
-				speed: 300,
-				activateOn: "click"
+				clickBar: 1,
 			}).init();
 		}
 	}

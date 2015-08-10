@@ -26,19 +26,10 @@ class JCckContent
 	protected $_instance_core		=	'';
 	protected $_instance_more		=	'';
 	
-	protected $_object_table		=	array();
-	
 	// __construct
 	public function __construct( $identifier = '', $data = true )
 	{
 		$this->_instance_base	=	JCckTable::getInstance( '#__cck_core', 'id' );
-		
-		//TODO : this should be nicer
-		$this->_object_table	=	array(
-			'joomla_article'	=>	'content',
-			'joomla_category'	=>	'category',
-			'joomla_user'		=>	'user',
-		);
 		
 		if ( $identifier ) {
 			$this->load( $identifier, $data );
@@ -69,30 +60,31 @@ class JCckContent
 		}
 		
 		$this->_type	=	$cck;
-		$this->_instance_core	=	JTable::getInstance( $this->_object_table[$this->_object] );
-		$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 		
-		$author_id 		=	0; // TODO : Get default author id
-		$parent_id		=	0;
+		if ( empty( $this->_object ) ) {
+			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			$this->_columns		=	$this->_getProperties();
+		}
+		
+		$this->_instance_core	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+		
+		$author_id 		=	0; // TODO: Get default author id
+		$parent_id		=	0; // TODO: Get default parent_id
 		
 		// Set the author_id
-		$author_key =	$this->_columns['author'];
-		
-		if ( isset( $data_content[$author_key] ) ) {
-			$author_id	=	$data_content[$author_key];
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] && isset( $data_content[$this->_columns['author']] ) ) {
+			$author_id	=	$data_content[$this->_columns['author']];
 		} else {
-			$user_id	=	JFactory::getUser()->get('id');
+			$user_id	=	JFactory::getUser()->get( 'id' );
 			
 			if ( $user_id ) {
 				$author_id	=	$user_id;
 			}
 		}
 		
-		//Set the parent_id
-		$parent_key = $this->_columns['parent'];
-		
-		if ( isset( $data_content[$parent_key] ) ) {
-			$parent_id	=	$data_content[$parent_key];
+		// Set the parent_id
+		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] && isset( $data_content[$this->_columns['parent']] ) ) {
+			$parent_id	=	$data_content[$this->_columns['parent']];
 		}
 		
 		// -------- -------- --------
@@ -111,17 +103,51 @@ class JCckContent
 			return false;
 		}
 	
-		if ( is_array( $data_more ) ) {
+		if ( is_array( $data_more ) && count( $data_more ) ) {
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk, true );
-					
+			unset( $data_more['id'] );
+			
 			if ( !( $this->save( 'more', $data_more ) ) ) {
 				return false;
 			}
-
 		}
 		
 		//TODO : Load instance info
 		return $this->_pk;
+	}
+
+	// delete
+	public function delete()
+	{
+		if ( $this->_object == '' ) {
+			return false;
+		}
+		if ( !( $this->_id && $this->_pk ) ) {
+			return false;
+		}
+
+		$config	=	array(
+						'author'=>$this->_instance_base->author_id,
+						'type'=>$this->_instance_base->cck,
+						'type_id'=>0
+					);
+		$nb		=	0;
+
+		if ( $config['type'] ) {
+			$config['type_id']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
+		}
+		if ( !$config['type_id'] ) {
+			return false;
+		}
+
+		JPluginHelper::importPlugin( 'content' );
+
+		if ( JCck::callFunc_Array( 'plgCCK_Storage_Location'.$this->_object, 'onCCK_Storage_LocationDelete', array( $this->_pk, &$config ) ) ) {
+			$nb++;
+		}
+		
+		return ( $nb ) ? true : false;
 	}
 
 	// get
@@ -133,7 +159,13 @@ class JCckContent
 
 		return $default;
 	}
-
+	
+	// getId
+	public function getId()
+	{
+		return $this->_id;
+	}
+	
 	// getTable
 	public function getTable()
 	{
@@ -148,28 +180,32 @@ class JCckContent
 		$this->_id		=	'';
 			
 		if ( is_array( $identifier ) ) {
-			$this->_object	=	$identifier[0];
-			$this->_columns	=	$this->_getProperties();
-			$this->_instance_core	=	JTable::getInstance( $this->_object_table[$this->_object] );
+			$this->_object			=	$identifier[0];
+			$this->_columns			=	$this->_getProperties();
+			$this->_instance_core	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
 			
 			if( !isset( $identifier[1] ) ) {
 				return;
 			}
 			
-			$base	=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE storage_location = "'.(string)$identifier[0].'" AND pk = '.(int)$identifier[1] );
+			$base					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE storage_location = "'.(string)$identifier[0].'" AND pk = '.(int)$identifier[1] );
 		} else {
-			$base	=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
-			$this->_object	=	$base->storage_location;
-			$this->_columns	=	$this->_getProperties();
-			$this->_instance_core	=	JTable::getInstance( $this->_object_table[$this->_object] );
+			$base					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+			$this->_object			=	$base->storage_location;
+			$this->_columns			=	$this->_getProperties();
+			$this->_instance_core	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
 		}
-
-		$this->_type	=	$base->cck;
-		$this->_pk		=	$base->pk;
-		$this->_id		=	$base->id;
+		if ( !( @$base->id && @$base->pk ) ) {
+			return false;
+		}
+		
+		$this->_type				=	$base->cck;
+		$this->_pk					=	$base->pk;
+		$this->_id					=	$base->id;
+		$this->_instance_base->load( $this->_id );
 		$this->_instance_core->load( $this->_pk );
 		$this->_instance_more		=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-		$this->_instance_more->load( $this->_id );
+		$this->_instance_more->load( $this->_pk );
 		
 		if ( !$this->_columns['table'] ) {
 			return;
@@ -227,7 +263,9 @@ class JCckContent
 			switch( $instance_name ) {
 				case 'base':
 					$this->_id	=	$this->{'_instance_'.$instance_name}->id;
-					$this->_instance_core->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+					if ( property_exists( $this->_instance_core, $this->_columns['custom'] ) ) {
+						$this->_instance_core->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+					}
 					$this->store( 'core' );
 					break;
 				case 'core':
@@ -244,7 +282,7 @@ class JCckContent
 	// _getProperties
 	protected function _getProperties()
 	{	
-		$values		=	array( 'table', 'key', 'author', 'parent', 'custom' );
+		$values		=	array( 'author', 'custom', 'key', 'parent', 'table', 'table_object' );
 		$properties	=	array();
 		
 		if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$this->_object.'/'.$this->_object.'.php' ) ) {

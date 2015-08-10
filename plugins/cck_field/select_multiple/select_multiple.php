@@ -51,6 +51,9 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 
 		// Prepare
 		$divider					=	( $field->divider != '' ) ? $field->divider : ',';
+		if ( is_array( $value ) ) {
+			$value					=	implode( $divider, $value );
+		}
 
 		// Set
 		$field->text				=	parent::g_getOptionText( $value, $field->options, $divider, $config );

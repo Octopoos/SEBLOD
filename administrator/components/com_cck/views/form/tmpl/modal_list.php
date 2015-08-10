@@ -41,7 +41,7 @@ if ( $legacy == 1 ) {
 $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative; top:8px;}' );
 ?>
 
-<div class="modal hide fade" id="<?php echo $target_id; ?>">
+<div class="modal modal-small hide fade" id="<?php echo $target_id; ?>">
 	<div class="modal-header">
 		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
 		<h3><?php echo $legend; ?></h3>

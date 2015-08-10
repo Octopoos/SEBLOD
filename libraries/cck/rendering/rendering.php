@@ -51,6 +51,7 @@ class CCK_Rendering
 	var $positions;
 	
 	var $grid;
+	var $infinite;
 	
 	var $css;
 	var $browser;
@@ -153,6 +154,7 @@ class CCK_Rendering
 		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
+		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
 		$this->path_lib		=	dirname(__FILE__);
@@ -192,8 +194,9 @@ class CCK_Rendering
 			$this->params['variation_default']	=	'seb_css3';
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
-		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';		
-		
+		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
+		$this->item_attributes	=	( isset( $this->params['rendering_item_attributes'] ) && $this->params['rendering_item_attributes'] ) ? ' '.$this->params['rendering_item_attributes'].' ' : '';
+
 		if ( $this->initRendering() === false ) {
 			$app	=	JFactory::getApplication();
 			$app->enqueueMessage( 'Oops! Template Init. failed.. ; (', 'error' );
@@ -303,9 +306,11 @@ class CCK_Rendering
 	// finalize
 	public function finalize()
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$js		=	'';
-		
+		$tmpl	=	$app->input->get( 'tmpl' );
+
 		// Computation
 		if ( $this->mode == 'form' && $this->config['doComputation'] ) {
 			$format	=	JCck::getConfig_Param( 'computation_format', 0 );
@@ -358,13 +363,29 @@ class CCK_Rendering
 		
 		// Stuff
 		if ( $this->css != '' ) {
-			$doc->addStyleDeclaration( $this->css );
+			if ( $tmpl == 'raw' ) {
+				echo '<style type="text/css">'.$this->css.'</style>';
+			} else {
+				$doc->addStyleDeclaration( $this->css );
+			}			
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$js		=	'(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}			
 		}
 		if ( $this->js2 != '' ) {
-			$doc->addScriptDeclaration( '(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);' );
+			$js		=	'(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}
 		}
 	}
 	
@@ -965,6 +986,29 @@ class CCK_Rendering
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// replaceLive
+	public function replaceLive( $attr )
+	{
+		if ( $attr != '' ) {
+			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				preg_match_all( $search, $attr, $matches );
+
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[2] as $k=>$fieldname ) {
+						$target		=	$matches[1][$k];
+						$get		=	'get'.$target;
+						$replace	=	$this->$get( $fieldname );
+						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
+					}
+				}
+			}
+		}
+
+		return $attr;
+	}
+	
 	// getBrowser
 	public function getBrowser( $property = 'name' )
 	{
@@ -993,8 +1037,12 @@ class CCK_Rendering
 
 	// isGoingtoLoadMore
 	public function isGoingtoLoadMore()
-	{	
-		return 1;
+	{
+		if ( $this->isLoadingMore() == -1 ) {
+			return true;
+		}
+
+		return $this->infinite;
 	}
 
 	// isLoadingMore
@@ -1002,7 +1050,17 @@ class CCK_Rendering
 	{
 		$app	=	JFactory::getApplication();
 		
-		return ( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) ) ? 1 : 0;
+		if ( $app->input->get( 'format' ) == 'raw' ) {
+			$infinite	=	$app->input->get( 'infinite' );
+
+			if ( $infinite == -1 ) {
+				return -1;
+			} elseif ( $infinite ) {
+				return 1;
+			}
+		}
+		
+		return 0;
 	}
 
 	// fakeModule (deprecated)

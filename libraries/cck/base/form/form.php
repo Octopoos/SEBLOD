@@ -33,11 +33,22 @@ class CCK_Form
 	// getFields
 	public static function getFields( $type, $client, $stage, $excluded, $idx, $cck = false )
 	{
+		if ( is_array( $type ) ) {
+			$parent	=	( isset( $type[1] ) ) ? $type[1] : '';
+			$type	=	$type[0];
+		} else {
+			$parent	=	'';
+		}
+
 		// Client
 		if ( $client == 'all' )  {
 			$where 	=	' WHERE b.name = "'.$type.'"';
 		} else {
-			$where 	=	' WHERE b.name = "'.$type.'" AND c.client = "'.$client.'"';
+			if ( $parent != '' ) {
+				$where 	=	' WHERE (b.name = "'.$type.'" OR b.name = "'.$parent.'") AND c.client = "'.$client.'"';
+			} else {
+				$where 	=	' WHERE b.name = "'.$type.'" AND c.client = "'.$client.'"';
+			}
 		}
 		if ( $stage > -1 ) {
 			$where 	.=	' AND c.stage = '.(int)$stage;
@@ -46,7 +57,7 @@ class CCK_Form
 		if ( $excluded != '' ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
 		}
-		//$where	.=	' AND c.variation != "none"';
+		// $where	.=	' AND c.variation != "none"';
 		
 		// Access
 		$user	=	JFactory::getUser();
@@ -59,9 +70,14 @@ class CCK_Form
 				. 	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
 				. 	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
 				. 	$where
-				.	' ORDER BY c.ordering ASC'
+				.	' ORDER BY'
 				;
-		$fields	=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
+		if ( $parent != '' ) {
+			$query	.=	' c.typeid ASC,';
+		}
+		$query		.=	' c.ordering ASC';
+		
+		$fields		=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
 		
 		if ( ! count( $fields ) ) {
 			$fields	=	array();
@@ -98,7 +114,7 @@ class CCK_Form
 	public static function getType( $name, $id, $location = '' )
 	{		
 		// todo: API (move)
-		$query	=	'SELECT a.id, a.title, a.name, a.description, a.location, a.storage_location, b.app as folder_app,'
+		$query	=	'SELECT a.id, a.title, a.name, a.description, a.location, a.parent, a.storage_location, b.app as folder_app,'
 				.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets'
 				.	' FROM #__cck_core_types AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
@@ -111,8 +127,7 @@ class CCK_Form
 	public static function redirect( $action, $url, $message = '', $type = 'error', &$config )
 	{
 		$app				=	JFactory::getApplication();
-		$config['error']	=	true;
-		
+		$config['error']	=	true;		
 		
 		if ( ! $message ) {
 			$message	=	JText::_( 'COM_CCK_NO_ACCESS' );

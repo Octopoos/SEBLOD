@@ -19,6 +19,8 @@
 			<option value="asc">COM_CCK_ASCENDING</option>
 			<option value="desc">COM_CCK_DESCENDING</option>
 		</field>
+		<field name="cckjs" type="cckjs" label="" description="" js_appendto=""
+				js_isvisiblewhen="#ordering,#order_by,#order_by_fieldname,#order_dir='type','ordering',true" js_format="html" hidden="true" />
 	</fieldset>
 
 	<fieldset name="position_display" label="VAR_SEB_TABLE_HEADING_LEGEND_POSITION">
@@ -27,5 +29,7 @@
 			<option value="1">COM_CCK_CONDITIONAL</option>
 		</field>
 		<field name="display_trigger" type="text" default="" label="VAR_SEB_TABLE_HEADING_DISPLAY_TRIGGER" description="VAR_SEB_TABLE_HEADING_DISPLAY_TRIGGER_DESC" class="inputbox" />
+		<field name="cckjs2" type="cckjs" label="" description="" js_appendto=""
+				js_isvisiblewhen="#display_trigger='display','1',true" js_format="html" hidden="true" />
 	</fieldset>
 </form>

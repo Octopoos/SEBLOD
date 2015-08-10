@@ -173,13 +173,13 @@ class CCKViewSearch extends JViewLegacy
 		$max_width				=	( JCck::on() ) ? '' : ' style="max-width:180px;"';
 		$default_f				=	( $this->item->id > 0 ) ? $this->item->folder : '';
 		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
-		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter" size="1" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
+		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
-		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter" size="1" prefix="a-"', 'value', 'text', '', 'filter3' );
+		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
-		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter" size="1" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
+		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter" size="1" prefix="f-"'.$max_width, 'value', 'text', $default_f, 'filter2' );
+		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"'.$max_width, 'value', 'text', $default_f, 'filter2' );
 	}
 	
 	// setPosition

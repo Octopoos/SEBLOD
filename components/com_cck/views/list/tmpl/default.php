@@ -63,8 +63,8 @@ if ( $this->show_form ) {
 if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
-<input type="hidden" name="boxchecked" value="0" />
-<?php if ( !JFactory::getApplication()->getCfg( 'sef' ) || !$this->config['Itemid'] ) { ?>
+<input type="hidden" name="boxchecked" id="boxchecked" value="0" />
+<?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
 <input type="hidden" name="option" value="com_cck" />
 <input type="hidden" name="view" value="list" />
 <?php if ( $this->home === false ) { ?>
@@ -126,7 +126,11 @@ if ( !$this->raw_rendering ) { ?>
 	        echo '<p class="counter">' . $pagesCounter . '</p>';
     	}
 		if ( $this->show_pagination > -1 ) {
-			echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
+			if ( $this->show_pagination == 2 ) {
+				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'</a></li>';
+			} else {
+				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
+			}
 		}
 	    echo '</div>';
 	}
@@ -149,4 +153,41 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
+<?php } ?>
+
+<?php if ( $this->show_pagination == 2 ) { ?>
+<script type="text/javascript">
+(function ($){
+	JCck.Core.loadmore = function(more,stop) {
+		var elem = ".cck-loading-more";
+		$.ajax({
+			cache: false,
+			data: "format=raw&infinite=1&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
+			type: "GET",
+			url: "<?php echo JUri::current(); ?>",
+			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
+			success: function(response){
+				if (stop != 1) {
+					$("#seblod_form_load_more").show();
+				} else {
+					$(".cck_page_list .pagination").hide();
+				}
+				$("#seblod_form_loading_more").hide(); $(elem).append(response);
+				<?php echo $this->callback_pagination ? $this->callback_pagination.'(response);' : ''; ?>
+			},
+			error:function(){}
+		});
+	}
+	$(document).ready(function() {
+		$("#seblod_form_load_more").on("click", function() {
+			var start = parseInt($(this).attr("data-start"));
+			var step = parseInt($(this).attr("data-step"));
+			start = start+step;
+			var stop = (start+step>=parseInt($(this).attr("data-end"))) ? 1 : 0;
+			$(this).attr("data-start",start);
+			JCck.Core.loadmore("&start="+start,stop);
+		});
+	});
+})(jQuery);
+</script>
 <?php } ?>

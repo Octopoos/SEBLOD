@@ -34,7 +34,7 @@ if ( isset( $options2['task'] ) ) {
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
 		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'TYPE', 'defaultvalue'=>'0', 'options'=>'Input=0||Button=1' ) );
 		echo JCckDev::renderForm( 'core_task', @$options2['task'], $config );
-		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
+		echo JCckDev::renderForm( 'core_bool3', @$options2['task_auto'], $config, array( 'label'=>'Auto Selection', 'defaultvalue'=>'1', 'storage_field'=>'json[options2][task_auto]' ) );
 		echo JCckDev::renderForm( 'core_task_exporter', $task_id['export'], $config, array( 'storage_field'=>'json[options2][task_id_export]' ) );
 		echo JCckDev::renderForm( 'core_task_processing', $task_id['process'], $config, array( 'storage_field'=>'json[options2][task_id_process]' ) );
 
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
 	$('#blank_li3').isVisibleWhen('bool','0');
 	$('#json_options2_icon').isVisibleWhen('bool6','1,2,3',false);
 	$('#bool3').isVisibleWhen('bool2','1,2');
-	$('#blank_li').isVisibleWhen('json_options2_task','export,process');
+	$('#json_options2_task_auto').isVisibleWhen('json_options2_task','export,process');
 	$('#json_options2_task_id_export').isVisibleWhen('json_options2_task','export');
 	$('#json_options2_task_id_process').isVisibleWhen('json_options2_task','process');
 	$('#json_options2_alt_link_text, #blank_li2').isVisibleWhen('bool2','2');
