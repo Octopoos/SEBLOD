@@ -17,7 +17,7 @@ final class JCckVersion
 	
 	public $DEV_LEVEL = '0';
 
-	public $DEV_STATUS = 'Beta14';
+	public $DEV_STATUS = '';
 	
 	// getDevStatus
 	public function getDevStatus()
