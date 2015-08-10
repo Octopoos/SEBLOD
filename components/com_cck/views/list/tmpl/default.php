@@ -12,9 +12,9 @@ defined( '_JEXEC' ) or die;
 
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (jQuery("#seblod_form").validationEngine("validate",task) === true) { Joomla.submitform((task=="save"?"search":task), document.getElementById("seblod_form")); }';
+	$js	=	'if (jQuery("#seblod_form").validationEngine("validate",task) === true) { JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("seblod_form")); }';
 } else {
-	$js	=	'Joomla.submitform((task=="save"?"search":task), document.getElementById("seblod_form"));';
+	$js	=	'JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("seblod_form"));';
 }
 $app	=	JFactory::getApplication();
 $doc	=	JFactory::getDocument();
@@ -31,7 +31,7 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 		.			'}'
 		.		'}'
 		.		'jQuery("#seblod_form").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
-		.		'Joomla.submitform(task,document.getElementById(\'seblod_form\'));'
+		.		'JCck.Core.submitForm(task,document.getElementById(\'seblod_form\'));'
 		.	'};'
 		.	'';
 $doc->addScriptDeclaration( $js );
