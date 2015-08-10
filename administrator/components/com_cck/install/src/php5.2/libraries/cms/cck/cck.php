@@ -283,7 +283,7 @@ abstract class JCck
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.3.0.min.js' );
+				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.6.0.min.js' );
 				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {

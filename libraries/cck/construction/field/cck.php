@@ -39,7 +39,7 @@ class JFormFieldCCK extends JFormField
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
 		if ( $format != 'raw' ) {
-			JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+			JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		}
 		
 		$force_id		=	(string)$this->element['id'];

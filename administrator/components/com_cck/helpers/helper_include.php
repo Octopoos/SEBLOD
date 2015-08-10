@@ -26,7 +26,7 @@ class Helper_Include extends CommonHelper_Include
 		// Additional
 		switch ( $view ) {
 			case 'box':
-				JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
+				JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
 				Helper_Include::addSmoothScrool( 500 );
 				break;
 			case 'folder':
@@ -41,7 +41,7 @@ class Helper_Include extends CommonHelper_Include
 				break;
 			case 'field':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js' ) );
 					JCck::loadjQueryUI();
 				}
 				Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', $script, $tmpl );
@@ -50,7 +50,7 @@ class Helper_Include extends CommonHelper_Include
 			case 'type':
 			case 'search':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.biscuit.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
@@ -74,7 +74,7 @@ class Helper_Include extends CommonHelper_Include
 			case 'sessions':
 			case 'versions':
 				if ( $view == 'folders' ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js' ) );
 				} else {
 					JCck::loadjQuery();
 				}

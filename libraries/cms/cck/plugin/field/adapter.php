@@ -38,7 +38,7 @@ class JCckPluginFieldAdapter
 		Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 		*/
 
-		JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
+		JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js' ) );
 
 		$config	=	array(
 						'asset'=>'',
