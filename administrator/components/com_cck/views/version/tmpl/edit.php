@@ -17,7 +17,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <script type="text/javascript">
 Joomla.submitbutton = function(task)
 {
-	Joomla.submitform(task, document.getElementById('adminForm'));
+	JCck.submitForm(task, document.getElementById('adminForm'));
 }
 </script>
 

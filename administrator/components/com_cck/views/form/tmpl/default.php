@@ -14,9 +14,9 @@ $app	=	JFactory::getApplication();
 Helper_Include::addScriptDeclaration( $this->config['javascript'] );
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (task == "form.cancel") { Joomla.submitform(task, document.getElementById("seblod_form")); } else { if (jQuery("#seblod_form").validationEngine("validate",task) === true) { if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("seblod_form"); Joomla.submitform(task, document.getElementById("seblod_form")); } } }';
+	$js	=	'if (task == "form.cancel") { JCck.Core.submitForm(task, document.getElementById("seblod_form")); } else { if (jQuery("#seblod_form").validationEngine("validate",task) === true) { if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("seblod_form"); JCck.Core.submitForm(task, document.getElementById("seblod_form")); } } }';
 } else {
-	$js	=	'if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("seblod_form"); Joomla.submitform(task, document.getElementById("seblod_form")); }';
+	$js	=	'if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("seblod_form"); JCck.Core.submitForm(task, document.getElementById("seblod_form")); }';
 }
 ?>
 
