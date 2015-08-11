@@ -238,6 +238,19 @@ class plgSystemCCK extends JPlugin
 						JCck::loadjQuery( true, true, true );
 					}
 					break;
+				case 'com_installer':
+					if ( $view == 'update' ) {
+						if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_updater" AND enabled = 1' ) > 0 ) {
+							$link	=	JRoute::_( 'index.php?option=com_cck_updater' );
+							$target	=	'_self';
+						} else {
+							$link	=	'http://www.seblod.com/products/634';
+							$target	=	'_blank';
+						}
+						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
+						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target ), 'notice' );
+					}
+					break;
 				case 'com_menus':
 					if ( $layout || $view == 'item' ) {
 						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
