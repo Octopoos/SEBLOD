@@ -650,7 +650,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			// Language Detection
 			$opt_query	=	str_replace( '[lang]', $lang_code, $opt_query );
 			$opt_query	=	JCckDevHelper::replaceLive( $opt_query );
-			
 			$lists		=	( $static ) ? JCckDatabaseCache::loadObjectList( $opt_query ) : JCckDatabase::loadObjectList( $opt_query );
 			if ( count( $lists ) ) {
 				foreach ( $lists as $list ) {
