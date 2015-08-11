@@ -120,7 +120,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
 		if ( $task == 'cancel' ) {
-			$click	=	' onclick="Joomla.submitform(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
+			$click	=	' onclick="JCck.Core.submitForm(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
 		} else {
 			if ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
 				$click	=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
@@ -188,7 +188,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
 				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
 			} else {
-				$onclick	=	'onclick="Joomla.submitform(\'cancel\', document.getElementById(\'seblod_form\'));"';
+				$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
 				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
 			}
 		} elseif ( $field->bool2 == 2 ) {

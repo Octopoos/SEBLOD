@@ -15,9 +15,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 JHtml::_( 'stylesheet', 'media/cck/css/definitions/all.css', array(), false );
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { Joomla.submitform(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';
+	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';
 } else {
-	$js	=	'Joomla.submitform(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'"));';
+	$js	=	'JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'"));';
 }
 $app	=	JFactory::getApplication();
 $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.seblod.pagination{text-align:center;}'
@@ -36,7 +36,7 @@ Joomla.submitbutton = function(task, cid)
 		}
 	}
 	jQuery("#adminForm").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JFactory::getURI() ); ?>">');
-	Joomla.submitform(task);
+	JCck.Core.submitForm(task);
 }
 </script>
 

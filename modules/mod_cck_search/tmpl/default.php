@@ -21,9 +21,9 @@ if ( $show_list_desc == 1 && $description != '' ) {
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
 	Helper_Include::addValidation( $config['validation'], $config['validation_options'], $formId );
-	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { Joomla.submitform("search", document.getElementById("'.$formId.'")); }';
+	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { JCck.Core.submitForm("search", document.getElementById("'.$formId.'")); }';
 } else {
-	$js	=	'Joomla.submitform("search", document.getElementById("'.$formId.'"));';
+	$js	=	'JCck.Core.submitForm("search", document.getElementById("'.$formId.'"));';
 }
 ?>
 <script type="text/javascript">

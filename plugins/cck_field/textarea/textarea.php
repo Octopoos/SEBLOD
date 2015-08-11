@@ -77,7 +77,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
 		$rows	=	( $field->rows ) ? $field->rows : 3;
-		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'"';
 		if ( $field->attributes != '' ) {
 			if ( strpos( $field->attributes, 'J(' ) !== false ) {
 				$matches	=	'';
@@ -96,6 +96,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			if ( $field->script ) {
+				parent::g_addScriptDeclaration( $field->script );
+			}
 		} else {
 			$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );

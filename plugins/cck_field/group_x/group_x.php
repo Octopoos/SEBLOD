@@ -45,7 +45,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$field->params	=	implode( '', $field->params );
 	}
 	
-	// onCCK_FieldPrepareContent
+	// onCCK_FieldDelete
 	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
 	{
 		if ( self::$type != $field->type ) {
@@ -449,7 +449,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				}
 				$html		.=	'</div>';
 				if ( $field->bool2 ) {
-					$empty		=	self::_formHTML( $field, $field->form[$i], 0, 0, $config );
+					$empty		=	self::_formHTML( $field, @$field->form[$i], 0, 0, $config );
 				}
 			}
 		}
@@ -565,87 +565,89 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		}
 		
-		foreach ( $group as $elem ) {
-			if ( $elem->display > 1 ) {
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
-			}
-			$html		.=	$elem->form;
-			if ( $elem->display > 1 ) {
-				$html	.=	'</div>';
-				$html	.=	'</div>';
-			}
-			
-			// Computation & Conditional
-			if ( @$elem->computation ) {			
-				$computation			=	new JRegistry;
-				$computation->loadString( $elem->computation_options );
-				$computation_options	=	$computation->toObject();
-				if ( $computation_options->calc == 'custom' ) {
-					$computed	=	'';
-					if ( count( $computation_options->fields ) ) {
-						foreach ( $computation_options->fields as $k=>$v ) {
-							$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
-						}
-						$computed		=	substr( $computed, 0, -1 );
-					}
-					$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-					$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
-					$format		=	'';
-					if ( $computation_options->format == 'toFixed' ) {
-						$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
-					} elseif ( $computation_options->format ) {
-						$format	=	'.'.$computation_options->format.'()';
-					}
-					if ( @$computation_options->recalc && $js_format != 'raw' ) {
-						$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
-																	   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
-																															 .$targets.', function (s){return s'.$format.';} );' );
-					} else {
-						$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
-													  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
-						if ( $event != 'none' ) {
-							$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
-						}
-						if ( $js_format == 'raw' ) {
-							if ( $event != 'none' ) {
-								$js	.=	$js2.'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc);';
+		if ( count( $group ) ) {
+			foreach ( $group as $elem ) {
+				if ( $elem->display > 1 ) {
+					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
+					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
+					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
+				}
+				$html		.=	$elem->form;
+				if ( $elem->display > 1 ) {
+					$html	.=	'</div>';
+					$html	.=	'</div>';
+				}
+				
+				// Computation & Conditional
+				if ( @$elem->computation ) {			
+					$computation			=	new JRegistry;
+					$computation->loadString( $elem->computation_options );
+					$computation_options	=	$computation->toObject();
+					if ( $computation_options->calc == 'custom' ) {
+						$computed	=	'';
+						if ( count( $computation_options->fields ) ) {
+							foreach ( $computation_options->fields as $k=>$v ) {
+								$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
 							}
+							$computed		=	substr( $computed, 0, -1 );
+						}
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
+						$format		=	'';
+						if ( $computation_options->format == 'toFixed' ) {
+							$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
+						} elseif ( $computation_options->format ) {
+							$format	=	'.'.$computation_options->format.'()';
+						}
+						if ( @$computation_options->recalc && $js_format != 'raw' ) {
+							$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
+																		   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
+																																 .$targets.', function (s){return s'.$format.';} );' );
 						} else {
-							JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
-						}
-					}
-				} else {
-					$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
-					$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-					$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
-					if ( @$computation_options->recalc && $js_format != 'raw' ) {
-						$config['computation'][$event][]	=	array( '_'=>$computed,
-																	   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
-					} else {
-						$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
-						if ( $js_format == 'raw' ) {
+							$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
+														  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
 							if ( $event != 'none' ) {
-								$js	.=	'$("'.$computed.'").bind("'.$event.'", JCck.Core.recalc);';
+								$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
+							}
+							if ( $js_format == 'raw' ) {
+								if ( $event != 'none' ) {
+									$js	.=	$js2.'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc);';
+								}
+							} else {
+								JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
+							}
+						}
+					} else {
+						$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
+						if ( @$computation_options->recalc && $js_format != 'raw' ) {
+							$config['computation'][$event][]	=	array( '_'=>$computed,
+																		   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
+						} else {
+							$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
+							if ( $js_format == 'raw' ) {
+								if ( $event != 'none' ) {
+									$js	.=	'$("'.$computed.'").bind("'.$event.'", JCck.Core.recalc);';
+								}
 							}
 						}
 					}
+					$config['doComputation']	=	1;
 				}
-				$config['doComputation']	=	1;
-			}
-			if ( @$elem->conditional ) {
-				$conditions					=	explode( ',', $elem->conditional );
-				$elem->conditional_options	=	str_replace( '#form#', '#'.$field->name.'_'.$i.'_'.$elem->name, $elem->conditional_options );
-				if ( count( $conditions ) > 1 ) {
-					$c_opts	=	$elem->conditional_options;
-					foreach ( $conditions as $c ) {
-						$c_opts	=	str_replace( $c, $field->name.'_'.$i.'_'.$c, $c_opts );
+				if ( @$elem->conditional ) {
+					$conditions					=	explode( ',', $elem->conditional );
+					$elem->conditional_options	=	str_replace( '#form#', '#'.$field->name.'_'.$i.'_'.$elem->name, $elem->conditional_options );
+					if ( count( $conditions ) > 1 ) {
+						$c_opts	=	$elem->conditional_options;
+						foreach ( $conditions as $c ) {
+							$c_opts	=	str_replace( $c, $field->name.'_'.$i.'_'.$c, $c_opts );
+						}
+					} else {
+						$c_opts		=	str_replace( $conditions[0], $field->name.'_'.$i.'_'.$conditions[0], $elem->conditional_options );
 					}
-				} else {
-					$c_opts		=	str_replace( $conditions[0], $field->name.'_'.$i.'_'.$conditions[0], $elem->conditional_options );
+					$js	.=	'$("#'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'").conditionalStates('.$c_opts.');';
 				}
-				$js	.=	'$("#'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'").conditionalStates('.$c_opts.');';
 			}
 		}
 		

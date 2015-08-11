@@ -45,7 +45,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			return;
 		}
 
-		if ( $value == '' ) {
+		$value_json		=	JCckDev::fromJSON( $value );
+		if ( $value == '' || isset( $value_json['image_location'] ) && $value_json['image_location'] == '' ) {
 			return;
 		}
 

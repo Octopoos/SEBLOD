@@ -49,14 +49,24 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			$config['doTranslation']=	$field->bool8;
 		}
 		
-		// Set
+		// Prepare
 		$divider					=	( $field->divider != '' ) ? $field->divider : ',';
 		if ( is_array( $value ) ) {
 			$value					=	implode( $divider, $value );
 		}
+		
+		// Set
 		$field->text				=	parent::g_getOptionText( $value, $field->options, $divider, $config );
 		$field->value				=	$value;
-		// todo: $field->values
+		
+		$texts						=	explode( $divider, $field->text );
+		$values						=	explode( $divider, $field->value );
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>$texts[$k], 'typo_target'=>'text', 'value'=>$v );
+			}
+		}
 		$field->typo_target			=	'text';
 		$config['doTranslation']	=	$doTranslation;
 	}

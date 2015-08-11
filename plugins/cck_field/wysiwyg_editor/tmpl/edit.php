@@ -19,7 +19,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default_Value', 'storage_field'=>'defaultvalue') );
+		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default Value', 'storage_field'=>'defaultvalue') );
 		
 		echo JCckDev::renderForm( 'core_options_editor', @$options2['editor'], $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'

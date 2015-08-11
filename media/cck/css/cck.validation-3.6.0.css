@@ -37,3 +37,5 @@ body[dir='rtl'] .formError .formErrorArrow, body.rtl .formError .formErrorArrow 
 .formError .formErrorArrow.formErrorArrowBottom{border-width: 0 8px 8px 8px;border-color: transparent transparent #242424 transparent; margin:3px 0 2px 13px;}
 
 .cck-tab-required > a{color:#ff0000;} /*.cck-tab-required > a:after{content:" *";}*/
+
+.formError.parentFormseblod_form_component, .formError.parentFormseblod_form_raw{z-index:1051;}

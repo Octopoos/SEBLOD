@@ -293,18 +293,25 @@ abstract class JCck
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.3.0.min.js' );
+				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.6.0.min.js' );
 				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
-				foreach ( $dev as $v ) {
-					$doc->addScript( JURI::root( true ).'/media/cck/js/'.$v );
+				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+					foreach ( $dev as $v ) {
+						echo '<script src="'.JURI::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+					}
+				} else {			
+					foreach ( $dev as $v ) {
+						$doc->addScript( JURI::root( true ).'/media/cck/js/'.$v );
+					}
 				}
 				$app->cck_jquery_dev	=	true;
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.5.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.6.0.min.js' );
+			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}
 	}

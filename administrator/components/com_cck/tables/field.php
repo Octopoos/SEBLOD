@@ -50,6 +50,10 @@ class CCK_TableField extends JTable
 					}
 				}
 			}
+
+			JCckDatabase::execute( 'DELETE IGNORE a.*'
+							.	' FROM #__cck_core AS a'
+							.	' WHERE a.storage_location="cck_field" AND a.pk="'.(int)$this->id.'"' );
 		}
 		
 		return parent::delete();

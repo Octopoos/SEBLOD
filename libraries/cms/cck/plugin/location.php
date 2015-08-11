@@ -143,7 +143,7 @@ class JCckPluginLocation extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_checkIn
-	public function g_checkIn( $table )
+	public static function g_checkIn( $table )
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();

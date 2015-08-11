@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKModelForm extends JModelLegacy
 {
 	// store
-	function store( $preconfig )
+	function store( $preconfig, $task = '' )
 	{
 		$client	=	'admin';	// admin or admin_edit
 		

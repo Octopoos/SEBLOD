@@ -502,6 +502,8 @@
 /administrator/manifests/packages/seb_map/*
 /administrator/manifests/packages/seb_masonry/*
 /administrator/manifests/packages/seb_minima/*
+/administrator/manifests/packages/seb_popover/*
+/administrator/manifests/packages/seb_table_heading/*
 /administrator/manifests/packages/seb_tabs/*
 /administrator/manifests/packages/pkg_cck_ecommerce.xml
 /administrator/manifests/packages/pkg_cck_field_code.xml
@@ -524,6 +526,8 @@
 /administrator/manifests/packages/pkg_seb_map.xml
 /administrator/manifests/packages/pkg_seb_masonry.xml
 /administrator/manifests/packages/pkg_seb_minima.xml
+/administrator/manifests/packages/pkg_seb_popover.xml
+/administrator/manifests/packages/pkg_seb_table_heading.xml
 /administrator/manifests/packages/pkg_seb_tabs.xml
 /administrator/manifests/packages/pkg_weblinks.xml
 /administrator/manifests/packages/index.html
@@ -615,6 +619,7 @@
 /language/en-GB/en-GB.lib_phputf8.sys.ini
 /language/en-GB/en-GB.lib_simplepie.sys.ini
 /language/en-GB/en-GB.ini
+/language/en-GB/en-GB.lib_fof.ini
 /language/en-GB/en-GB.lib_joomla.ini
 /language/en-GB/en-GB.localise.php
 /language/en-GB/en-GB.mod_articles_archive.ini
@@ -699,6 +704,7 @@
 /language/fr-FR/fr-FR.files_joomla.sys.ini
 /language/fr-FR/fr-FR.finder_cli.ini
 /language/fr-FR/fr-FR.ini
+/language/fr-FR/fr-FR.lib_fof.ini
 /language/fr-FR/fr-FR.lib_fof.sys.ini
 /language/fr-FR/fr-FR.lib_idna_convert.sys.ini
 /language/fr-FR/fr-FR.lib_joomla.ini
@@ -790,6 +796,7 @@
 /language/index.html
 /libraries/cms/application/*
 /libraries/cms/captcha/*
+/libraries/cms/class/*
 /libraries/cms/component/*
 /libraries/cms/editor/*
 /libraries/cms/error/*
@@ -1081,10 +1088,14 @@ Temporary Items
 /administrator/language/en-GB/en-GB.com_cck_toolbox.sys.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_code_processing.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_code_processing.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.sys.ini
 /components/com_cck_toolbox/*
 /language/en-GB/en-GB.com_cck_toolbox.ini
 /language/en-GB/en-GB.mod_cck_processing.ini
@@ -1095,6 +1106,7 @@ Temporary Items
 /media/cck_toolbox/*
 /modules/mod_cck_processing/*
 /plugins/cck_field/code_processing/*
+/plugins/cck_field_live/cck_processing/*
 /plugins/system/cck_toolbox/*
 /plugins/user/cck_toolbox/*
 
@@ -1472,6 +1484,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_option.sys.ini
 /plugins/cck_field_live/random_option/*
 
+######## SEBLOD Plug-ins >> Live >> Random UniqId
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_uniqid.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_random_uniqid.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_uniqid.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_random_uniqid.sys.ini
+/plugins/cck_field_live/random_uniqid/*
+
 ######## SEBLOD Plug-ins >> Live >> SEBLOD Site
 
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_site.ini
@@ -1521,6 +1541,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.sys.ini
 /plugins/cck_field_restriction/joomla_language/*
+
+######## SEBLOD Plug-ins >> Restriction >> Joomla! User
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_user.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_user.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_user.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_user.sys.ini
+/plugins/cck_field_restriction/joomla_user/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Mobile Device
 
@@ -1858,6 +1886,18 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_minima.ini
 /language/fr-FR/fr-FR.tpl_seb_minima.ini
 /templates/seb_minima/*
+
+######## SEBLOD Templates >> Popover
+
+/language/en-GB/en-GB.tpl_seb_popover.ini
+/language/fr-FR/fr-FR.tpl_seb_popover.ini
+/templates/seb_popover/*
+
+######## SEBLOD Templates >> Table Heading
+
+/language/en-GB/en-GB.tpl_seb_table_heading.ini
+/language/fr-FR/fr-FR.tpl_seb_table_heading.ini
+/templates/seb_table_heading/*
 
 ######## SEBLOD Templates >> Tabs
 

@@ -48,35 +48,41 @@ class plgCCK_FieldStorage extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
-		
+
 		// Prepare
-		$alter				=	true;
-		$alter_type_default	=	( isset( $inherit['alter_type_value'] ) ) ? $inherit['alter_type_value'] : '';
-		if ( isset( $config['item']->id ) && $config['item']->id && isset( $config['item']->storage_table ) && $config['item']->storage_table != '' ) {
-			$db		=	JFactory::getDbo();
-			$prefix	=	$db->getPrefix();
-			$table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
-			$tables	=	$db->getTableList();
-			if ( in_array( $table, $tables ) ) {
-				$column				=	JCckDatabase::loadObject( 'SHOW COLUMNS FROM '.$table.' WHERE field = "'.$config['item']->storage_field.'"' );
-				$alter_type_value	=	( isset( $column->Type ) ) ? strtoupper( $column->Type ) : $alter_type_default;
-			} else {
-				$alter				=	false;
-				$alter_type_value	=	$alter_type_default;
-				$alter_type_default	=	'';	
-			}
+		$app	=	JFactory::getApplication();
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			$form		=	'';
+			$value		=	'';
 		} else {
-			$alter_type_value	=	$alter_type_default;
-			$alter_type_default	=	'';
+			$alter				=	true;
+			$alter_type_default	=	( isset( $inherit['alter_type_value'] ) ) ? $inherit['alter_type_value'] : '';
+			if ( isset( $config['item']->id ) && $config['item']->id && isset( $config['item']->storage_table ) && $config['item']->storage_table != '' ) {
+				$db		=	JFactory::getDbo();
+				$prefix	=	$db->getPrefix();
+				$table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
+				$tables	=	$db->getTableList();
+				if ( in_array( $table, $tables ) ) {
+					$column				=	JCckDatabase::loadObject( 'SHOW COLUMNS FROM '.$table.' WHERE field = "'.$config['item']->storage_field.'"' );
+					$alter_type_value	=	( isset( $column->Type ) ) ? strtoupper( $column->Type ) : $alter_type_default;
+				} else {
+					$alter				=	false;
+					$alter_type_value	=	$alter_type_default;
+					$alter_type_default	=	'';	
+				}
+			} else {
+				$alter_type_value	=	$alter_type_default;
+				$alter_type_default	=	'';
+			}
+			ob_start();
+			include_once dirname(__FILE__).'/tmpl/form.php';				
+			$form	=	ob_get_clean();
 		}
-		ob_start();
-		include_once dirname(__FILE__).'/tmpl/form.php';				
-		$form	=	ob_get_clean();
-		
+
 		// Set
 		$field->form	=	$form;
 		$field->value	=	$value;
-		
+
 		// Return
 		if ( $return === true ) {
 			return $field;

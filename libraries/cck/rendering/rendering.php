@@ -306,9 +306,11 @@ class CCK_Rendering
 	// finalize
 	public function finalize()
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$js		=	'';
-		
+		$tmpl	=	$app->input->get( 'tmpl' );
+
 		// Computation
 		if ( $this->mode == 'form' && $this->config['doComputation'] ) {
 			$format	=	JCck::getConfig_Param( 'computation_format', 0 );
@@ -361,13 +363,29 @@ class CCK_Rendering
 		
 		// Stuff
 		if ( $this->css != '' ) {
-			$doc->addStyleDeclaration( $this->css );
+			if ( $tmpl == 'raw' ) {
+				echo '<style type="text/css">'.$this->css.'</style>';
+			} else {
+				$doc->addStyleDeclaration( $this->css );
+			}			
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$js		=	'(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}			
 		}
 		if ( $this->js2 != '' ) {
-			$doc->addScriptDeclaration( '(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);' );
+			$js		=	'(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}
 		}
 	}
 	
@@ -981,7 +999,7 @@ class CCK_Rendering
 					foreach ( $matches[2] as $k=>$fieldname ) {
 						$target		=	$matches[1][$k];
 						$get		=	'get'.$target;
-						$replace	=	$this->getValue( $fieldname );
+						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}
 				}
@@ -1020,6 +1038,10 @@ class CCK_Rendering
 	// isGoingtoLoadMore
 	public function isGoingtoLoadMore()
 	{
+		if ( $this->isLoadingMore() == -1 ) {
+			return true;
+		}
+
 		return $this->infinite;
 	}
 
@@ -1028,7 +1050,17 @@ class CCK_Rendering
 	{
 		$app	=	JFactory::getApplication();
 		
-		return ( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) ) ? 1 : 0;
+		if ( $app->input->get( 'format' ) == 'raw' ) {
+			$infinite	=	$app->input->get( 'infinite' );
+
+			if ( $infinite == -1 ) {
+				return -1;
+			} elseif ( $infinite ) {
+				return 1;
+			}
+		}
+		
+		return 0;
 	}
 
 	// fakeModule (deprecated)

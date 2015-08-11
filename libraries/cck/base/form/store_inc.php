@@ -28,7 +28,14 @@ if ( $task == 'save2copy' ) {
 	$isNew				=	1;
 	$preconfig['id']	=	0;
 }
-if ( $app->isSite() && ( $hash != $hashed ) ) {
+if ( $app->isSite() && $hashed !== NULL && ( $hash != $hashed ) ) {
+	$config	=	array(
+					'pk'=>0,
+					'options'=>'',
+					'url'=>@$preconfig['url'],
+					'validate'=>''
+				);
+
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
 }
@@ -53,8 +60,8 @@ $config		=	array( 'author'=>0,
 					   'fields'=>array(),
 					   'id'=>$preconfig['id'],
 					   'isNew'=>$isNew,
-					   'Itemid'=>@$preconfig['itemId'],
-					   'message'=>@$preconfig['message'],
+					   'Itemid'=>$preconfig['itemId'],
+					   'message'=>$preconfig['message'],
 					   'message_style'=>'',
 					   'options'=>'',
 					   'pk'=>$id,
@@ -64,7 +71,7 @@ $config		=	array( 'author'=>0,
 					   'storages'=>array(),
 					   'task'=>$task,
 					   'type'=>$preconfig['type'],
-					   'url'=>@$preconfig['url'],
+					   'url'=>$preconfig['url'],
 					   'validate'=>''
 					);
 CCK_Form::applyTypeOptions( $config );

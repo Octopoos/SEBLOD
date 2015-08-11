@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
 if ( $config['tmpl'] == 'ajax' ) {
 	$js	=	'';
 } else {
@@ -46,6 +45,9 @@ if ( $config['tmpl'] == 'ajax' ) {
 				$("#storage_field_pick").live("click", function() {
 					var field = ( $("#storage").val() == "dev" ) ? "dev_map" : "content_map";
 					var location = $("#storage_location").val();
+					if (location==null) {
+						location = "free";
+					}
 					if (location=="free") {
 						location = $("#storage_table").val();	
 					}
@@ -67,8 +69,19 @@ $js		=	'
 					$("#storage_location, #storage_field, #storage_alter").hide().attr("disabled", "disabled");
 					$("#storage_field_pick").hide();
 				}
-				if ($("#storage_location").val() != "free") {
+				var v = $("#storage_location").val();
+				if (v != "free") {
 					$("#storage_table").hide();
+				}
+				$("#op-"+v).show();
+				if ($("#jform_id").val()==0){
+					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
+						$(".storage-cck-more").parent().remove();
+					} else {
+						$(".storage-cck-core").remove();
+					}
+				} else {
+					$(".storage-cck-more").parent().remove();
 				}
 				$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").hide();
 
@@ -91,6 +104,9 @@ $js		=	'
 				if ($("#jform_id").val()==0){
 					if (parent.jQuery("#storage_location")){
 						var storage_location = parent.jQuery("#storage_location").val();
+						if (storage_location == "none") {
+							storage_location = "free";
+						}
 						$("#storage_location").val(storage_location);
 						if (storage_location == "free") {
 							$("#storage_table").parent().show();

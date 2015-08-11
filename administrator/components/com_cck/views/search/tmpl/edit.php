@@ -391,10 +391,10 @@ Helper_Display::quickCopyright();
 	}
 	Joomla.submitbutton = function(task) {
 		if (task == "search.cancel") {
-			$("#layers").remove(); Joomla.submitform(task, document.getElementById('adminForm'));	
+			$("#layers").remove(); JCck.submitForm(task, document.getElementById('adminForm'));	
 		} else {
 			if ($("#adminForm").validationEngine("validate",task) === true) {
-				JCck.Dev.preSubmit(); Joomla.submitform(task, document.getElementById('adminForm'));
+				JCck.Dev.preSubmit(); JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
 	}

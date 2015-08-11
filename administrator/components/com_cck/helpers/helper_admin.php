@@ -86,6 +86,7 @@ class Helper_Admin extends CommonHelper_Admin
 						'search'=>'cck-search',
 						'seblod'=>'cck-seblod',
 						'service'=>'cck-services',
+						'session'=>'archive',
 						'site'=>'cck-multisite',
 						'template'=>'cck-template',
 						'type'=>'cck-form',

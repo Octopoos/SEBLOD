@@ -56,6 +56,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			}
 		}
 		$lang_tag			=	$link->get( 'language', '' );
+		$link_attr			=	$link->get( 'attributes', '' );
 		$link_class			=	$link->get( 'class', '' );
 		$link_rel			=	$link->get( 'rel', '' );
 		$link_target		=	$link->get( 'target', '' );
@@ -96,10 +97,11 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		if ( $link->get( 'path_type', 0 ) ) {
 			$field->link	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$field->link;
 		}
-		$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
-		$field->link_rel	=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
-		$field->link_state	=	$link->get( 'state', 1 );
-		$field->link_target	=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
+		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
+		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
+		$field->link_state		=	$link->get( 'state', 1 );
+		$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
@@ -107,7 +109,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		$itemId		=	$process['itemId'];
+		$itemId		=	@$process['itemId'];
 		$name		=	$process['name'];
 		$fieldname	=	$process['fieldname'];
 		$location	=	$process['location'];

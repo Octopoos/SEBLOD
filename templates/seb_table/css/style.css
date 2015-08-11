@@ -13,6 +13,7 @@ table.table th.left,table.zebra th.left,
 table.table td.left,table.zebra td.left{text-align:left;}
 table.table th.right,table.zebra th.right,
 table.table td.right,table.zebra td.right{text-align:right;}
+table.table.middle tbody td{vertical-align: middle;}
 
 table.fixed{table-layout: fixed;}
 table.table td.nowrap{white-space: nowrap;}

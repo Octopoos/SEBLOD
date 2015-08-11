@@ -105,7 +105,7 @@ class CckRouter extends JComponentRouterBase
 			$vars['option']	=	'com_cck';
 			$vars['view']	=	'form';
 			$vars['layout']	=	'edit';
-			$vars['type']	=	$segments[1];
+			$vars['type']	=	@$segments[1];
 		} else {
 			$legacy	=	0; // check later
 			if ( !( $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] == 'list' ) ) {
@@ -114,7 +114,7 @@ class CckRouter extends JComponentRouterBase
 			if ( !$legacy ) {
 				if ( isset( $menuItem->query['search'] ) ) {
 					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-					if ( $count == 1 && $params['doSEF'][0] == '4'  ) {
+					if ( $count == 2 && $params['doSEF'][0] == '4'  ) {
 						if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
 							require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 							$properties			=	array( 'parent_object' );

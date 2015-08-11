@@ -487,6 +487,54 @@ class CCK_Import
 		$table->store();
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+	
+	// importProcessings
+	public static function importProcessings( $data )
+	{
+		$path	=	$data['root'].'/processings';
+
+		if ( file_exists( $path ) ) {
+			$files	=	JFolder::files( $path, '\.xml$' );
+			if ( count( $files ) ) {
+				foreach ( $files as $file ) {
+					$xml	=	JCckDev::fromXML( $path.'/'.$file );
+					if ( !$xml || (string)$xml->attributes()->type != 'processings' ) {
+						break;
+					}
+					$name	=	(string)$xml->processing->name;
+					
+					if ( $name ) {
+						$table				=	JCckTable::getInstance( '#__cck_more_processings' );
+						$table->load( array( 'name'=>$name ) );
+
+						$table->name		=	$name;
+						$table->title		=	(string)$xml->processing->title;
+						
+						// Folder			
+						$idx	=	(string)$xml->processing->folder;
+						if ( isset( $data['folders2'][$idx] ) ) {
+							$table->folder	=	$data['folders2'][$idx]->id;
+						} elseif ( isset( $data['folders'][$idx] ) ) {
+							$table->folder	=	$data['folders'][$idx]->id;
+						} else {
+							$table->folder	=	7;
+						}
+						
+						$table->type		=	(string)$xml->processing->type;
+						$table->description	=	(string)$xml->processing->description;
+						$table->options		=	(string)$xml->processing->options;
+						$table->ordering	=	(string)$xml->processing->ordering;
+						$table->published	=	(string)$xml->processing->published;
+						$table->scriptfile	=	(string)$xml->processing->scriptfile;
+						
+						$table->store();
+					}
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SQL
 	
 	// importSQL

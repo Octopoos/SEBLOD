@@ -90,6 +90,19 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 #featured_session{position:relative; top:10px; cursor:pointer;}
 body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session{top:0;}
 .featured_sessions_del{float:right; position:relative; top:-2px; cursor:pointer;}
+.dropdown-menu.featured-sessions {width:100%;}
+.dropdown-menu.featured-sessions li {height:25px;}
+.dropdown-menu.featured-sessions li:hover {background-color: #0081c2;}
+.dropdown-menu.featured-sessions li a:hover {background:none;}
+.dropdown-menu.featured-sessions li a.featured_sessions {float:left;}
+.dropdown-menu.featured-sessions li a.featured_sessions_edit {float:right;padding: 3px 10px;}
+.dropdown-menu.featured-sessions li a.featured_sessions_edit.icon-edit:before {color:inherit;}
+
+.dropdown-menu.featured-sessions > li > a {clear:none;}
+
+.dropdown-menu.featured-sessions .featured_sessions_del{top:5px;right:5px;}
+.dropdown-menu.featured-sessions .featured_sessions_del:hover {color: #fff;}
+.dropdown-menu.featured-sessions li span.featured_sessions_del.icon-delete:before {font-size: 12px;}
 
 div.seblod.preview div.cck_forms.cck_admin div.cck_desc{padding-bottom:8px; color:#eb8207;}
 .max-width-200{max-width:200px;}
@@ -159,7 +172,7 @@ body.com_cck fieldset.checkboxes input,body.com_cck fieldset.radios input{float:
 body.com_cck fieldset.checkboxes label,body.com_cck fieldset.radios label{float:left;}
 body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.vertical input{float:left; margin-top:0; margin-right:5px; clear:left;}
 .modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
-.modal-footer .btn-group .btn + .btn {padding-top:3px; font-size:0px;}
+.modal-footer .btn-group .btn + .btn, .btn-group.dropup .btn.dropdown-toggle {padding-top:3px; font-size:0px;}
 
 .modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
 .modal.modal-small .modal-body{padding: 15px; width: auto;}
@@ -169,6 +182,8 @@ div.modal.modal-small.fade.in{top:10%;}
 #toolbar #toolbar-cck-search,
 #toolbar #toolbar-cck-template,
 #toolbar #toolbar-cck-variation,
+#toolbar #toolbar-cck-session,
+#toolbar #toolbar-cck-extension,
 #toolbar #toolbar-folder,
 #toolbar #toolbar-archive:nth-last-child(2){float:right;}
 h1.page-title small{color: #fff; font-size:smaller;}

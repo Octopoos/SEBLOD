@@ -137,7 +137,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';
@@ -245,7 +245,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';

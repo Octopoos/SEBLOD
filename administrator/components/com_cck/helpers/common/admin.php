@@ -240,7 +240,7 @@ class CommonHelper_Admin
 						. ' GROUP BY s.id ORDER BY s.title'
 						;
 		} else {
-			if ( $component == 'com_cck' && $element ) {
+			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
 			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
@@ -301,6 +301,12 @@ class CommonHelper_Admin
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_name', JText::_( 'COM_CCK_USER_NAME' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_username', JText::_( 'COM_CCK_USER_USERNAME' ) );
+				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			}
+		} elseif ( $option == 'com_cck_toolbox' ) {
+			if ( $view == 'processings' ) {
+				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_APP_FOLDERS' ) );
+				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_APP_FOLDER_ID' ) );
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		}

@@ -234,10 +234,10 @@ Helper_Display::quickCopyright();
 	<?php if ( !$tmpl ) { ?>
 	Joomla.submitbutton = function(task) {
 		if (task == 'field.cancel') {
-			Joomla.submitform(task, document.getElementById('adminForm'));
+			JCck.submitForm(task, document.getElementById('adminForm'));
 		} else {
 			if ($("#adminForm").validationEngine("validate",task) === true) {
-				Joomla.submitform(task, document.getElementById('adminForm'));
+				JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
 	}

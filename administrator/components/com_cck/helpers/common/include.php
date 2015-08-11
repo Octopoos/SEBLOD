@@ -94,6 +94,27 @@ class CommonHelper_Include
 		$doc->addScriptDeclaration( $js );
 	}
 	
+	// addTooltip
+	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
+	{
+		if ( !JCck::on() ) {
+			$doc	=	JFactory::getDocument();
+			
+			if ( $script === true ) {
+				$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/css/jquery.qtip.css' );
+				$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/js/jquery.qtip.min.js' );
+			}
+			if ( $elem ) {
+				$js	=	'jQuery(document).ready(function($){ $("'.$elem.'").qtip({ style: {classes: "'.$classes.'"}, position: {my: "'.$pos_my.'", at: "'.$pos_at.'"} }); });';
+				if ( $tmpl == 'ajax' ) {
+					echo '<script type="text/javascript">'.$js.'</script>';
+				} else {
+					$doc->addScriptDeclaration( $js );
+				}
+			}
+		}
+	}
+	
 	// addValidation
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
@@ -133,7 +154,7 @@ class CommonHelper_Include
 			$options	=	'{}';
 		}
 		
-		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.5.0.css' );
+		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
 		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js' );
 		
 		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';

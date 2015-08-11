@@ -190,7 +190,7 @@ class Helper_Workshop
 			$template			=	self::getDefaultTemplate();
 		}
 		if ( !isset( $styles[$template] ) ) {
-			$styles[$template]	=	JCckDatabase::loadObject( 'SELECT id, params, template FROM #__template_styles WHERE template = "'.(string)$template.'" ORDER BY id asc' );
+			$styles[$template]	=	JCckDatabaseCache::loadObject( 'SELECT id, params, template FROM #__template_styles WHERE template = "'.(string)$template.'" ORDER BY id asc' );
 		}
 		
 		return $styles[$template];

@@ -340,7 +340,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$table->bind( $data );
 		}
 		if ( $isNew && !isset( $data['rules'] ) ) {
-			$data['rules']	=	array( 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array() );
+			$data['rules']	=	array(
+									'core.delete'=>array(),
+									'core.edit'=>array(),
+									'core.edit.state'=>array()
+								);
 		}
 		if ( isset( $data['rules'] ) && $data['rules'] ) {
 			if ( !is_array( $data['rules'] ) ) {

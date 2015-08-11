@@ -106,15 +106,48 @@ class JCckContent
 		if ( is_array( $data_more ) && count( $data_more ) ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk, true );
-					
+			unset( $data_more['id'] );
+			
 			if ( !( $this->save( 'more', $data_more ) ) ) {
 				return false;
 			}
-
 		}
 		
 		//TODO : Load instance info
 		return $this->_pk;
+	}
+
+	// delete
+	public function delete()
+	{
+		if ( $this->_object == '' ) {
+			return false;
+		}
+		if ( !( $this->_id && $this->_pk ) ) {
+			return false;
+		}
+
+		$config	=	array(
+						'author'=>$this->_instance_base->author_id,
+						'type'=>$this->_instance_base->cck,
+						'type_id'=>0
+					);
+		$nb		=	0;
+
+		if ( $config['type'] ) {
+			$config['type_id']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
+		}
+		if ( !$config['type_id'] ) {
+			return false;
+		}
+
+		JPluginHelper::importPlugin( 'content' );
+
+		if ( JCck::callFunc_Array( 'plgCCK_Storage_Location'.$this->_object, 'onCCK_Storage_LocationDelete', array( $this->_pk, &$config ) ) ) {
+			$nb++;
+		}
+		
+		return ( $nb ) ? true : false;
 	}
 
 	// get
@@ -162,13 +195,17 @@ class JCckContent
 			$this->_columns			=	$this->_getProperties();
 			$this->_instance_core	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
 		}
-
+		if ( !( @$base->id && @$base->pk ) ) {
+			return false;
+		}
+		
 		$this->_type				=	$base->cck;
 		$this->_pk					=	$base->pk;
 		$this->_id					=	$base->id;
+		$this->_instance_base->load( $this->_id );
 		$this->_instance_core->load( $this->_pk );
 		$this->_instance_more		=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-		$this->_instance_more->load( $this->_id );
+		$this->_instance_more->load( $this->_pk );
 		
 		if ( !$this->_columns['table'] ) {
 			return;

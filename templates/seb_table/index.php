@@ -51,67 +51,68 @@ if ( !$isMore ) {
 	$items		=	$cck->getItems();
 	$positions	=	$cck->getPositions();
 	unset( $positions['hidden'] );
-	if ( count( $items ) ) {
-		if ( !$isMore ) { ?>
-			<table<?php echo $class_table; ?>>
-			<?php
-			}
-			$head	=	'';
-			$thead	=	false;
-			foreach ( $positions as $name=>$position ) {
-				$class					=	$position->css;
-				$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
-				$legend					=	( $position->legend ) ? $position->legend : ( ( $position->legend2 ) ? $position->legend2 : '' );
-				$width					=	$cck->w( $name );
-				if ( $legend || $width ) {
-					if ( $legend ) {
-						$thead	=	true;
-					}
-					if ( $position->variation != '' ) {
-						$var		=	$cck->renderVariation( $position->variation, $legend, '', $position->variation_options, $name );
-						$matches	=	array();
-						preg_match( '#<th class="([a-zA-Z0-9\-\ _]*)"(.*)>#U', $var, $matches );
-						if ( isset( $matches[1] ) && $matches[1] != '' ) {
-							$class	=	$matches[1];
-							if ( $isFixed == 2 && $width && strpos( ' '.$class.' ', ' hide ' ) === false ) {
-								$table_width	+=	(int)$width;
-							}
-						} else {
-							$class	=	'';
+
+	if ( !$isMore ) { ?>
+		<table<?php echo $class_table; ?>>
+		<?php
+		}
+		$head	=	'';
+		$thead	=	false;
+		foreach ( $positions as $name=>$position ) {
+			$class					=	$position->css;
+			$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
+			$legend					=	( $position->legend ) ? $position->legend : ( ( $position->legend2 ) ? $position->legend2 : '' );
+			$width					=	$cck->w( $name );
+			if ( $legend || $width ) {
+				if ( $legend ) {
+					$thead	=	true;
+				}
+				if ( $position->variation != '' ) {
+					$var		=	$cck->renderVariation( $position->variation, $legend, '', $position->variation_options, $name );
+					$matches	=	array();
+					preg_match( '#<th class="([a-zA-Z0-9\-\ _]*)"(.*)>#U', $var, $matches );
+					if ( isset( $matches[1] ) && $matches[1] != '' ) {
+						$class	=	$matches[1];
+						if ( $isFixed == 2 && $width && strpos( ' '.$class.' ', ' hide ' ) === false ) {
+							$table_width	+=	(int)$width;
 						}
-						$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
-						$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
-						$head					.=	$var;
 					} else {
-						$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
-						$head					.=	'<th'.$attr['class'][$name].$attr['width'][$name].'>'.$legend.'</th>';	
+						$class	=	'';
 					}
+					$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
+					$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
+					$head					.=	$var;
+				} else {
+					$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
+					$head					.=	'<th'.$attr['class'][$name].$attr['width'][$name].'>'.$legend.'</th>';	
 				}
 			}
-            ?>
-            <?php if ( !$isMore && $head && $thead && ( $table_header == 0 || $table_header == 1 ) ) { ?>
-            <thead>
-                <tr><?php echo $head; ?></tr>
-			</thead>
-			<?php }
-			if ( !$isMore ) { ?>
-				<tbody<?php echo $class_body; ?>>
-            <?php
-        	}
+		}
+        ?>
+        <?php if ( $isMore < 1 && $head && $thead && ( $table_header == 0 || $table_header == 1 ) ) { ?>
+        <thead>
+            <tr><?php echo $head; ?></tr>
+		</thead>
+		<?php }
+		if ( $isMore < 1 ) { ?>
+			<tbody<?php echo $class_body; ?>>
+        <?php
+    	}
+    	if ( count( $items ) ) {
 			$i	=	0;
-            foreach ( $items as $item ) {
+	        foreach ( $items as $item ) {
 				?>
-                <tr <?php echo ${'class_row'.($i % 2)}.$item->replaceLive( $attributes ); ?>>
+	            <tr <?php echo ${'class_row'.($i % 2)}.$item->replaceLive( $attributes ); ?>>
 				<?php
-                foreach ( $positions as $name=>$position ) {
-                    $fieldnames	=	$cck->getFields( $name, '', false );
-                    $multiple	=	( count( $fieldnames ) > 1 ) ? true : false;
-                    $html		=	'';
-                    $width		=	'';
-                    if ( $isFixed ) {
+	            foreach ( $positions as $name=>$position ) {
+	                $fieldnames	=	$cck->getFields( $name, '', false );
+	                $multiple	=	( count( $fieldnames ) > 1 ) ? true : false;
+	                $html		=	'';
+	                $width		=	'';
+	                if ( $isFixed ) {
 						$width	=	$attr['width'][$name];
-                    }
-                    foreach ( $fieldnames as $fieldname ) {
+	                }
+	                foreach ( $fieldnames as $fieldname ) {
 						$content	=	$item->renderField( $fieldname );
 						if ( $content != '' ) {
 							if ( $item->getMarkup( $fieldname ) != 'none' && ( $multiple || $item->getMarkup_Class( $fieldname ) ) ) {
@@ -120,24 +121,26 @@ if ( !$isMore ) {
 								$html	.=	$content;
 							}
 						}
-                    }
-                    echo '<td'.$attr['class'][$name].$width.'>'.$html.'</td>';
-                }
-                ?>
-                </tr>
-            <?php $i++; }
-            if ( !$isMore ) { ?>
-				</tbody>
-			<?php
-			}
-			if ( $head && $thead && ( $table_header == -1 || $table_header == 1 ) ) { ?>
-            <tfoot>
-                <tr><?php echo $head; ?></tr>
-			</tfoot>
-			<?php }
-			if ( !$isMore ) { ?>
-			</table>
-	<?php } }
+	                }
+	                echo '<td'.$attr['class'][$name].$width.'>'.$html.'</td>';
+	            }
+	            ?>
+	            </tr>
+	        <?php $i++;
+	    	}
+	    }
+        if ( $isMore < 1 ) { ?>
+			</tbody>
+		<?php
+		}
+		if ( $head && $thead && ( $table_header == -1 || $table_header == 1 ) ) { ?>
+        <tfoot>
+            <tr><?php echo $head; ?></tr>
+		</tfoot>
+		<?php }
+		if ( !$isMore ) { ?>
+		</table>
+	<?php }
 	if ( !$isMore ) { ?>
     </div>
 </div>

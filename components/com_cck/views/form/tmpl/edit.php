@@ -37,9 +37,9 @@ if ( isset( $this->config['error'] ) && (int)$this->config['error'] == 1 ) { ?>
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'], $this->form_id );
-	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); Joomla.submitform(task, document.getElementById("'.$this->form_id.'")); } }';
+	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); } }';
 } else {
-	$js	=	'if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); Joomla.submitform(task, document.getElementById("'.$this->form_id.'")); }';
+	$js	=	'if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); }';
 }
 ?>
 <script type="text/javascript">
