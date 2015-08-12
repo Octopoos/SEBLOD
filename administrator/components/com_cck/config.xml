@@ -63,6 +63,11 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="COM_CCK_CONFIG_LEGEND_UNINSTALL" type="spacer" hr="false" />
+		<field name="uninstall_sql" type="list" default="0" label="COM_CCK_CONFIG_UNINSTALL_SQL" description="" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_UNINSTALL_SQL_BACKUP_TABLES</option>
+			<option value="1">COM_CCK_CONFIG_UNINSTALL_SQL_DROP_TABLES</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_VERSIONS" type="spacer" hr="false" />
 		<field name="version_auto" type="list" default="2" label="COM_CCK_CONFIG_VERSION_AUTO" description="COM_CCK_CONFIG_VERSION_AUTO_DESC" class="inputbox">
 			<option value="0">JNO</option>
