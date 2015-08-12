@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.7.0</version>
+	<version>3.7.1</version>
 	
 	<files>
 		<filename plugin="cck">cck.php</filename>

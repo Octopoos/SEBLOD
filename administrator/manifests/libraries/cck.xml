@@ -9,7 +9,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x Library - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.7.0</version>
+	<version>3.7.1</version>
 		
 	<files>
 		<folder>base</folder>

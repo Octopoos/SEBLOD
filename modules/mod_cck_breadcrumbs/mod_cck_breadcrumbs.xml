@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2012</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>	
-	<version>3.7.0</version>
+	<version>3.7.1</version>
 	
 	<files>
 		<folder>tmpl</folder>
