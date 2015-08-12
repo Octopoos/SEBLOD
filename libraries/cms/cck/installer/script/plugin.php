@@ -62,6 +62,7 @@ class JCckInstallerScriptPlugin
 	// uninstall
 	function uninstall( $parent )
 	{	
+		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		$where	=	'WHERE type = "'.$this->cck->type.'" AND element = "'.$this->cck->element.'"';
 		if ( $this->cck->group ) {
@@ -69,7 +70,7 @@ class JCckInstallerScriptPlugin
 		}
 
 		// Integration
-		if ( $this->cck->group == 'cck_storage_location' ) {
+		if ( $this->cck->group == 'cck_storage_location' && !isset( $app->cck_nosql ) ) {
 			$db->setQuery( 'DELETE FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' );
 			$db->query();
 		}

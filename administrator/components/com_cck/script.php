@@ -27,6 +27,7 @@ class com_cckInstallerScript
 		// Post Install Log
 		self::_postInstallMessage( 'uninstall', $parent );
 
+		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "package" AND element = "pkg_cck"' );
 		$eid	=	$db->loadResult();
@@ -34,6 +35,37 @@ class com_cckInstallerScript
 		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "plugin" AND element = "cck" AND folder="system"' );
 		$cck	=	$db->loadResult();
 		
+		// Backup or Drop SQL Tables
+		$prefix			=	$db->getPrefix();
+		$tables			=	$db->getTableList();
+		$tables			=	array_flip( $tables );
+		$uninstall_sql	=	(int)JCck::getConfig_Param( 'uninstall_sql', '' );
+
+		if ( count( $tables ) ) {
+			$length			=	strlen( $prefix );
+			$app->cck_nosql	=	true;
+			
+			foreach ( $tables as $k=>$v ) {
+				$pos		=	strpos( $k, $prefix.'cck_' );
+
+				if ( $pos !== false && $pos == 0 ) {
+					$k2		=	$prefix.'_'.substr( $k, $length );
+
+					if ( isset( $tables[$k2] ) ) {
+						$db->setQuery( 'DROP TABLE '.$k2 );
+						$db->execute();
+					}
+					if ( $uninstall_sql == 1 ) {
+						$db->setQuery( 'DROP TABLE '.$k );
+						$db->execute();
+					} else {
+						$db->setQuery( 'RENAME TABLE '.$k.' TO '.$k2 );
+						$db->execute();
+					}
+				}
+			}
+		}
+
 		// Uninstall FULL PACKAGE only if package exists && system plugin exists..
 		if ( $eid && $cck ) {
 			$manifest	=	JPATH_ADMINISTRATOR.'/manifests/packages/pkg_cck.xml';
