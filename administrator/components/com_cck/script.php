@@ -204,7 +204,8 @@ class com_cckInstallerScript
 	{
 		$db		=	JFactory::getDbo();
 		
-		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck"' );
+		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
+		
 		$res		=	$db->loadResult();
 		$registry	=	new JRegistry;
 		$registry->loadString( $res );
