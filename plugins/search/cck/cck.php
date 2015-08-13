@@ -443,8 +443,14 @@ class plgSearchCCK extends JPlugin
 							$tables[$s_table]['_']		=	't'.$t;
 							$tables[$s_table]['fields']	=	array();
 							$key						=	'id';
-							$join_key					=	'pk';
-							$query->join( 'LEFT', '`'.$s_table.'` AS '.$tables[$s_table]['_'].' ON '.$tables[$s_table]['_'].'.'.$key.' = t0.'.$join_key );
+							if($s_table == "#__categories" && isset($tables['#__content'])) {
+								$join_table	=	$tables['#__content']['_'];
+								$join_key	= 	'catid';
+							} else {
+								$join_table     =	't0';
+								$join_key	=	'pk';
+							}
+							$query->join( 'LEFT', '`'.$s_table.'` AS '.$tables[$s_table]['_'].' ON '.$tables[$s_table]['_'].'.'.$key.' = '.$join_table.'.'.$join_key );
 							$t++;
 						}
 						
