@@ -77,27 +77,11 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$value		=	(int)$field->defaultvalue;
 		$value		=	( $value ) ? $value - 1 : 0;
 		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
-		static $groups	=	array();
-		if ( !isset( $groups[$group_id] ) ) {
-			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0 );
-		}
 
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
-			$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
-			if ( $field->bool == 2 ) {
-				$html	=	JCckDevTabs::end();
-			} elseif ( $field->bool == 1 ) {
-				$html	=	JCckDevTabs::open( $group_id, $id, $field->label );
-				if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
-					$js	=	'(function($){ $(document).ready(function() { $("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active"); }); })(jQuery);';
-					JFactory::getDocument()->addScriptDeclaration( $js );
-				}
-			} else {
-				$html	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
-			}
-			$groups[$group_id]['current']++;
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
 		}
 
 		// Set
@@ -200,6 +184,55 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$field->markup	=	'none';
 
 		return parent::g_onCCK_FieldRenderForm( $field );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_FieldBeforeRenderContent
+	public static function onCCK_FieldBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$id				=	$process['id'];
+		$label			=	$process['label'];
+		$name			=	$process['name'];
+		$group_id		=	$process['group_id'];
+		$value			=	$process['value'];
+
+		if ( !$fields[$name]->state ) {
+			return;
+		}
+
+		static $groups	=	array();
+		if ( !isset( $groups[$group_id] ) ) {
+			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0, 'identifier'=>$process['identifier'], 'url_actions'=>$process['url_actions'] );
+		}
+		if ( $groups[$group_id]['identifier'] ) {
+			$id			=	JCckDev::toSafeID( $label );
+		}
+
+		if ( $fields[$name]->bool == 2 ) {
+			$html	=	JCckDevTabs::end();
+		} elseif ( $fields[$name]->bool == 1 ) {
+			$html	=	JCckDevTabs::open( $group_id, $id, $label );
+			$js		=	'';
+			if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
+				$js	=	'$("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active");';
+			}
+			if ( $groups[$group_id]['url_actions'] ) {
+				$js	=	'var cur = window.location.hash; if(cur!="" && $(cur).length) { $("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $(cur).addClass("active"); $("a[href=\'"+cur+"\']").parent().addClass("active"); }';
+				if ( $groups[$group_id]['url_actions'] == 2 ) {
+					$js	.=	' $("a[data-toggle=\'tab\']").on("shown", function (e) {window.location.hash = e.target.hash;})';
+				}
+			}
+			if ( $js ) {
+				$js	=	'(function($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
+				JFactory::getDocument()->addScriptDeclaration( $js );
+			}
+		} else {
+			$html	=	JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
+		}
+		$groups[$group_id]['current']++;
+
+		$fields[$name]->html	=	$html;
 	}
 }
 ?>
