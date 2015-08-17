@@ -24,6 +24,20 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.7.1 Upgrade Release [14-Aug-2014] -------------
+
+! "Upgrade" process of Products improved >> SEBLOD Updater add-on required.
+! XML scripts (of each SEBLOD product) updated.
+
+! SQL Tables now backuped by default when uninstalling SEBLOD
+>> Backup or Drop behavior can be selected in "SEBLOD 3.x > Options > Component".
+
+! Post Install info updated.
+
++ "Item Identifier", "URL" params added on "Tabs" plug-in.
+
+# "onBeforeRender" Restrictions support added on Tabs plug-in.
+
 -------------------- 3.7.0 Upgrade Release [17-Jul-2015] -------------
 
 + Ability to create/link a new field to a specific Content Type... from Field Manager (or Search Type).
