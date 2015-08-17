@@ -10,5 +10,5 @@
 
 defined( '_JEXEC' ) or die;
 
-echo trim( str_replace( array( '<!-- Begin: SEBLOD 3.x Document { www.seblod.com } -->', '<!-- End: SEBLOD 3.x (App Builder & CCK for Joomla!) { www.seblod.com } -->' ), '', $this->data ) );
+echo trim( str_replace( array( '<!-- Begin: SEBLOD 3.x Document -->', '<!-- End: SEBLOD 3.x Document -->' ), '', $this->data ) );
 ?>

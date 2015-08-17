@@ -199,7 +199,10 @@ class CCK_DocumentHTML extends CCK_Document
 
 		$this->parse($params);
 		$data = $this->_renderTemplate();
-		$data	=	'<!-- Begin: SEBLOD 3.x Document { www.seblod.com } -->'. $data .'<!-- End: SEBLOD 3.x (App Builder & CCK for Joomla!) { www.seblod.com } -->';
+
+		if ( (int)JCck::getConfig_Param( 'debug', 0 ) > 0 ) {
+			$data = '<!-- Begin: SEBLOD 3.x Document -->'. $data .'<!-- End: SEBLOD 3.x Document -->';
+		}
 
 		parent::render();
 		return $data;
