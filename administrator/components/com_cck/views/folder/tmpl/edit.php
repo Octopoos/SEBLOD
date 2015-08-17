@@ -80,7 +80,7 @@ Helper_Display::quickCopyright();
     }
     Joomla.submitbutton = function(task) {
         if (task == "folder.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
+            JCck.submitForm(task, document.getElementById('adminForm'));
         }
     }
     $(document).ready(function() {

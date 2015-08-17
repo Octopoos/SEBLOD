@@ -15,8 +15,11 @@ require_once dirname(__FILE__).'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
-$nLeft	=	$cck->countFields( 'left', true );
-$nRight	=	$cck->countFields( 'right', true );
+// -- Prepare
+$attributes =   $cck->id_attributes ? ' '.$cck->id_attributes : '';
+$attributes =   $cck->replaceLive( $attributes );
+$nLeft      =	$cck->countFields( 'left', true );
+$nRight     =	$cck->countFields( 'right', true );
 if ( $nLeft && $nRight ) {
 	$css	=	'#'.$cck->id.'_m100.cck-m100 {margin: 0 '.$cck->getStyleParam( 'position_right' ).'px 0 '.$cck->getStyleParam( 'position_left' ).'px !important;}'."\n";
 	$css	.=	'#'.$cck->id.' .cck-line-left {width: '.$cck->getStyleParam( 'position_left' ).'px;}'."\n";
@@ -34,7 +37,7 @@ $cck->addStyleDeclaration( $css );
 
 // -- Render
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>"<?php echo $cck->id_attributes; ?>>
+<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>"<?php echo $attributes; ?>>
 	<div>
     <?php // header-line
     if ( $cck->getStyleParam( 'position_header' ) ) {

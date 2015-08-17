@@ -63,6 +63,9 @@ div.adminformlist {
 	width:100%;
 	overflow:auto;
 }
+div.cck_form_cck_field_params div.adminformlist {
+	width:auto;
+}
 
 div.fxi {
 	border-bottom:1px dotted #CCCCCC;

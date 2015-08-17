@@ -131,8 +131,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</td>
             <td class="center hidden-phone small">
 				<?php
-				$storage	=	( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .' / '. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
-                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format" title="'.$storage.'">'.( $item->storage ).'</span>';
+				$storage	=	'<strong>'.( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .'</strong><br />'. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
+                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage ).'</span>';
 				?>
             </td>
             <td class="center hidden-phone small"><?php echo JText::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>

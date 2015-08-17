@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.0.0</version>
+	<version>3.7.1</version>
 	
 	<scriptfile>install/script.php</scriptfile>
 	
@@ -33,8 +33,7 @@
 	<config>
 		<fields name="params" addfieldpath="/libraries/cck/construction/field">
 			<fieldset name="basic">
-				<field name="quality_jpeg" type="text" default="90" label="PLG_CCK_FIELD_QUALITY_JPEG_LABEL" size="24" description="PLG_CCK_FIELD_QUALITY_JPEG_DESC" />
-				<field name="quality_png" type="text" default="3" label="PLG_CCK_FIELD_QUALITY_PNG_LABEL" size="24" description="PLG_CCK_FIELD_QUALITY_PNG_DESC" />
+				<field name="" type="spacer" hr="false" />
 			</fieldset>
 			
 			<fieldset name="advanced">

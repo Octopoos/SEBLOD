@@ -96,17 +96,19 @@ class plgContentCCKInstallerScript
 			$addons	=	$db->loadObjectList();
 			if ( count( $addons ) ) {			
 				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-				$titles	=	array( 'com_cck_developer'=>'Developer',
-								   'com_cck_ecommerce'=>'eCommerce',
-								   'com_cck_exporter'=>'Exporter',
-								   'com_cck_importer'=>'Importer',
-								   'com_cck_manager'=>'Manager',
-								   'com_cck_multilingual'=>'Multilingual',
-								   'com_cck_packager'=>'Packager',
-								   'com_cck_toolbox'=>'Toolbox',
-								   'com_cck_updater'=>'Updater',
-								   'com_cck_webservices'=>'WebServices'
-								);
+				$titles	=	array(
+								'com_cck_builder'=>'Builder',
+								'com_cck_developer'=>'Developer',
+								'com_cck_ecommerce'=>'eCommerce',
+								'com_cck_exporter'=>'Exporter',
+								'com_cck_importer'=>'Importer',
+								'com_cck_manager'=>'Manager',
+								'com_cck_multilingual'=>'Multilingual',
+								'com_cck_packager'=>'Packager',
+								'com_cck_toolbox'=>'Toolbox',
+								'com_cck_updater'=>'Updater',
+								'com_cck_webservices'=>'WebServices'
+							);
 				foreach ( $addons as $addon ) {
 					$addon->title	=	$titles[$addon->element];
 					self::_addAddon( $addon, $seblod );
@@ -256,14 +258,16 @@ class plgContentCCKInstallerScript
 									38=>'2.6.0', 39=>'2.7.0', 40=>'2.8.0', 41=>'2.9.0', 42=>'3.0.0', 43=>'3.0.1', 44=>'3.0.2', 45=>'3.0.3', 46=>'3.0.4', 47=>'3.0.5',
 									48=>'3.1.0', 49=>'3.1.1', 50=>'3.1.2', 51=>'3.1.3', 52=>'3.1.4', 53=>'3.1.5',
 									54=>'3.2.0', 55=>'3.2.1', 56=>'3.2.2', 57=>'3.3.0', 58=>'3.3.1', 59=>'3.3.2', 60=>'3.3.3', 61=>'3.3.4', 62=>'3.3.5', 63=>'3.3.6', 64=>'3.3.7', 65=>'3.3.8',
-									66=>'3.4.0', 67=>'3.4.1', 68=>'3.4.2', 69=>'3.4.3' );
+									66=>'3.4.0', 67=>'3.4.1', 68=>'3.4.2', 69=>'3.4.3', 70=>'3.5.0', 71=>'3.5.1',
+									72=>'3.6.0', 73=>'3.6.1', 74=>'3.6.2', 75=>'3.6.3', 76=>'3.6.4', 77=>'3.6.5',
+									78=>'3.7.0', 79=>'3.7.1' );
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
 			$i			=	array_search( $old, $versions );
 			$i2			=	$i;
 			$n			=	array_search( $new, $versions );
 			if ( $i < 7 ) {		// ONLY < 2.0 GA
-				$prefix	=	JFactory::getApplication()->getCfg( 'dbprefix' );
+				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 				$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
 				if ( count( $tables ) ) {
 					foreach ( $tables as $table ) {
@@ -432,7 +436,7 @@ class plgContentCCKInstallerScript
 					JCckDatabase::doQuery( 'UPDATE #__cck_core_objects SET options = "'.$db->escape( json_encode( $params ) ).'" WHERE name = "'.$k.'"' );
 				}
 			}
-
+			
 			if ( $i2 < 45 ) {
 				$table		=	'#__cck_store_item_users';
 				$columns	=	$db->getTableColumns( $table );
@@ -440,14 +444,25 @@ class plgContentCCKInstallerScript
 					JCckDatabase::doQuery( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' DROP '.JCckDatabase::quoteName( 'password2' ) );
 				}
 			}
-
+			
 			if ( $i2 < 66 ) {
 				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
 				if ( JFile::exists( $path ) ) {
 					JFile::delete( $path );
 				}
 			}
+			
+			if ( $i2 < 70 ) {
+				$plg_image	=	JPluginHelper::getPlugin( 'cck_field', 'upload_image' );
+				$plg_params	=	new JRegistry( $plg_image->params );
 
+				$com_cck	=	JComponentHelper::getComponent( 'com_cck' );
+				$com_cck->params->set( 'media_quality_jpeg', $plg_params->get( 'quality_jpeg', '90' ) );
+				$com_cck->params->set( 'media_quality_png', $plg_params->get( 'quality_png', '3' ) );
+				
+				JCckDatabase::doQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $com_cck->params->toString() ).'" WHERE type = "component" AND element = "com_cck"' );
+			}
+			
 			// Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}

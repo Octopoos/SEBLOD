@@ -181,6 +181,7 @@ Helper_Display::quickCopyright();
 			$("#site_grp").val($(this).attr("data-values"));
 		});
 		JCck.Dev.addScroll();
+		$(".sly ul li").removeClass("active"); $(".sly ul li:eq(1)").addClass("active");
 	});
 })(jQuery);
 </script>

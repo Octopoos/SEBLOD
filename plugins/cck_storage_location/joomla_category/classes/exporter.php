@@ -77,6 +77,10 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 		
 		// Set
+		if ( $config['prepare_output'] ) {
+			JPluginHelper::importPlugin( 'cck_field' );
+			$dispatcher	=	JDispatcher::getInstance();
+		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
 				// Check Permissions?
@@ -97,10 +101,19 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 					$fields	=	array();
 				} elseif ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 					$fields	=	array();
-					$vars 	=	get_object_vars( $table );
-					foreach ( $vars as $key=>$val ) {
-						if ( isset( $config['fields'][$key] ) ) {
-							$fields[$key]	=	$val;
+					if ( $config['prepare_output'] ) {
+						foreach ( $config['fields'] as $name=>$field ) {
+							// DISPATCH --> EXPORT
+							$val			=	@$table->$name;
+							$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+							$fields[$name]	=	$field->output;
+						}
+					} else {
+						$vars 	=	get_object_vars( $table );
+						foreach ( $vars as $key=>$val ) {
+							if ( isset( $config['fields'][$key] ) ) {
+								$fields[$key]	=	$val;
+							}
 						}
 					}
 				} else {
@@ -120,6 +133,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 					if ( count( $values[1] ) ) {
 						foreach ( $values[1] as $k=>$v ) {
 							if ( $v == self::$custom ) {
+								// DISPATCH --> EXPORT
 								$fields[self::$custom]	=	$values[2][$k];
 							} elseif ( !isset( $excluded2[$v] ) ) {
 								$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
@@ -137,7 +151,15 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 							} else {
 								$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
 							}
-							$fields[$key]	=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+							// DISPATCH --> EXPORT
+							if ( $config['prepare_output'] ) {
+								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+								$fields[$key]	=	$field->output;
+							} else {
+								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$fields[$key]	=	$val;
+							}
 						} else {
 							$name			=	$field->storage_field2 ? $field->storage_field2 : $name;
 							if ( $config['component'] == 'com_cck_exporter' ) {
@@ -148,7 +170,15 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
 								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array();	// TODO
 							}
-							$fields[$key]	=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
+							// DISPATCH --> EXPORT
+							if ( $config['prepare_output'] ) {
+								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+								$fields[$key]	=	$field->output;
+							} else {
+								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$fields[$key]	=	$val;
+							}
 						}
 					}
 				}

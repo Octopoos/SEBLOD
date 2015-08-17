@@ -36,6 +36,7 @@ class Helper_Include
 	// addValidation
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
 		if ( !$id ) {
@@ -59,18 +60,29 @@ class Helper_Include
 				}
 			}
 			if ( $position != 'inline' && $bgcolor != '' ) {
-				$doc->addStyleDeclaration( '.formError .formErrorContent, .formError .formErrorArrow div{background: '.$bgcolor.'}' );
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
 			}
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
 		} else {
 			$options	=	'{}';
 		}
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		
-		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation.css' );
-		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js' );
-		
-		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
-		$doc->addScriptDeclaration( $js );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css" type="text/css" />';
+			echo '<script src="'.JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js" type="text/javascript"></script>';
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js' );
+			$doc->addScriptDeclaration( $js );
+		}
 	}
 }
 ?>

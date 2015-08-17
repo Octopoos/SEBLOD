@@ -41,6 +41,52 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			$value	=	$storage->values[$P][2][$k];
 		}
 	}
+
+	// onCCK_StoragePrepareDelete
+	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		parent::g_onCCK_StoragePrepareContent( $field, $config );
+		
+		// Init
+		$P	=	$field->storage_field;
+		
+		// Prepare
+		if ( ! isset( $storage->values[$P] ) ) {
+			$storage->values[$P]	=	( isset( $storage->$P ) ) ? self::_initValues( $storage->$P ) : array( 0=>array(), 1=>array(), 2=>array(), 3=>array() );
+		}
+		
+		// Set
+		if ( ( $k = array_search( $field->storage_field2, $storage->values[$P][1] ) ) !== false ) {
+			$value	=	$storage->values[$P][2][$k];
+		}
+	}
+
+	// onCCK_StoragePrepareDownload
+	public function onCCK_StoragePrepareDownload( &$field, &$value, &$config = array() )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+
+		// Init
+
+		// Set
+		if ( $config['collection'] != '' ) {
+			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );			
+			preg_match( $regex, $field->value, $matches );
+			$value	=	$matches[1];
+		} else {
+			if ( is_object( $field ) && $field->storage_field2 ) {
+				$config['fieldname']	=	$field->storage_field2;
+			}
+			$regex	=	CCK_Content::getRegex_Field( $config['fieldname'] );
+			preg_match( $regex, $field->value, $matches );
+			$value	=	$matches[1];
+		}
+	}
 	
 	// onCCK_StoragePrepareForm
 	public function onCCK_StoragePrepareForm( &$field, &$value, &$storage, $config = array() )
@@ -107,6 +153,9 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'exact':
 				$sql		=	( !$TA ) ? $target.' = "'.$TA.$value.$TZ.'"' : $target.' REGEXP "'.$TA.$value.$TZ.'"';
 				break;
+			case 'empty':
+				$sql		=	$target.' REGEXP "'.$TA.$TZ.'"';
+				break;
 			case 'alpha':
 				$sql		=	$target.' REGEXP "'.$TA.$value.'.*'.$TZ.'"';
 				break;
@@ -144,13 +193,25 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				}
 				break;
 			case 'each':
+			case 'each_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
 				if ( count( $values ) ) {
 					$fragments	=	array();
-					foreach ( $values as $v ) {
-						if ( strlen( $v ) > 0 ) {
-							$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+					if ( $match == 'each_exact' ) {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.$v.$TZ.'"' : $target.' REGEXP "'.$TA.$v.$TZ.'"' )
+												.	$target.' REGEXP "'.$TA.$v.$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$TZ.'"';
+							}
+						}
+					} else {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+							}
 						}
 					}
 					if ( count( $fragments ) ) {

@@ -55,7 +55,7 @@ class plgUserCCK extends JPlugin
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterSave';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
@@ -74,7 +74,7 @@ class plgUserCCK extends JPlugin
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserBeforeSave';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
@@ -104,7 +104,7 @@ class plgUserCCK extends JPlugin
 		}
 		
 		$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
-		$prefix	= 	JFactory::getApplication()->getCfg( 'dbprefix' );
+		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
 		
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
 			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );

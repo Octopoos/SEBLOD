@@ -11,9 +11,9 @@
 defined( '_JEXEC' ) or die;
 
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-$config		=	JCckDev::init( array( '42', 'jform_rules', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state', 'core_client_type',
-										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_indexing', 'core_alias' ) );
+										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
 $doc		=	JFactory::getDocument();
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
@@ -80,7 +80,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             	<?php echo JCckDev::renderForm( $cck['core_storage_location2'], $this->item->storage_location, $config, array( 'attributes'=>'style="width:140px;"' ) ); ?>
             </ul>
             <ul class="spe spe_third">
-            	<?php echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config ); ?>
+            	<?php echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config ); ?>            	
             </ul>
 			<ul class="spe spe_name">
 				<?php
@@ -102,6 +102,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
             </ul>
             <ul class="spe spe_name">
+            	<?php echo JCckDev::renderForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) ); ?>
+            </ul>
+            <ul class="spe spe_type">
+            	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ); ?>
+            </ul>
+            <ul class="spe spe_sixth">
             	<?php echo JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ); ?>
             </ul>
         </div>
@@ -297,7 +303,7 @@ Helper_Display::quickCopyright();
 			});
 			$("#sortable1, #sortable2").selectable({
 				filter		: "li.field",
-				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled",
+				cancel		: "input,img,option,select,span.c_live,span.c_live2,span.c_mat,span.c_val,span.c_typo,span.c_link,span.c_res,span.c_comp,span.c_cond,.cbox,.ui-state-disabled,span.c_cancelled",
 			});
 			/* -- */
 			$(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
@@ -380,10 +386,10 @@ Helper_Display::quickCopyright();
 	}
 	Joomla.submitbutton = function(task) {
 		if (task == "type.cancel") {
-			$("#layers").remove(); Joomla.submitform(task, document.getElementById('adminForm'));
+			$("#layers").remove(); JCck.submitForm(task, document.getElementById('adminForm'));
 		} else {
 			if ($("#adminForm").validationEngine("validate",task) === true) {
-				JCck.Dev.preSubmit(); Joomla.submitform(task, document.getElementById('adminForm'));
+				JCck.Dev.preSubmit(); JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
 	}

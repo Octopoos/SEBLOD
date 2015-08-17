@@ -45,10 +45,19 @@ abstract class JCckDevField
 		if ( ! ( $field && ( @$field->storage == 'dev' && @$field->storage_field ) || $field->type == 'button_submit' ) ) {
 			return '';
 		}
-		
-		$inherit['name']	=	$field->storage_field;
+		$name	=	$field->storage_field;
+		if ( isset( $config['inherit'] ) ) {
+			if ( strpos( $name, '[' ) !== false ) {
+				$parts				=	explode( '[', $name );
+				$inherit['name']	=	$config['inherit'].'['.$parts[0].']['.$parts[1];
+			} else {
+				$inherit['name']	=	$config['inherit'].'['.$name.']';
+			}
+		} else {
+			$inherit['name']	=	$name;
+		}
 		if ( ! isset( $inherit['id'] ) ) {
-			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $field->storage_field );
+			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
 		}
 		
 		$dispatcher	=	JDispatcher::getInstance();

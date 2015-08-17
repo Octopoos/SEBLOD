@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" version="2.5" method="upgrade">
+	<name>SEBLOD</name>
+	<libraryname>cck</libraryname>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x Library - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.7.1</version>
+		
+	<files>
+		<folder>base</folder>
+		<folder>construction</folder>
+		<folder>content</folder>
+		<folder>development</folder>
+		<folder>joomla</folder>
+		<folder>misc</folder>
+		<folder>rendering</folder>
+		
+		<filename>_CREDITS.php</filename>
+		<filename>_LICENSE.php</filename>
+		<filename>_README.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages/site">
+		<language tag="en-GB">en-GB/en-GB.lib_cck.ini</language>
+		<language tag="en-GB">en-GB/en-GB.lib_cck.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.lib_cck.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.lib_cck.sys.ini</language>
+	</languages>
+</extension>

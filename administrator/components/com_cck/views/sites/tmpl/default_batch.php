@@ -29,9 +29,15 @@ if ( JCck::on() ) { ?>
 	            <div class="sly-wrapper">
 	                <div class="sly">
 	                    <ul>
-	                        <li data-values="7"><?php echo JText::_( 'COM_CCK_BASIC' ); ?></li>
-	                        <li data-values="2,7"><?php echo JText::_( 'COM_CCK_STANDARD' ); ?></li>
-	                        <li data-values="2,3,6,7"><?php echo JText::_( 'COM_CCK_ADVANCED' ); ?></li>
+	                        <li data-values="7"><?php echo JText::_( 'COM_CCK_BASIC' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_basic.png" alt="<?php echo JText::_( 'COM_CCK_BASIC' ); ?>" width="175" height="115" />
+	                        </li>
+	                        <li data-values="2,7"><?php echo JText::_( 'COM_CCK_STANDARD' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_standard.png" alt="<?php echo JText::_( 'COM_CCK_STANDARD' ); ?>" width="175" height="115" />
+	                        </li>
+	                        <li data-values="2,3,6,7"><?php echo JText::_( 'COM_CCK_ADVANCED' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_advanced.png" alt="<?php echo JText::_( 'COM_CCK_ADVANCED' ); ?>" width="175" height="115" />
+	                        </li>
 	                    </ul>
 	                </div>
 	            </div>

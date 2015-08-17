@@ -56,7 +56,7 @@ class Helper_Workshop
                 <li>
                 <?php
 				if ( $master == 'order' ) { ?>
-					<div class="pane ph1"><div>-</div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
+					<div class="pane ph1"><div><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
                 <?php } elseif ( $master == 'content' ) { ?>
                     <div class="pane ph4 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                     <div class="pane ph3 hide"><div><?php echo JText::_( 'COM_CCK_MARKUP_CLASS' ); ?></div><div><?php echo JText::_( 'COM_CCK_MARKUP' ); ?></div></div>
@@ -190,7 +190,7 @@ class Helper_Workshop
 			$template			=	self::getDefaultTemplate();
 		}
 		if ( !isset( $styles[$template] ) ) {
-			$styles[$template]	=	JCckDatabase::loadObject( 'SELECT id, params, template FROM #__template_styles WHERE template = "'.(string)$template.'" ORDER BY id asc' );
+			$styles[$template]	=	JCckDatabaseCache::loadObject( 'SELECT id, params, template FROM #__template_styles WHERE template = "'.(string)$template.'" ORDER BY id asc' );
 		}
 		
 		return $styles[$template];
@@ -331,7 +331,13 @@ class Helper_Workshop
 			}
 		} else {
 			if ( $master == 'order' ) {
-				$data['match_mode']	=	array( JHtml::_( 'select.option', 'ASC', JText::_( 'COM_CCK_ASCENDING' ) ), JHtml::_( 'select.option', 'DESC', JText::_( 'COM_CCK_DESCENDING' ) ) );
+				$data['match_mode']	=	array(
+											JHtml::_( 'select.option', 'ASC', JText::_( 'COM_CCK_ASCENDING' ) ),
+											JHtml::_( 'select.option', 'DESC', JText::_( 'COM_CCK_DESCENDING' ) ),
+											JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) ),
+											JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
+											JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true ) );
 				$data['typo']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true ) );
@@ -353,6 +359,7 @@ class Helper_Workshop
 				$data['match_mode']	=	array( JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),
 											   JHtml::_( 'select.option', 'alpha', JText::_( 'COM_CCK_MATCH_BEGINNING_WITH' ) ),
+											   JHtml::_( 'select.option', 'empty', JText::_( 'COM_CCK_MATCH_EMPTY' ) ),
 											   JHtml::_( 'select.option', 'zeta', JText::_( 'COM_CCK_MATCH_ENDING_WITH' ) ),
 											   JHtml::_( 'select.option', 'exact', JText::_( 'COM_CCK_MATCH_EXACT_PHRASE' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_MATCH_DEFAULT_PHRASE' ) ),
@@ -390,6 +397,7 @@ class Helper_Workshop
 											   JHtml::_( 'select.option', 'any', JText::_( 'COM_CCK_MATCH_ANY_WORDS' ) ),
 											   JHtml::_( 'select.option', 'any_exact', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT' ) ),
 											   JHtml::_( 'select.option', 'each', JText::_( 'COM_CCK_MATCH_EACH_WORD' ) ),
+											   JHtml::_( 'select.option', 'each_exact', JText::_( 'COM_CCK_MATCH_EACH_WORD_EXACT' ) ),
 											   JHtml::_( 'select.option', 'nested_exact', JText::_( 'COM_CCK_MATCH_NESTED_EXACT' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['live']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),

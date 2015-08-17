@@ -33,7 +33,7 @@ if ( is_object( $this->style ) ) {
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Class', 'size'=>'16', 'storage_field'=>'params[rendering_css_class]' ) );
-			echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_custom_attributes'], $config, array( 'label'=>'Custom Attributes', 'size'=>'32', 'storage_field'=>'params[rendering_custom_attributes]' ) );
+			echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_custom_attributes'], $config, array( 'label'=>'Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_custom_attributes]' ), array(), 'w100' );
             ?>
         </ul>
 	</div>

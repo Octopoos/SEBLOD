@@ -41,7 +41,7 @@ if ( $legacy == 1 ) {
 $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative; top:8px;}' );
 ?>
 
-<div class="modal hide fade" id="<?php echo $target_id; ?>">
+<div class="modal modal-small hide fade" id="<?php echo $target_id; ?>">
 	<div class="modal-header">
 		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
 		<h3><?php echo $legend; ?></h3>
@@ -97,7 +97,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-mini btn-danger pull-left" type="button" onclick="window.open('http://vip.seblod.com', '_blank'); return false;">
+		<button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://vip.seblod.com', '_blank'); return false;">
 			<?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
 		</button>
 		<button class="btn" type="button" data-dismiss="modal">

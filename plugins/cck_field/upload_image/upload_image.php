@@ -31,16 +31,64 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 		$data['json']['options2']['path']		=	trim( $data['json']['options2']['path'] );
 		
-		jimport( 'joomla.filesystem.folder' );
-		if ( ! JFolder::exists( JPATH_SITE.'/'.$data['json']['options2']['path'] ) ) {
-			JFolder::create( JPATH_SITE.'/'.$data['json']['options2']['path'] );
-			$buffer	=	'<!DOCTYPE html><title></title>';
-			JFile::write( JPATH_SITE.'/'.$data['json']['options2']['path'].'/'.'index.html', $buffer );
-		}
+		JCckDevHelper::createFolder( JPATH_SITE.'/'.$data['json']['options2']['path'] );
 		
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		$value_json		=	JCckDev::fromJSON( $value );
+		if ( $value == '' || isset( $value_json['image_location'] ) && $value_json['image_location'] == '' ) {
+			return;
+		}
+
+		// Init
+		$value_json		=	JCckDev::fromJSON( $value );
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+
+		// Process
+		if ( $value != '' && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+				}
+			} else {
+				JFile::delete( JPATH_SITE.'/'.$value );
+				
+				for ( $i = 1; $i <= 10; $i++ ) {
+					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -68,6 +116,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
 		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {
@@ -75,7 +126,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$field->{'thumb'.$i}	=	( JFile::exists( JPATH_SITE.'/'.$thumb ) ) ? $thumb : '';
 			}
 			
-			self::_addThumbs( $field, $options2, $value, $path, $this->params->get( 'quality_jpeg', '90' ), $this->params->get( 'quality_png', '90' ) );
+			self::_addThumbs( $field, $options2, $value, $path );
 			if ( isset( $options2['content_preview'] ) && $options2['content_preview'] ) {
 				$i				=	(int)$options2['content_preview'];
 				$field->html	=	( $field->{'thumb'.$i} ) ?  '<img src="'.$field->{'thumb'.$i}.'" title="'.$img_title.'" alt="'.$img_desc.'" />' : '<img src="'.$value.'" title="'.$img_title.'" alt="'.$img_desc.'" />';
@@ -95,6 +146,29 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$field->typo_target	=	'html';
 	}
 	
+	// onCCK_FieldPrepareDownload
+	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+
+		// Path Folder
+		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
+		$file		=	'';
+		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
+			$file	.=	$f_opt2['path'];
+			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
+			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
+		}
+		$file		.=	$field->value;
+		
+		$field->filename	=	$file;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
@@ -178,7 +252,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$thumb	=	$path.'_thumb'.$i.'/'.substr( strrchr( $value['image_location'], '/' ), 1 );
 				$field->{'thumb'.$i}	=	( JFile::exists( JPATH_ROOT.'/'.$thumb ) ) ? $thumb : '';
 			}
-			self::_addThumbs( $field, $options2, $value['image_location'], $path, $this->params->get( 'quality_jpeg', '90' ), $this->params->get( 'quality_png', '90' ) );
+			self::_addThumbs( $field, $options2, $value['image_location'], $path );
 		}
 		
 		$class				=	'inputbox file'.$validate . ( $field->css ? ' '.$field->css : '' );
@@ -188,14 +262,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$nameH	=	substr( $name, 0, -2 );
 			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$value2.'" />';
 			if ( $options2['title_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more2	=	self::_addFormText( $id.'_title', $nameH.'_title[]', $attr_input_text, $title_label, $image_title, 'upload_image' );
+				$form_more2	=	self::_addFormText( $id.'_title', $nameH.'_title[]', $attr_input_text, $title_label, $image_title, self::$type );
 			}
 			if ( $options2['custom_path'] == '1' ) {
-				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  $path_label, $value2, 'upload_image', false );
+				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  $path_label, $value2, self::$type, false );
 				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, 'upload_image' );
+				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
 				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
@@ -205,14 +279,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$nameH	=	substr( $name, 0, -1 );
 			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$value2.'" />';
 			if ( $options2['title_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more2	=	self::_addFormText( $id.'_title', $nameH.'_title]', $attr_input_text, $title_label, $image_title, 'upload_image' );
+				$form_more2	=	self::_addFormText( $id.'_title', $nameH.'_title]', $attr_input_text, $title_label, $image_title, self::$type );
 			}
 			if ( $options2['custom_path'] == '1' ) {
-				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  $path_label, $value2, 'upload_image', false );
+				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  $path_label, $value2, self::$type, false );
 				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, 'upload_image' );
+				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
 				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
@@ -221,14 +295,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		} else { //Default
 			$form_more	=	'<input class="inputbox" type="hidden" id="'.$name.'_hidden" name="'.$name.'_hidden" value="'.$value2.'" />';
 			if ( $options2['title_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more2	=	self::_addFormText( $id.'_title', $name.'_title', $attr_input_text, $title_label, $image_title, 'upload_image' );
+				$form_more2	=	self::_addFormText( $id.'_title', $name.'_title', $attr_input_text, $title_label, $image_title, self::$type );
 			}
 			if ( $options2['custom_path'] == '1' ) {
-				$form_more3	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  $path_label, $value2, 'upload_image', false );
+				$form_more3	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  $path_label, $value2, self::$type, false );
 				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';	//TODO!
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
-				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, 'upload_image' );
+				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
 				$onchange	=	' onchange="$(\''.$name.'_delete\').checked=true;"';
@@ -270,7 +344,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			} else {
 				$preview	=	'<a class="cck_preview" id="colorBox'.$field->id.'" href="'.JURI::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">'.$title_image.'</a>';
 			}
-			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, 'upload_image' );
+			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
 		} else {
 			$params['image_colorbox']	=	'0';
 		}
@@ -299,6 +373,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepape
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+		
+		$field->data	=	JUri::root().$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -540,13 +631,12 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
 			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path,
 									   'file_name'=>$ImageCustomName, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, //'value'=>$field->value,
-									   'quality_jpeg'=>$this->params->get( 'quality_jpeg', '90' ), 'quality_png'=>$this->params->get( 'quality_png', '3' ),
 									   'storage'=>$field->storage, 'storage_field' => $field->storage_field, 'storage_field2'=>( $field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$imageTitle, 'file_descr'=>$imageDesc );
 			parent::g_addProcess( 'afterStore', self::$type, $config, $process_params );
 		}
 		
-		$value		=	( $imageTitle == '' && $imageDesc == '' ) ? $value : '{"image_location":"'.$value.'","image_title":"'.$imageTitle.'","image_description":"'.$imageDesc.'"}';
+		$value		=	( !$options2['multivalue_mode'] || $imageTitle == '' && $imageDesc == '' ) ? $value : '{"image_location":"'.$value.'","image_title":"'.$imageTitle.'","image_description":"'.$imageDesc.'"}';
 		if ( $return === true ) {
 			return $value;
 		}
@@ -573,8 +663,6 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		jimport( 'joomla.filesystem.folder' );
-		
 		include dirname(__FILE__).'/includes/afterstore.php';
 	}
 	
@@ -602,8 +690,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$loaded	=	1;
 			
 			JCck::loadjQuery();
-			$doc->addStyleSheet( self::$path.'assets/css/upload_image.css' );
-			$doc->addScript( self::$path.'assets/js/upload_image.js' );
+			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+			$doc->addScript( self::$path.'assets/js/'.self::$type.'.js' );
 		}
 	}
 	
@@ -620,26 +708,24 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	}
 
 	// _addThumbs
-	protected static function _addThumbs( &$field, $options2, $value, $path, $quality_jpeg, $quality_png )
+	protected static function _addThumbs( &$field, $options2, $value, $path )
 	{
 		switch ( @$options2['force_thumb_creation'] ) {
 			case '0':
 				break;
 			case '1':
-				jimport( 'joomla.filesystem.folder' );
+				$image	=	new JCckDevImage( JPATH_SITE.'/'.$value );
 				for ( $i = 1; $i < 11; $i++ ) {
 					if ( ! $field->{'thumb'.$i} || $field->{'thumb'.$i} == '' ) {
-						$process_params			=	array( 'quality_jpeg'=> $quality_jpeg, 'quality_png'=> $quality_png );
-						$thumb_result			=	self::_addThumb ( $value, $options2, $i, $process_params );
+						$thumb_result			=	self::_addThumb( $image, $options2, $i );
 						$field->{'thumb'.$i}	=	( $thumb_result ) ? $path.'_thumb'.$i.'/'.substr( strrchr( $value, '/' ), 1 ) : '';
 					}
 				}
 				break;
 			case '2' :
-				jimport( 'joomla.filesystem.folder' );
+				$image	=	new JCckDevImage( JPATH_SITE.'/'.$value );
 				for ( $i = 1; $i < 11; $i++ ) {
-					$process_params			=	array( 'quality_jpeg'=> $quality_jpeg, 'quality_png'=> $quality_png );
-					$thumb_result			=	self::_addThumb ( $value, $options2, $i, $process_params );
+					$thumb_result			=	self::_addThumb( $image, $options2, $i );
 					$field->{'thumb'.$i}	=	( $thumb_result ) ? $path.'_thumb'.$i.'/'.substr( strrchr( $value, '/' ), 1 ) : '';
 				}
 				break;
@@ -649,7 +735,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// _addFormText
 	protected static function _addFormText( $id, $name, $attr, $label, $value, $suffix, $display = true )
 	{
-		$form	=	( $display ) ? '<div class="cck_forms cck_'.$suffix.'">' : '<div class="cck_forms cck_upload_image_'.$suffix.'" style="display:none">';
+		$form	=	( $display ) ? '<div class="cck_forms cck_'.$suffix.'">' : '<div class="cck_forms cck_'.self::$type.'_'.$suffix.'" style="display:none">';
 		$form	.=	'<div class="cck_label cck_label_'.$suffix.'"><label for="'.$id.'" >'.$label.'</label></div>';
 		$form	.=	'<div class="cck_form cck_form_'.$suffix.'"><input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' /></div>';
 		$form	.=	'</div>';
@@ -667,247 +753,21 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		
 		return $form;
 	}
-
-	// _available_img_dim
-	protected static function _available_img_dim( $dim )
-	{
-		return $dim && trim( $dim ) != '' && is_numeric( $dim );
-	}
 	
 	// _addThumb
-	protected static function _addThumb( $location, $options, $thumb, $params )
+	protected static function _addThumb( $image, $options, $thumb )
 	{
-		$location_old	=	$location;
-		$location		=	JPATH_SITE.'/'.$location;
-		$newSize		=	getimagesize( JPATH_SITE.'/'.$location_old );
-		$newWidth		=	$newSize[0];
-		$newHeight		=	$newSize[1];
-		$newRatio		=	$newWidth / $newHeight;	
-		$newExt			=	substr( strrchr( $location_old, "." ), 1 );
-		$waterI			=	''; // $options['image_watermark'];
-		$waterExtI		=	substr( strrchr( $waterI, "." ), 1 );
-		
-		switch( $newExt ) {
-			case 'gif':
-			case 'GIF':
-				$resImage	=	@ImageCreateFromGIF( JPATH_SITE.'/'.$location_old );
-				break;
-			case 'jpg':
-			case 'JPG':
-			case 'jpeg': 
-			case 'JPEG': 
-				$resImage	=	@ImageCreateFromJPEG( JPATH_SITE.'/'.$location_old );
-				break;
-			case 'png':
-			case 'PNG':
-				$resImage	=	@ImageCreateFromPNG( JPATH_SITE.'/'.$location_old );
-				break;
-			default:
-				break;
-		}
-		if ( ! $resImage ) {
-			//...
-		}
-		//umask(0002);
 		if ( count( $options ) ) {
-			//for ( $i = 0; $i < $thumb_count; $i++ ) {
-				$newWidth	=	$newSize[0];
-				$newHeight	=	$newSize[1];
-				$format_name	=	'thumb'.$thumb.'_process';
-				$width_name		=	'thumb'.$thumb.'_width';
-				$height_name	=	'thumb'.$thumb.'_height';
-				if ( trim( $options[$format_name] ) ) {
-					ob_start();
-					$newX	= 	0;
-					$newY	=	0;
-					$thumbX	=	0;
-					$thumbY	=	0;
-					if ( ! self::_available_img_dim ( $options[$width_name] ) && ! self::_available_img_dim ( $options[$height_name] ) ) {
-						return false;
-					}							
-					$width	=  ( ! $options[$width_name] && $options[$height_name] ) ? round( $options[$height_name] * $newRatio ) : $options[$width_name];
-					$height	=  ( $options[$width_name] && ! $options[$height_name] ) ? round( $options[$width_name] / $newRatio ) : $options[$height_name];
-					$ratio	=	$width / $height;
-					switch( $options[$format_name] )
-					{
-						case "addcolor":
-							$thumbWidth		=	( $ratio > $newRatio ) ? round( $height * $newRatio ) : $width;
-							$thumbHeight	=	( $ratio < $newRatio ) ? round( $width / $newRatio ) : $height;
-							$thumbX			=	( $width / 2 ) - ( $thumbWidth / 2 );
-							$thumbY			=	( $height / 2 ) - ( $thumbHeight / 2 );
-							break;
-						case "crop":
-							if ( $ratio > $newRatio ) {
-								$zoom		=	$newWidth / $width;
-								$crop_h		=	floor( $zoom * $height );
-								$crop_w		=	$newWidth;
-								$crop_x		=	0;
-								$crop_y		=	floor( 0.5 * ( $newHeight - $crop_h ) );
-							} else {
-								$zoom		=	$newHeight / $height;
-								$crop_h		=	$newHeight;
-								$crop_w		=	floor( $zoom * $width );
-								$crop_x		=	floor( 0.5 * ( $newWidth - $crop_w ) );
-								$crop_y		=	0;
-							}
-							$newX			=	$crop_x;
-							$newY			=	$crop_y;
-							$newWidth		=	$crop_w;
-							$newHeight		=	$crop_h;
-							$thumbWidth		=	$width;
-							$thumbHeight	=	$height;
-							$thumbX			=	0;
-							$thumbY			=	0;
-							break;
-						case "crop_dynamic":
-							if ( $newWidth > $newHeight ) {
-								if ( $ratio > $newRatio ) {
-									$zoom		=	$newWidth / $width;
-									$crop_h		=	floor( $zoom * $height );
-									$crop_w		=	$newWidth;
-									$crop_x		=	0;
-									$crop_y		=	floor( 0.5 * ( $newHeight - $crop_h ) );
-								} else {
-									$zoom		=	$newHeight / $height;
-									$crop_h		=	$newHeight;
-									$crop_w		=	floor( $zoom * $width );
-									$crop_x		=	floor( 0.5 * ( $newWidth - $crop_w ) );
-									$crop_y		=	0;
-								}
-								$newX			=	$crop_x;
-								$newY			=	$crop_y;
-								$newWidth		=	$crop_w;
-								$newHeight		=	$crop_h;
-								$thumbWidth		=	$width;
-								$thumbHeight	=	$height;
-								$thumbX			=	0;
-								$thumbY			=	0;
-							} else {
-								if ( $ratio > $newRatio ) {
-									$zoom		=	$newWidth / $width;
-									$crop_h		=	floor( $zoom * $height );
-									$crop_w		=	$newWidth;
-									$crop_x		=	0;
-									$crop_y		=	floor( 0.5 * ( $newHeight - $crop_h ) );
-								} else {
-									$zoom		=	$newHeight / $height;
-									$crop_h		=	$newHeight;
-									$crop_w		=	floor( $zoom * $width );
-									$crop_x		=	floor( 0.5 * ( $newWidth - $crop_w ) );
-									$crop_y		=	0;
-								}
-								$newX			=	$crop_x;
-								$newY			=	$crop_y;
-								$newWidth		=	$crop_h;
-								$newHeight		=	$crop_w;
-								$thumbWidth		=	$height;
-								$thumbHeight	=	$width;
-								$width			=	$thumbWidth;
-								$height			=	$thumbHeight;
-								$thumbX			=	0;
-								$thumbY			=	0;
-							}
-							break;
-						case "maxfit":
-							$width			=	( $width > $newWidth ) ? $newWidth : $width;
-							$height			=	( $height > $newHeight ) ? $newHeight : $height;
-							$width			=	( $ratio > $newRatio ) ? round( $height * $newRatio ) : $width;
-							$height			=	( $ratio < $newRatio ) ? round( $width / $newRatio ) : $height;
-							$thumbWidth		=	$width;
-							$thumbHeight	=	$height;
-							break;
-						case "shrink":
-							$width			=	( $width > $newWidth ) ? $newWidth : $width;
-							$height			=	( $height > $newHeight ) ? $newHeight : $height;
-							$thumbWidth		=	$width;
-							$thumbHeight	=	$height;
-							break;
-						case "shrink_dynamic":
-							if ( $newWidth > $newHeight ) {
-								$width			=	( $width > $newWidth ) ? $newWidth : $width;
-								$height			=	( $height > $newHeight ) ? $newHeight : $height;
-								$thumbWidth		=	$width;
-								$thumbHeight	=	$height;
-							} else {
-								$thumbWidth		=	( $height > $newWidth ) ? $newWidth : $height;
-								$thumbHeight	=	( $width > $newHeight ) ? $newHeight : $width;
-								$width			=	$thumbWidth;
-								$height			=	$thumbHeight;
-							}
-							break;
-						case "stretch":
-							$thumbWidth		=	$width;
-							$thumbHeight	=	$height;
-							break;
-						case "stretch_dynamic":
-							if ( $newWidth > $newHeight ) {
-								$thumbWidth		=	$width;
-								$thumbHeight	=	$height;
-							} else {
-								$thumbWidth		=	$height;
-								$thumbHeight	=	$width;
-								$width			=	$thumbWidth;
-								$height			=	$thumbHeight;
-							}
-							break;
-						default:
-							break;
-					}
-					$thumbImage	=	imageCreateTrueColor( $width, $height );
-					if ( $newExt == 'png' || $newExt == 'PNG' ) {
-						imagealphablending( $thumbImage, false );
-					}
-					//add color
-					if ( $options[$format_name] == 'addcolor' ) {
-						$r		=	hexdec( substr( $options['image_color'], 1, 2 ) );
-						$g		=	hexdec( substr( $options['image_color'], 3, 2 ) );
-						$b		=	hexdec( substr( $options['image_color'], 5, 2 ) );
-						$color	=	imagecolorallocate( $thumbImage, $r, $g, $b );
-						imagefill( $thumbImage, 0, 0, $color );
-					}
-					//
-					imagecopyresampled( $thumbImage, $resImage, $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight );
-					
-					$file_path		=	substr( $location, 0, strrpos( $location, '/' ) + 1 );
-					$old_file_path	=	substr( $location_old, 0, strrpos( $location_old, '/' ) + 1 );
-					$old_file_name	=	substr( $location_old, strrpos( $location_old, '/' ) + 1 );
-					if ( ! JFolder::exists( JPATH_SITE.'/'.$old_file_path.'_thumb'.$thumb ) ) {
-						JFolder::create( JPATH_SITE.'/'.$old_file_path.'_thumb'.$thumb );
-						$file_body	=	'<!DOCTYPE html><title></title>';
-						JFile::write( JPATH_SITE.'/'.$old_file_path.'_thumb'.$thumb.'/index.html', $file_body );
-					}
-					$thumbLocation	=	JPATH_SITE.'/'.$old_file_path.'_thumb'.$thumb.'/';
-					switch( $newExt ) {
-						case 'gif':
-						case 'GIF':
-							imagegif( $thumbImage ); //imagegif( $thumbImage, $thumbLocation.$old_file_name );
-							break;
-						case 'jpg':
-						case 'JPG':
-						case 'jpeg': 
-						case 'JPEG': 
-							imagejpeg( $thumbImage, NULL, $params['quality_jpeg'] ); //imagejpeg( $thumbImage, $thumbLocation.$old_file_name, $params['quality_jpeg'] );
-							break;
-						case 'png':
-						case 'PNG':
-							imagesavealpha( $thumbImage, true );
-							$quality_png	=	(int) $params['quality_png'];
-							imagepng( $thumbImage, NULL, $params['quality_png'] ); //$process['quality_png'] );//imagepng( $thumbImage, $thumbLocation.$old_file_name, $quality_png );
-							break;
-						default:
-							break;
-					}
-					$output = ob_get_contents();
-					ob_end_clean();
-					JFile::write( $thumbLocation.$old_file_name, $output );
-					return true;
-				} else {
-					return false;
-				}
-			//}
-			// ob_end_clean(); 
+			$format_name	=	'thumb'.$thumb.'_process';
+			$width_name		=	'thumb'.$thumb.'_width';
+			$height_name	=	'thumb'.$thumb.'_height';
+
+			if ( trim( $options[$format_name] ) ) {
+				return $image->createThumb( '', $thumb, $options[$width_name], $options[$height_name], $options[$format_name] );
+			} else {
+				return false;
+			}
 		}
-		// -- Image Process End
 	}
 
 	// _checkPath

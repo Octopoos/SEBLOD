@@ -13,28 +13,31 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_Storage_Location%class% extends JCckPluginLocation
 {
-	protected static $type		=	'%name%';
-	protected static $table		=	'#__'; // TODO
-	protected static $key		=	'id'; // TODO
+	protected static $type			=	'%name%';
+	protected static $table			=	'#__'; // TODO
+	protected static $key			=	'id'; // TODO
 	
-	protected static $access	=	'access'; // TODO
-	protected static $author	=	''; // TODO
-	protected static $custom	=	'description'; // TODO
-	protected static $parent	=	''; // TODO
-	protected static $status	=	'state'; // TODO
-	protected static $to_route	=	'a.id as pk, a.title, a.alias'; // TODO
+	protected static $access		=	'access'; // TODO
+	protected static $author		=	''; // TODO
+	protected static $created_at	=	''; // TODO
+	protected static $custom		=	'description'; // TODO
+	protected static $modified_at	=	''; // TODO
+	protected static $parent		=	''; // TODO
+	protected static $status		=	'state'; // TODO
+	protected static $to_route		=	'a.id as pk, a.title, a.alias'; // TODO
 	
-	protected static $context	=	''; //TODO
-	protected static $contexts	=	array(); //TODO
-	protected static $error		=	false;
-	protected static $ordering	=	array( 'alpha'=>'title ASC' ); // TODO
-	protected static $pk		=	0;
-	protected static $sef		=	array( '1'=>'full',
-										   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
-										   '3'=>'full', '32'=>'id', '33'=>'alias',
-										   '4'=>'full', '42'=>'id', '43'=>'alias'
-									);
-	
+	protected static $context		=	''; //TODO
+	protected static $contexts		=	array(); //TODO
+	protected static $error			=	false;
+	protected static $ordering		=	array( 'alpha'=>'title ASC' ); // TODO
+	protected static $pk			=	0;
+	protected static $sef			=	array( '1'=>'full',
+											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
+											   '3'=>'full', '32'=>'id', '33'=>'alias',
+											   '4'=>'full', '42'=>'id', '43'=>'alias'
+										);
+	protected static $routes		=	array();
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// onCCK_Storage_LocationConstruct
@@ -256,7 +259,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
 	{
 	}
 	
@@ -333,9 +336,26 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									'routes'=>'',
+									'status'=>'',
+									'table'=>'',
+									'to_route'=>''
+								);
+
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
-				if ( $p == 'key' || $p == 'table' || $p == 'access' || $p == 'custom' || $p == 'status' || $p == 'to_route' || $p == 'contexts' ) {
+				if ( isset( $autorized[$p] ) ) {
 					$properties[$p]	=	self::${$p};
 				}
 				unset( $properties[$i] );

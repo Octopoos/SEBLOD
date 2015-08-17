@@ -24,9 +24,14 @@ abstract class JCckToolbox
 		if ( ! self::$_config ) {
 			if ( JCckDatabaseCache::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.'com_'.self::$_me.'"' ) > 0 ) {
 				self::$_config	=	JComponentHelper::getParams( 'com_'.self::$_me );
+
+				if ( self::$_config->get( 'processing' ) != '0' ) {
+					self::$_config->set( 'processing', 1 );
+				}
 			} else {
 				self::$_config	=	new JRegistry;
 				self::$_config->set( 'KO', true );
+				self::$_config->set( 'processing', 1 );
 			}
 		}
 		
@@ -70,11 +75,13 @@ abstract class JCckToolbox
 	// process
 	public static function process( $event )
 	{
-		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 		if ( isset( $processing[$event] ) ) {
 			foreach ( $processing[$event] as $p ) {
 				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+					$options	=	new JRegistry( $p->options );
+					
 					include_once JPATH_SITE.$p->scriptfile;
 				}
 			}
@@ -84,9 +91,11 @@ abstract class JCckToolbox
 	// processById
 	public static function processById( $id = 0 )
 	{
-		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 AND id = '.(int)$id );
+		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$id );
 
 		if ( is_object( $processing ) && is_file( JPATH_SITE.$processing->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+
 			include_once JPATH_SITE.$processing->scriptfile;
 		}
 	}

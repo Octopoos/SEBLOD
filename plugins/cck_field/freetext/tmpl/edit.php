@@ -19,7 +19,7 @@ JCckDev::forceStorage();
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default_Value', 'storage_field'=>'defaultvalue') );
+		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default Value', 'storage_field'=>'defaultvalue') );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

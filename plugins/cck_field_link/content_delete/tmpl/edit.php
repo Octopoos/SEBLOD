@@ -28,11 +28,11 @@ JCckDev::initScript( 'link', $this->item );
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'None', 'options'=>'Custom=2', 'storage_field'=>'title' ) )
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Title', 'size'=>16, 'css'=>'input-medium', 'storage_field'=>'title_custom' ) )
 			. '</li>';
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Status', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
 		echo JCckDev::renderBlank();
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONFIG_NO_ACCESS' ) );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'1', 'label'=>'Show Value', 'selectlabel'=>'', 'options'=>'Hide=0||Show=1', 'storage_field'=>'no_access' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Show Value', 'selectlabel'=>'', 'options'=>'Hide=0||Show=1', 'storage_field'=>'no_access' ) );
 		?>
     </ul>
 </div>

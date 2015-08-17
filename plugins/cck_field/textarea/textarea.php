@@ -77,14 +77,30 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
 		$rows	=	( $field->rows ) ? $field->rows : 3;
-		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'"';
+		if ( $field->attributes != '' ) {
+			if ( strpos( $field->attributes, 'J(' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#J\((.*)\)#U';
+				preg_match_all( $search, $field->attributes, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $text ) {
+						$field->attributes	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
+					}
+				}
+			}
+			$attr	.=	' '.$field->attributes;
+		}
 		$form	= 	'<textarea id="'.$id.'" name="'.$name.'" cols="'.$cols.'" rows="'.$rows.'" '.$attr.'>'.$value.'</textarea>';
 		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			if ( $field->script ) {
+				parent::g_addScriptDeclaration( $field->script );
+			}
 		} else {
-			$hidden	=	'<textarea class="inputbox" style="display: none;" id="'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
+			$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
 		}
 		$field->value	=	$value;

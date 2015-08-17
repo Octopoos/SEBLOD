@@ -57,6 +57,14 @@ class plgCCK_FieldGroup extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
+		/*
+		if ( !$field->state ) {
+			$field->value	=	'';
+			return;
+		}
+		// TODO: SEBLOD 3.7 while checking for all Restriction plug-in behaviors..
+		*/
+
 		// Prepare
 		$name		=	$field->name;
 		$dispatcher	=	JDispatcher::getInstance();
@@ -226,21 +234,29 @@ class plgCCK_FieldGroup extends JCckPluginField
 					if ( $elem->display ) {
 						$value	=	JCck::callFunc( 'plgCCK_Field'.$elem->type, 'onCCK_FieldRenderContent', $elem );
 						if ( $value != '' ) {
-							$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
-							if ( $elem->label != '' ) {
-								$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+							if ( $elem->markup == 'none' ) {
+								$row	.=	$elem->label.$value;
+							} else {
+								$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
+								if ( $elem->label != '' ) {
+									$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+								}
+								$row	.=	$value
+										.	'</div>';
 							}
-							$row	.=	$value
-									.	'</div>';
 							$isRow	=	true;
 						}
 					}
 				}
-				if ( $isRow ) {
-					$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
-				}
-				if ( $html ) {
-					$html	=	'<div id="'.$field->name.'" class="gx">' .$html. '</div>';
+				if ( $field->markup == 'none' ) {
+					$html		=	$row;
+				} else {
+					if ( $isRow ) {
+						$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
+					}
+					if ( $html ) {
+						$html	=	'<div id="'.$field->name.'" class="gx">' .$html. '</div>';
+					}
 				}
 			}
 			
@@ -272,7 +288,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
 	// _formHTML
-	protected static function _formHTML( $field, $group, $i, $size_group, $config )
+	protected static function _formHTML( $field, $group, $i, $size_group, &$config )
 	{
 		$js		=	'';
 		$client	=	'cck_'.$config['client'];
@@ -291,6 +307,56 @@ class plgCCK_FieldGroup extends JCckPluginField
 				}
 				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">'.$elem->form.'</div>';
 				$html	.=	'</div>';
+				
+				// Computation
+				if ( @$elem->computation ) {
+					$computation			=	new JRegistry;
+					$computation->loadString( $elem->computation_options );
+					$computation_options	=	$computation->toObject();
+					
+					if ( $computation_options->calc == 'custom' ) {
+						$computed		=	'';
+						$computations	=	explode( ',', $elem->computation );
+						if ( count( $computations ) ) {
+							foreach ( $computations as $k=>$v ) {
+								$computed	.=	chr( 97 + $k ).':$("'.$v.'")'.',';
+							}
+							$computed		=	substr( $computed, 0, -1 );
+						}
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
+						$format		=	'';
+						if ( $computation_options->format == 'toFixed' ) {
+							$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
+						} elseif ( $computation_options->format ) {
+							$format	=	'.'.$computation_options->format.'()';
+						}
+						if ( @$computation_options->recalc ) {
+							$config['computation'][$event][]	=	array( '_'=>$elem->computation,
+																			   'js'=>'$("#'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
+																													 .$targets.', function (s){return s'.$format.';} );' );
+						} else {
+							$js		.= '(function ($){JCck.Core.recalc_'.$elem->name.' = function() {'
+								.'$("#'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );}'.'})(jQuery);';
+							if ( $event != 'none' ) {
+								$js	.= '$("'.$elem->computation.'").bind("'.$event.'", JCck.Core.recalc_'.$elem->name.'); JCck.Core.recalc_'.$elem->name.'();';
+							}
+						}
+					} else {
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
+						if ( @$computation_options->recalc ) {
+							$config['computation'][$event][]	=	array( '_'=>$elem->computation,
+																		   'js'=>'$("'.$elem->computation.'").'.$computation_options->calc.'("'.$event.'", "#'.$elem->name.'"'.$targets.');' );
+						} else {
+							$js		.=	'$("'.$elem->computation.'").'.$computation_options->calc.'("'.$event.'", "#'.$elem->name.'"'.$targets.');';
+							if ( $event != 'none' ) {
+								$js	.=	'$("'.$elem->computation.'").bind("'.$event.'", JCck.Core.recalc);';
+							}
+						}
+					}
+					$config['doComputation']	=	1;
+				}
 				
 				// Conditional
 				if ( @$elem->conditional ) {

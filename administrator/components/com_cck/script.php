@@ -27,6 +27,7 @@ class com_cckInstallerScript
 		// Post Install Log
 		self::_postInstallMessage( 'uninstall', $parent );
 
+		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "package" AND element = "pkg_cck"' );
 		$eid	=	$db->loadResult();
@@ -34,6 +35,37 @@ class com_cckInstallerScript
 		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "plugin" AND element = "cck" AND folder="system"' );
 		$cck	=	$db->loadResult();
 		
+		// Backup or Drop SQL Tables
+		$prefix			=	$db->getPrefix();
+		$tables			=	$db->getTableList();
+		$tables			=	array_flip( $tables );
+		$uninstall_sql	=	(int)JCck::getConfig_Param( 'uninstall_sql', '' );
+
+		if ( count( $tables ) ) {
+			$length			=	strlen( $prefix );
+			$app->cck_nosql	=	true;
+			
+			foreach ( $tables as $k=>$v ) {
+				$pos		=	strpos( $k, $prefix.'cck_' );
+
+				if ( $pos !== false && $pos == 0 ) {
+					$k2		=	$prefix.'_'.substr( $k, $length );
+
+					if ( isset( $tables[$k2] ) ) {
+						$db->setQuery( 'DROP TABLE '.$k2 );
+						$db->execute();
+					}
+					if ( $uninstall_sql == 1 ) {
+						$db->setQuery( 'DROP TABLE '.$k );
+						$db->execute();
+					} else {
+						$db->setQuery( 'RENAME TABLE '.$k.' TO '.$k2 );
+						$db->execute();
+					}
+				}
+			}
+		}
+
 		// Uninstall FULL PACKAGE only if package exists && system plugin exists..
 		if ( $eid && $cck ) {
 			$manifest	=	JPATH_ADMINISTRATOR.'/manifests/packages/pkg_cck.xml';
@@ -82,7 +114,7 @@ class com_cckInstallerScript
 					$id		=	(int)$f->id;
 					$id2	=	(int)'100'.$id;
 
-					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.$id;
+					$query	=	'UPDATE #__cck_core_fields SET id = '.$id2.' WHERE id = '.(int)$id;
 					$db->setQuery( $query );
 
 					if ( $db->execute() !== false ) {
@@ -142,7 +174,7 @@ class com_cckInstallerScript
 				$db->execute();
 			}
 		} elseif ( 'install' ) {
-			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[]}';			
+			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[],"core.export":{"7":1},"core.process":{"7":1}}';
 			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
 			$db->setQuery( $query );
 			$db->execute();
@@ -172,7 +204,8 @@ class com_cckInstallerScript
 	{
 		$db		=	JFactory::getDbo();
 		
-		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck"' );
+		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
+		
 		$res		=	$db->loadResult();
 		$registry	=	new JRegistry;
 		$registry->loadString( $res );

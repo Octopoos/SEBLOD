@@ -10,11 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( $show_list_title ) {
+	$tag		=	$tag_list_title;
+	$class		=	trim( $class_list_title );
+	$class		=	$class ? ' class="'.$class.'"' : '';
+	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
+}
+if ( $show_list_desc == 1 && $description != '' ) {
+	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
+}
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
 	Helper_Include::addValidation( $config['validation'], $config['validation_options'], $formId );
-	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { Joomla.submitform("search", document.getElementById("'.$formId.'")); }';
+	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { JCck.Core.submitForm("search", document.getElementById("'.$formId.'")); }';
 } else {
-	$js	=	'Joomla.submitform("search", document.getElementById("'.$formId.'"));';
+	$js	=	'JCck.Core.submitForm("search", document.getElementById("'.$formId.'"));';
 }
 ?>
 <script type="text/javascript">
@@ -30,6 +39,13 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 <?php } ?>
 <input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" />
 <input type="hidden" name="task" value="search" />
+<?php if ( !JFactory::getConfig()->get( 'sef' ) ) { ?>
+<input type="hidden" name="option" value="com_cck" />
+<input type="hidden" name="view" value="list" />
+<?php if ( $params->get( 'menu_item', '' ) ) { ?>
+<input type="hidden" name="Itemid" value="<?php echo $params->get( 'menu_item', '' ); ?>" />
+<?php } ?>
+<?php } ?>
 <?php if ( !$raw_rendering ) { ?>
 </div>
 <?php } ?>

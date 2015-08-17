@@ -128,7 +128,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 											   'core.delete'=>array(),
 											   'core.delete.own'=>array(),
 											   'core.edit'=>array(),
-											   'core.edit.own'=>array()
+											   'core.edit.own'=>array(),
+											   'core.edit.own.content'=>array(),
+											   'core.export'=>array(),
+											   'core.process'=>array()
 										);
 		}
 		if ( $data['jform']['rules'] ) {

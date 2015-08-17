@@ -47,9 +47,10 @@ $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
-$live		=	urldecode( $params->get( 'live' ) );
-$variation	=	$params->get( 'variation' );
 $limitstart	=	-1;
+$live		=	urldecode( $params->get( 'live' ) );
+$pagination	=	-2;
+$variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
@@ -58,8 +59,17 @@ include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
 if ( !is_object( @$options ) ) {
 	$options	=	new JRegistry;
 }
-$description	=	'';
-$show_list_desc	=	$params->get( 'show_list_desc' );
+$description		=	'';
+$show_list_desc		=	$params->get( 'show_list_desc' );
+$show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+if ( $show_list_title == '' ) {
+	$show_list_title	=	$options->get( 'show_list_title', '1' );
+	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$options->get( 'class_list_title' );
+} elseif ( $show_list_title ) {
+	$tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$params->get( 'class_list_title' );
+}
 if ( $show_list_desc == '' ) {
 	$show_list_desc	=	$options->get( 'show_list_desc', '1' );
 	$description	=	@$search->description;
@@ -90,12 +100,19 @@ if ( $description != '' ) {
 		}
 	}
 }
-$show_more			=	$params->get( 'show_link_more', 0 );
+$show_more			=	$params->get( 'show_more', 1 );
+$show_link_more		=	$params->get( 'show_link_more', 0 );
 $show_more_class	=	$params->get( 'link_more_class', '' );
 $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
+$show_more_text		=	$params->get( 'link_more_text', '' );
+if ( $show_more_text == '' ) {
+	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
+} elseif ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
+}
 $show_more_link		=	'';
-if ( $show_more ) {
-	$show_more_link	=	'index.php?Itemid='.$show_more;
+if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && $total_items > $preconfig['limit2'] ) ) && $show_link_more ) {
+	$show_more_link	=	'index.php?Itemid='.$show_link_more;
 	$show_more_link	=	JRoute::_( $show_more_link );
 	$show_more_vars	=	$params->get( 'link_more_variables', '' );
 	if ( $show_more_vars ) {

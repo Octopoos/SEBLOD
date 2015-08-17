@@ -40,28 +40,14 @@ class JCckInstallerScriptPlugin
 		self::postInstallMessage( 'install' );
 
 		// Integration
-		if ( $this->cck->group == 'cck_storage_location' ) {
-			if ( isset( $this->cck->xml->cck_integration ) ) {
-				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB' );
-				$integration	=	array( 'component', 'options', 'vars', 'view' );
-				$title			=	JText::_( 'PLG_CCK_STORAGE_LOCATION_'.$this->cck->element.'_LABEL2' );
-				foreach ( $integration as $i=>$elem ) {
-					if ( isset( $this->cck->xml->cck_integration->$elem ) ) {
-						$integration[$elem]	=	(string)$this->cck->xml->cck_integration->$elem;
-						unset( $integration[$i] );
-					}
-				}
-				$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`options`,`vars`,`view`)'
-								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
-				$db->setQuery( $query );
-				$db->query();
-			}
-		}
+		self::_setIntegration();
+		
 	}
 	
 	// uninstall
 	function uninstall( $parent )
 	{	
+		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		$where	=	'WHERE type = "'.$this->cck->type.'" AND element = "'.$this->cck->element.'"';
 		if ( $this->cck->group ) {
@@ -69,7 +55,7 @@ class JCckInstallerScriptPlugin
 		}
 
 		// Integration
-		if ( $this->cck->group == 'cck_storage_location' ) {
+		if ( $this->cck->group == 'cck_storage_location' && !isset( $app->cck_nosql ) ) {
 			$db->setQuery( 'DELETE FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' );
 			$db->query();
 		}
@@ -91,6 +77,9 @@ class JCckInstallerScriptPlugin
 		
 		// Post Install Log
 		self::postInstallMessage( 'update' );
+
+		// Integration
+		self::_setIntegration();
 	}
 	
 	// preflight
@@ -143,7 +132,13 @@ class JCckInstallerScriptPlugin
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
-			$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
+			if ( class_exists( 'JCckVersion' ) ) {
+				$version	=	new JCckVersion;
+				$version	=	$version->getShortVersion();
+			} else {
+				$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+			}
 		}
 		
 		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
@@ -159,6 +154,36 @@ class JCckInstallerScriptPlugin
 		$table->store();
 
 		return true;
+	}
+
+	// _setIntegration
+	function _setIntegration()
+	{
+		$db		=	JFactory::getDbo();
+
+		if ( $this->cck->group == 'cck_storage_location' ) {
+			if ( isset( $this->cck->xml->cck_integration ) ) {
+				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB' );
+				$integration	=	array( 'component', 'context', 'options', 'vars', 'view' );
+				$title			=	JText::_( 'PLG_CCK_STORAGE_LOCATION_'.$this->cck->element.'_LABEL2' );
+				foreach ( $integration as $i=>$elem ) {
+					if ( isset( $this->cck->xml->cck_integration->$elem ) ) {
+						$integration[$elem]	=	(string)$this->cck->xml->cck_integration->$elem;
+						unset( $integration[$i] );
+					}
+				}
+				if ( $id = JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' ) ) {
+					$query			=	'UPDATE #__cck_core_objects SET `component` = "'.$integration['component'].'", `context` = "'.$integration['context'].'", `vars` = "'.$integration['vars'].'", `view` = "'.$integration['view'].'" WHERE id = '.(int)$id;
+					$db->setQuery( $query );
+					$db->query();
+				} else {
+					$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`context`,`options`,`vars`,`view`)'
+									.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$integration['context'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
+					$db->setQuery( $query );
+					$db->query();
+				}
+			}
+		}
 	}
 }
 ?>

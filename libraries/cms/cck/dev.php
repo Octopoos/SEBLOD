@@ -124,12 +124,17 @@ abstract class JCckDev
 	// initScript
 	public static function initScript( $type, &$elem, $options = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$css	=	'';
 		$js		=	'';
 		$js2	=	'';
 		$js3	=	'';
 		if ( $type == 'field' ) {
+			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+				unset( $options['doTranslation'] );
+				unset( $options['hasOptions'] );
+			}
 			if ( isset( $options['doTranslation'] ) ) {
 				if ( is_array( $options['doTranslation'] ) ) {
 					$flag		=	'&nbsp;';
@@ -181,7 +186,7 @@ abstract class JCckDev
 						$n		=	0;
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
 							$attribs	.=	'<div class="attr">'
-										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+val['.$i.']+\'"'
+										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
 										.	' class="inputbox mini" size="10" />'
 										.	'</div>';
 							$keys[]		=	$customAttr;
@@ -253,7 +258,7 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"',
+					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"',
 															  'value', 'text', '', 'fields_list' );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'var cur = 9999; var isNew = '.$isNew.';
@@ -466,6 +471,12 @@ abstract class JCckDev
 	// renderBlank
 	public static function renderBlank( $html = '', $label = '' )
 	{
+		$app	=	JFactory::getApplication();
+
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		return '<li><label>'.$label.'</label>'.$html.'</li>';
 	}
 	
@@ -478,6 +489,11 @@ abstract class JCckDev
 		
 		$app	=	JFactory::getApplication();
 		$raw	=	false;
+
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		switch ( $type ) {
 			case 'addon':
 				$raw	=	true;
@@ -497,7 +513,7 @@ abstract class JCckDev
 		
 		$app->cck_markup_closed	=	true;
 		
-		$link	=	'http://www.seblod.com/v2/support/documentation/'.$url.'?tmpl=component';
+		$link	=	'http://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="clr"></div><div class="how-to-setup">'
 				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
@@ -509,6 +525,12 @@ abstract class JCckDev
 	// renderLegend
 	public static function renderLegend( $legend, $tooltip = '', $tag = '1' )
 	{
+		$app	=	JFactory::getApplication();
+		
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		if ( $tooltip != '' ) {
 			$tag		=	'<span class="star"> &sup'.$tag.';</span>';
 			$tooltip	=	' class="hasTooltip qtip_cck" title="'.$tooltip.'"';
@@ -525,6 +547,10 @@ abstract class JCckDev
 	{
 		$app	=	JFactory::getApplication();
 		
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			return;
+		}
+
 		if ( isset( $app->cck_markup_closed ) && $app->cck_markup_closed === true ) {
 			$close					=	'';
 			$app->cck_markup_closed	=	false;
@@ -603,7 +629,7 @@ abstract class JCckDev
 			for ( $i = 0; $i < $len; $i++ ) {
 				$chars	.=	'\\'.$char[$i];
 			}
-			$char	=	$chars[0];
+			$char	=	$chars[1];
 			$str	=	str_replace( $char, ' ', $string );
 			if ( $case != 2 ) {
 				$str	=	JFactory::getLanguage()->transliterate( $str );	

@@ -12,7 +12,6 @@ defined( '_JEXEC' ) or die;
 
 $name			=	$process['field_name'];
 $parent_name	=	$process['parent_name'];
-$type			=	$process['field_type'];
 $file_path		=	$process['file_path'];
 $file_name		=	$process['file_name'];
 $file_title		=	$process['file_title'];
@@ -29,7 +28,6 @@ if ( !(bool) ini_get( 'file_uploads' ) ) {
 }
 
 $doSave			=	0;
-$field_type		=	$type;
 $old_path		=	$file_path;
 if ( $content_folder && $config['isNew'] ) {
 	$file_path		.=	$config['pk'].'/';

@@ -232,6 +232,7 @@ class CCK_Document extends JObject
 			}
 		}
 		
+		$this->infinite			=	( isset( $infos['infinite'] ) ) ? $infos['infinite'] : false;
 		$this->pk				=	$pk;
 		$this->positions		=	$positions;
 		$this->positions_more	=	$positions_more;

@@ -25,5 +25,19 @@ defined( '_JEXEC' ) or die;
 		<?php
 		echo JCckDev::renderForm( 'core_bool', 1, $config, array( 'label'=>'Reordering', 'storage_field'=>'options[reordering]' ) );
 		?>
+	</ul><div class="clr"></div>
+	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>
+	<ul class="adminformlist adminformlist-2cols">
+		<?php
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Update By Key', 'defaultvalue'=>'', 'selectlabel'=>'None',
+								  'options'=>'Custom SL=-1||ID=id||Alias=alias', 'storage_field'=>'options[key]' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'defaultvalue'=>'', 'storage_field'=>'options[key_fieldname]' ) );
+        ?>
 	</ul>
 </div>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$('#options_key_fieldname').isVisibleWhen('options_key','-1');
+});
+</script>

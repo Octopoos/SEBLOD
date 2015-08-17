@@ -95,7 +95,15 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 	}
-	
+
+	// onAfterLoad
+	public function onAfterLoad()
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterLoad' );
+		}
+	}
+
 	// onAfterInitialise
 	public function onAfterInitialise()
 	{
@@ -105,6 +113,10 @@ class plgSystemCCK extends JPlugin
 			$router->attachBuildRule( array( $this, 'buildRule' ) );
 		} elseif ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
 			JFactory::getLanguage()->load( 'com_cck_core' );
+		}
+		
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
+			JCckToolbox::process( 'onAfterInitialise' );
 		}
 		
 		if ( $this->multisite !== true ) {
@@ -192,6 +204,9 @@ class plgSystemCCK extends JPlugin
 	// onAfterDispatch
 	public function onAfterDispatch()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterDispatch' );
+		}
 		$app		=	JFactory::getApplication();
 		$doc		=	JFactory::getDocument();
 		$id			=	$app->input->getInt( 'id', 0 );
@@ -208,7 +223,8 @@ class plgSystemCCK extends JPlugin
 					break;
 				case 'com_config':
 					$com	=	$app->input->get( 'component', '' );
-					if ( $com == 'com_cck' || $com == 'com_cck_developer'
+					if ( $com == 'com_cck' || $com == 'com_cck_builder'
+										   || $com == 'com_cck_developer'
 										   || $com == 'com_cck_ecommerce'
 										   || $com == 'com_cck_exporter'
 										   || $com == 'com_cck_importer'
@@ -220,6 +236,19 @@ class plgSystemCCK extends JPlugin
 										   || $com == 'com_cck_webservices' ) {
 						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
 						JCck::loadjQuery( true, true, true );
+					}
+					break;
+				case 'com_installer':
+					if ( $view == 'update' ) {
+						if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_updater" AND enabled = 1' ) > 0 ) {
+							$link	=	JRoute::_( 'index.php?option=com_cck_updater' );
+							$target	=	'_self';
+						} else {
+							$link	=	'http://www.seblod.com/products/634';
+							$target	=	'_blank';
+						}
+						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
+						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target ), 'notice' );
 					}
 					break;
 				case 'com_menus':
@@ -271,6 +300,7 @@ class plgSystemCCK extends JPlugin
 			$user	=	JFactory::getUser();
 			
 			if ( $this->multisite === true ) {
+				$config		=	JFactory::getConfig();
 				$site_title	=	$this->site_cfg->get( 'sitename', '' );
 				$site_pages	=	$this->site_cfg->get( 'sitename_pagetitles', 0 );
 				$site_desc	=	$this->site_cfg->get( 'metadesc', '' );
@@ -283,10 +313,10 @@ class plgSystemCCK extends JPlugin
 					$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
 					$doc->setTitle( $title );
 				}
-				if ( $site_desc && ( !$meta_desc || $meta_desc == $app->getCfg( 'MetaDesc' ) ) ) {
+				if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
 					$doc->setMetaData( 'description', $site_desc );
 				}
-				if ( $site_keys && ( !$meta_keys || $meta_keys == $app->getCfg( 'MetaKeys' ) ) ) {
+				if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
 					$doc->setMetaData( 'keywords', $site_keys );
 				}
 				if ( $this->site_cfg->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {
@@ -403,6 +433,9 @@ class plgSystemCCK extends JPlugin
 	// onBeforeRender
 	public function onBeforeRender()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onBeforeRender' );
+		}
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
@@ -410,12 +443,21 @@ class plgSystemCCK extends JPlugin
 			$head	=	$doc->getHeadData();
 
 			JCckToolbox::setHead( $head );
+		} elseif ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+			if ( count( $app->cck_app['Header'] ) ) {
+				foreach ( $app->cck_app['Header'] as $k=>$v ) {
+					$app->setHeader( $k, $v, true );
+				}
+			}
 		}
 	}
 
 	// onAfterRender
 	public function onAfterRender()
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterRender' );
+		}
 		$app		=	JFactory::getApplication();
 		$option		=	$app->input->get( 'option', '' );
 		$view		=	$app->input->get( 'view', '' );
@@ -427,8 +469,13 @@ class plgSystemCCK extends JPlugin
 				$uri		=	JFactory::getURI();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-				JResponse::setBody( $this->offline_buffer );
+				if ( JCck::on() ) {
+					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					$app->setBody( $this->offline_buffer );
+				} else {
+					JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+					JResponse::setBody( $this->offline_buffer );
+				}
 			}
 			return;
 		}
@@ -436,11 +483,12 @@ class plgSystemCCK extends JPlugin
 		// admin
 		if ( $app->isAdmin() && JFactory::getDocument()->getType() == 'html' ) {
 			
-			$buffer	=	JResponse::getBody();
+			$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
 			$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
 			
 			switch ( $option ) {
 				case 'com_cck':
+				case 'com_cck_builder':
 				case 'com_cck_developer':
 				case 'com_cck_ecommerce':
 				case 'com_cck_exporter':
@@ -509,12 +557,33 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
-			JResponse::setBody( $buffer );
+			if ( JCck::on() ) {
+				$app->setBody( $buffer );
+			} else {
+				JResponse::setBody( $buffer );
+			}
 			
 			return;
 		}
 	}
 	
+	// onContentPrepareForm
+	public function onContentPrepareForm( $form, $data )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onContentPrepareForm';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+	}
+
 	// _reSubmenu
 	protected function _reSubmenu( $buffer, $search, $replace )
 	{

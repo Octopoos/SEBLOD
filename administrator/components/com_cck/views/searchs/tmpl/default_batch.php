@@ -58,9 +58,9 @@ if ( JCck::on() ) { ?>
         if ( count( $options2 ) ) {
             $options    =   array_merge( $options, $options2 );
         }
-        $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox no-chosen" size="1"', 'value', 'text', '', 'featured' );
+        $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox no-chosen"', 'value', 'text', '', 'featured' );
         $options        =   JCckDatabase::loadObjectList( 'SELECT a.name AS text, a.name AS value FROM #__cck_core_templates AS a WHERE a.published = 1 AND a.mode = 2 ORDER BY a.title' );
-        $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen" size="1"', 'value', 'text', '', 'template_search' );
+        $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen"', 'value', 'text', '', 'template_search' );
     ?>
     <div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
         <div class="modal-header">
@@ -86,7 +86,7 @@ if ( JCck::on() ) { ?>
                     <div class="sly">
                         <ul>
                             <li data-name="" class="active"><?php echo JText::_( 'COM_CCK_NONE' ); ?>
-                                <img src="components/com_cck/assets/images/template_picker_none.png" alt="None" width="175" height="115" />
+                                <img src="components/com_cck/assets/images/template_picker_none.png" alt="<?php echo JText::_( 'COM_CCK_NONE' ); ?>" width="175" height="115" />
                             </li>
                             <?php
                             foreach ( $templates as $template ) {
@@ -107,6 +107,9 @@ if ( JCck::on() ) { ?>
             <?php } ?>
         </div>
         <div class="modal-footer">
+            <button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://www.seblod.com/products?seb_item_category=27', '_blank'); return false;">
+                <?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_TEMPLATES' ); ?>
+            </button>
             <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
             <div class="btn-group dropup pull-right">
                 <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>

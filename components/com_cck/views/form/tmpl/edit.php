@@ -29,21 +29,24 @@ if ( $this->show_form_title ) {
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
-if ( @$this->config['error'] === true ) {
+if ( isset( $this->config['error'] ) && (int)$this->config['error'] == 1 ) { ?>
+	<?php if ( !$this->raw_rendering ) { ?>
+		</div></div>
+	<?php }
 	return;
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
-	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (jQuery("#seblod_form").validationEngine("validate",task) === true) { if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("'.$this->unique.'"); Joomla.submitform(task, document.getElementById("seblod_form")); } }';
+	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'], $this->form_id );
+	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); } }';
 } else {
-	$js	=	'if (jQuery("#seblod_form").isStillReady() === true) { jQuery("#seblod_form input[name=\'config[unique]\']").val("'.$this->unique.'"); Joomla.submitform(task, document.getElementById("seblod_form")); }';
+	$js	=	'if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); }';
 }
 ?>
 <script type="text/javascript">
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="seblod_form" name="seblod_form">';
+echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this->pageclass_sfx.' cck-clrfix" id="system">' . $this->data . '</div>';
 ?>
 <?php if ( !$this->raw_rendering ) { ?>

@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( $show_list_title ) {
+	$tag		=	$tag_list_title;
+	$class		=	trim( $class_list_title );
+	$class		=	$class ? ' class="'.$class.'"' : '';
+	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
+}
 if ( $show_list_desc == 1 && $description != '' ) {
 	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
 }
@@ -24,7 +30,7 @@ if ( $search->content > 0 ) {
 }
 ?>
 <?php if ( $show_more_link ) { ?>
-	<div class="more"><a<?php echo $show_more_class; ?> href="<?php echo $show_more_link; ?>"><?php echo JText::_( 'MOD_CCK_LIST_VIEW_ALL' ); ?></a></div>
+	<div class="more"><a<?php echo $show_more_class; ?> href="<?php echo $show_more_link; ?>"><?php echo $show_more_text; ?></a></div>
 <?php } if ( !$raw_rendering ) { ?>
 </div>
 <?php }

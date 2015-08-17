@@ -15,6 +15,12 @@ class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
 	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return true;
+	}
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// g_onCCK_Storage_LocationPrepareContent
@@ -137,7 +143,7 @@ class JCckPluginLocation extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_checkIn
-	public function g_checkIn( $table )
+	public static function g_checkIn( $table )
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();
@@ -148,7 +154,7 @@ class JCckPluginLocation extends JPlugin
 				return false;
 			}
 			
-			if ( !$table->checkin( $pk ) ) {
+			if ( !$table->checkin() ) {
 				$app->enqueueMessage( $table->getError(), 'error' );
 				return false;
 			}
@@ -416,7 +422,7 @@ class JCckPluginLocation extends JPlugin
 			$author_id	=	JCckDatabase::loadResult( 'SELECT b.created_by FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pkb WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk );
 		}
 		if ( !$author_id ) {
-			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.pk = '.$pk ); // todo: a recuperer 
+			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk ); // todo: a recuperer
 		}
 
 		return $author_id;

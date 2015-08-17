@@ -42,6 +42,18 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		$field->text		=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value ); //@
 		$field->typo_target	=	'text';
 	}
+
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
 	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )

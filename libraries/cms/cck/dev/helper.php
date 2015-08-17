@@ -13,6 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckDevHelper
 abstract class JCckDevHelper
 {
+	// createFolder
+	public static function createFolder( $path, $mode = 0755 )
+	{
+		jimport( 'joomla.filesystem.folder' );
+		
+		if ( ! JFolder::exists( $path ) ) {
+			JFolder::create( $path, $mode );
+			$buffer	=	'<!DOCTYPE html><title></title>';
+			JFile::write( $path.'/index.html', $buffer );
+		}
+		
+		return $path;
+	}
+
+	// formatBytes
 	public static function formatBytes( $bytes, $precision = 2 )
 	{ 
 		$units	=	array( 'B', 'KB', 'MB', 'GB', 'TB' ); 
@@ -128,8 +143,11 @@ abstract class JCckDevHelper
 	public static function getRouteParams( $name )
 	{
 		static $params	=	array();
-
-		if ( !isset( $params[$name] ) ) {
+		
+		if ( $name == '' ) {
+			return array();
+		}
+		if ( !isset( $params[$name] )  ) {
 			$object				=	JCckDatabase::loadObject( 'SELECT a.storage_location, a.options FROM #__cck_core_searchs AS a WHERE a.name = "'.$name.'"' );
 			$object->options	=	json_decode( $object->options );
 
@@ -155,9 +173,9 @@ abstract class JCckDevHelper
 				$v	=	explode( '=', $var );
 				if ( $v[0] ) {
 					if ( $force ) {
-						$url[$v[0]]	=	(string)$v[1];
+						$url[$v[0]]	=	(string)@$v[1];
 					} else {
-						$url[$v[0]]	=	$v[1];
+						$url[$v[0]]	=	@$v[1];
 					}
 				}
 			}
@@ -165,6 +183,17 @@ abstract class JCckDevHelper
 		$url	=	new JRegistry( $url );
 		
 		return $url;
+	}
+	
+	// hasLanguageAssociations
+	public static function hasLanguageAssociations()
+	{
+		if ( class_exists( 'JLanguageAssociations' ) ) {
+			return JLanguageAssociations::isEnabled();
+		} else {
+			$app	=	JFactory::getApplication();
+			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );
+		}
 	}
 	
 	// matchUrlVars

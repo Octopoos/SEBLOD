@@ -103,7 +103,10 @@ class CCK_Install
 			
 		}
 
-		// Sql
+		// Processings
+		CCK_Import::importProcessings( $data );
+
+		// SQL
 		CCK_Import::importSQL( $root.'/sql' );
 		
 		// Tables

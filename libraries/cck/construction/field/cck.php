@@ -22,6 +22,7 @@ class JFormFieldCCK extends JFormField
 		require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 		
 		$attributes		=	isset( $this->element['cck_attributes'] ) ? (string)$this->element['cck_attributes'] : '';
+		$class			=	isset( $this->element['class'] ) ? (string)$this->element['class'] : '';
 		$name			=	(string)$this->element['construction'];
 		$name2			=	(string)$this->element['construction2'];
 		$options		=	isset( $this->element['cck_options'] ) ? (string)$this->element['cck_options'] : '';
@@ -38,7 +39,7 @@ class JFormFieldCCK extends JFormField
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
 		if ( $format != 'raw' ) {
-			JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+			JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		}
 		
 		$force_id		=	(string)$this->element['id'];
@@ -72,6 +73,9 @@ class JFormFieldCCK extends JFormField
 		}
 		if ( $selectlabel != 'undefined' ) {
 			$field->selectlabel	=	$selectlabel;
+		}
+		if ( $class != '' ) {
+			$field->css			=	$class;
 		}
 		$field					=	JCckDevField::get( $field, $this->value, $config, $inherit );
 		
