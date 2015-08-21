@@ -50,9 +50,9 @@ abstract class JCckDatabase
 	}
 	
 	// getTableList
-	public static function getTableList()
+	public static function getTableList( $flip = false )
 	{
-		return JFactory::getDbo()->getTableList();
+		return $flip ? array_flip( JFactory::getDbo()->getTableList() ) : JFactory::getDbo()->getTableList();
 	}
 
 	// loadAssocList

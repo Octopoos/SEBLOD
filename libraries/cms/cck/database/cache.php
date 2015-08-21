@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckDatabaseCache extends JCckDatabase
 {
 	// getTableList
-	public static function getTableList()
+	public static function getTableList( $flip = false )
 	{
 		static $cache	=	NULL;
 		
@@ -22,7 +22,7 @@ abstract class JCckDatabaseCache extends JCckDatabase
 			$cache	=	parent::getTableList();
 		}
 
-		return $cache;
+		return $flip ? array_flip( $cache ) : $cache;
 	}
 
 	// loadResult

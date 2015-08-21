@@ -212,7 +212,8 @@ class JCckContent
 		$this->_table		=	$this->_columns['table'];
 		
 		$config				=	JFactory::getConfig();
-		$more_table_exists	=	count( JCckDatabase::loadColumn( 'SHOW TABLES LIKE "'.$config->get( 'dbprefix' ).'cck_store_form_'.$this->_type.'"' ) );
+		$joomla_tables		=	JCckDatabaseCache::getTableList( true );
+		$more_table_exists	=	isset( $joomla_tables[$config->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
 		
 		if ( $more_table_exists ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
