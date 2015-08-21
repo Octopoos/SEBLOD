@@ -211,19 +211,23 @@ class JCckContent
 		
 		$this->_table		=	$this->_columns['table'];
 		
-		$config				=	JFactory::getConfig();
 		$joomla_tables		=	JCckDatabaseCache::getTableList( true );
-		$more_table_exists	=	isset( $joomla_tables[$config->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
+		$more_table_exists	=	isset( $joomla_tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
 		
 		if ( $more_table_exists ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
 		}
 
-		if ( $data === true && $more_table_exists ) {
-			$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.*, b.* FROM '.$this->_table.' AS a'
+		if ( $data === true ) {
+			if ( $more_table_exists ) {
+				$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.*, b.* FROM '.$this->_table.' AS a'
 															. ' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key']
 															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
+			} else {
+				$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.* FROM '.$this->_table.' AS a'
+															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
+			}
 		} elseif ( is_array( $data ) ) {
 			if ( isset( $data[$this->_table] ) ) {
 				$select	=	implode( ',', $data[$this->_table] );
