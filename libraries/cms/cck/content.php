@@ -204,16 +204,22 @@ class JCckContent
 		$this->_id					=	$base->id;
 		$this->_instance_base->load( $this->_id );
 		$this->_instance_core->load( $this->_pk );
-		$this->_instance_more		=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-		$this->_instance_more->load( $this->_pk );
 		
 		if ( !$this->_columns['table'] ) {
 			return;
 		}
 		
-		$this->_table	=	$this->_columns['table'];
+		$this->_table		=	$this->_columns['table'];
 		
-		if ( $data === true ) {
+		$config				=	JFactory::getConfig();
+		$more_table_exists	=	count( JCckDatabase::loadColumn( 'SHOW TABLES LIKE "'.$config->get( 'dbprefix' ).'cck_store_form_'.$this->_type.'"' ) );
+		
+		if ( $more_table_exists ) {
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+			$this->_instance_more->load( $this->_pk );
+		}
+
+		if ( $data === true && $more_table_exists ) {
 			$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.*, b.* FROM '.$this->_table.' AS a'
 															. ' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key']
 															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
