@@ -93,7 +93,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		
 		switch ( $match ) {
 			case 'exact':
-				$sql	=	$target.' = '.JCckDatabase::quote( $value );
+				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+				if ( !$var_type ) {
+					$sql	=	$target.' = '.$value;
+				} else {
+					$sql	=	$target.' = '.JCckDatabase::quote( $value );
+				}
 				break;
 			case 'empty':
 				$sql	=	$target.' = ""';
@@ -265,7 +270,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$sql	=	$target.' != ""';
 				break;
 			case 'not_equal':
-				$sql	=	$target.' != '.JCckDatabase::quote( $value );
+				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+				if ( !$var_type ) {
+					$sql	=	$target.' != '.$value;
+				} else {
+					$sql	=	$target.' != '.JCckDatabase::quote( $value );
+				}
 				break;
 			case 'not_like':
 				$sql	=	$target.' NOT LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $value, true ).'%', false );
