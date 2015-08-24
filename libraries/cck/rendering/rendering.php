@@ -191,7 +191,7 @@ class CCK_Rendering
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
-			$this->params['variation_default']	=	'seb_css3';
+			$this->params['variation_default']	=	$app->isAdmin() ? 'seb_css3b' : JCck::getConfig_Param( 'site_variation', 'seb_css3' );
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
 		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
@@ -897,8 +897,8 @@ class CCK_Rendering
 						$field_width		=	( $field_width == '100%') ? '50%' : $field_width;
 						$css				.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s { width: '.$field_width.'; }'."\n";
 					}
-					$field_focus_border_color	=	$options->get( 'field_focus_border_color', '#888888' );
-					if ( $field_focus_border_color != '#888888' ) {
+					$field_focus_border_color	=	trim( $options->get( 'field_focus_border_color', '' ) );
+					if ( $field_focus_border_color != '' && $field_focus_border_color != '#888888' ) {
 						$css				.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s input.inputbox:focus, '."\n"
 											.	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s textarea.inputbox:focus, '."\n"
 											.	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s select.inputbox:focus, '."\n"
