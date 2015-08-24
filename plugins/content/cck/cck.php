@@ -169,8 +169,8 @@ class plgContentCCK extends JPlugin
 
 		$join			=	' LEFT JOIN #__cck_core_folders AS f ON f.id = b.folder';
 		$join_select	=	', f.app as folder_app';
-		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, b.id as type_id, b.alias as type_alias, b.indexed, b.parent, b.stylesheets,'
-						.	' b.options_content, b.options_intro, c.template as content_template, c.params as content_params, d.template as intro_template, d.params as intro_params'.$join_select
+		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, a.author_id AS author, b.id AS type_id, b.alias AS type_alias, b.indexed, b.parent, b.stylesheets,'
+						.	' b.options_content, b.options_intro, c.template AS content_template, c.params AS content_params, d.template AS intro_template, d.params AS intro_params'.$join_select
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
 						.	' LEFT JOIN #__template_styles AS c ON c.id = b.template_content'
@@ -345,7 +345,7 @@ class plgContentCCK extends JPlugin
 		// Fields
 		if ( count( $fields ) ) {
 			JPluginHelper::importPlugin( 'cck_storage' );
-			$config	=	array( 'author'=>0,
+			$config	=	array( 'author'=>$cck->author,
 							   'client'=>$client,
    							   'doSEF'=>$p_sef,
 							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
