@@ -172,7 +172,7 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
-		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_VARIATION" description=""  class="inputbox" />
+		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION" description=""  class="inputbox" />
 		<field name="site_modal_box_css" type="folderlist" directory="/media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
 			   label="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS" description="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS_DESC" class="inputbox" />
 		<field name="site_css_def" type="cck" construction="core_css_definitions" default="" label="COM_CCK_CONFIG_CSS_DEFINITIONS" description="COM_CCK_CONFIG_CSS_DEFINITIONS_DESC" class="inputbox" />
