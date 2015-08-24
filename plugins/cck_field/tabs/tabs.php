@@ -108,11 +108,12 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$value		=	( $value != '' ) ? (int)$value : (int)$field->defaultvalue;
 		$value		=	( $value ) ? $value - 1 : 0;
 		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
+
 		static $groups	=	array();
 		if ( !isset( $groups[$group_id] ) ) {
 			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0 );
 		}
-
+		
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
@@ -200,7 +201,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		if ( !$fields[$name]->state ) {
 			return;
 		}
-
+		
 		static $groups	=	array();
 		if ( !isset( $groups[$group_id] ) ) {
 			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0, 'identifier'=>$process['identifier'], 'url_actions'=>$process['url_actions'] );
@@ -208,7 +209,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		if ( $groups[$group_id]['identifier'] ) {
 			$id			=	JCckDev::toSafeID( $label );
 		}
-
+		
 		if ( $fields[$name]->bool == 2 ) {
 			$html	=	JCckDevTabs::end();
 		} elseif ( $fields[$name]->bool == 1 ) {
