@@ -24,7 +24,7 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.7.1 Upgrade Release [14-Aug-2014] -------------
+-------------------- 3.7.1 Upgrade Release [17-Aug-2014] -------------
 
 ! "Upgrade" process of Products improved >> SEBLOD Updater add-on required.
 ! XML scripts (of each SEBLOD product) updated.
@@ -35,6 +35,9 @@ $ -> Language fix or change
 ! Post Install info updated.
 
 + "Item Identifier", "URL" params added on "Tabs" plug-in.
+
+^ <!-- Begin: SEBLOD 3.x Document --> only displayed when debug is enabled.
+^ <!-- End: SEBLOD 3.x Document --> only displayed when debug is enabled.
 
 # "onBeforeRender" Restrictions support added on Tabs plug-in.
 
