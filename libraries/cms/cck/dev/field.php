@@ -54,7 +54,9 @@ abstract class JCckDevField
 				$inherit['name']	=	$config['inherit'].'['.$name.']';
 			}
 		} else {
-			$inherit['name']	=	$name;
+			if ( ! isset( $inherit['name'] ) ) {
+				$inherit['name']	=	$name;
+			}
 		}
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
