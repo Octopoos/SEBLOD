@@ -21,7 +21,7 @@ if ( JCck::on() ) {
 	?>
 	<div class="btn-group cck-quickadd">
 		<button href="<?php echo $href; ?>" class="btn btn-small<?php echo $class; ?>" data-toggle="modal" data-target="#collapseModal3">
-			<i class="icon-plus"></i>
+			<span class="icon-plus"></span>
 			<?php echo $label; ?>
 		</button>
 	</div>
