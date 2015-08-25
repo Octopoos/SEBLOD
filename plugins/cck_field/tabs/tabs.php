@@ -219,9 +219,9 @@ class plgCCK_FieldTabs extends JCckPluginField
 				$js	=	'$("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active");';
 			}
 			if ( $groups[$group_id]['url_actions'] ) {
-				$js	=	'var cur = window.location.hash; if(cur!="" && $(cur).length) { $("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $(cur).addClass("active"); $("a[href=\'"+cur+"\']").parent().addClass("active"); }';
+				$js	=	'var cur = window.location.hash; if(cur!="" && $(cur).length) { $("a[href=\'"+cur+"\']").tab("show"); }';
 				if ( $groups[$group_id]['url_actions'] == 2 ) {
-					$js	.=	' $("a[data-toggle=\'tab\']").on("shown", function (e) {window.location.hash = e.target.hash;})';
+					$js	.=	' $("a[data-toggle=\'tab\']").on("shown", function(e) {window.location.hash = e.target.hash;})';
 				}
 			}
 			if ( $js ) {
