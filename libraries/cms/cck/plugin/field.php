@@ -985,7 +985,9 @@ class JCckPluginField extends JPlugin
 		if ( $separator ) {
 			$length	=	strlen( $separator );
 			$value	=	implode( $separator, $value );
-			$text	=	substr( $text, 0, -$length );
+			if ( $text != '' ) {
+				$text	=	substr( $text, 0, -$length );
+			}
 		} elseif ( $separator != '0' ) {
 			$value	=	(string)@$value[0];
 		}
