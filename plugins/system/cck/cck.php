@@ -584,6 +584,35 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 
+	// onExtensionAfterSave
+	public function onExtensionAfterSave( $context, $table, $flag )
+	{
+		if ( $context != 'com_config.component' ) {
+			return;
+		}
+
+		if ( !( is_object( $table ) && $table->type == 'component' && $table->element == 'com_cck_updater' ) ) {
+			return;
+		}
+
+		$params	=	new JRegistry;
+		$params->loadString( $table->params );
+
+		if ( $proxy = (int)$params->get( 'proxy', '0' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+						
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "update.seblod.com", "'.$proxy.'") WHERE location LIKE "%update.seblod.com%" AND location != "http://update.seblod.com/pkg_cck.xml"' );
+		} elseif ( !$proxy && $params->get( 'proxy_domain' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "'.$proxy.'", "update.seblod.com") WHERE location LIKE "%'.$proxy.'%"' );
+		}
+	}
+
 	// _reSubmenu
 	protected function _reSubmenu( $buffer, $search, $replace )
 	{
