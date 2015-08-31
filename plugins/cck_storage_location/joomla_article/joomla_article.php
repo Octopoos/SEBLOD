@@ -207,8 +207,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Init
 		$db		=	JFactory::getDbo();
+		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		$null	=	$db->getNullDate();
-		$now	=	JFactory::getDate()->toSql();
 		
 		// Prepare
 		if ( ! isset( $tables[self::$table] ) ) {

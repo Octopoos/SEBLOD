@@ -41,7 +41,8 @@ class CCKModelVariations extends JModelList
 		$variations	=	array(
 							'empty'=>'',
 							'joomla'=>'',
-							'seb_css3'=>''
+							'seb_css3'=>'',
+							'seb_css3b'=>''
 						);
 
 		// Filter Search

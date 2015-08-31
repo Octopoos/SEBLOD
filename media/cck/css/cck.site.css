@@ -105,7 +105,7 @@ div.cck_forms.cck_site div.cck_form.cck_form_radio label{clear:none;display:tabl
 div.cck_forms.cck_site div.cck_form.cck_form_textarea textarea{height:auto;}
 
 /*SITE GENERIQUE WYSIWYG*/
-div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%;}
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,
@@ -171,6 +171,11 @@ div.cck_form_cck_field_params ul.adminformlist li {display:block; float:left; po
 div.cck_forms.cck_site div.cck_form.cck_form_cck_fields{width: 100%;}
 div.cck_form_cck_fields .btn .caret{margin-top: 7px;}
 div.cck_form_cck_fields div.btn-group.cck-fr.open .dropdown-menu{left:initial; right:0;}
+
+/*SITE GENERIQUE JOIN_X*/
+div.cck_forms.cck_site div.cck_form.cck_form_join_x{width: 100%;}
+div.cck_form_join_x .btn .caret{margin-top: 7px;}
+div.cck_form_join_x div.btn-group.cck-fr.open .dropdown-menu{left:initial; right:0;}
 
 /*FIELDSET*/
 fieldset div.cck_forms.cck_site{

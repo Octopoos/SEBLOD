@@ -202,8 +202,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		
 		// Init
 		$db		=	JFactory::getDbo();
+		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		$null	=	$db->getNullDate();
-		$now	=	JFactory::getDate()->toSql();
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {

@@ -115,7 +115,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		} elseif ( $form == '-2' ) {
 			$form		=	'#'.$link->get( 'form_fieldname', '' ).'#';
 
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ) ) );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ), 'form'=>'-2' ) );
 		} elseif ( $form != '' ) {
 			$user 		=	JCck::getUser();
 			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
@@ -192,27 +192,36 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		$name		=	$process['name'];
-		$fieldname	=	$process['fieldname'];
-		$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
-		$user 		=	JCck::getUser();
-			
-		$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
-		$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+		$name	=	$process['name'];
+		
+		if ( isset( $process['form'] ) && $process['form'] == '-2' ) {
+			$fieldname	=	$process['fieldname'];
+			$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
+			$user 		=	JCck::getUser();
+				
+			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+			$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
 
-		// Check Permissions
-		if ( $canCreate ) {
-			$fields[$name]->link	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->link );
-			$fields[$name]->html	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->html );
-			$fields[$name]->typo	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->typo );
-		} else {
-			$fields[$name]->link	=	'';
-			$target					=	 $fields[$name]->typo_target;
-
-			if ( $fields[$name]->typo ) {
-				$fields[$name]->typo	=	$fields[$name]->$target; // todo: str_replace link+target par target
+			// Check Permissions
+			if ( $canCreate ) {
+				$fields[$name]->link	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->link );
+				$fields[$name]->html	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->html );
+				$fields[$name]->typo	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->typo );
 			} else {
-				$fields[$name]->html	=	$fields[$name]->$target;
+				$fields[$name]->link	=	'';
+				$target					=	 $fields[$name]->typo_target;
+
+				if ( $fields[$name]->typo ) {
+					$fields[$name]->typo	=	$fields[$name]->$target; // todo: str_replace link+target par target
+				} else {
+					$fields[$name]->html	=	$fields[$name]->$target;
+				}
+			}
+		} else {
+			$name	=	$process['name'];
+			
+			if ( count( $process['matches'][1] ) ) {
+				self::g_setCustomVars( $process, $fields, $name );
 			}
 		}
 	}

@@ -24,6 +24,25 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
+-------------------- 3.8.0 Upgrade Release [xx-Sep-2014] -------------
+
+! Performance improvements on Search system >> SQL queries refactored.
+! Memory optimizations on List rendering.
+
+^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
+
++ "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
++ "Default Variation" parameter added on SEBLOD Options (Site).
++ "Optimize (Memory)" parameter added on SEBLOD Options (Site).
+
++ "seb_css3b" variation added (cleaner version of seb_css3).
+
+! One (seb_one) updated with "Inherited" variation parameter.
+
+# Issues fixed on JCckContent class.
+# Permission issue fixed when Edit button/link is the 1st field assigned.
+# Various improvements or issues fixed.
+
 -------------------- 3.7.1 Upgrade Release [17-Aug-2014] -------------
 
 ! "Upgrade" process of Products improved >> SEBLOD Updater add-on required.

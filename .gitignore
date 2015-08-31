@@ -1253,6 +1253,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_iframe.sys.ini
 /plugins/cck_field/iframe/*
 
+######## SEBLOD Plug-ins >> Field >> JoinX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_join_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_join_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.sys.ini
+/plugins/cck_field/join_x/*
+
 ######## SEBLOD Plug-ins >> Field >> Radio Numeric
 
 /administrator/language/en-GB/en-GB.plg_cck_field_radio_numeric.ini

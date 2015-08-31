@@ -143,7 +143,12 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['styles']								=	JCckDatabase::loadObjectList( 'SELECT * FROM #__template_styles', 'id' );
 		$data['tables']								=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
-		$data['variations']							=	array( 'empty'=>true, 'joomla'=>true, 'seb_css3'=>true );
+		$data['variations']							=	array(
+															'empty'=>true,
+															'joomla'=>true,
+															'seb_css3'=>true,
+															'seb_css3b'=>true
+														);
 		CCK_Export::createDir( $data['root_content'] );
 		CCK_Export::createDir( $data['root_elements'] );
 		CCK_Export::createDir( $data['root_extensions'] );

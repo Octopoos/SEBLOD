@@ -211,16 +211,16 @@ class JCckContent
 		
 		$this->_table		=	$this->_columns['table'];
 		
-		$joomla_tables		=	JCckDatabaseCache::getTableList( true );
-		$more_table_exists	=	isset( $joomla_tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
+		$tables				=	JCckDatabaseCache::getTableList( true );
+		$hasMore			=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
 		
-		if ( $more_table_exists ) {
+		if ( $hasMore ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
 		}
 
 		if ( $data === true ) {
-			if ( $more_table_exists ) {
+			if ( $hasMore ) {
 				$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.*, b.* FROM '.$this->_table.' AS a'
 															. ' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key']
 															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
@@ -274,6 +274,7 @@ class JCckContent
 			switch( $instance_name ) {
 				case 'base':
 					$this->_id	=	$this->{'_instance_'.$instance_name}->id;
+					
 					if ( property_exists( $this->_instance_core, $this->_columns['custom'] ) ) {
 						$this->_instance_core->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
 					}
@@ -281,6 +282,20 @@ class JCckContent
 					break;
 				case 'core':
 					$this->_pk	=	$this->{'_instance_'.$instance_name}->id;
+					
+					if ( $this->_instance_base->id ) {
+						$data_base	=	array();
+						
+						if ( isset( $data[$this->_columns['author']] ) ) {
+							$data_base['author_id']	=	$data[$this->_columns['author']];
+						}
+						if ( isset( $data[$this->_columns['parent']] ) ) {
+							$data_base['parent_id']	=	$data[$this->_columns['parent']];
+						}
+						if ( count( $data_base ) ) {
+							$this->save( 'base', $data_base );
+						}
+					}
 					break;
 				case 'more':
 					break;
