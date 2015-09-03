@@ -21,6 +21,7 @@
 			<!-- Variation -->
 			<file type="file" id="var_cck_joomla" src="libraries/cck/rendering/variations">var_cck_joomla.zip</file>
 			<file type="file" id="var_cck_seb_css3" src="libraries/cck/rendering/variations">var_cck_seb_css3.zip</file>
+			<file type="file" id="var_cck_seb_css3b" src="libraries/cck/rendering/variations">var_cck_seb_css3b.zip</file>
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->
