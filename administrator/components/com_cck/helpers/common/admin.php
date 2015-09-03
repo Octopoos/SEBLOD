@@ -295,7 +295,7 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
-			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' ) {
+			if ( $view == 'carts' || $view == 'orders' || $view == 'subscriptions' || $view == 'stores' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
