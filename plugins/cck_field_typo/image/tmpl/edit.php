@@ -46,6 +46,9 @@ JCckDev::initScript( 'typo', $this->item );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Image Title', 'defaultvalue'=>'1', 'selectlabel'=>'', 'options'=>'None=0||Auto=1', 'storage_field'=>'image_title' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>0, 'options'=>'Absolute=1||Relative=0',
 																		 'storage_field'=>'path_type' ) );
+        
+		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
+		echo JCckDev::renderForm( 'core_attributes', '', $config, array( 'label'=>'Custom Attributes', 'storage_field'=>'attributes' ), array(), 'w100' );
         ?>
     </ul>
 </div>

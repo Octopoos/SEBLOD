@@ -42,6 +42,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		// Prepare
 		$options		=	array(
 								'base'=>JUri::root( true ).'/',
+								'attributes'=>$typo->get( 'attributes', '' ),
 								'root'=>( $typo->get( 'path_type', 0 ) ? JUri::root() : '' )
 							);
 		$thumb_array	=	array( 'thumb'=>$typo->get( 'thumb', 'thumb1' ),
@@ -118,8 +119,9 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$image_alt			=	( isset( $field->image_alt ) ) ? $field->image_alt : '';
 		$field->image_alt	=	( $image_alt != '' ) ? $image_alt : $image_title;
 		$field->image_title	=	( $params['image_title'] && $field->image_title ) ? $field->image_title : '';
-		$attr_title			=	( $field->image_title ) ? 'title="'.$field->image_title.'" ' : '';
+		$title				=	( $field->image_title ) ? 'title="'.$field->image_title.'" ' : '';
 
+		$attr				=	( $options['attributes'] != '' ) ? ' '.$options['attributes'] : '';
 		$height				=	'';
 		$srcset				=	'';
 		$width				=	'';
@@ -134,7 +136,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
 		}
-		$img		=	'<img '.$attr_title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $options ).'"'.$srcset.$width.$height.' />';
+		$img		=	'<img '.$title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $options ).'"'.$srcset.$attr.$width.$height.' />';
 
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
