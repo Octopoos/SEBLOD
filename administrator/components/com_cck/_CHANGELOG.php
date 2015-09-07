@@ -31,15 +31,21 @@ $ -> Language fix or change
 
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
 
++ Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
 + "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
 + "Default Variation" parameter added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
++ "Custom Attributes" added on Image Typo plug-in.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
 ! One (seb_one) updated with "Inherited" variation parameter.
 
+# Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
+# < p > removed from Freetexts field in install.sql
+# Improvements for upcoming eCommerce add-on.
 # Issues fixed on JCckContent class.
+# Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
 # Various improvements or issues fixed.
 
