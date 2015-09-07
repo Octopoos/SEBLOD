@@ -278,7 +278,7 @@ abstract class JCckEcommerce
 		if ( !count( $zones ) ) {
 			$zones	=	array( 0=>0 );
 		}
-		$query		=	'SELECT a.title, a.type, a.tax, a.tax_amount, a.groups, a.target'
+		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.groups, a.target'
 					.	' FROM #__cck_more_ecommerce_taxes AS a'
 					.	' LEFT JOIN #__cck_more_ecommerce_zone_tax AS b ON b.tax_id = a.id'
 					.  ' WHERE a.published = 1'
@@ -302,7 +302,8 @@ abstract class JCckEcommerce
 		if ( !( isset( $user->country ) && $user->country != '' ) ) {
 			return $zones;
 		}
-		$zones	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_more_ecommerce_zones WHERE published = 1 AND countries LIKE "%||'.$user->country.'||%" ORDER BY CHARACTER_LENGTH(countries) ASC' );
+		$where	=	'countries = "'.$user->country.'" OR countries LIKE "'.$user->country.'||%" OR countries LIKE "%||'.$user->country.'" OR countries LIKE "%||'.$user->country.'||%"';
+		$zones	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
 
 		return $zones;
 	}
