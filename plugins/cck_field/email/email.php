@@ -312,11 +312,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			
-			$body		=	str_replace( '[id]', $config['id'], $body );
-			$body		=	str_replace( '[pk]', $config['pk'], $body );
-			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
-			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
 
 			if ( isset( $config['registration_activation'] ) ) {
 				$body		=	str_replace( '[activation]', JURI::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
@@ -392,7 +387,12 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-	
+			
+			$body		=	str_replace( '[id]', $config['id'], $body );
+			$body		=	str_replace( '[pk]', $config['pk'], $body );
+			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
+			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
+
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
 				$matches	=	NULL;
