@@ -375,7 +375,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			
+
 			// J(translate)
 			if ( $body != '' && strpos( $body, 'J(' ) !== false ) {
 				$matches	=	'';
@@ -392,6 +392,18 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$body		=	str_replace( '[pk]', $config['pk'], $body );
 			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
 			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
+
+			if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
+				$user			=	JCck::getUser();
+				$matches		=	'';
+				$search			=	'#\$user\->([a-zA-Z0-9_]*)#';
+				preg_match_all( $search, $body, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $k=>$v ) {
+						$body	=	str_replace( $matches[0][$k], $user->$v, $body );
+					}
+				}
+			}
 
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
