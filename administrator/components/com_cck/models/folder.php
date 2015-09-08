@@ -329,6 +329,12 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 					CCK_Export::createDir( $path.'/languages/'.$language );
 					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.ini' );
 				}
+				if ( is_file( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' ) ) {
+					$l	=	$lang->addChild( 'language', $language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
+					$l->addAttribute( 'tag', $language );
+					CCK_Export::createDir( $path.'/languages/'.$language );
+					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
+				}
 			}
 		}
 
