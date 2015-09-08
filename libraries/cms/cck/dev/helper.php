@@ -284,7 +284,7 @@ abstract class JCckDevHelper
 			}
 		}
 		if ( $str != '' && strpos( $str, '$user->' ) !== false ) {
-			$user			=	JFactory::getUser();
+			$user			=	JCck::getUser();
 			if ( strpos( $str, '$user->getAuthorisedViewLevels()' ) !== false ) {
 				$access		=	implode( ',', $user->getAuthorisedViewLevels() );
 				$str		=	str_replace( '$user->getAuthorisedViewLevels()', $access, $str );
