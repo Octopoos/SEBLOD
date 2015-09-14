@@ -273,7 +273,15 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		$options[]	=	JHtml::_( 'select.option', 'title', JText::_( 'COM_CCK_TITLE' ) );
-		$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		if ( $option == 'com_cck_ecommerce' ) {
+			if ( $view == 'zones' ) {
+				$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+			} elseif ( $view == 'orders' ) {
+				$options[]	=	JHtml::_( 'select.option', 'number', JText::_( 'COM_CCK_INVOICE' ) );
+			}
+		} else {
+			$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		}
 		if ( $option == 'com_cck' && $view == 'fields' ) {
 			$options[]	=	JHtml::_( 'select.option', 'label', JText::_( 'COM_CCK_LABEL' ) );	
 		}
@@ -295,7 +303,7 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
-			if ( $view == 'carts' || $view == 'orders' || $view == 'subscriptions' || $view == 'stores' ) {
+			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' || $view == 'subscriptions' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
