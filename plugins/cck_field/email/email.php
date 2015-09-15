@@ -312,7 +312,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-
+			
 			if ( isset( $config['registration_activation'] ) ) {
 				$body		=	str_replace( '[activation]', JURI::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
 				$body		=	str_replace( '[username]', $fields['username']->value, $body );
@@ -364,7 +364,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
 				preg_match_all( $search, $body, $matches );
 				if ( count( $matches[1] ) ) {
-					for ( $i = 0, $n = count( $matches ); $i <= $n; $i++ ) {
+					for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ ) {
 						$attr	=	strtolower( $matches[1][$i] );
 						$match	=	$matches[2][$i];
 						if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' ){
@@ -375,7 +375,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-
+			
 			// J(translate)
 			if ( $body != '' && strpos( $body, 'J(' ) !== false ) {
 				$matches	=	'';
