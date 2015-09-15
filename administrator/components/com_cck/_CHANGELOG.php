@@ -30,23 +30,29 @@ $ -> Language fix or change
 ! Memory optimizations on List rendering.
 
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
++ "Count" (Auto / Estimate) parameter added on Search Types.
 
 + Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
 + "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
 + "Default Variation" parameter added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
-+ "Custom Attributes" added on Image Typo plug-in.
++ "Class", "Custom Attributes" added on Image Typo plug-in.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
 ! One (seb_one) updated with "Inherited" variation parameter.
+
+^ Mobile Detect updated from 2.8.15 to 2.8.16.
 
 # Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
 # < p > removed from Freetexts field in install.sql
 # Improvements for upcoming eCommerce add-on.
 # Issues fixed on JCckContent class.
 # Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
+# Missing Languages files (for Package Export) added.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
+# Processing Export issue fixed.
+# Syntax (replacement) issues fixed on "Email" plug-in.
 # Various improvements or issues fixed.
 
 -------------------- 3.7.1 Upgrade Release [17-Aug-2014] -------------
