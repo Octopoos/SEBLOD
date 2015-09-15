@@ -18,7 +18,10 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'; ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-			echo JCckDev::renderForm( $cck['core_limit'], @$options['limit'], $config );
+            echo '<li><label>'.JText::_( 'COM_CCK_LIMIT' ).' / '.JText::_( 'COM_CCK_COUNT' ).'</label>'
+             .   JCckDev::getForm( $cck['core_limit'], @$options['limit'], $config )
+             .   JCckDev::getForm( 'core_dev_select', @$options['count'], $config, array( 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Auto=0||Estimate=1', 'storage_field'=>'options[count]' ) )
+             .   '</li>';
             echo '<li><label>'.JText::_( 'COM_CCK_CACHE_SEARCH' ).'</label>'
              .   JCckDev::getForm( $cck['core_cache'], @$options['cache'], $config )
              .   JCckDev::getForm( 'core_dev_select', @$options['cache_per_user'], $config, array( 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'For Anyone=0||Per User=1', 'storage_field'=>'options[cache_per_user]' )  )

@@ -52,6 +52,7 @@ class plgSearchCCK extends JPlugin
 		$db				=	JFactory::getDbo();
 		$dispatcher		=	JDispatcher::getInstance();
 		$doClean		=	false;
+		$doCount		=	(int)$options->get( 'count' );
 		$doLimit		=	false;
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
@@ -252,7 +253,7 @@ class plgSearchCCK extends JPlugin
 		
 		$inherit	=	array( 'bridge'=>'', 'query'=>'' );
 		$query		=	NULL;
-		$query2		=	NULL;
+		$query2		=	'';
 		$results	=	array();
 		self::_setStorage( $tables, $config, $inherit );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -309,12 +310,35 @@ class plgSearchCCK extends JPlugin
 				$results	=	$db->loadObjectList();
 
 				if ( $doLimit ) {
-					$query1				=	(string)$query;
-					$query->clear( 'order' )->clear( 'limit' );
-					$query->clear( 'select' )->select( 'COUNT(t0.id)' );
-					$db->setQuery( $query );
-					$config['total']	=	$db->loadResult();
-					$query2				=	(string)$query;
+					$count	=	count( $results );
+					if ( $count < $config['limitend'] ) {
+						$config['total']		=	$count;
+					} else {
+						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
+							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.$tables['#__cck_core']['fields']['cck'].'"';
+							$config['total']	=	JCckDatabaseCache::loadResult( $query2 );
+						} else {
+							if ( JCck::on() ) {
+								$query1				=	(string)$query;
+								$query->clear( 'order' )->clear( 'limit' );
+								$query->clear( 'select' )->select( 'COUNT(t0.id)' );
+								$db->setQuery( $query );
+								$config['total']	=	$db->loadResult();
+								$query2				=	(string)$query;
+							} else {
+								$query2				=	$db->getQuery( true );
+								$query2->select( 'COUNT(t0.id)' );
+								$query2->from( '`#__cck_core` AS t0' );
+								self::_buildQuery( $dispatcher, $query2, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
+								if ( $where != '' ) {
+									$query2->where( $where );
+								}
+								$db->setQuery( $query2, 0, 0 );
+								$config['total']	=	$db->loadResult();
+								$query2				=	(string)$query2;
+							}
+						}
+					}
 				}
 			} else {
 				$query	=	$db->getQuery( true );
@@ -334,9 +358,12 @@ class plgSearchCCK extends JPlugin
 			if ( !isset( $query1 ) ) {
 				$query1	=	(string)$query;
 			}
+			if ( $query2 ) {
+				$query2	.=	'<br />';
+			}
 			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'LIMIT', 'UNION' ),
 							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />LIMIT', '<br />UNION' ),
-							  (string)$query1.'<br />'.(string)$query2 ).'<br /><br />';
+							  $query1.'<br />'.$query2 ).'<br />';
 		}
 		
 		unset( $fields );
