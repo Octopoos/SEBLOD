@@ -366,7 +366,7 @@ class CCK_Export
 		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
 		$xml->addChild( 'acl', (string)$acl );
 
-		if ( isset( $data['processings'][$elem->id] ) ) {
+		if ( isset( $data['processings2'][$elem->id] ) ) {
 			$data['elements']['processings'][$elem->id]	=	'';
 		}
 	}
@@ -798,8 +798,12 @@ class CCK_Export
 		$elemtype	=	'processing';
 		$plural		=	$elemtype.'s';
 		$dest		=	CCK_Export::createDir( $data['root_elements'].'/'.$plural );
-
-		foreach ( $data['elements']['processings'] as $k=>$v ) {
+		
+		foreach ( $data['processings'] as $k=>$v ) {
+			$folder_id	=	$data['processings'][$k]->folder;
+			if ( !isset( $data['elements']['processings'][$folder_id] ) ) {
+				continue;
+			}
 			$name		=	$data['processings'][$k]->name;
 			$filename	=	JFile::getName( $data['processings'][$k]->scriptfile );
 			$filename	=	substr( $filename, 0, strrpos( $filename, '.' ) );
