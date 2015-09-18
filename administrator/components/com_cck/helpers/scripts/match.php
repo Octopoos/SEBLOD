@@ -54,10 +54,12 @@ $js		=	'
 					$("#match_mode").val(parent.jQuery("#'.$name.'_match_mode").val());
 					var encoded = parent.jQuery("#'.$name.'_match_options").val();
 					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-					$.each(data, function(k, v) {
-						var elem = "match_options_"+k;
-						$("#"+elem).myVal(v);
-					});
+					if (data) {
+						$.each(data, function(k, v) {
+							var elem = "match_options_"+k;
+							$("#"+elem).myVal(v);
+						});
+					}
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
 					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
 					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");

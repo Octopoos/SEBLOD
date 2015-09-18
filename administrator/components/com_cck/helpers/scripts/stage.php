@@ -42,10 +42,12 @@ $js		=	'
 					if (legacy) {
 						$("#value").myVal(legacy);
 					}
-					$.each(data, function(k, v) {
-						var elem = k;
-						$("#"+elem).myVal(v);
-					});
+					if (data) {
+						$.each(data, function(k, v) {
+							var elem = k;
+							$("#"+elem).myVal(v);
+						});
+					}
 					if(!$("#value").myVal()) {
 						$("#value").myVal("1");
 					}

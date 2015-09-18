@@ -355,18 +355,20 @@ abstract class JCckDev
 						var elem = "'.$elem->id.'_'.$type.'_options";
 						var encoded = parent.jQuery("#"+elem).val();
 						var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-						$.each(data, function(k, v) {
-							if(!$("#"+k).length) {
-								var temp = v.split("||");
-								var len = temp.length;
-								for(i = 0; i < len; i++) {
-									if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
-									$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
+						if (data) {
+							$.each(data, function(k, v) {
+								if(!$("#"+k).length) {
+									var temp = v.split("||");
+									var len = temp.length;
+									for(i = 0; i < len; i++) {
+										if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
+										$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
+									}
+								} else {
+									$("#"+k).myVal( v );
 								}
-							} else {
-								$("#"+k).myVal( v );
-							}
-						});
+							});
+						}
 						'.$js2.'
 					});
 				})(jQuery); 

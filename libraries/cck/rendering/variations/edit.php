@@ -32,9 +32,11 @@ $js		=	'
 					var elem = "pos-'.$this->item->id.'_variation_options";
 					var encoded = parent.jQuery("#"+elem).val();
 					var data = (encoded != "") ? $.evalJSON(encoded) : "";
-					$.each(data, function(k, v) {
-						$("#"+k).val( v );
-					});
+					if (data) {
+						$.each(data, function(k, v) {
+							$("#"+k).val( v );
+						});
+					}
 				});
 			})(jQuery);
 			';
