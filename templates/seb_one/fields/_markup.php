@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright			Copyright (C) 2013 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -41,7 +41,7 @@ function cckMarkup_seb_one( $cck, $html, $field, $options )
 		$label	=	( $label != '' ) ? '<div id="'.$cck->id.'_label_'.$field->name.'" class="cck_label cck_label_'.$field->type.'">'.$label.'</div>' : '';
 	}
 	
-	$html	=	'<div id="'.$cck->id.'_'.$cck->mode_property.'_'.$field->name.'" class="cck_'.$cck->mode_property.' cck_'.$cck->mode_property.'_'.$field->type.'">'.$html.'</div>';
+	$html	=	'<div id="'.$cck->id.'_'.$cck->mode_property.'_'.$field->name.'" class="cck_'.$cck->mode_property.' cck_'.$cck->mode_property.'_'.$field->type.$field->markup_class.'">'.$html.'</div>';
 	$html	=	'<div id="'.$cck->id.'_'.$field->name.'" class="cck_'.$cck->mode.'s cck_'.$cck->client.' cck_'.$field->type.' cck_'.$field->name.'">'.$label.$html.$desc.'</div>';
 	
 	return $html;
