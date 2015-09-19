@@ -37,23 +37,28 @@ $ -> Language fix or change
 + "Default Variation" parameter added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
-+ "Class", "Custom Attributes" added on Image Typo plug-in.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
 ! One (seb_one) updated with "Inherited" variation parameter.
 
-^ Mobile Detect updated from 2.8.15 to 2.8.16.
-
-# Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
 # < p > removed from Freetexts field in install.sql
 # Improvements for upcoming eCommerce add-on.
 # Issues fixed on JCckContent class.
-# Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
 # Missing Languages files (for Package Export) added.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
 # Processing Export issue fixed.
 # Syntax (replacement) issues fixed on "Email" plug-in.
 # Various improvements or issues fixed.
+
+-------------------- 3.7.2 Upgrade Release [18-Sep-2014] -------------
+
++ "Class", "Custom Attributes" added on Image Typo plug-in.
+
+^ Mobile Detect updated from 2.8.15 to 2.8.16.
+
+# Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
+# Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
+# Minor Javascript issues fixed (regression since Joomla! 3.4.4)
 
 -------------------- 3.7.1 Upgrade Release [17-Aug-2014] -------------
 
