@@ -33,7 +33,6 @@ $ -> Language fix or change
 + "Count" (Auto / Estimate) parameter added on Search Types.
 
 + Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
-+ "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
 + "Default Variation" parameter added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
@@ -50,9 +49,10 @@ $ -> Language fix or change
 # Syntax (replacement) issues fixed on "Email" plug-in.
 # Various improvements or issues fixed.
 
--------------------- 3.7.2 Upgrade Release [18-Sep-2014] -------------
+-------------------- 3.7.2 Upgrade Release [19-Sep-2014] -------------
 
 + "Class", "Custom Attributes" added on Image Typo plug-in.
++ "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
 
 ^ Mobile Detect updated from 2.8.15 to 2.8.16.
 
