@@ -81,10 +81,14 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, multicart, multistore, ordering, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_shipping, request_shipping_field'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, multicart, multistore, ordering, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_shipping, request_shipping_field, request_state_id'
 															. ' FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.$name.'"' );
 			if ( strpos( $definitions[$name]->request_payment_field, '$' ) !== false ) {
 				$definitions[$name]->request_payment_field	=	str_replace( '$', strtolower( JCckEcommerce::getCurrency()->code ), $definitions[$name]->request_payment_field );
+			}
+			$definitions[$name]->request_state	=	0;
+			if ( $definitions[$name]->request_state_id ) {
+				$definitions[$name]->request_state	=	JCckDatabase::loadResult( 'SELECT value FROM #__cck_more_ecommerce_order_states WHERE id = '.(int)$definitions[$name]->request_state_id );
 			}
 		}
 		
