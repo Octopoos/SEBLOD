@@ -72,6 +72,32 @@ class JCckTableBatch extends JObject
 		}
 	}
 	
+	// bindArray
+	public function bindArray( $data )
+	{
+		if ( count( $data ) ) {
+			$k	=	key( $data );
+			if ( is_string( $k ) ) {
+				foreach ( $data[$k] as $v ) {
+					$row				=	new stdClass;
+					$row->$k			=	$v;
+					$this->_tbl_rows[]	=	$row;
+				}
+			} else {
+				foreach ( $data as $key=>$val ) {
+					if ( count( $val ) ) {
+						$row		=	new stdClass;
+						foreach ( $val as $k=>$v ) {
+							$row->$k	=	$v;
+							
+						}
+						$this->_tbl_rows[]	=	$row;
+					}
+				}
+			}
+		}
+	}
+
 	// check
 	public function check( $force = array(), $ignore = array(), $init = array() )
 	{
