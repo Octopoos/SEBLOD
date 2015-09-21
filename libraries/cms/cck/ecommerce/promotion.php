@@ -34,11 +34,13 @@ abstract class JCckEcommercePromotion
 							// OK
 						} elseif ( $p->target == 2 ) {
 							$products	=	self::getTargets( $p->id );
+
 							if ( !isset( $products[$params['target_id']] ) ) {
 								continue;
 							}
 						} elseif ( $p->target == -2 ) {
 							$products	=	self::getTargets( $p->id );
+							
 							if ( isset( $products[$params['target_id']] ) ) {
 								continue;
 							}
@@ -55,6 +57,7 @@ abstract class JCckEcommercePromotion
 					}
 				}
 				$groups		=	explode( ',', $p->groups );
+
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->discount ) {
 						case 'free':
@@ -62,7 +65,7 @@ abstract class JCckEcommercePromotion
 							$total		=	0;
 							break;
 						case 'minus':
-							$discount	=	'- '.$currency->lft.$p->discount_amount.$currency->right;
+							$discount	=	'- '.$currency->lft.number_format( $p->discount_amount, 2 ).$currency->rgt;
 							$total		-=	$p->discount_amount;
 							break;
 						case 'percentage':

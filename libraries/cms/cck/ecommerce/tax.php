@@ -22,19 +22,23 @@ abstract class JCckEcommerceTax
 
 		$currency	=	JCckEcommerce::getCurrency();
 		$tax		=	'';
+		$taxed		=	0;
 		$taxes		=	JCckEcommerce::getTaxes( $type, $my_zones );
-		
+
 		if ( count( $taxes ) ) {
 			foreach ( $taxes as $p ) {
 				$groups		=	explode( ',', $p->groups );
+				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->tax ) {
 						case 'plus':
 							$tax		=	$p->tax_amount;
+							$taxed		+=	$tax;
 							$total		+=	$tax;
 							break;
 						case 'percentage':
 							$tax		=	$total * $p->tax_amount / 100;
+							$taxed		+=	$tax;
 							$total		+=	$tax;
 							break;
 						default:
@@ -45,7 +49,7 @@ abstract class JCckEcommerceTax
 			}
 		}
 
-		return $tax;
+		return (string)$taxed;
 	}
 }
 ?>
