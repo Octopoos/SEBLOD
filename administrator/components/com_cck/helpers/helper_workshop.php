@@ -259,12 +259,16 @@ class Helper_Workshop
 	public static function getFieldsAv( $element, $item, $objects, $featured = '' )
 	{
 		$excluded	=	self::getFields( $element, $item, '', true );
+		$select		=	'';
 		$where		=	' WHERE a.published = 1 AND b.published = 1';
+
 		if ( $objects != '' ) {
 			$where	.=	' AND a.storage_location IN ('.$objects.')';
 		}
 		if ( $element == 'type' && $item->storage_location != 'none' ) {
-			$where		.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+			$where	.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+		} elseif ( $element == 'search' ) {
+			$select	=	', a.storage_table, a.storage_field';
 		}
 		if ( $excluded ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
@@ -273,6 +277,7 @@ class Helper_Workshop
 			$where	.=	' AND '.$featured;
 		}
 		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label'
+				.	$select
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder '
 				.	$where

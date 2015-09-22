@@ -79,8 +79,23 @@ $positions	=	array();
 			if ( count( $this->fieldsAv ) ) {
                 echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
-                $style	=	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
+                $data['tables'] =   array();
+                $style          =	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
                 foreach ( $this->fieldsAv as $field ) {
+                    if ( $field->storage_table != '' ) {
+                        if ( !isset( $data['tables'][$field->storage_table] ) ) {
+                            $data['tables'][$field->storage_table]  =   JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+                        }
+                        if ( @$field->match_mode == '' && isset( $data['tables'][$field->storage_table][$field->storage_field] ) ) {
+                            if ( $data['tables'][$field->storage_table][$field->storage_field]->Type == 'tinyint(3)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(11)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10) unsigned' ) {
+                                $field->match_mode      =   'exact';
+                                $field->match_options   =   '{"var_type":"0"}';
+                            }
+                        }
+                    }
                     $type_field	=	'';
                     if ( isset( $this->type_fields[$field->id] ) ) {
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
