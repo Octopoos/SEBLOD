@@ -46,7 +46,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 }
 
 echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ).'" autocomplete="off" method="get" id="'.$this->config['formId'].'" name="'.$this->config['formId'].'">';
-echo '<div class="seblod first">' . $this->form . '</div>';
+echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 ?>
 
 <div class="cck_page_list<?php echo $this->pageclass_sfx; ?>" id="system">
