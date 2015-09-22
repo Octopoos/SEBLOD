@@ -366,9 +366,17 @@ if ( $preconfig['task'] == 'search' ) {
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {
 					// Form
+					$return			=	'';
+					if ( @$preconfig['auto_redirect_vars'] != '' ) {
+						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+
+						if ( $return != '' ) {
+							$return		=	'&'.$preconfig['auto_redirect_vars'].'='.$return;
+						}
+					}
 					$uri			=	$_SERVER["HTTP_REFERER"];
-					$return			=	base64_encode( $uri );
-					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].'&return='.$return );
+					$return			.=	'&return='.base64_encode( $uri );
+					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return );
 					$app->redirect( $redirect_url );
 					return;
 				}

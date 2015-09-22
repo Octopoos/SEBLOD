@@ -49,14 +49,15 @@ class CCKViewList extends JViewLegacy
 		$variation		=	$params->get( 'variation' );
 		
 		if ( $params->get( 'show_list', '' ) != '' ) {
-			$preconfig['show_list']	=	(int)$params->get( 'show_list' );
+			$preconfig['show_list']			=	(int)$params->get( 'show_list' );
 		}
-		$preconfig['search2']		=	$params->get( 'search2' );
-		$preconfig['show_form']		=	$params->get( 'show_form', '' );
-		$preconfig['auto_redirect']	=	$params->get( 'auto_redirect', '' );
-		$preconfig['limit2']		=	$params->get( 'limit2', 0 );
-		$preconfig['ordering']		=	$params->get( 'ordering', '' );
-		$preconfig['ordering2']		=	$params->get( 'ordering2', '' );
+		$preconfig['search2']				=	$params->get( 'search2' );
+		$preconfig['show_form']				=	$params->get( 'show_form', '' );
+		$preconfig['auto_redirect']			=	$params->get( 'auto_redirect', '' );
+		$preconfig['auto_redirect_vars']	=	$params->get( 'auto_redirect_vars', '' );
+		$preconfig['limit2']				=	$params->get( 'limit2', 0 );
+		$preconfig['ordering']				=	$params->get( 'ordering', '' );
+		$preconfig['ordering2']				=	$params->get( 'ordering2', '' );
 		
 		// Page
 		$menus	=	$app->getMenu();
