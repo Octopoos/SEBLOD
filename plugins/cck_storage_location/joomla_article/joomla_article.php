@@ -443,7 +443,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected function _completeTable( &$table, &$data, &$config )
 	{
 		if ( $table->state == 1 && intval( $table->publish_up ) == 0 ) {
-			$table->publish_up	=	JFactory::getDate()->toSql();
+			$table->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		}
 		if ( ! $table->{self::$key} ) {
 			$table->modified_by	=	0;
