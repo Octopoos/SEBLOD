@@ -80,7 +80,7 @@ abstract class JCckEcommercePromotion
 			}
 		}
 		
-		return $discount;
+		return (string)$discount;
 	}
 
 	// count
