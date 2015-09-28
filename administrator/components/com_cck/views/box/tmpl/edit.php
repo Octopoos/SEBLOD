@@ -75,7 +75,7 @@ if ( $this->doValidation == 1 ) {
 }
 $js		=	'if("undefined"===typeof JCck.Dev){JCck.Dev={}};'
 		.	'JCck.Dev.close = function() { if (parent.jQuery.fn.colorbox) {parent.jQuery.fn.colorbox.close();}'
-		.	'else {if (window.parent.SqueezeBox) {window.parent.SqueezeBox.close();};} }';
+		.	'else {if (window.parent.SqueezeBox) {window.parent.SqueezeBox.close();};} };';
 $doc->addScriptDeclaration( $js );
 ?>
 </form>
