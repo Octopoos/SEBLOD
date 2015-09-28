@@ -1,7 +1,7 @@
 /**
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2015 SEBLOD. All Rights Reserved.
 **/
 
 (function ($){
