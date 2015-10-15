@@ -294,21 +294,29 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$lang	=	JFactory::getLanguage();
 		$loaded	=	1;
 		
-		$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
-		$doc->addScript( self::$path.'assets/js/jscal2.js' );
-		$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/jscal2.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/border-radius.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css'.'" type="text/css" />';
+			echo '<script src="'.self::$path.'assets/js/jscal2.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js'.'" type="text/javascript"></script>';
+		} else {
+			$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
+			$doc->addScript( self::$path.'assets/js/jscal2.js' );
+			$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		}
 	}
 	
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
-		$doc	=	JFactory::getDocument();
 		$js	=	'
 				<script type="text/javascript">
 					var cal = Calendar.setup({';

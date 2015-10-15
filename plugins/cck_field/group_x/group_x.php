@@ -357,8 +357,15 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-		$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/'.self::$type.'.css'.'" type="text/css" />';
+		} else {
+			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+		}
+
 		$count	=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
 		$html	=	'';
 		$js		=	'';
@@ -477,17 +484,24 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$loaded	=	1;
 		
 		JCck::loadjQuery();
 		JCck::loadjQueryUI();
-		$doc->addScript( self::$path.'assets/js/script.js' );
+
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script src="'.self::$path.'assets/js/script.js'.'" type="text/javascript"></script>';
+		} else {
+			$doc->addScript( self::$path.'assets/js/script.js' );
+		}
 	}
 	
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
+		$app		=	JFactory::getApplication();
 		$doc		=	JFactory::getDocument();
 		$search		=	array( '.', '<', '>', '"', '%', ';' );
 		$replace	=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
@@ -520,7 +534,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		$js	.=	'});';
 		
-		$doc ->addScriptDeclaration( $js );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc ->addScriptDeclaration( $js );
+		}
 	}
 
 	// _formHTML
@@ -568,12 +586,18 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		if ( count( $group ) ) {
 			foreach ( $group as $elem ) {
 				if ( $elem->display > 1 ) {
-					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
-					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
-					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
+					if ( $elem->markup == 'none' ) {
+						if ( $elem->label != '' ) {
+							$html	.=	'<label for="'.$elem->name.'">'.$elem->label.'</label>';
+						}
+					} else {
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
+					}
 				}
 				$html		.=	$elem->form;
-				if ( $elem->display > 1 ) {
+				if ( $elem->display > 1 && $elem->markup != 'none' ) {
 					$html	.=	'</div>';
 					$html	.=	'</div>';
 				}
