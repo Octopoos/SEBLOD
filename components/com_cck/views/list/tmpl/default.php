@@ -120,13 +120,13 @@ if ( !$this->raw_rendering ) { ?>
 		echo $this->loadTemplate( 'items' );
 	}
 	if ( ( $this->show_pages_number || $this->show_pagination > -1 ) && $pages_total > 1 ) {
-	    echo '<div class="'.$this->class_pagination.'">';
+	    echo '<div class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
 		$pagesCounter	=	$this->pagination->getPagesCounter();
     	if ( $this->show_pages_number && $pagesCounter ) {
 	        echo '<p class="counter">' . $pagesCounter . '</p>';
     	}
 		if ( $this->show_pagination > -1 ) {
-			if ( $this->show_pagination == 2 ) {
+			if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) {
 				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'</a></li>';
 			} else {
 				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
@@ -155,7 +155,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 </div></div>
 <?php } ?>
 
-<?php if ( $this->show_pagination == 2 ) { ?>
+<?php if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) { ?>
 <script type="text/javascript">
 (function ($){
 	JCck.Core.loadmore = function(more,stop) {
@@ -168,7 +168,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
 			success: function(response){
 				if (stop != 1) {
-					$("#seblod_form_load_more").show();
+					$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 				} else {
 					$(".cck_page_list .pagination").hide();
 				}
@@ -186,7 +186,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 			var stop = (start+step>=parseInt($(this).attr("data-end"))) ? 1 : 0;
 			$(this).attr("data-start",start);
 			JCck.Core.loadmore("&start="+start,stop);
-		});
+		})<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 	});
 })(jQuery);
 </script>

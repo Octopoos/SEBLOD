@@ -43,7 +43,7 @@ if ($("#jform_id").val()>0) {JCck.Dev.trash = $("#sortable2 li:not(.f-"+$("#fold
 var block_item = <?php echo $block_item; ?>;
 if (block_item) {$("#client5_label").addClass("disabled"); $("#client5").prop("disabled", true);} else {$("#client5_label").removeClass("disabled"); $("#client5").prop("disabled", false);}
 $("#options_tag_list_title").isVisibleWhen('options_show_list_title','1',true,'visibility'); $("#options_label_items_number").isVisibleWhen('options_show_items_number','1');
-$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#blank_li6").isVisibleWhen('options_show_pagination','2');
+$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#blank_li6").isVisibleWhen('options_show_pagination','2,8');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }
 <?php echo $this->js['tooltip']; ?>

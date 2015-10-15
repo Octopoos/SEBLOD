@@ -95,7 +95,7 @@ if ( ! $count ) {
 // Init
 $limitend	=	(int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
-$isInfinite	=	( $pagination == 2 ) ? true : false;
+$isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 if ( $limitstart != -1 ) {
 	if ( $limitend != -1 ) {
 		$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
