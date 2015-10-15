@@ -320,11 +320,15 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
-		$output		=	1; // $params->get( 'output', 0 );
 		
 		$file		=	$model->prepareProcess( $params, $task_id, $ids, $config );
 		$link		=	( isset( $config['url'] ) && $config['url'] ) ? $config['url'] : $this->_getReturnPage();
 		if ( $file ) {
+			$output	=	$params->get( 'output', '' );
+
+			if ( $output == '' ) {
+				$output	=	1;
+			}
 			if ( $output > 0 ) {
 				$this->setRedirect( $link, JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
 			} else {
@@ -507,15 +511,23 @@ class CCKController extends JControllerLegacy
 			}
 		}
 		if ( $id ) {
-			$char	=	( strpos( $link, '?' ) > 0 ) ? '&' : '?';
+			$char		=	( strpos( $link, '?' ) > 0 ) ? '&' : '?';
+			$hash		=	'';
+			if ( strpos( $link, '#' ) !== false ) {
+				$parts	=	explode( '#', $link );
+				$link	=	$parts[0];
+				$hash	=	'#'.$parts[1];
+			}
 			if ( isset( $config['thanks'] ) ) {
 				if ( !empty( $config['thanks'] ) ) {
 					$thanks			=	( @$config['thanks']->name ) ? $config['thanks']->name : 'thanks';
 					$thanks_value	=	( @$config['thanks']->value ) ? $config['thanks']->value : $preconfig['type'];
-					$link			.=	$char.$thanks.'='.$thanks_value;
+					$link			.=	$char.$thanks.'='.$thanks_value.$hash;
+				} else {
+					$link			.=	$hash;
 				}
 			} else {
-				$link			.=	$char.'thanks='.$preconfig['type'];
+				$link			.=	$char.'thanks='.$preconfig['type'].$hash;
 			}
 		}
 		if ( $msg != '' ) {
