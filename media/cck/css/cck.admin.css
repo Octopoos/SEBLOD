@@ -112,6 +112,11 @@ div.cck_forms.cck_admin div.cck_form.cck_form_upload_image span.linkage {top:5px
 /*SITE GENERIQUE LINK */
 div.cck_forms.cck_admin div.cck_form.cck_form_link div.cck_forms{clear:both;}
 
+/*SITE GENERIQUE JOIN_X*/
+div.cck_forms.cck_admin div.cck_form.cck_form_join_x{width: 100%;}
+div.cck_form_join_x .btn .caret{margin-top: 7px;}
+div.cck_form_join_x div.btn-group.cck-fr.open .dropdown-menu{left:initial; right:0;}
+
 /* UI */
 div.vertical, div.horizontal {
 	padding-bottom: 15px;
