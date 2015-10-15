@@ -28,11 +28,13 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		 .	 JCckDev::getForm( 'core_options_class', @$options2['text_label'], $config, array( 'defaultvalue'=>'Text', 'size'=>'18', 'storage_field'=>'json[options2][text_label]' ) )
 		 .	 '</li>';
 		echo JCckDev::renderForm( 'core_defaultvalue', @$options2['def_text'], $config, array( 'label'=>'DEFAULT_TEXT', 'storage_field'=>'json[options2][def_text]' ) );
-		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'SHOW_TARGET', 'defaultvalue'=>'0', 'options'=>'Hide=>0||Show=1' ) );
+		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'SHOW_TARGET', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=1' ) );
 		echo JCckDev::renderForm( 'core_options_target', @$options2['target'], $config, array( 'label'=>'DEFAULT_TARGET' ) );
-		echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'SHOW_CLASS', 'defaultvalue'=>'0', 'options'=>'Hide=>0||Show=1' ) );
+		echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'SHOW_CLASS', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=1' ) );
 		echo JCckDev::renderForm( 'core_options_class', @$options2['class'], $config );
-		echo JCckDev::renderForm( 'core_bool', $this->item->bool5, $config, array( 'label'=>'SHOW_PREVIEW', 'defaultvalue'=>'1', 'options'=>'Hide=>0||Show=1', 'storage_field'=>'bool5' ) );
+		echo JCckDev::renderForm( 'core_bool', $this->item->bool6, $config, array( 'label'=>'SHOW_REL', 'defaultvalue'=>'0', 'options'=>'Hide=0', 'storage_field'=>'bool6' ) );
+		echo JCckDev::renderForm( 'core_options_class', @$options2['rel'], $config, array( 'label'=>'Default Rel', 'defaultvalue'=>'', 'storage_field'=>'json[options2][rel]' ) );
+		echo JCckDev::renderForm( 'core_bool', $this->item->bool5, $config, array( 'label'=>'SHOW_PREVIEW', 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1', 'storage_field'=>'bool5' ) );
         echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
         echo JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config );
         echo JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config );

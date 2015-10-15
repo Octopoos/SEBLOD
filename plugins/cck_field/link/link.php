@@ -54,12 +54,14 @@ class plgCCK_FieldLink extends JCckPluginField
 			$default_text	=	( @$options2['def_text'] != '' ) ? $options2['def_text'] : '';
 			$default_class	=	( @$options2['class'] != '' ) ? $options2['class'] : '';
 			$default_target	=	( @$options2['target'] != '' ) ? $options2['target'] : '';
+			$default_rel	=	( @$options2['rel'] != '' ) ? $options2['rel'] : '';
 	
 			$value		=	JCckDev::fromJSON( $value );
 			$link		=	( @$value['link'] != '' ) ? $value['link'] : $default_link;
 			$text		=	( @$value['text'] != '' ) ? $value['text'] : ( ( $default_text ) ? $default_text : $link );	
 			$class		=	( @$value['class'] != '' ) ? $value['class'] : $default_class;	
 			$target		=	( @$value['target'] != '' ) ? $value['target'] : $default_target;
+			$rel		=	( @$value['rel'] != '' ) ? $value['rel'] : $default_rel;
 			$extension	=	array( '.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF' );
 
 			foreach ( $extension as $ext ){
@@ -70,9 +72,11 @@ class plgCCK_FieldLink extends JCckPluginField
 			$field->link		=	( strpos( $link, 'index.php' ) === 0 || $link[0] == '/' ) ? $link : ( ( strpos( $link, 'http://' ) === false && strpos( $link, 'https://' ) === false ) ? 'http://'.$link : $link );
 			$field->link_target	=	$target;
 			$field->link_class	=	$class;
+			$field->link_rel	=	$rel;
 			$field->linked		=	true;
 			$class				=	( $class != '' ) ? 'class="'.$class.'" ' : '';
-			$field->html		=	'<a href="'.$field->link.'" '.$class.'target="'.$field->link_target.'">'.$field->text.'</a>';
+			$rel				=	( $rel != '' ) ? ' rel="'.$rel.'"' : '';
+			$field->html		=	'<a href="'.$field->link.'" '.$class.'target="'.$field->link_target.'"'.$rel.'>'.$field->text.'</a>';
 			$field->typo_target	=	'text';
 		}
 	}
