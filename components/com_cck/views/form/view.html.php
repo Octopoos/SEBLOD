@@ -123,6 +123,9 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
+		if ( $app->input->get( 'tmpl' ) == 'component' || $app->input->get( 'tmpl' ) == 'raw' ) {
+			$params->set( 'show_page_heading', 0 );
+		}
 		
 		$this->config				=	&$config;
 		$this->data					=	&$data;
