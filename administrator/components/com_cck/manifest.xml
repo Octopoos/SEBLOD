@@ -16,6 +16,7 @@
 		<sql>
 			<file driver="mysql" charset="utf8">install/install.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/countries.sql</file>
+			<file driver="mysql" charset="utf8">install/sql/jobs.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/processings.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/sessions.sql</file>
 		</sql>
