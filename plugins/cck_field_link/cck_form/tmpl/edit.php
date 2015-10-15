@@ -25,6 +25,8 @@ JCckDev::initScript( 'link', $this->item );
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'form_fieldname' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Redirection', 'selectlabel'=>'Auto', 'options'=>'Inherited=-1', 'storage_field'=>'redirection' ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Redirection Custom Variables', 'storage_field'=>'redirection_custom' ) );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_attributes', '', $config, array( 'label'=>'Custom Attributes', 'storage_field'=>'attributes' ), array(), 'w100' );
@@ -47,8 +49,9 @@ JCckDev::initScript( 'link', $this->item );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('#form_edition').isVisibleWhen('form','');
+	$('#form_edition,#blank_li').isVisibleWhen('form','');
 	$('#form_fieldname').isVisibleWhen('form','-2');
 	$('#title_custom').isVisibleWhen('title','2',false);
+	$('#redirection_custom,#blank_li').isVisibleWhen('redirection','');
 });
 </script>

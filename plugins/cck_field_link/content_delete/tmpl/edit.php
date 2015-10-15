@@ -21,6 +21,8 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Redirection', 'selectlabel'=>'Auto', 'options'=>'Url=url', 'storage_field'=>'redirection' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Url', 'storage_field'=>'redirection_url' ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Redirection Custom Variables', 'storage_field'=>'redirection_custom' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'size'=>24, 'storage_field'=>'class' ) );
@@ -41,5 +43,6 @@ JCckDev::initScript( 'link', $this->item );
 jQuery(document).ready(function($) {
 	$('#title_custom').isVisibleWhen('title','2',false);
 	$('#redirection_url,#blank_li').isVisibleWhen('redirection','url');
+	$('#redirection_custom,#blank_li2').isVisibleWhen('redirection','');
 });
 </script>

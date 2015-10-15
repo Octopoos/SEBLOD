@@ -48,6 +48,14 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
 			$return		=	$app->input->get( 'return' );
 		} else {
+			$return2	=	$link->get( 'redirection_custom', '' );
+			if ( $return2 != '' ) {
+				if ( $return2[0] == '#' ) {
+					$uri	.=	$return2;
+				} else {
+					$uri	.=	( strpos( $return2, '?' ) !== false ? '&' : '?' ).$return2;
+				}
+			}
 			$return		=	base64_encode( $uri );
 		}
 		
