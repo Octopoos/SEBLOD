@@ -44,7 +44,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 			$value	=	'{load'.$mode.' '.$field->defaultvalue.$style.'}';
 
 			if ( $field->bool2 ) {
-				$form	=	JHtml::_( 'content.prepare', $value );
+				$value	=	JHtml::_( 'content.prepare', $value );
 			}
 		}
 		
