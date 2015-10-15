@@ -48,7 +48,8 @@ class plgSearchCCK extends JPlugin
 		if ( !is_object( $options ) ) {
 			$options	=	new JRegistry;
 		}
-		
+
+		$app			=	JFactory::getApplication();
 		$db				=	JFactory::getDbo();
 		$dispatcher		=	JDispatcher::getInstance();
 		$doClean		=	false;
@@ -56,6 +57,7 @@ class plgSearchCCK extends JPlugin
 		$doLimit		=	false;
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
+		$isLoadingMore	=	( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) > 0 ) ? 1 : 0;
 		$glues			=	1;
 		$order			=	'';
 		$order_string	=	'';
@@ -311,7 +313,8 @@ class plgSearchCCK extends JPlugin
 
 				if ( $doLimit ) {
 					$count	=	count( $results );
-					if ( $count < $config['limitend'] ) {
+
+					if ( $count < $config['limitend'] || $isLoadingMore ) {
 						$config['total']		=	$count;
 					} else {
 						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
@@ -320,11 +323,23 @@ class plgSearchCCK extends JPlugin
 						} else {
 							if ( JCck::on() ) {
 								$query1				=	(string)$query;
-								$query->clear( 'order' )->clear( 'limit' );
-								$query->clear( 'select' )->select( 'COUNT(t0.id)' );
-								$db->setQuery( $query );
-								$config['total']	=	$db->loadResult();
-								$query2				=	(string)$query;
+
+								if ( strpos( $query1, 'HAVING' ) !== false ) {
+									$query->clear( 'order' )->clear( 'limit' );
+
+									$query2				=	$db->getQuery( true );
+									$query2->select( 'COUNT(*)' );
+									$query2->from( '('.(string)$query.') AS Count' );
+									$db->setQuery( $query2 );
+									$config['total']	=	$db->loadResult();
+									$query2				=	(string)$query2;
+								} else {
+									$query->clear( 'order' )->clear( 'limit' );
+									$query->clear( 'select' )->select( 'COUNT(t0.id)' );
+									$db->setQuery( $query );
+									$config['total']	=	$db->loadResult();
+									$query2				=	(string)$query;
+								}
 							} else {
 								$query2				=	$db->getQuery( true );
 								$query2->select( 'COUNT(t0.id)' );
@@ -361,8 +376,8 @@ class plgSearchCCK extends JPlugin
 			if ( $query2 ) {
 				$query2	.=	'<br />';
 			}
-			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'LIMIT', 'UNION' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />LIMIT', '<br />UNION' ),
+			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'LIMIT', 'UNION', ') AS Count' ),
+							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
 							  $query1.'<br />'.$query2 ).'<br />';
 		}
 		
