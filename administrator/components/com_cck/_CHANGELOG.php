@@ -24,27 +24,40 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.8.0 Upgrade Release [xx-Sep-2014] -------------
+-------------------- 3.8.0 Upgrade Release [xx-Oct-2014] -------------
 
-! Performance improvements on Search system >> SQL queries refactored.
 ! Memory optimizations on List rendering.
-
+! Performance improvements on Search system >> SQL queries refactored.
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
+
 + "Count" (Auto / Estimate) parameter added on Search Types.
++ "Load" behaviour added to Infinite Pagination on Search Types.
+  >> support added on the following templates: Chart, Map.
 
 + Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
 + "Default Variation" parameter added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
++ "Auto Redirection (Vars)" added on Lists.
++ "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
++ "Rel" parameter added on Link plug-in.
+^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
+
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
-! One (seb_one) updated with "Inherited" variation parameter.
+! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
+^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
+^ One (seb_one) updated with "Inherited" variation parameter.
+^ "show_page_heading" parameter forced to 0 when tmpl=raw.
 
 # < p > removed from Freetexts field in install.sql
+# HTML output fixed on "Group X" (Form views) Field plug-ins when markup=none.
 # Improvements for upcoming eCommerce add-on.
 # Issues fixed on JCckContent class.
+# Maxlength validation fixed on Messages (Configuration) on back-end.
 # Missing Languages files (for Package Export) added.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
+# "Prepare Content" issue fixed on "Joomla! Module" plug-in >> "PrepareContent" method.
 # Processing Export issue fixed.
 # Syntax (replacement) issues fixed on "Email" plug-in.
 # Various improvements or issues fixed.
@@ -104,7 +117,7 @@ $ -> Language fix or change
 ^ JCckContent class updated >> "delete" method added and issues fixed.
 ^ Mobile Detect updated from 2.8.13 to 2.8.15.
 ^ Various Core improvements for upcoming Builder App.
-^ Various Script/Styles improvemented when tmpl=raw.
+^ Various Script/Styles improved when tmpl=raw.
 
 - Limit of characters removed in "Admin Menu" module.
 
