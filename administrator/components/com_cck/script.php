@@ -180,11 +180,17 @@ class com_cckInstallerScript
 			$db->execute();
 		}
 		
-		// CMS Autoloader
+		/* Todo: loop */
+		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
+		if ( JFile::exists( $src ) ) {
+			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
+			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
+		}
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
 		}
+		/* Todo: loop */
 		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 			jimport( 'cck.base.cck_5_2' );
 			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/php5.2/libraries/cms/cck/cck.php';
