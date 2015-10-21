@@ -26,6 +26,7 @@ class JFormFieldCCK extends JFormField
 		$name			=	(string)$this->element['construction'];
 		$name2			=	(string)$this->element['construction2'];
 		$options		=	isset( $this->element['cck_options'] ) ? (string)$this->element['cck_options'] : '';
+		$rows			=	isset( $this->element['rows'] ) ? (string)$this->element['rows'] : '';
 		$suffix			=	(string)$this->element['more'] ? '<span class="variation_value">'.(string)$this->element['more'].'</span>' : '';
 		$suffix2		=	(string)$this->element['more2'] ? '<span class="variation_value">'.(string)$this->element['more2'].'</span>' : '';
 		$selectlabel	=	isset( $this->element['cck_selectlabel'] ) ? (string)$this->element['cck_selectlabel'] : 'undefined';
@@ -77,6 +78,9 @@ class JFormFieldCCK extends JFormField
 		if ( $class != '' ) {
 			$field->css			=	$class;
 		}
+		if ( $rows != '' ) {
+			$field->rows		=	$rows;
+		}
 		$field					=	JCckDevField::get( $field, $this->value, $config, $inherit );
 		
 		$more			=	'';
@@ -88,9 +92,12 @@ class JFormFieldCCK extends JFormField
 			$more					=	$field2->form;
 		}
 		
-		$script	=	$this->_addScripts( $this->id, array( 'appendTo'=>(string)$this->element['js_appendto'],
-														  'isVisibleWhen'=>(string)$this->element['js_isvisiblewhen'],
-														  'isDisabledWhen'=>(string)$this->element['js_isdisabledwhen'] ), $format );
+		$script	=	$this->_addScripts( $this->id, array(
+													'appendTo'=>(string)$this->element['js_appendto'],
+													'isVisibleWhen'=>(string)$this->element['js_isvisiblewhen'],
+													'isDisabledWhen'=>(string)$this->element['js_isdisabledwhen'],
+													'replaceHtml'=>(string)$this->element['js_replacehtml']
+												   ), $format );
 		
 		return $field->form.$suffix.$more.$suffix2.$script;
 	}
@@ -102,6 +109,7 @@ class JFormFieldCCK extends JFormField
 		$js		=	'';		
 		$js2	=	'';
 		$js3	=	'';
+		$js4	=	'';
 		
 		// appendTo
 		if ( $events['appendTo'] ) {
@@ -154,9 +162,15 @@ class JFormFieldCCK extends JFormField
 			}
 		}
 		
+		// replaceHtml
+		if ( $events['replaceHtml'] ) {
+			$js4	=	'$("#'.$id.'").on( "focus", function(ev){ev.preventDefault(); var v = $(this).myVal(); v = v.replace(/\[\[/g, "<"); v = v.replace(/\]\]/g, ">"); $(this).val(v); });';
+			$js4	.=	'$("#'.$id.'").on( "blur", function(ev){ev.preventDefault(); var v = $(this).myVal(); v = v.replace(/\</g, "[["); v = v.replace(/\>/g, "]]"); $(this).val(v); });'; // v.replace(/</g, "[[");
+		}
+
 		// Set
-		if ( $js || $js2 || $js3 ) {
-			$js	=	'jQuery(document).ready(function($){'.$js.' '.$js2.' '.$js3.'});';
+		if ( $js || $js2 || $js3 || $js4 ) {
+			$js	=	'jQuery(document).ready(function($){'.$js.' '.$js2.' '.$js3.$js4.'});';
 			
 			if ( $format == 'raw' ) {
 				return '<script type="text/javascript">'.$js.'</script>';
