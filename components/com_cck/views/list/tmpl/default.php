@@ -158,8 +158,9 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 <?php if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) { ?>
 <script type="text/javascript">
 (function ($){
-	JCck.Core.loadmore = function(more,stop) {
+	JCck.Core.loadmore = function(more,stop,search) {
 		var elem = ".cck-loading-more";
+		var search = search || 0;
 		$.ajax({
 			cache: false,
 			data: "format=raw&infinite=1&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
@@ -172,7 +173,8 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 				} else {
 					$(".cck_page_list .pagination").hide();
 				}
-				$("#seblod_form_loading_more").hide(); $(elem).append(response);
+				$("#seblod_form_loading_more").hide();
+				if (search==1) { $(elem).html(response); } else { $(elem).append(response); }
 				<?php echo $this->callback_pagination ? $this->callback_pagination.'(response);' : ''; ?>
 			},
 			error:function(){}

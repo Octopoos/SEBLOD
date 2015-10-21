@@ -359,6 +359,9 @@ class Helper_Workshop
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
+											   /*
+											   JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
+											   */
 											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['match_mode']	=	array( JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),

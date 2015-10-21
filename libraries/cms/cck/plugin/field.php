@@ -875,7 +875,7 @@ class JCckPluginField extends JPlugin
 			if ( $html ) {
 				$field->form	.=	str_replace( $html, $html.' disabled="disabled"', $form );
 			}
-		} elseif ( $variation == 'form_filter' ) {
+		} elseif ( $variation == 'form_filter' || $variation == 'form_filter_ajax' ) {
 			$field->form	=	$form;
 			if ( isset( $config['submit'] ) && isset( $config['formId'] ) ) {
 				$parent		=	$config['formId'];
@@ -887,8 +887,12 @@ class JCckPluginField extends JPlugin
 			if ( $field->script ) {
 				self::g_addScriptDeclaration( $field->script );
 			}
-			self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
-		} elseif ( $variation == 'list' || $variation == 'list_filter' ) {
+			if ( $variation == 'form_filter_ajax' ) {
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var v=$(this).myVal(); JCck.Core.loadmore("&start=0&"+$(this).attr("name")+"="+v,0,1); });' );
+			} else {
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
+			}
+		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	'';
 			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
@@ -897,12 +901,16 @@ class JCckPluginField extends JPlugin
 				static $loaded	=	0;
 				if ( !$loaded ) {
 					$doc		=	JFactory::getDocument();
-					if ( $variation == 'list' ) {
-						$then	=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
+					$then		=	'';
+					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
+						if ( $variation == 'list_filter_ajax' ) {
+							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
+						}
+						$then	.=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
 						$then	=	' JCck.Core.submit("search");';
 					}
-					$js			=	'$("form#seblod_form").on("click", ".list-variation-items > li a", function() { $("#'.$id.'").val($(this).parent().attr("data-value"));'.$then.' });';
+					$js			=	'$("form#seblod_form").on("click", ".list-variation-items > li a", function() { var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js			=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
 					$doc->addScriptDeclaration( $js );
 					$loaded		=	1;

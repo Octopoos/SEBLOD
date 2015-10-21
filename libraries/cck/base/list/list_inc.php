@@ -97,10 +97,12 @@ $limitend	=	(int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 if ( $limitstart != -1 ) {
-	if ( $limitend != -1 ) {
-		$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+	if ( isset( $this ) ) {
+		if ( $limitend != -1 ) {
+			$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+		}
+		$limitend	=	(int)$this->state->get( 'limit' );
 	}
-	$limitend	=	(int)$this->state->get( 'limit' );
 }
 
 if ( !isset( $lives ) ) {
@@ -220,7 +222,7 @@ foreach ( $fields as $field ) {
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
 		
 	// Value
-	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'list' || $field->variation == 'list_filter' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
+	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
 	} else {
 		if ( isset( $lives[$name] ) ) {

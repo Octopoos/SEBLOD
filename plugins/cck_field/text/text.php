@@ -41,6 +41,9 @@ class plgCCK_FieldText extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
 	{
+		/*
+		$data['variation'][]	=	JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+		*/
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'custom_number', JText::_( 'COM_CCK_NUMBER' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'custom_url', JText::_( 'COM_CCK_URL' ) );

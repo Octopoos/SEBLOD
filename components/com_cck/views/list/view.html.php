@@ -98,7 +98,7 @@ class CCKViewList extends JViewLegacy
 		
 		// Pagination
 		$pagination	=	$params->get( 'show_pagination' );
-
+		
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
