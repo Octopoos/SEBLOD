@@ -80,6 +80,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 									   'wrapper'=>'row-fluid'
 								);
 			$this->html		=	array( 'filter_select_header'=>'<h4 class="page-header">'.JText::_( 'JSEARCH_FILTER_LABEL' ).'</h4>',
+									   'filter_select_header_custom'=>'<h4 class="page-header">*title*</h4>',
 									   'filter_select_separator'=>'<hr class="hr-condensed" />'
 								);
 			$this->js		=	array( 'filter'=>'jQuery(document).ready(function($) { $("#sidebar div.sidebar-nav").append("<hr />"); $("div.filter-select").appendTo("#sidebar div.sidebar-nav").removeClass("hidden-important");'
@@ -101,6 +102,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 									   'wrapper'=>'sebwrapper'
 								);
 			$this->html		=	array( 'filter_select_header'=>'',
+									   'filter_select_header_custom'=>'',
 									   'filter_select_separator'=>''
 								);
 			$this->js		=	array( 'filter'=>''
