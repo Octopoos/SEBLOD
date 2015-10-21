@@ -60,6 +60,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 		$items[$i]->author		=	0;
 		$items[$i]->cck			=	'';
 		$items[$i]->loc			=	$list['location'];
+		$items[$i]->parent		=	'';
 		$items[$i]->pid			=	0;
 		$items[$i]->pk			=	$i;
 		$items[$i]->pkb			=	0;
