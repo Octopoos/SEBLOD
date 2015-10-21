@@ -16,9 +16,15 @@ abstract class JCckEcommercePayment
 	// getGateway
 	public static function getGateway()
 	{
-		$name	=	JCckDatabase::loadResult( 'SELECT type FROM #__cck_more_ecommerce_gateways WHERE published = 1 ORDER BY id DESC' );
+		$user	=	JFactory::getUser();
+		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
+
+		$name	=	JCckDatabase::loadResult( 'SELECT type'
+											. ' FROM #__cck_more_ecommerce_gateways'
+											. ' WHERE published = 1 AND access IN ('.$access.')'
+											. ' ORDER BY id DESC' );
 		
-		return $name; /* JFactory::getApplication()->input->post->get( 'seb_order_gateway' ); */
+		return $name;
 	}
 }
 ?>
