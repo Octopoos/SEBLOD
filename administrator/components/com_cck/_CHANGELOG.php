@@ -24,7 +24,7 @@ $ -> Language fix or change
 
 @ID is the ID on SEBLOD Tracker.
 
--------------------- 3.8.0 Upgrade Release [xx-Oct-2014] -------------
+-------------------- 3.8.0 Upgrade Release [xx-Nov-2014] -------------
 
 ! Memory optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
@@ -45,14 +45,19 @@ $ -> Language fix or change
 
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
++ js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
+
++ "Add to Cart" permission added.
++ Various Improvements for upcoming SEBLOD eCommerce add-on.
+
 ! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
+
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ "show_page_heading" parameter forced to 0 when tmpl=raw.
 
 # < p > removed from Freetexts field in install.sql
 # HTML output fixed on "Group X" (Form views) Field plug-ins when markup=none.
-# Improvements for upcoming eCommerce add-on.
 # Issues fixed on JCckContent class.
 # Maxlength validation fixed on Messages (Configuration) on back-end.
 # Missing Languages files (for Package Export) added.
