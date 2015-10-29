@@ -15,7 +15,7 @@ final class JCckVersion
 {
 	public $RELEASE = '3.7';
 	
-	public $DEV_LEVEL = '5';
+	public $DEV_LEVEL = '6';
 
 	public $DEV_STATUS = '';
 	
