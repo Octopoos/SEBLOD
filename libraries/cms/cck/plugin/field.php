@@ -773,6 +773,19 @@ class JCckPluginField extends JPlugin
 			require_once JPATH_PLUGINS.'/cck_storage/'.$storage.'/'.$storage.'.php';
 			JCck::callFunc_Array( 'plgCCK_Storage'.$storage, 'onCCK_StoragePrepareStore', array( &$field, $value, &$config ) );
 		}
+
+		/*
+		$field->state		=	1;
+		
+		// Restriction
+		if ( isset( $field->restriction ) && $field->restriction ) {
+			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareForm', array( &$field, &$config ) );
+			if ( !$field->authorised ) {
+				$field->display	=	0;
+				$field->state	=	0;
+			}
+		}
+		*/
 	}
 	
 	// g_onCCK_FieldPrepareStore_X

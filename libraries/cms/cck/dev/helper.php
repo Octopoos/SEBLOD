@@ -40,6 +40,12 @@ abstract class JCckDevHelper
 		return round( $bytes, $precision ).' '.$units[$pow];
 	}
 	
+	// getAbsoluteUrl
+	public static function getAbsoluteUrl( $itemId )
+	{
+		return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) );
+	}
+	
 	// getBranch
 	public static function getBranch( $table, $pk )
 	{
@@ -242,13 +248,16 @@ abstract class JCckDevHelper
 		}
 		if ( $str != '' ) {
 			$str	=	str_replace( '$uri-&gt;get', '$uri->get', $str );
+			
 			if ( strpos( $str, '$uri->get' ) !== false ) {
 				$matches	=	'';
 				$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 				preg_match_all( $search, $str, $matches );
+				
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $k=>$v ) {
 						$variable	=	$matches[2][$k];
+						
 						if ( $v == 'Current' ) {
 							$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
 							$str		=	str_replace( $matches[0][$k], $request, $str );
@@ -256,6 +265,7 @@ abstract class JCckDevHelper
 							$value				=	'';
 							$custom_v			=	'';
 							static $custom_vars	=	array();
+							
 							if ( !isset( $custom_vars[$name] ) ) {
 								$custom_vars[$name]	=	explode( '&', $str );
 							}
@@ -277,7 +287,12 @@ abstract class JCckDevHelper
 							$str		=	str_replace( '&'.$custom_v.'='.$matches[0][$k], $value, $str );
 						} else {
 							$request	=	'get'.$v;
-							$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
+							
+							if ( $v == 'Int' ) {
+								$str		=	str_replace( $matches[0][$k], (int)$app->input->$request( $variable, '' ), $str );
+							} else {
+								$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
+							}
 						}
 					}
 				}
