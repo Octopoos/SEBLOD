@@ -702,6 +702,12 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// access
+	public static function access( $pk )
+	{
+		return JCckDatabaseCache::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.self::$key.' = '.$pk.' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')' );
+	}
+	
 	// authorise
 	public static function authorise( $rule, $pk )
 	{
