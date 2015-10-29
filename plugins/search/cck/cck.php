@@ -313,8 +313,8 @@ class plgSearchCCK extends JPlugin
 
 				if ( $doLimit ) {
 					$count	=	count( $results );
-
-					if ( $count < $config['limitend'] || $isLoadingMore ) {
+					
+					if ( ( $count < $config['limitend'] && !$config['limitstart'] ) || $isLoadingMore ) {
 						$config['total']		=	$count;
 					} else {
 						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
