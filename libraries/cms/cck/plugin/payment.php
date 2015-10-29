@@ -15,8 +15,56 @@ class JCckPluginPayment extends JPlugin
 {
 	protected static $construction	=	'cck_ecommerce_payment';
 	
+	// g_onCCK_PaymentValidate
+	public static function g_onCCK_PaymentValidate( $data, $success, &$config )
+	{
+		$update	=	'pay_return = "'.JCckDatabase::escape( json_encode( $data['order'] ) ).'",'
+				.	'pay_return_payments = "'.JCckDatabase::escape( json_encode( $data['payments'] ) ).'",'
+				.	'state = '.$data['order_state'];
+
+		JCckDatabase::execute( 'UPDATE #__cck_more_ecommerce_orders SET '.$update.' WHERE pay_key = "'.$config['pay_key'].'"' );
+
+		if ( !$success ) {
+			return;
+		}
+
+		// Cart
+		$cart_id	=	(int)JCckDatabase::loadResult( 'SELECT a.id FROM #__cck_more_ecommerce_carts AS a WHERE a.pay_key = "'.$config['pay_key'].'"' );
+		
+		if ( $cart_id ) {
+			JCckDatabase::execute( 'UPDATE #__cck_more_ecommerce_carts SET pay_key = "" WHERE id = '.$cart_id );
+			JCckDatabase::execute( 'DELETE a.* FROM #__cck_more_ecommerce_cart_product AS a WHERE a.cart_id = '.$cart_id );
+		}
+
+		// Execute Processings (Invoice, Notifications, ...)
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event      =   'onCckPaymentSuccess';
+			$processing =   JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// g_addProcess
+	public static function g_addProcess( $event, $type, &$config, $params )
+	{
+		if ( $event && $type ) {
+			$process						=	new stdClass;
+			$process->group					=	self::$construction;
+			$process->type					=	$type;
+			$process->params				=	$params;
+			$config['process'][$event][]	=	$process;
+		}
+	}
+
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{

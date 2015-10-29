@@ -148,7 +148,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$type] ) ) {
-			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options'
+			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options, token'
 																. ' FROM #__cck_more_ecommerce_gateways WHERE type = "'.$type.'"' );
 			$cache[$type]->options	=	new JRegistry( $cache[$type]->options );
 		}

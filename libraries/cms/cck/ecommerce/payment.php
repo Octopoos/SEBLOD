@@ -26,5 +26,20 @@ abstract class JCckEcommercePayment
 		
 		return $name;
 	}
+
+	// getListenUrl
+	public static function getListenUrl( $gateway )
+	{
+		$url	=	JUri::root();
+		$url	.=	( $url[strlen($url)-1] == '/' ? '' : '/' );
+
+		if ( !JFactory::getApplication()->get( 'sef_rewrite' ) ) {
+			$url	.=	'index.php/';
+		} 
+
+		$url	.=	'listen/'.$gateway->token;
+
+		return $url;
+	}
 }
 ?>
