@@ -43,6 +43,7 @@ $ -> Language fix or change
 + "Rel" parameter added on Link plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
 
++ "Export", "Process" tasks (Submit Button) support added on Content views.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 
 + js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
