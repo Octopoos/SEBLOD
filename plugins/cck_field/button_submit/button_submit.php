@@ -83,6 +83,71 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+
+		// Init
+		$id				=	$field->name;
+		$form_id		=	$field->name.'_form';
+		$name			=	$field->name;
+		$value			=	$field->label;
+		$field->label	=	'';
+
+		// Prepare
+		$pre_task	=	'';
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
+		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
+		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
+		
+		if ( $task_id ) {
+			$pre_task	=	htmlspecialchars( 'jQuery("#'.$form_id.'").append(\'<input type="hidden" name="tid" value="'.$task_id.'">\');' );
+		}
+		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
+		
+		if ( $task == 'export' || $task == 'process' ) {
+			$click	=	'';
+		} else {
+			echo 'This task is not supported on the Content view.';
+
+			$field->html	=	'';
+			$field->value	=	'';
+
+			return;
+		}
+		
+		$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
+		if ( $field->bool ) {
+			$label	=	$value;
+			if ( JCck::on() ) {
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$attr		.=	' title="'.$value.'"';
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+				}
+			}
+			$type	=	( $field->bool7 == 1 || !$click ) ? 'submit' : 'button';
+			$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
+			$tag	=	'button';
+		} else {
+			$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+			$tag	=	'input';
+		}
+
+		if ( $form != '' ) {
+			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$form_id.'" name="'.$form_id.'">'
+					.	$form
+					.	'<input type="hidden" name="task" value="'.$task.'" />'
+					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
+					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
+					.	JHtml::_( 'form.token' )
+					.	'</form>';
+		}
+
+		// Set
+		$field->html	=	$form;
+		$field->value	=	'';
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -257,7 +322,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
-		return parent::g_onCCK_FieldRenderContent( $field );
+		return parent::g_onCCK_FieldRenderContent( $field, 'html' );
 	}
 	
 	// onCCK_FieldRenderForm
