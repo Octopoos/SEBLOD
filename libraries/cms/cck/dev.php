@@ -354,7 +354,7 @@ abstract class JCckDev
 						var eid = "'.$elem->id.'";
 						var elem = "'.$elem->id.'_'.$type.'_options";
 						var encoded = parent.jQuery("#"+elem).val();
-						var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
+						var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
 						if (data) {
 							$.each(data, function(k, v) {
 								if(!$("#"+k).length) {
