@@ -96,9 +96,36 @@ class JCckPluginLink extends JPlugin
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $k=>$v ) {
 					$variable	=	$matches[2][$k];
+
 					if ( $v == 'Current' ) {
 						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
 						$custom		=	str_replace( $matches[0][$k], $request, $custom );						
+					} elseif ( $v == 'Array' ) {
+						$name				=	$field->name;
+						$value				=	'';
+						$custom_v			=	'';
+						static $custom_vars	=	array();
+						
+						if ( !isset( $custom_vars[$name] ) ) {
+							$custom_vars[$name]	=	explode( '&', $custom );
+						}
+						if ( count( $custom_vars[$name] ) ) {
+							foreach ( $custom_vars[$name] as $custom_var ) {
+								if ( strpos( $custom_var, $matches[0][$k] ) !== false ) {
+									$custom_v	=	substr( $custom_var, 0, strpos( $custom_var, '=' ) );
+								}
+							}
+						}
+						if ( $custom_v != '' ) {
+							$values		=	$app->input->get( $variable, '', 'array' );
+							if ( is_array( $values ) && count( $values ) ) {
+								foreach ( $values as $val ) {
+									$value	.=	'&'.$custom_v.'[]='.$val;
+								}
+							}
+						}
+						
+						$custom		=	str_replace( '&'.$custom_v.'='.$matches[0][$k], $value, $custom );
 					} else {
 						$request	=	'get'.$v;
 						$custom		=	str_replace( $matches[0][$k], urlencode( $app->input->$request( $variable, '' ) ), $custom );
