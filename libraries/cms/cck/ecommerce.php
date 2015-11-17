@@ -81,12 +81,16 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, multicart, multistore, ordering, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_shipping, request_shipping_field, request_state_id'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, formula, multicart, multistore, ordering, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_shipping, request_shipping_field, request_state_id'
 															. ' FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.$name.'"' );
 			if ( strpos( $definitions[$name]->request_payment_field, '$' ) !== false ) {
 				$definitions[$name]->request_payment_field	=	str_replace( '$', strtolower( JCckEcommerce::getCurrency()->code ), $definitions[$name]->request_payment_field );
 			}
 			$definitions[$name]->request_state	=	0;
+			
+			if ( $definitions[$name]->formula != '' ) {
+				$definitions[$name]->formula		=	JCckEcommerceCart::prepareFormula( $definitions[$name]->formula );
+			}
 			if ( $definitions[$name]->request_state_id ) {
 				$definitions[$name]->request_state	=	JCckDatabase::loadResult( 'SELECT value FROM #__cck_more_ecommerce_order_states WHERE id = '.(int)$definitions[$name]->request_state_id );
 			}
@@ -140,6 +144,23 @@ abstract class JCckEcommerce
 		return $currency;
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Orders
+
+	// getOrderByPayKey
+	public static function getOrderByPayKey( $pay_key )
+	{
+		static $cache	=	array();
+		
+		if ( !isset( $cache[$pay_key] ) ) {
+			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.info_billing'
+															. ' FROM #__cck_more_ecommerce_orders AS a'
+															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
+															. ' WHERE a.pay_key = "'.$pay_key.'"' );
+		}
+
+		return $cache[$pay_key];
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Payments
 
 	// getGateway
@@ -159,14 +180,17 @@ abstract class JCckEcommerce
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Products
 
 	// getTotal
-	public static function getTotal( $items, $target = 'price' )
+	public static function getTotal( $items, $cart_type )
 	{
-		$total	=	0;
-
+		$cart_definition	=	self::getCartDefinition( $cart_type );
+		$total				=	0;
+		
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$qty	=	$item->quantity;
-				$total	+=	$item->price * $qty;
+				if ( !empty( $cart_definition->formula ) ) {
+					$item->price	=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );	/* Alter Price */
+				}
+				$total	+=	$item->price * $item->quantity;	/* Alter Price */
 			}
 		}
 		

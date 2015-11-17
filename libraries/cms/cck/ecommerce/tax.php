@@ -14,10 +14,10 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceTax
 {
 	// apply
-	public static function apply( $type, &$total )
+	public static function apply( $type, &$total, $params = array() )
 	{
 		$user		=	JCck::getUser();
-		$my_groups	=	$user->getAuthorisedGroups();
+		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
 		$my_zones	=	JCckEcommerce::getUserZones();
 
 		$currency	=	JCckEcommerce::getCurrency();
@@ -27,6 +27,15 @@ abstract class JCckEcommerceTax
 
 		if ( count( $taxes ) ) {
 			foreach ( $taxes as $p ) {
+				if ( isset( $params['target'] ) && $params['target'] ) {
+					if ( $params['target'] == 'order' && $p->target == 0 ) {
+						// OK
+					} elseif ( $params['target'] == 'product' && $p->target == 1 ) {
+						// OK
+					} else {
+						continue;
+					}
+				}
 				$groups		=	explode( ',', $p->groups );
 				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {

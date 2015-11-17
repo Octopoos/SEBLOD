@@ -16,9 +16,8 @@ abstract class JCckEcommercePromotion
 	// apply
 	public static function apply( $type, &$total, $params = array() )
 	{
-		
 		$user		=	JCck::getUser();
-		$my_groups	=	$user->getAuthorisedGroups();
+		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
 		
 		$currency	=	JCckEcommerce::getCurrency();
 		$discount	=	'';
