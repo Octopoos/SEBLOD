@@ -19,6 +19,7 @@ JCckDev::initScript( 'restriction', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_location2', '', $config, array( 'label'=>'Location' ) );
 		echo JCckDev::renderForm( 'core_action2', '', $config );
+		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
         ?>
     </ul>
 </div>

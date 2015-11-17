@@ -59,7 +59,8 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		$app		=	JFactory::getApplication();
 		$action		=	$restriction->get( 'action', '' );
 		$location	=	$restriction->get( 'location', '' );
-
+		$type		=	$restriction->get('form', '');
+		
 		if ( $location ) {
 			if ( !$app->{'is'.$location}() ) {
 				$field->display	=	0;
@@ -75,6 +76,13 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 			}
 		}
 		
+		if ( $type ) {
+			if ( $type != $config['type'] ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
+
 		return true;
 	}
 }
