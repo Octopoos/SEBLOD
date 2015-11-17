@@ -25,6 +25,7 @@ class JCckContent
 	protected $_instance_base		=	'';
 	protected $_instance_core		=	'';
 	protected $_instance_more		=	'';
+	protected $_instance_more2		=	'';
 	
 	// __construct
 	public function __construct( $identifier = '', $data = true )
@@ -53,7 +54,7 @@ class JCckContent
 	}
 	
 	// create
-	public function create( $cck, $data_content, $data_more = null )
+	public function create( $cck, $data_content, $data_more = null, $data_more2 = null )
 	{
 		if ( $this->_id ) {
 			return;
@@ -64,6 +65,7 @@ class JCckContent
 		if ( empty( $this->_object ) ) {
 			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			$this->_columns		=	$this->_getProperties();
+			$this->_table		=	$this->_columns['table'];
 		}
 		
 		$this->_instance_core	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
@@ -109,6 +111,20 @@ class JCckContent
 			unset( $data_more['id'] );
 			
 			if ( !( $this->save( 'more', $data_more ) ) ) {
+				return false;
+			}
+		}
+
+		if ( is_array( $data_more2 ) && count( $data_more2 ) ) {
+			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ) );
+			$this->_instance_more2->load( $this->_pk, true );
+
+			if ( !isset( $data_more2['cck'] ) ) {
+				$data_more2['cck']	=	$this->_type;
+			}
+			unset( $data_more2['id'] );
+			
+			if ( !( $this->save( 'more2', $data_more2 ) ) ) {
 				return false;
 			}
 		}
@@ -298,6 +314,8 @@ class JCckContent
 					}
 					break;
 				case 'more':
+				case 'more2':
+				default:
 					break;
 			}
 		}
