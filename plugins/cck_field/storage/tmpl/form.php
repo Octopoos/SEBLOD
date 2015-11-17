@@ -74,6 +74,9 @@ $js		=	'
 					$("#storage_table").hide();
 				}
 				$("#op-"+v).show();
+				if ($("#storage").val() == "none"){
+					$(".storage-cck-more").attr("disabled","disabled"); $(".storage-cck-more").parent().hide();
+				}
 				if ($("#jform_id").val()==0){
 					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
 						$(".storage-cck-more").parent().remove();
