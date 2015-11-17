@@ -61,6 +61,12 @@ abstract class JCckEcommerce
 		return ( self::getConfig_Param( 'uix', '' ) == 'nano' ) ? 'compact' : 'full';
 	}
 
+	// isOffline
+	public static function isOffline()
+	{
+		return ( ( self::getConfig_Param( 'offline' ) == 1 || ( self::getConfig_Param( 'offline' ) == 2 && !JFactory::getUser()->authorise( 'core.admin' ) ) ) ) ? true : false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Cart
 	
 	// getCart
