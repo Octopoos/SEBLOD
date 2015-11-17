@@ -13,6 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckDevHelper
 abstract class JCckDevHelper
 {
+	// alterTableAddColumn
+	public static function alterTableAddColumn( $table, $column, $column_prev = '', $type = 'VARCHAR(50)' )
+	{
+		$db			=	JFactory::getDbo();
+		$columns	=	$db->getTableColumns( $table );
+
+		if ( $column_prev != '' && $column != $column_prev ) {
+			if ( !isset( $columns[$column] ) ) {
+				JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' CHANGE '.JCckDatabase::quoteName( $column_prev ).' '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL' );
+			}
+		} elseif ( !isset( $columns[$column] ) ) {
+			JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL' );
+		}
+	}
+
 	// createFolder
 	public static function createFolder( $path, $mode = 0755 )
 	{
@@ -25,6 +40,19 @@ abstract class JCckDevHelper
 		}
 		
 		return $path;
+	}
+
+	// explode
+	public static function explode( $delimiters, $string, $limit = null, $replace = array( 'search'=>array( ' ', "\r" ), 'replace'=>'' ) )
+	{
+		if ( is_array( $replace ) && isset( $replace['search'] ) && isset( $replace['replace'] ) ) {
+			$string		=	str_replace( $replace['search'], $replace['replace'], $string );
+		}
+
+		$string		=	str_replace( $delimiters, '||', $string );
+		$list		=	explode( '||', $string );
+		
+		return $list;
 	}
 
 	// formatBytes
@@ -325,6 +353,12 @@ abstract class JCckDevHelper
 		}
 
 		return $str;
+	}
+
+	// secureField
+	public static function secureField( $field, $value )
+	{
+		JFactory::getSession()->set( 'cck_hash_live_'.$field->name, JApplication::getHash( $value ) );
 	}
 
 	// setDynamicVars
