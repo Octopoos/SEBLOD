@@ -22,7 +22,7 @@ class CCKViewCck extends JCckBaseLegacyView
         $buttons        =   array();
         if ( JCck::getUIX() == 'compact' ) {
             $core       =   array(
-                                array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_' )
+                                array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_', 'img'=>'cck-form' )
                             );
         } else {
             $core       =   array(
@@ -38,6 +38,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                                         . ' FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
                                                         . ' WHERE a.link LIKE "index.php?option=com_cck\_%"'
                                                         . ' AND a.link NOT IN ("index.php?option=com_cck_ecommerce&view=listen","index.php?option=com_cck_toolbox&view=processing","index.php?option=com_cck_webservices&view=api")'
+                                                        . ' AND b.enabled = 1'
                                                         . ' ORDER BY a.title ASC' );
         $groupedButtons =   array();
         $more           =   array(
