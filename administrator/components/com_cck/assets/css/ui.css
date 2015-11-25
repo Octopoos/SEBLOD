@@ -361,6 +361,7 @@ ul.adminformlist li div.button2-left {
 div.full div.togglebar{position:relative; left: 91px; padding-top: 14px; float:left;}
 body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important; padding: 0;}
 div.compact div.togglebar{position:relative; left: 200px; padding-top: 14px;}
+body.com_cck div.compact div.togglebar{left: 0px; top:6px; float:none; width:500px; margin: 0 auto!important; padding: 0;}
 div.togglebar > div{float:left; position:relative;}
 div.togglebar fieldset#layer{margin-left: 10px;float:left;}
 ul.spe, ul.spe li{list-style: none outside none; margin: 0; padding: 0;}

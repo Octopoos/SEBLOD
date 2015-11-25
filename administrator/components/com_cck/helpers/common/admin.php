@@ -26,14 +26,17 @@ class CommonHelper_Admin
 	}
 	
 	// addIcon
-	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left' )
+	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left', $div = '' )
 	{
+		if ( $div == '' ) {
+			$div	=	'3';
+		}
 		if ( $size == 48 ) {
 			$class	=	'icon icon-rounded';
-			$class2	=	'wrapper-icon span3';
+			$class2	=	'wrapper-icon span'.$div;
 		} else {
 			$class	=	'icon icon-rounded icon_small icon_small_'.$align;
-			$class2	=	'wrapper-icon half span3';
+			$class2	=	'wrapper-icon half span'.$div;
 		}
 		$target	=	( strpos( $link, 'http://' ) !== false ) ? '_blank' : '_self';
 		if ( $text == 'spacer' ) {
