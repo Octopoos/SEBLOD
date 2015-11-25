@@ -76,6 +76,8 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 			$value	=	array( 2 );
 		} elseif ( $value && is_string( $value ) && strpos( $value, ',' ) !== false ) {
 			$value	=	explode( ',', $value );
+		} elseif ( is_null( $value ) ) {
+			$value	=	$field->defaultvalue;
 		}
 		if ( ! is_array( $value ) ) {
 			$value	=	array( $value );
