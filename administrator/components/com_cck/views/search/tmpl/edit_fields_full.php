@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+$db         =   JFactory::getDbo();
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
@@ -80,10 +81,12 @@ $positions	=	array();
                 echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
                 $data['tables'] =   array();
+                $prefix         =   $db->getPrefix();
+                $tables         =   $db->getTableList();
                 $style          =	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
                 foreach ( $this->fieldsAv as $field ) {
                     if ( $field->storage_table != '' ) {
-                        if ( !isset( $data['tables'][$field->storage_table] ) ) {
+                        if ( !isset( $data['tables'][$field->storage_table] ) && in_array( str_replace( '#__', $prefix, $field->storage_table ), $tables ) ) {
                             $data['tables'][$field->storage_table]  =   JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
                         }
                         if ( @$field->match_mode == '' && isset( $data['tables'][$field->storage_table][$field->storage_field] ) ) {
