@@ -153,7 +153,7 @@ abstract class JCckEcommerce
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Orders
 
 	// getOrderByPayKey
-	public static function getOrderByPayKey( $pay_key )
+	public static function getOrderByPayKey( $pay_key, $isCached = true )
 	{
 		static $cache	=	array();
 		
@@ -162,6 +162,13 @@ abstract class JCckEcommerce
 															. ' FROM #__cck_more_ecommerce_orders AS a'
 															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
 															. ' WHERE a.pay_key = "'.$pay_key.'"' );
+			if ( !$isCached ) {
+				$temp	=	$cache[$pay_key];
+				
+				unset( $cache[$pay_key] );
+
+				return $temp;
+			}
 		}
 
 		return $cache[$pay_key];
@@ -186,17 +193,50 @@ abstract class JCckEcommerce
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Products
 
 	// getTotal
-	public static function getTotal( $items, $cart_type )
+	public static function getTotal( $items, $cart_type, $params = array() )
 	{
+		$apply_promotions	=	false;
+		$apply_taxes		=	false;
 		$cart_definition	=	self::getCartDefinition( $cart_type );
 		$total				=	0;
 		
+		if ( isset( $params['apply_promotions'] ) ) {
+			$apply_promotions	=	$params['apply_promotions'];
+
+			unset( $params['apply_promotions'] );
+		}
+		if ( isset( $params['apply_taxes'] ) ) {
+			$apply_taxes		=	$params['apply_taxes'];
+
+			unset( $params['apply_taxes'] );
+		}
+		$params['target']	=	'product';
+		
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				if ( !empty( $cart_definition->formula ) ) {
-					$item->price	=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );	/* Alter Price */
+				$options	=	$params;
+				$price		=	$item->price;
+				
+				// Taxes
+				if ( $apply_taxes ) {
+					JCckEcommerceTax::apply( '', $price, $options );
 				}
-				$total	+=	$item->price * $item->quantity;	/* Alter Price */
+				
+				// Formula
+				if ( !empty( $cart_definition->formula ) ) {
+					$item->price	=	$price;
+					$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
+				}
+				
+				// Promotions
+				if ( $apply_promotions ) {
+					$options['target_id']	=	$item->product_id;
+
+					JCckEcommercePromotion::apply( '', $price, $options );
+				}
+				
+				// Quantity /* Alter Price */
+				$total	+=	$price * $item->quantity;
 			}
 		}
 		

@@ -13,6 +13,41 @@ defined( '_JEXEC' ) or die;
 // JCckEcommerceCart
 abstract class JCckEcommerceCart
 {
+	// _compute
+	protected static function _compute( $math, $parts, $item )
+	{
+		$doMath	=	true;
+
+		if ( !is_numeric( $parts[0] ) ) {
+			if ( isset( $item->{$parts[0]} ) && $item->{$parts[0]} != '' ) {
+				$parts[0]	=	$item->{$parts[0]};
+			} else {
+				$doMath	=	false;
+			}
+		}
+		if ( !is_numeric( $parts[1] ) ) {
+			if ( isset( $item->{$parts[1]} ) && $item->{$parts[1]} != '' ) {
+				$parts[1]	=	$item->{$parts[1]};
+			} else {
+				$doMath	=	false;
+			}
+		}
+		if ( $doMath ) {
+			switch ( $math ) {
+				case '*':
+					return ( $parts[0] * $parts[1] );
+					break;
+				case '/':
+					return ( $parts[0] / $parts[1] );
+					break;
+				default:
+					break;
+			}
+		}
+
+		return 1;
+	}
+
 	// computeItem
 	public static function computeItem( $item, $formula )
 	{
@@ -28,7 +63,15 @@ abstract class JCckEcommerceCart
 					$do	=	$f->value;
 				} else {
 					if ( $f->type == 'dynamic' ) {
-						$value	=	( isset( $item->{$f->value} ) && $item->{$f->value} != '' ) ? $item->{$f->value} : 1;
+						if ( strpos( $f->value, '*' ) !== false ) {
+							$parts	=	explode( '*', $f->value );
+							$value	=	self::_compute( '*', $parts, $item );
+						} elseif ( strpos( $f->value, '/' ) !== false ) {
+							$parts	=	explode( '/', $f->value );
+							$value	=	self::_compute( '/', $parts, $item );
+						} else {
+							$value	=	( isset( $item->{$f->value} ) && $item->{$f->value} != '' ) ? $item->{$f->value} : 1;
+						}
 					} else {
 						$value	=	$f->value;
 					}
@@ -86,7 +129,7 @@ abstract class JCckEcommerceCart
 
 		if ( $formula != '' ) {
 			$matches	=	'';
-			$search		=	'#(\[([a-zA-Z0-9_]*)\])|([\*\/])|([0-9].*)#';
+			$search		=	'#(\[([a-zA-Z0-9_\*\/]*)\])|([\*\/])|([0-9].*)#';
 			preg_match_all( $search, $formula, $matches );
 			
 			if ( count( $matches[0] ) ) {
@@ -112,7 +155,7 @@ abstract class JCckEcommerceCart
 				}
 			}
 		}
-
+		
 		return $parts;
 	}
 }

@@ -20,8 +20,10 @@ abstract class JCckEcommercePromotion
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
 		
 		$currency	=	JCckEcommerce::getCurrency();
-		$discount	=	'';
 		$promotions	=	JCckEcommerce::getPromotions( $type );
+		$res		=	0;
+		$results	=	array( 'items'=>array() );
+		$text		=	'';
 		
 		if ( count( $promotions ) ) {
 			foreach ( $promotions as $p ) {
@@ -60,26 +62,41 @@ abstract class JCckEcommercePromotion
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->discount ) {
 						case 'free':
-							$discount	=	'FREE';
-							$total		=	0;
+							$promotion			=	0;
+							$res				=	$promotion;
+							$text				=	JText::_( 'COM_CCK_FREE' );
+							$total				=	$promotion;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>'', 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 							break;
 						case 'minus':
-							$discount	=	'- '.$currency->lft.number_format( $p->discount_amount, 2 ).$currency->rgt;
-							$total		-=	$p->discount_amount;
+							$promotion			=	$p->discount_amount * -1;
+							$res				+=	$promotion;
+							$text				=	'- '.$currency->lft.number_format( $p->discount_amount, 2 ).$currency->rgt;
+							$total				+=	$promotion;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 							break;
 						case 'percentage':
-							$discount	=	'- '.$p->discount_amount.' %';
-							$total		=	$total - ( $total * $p->discount_amount / 100 );
+							$promotion			=	$total * $p->discount_amount / 100;
+							$res				=	$promotion;
+							$text				=	'- '.$p->discount_amount.' %';
+							$total				=	$total - $promotion;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 							break;
 						default:
 							break;
 					}
-					
 				}
 			}
 		}
-		
-		return (string)$discount;
+
+		if ( $res ) {
+			$results['text']	=	$text;
+			$results['total']	=	(float)$res;
+
+			return (object)$results;
+		}
+
+		return null;
 	}
 
 	// count

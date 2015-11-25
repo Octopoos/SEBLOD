@@ -21,8 +21,9 @@ abstract class JCckEcommerceTax
 		$my_zones	=	JCckEcommerce::getUserZones();
 
 		$currency	=	JCckEcommerce::getCurrency();
+		$res		=	0;
+		$results	=	array( 'items'=>array() );
 		$tax		=	'';
-		$taxed		=	0;
 		$taxes		=	JCckEcommerce::getTaxes( $type, $my_zones );
 
 		if ( count( $taxes ) ) {
@@ -41,14 +42,16 @@ abstract class JCckEcommerceTax
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->tax ) {
 						case 'plus':
-							$tax		=	$p->tax_amount;
-							$taxed		+=	$tax;
-							$total		+=	$tax;
+							$tax				=	$p->tax_amount;
+							$res				+=	$tax;
+							$total				+=	$tax;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
 							break;
 						case 'percentage':
-							$tax		=	$total * $p->tax_amount / 100;
-							$taxed		+=	$tax;
-							$total		+=	$tax;
+							$tax				=	$total * $p->tax_amount / 100;
+							$res				+=	$tax;
+							$total				+=	$tax;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
 							break;
 						default:
 							break;
@@ -58,7 +61,13 @@ abstract class JCckEcommerceTax
 			}
 		}
 
-		return (string)$taxed;
+		if ( $res ) {
+			$results['total']	=	(float)$res;
+
+			return (object)$results;
+		}
+
+		return null;
 	}
 }
 ?>
