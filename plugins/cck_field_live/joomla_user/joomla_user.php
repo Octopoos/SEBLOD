@@ -29,8 +29,10 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 		$options	=	parent::g_getLive( $field->live_options );
 		
 		// Prepare
+		$default	=	$options->get( 'default_value', '' );
 		$excluded	=	$options->get( 'excluded' );
 		$property	=	$options->get( 'property' );
+
 		if ( $property ) {
 			$user	=	JCck::getUser();
 			if ( $user->id > 0 && $user->guest == 1 ) {
@@ -45,7 +47,7 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 					$viewlevels	=	array_diff( $viewlevels, $excluded );
 				}
 				if ( empty( $viewlevels ) ) {
-					$live	=	$options->get( 'default_value', '' );
+					$live	=	$default;
 				} else {
 					$live	=	implode( ',', $viewlevels );	
 				}
@@ -57,11 +59,15 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 						$live		=	array_diff( $live, $excluded );
 					}
 					if ( empty( $live ) ) {
-						$live	=	$options->get( 'default_value', '' );
+						$live	=	$default;
 					} else {
 						$live	=	implode( ',', $live );	
 					}
+				} elseif ( $live == '' ) {
+					$live	=	$default;
 				}
+			} else {
+				$live	=	$default;
 			}
 		}
 		

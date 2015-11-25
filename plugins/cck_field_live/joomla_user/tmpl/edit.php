@@ -27,6 +27,6 @@ JCckDev::initScript( 'live', $this->item );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('#excluded,#default_value').isVisibleWhen('property','access,groups');
+	$('#excluded').isVisibleWhen('property','access,groups');
 });
 </script>
