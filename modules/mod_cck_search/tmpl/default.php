@@ -30,7 +30,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] !
 <?php echo $config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $config['action'] ) ? $config['action'] : '<form action="'.JRoute::_( 'index.php?option=com_cck'.$action_vars ).'" autocomplete="off" method="get" id="'.$formId.'" name="'.$formId.'">';
+echo ( $config['action'] ) ? $config['action'] : '<form action="'.( $action_url ? $action_url : JRoute::_( 'index.php?option=com_cck'.$action_vars ) ).'" autocomplete="off" method="get" id="'.$formId.'" name="'.$formId.'">';
 echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">' . $form . '</div>';
 ?>
 <?php if ( !$raw_rendering ) { ?>

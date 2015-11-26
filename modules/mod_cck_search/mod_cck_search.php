@@ -23,6 +23,7 @@ $app	=	JFactory::getApplication();
 $form	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
+$itemId	=	(string)$params->get( 'menu_item', '' );
 
 if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
 	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
@@ -48,9 +49,16 @@ $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
-$action_vars		=	( $params->get( 'menu_item', '' ) ) ? '&Itemid='.$params->get( 'menu_item', '' ) : '';
+$action_url		=	'';
+$action_vars	=	'';
+
+if ( $itemId == '-1' ) {
+	$action_url		=	JUri::getInstance()->toString( array( 'path' ) );
+} elseif ( $itemId ) {
+	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
+}
 $live				=	urldecode( $params->get( 'live' ) );
-$target			=	$params->get( 'menu_item_search', 0 );
+$target				=	$params->get( 'menu_item_search', 0 );
 $variation			=	$params->get( 'variation' );
 $limitstart			=	-1;
 
