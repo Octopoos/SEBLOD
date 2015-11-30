@@ -562,7 +562,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
 													$data['name'],
 													$data['sitename'],
-													$data['siteurl'],
 													$data['username'],
 													$data['password_clear']
 									);
