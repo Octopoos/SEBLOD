@@ -53,7 +53,7 @@ class Helper_Include
 			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
 			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
 			if ( $color != '' ) {
-				if ( $position == 'inline' ) {
+				if ( $position == 'inline' && $id != '_' ) {
 					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
 				} else {
 					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
@@ -72,7 +72,8 @@ class Helper_Include
 		} else {
 			$options	=	'{}';
 		}
-		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css" type="text/css" />';
