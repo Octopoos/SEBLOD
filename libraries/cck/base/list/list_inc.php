@@ -192,6 +192,19 @@ if ( $preconfig['show_form'] ) {
 	}
 }
 
+// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
+
+$context	=	$app->input->getString( 'context' );
+
+if ( $context != '' ) {
+	$context	=	str_replace( "'", '"', $context );
+	$context	=	json_decode( $context );
+
+	if ( isset( $context->view ) && $context->view == 'form' ) {
+		$app->input->set( 'view', 'form' );
+	}
+}
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search
 
 // Validation
@@ -251,6 +264,7 @@ foreach ( $fields as $field ) {
 }
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
+
 if ( isset( $doc ) ) {
 	$doc->fields		=	$fields;
 }
@@ -313,6 +327,7 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List
+
 	if ( $doDebug ) {
 		$profiler	=	JProfiler::getInstance();
 	}
