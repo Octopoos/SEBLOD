@@ -84,8 +84,9 @@ $positions	=	array();
                 $prefix         =   $db->getPrefix();
                 $tables         =   $db->getTableList();
                 $style          =	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
+                
                 foreach ( $this->fieldsAv as $field ) {
-                    if ( $field->storage_table != '' ) {
+                    if ( $this->item->master == 'search' && $field->storage_table != '' ) {
                         if ( !isset( $data['tables'][$field->storage_table] ) && in_array( str_replace( '#__', $prefix, $field->storage_table ), $tables ) ) {
                             $data['tables'][$field->storage_table]  =   JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
                         }
