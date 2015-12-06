@@ -66,19 +66,16 @@ class JCckDevImage
 		
 		$path 			=	$this->_pathinfo['dirname'];
 		$resImage 		= 	$this->_resource;
-
-		// Calcul Thumb Size
-		$values = $this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
-		list( $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight ) = $values;
+		$info			=	$this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
 
 		// Add transparence for PNG
-		$thumbImage	=	imageCreateTrueColor( $thumbWidth, $thumbHeight );
+		$thumbImage	=	imageCreateTrueColor( $info['thumbWidth'], $info['thumbHeight'] );
 		if ( $this->_extension == 'png' ) {
 			imagealphablending( $thumbImage, false );
 		}
 
 		// Generate thumb ressource
-		imagecopyresampled( $thumbImage, $resImage, $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight );
+		imagecopyresampled( $thumbImage, $resImage, $info['thumbX'], $info['thumbY'], $info['newX'], $info['newY'], $info['thumbWidth'], $info['thumbHeight'], $info['newWidth'], $info['newHeight'] );
 
 		// Set Folder
 		// $file_path ='';
@@ -266,16 +263,15 @@ class JCckDevImage
 				break;
 		}
 
-		$values 	= 	array();
-		$values[] 	=	$thumbX;
-		$values[] 	=	$thumbY;
-		$values[] 	=	$newX;
-		$values[] 	=	$newY;
-		$values[] 	=	$thumbWidth;
-		$values[] 	=	$thumbHeight;
-		$values[] 	=	$src_w;
-		$values[] 	=	$src_h;
-
-		return $values;
+		return 	array(
+					'thumbX'=>$thumbX,
+					'thumbY'=>$thumbY,
+					'newX'=>$newX,
+					'newY'=>$newY,
+					'thumbWidth'=>$thumbWidth,
+					'thumbHeight'=>$thumbHeight,
+					'newWidth'=>$src_w,
+					'newHeight'=>$src_h,
+				);
 	}
 }
