@@ -147,12 +147,14 @@ class plgSystemCCK extends JPlugin
 			$authgroups	=	$user->getAuthorisedGroups();
 			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
 			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
-			
 			$multisite	=	false;
-			foreach ( $user->groups as $g ) {
-				if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
-					$multisite	=	true;
-					break;
+			
+			if ( count( $user->groups ) ) {
+				foreach ( $user->groups as $g ) {
+					if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
+						$multisite	=	true;
+						break;
+					}
 				}
 			}
 			
