@@ -168,6 +168,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				$fields[$name]->link	.=	( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['vars'] : '?'.$process['vars'];
 			}
 			if ( $process['custom'] ) {
+				$process['custom']		=	parent::g_getCustomVars( self::$type, $fields[$name], $process['custom'], $config );
 				$fields[$name]->link	.=	( $process['custom'][0] == '#' ) ? $process['custom'] : ( ( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['custom'] : '?'.$process['custom'] );
 			}
 			JCckPluginLink::g_setHtml( $fields[$name], $target );
