@@ -83,6 +83,7 @@
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>
 				</field>
+				<field name="search2" type="cck" construction="core_search_type" label="MOD_CCK_LIST_SEARCH_ALT" description="MOD_CCK_LIST_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
 				<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>
