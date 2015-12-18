@@ -101,6 +101,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
 			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
 			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
+			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
+			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
 			$xml		=	'
 							<form>
 								<field
@@ -110,9 +112,12 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 									label="'.htmlspecialchars( $field->label ).'"
 									class="'.$class.'"
 									'.$mode.'
+									'.$parent.'
 									'.$custom.'
-									multiple="true"
-								/>
+									'.$multiple.'
+								>
+								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
+								</field>
 							</form>
 						';
 			$form	=	JForm::getInstance( $id, $xml );
