@@ -22,6 +22,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	
 	protected static $access		=	'';
 	protected static $author		=	'';
+	protected static $author_object	=	'';
 	protected static $created_at	=	'registerDate';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -36,6 +37,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $ordering		=	array( 'alpha'=>'name ASC' );
 	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
+	protected static $routes		=	array();
+	protected static $sef			=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -699,6 +702,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'author_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

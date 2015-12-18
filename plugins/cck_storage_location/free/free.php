@@ -20,6 +20,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	
 	protected static $access		=	'';
 	protected static $author		=	'';
+	protected static $author_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -32,7 +33,10 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $contexts		=	array();
 	protected static $error			=	false;
 	protected static $ordering		=	array();
+	protected static $ordering2		=	array();
 	protected static $pk			=	0;
+	protected static $routes		=	array();
+	protected static $sef			=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
