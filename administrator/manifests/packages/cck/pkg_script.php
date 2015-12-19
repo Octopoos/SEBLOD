@@ -79,7 +79,7 @@ class pkg_cckInstallerScript
 		?>
 		<legend><?php echo $texts[1]['str']; ?></legend>
 		<p>
-		<a target="_blank" href="http://www.seblod.com/products" class="btn btn-small btn-success"><?php echo $texts[7]['str']; ?></a>
+		<a target="_blank" href="http://www.seblod.com/store" class="btn btn-small btn-success"><?php echo $texts[7]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/resources/manuals" class="btn btn-small btn-primary"><?php echo $texts[6]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/changelogs" class="btn btn-small"><?php echo $texts[3]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/resources/videos" class="btn btn-small"><?php echo $texts[4]['str']; ?></a>

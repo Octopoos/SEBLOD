@@ -78,6 +78,7 @@ if ( $mode == 1 || $mode == 2 ) {
 	$menu->addChild( new JMenuNode( 'Demo', 'http://demo.seblod.com', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'FAQs', 'http://www.seblod.com/faq', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Features', 'http://www.seblod.com/features', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'GitHub', 'https://github.com/Octopoos/SEBLOD', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Terminology', 'http://www.seblod.com/terminology', '', false, '_blank' ) );
 	$menu->getParent();
 	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_COMMUNITY' ), 'http://www.seblod.com/community', 'cck', false, '_blank' ), true );
@@ -89,22 +90,22 @@ if ( $mode == 1 || $mode == 2 ) {
 	$menu->addChild( new JMenuNode( 'Testimonials', 'http://www.seblod.com/community/testimonials', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Users', 'http://www.seblod.com/community/users', '', false, '_blank' ) );
 	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_SERVICES' ), 'http://www.seblod.com/enterprise', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Support', 'http://www.seblod.com/enterprise/support', '', false, '_blank' ) );
-	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_PRODUCTS' ), 'http://www.seblod.com/products', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Add-ons', 'http://www.seblod.com/products/add-ons', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Applications', 'http://www.seblod.com/products/applications', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Plug-ins', 'http://www.seblod.com/products/plug-ins', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Templates', 'http://www.seblod.com/products/templates', '', false, '_blank' ) );
-	$menu->getParent();
 	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_RESOURCES' ), 'http://www.seblod.com/resources', 'cck', false, '_blank' ), true );
 	$menu->addChild( new JMenuNode( 'Books', 'http://www.seblod.com/resources/books', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Extensions', 'http://www.seblod.com/resources/extensions', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Manuals', 'http://www.seblod.com/resources/manuals', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Marketing', 'http://www.seblod.com/resources/marketing', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Tracker', 'http://www.seblod.com/resources/tracker', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Tutorials', 'http://www.seblod.com/resources/tutorials', '', false, '_blank' ) );
 	$menu->addChild( new JMenuNode( 'Videos', 'http://www.seblod.com/resources/videos', '', false, '_blank' ) );
+	$menu->getParent();
+	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_PRODUCTS' ), 'http://www.seblod.com/store', 'cck', false, '_blank' ), true );
+	$menu->addChild( new JMenuNode( 'Clubs', 'http://www.seblod.com/store/clubs', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Extensions', 'http://www.seblod.com/store/extensions', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Add-ons', 'http://www.seblod.com/store/extensions?seb_item_category=16', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Applications', 'http://www.seblod.com/store/extensions/applications', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Plug-ins', 'http://www.seblod.com/store/extensions?seb_item_category=19,20,21,22,23,24,25,112', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Templates', 'http://www.seblod.com/store/extensions?seb_item_category=27', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Services', 'http://www.seblod.com/store/services', '', false, '_blank' ) );
 	$menu->getParent();
 } elseif ( $mode == 3 ) {
 	if ( $user->authorise( 'core.manage', 'com_cck_ecommerce' ) ) {
