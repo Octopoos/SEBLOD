@@ -77,7 +77,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://vip.seblod.com', '_blank'); return false;">
+		<button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://www.seblod.com/store/extensions/applications/', '_blank'); return false;">
 			<?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
 		</button>
 		<button class="btn" type="button" data-dismiss="modal">
