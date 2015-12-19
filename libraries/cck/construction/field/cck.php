@@ -63,10 +63,12 @@ class JFormFieldCCK extends JFormField
 		$storage_field			=	$field->storage_field;
 		$field->storage_field	=	$this->name;
 		if ( $attributes != '' ) {
+			$attributes	=	str_replace( "'", '"', $attributes );
+			
 			if ( $field->attributes ) {
-				$field->attributes	.=	' '.htmlspecialchars( str_replace( "'", '"', $attributes ) );
+				$field->attributes	.=	' '.$attributes;
 			} else {
-				$field->attributes	=	htmlspecialchars( str_replace( "'", '"', $attributes ) );
+				$field->attributes	=	$attributes;
 			}
 		}
 		if ( $options != '' ) {

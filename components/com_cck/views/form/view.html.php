@@ -104,6 +104,13 @@ class CCKViewForm extends JViewLegacy
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
 		}
+		if ( $params->get( 'display_form_title', '' ) == '1' ) {
+			$this->title				=	$params->get( 'title_form_title', '' );
+		} elseif ( $params->get( 'display_form_title', '' ) == '0' ) {
+			$this->title				=		$menu->title;
+		} else {
+			$this->title				=		@$type->title;
+		}
 		$this->show_form_title		=	$params->get( 'show_form_title' );
 		if ( $this->show_form_title == '' ) {
 			$this->show_form_title	=	$options->get( 'show_form_title', '1' );
@@ -123,7 +130,7 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
-		if ( $app->input->get( 'tmpl' ) == 'component' || $app->input->get( 'tmpl' ) == 'raw' ) {
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$params->set( 'show_page_heading', 0 );
 		}
 		

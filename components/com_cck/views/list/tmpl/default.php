@@ -46,7 +46,7 @@ if ( $this->show_list_title ) {
 	$tag		=	$this->tag_list_title;
 	$class		=	trim( $this->class_list_title );
 	$class		=	$class ? ' class="'.$class.'"' : '';
-	echo '<'.$tag.$class.'>' . @$this->search->title . '</'.$tag.'>';
+	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
@@ -175,7 +175,17 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 				}
 				$("#seblod_form_loading_more").hide();
 				if (search==1) { $(elem).html(response); } else { $(elem).append(response); }
-				<?php echo $this->callback_pagination ? $this->callback_pagination.'(response);' : ''; ?>
+				<?php
+				if ( $this->callback_pagination != '' ) {
+					$pos	=	strpos( $this->callback_pagination, '$(' );
+
+					if ( $pos !== false && $pos == 0 ) {
+						echo $this->callback_pagination;
+					} else {
+						echo $this->callback_pagination.'(response);';
+					}
+				}
+				?>
 			},
 			error:function(){}
 		});

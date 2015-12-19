@@ -24,7 +24,7 @@ if ( $this->show_form_title ) {
 	$tag		=	$this->tag_form_title;
 	$class		=	trim( $this->class_form_title );
 	$class		=	$class ? ' class="'.$class.'"' : '';
-	echo '<'.$tag.$class.'>' . @$this->type->title . '</'.$tag.'>';
+	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';

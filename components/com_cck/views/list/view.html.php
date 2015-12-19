@@ -56,6 +56,7 @@ class CCKViewList extends JViewLegacy
 		$preconfig['auto_redirect']			=	$params->get( 'auto_redirect', '' );
 		$preconfig['auto_redirect_vars']	=	$params->get( 'auto_redirect_vars', '' );
 		$preconfig['limit2']				=	$params->get( 'limit2', 0 );
+		$preconfig['limitend']				=	$params->get( 'pagination2', '' );
 		$preconfig['ordering']				=	$params->get( 'ordering', '' );
 		$preconfig['ordering2']				=	$params->get( 'ordering2', '' );
 		
@@ -118,6 +119,14 @@ class CCKViewList extends JViewLegacy
 			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
 			$this->class_list_title		=	$params->get( 'class_list_title' );
 		}
+		if ( $params->get( 'display_list_title', '' ) == '1' ) {
+			$this->title				=	$params->get( 'title_list_title', '' );
+		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
+			$this->title				=		$menu->title;
+		} else {
+			$this->title				=		@$search->title;
+		}
+
 		$this->show_list_desc			=	$params->get( 'show_list_desc' );
 		if ( $this->show_list_desc == '' ) {
 			$this->show_list_desc		=	$options->get( 'show_list_desc', '1' );
@@ -170,6 +179,11 @@ class CCKViewList extends JViewLegacy
 			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
 			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
 			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
+		} else {
+			$this->callback_pagination	=	'';
+		}
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			$params->set( 'show_page_heading', 0 );
 		}
 		
 		$this->config					=	&$config;
