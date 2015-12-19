@@ -14,19 +14,29 @@ defined( '_JEXEC' ) or die;
 class CCK_Rendering
 {
     static $instance;
+    static $instance2;
 	
+	// getInstance
     public static function getInstance( $template = '' )
     {
 		if ( $template == JFactory::getApplication()->getTemplate() ) {
 			print( 'You should NOT set "'.$template.'" as Default Template.' );
 			die;
 		}
-		
-        if ( ! self::$instance ) {
-			self::$instance	=	new CCK_Rendering();
-        }
-        return self::$instance;
-    }
+
+		$app		=	JFactory::getApplication();
+		$instance	=	'instance';
+
+    	if ( isset( $app->cck_idx ) && $app->cck_idx[0] !== false ) {
+			$instance	=	'instance2';
+		}
+
+		if ( !self::${$instance} ) {
+			self::${$instance}	=	new CCK_Rendering();
+		}
+
+		return self::${$instance};	
+	}
 	
 	private $me;
 	
@@ -136,8 +146,12 @@ class CCK_Rendering
 		$app				=	JFactory::getApplication();
 		
 		$idx				=	'_';
-		if ( isset( $app->cck_idx ) && count( $app->cck_idx ) ) {
-			$idx			=	array_pop( $app->cck_idx );
+		if ( isset( $app->cck_idx ) ) {
+			$app->cck_idx[0]	=	false;
+
+			if ( count( $app->cck_idx ) > 1 ) {
+				$idx		=	array_pop( $app->cck_idx );
+			}
 		}
 		$me					=	CCK_Document::getInstance( 'html' );
 		$this->me			=	( isset( $me->fields ) ) ? $me->fields : array();

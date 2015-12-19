@@ -89,13 +89,19 @@ if ( ! $count ) {
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);
-	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
+
+	if ( !( $preconfig['task'] == 'no' && !$preconfig['show_form'] ) ) {
+		$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' );
+	}
+
+	return;
 }
 
 // Init
-$limitend	=	(int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
+
 if ( $limitstart != -1 ) {
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
@@ -250,6 +256,9 @@ foreach ( $fields as $field ) {
 	}
 	
 	// Prepare
+	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
+		$field->variation	=	'hidden';
+	}
 	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
@@ -296,15 +305,6 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	$total					=	count( $items );
 	
-	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
-		$limitstart			=	-1;
-		$limitend			=	0;
-		$total				=	$config['total'];
-	} else {
-		$config['total']	=	$total;
-	}
-	$total_items			=	$total;
-	
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
 		$ids	=	'';
@@ -321,6 +321,16 @@ if ( $preconfig['task'] == 'search' ) {
 		$config['pks']	=	$pks;
 	}
 
+	// Total
+	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
+		$limitstart			=	-1;
+		$limitend			=	0;
+		$total				=	$config['total'];
+	} else {
+		$config['total']	=	$total;
+	}
+	$total_items			=	$total;
+
 	// Pagination
 	if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
 		$items	=	array_splice( $items, $limitstart, $limitend );
@@ -336,14 +346,20 @@ if ( $preconfig['task'] == 'search' ) {
 		$target					=	'search';
 		if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
 			$target				=	'search2';
-			$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );	
-			$search->content	=	$search2->content;
+			$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
+			$options2			=	new JRegistry;
+			$options2->loadString( $search2->options );
+
+			if ( $options2->get( 'sef' ) != '' ) {
+				$config['doSEF']	=	$options2->get( 'sef' );
+			}
+			$search->content		=	$search2->content;
 		}
 		if ( $total ) {
 			if ( isset( $preconfig['idx'] ) ) {
 				$config['idx']	=	$preconfig['idx'];
 				if ( !isset( $app->cck_idx ) ) {
-					$app->cck_idx	=	array();	
+					$app->cck_idx	=	array( 0=>false );
 				}
 				$app->cck_idx[]	=	$preconfig['idx'];
 			}

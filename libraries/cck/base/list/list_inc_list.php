@@ -48,6 +48,9 @@ if ( isset( $templateStyle->params['cck_client_item'] ) ) {
 	}
 }
 if ( $go_for_item || $go_for_both ) {
+	if ( isset( $app->cck_idx ) ) {
+		$app->cck_idx[0]	=	true;
+	}
 	$client			=	'item';
 	$fields			=	CCK_List::getFields_Items( $search->name, $client, $access );
 	$target_f		=	'fields';

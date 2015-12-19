@@ -340,9 +340,10 @@ class CCK_List
 		
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$data	=	'';
-		$itemId	=	( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId;
 		$list	=	array(
+						'doSEF'=>$config['doSEF'],
 						'isCore'=>$config['doQuery'],
+						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
 						'location'=>$config['location'],
 					);
 		
