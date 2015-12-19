@@ -72,16 +72,17 @@ class CCKModelList extends JModelLegacy
 	public function saveOrder( $pks = array(), $lft = array() )
 	{
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-
+		
 		if ( !count( $pks ) ) {
 			return false;
 		}
 
 		$db 	= 	JFactory::getDbo();
 		$query	= 	$db->getQuery( true );
-		$query->select( 'id, pk, storage_location' )
-			  ->from( '#__cck_core' )
-			  ->where( 'id IN (' . implode( ',', $pks ) . ')' );
+		$query->select( 'a.id, a.pk, a.storage_location, b.id AS type_id' )
+			  ->from( '#__cck_core AS a' )
+			  ->join( 'LEFT', '#__cck_core_types AS b ON b.name = a.cck' )
+			  ->where( 'a.id IN (' . implode( ',', $pks ) . ')' );
 
 		$db->setQuery($query);
 		$results 	= 	$db->loadAssocList( 'id' );
@@ -89,16 +90,31 @@ class CCKModelList extends JModelLegacy
 		if ( !empty( $results ) ) {
 			$ids 		= 	array();
 			$location 	= 	null;
+			$user 		=	JCck::getUser();
+			$user_id	=	$user->get( 'id' );
 
-			foreach ( $pks as $pk ) {
-				$ids[] 	= 	$results[$pk]['pk'];
+			foreach ( $pks as $i=>$pk ) {
+				$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$results[$pk]['type_id'] );
+				$canEditOwn	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$results[$pk]['type_id'] );
+
+				// Check Permissions
+				if ( !( $canEdit && $canEditOwn
+					|| ( $canEdit && !$canEditOwn && ( $results[$pk]['author_id'] != $user_id ) )
+					|| ( $canEditOwn && ( $results[$pk]['author_id'] == $user_id ) ) ) ) {
+					unset( $lft[$i] );
+					continue;
+				}
+
+				$ids[] 		= 	$results[$pk]['pk'];
 
 				if ( null === $location ) {
 					$location 	= 	$results[$pk]['storage_location'];
 				}
-			}
 
-			return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'onCCK_Storage_LocationSaveOrder', array( $ids, $lft ) );
+			}
+			if ( $location && count( $ids ) ) {
+				return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'onCCK_Storage_LocationSaveOrder', array( $ids, $lft ) );
+			}
 		}
 
 		return false;
