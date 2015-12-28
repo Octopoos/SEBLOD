@@ -61,7 +61,8 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$link_rel			=	$link->get( 'rel', '' );
 		$link_target		=	$link->get( 'target', '' );
 		$tmpl				=	$link->get( 'tmpl', '' );
-		$tmpl				=	$tmpl ? 'tmpl='.$tmpl : '';
+		$tmpl				=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
+		$tmpl				=	( $tmpl ) ? 'tmpl='.$tmpl : '';
 		$vars				=	$tmpl;
 		
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {

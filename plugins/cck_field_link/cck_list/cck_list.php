@@ -35,6 +35,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
+		$app			=	JFactory::getApplication();
 		$list			=	$link->get( 'list', '' );
 		$itemId			=	(int)$link->get( 'itemid', '' );
 		$search_field	=	$link->get( 'search_field', 0 );
@@ -50,7 +51,8 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 		$link_rel		=	$link->get( 'rel', '' );
 		$link_target	=	$link->get( 'target', '' );
 		$tmpl			=	$link->get( 'tmpl', '' );
-		$tmpl			=	$tmpl ? '&tmpl='.$tmpl : '';
+		$tmpl			=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
+		$tmpl			=	( $tmpl ) ? '&tmpl='.$tmpl : '';
 		$vars			=	'&task=search'.$tmpl;
 		
 		// Set
