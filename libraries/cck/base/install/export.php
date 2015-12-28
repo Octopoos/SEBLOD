@@ -82,6 +82,69 @@ class CCK_Export
 		}
 	}
 	
+	// update
+	public static function update( $path, $copyright )
+	{
+		$extensions	=	array();
+
+		if ( is_dir( $path ) ) {
+			$paths	=	JFolder::files( $path, '(.*)\.(css|ini|js|php|xml)$', true, true );
+		} elseif ( is_file( $path ) ) {
+			$paths	=	array( 0=>$path );
+		} else {
+			return;
+		}
+
+		if ( count( $paths ) ) {
+			foreach ( $paths as $k=>$path ) {
+				if ( is_file( $path ) ) {
+					$isUpToDate		=	true;
+
+					// Copyright
+					if ( $copyright ) {
+						$buffer		=	JFile::read( $path );
+						$ext		=	JFile::getExt( $path );
+						$replace	=	'Copyright (C) 2009 - '.(string)$copyright.' SEBLOD.';
+
+						if ( strpos( $buffer, $replace ) === false ) {
+							$search		=	'Copyright (C) 2009 - '.( $copyright - 1 ).' SEBLOD.';
+							$search2	=	'Copyright (C) 2013 SEBLOD.';
+
+							if ( strpos( $buffer, $search ) !== false ) {
+								$buffer	=	str_replace( $search, $replace, $buffer );
+
+								if ( !isset( $extensions[$ext] ) ) {
+									$extensions[$ext]	=	0;
+								}
+								$extensions[$ext]++;
+							} elseif ( strpos( $buffer, $search2 ) !== false ) {
+								$buffer	=	str_replace( $search2, $replace, $buffer );
+
+								if ( !isset( $extensions[$ext] ) ) {
+									$extensions[$ext]	=	0;
+								}
+								$extensions[$ext]++;
+							}
+
+							$isUpToDate	=	false;
+						} else {
+							if ( !isset( $extensions[$ext] ) ) {
+								$extensions[$ext]	=	0;
+							}
+							$extensions[$ext]++;
+						}
+					}
+
+					if ( !$isUpToDate ) {
+						JFile::write( $path, $buffer );
+					}
+				}
+			}
+		}
+
+		return $extensions;
+	}
+
 	// zip
 	public static function zip( $path, $path_zip )
 	{
@@ -197,13 +260,13 @@ class CCK_Export
 	}
 	
 	// exportElements
-	public static function exportElements( $elemtype, $elements, &$data, &$extensions = array(), $protected = 0 )
+	public static function exportElements( $elemtype, $elements, &$data, &$extensions = array(), $protected = 0, $copyright = '' )
 	{
 		if ( count( $elements ) ) {
 			CCK_Export::createDir( $data['root_elements'].'/'.$elemtype.'s' );
 			
 			foreach ( $elements as $elem ) {
-				self::exportElement( $elemtype, $elem, $data, $extensions, $protected );
+				self::exportElement( $elemtype, $elem, $data, $extensions, $protected, $copyright );
 			}
 		}
 	}
@@ -262,7 +325,7 @@ class CCK_Export
 	}
 
 	// exportElement
-	public static function exportElement( $elemtype, &$elem, &$data, &$extensions, $protected = 0 )
+	public static function exportElement( $elemtype, &$elem, &$data, &$extensions, $protected = 0, $copyright = '' )
 	{
 		if ( isset( $data['elements'][$elemtype][$elem->id] ) || ( $elem->id < $protected ) ) {
 			return;
@@ -318,7 +381,7 @@ class CCK_Export
 		
 		// Prepare2
 		$call	=	'export'.$elemtype;
-		self::$call( $elemtype, $elem, $xml, $data, $extensions, $file );
+		self::$call( $elemtype, $elem, $xml, $data, $extensions, $file, $copyright );
 		
 		// Set
 		$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
@@ -336,7 +399,7 @@ class CCK_Export
 	}
 	
 	// exportField
-	public static function exportField( $elemtype, $elem, &$xml, &$data, &$extensions, &$file )
+	public static function exportField( $elemtype, $elem, &$xml, &$data, &$extensions, &$file, $copyright = '' )
 	{
 		self::exportPlugin( 'cck_field', $elem->type, $data, $extensions );
 		
@@ -354,7 +417,7 @@ class CCK_Export
 	}
 	
 	// exportFolder
-	public static function exportFolder( $elemtype, $elem, &$xml, &$data, &$extensions, &$file )
+	public static function exportFolder( $elemtype, $elem, &$xml, &$data, &$extensions, &$file, $copyright = '' )
 	{
 		$null	=	array( 'asset_id', 'depth', 'lft', 'rgt' );
 		foreach ( $null as $n ) {
@@ -372,7 +435,7 @@ class CCK_Export
 	}
 	
 	// exportTemplate
-	public static function exportTemplate( $elemtype, $elem, &$xml, &$data, &$extensions, &$file )
+	public static function exportTemplate( $elemtype, $elem, &$xml, &$data, &$extensions, &$file, $copyright = '' )
 	{
 		$file['_']			=	'tpl_'.$elem->name.'.zip';
 		$file['src']		=	JPATH_SITE.'/'.$elemtype.'s'.'/'.$elem->name;
@@ -382,7 +445,7 @@ class CCK_Export
 			$extensions[$file['src']]	=	(object)array( 'type'=>'template', 'id'=>'tpl_'.$elem->name, 'client'=>'site', '_file'=>$file['_'] );
 		}
 		if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
-			self::exportFile( 'template', $data, $file );
+			self::exportFile( 'template', $data, $file, array(), $copyright );
 		}
 		CCK_Export::findFields( array( $file['src'].'/templateDetails.xml' ), $data['root_elements'] );
 	}
@@ -396,7 +459,7 @@ class CCK_Export
 	}
 	
 	// exportType
-	public static function exportType( $elemtype, $elem, &$xml, &$data, &$extensions, &$file )
+	public static function exportType( $elemtype, $elem, &$xml, &$data, &$extensions, &$file, $copyright = '' )
 	{
 		if ( isset( $xml->{$elemtype}->asset_id ) ) {
 			$xml->{$elemtype}->asset_id	=	'';
@@ -506,7 +569,7 @@ class CCK_Export
 	}
 	
 	// exportSearch
-	public static function exportSearch( $elemtype, $elem, &$xml, &$data, &$extensions, &$file )
+	public static function exportSearch( $elemtype, $elem, &$xml, &$data, &$extensions, &$file, $copyright = '' )
 	{
 		// Views
 		$views		=	array( 'search', 'filter', 'list', 'item' );
@@ -648,7 +711,7 @@ class CCK_Export
 	}
 	
 	// exportFile
-	public static function exportFile( $type, &$data, $file, $extensions = array() )
+	public static function exportFile( $type, &$data, $file, $extensions = array(), $copyright = '' )
 	{
 		$path	=	$data['root_extensions'].'/_temp';
 		if ( $file['src'] && JFolder::exists( $file['src'] ) ) {
@@ -677,13 +740,17 @@ class CCK_Export
 					CCK_Export::createFile( $path.'/'.$file['filename'].'.xml', '<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML() );
 				}
 			} else {
+				if ( $copyright ) {
+					CCK_Export::update( $file['src'], $copyright );
+				}
 				JFolder::copy( $file['src'], $path );
 				if ( $type == 'plugin' ) {
 					CCK_Export::findFields( array( $file['src'].'/tmpl/edit.php', $file['src'].'/tmpl/edit2.php' ), $path.'/install' );
+					CCK_Export::update( $path.'/install', $copyright );
 				}
 			}
 			if ( @$file['lang_src'] != '' ) {
-				CCK_Export::exportLanguage( $file['lang_src'], $file['lang_root'], $path );
+				CCK_Export::exportLanguage( $file['lang_src'], $file['lang_root'], $path, $copyright );
 			}
 			CCK_Export::clean( $path );
 			CCK_Export::zip( $path, $data['root_extensions'].'/'.$file['_'] );
@@ -967,7 +1034,7 @@ class CCK_Export
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Language
 	
 	// exportLanguage
-	public static function exportLanguage( $path, $root, $dest )
+	public static function exportLanguage( $path, $root, $dest, $copyright = '' )
 	{
 		$xml	=	JCckDev::fromXML( $path );
 		if ( ! isset( $xml->languages ) ) {
@@ -982,6 +1049,9 @@ class CCK_Export
 				CCK_Export::createDir( $dest_l.'/'.$tag );
 				$lang	=	(string)$lang;
 				if ( JFile::exists( $root.'/language/'.$lang ) ) {
+					if ( $copyright ) {
+						CCK_Export::update( $root.'/language/'.$lang, $copyright );
+					}
 					JFile::copy( $root.'/language/'.$lang, $dest_l.'/'.$lang );
 				}
 			}
