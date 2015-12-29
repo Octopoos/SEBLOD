@@ -44,7 +44,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$value	=	trim( $field->value );
 		
 		if ( $format == -2 ) {
-			$typo		=	self::_getTimeAgo( $value );
+			$typo		=	self::_getTimeAgo( $value, $typo->get( 'unit', '' ), $typo->get( 'alt_format', '' ), $typo->get( 'format2', 'Y-m-d' ) );
 		} else {
 			$options2	=	JCckDev::fromJSON( $field->options2 );
 			if ( $format == -1 ) {
@@ -52,51 +52,72 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 			}
 			$value		=	self::_getValueWithFormatStorage( $value, @$options2['storage_format'] );
 			$date_eng	=	$format ? date(  $format, $value ) : $value;
-			$typo	=	self::_getDateByLang( $format, $value, $date_eng );
+			$typo		=	self::_getDateByLang( $format, $value, $date_eng );
 		}
 	
 		return $typo;
 	}
 
 	// _getTimeAgo
-	protected static function _getTimeAgo( $value )
+	protected static function _getTimeAgo( $value, $unit, $limit, $alt_format )
 	{
 		if ( @!mktime( $value ) ) {
 			return;
 		}
 		
 		// Init
-		$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
-		$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
-		$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
-		$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
-		$text_days		=	strtolower( JText::_( 'COM_CCK_DAYS' ) );
-		$text_today		=	strtolower( JText::_( 'COM_CCK_TODAY' ) );
-		$text_yesterday	=	strtolower( JText::_( 'COM_CCK_YESTERDAY' ) );
-		
-		// Prepare
 		$date1			=	new DateTime( $value );
 		$date1->setTime( 00, 00, 00 );
-		$date2			=	new DateTime();
-		$date2->setTime( 00, 00, 00 );
+		$now			=	new DateTime();
+		$now->setTime( 00, 00, 00 );
 
-		$interval		=	$date1->diff( $date2 );
+		$interval		=	$date1->diff( $now );
 		$years			=	$interval->format( '%y' );
 		$months			=	$interval->format( '%m' );
 		$days			=	$interval->format( '%d' );
 
-		if ( $years != 0 ) {
-			$interval	=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
-			$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
-		} elseif ( $months != 0 ) {
-			$interval	=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
-			$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+		if ( $days >= $limit ) {
+			$value		=	self::_getValueWithFormatStorage( $value );
+			$date_eng	=	$alt_format ? date(  $alt_format, $value ) : $value;
+			$interval	=	self::_getDateByLang( $alt_format, $value, $date_eng );
 		} else {
-			$interval	=	( $days > 1 ) ? JText::sprintf( 'COM_CCK_AGO_SENTENCE', $days.' '.$text_days ) : ( ( $days > 0 ) ? $text_yesterday : $text_today );
+			// Prepare
+			if ( $years != 0 ) {
+				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
+				$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
+
+				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
+				$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+			} elseif ( $months != 0 ) {
+				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
+				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
+
+				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
+				$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+			} else {
+				if ( $days > 1 ) {
+					$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
+				} elseif ( $days > 0 ) {
+					$interval	=	strtolower( JText::_( 'COM_CCK_YESTERDAY' ) );
+				} else {
+					if ( $unit == 1 ) {
+						$date1			=	new DateTime( $value );
+						$now			=	new DateTime();
+						$interval		=	$date1->diff( $now );
+						$hours			=	$interval->format( '%h' );
+
+						$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
+						$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
+
+						$interval		=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
+						$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+					} else {
+						$interval	=	strtolower( JText::_( 'COM_CCK_TODAY' ) );
+					}
+				}
+			}
 		}
 		
-		//$interval	=	( $link != '' ) ? '<a href="'.$link.'">'.$interval.'</a>' : $interval;
-		//return '<span class="interval">'.$interval.'</span>';
 		return $interval;
 	}
 
@@ -105,7 +126,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	{
 		$format_storage	=	( isset( $format_storage ) ) ? $format_storage : '0';
 		
-		return ( trim ( $value ) == '' ) ? '' : (( $format_storage == '0' ) ? strtotime ( $value ) : $value );
+		return ( trim ( $value ) == '' ) ? '' : ( ( $format_storage == '0' ) ? strtotime ( $value ) : $value );
 	}
 	
 	// _getDateByLang
