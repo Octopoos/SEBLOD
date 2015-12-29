@@ -132,7 +132,7 @@ class CCKController extends JControllerLegacy
 			}
 		} else {
 			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
-			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id'
+			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
 						.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
@@ -149,6 +149,7 @@ class CCKController extends JControllerLegacy
 								'location'=>$core->storage_location,
 								'pk'=>$core->pk,
 								'pkb'=>0,
+								'store_id'=>$core->store_id,
 								'task'=>'download',
 								'type'=>$core->type,
 								'type_id'=>$core->type_id,
