@@ -200,7 +200,6 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
 $dispatcher	=	JDispatcher::getInstance();
-$session	=	JFactory::getSession();
 
 // Validation
 if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
@@ -256,14 +255,26 @@ foreach ( $fields as $field ) {
 		} else {
 			if ( $field->live ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
-				$hash		=	JApplication::getHash( $value );
-				$session->set( 'cck_hash_live_'.$field->name, $hash );
+
+				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
+					JCckDevHelper::secureField( $field, $value );
+				}
 			} else {
 				$value	=	( isset( $lives[$name] ) ) ? $lives[$name] : $field->live_value;
 			}
 		}
 	}
 	$field->value	=	$value;
+	
+	if ( $field->variation == 'hidden_isfilled' ) {
+		if ( $value != '' ) {
+			$field->variation	=	'hidden';
+
+			JCckDevHelper::secureField( $field, $value );
+		} else {
+			$field->variation	=	'';
+		}
+	}
 	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
 	
 	$position				=	$field->position;

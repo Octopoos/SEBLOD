@@ -297,7 +297,9 @@ class JCckPluginField extends JPlugin
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
-		
+		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+
 		// 1
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
@@ -435,6 +437,8 @@ class JCckPluginField extends JPlugin
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
+		$data['variation'][]=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+		$data['variation'][]=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		
 		// 1
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '

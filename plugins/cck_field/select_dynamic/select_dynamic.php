@@ -42,7 +42,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
 	{
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		
 		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data );
@@ -182,7 +182,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				} else {
 					$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 				}
-				$auto++;
+				if ( $field->required ) {
+					$auto++;
+				}
 			}
 			$count2			=	JCck::getConfig_Param( 'development_attr', 6 );
 			$opt_attr		=	'';
@@ -364,11 +366,16 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$attr	=	'class="'.$class.'"'.$size.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
 			$count	=	count( $opts );
 			$form	=	'';
+
 			if ( $field->variation == 'hidden_auto' ) {
 				if ( $auto == $count && is_object( $opts[$auto - 1] ) ) {
 					$count				=	0;
 					$field->variation	=	'hidden';
-					$value				=	$opts[$auto - 1]->value;	
+					$value				=	$opts[$auto - 1]->value;
+
+					if ( !$field->live ) {
+						JCckDevHelper::secureField( $field, $value );
+					}
 				} else {
 					$field->variation	=	'';
 				}

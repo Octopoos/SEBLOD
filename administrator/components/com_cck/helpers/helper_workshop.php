@@ -311,11 +311,12 @@ class Helper_Workshop
 				$data['restriction']=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true ) );
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'hidden_isfilled', JText::_( 'COM_CCK_HIDDEN_IS_FILLED_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
+											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['live']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ) ), Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
 				$data['stage']		=	array( JHtml::_( 'select.option', 0, JText::_( 'COM_CCK_STAGE_FINAL' ) ),
@@ -354,15 +355,15 @@ class Helper_Workshop
 				$data['restriction']=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true ) );
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
 											   /*
 											   JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
 											   */
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
+											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['match_mode']	=	array( JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),

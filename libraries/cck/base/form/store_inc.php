@@ -49,7 +49,7 @@ $dispatcher	=	JDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
 $config		=	array( 'author'=>0,
@@ -86,37 +86,44 @@ $fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $
 
 if ( count( $fields ) ) {
 	foreach ( $fields as $field ) {
-		$name			=	$field->name;
 		$field->state	=	'';
+		$toBeChecked	=	false;
 
 		// Restriction
 		if ( isset( $field->restriction ) && $field->restriction ) {
 			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareStore', array( &$field, &$config ) );
+			
 			if ( !$field->authorised ) {
 				continue;
 			}
 		}
 
-		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_auto' || $field->variation == 'disabled' || $field->variation == 'value' ) && ! $field->live && $field->live_value != '' ) {
+		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled' || $field->variation == 'value' ) && !$field->live && $field->live_value != '' ) {
 			$value	=	$field->live_value;
 		} else {
-			if ( isset( $post[$name] ) ) {
-				$value			=	$post[$name];
+			if ( isset( $post[$field->name] ) ) {
+				$value			=	$post[$field->name];
 			} else {
 				$value			=	NULL;
 				$field->state	=	'disabled';
 			}
+			if ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && !$field->live && $session->has( 'cck_hash_live_'.$field->name ) ) {
+				$toBeChecked	=	true;
+			}
 		}
-		$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );	
-		if ( !$id && $field->live && ( $field->variation == 'hidden' || $field->variation == 'hidden_auto' || $field->variation == 'disabled' || $field->variation == 'value' ) ) {
-			if ( !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
-				$hash		=	JApplication::getHash( $value );
-				$hashed		=	$session->get( 'cck_hash_live_'.$field->name );
-				$session->clear( 'cck_hash_live_'.$field->name );
-				if ( $hash !=  $hashed ) {
-					$config['validate'] =	'error';
-					$integrity[]		=	$field->name;
-				}
+		$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
+
+		if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
+			$toBeChecked	=	true;
+		}
+		if ( $toBeChecked && !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
+			$hash		=	JApplication::getHash( $value );
+			$hashed		=	$session->get( 'cck_hash_live_'.$field->name );
+			$session->clear( 'cck_hash_live_'.$field->name );
+			
+			if ( $hash !=  $hashed ) {
+				$config['validate'] =	'error';
+				$integrity[]		=	$field->name;
 			}
 		}
 		if ( $field->storages != '' ) {
@@ -159,9 +166,12 @@ if ( $config['validate'] ) {
 }
 
 // BeforeStore
-if ( isset( $processing['onCckPreBeforeStore'] ) ) {
-	foreach ( $processing['onCckPreBeforeStore'] as $p ) {
+$event	=	'onCckPreBeforeStore';
+if ( isset( $processing[$event] ) ) {
+	foreach ( $processing[$event] as $p ) {
 		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+			
 			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
@@ -173,9 +183,12 @@ if ( isset( $config['process']['beforeStore'] ) && count( $config['process']['be
 		}
 	}
 }
-if ( isset( $processing['onCckPostBeforeStore'] ) ) {
-	foreach ( $processing['onCckPostBeforeStore'] as $p ) {
+$event	=	'onCckPostBeforeStore';
+if ( isset( $processing[$event] ) ) {
+	foreach ( $processing[$event] as $p ) {
 		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+
 			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
@@ -199,9 +212,12 @@ if ( !$k ) {
 }
 
 // AfterStore
-if ( isset( $processing['onCckPreAfterStore'] ) ) {
-	foreach ( $processing['onCckPreAfterStore'] as $p ) {
+$event	=	'onCckPreAfterStore';
+if ( isset( $processing[$event] ) ) {
+	foreach ( $processing[$event] as $p ) {
 		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+
 			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
@@ -213,9 +229,12 @@ if ( isset( $config['process']['afterStore'] ) && count( $config['process']['aft
 		}
 	}
 }
-if ( isset( $processing['onCckPostAfterStore'] ) ) {
-	foreach ( $processing['onCckPostAfterStore'] as $p ) {
+$event	=	'onCckPostAfterStore';
+if ( isset( $processing[$event] ) ) {
+	foreach ( $processing[$event] as $p ) {
 		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+
 			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
