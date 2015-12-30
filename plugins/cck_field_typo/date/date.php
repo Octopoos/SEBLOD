@@ -76,7 +76,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$months			=	$interval->format( '%m' );
 		$days			=	$interval->format( '%d' );
 
-		if ( $days >= $limit ) {
+		if ( $limit && $days >= $limit ) {
 			$value		=	self::_getValueWithFormatStorage( $value );
 			$date_eng	=	$alt_format ? date(  $alt_format, $value ) : $value;
 			$interval	=	self::_getDateByLang( $alt_format, $value, $date_eng );
@@ -98,7 +98,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 				if ( $days > 1 ) {
 					$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
 				} elseif ( $days > 0 ) {
-					$interval	=	strtolower( JText::_( 'COM_CCK_YESTERDAY' ) );
+					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
 				} else {
 					if ( $unit == 1 ) {
 						$date1			=	new DateTime( $value );
@@ -112,7 +112,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 						$interval		=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
 						$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
 					} else {
-						$interval	=	strtolower( JText::_( 'COM_CCK_TODAY' ) );
+						$interval		=	JText::_( 'COM_CCK_TODAY' );
 					}
 				}
 			}

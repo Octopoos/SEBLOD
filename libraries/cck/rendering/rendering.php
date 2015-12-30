@@ -13,12 +13,12 @@ defined( '_JEXEC' ) or die;
 // Rendering
 class CCK_Rendering
 {
-    static $instance;
-    static $instance2;
+	static $instance;
+	static $instance2;
 	
 	// getInstance
-    public static function getInstance( $template = '' )
-    {
+	public static function getInstance( $template = '' )
+	{
 		if ( $template == JFactory::getApplication()->getTemplate() ) {
 			print( 'You should NOT set "'.$template.'" as Default Template.' );
 			die;
