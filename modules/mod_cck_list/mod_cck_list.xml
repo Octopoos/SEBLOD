@@ -56,6 +56,7 @@
 				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" />
 				<field name="" label="" type="spacer" hr="false" />
 				<field name="limit2" type="text" default="5" label="MOD_CCK_LIST_CONFIG_LIMIT2" description="MOD_CCK_LIST_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
+				<field name="limitstart" type="text" default="" label="MOD_CCK_LIST_CONFIG_LIMITSTART" description="MOD_CCK_LIST_CONFIG_LIMITSTART_DESC" size="8" class="inputbox" />
 				<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="MOD_CCK_LIST_CONFIG_ORDERING" default=""
 					   description="MOD_CCK_LIST_CONFIG_ORDERING_DESC" class="inputbox" />
 				<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
