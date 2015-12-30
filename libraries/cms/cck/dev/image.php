@@ -15,8 +15,9 @@ jimport( 'joomla.filesystem.file' );
 // JCckDevImage
 class JCckDevImage
 {
-	protected $_height 		=	0;
+	protected $_exif 		=	array();
 	protected $_extension 	=	'';
+	protected $_height 		=	0;
 	protected $_pathinfo 	=	NULL;
 	protected $_quality_jpg	=	90;
 	protected $_quality_png	=	3;
@@ -32,6 +33,10 @@ class JCckDevImage
 		
 		$this->_pathinfo 	=	pathinfo( $path );
 		$this->_extension	=	strtolower( $this->_pathinfo['extension'] );
+
+		if ( in_array( $this->_extension, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
+			$this->_exif 	=	exif_read_data( $path, 0, true );
+		}
 		
 		$this->_resource 	= 	$this->_createResource( $this->_extension, $path );
 		list( $this->_width, $this->_height )	=	getimagesize( $path );
@@ -92,6 +97,32 @@ class JCckDevImage
 		return true;
 	}
 
+	// rotate
+	public function rotate( $degrees = 0 )
+	{
+		if ( !$degrees && isset( $this->_exif['IFD0']['Orientation'] ) ) {
+			switch ( $this->_exif['IFD0']['Orientation'] ) {
+				case 8:
+					$degrees	=	90;
+					break;
+				case 3:
+					$degrees	=	180;
+					break;
+				case 6:
+					$degrees	=	-90;
+					break;
+				default:
+					$degrees	=	0;
+					break;
+			}
+		}
+
+		if ( $degrees ) {
+			$rotate	=	imagerotate( $this->_resource, $degrees, 0 );
+			$this->_generateThumb( $this->_extension, $rotate, $this->_pathinfo['dirname'].'/'.$this->_pathinfo['basename'] );
+		}
+	}
+	
 	// _createResource
 	protected function _createResource( $ext, $path )
 	{
