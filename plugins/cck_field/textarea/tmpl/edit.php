@@ -21,6 +21,7 @@ defined( '_JEXEC' ) or die;
         echo JCckDev::renderForm( 'core_rows', $this->item->rows, $config, array( 'defaultvalue'=>'3' ) );
 		echo JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config );
         echo JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config );
+        echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Characters Remaining', 'defaultvalue'=>'0', 'options'=>'Show=1||Hide=0' ) );
 		
         echo JCckDev::renderHelp( 'field', 'seblod-2-x-textarea-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'COM_CCK_PROCESSING_DESC_TEXTAREA' ), 2 );
