@@ -266,6 +266,15 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$value;
+
+		$texts						=	( isset( $field->text ) ) ? explode( $divider, $field->text ) : array();
+		$values						=	( is_string( $field->value ) ) ? explode( $divider, $field->value ) : $field->value;
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>@$texts[$k], 'value'=>$v );
+			}
+		}
 		
 		// Return
 		if ( $return === true ) {

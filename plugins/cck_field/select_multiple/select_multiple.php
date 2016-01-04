@@ -181,6 +181,15 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		}
 		$field->value	=	$value;
 		
+		$texts						=	( isset( $field->text ) ) ? explode( $divider, $field->text ) : array();
+		$values						=	( is_string( $field->value ) ) ? explode( $divider, $field->value ) : $field->value;
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>@$texts[$k], 'value'=>$v );
+			}
+		}
+
 		// Return
 		if ( $return === true ) {
 			return $field;
