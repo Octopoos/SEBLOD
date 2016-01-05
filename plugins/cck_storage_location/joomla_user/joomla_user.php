@@ -332,7 +332,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			self::_initTable_fromSite( $table, $data, $config );
 			
 			if ( $isNew ) {
-				$activation	=	$parameters->get( 'useractivation' );
+				$activation		=	$parameters->get( 'useractivation' );
+
+				if ( empty( $data['password'] ) ) {
+					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password2']	=	$data['password'];
+				}
 				if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
 					$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
 					$data['block']						=	1;
@@ -373,6 +378,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			
 			// Prepare
 			if ( is_array( $data ) ) {
+				if ( $isNew && empty( $data['password'] ) ) {
+					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password2']	=	$data['password'];
+				}
 				$table->bind( $data );
 			}
 			self::_completeTable( $table, $data, $config, $parameters );
