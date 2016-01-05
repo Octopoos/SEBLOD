@@ -59,6 +59,7 @@ $ -> Language fix or change
 + "Multiple", "Parent" parameters added on Joomla! Tag Field plug-in.
 + "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
 + "Rel" parameter added on Link plug-in.
++ "Remaining Characters" aded on Textarea plug-in.
 + "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
 
@@ -68,6 +69,7 @@ $ -> Language fix or change
 + "Add to Cart" permission added.
 + Various Improvements for upcoming SEBLOD eCommerce add-on.
 
+! Force Random Password to have 20 characters.
 ! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
 ! SEBLOD.com Urls updated in Admin Menu Module.
 ! Various images added for all supported Object plug-ins.
@@ -77,6 +79,7 @@ $ -> Language fix or change
 ^ "show_page_heading" parameter forced to 0 when tmpl=raw on Forms & Lists.
 
 # Add missing options pre/post before/after store processing.
+# "allowUserRegistration" now supported.
 # Cookie issue while creating a new Search Type (back-end) fixed.
 # Custom Attributes issue fixed on Cotnent plug-in (beforeRender).
 # < p > removed from Freetexts field in install.sql
@@ -85,6 +88,7 @@ $ -> Language fix or change
 # Keep "return" in "user profile edit" redirection.
 # Maxlength validation fixed on Messages (Configuration) on back-end.
 # Missing Languages files (for Package Export) added.
+# Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
 # Nested Lists (using "Items" view) issue fixed.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
 # "Prepare Content" issue fixed on "Joomla! Module" plug-in >> "PrepareContent" method.
