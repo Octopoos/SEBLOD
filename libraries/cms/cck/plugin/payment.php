@@ -25,6 +25,19 @@ class JCckPluginPayment extends JPlugin
 		JCckDatabase::execute( 'UPDATE #__cck_more_ecommerce_orders SET '.$update.' WHERE pay_key = "'.$config['pay_key'].'"' );
 
 		if ( !$success ) {
+			$event		=	'onCckPaymentFailure';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+
 			return;
 		}
 
