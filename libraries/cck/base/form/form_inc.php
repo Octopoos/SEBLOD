@@ -131,6 +131,11 @@ if ( ! $canAccess ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 	}
 }
+if ( $type->storage_location == 'joomla_user' && $isNew ) {
+	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+	}
+}
 
 // Fields
 $fields		=	CCK_Form::getFields( array( $type->name, $type->parent ), $preconfig['client'], $stage, '', true, true );
