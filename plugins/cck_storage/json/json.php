@@ -119,7 +119,7 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 				$value	=	$storage->values[$P][$field->storage_field2];
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
-					$value	=	$value[$field->storage_field3];
+					$value	=	@$value[$field->storage_field3];
 				}
 			}
 		}
