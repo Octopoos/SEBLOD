@@ -50,15 +50,20 @@ $values			=	getOptions( $live );
 $variations		=	getOptions( $variat );
 
 // Variations
-$opts			=	array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_INHERITED' ).' -' ),
-						   JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
-						   JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-						   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-						   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-						   JHtml::_( 'select.option', 'form', JText::_( 'COM_CCK_DEFAULT' ) ),
-						   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-						   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
-						   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
+$opts			=	array(
+						JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_INHERITED' ).' -' ),
+						JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+						JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+						JHtml::_( 'select.option', 'hidden_anonymous', JText::_( 'COM_CCK_HIDDEN_ANONYMOUS_AND_SECURED' ) ),
+						JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
+						JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+						JHtml::_( 'select.option', 'form', JText::_( 'COM_CCK_DEFAULT' ) ),
+						JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
+						JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+						JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+						JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) ),
+						JHtml::_( 'select.option', '</OPTGROUP>', '' )
+					);
 
 // Process
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';

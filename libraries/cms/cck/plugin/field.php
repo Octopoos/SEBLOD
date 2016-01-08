@@ -954,8 +954,9 @@ class JCckPluginField extends JPlugin
 			$field->form	=	$base;
 			$field->display =	0;
 		} else {
+			$attr_id		=	( $variation == 'hidden_anonymous' ) ? '' : 'id="'.$id.'" ';
 			$attr			=	$field->attributes ? ' '.$field->attributes : '';
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" '.$attr_id.'name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
 			$field->form	=	$base;
 			if ( $field->display ) {
 				$field->display =	1;
