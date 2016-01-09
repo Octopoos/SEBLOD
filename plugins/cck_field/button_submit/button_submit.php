@@ -194,6 +194,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				}
 				if ( !$task_auto ) {
 					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$click.'}';
+				} else {
+					$config['doQuery2']	=	true;
 				}
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$click.'"' : '';
 			} elseif ( $task == 'save2redirect' ) {
@@ -339,10 +341,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$process['task']	=	str_replace( array( 'form.', 'list.' ), '', $process['task'] );
 		
 		if ( $process['task_auto'] && ( $process['task'] == 'export' || $process['task'] == 'process' ) ) {
-			if ( isset( $config['ids'] ) && $config['ids'] != '' ) {
+			$target			=		( isset( $config['ids2'] ) && $config['ids2'] != '' ) ? 'ids2' : 'ids';
+			
+			if ( isset( $config[$target] ) && $config[$target] != '' ) {
 				$name					=	$process['name'];
 				$search					=	'onclick="';
-				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config['ids'].'">\');' );
+				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config[$target].'">\');' );
 				$fields[$name]->form	=	str_replace( $search, $replace, $fields[$name]->form );
 			}
 		}
