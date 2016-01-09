@@ -103,7 +103,7 @@ class CCKViewList extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
-		$pagination	=	$this->getModel()->_getPagination( $total );
+		$pagination	=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
 		if ( !is_object( @$options ) ) {
@@ -136,7 +136,7 @@ class CCKViewList extends JViewLegacy
 		} else {
 			$this->description			=	'';
 		}
-		if ( !$total && !$options->get( 'show_list_desc_no_result', '1' ) ) {
+		if ( !$total_items && !$options->get( 'show_list_desc_no_result', '1' ) ) {
 			$this->show_list_desc		=	0;
 			$this->description			=	'';
 		}
@@ -195,7 +195,7 @@ class CCKViewList extends JViewLegacy
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;
-		$this->total					=	&$total;
+		$this->total					=	&$total_items;
 	}
 }
 ?>

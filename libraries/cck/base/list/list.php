@@ -119,12 +119,25 @@ class CCK_List
 	// getFields
 	public static function getFields( $search, $client, $excluded = '', $idx = true, $cck = false )
 	{
+		$where 	=	' WHERE b.name = "'.$search.'"';
+
 		// Client
-		if ( $client == 'all' )  {
-			$where 	=	' WHERE b.name = "'.$search.'"';
-		} else {
-			$where 	=	' WHERE b.name = "'.$search.'" AND c.client = "'.$client.'"';
+		if ( $client != 'all' )  {
+			$and		=	array();
+
+			if ( !is_array( $client ) ) {
+				$client	=	array( $client );
+			}
+
+			if ( count( $client ) ) {
+				foreach ( $client as $k=>$v ) {
+					$and[]	=	'c.client = "'.$v.'"';
+				}
+				$where	.=	' AND ('.implode( ' OR ', $and ).')';
+			}
 		}
+
+		// Exclude
 		if ( $excluded != '' ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
 		}
@@ -134,18 +147,25 @@ class CCK_List
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	' SELECT DISTINCT '.self::getFieldColumns_asString( 'a' ).', c.client,'
+		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_search_field AS c ON c.fieldid = a.id'
 				. 	' LEFT JOIN #__cck_core_searchs AS b ON b.id = c.searchid'
 				.	$where
+				.	' GROUP BY c.client, c.fieldid'
 				.	' ORDER BY c.ordering ASC';
 				;
-		$fields	=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
+		$fields	=	( $idx ) ? JCckDatabase::loadObjectListArray( $query, 'client', 'name' ) : JCckDatabase::loadObjectList( $query, 'client' ); //#
 		
 		if ( ! count( $fields ) ) {
 			$fields	=	array();
+
+			if ( count( $client ) ) {
+				foreach ( $client as $k=>$v ) {
+					$fields[$v]	=	array();
+				}
+			}
 		}
 		
 		return $fields;

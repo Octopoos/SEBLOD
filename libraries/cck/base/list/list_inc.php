@@ -68,9 +68,9 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 }
 
 // Fields
-$fields						=	CCK_List::getFields( $search->name, $preconfig['client'], '', true, true );
-$fields_order				=	CCK_List::getFields( $search->name, 'order', '', true, true );
-$count						=	count( $fields );
+$fields						=	CCK_List::getFields( $search->name, array( $preconfig['client'], 'order' ), '', true, true );
+
+$count						=	count( $fields['search'] );
 $doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
 $doDebug					=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
 $options->set( 'debug', $doDebug );
@@ -205,9 +205,24 @@ $context	=	$app->input->getString( 'context' );
 if ( $context != '' ) {
 	$context	=	str_replace( "'", '"', $context );
 	$context	=	json_decode( $context );
+	$vars		=	array(
+						'Itemid'=>'',
+						'view'=>'form'
+					);
 
-	if ( isset( $context->view ) && $context->view == 'form' ) {
-		$app->input->set( 'view', 'form' );
+	foreach ( $vars as $key=>$val ) {
+		if ( isset( $context->$key ) ) {
+			$v	=	$context->$key;
+
+			if ( is_array( $val ) ) {
+				// todo
+			} elseif ( $val != '' ) {
+				if ( $v != $val ) {
+					continue;
+				}
+			}
+			$app->input->set( $key, $v );
+		}
 	}
 }
 
@@ -224,7 +239,7 @@ $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$params->get( 'o
 $stages					=	array();
 
 // Process
-foreach ( $fields as $field ) {
+foreach ( $fields['search'] as $field ) {
 	$name	=	$field->name;
 	$value	=	'';
 	
@@ -275,7 +290,7 @@ foreach ( $fields as $field ) {
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
 
 if ( isset( $doc ) ) {
-	$doc->fields		=	$fields;
+	$doc->fields		=	$fields['search'];
 }
 $config['limitstart']	=	$limitstart;
 $config['limitend']		=	$limitend;
@@ -290,7 +305,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $error ) {
 				// Search
 				$current['stage']	=	$stage;
-				$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
+				$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
 				if ( ! $items && $stages[$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
 					$error			=	1;
 					break;
@@ -301,7 +316,7 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	if ( ! $error ) {
 		$current['stage']	=	0;
-		$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
+		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
 	}
 	$total					=	count( $items );
 	
@@ -383,6 +398,8 @@ if ( $preconfig['task'] == 'search' ) {
 					// Cut
 					$items	=	array_splice( $items, 0, $total );
 				}
+			} else {
+				$total	=	count( $items ); // todo: change above??
 			}
 			// Suffle
 			if ( $preconfig['ordering2'] == 'shuffle' || $preconfig['ordering2'] == 'random_shuffle' ) {
@@ -451,10 +468,10 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 			if ( $no_action ) {
 				if ( $no_action == 'auto_redirect' ) {
-					if ( isset( $fields['cck'] ) && !$fields['cck']->live && $fields['cck']->live_value ) {
+					if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
 						$uri			=	$_SERVER["HTTP_REFERER"];
 						$return			=	base64_encode( $uri );
-						$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
+						$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
 						$app->redirect( $redirect_url );
 					}
 					return;
@@ -491,12 +508,12 @@ if ( $preconfig['show_form'] > 0 ) {
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
 		foreach ( $config['process']['beforeRenderForm'] as $process ) {
 			if ( $process->type ) {
-				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
+				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields['search'], &$config['storages'], &$config ) );
 			}
 		}
 	}
 	
-	$doc->fields	=	&$fields;
+	$doc->fields	=	&$fields['search'];
 	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
