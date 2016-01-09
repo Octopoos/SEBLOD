@@ -90,6 +90,7 @@ if ( !$this->raw_rendering ) { ?>
 	} else {
 		$pages_total	=	0;
 	}
+	$hasAjax			=	( $pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ? true : false;
 	$pagination_replace	=	'';
 	if ( $this->show_pagination > -2 && $pages_total > 1 ) {
 		$url			=	JUri::getInstance()->toString().'&';
@@ -155,7 +156,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 </div></div>
 <?php } ?>
 
-<?php if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) { ?>
+<?php if ( $hasAjax ) { ?>
 <script type="text/javascript">
 (function ($){
 	JCck.Core.loadmore = function(more,stop,search) {
