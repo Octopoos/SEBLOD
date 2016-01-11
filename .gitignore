@@ -499,6 +499,7 @@
 /administrator/manifests/packages/seb_cloud/*
 /administrator/manifests/packages/seb_html/*
 /administrator/manifests/packages/seb_list/*
+/administrator/manifests/packages/seb_list2mail/*
 /administrator/manifests/packages/seb_map/*
 /administrator/manifests/packages/seb_masonry/*
 /administrator/manifests/packages/seb_minima/*
@@ -523,6 +524,7 @@
 /administrator/manifests/packages/pkg_seb_cloud.xml
 /administrator/manifests/packages/pkg_seb_html.xml
 /administrator/manifests/packages/pkg_seb_list.xml
+/administrator/manifests/packages/pkg_seb_list2mail.xml
 /administrator/manifests/packages/pkg_seb_map.xml
 /administrator/manifests/packages/pkg_seb_masonry.xml
 /administrator/manifests/packages/pkg_seb_minima.xml
@@ -674,6 +676,22 @@
 /language/en-GB/en-GB.mod_whosonline.sys.ini
 /language/en-GB/en-GB.mod_wrapper.ini
 /language/en-GB/en-GB.mod_wrapper.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_code.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_restriction_joomla_acl.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_seblod.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_sql.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_typo_joomla.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_validation_letters.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_validation_numbers.sys.ini
+/language/en-GB/en-GB.pkg_seb_accordion.sys.ini
+/language/en-GB/en-GB.pkg_seb_chart.sys.ini
+/language/en-GB/en-GB.pkg_seb_cloud.sys.ini
+/language/en-GB/en-GB.pkg_seb_list2mail.sys.ini
+/language/en-GB/en-GB.pkg_seb_map.sys.ini
+/language/en-GB/en-GB.pkg_seb_masonry.sys.ini
+/language/en-GB/en-GB.pkg_seb_popover.sys.ini
+/language/en-GB/en-GB.pkg_seb_table_heading.sys.ini
+/language/en-GB/en-GB.pkg_seb_tabs.sys.ini
 /language/en-GB/en-GB.tpl_atomic.ini
 /language/en-GB/en-GB.tpl_atomic.sys.ini
 /language/en-GB/en-GB.tpl_beez_20.ini
@@ -766,6 +784,22 @@
 /language/fr-FR/fr-FR.mod_whosonline.sys.ini
 /language/fr-FR/fr-FR.mod_wrapper.ini
 /language/fr-FR/fr-FR.mod_wrapper.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_code.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_restriction_joomla_acl.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_seblod.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_sql.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_typo_joomla.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_validation_letters.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_validation_numbers.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_accordion.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_chart.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_cloud.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_list2mail.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_map.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_masonry.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_popover.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_table_heading.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_tabs.sys.ini
 /language/fr-FR/fr-FR.tpl_atomic.ini
 /language/fr-FR/fr-FR.tpl_atomic.sys.ini
 /language/fr-FR/fr-FR.tpl_beez_20.ini
@@ -1877,6 +1911,12 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_list.ini
 /language/fr-FR/fr-FR.tpl_seb_list.ini
 /templates/seb_list/*
+
+######## SEBLOD Templates >> List2Mail
+
+/language/en-GB/en-GB.tpl_seb_list2mail.ini
+/language/fr-FR/fr-FR.tpl_seb_list2mail.ini
+/templates/seb_list2mail/*
 
 ######## SEBLOD Templates >> Map
 
