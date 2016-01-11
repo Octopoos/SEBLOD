@@ -497,6 +497,7 @@
 /administrator/manifests/packages/seb_backstretch/*
 /administrator/manifests/packages/seb_chart/*
 /administrator/manifests/packages/seb_cloud/*
+/administrator/manifests/packages/seb_comparison/*
 /administrator/manifests/packages/seb_html/*
 /administrator/manifests/packages/seb_list/*
 /administrator/manifests/packages/seb_list2mail/*
@@ -522,6 +523,7 @@
 /administrator/manifests/packages/pkg_seb_backstretch.xml
 /administrator/manifests/packages/pkg_seb_chart.xml
 /administrator/manifests/packages/pkg_seb_cloud.xml
+/administrator/manifests/packages/pkg_seb_comparison.xml
 /administrator/manifests/packages/pkg_seb_html.xml
 /administrator/manifests/packages/pkg_seb_list.xml
 /administrator/manifests/packages/pkg_seb_list2mail.xml
@@ -686,9 +688,11 @@
 /language/en-GB/en-GB.pkg_seb_accordion.sys.ini
 /language/en-GB/en-GB.pkg_seb_chart.sys.ini
 /language/en-GB/en-GB.pkg_seb_cloud.sys.ini
+/language/en-GB/en-GB.pkg_seb_comparison.sys.ini
 /language/en-GB/en-GB.pkg_seb_list2mail.sys.ini
 /language/en-GB/en-GB.pkg_seb_map.sys.ini
 /language/en-GB/en-GB.pkg_seb_masonry.sys.ini
+/language/en-GB/en-GB.pkg_seb_minima.sys.ini
 /language/en-GB/en-GB.pkg_seb_popover.sys.ini
 /language/en-GB/en-GB.pkg_seb_table_heading.sys.ini
 /language/en-GB/en-GB.pkg_seb_tabs.sys.ini
@@ -794,9 +798,11 @@
 /language/fr-FR/fr-FR.pkg_seb_accordion.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_chart.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_cloud.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_comparison.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_list2mail.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_map.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_masonry.sys.ini
+/language/fr-FR/fr-FR.pkg_seb_minima.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_popover.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_table_heading.sys.ini
 /language/fr-FR/fr-FR.pkg_seb_tabs.sys.ini
@@ -1296,6 +1302,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.sys.ini
 /plugins/cck_field/join_x/*
 
+######## SEBLOD Plug-ins >> Field >> Message Redirection
+
+/administrator/language/en-GB/en-GB.plg_cck_field_message_redirection.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_message_redirection.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_message_redirection.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_message_redirection.sys.ini
+/plugins/cck_field/message_redirection/*
+
 ######## SEBLOD Plug-ins >> Field >> Radio Numeric
 
 /administrator/language/en-GB/en-GB.plg_cck_field_radio_numeric.ini
@@ -1503,6 +1517,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.sys.ini
 /plugins/cck_field_live/datetime/*
 
+######## SEBLOD Plug-ins >> Live >> Joomla! Menu Item
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_joomla_menu_item.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_joomla_menu_item.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_joomla_menu_item.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_joomla_menu_item.sys.ini
+/plugins/cck_field_live/joomla_menu_item/*
+
 ######## SEBLOD Plug-ins >> Live >> Lorem Ipsum
 
 /administrator/language/en-GB/en-GB.plg_cck_field_live_lorem_ipsum.ini
@@ -1510,6 +1532,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_lorem_ipsum.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_lorem_ipsum.sys.ini
 /plugins/cck_field_live/lorem_ipsum/*
+
+######## SEBLOD Plug-ins >> Live >> Mobile Device
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_mobile_device.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_mobile_device.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_mobile_device.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_mobile_device.sys.ini
+/plugins/cck_field_live/mobile_device/*
 
 ######## SEBLOD Plug-ins >> Live >> Random Number
 
@@ -1551,6 +1581,30 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.sys.ini
 /plugins/cck_field_live/url/*
 
+######## SEBLOD Plug-ins >> Object >> Joomla! Menu Item
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_menu_item.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_menu_item.sys.ini
+/plugins/cck_storage_location/joomla_menu_item/*
+
+######## SEBLOD Plug-ins >> Object >> Joomla! Redirection
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_redirection.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_redirection.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_redirection.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_redirection.sys.ini
+/plugins/cck_storage_location/joomla_redirection/*
+
+######## SEBLOD Plug-ins >> Object >> Joomla! Tag
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_tag.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_tag.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_tag.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_tag.sys.ini
+/plugins/cck_storage_location/joomla_tag/*
+
 ######## SEBLOD Plug-ins >> Object >> Joomla! User Note
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_user_note.ini
@@ -1558,6 +1612,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.sys.ini
 /plugins/cck_storage_location/joomla_user_note/*
+
+######## SEBLOD Plug-ins >> Restriction >> Clear
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_clear.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_clear.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.sys.ini
+/plugins/cck_field_restriction/clear/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 
@@ -1899,6 +1961,12 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_cloud.ini
 /language/fr-FR/fr-FR.tpl_seb_cloud.ini
 /templates/seb_cloud/*
+
+######## SEBLOD Templates >> Comparison
+
+/language/en-GB/en-GB.tpl_seb_comparison.ini
+/language/fr-FR/fr-FR.tpl_seb_comparison.ini
+/templates/seb_comparison/*
 
 ######## SEBLOD Templates >> HTML
 
