@@ -35,6 +35,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		}
 		
 		$field->typo		=	parent::g_hasLink( $field, $typo, $field->typo );
+		$field->typo_mode	=	1;
 	}
 		
 	// _typo
