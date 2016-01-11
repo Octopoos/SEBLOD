@@ -33,7 +33,7 @@ $ -> Language fix or change
 + "Count" (Auto / Estimate) parameter added on Search Types.
 + "Load" behaviour added to Infinite Pagination on Search Types.
   >> support added on the following templates: Chart, Map.
-+ Reorder by drag-and-drop capabilites added.
++ Reorder by drag-and-drop capabilities added.
   >> supported Object plug-ins: Joomla! Article, Joomla! Category
 + Router improved for 2 segments URLs (i.e. /author/...)
   >> supported Object plug-ins: Joomla! Article
@@ -45,6 +45,7 @@ $ -> Language fix or change
 + "Alternative Search Type" parameter added on List module.
 + "Auto Redirection (Vars)" added on Lists.
 + "Export", "Process" tasks (Submit Button) support added on Content views.
++ "Hidden & Anonymous" Field Variation added on Forms.
 + "Hidden when filled" Field Variation added on Forms.
 + Pagination parameter added on Lists Menu Items.
 + "seb_css3b" variation added (cleaner version of seb_css3).
@@ -74,9 +75,11 @@ $ -> Language fix or change
 ! SEBLOD.com Urls updated in Admin Menu Module.
 ! Various images added for all supported Object plug-ins.
 
+^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ "show_page_heading" parameter forced to 0 when tmpl=raw on Forms & Lists.
+^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 
 # Add missing options pre/post before/after store processing.
 # "allowUserRegistration" now supported.
@@ -98,6 +101,7 @@ $ -> Language fix or change
 # Router issue (related to 2 segments URLs) fixed (regression.. :/).
 # Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
 # Syntax (replacement) issues fixed on "Email" plug-in.
+# Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
 # Various improvements or issues fixed.
 
 -------------------- 3.7.2 Upgrade Release [19-Sep-2015] -------------
