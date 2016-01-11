@@ -81,8 +81,10 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			} else {
 				//
 			}
-		} else {
+		} elseif ( $content != '2' ) {
 			$field->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+		} else {
+			$field->link		=	'';
 		}
 		if ( $field->link ) {
 			if ( $vars ) {
@@ -164,6 +166,10 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 
 		$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
 		$target					=	 $fields[$name]->typo_target;
+
+		if ( isset( $fields[$name]->typo_mode ) && $fields[$name]->typo_mode ) {
+			$target	=	'typo';
+		}
 		if ( $fields[$name]->link ) {
 			if ( $process['vars'] ) {
 				$fields[$name]->link	.=	( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['vars'] : '?'.$process['vars'];
