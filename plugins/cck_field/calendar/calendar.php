@@ -211,7 +211,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			if ( JCck::on() ) {
-				$form		.=	'<button class="btn" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
+				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
 			} else {
 				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';	
 			}
