@@ -395,7 +395,10 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
-		// require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php'; // todo: include for manual use of JCckDev (but not for add-on.. :/)
+		if (!class_exists('Helper_Include'))
+		{
+			require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php';
+		}
 		
 		Helper_Include::addValidation( $config['validation'], $config['validation_options'], $id );
 		
