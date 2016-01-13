@@ -205,7 +205,11 @@ class CCK_Rendering
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
-			$this->params['variation_default']	=	$app->isAdmin() ? 'seb_css3b' : JCck::getConfig_Param( 'site_variation', 'seb_css3' );
+			if ( $app->isAdmin() ) {
+				$this->params['variation_default']	=	'seb_css3b';
+			} else {
+				$this->params['variation_default']	=	JCck::getConfig_Param( ( $this->mode == 'form' ? 'site_variation_form' : 'site_variation' ), 'seb_css3' );
+			}
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
 		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
