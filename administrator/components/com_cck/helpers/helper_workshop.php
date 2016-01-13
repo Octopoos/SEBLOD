@@ -455,7 +455,7 @@ class Helper_Workshop
 	public static function getPositionVariations( $template = '', $default = true )
 	{
 		$path		=	JPATH_SITE.'/libraries/cck/rendering/variations';
-		$variations	=	( $default !== false ) ? array( ''=>'- '.JText::_( 'COM_CCK_DEFAULT' ).' -',
+		$variations	=	( $default !== false ) ? array( ''=>'- '.JText::_( 'COM_CCK_INHERITED' ).' -',
 													   'empty' => '- '.JText::_( 'COM_CCK_EMPTY' ).' -',
 													   'none' => '- '.JText::_( 'COM_CCK_NONE' ).' -'
 													)
