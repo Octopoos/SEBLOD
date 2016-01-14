@@ -39,7 +39,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
@@ -49,7 +49,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );

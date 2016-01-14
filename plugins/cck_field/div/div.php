@@ -29,7 +29,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchContent
-	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 
@@ -37,7 +37,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['match_mode']	=	NULL;
 		$data['markup']		=	NULL;
@@ -47,7 +47,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 
@@ -55,7 +55,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 		$data['validation']	=	NULL;

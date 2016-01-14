@@ -29,7 +29,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		parent::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data );
 		
@@ -38,7 +38,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		parent::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data );
 		

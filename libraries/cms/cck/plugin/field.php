@@ -101,7 +101,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data );
 		
@@ -110,7 +110,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data );
 		
@@ -119,7 +119,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
 		
@@ -128,7 +128,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchOrder
-	public static function onCCK_FieldConstruct_SearchOrder( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchOrder( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchOrder( $field, $style, $data );
 		
@@ -137,7 +137,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchContent
-	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchContent( $field, $style, $data );
 		
@@ -292,7 +292,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_TypeForm
-	public static function g_onCCK_FieldConstruct_TypeForm( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_TypeForm( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -384,7 +384,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_TypeContent
-	public static function g_onCCK_FieldConstruct_TypeContent( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_TypeContent( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -432,7 +432,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchSearch
-	public static function g_onCCK_FieldConstruct_SearchSearch( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchSearch( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -535,7 +535,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchOrder
-	public static function g_onCCK_FieldConstruct_SearchOrder( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchOrder( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -552,7 +552,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchContent
-	public static function g_onCCK_FieldConstruct_SearchContent( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchContent( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;

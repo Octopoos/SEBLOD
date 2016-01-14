@@ -167,8 +167,11 @@ class CCKController extends JControllerLegacy
 	public function ajax_field_li( $field = NULL, $client = '' )
 	{
 		$app		=	JFactory::getApplication();
+		$config		=	array(
+							'task'=>'ajax_field_li'
+						);
 		$lang		=	JFactory::getLanguage();
-		
+
 		if ( is_object( $field ) ) {
 			$return		=	true;
 			$element	=	'type';
@@ -201,7 +204,7 @@ class CCKController extends JControllerLegacy
 		$style		=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
 		$data		=	Helper_Workshop::getParams( $element, $master, $client );
 		
-		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data ) );
+		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, $config ) );
 		
 		$json		=	array();
 		ob_start();
