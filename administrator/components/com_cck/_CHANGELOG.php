@@ -39,7 +39,7 @@ $ -> Language fix or change
   >> supported Object plug-ins: Joomla! Article
 
 + Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
-+ "Default Variation" parameter added on SEBLOD Options (Site).
++ "Default Variation", "Default Variation (Form)" parameters added on SEBLOD Options (Site).
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
 + "Alternative Search Type" parameter added on List module.
@@ -47,7 +47,7 @@ $ -> Language fix or change
 + "Export", "Process" tasks (Submit Button) support added on Content views.
 + "Hidden & Anonymous" Field Variation added on Forms.
 + "Hidden when filled" Field Variation added on Forms.
-+ Pagination parameter added on Lists Menu Items.
++ Pagination parameter added on List Menu Items.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 + Title (Inherited / Menu Item / Custom) parameter added on Forms & Lists Menu Items.
 + "URL" mode added to "Menu Item Target" on Search module.
@@ -60,7 +60,7 @@ $ -> Language fix or change
 + "Multiple", "Parent" parameters added on Joomla! Tag Field plug-in.
 + "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
 + "Rel" parameter added on Link plug-in.
-+ "Remaining Characters" aded on Textarea plug-in.
++ "Remaining Characters" added on Textarea plug-in.
 + "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
 
@@ -85,6 +85,7 @@ $ -> Language fix or change
 # "allowUserRegistration" now supported.
 # Cookie issue while creating a new Search Type (back-end) fixed.
 # Custom Attributes issue fixed on Cotnent plug-in (beforeRender).
+# Cyrillic issue fixed (while creating a field from a Content Type).
 # < p > removed from Freetexts field in install.sql
 # HTML output fixed on "Group X" (Form views) Field plug-ins when markup=none.
 # Issues fixed on JCckContent class.
