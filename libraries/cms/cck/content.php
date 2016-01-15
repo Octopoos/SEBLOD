@@ -289,7 +289,7 @@ class JCckContent
 		if ( $status ) {
 			switch( $instance_name ) {
 				case 'base':
-					$this->_pk	=	$this->{'_instance_'.$instance_name}->id;
+					$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
 					
 					if ( $this->_instance_core->id ) {
 						$data_core	=	array();
