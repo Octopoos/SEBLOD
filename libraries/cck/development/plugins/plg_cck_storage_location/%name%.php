@@ -41,7 +41,6 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 											   '3'=>'full', '32'=>'id', '33'=>'alias',
 											   '4'=>'full', '42'=>'id', '43'=>'alias'
 										);
-	protected static $routes		=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
