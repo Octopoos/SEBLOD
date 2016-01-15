@@ -110,8 +110,12 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 						$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
 						$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
 
-						$interval		=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
-						$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+						if ( $hours == 0 ) {
+							$interval		=	JText::_( 'COM_CCK_JUST_NOW' );
+						} else {
+							$interval		=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
+							$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+						}
 					} else {
 						$interval		=	JText::_( 'COM_CCK_TODAY' );
 					}
