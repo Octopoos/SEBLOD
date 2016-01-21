@@ -50,8 +50,21 @@ abstract class JCck
 			return self::$_config;
 		}
 
+		$app			=	JFactory::getApplication();
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+
+		// Tweak Language: JText
+		$translate		=	(int)$config->params->get( 'language_jtext', 0 );
+		if ( $translate == 2 ) {
+			if ( !( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) ) ) {
+				if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+					$config->params->set( 'language_jtext', 0 );
+				} else {
+					$config->params->set( 'language_jtext', 1 );
+				}
+			}
+		}
 		
 		self::$_config	=&	$config;
 	}
