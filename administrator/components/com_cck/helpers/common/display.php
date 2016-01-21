@@ -19,7 +19,7 @@ class CommonHelper_Display
 		?>
 		<div class="copyright">
 			<strong><a target="_blank" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::_( 'COM_CCK_COPYRIGHT_SEBLOD_ADDON' ); ?>
-            <br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2015'; ?>
+            <br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2016'; ?>
 		</div>
 		<?php
 	}
