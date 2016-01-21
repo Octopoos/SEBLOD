@@ -385,7 +385,7 @@ class plgSearchCCK extends JPlugin
 						}
 					}
 				}
-				if ( $config['doQuery2'] && isset( $results2 ) && count( $results2 ) ) {
+				if ( isset( $config['doQuery2'] ) && $config['doQuery2'] && isset( $results2 ) && count( $results2 ) ) {
 					$config['ids2']		=	'';
 					$config['pks2']		=	'';
 
