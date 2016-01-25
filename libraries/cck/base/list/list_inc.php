@@ -305,7 +305,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $error ) {
 				// Search
 				$current['stage']	=	$stage;
-				$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+				$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 				if ( ! $items && $stages[$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
 					$error			=	1;
 					break;
@@ -316,7 +316,7 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	if ( ! $error ) {
 		$current['stage']	=	0;
-		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 	}
 	$total					=	count( $items );
 	
