@@ -53,6 +53,30 @@ abstract class JCckWebservice
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Call
 
+	// call
+	public static function call( $name )
+	{
+		$response		=	null;
+		$webservice		=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.request, a.request_object, a.request_options, a.response, a.response_format FROM #__cck_more_webservices_calls AS a'
+													. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
+													. ' WHERE a.name = "'.$name.'"' );
+		if ( !is_object( $webservice ) ) {
+			return;
+		}
+		$config			=	array();
+		$dispatcher		=	JDispatcher::getInstance();
+		$fields			=	array();
+
+		JPluginHelper::importPlugin( 'cck_webservice' );
+		$dispatcher->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+
+		if ( isset( $webservice->response ) ) {
+			$response	=	$webservice->response;
+		}
+
+		return $response;
+	}
+
 	// getCall
 	public static function getCall( $name )
 	{
