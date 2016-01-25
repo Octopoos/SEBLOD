@@ -117,7 +117,7 @@ abstract class JCckToolbox
 		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$id );
 
 		if ( is_object( $processing ) && is_file( JPATH_SITE.$processing->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+			$options	=	new JRegistry( $processing->options );
 
 			include_once JPATH_SITE.$processing->scriptfile;
 		}
