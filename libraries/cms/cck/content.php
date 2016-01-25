@@ -322,6 +322,12 @@ class JCckContent
 		
 		return $status;
 	}
+
+	// set
+	public function set( $instance_name, $property, $value )
+	{
+		$this->{'_instance_'.$instance_name}->$property	=	$value;
+	}
 	
 	// _getProperties
 	protected function _getProperties()
