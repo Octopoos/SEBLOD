@@ -276,7 +276,7 @@ abstract class JCckDev
 								});
 								';
 					if ( !$elem->options ) {
-						//$js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
+						// $js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
 					}
 					$css	.=	'.button-add{display:none;}';
 					if ( !$elem->options ) {
@@ -300,9 +300,12 @@ abstract class JCckDev
 			
 			return;
 		}
-		
-		if ( $elem->name ) {
-			JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
+		if ( $type == 'processing' ) {
+			JFactory::getLanguage()->load( 'files_pro_cck_'.$elem->name, JPATH_SITE, null, false, true );
+		} else {
+			if ( $elem->name ) {
+				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
+			}
 		}
 		Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 		
@@ -315,62 +318,88 @@ abstract class JCckDev
 			$js2	=	'if($("#typo_label").length) { $("#typo_label").val(parent.jQuery("#"+eid+"_typo_label").val()); }';
 			$js3	=	'if($("#typo_label").length) { parent.jQuery("#"+eid+"_typo_label").val($("#typo_label").val()); } excluded[0] = "typo_label"';
 		}
+		if ( !isset( $options['js']['load'] ) ) {
+			$options['js']['load']		=	'var eid = "'.$elem->id.'";
+											var elem = "'.$elem->id.'_'.$type.'_options";
+											var encoded = parent.jQuery("#"+elem).val();
+											var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
+											if (data) {
+												var j = 0;
+												$.each(data, function(k, v) {
+													if(!$("#"+k).length) {
+														if (typeof v === "object") {
+															var p = "'.$type.'";
+															var $clone = $("#'.$type.'_id").parent().clone().addClass("new").appendTo(".target");
+															$("li.new > *").attr("id",p+j).myVal(k).parent().removeClass("new");
+															var $clone = $("#'.$type.'_options_id").parent().clone().addClass("new").appendTo(".target");
+															$("li.new > *").attr("id",p+j+"_options").myVal($.toJSON(v)).parent().removeClass("new");
+														} else {
+															var temp = v.split("||");
+															var len = temp.length;
+															for(i = 0; i < len; i++) {
+																if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
+																$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
+															}
+														}
+													} else {
+														$("#"+k).myVal( v );
+													}
+												});
+											}
+											'.$js2;
+		}
+		if ( !isset( $options['js']['reset'] ) ) {
+			$options['js']['reset']		=	'var elem = "'.$elem->id.'_'.$type.'_options";
+											parent.jQuery("#"+elem).val("");
+											this.close();';
+		}
+		if ( !isset( $options['js']['submit'] ) ) {
+			$options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") === true ) {
+												var eid = "'.$elem->id.'";
+												var elem = "'.$elem->id.'_'.$type.'_options";
+												var data = {};
+												var excluded = [];
+												'.$js3.'
+												if (typeof cck_dev != "undefined") {
+													$.each(cck_dev, function(k, v) {
+														if(jQuery.inArray(v, excluded) == -1) {
+															if(!$("#"+v).length) {
+																var temp = [];
+																$("[name=\""+v+"\[\]\"]").each(function(i) {
+																	temp[i] = $(this).val();
+																});
+																data[v] = temp.join("||");
+															} else {
+																data[v] = $("#"+v).myVal();
+															}
+														}
+													});
+												} else {
+													$(".'.$type.'s").each(function(i) {
+														var v = $(this).myVal();
+														if (v != "") {
+															var enc = $(".'.$type.'s_options:eq("+i+")").myVal();
+															if (enc == "") {
+																enc = "{}";
+															}
+															var d = $.evalJSON(enc);
+															data[v] = d;
+														}
+													});
+												}
+												var encoded = $.toJSON(data);
+												parent.jQuery("#"+elem).val(encoded);
+												this.close();
+												return;
+											}';
+		}
 		$js	=	'
 				(function ($){
 					JCck.Dev = {
-						reset: function() {
-							var elem = "'.$elem->id.'_'.$type.'_options";
-							parent.jQuery("#"+elem).val("");
-							this.close();
-						},
-						submit: function() {
-							if ( $("#adminForm").validationEngine("validate") === true ) {
-								var eid = "'.$elem->id.'";
-								var elem = "'.$elem->id.'_'.$type.'_options";
-								var data = {};
-								var excluded = [];
-								'.$js3.'
-								$.each(cck_dev, function(k, v) {
-									if(jQuery.inArray(v, excluded) == -1) {
-										if(!$("#"+v).length) {
-											var temp = [];
-											$("[name=\""+v+"\[\]\"]").each(function(i) {
-												temp[i] = $(this).val();
-											});
-											data[v] = temp.join("||");
-										} else {
-											data[v] = $("#"+v).myVal();
-										}
-									}
-								});
-								var encoded = $.toJSON(data);
-								parent.jQuery("#"+elem).val(encoded);
-								this.close();
-								return;
-							}
-						}
+						reset: function() {'.$options['js']['submit'].'},
+						submit: function() {'.$options['js']['submit'].'}
 					}
-					$(document).ready(function(){
-						var eid = "'.$elem->id.'";
-						var elem = "'.$elem->id.'_'.$type.'_options";
-						var encoded = parent.jQuery("#"+elem).val();
-						var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
-						if (data) {
-							$.each(data, function(k, v) {
-								if(!$("#"+k).length) {
-									var temp = v.split("||");
-									var len = temp.length;
-									for(i = 0; i < len; i++) {
-										if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
-										$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
-									}
-								} else {
-									$("#"+k).myVal( v );
-								}
-							});
-						}
-						'.$js2.'
-					});
+					$(document).ready(function(){'.$options['js']['load'].'});
 				})(jQuery); 
 			';
 		
