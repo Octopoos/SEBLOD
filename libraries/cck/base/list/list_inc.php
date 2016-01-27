@@ -23,6 +23,7 @@ $items			=	array();
 $lang   		=	JFactory::getLanguage();
 $path			=	JPATH_SITE.'/templates';
 $total			=	0;
+$total_items	=	0;
 $user 			=	JCck::getUser();
 $user->gid		=	25; // Todo:: ACL
 
@@ -55,6 +56,7 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
 						   'javascript'=>'',
+						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
 						   'validation'=>array(),
@@ -84,6 +86,7 @@ if ( ! $count ) {
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
 						   'javascript'=>'',
+						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
 						   'validation'=>array(),
@@ -149,6 +152,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
+						   'limitend'=>0,
 						   'location'=>'',
 						   'pk'=>$id,
 						   'submit'=>$preconfig['submit'],
