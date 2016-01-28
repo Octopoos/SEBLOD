@@ -181,10 +181,19 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			} else {
 				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE id IN ('.$config['pks'].')', 'id' );
 				if ( !isset( $storages[self::$table] ) ) {
-					$storages['_']			=	self::$table;
-					$storages[self::$table]	=	JCckDatabase::loadObjectList( 'SELECT a.*, b.title AS category_title, b.alias AS category_alias'
-																			. ' FROM '.self::$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid'
-																			. ' WHERE a.'.self::$key.' IN ('.$config['pks'].')', self::$key );
+					$storages['_']	=	self::$table;
+
+					$select			=	( $config['doSEF'][0] == '5' ) ? ', d.alias AS author_alias' : '';
+					$query			=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
+									.	' FROM '.self::$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+					
+					if ( $config['doSEF'][0] == '5' ) {
+						$query		.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
+									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
+					}
+					$query			.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
+
+					$storages[self::$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
 					foreach ( $storages[self::$table] as $s ) {
 						$s->slug	=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
 					}
@@ -767,7 +776,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		$vars['option']	=	'com_content';
 		$vars['view']	=	'article';
-
+		
 		if ( $n == 2 ) {
 			if ( $config['doSEF'][0] == '5' ) {
 				$join				.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
