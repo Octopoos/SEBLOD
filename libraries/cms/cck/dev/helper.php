@@ -174,7 +174,7 @@ abstract class JCckDevHelper
 	}
 	
 	// getRouteParams
-	public static function getRouteParams( $name )
+	public static function getRouteParams( $name, $sef = '' )
 	{
 		static $params	=	array();
 		
@@ -186,7 +186,13 @@ abstract class JCckDevHelper
 			$object->options	=	json_decode( $object->options );
 
 			$params[$name]				=	array();
-			$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+
+			if ( $sef != '' ) {
+				$params[$name]['doSEF']	=	$sef;
+			} else {
+				$params[$name]['doSEF']	=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+			}
+
 			$params[$name]['join_key']	=	'pk';
 			$params[$name]['location']	=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
 		}

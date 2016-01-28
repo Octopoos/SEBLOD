@@ -62,8 +62,6 @@
 				   label="COM_CCK_CONFIG_SHOW_PAGINATION" description="COM_CCK_CONFIG_SHOW_PAGINATION_DESC" class="inputbox" />
 			<field name="class_pagination" type="cck" construction="core_class_pagination" default="" label="" description="" class="inputbox" 
 				   js_appendto="jform_params_show_pagination=#jform_params_class_pagination" js_isvisiblewhen="div#jform_params_class_pagination-more='jform_params_show_pagination','-1,0,1',false" js_format="html" hidden="true" />
-			
-			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
 		</fieldset>
 		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
 			<field name="live" type="cckhidden" label="" description="" />
@@ -75,8 +73,10 @@
 				<option value="0">JNO</option>
 				<option	value="1">JYES</option>
 			</field>
+			<field name="sef" type="cck" construction="core_sef" label="COM_CCK_CONFIG_SEF" description="COM_CCK_CONFIG_SEF_DESC" class="inputbox" cck_selectlabel="Inherited" />
 			<field name="display_form_title" type="cck" construction="core_dev_select" cck_options="Menu Item=0||Custom=1" cck_selectlabel="Inherited" default="" label="LIB_CCK_TITLE" description="" class="inputbox" />
 			<field name="title_form_title" type="cck" construction="core_dev_text" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Title)'" js_appendto="jform_params_display_form_title=#jform_params_title_form_title" js_isvisiblewhen="div#jform_params_title_form_title-more='jform_params_display_form_title','1',false" js_format="html" hidden="true" />
+			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
 		</fieldset>
 	</fields>
 </metadata>
