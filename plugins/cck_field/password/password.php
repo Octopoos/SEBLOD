@@ -64,13 +64,9 @@ class plgCCK_FieldPassword extends JCckPluginField
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
-			if ( $config['pk'] ) { // hardfix for now
-				$field->required	=	'';
-			} else {
-				plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
-				parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true ) );
-				$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
-			}
+			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true ) );
+			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 		
 		// Prepare
