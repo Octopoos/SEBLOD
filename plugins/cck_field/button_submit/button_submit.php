@@ -193,7 +193,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
 				}
 				if ( !$task_auto ) {
-					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$click.'}';
+					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$click.'}';
 				} else {
 					$config['doQuery2']	=	true;
 				}
@@ -278,7 +278,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
 				$onclick		=	$pre_task.'JCck.Core.submit(\''.$task.'\')';
 				if ( !$task_auto ) {
-					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$onclick.'}';
+					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$onclick.'}';
 				}
 				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
 				
