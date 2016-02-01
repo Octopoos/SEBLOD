@@ -102,17 +102,8 @@ class plgCCK_FieldText extends JCckPluginField
 		}
 		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$maxlen;
+
 		if ( $field->attributes != '' ) {
-			if ( strpos( $field->attributes, 'J(' ) !== false ) {
-				$matches	=	'';
-				$search		=	'#J\((.*)\)#U';
-				preg_match_all( $search, $field->attributes, $matches );
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[1] as $text ) {
-						$field->attributes	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
-					}
-				}
-			}
 			$attr	.=	' '.$field->attributes;
 		}
 
