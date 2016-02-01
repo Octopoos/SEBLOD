@@ -68,7 +68,6 @@ class JCckPluginField extends JPlugin
 			return $value;
 		}
 		if ( count( $opts ) ) {
-			$exist	=	false;
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
 				if ( $config['doTranslation'] && trim( $o[0] ) ) {
@@ -79,9 +78,6 @@ class JCckPluginField extends JPlugin
 					return ( isset( $o[1] ) ) ? $o[1] : $o[0];
 					break;
 				}
-			}
-			if ( $exist === true ) {
-				$value[]	=	$val;
 			}
 		}
 		
