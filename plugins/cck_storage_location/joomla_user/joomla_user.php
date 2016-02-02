@@ -354,7 +354,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			if ( ! $table->save() ) {
 				$app->enqueueMessage( JText::sprintf( 'COM_CCK_REGISTRATION_SAVE_FAILED', $table->getError() ), 'error' );
 				$config['error']	=	true;
-				return;
+
+				return false;
 			}
 			
 			if ( $isNew ) {
@@ -373,6 +374,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	
 			// Check Error
 			if ( self::$error === true ) {
+				$config['error']	=	true;
+
 				return false;
 			}
 			
@@ -387,7 +390,9 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			self::_completeTable( $table, $data, $config, $parameters );
 			
 			// Store
-			$table->save();
+			if ( !$table->save() ) {
+				$config['error']	=	true;
+			}
 			
 			self::$pk	=	$table->{self::$key};
 			if ( !$config['pk'] ) {

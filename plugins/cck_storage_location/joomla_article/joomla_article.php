@@ -325,16 +325,16 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		if ( ! $config['id'] ) {
-			$isNew	=	true;
+			$isNew			=	true;
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 		} else {
-			$isNew	=	false;
+			$isNew		=	false;
 		}
 		
 		// Init
-		$app	=	JFactory::getApplication();
-		$table	=	self::_getTable( $pk );
-		$isNew	=	( $pk > 0 ) ? false : true;
+		$app		=	JFactory::getApplication();
+		$table		=	self::_getTable( $pk );
+		$isNew		=	( $pk > 0 ) ? false : true;
 		if ( isset( $table->tags ) ) {
 			$tags	=	$table->tags;
 			unset( $table->tags );
@@ -351,6 +351,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Check Error
 		if ( self::$error === true ) {
+			$config['error']	=	true;
+
 			return false;
 		}
 		
@@ -386,14 +388,19 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		JPluginHelper::importPlugin( 'content' );
 		$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 		if ( $isNew === true && parent::g_isMax( $table->{self::$author}, $table->{self::$parent}, $config ) ) {
-			return;
+			$config['error']	=	true;
+
+			return false;
 		}
 		
 		if ( !$table->store() ) {
 			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			
 			if ( $isNew ) {
 				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
 			}
+			$config['error']	=	true;
+
 			return false;
 		}
 		

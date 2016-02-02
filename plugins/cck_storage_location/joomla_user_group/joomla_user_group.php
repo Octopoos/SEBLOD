@@ -305,6 +305,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		
 		// Check Error
 		if ( self::$error === true ) {
+			$config['error']	=	true;
+
 			return false;
 		}
 		
@@ -321,9 +323,12 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		$dispatcher->trigger( 'onUserBeforeSaveGroup', array( self::$context, &$table, $isNew ) );
 		if ( !$table->store() ) {
 			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+
 			if ( $isNew ) {
 				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
 			}
+			$config['error']	=	true;
+			
 			return false;
 		}
 		$dispatcher->trigger( 'onUserAfterSaveGroup', array( self::$context, &$table, $isNew ) );

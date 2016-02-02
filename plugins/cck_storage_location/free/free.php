@@ -270,6 +270,8 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				
 				// Check Error
 				if ( self::$error === true ) {
+					$config['error']	=	true;
+
 					return false;
 				}
 				
@@ -288,13 +290,18 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				
 				// Store
 				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->get( 'id' ), 0, $config ) ) {
-					return;
+					$config['error']	=	true;
+
+					return false;
 				}
 				if ( !$table->store() ) {
 					JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+					
 					if ( $isNew ) {
 						parent::g_onCCK_Storage_LocationRollback( $config['id'] );
 					}
+					$config['error']	=	true;
+
 					return false;
 				}
 				
@@ -319,7 +326,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// _core
 	protected function _core( $data, $config = array() )
 	{
-		$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
+		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$core->load( $config['id'] );
 		$core->cck				=	$config['type'];
 		if ( ! $core->pk ) {

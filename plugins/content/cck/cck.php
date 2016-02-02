@@ -17,6 +17,66 @@ class plgContentCCK extends JPlugin
 	protected $loaded	=	array();
 	protected $title	=	'';
 	
+	// onContentAfterSave
+	public function onContentAfterSave( $context, $article, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onContentAfterSave';
+
+			$this->_process( array( 'event', 'context', 'article', 'isNew' ), $event, $context, $article, $isNew );
+		}
+	}
+
+	// onContentBeforeSave
+	public function onContentBeforeSave( $context, $article, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onContentBeforeSave';
+
+			$this->_process( array( 'event', 'context', 'article', 'isNew' ), $event, $context, $article, $isNew );
+		}
+	}
+
+	// onCckConstructionAfterDelete
+	public function onCckConstructionAfterDelete( $context, $data )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionAfterDelete';
+
+			$this->_process( array( 'event', 'context', 'data' ), $event, $context, $data );
+		}
+	}
+
+	// onCckConstructionBeforeDelete
+	public function onCckConstructionBeforeDelete( $context, $data )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionBeforeDelete';
+
+			$this->_process( array( 'event', 'context', 'data' ), $event, $context, $data );
+		}
+	}
+
+	// onCckConstructionAfterSave
+	public function onCckConstructionAfterSave( $context, $item, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionAfterSave';
+
+			$this->_process( array( 'event', 'context', 'item', 'isNew' ), $event, $context, $item, $isNew );
+		}
+	}
+
+	// onCckConstructionBeforeSave
+	public function onCckConstructionBeforeSave( $context, $item, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionBeforeSave';
+			
+			$this->_process( array( 'event', 'context', 'item', 'isNew' ), $event, $context, $item, $isNew );
+		}
+	}
+
 	// onContentAfterDelete
 	public function onContentAfterDelete( $context, $data )
 	{
@@ -305,6 +365,36 @@ class plgContentCCK extends JPlugin
 		$this->_render( $context, $article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
 	}
 	
+	// _process
+	protected function _process()
+	{
+		$args	=	func_get_args();
+		
+		if ( count( $args ) ) {
+			$i		=	0;
+			$keys	=	array_shift( $args );
+
+			if ( count( $keys ) ) {
+				foreach ( $args as $arg ) {
+					${$keys[$i++]}	=	$arg;
+				}
+			}
+		}
+		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+		
+		unset( $args );
+
+		if ( isset( $processing[$event] ) ) {
+			foreach ( $processing[$event] as $p ) {
+				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+					$options	=	new JRegistry( $p->options );
+
+					include_once JPATH_SITE.$p->scriptfile;
+				}
+			}
+		}
+	}
+
 	// _render
 	protected function _render( $context, &$article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{

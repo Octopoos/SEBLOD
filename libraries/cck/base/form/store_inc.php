@@ -208,7 +208,12 @@ foreach ( $config['storages'] as $data ) {
 	}
 }
 if ( !$k ) {
-	$config['pk']	=	69;
+	$config['pk']	=	-1;
+}
+
+// Stop here if an error occured
+if ( $config['error'] !== false ) {
+	return $config;
 }
 
 // AfterStore
