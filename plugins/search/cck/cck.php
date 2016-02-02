@@ -293,6 +293,12 @@ class plgSearchCCK extends JPlugin
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
+				if ( isset( $config['query_parts']['where'] ) ) {
+					if ( ( is_string( $config['query_parts']['where'] ) && $config['query_parts']['where'] != '' )
+						|| count( $config['query_parts']['where'] ) ) {
+						$query->where( $config['query_parts']['where'] );	
+					}
+				}
 				if ( isset( $config['query_parts']['having'] ) ) {
 					if ( ( is_string( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' )
 						|| count( $config['query_parts']['having'] ) ) {
