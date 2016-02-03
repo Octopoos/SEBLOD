@@ -54,10 +54,12 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $target ) {
-					if ( is_array( $field->$target ) ) {
-						$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
-					} else {
-						$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+					if ( isset( $field->$target ) ) {
+						if ( is_array( $field->$target ) ) {
+							$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
+						} else {
+							$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+						}	
 					}
 				}
 			}
