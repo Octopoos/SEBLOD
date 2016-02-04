@@ -14,8 +14,11 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceCurrency
 {
 	// apply
-	public static function format( $amount )
+	public static function format( $amount, $format = true )
 	{
+		if ( $format ) {
+			$amount	=	number_format( $amount, 2, JText::_( 'DECIMALS_SEPARATOR' ), JText::_( 'THOUSANDS_SEPARATOR' ) );
+		}
 		$currency	=	JCckEcommerce::getCurrency();
 		
 		return $currency->lft.$amount.$currency->rgt;

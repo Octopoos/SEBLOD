@@ -71,8 +71,9 @@ abstract class JCckEcommercePromotion
 						case 'minus':
 							$promotion			=	$p->discount_amount * -1;
 							$res				+=	$promotion;
-							$text				=	'- '.$currency->lft.number_format( $p->discount_amount, 2 ).$currency->rgt;
+							$text				=	'- '.JCckEcommerceCurrency::format( $p->discount_amount );
 							$total				+=	$promotion;
+							$total				=	( $total < 0 ) ? 0 : $total;
 							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 							break;
 						case 'percentage':
