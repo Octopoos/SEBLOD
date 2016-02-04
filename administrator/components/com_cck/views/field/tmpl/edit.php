@@ -150,6 +150,7 @@ Helper_Display::quickCopyright();
 			var loading = "<img align='center' src='<?php echo $ajax_load; ?>' alt='' />";  
 			$.ajax({
 				cache: false,
+				async: false,
 				data: mydata,
 				type: "POST",
 				url: "index.php?option=com_cck&view="+view+"&layout="+layout+"&format=raw",
@@ -164,6 +165,7 @@ Helper_Display::quickCopyright();
 			$("#task").val(task);
 			$.ajax({
 				cache: false,
+				async: false,
 				data: $("#adminForm").serialize(),
 				type: "POST",
 				url: 'index.php?option=com_cck&task='+task,
@@ -175,6 +177,7 @@ Helper_Display::quickCopyright();
 						var client = '&client='+parent.jQuery('input[name=client]:checked', '#adminForm').val();
 						$.ajax({
 							cache: false,
+							async: false,
 							type: "POST",
 							url: 'index.php?option=com_cck&task=ajax_field_li&format=raw'+fieldname+element+client,
 							success: function(response) {
