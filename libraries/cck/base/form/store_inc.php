@@ -84,6 +84,17 @@ if ( $stages > 1 ) {
 $parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$preconfig['type'].'"' );
 $fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $stage, '', true );
 
+// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
+
+if ( isset( $config['Itemid'] ) ) {
+	$app->input->set( 'Itemid', $config['Itemid'] );
+}
+if ( isset( $preconfig['tmpl'] ) ) {
+	$app->input->set( 'tmpl', $preconfig['tmpl'] );
+}
+
+// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Store
+
 if ( count( $fields ) ) {
 	foreach ( $fields as $field ) {
 		$field->state	=	'';
@@ -164,6 +175,8 @@ if ( $config['validate'] ) {
 	}
 	return 0;
 }
+
+// -------- -------- -------- -------- -------- -------- -------- -------- // Do Store
 
 // BeforeStore
 $event	=	'onCckPreBeforeStore';
