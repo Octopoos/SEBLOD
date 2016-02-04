@@ -110,6 +110,7 @@ abstract class JCckDev
 			$config['doValidation']	=	2;
 			require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 		}
+		$config['id']				=	0;
 		$config['pk']				=	0;
 		
 		if ( count( $more ) ) {

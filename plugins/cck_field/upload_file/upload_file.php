@@ -309,16 +309,23 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
+			$more	=	'';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
-			$link	=	'javascript: SqueezeBox.fromElement(\''.JURI::root().$value2.'\', {handler: \'image\'});';
+			if ( isset( $config['id'] ) && $config['id'] ) {
+				$link	=	JURI::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
+				$target	=	'';
+			} else {
+				$link	=	JURI::root().$value2;
+				$target	=	'target="_blank"';
+			}
 			$title	=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
 			if ( $options2['preview'] == 8 ) {
 				$label		=	'';
 				$preview	=	'<span class="cck_preview">'.$title.'</span>';
 			} else if ( $options2['preview'] == 1 ) {
-				$preview	=	'<a href="'.JURI::root().$value2.'" target="_blank" title="'.$value['file_title'].'"><img src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
+				$preview	=	'<a href="'.$link.'"'.$target.' title="'.$value['file_title'].'"><img src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
 			} else {
-				$preview	=	'<a class="cck_preview" href="'.JURI::root().$value2.'" target="_blank" title="'.$value['file_title'].'">'.$title.'</a>';
+				$preview	=	'<a class="cck_preview" href="'.$link.'"'.$target.' title="'.$value['file_title'].'">'.$title.'</a>';
 			}
 			$preview	=	self::_addFormPreview( $id, $label, $preview, 'upload_file' );
 			$form		.=	$preview;
