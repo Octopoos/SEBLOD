@@ -43,6 +43,10 @@ abstract class JCckUser
 			$user->where_clause	=	'user_id='.$user->id;
 		} else {
 			$user->session_id	=	JFactory::getSession()->getId();
+
+			if ( empty( $user->session_id ) ) {
+				$user->session_id	=	uniqid(); /* Not good, but better than empty */
+			}
 			$user->where_clause	=	'session_id="'.$user->session_id.'"';
 		}
 		
