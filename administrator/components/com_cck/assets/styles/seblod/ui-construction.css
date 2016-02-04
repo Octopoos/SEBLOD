@@ -85,7 +85,6 @@ a:hover.icons.icon-toggle{background-position: 0 -220px;}
 
 /* Joomla 3.x */
 div.row-fluid div.span12 ul.sortable li.position,
-div.row-fluid div.span12 fieldset.toggle label:hover,
 div.row-fluid div.span12 fieldset.toggle label.selected{
 	background-color: #184a7d;
 	background-image: -moz-linear-gradient(top,#17568c,#1a3867);
@@ -95,6 +94,18 @@ div.row-fluid div.span12 fieldset.toggle label.selected{
 	background-image: linear-gradient(to bottom,#17568c,#1a3867);
 	background-repeat: repeat-x;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff17568c', endColorstr='#ff1a3867', GradientType=0);
+}
+
+div.row-fluid div.span12 fieldset.toggle label:hover
+{
+	background-color: #2167aa;
+	background-image: -moz-linear-gradient(top, #1969a7, #1f518c);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#1969a7),to(#1f518c));
+	background-image: -webkit-linear-gradient(top,#1969a7,#1f518c);
+	background-image: -o-linear-gradient(top,#1969a7,#1f518c);
+	background-image: linear-gradient(to bottom,#1969a7,#1f518c);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1969a7', endColorstr='#ff1f518c', GradientType=0);
 }
 div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#17568C!important;}
 div.row-fluid div.span12 ul.sortable_header li div.pane{top:-15px;}
