@@ -65,6 +65,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[url]" value="<?php echo $this->config['url']; ?>" />
 <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
 <input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php echo JHtml::_( 'form.token' ); ?>
 <?php if ( !$this->raw_rendering ) { ?>

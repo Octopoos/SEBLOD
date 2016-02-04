@@ -592,9 +592,10 @@ class CCKController extends JControllerLegacy
 	{
 		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
 
-		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
-		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : (int)$data['id'];
+		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : (int)$data['itemId'];
 		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['tmpl']		=	( !isset( $data['tmpl'] ) ) ? '' : $data['tmpl'];
 		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
 		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
 		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];

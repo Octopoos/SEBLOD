@@ -37,6 +37,7 @@ echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' 
 <input type="hidden" name="config[url]" value="<?php echo $config['url']; ?>" />
 <input type="hidden" name="config[id]" value="0" />
 <input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php echo JHtml::_( 'form.token' ); ?>
 <?php if ( !$raw_rendering ) { ?>
