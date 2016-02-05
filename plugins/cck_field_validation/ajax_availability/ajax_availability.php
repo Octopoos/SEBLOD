@@ -70,7 +70,18 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 			if ( isset( $validation->fieldnames ) && $validation->fieldnames ) {
 				parent::g_addProcess( 'beforeStore', self::$type, $config, array( 'name'=>$name, 'value'=>$value, 'validation'=>$validation ) );
 			} else {
-				$error	=	self::_check( $validation, $value, $config );
+				$do	=	true;
+				// Check if table = object (todo: will be improved later..)
+				if ( $validation->table == '#__users' ) {
+					$type	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
+					
+					if ( $type != 'joomla_user' ) {
+						$do	=	false;
+					}
+				}
+				if ( $do !== false ) {
+					$error	=	self::_check( $validation, $value, $config );
+				}
 			}
 		}
 		
