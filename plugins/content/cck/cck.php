@@ -38,22 +38,22 @@ class plgContentCCK extends JPlugin
 	}
 
 	// onCckConstructionAfterDelete
-	public function onCckConstructionAfterDelete( $context, $data )
+	public function onCckConstructionAfterDelete( $context, $item )
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onCckConstructionAfterDelete';
 
-			$this->_process( array( 'event', 'context', 'data' ), $event, $context, $data );
+			$this->_process( array( 'event', 'context', 'item' ), $event, $context, $item );
 		}
 	}
 
 	// onCckConstructionBeforeDelete
-	public function onCckConstructionBeforeDelete( $context, $data )
+	public function onCckConstructionBeforeDelete( $context, $item )
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onCckConstructionBeforeDelete';
 
-			$this->_process( array( 'event', 'context', 'data' ), $event, $context, $data );
+			$this->_process( array( 'event', 'context', 'item' ), $event, $context, $item );
 		}
 	}
 
@@ -389,7 +389,7 @@ class plgContentCCK extends JPlugin
 				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
 					$options	=	new JRegistry( $p->options );
 
-					include_once JPATH_SITE.$p->scriptfile;
+					include JPATH_SITE.$p->scriptfile;
 				}
 			}
 		}
