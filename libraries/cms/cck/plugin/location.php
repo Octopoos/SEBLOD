@@ -174,7 +174,7 @@ class JCckPluginLocation extends JPlugin
 		}
 
 		// More
-		if ( $table && $table != $default ) {
+		if ( $table && $table != $default && $table != 'none' ) {
 			$more	=	JCckTable::getInstance( $table, 'id' );
 			$more->load( $pk, true );
 			if ( isset( $more->cck ) ) {
