@@ -73,11 +73,21 @@ class JCckContent
 		$author_id 		=	0; // TODO: Get default author id
 		$parent_id		=	0; // TODO: Get default parent_id
 		
+		// Base
+		if ( !( $this->save( 'base', $data_content ) ) ) {
+			return false;
+		}
+		
 		// Set the author_id
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] && isset( $data_content[$this->_columns['author']] ) ) {
-			$author_id	=	$data_content[$this->_columns['author']];
-		} else {
-			$user_id	=	JFactory::getUser()->get( 'id' );
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
+			if ( $this->_columns['author'] == $this->_columns['key'] ) {
+				$author_id	=	$this->_instance_base->get( $this->_columns['key'], 0 );
+			} elseif ( isset( $data_content[$this->_columns['author']] ) ) {
+				$author_id	=	$data_content[$this->_columns['author']];
+			}
+		}
+		if ( !$author_id ) {
+			$user_id		=	JFactory::getUser()->get( 'id' );
 			
 			if ( $user_id ) {
 				$author_id	=	$user_id;
@@ -88,23 +98,21 @@ class JCckContent
 		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] && isset( $data_content[$this->_columns['parent']] ) ) {
 			$parent_id	=	$data_content[$this->_columns['parent']];
 		}
-		
-		// -------- -------- --------
-		if ( !( $this->save( 'base', $data_content ) ) ) {
+
+		// Core
+		if ( !( $this->save( 'core',
+							 array(
+								'cck'=>$this->_type,
+								'pk'=>$this->_pk,
+								'storage_location'=>$this->_object,
+								'author_id'=>$author_id,
+								'parent_id'=>$parent_id,
+								'date_time'=>JFactory::getDate()->toSql()
+						   ) ) ) ) {
 			return false;
 		}
 		
-		if ( !( $this->save( 'core', array(
-							'cck'=>$this->_type,
-							'pk'=>$this->_pk,
-							'storage_location'=>$this->_object,
-							'author_id'=>$author_id,
-							'parent_id'=>$parent_id,
-							'date_time'=>JFactory::getDate()->toSql()
-						 ) ) ) ) {
-			return false;
-		}
-	
+		// More
 		if ( is_array( $data_more ) && count( $data_more ) ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk, true );
@@ -114,7 +122,6 @@ class JCckContent
 				return false;
 			}
 		}
-
 		if ( is_array( $data_more2 ) && count( $data_more2 ) ) {
 			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ) );
 			$this->_instance_more2->load( $this->_pk, true );
@@ -226,24 +233,37 @@ class JCckContent
 		}
 		
 		$this->_table		=	$this->_columns['table'];
+		$suffixMore2		=	str_replace( '#__', '', $this->_table );
 		
 		$tables				=	JCckDatabaseCache::getTableList( true );
 		$hasMore			=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
+		$hasMore2			=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_item_'.$suffixMore2] );
 		
 		if ( $hasMore ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
 		}
+		if ( $hasMore2 ) {
+			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.$suffixMore2 );
+			$this->_instance_more2->load( $this->_pk );
+		}
 
 		if ( $data === true ) {
+			$select				=	'';
+			$join				=	'';
 			if ( $hasMore ) {
-				$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.*, b.* FROM '.$this->_table.' AS a'
-															. ' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key']
-															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
-			} else {
-				$this->_properties	=	JCckDatabase::loadObject( 'SELECT a.* FROM '.$this->_table.' AS a'
-															. ' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk );
+				$select			.=	', b.*';
+				$join			.=	' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key'];
 			}
+			if ( $hasMore2 ) {
+				$select			.=	', c.*';
+				$join			.=	' LEFT JOIN #__cck_store_item_'.$suffixMore2.' AS c ON c.id = a.'.$this->_columns['key'];
+			}
+			$query				=	'SELECT a.*'.$select
+								.	' FROM '.$this->_table.' AS a'
+								.	$join
+								.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
+			$this->_properties	=	JCckDatabase::loadObject( $query );
 		} elseif ( is_array( $data ) ) {
 			if ( isset( $data[$this->_table] ) ) {
 				$select	=	implode( ',', $data[$this->_table] );
@@ -293,8 +313,10 @@ class JCckContent
 					
 					if ( $this->_instance_core->id ) {
 						$data_core	=	array();
-						
-						if ( isset( $data[$this->_columns['author']] ) ) {
+
+						if ( $this->_columns['author'] == $this->_columns['key'] ) {
+							$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
+						} elseif ( isset( $data[$this->_columns['author']] ) ) {
 							$data_core['author_id']	=	$data[$this->_columns['author']];
 						}
 						if ( isset( $data[$this->_columns['parent']] ) ) {
