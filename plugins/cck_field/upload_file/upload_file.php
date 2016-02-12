@@ -485,7 +485,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			}
 		}
 		// Short Format Path
-		if ( $options2['storage_format'] ) {
+		if ( @$options2['storage_format'] ) {
 			$itemPath	=	$itemPrePath.$itemPath;
 
 			if ( strrpos( $item_custom_dir, '.') > 0 ) {
