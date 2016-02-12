@@ -17,7 +17,7 @@ final class JCckVersion
 	
 	public $DEV_LEVEL = '0';
 
-	public $DEV_STATUS = '';
+	public $DEV_STATUS = 'RC-5';
 	
 	// getDevStatus
 	public function getDevStatus()
@@ -25,10 +25,16 @@ final class JCckVersion
 		return $this->DEV_STATUS;
 	}
 
+	// getFullVersion
+	public function getFullVersion()
+	{
+		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
+	}
+
 	// getShortVersion
 	public function getShortVersion()
 	{
-		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
+		return $this->RELEASE . '.' . $this->DEV_LEVEL;
 	}
 }
 ?>

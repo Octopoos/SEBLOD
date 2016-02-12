@@ -17,7 +17,7 @@ if ( is_file( JPATH_COMPONENT.'/_VERSION.php' ) ) {
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Core
 
-define( 'CCK_VERSION', 			( isset( $version ) && is_object( $version ) ) ? $version->getShortVersion() : '3.x' );
+define( 'CCK_VERSION', 			( isset( $version ) && is_object( $version ) ) ? $version->getFullVersion() : '3.x' );
 define( 'CCK_NAME',				'cck' );
 define( 'CCK_TITLE',			'CCK' );
 define( 'CCK_COM',				'com_'.CCK_NAME );
