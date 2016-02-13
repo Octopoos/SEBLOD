@@ -41,15 +41,22 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		$format	=	$typo->get( 'format', 'Y-m-d' );
-		$value	=	trim( $field->value );
+		$format		=	$typo->get( 'format', 'Y-m-d' );
+		$timezone	=	(int)$typo->get( 'timezone', '1' );
+		$value		=	trim( $field->value );
 		
 		if ( $format == -2 ) {
 			$typo		=	self::_getTimeAgo( $value, $typo->get( 'unit', '' ), $typo->get( 'alt_format', '' ), $typo->get( 'format2', 'Y-m-d' ) );
 		} else {
 			$options2	=	JCckDev::fromJSON( $field->options2 );
+			
 			if ( $format == -1 ) {
 				$format	=	trim( $typo->get( 'format_custom', @$options2['format'] ) );
+			}
+			if ( $timezone ) {
+				if ( !( isset( $options2['storage_format'] ) && $options2['storage_format'] ) ) {
+					$value	=	JHtml::_( 'date', $value, 'Y-m-d H:i:s' );
+				}
 			}
 			$value		=	self::_getValueWithFormatStorage( $value, @$options2['storage_format'] );
 			$date_eng	=	$format ? date(  $format, $value ) : $value;
@@ -67,9 +74,9 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		}
 		
 		// Init
-		$date1			=	new DateTime( $value );
+		$date1			=	new DateTime( $value, new DateTimeZone(UTC) );
 		$date1->setTime( 00, 00, 00 );
-		$now			=	new DateTime();
+		$now			=	new DateTime( 'now', new DateTimeZone(UTC) );
 		$now->setTime( 00, 00, 00 );
 
 		$interval		=	$date1->diff( $now );
@@ -81,7 +88,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 			$value		=	self::_getValueWithFormatStorage( $value );
 			$date_eng	=	$alt_format ? date(  $alt_format, $value ) : $value;
 			$interval	=	self::_getDateByLang( $alt_format, $value, $date_eng );
-		} else {
+		} else {			
 			// Prepare
 			if ( $years != 0 ) {
 				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
@@ -101,23 +108,39 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 				} elseif ( $days > 0 ) {
 					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
 				} else {
-					if ( $unit == 1 ) {
-						$date1			=	new DateTime( $value );
-						$now			=	new DateTime();
+					if ( !$unit ) {
+						$interval		=	JText::_( 'COM_CCK_TODAY' );
+					} else {
+						$date1			=	new DateTime( $value, new DateTimeZone(UTC) );
+						$now			=	new DateTime( 'now', new DateTimeZone(UTC) );
 						$interval		=	$date1->diff( $now );
 						$hours			=	$interval->format( '%h' );
+						$minutes		=	$interval->format( '%i' );
+						if ( $unit == 2 ) {
+							$minutes		+=	( $hours * 60 );
+							$text_minutes	=	strtolower( JText::_( 'COM_CCK_MINUTES' ) );
+							$text_minute	=	strtolower( JText::_( 'COM_CCK_MINUTE' ) );
 
-						$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
-						$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
-
-						if ( $hours == 0 ) {
-							$interval		=	JText::_( 'COM_CCK_JUST_NOW' );
-						} else {
-							$interval		=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
-							$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+							if ( $minutes == 0 ) {
+								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
+							} elseif ( $minutes < 60 ) {
+								$interval	=	( $minutes > 1 ) ? $minutes.' '.$text_minutes : $minutes.' '.$text_minute;
+								$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+							} else {
+								$unit		=	1;
+							}
 						}
-					} else {
-						$interval		=	JText::_( 'COM_CCK_TODAY' );
+						if ( $unit == 1 ) {
+							$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
+							$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
+
+							if ( $hours == 0 ) {
+								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
+							} else {
+								$interval	=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
+								$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+							}
+						}
 					}
 				}
 			}

@@ -26,7 +26,8 @@ $formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date F
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Alternative', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'No=0||Yes after n Days=optgroup||1=1||2=2||15=15||16=16||30=30', 'storage_field'=>'alt_format' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Format', 'selectlabel'=>'', 'defaultvalue'=>'', 'storage_field'=>'format2',
 								  'options'=>$formats ) );
-		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Unit', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Day=0||Hours=1', 'storage_field'=>'unit' ) );
+		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Unit', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Day=0||Hour=1||Minute=2', 'storage_field'=>'unit' ) );
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Apply Time Zone', 'defaultvalue'=>'1', 'storage_field'=>'timezone' ) );
         ?>
     </ul>
 </div>
