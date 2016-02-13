@@ -2247,6 +2247,14 @@ Temporary Items
 /plugins/cck_field_validation/uppercase_space/*
 /plugins/cck_field_validation/uppercase_underscore/*
 
+######## SEBLOD Plug-ins >> Validation >> Number Format
+
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_number_format.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_validation_number_format.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_number_format.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_number_format.sys.ini
+/plugins/cck_field_validation/number_format/*
+
 ######## SEBLOD Plug-ins >> Validation >> Numbers (Pack)
 
 /administrator/language/en-GB/en-GB.plg_cck_field_validation_number.ini
