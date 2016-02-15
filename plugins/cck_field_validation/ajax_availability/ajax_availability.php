@@ -180,14 +180,8 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
 
-	// onCCK_FieldBeforeRenderForm
-	public static function onCCK_FieldBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
-	{
-		// todo
-	}
-
-	// onCCK_FieldBeforeStore
-	public static function onCCK_FieldBeforeStore( $process, &$fields, &$storages, &$config = array() )
+	// onCCK_Field_ValidationBeforeStore
+	public static function onCCK_Field_ValidationBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
 		$and	=	self::_where( $validation->table, $validation->fieldnames, $fields );
 		$error	=	self::_check( $process['validation'], $process['value'], $config, $and );
