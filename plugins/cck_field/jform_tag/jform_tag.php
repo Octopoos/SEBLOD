@@ -4,7 +4,7 @@
  * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
  * @url				http://www.seblod.com
  * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
  * @license 			GNU General Public License version 2 or later; see _LICENSE.php
  **/
 
@@ -101,6 +101,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
 			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
 			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
+			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
+			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
 			$xml		=	'
 							<form>
 								<field
@@ -110,9 +112,12 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 									label="'.htmlspecialchars( $field->label ).'"
 									class="'.$class.'"
 									'.$mode.'
+									'.$parent.'
 									'.$custom.'
-									multiple="true"
-								/>
+									'.$multiple.'
+								>
+								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
+								</field>
 							</form>
 						';
 			$form	=	JForm::getInstance( $id, $xml );
