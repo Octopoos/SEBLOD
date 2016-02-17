@@ -14,3 +14,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_processings` (
   `checked_out_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+
+INSERT INTO `#__cck_more_processings` (`id`, `title`, `name`, `folder`, `type`, `description`, `options`, `ordering`, `published`, `scriptfile`, `checked_out`, `checked_out_time`) VALUES
+(1, 'Customize', 'customize', 3, 'onCckPostBeforeStore', '', '{"output":"","output_path":"tmp\\/","output_extension":"txt","output_filename_date":"","content_types":"site","registered":{"email":"","password":"","username":"","name":"","first_name":"","last_name":""},"author":{"email":"","password":"","username":"","name":"","first_name":"","last_name":""},"manager":{"email":"","password":"","username":"","name":"","first_name":"","last_name":""},"administrator":{"email":"seb_site_administrator_email","password":"seb_site_administrator_password","username":"seb_site_administrator_email","name":"seb_site_administrator_name","first_name":"seb_site_administrator_first_name","last_name":"seb_site_administrator_last_name"},"type":"7"}', 0, 1, '/media/cck/processings/sites/customize/customize.php', 0, '0000-00-00 00:00:00'),
+(2, 'Complete', 'complete', 3, 'onCckConstructionBeforeSave', '', '{"output":"","output_path":"tmp\\/","output_extension":"txt","output_filename_date":""}', 0, 1, '/media/cck/processings/sites/complete/complete.php', 0, '0000-00-00 00:00:00');
