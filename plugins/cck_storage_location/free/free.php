@@ -30,6 +30,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $to_route		=	'';
 	
 	protected static $context		=	'';
+	protected static $context2		=	'';
 	protected static $contexts		=	array();
 	protected static $error			=	false;
 	protected static $ordering		=	array();

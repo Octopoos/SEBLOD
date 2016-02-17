@@ -32,6 +32,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $to_route		=	'';
 	
 	protected static $context		=	'';
+	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'name ASC' );

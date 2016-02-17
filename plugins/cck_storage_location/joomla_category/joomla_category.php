@@ -32,6 +32,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $to_route		=	'a.id as pk, a.title, a.alias';
 	
 	protected static $context		=	'com_categories.category';
+	protected static $context2		=	'com_content.category';
 	protected static $contexts		=	array( 'com_content.categories', 'com_content.category' );
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created_time DESC', 'oldest'=>'created_time ASC', 'ordering'=>'lft ASC', 'popular'=>'hits DESC' );
