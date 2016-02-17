@@ -57,7 +57,7 @@ abstract class JCckWebservice
 	public static function call( $name, $data = array(), $fields = array() )
 	{
 		$response		=	null;
-		$webservice		=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.request, a.request_object, a.request_options, a.response, a.response_format FROM #__cck_more_webservices_calls AS a'
+		$webservice		=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.options as options2, a.request, a.request_object, a.request_options, a.response, a.response_format FROM #__cck_more_webservices_calls AS a'
 													. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 													. ' WHERE a.name = "'.$name.'"' );
 		if ( !is_object( $webservice ) ) {
@@ -100,7 +100,7 @@ abstract class JCckWebservice
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$name] ) ) {
-			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.request, a.request_object, a.request_options, a.response, a.response_format'
+			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT b.name, b.type, b.options, a.options as options2, a.request, a.request_object, a.request_options, a.response, a.response_format'
 														. 'FROM #__cck_more_webservices_calls AS a'
 														. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 														. ' WHERE a.name = "'.$name.'"' );
