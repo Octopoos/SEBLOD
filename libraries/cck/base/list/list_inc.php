@@ -123,6 +123,8 @@ if ( !isset( $lives ) ) {
 			$lives[$l[0]]	=	$l[1];
 		}
 	}
+} elseif ( count( $lives ) && $isInfinite ) {
+	// todo: force lives
 }
 $variation	=	explode( '||', $variation );
 $variations	=	array();
@@ -211,15 +213,17 @@ if ( $context != '' ) {
 	$context	=	json_decode( $context );
 	$vars		=	array(
 						'Itemid'=>'',
-						'view'=>'form'
+						'view'=>array( 'form', 'list', 'article', 'category' )
 					);
-
 	foreach ( $vars as $key=>$val ) {
+
 		if ( isset( $context->$key ) ) {
 			$v	=	$context->$key;
 
 			if ( is_array( $val ) ) {
-				// todo
+				if ( !in_array( $v, $val ) ) {
+					continue;
+				}
 			} elseif ( $val != '' ) {
 				if ( $v != $val ) {
 					continue;
@@ -228,6 +232,17 @@ if ( $context != '' ) {
 			$app->input->set( $key, $v );
 		}
 	}
+}
+if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
+	$menu				=	$app->getMenu()->getItem( $app->input->get( 'Itemid' ) );
+
+	if ( is_object( $menu ) && isset( $menu->params ) ) {
+		$preconfig['limit']		=	$menu->params->get( 'limit' );
+		$preconfig['search2']	=	$menu->params->get( 'search2' );
+	}
+}
+if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
+	$options->set( 'limit', $preconfig['limit'] );
 }
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search

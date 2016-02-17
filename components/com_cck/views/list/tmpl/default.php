@@ -156,7 +156,9 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 </div></div>
 <?php } ?>
 
-<?php if ( $hasAjax ) { ?>
+<?php if ( $hasAjax ) {
+$context	=	'&context={\'Itemid\':'.$app->input->getInt( 'Itemid', 0 ).',\'view\':\'list\'}';
+?>
 <script type="text/javascript">
 (function ($){
 	JCck.Core.loadmore = function(more,stop,search) {
@@ -164,7 +166,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 		var search = search || 0;
 		$.ajax({
 			cache: false,
-			data: "format=raw&infinite=1&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
+			data: "format=raw&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
 			type: "GET",
 			url: "<?php echo JUri::current(); ?>",
 			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },

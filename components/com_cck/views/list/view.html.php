@@ -55,6 +55,7 @@ class CCKViewList extends JViewLegacy
 		$preconfig['show_form']				=	$params->get( 'show_form', '' );
 		$preconfig['auto_redirect']			=	$params->get( 'auto_redirect', '' );
 		$preconfig['auto_redirect_vars']	=	$params->get( 'auto_redirect_vars', '' );
+		$preconfig['limit']					=	$params->get( 'limit', 0 );
 		$preconfig['limit2']				=	$params->get( 'limit2', 0 );
 		$preconfig['limitend']				=	$params->get( 'pagination2', '' );
 		$preconfig['ordering']				=	$params->get( 'ordering', '' );
