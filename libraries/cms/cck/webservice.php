@@ -83,7 +83,7 @@ abstract class JCckWebservice
 				}
 			}
 		}
-
+		
 		JPluginHelper::importPlugin( 'cck_webservice' );
 		$dispatcher->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
