@@ -58,6 +58,9 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 		
 		if ( count( $config['fields2'] ) ) {
 			foreach ( $config['fields2'] as $k=>$field ) {
+				if ( $field->storage_table == '' ) {
+					continue;
+				}
 				if ( !isset( $storages[$field->storage_table] ) ) {
 					$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
 				}
@@ -145,6 +148,9 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 				// More
 				if ( count( $config['fields2'] ) ) {
 					foreach ( $config['fields2'] as $name=>$field ) {
+						if ( $field->storage_table == '' ) {
+							continue;
+						}
 						if ( $field->storage == 'standard' ) {
 							if ( $config['component'] == 'com_cck_exporter' ) {
 								$key		=	$field->name;
