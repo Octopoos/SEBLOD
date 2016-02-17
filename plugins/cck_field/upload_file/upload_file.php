@@ -374,7 +374,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		
 		// Set
 		$field->form		=	$form;
-		$field->match_mode	=	'not_empty';
+		
+		if ( $value != '' ) {
+			$field->match_mode	=	'not_empty';
+		} else {
+			$field->match_mode	=	'';
+		}
 		$field->type		=	'checkbox';
 		$field->value		=	$value;
 		
