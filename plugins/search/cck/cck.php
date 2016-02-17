@@ -429,8 +429,8 @@ class plgSearchCCK extends JPlugin
 			if ( isset( $query3 ) ) {
 				$query2	.=	$query3.'<br />';
 			}
-			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'LIMIT', 'UNION', ') AS Count' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
+			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
+							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
 							  $query1.'<br />'.$query2 ).'<br />';
 		}
 		
