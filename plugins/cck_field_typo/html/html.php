@@ -44,8 +44,8 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	{
 		$app	=	JFactory::getApplication();
 		$html	=	$typo->get( 'html', '' );
-		
-		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
+
+		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*html*' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
 			$html		=	parent::g_hasLink( $field, $typo, $html );
 		}
 		if ( $html != '' ) {
