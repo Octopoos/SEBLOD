@@ -58,6 +58,9 @@ class plgSearchCCK extends JPlugin
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
 		$isLoadingMore	=	( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) > 0 ) ? 1 : 0;
+		if ( $isLoadingMore ) {
+			$isLoadingMore	=	0; /* todo: only when it was triggered by the component itself */
+		}
 		$glues			=	1;
 		$order			=	'';
 		$order_string	=	'';
