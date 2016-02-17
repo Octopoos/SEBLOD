@@ -4,7 +4,7 @@
  * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
  * @url				http://www.seblod.com
  * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+ * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
  * @license 			GNU General Public License version 2 or later; see _LICENSE.php
  **/
 
@@ -43,15 +43,12 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 
 		if ( $value || ( $config['client'] == 'list' || $config['client'] == 'item'  ) ) {
 			$location		=	( isset( $config['location'] ) && $config['location'] ) ? $config['location'] : 'joomla_article';
-			$properties		=	array( 'context' );
+			$properties		=	array( 'context', 'context2' );
 			$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$location, 'getStaticProperties', $properties );
 
-			/* temporary fix for content categories */
-			if ( $properties['context'] == 'com_categories.category' ) {
-				$properties['context']	=	'com_content.category';	// todo: dynamic context per extension (#__categories)
+			if ( $properties['context2'] != '' ) {
+				$properties['context']	=	$properties['context2'];
 			}
-			/* temporary fix for content categories */
-
 			if ( is_object( $value ) && isset( $value->tags ) ) {
 				$value		=	$value->tags;
 			}
@@ -94,36 +91,42 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		}
 
 		// Prepare
-		if ( JCck::on() ) {
-			JHtml::_( 'formbehavior.chosen', 'select.tag' );
-
-			$options2	=	JCckDev::fromJSON( $field->options2 );
-			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
-			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
-			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
-			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
-			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
-			$xml		=	'
-							<form>
-								<field
-									type="'.self::$type2.'"
-									name="'.$name.'"
-									id="'.$id.'"
-									label="'.htmlspecialchars( $field->label ).'"
-									class="'.$class.'"
-									'.$mode.'
-									'.$parent.'
-									'.$custom.'
-									'.$multiple.'
-								>
-								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
-								</field>
-							</form>
-						';
-			$form	=	JForm::getInstance( $id, $xml );
-			$form	=	$form->getInput( $name, '', $value );
+		if ( parent::g_isStaticVariation( $field, $field->variation, true ) ) {
+			$form			=	'';
+			$field->text	=	'';
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
-			$form	=	'';
+			if ( JCck::on() ) {
+				JHtml::_( 'formbehavior.chosen', 'select.tag' );
+
+				$options2	=	JCckDev::fromJSON( $field->options2 );
+				$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
+				$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
+				$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
+				$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
+				$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
+				$xml		=	'
+								<form>
+									<field
+										type="'.self::$type2.'"
+										name="'.$name.'"
+										id="'.$id.'"
+										label="'.htmlspecialchars( $field->label ).'"
+										class="'.$class.'"
+										'.$mode.'
+										'.$parent.'
+										'.$custom.'
+										'.$multiple.'
+									>
+									'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
+									</field>
+								</form>
+							';
+				$form	=	JForm::getInstance( $id, $xml );
+				$form	=	$form->getInput( $name, '', $value );
+			} else {
+				$form	=	'';
+			}
 		}
 
 		// Set
@@ -144,45 +147,49 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 	}
 
 	// onCCK_FieldPrepareSearch
-	public function onCCK_FieldPrepareSearch(&$field, $value = '', &$config = array(), $inherit = array(), $return = false)
+	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
-		if (self::$type != $field->type)
-		{
+		if ( self::$type != $field->type ) {
 			return;
 		}
 
-		if (is_array($value))
-		{
-			$value = implode(',', $value);
+		if ( is_array( $value ) ) {
+			$value	=	implode( ',', $value );
 		}
+		$isMultiple	=	( strpos( $value, ',' ) !== false ) ? 1 : 0;
 
-		if (JCck::on('3.1') && $field->storage_location == 'joomla_article' && $field->storage_table == '#__content' && $field->storage_field == 'tags')
-		{
-			$field->storage_location = 'free';
-			$field->storage_table = '#__contentitem_tag_map';
-			$field->storage_field = 'tag_id';
-			$field->storage_field2 = '';
+		if ( $value != '' && JCck::on( '3.1' ) ) {
+			if ( $field->storage_location != '' ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
 
-			$join = new stdClass();
-			$join->table = "#__contentitem_tag_map";
-			$join->column = "content_item_id";
-			$join->column2 = "id";
-			$join->table2 = "#__content";
-			$join->and = "type_alias = 'com_content.article'";
+				$properties	=	array( 'context', 'context2', 'key', 'table' );
+				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
 
-			$config['joins'][$field->stage][] = $join;
+				$field->storage_location	=	'free';
+				$field->storage_table		=	'#__contentitem_tag_map';
+				$field->storage_field		=	'tag_id';
+				$field->storage_field2		=	'';
 
-			$config['query_parts']['group'][] = "t0.id";
+				$join						=	new stdClass;
+				$join->table				=	'#__contentitem_tag_map';
+				$join->column				=	'content_item_id';
+				$join->column2				=	$properties['key'];
+				$join->table2				=	$properties['table'];
+				$join->and					=	'type_alias = "'.( ( isset( $properties['context2'] ) && $properties['context2'] != '' ) ? $properties['context2'] : $properties['context'] ).'"';
+
+				$config['joins'][$field->stage][]		=	$join;
+
+				if ( $isMultiple ) {
+					$config['query_parts']['group'][]	=	't0.id';
+				}
+			}
 		}
 
 		// Prepare
-		self::onCCK_FieldPrepareForm($field, $value, $config, $inherit, $return);
-
-
+		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 
 		// Return
-		if ($return === true)
-		{
+		if ( $return === true ) {
 			return $field;
 		}
 	}
@@ -209,6 +216,18 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return $value;
 		}
 		$field->value	=	$value;
+		$field->text	=	'';
+
+		$values			=	( is_array( $field->value ) ) ? implode( ',', $field->value ) : $field->value;
+
+		if ( $values != '' ) {
+			$texts		=	JCckDatabase::loadColumn( 'SELECT title FROM #__tags WHERE id IN ('.$values.')' );
+
+			if ( is_array( $texts ) ) {
+				$field->text	=	implode( ',', $texts );
+			}
+		}
+
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 
@@ -234,4 +253,3 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>
