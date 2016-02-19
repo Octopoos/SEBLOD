@@ -24,9 +24,16 @@ abstract class JCckWebservice
 		if ( self::$_config ) {
 			return self::$_config;
 		}
-
-		$config			=	new stdClass;
-		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+		
+		if ( JCckDatabaseCache::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.'com_'.self::$_me.'"' ) > 0 ) {
+			$config			=	new stdClass;
+			$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+		} else {
+			$config			=	new stdClass;
+			
+			$config->params	=	new JRegistry;
+			$config->params->set( 'KO', true );
+		}
 		
 		self::$_config	=&	$config;
 	}

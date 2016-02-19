@@ -37,7 +37,9 @@ class plgSystemCCK extends JPlugin
 		// Development
 		jimport( 'cck.development.database' ); // deprecated
 		
-		$this->multisite	=	JCck::_setMultisite();
+		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
+		$this->restapi		=	$this->_isRestApi();
+
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
@@ -77,6 +79,7 @@ class plgSystemCCK extends JPlugin
 	public function buildRule( &$router, &$uri )
 	{
 		$Itemid	=	$uri->getVar( 'Itemid' );
+
 		if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
 			$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
 			if ( isset( $item->query['view'] ) && $item->query['view'] == 'list' ) {
@@ -108,6 +111,25 @@ class plgSystemCCK extends JPlugin
 	public function onAfterInitialise()
 	{
 		$app	=	JFactory::getApplication();
+
+		if ( $this->restapi ) {
+			$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
+			$path		=	JUri::getInstance()->getPath();
+			$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
+
+			if ( $segment != '' ) {
+				if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
+					$format	=	substr( $segment, $pos + 1 );
+
+					if ( $format[0] == 'w' ) {
+						$format	=	substr( $format, 1 );
+					}
+				}
+			}
+			
+			$app->input->set( 'format', $format );
+		}
+
 		if ( $app->isSite() ) {
 			$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
 			$router->attachBuildRule( array( $this, 'buildRule' ) );
@@ -621,6 +643,34 @@ class plgSystemCCK extends JPlugin
 
 			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "'.$proxy.'", "update.seblod.com") WHERE location LIKE "%'.$proxy.'%"' );
 		}
+	}
+
+	// _isRestApi
+	protected function _isRestApi()
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+		 	return false;
+		} else {
+			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
+													. ' FROM #__menu WHERE'
+													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1',
+													'path' );
+			$path	=	JUri::getInstance()->getPath();
+			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+
+			if ( count( $apis ) ) {
+				foreach ( $apis as $api ) {
+					$api	=	$prefix.'/'.$api->path;
+					$pos	=	strpos( $path, $api );
+
+					if ( $pos !== false && $pos == 0 ) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;	
 	}
 
 	// _reSubmenu
