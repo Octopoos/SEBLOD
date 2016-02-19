@@ -41,7 +41,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 			$extraData2	=	'"extraDataDynamic": "#'.str_replace( '||', ',#', $validation->fieldnames ).'",';
 			$and		=	self::_where( $validation->table, $validation->fieldnames, @$config['storages'][$validation->table], 'object' );
 		}
-		if ( $field->value ) {
+		if ( isset( $field->value ) && $field->value != '' ) {
 			$pk		=	(int)JCckDatabase::loadResult( 'SELECT '.$validation->key.' FROM '.$validation->table.' WHERE '.$validation->column.'="'.JCckDatabase::escape( $field->value ).'"'.$and );
 			$extra	.=	'&avKey='.$validation->key.'&avPk='.$pk.'&avPv='.htmlspecialchars( str_replace( array( '<', '>', "'" ), array( '%26lt;', '%26gt;', '%27' ), $field->value ) );
 		}
