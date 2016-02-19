@@ -88,5 +88,16 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             ?>
         </ul>
 	</div>
+    <div class="seblod">
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' ); ?></div>
+        <ul class="adminformlist adminformlist-2cols">
+            <?php
+            echo JCckDev::renderForm( $cck['core_validation_position'], @$options['validation_position'], $config );
+            echo JCckDev::renderForm( $cck['core_validation_scroll'], @$options['validation_scroll'], $config );
+            echo JCckDev::renderForm( $cck['core_validation_color'], @$options['validation_color'], $config );
+            echo JCckDev::renderForm( $cck['core_validation_background_color'], @$options['validation_background_color'], $config );
+            ?>
+        </ul>
+    </div>
 </div>
 <div class="clr"></div>

@@ -15,7 +15,8 @@ $cck		=	JCckDev::preload( array( 'core_pagination', 'core_cache', 'core_cache2',
 										 'core_prepare_content', 'core_debug', 'core_auto_redirection', 'core_ordering',
 										 'core_tag_title', 'core_class_title', 'core_show_hide2', 'core_action_no_access', 'core_redirection_url_no_access', 'core_label_total',
 										 'core_class_total', 'core_show_pagination', 'core_class_pagination',
-										 'core_message_style', 'core_action', 'core_message', 'core_template' ) );
+										 'core_message_style', 'core_action', 'core_message', 'core_validation_position', 'core_validation_scroll', 'core_validation_color',
+										 'core_validation_background_color', 'core_template' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 
 if ( $this->item->client == 'list' ) {
