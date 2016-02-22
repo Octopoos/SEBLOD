@@ -86,10 +86,10 @@ $fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 
-if ( isset( $config['Itemid'] ) ) {
+if ( isset( $config['Itemid'] ) && $config['Itemid'] ) {
 	$app->input->set( 'Itemid', $config['Itemid'] );
 }
-if ( isset( $preconfig['tmpl'] ) ) {
+if ( isset( $preconfig['tmpl'] ) && $preconfig['tmpl'] != '' ) {
 	$app->input->set( 'tmpl', $preconfig['tmpl'] );
 }
 
