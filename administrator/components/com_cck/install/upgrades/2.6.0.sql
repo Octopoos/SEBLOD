@@ -48,9 +48,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
   `region` varchar(255) NOT NULL,
   `country` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
-  `website` varchar(255) NOT NULL,
-  `birthdate` datetime NOT NULL,
-  `birthplace` varchar(255) NOT NULL,
+  `website` varchar(255) NOT NULL
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
