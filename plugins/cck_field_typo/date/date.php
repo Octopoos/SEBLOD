@@ -74,9 +74,9 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		}
 		
 		// Init
-		$date1			=	new DateTime( $value, new DateTimeZone(UTC) );
+		$date1			=	new DateTime( $value, new DateTimeZone('UTC') );
 		$date1->setTime( 00, 00, 00 );
-		$now			=	new DateTime( 'now', new DateTimeZone(UTC) );
+		$now			=	new DateTime( 'now', new DateTimeZone('UTC') );
 		$now->setTime( 00, 00, 00 );
 
 		$interval		=	$date1->diff( $now );
@@ -111,8 +111,8 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 					if ( !$unit ) {
 						$interval		=	JText::_( 'COM_CCK_TODAY' );
 					} else {
-						$date1			=	new DateTime( $value, new DateTimeZone(UTC) );
-						$now			=	new DateTime( 'now', new DateTimeZone(UTC) );
+						$date1			=	new DateTime( $value, new DateTimeZone('UTC') );
+						$now			=	new DateTime( 'now', new DateTimeZone('UTC') );
 						$interval		=	$date1->diff( $now );
 						$hours			=	$interval->format( '%h' );
 						$minutes		=	$interval->format( '%i' );
