@@ -183,6 +183,11 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 					$config['query_parts']['group'][]	=	't0.id';
 				}
 			}
+		} else {
+			$field->storage					=	'none';
+			$field->storage_location		=	'';
+			$field->storage_table			=	'';
+			$field->storage_field2			=	'';
 		}
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 
