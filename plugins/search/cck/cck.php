@@ -57,6 +57,7 @@ class plgSearchCCK extends JPlugin
 		$doLimit		=	false;
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
+		$hasGroup		=	false;
 		$isLoadingMore	=	( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) > 0 ) ? 1 : 0;
 		if ( $isLoadingMore ) {
 			$isLoadingMore	=	0; /* todo: only when it was triggered by the component itself */
@@ -309,6 +310,7 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
+					$hasGroup	=	true;
 					$query->group( $config['query_parts']['group'] );
 				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
@@ -361,8 +363,14 @@ class plgSearchCCK extends JPlugin
 										$results2		=	$db->loadObjectList();
 										$query3			=	(string)$query;
 									}
-									$query->clear( 'order' )->clear( 'limit' );
-									$query->clear( 'select' )->select( 'COUNT(t0.id)' );
+									$query->clear( 'order' )->clear( 'limit' )->clear( 'select' );
+									
+									if ( $hasGroup ) {
+										$query->clear( 'group' );
+										$query->select( 'COUNT(DISTINCT t0.id)' );
+									} else {
+										$query->select( 'COUNT(t0.id)' );
+									}
 									$db->setQuery( $query );
 									$config['total']	=	$db->loadResult();
 									$query2				=	(string)$query;
@@ -381,7 +389,7 @@ class plgSearchCCK extends JPlugin
 									$query3			=	(string)$query3;
 								}
 								$query2				=	$db->getQuery( true );
-								$query2->select( 'COUNT(t0.id)' );
+								$query2->select( 'COUNT(DISTINCT t0.id)' );
 								$query2->from( '`#__cck_core` AS t0' );
 								self::_buildQuery( $dispatcher, $query2, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 								if ( $where != '' ) {
