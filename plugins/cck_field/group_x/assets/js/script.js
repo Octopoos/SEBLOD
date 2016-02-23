@@ -19,7 +19,7 @@
 			var Child;
 			var GrandChildren;
 			$("body").on('click', '.cck_button_add_'+name, function() {
-				elem = $(this).parent().parent();
+				elem = $(this).closest('[id^="cck1r_forms_' +name);
 				length = ( elem.parent().children().length );
 				id = $(this).parent().attr("id");
 				if (length < max_element) {
@@ -65,7 +65,7 @@
 			var GrandChildren;
 			var ind;
 			$("body").on('click', '.cck_button_del_'+name, function() {
-				elem	=	$(this).parent().parent();
+				elem = $(this).closest('[id^="cck1r_forms_' +name);
 				var n	=	elem.parent().children().length;
 				if (n > min_element) {
 					position	=	position_in_gx( elem );
