@@ -51,23 +51,40 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 				} else {
 					$live	=	implode( ',', $viewlevels );	
 				}
-			} elseif ( isset( $user->$property ) ) {
-				$live		=	$user->$property;
-				if ( is_array( $live ) ) {
-					if ( $excluded != '' ) {
-						$excluded	=	explode( ',', $excluded );
-						$live		=	array_diff( $live, $excluded );
+			} else {
+				if ( strpos( $property, '[' ) !== false ) {
+					$properties	= 	explode( '[', $property );
+					$property 	=	$properties[0];
+				}
+				if ( isset( $user->$property ) ) {
+					$live		=	$user->$property;
+
+					if ( isset( $properties ) ) {
+						$values	=	json_decode( $live, true );
+						$target	=	substr( $properties[1], 0, -1 );
+
+						if ( isset( $values[$target] ) ) {
+							$live	=	$values[$target];
+						} else {
+							$live	=	'';
+						}
 					}
-					if ( empty( $live ) ) {
+					if ( is_array( $live ) ) {
+						if ( $excluded != '' ) {
+							$excluded	=	explode( ',', $excluded );
+							$live		=	array_diff( $live, $excluded );
+						}
+						if ( empty( $live ) ) {
+							$live	=	$default;
+						} else {
+							$live	=	implode( ',', $live );	
+						}
+					} elseif ( $live == '' ) {
 						$live	=	$default;
-					} else {
-						$live	=	implode( ',', $live );	
 					}
-				} elseif ( $live == '' ) {
+				} else {
 					$live	=	$default;
 				}
-			} else {
-				$live	=	$default;
 			}
 		}
 		
