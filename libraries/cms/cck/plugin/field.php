@@ -663,7 +663,7 @@ class JCckPluginField extends JPlugin
 			}
 		}
 
-		if ( isset($field->attributes) && $field->attributes != '' ) {
+		if ( isset( $field->attributes ) && $field->attributes != '' ) {
 			if ( strpos( $field->attributes, 'J(' ) !== false ) {
 				$matches	=	'';
 				$search		=	'#J\((.*)\)#U';
