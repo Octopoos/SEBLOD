@@ -22,9 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
-@ID is the ID on SEBLOD Tracker.
-
--------------------- 3.8.0 Upgrade Release [xx-Jan-2016] -------------
+-------------------- 3.8.0 Upgrade Release [xx-Feb-2016] -------------
 
 ! Memory & Performance optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
@@ -43,20 +41,22 @@ $ -> Language fix or change
 + "Optimize (Memory)" parameter added on SEBLOD Options (Site).
 
 + "Alternative Search Type" parameter added on List module.
-+ "Auto Redirection (Vars)" added on Lists.
++ "Auto Redirection (Vars)", "SEF" parameters added on List Menu Items.
 + "Export", "Process" tasks (Submit Button) support added on Content views.
 + "Hidden & Anonymous" Field Variation added on Forms.
 + "Hidden when filled" Field Variation added on Forms.
-+ Pagination parameter added on List Menu Items.
++ "Limit", "Pagination" parameters added on List Menu Items.
 + "seb_css3b" variation added (cleaner version of seb_css3).
 + Title (Inherited / Menu Item / Custom) parameter added on Forms & Lists Menu Items.
 + "URL" mode added to "Menu Item Target" on Search module.
++ "Validation" parameters added on Search Types.
 
-+ "Alternative Format", "Unit" parameters added on Date Typography plug-in.
++ "Alternative Format", "Unit", "Time Zone" parameters added on Date Typography plug-in.
 + "Auto" Tmpl parameter added on Content, "SEBLOD Form", "SEBLOD List" Link plug-ins.
 + "Behavior" parameter added on Clear Typo plug-in.
 + Content Type (Form) added on Workflow Restriction plug-in.
 + "Default Value" added on Joomla! User Live plug-in.
++ "JForm Tag" plug-in improved >> Native Search behavior, Static Variation (Rendering).
 + "Multiple", "Parent" parameters added on Joomla! Tag Field plug-in.
 + "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
 + "Rel" parameter added on Link plug-in.
@@ -68,40 +68,59 @@ $ -> Language fix or change
 + js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
 
 + "Add to Cart" permission added.
++ "Yes, but English" (Language >> JText) added on SEBLOD Options.
 + Various Improvements for upcoming SEBLOD eCommerce add-on.
 
+^ Events changed in SEBLOD core for Content Type, Field, Folder, Search Type, Template:
+	>> "onContentBeforeSave" replaced by "onCckConstructionBeforeSave"
+	>> "onContentAfterSave" replaced by "onCckConstructionAfterSave"
+	>> "onContentBeforeDelete" replaced by "onCckConstructionBeforeDelete"
+	>> "onContentAfterDelete" replaced by "onCckConstructionAfterDelete"
+- "onUserBeforeDeleteNote" event removed, use "onContentBeforeDelete"/"onContentAfterDelete".
+
+! Copyright Updated.
 ! Force Random Password to have 20 characters.
+! Object Plug-ins (exporter.php, importer.php) updated for Exporter/Importer Add-ons.
 ! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
 ! SEBLOD.com Urls updated in Admin Menu Module.
+! Sites generation refactored for greater flexibility.
 ! Various images added for all supported Object plug-ins.
 
+^ AfterStore processing/events not executed anymore if an error is thrown while storing.
 ^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
+^ jQuery Validation script updated for AJAX and Confirm validations.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ "show_page_heading" parameter forced to 0 when tmpl=raw on Forms & Lists.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 
 # Add missing options pre/post before/after store processing.
+# AJAX availability issue fixed >> no need to clic more than once now, yeah!
+# "Alternative Search" issue fixed for Infinite pagination.
 # "allowUserRegistration" now supported.
 # Cookie issue while creating a new Search Type (back-end) fixed.
 # Custom Attributes issue fixed on Cotnent plug-in (beforeRender).
 # Cyrillic issue fixed (while creating a field from a Content Type).
 # < p > removed from Freetexts field in install.sql
+# Empty message issue fixed after (submitting a Form).
+# Hardcoded condition (preventing required/validation) removed on Password field.
 # HTML output fixed on "Group X" (Form views) Field plug-ins when markup=none.
 # Issues fixed on JCckContent class.
 # Keep "return" in "user profile edit" redirection.
 # Maxlength validation fixed on Messages (Configuration) on back-end.
 # Missing Languages files (for Package Export) added.
 # Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
+# Native Search behaviors fixed for Upload File/Image plug-ins.
 # Nested Lists (using "Items" view) issue fixed.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
 # "Prepare Content" issue fixed on "Joomla! Module" plug-in >> "PrepareContent" method.
 # Processing Export issue fixed.
-# SEF parameter properly propagated during List rendering.
 # Registration email/mode using COM_CCK_EMAIL_REGISTERED_BODY fixed.
 # Router issue (related to 2 segments URLs) fixed (regression.. :/).
+# SEF parameter properly propagated during List rendering.
 # Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
 # Syntax (replacement) issues fixed on "Email" plug-in.
+# Time Zone now applied automatically by "Date" Typo plug-in.
 # Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
 # Various improvements or issues fixed.
 
