@@ -1,12 +1,12 @@
 <?php
 /**
- * @version 			SEBLOD 3.x Core
- * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
- * @url				http://www.seblod.com
- * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
- * @license 			GNU General Public License version 2 or later; see _LICENSE.php
- **/
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
 defined( '_JEXEC' ) or die;
 
@@ -45,8 +45,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$location		=	( isset( $config['location'] ) && $config['location'] ) ? $config['location'] : 'joomla_article';
 			$properties		=	array( 'context', 'context2' );
 			$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$location, 'getStaticProperties', $properties );
-
-			if ( $properties['context2'] != '' ) {
+			
+			if ( isset( $properties['context2'] ) && $properties['context2'] != '' ) {
 				$properties['context']	=	$properties['context2'];
 			}
 			if ( is_object( $value ) && isset( $value->tags ) ) {
@@ -161,7 +161,6 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		if ( $value != '' && JCck::on( '3.1' ) ) {
 			if ( $field->storage_location != '' ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
-
 				$properties	=	array( 'context', 'context2', 'key', 'table' );
 				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
 
@@ -253,3 +252,4 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		return self::$friendly;
 	}
 }
+?>
