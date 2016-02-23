@@ -59,6 +59,8 @@ $types		=	array(
 		foreach ( $params as $p ) {
 			echo JCckDev::renderForm( 'core_dev_text', @$options[$account][$p['name']], $config, array( 'label'=>$p['label'], 'storage_field'=>'json[options]['.$account.']['.$p['name'].']', 'required'=>$p['required'], 'attributes'=>$p['attributes'] ) );
 		}
+		echo JCckDev::renderForm( 'core_bool', @$options[$account]['bridge'], $config, array( 'label'=>'Bridge', 'defaultvalue'=>'0', 'storage_field'=>'json[options]['.$account.'][bridge]' ) );
+		echo JCckDev::renderBlank();
 
 		echo '</ul>';
 	}
@@ -70,7 +72,7 @@ $types		=	array(
 		echo JCckDevTabs::open( $group_id, 'tabs2', JText::_( 'COM_CCK_OPTIONS' ) );
 	}
 	echo '<ul class="adminformlist adminformlist-2cols">';
-	echo JCckDev::renderForm( 'core_dev_select', @$options['type'], $config, array( 'label'=>'Type', 'defaultvalue'=>'2,7', 'selectlabel'=>'', 'options'=>'Basic=7||Standard=2,7||Advanced=2,3,6,7', 'storage_field'=>'json[options][type]' ) );
+	echo JCckDev::renderForm( 'core_dev_select', @$options['type'], $config, array( 'label'=>'Type', 'defaultvalue'=>'2,7', 'selectlabel'=>'', 'options'=>'Minimal=6||Basic=7||Standard=2,7||Advanced=2,3,6,7', 'storage_field'=>'json[options][type]' ) );
 	echo '</ul>';
 
 	echo JCckDevTabs::end();
