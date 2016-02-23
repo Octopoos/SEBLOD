@@ -69,7 +69,6 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 							$live	=	'';
 						}
 					}
-<<<<<<< HEAD
 					if ( is_array( $live ) ) {
 						if ( $excluded != '' ) {
 							$excluded	=	explode( ',', $excluded );
@@ -84,18 +83,8 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 						$live	=	$default;
 					}
 				} else {
-=======
-					if ( empty( $live ) ) {
-						$live	=	$default;
-					} else {
-						$live	=	implode( ',', $live );	
-					}
-				} elseif ( $live == '' ) {
->>>>>>> Octopoos/master
 					$live	=	$default;
 				}
-			} else {
-				$live	=	$default;
 			}
 		}
 		
