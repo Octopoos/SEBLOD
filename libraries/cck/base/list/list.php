@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -63,15 +63,81 @@ class CCK_List
 		return join( '|', $pattern );
 	}
 
+	// getFieldColumns_asString
+	public static function getFieldColumns_asString( $t )
+	{
+		$columns	=	array(
+							'id',
+							'title',
+							'name',
+							'folder',
+							'type',
+							'description',
+							'published',
+							'label',
+							'selectlabel',
+							'display',
+							'required',
+							'validation',
+							'defaultvalue',
+							'options',
+							'options2',
+							'minlength',
+							'maxlength',
+							'size',
+							'cols',
+							'rows',
+							'ordering',
+							'sorting',
+							'divider',
+							'bool',
+							'location',
+							'extended',
+							'style',
+							'script',
+							'bool2',
+							'bool3',
+							'bool4',
+							'bool5',
+							'bool6',
+							'bool7',
+							'bool8',
+							'css',
+							'attributes',
+							'storage',
+							'storage_cck',
+							'storage_location',
+							'storage_table',
+							'storage_field',
+							'storage_field2',
+							'storage_params'
+						);
+
+		return $t.'.'.implode( ', '.$t.'.', $columns );
+	}
+
 	// getFields
 	public static function getFields( $search, $client, $excluded = '', $idx = true, $cck = false )
 	{
+		$where 	=	' WHERE b.name = "'.$search.'"';
+
 		// Client
-		if ( $client == 'all' )  {
-			$where 	=	' WHERE b.name = "'.$search.'"';
-		} else {
-			$where 	=	' WHERE b.name = "'.$search.'" AND c.client = "'.$client.'"';
+		if ( $client != 'all' )  {
+			$and		=	array();
+
+			if ( !is_array( $client ) ) {
+				$client	=	array( $client );
+			}
+
+			if ( count( $client ) ) {
+				foreach ( $client as $k=>$v ) {
+					$and[]	=	'c.client = "'.$v.'"';
+				}
+				$where	.=	' AND ('.implode( ' OR ', $and ).')';
+			}
 		}
+
+		// Exclude
 		if ( $excluded != '' ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
 		}
@@ -81,18 +147,25 @@ class CCK_List
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	' SELECT DISTINCT a.*, c.client,'
+		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_search_field AS c ON c.fieldid = a.id'
 				. 	' LEFT JOIN #__cck_core_searchs AS b ON b.id = c.searchid'
 				.	$where
+				.	' GROUP BY c.client, c.fieldid'
 				.	' ORDER BY c.ordering ASC';
 				;
-		$fields	=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
+		$fields	=	( $idx ) ? JCckDatabase::loadObjectListArray( $query, 'client', 'name' ) : JCckDatabase::loadObjectList( $query, 'client' ); //#
 		
 		if ( ! count( $fields ) ) {
 			$fields	=	array();
+
+			if ( count( $client ) ) {
+				foreach ( $client as $k=>$v ) {
+					$fields[$v]	=	array();
+				}
+			}
 		}
 		
 		return $fields;
@@ -101,7 +174,7 @@ class CCK_List
 	// getFields_Items
 	public static function getFields_Items( $search_name, $client, $access )
 	{
-		$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 					.	' FROM #__cck_core_search_field AS c'
 					.	' LEFT JOIN #__cck_core_searchs AS sc ON sc.id = c.searchid'
 					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -141,7 +214,7 @@ class CCK_List
 		
 		// Debug
 		if ( $doDebug ) {
-			$count		=	count( $list );
+			$count		=	( isset( $config['total'] ) && $config['total'] ) ? $config['total'] : count( $list );
 			echo $profiler->mark( 'afterSearch'.$isCached ).' = '.$count.' '.( $count > 1 ? 'results' : 'result' ).'.<br />';
 			if ( isset( $current['stage'] ) && (int)$current['stage'] > 0 ) {
 				echo '<br />';
@@ -163,6 +236,79 @@ class CCK_List
 		}
 		
 		return $cache[$search_id.'_'.$client];
+	}
+
+	// getPropertyColumns_asString
+	public static function getPropertyColumns_asString( $level )
+	{
+		if ( !$level ) {
+			return; // 67
+		}
+
+		$columns	=	array(
+							'computation_options',
+							'conditional_options',
+							'link_options',
+							'live_options',
+							'match_collection',
+							'match_mode',
+							'match_options',
+							'match_value',
+							'restriction_options',
+							'typo_label',
+							'typo_options',
+							'validation',
+							'validation_options'
+						);
+
+		if ( $level == 1 ) {
+			return $columns; // 62
+		}
+
+		$columns[]	=	'access';
+		$columns[]	=	'folder';
+		$columns[]	=	'location';
+		$columns[]	=	'ordering';
+		$columns[]	=	'published';
+		$columns[]	=	'restriction';
+		$columns[]	=	'sorting';
+		$columns[]	=	'storage';
+		$columns[]	=	'storage_cck';
+		$columns[]	=	'storage_location';
+		$columns[]	=	'storage_table';
+		$columns[]	=	'storage_field';
+		$columns[]	=	'storage_field2';
+		$columns[]	=	'storage_params';
+
+		if ( $level == 2 ) {
+			return $columns; // 48
+		}
+
+		$columns[]	=	'attributes';
+		$columns[]	=	'bool';
+		$columns[]	=	'bool2';
+		$columns[]	=	'bool3';
+		$columns[]	=	'bool4';
+		$columns[]	=	'bool5';
+		$columns[]	=	'bool6';
+		$columns[]	=	'bool7';
+		$columns[]	=	'bool8';
+		$columns[]	=	'access';
+		$columns[]	=	'css';
+		$columns[]	=	'cols';
+		$columns[]	=	'defaultvalue';
+		$columns[]	=	'divider';
+		$columns[]	=	'extended';
+		$columns[]	=	'maxlength';
+		$columns[]	=	'minlength';
+		$columns[]	=	'options';
+		$columns[]	=	'options2';
+		$columns[]	=	'required';
+		$columns[]	=	'rows';
+		$columns[]	=	'selectlabel';
+		$columns[]	=	'size';
+		
+		return $columns; // 26
 	}
 
 	// getSearch
@@ -214,9 +360,10 @@ class CCK_List
 		
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$data	=	'';
-		$itemId	=	( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId;
 		$list	=	array(
+						'doSEF'=>$config['doSEF'],
 						'isCore'=>$config['doQuery'],
+						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
 						'location'=>$config['location'],
 					);
 		

@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.7.1</version>
+	<version>3.8.0</version>
 	
 	<files>
 		<folder>tmpl</folder>
@@ -29,7 +29,8 @@
 			<fieldset name="basic">
 				<field name="search" type="cck" construction="core_search_type" id="jform_trigger_search" class="inputbox" required="true" label="MOD_CCK_SEARCH_CONFIG_SEARCH" description="MOD_CCK_SEARCH_CONFIG_SEARCH_DESC" />
 				<field name="menu_item"	type="menuitem"	label="MOD_CCK_SEARCH_CONFIG_MENU_ITEM" description="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_DESC" class="inputbox">
-					<option value="">JCURRENT</option>
+					<option value="">COM_CCK_INHERITED</option>
+					<option value="-1">COM_CCK_URL</option>
 				</field>
 				<field name="menu_item_search" type="cck" construction="core_dev_radio" default="0" cck_selectlabel="" cck_options="No=0||Yes=1"
 				   label="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH" description="MOD_CCK_SEARCH_CONFIG_MENU_ITEM_SEARCH_DESC" class="btn-group btn-group-yesno" />

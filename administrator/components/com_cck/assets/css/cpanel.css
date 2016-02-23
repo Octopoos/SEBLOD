@@ -11,6 +11,7 @@
 body.modal-open .row-fluid div.wrapper-icon {margin-left: 10px;}
 .row-fluid div.wrapper-icon:first-child {margin-left: 0;}
 div.modal-body .row-fluid div.wrapper-icon {margin-left: 8px;}
+div.modal-body .cpanel.row-fluid{padding:12px 0 0 10px;}
 #cpanel div.wrapper-icon.half {height:71px;}
 #cpanel div.icon_small a {height:44px !important;}
 #cpanel div.icon_small span {padding-top:8px;}
@@ -80,5 +81,7 @@ div.modal-body .row-fluid div.wrapper-icon img {padding: 10px 0px 6px 0px;}
 div.modal-body .row-fluid div.wrapper-icon a > span {font-size: 12px;}
 
 .modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
-.modal.modal-small .modal-body{padding: 15px; width: auto;}
+.modal.modal-small .modal-body{overflow-y:auto; padding: 15px; width: auto;}
+.modal.modal-small .modal-body .accordion-group{margin-bottom:10px;}
+.modal.modal-small .modal-body .accordion-group ul.nav.nav-tabs.nav-stacked{margin-bottom:2px;}
 div.modal.modal-small.fade.in{top:10%;}

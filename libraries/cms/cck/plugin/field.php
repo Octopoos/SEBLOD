@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -68,7 +68,6 @@ class JCckPluginField extends JPlugin
 			return $value;
 		}
 		if ( count( $opts ) ) {
-			$exist	=	false;
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
 				if ( $config['doTranslation'] && trim( $o[0] ) ) {
@@ -79,9 +78,6 @@ class JCckPluginField extends JPlugin
 					return ( isset( $o[1] ) ) ? $o[1] : $o[0];
 					break;
 				}
-			}
-			if ( $exist === true ) {
-				$value[]	=	$val;
 			}
 		}
 		
@@ -101,7 +97,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data );
 		
@@ -110,7 +106,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data );
 		
@@ -119,7 +115,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
 		
@@ -128,7 +124,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchOrder
-	public static function onCCK_FieldConstruct_SearchOrder( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchOrder( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchOrder( $field, $style, $data );
 		
@@ -137,7 +133,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// onCCK_FieldConstruct_SearchContent
-	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), $config = array() )
 	{
 		self::g_onCCK_FieldConstruct_SearchContent( $field, $style, $data );
 		
@@ -292,12 +288,14 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_TypeForm
-	public static function g_onCCK_FieldConstruct_TypeForm( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_TypeForm( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
-		
+		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+
 		// 1
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
@@ -382,7 +380,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_TypeContent
-	public static function g_onCCK_FieldConstruct_TypeContent( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_TypeContent( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -430,11 +428,13 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchSearch
-	public static function g_onCCK_FieldConstruct_SearchSearch( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchSearch( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
+		$data['variation'][]=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+		$data['variation'][]=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		
 		// 1
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
@@ -531,7 +531,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchOrder
-	public static function g_onCCK_FieldConstruct_SearchOrder( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchOrder( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -548,7 +548,7 @@ class JCckPluginField extends JPlugin
 	}
 	
 	// g_onCCK_FieldConstruct_SearchContent
-	public static function g_onCCK_FieldConstruct_SearchContent( &$field, $style, $data )
+	public static function g_onCCK_FieldConstruct_SearchContent( &$field, $style, $data, $config = array() )
 	{
 		$id					=	$field->id;
 		$name				=	$field->name;
@@ -662,6 +662,19 @@ class JCckPluginField extends JPlugin
 				$field->state	=	0;
 			}
 		}
+
+		if ( isset($field->attributes) && $field->attributes != '' ) {
+			if ( strpos( $field->attributes, 'J(' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#J\((.*)\)#U';
+				preg_match_all( $search, $field->attributes, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $text ) {
+						$field->attributes	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
+					}
+				}
+			}
+		}
 	}
 		
 	// g_onCCK_FieldPrepareForm_Validation
@@ -773,6 +786,19 @@ class JCckPluginField extends JPlugin
 			require_once JPATH_PLUGINS.'/cck_storage/'.$storage.'/'.$storage.'.php';
 			JCck::callFunc_Array( 'plgCCK_Storage'.$storage, 'onCCK_StoragePrepareStore', array( &$field, $value, &$config ) );
 		}
+
+		/*
+		$field->state		=	1;
+		
+		// Restriction
+		if ( isset( $field->restriction ) && $field->restriction ) {
+			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareForm', array( &$field, &$config ) );
+			if ( !$field->authorised ) {
+				$field->display	=	0;
+				$field->state	=	0;
+			}
+		}
+		*/
 	}
 	
 	// g_onCCK_FieldPrepareStore_X
@@ -875,7 +901,7 @@ class JCckPluginField extends JPlugin
 			if ( $html ) {
 				$field->form	.=	str_replace( $html, $html.' disabled="disabled"', $form );
 			}
-		} elseif ( $variation == 'form_filter' ) {
+		} elseif ( $variation == 'form_filter' || $variation == 'form_filter_ajax' ) {
 			$field->form	=	$form;
 			if ( isset( $config['submit'] ) && isset( $config['formId'] ) ) {
 				$parent		=	$config['formId'];
@@ -887,8 +913,12 @@ class JCckPluginField extends JPlugin
 			if ( $field->script ) {
 				self::g_addScriptDeclaration( $field->script );
 			}
-			self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
-		} elseif ( $variation == 'list' || $variation == 'list_filter' ) {
+			if ( $variation == 'form_filter_ajax' ) {
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var v=$(this).myVal(); JCck.Core.loadmore("&start=0&"+$(this).attr("name")+"="+v,0,1); });' );
+			} else {
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
+			}
+		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	'';
 			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
@@ -897,12 +927,16 @@ class JCckPluginField extends JPlugin
 				static $loaded	=	0;
 				if ( !$loaded ) {
 					$doc		=	JFactory::getDocument();
-					if ( $variation == 'list' ) {
-						$then	=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
+					$then		=	'';
+					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
+						if ( $variation == 'list_filter_ajax' ) {
+							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
+						}
+						$then	.=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
 						$then	=	' JCck.Core.submit("search");';
 					}
-					$js			=	'$("form#seblod_form").on("click", ".list-variation-items > li a", function() { $("#'.$id.'").val($(this).parent().attr("data-value"));'.$then.' });';
+					$js			=	'$("form#seblod_form").on("click", ".list-variation-items > li a", function() { var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js			=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
 					$doc->addScriptDeclaration( $js );
 					$loaded		=	1;
@@ -929,8 +963,9 @@ class JCckPluginField extends JPlugin
 			$field->form	=	$base;
 			$field->display =	0;
 		} else {
+			$attr_id		=	( $variation == 'hidden_anonymous' ) ? '' : 'id="'.$id.'" ';
 			$attr			=	$field->attributes ? ' '.$field->attributes : '';
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" '.$attr_id.'name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
 			$field->form	=	$base;
 			if ( $field->display ) {
 				$field->display =	1;
@@ -985,7 +1020,9 @@ class JCckPluginField extends JPlugin
 		if ( $separator ) {
 			$length	=	strlen( $separator );
 			$value	=	implode( $separator, $value );
-			$text	=	substr( $text, 0, -$length );
+			if ( $text != '' ) {
+				$text	=	substr( $text, 0, -$length );
+			}
 		} elseif ( $separator != '0' ) {
 			$value	=	(string)@$value[0];
 		}

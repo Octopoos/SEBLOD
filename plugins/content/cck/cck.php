@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,6 +17,66 @@ class plgContentCCK extends JPlugin
 	protected $loaded	=	array();
 	protected $title	=	'';
 	
+	// onContentAfterSave
+	public function onContentAfterSave( $context, $article, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onContentAfterSave';
+
+			$this->_process( array( 'event', 'context', 'article', 'isNew' ), $event, $context, $article, $isNew );
+		}
+	}
+
+	// onContentBeforeSave
+	public function onContentBeforeSave( $context, $article, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onContentBeforeSave';
+
+			$this->_process( array( 'event', 'context', 'article', 'isNew' ), $event, $context, $article, $isNew );
+		}
+	}
+
+	// onCckConstructionAfterDelete
+	public function onCckConstructionAfterDelete( $context, $item )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionAfterDelete';
+
+			$this->_process( array( 'event', 'context', 'item' ), $event, $context, $item );
+		}
+	}
+
+	// onCckConstructionBeforeDelete
+	public function onCckConstructionBeforeDelete( $context, $item )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionBeforeDelete';
+
+			$this->_process( array( 'event', 'context', 'item' ), $event, $context, $item );
+		}
+	}
+
+	// onCckConstructionAfterSave
+	public function onCckConstructionAfterSave( $context, $item, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionAfterSave';
+
+			$this->_process( array( 'event', 'context', 'item', 'isNew' ), $event, $context, $item, $isNew );
+		}
+	}
+
+	// onCckConstructionBeforeSave
+	public function onCckConstructionBeforeSave( $context, $item, $isNew )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event	=	'onCckConstructionBeforeSave';
+			
+			$this->_process( array( 'event', 'context', 'item', 'isNew' ), $event, $context, $item, $isNew );
+		}
+	}
+
 	// onContentAfterDelete
 	public function onContentAfterDelete( $context, $data )
 	{
@@ -169,8 +229,8 @@ class plgContentCCK extends JPlugin
 
 		$join			=	' LEFT JOIN #__cck_core_folders AS f ON f.id = b.folder';
 		$join_select	=	', f.app as folder_app';
-		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, b.id as type_id, b.alias as type_alias, b.indexed, b.parent, b.stylesheets,'
-						.	' b.options_content, b.options_intro, c.template as content_template, c.params as content_params, d.template as intro_template, d.params as intro_params'.$join_select
+		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, a.author_id AS author, b.id AS type_id, b.alias AS type_alias, b.indexed, b.parent, b.stylesheets,'
+						.	' b.options_content, b.options_intro, c.template AS content_template, c.params AS content_params, d.template AS intro_template, d.params AS intro_params'.$join_select
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
 						.	' LEFT JOIN #__template_styles AS c ON c.id = b.template_content'
@@ -305,6 +365,36 @@ class plgContentCCK extends JPlugin
 		$this->_render( $context, $article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
 	}
 	
+	// _process
+	protected function _process()
+	{
+		$args	=	func_get_args();
+		
+		if ( count( $args ) ) {
+			$i		=	0;
+			$keys	=	array_shift( $args );
+
+			if ( count( $keys ) ) {
+				foreach ( $args as $arg ) {
+					${$keys[$i++]}	=	$arg;
+				}
+			}
+		}
+		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+		
+		unset( $args );
+
+		if ( isset( $processing[$event] ) ) {
+			foreach ( $processing[$event] as $p ) {
+				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+					$options	=	new JRegistry( $p->options );
+
+					include JPATH_SITE.$p->scriptfile;
+				}
+			}
+		}
+	}
+
 	// _render
 	protected function _render( $context, &$article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{
@@ -345,7 +435,7 @@ class plgContentCCK extends JPlugin
 		// Fields
 		if ( count( $fields ) ) {
 			JPluginHelper::importPlugin( 'cck_storage' );
-			$config	=	array( 'author'=>0,
+			$config	=	array( 'author'=>$cck->author,
 							   'client'=>$client,
    							   'doSEF'=>$p_sef,
 							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),

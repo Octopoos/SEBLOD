@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -22,6 +22,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	
 	protected static $access		=	'access';
 	protected static $author		=	'created_by';
+	protected static $author_object	=	'joomla_user';
 	protected static $created_at	=	'created';
 	protected static $custom		=	'introtext';
 	protected static $modified_at	=	'modified';
@@ -31,16 +32,19 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $to_route		=	'a.id as pk, a.title, a.alias, a.catid, a.language';
 	
 	protected static $context		=	'com_content.article';
+	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
+	protected static $ordering2		=	array();
 	protected static $pk			=	0;
+	protected static $routes		=	array();
 	protected static $sef			=	array( '1'=>'full',
 											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
 											   '3'=>'full', '32'=>'id', '33'=>'alias',
-											   '4'=>'full', '42'=>'id', '43'=>'alias'
+											   '4'=>'full', '42'=>'id', '43'=>'alias',
+											   '5'=>'full', '52'=>'id', '53'=>'alias'
 										);
-	protected static $routes		=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -73,6 +77,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( $table == self::$table ) {
 			$storage			=	self::_getTable( $pk, true );
 			$storage->slug		=	( $storage->alias ) ? $storage->id.':'.$storage->alias : $storage->id;
+
+			if ( 1 == 1 ) {
+				$storage->author_alias	=	JCckDatabaseCache::loadResult( 'SELECT b.alias as author_alias FROM #__cck_core AS a'
+																		 . ' LEFT JOIN #__content AS b ON b.id = a.pkb'
+																		 . ' WHERE a.storage_location = "joomla_user" AND a.pk = '.(int)$storage->{self::$author} );
+			}
 			$config['author']	=	$storage->{self::$author};
 		} else {
 			$storage			=	parent::g_onCCK_Storage_LocationPrepareContent( $table, $pk );
@@ -85,7 +95,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 		if ( $config['doSEF'] && isset( $row->readmore_link ) ) {
 			$row->readmore_link	=	self::getRouteByStorage( $config['storages'], $config['doSEF'], $config['Itemid'], $config );
-			$config['doSEF']	=	0;
 		}
 	}
 	
@@ -156,19 +165,36 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		// Prepare
 		if ( $load ) {
 			if ( $table == self::$table ) {
-				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT a.*, b.title AS category_title, b.alias AS category_alias'
-																	. ' FROM '.$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid'
-																	. ' WHERE a.'.self::$key.' IN ('.$config['pks'].')', self::$key );
+				$select				=	( $config['doSEF'][0] == '5' ) ? ', d.alias AS author_alias' : '';
+				$query				=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
+									.	' FROM '.$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+				
+				if ( $config['doSEF'][0] == '5' ) {
+					$query			.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
+									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
+				}
+				$query				.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
+
+				$storages[$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
 				foreach ( $storages[self::$table] as $s ) {
 					$s->slug		=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
 				}
 			} else {
 				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE id IN ('.$config['pks'].')', 'id' );
 				if ( !isset( $storages[self::$table] ) ) {
-					$storages['_']			=	self::$table;
-					$storages[self::$table]	=	JCckDatabase::loadObjectList( 'SELECT a.*, b.title AS category_title, b.alias AS category_alias'
-																			. ' FROM '.self::$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid'
-																			. ' WHERE a.'.self::$key.' IN ('.$config['pks'].')', self::$key );
+					$storages['_']	=	self::$table;
+
+					$select			=	( $config['doSEF'][0] == '5' ) ? ', d.alias AS author_alias' : '';
+					$query			=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
+									.	' FROM '.self::$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+					
+					if ( $config['doSEF'][0] == '5' ) {
+						$query		.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
+									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
+					}
+					$query			.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
+
+					$storages[self::$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
 					foreach ( $storages[self::$table] as $s ) {
 						$s->slug	=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
 					}
@@ -207,8 +233,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Init
 		$db		=	JFactory::getDbo();
+		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		$null	=	$db->getNullDate();
-		$now	=	JFactory::getDate()->toSql();
 		
 		// Prepare
 		if ( ! isset( $tables[self::$table] ) ) {
@@ -300,16 +326,16 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		if ( ! $config['id'] ) {
-			$isNew	=	true;
+			$isNew			=	true;
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 		} else {
-			$isNew	=	false;
+			$isNew		=	false;
 		}
 		
 		// Init
-		$app	=	JFactory::getApplication();
-		$table	=	self::_getTable( $pk );
-		$isNew	=	( $pk > 0 ) ? false : true;
+		$app		=	JFactory::getApplication();
+		$table		=	self::_getTable( $pk );
+		$isNew		=	( $pk > 0 ) ? false : true;
 		if ( isset( $table->tags ) ) {
 			$tags	=	$table->tags;
 			unset( $table->tags );
@@ -326,6 +352,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Check Error
 		if ( self::$error === true ) {
+			$config['error']	=	true;
+
 			return false;
 		}
 		
@@ -361,14 +389,19 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		JPluginHelper::importPlugin( 'content' );
 		$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 		if ( $isNew === true && parent::g_isMax( $table->{self::$author}, $table->{self::$parent}, $config ) ) {
-			return;
+			$config['error']	=	true;
+
+			return false;
 		}
 		
 		if ( !$table->store() ) {
 			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			
 			if ( $isNew ) {
 				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
 			}
+			$config['error']	=	true;
+
 			return false;
 		}
 		
@@ -443,7 +476,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected function _completeTable( &$table, &$data, &$config )
 	{
 		if ( $table->state == 1 && intval( $table->publish_up ) == 0 ) {
-			$table->publish_up	=	JFactory::getDate()->toSql();
+			$table->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		}
 		if ( ! $table->{self::$key} ) {
 			$table->modified_by	=	0;
@@ -510,6 +543,16 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		parent::g_completeTable( $table, self::$custom, $config );
 	}
 	
+	// _getReorderConditions
+	protected function _getReorderConditions( $table )
+	{
+		$conditions	=	array(
+							'catid = '.(int)$table->catid
+						);
+
+		return $conditions;
+	}
+
 	// _setAssociations
 	protected function _setAssociations( $table, $data, $isNew, $config )
 	{
@@ -591,7 +634,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// buildRoute
 	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
 	{
-		if ( isset( $query['typeid'] ) ) {
+		if ( isset( $query['userid'] ) ) {
+			$segments[]	=	$query['userid'];
+			unset( $query['userid'] );
+		} elseif ( isset( $query['typeid'] ) ) {
 			$segments[]	=	$query['typeid'];
 			unset( $query['typeid'] );
 		} elseif ( isset( $query['catid'] ) ) {
@@ -606,13 +652,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$id		=	$query['id'];
 			} else {
 				if ( strpos( $query['id'], ':' ) !== false ) {
+					$idArray	=	explode( ':', $query['id'], 2 );
+
 					if ( self::$sef[$config['doSEF']] == 'alias' ) {
-						list( $tmp, $id )	=	explode( ':', $query['id'], 2 );
+						$id		=	(string)$idArray[1];
 					} else {
-						list( $id, $alias )	=	explode( ':', $query['id'], 2 );
+						$id		=	(int)$idArray[0];
 					}
 				} else {
-					$id		=	$query['id'];
+					$id			=	$query['id'];
 				}
 			}
 			$segments[]	=	$id;
@@ -625,9 +673,17 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	{
 		$route		=	'';
 		if ( is_numeric( $item ) ) {
-			$item	=	JCckDatabaseCache::loadObject( 'SELECT a.id, a.alias, a.catid, a.language, b.alias AS category_alias'
-													 . ' FROM #__content AS a LEFT JOIN #__categories AS b ON b.id = a.catid'
-													 . ' WHERE a.id = '.(int)$item );
+			$select	=	( $sef[0] == '5' ) ? ', a.created_by, d.alias AS author_alias' : '';
+			$query	=	'SELECT a.id, a.alias, a.catid, a.language, b.alias AS category_alias'.$select
+					.	' FROM #__content AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+
+			if ( $sef[0] == '5' ) {
+				$query	.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
+						.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
+			}
+			$query	.=	' WHERE a.id = '.(int)$item;
+			
+			$item	=	JCckDatabaseCache::loadObject( $query );
 			if ( empty( $item ) ) {
 				return '';
 			}
@@ -638,6 +694,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( $sef ) {
 			if ( $sef == '0' || $sef == '1' ) {
 				$path	=	'&catid='.$item->catid;
+			} elseif ( $sef[0] == '5' ) {
+				$path	=	'&userid='.( isset( $item->author_alias ) ? $item->author_alias : $item->created_by );
 			} elseif ( $sef[0] == '4' ) {
 				$path	=	'&catid='.( isset( $item->category_alias ) ? $item->category_alias : $item->catid );
 			} elseif ( $sef[0] == '3' ) {
@@ -657,13 +715,17 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// getRouteByStorage
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{
-		if ( isset( $storage[self::$table]->_route ) && !$lang_tag ) {
-			return JRoute::_( $storage[self::$table]->_route );
-		}
+		$idx	=	md5( $sef.'|'.$itemId.'|'.$lang_tag );
 		
+		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
+			return JRoute::_( $storage[self::$table]->_route[$idx] );
+		}
+
 		if ( $sef ) {
 			if ( $sef == '0' || $sef == '1' ) {
 				$path	=	'&catid='.$storage[self::$table]->catid;
+			} elseif ( $sef[0] == '5' ) {
+				$path	=	'&userid='.( isset( $storage[self::$table]->author_alias ) ? $storage[self::$table]->author_alias : $storage[self::$table]->created_by );
 			} elseif ( $sef[0] == '4' ) {
 				$path	=	'&catid='.( isset( $storage[self::$table]->category_alias ) ? $storage[self::$table]->category_alias : $storage[self::$table]->catid );
 			} elseif ( $sef[0] == '3' ) {
@@ -672,7 +734,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$path	=	'';
 			}
 			if ( is_object( $storage[self::$table] ) ) {
-				$storage[self::$table]->_route	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+				if ( !isset( $storage[self::$table]->_route ) ) {
+					$storage[self::$table]->_route		=	array();
+				}
+				$storage[self::$table]->_route[$idx]	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
 			}
 
 			// Multilanguage Associations
@@ -687,7 +752,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$lang_code	=	JFactory::getLanguage()->getTag();
 					foreach ( $languages as $l ) {
 						if ( $lang_code == $l->lang_code ) {
-							self::$routes[$l->lang_code]	=	$storage[self::$table]->_route;
+							self::$routes[$l->lang_code]	=	$storage[self::$table]->_route[$idx];
 						} else {
 							$itemId2						=	isset( $assoc_m[$l->lang_code] ) ? $assoc_m[$l->lang_code] : 0;
 							$pk2							=	isset( $assoc_c[$l->lang_code] ) ? (int)$assoc_c[$l->lang_code]->id : 0;
@@ -701,10 +766,14 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 		} else {
 			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $storage[self::$table]->slug, $storage[self::$table]->catid, $storage[self::$table]->language );
+
+			if ( !isset( $storage[self::$table]->_route ) ) {
+				$storage[self::$table]->_route		=	array();
+			}
+			$storage[self::$table]->_route[$idx]	=	ContentHelperRoute::getArticleRoute( $storage[self::$table]->slug, $storage[self::$table]->catid, $storage[self::$table]->language );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return JRoute::_( $storage[self::$table]->_route[$idx] );
 	}
 
 	// parseRoute
@@ -717,7 +786,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$vars['view']	=	'article';
 		
 		if ( $n == 2 ) {
-			if ( $config['doSEF'][0] == '3' ) {
+			if ( $config['doSEF'][0] == '5' ) {
+				$join				.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
+									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
+				$where				=	' AND d.alias="'.(string)$segments[0].'"';
+			} elseif ( $config['doSEF'][0] == '3' ) {
 				$join				=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
 				$where				=	' AND b.cck = "'.(string)$segments[0].'"';
 			} else {
@@ -789,6 +862,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// access
+	public static function access( $pk )
+	{
+		return JCckDatabaseCache::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.self::$key.' = '.$pk.' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).') AND '.self::$status.' = 1' );
+	}
+
 	// authorise
 	public static function authorise( $rule, $pk )
 	{
@@ -819,6 +898,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'author_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

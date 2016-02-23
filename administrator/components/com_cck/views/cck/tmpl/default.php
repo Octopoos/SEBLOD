@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,7 +46,7 @@ if ( $app->input->get( 'debug', 0 ) == 1 ) {
                 <?php
                 if ( $uix == 'compact' ) {
                     echo '<div class="fltlft">';
-                    Helper_Admin::addIcon( CCK_COM, _C2_LINK, _C2_NAME, JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ) );
+                    Helper_Admin::addIcon( CCK_COM, _C2_LINK, _C2_NAME, JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ), 48, 'left', '6' );
                     Helper_Admin::addIcon( CCK_COM, _C0_LINK, _C0_NAME, JText::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ) );
                     echo '</div>';
                 } else {
@@ -86,10 +86,12 @@ if ( $app->input->get( 'debug', 0 ) == 1 ) {
                     </ul>
                 </div>
             <?php } echo JCckDevAccordion::end(); ?>
+            <?php if ( $uix != 'compact' ) { ?>
             <div class="alert alert-info">
                 <a href="http://jed.seblod.com" target="_blank" class="close"><span class="icon-arrow-right-2"></span></a>
                 <div><strong>If you use SEBLOD, please post a rating & review at the JED. Thank you.</strong></div>
             </div>
+            <?php } ?>
         </div>
         
     </div>

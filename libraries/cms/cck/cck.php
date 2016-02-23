@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -50,8 +50,21 @@ abstract class JCck
 			return self::$_config;
 		}
 
+		$app			=	JFactory::getApplication();
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+
+		// Tweak Language: JText
+		$translate		=	(int)$config->params->get( 'language_jtext', 0 );
+		if ( $translate == 2 ) {
+			if ( !( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) ) ) {
+				if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+					$config->params->set( 'language_jtext', 0 );
+				} else {
+					$config->params->set( 'language_jtext', 1 );
+				}
+			}
+		}
 		
 		self::$_config	=&	$config;
 	}
@@ -310,7 +323,7 @@ abstract class JCck
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.6.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.7.1.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}

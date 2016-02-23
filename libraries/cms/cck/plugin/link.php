@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -91,17 +91,61 @@ class JCckPluginLink extends JPlugin
 		}
 		if ( $custom != '' && strpos( $custom, '$uri->get' ) !== false ) {
 			$matches	=	'';
-			$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
+			$search		=	'#([a-zA-Z0-9_]*)=\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 			preg_match_all( $search, $custom, $matches );
-			if ( count( $matches[1] ) ) {
-				foreach ( $matches[1] as $k=>$v ) {
-					$variable	=	$matches[2][$k];
+			
+			if ( count( $matches[2] ) ) {
+				foreach ( $matches[2] as $k=>$v ) {
+					$variable	=	$matches[3][$k];
+					
 					if ( $v == 'Current' ) {
 						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
-						$custom		=	str_replace( $matches[0][$k], $request, $custom );						
+						$custom		=	str_replace( $matches[0][$k], $matches[1][$k].'='.$request, $custom );						
+					} elseif ( $v == 'Array' ) {
+						$name				=	$field->name;
+						$value				=	'';
+						$custom_v			=	'';
+						static $custom_vars	=	array();
+						
+						if ( !isset( $custom_vars[$name] ) ) {
+							$custom_vars[$name]	=	explode( '&', $custom );
+						}
+						if ( count( $custom_vars[$name] ) ) {
+							foreach ( $custom_vars[$name] as $custom_var ) {
+								if ( strpos( $custom_var, $matches[0][$k] ) !== false ) {
+									$custom_v	=	substr( $custom_var, 0, strpos( $custom_var, '=' ) );
+								}
+							}
+						}
+						if ( $custom_v != '' ) {
+							$values		=	$app->input->get( $variable, '', 'array' );
+							if ( is_array( $values ) && count( $values ) ) {
+								foreach ( $values as $val ) {
+									$value	.=	'&'.$custom_v.'[]='.$val;
+								}
+								$value	=	substr( $value, 1 );
+							}
+						}
+						$pos		=	strpos( $custom, '&'.$matches[0][$k] );
+						
+						if ( $value == '' ) {
+							$pre	=	( $pos !== false ) ? '&' : '';
+						} else {
+							$pre	=	( $pos !== false && $pos == 0 ) ? '&' : '';
+						}
+						$custom		=	str_replace( $pre.$matches[0][$k], $value, $custom );
 					} else {
+						$pos		=	strpos( $custom, '&'.$matches[0][$k] );
 						$request	=	'get'.$v;
-						$custom		=	str_replace( $matches[0][$k], urlencode( $app->input->$request( $variable, '' ) ), $custom );
+						$result		=	urlencode( $app->input->$request( $variable, '' ) );
+						
+						if ( $result == '' ) {
+							$pre	=	( $pos !== false ) ? '&' : '';
+							$custom	=	str_replace( $pre.$matches[0][$k], '', $custom );
+						} else {
+							$pre	=	( $pos !== false && $pos == 0 ) ? '&' : '';
+							$custom	=	str_replace( $pre.$matches[0][$k], $matches[1][$k].'='.$result, $custom );
+						}
 					}
 				}
 			}

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,7 +15,8 @@ $cck		=	JCckDev::preload( array( 'core_pagination', 'core_cache', 'core_cache2',
 										 'core_prepare_content', 'core_debug', 'core_auto_redirection', 'core_ordering',
 										 'core_tag_title', 'core_class_title', 'core_show_hide2', 'core_action_no_access', 'core_redirection_url_no_access', 'core_label_total',
 										 'core_class_total', 'core_show_pagination', 'core_class_pagination',
-										 'core_message_style', 'core_action', 'core_message', 'core_template' ) );
+										 'core_message_style', 'core_action', 'core_message', 'core_validation_position', 'core_validation_scroll', 'core_validation_color',
+										 'core_validation_background_color', 'core_template' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 
 if ( $this->item->client == 'list' ) {
@@ -43,7 +44,7 @@ if ($("#jform_id").val()>0) {JCck.Dev.trash = $("#sortable2 li:not(.f-"+$("#fold
 var block_item = <?php echo $block_item; ?>;
 if (block_item) {$("#client5_label").addClass("disabled"); $("#client5").prop("disabled", true);} else {$("#client5_label").removeClass("disabled"); $("#client5").prop("disabled", false);}
 $("#options_tag_list_title").isVisibleWhen('options_show_list_title','1',true,'visibility'); $("#options_label_items_number").isVisibleWhen('options_show_items_number','1');
-$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#blank_li6").isVisibleWhen('options_show_pagination','2');
+$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#blank_li6").isVisibleWhen('options_show_pagination','2,8');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }
 <?php echo $this->js['tooltip']; ?>

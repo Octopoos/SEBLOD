@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /*FLOAT*/
@@ -72,7 +72,8 @@ div.cck_page_desc{padding:0; margin:15px 0px; text-align:justify;}
 .modal-remote-parent .cck-nav.no-nav {display: none;}
 #modal-remote .modal-body .loading {background: url(../images/spinner.gif) 50% 50% no-repeat;width:48px;height:48px;margin:0 auto;background-size:cover;}
 #modal-remote .modal-content {width:100%;}
-#modal-remote.modal .close {height: 18px;display: block;top: 5px;right: 5px;width: 18px;position: absolute;z-index:100;}
+#modal-remote .modal-header {min-height:31px;}
+#modal-remote.modal > .close {height: 18px;display: block;top: 5px;right: 5px;width: 18px;position: absolute;z-index:100;}
 .modal-remote-parent #modal-remote.modal {position:static;margin:0 auto;max-width:1000px;width:auto;border:none;border-radius:0;}
 .modal-remote-parent #modal-remote.modal .close {position:fixed;opacity: 1;color: #fff;}
 .modal-remote-parent #modal-remote.modal .close:hover {color: #5c5f64;}

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,7 +46,7 @@ if ( $this->show_list_title ) {
 	$tag		=	$this->tag_list_title;
 	$class		=	trim( $this->class_list_title );
 	$class		=	$class ? ' class="'.$class.'"' : '';
-	echo '<'.$tag.$class.'>' . @$this->search->title . '</'.$tag.'>';
+	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
@@ -90,6 +90,7 @@ if ( !$this->raw_rendering ) { ?>
 	} else {
 		$pages_total	=	0;
 	}
+	$hasAjax			=	( $pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ? true : false;
 	$pagination_replace	=	'';
 	if ( $this->show_pagination > -2 && $pages_total > 1 ) {
 		$url			=	JUri::getInstance()->toString().'&';
@@ -120,13 +121,13 @@ if ( !$this->raw_rendering ) { ?>
 		echo $this->loadTemplate( 'items' );
 	}
 	if ( ( $this->show_pages_number || $this->show_pagination > -1 ) && $pages_total > 1 ) {
-	    echo '<div class="'.$this->class_pagination.'">';
+	    echo '<div class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
 		$pagesCounter	=	$this->pagination->getPagesCounter();
     	if ( $this->show_pages_number && $pagesCounter ) {
 	        echo '<p class="counter">' . $pagesCounter . '</p>';
     	}
 		if ( $this->show_pagination > -1 ) {
-			if ( $this->show_pagination == 2 ) {
+			if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) {
 				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'</a></li>';
 			} else {
 				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
@@ -155,25 +156,39 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 </div></div>
 <?php } ?>
 
-<?php if ( $this->show_pagination == 2 ) { ?>
+<?php if ( $hasAjax ) {
+$context	=	'&context={\'Itemid\':'.$app->input->getInt( 'Itemid', 0 ).',\'view\':\'list\'}';
+?>
 <script type="text/javascript">
 (function ($){
-	JCck.Core.loadmore = function(more,stop) {
+	JCck.Core.loadmore = function(more,stop,search) {
 		var elem = ".cck-loading-more";
+		var search = search || 0;
 		$.ajax({
 			cache: false,
-			data: "format=raw&infinite=1&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
+			data: "format=raw&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
 			type: "GET",
 			url: "<?php echo JUri::current(); ?>",
 			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
 			success: function(response){
 				if (stop != 1) {
-					$("#seblod_form_load_more").show();
+					$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 				} else {
 					$(".cck_page_list .pagination").hide();
 				}
-				$("#seblod_form_loading_more").hide(); $(elem).append(response);
-				<?php echo $this->callback_pagination ? $this->callback_pagination.'(response);' : ''; ?>
+				$("#seblod_form_loading_more").hide();
+				if (search==1) { $(elem).html(response); } else { $(elem).append(response); }
+				<?php
+				if ( $this->callback_pagination != '' ) {
+					$pos	=	strpos( $this->callback_pagination, '$(' );
+
+					if ( $pos !== false && $pos == 0 ) {
+						echo $this->callback_pagination;
+					} else {
+						echo $this->callback_pagination.'(response);';
+					}
+				}
+				?>
 			},
 			error:function(){}
 		});
@@ -186,7 +201,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 			var stop = (start+step>=parseInt($(this).attr("data-end"))) ? 1 : 0;
 			$(this).attr("data-start",start);
 			JCck.Core.loadmore("&start="+start,stop);
-		});
+		})<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 	});
 })(jQuery);
 </script>

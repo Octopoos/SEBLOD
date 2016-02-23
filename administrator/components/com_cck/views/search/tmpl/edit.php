@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -130,6 +130,9 @@ if ( $this->item->client == 'list' ) {
 		echo '<input type="hidden" id="cck_type" name="cck_type" value="'.$this->item->cck_type.'" />';
 	}
     echo $this->form->getInput( 'id' );
+    if ( !isset( $config['validation']['maxSize'] ) ) {
+    	$config['validation']['maxSize']	=	'"maxSize":{"regex":"none","alertText":"* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT' ).'","alertText2":"'.JText::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT2' ).'"}';
+    }
 	JCckDev::validate( $config );
     echo JHtml::_( 'form.token' );
 	?>
@@ -150,7 +153,7 @@ Helper_Display::quickCopyright();
 			$.ajax({
 				cache: false,
 				data: mydata,
-				type: "POST",
+				type: "GET",
 				url: "index.php?option=com_cck&view="+view+"&layout="+layout+"&format=raw",
 				beforeSend:function(){ $("#loading").html(loading); $(elem).html(""); },
 				success: function(response){ $("#loading").html(""); $(elem).html(response); JCck.Dev.setEdit2(uix);},

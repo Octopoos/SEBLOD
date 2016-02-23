@@ -4,11 +4,11 @@
 	<packagename>cck</packagename>
 	<packager>Octopoos</packager>
 	<packagerurl>http://www.seblod.com</packagerurl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.7.1</version>
+	<version>3.8.0</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	
@@ -21,6 +21,7 @@
 			<!-- Variation -->
 			<file type="file" id="var_cck_joomla" src="libraries/cck/rendering/variations">var_cck_joomla.zip</file>
 			<file type="file" id="var_cck_seb_css3" src="libraries/cck/rendering/variations">var_cck_seb_css3.zip</file>
+			<file type="file" id="var_cck_seb_css3b" src="libraries/cck/rendering/variations">var_cck_seb_css3b.zip</file>
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->

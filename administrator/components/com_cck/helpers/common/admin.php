@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,14 +26,17 @@ class CommonHelper_Admin
 	}
 	
 	// addIcon
-	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left' )
+	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left', $div = '' )
 	{
+		if ( $div == '' ) {
+			$div	=	'3';
+		}
 		if ( $size == 48 ) {
 			$class	=	'icon icon-rounded';
-			$class2	=	'wrapper-icon span3';
+			$class2	=	'wrapper-icon span'.$div;
 		} else {
 			$class	=	'icon icon-rounded icon_small icon_small_'.$align;
-			$class2	=	'wrapper-icon half span3';
+			$class2	=	'wrapper-icon half span'.$div;
 		}
 		$target	=	( strpos( $link, 'http://' ) !== false ) ? '_blank' : '_self';
 		if ( $text == 'spacer' ) {
@@ -273,7 +276,15 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		$options[]	=	JHtml::_( 'select.option', 'title', JText::_( 'COM_CCK_TITLE' ) );
-		$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		if ( $option == 'com_cck_ecommerce' ) {
+			if ( $view == 'zones' ) {
+				$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+			} elseif ( $view == 'orders' ) {
+				$options[]	=	JHtml::_( 'select.option', 'number', JText::_( 'COM_CCK_INVOICE' ) );
+			}
+		} else {
+			$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		}
 		if ( $option == 'com_cck' && $view == 'fields' ) {
 			$options[]	=	JHtml::_( 'select.option', 'label', JText::_( 'COM_CCK_LABEL' ) );	
 		}
@@ -295,7 +306,7 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
-			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' ) {
+			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' || $view == 'subscriptions' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );

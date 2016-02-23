@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,11 +13,11 @@ defined( '_JEXEC' ) or die;
 // JCckVersion
 final class JCckVersion
 {
-	public $RELEASE = '3.7';
+	public $RELEASE = '3.8';
 	
-	public $DEV_LEVEL = '1';
+	public $DEV_LEVEL = '0';
 
-	public $DEV_STATUS = '';
+	public $DEV_STATUS = 'RC-5';
 	
 	// getDevStatus
 	public function getDevStatus()
@@ -25,10 +25,16 @@ final class JCckVersion
 		return $this->DEV_STATUS;
 	}
 
+	// getFullVersion
+	public function getFullVersion()
+	{
+		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
+	}
+
 	// getShortVersion
 	public function getShortVersion()
 	{
-		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
+		return $this->RELEASE . '.' . $this->DEV_LEVEL;
 	}
 }
 ?>

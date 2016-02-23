@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -174,17 +174,23 @@ class com_cckInstallerScript
 				$db->execute();
 			}
 		} elseif ( 'install' ) {
-			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[],"core.export":{"7":1},"core.process":{"7":1}}';
+			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[],"core.addto.cart":{"7":1},"core.export":{"7":1},"core.process":{"7":1}}';
 			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
 			$db->setQuery( $query );
 			$db->execute();
 		}
 		
-		// CMS Autoloader
+		/* Todo: loop */
+		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
+		if ( JFile::exists( $src ) ) {
+			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
+			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
+		}
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
 		}
+		/* Todo: loop */
 		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 			jimport( 'cck.base.cck_5_2' );
 			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/php5.2/libraries/cms/cck/cck.php';

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,7 +24,7 @@ if ( $this->show_form_title ) {
 	$tag		=	$this->tag_form_title;
 	$class		=	trim( $this->class_form_title );
 	$class		=	$class ? ' class="'.$class.'"' : '';
-	echo '<'.$tag.$class.'>' . @$this->type->title . '</'.$tag.'>';
+	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
@@ -65,6 +65,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[url]" value="<?php echo $this->config['url']; ?>" />
 <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
 <input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php echo JHtml::_( 'form.token' ); ?>
 <?php if ( !$this->raw_rendering ) { ?>

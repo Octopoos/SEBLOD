@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -53,7 +53,7 @@ class Helper_Include
 			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
 			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
 			if ( $color != '' ) {
-				if ( $position == 'inline' ) {
+				if ( $position == 'inline' && $id != '_' ) {
 					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
 				} else {
 					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
@@ -72,15 +72,16 @@ class Helper_Include
 		} else {
 			$options	=	'{}';
 		}
-		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css" type="text/css" />';
-			echo '<script src="'.JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js" type="text/javascript"></script>';
+			echo '<script src="'.JURI::root( true ).'/media/cck/js/cck.validation-3.8.0.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.5.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.8.0.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}

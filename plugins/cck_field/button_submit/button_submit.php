@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -38,7 +38,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['live']		=	NULL;
 		$data['validation']	=	NULL;
@@ -56,7 +56,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['live']		=	NULL;
 		$data['match_mode']	=	NULL;
@@ -83,6 +83,71 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+
+		// Init
+		$id				=	$field->name;
+		$form_id		=	$field->name.'_form';
+		$name			=	$field->name;
+		$value			=	$field->label;
+		$field->label	=	'';
+
+		// Prepare
+		$pre_task	=	'';
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
+		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
+		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
+		
+		if ( $task_id ) {
+			$pre_task	=	htmlspecialchars( 'jQuery("#'.$form_id.'").append(\'<input type="hidden" name="tid" value="'.$task_id.'">\');' );
+		}
+		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
+		
+		if ( $task == 'export' || $task == 'process' ) {
+			$click	=	'';
+		} else {
+			echo 'This task is not supported on the Content view.';
+
+			$field->html	=	'';
+			$field->value	=	'';
+
+			return;
+		}
+		
+		$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
+		if ( $field->bool ) {
+			$label	=	$value;
+			if ( JCck::on() ) {
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$attr		.=	' title="'.$value.'"';
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+				}
+			}
+			$type	=	( $field->bool7 == 1 || !$click ) ? 'submit' : 'button';
+			$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
+			$tag	=	'button';
+		} else {
+			$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+			$tag	=	'input';
+		}
+
+		if ( $form != '' ) {
+			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$form_id.'" name="'.$form_id.'">'
+					.	$form
+					.	'<input type="hidden" name="task" value="'.$task.'" />'
+					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
+					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
+					.	JHtml::_( 'form.token' )
+					.	'</form>';
+		}
+
+		// Set
+		$field->html	=	$form;
+		$field->value	=	'';
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -128,7 +193,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
 				}
 				if ( !$task_auto ) {
-					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$click.'}';
+					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$click.'}';
+				} else {
+					$config['doQuery2']	=	true;
 				}
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$click.'"' : '';
 			} elseif ( $task == 'save2redirect' ) {
@@ -211,7 +278,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
 				$onclick		=	$pre_task.'JCck.Core.submit(\''.$task.'\')';
 				if ( !$task_auto ) {
-					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'\');}else{'.$onclick.'}';
+					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$onclick.'}';
 				}
 				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
 				
@@ -257,7 +324,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
-		return parent::g_onCCK_FieldRenderContent( $field );
+		return parent::g_onCCK_FieldRenderContent( $field, 'html' );
 	}
 	
 	// onCCK_FieldRenderForm
@@ -274,10 +341,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$process['task']	=	str_replace( array( 'form.', 'list.' ), '', $process['task'] );
 		
 		if ( $process['task_auto'] && ( $process['task'] == 'export' || $process['task'] == 'process' ) ) {
-			if ( isset( $config['ids'] ) && $config['ids'] != '' ) {
+			$target			=		( isset( $config['ids2'] ) && $config['ids2'] != '' ) ? 'ids2' : 'ids';
+			
+			if ( isset( $config[$target] ) && $config[$target] != '' ) {
 				$name					=	$process['name'];
 				$search					=	'onclick="';
-				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config['ids'].'">\');' );
+				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config[$target].'">\');' );
 				$fields[$name]->form	=	str_replace( $search, $replace, $fields[$name]->form );
 			}
 		}

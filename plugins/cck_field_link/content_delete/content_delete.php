@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,7 +42,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$redirection	=	$link->get( 'redirection', '' );
 		$return			=	'';
 		$task			=	( JFactory::getApplication()->isAdmin() ) ? 'list.delete' : 'delete';
-		$uri			=	JFactory::getURI();
+		$uri			=	(string)JFactory::getURI();
 		
 		// Return
 		if ( $redirection == 'url' ) {
@@ -56,6 +56,14 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		} elseif ( $config['client'] == 'content' ) {
 			$return		=	base64_encode( JRoute::_( 'index.php?Itemid='.$itemId ) );
 		} else {
+			$return2	=	$link->get( 'redirection_custom', '' );
+			if ( $return2 != '' ) {
+				if ( $return2[0] == '#' ) {
+					$uri	.=	$return2;
+				} else {
+					$uri	.=	( strpos( $return2, '?' ) !== false ? '&' : '?' ).$return2;
+				}
+			}
 			$return		=	base64_encode( $uri );
 		}
 		if ( $return ) {

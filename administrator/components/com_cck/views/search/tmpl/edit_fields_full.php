@@ -4,12 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
+$db         =   JFactory::getDbo();
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
@@ -79,8 +80,27 @@ $positions	=	array();
 			if ( count( $this->fieldsAv ) ) {
                 echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
-                $style	=	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
+                $data['tables'] =   array();
+                $prefix         =   $db->getPrefix();
+                $tables         =   $db->getTableList();
+                $style          =	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
+                
                 foreach ( $this->fieldsAv as $field ) {
+                    if ( $this->item->master == 'search' && $field->storage_table != '' ) {
+                        if ( !isset( $data['tables'][$field->storage_table] ) && in_array( str_replace( '#__', $prefix, $field->storage_table ), $tables ) ) {
+                            $data['tables'][$field->storage_table]  =   JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+                        }
+                        if ( @$field->match_mode == '' && isset( $data['tables'][$field->storage_table][$field->storage_field] ) ) {
+                            if ( $data['tables'][$field->storage_table][$field->storage_field]->Type == 'tinyint(3)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'tinyint(3) unsigned'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(11)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10)'
+                              || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10) unsigned' ) {
+                                $field->match_mode      =   'exact';
+                                $field->match_options   =   '{"var_type":"0"}';
+                            }
+                        }
+                    }
                     $type_field	=	'';
                     if ( isset( $this->type_fields[$field->id] ) ) {
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;

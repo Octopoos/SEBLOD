@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -22,7 +22,7 @@ class CCKViewCck extends JCckBaseLegacyView
         $buttons        =   array();
         if ( JCck::getUIX() == 'compact' ) {
             $core       =   array(
-                                array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_' )
+                                array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_', 'img'=>'cck-form' )
                             );
         } else {
             $core       =   array(
@@ -37,7 +37,8 @@ class CCKViewCck extends JCckBaseLegacyView
         $components     =   JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element'
                                                         . ' FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
                                                         . ' WHERE a.link LIKE "index.php?option=com_cck\_%"'
-                                                        . ' AND a.link NOT IN ("index.php?option=com_cck_toolbox&view=processing","index.php?option=com_cck_webservices&view=api")'
+                                                        . ' AND a.link NOT IN ("index.php?option=com_cck_ecommerce&view=listen","index.php?option=com_cck_toolbox&view=processing","index.php?option=com_cck_webservices&view=api")'
+                                                        . ' AND b.enabled = 1'
                                                         . ' ORDER BY a.title ASC' );
         $groupedButtons =   array();
         $more           =   array(

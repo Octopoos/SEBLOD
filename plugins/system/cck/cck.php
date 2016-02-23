@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,7 +37,9 @@ class plgSystemCCK extends JPlugin
 		// Development
 		jimport( 'cck.development.database' ); // deprecated
 		
-		$this->multisite	=	JCck::_setMultisite();
+		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
+		$this->restapi		=	$this->_isRestApi();
+
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
@@ -77,6 +79,7 @@ class plgSystemCCK extends JPlugin
 	public function buildRule( &$router, &$uri )
 	{
 		$Itemid	=	$uri->getVar( 'Itemid' );
+
 		if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
 			$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
 			if ( isset( $item->query['view'] ) && $item->query['view'] == 'list' ) {
@@ -108,6 +111,25 @@ class plgSystemCCK extends JPlugin
 	public function onAfterInitialise()
 	{
 		$app	=	JFactory::getApplication();
+
+		if ( $this->restapi ) {
+			$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
+			$path		=	JUri::getInstance()->getPath();
+			$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
+
+			if ( $segment != '' ) {
+				if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
+					$format	=	substr( $segment, $pos + 1 );
+
+					if ( $format[0] == 'w' ) {
+						$format	=	substr( $format, 1 );
+					}
+				}
+			}
+			
+			$app->input->set( 'format', $format );
+		}
+
 		if ( $app->isSite() ) {
 			$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
 			$router->attachBuildRule( array( $this, 'buildRule' ) );
@@ -147,12 +169,14 @@ class plgSystemCCK extends JPlugin
 			$authgroups	=	$user->getAuthorisedGroups();
 			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
 			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
-			
 			$multisite	=	false;
-			foreach ( $user->groups as $g ) {
-				if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
-					$multisite	=	true;
-					break;
+			
+			if ( count( $user->groups ) ) {
+				foreach ( $user->groups as $g ) {
+					if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
+						$multisite	=	true;
+						break;
+					}
 				}
 			}
 			
@@ -241,14 +265,18 @@ class plgSystemCCK extends JPlugin
 				case 'com_installer':
 					if ( $view == 'update' ) {
 						if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_updater" AND enabled = 1' ) > 0 ) {
+							$class	=	'btn btn-primary btn-small';
 							$link	=	JRoute::_( 'index.php?option=com_cck_updater' );
 							$target	=	'_self';
+							$style	=	'top: -2px; position: relative;';
 						} else {
+							$class	=	'';
 							$link	=	'http://www.seblod.com/products/634';
 							$target	=	'_blank';
+							$style	=	'text-decoration:underline;';
 						}
 						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
-						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target ), 'notice' );
+						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target, $class, $style ), 'notice' );
 					}
 					break;
 				case 'com_menus':
@@ -356,7 +384,9 @@ class plgSystemCCK extends JPlugin
 							if ( !$type ) {
 								return;
 							}
-							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId;
+							$return	=	$app->input->getBase64( 'return', '' );
+							$return	=	$return ? '&return='.$return : '';
+							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId.$return;
 						} else {
 							require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.php';
 							$sef		=	0;
@@ -572,16 +602,75 @@ class plgSystemCCK extends JPlugin
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onContentPrepareForm';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}
 			}
 		}
+	}
+
+	// onExtensionAfterSave
+	public function onExtensionAfterSave( $context, $table, $flag )
+	{
+		if ( $context != 'com_config.component' ) {
+			return;
+		}
+
+		if ( !( is_object( $table ) && $table->type == 'component' && $table->element == 'com_cck_updater' ) ) {
+			return;
+		}
+
+		$params	=	new JRegistry;
+		$params->loadString( $table->params );
+
+		if ( $proxy = (int)$params->get( 'proxy', '0' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+						
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "update.seblod.com", "'.$proxy.'") WHERE location LIKE "%update.seblod.com%" AND location != "http://update.seblod.com/pkg_cck.xml"' );
+		} elseif ( !$proxy && $params->get( 'proxy_domain' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "'.$proxy.'", "update.seblod.com") WHERE location LIKE "%'.$proxy.'%"' );
+		}
+	}
+
+	// _isRestApi
+	protected function _isRestApi()
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+		 	return false;
+		} else {
+			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
+													. ' FROM #__menu WHERE'
+													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1',
+													'path' );
+			$path	=	JUri::getInstance()->getPath();
+			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+
+			if ( count( $apis ) ) {
+				foreach ( $apis as $api ) {
+					$api	=	$prefix.'/'.$api->path;
+					$pos	=	strpos( $path, $api );
+
+					if ( $pos !== false && $pos == 0 ) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;	
 	}
 
 	// _reSubmenu

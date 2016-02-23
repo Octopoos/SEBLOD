@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -32,6 +32,8 @@ $doc->list[$idx]		=	array();
 
 $debug		=	JCck::getConfig_Param( 'debug', 0 );
 $ids		=	'';
+$optimize	=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
+$properties	=	CCK_List::getPropertyColumns_asString( $optimize );
 $pks		=	'';
 if ( $list['isCore'] ) {
 	for ( $i = 0; $i < $count; $i++ ) {
@@ -55,8 +57,10 @@ for ( $i = 0; $i < $count; $i++ ) {
 		$PK						=	$items[$i]->pk;
 	} else {
 		$PK						=	$i;
+		$items[$i]->author		=	0;
 		$items[$i]->cck			=	'';
 		$items[$i]->loc			=	$list['location'];
+		$items[$i]->parent		=	'';
 		$items[$i]->pid			=	0;
 		$items[$i]->pk			=	$i;
 		$items[$i]->pkb			=	0;
@@ -68,16 +72,16 @@ for ( $i = 0; $i < $count; $i++ ) {
 	// --
 	if ( $count2 ) {
 		$config		=	array(
-							'author'=>0,
+							'author'=>$items[$i]->author,
 							'client'=>'item',
-							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
+							'doSEF'=>$list['doSEF'],
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
 							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
-							'Itemid'=>$itemId,
+							'Itemid'=>$list['itemId'],
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
 							'parent_id'=>$items[$i]->parent,
@@ -142,7 +146,15 @@ for ( $i = 0; $i < $count; $i++ ) {
 				} else {
 					$field->typo	=	'';
 				}
+				
+				// Optimize Memory
+				if ( $optimize ) {
+					foreach ( $properties as $property ) {
+						unset( $field->$property );
+					}
+				}
 				$fieldsI[$fieldName]			=	$field;
+
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions[$pos][]			=	$field->name;
@@ -176,16 +188,16 @@ for ( $i = 0; $i < $count; $i++ ) {
 	
 	if ( $count3 ) {
 		$config		=	array(
-							'author'=>0,
+							'author'=>$items[$i]->author,
 							'client'=>'item',
-							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
+							'doSEF'=>$list['doSEF'],
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
 							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
-							'Itemid'=>$itemId,
+							'Itemid'=>$list['itemId'],
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
 							'parent_id'=>$items[$i]->parent,
@@ -250,7 +262,15 @@ for ( $i = 0; $i < $count; $i++ ) {
 				} else {
 					$field->typo	=	'';
 				}
+
+				// Optimize Memory
+				if ( $optimize ) {
+					foreach ( $properties as $property ) {
+						unset( $field->$property );
+					}
+				}
 				$fieldsI[$fieldName]			=	$field;
+
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions2[$pos][]			=	$field->name;

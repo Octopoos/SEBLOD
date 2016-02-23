@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -79,7 +79,7 @@ class pkg_cckInstallerScript
 		?>
 		<legend><?php echo $texts[1]['str']; ?></legend>
 		<p>
-		<a target="_blank" href="http://www.seblod.com/products" class="btn btn-small btn-success"><?php echo $texts[7]['str']; ?></a>
+		<a target="_blank" href="http://www.seblod.com/store" class="btn btn-small btn-success"><?php echo $texts[7]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/resources/manuals" class="btn btn-small btn-primary"><?php echo $texts[6]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/changelogs" class="btn btn-small"><?php echo $texts[3]['str']; ?></a>
 		<a target="_blank" href="http://www.seblod.com/resources/videos" class="btn btn-small"><?php echo $texts[4]['str']; ?></a>

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,7 +19,7 @@ class Helper_Workshop
 	public static function displayField( &$field, $type_field = '' )
 	{
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'. strtolower( substr( $field->title, 0, 1 ) ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox edit" href="<?php echo $link; ?>"></a><span class="title" onDblClick="JCck.Dev.moveDir('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.Dev.moveDir('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox edit" href="<?php echo $link; ?>"></a><span class="title" onDblClick="JCck.Dev.moveDir('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.Dev.moveDir('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -259,12 +259,16 @@ class Helper_Workshop
 	public static function getFieldsAv( $element, $item, $objects, $featured = '' )
 	{
 		$excluded	=	self::getFields( $element, $item, '', true );
+		$select		=	'';
 		$where		=	' WHERE a.published = 1 AND b.published = 1';
+
 		if ( $objects != '' ) {
 			$where	.=	' AND a.storage_location IN ('.$objects.')';
 		}
 		if ( $element == 'type' && $item->storage_location != 'none' ) {
-			$where		.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+			$where	.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+		} elseif ( $element == 'search' ) {
+			$select	=	', a.storage_table, a.storage_field';
 		}
 		if ( $excluded ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
@@ -273,6 +277,7 @@ class Helper_Workshop
 			$where	.=	' AND '.$featured;
 		}
 		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label'
+				.	$select
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder '
 				.	$where
@@ -306,11 +311,12 @@ class Helper_Workshop
 				$data['restriction']=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true ) );
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'hidden_isfilled', JText::_( 'COM_CCK_HIDDEN_IS_FILLED_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
+											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['live']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ) ), Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
 				$data['stage']		=	array( JHtml::_( 'select.option', 0, JText::_( 'COM_CCK_STAGE_FINAL' ) ),
@@ -349,12 +355,15 @@ class Helper_Workshop
 				$data['restriction']=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true ) );
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
+											   /*
+											   JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
+											   */
+											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['match_mode']	=	array( JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
 											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),
@@ -446,7 +455,7 @@ class Helper_Workshop
 	public static function getPositionVariations( $template = '', $default = true )
 	{
 		$path		=	JPATH_SITE.'/libraries/cck/rendering/variations';
-		$variations	=	( $default !== false ) ? array( ''=>'- '.JText::_( 'COM_CCK_DEFAULT' ).' -',
+		$variations	=	( $default !== false ) ? array( ''=>'- '.JText::_( 'COM_CCK_INHERITED' ).' -',
 													   'empty' => '- '.JText::_( 'COM_CCK_EMPTY' ).' -',
 													   'none' => '- '.JText::_( 'COM_CCK_NONE' ).' -'
 													)
