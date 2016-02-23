@@ -1121,7 +1121,43 @@ Temporary Items
 
 ######## SEBLOD Add-ons >> eCommerce
 
-
+/administrator/components/com_cck_ecommerce/*
+/administrator/language/en-GB/en-GB.com_cck_ecommerce.ini
+/administrator/language/en-GB/en-GB.com_cck_ecommerce.sys.ini
+/administrator/language/fr-FR/fr-FR.com_cck_ecommerce.ini
+/administrator/language/fr-FR/fr-FR.com_cck_ecommerce.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_cck_sandbox.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_cck_sandbox.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_cck_sandbox.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_cck_sandbox.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_paypal_adaptive_payments.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_paypal_adaptive_payments.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_paypal_adaptive_payments.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_paypal_adaptive_payments.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_westpac_payway.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_westpac_payway.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_westpac_payway.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_westpac_payway.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_shipping_cck_sandbox.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_shipping_cck_sandbox.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_shipping_cck_sandbox.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_shipping_cck_sandbox.sys.ini
+/components/com_cck_ecommerce/*
+/language/en-GB/en-GB.com_cck_ecommerce.ini
+/language/en-GB/en-GB.mod_cck_ecommerce_cart.ini
+/language/en-GB/en-GB.mod_cck_ecommerce_cart.sys.ini
+/language/en-GB/en-GB.mod_cck_ecommerce_currency.ini
+/language/en-GB/en-GB.mod_cck_ecommerce_currency.sys.ini
+/language/fr-FR/fr-FR.com_cck_ecommerce.ini
+/language/fr-FR/fr-FR.mod_cck_ecommerce_cart.ini
+/language/fr-FR/fr-FR.mod_cck_ecommerce_cart.sys.ini
+/language/fr-FR/fr-FR.mod_cck_ecommerce_currency.ini
+/language/fr-FR/fr-FR.mod_cck_ecommerce_currency.sys.ini
+/media/cck_ecommerce/*
+/modules/mod_cck_ecommerce_cart/*
+/modules/mod_cck_ecommerce_currency/*
+/plugins/system/cck_ecommerce/*
+/plugins/user/cck_ecommerce/*
 
 ######## SEBLOD Add-ons >> Exporter
 
