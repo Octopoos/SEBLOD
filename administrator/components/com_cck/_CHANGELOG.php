@@ -104,7 +104,7 @@ $ -> Language fix or change
 # < p > removed from Freetexts field in install.sql
 # Empty message issue fixed after (submitting a Form).
 # Hardcoded condition (preventing required/validation) removed on Password field.
-# HTML output fixed on "Group X" (Form views) Field plug-ins when markup=none.
+# HTML output improved on "Group" and "Group X" (Form views) Field plug-ins when markup=none.
 # Issues fixed on JCckContent class.
 # Keep "return" in "user profile edit" redirection.
 # Maxlength validation fixed on Messages (Configuration) on back-end.
