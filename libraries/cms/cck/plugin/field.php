@@ -68,7 +68,6 @@ class JCckPluginField extends JPlugin
 			return $value;
 		}
 		if ( count( $opts ) ) {
-			$exist	=	false;
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
 				if ( $config['doTranslation'] && trim( $o[0] ) ) {
@@ -79,9 +78,6 @@ class JCckPluginField extends JPlugin
 					return ( isset( $o[1] ) ) ? $o[1] : $o[0];
 					break;
 				}
-			}
-			if ( $exist === true ) {
-				$value[]	=	$val;
 			}
 		}
 		
@@ -664,6 +660,19 @@ class JCckPluginField extends JPlugin
 			if ( !$field->authorised ) {
 				$field->display	=	0;
 				$field->state	=	0;
+			}
+		}
+
+		if ( isset($field->attributes) && $field->attributes != '' ) {
+			if ( strpos( $field->attributes, 'J(' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#J\((.*)\)#U';
+				preg_match_all( $search, $field->attributes, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $text ) {
+						$field->attributes	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
+					}
+				}
 			}
 		}
 	}
