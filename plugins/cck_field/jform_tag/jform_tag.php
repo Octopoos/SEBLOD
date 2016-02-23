@@ -153,6 +153,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return;
 		}
 
+		// Prepare
 		if ( is_array( $value ) ) {
 			$value	=	implode( ',', $value );
 		}
@@ -183,8 +184,6 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 				}
 			}
 		}
-
-		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 
 		// Return
