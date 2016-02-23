@@ -56,8 +56,10 @@ $ -> Language fix or change
 + "Behavior" parameter added on Clear Typo plug-in.
 + Content Type (Form) added on Workflow Restriction plug-in.
 + "Default Value" added on Joomla! User Live plug-in.
++ "JForm Usergroup" plug-in improved >> Native Search behavior.
 + "JForm Tag" plug-in improved >> Native Search behavior, Static Variation (Rendering).
 + "Multiple", "Parent" parameters added on Joomla! Tag Field plug-in.
++ Params (JSON) can now be retrivied from Joomla! User Live plug-in.
 + "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
 + "Rel" parameter added on Link plug-in.
 + "Remaining Characters" added on Textarea plug-in.
