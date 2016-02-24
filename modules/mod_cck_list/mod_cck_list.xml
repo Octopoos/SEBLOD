@@ -61,8 +61,7 @@
 					   description="MOD_CCK_LIST_CONFIG_ORDERING_DESC" class="inputbox" />
 				<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 					   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
-				<field
-					name="ordering2" type="list" label="MOD_CCK_LIST_CONFIG_ORDERING2" default="" description="MOD_CCK_LIST_CONFIG_ORDERING2_DESC" class="inputbox">
+				<field name="ordering2" type="list" label="COM_CCK_CONFIG_ORDERING2" default="" description="COM_CCK_CONFIG_ORDERING2_DESC" class="inputbox">
 					<option value="">MOD_CCK_LIST_CONFIG_OPTION_NONE</option>
 					<option	value="random">MOD_CCK_LIST_CONFIG_OPTION_RANDOM</option>
 					<option	value="shuffle">MOD_CCK_LIST_CONFIG_OPTION_SHUFFLE</option>

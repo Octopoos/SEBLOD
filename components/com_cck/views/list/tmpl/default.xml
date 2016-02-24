@@ -45,7 +45,13 @@
 			<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="COM_CCK_CONFIG_ORDERING" default="" description="COM_CCK_CONFIG_ORDERING_DESC" class="inputbox" />
 			<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 				   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
-			
+			<field name="ordering2" type="list" label="COM_CCK_CONFIG_ORDERING2" default="" description="COM_CCK_CONFIG_ORDERING2_DESC" class="inputbox">
+					<option value="">COM_CCK_CONFIG_OPTION_NONE</option>
+					<option	value="random">COM_CCK_CONFIG_OPTION_RANDOM</option>
+					<option	value="shuffle">COM_CCK_CONFIG_OPTION_SHUFFLE</option>
+					<option	value="random_shuffle">COM_CCK_CONFIG_OPTION_RANDOM_SHUFFLE</option>
+				</field>
+
 			<field name="show_items_number" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER" description="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER_DESC" class="inputbox" />
 			<field name="show_items_number_label" type="cck" construction="core_label_total" default="" label="" description="" class="inputbox" />
