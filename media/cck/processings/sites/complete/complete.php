@@ -20,8 +20,12 @@ $sitemail		=	substr( $sitemail, strpos( $sitemail, '@' ) );
 
 $existing_users	=	array();
 $next_level		=	0;
-$users			=	array();
 $usergroups		=	array();
+$users			=	array();
+$users_author	=	array();
+$users_bridge	=	array();
+$users_force	=	array();
+$users_more		=	array();
 
 if ( isset( $item->groups ) && $item->groups != '' ) {
 	$item->groups		=	json_decode( $item->groups, true );
@@ -80,7 +84,33 @@ foreach ( $groups as $i=>$g ) {
 
 	// User
 	$k	=	(string)$g;
+
+	$users_author[$i]	=	0;
+	$users_bridge[$i]	=	0;
+	$users_force[$i]	=	0;
+	$users_more[$i]		=	array();
+
 	if ( isset( $existing_users[$k] ) ) {
+		if ( isset( $existing_users[$k]['bridge'] ) ) {
+			$users_bridge[$i]	=	(int)$existing_users[$k]['bridge'];
+
+			unset( $existing_users[$k]['bridge'] );
+		}
+		if ( isset( $existing_users[$k]['force_password'] ) ) {
+			$users_force[$i]	=	(int)$existing_users[$k]['force_password'];
+
+			unset( $existing_users[$k]['force_password'] );
+		}
+		if ( isset( $existing_users[$k]['set_author'] ) ) {
+			$users_author[$i]	=	(int)$existing_users[$k]['set_author'];
+
+			unset( $existing_users[$k]['set_author'] );
+		}
+		if ( isset( $existing_users[$k]['more'] ) ) {
+			$users_more[$i]		=	$existing_users[$k]['more'];
+
+			unset( $existing_users[$k]['more'] );
+		}
 		$users[$i]		=	CCK_TableSiteHelper::addUser( $existing_users[$k] );
 	} else {
 		$users[$i]		=	CCK_TableSiteHelper::addUser( $group->title, $sitetitle, $sitemail );
@@ -97,22 +127,6 @@ if ( $mode == 1 ) {
 	CCK_TableSiteHelper::updateRootAsset( $root, $rules );
 }
 
-// Users
-krsort( $users );
-$accounts		=	array();
-$usergroups[]	=	0;
-
-foreach ( $users as $u ) {
-	array_pop( $usergroups );
-	$u->groups	=	$usergroups;
-	$u->save();
-	if ( $u->authorise( 'core.login.admin' ) ) {
-		$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'admin' );
-	} else {
-		$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'site' );
-	}
-}
-
 // Guest Viewlevel
 $usergroups			=	$item->groups;
 if ( $guest_only ) {
@@ -126,7 +140,7 @@ if ( $guest_only ) {
 }
 
 // Viewlevels
-$viewlevels[]	=	$guest_viewlevel;
+$viewlevels[]		=	$guest_viewlevel;
 foreach ( $levels as $l ) {
 	array_shift( $usergroups );
 	$levels			=	array( 'title'=>$l->title, 'rules'=>$usergroups );
@@ -139,7 +153,114 @@ foreach ( $levels as $l ) {
 }
 $item->viewlevels	=	$viewlevels;
 
-CCK_TableSiteHelper::sendMails( $item, $accounts );
+// Users
+krsort( $users );
+krsort( $users_author );
+krsort( $users_bridge );
+krsort( $users_force );
+krsort( $users_more );
+
+$accounts		=	array();
+$usergroups[]	=	0;
+
+$content_type	=	'user';
+$integration	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_core_objects WHERE name = "joomla_user"' );
+
+if ( is_object( $integration ) ) {
+	$integration->options	=	new JRegistry( $integration->options );	
+	$content_type			=	$integration->options->get( 'default_type', 'user' );
+}
+
+$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', 'joomla_user' );
+$plg_params	=	new JRegistry( $plg->params );
+$plg_params	=	$plg_params->toArray();
+
+if ( isset( $plg_params['bridge_default-access'] ) ) {
+	$plg_params['bridge_default-access']	=	$guest_viewlevel;
+}
+foreach ( $users as $k=>$u ) {
+	array_pop( $usergroups );
+
+	$id			=	0;
+	$u->groups	=	$usergroups;
+
+	// Force Password
+	if ( isset( $users_force[$k] ) && $users_force[$k] ) {
+		$u->password	=	$u->password_clear;
+	}
+	$u->save();
+
+	if ( !$u->id ) {
+		continue;
+	}
+
+	// Set As Author
+	if ( isset( $users_author[$k] ) && $users_author[$k] ) {
+		$item->created_user_id	=	$u->id;
+	}
+
+	// Store More
+	if ( isset( $users_more[$k] ) && count( $users_more[$k] ) ) {
+		// Core
+		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
+		$core->cck				=	$content_type;
+		$core->pk 				=	$u->id;
+		$core->storage_location =	'joomla_user';
+		$core->storage_table	=	'';
+		$core->author_id 		=	$u->id;
+		$core->parent_id 		=	0;
+		$core->date_time 		=	JFactory::getDate()->toSql();
+		$core->check();
+		$core->store();
+		$id						=	(int)$core->id;
+
+		// More
+		$users_more[$k]['cck']	=	$content_type;
+
+		$more					=	JCckTable::getInstance( '#__cck_store_item_users', 'id' );
+		$more->load( $u->id, true );
+		$more->bind( $users_more[$k] );
+		$more->store();
+	}
+
+	// Do Bridge
+	if ( $id && isset( $users_bridge[$k] ) && $users_bridge[$k] ) {
+		$storages 						= 	array();
+		$storages['#__users']			=	(array)JCckDatabase::loadObject( 'SELECT * FROM `#__users` WHERE id='.(int)$u->id );
+
+		if ( is_object( $more ) ) {
+			$storages['#__cck_store_item_users']	=	(array)$more->getProperties();
+		}
+
+		$config		=	array(
+							'author'=>$u->id,
+							'id'=>$id,
+							'parent'=>0,
+							'parent_id'=>0,
+							'pk'=>$u->id,
+							'storages'=>$storages,
+							'type'=>'user'
+						);
+		$location	=	array(
+							'_'=>(object)array( 'location'=>'joomla_user', 'state'=>false, 'table'=>'#__users' )
+						);
+		$pk			=	$u->id;
+
+		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
+		@JCckPluginLocation::g_doBridge( 'joomla_article', $pk, $location, $config, $plg_params );
+	}
+
+	// Send Mails
+	if ( $u->authorise( 'core.login.admin' ) ) {
+		$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'admin' );
+	} else {
+		$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'site' );
+	}
+}
+
+if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '1' ) == 1 ) {
+	CCK_TableSiteHelper::sendMails( $item, $accounts );
+}
 
 // Finalize
 if ( is_array( $item->groups ) ) {

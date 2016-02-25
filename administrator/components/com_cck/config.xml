@@ -134,6 +134,10 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox">
 			<option value="0">COM_CCK_INHERITED</option>
 			<option value="1">COM_CCK_OWNED</option>

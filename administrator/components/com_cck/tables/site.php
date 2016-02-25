@@ -32,6 +32,17 @@ class CCK_TableSite extends JTable
 			return false;
 		}
 		
+		if ( $this->id ) {
+			//
+		} else {
+			if ( !(int)$this->created_date ) {
+				$this->created_date		=	JFactory::getDate()->toSql();
+			}
+			if ( empty( $this->created_user_id ) ) {
+				$this->created_user_id	=	JFactory::getUser()->get( 'id' );
+			}
+		}
+
 		return true;
 	}
 	
@@ -45,6 +56,28 @@ class CCK_TableSite extends JTable
 		}
 
 		return parent::delete();
+	}
+
+	// store
+	public function store( $updateNulls = false )
+	{
+		$result	=	parent::store( $updateNulls );
+
+		if ( $result !== false ) {
+			if ( !(int)$this->access || (int)$this->access == 1 ) {
+				$viewlevels	=	$this->viewlevels;
+
+				if ( is_string( $viewlevels ) ) {
+					$viewlevels	=	explode( ',', $viewlevels );
+				}
+				if ( $viewlevels[0] ) {
+					$this->access	=	$viewlevels[0];
+					$this->store();
+				}
+			}
+		}
+
+		return $result;
 	}
 }
 

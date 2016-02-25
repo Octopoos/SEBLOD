@@ -60,7 +60,8 @@ $types		=	array(
 			echo JCckDev::renderForm( 'core_dev_text', @$options[$account][$p['name']], $config, array( 'label'=>$p['label'], 'storage_field'=>'json[options]['.$account.']['.$p['name'].']', 'required'=>$p['required'], 'attributes'=>$p['attributes'] ) );
 		}
 		echo JCckDev::renderForm( 'core_bool', @$options[$account]['bridge'], $config, array( 'label'=>'Bridge', 'defaultvalue'=>'0', 'storage_field'=>'json[options]['.$account.'][bridge]' ) );
-		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_bool', @$options[$account]['force_password'], $config, array( 'label'=>'Password', 'defaultvalue'=>'0', 'options'=>'Clear=0||MD5=1', 'storage_field'=>'json[options]['.$account.'][force_password]' ) );
+		echo JCckDev::renderForm( 'core_bool', @$options[$account]['set_author'], $config, array( 'label'=>'Set As Author', 'defaultvalue'=>'0', 'storage_field'=>'json[options]['.$account.'][set_author]' ) );
 
 		echo '</ul>';
 	}

@@ -41,10 +41,15 @@ foreach ( $groups as $i=>$g ) {
 	if ( isset( $opts[$account] ) && $opts[$account]['email'] ) {
 		if ( count( $opts[$account] ) ) {
 			foreach ( $opts[$account] as $k=>$v ) {
-				if ( $v != '' ) {
-					$opts[$account][$k]	=	@$fields[$v]->value;
+				if ( !( $k == 'bridge' || $k == 'force_password' || $k == 'set_author' ) ) {
+					if ( $v != '' ) {
+						$opts[$account][$k]	=	@$fields[$v]->value;
+					}	
 				}
 			}
+		}
+		if ( $opts[$account]['email'] == '' ) {
+			continue;
 		}
 		if ( $opts[$account]['name'] == '' ) {
 			if ( !( $opts[$account]['first_name'] && $opts[$account]['last_name'] ) ) {
@@ -59,7 +64,7 @@ foreach ( $groups as $i=>$g ) {
 		$opts[$account]['password2']	=	$opts[$account]['password'];
 
 		if ( $opts[$account]['username'] == '' ) {
-			$opts[$account]['username']	=	$opts[$account]['email'];	
+			$opts[$account]['username']	=	$opts[$account]['email'];
 		}
 		
 		$data	=	$opts[$account];
@@ -68,9 +73,12 @@ foreach ( $groups as $i=>$g ) {
 														'name'=>'',
 														'password'=>'',
 														'password2'=>'',
-														'username'=>''
+														'username'=>'',
+														'bridge'=>'',
+														'force_password'=>'',
+														'set_author'=>''
 													 ) );
-		
+
 		unset( $data['first_name'] );
 		unset( $data['last_name'] );
 
@@ -81,6 +89,11 @@ foreach ( $groups as $i=>$g ) {
 				}
 			}
 		}
+		$data['bridge']			=	(int)$opts[$account]['bridge'];
+		$data['force_password']	=	(int)$opts[$account]['force_password'];
+		$data['set_author']		=	(int)$opts[$account]['set_author'];
+		$data['more']			=	$data2;
+		
 		$users[((string)$g)]	=	$data;
 	}
 }
