@@ -1,6 +1,6 @@
 
 ALTER TABLE `#__cck_core_sites` ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT '1' AFTER `checked_out_time`;
-ALTER TABLE `#__cck_core_types` ADD `created_date` DATETIME NOT NULL AFTER `access`;
+ALTER TABLE `#__cck_core_sites` ADD `created_date` DATETIME NOT NULL AFTER `access`;
 ALTER TABLE `#__cck_core_sites` ADD `created_user_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `created_date`;
 
 UPDATE `#__cck_core_fields` SET `bool3` = '1' WHERE `type` = "jform_tag";
