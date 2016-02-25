@@ -898,6 +898,8 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL,
   `access` int(10) unsigned NOT NULL DEFAULT '1',
+  `created_date` datetime NOT NULL,
+  `created_user_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=500 ;
