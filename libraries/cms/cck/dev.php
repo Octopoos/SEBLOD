@@ -302,7 +302,17 @@ abstract class JCckDev
 			return;
 		}
 		if ( $type == 'processing' ) {
-			JFactory::getLanguage()->load( 'files_pro_cck_'.$elem->name, JPATH_SITE, null, false, true );
+			$offset	=	0;
+			$path	=	$elem->scriptfile;
+			$pos	=	strpos( $path, '.' );
+
+			if ( $path[0] == '/' ) {
+				$offset	=	1;
+			}
+			$path	=	substr( $path, $offset, $pos );
+			$path	=	str_replace( '/', '_', $path );
+
+			JFactory::getLanguage()->load( 'files_pro_cck_'.$path.'.sys', JPATH_SITE, null, false, true );
 		} else {
 			if ( $elem->name ) {
 				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );

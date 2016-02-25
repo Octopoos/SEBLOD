@@ -723,7 +723,12 @@ class CCK_Export
 				if ( JFile::exists( $manifest ) ) {
 					JFile::copy( $manifest, $path.'/'.$file['filename'].'.xml' );
 				} else {
-					$xml		=	CCK_Export::prepareFile( (object)array( 'title'=>$file['name'] ) );
+					$obj		=	(object)array( 'title'=>$file['name'] );
+
+					if ( $type == 'processing' ) {
+						$obj->description	=	'SEBLOD 3.x Processing File - www.seblod.com';
+					}
+					$xml		=	CCK_Export::prepareFile( $obj );
 					$fileset	=	$xml->addChild( 'fileset' );
 					$files		=	$fileset->addChild( 'files' );
 
@@ -874,6 +879,28 @@ class CCK_Export
 				continue;
 			}
 			$name		=	$data['processings'][$k]->name;
+			$name2		=	$data['processings'][$k]->scriptfile;
+
+			if ( $name2 != '' ) {
+				$offset	=	0;
+
+				if ( $name2[0] == '/' ) {
+					$offset	=	1;
+				}
+				$pos	=	strpos( $name2, '.' );
+
+				if ( $pos !== false ) {
+					$name2	=	substr( $name2, $offset, $pos - 1 );
+				} else {
+					$name2	=	substr( $name2, $offset );
+				}
+			}
+			$name2		=	str_replace( '/', '_', $name2 );
+			$suffix		=	'';
+
+			if ( $data['processings'][$k]->type != '0' ) {
+				$suffix	=	'_'.strtolower( $data['processings'][$k]->type );
+			}
 			$filename	=	JFile::getName( $data['processings'][$k]->scriptfile );
 			$filename	=	substr( $filename, 0, strrpos( $filename, '.' ) );
 			
@@ -907,7 +934,7 @@ class CCK_Export
 
 				// Set
 				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
-				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
+				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name2 ).$suffix.'.xml';
 				JFile::write( $path, $buffer );
 
 				if ( $folder ) {
@@ -915,16 +942,18 @@ class CCK_Export
 
 					if ( JFolder::exists( $path ) ) {
 						$file				=	array();
-						$file['_']			=	'pro_cck_'.$name.'.zip';
-						$file['filename']	=	'pro_cck_'.$name;
+						$file['_']			=	'pro_cck_'.$name2.'.zip';
+						$file['filename']	=	'pro_cck_'.$name2;
 						$file['name']		=	$name;
 						$file['src']		=	$path.$name;
+						$file['lang_src']	=	JPATH_ADMINISTRATOR.'/manifests/files/pro_cck_'.$name2.'.xml';
+						$file['lang_root']	=	JPATH_SITE;
 
 						if ( file_exists( $file['src'] ) ) {
 							if ( !isset( $extensions[$file['src']] ) ) {
 								$extensions[$file['src']]	=	(object)array(
 																	'type'=>'file',
-																	'id'=>'pro_cck_'.$name,
+																	'id'=>'pro_cck_'.$name2,
 																	'_file'=>$file['_'],
 																	'src'=>$folder
 															);
@@ -1038,7 +1067,11 @@ class CCK_Export
 	// exportLanguage
 	public static function exportLanguage( $path, $root, $dest, $copyright = '' )
 	{
+		if ( !is_file( $path ) ) {
+			return;
+		}
 		$xml	=	JCckDev::fromXML( $path );
+		
 		if ( ! isset( $xml->languages ) ) {
 			return;
 		}
