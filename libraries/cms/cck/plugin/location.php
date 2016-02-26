@@ -377,6 +377,11 @@ class JCckPluginLocation extends JPlugin
 			
 			$dispatcher->trigger( 'onContentAfterSave', array( 'com_categories.category', &$bridge, $isNew ) );
 		} else {
+			if ( !isset( $params['bridge_ordering'] ) ) {
+				$params['bridge_ordering']	=	1;
+			} else {
+				$params['bridge_ordering']	=	(int)$params['bridge_ordering'];
+			}
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
@@ -431,7 +436,12 @@ class JCckPluginLocation extends JPlugin
 				$bridge->publish_up	=	JFactory::getDate()->toSql();
 			}
 			if ( !$core->pkb ) {
-				$bridge->reorder( 'catid = '.(int)$bridge->catid.' AND state >= 0' );
+				if ( $params['bridge_ordering'] ) {
+					$max				=	JCckDatabase::loadResult( 'SELECT MAX(ordering) FROM #__content WHERE catid = '.(int)$bridge->catid );
+					$bridge->ordering	=	(int)$max + 1;
+				} else {
+					$bridge->reorder( 'catid = '.(int)$bridge->catid.' AND state >= 0' );
+				}
 			}
 			$bridge->check();
 			if ( empty( $bridge->language ) ) {
