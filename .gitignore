@@ -512,6 +512,7 @@
 /administrator/manifests/packages/seb_tabs/*
 /administrator/manifests/packages/pkg_cck_ecommerce.xml
 /administrator/manifests/packages/pkg_cck_field_code.xml
+/administrator/manifests/packages/pkg_cck_field_geoip.xml
 /administrator/manifests/packages/pkg_cck_field_restriction_joomla_acl.xml
 /administrator/manifests/packages/pkg_cck_field_seblod.xml
 /administrator/manifests/packages/pkg_cck_field_sql.xml
@@ -692,6 +693,7 @@
 /language/en-GB/en-GB.pkg_cck_toolbox.sys.ini
 /language/en-GB/en-GB.pkg_cck_webservices.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_code.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_geoip.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_seblod.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_sql.sys.ini
@@ -811,6 +813,7 @@
 /language/fr-FR/fr-FR.pkg_cck_toolbox.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_webservices.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_code.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_geoip.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_seblod.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_sql.sys.ini
@@ -1702,6 +1705,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_ecommerce_go_to_checkout.sys.ini
 /plugins/cck_field_link/cck_ecommerce_go_to_checkout/*
 
+######## SEBLOD Plug-ins >> Link >> SEBLOD Route
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_route.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_route.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_route.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_route.sys.ini
+/plugins/cck_field_link/cck_route/*
+
 ######## SEBLOD Plug-ins >> Link >> SEBLOD Search (JS)
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_cck_search_js.ini
@@ -1717,6 +1728,15 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.sys.ini
 /plugins/cck_field_live/datetime/*
+
+
+######## SEBLOD Plug-ins >> Live >> GeoIP
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_geoip.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_geoip.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_geoip.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_geoip.sys.ini
+/plugins/cck_field_live/geoip/*
 
 ######## SEBLOD Plug-ins >> Live >> Joomla! Menu Item
 
@@ -1921,6 +1941,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.sys.ini
 /plugins/cck_field_restriction/clear/*
+
+######## SEBLOD Plug-ins >> Restriction >> GeoIP
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_geoip.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_geoip.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_geoip.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_geoip.sys.ini
+/plugins/cck_field_restriction/geoip/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 
