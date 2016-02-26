@@ -44,7 +44,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 
 <div class="modal modal-small hide fade" id="<?php echo $target_id; ?>">
 	<div class="modal-header">
-		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
+		<button type="button" role="presentation" class="close" data-dismiss="modal">×</button>
 		<h3><?php echo $legend; ?></h3>
 	</div>
 	<div class="modal-body">
@@ -65,7 +65,11 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		        <div class="wrapper-icon span3">
 		            <div class="icon">
 		                <a href="<?php echo $link; ?>" target="_parent">
-		                    <?php echo JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+		                    <?php
+		                    $img	=	JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+		                    
+							echo str_replace( '<img ', '<img width="32" height="32" ', $img );
+		                    ?>
 		                    <span><?php echo $text; ?></span>
 						</a>
 		            </div>

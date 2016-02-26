@@ -51,15 +51,15 @@ if ( $app->input->get( 'debug', 0 ) == 1 ) {
                     echo '</div>';
                 } else {
                     echo '<div class="fltlft">';
-                    Helper_Admin::addIcon( CCK_COM, _C2_LINK, _C2_NAME, JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ) );
-                    Helper_Admin::addIcon( CCK_COM, _C3_LINK, _C3_NAME, JText::_( _C3_TEXT.'_MANAGER'.'_BR' ) );
-                    Helper_Admin::addIcon( CCK_COM, _C4_LINK, _C4_NAME, JText::_( 'COM_CCK_'._C4_TEXT.'_MANAGER'.'_BR' ) );
-                    Helper_Admin::addIcon( CCK_COM, _C1_LINK, _C1_NAME, JText::_( _C1_TEXT.'_MANAGER'.'_BR' ) );
+                    Helper_Admin::addIcon( CCK_COM, _C2_LINK, array( _C2_NAME, 'icon-cck-form' ), JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ) );
+                    Helper_Admin::addIcon( CCK_COM, _C3_LINK, array( _C3_NAME, 'icon-cck-plugin' ), JText::_( _C3_TEXT.'_MANAGER'.'_BR' ) );
+                    Helper_Admin::addIcon( CCK_COM, _C4_LINK, array( _C4_NAME, 'icon-cck-search' ), JText::_( 'COM_CCK_'._C4_TEXT.'_MANAGER'.'_BR' ) );
+                    Helper_Admin::addIcon( CCK_COM, _C1_LINK, array( _C1_NAME, 'icon-cck-template' ), JText::_( _C1_TEXT.'_MANAGER'.'_BR' ) );
                     echo '</div><div class="clr"></div>'
                      .   '<div class="fltlft">';
                     Helper_Admin::addIcon( CCK_COM, 'spacer', 'spacer', 'spacer', 24 );
-                    Helper_Admin::addIcon( CCK_COM, _C0_LINK, _C0_NAME, JText::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ), 24, 'left' );
-                    Helper_Admin::addIcon( CCK_COM, _C5_LINK, _C5_NAME, JText::_( _C5_TEXT.'_MANAGER'.'_BR' ), 24, 'right' );
+                    Helper_Admin::addIcon( CCK_COM, _C0_LINK, array( _C0_NAME, 'icon-cck-application' ), JText::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ), 24, 'left' );
+                    Helper_Admin::addIcon( CCK_COM, _C5_LINK, array( _C5_NAME, 'icon-cck-multisite' ), JText::_( _C5_TEXT.'_MANAGER'.'_BR' ), 24, 'right' );
                     echo '</div>';
                 }
                 ?>

@@ -73,6 +73,8 @@ class Helper_Include extends CommonHelper_Include
 			case 'variations':
 			case 'sessions':
 			case 'versions':
+				require_once JPATH_LIBRARIES.'/cck/joomla/html/cckactionsdropdown.php';
+
 				if ( $view == 'folders' ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js' ) );
 				} else {

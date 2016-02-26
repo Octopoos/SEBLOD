@@ -14,7 +14,7 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 if ( JCck::on() ) { ?>
 	<div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
+			<button type="button" class="close" data-dismiss="modal">×</button>
 			<h3><?php echo JText::_( 'COM_CCK_APP_PROCESS'); ?></h3>
 		</div>
 		<div class="modal-body">

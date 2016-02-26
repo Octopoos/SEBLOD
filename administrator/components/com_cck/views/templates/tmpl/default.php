@@ -48,9 +48,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.mode', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_DETAILS' ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_FEATURED', 'a.featured', $listDir, $listOrder ); ?></th>
+			<th width="15%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.mode', $listDir, $listOrder ); ?></th>
+			<th width="15%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_DETAILS' ); ?></th>
 			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -148,8 +147,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				echo $overrides.'<br />'.$positions.'<br />'.$variations;
 				?>
 			</td>
-			<td class="center hidden-phone"><?php Helper_Display::quickJGrid( 'featured', $item->featured, $i, false ); ?></td>
-			<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
+			<td class="center">
+				<div class="btn-group">
+					<?php
+					echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
+
+					Helper_Display::quickJGrid( 'featured', $item->featured, $i, false );
+					?>
+				</div>
+			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
 		<?php
@@ -159,7 +165,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<tfoot>
 		<tr height="40px;">
 	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
-			<td class="center" colspan="9" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td class="center" colspan="8" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>

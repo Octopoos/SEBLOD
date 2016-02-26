@@ -59,7 +59,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_SITE_FORM' ); ?></th>
 			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_INTRO' ); ?></th>
 			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_CONTENT' ); ?></th>
-			<th width="10%" class="center nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>			
 	</thead>
@@ -136,10 +136,21 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				$client	=	'<strong>'.$item->contentTemplate.'</strong><br />'.$item->contentFields.' '.$label;
                 echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
-				<?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?>
-			</td>
-			<td width="3%" class="center hidden-phone">
-				<?php echo ( $item->versions ) ? '<a href="'.$linkVersion.'"><img class="img-action" src="components/'.CCK_COM.'/assets/images/16/icon-16-version.png" border="0" alt="" /></a>' : ''; ?>
+				<?php if ( $item->versions ) { ?>
+					<div class="btn-group">
+				<?php
+				}
+				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
+
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+
+					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title));
+				}
+				if ( $item->versions ) {				
+				?>
+					</div>
+				<?php } ?>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
@@ -150,7 +161,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<tfoot>
 		<tr height="40px;">
 	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
-			<td class="center" colspan="11" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td class="center" colspan="10" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>

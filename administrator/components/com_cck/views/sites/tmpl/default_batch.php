@@ -17,7 +17,7 @@ if ( !$user->authorise( 'core.create', 'com_cck' ) ) {
 if ( JCck::on() ) { ?>
 	<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
 	    <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">x</button>
+	        <button type="button" class="close" data-dismiss="modal">×</button>
 	        <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_SITE' ).' ('.JText::_( 'COM_CCK_MULTISITES' ).')'; ?></h3>
 	    </div>
 	    <?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>

@@ -27,15 +27,23 @@ class CommonHelper_Display
 	// quickJGrid
 	public static function quickJGrid( $type, $value = 0, $i, $canChange = true )
 	{
-		$states	= array( 0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE' ),
-						 1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE' ) );
-		
+		$states	=	array(
+						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
+						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
+					);
 		$state	=	JArrayHelper::getValue( $states, (int) $value, $states[1] );
-		$html	=	JHtml::_( 'image','admin/'.$state[0], JText::_( $state[2] ), NULL, true );
-		if ( $canChange ) {
-			$html	= '<a href="#" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_($state[3]).'">' .$html. '</a>';
-		}
 		
+		if ( JCck::on() ) {
+			$html	=	'<span class="icon-'.$state[5].'"></span>';
+		} else {
+			$html	=	JHtml::_( 'image','admin/'.$state[0], JText::_( $state[2] ), NULL, true );
+		}
+		if ( $canChange ) {
+			$html	= '<a href="#" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
+		} else {
+			$html	= '<a href="#" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
+		}
+
 		echo $html;
 	}
 
