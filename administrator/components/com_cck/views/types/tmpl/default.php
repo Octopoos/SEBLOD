@@ -136,21 +136,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				$client	=	'<strong>'.$item->contentTemplate.'</strong><br />'.$item->contentFields.' '.$label;
                 echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
-				<?php if ( $item->versions ) { ?>
-					<div class="btn-group">
+				<div class="btn-group">
 				<?php
-				}
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
 
-					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title));
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );	
 				}
-				if ( $item->versions ) {				
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );			
 				?>
-					</div>
-				<?php } ?>
+				</div>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>

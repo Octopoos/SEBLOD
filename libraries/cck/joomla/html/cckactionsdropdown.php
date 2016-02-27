@@ -15,7 +15,8 @@ JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actio
 // JHtmlCckActionsDropdown
 abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
 {
-	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '')
+	// addCustomLinkItem
+	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
 	{
 		static::$dropDownList[] = '<li>'
 			. '<a href = "'.$link.'">'

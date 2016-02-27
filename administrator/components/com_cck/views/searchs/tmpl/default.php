@@ -128,21 +128,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				$client	=	'<strong>'.$item->itemTemplate.'</strong><br />'.$item->itemFields.' '.$label;
                 echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center">
-				<?php if ( $item->versions ) { ?>
-					<div class="btn-group">
+				<div class="btn-group">
 				<?php
-				}
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'searchs.version' );
 
-					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title));
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );	
 				}
-				if ( $item->versions ) {				
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );			
 				?>
-					</div>
-				<?php } ?>
+				</div>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
