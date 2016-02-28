@@ -46,9 +46,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                 'PLUGIN_FIELD'=>19,
                                 'PLUGIN_LINK'=>20,
                                 'PLUGIN_LIVE'=>21,
-                                /*
                                 'PLUGIN_OBJECT'=>22,
-                                */
                                 'PLUGIN_RESTRICTION'=>112,
                                 /*
                                 'PLUGIN_STORAGE'=>23,
@@ -83,7 +81,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                 'access'=>array( 'core.manage', 'com_cck' ),
                                 'group' =>'COM_CCK_SEBLOD_COM',
                                 'image' =>'download',
-                                'link'  =>JRoute::_( 'http://www.seblod.com/products?seb_item_category='.$v ),
+                                'link'  =>JRoute::_( 'http://www.seblod.com/store/extensions?seb_item_category='.$v ),
                                 'target'=>'_blank',
                                 'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
                             );

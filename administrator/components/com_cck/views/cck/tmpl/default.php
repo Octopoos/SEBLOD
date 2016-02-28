@@ -80,9 +80,9 @@ if ( $app->input->get( 'debug', 0 ) == 1 ) {
                 ?>
                 <div class="<?php echo $this->css['items']; ?>">
                     <ul class="adminformlist inline">
-                        <li><a target="_blank" href="http://www.seblod.com/products?seb_item_category=16"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_ADDON' ); ?></a></li>
-                        <li><a target="_blank" href="http://www.seblod.com/products?seb_item_category=19"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_PLUGIN_FIELD' ); ?></a></li>
-                        <li><a target="_blank" href="http://www.seblod.com/products?seb_item_category=27"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_TEMPLATE' ); ?></a></li>
+                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=16"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_ADDON' ); ?></a></li>
+                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=19"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_PLUGIN_FIELD' ); ?></a></li>
+                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=27"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_TEMPLATE' ); ?></a></li>
                     </ul>
                 </div>
             <?php } echo JCckDevAccordion::end(); ?>
