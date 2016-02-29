@@ -147,6 +147,7 @@ Helper_Display::quickCopyright();
 			var typeid = $("#myid").val();
 			$.ajax({
 				cache: false,
+				async: false,
 				type: "POST",
 				url: "index.php?option=com_cck&task=ajaxAddType&title="+title+"&folder_id="+folder_id+"&client="+client+"&fields="+fields+"&type_id="+typeid+"&format=raw",
 				beforeSend:function(){},
@@ -165,6 +166,7 @@ Helper_Display::quickCopyright();
 			var loading = "<img align='center' src='<?php echo $ajax_load; ?>' alt='' />";  
 			$.ajax({
 				cache: false,
+				async: false,
 				data: mydata,
 				type: "GET",
 				url: "index.php?option=com_cck&view="+view+"&layout="+layout+"&format=raw",
@@ -178,6 +180,7 @@ Helper_Display::quickCopyright();
 			$("#task").val(task);
 			$.ajax({
 				cache: false,
+				async: false,
 				data: $("#adminForm").serialize()+mydata,
 				type: "POST",
 				url: 'index.php?option=com_cck&task='+task,

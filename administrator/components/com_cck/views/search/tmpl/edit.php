@@ -152,6 +152,7 @@ Helper_Display::quickCopyright();
 			var loading = "<img align='center' src='<?php echo $ajax_load; ?>' alt='' />";  
 			$.ajax({
 				cache: false,
+				async: false,
 				data: mydata,
 				type: "GET",
 				url: "index.php?option=com_cck&view="+view+"&layout="+layout+"&format=raw",
@@ -165,6 +166,7 @@ Helper_Display::quickCopyright();
 			$("#task").val(task);
 			$.ajax({
 				cache: false,
+				async: false,
 				data: $("#adminForm").serialize()+mydata,
 				type: "POST",
 				url: 'index.php?option=com_cck&task='+task,
