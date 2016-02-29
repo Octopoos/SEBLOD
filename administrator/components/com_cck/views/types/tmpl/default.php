@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+$action			=	( JCck::on() ) ? '<span class="icon-pencil-2"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-forms.png" border="0" alt="" title="'.JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ).'" />';
+$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ).'"' : '';
 $uix			=	JCck::getUIX();
 $css			=	array();
 $doc			=	JFactory::getDocument();
@@ -19,7 +21,6 @@ $label			=	strtolower( JText::_( 'COM_CCK_FIELDS' ) );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
-$title2			=	JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' );
 $top			=	( !JCck::on() ) ? 'border-top' : 'content';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
@@ -87,7 +88,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
             	<?php if ( $item->published && $item->adminFields && $item->location != 'site' && $item->storage_location != 'none' && $canCreateItem ) { ?>
-					<a target="_self" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-forms.png" border="0" alt="" title="<?php echo $title2 ?>" /></a>
+					<a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+						<?php echo $action; ?>
+					</a>
                 <?php } ?>
 			</td>
 			<td>

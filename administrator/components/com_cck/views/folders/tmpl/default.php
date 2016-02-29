@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+$action		=	( JCck::on() ) ? '<span class="icon-download"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-download.png" border="0" alt="" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'" />';
+$action_attr=	( JCck::on() ) ? ' class="app-download btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'"' : ' class="app-download"';
 $uix		=	JCck::getUIX();
 $css		=	array();
 $doc		=	JFactory::getDocument();
@@ -19,7 +21,6 @@ $userId		=	$user->id;
 $listOrder	=	$this->state->get( 'list.ordering' );
 $listDir	=	$this->state->get( 'list.direction' );
 $link2		=	'index.php?option='.$this->option.'&task=folder.export&id=';
-$title2		=	JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' );
 $top		=	( !JCck::on() ) ? 'border-top' : 'content';
 
 $config		=	JCckDev::init( array( '42', 'button_submit', 'checkbox', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text' ), true, array( 'vName' => '' ) );
@@ -90,13 +91,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
 		
 		$img			=	$images[$item->home];
+		$action_attr2	=	( $item->home ) ? str_replace( 'btn-micro', 'btn-primary btn-micro', $action_attr ) : $action_attr;
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
-            <td width="30px" class="center hidden-phone"><a class="app-download" href="javascript: void(0);" title="<?php echo $item->id; ?>">
-            	<img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/<?php echo $img; ?>" border="0" alt="" title="<?php echo $title2 ?>" /></a>
+            <td width="30px" class="center hidden-phone">
+            	<a href="javascript: void(0);" data-id="<?php echo $item->id; ?>"<?php echo $action_attr2; ?>>
+            		<?php echo $action; ?>
+            	</a>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">

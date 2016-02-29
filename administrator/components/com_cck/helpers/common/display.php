@@ -52,9 +52,9 @@ class CommonHelper_Display
 	{
 		$direction	=	'#' . $direction;
 		if ( $text == 'up' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-up.png" />&nbsp;</a>';
+			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;'.( JCck::on() ? '<span class="icon-arrow-up-2"></span>' : '<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-up.png" />&nbsp;' ).'</a>';
 		} elseif ( $text == 'down' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-down.png" />&nbsp;</a>';
+			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;'.( JCck::on() ? '<span class="icon-arrow-down-2"></span>' : '<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-down.png" />&nbsp;' ).'</a>';
 		} else {
 			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none; color: #666666;">&nbsp;'.$text.'&nbsp;</a>';
 		}

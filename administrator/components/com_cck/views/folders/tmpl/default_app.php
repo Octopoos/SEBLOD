@@ -98,7 +98,7 @@ if ( JCck::on() ) { ?>
 <script type="text/javascript">
 jQuery(document).ready(function($) {	
 	$(".app-download").live("click", function() {
-		var id = $(this).attr("title");
+		var id = $(this).attr("data-id");
 		var url = "<?php echo $link2; ?>"+id;
 		var elements = $("#app_elements").myVal();
 		var opts = "&options[aa]=1&options[bb]=2";

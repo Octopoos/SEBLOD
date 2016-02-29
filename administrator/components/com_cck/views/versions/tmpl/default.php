@@ -10,16 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$title2		=	JText::_( 'COM_CCK_REVERT_TO_THIS_VERSION' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	( JCck::on() ) ? '<span class="icon-loop"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-versions-revert.png" border="0" alt="" title="'.JText::_( 'COM_CCK_REVERT_TO_THIS_VERSION' ).'" />';
+$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_REVERT_TO_THIS_VERSION' ).'"' : '';
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$top			=	( !JCck::on() ) ? 'border-top' : 'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
 										 'core_version_location_filter', 'core_state_filter', 'core_version_e_type_filter' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JText::script( 'COM_CCK_CONFIRM_RESTORE_VERSION' );
@@ -68,8 +69,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$more			=	JCckDev::fromJSON( $item->e_more );
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='.$item->id );
 		if ( $canEdit ) {
-			$goBackToVersion	=	'<a href="javascript:void(0);" onclick="Joomla.submitbutton(\'versions.revert\',\'cb'.$i.'\');">'
-								.	'<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-versions-revert.png" border="0" alt="" title="'.$title2.'" /></a>';
+			$goBackToVersion	=	'<a href="javascript:void(0);" onclick="Joomla.submitbutton(\'versions.revert\',\'cb'.$i.'\');"'.$action_attr.'>'
+								.	$action
+								.	'</a>';
 		} else {
 			$goBackToVersion	=	'-';
 		}

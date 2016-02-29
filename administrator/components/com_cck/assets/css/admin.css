@@ -37,6 +37,7 @@ table.adminlist div.title-left {float: left;}
 table.adminlist div.title-right {float: right; padding-top:10px; padding-right:14px;}
 table.adminlist tr td span {font-size: 1.1em;}
 input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius:3px;}
+.seblod-manager input[type="checkbox"]{margin:0;}
 
 /* switch linkage */
 .switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}
@@ -169,6 +170,15 @@ body.contentpane.component div.toggle-selection a{color:#0088CC;}
 body.com_cck div#status{box-shadow:none;}
 
 div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5px;}
+
+.seblod-manager .btn [class^="icon-"],
+.seblod-manager .btn [class*=" icon-"] {
+	margin-right: 0;
+}
+.seblod-manager a.scroll,
+.seblod-manager a:link.scroll,
+.seblod-manager a:visited.scroll{color:#ddd; font-weight:normal;}
+.seblod-manager thead a.scroll{position: relative; top:2px;}
 
 body.com_cck fieldset.checkboxes input,body.com_cck fieldset.radios input{float:left; margin-top:0;}
 body.com_cck fieldset.checkboxes label,body.com_cck fieldset.radios label{float:left;}

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-searchs.png" border="0" alt="" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'" />';
+$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"' : '';
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
@@ -18,7 +20,6 @@ $label			=	JText::_( 'COM_CCK_FIELDS' );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
-$title2			=	JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' );
 $top			=	( !JCck::on() ) ? 'border-top' : 'content';
 $templates		=	JCckDatabase::loadObjectList( 'SELECT name, title FROM #__cck_core_templates WHERE mode = 2 AND published = 1 ORDER BY name', 'name' );
 $scroll			=	( count( $templates ) >= 3 ) ? 1 : 0;
@@ -80,7 +81,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
-            	<a target="_blank" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-searchs.png" border="0" alt="" title="<?php echo $title2 ?>" /></a>
+            	<a target="_blank" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+            		 <?php echo $action; ?>
+            	</a>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
