@@ -130,7 +130,7 @@ div.filter-select select, div.filter-search select, div.filter-search input, div
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
 div.filter-search.pull-left div.chzn-container{padding-right:6px;}
-div.filter-search.pull-left div.chzn-container > a{height:25px;}
+div.filter-search.pull-left div.chzn-container > a{height:26px;}
 div.btn-toolbar div.chzn-container{padding-right:6px;}
 div.btn-toolbar div#limit_chzn{padding-right:0;}
 body.contentpane.component div.seblod span.publish.icon-flag,
