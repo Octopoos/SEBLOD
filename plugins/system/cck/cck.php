@@ -165,6 +165,31 @@ class plgSystemCCK extends JPlugin
 				return;
 			}
 			
+			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
+				if ( !$user->authorise( 'core.admin' ) ) {
+					$groups		=	explode( ',', $this->site->groups );
+					$hasGroups	=	0;
+
+					if ( count( $groups ) ) {
+						foreach ( $groups as $group_id ) {
+							if ( isset( $user->groups[$group_id] ) ) {
+								$hasGroups++;
+							}
+						}
+						
+
+						if ( !$hasGroups ) {
+							$options	=	array( 'clientid'=>0 );
+							$result		=	$app->logout( $user->get( 'id' ), $options );
+
+							if ( !( $result instanceof Exception ) ) {
+								$app->redirect( '/' );
+							}
+						}
+					}
+				}
+			}
+			
 			// Groups
 			$authgroups	=	$user->getAuthorisedGroups();
 			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
