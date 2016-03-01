@@ -206,9 +206,14 @@ class CCKController extends JControllerLegacy
 		
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, $config ) );
 		
+		if ( JCck::on() ) {
+			$attr	=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+		} else {
+			$attr	=	array( 'class'=>' edit', 'span'=>'' );
+		}
 		$json		=	array();
 		ob_start();
-		Helper_Workshop::displayField( $field );
+		Helper_Workshop::displayField( $field, '', $attr );
 		$json["id"]		=	(int)$field->id;
 		$json["html"]	=	ob_get_clean();
 		

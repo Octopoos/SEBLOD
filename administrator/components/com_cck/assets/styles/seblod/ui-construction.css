@@ -8,11 +8,12 @@
 
 /*toggle*/
 div.seblod fieldset.toggle{background-color:#FFFFFF;}
-fieldset.toggle label.selected{background: none repeat scroll 0 0 #00416a;color: #ffffff;}
+fieldset.toggle label.selected{background: none repeat scroll 0 0 #00416a;color: #ffffff; border-color:#00416a;}
 fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid;color: #cccccc;text-decoration: line-through; cursor: default!important;}
 fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid; color: #00416a;}
-fieldset.toggle label:hover{background-color: #00416a;color: #ffffff;}
+fieldset.toggle label:hover{background-color: #00416a;color: #ffffff; border-color:#00416a;}
 fieldset.toggle label.first{border-left: 1px solid #dedede !important; -webkit-border-top-left-radius:2px; -webkit-border-bottom-left-radius:2px; -moz-border-radius-topleft:2px; -moz-border-radius-bottomleft:2px; border-top-left-radius:2px; border-bottom-left-radius:2px;}
+fieldset.toggle label.first.selected,fieldset.toggle label:hover.first{border-left: 1px solid #00416a !important;}
 fieldset.toggle label.last{-webkit-border-top-right-radius:2px; -webkit-border-bottom-right-radius:2px; -moz-border-radius-topright:2px; -moz-border-radius-bottomright:2px; border-top-right-radius:2px; border-bottom-right-radius:2px;}
 
 .loading{top:68px!important;}
@@ -29,7 +30,7 @@ li.ui-selected{background: #ffffcc !important;}
 li.ui-sortable-helper{background: #ffffcc !important;}
 ul.sortable li.t-tabs,ul.sortable li.t-search_operator,ul.sortable li.t-div{background-color: #dedede;}
 /*li:hover.ui-selectee{border-color: #bbbbbb !important;}*/
-ul.sortable li.position{background-color: #00416a !important;}
+ul.sortable li.position{background-color: #00416a !important; border-color:#00416a;}
 ul.sortable li.position span.title{color: #ffffff !important;}
 div.seblod .selector{background-color: #00416a !important;border-color: #00416a !important;}
 div.seblod .thin.blue{background-color: #ffffff;border-color: #00416a;color: #00416a;}
@@ -40,32 +41,35 @@ div.seblod input[type="radio"].selector:checked{color: #f1f1f1 !important;}
 ul.sortable_header li{color: #ffffff !important;}
 ul.sortable_header li div.pane div{background-color: #00416a !important;border-left: 1px solid #00416a !important;border-right: 1px solid #00416a !important;border-top: 1px solid #00416a !important;}
 
-ul.sortable li.field div.drag{background: url(images/grip.png) no-repeat scroll 0 0 transparent;}
-ul.sortable li.field div:hover.drag{background: url(images/grip.png) no-repeat scroll 0 -14px transparent;}
-ul.sortable li.field div.drag {cursor: move;height: 14px;position: absolute;right: 3px;top: 8px;width: 23px;}
+ul.sortable li.field div.drag{background: url(images/grip.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+ul.sortable li.field div.drag {cursor: move;height: 14px;position: absolute;right: 1px;top: 8px;width: 23px;}
 div#seblod-main ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
-div#seblod-main ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 0 transparent;}
-div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -17px transparent;}
-div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 -34px transparent;}
-div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -51px transparent;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 0 transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
 div#seblod-sidebar ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
 
 ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
 ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #00416a; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
 
 ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
+ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#00416a; padding-left:2px;}
+ul.sortable li.field a:hover.b{color:#0088CC; padding-left:2px;}
+ul.sortable li.field a.b [class^="icon-"],
+ul.sortable li.field a.b [class*=" icon-"] {margin-right: 0;}
 ul.sortable li div.pane div.col1{height: 30px;right: 302px;}
 ul.sortable li div.pane div.col2{height: 30px;right: 52px;}
 ul.sortable li div.pane div{color: #ffffff; font-weight: bold;}
 
 a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,
-a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons.png);}
-div#seblod-sidebar a.panel { float:left; width:20px; height:20px; text-align:center; cursor:pointer; font-size:14px !important; font-weight:bold; font-style:italic;
-	line-height:20px; border:1px solid #dedede; text-decoration:none !important; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;
-	-webkit-transition:background-color 0.3s linear; -moz-transition:background-color 0.3s linear; -o-transition:background-color 0.3s linear; transition:background-color 0.3s linear; }
+a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons.png); background-size: cover;}
+div#seblod-sidebar a.panel { float:left; width:20px; height:20px; text-align:center; cursor:pointer; font-size:14px !important; font-weight:bold;
+	line-height:20px; border:1px solid #dedede; text-decoration:none !important; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
 div#seblod-sidebar a.panel{background: none repeat scroll 0 0 #f1f1f1; color: #00416a;}
-div#seblod-sidebar a.panel:hover{background-color:#00416a; color:#ffffff;}
-div#seblod-sidebar a.panel.selected{background-color:#00416a; color:#ffffff;}
+div#seblod-sidebar a.panel:hover{background-color:#00416a; color:#ffffff; border-color: #00416a;}
+div#seblod-sidebar a.panel.selected{background-color:#00416a; color:#ffffff; border-color: #00416a;}
 
 /*sidebar*/
 a:link.icons.icon-add, a:visited.icons.icon-add{background-position: 0 0;}
@@ -87,14 +91,7 @@ a:hover.icons.icon-toggle{background-position: 0 -220px;}
 div.row-fluid div.span12 ul.sortable li.position,
 div.row-fluid div.span12 fieldset.toggle label:hover,
 div.row-fluid div.span12 fieldset.toggle label.selected{
-	background-color: #184a7d;
-	background-image: -moz-linear-gradient(top,#17568c,#1a3867);
-	background-image: -webkit-gradient(linear,0 0,0 100%,from(#17568c),to(#1a3867));
-	background-image: -webkit-linear-gradient(top,#17568c,#1a3867);
-	background-image: -o-linear-gradient(top,#17568c,#1a3867);
-	background-image: linear-gradient(to bottom,#17568c,#1a3867);
-	background-repeat: repeat-x;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff17568c', endColorstr='#ff1a3867', GradientType=0);
+	background-color: #00416a;
 }
-div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#17568C!important;}
+div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#00416a!important;}
 div.row-fluid div.span12 ul.sortable_header li div.pane{top:-15px;}

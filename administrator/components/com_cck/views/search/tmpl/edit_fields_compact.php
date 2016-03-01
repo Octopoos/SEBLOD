@@ -13,6 +13,12 @@ defined( '_JEXEC' ) or die;
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
+
+if ( JCck::on() ) {
+    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+} else {
+    $attr   =   array( 'class'=>' edit', 'span'=>'' );
+}
 ?>
 
 <div class="seb-wrapper <?php echo $this->uix; ?>">
@@ -32,7 +38,7 @@ $positions	=	array();
                             $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                         }
                         JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                        Helper_Workshop::displayField( $field, $type_field );
+                        Helper_Workshop::displayField( $field, $type_field, $attr );
                     }
                 }
 				Helper_Workshop::displayPositionEnd();
@@ -51,7 +57,7 @@ $positions	=	array();
 										$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
 									}
 									JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-									Helper_Workshop::displayField( $field, $type_field );
+									Helper_Workshop::displayField( $field, $type_field, $attr );
 								}
 							} else {
 								$positions[]	=	$pos->name;
@@ -86,7 +92,7 @@ $positions	=	array();
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                     }
                     JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                    Helper_Workshop::displayField( $field, $type_field );
+                    Helper_Workshop::displayField( $field, $type_field, $attr );
                 }
                 echo '</ul></div><div id="sortable_original" style="display: none;"></div>';
             }

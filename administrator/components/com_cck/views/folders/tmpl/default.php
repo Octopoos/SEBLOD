@@ -57,7 +57,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<th class="center" rowspan="2" colspan="2">
 				<?php
                 echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder );
-				echo JHtml::_( 'grid.sort', '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />', 'a.lft', $listDir, $listOrder );				
+				echo JHtml::_( 'grid.sort', ( JCck::on() ? '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>' : '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />' ), 'a.lft', $listDir, $listOrder );				
 				?>
 			</th>
 			<th width="10%" class="center hidden-phone nowrap" rowspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_COLOR', 'a.color', $listDir, $listOrder ); ?></th>

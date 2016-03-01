@@ -16,10 +16,10 @@ class Helper_Workshop
 	protected static $template	=	'';
 	
 	// displayField
-	public static function displayField( &$field, $type_field = '' )
+	public static function displayField( &$field, $type_field = '', $attr = array() )
 	{
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox edit" href="<?php echo $link; ?>"></a><span class="title" onDblClick="JCck.Dev.moveDir('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.Dev.moveDir('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.Dev.moveDir('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.Dev.moveDir('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -88,7 +88,6 @@ class Helper_Workshop
 		$hide	=	( $variation_status != '' ) ? '' : ' hidden';
 		
 		$pos	=	'<li class="position ui-state-disabled" id="pos-'.$p.'">'
-				.	'<a href="#pos-'.$to.'"><img class="left" src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-'.$dir.'.png" alt="" /></a>'
 				.	'<input class="selector" type="radio" id="position'.$p.'" name="positions" gofirst="#pos-'.($to-1).'" golast="#pos-'.$to.'" />'
 				.	'<span class="title">'.$title.'</span>'
 				.	'<input type="hidden" name="ff[pos-'.$name.']" value="position" />'
@@ -297,7 +296,7 @@ class Helper_Workshop
 	{
 		$data		=	array();
 		$data['_']	=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
-							   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ) );
+							   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-pencil-2"></span>' : '&laquo;' ) );
 		
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {

@@ -20,6 +20,8 @@ div.seblod-less.cpanel_news.compact{width:380px;}
 div.seblod-less.cpanel_news.compact div.cpanel.compact{width:270px;}
 div.seblod.beta{background-image: url("../images/beta.png"); background-position:0px 0px; background-repeat:no-repeat;}
 div.seblod.first.cpanel_news{margin-top:0 !important;}
+div.seblod.first.cpanel_news .legend,
+div.seblod.first.cpanel_news ul.adminformlist{margin:0;}
 div#cckOptions, div.accordion-group{margin-bottom:10px;}
 div.cpanel_news div.alert a.close, div.cpanel_news div.alert a.close span{color:#08c; width: 20px; height: 20px; line-height: 22px; text-shadow:none; opacity: 1; font-weight: normal;}
 div.cpanel_news div.alert{color:#08c;}
@@ -45,6 +47,9 @@ input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; bor
 .switch span.notice {background-position:left; background-repeat:no-repeat; text-indent: 25px;}
 .switch span.unlinked {background-image: url("../images/24/icon-24-unlock.png");}
 
+.switch span.linkage.icon-lock{left: -2px; margin: 5px 0 0 6px; font-size: 18px; color:#0088cc; background-image:none;}
+.switch span.linkage.unlinked.icon-lock:before{content: "\e267"; color:#eb8207;}
+
 .cck_radius2 {-webkit-border-radius: 2px!important; -moz-border-radius: 2px!important; border-radius: 2px!important;}
 #permissions-sliders ul#rules li h3 {-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
 div.pane-slider.content.pane-down {border-bottom: 1px solid #ccc !important;}
@@ -61,7 +66,8 @@ div.preview fieldset.checkboxes input.inputbox, div.preview fieldset.radios inpu
 div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:none;display:block;float:left;line-height:190%;margin:0;padding-right:20px;}
 
 input#storage_field{padding-right: 15px; margin-right:0px;}
-span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-13px; float:left; padding:0; margin:0;}
+span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
+span#storage_field_pick > .icon-pencil-2{font-size:12px; font-weight: normal; margin-right:0;}
 span.value-picker{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
 
 table.adminlist td div.title-left{padding-left: 9px;}
@@ -84,7 +90,7 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 
 #toggle_more{top:76px;}
 #toggle_more_workshop{top:98px;}
-.toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle.png"); background-repeat:no-repeat;}
+.toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle.png"); background-repeat:no-repeat; background-size: cover;}
 .toggle_more.closed{background-position:0 0;}
 .toggle_more.open{background-position:0 -10px;}
 
@@ -122,6 +128,8 @@ pre.cck-xml{font-family: "Arial", "Helvetica", sans-serif; font-size:12px; paddi
 
 /* Joomla 3.x */
 .img-action{max-width: inherit;}
+body #j-main-container{padding-left:0;}
+body #j-main-container > .btn-toolbar{margin-top:15px;}
 ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #0088cc; margin-bottom: 6px;}
 ul.nav.nav-list li a[href='#']:hover{background:none;}
 div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
@@ -129,9 +137,9 @@ div.seblod-manager .table .dropdown-menu{left: inherit; right: 0;}
 div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
-div.filter-search.pull-left div.chzn-container{padding-right:6px;}
+div.filter-search.pull-left div.chzn-container{padding-right:0px; margin-right:6px;}
 div.filter-search.pull-left div.chzn-container > a{height:26px;}
-div.btn-toolbar div.chzn-container{padding-right:6px;}
+div.btn-toolbar div.chzn-container{padding-right:0px; margin-right:6px;}
 div.btn-toolbar div#limit_chzn{padding-right:0;}
 body.contentpane.component div.seblod span.publish.icon-flag,
 body.com_cck div.seblod span.publish.icon-flag {color:#51a351;}
@@ -171,8 +179,8 @@ body.com_cck div#status{box-shadow:none;}
 
 div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5px;}
 
-.seblod-manager .btn [class^="icon-"],
-.seblod-manager .btn [class*=" icon-"] {
+.btn [class^="icon-"],
+.btn [class*=" icon-"] {
 	margin-right: 0;
 }
 .seblod-manager a.scroll,
@@ -208,8 +216,8 @@ body.com_cck fieldset.btn-group-yesno .btn-success.active,
 body.com_cck fieldset.btn-group-yesno .btn-success.disabled,
 body.com_cck fieldset.btn-group-yesno .btn-success[disabled] {
 	color: #fff;
-	background-color: #17568c;
-	*background-color: #17568c;
+	background-color: #00416a;
+	*background-color: #00416a;
 	border-color: #1a3867 #1a3867 #1a3867;
 }
 

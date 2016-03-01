@@ -53,7 +53,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             ?>
         </ul>
 		<?php if ( !$this->isNew ) { ?>
-			<img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+            <?php if ( JCck::on() ) { ?>
+                <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
+            <?php } else { ?>
+                <img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+            <?php } ?>
 		<?php } ?>
 	</div>
 

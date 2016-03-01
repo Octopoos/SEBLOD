@@ -128,10 +128,6 @@ fieldset.toggle label {
 	cursor:pointer;
 	font-size: 11px;
 	font-weight: 700;
-	-webkit-transition: background-color 0.3s linear;
-	-moz-transition: background-color 0.3s linear;
-	-o-transition: background-color 0.3s linear;
-	transition: background-color 0.3s linear;
 	margin-bottom: 0;
 }
 div.seblod .inputbox {
@@ -144,10 +140,11 @@ div.seblod .thin {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius:3px;
-	padding: 3px;
+	padding: 2px 3px;
 }
 div.seblod select.thin {
 	padding-right: 5px !important;
+	height: 24px;
 }
 div.seblod .thin.empty {
 	background-color: #ffffff;
@@ -446,9 +443,9 @@ div.seblod input.trigger-type{padding-right: 15px;}
 .font-size-109{font-size:1.09em;}
 
 /* Joomla 3.x */
-body.com_cck div.seblod div.legend,
-body.com_cck_ecommerce div.seblod div.legend,
-body.com_cck_webservices div.seblod div.legend,
+body.com_cck div.seblod:not(.cpanel_news) div.legend,
+body.com_cck_ecommerce div.seblod:not(.cpanel_news) div.legend,
+body.com_cck_webservices div.seblod:not(.cpanel_news) div.legend,
 body.contentpane.component div.seblod div.legend,
 div.accordion div.seblod div.legend {color:#0088CC; font-size:1em;}
 div.accordion div.seblod{border:0;}
@@ -479,7 +476,7 @@ body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;ma
 ul.spe.spe_latest li{width:70px; margin-top: 15px;}
 ul.spe.spe_description .btn{width:76px;}
 ul.spe_name.adminformlist li{width:29em;}
-ul.spe_type.spe_latest li{width:33em;}
+ul.spe_type.spe_latest li{width:28em;}
 ul.spe fieldset.btn-group > label{float:none; display:inline-block; line-height:18px}
 ul.spe fieldset.btn-group > label{width:auto; min-width:25px;}
 ul.spe_state.spe_third li {width: 140px;}

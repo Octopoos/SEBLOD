@@ -15,12 +15,18 @@ $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->c
 $from_view	=	( $this->item->master == 'content' ) ? ( ( $this->item->client == 'intro' ) ? 'CONTENT' : 'INTRO' ) : ( ( $this->item->client == 'admin' ) ? 'SITE_FORM' : 'ADMIN_FORM' );
 $clone		=	( $this->item->id ) ? JText::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', JText::_( 'COM_CCK_'.$from_view ) ) : '';
 $positions	=	array();
+
+if ( JCck::on() ) {
+    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+} else {
+    $attr   =   array( 'class'=>' edit', 'span'=>'' );
+}
 ?>
 
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
         <div class="seblod">
-            <div id="linkage_wrap"><?php echo JCckDev::getForm( $cck['core_linkage'], 1, $config ); ?></div>
+            <div id="linkage_wrap"><?php echo JCckDev::getForm( $cck['core_linkage'], 1, $config, array( 'css'=>'icon-lock' ) ); ?></div>
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );
@@ -35,7 +41,7 @@ $positions	=	array();
 							$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
 						}
 						JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Type'.$this->item->master, array( &$field, $style, $data ) );
-						Helper_Workshop::displayField( $field, $type_field );
+						Helper_Workshop::displayField( $field, $type_field, $attr );
 					}
 				} else {
 					$positions[]	=	$pos->name;
@@ -55,7 +61,7 @@ $positions	=	array();
             <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'type', $this->item->master, $this->item->client, $this->uix, $clone ); ?></div>
 			<?php
 			if ( count( $this->fieldsAv ) ) {
-				echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
+				echo '<div class="legend top flexenter">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
 				$style	=	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );
                 foreach ( $this->fieldsAv as $field ) {
@@ -64,7 +70,7 @@ $positions	=	array();
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                     }
                     JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Type'.$this->item->master, array( &$field, $style, $data ) );
-                    Helper_Workshop::displayField( $field, $type_field );
+                    Helper_Workshop::displayField( $field, $type_field, $attr );
                 }
                 echo '</ul></div><div id="sortable_original" style="display: none;"></div>';
             }

@@ -14,6 +14,12 @@ $db         =   JFactory::getDbo();
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
+
+if ( JCck::on() ) {
+    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+} else {
+    $attr   =   array( 'class'=>' edit', 'span'=>'' );
+}
 ?>
 
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
@@ -33,7 +39,7 @@ $positions	=	array();
                             $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                         }
                         JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                        Helper_Workshop::displayField( $field, $type_field );
+                        Helper_Workshop::displayField( $field, $type_field, $attr );
                     }
                 }
 				Helper_Workshop::displayPositionEnd();
@@ -52,7 +58,7 @@ $positions	=	array();
 										$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
 									}
 									JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-									Helper_Workshop::displayField( $field, $type_field );
+									Helper_Workshop::displayField( $field, $type_field, $attr );
 								}
 							} else {
 								$positions[]	=	$pos->name;
@@ -78,7 +84,7 @@ $positions	=	array();
             <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
 			<?php
 			if ( count( $this->fieldsAv ) ) {
-                echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
+                echo '<div class="legend top flexenter">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
                 $data['tables'] =   array();
                 $prefix         =   $db->getPrefix();
@@ -106,7 +112,7 @@ $positions	=	array();
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                     }
                     JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                    Helper_Workshop::displayField( $field, $type_field );
+                    Helper_Workshop::displayField( $field, $type_field, $attr );
                 }
                 echo '</ul></div><div id="sortable_original" style="display: none;"></div>';
             }

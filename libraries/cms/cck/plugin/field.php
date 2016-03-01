@@ -319,7 +319,7 @@ class JCckPluginField extends JPlugin
 				$hide	=	' show';
 				$hide2	=	' hide';
 			}
-			$text				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? '&laquo;' : '';	// ( static::$friendly ) ? '&laquo;' : '';
+			$text				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	JHtml::_( 'select.genericlist', $data['live'], 'ffp['.$name.'][live]', 'size="1" class="thin c_live_ck"', 'value', 'text', @$field->live, $name.'_live' );
 			$column2			=	'<input class="thin blue c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
 								.	'value="'.( ( @$field->live_value != '' ) ? htmlspecialchars( $field->live_value ) : '' ).'" />'
@@ -459,7 +459,7 @@ class JCckPluginField extends JPlugin
 				$hide	=	' show';
 				$hide2	=	' hide';
 			}
-			$text				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? '&laquo;' : '';	// ( static::$friendly ) ? '&laquo;' : '';
+			$text				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	JHtml::_( 'select.genericlist', $data['live'], 'ffp['.$name.'][live]', 'size="1" class="thin c_live_ck"', 'value', 'text', @$field->live, $name.'_live' );
 			$column2			=	'<input class="thin blue c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
 								.	'value="'.( ( @$field->live_value != '' ) ? htmlspecialchars( $field->live_value ) : '' ).'" />'
