@@ -119,6 +119,7 @@ div.seblod.preview div.cck_forms.cck_admin div.cck_desc{padding-bottom:8px; colo
 span.gtr2{margin-right:16px; visibility:hidden;}
 .mr-3{margin-right:3px!important;}
 .legend-desc{font-size:1.09em; padding-top:10px;}
+th span.large{font-size:16px; position:relative; top:2px;}
 
 #bool8.jgrid:not(.btn) span.publish {background-image: url("../images/16/icon-16-language.png");}
 #bool8.jgrid:not(.btn) span.unpublish {background-image: url("../images/16/icon-16-disabled.png");}
@@ -138,7 +139,8 @@ div.filter-select select, div.filter-search select, div.filter-search input, div
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
 div.filter-search.pull-left div.chzn-container{padding-right:0px; margin-right:6px;}
-div.filter-search.pull-left div.chzn-container > a{height:26px;}
+div.filter-search.pull-left div.chzn-container > a,
+div.pull-right div.chzn-container > a{height:26px; line-height: 26px;}
 div.btn-toolbar div.chzn-container{padding-right:0px; margin-right:6px;}
 div.btn-toolbar div#limit_chzn{padding-right:0;}
 body.contentpane.component div.seblod span.publish.icon-flag,
@@ -183,6 +185,8 @@ div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5p
 .btn [class*=" icon-"] {
 	margin-right: 0;
 }
+.btn-count.btn-micro{padding:1px 4px; font-size:12px; font-weight: bold; line-height: 14px; min-width: 14px;}
+
 .seblod-manager a.scroll,
 .seblod-manager a:link.scroll,
 .seblod-manager a:visited.scroll{color:#ddd; font-weight:normal;}
