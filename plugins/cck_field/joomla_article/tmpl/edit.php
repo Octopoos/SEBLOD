@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 	$("div#layer").on("click", "span.c_link", function() {
 		var field = $(this).attr("name");
 		var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_link/content/tmpl/edit.php&id="+field+"&name=content&validation=1";
-		$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+		$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 	});
 	if ( !$('#extended').val() ) {
 		$('#bool2, #json_options2_child_orderby, #json_options2_child_location, #json_options2_child_limit, #blank_li, #json_options2_child_language').parent().hide();

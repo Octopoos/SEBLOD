@@ -226,12 +226,12 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$doc->addStyleSheet( JURI::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
 			
 				$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
-					.	' $.fn.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} elseif ( $params['inherited'] == true ) {
 				JCck::loadModalBox();
 				$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
-					.	' $.fn.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} else {
 				JCck::loadModalBox();

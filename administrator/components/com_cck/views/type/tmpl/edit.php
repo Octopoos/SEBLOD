@@ -255,7 +255,7 @@ Helper_Display::quickCopyright();
 			if ( template ) {
 				var img = "<?php echo JURI::root(); ?>templates/"+$("#template").val()+"/template_preview.png";
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file="+img;
-				$.fn.colorbox({href:url, iframe:true, innerWidth:850, innerHeight:585, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:850, innerHeight:585, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		},
 		setEdit2: function(uix) {
@@ -453,14 +453,14 @@ Helper_Display::quickCopyright();
 			var field = $(this).attr("name");
 			var cur = "none";
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title=type&name="+field+"&type="+field+"_live_value&id="+cur;
-			$.fn.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+			$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
 		$("div#layers").on("click", "span.c_live2", function() {
 			var field = $(this).attr("name");
 			var live = $("#"+field+"_live").val();
 			if (live) {
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_live/"+live+"/tmpl/edit.php&id="+field+"&name="+live+"&validation=1";
-				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		});
 		$("div#layers").on("change", "select.c_var_ck", function() {
@@ -472,7 +472,7 @@ Helper_Display::quickCopyright();
 			var variation = $("#pos-"+pos+"_variation").val();
 			if (variation) {
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=libraries/cck/rendering/variations/edit.php&id="+pos+"&name="+variation+"&type="+$("#template").val();
-				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		});
 		$("div#layers").on("contextmenu", "span.c_val", function() {
@@ -491,7 +491,7 @@ Helper_Display::quickCopyright();
 			var field = $(this).attr("name");
 			var validation = $("#"+field+"_validation").val();
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/validation.php&type=type&id="+field+"&name="+validation+"&validation=1";
-			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+			$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
 		$("div#layers").on("change", "select.c_typo_ck", function() {
 			var field = $(this).parents().eq(3).attr("id");
@@ -504,7 +504,7 @@ Helper_Display::quickCopyright();
 			var typo = $("#"+field+"_typo").val();
 			if (typo) {
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_typo/"+typo+"/tmpl/edit.php&id="+field+"&name="+typo+"&validation=1";
-				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		});
 		$("div#layers").on("change", "select.c_link_ck", function() {
@@ -518,7 +518,7 @@ Helper_Display::quickCopyright();
 			var link = $("#"+field+"_link").val();
 			if (link) {
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_link/"+link+"/tmpl/edit.php&id="+field+"&name="+link+"&validation=1";
-				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		});
 		$("div#layers").on("change", "select.c_res_ck", function() {
@@ -532,7 +532,7 @@ Helper_Display::quickCopyright();
 			var restriction = $("#"+field+"_restriction").val();
 			if (restriction) {
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_restriction/"+restriction+"/tmpl/edit.php&id="+field+"&name="+restriction+"&validation=1";
-				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+				$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
 		});
 		$("div#layers").on("click", "span.c_comp", function() {
@@ -541,7 +541,7 @@ Helper_Display::quickCopyright();
 			var computation = $("#ffp_"+field+"_computation").val();
 			computation = computation.replace(/#/gi, "");
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/computation.php&id="+id+"&type=type&name="+field+"&title="+computation;
-			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+			$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
 		$("div#layers").on("click", "span.c_cond", function() {
 			var id = $("#jform_id").val();
@@ -554,7 +554,7 @@ Helper_Display::quickCopyright();
 				conditional = 1;
 			}
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/conditional.php&id="+id+"&type=type&name="+field+"&title="+conditional;
-			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+			$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
 		$("div#layers").on("click", "a#linkage", function() {
 			$("#linkage input").removeAttr("checked");

@@ -150,9 +150,8 @@ class Helper_Include extends CommonHelper_Include
 			$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
 			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			
-			$js	=	'
-					$(".'.$class.'").live("click", function(e) { e.preventDefault();
-						$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
+			$js	=	'$(document).on("click",".'.$class.'", function(e) { e.preventDefault();
+						$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
 						return false;
 					});
 					';
