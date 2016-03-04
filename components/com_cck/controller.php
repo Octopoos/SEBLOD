@@ -264,7 +264,7 @@ class CCKController extends JControllerLegacy
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
 	}
-
+	
 	// getRoute
 	public function getRoute()
 	{
