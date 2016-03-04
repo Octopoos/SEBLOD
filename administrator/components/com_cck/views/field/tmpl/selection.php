@@ -112,7 +112,7 @@ $js		=	'
 				$.fn.toggleMultiple = function() {
 					if (this.is("select")) {
 						if (this.prop("multiple")) {
-							this.prepend(\'<option value="">- '.JText::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).attr("size",1);
+							this.prepend(\'<option value="">- '.JText::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).removeAttr("size");
 						} else {
 							$("#"+this.attr("id")+" option:eq(0)").remove();
 							this.prop("multiple",true).attr("size",15);

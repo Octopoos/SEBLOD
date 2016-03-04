@@ -12,7 +12,6 @@ defined( '_JEXEC' ) or die;
 
 $options	=	JCckDev::fromJSON( $this->item->options );
 ?>
-
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'; ?></div>

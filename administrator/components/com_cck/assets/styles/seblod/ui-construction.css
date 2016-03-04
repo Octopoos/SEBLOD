@@ -35,8 +35,8 @@ ul.sortable li.position span.title{color: #ffffff !important;}
 div.seblod .selector{background-color: #00416a !important;border-color: #00416a !important;}
 div.seblod .thin.blue{background-color: #ffffff;border-color: #00416a;color: #00416a;}
 div.pane span.text.blue{color: #00416a;!important;}
-div.pane span.c_live2, div.pane span.c_mat2, div.pane span.c_comp, div.pane span.c_cond, div.pane span.c_val{cursor: pointer;font-size:0.95em;}
-div.pane span.c_live2:hover, div.pane span.c_mat2:hover, div.pane span.c_comp:hover, div.pane span.c_cond:hover, div.pane span.c_val:hover{text-decoration:underline;}
+div.pane span.c_live2, div.pane span.c_mat2, div.pane span.c_comp, div.pane span.c_cond, div.pane span.c_val, div.pane .sp2se{cursor: pointer;font-size:0.95em;}
+div.pane span.c_live2:hover, div.pane span.c_mat2:hover, div.pane span.c_comp:hover, div.pane span.c_cond:hover, div.pane span.c_val:hover, div.pane span.sp2se:hover{text-decoration:underline;}
 div.seblod input[type="radio"].selector:checked{color: #f1f1f1 !important;}
 ul.sortable_header li{color: #ffffff !important;}
 ul.sortable_header li div.pane div{background-color: #00416a !important;border-left: 1px solid #00416a !important;border-right: 1px solid #00416a !important;border-top: 1px solid #00416a !important;}
@@ -52,7 +52,9 @@ div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/ar
 div#seblod-sidebar ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
 
 ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
-ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #00416a; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
+ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #00416a; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
+ul.sortable li span.c_mat, ul.sortable li span.c_res{top: 1px;}
+ul.sortable li span.c_live{font-weight: normal;}
 
 ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
 ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#00416a; padding-left:2px;}

@@ -59,6 +59,7 @@ a:link.icons, a:visited.icons{ background-repeat:no-repeat;cursor: pointer;heigh
 
 /* ui-construction (sortable) */
 ul.sortable{padding: 0; margin:0 0 9px 0;}
+#layer_fields{position:relative;}
 #sortable1{overflow:auto;}
 #sortable2{float: left;width: 100%;padding: 0px 0px 0px 15px; margin:0;}
 #seblod-sidebar select { margin-bottom: 3px; }
@@ -86,7 +87,15 @@ ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200p
 #linkage_wrap{position:absolute; top:13px; right:15px; z-index: 99;}
 ul.sortable li div.pane span.text {font-size: 10px; line-height:22px;}
 ul.sortable li div.pane .hidden{display:inline-block;}
-div.colc .icon-pencil-2{position: relative; left:-22px;}
+div.colc .icon-menu-2{position: relative; left:-22px; font-size:12px;}
+div.colc .sp2se{margin-left:0; }
+div.colc .se2sp{display:inline-block;}
+div.colc .sp2se::-moz-selection {background: none;}
+div.colc .sp2se::selection {background: none;}
+div.colc span.text::-moz-selection {background: none;}
+div.colc span.text::selection {background: none;}
+div.colc::-moz-selection {background: none;}
+div.colc::selection {background: none;}
 
 .flexenter {
     display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex;
@@ -96,6 +105,7 @@ div.colc .icon-pencil-2{position: relative; left:-22px;}
     width: auto !important; margin: auto;
 }
 .flexenter > .input-medium {width: 40%; margin: 0 1px;}
+div.seblod div.legend.flexenter .inputbox{font-size: 11px;}
 
 #minwidth-body .colorpicker{display:none;}
 div.subtabs{color:#00416a; font-size:0.95em;}

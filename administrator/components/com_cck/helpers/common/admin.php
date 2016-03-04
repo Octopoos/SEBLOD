@@ -375,7 +375,12 @@ class CommonHelper_Admin
 			$plugin->text								=	JText::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
 			$params										=	JCckDev::fromJSON( $plugin->params );
 			$group										=	JText::_( $params['group'] );
-			$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+
+			if ( $prefix.$folder == 'cck_field_restriction' ) {
+				$groups[$group][$plugin->value]				=	$plugin;
+			} else {
+				$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+			}
 		}
 		if ( ! isset( $groups ) ) {
 			return $options;

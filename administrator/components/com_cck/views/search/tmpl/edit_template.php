@@ -14,7 +14,6 @@ if ( is_object( $this->style ) ) {
 	$this->style->params	=	JCckDev::fromJSON( $this->style->params );
 }
 ?>
-
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<?php if ( $this->item->client != 'order' ) { ?>
         <div class="seblod">

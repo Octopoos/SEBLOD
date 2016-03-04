@@ -40,6 +40,10 @@ table.adminlist div.title-right {float: right; padding-top:10px; padding-right:1
 table.adminlist tr td span {font-size: 1.1em;}
 input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius:3px;}
 .seblod-manager input[type="checkbox"]{margin:0;}
+.seblod-manager .table{margin-bottom:0;}
+.pagination.pagination-toolbar{padding-top:4px;}
+.pagination-toolbar .pagination-list li span[class^="icon-"],
+.pagination-toolbar .pagination-list li span[class*=" icon-"]{position:relative; top:2px;}
 
 /* switch linkage */
 .switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}
@@ -67,7 +71,7 @@ div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:n
 
 input#storage_field{padding-right: 15px; margin-right:0px;}
 span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
-span#storage_field_pick > .icon-pencil-2{font-size:12px; font-weight: normal; margin-right:0;}
+span#storage_field_pick > .icon-menu-2{font-size:12px; font-weight: normal; margin-right:0;}
 span.value-picker{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
 
 table.adminlist td div.title-left{padding-left: 9px;}

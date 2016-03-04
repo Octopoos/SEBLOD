@@ -38,13 +38,21 @@ class CCKViewSearch extends JViewLegacy
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
 				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
+				break;
 			default:
 				break;
 		}
 		
 		if ( JCck::on() ) {
 			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'89px',
+								   'panel_height'=>'80px',
 								   'w30'=>'span4',
 								   'w70'=>'span8',
 								   'wrapper'=>'container',

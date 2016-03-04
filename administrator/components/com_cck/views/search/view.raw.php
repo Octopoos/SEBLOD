@@ -38,13 +38,21 @@ class CCKViewSearch extends JViewLegacy
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
 				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
+				break;
 			default:
 				break;
 		}
 		
 		if ( JCck::on() ) {
 			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'89px',
+								   'panel_height'=>'80px',
 								   'w30'=>'span4',
 								   'w70'=>'span8',
 								   'wrapper'=>'container',
@@ -129,7 +137,9 @@ class CCKViewSearch extends JViewLegacy
 	
 	// prepareDisplay_Ajax
 	function prepareDisplay_Ajax()
-	{		
+	{
+		$folder		=	( $this->item->id > 0 ) ? $this->item->folder : 1;
+
 		// Fields
 		if ( $this->item->cck_type != '' && !$this->item->skip ) {
 			$pos								=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
@@ -137,10 +147,10 @@ class CCKViewSearch extends JViewLegacy
 			$this->fields[$pos][0]->variation	=	'hidden';
 			$this->fields[$pos][0]->match_mode	=	'exact';
 			$this->fields[$pos][0]->live_value	=	$this->item->cck_type;
-			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'search', $this->item, '', 'a.name != "cck"' );
+			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'search', $this->item, '', 'a.name != "cck" AND a.folder = '.(int)$folder );
 		} else {
 			$this->fields		=	Helper_Workshop::getFields( 'search', $this->item );
-			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'search', $this->item, '' );
+			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'search', $this->item, '', 'a.folder = '.(int)$folder );
 		}
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
@@ -171,7 +181,6 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Filters
 		$max_width				=	( JCck::on() ) ? '' : ' style="max-width:180px;"';
-		$default_f				=	( $this->item->id > 0 ) ? $this->item->folder : '';
 		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
 		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
@@ -179,9 +188,33 @@ class CCKViewSearch extends JViewLegacy
 		$options				=	Helper_Admin::getTypeOptions( true, false );
 		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"'.$max_width, 'value', 'text', $default_f, 'filter2' );
+		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"'.$max_width, 'value', 'text', $folder, 'filter2' );
 	}
 	
+	// prepareDisplay_Ajax2
+	function prepareDisplay_Ajax2( $isScoped )
+	{
+		$and		=	'';
+		$folder		=	( $this->item->id > 0 ) ? $this->item->folder : 1;
+		if ( $this->item->cck_type != '' ) {
+			$this->item->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->item->cck_type.'"' );
+		}
+		$location	=	( $this->item->storage_location == '' ) ? 'joomla_article' : $this->item->storage_location;
+		
+		// Fields
+		if ( !$isScoped ) {
+			$and	=	'(a.storage_location != "'.$location.'" AND a.storage != "none")';
+		} else {
+			$and	=	'(a.storage_location = "'.$location.'" OR a.storage = "none")';
+		}
+		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'search', $this->item, $and, 'a.folder != '.(int)$folder );
+		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
+		
+		// Languages (todo: optimize)
+		Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
+		JPluginHelper::importPlugin( 'cck_field' );
+	}
+
 	// setPosition
 	function setPosition( $name, $title = '' )
 	{

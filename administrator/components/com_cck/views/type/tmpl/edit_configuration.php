@@ -13,7 +13,6 @@ defined( '_JEXEC' ) or die;
 $P			=	'options_'.$this->item->client;
 $options	=	JCckDev::fromJSON( $this->item->$P );
 ?>
-
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<?php if ( $this->item->master == 'content' ) { ?>
 	<div class="seblod">

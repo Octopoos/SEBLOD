@@ -21,7 +21,6 @@ if ( JCck::on() ) {
     $attr   =   array( 'class'=>' edit', 'span'=>'' );
 }
 ?>
-
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">
         <div class="seblod">
