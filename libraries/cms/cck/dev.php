@@ -407,7 +407,7 @@ abstract class JCckDev
 		$js	=	'
 				(function ($){
 					JCck.Dev = {
-						reset: function() {'.$options['js']['submit'].'},
+						reset: function() {'.$options['js']['reset'].'},
 						submit: function() {'.$options['js']['submit'].'}
 					}
 					$(document).ready(function(){'.$options['js']['load'].'});
