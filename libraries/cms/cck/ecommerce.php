@@ -347,7 +347,7 @@ abstract class JCckEcommerce
 	{
 		$db			=	JFactory::getDbo();
 		$null		=	$db->getNullDate();
-		$now		=	JFactory::getDate()->toSql();
+		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
 
 		$zones[]	=	0;
 		
