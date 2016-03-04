@@ -128,8 +128,18 @@ abstract class JCck
 				$host2		=	$host.'/'.$path;
 			}
 			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
+				
+				foreach ( self::$_sites as $s ) {
+					$s->exclusions	=	array();
+					$json			=	json_decode( $s->configuration, true );
+
+					if ( isset( $json['exclusions'] ) && $json['exclusions'] != '' ) {
+						$s->exclusions	=	explode( '||', $json['exclusions'] );
+					}
+				}
 				foreach ( self::$_sites as $s ) {
 					if ( $s->aliases != '' ) {
 						$aliases	=	explode( '||', $s->aliases );
@@ -306,7 +316,7 @@ abstract class JCck
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.6.0.min.js' );
+				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
 				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {

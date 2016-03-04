@@ -62,11 +62,13 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</div>
 
     <div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_SITE_ALIASES' ); ?></div>
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_URLS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
             $aliases    =   JCckDev::fromSTRING( $this->item->aliases );
-            echo '<li>'.JCckDev::getForm( 'core_options', $aliases, $config, array( 'storage_field'=>'aliases' ) ).'</li>';
+            $exclusions =   JCckDev::fromSTRING( @$cfg['exclusions'] );
+            echo JCckDev::renderForm( 'core_options', $aliases, $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) );
+            echo JCckDev::renderForm( 'core_options', $exclusions, $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ) );
             ?>
         </ul>
     </div>

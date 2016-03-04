@@ -65,7 +65,39 @@ class plgSystemCCK extends JPlugin
 					}
 					// ---
 					$tag	=	$this->site_cfg->get( 'language' );
+					
 					if ( $tag ) {
+						$forced	=	false;
+						$path	=	JUri::getInstance()->getPath();
+						$length	=	strlen( $path );
+
+						if ( $path[$length - 1 ] != '/' ) {
+							$path	.=	'/';
+						}
+						if ( $path[0] != '/' ) {
+							$path	=	'/'.$path;
+						}
+						if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
+							foreach ( $this->site->exclusions as $excl ) {
+								$length	=	strlen( $excl );
+
+								if ( $excl[$length - 1 ] != '/' ) {
+									$excl	.=	'/';
+								}
+								if ( $excl[0] != '/' ) {
+									$excl	=	'/'.$excl;
+								}
+								$pos	=	strpos( $path, $excl );
+
+								if ( $pos !== false && $pos == 0 ) {
+									$forced	=	true;
+									break;
+								}
+							}
+						}
+						if ( $forced == true ) {
+							$tag	=	JFactory::getLanguage()->getDefault();
+						}
 						JFactory::getConfig()->set( 'language', $tag );
 						JFactory::getLanguage()->setLanguage( $tag );
 					}
@@ -140,7 +172,6 @@ class plgSystemCCK extends JPlugin
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
 			JCckToolbox::process( 'onAfterInitialise' );
 		}
-		
 		if ( $this->multisite !== true ) {
 			return;
 		}
@@ -536,86 +567,104 @@ class plgSystemCCK extends JPlugin
 		}
 		
 		// admin
-		if ( $app->isAdmin() && JFactory::getDocument()->getType() == 'html' ) {
-			
-			$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
-			$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
-			
-			switch ( $option ) {
-				case 'com_cck':
-				case 'com_cck_builder':
-				case 'com_cck_developer':
-				case 'com_cck_ecommerce':
-				case 'com_cck_exporter':
-				case 'com_cck_importer':
-				case 'com_cck_manager':
-				case 'com_cck_multilingual':
-				case 'com_cck_packager':
-				case 'com_cck_toolbox':
-				case 'com_cck_updater':
-				case 'com_cck_webservices':
-					$buffer	=	$this->_setBasics( $buffer, $option, $view );
-					break;
-				case 'com_postinstall':
-					$eid	=	$app->input->get( 'eid', 0 );
-					$eid2	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
-					if ( $eid && $eid == $eid2 ) {
-						$buffer	=	str_replace( 'com_cck', 'SEBLOD', $buffer );
-						$buffer	=	str_replace( 'option=SEBLOD', 'option=com_cck', $buffer );	
-					}
-					break;
-				case 'com_templates':
-					if ( $view == 'templates' || $layout == 'edit' ) {
+		if ( $app->isAdmin() ) {
+			$buffer		=	'';
+			$type		=	JFactory::getDocument()->getType();
+
+			if ( $type == 'html' ) {
+				$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
+				$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
+				
+				switch ( $option ) {
+					case 'com_cck':
+					case 'com_cck_builder':
+					case 'com_cck_developer':
+					case 'com_cck_ecommerce':
+					case 'com_cck_exporter':
+					case 'com_cck_importer':
+					case 'com_cck_manager':
+					case 'com_cck_multilingual':
+					case 'com_cck_packager':
+					case 'com_cck_toolbox':
+					case 'com_cck_updater':
+					case 'com_cck_webservices':
+						$buffer	=	$this->_setBasics( $buffer, $option, $view );
 						break;
-					}
-					$search		=	'#administrator/index.php\?option=com_templates&amp;task=style.edit&amp;id=(.*)">(.*)</a>#sU';
-					$list		=	JCckDatabase::loadObjectList( 'SELECT a.id, b.name FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.name != ""', 'id' );
-					preg_match_all( $search, $buffer, $matches );
-					if ( count( $matches[1] ) ) {
-						$i		=	0;
-						$style	=	'height:14px; color:#ffffff; background-color:#0088CC; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
-						foreach ( $matches[1] as $match ) {
-							if ( isset( $list[$match] ) ) {
-								$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';
-								$buffer		=	str_replace( $matches[0][$i], $replace, $buffer );
-							}
-							$i++;
+					case 'com_postinstall':
+						$eid	=	$app->input->get( 'eid', 0 );
+						$eid2	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
+						if ( $eid && $eid == $eid2 ) {
+							$buffer	=	str_replace( 'com_cck', 'SEBLOD', $buffer );
+							$buffer	=	str_replace( 'option=SEBLOD', 'option=com_cck', $buffer );	
 						}
-					}
-					break;
-				default:
-					$and		=	( $view ) ? ' AND ( a.view = "'.$view.'" OR a.view = "" )' : '';
-					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"'.$and );
-					$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout );
-					if ( count( $locations ) ) {
-						foreach ( $locations as $location ) {
-							$path	=	JPATH_SITE.'/plugins/cck_storage_location/'.$location->name.'/classes/integration.php';
-							if ( is_file( $path ) ) {
-								$data	=	array( 'doIntegration'=>false,
-												   'multilanguage'=>0,
-												   'options'=>new JRegistry( $location->options ),
-												   'replace_end'=>'"',
-												   'return_option'=>substr( $option, 4 ),
-												   'return_view'=>$view,
-												   'return'=>'',
-												   'search'=>'',
-												   'search_alt'=>''
-											);
-								require_once $path;
-								JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location->name.'_Integration', 'onCCK_Storage_LocationAfterRender', array( &$buffer, &$data, $uri ) );
-								if ( $data['doIntegration'] ) {
-									$list	=	JCckDatabase::loadObjectList( 'SELECT pk, cck FROM #__cck_core WHERE storage_location="'.$location->name.'"', 'pk' );
-									$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list );
+						break;
+					case 'com_templates':
+						if ( $view == 'templates' || $layout == 'edit' ) {
+							break;
+						}
+						$search		=	'#administrator/index.php\?option=com_templates&amp;task=style.edit&amp;id=(.*)">(.*)</a>#sU';
+						$list		=	JCckDatabase::loadObjectList( 'SELECT a.id, b.name FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.name != ""', 'id' );
+						preg_match_all( $search, $buffer, $matches );
+						if ( count( $matches[1] ) ) {
+							$i		=	0;
+							$style	=	'height:14px; color:#ffffff; background-color:#0088CC; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
+							foreach ( $matches[1] as $match ) {
+								if ( isset( $list[$match] ) ) {
+									$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';
+									$buffer		=	str_replace( $matches[0][$i], $replace, $buffer );
+								}
+								$i++;
+							}
+						}
+						break;
+					default:
+						$and		=	( $view ) ? ' AND ( a.view = "'.$view.'" OR a.view = "" )' : '';
+						$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"'.$and );
+						$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout );
+						if ( count( $locations ) ) {
+							foreach ( $locations as $location ) {
+								$path	=	JPATH_SITE.'/plugins/cck_storage_location/'.$location->name.'/classes/integration.php';
+								if ( is_file( $path ) ) {
+									$data	=	array( 'doIntegration'=>false,
+													   'multilanguage'=>0,
+													   'options'=>new JRegistry( $location->options ),
+													   'replace_end'=>'"',
+													   'return_option'=>substr( $option, 4 ),
+													   'return_view'=>$view,
+													   'return'=>'',
+													   'search'=>'',
+													   'search_alt'=>''
+												);
+									require_once $path;
+									JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location->name.'_Integration', 'onCCK_Storage_LocationAfterRender', array( &$buffer, &$data, $uri ) );
+									if ( $data['doIntegration'] ) {
+										$list	=	JCckDatabase::loadObjectList( 'SELECT pk, cck FROM #__cck_core WHERE storage_location="'.$location->name.'"', 'pk' );
+										$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list );
+									}
 								}
 							}
 						}
+						break;
+				}
+
+				if ( JCck::on() ) {
+					$app->setBody( $buffer );
+				} else {
+					JResponse::setBody( $buffer );
+				}
+			} elseif ( $option == 'com_cck' && $type == 'raw' ) {
+				if ( $layout == 'edit3' || $layout == 'edit4' ) {
+					$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
+					$buffer	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $buffer );
+					
+					if ( $buffer != '' ) {
+						if ( JCck::on() ) {
+							$app->setBody( $buffer );
+						} else {
+							JResponse::setBody( $buffer );
+						}	
 					}
-					break;
-			}
-			if ( JCck::on() ) {
-				$app->setBody( $buffer );
-			} else {
-				JResponse::setBody( $buffer );
+				}
 			}
 			
 			return;
