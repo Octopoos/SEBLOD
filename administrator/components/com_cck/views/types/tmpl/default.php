@@ -17,6 +17,7 @@ $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
+$hasDropdown	=	JCck::on();
 $label			=	strtolower( JText::_( 'COM_CCK_FIELDS' ) );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
@@ -143,12 +144,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<?php
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
+				if ( $hasDropdown ) {
+					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
 
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );	
+					if ( $item->versions ) {
+						JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+					}
+					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				}
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );			
 				?>
 				</div>
 			</td>
