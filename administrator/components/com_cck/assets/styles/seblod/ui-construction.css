@@ -41,8 +41,8 @@ div.seblod input[type="radio"].selector:checked{color: #f1f1f1 !important;}
 ul.sortable_header li{color: #ffffff !important;}
 ul.sortable_header li div.pane div{background-color: #00416a !important;border-left: 1px solid #00416a !important;border-right: 1px solid #00416a !important;border-top: 1px solid #00416a !important;}
 
-ul.sortable li.field div.drag{background: url(images/grip.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
-ul.sortable li.field div:hover.drag{background: url(images/grip.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+ul.sortable li.field div.drag{background: url(images/grip2.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip2.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
 ul.sortable li.field div.drag {cursor: move;height: 14px;position: absolute;right: 1px;top: 8px;width: 23px;}
 div#seblod-main ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
 div#seblod-main ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 0 transparent; background-size: cover;}
