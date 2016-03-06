@@ -181,6 +181,9 @@ div.seblod .adminformlist:not(.spe) label {
 	line-height: 23px;
 	height:30px;
 }
+div.seblod .adminformlist:not(.spe) label.inline {
+	clear: none;
+}
 div.seblod.horizontal .adminformlist label {
 	width: 70px;
 	text-align:right;

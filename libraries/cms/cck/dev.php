@@ -178,7 +178,7 @@ abstract class JCckDev
 				if ( isset( $options['customAttr'] ) ) {
 					$label		=	isset( $options['customAttrLabel'] ) ? $options['customAttrLabel'] : JText::_( 'COM_CCK_CUSTOM_ATTRIBUTES' );
 					$html		.=	'<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" />'
-								.	'<label for="toggle_attr" class="toggle_attr">'.$label.'</label>';
+								.	'<label for="toggle_attr" class="toggle_attr inline">'.$label.'</label>';
 					$attribs	=	'';
 					
 					if ( is_array( $options['customAttr'] ) ) {
@@ -262,12 +262,13 @@ abstract class JCckDev
 					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"',
 															  'value', 'text', '', 'fields_list' );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
+					$target	=	( is_string( $options['fieldPicker'] ) ) ? $options['fieldPicker'] : 'string[options]';
 					$js2	.=	'var cur = 9999; var isNew = '.$isNew.';
 								$("ul.adminformlist").on("change", "select#fields_list", function() {
 									var val = $(this).val();
 									if (val) {
 										$("#sortable_core_options>div:last .button-add-core_options").click();
-										$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").val(val);
+										$("#sortable_core_options>div:last input:text[name=\''.$target.'[]\']").val(val);
 										'.$js3.'
 									}
 									if (isNew) {
