@@ -632,7 +632,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path,
 									   'file_name'=>$ImageCustomName, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, //'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field' => $field->storage_field, 'storage_field2'=>( $field->storage_field2 ? $field->storage_field2 : $field->name ), 
-									   'storage_table'=>$field->storage_table, 'file_title'=>$imageTitle, 'file_descr'=>$imageDesc );
+									   'storage_table'=>$field->storage_table, 'file_title'=>$imageTitle, 'file_descr'=>$imageDesc);
 			parent::g_addProcess( 'afterStore', self::$type, $config, $process_params );
 		}
 		

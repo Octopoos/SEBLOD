@@ -86,6 +86,8 @@ if ( JFile::upload( $tmp_name, $location ) ) {
 	$options['thumb0_width']	=	$options['image_width'];
 	$options['thumb0_height']	=	$options['image_height'];
 	
+	$watermark = JPATH_SITE . $options['image_watermark'];
+	
 	for ( $i = 0; $i < $thumb_count; $i++ ) {
 		$format_name	=	'thumb'.$i.'_process';
 		$width_name		=	'thumb'.$i.'_width';
@@ -94,10 +96,14 @@ if ( JFile::upload( $tmp_name, $location ) ) {
 		if ( $i == 0 && $src_w == $options[$width_name] && $src_h == $options[$height_name] ) {
 			continue;
 		}
-		if ( trim( $options[$format_name] ) ) {
-			$image->createThumb( '', $i, $options[$width_name], $options[$height_name], $options[$format_name] );
+		if (trim($options[$format_name])) {
+			$image->createThumb('', $i, $options[$width_name], $options[$height_name], $options[$format_name], $watermark, 0.8);
 		}
 	}
+	/* Add watermark to main picture * */
+	$watermark_obj = new JCckDevImage($watermark);
+	$image->createWatermark('', $watermark_obj, 0.8);
+	/*	 * *** */
 } else {
 	$value	=	'';
 	if ( $file_title == '' && $file_descr == '' ) {
