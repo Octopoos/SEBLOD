@@ -203,9 +203,10 @@ Helper_Display::quickCopyright();
 				data: $("#adminForm").serialize()+mydata,
 				type: "POST",
 				url: 'index.php?option=com_cck&task='+task,
-				beforeSend:function(){ $("#loading").html(loading); $(elem).html(""); },
+				beforeSend:function(){ $("#loading").html(loading); $(elem).html(""); JCck.Dev.trash=""; },
 				success: function(response){
 					$("#loading").html(""); $(elem).hide().html(response).fadeIn(88); JCck.Dev.setEdit2(uix); $("#client label").removeClass("off");
+					var cur = $("#myid").val(); var data = "id="+cur+"&client="+client+"&layer="+layer;
 					JCck.Dev.ajaxLayer("type", "edit3", "#sortable3", data, uix);
 				},
 				error:function(){ $(elem).html("<div><strong>Oops!</strong> Try to close the page & re-open it properly.</div>"); }
@@ -290,9 +291,10 @@ Helper_Display::quickCopyright();
 				$("#scroll").height(wh-wo);
 			}
 			$(window).scroll(function() {
-				var sidebarPos = $("#seblod-sidebar").offset();
+				var $sidebar = $("#seblod-sidebar");
 				var winScroll = $(window).scrollTop();
-				if (winScroll > sidebarPos.top) {
+				var diff = ( $sidebar.length ) ? $sidebar.offset().top : 0;
+				if (winScroll > diff) {
 					JCck.Dev.setSidebar();
 				} else {
 					if ($("#seblod-sideblock").css('position') == 'fixed') {
@@ -342,7 +344,6 @@ Helper_Display::quickCopyright();
 		},
 		setSidebar: function() {
 			var w = $("#seblod-sideblock").width();
-			var sidebarPos = $("#seblod-sidebar").offset();
 			var winScroll = $(window).scrollTop();
 			var mainHeight = $("#seblod-main").height();
 			var sidebarHeight = $("#seblod-sideblock").height();
@@ -352,7 +353,9 @@ Helper_Display::quickCopyright();
 					$("#seblod-sidebar").addClass('passive');
 				}
 			} else {
-				if ( winScroll > sidebarPos.top ) {
+				var $sidebar = $("#seblod-sidebar");
+				var diff = ( $sidebar.length ) ? $sidebar.offset().top : 0;
+				if ( winScroll > diff ) {
 					var mainPos = $("#seblod-main").offset();
 					if ( $("#seblod-sideblock").css('position') != 'fixed' ) {
 						$("#seblod-sideblock").css({'position' : 'fixed'});
