@@ -631,6 +631,9 @@ class JCckPluginField extends JPlugin
 			$field->label	=	'';
 		}
 		if ( $config['doTranslation'] ) {
+			if ( $field->label == '&nbsp;' ) {
+				$field->label	=	'Nbsp';
+			}
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
@@ -664,8 +667,11 @@ class JCckPluginField extends JPlugin
 			$field->label	=	'';
 		}
 		if ( $config['doTranslation'] ) {
+			if ( $field->label == '&nbsp;' ) {
+				$field->label	=	'Nbsp';
+			}
 			if ( trim( $field->label ) ) {
-				$field->label		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
+				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
 			if ( trim( $field->description ) ) {
 				$desc	=	trim( strip_tags( $field->description ) );
@@ -751,8 +757,11 @@ class JCckPluginField extends JPlugin
 			$field->label	=	'';
 		}
 		if ( $config['doTranslation'] ) {
+			if ( $field->label == '&nbsp;' ) {
+				$field->label	=	'Nbsp';
+			}
 			if ( trim( $field->label ) ) {
-				$field->label		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
+				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
 			if ( trim( $field->description ) ) {
 				$desc	=	trim( strip_tags( $field->description ) );
@@ -783,8 +792,11 @@ class JCckPluginField extends JPlugin
 			$field->label	=	'';
 		}
 		if ( $config['doTranslation'] ) {
+			if ( $field->label == '&nbsp;' ) {
+				$field->label	=	'Nbsp';
+			}
 			if ( trim( $field->label ) ) {
-				$field->label		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
+				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
 			if ( trim( $field->description ) ) {
 				$desc	=	trim( strip_tags( $field->description ) );
