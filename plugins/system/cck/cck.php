@@ -14,13 +14,21 @@ defined( '_JEXEC' ) or die;
 class plgSystemCCK extends JPlugin
 {
 	protected $content_objects	=	array();
+	protected $multisite		=	null;
+	protected $restapi			=	null;
+	protected $site				=	null;
+	protected $site_cfg			=	null;
 	
-	// plgSystemCCK
-	function plgSystemCCK( &$subject, $config )
+	// __construct
+	public function __construct( &$subject, $config )
 	{
+		parent::__construct( $subject, $config );
+
 		$app	=	JFactory::getApplication();
+
 		if ( $app->isAdmin() ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
+
 			if ( file_exists( JPATH_SITE.'/plugins/cck_storage_location/joomla_user_note/joomla_user_note.php' ) ) {
 				$this->content_objects['joomla_user_note']	=	1;
 			}
@@ -43,21 +51,27 @@ class plgSystemCCK extends JPlugin
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
+			
 			if ( JCck::isSite() ) {
 				$this->site	=	JCck::getSite();
 				$this->site_cfg->loadString( $this->site->configuration );
+				
 				if ( $app->isSite() && $this->site ) {
 					// --- Redirect to Homepage
 					$homepage	=	$this->site_cfg->get( 'homepage', 0 );
+					
 					if ( $homepage > 0 ) {
 						$current	=	JUri::current( true );
 						$len		=	strlen( $current );
+						
 						if ( $current[$len - 1] == '/' ) {
 							$current	=	substr( $current, 0, -1 );
 						}
 						$current	=	str_replace( array( 'http://', 'https://' ), '', $current );
+						
 						if ( $current == $this->site->host ) {
 							$redirect_url	=	JRoute::_( 'index.php?Itemid='.$homepage );
+							
 							if ( $redirect_url != JUri::root(true).'/' ) {
 								JFactory::getApplication()->redirect( $redirect_url );	
 							}
@@ -104,9 +118,8 @@ class plgSystemCCK extends JPlugin
 				}
 			}
 		}
-		parent::__construct( $subject, $config );
 	}
-	
+
 	// buildRule
 	public function buildRule( &$router, &$uri )
 	{
