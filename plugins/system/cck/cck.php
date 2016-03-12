@@ -440,9 +440,15 @@ class plgSystemCCK extends JPlugin
 							if ( !$type ) {
 								return;
 							}
-							$return	=	$app->input->getBase64( 'return', '' );
-							$return	=	$return ? '&return='.$return : '';
-							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId.$return;
+							$itemId2	=	$options->get( 'profile_itemid', 0 );
+
+							if ( !$itemId2 ) {
+								$itemId2	=	$itemId;
+							}
+							$return		=	$app->input->getBase64( 'return', '' );
+							$return		=	$return ? '&return='.$return : '';
+							$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId2.$return;
+							$url		=	JRoute::_( $url );
 						} else {
 							require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.php';
 							$sef		=	0;
