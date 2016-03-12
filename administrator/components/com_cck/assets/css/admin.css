@@ -18,7 +18,7 @@ div.seblod-less.cpanel_news.full{width:600px;}
 div.cpanel_news.compact{width:350px;}
 div.seblod-less.cpanel_news.compact{width:380px;}
 div.seblod-less.cpanel_news.compact div.cpanel.compact{width:270px;}
-div.seblod.beta{background-image: url("../images/beta.png"); background-position:0px 0px; background-repeat:no-repeat;}
+div.seblod.beta{background-image: url("../images/beta.png"); background-position:0px 0px; background-repeat:no-repeat; background-size: 42px;}
 div.seblod.first.cpanel_news{margin-top:0 !important;}
 div.seblod.first.cpanel_news .legend,
 div.seblod.first.cpanel_news ul.adminformlist{margin:0;}
