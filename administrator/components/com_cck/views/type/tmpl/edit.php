@@ -176,7 +176,7 @@ Helper_Display::quickCopyright();
 				},
 				success: function(response){
 					if (layout == "edit2") {
-						$("#loading").html(""); $(elem).hide().html(response).fadeIn(88); JCck.Dev.setEdit2(uix);
+						$("#loading").html(""); $(elem).hide().html(response).fadeIn(88); JCck.Dev.setEdit2(uix); $("#client label").removeClass("off");
 						// $("#layer_fields").css({"left":(($("#content").width() - ( $("#layers .span8").width() + $("#layers .span4").width() + 9 ))/2)+"px"});
 						JCck.Dev.ajaxLayer("type", "edit3", "#sortable3", mydata, uix);
 					} else if (layout == "edit3") {
@@ -442,6 +442,7 @@ Helper_Display::quickCopyright();
 		var uix = '<?php echo $this->uix; ?>';
 		var client = $("#"+$("#client .selected").attr('for')).val(); var layer = $("#"+$("#layer .selected").attr('for')).val();
 		var name = $("#name").val();
+		$("#client label").addClass("off");
 		$.cookie("cck_type"+name+"_client", client);
 		var cur = $("#myid").val(); var data = "id="+cur+"&client="+client+"&layer="+layer;
 		JCck.Dev.ajaxLayer("type", "edit2", "#layers", data, uix);

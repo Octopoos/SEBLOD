@@ -163,7 +163,7 @@ Helper_Display::quickCopyright();
 				},
 				success: function(response){
 					if (layout == "edit2") {
-						$("#loading").html(""); $(elem).hide().html(response).fadeIn(88); JCck.Dev.setEdit2(uix);
+						$("#loading").html(""); $(elem).hide().html(response).fadeIn(88); JCck.Dev.setEdit2(uix); $("#client label").removeClass("off");
 						// $("#layer_fields").css({"left":(($("#content").width() - ( $("#layers .span8").width() + $("#layers .span4").width() + 9 ))/2)+"px"});
 						JCck.Dev.ajaxLayer("search", "edit3", "#sortable3", mydata, uix);
 					} else if (layout == "edit3") {
@@ -452,6 +452,7 @@ Helper_Display::quickCopyright();
 			if (client == "item") {	client = "list"; $("#client4_label").addClass("selected");	$("#client5_label").removeClass("selected"); }
 		}
 		var name = $("#name").val();
+		$("#client label").addClass("off");
 		$.cookie("cck_search"+name+"_client", client);
 		var cur = $("#myid").val(); var data = "id="+cur+"&client="+client+"&layer="+layer+"&skip=<?php echo $this->item->skip; ?>";
 		JCck.Dev.ajaxLayer("search", "edit2", "#layers", data, uix);
