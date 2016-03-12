@@ -308,7 +308,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			return $field->typo;
 		} else {			
 			$doc	=	JFactory::getDocument();
-			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 	
 			$count	=	count( $field->value );
 			$html	=	'';
@@ -361,9 +361,9 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$doc	=	JFactory::getDocument();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/'.self::$type.'.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/style2.css'.'" type="text/css" />';
 		} else {
-			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 		}
 
 		$count	=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
@@ -552,13 +552,13 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$rId				=	$config['rendering_id'];
 		
 		if ( $field->bool3 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"><span class="icon-minus"></span></div>';
 		}
 		if ( $field->bool2 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"><span class="icon-plus"></span></div>';
 		}
 		if ( $field->bool4 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"><span class="icon-circle"></span></div>';
 		}
 		
 		if ( $size_group == 1 ) {
