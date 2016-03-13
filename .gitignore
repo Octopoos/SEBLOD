@@ -1898,6 +1898,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_store.sys.ini
 /plugins/cck_storage_location/cck_ecommerce_store/*
 
+######## SEBLOD Plug-ins >> Object >> SEBLOD eCommerce Subscription
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_ecommerce_subscription.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_ecommerce_subscription.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_subscription.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_subscription.sys.ini
+/plugins/cck_storage_location/cck_ecommerce_subscription/*
+
 ######## SEBLOD Plug-ins >> Object >> SEBLOD Content Type
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_type.ini
