@@ -11,30 +11,12 @@
 defined( '_JEXEC' ) or die;
 
 // JCckVersion
-final class JCckVersion
+final class JCckVersion extends JCckVersionObject
 {
 	public $RELEASE = '3.8';
 	
 	public $DEV_LEVEL = '0';
 
 	public $DEV_STATUS = 'RC-7';
-	
-	// getDevStatus
-	public function getDevStatus()
-	{
-		return $this->DEV_STATUS;
-	}
-
-	// getFullVersion
-	public function getFullVersion()
-	{
-		return $this->RELEASE . '.' . $this->DEV_LEVEL.( $this->DEV_STATUS ? ' '.$this->DEV_STATUS : '' );
-	}
-
-	// getShortVersion
-	public function getShortVersion()
-	{
-		return $this->RELEASE . '.' . $this->DEV_LEVEL;
-	}
 }
 ?>
