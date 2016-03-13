@@ -44,6 +44,7 @@ input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; bor
 .pagination.pagination-toolbar{padding-top:4px;}
 .pagination-toolbar .pagination-list li span[class^="icon-"],
 .pagination-toolbar .pagination-list li span[class*=" icon-"]{position:relative; top:2px;}
+th.caret-fix > a:first-child > span{float:left; position:relative; left:3px;}
 
 /* switch linkage */
 .switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}

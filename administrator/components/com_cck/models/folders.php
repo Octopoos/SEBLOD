@@ -218,7 +218,7 @@ class CCKModelFolders extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'lft', 'asc' );
+		parent::populateState( 'a.lft', 'asc' );
 	}
 }
 ?>

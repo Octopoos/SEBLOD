@@ -254,7 +254,7 @@ class CCKModelSearchs extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'title', 'asc' );
+		parent::populateState( 'a.title', 'asc' );
 	}
 }
 ?>

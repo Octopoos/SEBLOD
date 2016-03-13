@@ -21,9 +21,9 @@ class CCKViewFolders extends JCckBaseLegacyViewList
 	{
 		return array(
 					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'lft'=>JText::_( 'COM_CCK_ORDERING' ),
+					'a.lft'=>JText::_( 'COM_CCK_ORDERING' ),
 					'a.published'=>JText::_( 'COM_CCK_STATUS' ),
-					'title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.title'=>JText::_( 'COM_CCK_TITLE' )
 				);
 	}
 

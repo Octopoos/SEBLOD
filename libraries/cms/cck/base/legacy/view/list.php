@@ -43,7 +43,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	{
 		return array(
 					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.title'=>JText::_( 'COM_CCK_TITLE' )
 				);
 	}
 	
