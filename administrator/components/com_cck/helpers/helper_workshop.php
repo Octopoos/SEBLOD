@@ -391,7 +391,7 @@ class Helper_Workshop
 											   'not_alpha'=>JHtml::_( 'select.option', 'not_alpha', JText::_( 'COM_CCK_MATCH_NOT_BEGINNING_WITH' ) ),
 											   'not_empty'=>JHtml::_( 'select.option', 'not_empty', JText::_( 'COM_CCK_MATCH_NOT_EMPTY' ) ),
 											   'not_zeta'=>JHtml::_( 'select.option', 'not_zeta', JText::_( 'COM_CCK_MATCH_NOT_ENDING_WITH' ) ),
-											   'not_zeta'=>JHtml::_( 'select.option', 'not_equal', JText::_( 'COM_CCK_MATCH_NOT_EQUAL' ) ),
+											   'not_equal'=>JHtml::_( 'select.option', 'not_equal', JText::_( 'COM_CCK_MATCH_NOT_EQUAL' ) ),
 											   'not_null'=>JHtml::_( 'select.option', 'not_null', JText::_( 'COM_CCK_MATCH_NOT_NULL' ) ),
 											   'not_any_exact'=>JHtml::_( 'select.option', 'not_any_exact', JText::_( 'COM_CCK_MATCH_NOT_ANY_WORDS_EXACT' ) ),
 											   'not_like'=>JHtml::_( 'select.option', 'not_like', JText::_( 'COM_CCK_MATCH_NOT_LIKE' ) ),
