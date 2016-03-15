@@ -293,7 +293,11 @@ foreach ( $fields as $field ) {
 
 // Merge
 if ( count( $config['fields'] ) ) {
-	$fields				=	array_merge( $fields, $config['fields'] );	// Test: a loop may be faster.
+	foreach ( $config['fields'] as $k=>$v ) {
+		if ( $v->restriction != 'unset' ) {
+			$fields[$k]	=	$v;
+		}
+	}
 	$config['fields']	=	NULL;
 	unset( $config['fields'] );
 }

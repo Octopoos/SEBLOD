@@ -146,7 +146,11 @@ if ( count( $fields ) ) {
 
 // Merge
 if ( count( $config['fields'] ) ) {
-	$fields				=	array_merge( $fields, $config['fields'] );	// Test: a loop may be faster.
+	foreach ( $config['fields'] as $k=>$v ) {
+		if ( $v->restriction != 'unset' ) {
+			$fields[$k]	=	$v;
+		}
+	}
 	$config['fields']	=	NULL;
 	unset( $config['fields'] );
 }
@@ -205,6 +209,11 @@ if ( isset( $processing[$event] ) ) {
 			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 		}
 	}
+}
+
+// Stop here if an error occured
+if ( $config['error'] !== false ) {
+	return $config;
 }
 
 // Validate
