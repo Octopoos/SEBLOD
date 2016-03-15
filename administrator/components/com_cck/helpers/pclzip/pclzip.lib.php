@@ -25,6 +25,8 @@
 // $Id: pclzip.lib.php 2 2011-02-24 03:47:20Z Saba $
 // --------------------------------------------------------------------------------
 
+  defined( '_JEXEC' ) or die;
+  
   // ----- Constants
   if (!defined('PCLZIP_READ_BLOCK_SIZE')) {
     define( 'PCLZIP_READ_BLOCK_SIZE', 2048 );

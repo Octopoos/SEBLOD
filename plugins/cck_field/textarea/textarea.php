@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -77,14 +77,23 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
 		$rows	=	( $field->rows ) ? $field->rows : 3;
-		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
+		$attr	=	'class="'.$class.'"'.$maxlen;
+
+		if ( $field->attributes != '' ) {
+			$attr	.=	' '.$field->attributes;
+		}
 		$form	= 	'<textarea id="'.$id.'" name="'.$name.'" cols="'.$cols.'" rows="'.$rows.'" '.$attr.'>'.$value.'</textarea>';
+		$form 	.=	( $field->bool4 ) ? self::_checkRemaingCharacters( $id, $field->maxlength ) : '';
 		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			if ( $field->script ) {
+				parent::g_addScriptDeclaration( $field->script );
+			}
 		} else {
-			$hidden	=	'<textarea class="inputbox" style="display: none;" id="'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
+			$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
 		}
 		$field->value	=	$value;
@@ -153,6 +162,24 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
+	// _checkRemaingCharacters
+	protected static function _checkRemaingCharacters( $id, $length = 0 )
+	{
+		if ( !$length ) {
+			return '';
+		}
+
+		$js	=	'$("#'.$id.'").keyup(function() {
+					if ( $(this).attr("maxlength") != "undefinded" ) {
+							$("#chars-'.$id.' span").html($(this).attr("maxlength")-$(this).val().length);
+					}
+				}).trigger("keyup");';
+
+		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) {'.$js.'});' );
+		
+		return '<div id="chars-'.$id.'">'.JText::sprintf( 'COM_CCK_N_CHARACTERS_REMAINING', $length ).'</div>';
+	}
+
 	// _br2nl
 	protected static function _br2nl( $text )
 	{

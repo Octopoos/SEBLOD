@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -39,17 +39,20 @@ $preconfig['client']		=	'search';
 $preconfig['formId']		=	$formId;
 $preconfig['submit']		=	'JCck.Core.submit_'.$uniqId;
 $preconfig['search']		=	$params->get( 'search', '' );
+$preconfig['search2']		=	$params->get( 'search2', '' );
 $preconfig['itemId']		=	'';
 $preconfig['task']			=	'search';
-$preconfig['show_form']		=	1;
+$preconfig['show_form']		=	'0';
 $preconfig['auto_redirect']	=	0;
 $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
+$limitstart	=	(int)$params->get( 'limitstart', '' );
+$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : -1;
 $live		=	urldecode( $params->get( 'live' ) );
+$pagination	=	-2;
 $variation	=	$params->get( 'variation' );
-$limitstart	=	-1;
 
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
@@ -58,8 +61,17 @@ include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
 if ( !is_object( @$options ) ) {
 	$options	=	new JRegistry;
 }
-$description	=	'';
-$show_list_desc	=	$params->get( 'show_list_desc' );
+$description		=	'';
+$show_list_desc		=	$params->get( 'show_list_desc' );
+$show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+if ( $show_list_title == '' ) {
+	$show_list_title	=	$options->get( 'show_list_title', '1' );
+	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$options->get( 'class_list_title' );
+} elseif ( $show_list_title ) {
+	$tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$params->get( 'class_list_title' );
+}
 if ( $show_list_desc == '' ) {
 	$show_list_desc	=	$options->get( 'show_list_desc', '1' );
 	$description	=	@$search->description;
@@ -90,12 +102,19 @@ if ( $description != '' ) {
 		}
 	}
 }
-$show_more			=	$params->get( 'show_link_more', 0 );
+$show_more			=	$params->get( 'show_more', 1 );
+$show_link_more		=	$params->get( 'show_link_more', 0 );
 $show_more_class	=	$params->get( 'link_more_class', '' );
 $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
+$show_more_text		=	$params->get( 'link_more_text', '' );
+if ( $show_more_text == '' ) {
+	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
+} elseif ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
+}
 $show_more_link		=	'';
-if ( $show_more ) {
-	$show_more_link	=	'index.php?Itemid='.$show_more;
+if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && $total_items > $preconfig['limit2'] ) ) && $show_link_more ) {
+	$show_more_link	=	'index.php?Itemid='.$show_link_more;
 	$show_more_link	=	JRoute::_( $show_more_link );
 	$show_more_vars	=	$params->get( 'link_more_variables', '' );
 	if ( $show_more_vars ) {
@@ -105,7 +124,6 @@ if ( $show_more ) {
 		}
 	}
 }
-
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';

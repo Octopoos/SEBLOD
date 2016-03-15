@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,6 +42,10 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 			$mode	=	$field->bool ? 'module' : 'position';
 			$style	=	$field->style ? ','.$field->style : '';
 			$value	=	'{load'.$mode.' '.$field->defaultvalue.$style.'}';
+
+			if ( $field->bool2 ) {
+				$value	=	JHtml::_( 'content.prepare', $value );
+			}
 		}
 		
 		// Set
@@ -57,9 +61,25 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
+		// Init
+		$form		=	'';
+		$value		=	'';
+
+		// Prepare
+		if ( $field->defaultvalue ) {
+			$mode	=	$field->bool ? 'module' : 'position';
+			$style	=	$field->style ? ','.$field->style : '';
+			$form	=	'{load'.$mode.' '.$field->defaultvalue.$style.'}';
+			$value	=	$field->defaultvalue;
+
+			if ( $field->bool2 ) {
+				$form	=	JHtml::_( 'content.prepare', $form );
+			}
+		}
+
 		// Set
-		$field->form	=	'';
-		$field->value	=	'';
+		$field->form	=	$form;
+		$field->value	=	$value;
 	}
 	
 	// onCCK_FieldPrepareSearch

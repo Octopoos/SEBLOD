@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -34,6 +34,20 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
+	{
+		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
+		/*
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+		*/
+		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+		
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
+	}
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -57,6 +71,18 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		$config['doTranslation']	=	$doTranslation;
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -224,7 +250,10 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		}
 		
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$attr	=	'class="'.$class.'" size="1"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		if ( $value != '' ) {
+			$class	.=	' has-value';
+		}
+		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {
 			if ( $attrib ) {

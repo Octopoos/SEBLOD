@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 // Template
 $idx			=	( isset( $config['idx'] ) ) ? $config['idx'] : '_';
+$isInfinite		=	$config['infinite'];
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
 if ( ! $templateStyle ) {
@@ -47,6 +48,9 @@ if ( isset( $templateStyle->params['cck_client_item'] ) ) {
 	}
 }
 if ( $go_for_item || $go_for_both ) {
+	if ( isset( $app->cck_idx ) ) {
+		$app->cck_idx[0]	=	true;
+	}
 	$client			=	'item';
 	$fields			=	CCK_List::getFields_Items( $search->name, $client, $access );
 	$target_f		=	'fields';
@@ -104,7 +108,7 @@ if ( $go_for_item || $go_for_both ) {
 }
 
 // Finalize
-$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+$infos			=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'content', $search->name, 'list', $positions, $positions_p, $infos );
 $data			=	$doc->render( false, $rparams );
 ?>

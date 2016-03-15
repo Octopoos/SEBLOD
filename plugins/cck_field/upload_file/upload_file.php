@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -31,16 +31,63 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$data['json']['options2']['path']		=	trim( $data['json']['options2']['path'] );
 		
-		jimport( 'joomla.filesystem.folder' );
-		if ( ! JFolder::exists( JPATH_SITE.'/'.$data['json']['options2']['path'] ) ) {
-			JFolder::create( JPATH_SITE.'/'.$data['json']['options2']['path'] );
-			$buffer	=	'<!DOCTYPE html><title></title>';
-			JFile::write( JPATH_SITE.'/'.$data['json']['options2']['path'].'/'.'index.html', $buffer );
-		}
+		JCckDevHelper::createFolder( JPATH_SITE.'/'.$data['json']['options2']['path'] );
 		
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		$value_json			=	JCckDev::fromJSON( $value );
+		if ( $value == '' || isset( $value_json['file_location'] ) && $value_json['file_location'] == '' ) {
+			return;
+		}
+		
+		// Init
+		$value_json			=	JCckDev::fromJSON( $value );
+		$options2			=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value			=	( trim($value_json['file_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['file_location'] ) ;
+			$file_name		=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value			=	( trim($value) == '' ) ? trim($field->defaultvalue) : trim( $value ) ;
+			$file_name		=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		$file		=	$value;
+		$path		=	@$options2['path'];
+		if ( @$options2['storage_format'] ) {
+			$path	.=	( @$options2['path_content'] ) ? $config['pk'].'/' : '';
+			$file	=	$path.$value;
+		}
+		
+		// Process
+		if ( $file != '' && JFile::exists( JPATH_SITE.'/'.$file ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+				}
+			} else {
+				if ( JFile::delete( JPATH_SITE.'/'.$file ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -97,6 +144,29 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$field->value			=	$value;
 	}
 	
+	// onCCK_FieldPrepareDownload
+	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+
+		// Path Folder
+		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
+		$file		=	'';
+		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
+			$file	.=	$f_opt2['path'];
+			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
+			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
+		}
+		$file		.=	$field->value;
+
+		$field->filename	=	$file;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
@@ -239,16 +309,23 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
+			$more	=	'';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
-			$link	=	'javascript: SqueezeBox.fromElement(\''.JURI::root().$value2.'\', {handler: \'image\'});';
+			if ( isset( $config['id'] ) && $config['id'] ) {
+				$link	=	JURI::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
+				$target	=	'';
+			} else {
+				$link	=	JURI::root().$value2;
+				$target	=	'target="_blank"';
+			}
 			$title	=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
 			if ( $options2['preview'] == 8 ) {
 				$label		=	'';
 				$preview	=	'<span class="cck_preview">'.$title.'</span>';
 			} else if ( $options2['preview'] == 1 ) {
-				$preview	=	'<a href="'.JURI::root().$value2.'" target="_blank" title="'.$value['file_title'].'"><img src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
+				$preview	=	'<a href="'.$link.'"'.$target.' title="'.$value['file_title'].'"><img src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
 			} else {
-				$preview	=	'<a class="cck_preview" href="'.JURI::root().$value2.'" target="_blank" title="'.$value['file_title'].'">'.$title.'</a>';
+				$preview	=	'<a class="cck_preview" href="'.$link.'"'.$target.' title="'.$value['file_title'].'">'.$title.'</a>';
 			}
 			$preview	=	self::_addFormPreview( $id, $label, $preview, 'upload_file' );
 			$form		.=	$preview;
@@ -297,7 +374,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		
 		// Set
 		$field->form		=	$form;
-		$field->match_mode	=	'not_empty';
+		
+		if ( $value != '' ) {
+			$field->match_mode	=	'not_empty';
+		} else {
+			$field->match_mode	=	'';
+		}
 		$field->type		=	'checkbox';
 		$field->value		=	$value;
 		
@@ -408,7 +490,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			}
 		}
 		// Short Format Path
-		if ( $options2['storage_format'] ) {
+		if ( @$options2['storage_format'] ) {
 			$itemPath	=	$itemPrePath.$itemPath;
 
 			if ( strrpos( $item_custom_dir, '.') > 0 ) {

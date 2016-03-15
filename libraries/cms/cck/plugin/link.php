@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -91,17 +91,61 @@ class JCckPluginLink extends JPlugin
 		}
 		if ( $custom != '' && strpos( $custom, '$uri->get' ) !== false ) {
 			$matches	=	'';
-			$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
+			$search		=	'#([a-zA-Z0-9_]*)=\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 			preg_match_all( $search, $custom, $matches );
-			if ( count( $matches[1] ) ) {
-				foreach ( $matches[1] as $k=>$v ) {
-					$variable	=	$matches[2][$k];
+			
+			if ( count( $matches[2] ) ) {
+				foreach ( $matches[2] as $k=>$v ) {
+					$variable	=	$matches[3][$k];
+					
 					if ( $v == 'Current' ) {
 						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
-						$custom		=	str_replace( $matches[0][$k], $request, $custom );						
+						$custom		=	str_replace( $matches[0][$k], $matches[1][$k].'='.$request, $custom );						
+					} elseif ( $v == 'Array' ) {
+						$name				=	$field->name;
+						$value				=	'';
+						$custom_v			=	'';
+						static $custom_vars	=	array();
+						
+						if ( !isset( $custom_vars[$name] ) ) {
+							$custom_vars[$name]	=	explode( '&', $custom );
+						}
+						if ( count( $custom_vars[$name] ) ) {
+							foreach ( $custom_vars[$name] as $custom_var ) {
+								if ( strpos( $custom_var, $matches[0][$k] ) !== false ) {
+									$custom_v	=	substr( $custom_var, 0, strpos( $custom_var, '=' ) );
+								}
+							}
+						}
+						if ( $custom_v != '' ) {
+							$values		=	$app->input->get( $variable, '', 'array' );
+							if ( is_array( $values ) && count( $values ) ) {
+								foreach ( $values as $val ) {
+									$value	.=	'&'.$custom_v.'[]='.$val;
+								}
+								$value	=	substr( $value, 1 );
+							}
+						}
+						$pos		=	strpos( $custom, '&'.$matches[0][$k] );
+						
+						if ( $value == '' ) {
+							$pre	=	( $pos !== false ) ? '&' : '';
+						} else {
+							$pre	=	( $pos !== false && $pos == 0 ) ? '&' : '';
+						}
+						$custom		=	str_replace( $pre.$matches[0][$k], $value, $custom );
 					} else {
+						$pos		=	strpos( $custom, '&'.$matches[0][$k] );
 						$request	=	'get'.$v;
-						$custom		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $custom );
+						$result		=	urlencode( $app->input->$request( $variable, '' ) );
+						
+						if ( $result == '' ) {
+							$pre	=	( $pos !== false ) ? '&' : '';
+							$custom	=	str_replace( $pre.$matches[0][$k], '', $custom );
+						} else {
+							$pre	=	( $pos !== false && $pos == 0 ) ? '&' : '';
+							$custom	=	str_replace( $pre.$matches[0][$k], $matches[1][$k].'='.$result, $custom );
+						}
 					}
 				}
 			}
@@ -122,7 +166,7 @@ class JCckPluginLink extends JPlugin
 				$replace				=	$fields[$fieldname]->{$target};
 				$replace				=	JCckDev::toSafeID( $replace );
 			} else {
-				$replace				=	$fields[$fieldname]->{$target};
+				$replace				=	urlencode( $fields[$fieldname]->{$target} );
 			}
 			$fields[$name]->link        =	str_replace( $process['matches'][0][$k], $replace, $fields[$name]->link );
 			if ( isset( $fields[$name]->form ) ) {
@@ -175,34 +219,42 @@ class JCckPluginLink extends JPlugin
 	{
 		if ( is_array( $field->value ) ) {
 			foreach ( $field->value as $f ) {
-				$target		=	$f->typo_target;
-				if ( isset( $f->link ) ) {
-					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-					$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
-					$attr			=	( $attr != '' ) ? ' '.$attr : '';
-					
-					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+				if ( is_object( $f ) ) {
+					if ( isset( $f->link ) ) {
+						$target			=	$f->typo_target;
+
+						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
+						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
+						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
+						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
+						$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
+						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
+						$attr			=	( $attr != '' ) ? ' '.$attr : '';
+						
+						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+					}
 				}
 			}
 		} elseif ( isset( $field->values ) && count( $field->values ) ) {
 			$html	=	'';
 			foreach ( $field->values as $f ) {
-				$target		=	$f->typo_target;
-				if ( isset( $f->link ) ) {
-					$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-					$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-					$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-					$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-					$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-					$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
-					$attr			=	( $attr != '' ) ? ' '.$attr : '';
-					
-					$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
-					$html			.=	$f->html.', ';
+				if ( is_object( $f ) ) {
+					if ( isset( $f->link ) ) {
+						$target			=	$f->typo_target;
+
+						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
+						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
+						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
+						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
+						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
+						$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
+						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
+						$attr			=	( $attr != '' ) ? ' '.$attr : '';
+						
+						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+						$html			.=	$f->html.', ';
+					}
 				}
 			}
 			$field->html	=	$html ? substr( $html, 0, -2 ) : '';
@@ -210,12 +262,13 @@ class JCckPluginLink extends JPlugin
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 			
 			if ( $applyLink ) {
+				$link_attr		=	( isset( $field->link_attributes ) && $field->link_attributes != '' ) ? $field->link_attributes : '';
 				$link_class		=	( isset( $field->link_class ) && $field->link_class != '' ) ? 'class="'.$field->link_class.'" ' : '';
 				$link_onclick	=	( isset( $field->link_onclick ) && $field->link_onclick != '' ) ? 'onclick="'.$field->link_onclick.'" ' : '';
 				$link_rel		=	( isset( $field->link_rel ) && $field->link_rel != '' ) ? 'rel="'.$field->link_rel.'" ' : '';
 				$link_target	=	( isset( $field->link_target ) && $field->link_target != '' ) ? 'target="'.$field->link_target.'" ' : '';
 				$link_title		=	( isset( $field->link_title ) && $field->link_title != '' ) ? 'title="'.$field->link_title.'" ' : '';
-				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title );
+				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
 				$attr			=	( $attr != '' ) ? ' '.$attr : '';
 
 				$field->html	=	( $field->$target != '' ) ? '<a href="'.$field->link.'"'.$attr.'>'.$field->$target.'</a>' : '';

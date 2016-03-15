@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,7 +19,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default_Value', 'storage_field'=>'defaultvalue') );
+		echo JCckDev::renderForm( 'core_description', $this->item->defaultvalue, $config, array( 'label'=>'Default Value', 'storage_field'=>'defaultvalue') );
 		
 		echo JCckDev::renderForm( 'core_options_editor', @$options2['editor'], $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'
@@ -30,7 +30,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo JCckDev::renderForm( 'core_place', $this->item->bool, $config, array( 'label'=>'DISPLAY_MODE' ) );
 		echo JCckDev::renderForm( 'core_selectlabel', $this->item->selectlabel, $config );
 
-		echo JCckDev::renderHelp( 'field', '3147-wysiwyg-editor.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-wysiwyg-editor-field' );
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC_PROCESSING' ), 2 );
 		echo JCckDev::renderForm( 'core_options_import', @$options2['import'], $config );
 		

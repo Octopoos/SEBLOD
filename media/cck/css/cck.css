@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /*FLOAT*/
@@ -56,3 +56,28 @@ div.vertical div.right,div.horizontal div.legend.right{text-align:right; float:n
 
 /*VIEWS*/
 div.cck_page_desc{padding:0; margin:15px 0px; text-align:justify;}
+
+/*MODAL*/
+.modal-remote-parent {position: fixed;top: 0;right: 0;bottom:0;left:0;overflow: auto;z-index:1045;}
+.modal-remote-positioning {display: table;height: 100%;width: 100%;}
+.modal-remote-container {display: table-cell;vertical-align: middle;padding:60px;}
+.modal-navigation-parent {bottom: 0;left: 0;position: fixed;right: 0;top: 0;}
+.modal-navigation-positioning {box-sizing: border-box;height: 100%;margin: 0 auto;max-width: 1120px;padding: 60px;width: 100%;}
+.modal-navigation-container {position: relative;margin: 0 auto;height: 100%;width: 100%;}
+.modal-remote-parent .cck-nav {position: absolute;top: 50%;font-size: 40px;line-height: 40px;height: 40px;margin-top: -20px;display: block;}
+.modal-remote-parent a.cck-nav, .modal-remote-parent a.cck-nav:link, .modal-remote-parent a.cck-nav:visited {color: #fff;text-decoration:none;}
+.modal-remote-parent a.cck-nav:hover {color: #f7931e;text-decoration:none;}
+.modal-remote-parent .cck-nav.prev {left:-60px;}
+.modal-remote-parent .cck-nav.next {right:-60px;}
+.modal-remote-parent .cck-nav.no-nav {display: none;}
+#modal-remote .modal-body .loading {background: url(../images/spinner.gif) 50% 50% no-repeat;width:48px;height:48px;margin:0 auto;background-size:cover;}
+#modal-remote .modal-content {width:100%;}
+#modal-remote .modal-header {min-height:31px;}
+#modal-remote.modal > .close {height: 18px;display: block;top: 5px;right: 5px;width: 18px;position: absolute;z-index:100;}
+.modal-remote-parent #modal-remote.modal {position:static;margin:0 auto;max-width:1000px;width:auto;border:none;border-radius:0;}
+.modal-remote-parent #modal-remote.modal .close {position:fixed;opacity: 1;color: #fff;}
+.modal-remote-parent #modal-remote.modal .close:hover {color: #5c5f64;}
+
+@media (max-width:959px){
+.modal-remote-parent #modal-remote.modal {max-width:500px;}.modal-remote-parent .modal-navigation-positioning {max-width:620px;}
+}

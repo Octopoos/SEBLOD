@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -28,7 +28,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchContent
-	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 
@@ -36,8 +36,9 @@ class plgCCK_FieldTabs extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
+		$data['match_mode']	=	NULL;
 		$data['markup']		=	NULL;
 		$data['validation']	=	NULL;
 
@@ -45,7 +46,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 
@@ -53,7 +54,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['markup']		=	NULL;
 		$data['validation']	=	NULL;
@@ -73,18 +74,14 @@ class plgCCK_FieldTabs extends JCckPluginField
 		
 		// Init
 		$id			=	$field->name;
-		
+		$value		=	(int)$field->defaultvalue;
+		$value		=	( $value ) ? $value - 1 : 0;
+		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
+
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
-			$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
-			if ( $field->bool == 2 ) {
-				$html	=	JCckDevTabs::end();
-			} elseif ( $field->bool == 1 ) {
-				$html	=	JCckDevTabs::open( $group_id, $id, $field->label );
-			} else {
-				$html	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
-			}
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
 		}
 
 		// Set
@@ -108,18 +105,14 @@ class plgCCK_FieldTabs extends JCckPluginField
 		} else {
 			$id		=	$field->name;
 		}
+		$value		=	( $value != '' ) ? (int)$value : (int)$field->defaultvalue;
+		$value		=	( $value ) ? $value - 1 : 0;
+		$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
 		
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
-			$group_id	=	( $field->location != '' ) ? $field->location : 'cck_tabs1';
-			if ( $field->bool == 2 ) {
-				$form	=	JCckDevTabs::end();
-			} elseif ( $field->bool == 1 ) {
-				$form	=	JCckDevTabs::open( $group_id, $id, $field->label );
-			} else {
-				$form	=	JCckDevTabs::start( $group_id, $id, $field->label, array( 'active'=>$id ) );
-			}
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
 		}
 
 		// Set
@@ -173,6 +166,82 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$field->markup	=	'none';
 
 		return parent::g_onCCK_FieldRenderForm( $field );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_FieldBeforeRenderContent
+	public static function onCCK_FieldBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$name	=	$process['name'];
+
+		if ( !$fields[$name]->state ) {
+			return;
+		}
+		
+		self::_prepare( 'html', $process, $fields );
+	}
+
+	// onCCK_FieldBeforeRenderForm
+	public static function onCCK_FieldBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
+	{
+		$name	=	$process['name'];
+
+		if ( !$fields[$name]->state ) {
+			return;
+		}
+		
+		self::_prepare( 'form', $process, $fields );
+	}
+
+	// _prepare
+	protected static function _prepare( $target, $process, &$fields )
+	{
+		$id				=	$process['id'];
+		$label			=	$process['label'];
+		$name			=	$process['name'];
+		$group_id		=	$process['group_id'];
+		$value			=	$process['value'];
+
+		static $groups	=	array();
+		if ( !isset( $groups[$group_id] ) ) {
+			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0, 'identifier'=>$process['identifier'], 'url_actions'=>$process['url_actions'] );
+		}
+		if ( $groups[$group_id]['identifier'] ) {
+			$id			=	JCckDev::toSafeID( $label );
+		}
+		
+		if ( $fields[$name]->bool == 2 ) {
+			$html	=	JCckDevTabs::end();
+		} elseif ( $fields[$name]->bool == 1 ) {
+			$html	=	JCckDevTabs::open( $group_id, $id, $label );
+			if ( $target == 'form' ) {
+				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+			}
+			$js		=	'';
+			if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
+				$js	=	'$("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active");';
+			}
+			if ( $groups[$group_id]['url_actions'] ) {
+				$js	=	'var cur = window.location.hash; if(cur!="" && $(cur).length) { $("a[href=\'"+cur+"\']").tab("show"); }';
+				if ( $groups[$group_id]['url_actions'] == 2 ) {
+					$js	.=	' $("a[data-toggle=\'tab\']").on("shown", function(e) {window.location.hash = e.target.hash;})';
+				}
+			}
+			if ( $js ) {
+				$js	=	'(function($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
+				JFactory::getDocument()->addScriptDeclaration( $js );
+			}
+		} else {
+			$html	=	JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
+			if ( $target == 'form' ) {
+				$html	=	str_replace( 'class="nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $html );
+				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+			}
+		}
+		$groups[$group_id]['current']++;
+
+		$fields[$name]->$target	=	$html;
 	}
 }
 ?>

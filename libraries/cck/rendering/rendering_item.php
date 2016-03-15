@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -61,11 +61,11 @@ class CCK_Item
 			$count		=	count( $args );
 			if ( $count ==  1 ) {
 				if ( empty( $property ) ) {
-					if ( isset ( $this->me[$fieldname] ) ) {
+					if ( isset( $this->me[$fieldname] ) ) {
 						return $this->me[$fieldname];
 					}
 				} else {
-					if ( isset ( $this->me[$fieldname]->$property ) ) {
+					if ( isset( $this->me[$fieldname]->$property ) ) {
 						return $this->me[$fieldname]->$property;
 					}
 				}
@@ -428,6 +428,29 @@ class CCK_Item
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// replaceLive
+	public function replaceLive( $attr )
+	{
+		if ( $attr != '' ) {
+			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				preg_match_all( $search, $attr, $matches );
+
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[2] as $k=>$fieldname ) {
+						$target		=	$matches[1][$k];
+						$get		=	'get'.$target;
+						$replace	=	$this->$get( $fieldname );
+						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
+					}
+				}
+			}
+		}
+
+		return $attr;
+	}
+
 	// isFile
 	public function isFile( $path )
 	{

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -41,6 +41,18 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		$field->value		=	$value;
 		$field->text		=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value ); //@
 		$field->typo_target	=	'text';
+	}
+
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
 	}
 	
 	// onCCK_FieldPrepareForm

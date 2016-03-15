@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /* BASE */
@@ -13,6 +13,7 @@
 .cck-float-left{float:left!important;}.cck-float-none{float:none!important;}.cck-float-right{float:right!important;}
 .cck-width-auto{width:auto!important;}.cck-width-100{width:100px!important;}.cck-width-200{width:200px!important;}.cck-width-300{width:300px!important;}.cck-width-400{width:400px!important;}.cck-width-500{width:500px!important;}
 .cck-margin-auto{margin:auto;}
+.cck-overflow-visible{overflow:visible!important;}.cck-overflow-hidden{overflow:hidden!important;}
 
 /* SPACING ( MARGIN + PADDING ) */
 .cck-margin-top-0{margin-top:0px!important;}.cck-margin-right-0{margin-right:0px!important;}.cck-margin-bottom-0{margin-bottom:0px!important;}.cck-margin-left-0{margin-left:0px!important;}
@@ -28,7 +29,7 @@
 .cck-padding-top-10{padding-top:10px!important;}.cck-padding-right-10{padding-right:10px!important;}.cck-padding-bottom-10{padding-bottom:10px!important;}.cck-padding-left-10{padding-left:10px!important;}
 .cck-padding-top-20{padding-top:20px!important;}.cck-padding-right-20{padding-right:20px!important;}.cck-padding-bottom-20{padding-bottom:20px!important;}.cck-padding-left-20{padding-left:20px!important;}
 .cck-padding-top-30{padding-top:30px!important;}.cck-padding-right-30{padding-right:30px!important;}.cck-padding-bottom-30{padding-bottom:30px!important;}.cck-padding-left-30{padding-left:30px!important;}
-.cck-padding-top-40{padding-top:40px!important;}.cck-padding-right-40{padding-right:40px!important;}.cck-padding-bottom-40{padding-bottom:40px!important;}.cck-padding-left-30{padding-left:40px!important;}
+.cck-padding-top-40{padding-top:40px!important;}.cck-padding-right-40{padding-right:40px!important;}.cck-padding-bottom-40{padding-bottom:40px!important;}.cck-padding-left-40{padding-left:40px!important;}
 .cck-padding-top-50{padding-top:50px!important;}.cck-padding-right-50{padding-right:50px!important;}.cck-padding-bottom-50{padding-bottom:50px!important;}.cck-padding-left-50{padding-left:50px!important;}
 
 /* WRITING ( FONT + TEXT ) */

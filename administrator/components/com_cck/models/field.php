@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -109,7 +109,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	{
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
-		$data['storage_table']	=	str_replace( JFactory::getApplication()->getCfg( 'dbprefix' ), '#__', $data['storage_table'] );
+		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 		
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );

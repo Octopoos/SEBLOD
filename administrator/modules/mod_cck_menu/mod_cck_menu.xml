@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.0.0</version>
+	<version>3.8.0</version>
 
 	<files>
 		<folder>assets</folder>

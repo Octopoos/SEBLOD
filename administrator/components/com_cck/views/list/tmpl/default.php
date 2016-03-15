@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,14 +15,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 JHtml::_( 'stylesheet', 'media/cck/css/definitions/all.css', array(), false );
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { Joomla.submitform(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';
+	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';
 } else {
-	$js	=	'Joomla.submitform(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'"));';
+	$js	=	'JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'"));';
 }
 $app	=	JFactory::getApplication();
 $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.seblod.pagination{text-align:center;}'
 		.	'form div.pagination div.button2-left,form div.pagination div.button2-right, form div.pagination div.limit{margin-right:10px!important;}'
-		.	'div.cck_page_list div.pagination .total{float:right; line-height:24px;}';
+		.	'div.cck_page_list div.pagination .total{float:right; line-height:28px;}';
 JFactory::getDocument()->addStyleDeclaration( $css );
 ?>
 
@@ -36,7 +36,7 @@ Joomla.submitbutton = function(task, cid)
 		}
 	}
 	jQuery("#adminForm").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JFactory::getURI() ); ?>">');
-	Joomla.submitform(task);
+	JCck.Core.submitForm(task);
 }
 </script>
 
@@ -46,7 +46,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 }
 
 echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ).'" autocomplete="off" method="get" id="'.$this->config['formId'].'" name="'.$this->config['formId'].'">';
-echo '<div class="seblod first">' . $this->form . '</div>';
+echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 ?>
 
 <div class="cck_page_list<?php echo $this->pageclass_sfx; ?>" id="system">
@@ -70,7 +70,11 @@ echo '<div class="seblod first">' . $this->form . '</div>';
 		}	
 	    echo '<div class="seblod '.$this->class_pagination.'">';
 		if ( $this->show_pagination > -1 ) {
-			echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
+			if ( JCck::on() ) {
+				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $this->pagination->getListFooter() );
+			} else {
+				echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
+			}
 		}
 	    echo '</div>';
 	}

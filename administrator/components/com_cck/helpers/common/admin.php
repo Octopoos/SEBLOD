@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,15 +13,35 @@ defined( '_JEXEC' ) or die;
 // CommonHelper
 class CommonHelper_Admin
 {
-	// addIcon
-	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left' )
+	// addFolderClass
+	public static function addFolderClass( &$css, $id, $color, $colorchar, $width = '25' )
 	{
+		if ( ! isset( $css[$id] ) ) {
+			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
+			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
+			$css[$id]	=	'.folderColor'.$id.' {width: '.$width.'px; height: 18px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
+						.	'vertical-align: middle; border: none; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius:20px; text-align:center; margin-left:auto; margin-right:auto; font-size:12px;}'
+						.	'.folderColor'.$id.' > strong{position:relative; top:1px;}';
+		}
+	}
+	
+	// addIcon
+	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left', $div = '' )
+	{
+		$font	=	true;
+
+		if ( is_array( $image ) ) {
+			$image	=	( $font !== false ) ? $image[1] : $image[0];
+		}
+		if ( $div == '' ) {
+			$div	=	'3';
+		}
 		if ( $size == 48 ) {
 			$class	=	'icon icon-rounded';
-			$class2	=	'wrapper-icon span3';
+			$class2	=	'wrapper-icon span'.$div;
 		} else {
 			$class	=	'icon icon-rounded icon_small icon_small_'.$align;
-			$class2	=	'wrapper-icon half span3';
+			$class2	=	'wrapper-icon half span'.$div;
 		}
 		$target	=	( strpos( $link, 'http://' ) !== false ) ? '_blank' : '_self';
 		if ( $text == 'spacer' ) {
@@ -36,7 +56,13 @@ class CommonHelper_Admin
             <div class="<?php echo $class2; ?>">
                 <div class="<?php echo $class; ?>">
                     <a href="<?php echo $link; ?>" target="<?php echo $target; ?>">
-                        <?php echo JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+                        <?php
+                        if ( strpos( $image, 'icon-cck-' ) !== false ) {
+                        	echo '<span class="'.$image.'"></span>';
+                        } else {
+							echo JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+                        }
+                        ?>
                         <span><?php echo $text; ?></span>
 					</a>
                 </div>
@@ -204,6 +230,7 @@ class CommonHelper_Admin
 	// getFolderOptions
 	public static function getFolderOptions( $selectlabel = false, $quickfolder = true, $top = false, $published = true, $element = '', $featured = false, $more = '' )
 	{
+		$component	=	JFactory::getApplication()->input->getCmd( 'option' );
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
@@ -227,7 +254,7 @@ class CommonHelper_Admin
 						. ' GROUP BY s.id ORDER BY s.title'
 						;
 		} else {
-			if ( $element ) {
+			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
 			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
@@ -242,7 +269,8 @@ class CommonHelper_Admin
 			if ( $top && $options2[0]->value == '2' ) {
 				$options2[0]->text	=	JText::_( 'COM_CCK_'.$options2[0]->text );
 			}
-			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'._C0_TEXT.'S' ) );
+			$optgroup			=	( defined( '_C0_TEXT' ) ) ? 'COM_CCK_'._C0_TEXT.'S' : 'COM_CCK_APP_FOLDERS';
+			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $optgroup ) );
 			$options			=	array_merge( $options, $options2 );
 			$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		}
@@ -259,7 +287,15 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		$options[]	=	JHtml::_( 'select.option', 'title', JText::_( 'COM_CCK_TITLE' ) );
-		$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		if ( $option == 'com_cck_ecommerce' ) {
+			if ( $view == 'zones' ) {
+				$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+			} elseif ( $view == 'orders' ) {
+				$options[]	=	JHtml::_( 'select.option', 'number', JText::_( 'COM_CCK_INVOICE' ) );
+			}
+		} else {
+			$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		}
 		if ( $option == 'com_cck' && $view == 'fields' ) {
 			$options[]	=	JHtml::_( 'select.option', 'label', JText::_( 'COM_CCK_LABEL' ) );	
 		}
@@ -281,12 +317,18 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
-			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' ) {
+			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' || $view == 'subscriptions' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_name', JText::_( 'COM_CCK_USER_NAME' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_username', JText::_( 'COM_CCK_USER_USERNAME' ) );
+				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			}
+		} elseif ( $option == 'com_cck_toolbox' ) {
+			if ( $view == 'processings' ) {
+				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_APP_FOLDERS' ) );
+				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_APP_FOLDER_ID' ) );
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		}
@@ -333,7 +375,12 @@ class CommonHelper_Admin
 			$plugin->text								=	JText::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
 			$params										=	JCckDev::fromJSON( $plugin->params );
 			$group										=	JText::_( $params['group'] );
-			$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+
+			if ( $prefix.$folder == 'cck_field_restriction' ) {
+				$groups[$group][$plugin->value]				=	$plugin;
+			} else {
+				$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+			}
 		}
 		if ( ! isset( $groups ) ) {
 			return $options;

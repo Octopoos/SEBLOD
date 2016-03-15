@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -49,7 +49,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 '</li>';
 		// core_options_path_box (useless)
 		
-		echo JCckDev::renderHelp( 'field', '2557-upload-file.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-upload-file-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -35,10 +35,63 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		}
 		
 		// Set
+		if ( !$field->storage_field2 ) {
+			$value	=	$storage->values[$P];
+		} else {
+			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
+				$value	=	$storage->values[$P][$field->storage_field2];
+				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
+					$value	=	$value[$field->storage_field3];
+				}
+			}
+		}
+	}
+
+	// onCCK_StoragePrepareDelete
+	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		parent::g_onCCK_StoragePrepareContent( $field, $config );
+		
+		// Init
+		$P	=	$field->storage_field;
+		
+		// Prepare
+		if ( ! isset( $storage->values[$P] ) ) {
+			$storage->values[$P]	=	( isset( $storage->$P ) ) ? self::_initValues( $storage->$P ) : array();
+		}
+		
+		// Set
 		if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 			$value	=	$storage->values[$P][$field->storage_field2];
 			if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 				$value	=	$value[$field->storage_field3];
+			}
+		}
+	}
+
+	// onCCK_StoragePrepareDownload
+	public function onCCK_StoragePrepareDownload( &$field, &$value, &$config = array() )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		
+		// Init
+		$P	=	$field->storage_field;
+
+		if ( $config['collection'] != '' ) {
+			$matches	=	json_decode( $field->value, true );
+			$value		=	$matches[$P][$config['xi']];
+		} else {
+			$matches	=	json_decode( $field->value, true );
+			if ( isset( $matches[$field->storage_field2] ) ) {
+				$value	=	$matches[$field->storage_field2];
+				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
+					$value	=	$value[$field->storage_field3];
+				}
 			}
 		}
 	}
@@ -60,10 +113,14 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		}
 		
 		// Set
-		if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
-			$value	=	$storage->values[$P][$field->storage_field2];
-			if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
-				$value	=	$value[$field->storage_field3];
+		if ( !$field->storage_field2 ) {
+			$value	=	$storage->values[$P];
+		} else {
+			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
+				$value	=	$storage->values[$P][$field->storage_field2];
+				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
+					$value	=	@$value[$field->storage_field3];
+				}
 			}
 		}
 	}

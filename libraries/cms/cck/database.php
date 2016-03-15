@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -43,16 +43,16 @@ abstract class JCckDatabase
 	{
 		$res	=	JFactory::getDbo()->getTableCreate( $tables );
 		
-		$res	=	str_replace( JFactory::getApplication()->getCfg( 'dbprefix' ), '#__', $res );
+		$res	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $res );
 		$res	=	str_replace( 'CREATE TABLE `#__', 'CREATE TABLE IF NOT EXISTS `#__', $res );
 		
 		return $res;
 	}
 	
 	// getTableList
-	public static function getTableList()
+	public static function getTableList( $flip = false )
 	{
-		return JFactory::getDbo()->getTableList();
+		return $flip ? array_flip( JFactory::getDbo()->getTableList() ) : JFactory::getDbo()->getTableList();
 	}
 
 	// loadAssocList

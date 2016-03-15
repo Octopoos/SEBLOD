@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -39,9 +39,9 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		if ( isset( $validation->fieldnames ) && $validation->fieldnames ) {
 			$extra		.=	'&avWhere='.str_replace( '||', ',', $validation->fieldnames );
 			$extraData2	=	'"extraDataDynamic": "#'.str_replace( '||', ',#', $validation->fieldnames ).'",';
-			$and		=	self::_where( $validation->table, $validation->fieldnames, $config['storages'][$validation->table], 'object' );
+			$and		=	self::_where( $validation->table, $validation->fieldnames, @$config['storages'][$validation->table], 'object' );
 		}
-		if ( $field->value ) {
+		if ( isset( $field->value ) && $field->value != '' ) {
 			$pk		=	(int)JCckDatabase::loadResult( 'SELECT '.$validation->key.' FROM '.$validation->table.' WHERE '.$validation->column.'="'.JCckDatabase::escape( $field->value ).'"'.$and );
 			$extra	.=	'&avKey='.$validation->key.'&avPk='.$pk.'&avPv='.htmlspecialchars( str_replace( array( '<', '>', "'" ), array( '%26lt;', '%26gt;', '%27' ), $field->value ) );
 		}
@@ -70,7 +70,18 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 			if ( isset( $validation->fieldnames ) && $validation->fieldnames ) {
 				parent::g_addProcess( 'beforeStore', self::$type, $config, array( 'name'=>$name, 'value'=>$value, 'validation'=>$validation ) );
 			} else {
-				$error	=	self::_check( $validation, $value, $config );
+				$do	=	true;
+				// Check if table = object (todo: will be improved later..)
+				if ( $validation->table == '#__users' ) {
+					$type	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
+					
+					if ( $type != 'joomla_user' ) {
+						$do	=	false;
+					}
+				}
+				if ( $do !== false ) {
+					$error	=	self::_check( $validation, $value, $config );
+				}
 			}
 		}
 		
@@ -169,14 +180,8 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
 
-	// onCCK_FieldBeforeRenderForm
-	public static function onCCK_FieldBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
-	{
-		// todo
-	}
-
-	// onCCK_FieldBeforeStore
-	public static function onCCK_FieldBeforeStore( $process, &$fields, &$storages, &$config = array() )
+	// onCCK_Field_ValidationBeforeStore
+	public static function onCCK_Field_ValidationBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
 		$and	=	self::_where( $validation->table, $validation->fieldnames, $fields );
 		$error	=	self::_check( $process['validation'], $process['value'], $config, $and );

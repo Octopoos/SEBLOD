@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,9 +24,14 @@ abstract class JCckToolbox
 		if ( ! self::$_config ) {
 			if ( JCckDatabaseCache::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.'com_'.self::$_me.'"' ) > 0 ) {
 				self::$_config	=	JComponentHelper::getParams( 'com_'.self::$_me );
+
+				if ( self::$_config->get( 'processing' ) != '0' ) {
+					self::$_config->set( 'processing', 1 );
+				}
 			} else {
 				self::$_config	=	new JRegistry;
 				self::$_config->set( 'KO', true );
+				self::$_config->set( 'processing', 1 );
 			}
 		}
 		
@@ -65,16 +70,41 @@ abstract class JCckToolbox
 		}
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Processing
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Jobs
+	
+	// run
+	public static function run( $name )
+	{
+		$processings	=	JCckDatabase::loadObjectList( 'SELECT a.type, a.scriptfile, a.options'
+														. ' FROM #__cck_more_processings AS a'
+														. ' LEFT JOIN #__cck_more_job_processing AS b ON b.processing_id = a.id'
+														. ' LEFT JOIN #__cck_more_jobs AS c ON c.id = b.job_id'
+														. ' WHERE c.name = "'.$name.'" AND c.published = 1 AND a.published = 1'
+														. ' ORDER BY b.id' );
+
+		if ( count( $processings ) ) {
+			foreach ( $processings as $p ) {
+				if ( is_object( $p ) && is_file( JPATH_SITE.$p->scriptfile ) ) {
+					$options	=	new JRegistry( $p->options );
+
+					include_once JPATH_SITE.$p->scriptfile;
+				}
+			}
+		}
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Processings
 	
 	// process
 	public static function process( $event )
 	{
-		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 ORDER BY ordering', 'type' );
+		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 		if ( isset( $processing[$event] ) ) {
 			foreach ( $processing[$event] as $p ) {
 				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+					$options	=	new JRegistry( $p->options );
+					
 					include_once JPATH_SITE.$p->scriptfile;
 				}
 			}
@@ -84,9 +114,11 @@ abstract class JCckToolbox
 	// processById
 	public static function processById( $id = 0 )
 	{
-		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile FROM #__cck_more_toolbox_processings WHERE published = 1 AND id = '.(int)$id );
+		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$id );
 
 		if ( is_object( $processing ) && is_file( JPATH_SITE.$processing->scriptfile ) ) {
+			$options	=	new JRegistry( $processing->options );
+
 			include_once JPATH_SITE.$processing->scriptfile;
 		}
 	}

@@ -63,6 +63,11 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="COM_CCK_CONFIG_LEGEND_UNINSTALL" type="spacer" hr="false" />
+		<field name="uninstall_sql" type="list" default="0" label="COM_CCK_CONFIG_UNINSTALL_SQL" description="" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_UNINSTALL_SQL_BACKUP_TABLES</option>
+			<option value="1">COM_CCK_CONFIG_UNINSTALL_SQL_DROP_TABLES</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_VERSIONS" type="spacer" hr="false" />
 		<field name="version_auto" type="list" default="2" label="COM_CCK_CONFIG_VERSION_AUTO" description="COM_CCK_CONFIG_VERSION_AUTO_DESC" class="inputbox">
 			<option value="0">JNO</option>
@@ -90,6 +95,7 @@
 	<fieldset name="fs_language" label="COM_CCK_CONFIG_FIELDSET_LANGUAGE" description="COM_CCK_CONFIG_FIELDSET_LANGUAGE_DESC">
 		<field name="language_jtext" type="radio" default="0" label="COM_CCK_CONFIG_LANGUAGE_JTEXT" description="COM_CCK_CONFIG_LANGUAGE_JTEXT_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
+			<option value="2">COM_CCK_YES_BUT_ENGLISH</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_TRANSLATIONS" type="spacer" hr="false" />
@@ -104,6 +110,8 @@
 		</field>
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
+		<field name="media_quality_jpeg" type="text" default="90" label="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG_DESC" class="inputbox input-small" />
+		<field name="media_quality_png" type="text" default="3" label="COM_CCK_CONFIG_MEDIA_QUALITY_PNG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_PNG_DESC" class="inputbox input-small" />
 		<field name="media_archive_extensions" type="text" size="98" default="7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE_DESC" class="inputbox input-xlarge" />
 		<field name="media_audio_extensions" type="text" size="98" default="flac,mp3,ogg,wma,wav,FLAC,MP3,OGG,WMA,WAV" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_AUDIO" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_AUDIO_DESC" class="inputbox input-xlarge" />
 		<field name="media_document_extensions" type="text" size="98" default="csv,doc,docx,pdf,pps,ppsx,ppt,pptx,txt,xls,xlsx,CSV,DOC,DOCX,PDF,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_DOCUMENT" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_DOCUMENT_DESC" class="inputbox input-xlarge" />
@@ -126,6 +134,14 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="multisite_login" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_LOGIN" description="COM_CCK_CONFIG_MULTISITE_LOGIN_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox">
 			<option value="0">COM_CCK_INHERITED</option>
 			<option value="1">COM_CCK_OWNED</option>
@@ -141,11 +157,18 @@
 	<fieldset name="fs_site" label="COM_CCK_CONFIG_FIELDSET_SITE" description="COM_CCK_CONFIG_FIELDSET_SITE_DESC">
 		<field name="debug" type="list" default="0" label="COM_CCK_CONFIG_DEBUG" description="COM_CCK_CONFIG_DEBUG_DESC" class="inputbox chzn-color">
 			<option value="1">COM_CCK_YES_FOR_EVERYONE</option>
+			<option value="-1">COM_CCK_YES_LIPSUM_FOR_EVERYONE</option>
 			<option value="2">COM_CCK_YES_FOR_SUPER_ADMIN</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="hide_edit_icon" type="radio" default="0" label="COM_CCK_CONFIG_HIDE_EDIT_ICON" description="COM_CCK_CONFIG_HIDE_EDIT_ICON_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="optimize_memory" type="list" default="0" label="COM_CCK_CONFIG_OPTIMIZE_MEMORY" description="COM_CCK_CONFIG_OPTIMIZE_MEMORY_DESC" class="inputbox chzn-color chzn-color-permissive">
+			<option value="1">COM_CCK_LOWEST_LEVEL</option>
+			<option value="2">COM_CCK_INTERMEDIATE_LEVEL</option>
+			<option value="3">COM_CCK_HIGHEST_LEVEL</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="responsive" type="radio" default="0" label="COM_CCK_CONFIG_RESPONSIVE" description="COM_CCK_CONFIG_RESPONSIVE_DESC" class="btn-group btn-group-yesno">
@@ -158,6 +181,8 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
+		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
+		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box_css" type="folderlist" directory="/media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
 			   label="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS" description="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS_DESC" class="inputbox" />
 		<field name="site_css_def" type="cck" construction="core_css_definitions" default="" label="COM_CCK_CONFIG_CSS_DEFINITIONS" description="COM_CCK_CONFIG_CSS_DEFINITIONS_DESC" class="inputbox" />

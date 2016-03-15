@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,6 +37,14 @@ class CCKViewType extends JViewLegacy
 			case 'edit2':
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
+				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
 				break;
 			default:
 				break;
@@ -119,13 +127,13 @@ class CCKViewType extends JViewLegacy
 	// prepareDisplay_Ajax
 	function prepareDisplay_Ajax()
 	{
-		$featured	=	$this->state->get( 'skeleton_id', 0 );
+		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
+		$folder		=	( $featured ) ? 0 : $this->item->folder;
 		
 		// Fields
-		$objects				=	'';
 		$pos					=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
 		$this->fields			=	Helper_Workshop::getFields( 'type', $this->item, 'a.folder = '.(int)$featured, false, false, $pos  );
-		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, $objects, 'a.folder != '.(int)$featured );
+		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, '', 'a.folder = '.(int)$folder );
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
 		// Positions
@@ -148,18 +156,47 @@ class CCKViewType extends JViewLegacy
 		}
 		$this->positions_nb	=	count( $this->positions );
 		$this->variations	=	Helper_Workshop::getPositionVariations( $this->style->template );
-
+		
 		// Filters
 		$max_width				=	( JCck::on() ) ? '' : ' style="max-width:180px;"';
-		$default_f				=	( $this->item->id > 0 ) ? $this->item->folder : '';
 		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
-		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter" size="1" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
+		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
-		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter" size="1" prefix="a-"', 'value', 'text', '', 'filter3' );
+		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
-		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter" size="1" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
+		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter" size="1" prefix="f-"'.$max_width, 'value', 'text', $default_f, 'filter2' );
+		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"'.$max_width, 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
+	}
+
+	// prepareDisplay_Ajax2
+	function prepareDisplay_Ajax2( $isScoped )
+	{
+		$and		=	'';
+		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
+		$folder		=	$this->state->get( 'skeleton_id', $this->item->folder );
+
+		if ( $featured == 11 ) { // TODO: dynamic mapping
+			$this->item->storage_location	=	'joomla_category';
+		} elseif ( $featured == 13 ) {
+			$this->item->storage_location	=	'joomla_user';
+		} elseif ( $featured == 14 ) {
+			$this->item->storage_location	=	'joomla_user_group';
+		}	
+		$location	=	( $this->item->storage_location == '' ) ? 'joomla_article' : $this->item->storage_location;
+
+		// Fields
+		if ( !$isScoped ) {
+			$and	=	'(a.storage_location != "'.$location.'" AND a.storage != "none")';
+		} else {
+			$and	=	'(a.storage_location = "'.$location.'" OR a.storage = "none")';
+		}
+		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, $and, 'a.folder != '.(int)$folder );
+		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
+		
+		// Languages (todo: optimize)
+		Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
+		JPluginHelper::importPlugin( 'cck_field' );
 	}
 	
 	// setPosition
@@ -173,7 +210,7 @@ class CCKViewType extends JViewLegacy
 		$height	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
 		$css	=	'';
 		
-		Helper_Workshop::displayPosition( $this->p, $name, '# '.$title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css );
+		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css );
 		$this->p++;
 		
 		return $name;

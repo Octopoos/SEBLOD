@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -29,7 +29,6 @@ JCckDev::forceStorage( 'custom' );
 		echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'DRAG', 'defaultvalue'=>'1' ) );
 		echo JCckDev::renderForm( 'core_orientation', $this->item->bool, $config, array( 'defaultvalue'=>'1', 'options'=>'Horizontal=0||Vertical=1||Table=2' ) );
 		
-		echo JCckDev::renderHelp( 'field', '2879-groupx.html' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value' => 'TEXT' ) );
         ?>

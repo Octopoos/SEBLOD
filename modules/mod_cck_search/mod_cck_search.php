@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,6 +23,7 @@ $app	=	JFactory::getApplication();
 $form	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
+$itemId	=	(string)$params->get( 'menu_item', '' );
 
 if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
 	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
@@ -48,17 +49,65 @@ $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
-$action_vars		=	( $params->get( 'menu_item', '' ) ) ? '&Itemid='.$params->get( 'menu_item', '' ) : '';
+$action_url		=	'';
+$action_vars	=	'';
+
+if ( $itemId == '-1' ) {
+	$action_url		=	JUri::getInstance()->toString( array( 'path' ) );
+} elseif ( $itemId ) {
+	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
+}
 $live				=	urldecode( $params->get( 'live' ) );
-$target			=	$params->get( 'menu_item_search', 0 );
+$target				=	$params->get( 'menu_item_search', 0 );
 $variation			=	$params->get( 'variation' );
 $limitstart			=	-1;
 
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
 
+// Set
+if ( !is_object( @$options ) ) {
+	$options	=	new JRegistry;
+}
+$description		=	'';
+$show_list_desc		=	$params->get( 'show_list_desc' );
+$show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+if ( $show_list_title == '' ) {
+	$show_list_title	=	$options->get( 'show_list_title', '1' );
+	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$options->get( 'class_list_title' );
+} elseif ( $show_list_title ) {
+	$tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
+	$class_list_title	=	$params->get( 'class_list_title' );
+}
+if ( $show_list_desc == '' ) {
+	$show_list_desc	=	$options->get( 'show_list_desc', '1' );
+	$description	=	@$search->description;
+} else {
+	$description	=	$params->get( 'list_desc', @$search->description );
+}
+if ( $description != '' ) {
+	$description	=	str_replace( '[title]', $module->title, $description );
+	$description	=	str_replace( '$cck->get', '$cck-&gt;get', $description );
+	if ( strpos( $description, '$cck-&gt;get' ) !== false ) {
+		$matches	=	'';
+		$regex		=	'#\$cck\-\&gt;get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
+		preg_match_all( $regex, $description, $matches );
+		if ( count( $matches[1] ) ) {
+			foreach ( $matches[1] as $k=>$v ) {
+				$fieldname		=	$matches[2][$k];
+				$target			=	strtolower( $v );
+				if ( count( @$doc->list ) ) {
+					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->{$target}, $description );
+				} else {
+					$description	=	str_replace( $matches[0][$k], '', $description );
+				}
+			}
+		}
+	}
+}
 if ( $target ) {
-	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $itemId ) );
+	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $params->get( 'menu_item', $itemId ) ) );
 	if ( isset( $target->query['option'] ) && $target->query['option'] == 'com_cck'
 	  && isset( $target->query['view'] ) && $target->query['view'] == 'list'
 	  && isset( $target->query['search'] ) && $target->query['search'] ) {

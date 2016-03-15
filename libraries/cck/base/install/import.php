@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -487,6 +487,63 @@ class CCK_Import
 		$table->store();
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+	
+	// importProcessings
+	public static function importProcessings( $data )
+	{
+		$path			=	$data['root'].'/processings';
+		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings', 'scriptfile', 'type' );
+
+		if ( file_exists( $path ) ) {
+			$files	=	JFolder::files( $path, '\.xml$' );
+			if ( count( $files ) ) {
+				foreach ( $files as $file ) {
+					$xml	=	JCckDev::fromXML( $path.'/'.$file );
+					if ( !$xml || (string)$xml->attributes()->type != 'processings' ) {
+						break;
+					}
+					$name		=	(string)$xml->processing->name;
+					$scriptfile	=	(string)$xml->processing->scriptfile;
+					$state		=	(string)$xml->processing->published;
+					$type		=	(string)$xml->processing->type;
+
+					if ( $name && $scriptfile && $type != '' ) {
+						if ( isset( $processings[$scriptfile] ) ) {
+							if ( isset( $processings[$scriptfile][$type] ) ) {
+								continue;
+							} else {
+								$state		=	0;
+							}
+						}
+						$table				=	JCckTable::getInstance( '#__cck_more_processings' );
+						$table->name		=	$name;
+						$table->title		=	(string)$xml->processing->title;
+						
+						// Folder			
+						$idx	=	(string)$xml->processing->folder;
+						if ( isset( $data['folders2'][$idx] ) ) {
+							$table->folder	=	$data['folders2'][$idx]->id;
+						} elseif ( isset( $data['folders'][$idx] ) ) {
+							$table->folder	=	$data['folders'][$idx]->id;
+						} else {
+							$table->folder	=	7;
+						}
+						
+						$table->type		=	$type;
+						$table->description	=	(string)$xml->processing->description;
+						$table->options		=	(string)$xml->processing->options;
+						$table->ordering	=	(string)$xml->processing->ordering;
+						$table->published	=	$state;
+						$table->scriptfile	=	$scriptfile;
+						
+						$table->store();
+					}
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SQL
 	
 	// importSQL
@@ -608,7 +665,7 @@ class CCK_Import
 						}
 						
 						$sql_query	=	( $sql_query ) ? substr( $sql_query, 0, -1 ) : '';
-						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
+						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
 					}
 				}
 			}

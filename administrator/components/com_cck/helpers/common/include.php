@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -29,6 +29,18 @@ class CommonHelper_Include
 		Helper_Include::addStyleSheets( true );
 	}
 	
+	// addStyleDeclaration
+	public static function addStyleDeclaration( $css, $minify = false )
+	{
+		$doc	=	JFactory::getDocument();
+		
+		if ( $minify === true ) {
+			$css	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
+		}
+		
+		$doc->addStyleDeclaration( $css );
+	}
+	
 	// addStyleSheets
 	public static function addStyleSheets( $component, $paths = array() )
 	{
@@ -36,7 +48,7 @@ class CommonHelper_Include
 		
 		$doc->addStyleDeclaration( 'div.pagetitle {display: block!important;}' );
 		if ( $component ) {
-			$doc->addStyleDeclaration( 'div.seblod {margin: 0px 10px 10px 10px!important;} div.seblod.first {margin-top: 10px!important;}' );
+			$doc->addStyleDeclaration( 'div.seblod {margin: 0px 10px 10px 10px!important;}' );
 			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/admin.css', array(), false );
 			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css', array(), false );
 		}
@@ -82,6 +94,27 @@ class CommonHelper_Include
 		$doc->addScriptDeclaration( $js );
 	}
 	
+	// addTooltip
+	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
+	{
+		if ( !JCck::on() ) {
+			$doc	=	JFactory::getDocument();
+			
+			if ( $script === true ) {
+				$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/css/jquery.qtip.css' );
+				$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/js/jquery.qtip.min.js' );
+			}
+			if ( $elem ) {
+				$js	=	'jQuery(document).ready(function($){ $("'.$elem.'").qtip({ style: {classes: "'.$classes.'"}, position: {my: "'.$pos_my.'", at: "'.$pos_at.'"} }); });';
+				if ( $tmpl == 'ajax' ) {
+					echo '<script type="text/javascript">'.$js.'</script>';
+				} else {
+					$doc->addScriptDeclaration( $js );
+				}
+			}
+		}
+	}
+	
 	// addValidation
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
@@ -108,15 +141,21 @@ class CommonHelper_Include
 				}
 			}
 			if ( $position != 'inline' && $bgcolor != '' ) {
-				$doc->addStyleDeclaration( '.formError .formErrorContent, .formError .formErrorArrow div{background: '.$bgcolor.'}' );
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
 			}
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
 		} else {
 			$options	=	'{}';
 		}
 		
-		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation.css' );
-		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js' );
+		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
+		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.8.0.min.js' );
 		
 		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		$doc->addScriptDeclaration( $js );

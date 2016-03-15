@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -209,7 +209,7 @@ echo '<div class="seblod"><div class="legend top center">'.$field->title.'</div>
  .	 '</li>'
  .	 '<li><label>'.JText::_( 'COM_CCK_FIELDS' ).'</label>'
  .	 JCckDev::getForm( 'core_options', $selectors, $config, array( 'label'=>'Fields', 'rows'=>1, 'storage_field'=>'fields' ) )
- .	 JHtml::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
+ .	 JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
  .	 '<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" /><label for="toggle_attr" class="toggle_attr">'.JText::_( 'COM_CCK_CUSTOM_ATTRIBUTE_AND_EVENT' ).'</label>'
  .	 '</li>'
  .	 '<li><label>'.JText::_( 'COM_CCK_FORMAT_PRECISION' ).'</label>'
@@ -217,7 +217,7 @@ echo '<div class="seblod"><div class="legend top center">'.$field->title.'</div>
  .	 JCckDev::getForm( 'core_computation_precision', '', $config )
  .	 '</li>'
  .	 JCckDev::renderForm( 'core_computation_recalc', '', $config )
- .	 JCckDev::renderForm( 'core_computation_event', '', $config, array( 'defaultvalue'=>'change', 'options'=>'None=none||Event=optgroup||Event Change=change||Event Keyup=keyup', 'storage_field'=>'event' ), array(), 'col2' )
+ .	 JCckDev::renderForm( 'core_computation_event', '', $config, array( 'defaultvalue'=>'change', 'options'=>'None=none||Event=optgroup||Event Change=change||Event Keyup=keyup', 'storage_field'=>'event' ) )
  .	 '</ul></div>';
 ?>
 <div class="seblod inverted" style="display:none;">

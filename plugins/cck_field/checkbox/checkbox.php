@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -49,16 +49,38 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			$config['doTranslation']=	$field->bool8;
 		}
 		
-		// Set
+		// Prepare
 		$divider					=	( $field->divider != '' ) ? $field->divider : ',';
 		if ( is_array( $value ) ) {
 			$value					=	implode( $divider, $value );
 		}
+		
+		// Set
 		$field->text				=	parent::g_getOptionText( $value, $field->options, $divider, $config );
 		$field->value				=	$value;
-		// todo: $field->values
+		
+		$texts						=	explode( $divider, $field->text );
+		$values						=	explode( $divider, $field->value );
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>$texts[$k], 'typo_target'=>'text', 'value'=>$v );
+			}
+		}
 		$field->typo_target			=	'text';
 		$config['doTranslation']	=	$doTranslation;
+	}
+	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -143,6 +165,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		
 		$count	=	count( $opts );
+		$count2	=	0;
+		$form	=	'';
 		if ( $field->bool ) {
 			$orientation	=	' vertical';
 			$field->bool2	=	( !$field->bool2 ) ? 1 : $field->bool2;
@@ -151,9 +175,6 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		} else {
 			$orientation	=	'';
 		}
-		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
-		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
 		if ( JCck::on() ) {
 			$attr	=	'class="checkbox'.$validate.'" size="1"';
 		} else {
@@ -174,7 +195,12 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 				}
 				$k++;
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-				$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+				if ( in_array( (string)$o->value, (array)$value ) ) {
+					$checked	=	'checked="checked" ';
+					$count2++;
+				} else {
+					$checked	=	'';
+				}
 				$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 
 				$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label>';
@@ -184,19 +210,45 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			if ( $count == 1 && strpos( $optionsSorted[0], '=' ) === false ) {
 				foreach ( $opts as $i=>$o ) {
 					$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-					$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+					if ( in_array( (string)$o->value, (array)$value ) ) {
+						$checked	=	'checked="checked" ';
+						$count2++;
+					} else {
+						$checked	=	'';
+					}
 					$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 				}
 			} else {
 				foreach ( $opts as $i=>$o ) {
 					$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
-					$checked	=	( in_array( (string)$o->value, (array)$value ) ? ' checked="checked" ' : '' );
+					if ( in_array( (string)$o->value, (array)$value ) ) {
+						$checked	=	'checked="checked" ';
+						$count2++;
+					} else {
+						$checked	=	'';
+					}
 					$form		.=	'<input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 					$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label>';
 				}
 			}
 		}
-		$form	.=	'</fieldset>';
+		if ( $field->bool7 ) {
+			$checked	=	( $count == $count2 ? '1' : '' ) ? 'checked="checked" ' : '';
+			$attr		=	'onclick="Joomla.checkAll(this,\''.$id.'\');"';
+			$check_all	=	'<input type="checkbox" id="'.$id.'_toggle'.'" name="'.$name.'_toggle" value="" '.$checked.$attr.' />'
+						.	'<label for="'.$id.'_toggle">'.JText::_( 'COM_CCK_CHECK_ALL' ).'</label>';
+			if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
+				$check_all	=	'<div class="cck-clrfix">'.$check_all.'</div>';
+			}
+			if ( $field->bool7 == 2 ) {
+				$form	.=	$check_all;
+			} else {
+				$form	=	$check_all.$form;
+			}
+		}
+		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
+		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+		$form		=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
 		
 		// Set
 		if ( ! $field->variation ) {
@@ -214,6 +266,15 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$value;
+
+		$texts						=	( isset( $field->text ) ) ? explode( $divider, $field->text ) : array();
+		$values						=	( is_string( $field->value ) ) ? explode( $divider, $field->value ) : $field->value;
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>@$texts[$k], 'value'=>$v );
+			}
+		}
 		
 		// Return
 		if ( $return === true ) {

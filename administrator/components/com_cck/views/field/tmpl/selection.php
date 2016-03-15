@@ -4,14 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 // Prepare
-$app	=	JFactory::getApplication();
 if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	if ( $this->item->id == 'dev_map' ) {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br />'.JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
@@ -28,7 +27,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	} else {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
 		$location				=	$this->item->title;
-		$prefix					=	$app->getCfg( 'dbprefix' );
+		$prefix					=	JFactory::getConfig()->get( 'dbprefix' );
 		if ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
 			$properties				=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
 		} else {
@@ -51,7 +50,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	}
 	$field						=	new stdClass;
 	$field->type				=	'select_simple';
-	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
+	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
 } else {
 	$desc						=	'';
 	$field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
@@ -113,7 +112,7 @@ $js		=	'
 				$.fn.toggleMultiple = function() {
 					if (this.is("select")) {
 						if (this.prop("multiple")) {
-							this.prepend(\'<option value="">- '.JText::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).attr("size",1);
+							this.prepend(\'<option value="">- '.JText::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).removeAttr("size");
 						} else {
 							$("#"+this.attr("id")+" option:eq(0)").remove();
 							this.prop("multiple",true).attr("size",15);

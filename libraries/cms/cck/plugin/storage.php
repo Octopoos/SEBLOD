@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -20,6 +20,8 @@ class JCckPluginStorage extends JPlugin
 	{
 		if ( ! $field->storage_field2 ) {
 			$field->storage_field2	=	$field->name;
+		} elseif ( $field->storage_field2 == 'clear' ) {
+			$field->storage_field2	=	'';
 		} elseif ( strpos( $field->storage_field2, '|' ) !== false ) {
 			$levels	=	explode( '|', $field->storage_field2 );
 			for ( $i = 0, $n = count( $levels ); $i < $n; $i++ ) {
@@ -33,6 +35,8 @@ class JCckPluginStorage extends JPlugin
 	{
 		if ( ! $field->storage_field2 ) {
 			$field->storage_field2	=	$field->name;
+		} elseif ( $field->storage_field2 == 'clear' ) {
+			$field->storage_field2	=	'';
 		} elseif ( strpos( $field->storage_field2, '|' ) !== false ) {
 			$levels	=	explode( '|', $field->storage_field2 );
 			for ( $i = 0, $n = count( $levels ); $i < $n; $i++ ) {

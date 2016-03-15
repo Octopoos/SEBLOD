@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,7 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 if ( JCck::on() ) { ?>
 	<div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
+			<button type="button" class="close" data-dismiss="modal">×</button>
 			<h3><?php echo JText::_( 'COM_CCK_APP_PROCESS'); ?></h3>
 		</div>
 		<div class="modal-body">
@@ -98,7 +98,7 @@ if ( JCck::on() ) { ?>
 <script type="text/javascript">
 jQuery(document).ready(function($) {	
 	$(".app-download").live("click", function() {
-		var id = $(this).attr("title");
+		var id = $(this).attr("data-id");
 		var url = "<?php echo $link2; ?>"+id;
 		var elements = $("#app_elements").myVal();
 		var opts = "&options[aa]=1&options[bb]=2";

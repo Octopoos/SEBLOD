@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -30,7 +30,10 @@ if ( !isset( $doc->list ) ) {
 }
 $doc->list[$idx]		=	array();
 
+$debug		=	JCck::getConfig_Param( 'debug', 0 );
 $ids		=	'';
+$optimize	=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
+$properties	=	CCK_List::getPropertyColumns_asString( $optimize );
 $pks		=	'';
 if ( $list['isCore'] ) {
 	for ( $i = 0; $i < $count; $i++ ) {
@@ -41,13 +44,23 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 }
 $storages		=	array( '_'=>'' );
+$suffix			=	'';
+
+if ( $debug == -1 ) {
+	$suffix		=	'Debug';
+	foreach ( $fields as $field ) {
+		$field->storage	=	'lipsum';
+	}
+}
 for ( $i = 0; $i < $count; $i++ ) {
 	if ( isset( $items[$i]->pk ) ) {
 		$PK						=	$items[$i]->pk;
 	} else {
 		$PK						=	$i;
+		$items[$i]->author		=	0;
 		$items[$i]->cck			=	'';
 		$items[$i]->loc			=	$list['location'];
+		$items[$i]->parent		=	'';
 		$items[$i]->pid			=	0;
 		$items[$i]->pk			=	$i;
 		$items[$i]->pkb			=	0;
@@ -59,17 +72,19 @@ for ( $i = 0; $i < $count; $i++ ) {
 	// --
 	if ( $count2 ) {
 		$config		=	array(
-							'author'=>0,
+							'author'=>$items[$i]->author,
 							'client'=>'item',
-							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
+							'doSEF'=>$list['doSEF'],
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
-							'Itemid'=>$itemId,
+							'Itemid'=>$list['itemId'],
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
+							'parent_id'=>$items[$i]->parent,
 							'pk'=>$items[$i]->pk,
 							'pkb'=>$items[$i]->pkb,
 							'pks'=>$pks,
@@ -118,7 +133,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$value		=	trim( $value );
 				}
 				$hasLink	=	( $field->link != '' ) ? 1 : 0;
-				$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+				$dispatcher->trigger( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 				$target		=	$field->typo_target;
 				if ( $hasLink ) {
 					$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
@@ -126,23 +141,40 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';
 				}
+				
+				// Optimize Memory
+				if ( $optimize ) {
+					foreach ( $properties as $property ) {
+						unset( $field->$property );
+					}
+				}
 				$fieldsI[$fieldName]			=	$field;
+
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions[$pos][]			=	$field->name;
 					$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
+				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
 				}
 			}
 		}
 		
 		// Merge
 		if ( count( $config['fields'] ) ) {
-			$fieldsI			=	array_merge( $fieldsI, $config['fields'] );	// Test: a loop may be faster.
+			foreach ( $config['fields'] as $k=>$v ) {
+				if ( $v->restriction != 'unset' ) {
+					$fieldsI[$k]	=	$v;
+				}
+			}
 			$config['fields']	=	NULL;
 			unset( $config['fields'] );
 		}
@@ -160,17 +192,19 @@ for ( $i = 0; $i < $count; $i++ ) {
 	
 	if ( $count3 ) {
 		$config		=	array(
-							'author'=>0,
+							'author'=>$items[$i]->author,
 							'client'=>'item',
-							'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
+							'doSEF'=>$list['doSEF'],
 							'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 							'doTypo'=>$p_typo,
+							'error'=>0,
 							'fields'=>array(),
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
-							'Itemid'=>$itemId,
+							'Itemid'=>$list['itemId'],
 							'links'=>array(),
 							'location'=>$items[$i]->loc,
+							'parent_id'=>$items[$i]->parent,
 							'pk'=>$items[$i]->pk,
 							'pkb'=>$items[$i]->pkb,
 							'pks'=>$pks,
@@ -227,12 +261,20 @@ for ( $i = 0; $i < $count; $i++ ) {
 						JCckPluginLink::g_setHtml( $field, $target );
 					}
 				}
-				if ( @$field->typo && $field->$target !== '' && $p_typo ) {
+				if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
 					$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 				} else {
 					$field->typo	=	'';
 				}
+
+				// Optimize Memory
+				if ( $optimize ) {
+					foreach ( $properties as $property ) {
+						unset( $field->$property );
+					}
+				}
 				$fieldsI[$fieldName]			=	$field;
+
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions2[$pos][]			=	$field->name;
@@ -240,12 +282,21 @@ for ( $i = 0; $i < $count; $i++ ) {
 						$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
 					}
 				}
+
+				// Was it the last one?
+				if ( $config['error'] ) {
+					break;
+				}
 			}
 		}
 		
 		// Merge
 		if ( count( $config['fields'] ) ) {
-			$fieldsI			=	array_merge( $fieldsI, $config['fields'] );	// Test: a loop may be faster.
+			foreach ( $config['fields'] as $k=>$v ) {
+				if ( $v->restriction != 'unset' ) {
+					$fieldsI[$k]	=	$v;
+				}
+			}
 			$config['fields']	=	NULL;
 			unset( $config['fields'] );
 		}

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,7 +17,7 @@ if ( !$user->authorise( 'core.create', 'com_cck' ) ) {
 if ( JCck::on() ) { ?>
 	<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
 	    <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">x</button>
+	        <button type="button" class="close" data-dismiss="modal">×</button>
 	        <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_SITE' ).' ('.JText::_( 'COM_CCK_MULTISITES' ).')'; ?></h3>
 	    </div>
 	    <?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>
@@ -29,9 +29,15 @@ if ( JCck::on() ) { ?>
 	            <div class="sly-wrapper">
 	                <div class="sly">
 	                    <ul>
-	                        <li data-values="7"><?php echo JText::_( 'COM_CCK_BASIC' ); ?></li>
-	                        <li data-values="2,7"><?php echo JText::_( 'COM_CCK_STANDARD' ); ?></li>
-	                        <li data-values="2,3,6,7"><?php echo JText::_( 'COM_CCK_ADVANCED' ); ?></li>
+	                        <li data-values="7"><?php echo JText::_( 'COM_CCK_BASIC' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_basic.png" alt="<?php echo JText::_( 'COM_CCK_BASIC' ); ?>" width="175" height="115" />
+	                        </li>
+	                        <li data-values="2,7"><?php echo JText::_( 'COM_CCK_STANDARD' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_standard.png" alt="<?php echo JText::_( 'COM_CCK_STANDARD' ); ?>" width="175" height="115" />
+	                        </li>
+	                        <li data-values="2,3,6,7"><?php echo JText::_( 'COM_CCK_ADVANCED' ); ?>
+	                        	<img src="components/com_cck/assets/images/site_picker_advanced.png" alt="<?php echo JText::_( 'COM_CCK_ADVANCED' ); ?>" width="175" height="115" />
+	                        </li>
 	                    </ul>
 	                </div>
 	            </div>

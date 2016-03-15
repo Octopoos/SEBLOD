@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -98,7 +98,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		$core	=	JCckDev::fromJSON( $table->e_core );
 		
 		if ( isset( $row->asset_id ) && $row->asset_id && isset( $core['rules'] ) ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.$row->asset_id );
+			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.(int)$row->asset_id );
 		}
 		
 		// More

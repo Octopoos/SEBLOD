@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,20 +13,30 @@ defined( '_JEXEC' ) or die;
 // Rendering
 class CCK_Rendering
 {
-    static $instance;
+	static $instance;
+	static $instance2;
 	
-    public static function getInstance( $template = '' )
-    {
+	// getInstance
+	public static function getInstance( $template = '' )
+	{
 		if ( $template == JFactory::getApplication()->getTemplate() ) {
 			print( 'You should NOT set "'.$template.'" as Default Template.' );
 			die;
 		}
-		
-        if ( ! self::$instance ) {
-			self::$instance	=	new CCK_Rendering();
-        }
-        return self::$instance;
-    }
+
+		$app		=	JFactory::getApplication();
+		$instance	=	'instance';
+
+    	if ( isset( $app->cck_idx ) && $app->cck_idx[0] !== false ) {
+			$instance	=	'instance2';
+		}
+
+		if ( !self::${$instance} ) {
+			self::${$instance}	=	new CCK_Rendering();
+		}
+
+		return self::${$instance};	
+	}
 	
 	private $me;
 	
@@ -51,6 +61,7 @@ class CCK_Rendering
 	var $positions;
 	
 	var $grid;
+	var $infinite;
 	
 	var $css;
 	var $browser;
@@ -63,7 +74,7 @@ class CCK_Rendering
 	public function __call( $method, $args )
 	{
 		$prefix		=	strtolower( substr( $method, 0, 3 ) );
-        $property	=	strtolower( substr( $method, 3 ) );
+		$property	=	strtolower( substr( $method, 3 ) );
 		
 		if ( empty( $prefix ) ) {
 			return;
@@ -91,8 +102,8 @@ class CCK_Rendering
 											  : @$this->me[$fieldname]->{$this->mode_property}[$args[1]][$args[2]]->$property;
 				}
 			}
-        }
-    }
+		}
+	}
 	
 	// __get
     public function __get( $property ) {
@@ -107,7 +118,7 @@ class CCK_Rendering
 		return $this->debug;
 	}
 		
-	// doDesc
+	// isDesc
 	protected function isDesc( $position = '' )
 	{
 		return ( $this->desc && $this->desc == $position ) ? -1 : 0;
@@ -135,8 +146,12 @@ class CCK_Rendering
 		$app				=	JFactory::getApplication();
 		
 		$idx				=	'_';
-		if ( isset( $app->cck_idx ) && count( $app->cck_idx ) ) {
-			$idx			=	array_pop( $app->cck_idx );
+		if ( isset( $app->cck_idx ) ) {
+			$app->cck_idx[0]	=	false;
+
+			if ( count( $app->cck_idx ) > 1 ) {
+				$idx		=	array_pop( $app->cck_idx );
+			}
 		}
 		$me					=	CCK_Document::getInstance( 'html' );
 		$this->me			=	( isset( $me->fields ) ) ? $me->fields : array();
@@ -153,6 +168,7 @@ class CCK_Rendering
 		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
+		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
 		$this->path_lib		=	dirname(__FILE__);
@@ -189,11 +205,16 @@ class CCK_Rendering
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
-			$this->params['variation_default']	=	'seb_css3';
+			if ( $app->isAdmin() ) {
+				$this->params['variation_default']	=	'seb_css3b';
+			} else {
+				$this->params['variation_default']	=	JCck::getConfig_Param( ( $this->mode == 'form' ? 'site_variation_form' : 'site_variation' ), 'seb_css3' );
+			}
 		}
 		$this->id_attributes	=	( isset( $this->params['rendering_custom_attributes'] ) && $this->params['rendering_custom_attributes'] ) ? ' '.$this->params['rendering_custom_attributes'].' ' : '';
-		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';		
-		
+		$this->id_class			=	( isset( $this->params['rendering_css_class'] ) && $this->params['rendering_css_class'] ) ? $this->params['rendering_css_class'].' ' : '';
+		$this->item_attributes	=	( isset( $this->params['rendering_item_attributes'] ) && $this->params['rendering_item_attributes'] ) ? ' '.$this->params['rendering_item_attributes'].' ' : '';
+
 		if ( $this->initRendering() === false ) {
 			$app	=	JFactory::getApplication();
 			$app->enqueueMessage( 'Oops! Template Init. failed.. ; (', 'error' );
@@ -303,9 +324,11 @@ class CCK_Rendering
 	// finalize
 	public function finalize()
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$js		=	'';
-		
+		$tmpl	=	$app->input->get( 'tmpl' );
+
 		// Computation
 		if ( $this->mode == 'form' && $this->config['doComputation'] ) {
 			$format	=	JCck::getConfig_Param( 'computation_format', 0 );
@@ -358,13 +381,29 @@ class CCK_Rendering
 		
 		// Stuff
 		if ( $this->css != '' ) {
-			$doc->addStyleDeclaration( $this->css );
+			if ( $tmpl == 'raw' ) {
+				echo '<style type="text/css">'.$this->css.'</style>';
+			} else {
+				$doc->addStyleDeclaration( $this->css );
+			}			
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$js		=	'(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}			
 		}
 		if ( $this->js2 != '' ) {
-			$doc->addScriptDeclaration( '(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);' );
+			$js		=	'(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);';
+
+			if ( $tmpl == 'raw' ) {
+				echo '<script type="text/javascript">'.$js.'</script>';
+			} else {
+				$doc->addScriptDeclaration( $js );
+			}
 		}
 	}
 	
@@ -876,8 +915,8 @@ class CCK_Rendering
 						$field_width		=	( $field_width == '100%') ? '50%' : $field_width;
 						$css				.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s { width: '.$field_width.'; }'."\n";
 					}
-					$field_focus_border_color	=	$options->get( 'field_focus_border_color', '#888888' );
-					if ( $field_focus_border_color != '#888888' ) {
+					$field_focus_border_color	=	trim( $options->get( 'field_focus_border_color', '' ) );
+					if ( $field_focus_border_color != '' && $field_focus_border_color != '#888888' ) {
 						$css				.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s input.inputbox:focus, '."\n"
 											.	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s textarea.inputbox:focus, '."\n"
 											.	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$cck->mode.'s select.inputbox:focus, '."\n"
@@ -965,6 +1004,29 @@ class CCK_Rendering
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// replaceLive
+	public function replaceLive( $attr )
+	{
+		if ( $attr != '' ) {
+			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				preg_match_all( $search, $attr, $matches );
+
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[2] as $k=>$fieldname ) {
+						$target		=	$matches[1][$k];
+						$get		=	'get'.$target;
+						$replace	=	$this->$get( $fieldname );
+						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
+					}
+				}
+			}
+		}
+
+		return $attr;
+	}
+	
 	// getBrowser
 	public function getBrowser( $property = 'name' )
 	{
@@ -989,6 +1051,34 @@ class CCK_Rendering
 		}
 
 		return $paths[$path];
+	}
+
+	// isGoingtoLoadMore
+	public function isGoingtoLoadMore()
+	{
+		if ( $this->isLoadingMore() == -1 ) {
+			return true;
+		}
+
+		return $this->infinite;
+	}
+
+	// isLoadingMore
+	public function isLoadingMore()
+	{
+		$app	=	JFactory::getApplication();
+		
+		if ( $app->input->get( 'format' ) == 'raw' ) {
+			$infinite	=	$app->input->get( 'infinite' );
+
+			if ( $infinite == -1 ) {
+				return -1;
+			} elseif ( $infinite ) {
+				return 1;
+			}
+		}
+		
+		return 0;
 	}
 
 	// fakeModule (deprecated)

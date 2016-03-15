@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 if ( JCck::on() ) { ?>
     <div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">x</button>
+            <button type="button" class="close" data-dismiss="modal">×</button>
             <h3><?php echo JText::_( 'COM_CCK_BATCH_PROCESS'); ?></h3>
         </div>
         <?php if ( $user->authorise( 'core.edit', 'com_cck' ) ) { ?>
@@ -56,7 +56,7 @@ if ( JCck::on() ) { ?>
     ?>
     <div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">x</button>
+            <button type="button" class="close" data-dismiss="modal">×</button>
             <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C2_TEXT ); ?></h3>
         </div>
         <?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>
@@ -76,7 +76,11 @@ if ( JCck::on() ) { ?>
                     <div class="wrapper-icon span3">
                         <div class="icon">
                             <a href="javascript:void(0);" onclick="JCck.Dev.addNew('<?php echo $item->id; ?>');">
-                                <?php echo JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+                                <?php
+                                $img    =   JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+
+                                echo str_replace( '<img ', '<img width="32" height="32" ', $img );
+                                ?>
                                 <span><?php echo $text; ?></span>
                             </a>
                         </div>

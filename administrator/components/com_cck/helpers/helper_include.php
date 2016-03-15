@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,7 +26,7 @@ class Helper_Include extends CommonHelper_Include
 		// Additional
 		switch ( $view ) {
 			case 'box':
-				JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
+				JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
 				Helper_Include::addSmoothScrool( 500 );
 				break;
 			case 'folder':
@@ -41,7 +41,7 @@ class Helper_Include extends CommonHelper_Include
 				break;
 			case 'field':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 					JCck::loadjQueryUI();
 				}
 				Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', $script, $tmpl );
@@ -50,7 +50,7 @@ class Helper_Include extends CommonHelper_Include
 			case 'type':
 			case 'search':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.biscuit.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
@@ -59,6 +59,7 @@ class Helper_Include extends CommonHelper_Include
 				Helper_Include::addColorpicker( $script );
 				Helper_Include::addTooltip( '', '', '', '', $script );
 				break;
+			case 'session':
 			case 'version':
 				JCck::loadjQuery( true, true, true );
 				break;
@@ -70,9 +71,12 @@ class Helper_Include extends CommonHelper_Include
 			case 'folders':
 			case 'sites':
 			case 'variations':
+			case 'sessions':
 			case 'versions':
+				require_once JPATH_LIBRARIES.'/cck/joomla/html/cckactionsdropdown.php';
+
 				if ( $view == 'folders' ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 				} else {
 					JCck::loadjQuery();
 				}
@@ -95,6 +99,12 @@ class Helper_Include extends CommonHelper_Include
 					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
 				}
+				if ( $view == 'sessions' ) {
+					$doc->addStyleDeclaration( '#system-message-container.j-toggle-main.span10{width: 100%;}' );
+				}
+				break;
+			case 'list':
+				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				break;
 			case 'cck':
 				$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
@@ -113,18 +123,6 @@ class Helper_Include extends CommonHelper_Include
 		if ( $js != '' ) {
 			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) { '.$js.' });' );
 		}
-	}
-
-	// addStyleDeclaration
-	public static function addStyleDeclaration( $css, $minify = false )
-	{
-		$doc	=	JFactory::getDocument();
-		
-		if ( $minify === true ) {
-			$css	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
-		}
-		
-		$doc->addStyleDeclaration( $css );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
@@ -192,27 +190,6 @@ class Helper_Include extends CommonHelper_Include
 					});
 					';
 		$doc->addScriptDeclaration( $js );
-	}
-	
-	// addTooltip
-	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
-	{
-		if ( !JCck::on() ) {
-			$doc	=	JFactory::getDocument();
-			
-			if ( $script === true ) {
-				$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/css/jquery.qtip.css' );
-				$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-qtip/js/jquery.qtip.min.js' );
-			}
-			if ( $elem ) {
-				$js	=	'jQuery(document).ready(function($){ $("'.$elem.'").qtip({ style: {classes: "'.$classes.'"}, position: {my: "'.$pos_my.'", at: "'.$pos_at.'"} }); });';
-				if ( $tmpl == 'ajax' ) {
-					echo '<script type="text/javascript">'.$js.'</script>';
-				} else {
-					$doc->addScriptDeclaration( $js );
-				}
-			}
-		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //

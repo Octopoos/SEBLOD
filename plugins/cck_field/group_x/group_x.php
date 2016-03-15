@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -28,7 +28,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		parent::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data );
 		
@@ -37,7 +37,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	}
 		
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
 	{
 		parent::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data );
 		
@@ -45,6 +45,47 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$field->params	=	implode( '', $field->params );
 	}
 	
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		$name		=	$field->name;
+		$dispatcher	=	JDispatcher::getInstance();
+		$fields		=	self::_getChildren( $field, $config, false );
+
+		// TODO: call storage plugin.
+		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
+		$content	=	array();
+		for ( $xi = 0; $xi < $xn; $xi++ ) {
+			foreach ( $fields as $f ) {
+				if ( is_object( $f ) ) {
+					$f_name					=	$f->name;
+					$f_value				=	'';
+					$inherit				=	array( 'parent' => $field->name, 'xi' => $xi );
+					$content[$xi][$f_name]	=	clone $f;
+					//
+					if ( $field->storage == 'custom' ) {
+						$f->storage				=	$field->storage;
+						$f->storage_table		=	$field->storage_table;
+						$f->storage_field		=	$field->storage_field;
+					}
+					$table					=	$f->storage_table;
+					if ( $table && ! isset( $config['storages'][$table] ) ) {
+						$config['storages'][$table]	=	'';
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+					}
+					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi, $field ) );
+
+					$dispatcher->trigger( 'onCCK_FieldDelete', array( &$content[$xi][$f_name], $f_value, &$config ) );
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -267,7 +308,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			return $field->typo;
 		} else {			
 			$doc	=	JFactory::getDocument();
-			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 	
 			$count	=	count( $field->value );
 			$html	=	'';
@@ -281,22 +322,30 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						if ( $elem->display ) {
 							$value	=	JCck::callFunc( 'plgCCK_Field'.$elem->type, 'onCCK_FieldRenderContent', $elem );
 							if ( $value != '' ) {
-								$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
-								if ( $elem->label != '' ) {
-									$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+								if ( $elem->markup == 'none' ) {
+									$row	.=	$elem->label.$value;
+								} else {
+									$row	.=	'<div id="'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_'.$elem->type.'">';
+									if ( $elem->label != '' ) {
+										$row	.=	'<label class="cck_label_'.$elem->type.'">'.$elem->label.'</label>';
+									}
+									$row	.=	$value
+											.	'</div>';
 								}
-								$row	.=	$value
-										.	'</div>';
-								$isRow	=	true;
 							}
+							$isRow	=	true;
 						}
 					}
 					if ( $isRow ) {
-						$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
+						if ( $field->markup == 'none' ) {
+							$html	.=	$row;
+						} else {
+							$html	.=	'<div id="'.$field->name.'_'.$i.'" class="gxi"><div>' .$row. '</div></div>';
+						}
 					}
 					$i++;
 				}
-				if ( $html ) {
+				if ( $html && $field->markup != 'none' ) {
 					$html	=	'<div id="'.$field->name.'" class="gx">' .$html. '</div>';
 				}
 			}
@@ -308,8 +357,15 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-		$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
+
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/style2.css'.'" type="text/css" />';
+		} else {
+			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
+		}
+
 		$count	=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
 		$html	=	'';
 		$js		=	'';
@@ -400,7 +456,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				}
 				$html		.=	'</div>';
 				if ( $field->bool2 ) {
-					$empty		=	self::_formHTML( $field, $field->form[$i], 0, 0, $config );
+					$empty		=	self::_formHTML( $field, @$field->form[$i], 0, 0, $config );
 				}
 			}
 		}
@@ -428,17 +484,24 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$loaded	=	1;
 		
 		JCck::loadjQuery();
 		JCck::loadjQueryUI();
-		$doc->addScript( self::$path.'assets/js/script.js' );
+
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script src="'.self::$path.'assets/js/script.js'.'" type="text/javascript"></script>';
+		} else {
+			$doc->addScript( self::$path.'assets/js/script.js' );
+		}
 	}
 	
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
+		$app		=	JFactory::getApplication();
 		$doc		=	JFactory::getDocument();
 		$search		=	array( '.', '<', '>', '"', '%', ';' );
 		$replace	=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
@@ -471,7 +534,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		$js	.=	'});';
 		
-		$doc ->addScriptDeclaration( $js );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc ->addScriptDeclaration( $js );
+		}
 	}
 
 	// _formHTML
@@ -485,13 +552,13 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$rId				=	$config['rendering_id'];
 		
 		if ( $field->bool3 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"><span class="icon-minus"></span></div>';
 		}
 		if ( $field->bool2 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"><span class="icon-plus"></span></div>';
 		}
 		if ( $field->bool4 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"></div>';
+			$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"><span class="icon-circle"></span></div>';
 		}
 		
 		if ( $size_group == 1 ) {
@@ -516,87 +583,95 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		}
 		
-		foreach ( $group as $elem ) {
-			if ( $elem->display > 1 ) {
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
-				$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
-			}
-			$html		.=	$elem->form;
-			if ( $elem->display > 1 ) {
-				$html	.=	'</div>';
-				$html	.=	'</div>';
-			}
-			
-			// Computation & Conditional
-			if ( @$elem->computation ) {			
-				$computation			=	new JRegistry;
-				$computation->loadString( $elem->computation_options );
-				$computation_options	=	$computation->toObject();
-				if ( $computation_options->calc == 'custom' ) {
-					$computed	=	'';
-					if ( count( $computation_options->fields ) ) {
-						foreach ( $computation_options->fields as $k=>$v ) {
-							$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
+		if ( count( $group ) ) {
+			foreach ( $group as $elem ) {
+				if ( $elem->display > 1 ) {
+					if ( $elem->markup == 'none' ) {
+						if ( $elem->label != '' ) {
+							$html	.=	'<label for="'.$elem->name.'">'.$elem->label.'</label>';
 						}
-						$computed		=	substr( $computed, 0, -1 );
-					}
-					$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-					$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
-					$format		=	'';
-					if ( $computation_options->format == 'toFixed' ) {
-						$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
-					} elseif ( $computation_options->format ) {
-						$format	=	'.'.$computation_options->format.'()';
-					}
-					if ( @$computation_options->recalc && $js_format != 'raw' ) {
-						$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
-																	   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
-																															 .$targets.', function (s){return s'.$format.';} );' );
 					} else {
-						$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
-													  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
-						if ( $event != 'none' ) {
-							$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
-						}
-						if ( $js_format == 'raw' ) {
-							if ( $event != 'none' ) {
-								$js	.=	$js2.'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc);';
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
+					}
+				}
+				$html		.=	$elem->form;
+				if ( $elem->display > 1 && $elem->markup != 'none' ) {
+					$html	.=	'</div>';
+					$html	.=	'</div>';
+				}
+				
+				// Computation & Conditional
+				if ( @$elem->computation ) {			
+					$computation			=	new JRegistry;
+					$computation->loadString( $elem->computation_options );
+					$computation_options	=	$computation->toObject();
+					if ( $computation_options->calc == 'custom' ) {
+						$computed	=	'';
+						if ( count( $computation_options->fields ) ) {
+							foreach ( $computation_options->fields as $k=>$v ) {
+								$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
 							}
+							$computed		=	substr( $computed, 0, -1 );
+						}
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
+						$format		=	'';
+						if ( $computation_options->format == 'toFixed' ) {
+							$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
+						} elseif ( $computation_options->format ) {
+							$format	=	'.'.$computation_options->format.'()';
+						}
+						if ( @$computation_options->recalc && $js_format != 'raw' ) {
+							$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
+																		   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
+																																 .$targets.', function (s){return s'.$format.';} );' );
 						} else {
-							JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
-						}
-					}
-				} else {
-					$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
-					$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-					$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
-					if ( @$computation_options->recalc && $js_format != 'raw' ) {
-						$config['computation'][$event][]	=	array( '_'=>$computed,
-																	   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
-					} else {
-						$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
-						if ( $js_format == 'raw' ) {
+							$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
+														  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
 							if ( $event != 'none' ) {
-								$js	.=	'$("'.$computed.'").bind("'.$event.'", JCck.Core.recalc);';
+								$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
+							}
+							if ( $js_format == 'raw' ) {
+								if ( $event != 'none' ) {
+									$js	.=	$js2.'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc);';
+								}
+							} else {
+								JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
+							}
+						}
+					} else {
+						$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
+						if ( @$computation_options->recalc && $js_format != 'raw' ) {
+							$config['computation'][$event][]	=	array( '_'=>$computed,
+																		   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
+						} else {
+							$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
+							if ( $js_format == 'raw' ) {
+								if ( $event != 'none' ) {
+									$js	.=	'$("'.$computed.'").bind("'.$event.'", JCck.Core.recalc);';
+								}
 							}
 						}
 					}
+					$config['doComputation']	=	1;
 				}
-				$config['doComputation']	=	1;
-			}
-			if ( @$elem->conditional ) {
-				$conditions					=	explode( ',', $elem->conditional );
-				$elem->conditional_options	=	str_replace( '#form#', '#'.$field->name.'_'.$i.'_'.$elem->name, $elem->conditional_options );
-				if ( count( $conditions ) > 1 ) {
-					$c_opts	=	$elem->conditional_options;
-					foreach ( $conditions as $c ) {
-						$c_opts	=	str_replace( $c, $field->name.'_'.$i.'_'.$c, $c_opts );
+				if ( @$elem->conditional ) {
+					$conditions					=	explode( ',', $elem->conditional );
+					$elem->conditional_options	=	str_replace( '#form#', '#'.$field->name.'_'.$i.'_'.$elem->name, $elem->conditional_options );
+					if ( count( $conditions ) > 1 ) {
+						$c_opts	=	$elem->conditional_options;
+						foreach ( $conditions as $c ) {
+							$c_opts	=	str_replace( $c, $field->name.'_'.$i.'_'.$c, $c_opts );
+						}
+					} else {
+						$c_opts		=	str_replace( $conditions[0], $field->name.'_'.$i.'_'.$conditions[0], $elem->conditional_options );
 					}
-				} else {
-					$c_opts		=	str_replace( $conditions[0], $field->name.'_'.$i.'_'.$conditions[0], $elem->conditional_options );
+					$js	.=	'$("#'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'").conditionalStates('.$c_opts.');';
 				}
-				$js	.=	'$("#'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'").conditionalStates('.$c_opts.');';
 			}
 		}
 		
@@ -615,14 +690,20 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	}
 	
 	// _getChildren
-	protected static function _getChildren( $parent, $config = array() )
+	protected static function _getChildren( $parent, $config = array(), $isClient = true )
 	{
 		$db		=	JFactory::getDbo();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
-		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
-		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
+		if ( !$isClient ) {
+			$client_w	=	'';
+		} else {
+			$client		=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
+			$client_w	=	'c.client = "'.$client.'" AND ';
+		}
+		
+		$where	=	' WHERE '.$client_w.'b.name = "'.$parent->extended.'"'
 				.	' AND a.type != "form_action"'
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';

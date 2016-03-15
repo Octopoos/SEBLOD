@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -128,7 +128,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 											   'core.delete'=>array(),
 											   'core.delete.own'=>array(),
 											   'core.edit'=>array(),
-											   'core.edit.own'=>array()
+											   'core.edit.own'=>array(),
+											   'core.edit.own.content'=>array(),
+											   'core.export'=>array(),
+											   'core.process'=>array()
 										);
 		}
 		if ( $data['jform']['rules'] ) {

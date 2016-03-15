@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -302,13 +302,15 @@ abstract class JCckDevIntegration
 	public static function rewriteBuffer( $buffer, $data, $list, $list_assoc = array() )
 	{
 		$app			=	JFactory::getApplication();
+		$class			=	JCck::on( '3.4' ) ? ' class="hasTooltip"' : '';
 		$idx			=	0;
 		$idx2			=	2;
 		$idx3			=	3;
 		$items			=	array();
 		$list2			=	array();
 		$multilanguage	=	0;
-		if ( isset( $app->item_associations ) && $app->item_associations ) {
+		
+		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			$multilanguage	=	( isset( $data['multilanguage'] ) && $data['multilanguage'] ) ? 1 : 0;
 		}
 		$pks				=	'';
@@ -334,7 +336,7 @@ abstract class JCckDevIntegration
 					$type		=	( $type ) ? '&type='.$type : '&type='.$opt_default_type;
 					$search		=	$matches[$idx][$k];
 					$list2[$m]	=	array( 'link'=>'index.php?option=com_cck&amp;view=form'.$return.$type.'&id='.$m.$data['replace_end'] );
-					$replace=	'<a href="'.$list2[$m]['link'];	
+					$replace=	'<a'.$class.' href="'.$list2[$m]['link'];	
 					if ( $isComplete ) {
 						$replace	.=	' '.$matches[$idx3][$k].'>';	
 					}
@@ -350,7 +352,7 @@ abstract class JCckDevIntegration
 						$type		=	( $type ) ? '&type='.$type : '&type='.$opt_default_type;
 						$search		=	$matches[$idx][$k];
 						$list2[$m]	=	array( 'link'=>'index.php?option=com_cck&amp;view=form'.$return.$type.'&id='.$m.$data['replace_end'] );
-						$replace	=	'<a href="'.$list2[$m]['link'];
+						$replace	=	'<a'.$class.' href="'.$list2[$m]['link'];
 						if ( $isComplete ) {
 							$replace	.=	' '.$matches[$idx3][$k].'>';	
 						}

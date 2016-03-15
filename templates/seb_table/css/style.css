@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 table.table,table.zebra{width:100%;}
@@ -13,6 +13,7 @@ table.table th.left,table.zebra th.left,
 table.table td.left,table.zebra td.left{text-align:left;}
 table.table th.right,table.zebra th.right,
 table.table td.right,table.zebra td.right{text-align:right;}
+table.table.middle tbody td{vertical-align: middle;}
 
 table.fixed{table-layout: fixed;}
 table.table td.nowrap{white-space: nowrap;}

@@ -4,13 +4,17 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.framework' );
+if ( !JCck::on( '3.4' ) ) {
+	JHtml::_( 'behavior.framework' );
+} else {
+	JHtml::_( 'behavior.core' );
+}
 
 $app			=	JFactory::getApplication();
 $data			=	'';
@@ -29,11 +33,12 @@ $user 			=	JCck::getUser();
 
 // Type
 $type			=	CCK_Form::getType( $preconfig['type'], $id );
-$lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 if ( ! $type ) {
 	$config		=	array( 'action'=>$preconfig['action'], 'core'=>true, 'formId'=>$preconfig['formId'], 'javascript'=>'', 'submit'=>$preconfig['submit'], 'validation'=>array(), 'validation_options'=>array() );
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
+$lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
+
 $options	=	new JRegistry;
 $options->loadString( $type->{'options_'.$preconfig['client']} );
 
@@ -48,7 +53,11 @@ $stage			=	-1;
 if ( $id > 0 ) {
 	$isNew				=	0;
 	$canAccess			=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
-	$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+	//if ( $user->id && !$user->guest ) {
+		$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+	//} else {
+	//	$canEditOwn		=	false; // todo: guest
+	//}
 	
 	// canEditOwnContent
 	jimport( 'cck.joomla.access.access' );
@@ -57,7 +66,7 @@ if ( $id > 0 ) {
 		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
 		$canEditOwnContent	=	false;
 		if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
-			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.$id );
+			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$id );
 			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.$related_content_id );
 
 			if ( $related_content->author_id == $user->get( 'id' ) ) {
@@ -96,7 +105,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 				   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
-   				   'error'=>false,
+   				   'error'=>0,
 				   'fields'=>array(),
 				   'formId'=>$preconfig['formId'],
 				   'isNew'=>$isNew,
@@ -122,9 +131,14 @@ if ( ! $canAccess ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 	}
 }
+if ( $type->storage_location == 'joomla_user' && $isNew ) {
+	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+	}
+}
 
 // Fields
-$fields		=	CCK_Form::getFields( $type->name, $preconfig['client'], $stage, '', true, true );
+$fields		=	CCK_Form::getFields( array( $type->name, $type->parent ), $preconfig['client'], $stage, '', true, true );
 if ( ! count( $fields ) ) {
 	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
 }
@@ -169,7 +183,14 @@ foreach ( $variation as $var ) {
 
 // Positions
 $positions		=	array();
-$positions_more	=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a WHERE a.typeid = '.(int)$type->id.' AND a.client ="'.(string)$preconfig['client'].'"', 'position' );
+$positions_w	=	'a.typeid = '.(int)$type->id;
+if ( $type->parent != '' ) {
+	$parent_id		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type->parent.'"' );
+	if ( $parent_id ) {
+		$positions_w	=	'('.$positions_w.' OR a.typeid = '.$parent_id.')';
+	}
+}
+$positions_more	=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a WHERE '.$positions_w.' AND a.client ="'.(string)$preconfig['client'].'"', 'position' );
 
 // Begin Doc
 jimport( 'cck.rendering.document.document' );
@@ -184,7 +205,6 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
 $dispatcher	=	JDispatcher::getInstance();
-$session	=	JFactory::getSession();
 
 // Validation
 if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
@@ -240,23 +260,44 @@ foreach ( $fields as $field ) {
 		} else {
 			if ( $field->live ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
-				$hash		=	JApplication::getHash( $value );
-				$session->set( 'cck_hash_live_'.$field->name, $hash );
+
+				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
+					JCckDevHelper::secureField( $field, $value );
+				}
 			} else {
 				$value	=	( isset( $lives[$name] ) ) ? $lives[$name] : $field->live_value;
 			}
 		}
 	}
 	$field->value	=	$value;
+	
+	if ( $field->variation == 'hidden_isfilled' ) {
+		if ( $value != '' ) {
+			$field->variation	=	'hidden';
+
+			JCckDevHelper::secureField( $field, $value );
+		} else {
+			$field->variation	=	'';
+		}
+	}
 	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
 	
 	$position				=	$field->position;
 	$positions[$position][]	=	$field->name;
+
+	// Was it the last one?
+	if ( $config['error'] ) {
+		break;
+	}
 }
 
 // Merge
 if ( count( $config['fields'] ) ) {
-	$fields				=	array_merge( $fields, $config['fields'] );	// Test: a loop may be faster.
+	foreach ( $config['fields'] as $k=>$v ) {
+		if ( $v->restriction != 'unset' ) {
+			$fields[$k]	=	$v;
+		}
+	}
 	$config['fields']	=	NULL;
 	unset( $config['fields'] );
 }

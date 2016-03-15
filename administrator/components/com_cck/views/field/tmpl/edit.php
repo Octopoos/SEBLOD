@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -234,10 +234,10 @@ Helper_Display::quickCopyright();
 	<?php if ( !$tmpl ) { ?>
 	Joomla.submitbutton = function(task) {
 		if (task == 'field.cancel') {
-			Joomla.submitform(task, document.getElementById('adminForm'));
+			JCck.submitForm(task, document.getElementById('adminForm'));
 		} else {
 			if ($("#adminForm").validationEngine("validate",task) === true) {
-				Joomla.submitform(task, document.getElementById('adminForm'));
+				JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
 	}

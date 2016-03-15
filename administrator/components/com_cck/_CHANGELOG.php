@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -22,7 +22,322 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
-@ID is the ID on SEBLOD Tracker.
+-------------------- 3.8.0 Upgrade Release [xx-Feb-2016] -------------
+
+! Memory & Performance optimizations on List rendering.
+! Performance improvements on Search system >> SQL queries refactored.
+^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
+
++ "Count" (Auto / Estimate) parameter added on Search Types.
++ "Load" behaviour added to Infinite Pagination on Search Types.
+  >> support added on the following templates: Chart, Map.
++ Reorder by drag-and-drop capabilities added.
+  >> supported Object plug-ins: Joomla! Article, Joomla! Category
++ Router improved for 2 segments URLs (i.e. /author/...)
+  >> supported Object plug-ins: Joomla! Article
+
++ Ability to apply INNER/LEFT/RIGHT joins >> Search Join plug-in required.
++ "Default Variation", "Default Variation (Form)" parameters added on SEBLOD Options (Site).
++ "Optimize (Memory)" parameter added on SEBLOD Options (Site).
+
++ "Alternative Search Type" parameter added on List module.
++ "Auto Redirection (Vars)", "SEF" parameters added on List Menu Items.
++ "Export", "Process" tasks (Submit Button) support added on Content views.
++ "Hidden & Anonymous" Field Variation added on Forms.
++ "Hidden when filled" Field Variation added on Forms.
++ "Limit", "Pagination" parameters added on List Menu Items.
++ "seb_css3b" variation added (cleaner version of seb_css3).
++ Title (Inherited / Menu Item / Custom) parameter added on Forms & Lists Menu Items.
++ "URL" mode added to "Menu Item Target" on Search module.
++ "Validation" parameters added on Search Types.
+
++ "Alternative Format", "Unit", "Time Zone" parameters added on Date Typography plug-in.
++ "Auto" Tmpl parameter added on Content, "SEBLOD Form", "SEBLOD List" Link plug-ins.
++ "Behavior" parameter added on Clear Typo plug-in.
++ Content Type (Form) added on Workflow Restriction plug-in.
++ "Default Value" added on Joomla! User Live plug-in.
++ "JForm Usergroup" plug-in improved >> Native Search behavior.
++ "JForm Tag" plug-in improved >> Native Search behavior, Static Variation (Rendering).
++ "Multiple", "Parent" parameters added on Joomla! Tag Field plug-in.
++ Params (JSON) can now be retrivied from Joomla! User Live plug-in.
++ "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
++ "Rel" parameter added on Link plug-in.
++ "Remaining Characters" added on Textarea plug-in.
++ "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
+^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
+
++ "#__cck_store_item_..." support added in JCckContent class.
++ js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
+
++ "Add to Cart" permission added.
++ "Yes, but English" (Language >> JText) added on SEBLOD Options.
++ Various Improvements for upcoming SEBLOD eCommerce add-on.
+
+^ Events changed in SEBLOD core for Content Type, Field, Folder, Search Type, Template:
+	>> "onContentBeforeSave" replaced by "onCckConstructionBeforeSave"
+	>> "onContentAfterSave" replaced by "onCckConstructionAfterSave"
+	>> "onContentBeforeDelete" replaced by "onCckConstructionBeforeDelete"
+	>> "onContentAfterDelete" replaced by "onCckConstructionAfterDelete"
+- "onUserBeforeDeleteNote" event removed, use "onContentBeforeDelete"/"onContentAfterDelete".
+
+! Copyright Updated.
+! Force Random Password to have 20 characters.
+! Object Plug-ins (exporter.php, importer.php) updated for Exporter/Importer Add-ons.
+! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
+! SEBLOD.com Urls updated in Admin Menu Module.
+! Sites generation refactored for greater flexibility.
+! Various images added for all supported Object plug-ins.
+
+^ AfterStore processing/events not executed anymore if an error is thrown while storing.
+^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
+^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
+^ jQuery Validation script updated for AJAX and Confirm validations.
+^ One (seb_one) updated with "Inherited" variation parameter.
+^ "show_page_heading" parameter forced to 0 when tmpl=raw on Forms & Lists.
+^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
+
+# Add missing options pre/post before/after store processing.
+# AJAX availability issue fixed >> no need to clic more than once now, yeah!
+# "Alternative Search" issue fixed for Infinite pagination.
+# "allowUserRegistration" now supported.
+# Cookie issue while creating a new Search Type (back-end) fixed.
+# Custom Attributes issue fixed on Cotnent plug-in (beforeRender).
+# Cyrillic issue fixed (while creating a field from a Content Type).
+# < p > removed from Freetexts field in install.sql
+# Empty message issue fixed after (submitting a Form).
+# Hardcoded condition (preventing required/validation) removed on Password field.
+# HTML output improved on "Group" and "Group X" (Form views) Field plug-ins when markup=none.
+# Issues fixed on JCckContent class.
+# Keep "return" in "user profile edit" redirection.
+# Maxlength validation fixed on Messages (Configuration) on back-end.
+# Missing Languages files (for Package Export) added.
+# Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
+# Native Search behaviors fixed for Upload File/Image plug-ins.
+# Nested Lists (using "Items" view) issue fixed.
+# Permission issue fixed when Edit button/link is the 1st field assigned.
+# "Prepare Content" issue fixed on "Joomla! Module" plug-in >> "PrepareContent" method.
+# Processing Export issue fixed.
+# Registration email/mode using COM_CCK_EMAIL_REGISTERED_BODY fixed.
+# Router issue (related to 2 segments URLs) fixed (regression.. :/).
+# SEF parameter properly propagated during List rendering.
+# Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
+# Syntax (replacement) issues fixed on "Email" plug-in.
+# Time Zone now applied automatically by "Date" Typo plug-in.
+# Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
+# Various improvements or issues fixed.
+
+-------------------- 3.7.2 Upgrade Release [19-Sep-2015] -------------
+
++ "Class", "Custom Attributes" added on Image Typo plug-in.
++ "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
+
+^ Mobile Detect updated from 2.8.15 to 2.8.16.
+
+# Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
+# Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
+# Minor Javascript issues fixed (regression since Joomla! 3.4.4)
+
+-------------------- 3.7.1 Upgrade Release [17-Aug-2014] -------------
+
+! "Upgrade" process of Products improved >> SEBLOD Updater add-on required.
+! XML scripts (of each SEBLOD product) updated.
+
+! SQL Tables now backuped by default when uninstalling SEBLOD
+>> Backup or Drop behavior can be selected in "SEBLOD 3.x > Options > Component".
+
+! Post Install info updated.
+
++ "Item Identifier", "URL" params added on "Tabs" plug-in.
+
+^ <!-- Begin: SEBLOD 3.x Document --> only displayed when debug is enabled.
+^ <!-- End: SEBLOD 3.x Document --> only displayed when debug is enabled.
+
+# "onBeforeRender" Restrictions support added on Tabs plug-in.
+
+-------------------- 3.7.0 Upgrade Release [17-Jul-2015] -------------
+
++ Ability to create/link a new field to a specific Content Type... from Field Manager (or Search Type).
++ Ability to join the same table more than once added >> Search Join plug-in required.
++ Force Typography even if value is empty.
++ Session Manager added >> "Edit" capabilities for sessions created from Exporter/Importer add-ons.
+
++ Export of Processings implemented.
++ Export of Storage (Format) plug-ins implemented.
++ Import of Processings implemented.
+
++ "Custom Attribute" added on "Content", "SEBLOD Form" Link plug-ins.
++ "List" Variation added on "Select Dynamic/Simple"
++ "Prepare Content" parameter added on "Joomla! Module" plug-in.
++ "Static Options" placement added on "Select Dynamic".
++ "Use Value (Field)" added on "SEBLOD Form" Link plug-in.
++ Text input forced for Search Form, on "Wysiwyg Editor" plug-in.
++ ->values property available on "Checkbox" plug-in.
+
+! Table (seb_table) updated to render <table></table> even if no items.
+
++ "JCck.Core.baseURI" javascript property added.
+
+^ <form> ID suffixed on Form View when tmpl=component OR tmpl=raw.
+^ JCckContent class updated >> "delete" method added and issues fixed.
+^ Mobile Detect updated from 2.8.13 to 2.8.15.
+^ Various Core improvements for upcoming Builder App.
+^ Various Script/Styles improved when tmpl=raw.
+
+- Limit of characters removed in "Admin Menu" module.
+
+# "->get(...)" syntax fixed in "$cck->replaceLive()" method.
+# A few PHP notices fixed/removed.
+# Custom Attributes issue fixed on "Textarea" plug-in.
+# Download issue fixed in Custom storage.
+# Minimum number of rows forced on "Field X" plug-in.
+# Minor CSS issues fixed.
+# Minor issue (related to attachments) fixed on "Email" plug-in.
+# Minor issues fixed on "Select Dynamic".
+# Missing Script (JS) from Stuff applied on "Textarea" plug-in.
+# Javascript issues fixed for Free Storage (back-end).
+# Javascript issues fixed on "Group X" plug-in.
+# Prevent default value to be removed in "Upload File/Image" plug-ins.
+# Router issue (related to 2 segments URLs) fixed.
+# Various improvements or issues fixed.
+
+-------------------- 3.6.2 Upgrade Release [21-May-2015] -------------
+
+# Remove temporary comments.
+
+-------------------- 3.6.1 Upgrade Release [21-May-2015] -------------
+
++ J(...) support added for Custom Attributes on Textarea Field.
+
+^ Mobile Detect updated from 2.8.12 to 2.8.13.
+
+# Notice removed on "Joomla Article" Object plug-in.
+# Routing issue fixed (regression).
+
+-------------------- 3.6.0 Upgrade Release [8-May-2015] -------------
+
+! Joomla! 3.4 ready.
+* Security Release: 2 missing JEXEC security checks added.
+
++ "Alternative Search Type" added for Lists/Items rendering on Menu Items.
++ Content Type inheritance (Parent/Childs) implemented. (Thanks to pulsarinformatique!)
++ "Leave nothing behind" crowdfunding project implemented. (Thanks to the SEBLOD community!)
++ Load More (Infinite Pagination) added on Search Types.
+  >> supported templates: Accordion, List, Masonry, Table, Tabs.
++ "save2copy" Task added on Forms.
++ Router improved for 2 segments URLs (i.e. /parent/...)
+
+^ SQL table storage engine switched from MyISAM to InnoDB in install.sql (!)
+^ SQL table storage engine switched from MyISAM to InnoDB for newly created tables. (!)
+
++ "Change Column" (Alter Storage Field) added.
++ "Comparison Mode" parameter added for "Any Exact" match >> multiple vs multiple.
++ Custom Attributes applied on Content view (Root).
++ Custom Attributes applied on List views' items.
++ Multilanguage Associations available for Joomla! Category object.
+
++ "More" Link handled more intelligently >> "only if results", "only if more results".
++ "More" Link Text parameter added on List module.
++ "Show List View" parameter added on List View.
+
++ "Auto Selection" added on Submit Button plug-in.
++ "CheckAll" toggle added on Checkbox plug-in.
++ Custom Attributes applied on Links plug-ins.
++ Default/Live values used to set the "Active" tab on Tabs plug-in.
++ "Delete" methods added to "Joomla Article", Upload File/Image Field plug-ins.
++ "PrepareDownload", "PrepareResource" methods added to "Joomla Article", Upload File/Image Field plug-ins.
++ Dynamic Itemid mode based on fields' mapping added on Content Link plug-in.
++ "Group Required" (at least one field of..) capability added.
++ "has-value" class added on Select Dynamic/Numeric/Simple, Text.. (when value != '')
++ "Image Alt Fieldname" added on Image Typography plug-in.
++ "Image Title" added on Image Typography plug-in.
++ Srcset (2x, 3x) added on Image Typography plug-in.
++ Ukrainian language file added to Calendar plug-in.
++ $user->... $uri->... syntaxes processed added on Freetext plug-in.
+
++ "Delete" method added (to Field plug-ins). (!)
++ "PrepareDelete" method added (to Object plug-ins). (!)
++ "PrepareDownload" method added (to Field & Object plug-ins). (!)
++ "PrepareExport" method added >> SEBLOD Export Add-on required. (!)
++ "PrepareResource" method added >> SEBLOD WebServices Add-on required. (!)
+
++ Ability to override HTTP Header fields.
++ Ability to append "Group By" clauses and "User-defined Variables" to Search system.
+
+! One (seb_one) updated with "Custom Attributes".
+! Table (seb_table) updated with "Custom Attributes" & "Load More" capabilities.
+
+^ Default behaviour of "Show Value" changed in Form & Delete links >> now hidden by default. (!)
+^ Default User Group set as Registered (2) on User (Admin Form). (!)
+^ "Download" task refactored. (!)
+- "Group By" clause removed in Search system (!)
+^ Mootools not included anymore in each Form or List views (>= Joomla 3.4). (!)
+
+^ A few more properties available from Object plug-ins.
+^ Chosen script loaded on List views (back-end).
+^ Include inline scripts for Tabs when tmpl=raw
+^ jQuery Validation script and style updated.
+^ Mobile Detect updated from 2.8.3 to 2.8.12.
+^ "template_preview.png" updated for One (seb_one) template.
+
+- "defines.php" file (from back-end component) removed.
+- "size="1" attribute removed on JForm Category/MenuItem, Select Dynamic/Numeric/Simple.
+
+# Broken rendering issue fixed for nested lists.
+# "Create" permission check now applied on SEBLOD Form Link.
+# Check state of Email field before sending (disabled = no email).
+# Custom Redirection issue fixed Search Form (Submit Button).
+# Default set up of "Export" & "Process" permissions forced after installation.
+# Duplicated path segments issue fixed on router.
+# "Edit Own" issue fixed on Free Object.
+# HTML output fixed on "Group" & "Group X" Field plug-ins when markup=none.
+# Inherit Object automatically when creating a new Search Type based on a Content Type.
+# Inherit Search Type issue fixed on Search module.
+# Minor CSS issues fixed.
++ Missing "Delete" methods added to Free, User, User Group Object plug-ins.
+# Missing icons added on Form & List views (back-end).
+# Missing computation rules now applied on "Group" Field plug-in.
+# Multilanguage issue fixed on Joomla! Article object (regression).
+# Retriving "Bridge" Author SQL query fixed.
+# Routing issue (Auto Redirection: Content) fixed.
+# Routing issue (when SEF is OFF) fixed on Search Module.
+# Safe string issue (multiple allowed characters) fixed on Upload File/Image plug-ins.
+# "sendpassword" parameter supported on Joomla! User registration.
+# "undefined" javascript issue fixed on various plug-ins configuration.
+# Unsafe Characters issues fixed on Links' Custom Variables.
+# Validation rules fixed for fields inside Tabs.
+# Various issues fixed on App Export.
+# Various issues fixed, and code refactored on JCckContent class.
+# Various SQL queries fixed.
+# Wrong params for "Include File action" issue fixed.
+
+-------------------- 3.5.0 Upgrade Release [5-Dec-2014] -------------
+
++ XML format added on List View.
++ Ordering By "Custom Values" added.
++ Ordering Modifiers (Length, Numeric) added >> natural sorting.
+
++ "Count" parameter added on List View.
++ "Empty", "Each Word Exact" Match mode added on Search Types.
+
++ "Show Title", "Class", "Tag" added to List module.
++ "Show Title", "Class", "Tag" added to Search module.
++ "Show Description" added to Search module.
+
++ JCckDevImage class added for Images processing.
+
+! Complete Processing Task >> SEBLOD Toolbox Add-on required.
+^ Image Quality (JPG, PNG) moved to SEBLOD Options (Media).
+^ Include inline scripts for Validation when tmpl=raw
+^ Implement JCckVersion class.
+^ Move Processings from Toolbox Add-on to Core.
+! Rename #__cck_more_toolbox_processings to #__cck_more_processings.
+
+# Append/Prepend issue fixed on Submit Button plug-in.
+# Export of Restriction plug-ins issue fixed on Search Types.
+# Notices removed in Router.
+# Redirection issue fixed on SEBLOD Form Link. (regression since SEBLOD 3.4.x)
+# Remove Match modes on Div, Tabs plug-ins.
+# Tooltip issue (Heading variation) fixed (Joomla 2.5).
 
 -------------------- 3.4.3 Upgrade Release [12-Nov-2014] -------------
 
@@ -333,7 +648,7 @@ $ -> Language fix or change
 -------------------- 3.1.0 Upgrade Release [25-Apr-2013] -------------
 
 + Friendly Multilanguage Management added on Article Manager.
-+ Multilanguage Associations available for to Joomla! Article object.
++ Multilanguage Associations available for Joomla! Article object.
 + Native Tag system available for Joomla! Article & Category objects.
 
 + "Nested Exact" Match modes added on Search Types.

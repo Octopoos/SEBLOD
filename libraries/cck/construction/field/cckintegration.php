@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -224,7 +224,7 @@ if ( JCck::on() ) {
 			$html[] =	'</div></div>';
 
 			// Stuff
-			JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+			JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 			$ajax	=	'../media/system/images/modal/spinner.gif';
 			$js		=	'
 						(function ($){
@@ -512,7 +512,7 @@ if ( JCck::on() ) {
 				.	$app->input->cookie->get('jpanesliders_integration-sliders' . $component, 0, 'integer') . ", alwaysHide:true, opacity: false}); });";
 			$doc->addScriptDeclaration( $js );
 
-			JCck::loadjQuery( true, true, array( 'cck.dev-3.3.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+			JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 			$ajax	=	'../media/system/images/modal/spinner.gif';
 			$js		=	'
 						(function ($){

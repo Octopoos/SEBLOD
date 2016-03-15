@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -80,7 +80,13 @@ class JCckInstallerScriptComponent
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
-			$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
+			if ( class_exists( 'JCckVersion' ) ) {
+				$version	=	new JCckVersion;
+				$version	=	$version->getShortVersion();
+			} else {
+				$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+			}
 		}
 		
 		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			

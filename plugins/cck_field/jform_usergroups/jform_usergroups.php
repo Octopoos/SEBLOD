@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -73,9 +73,11 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 			$name	=	$field->name;
 		}
 		if ( $config['client'] == 'admin' && ! $config['pk'] && !$value ) {
-			$value		=	array( 8 );
+			$value	=	array( 2 );
 		} elseif ( $value && is_string( $value ) && strpos( $value, ',' ) !== false ) {
 			$value	=	explode( ',', $value );
+		} elseif ( is_null( $value ) ) {
+			$value	=	$field->defaultvalue;
 		}
 		if ( ! is_array( $value ) ) {
 			$value	=	array( $value );
@@ -100,9 +102,14 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 				parent::g_addScriptDeclaration( $field->script );
 			}
 		} else {
-			$values	=	( is_array( $value ) ) ? implode( ',', $value ) : $value;
-			$field->text	=	JCckDatabase::loadColumn( 'SELECT title FROM #__usergroups WHERE id IN ('.(string)$values.')' );
-			$field->text	=	implode( ',', $field->text ); //todo
+			$values			=	( is_array( $value ) ) ? implode( ',', $value ) : $value;
+
+			if ( $values != '' ) {
+				$field->text	=	JCckDatabase::loadColumn( 'SELECT title FROM #__usergroups WHERE id IN ('.(string)$values.')' );
+				$field->text	=	implode( ',', $field->text ); //todo	
+			} else {
+				$field->text	=	'';
+			}
 			parent::g_getDisplayVariation( $field, $field->variation, $values, $field->text, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$value;
@@ -121,8 +128,50 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		}
 		
 		// Prepare
+		if ( is_array( $value ) ) {
+			$value	=	implode( ',', $value );
+		}
+		$isMultiple	=	( strpos( $value, ',' ) !== false ) ? 1 : 0;
+
+		if ( $value != '' ) {
+			if ( $field->storage_location != '' ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
+				$properties	=	array( 'key', 'table' );
+				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
+
+				$field->storage_location	=	'free';
+				$field->storage_table		=	'#__user_usergroup_map';
+				$field->storage_field		=	'group_id';
+				$field->storage_field2		=	'';
+
+				$join						=	new stdClass;
+				$join->table				=	'#__user_usergroup_map';
+				$join->column				=	'user_id';
+				$join->column2				=	$properties['key'];
+				$join->table2				=	$properties['table'];
+				$join->and					=	'';
+
+				$config['joins'][$field->stage][]		=	$join;
+
+				if ( $isMultiple ) {
+					$config['query_parts']['group'][]	=	't0.id';
+				}
+			}
+		} else {
+			$field->storage					=	'none';
+			$field->storage_location		=	'';
+			$field->storage_table			=	'';
+			$field->storage_field2			=	'';
+		}
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-		
+
+		$divider			=	$field->match_value ? $field->match_value : ',';
+		$field->match_value	=	$divider;
+		if ( is_array( $field->value ) ) {
+			$field->value	=	implode( $divider, $field->value );
+			$value			=	$field->value;
+		}
+
 		// Return
 		if ( $return === true ) {
 			return $field;

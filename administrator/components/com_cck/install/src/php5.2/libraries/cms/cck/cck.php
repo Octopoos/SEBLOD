@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -95,9 +95,51 @@ abstract class JCck
 	public static function _setMultisite()
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
-			self::$_host	=	JURI::getInstance()->getHost();
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
-			
+			$alias			=	'';
+			$host			=	JURI::getInstance()->getHost();
+			$path			=	JURI::getInstance()->getPath();
+			$host2			=	'';
+			if ( $path ) {
+				$path	=	substr( $path, 1 );
+				$path	=	substr( $path, 0, strpos( $path, '/' ) );
+				$host2		=	$host.'/'.$path;
+			}
+			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			if ( count( self::$_sites ) ) {
+				$break		=	0;
+				foreach ( self::$_sites as $s ) {
+					if ( $s->aliases != '' ) {
+						$aliases	=	explode( '||', $s->aliases );
+						if ( count( $aliases ) ) {
+							foreach ( $aliases as $a ) {
+								if ( strpos( $a, '/' ) !== false ) {
+									if ( $a == $host2 ) {
+										$alias	=	$a;
+										$host	=	$s->name;
+										$break	=	1;
+										break;
+									}
+								} else {
+									if ( $a == $host ) {
+										$alias	=	$a;
+										$host	=	$s->name;
+										$break	=	1;
+										break;
+									}	
+								}
+							}
+						}
+						if ( $break ) {
+							break;
+						}
+					}
+				}
+			}
+			self::$_host				=	$host;
+			if ( isset( self::$_sites[$host] ) ) {
+				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
+			}
+
 			return true;
 		} else {
 			return false;
@@ -209,8 +251,13 @@ abstract class JCck
 		}
 		
 		$doc	=	JFactory::getDocument();
-		if ( $key == 'cck.ecommerce' ) {	// todo: explode & dispatch
-			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-1.0.0.js' );
+		if ( $key == 'cck.ecommerce' ) { // todo: explode & dispatch
+			$version	=	'1.0.0';
+			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php' ) ) {
+				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
+				$version	=	new JCckEcommerceVersion;
+			}
+			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.js' );
 		}
 		
 		$loaded[$key]	=	true;
@@ -236,18 +283,25 @@ abstract class JCck
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.3.0.min.js' );
+				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
 				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
-				foreach ( $dev as $v ) {
-					$doc->addScript( JURI::root( true ).'/media/cck/js/'.$v );
+				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+					foreach ( $dev as $v ) {
+						echo '<script src="'.JURI::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+					}
+				} else {			
+					foreach ( $dev as $v ) {
+						$doc->addScript( JURI::root( true ).'/media/cck/js/'.$v );
+					}
 				}
 				$app->cck_jquery_dev	=	true;
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.3.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.7.1.min.js' );
+			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}
 	}

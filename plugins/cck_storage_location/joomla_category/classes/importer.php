@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -20,7 +20,16 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 	{
 		if ( !$config['pk'] ) {
 			// Init
-			$pk		=	( isset( $data[self::$key] ) && $data[self::$key] > 0 ) ? $data[self::$key] : 0;
+			if ( !$pk ) {
+				if ( isset( $config['key'] ) && $config['key'] ) {
+					if ( isset( $data[$config['key']] ) && $data[$config['key']] != '' ) {
+						$pk		=	(int)JCckDatabase::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.$config['key'].' = "'.$data[$config['key']].'"' );
+					}
+					$pk		=	( $pk > 0 ) ? $pk : 0;
+				} else {
+					$pk		=	( isset( $data[self::$key] ) && (int)$data[self::$key] > 0 ) ? (int)$data[self::$key] : 0;
+				}
+			}
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
@@ -84,8 +93,9 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			}
 			
 			if ( !$config['pk'] ) {
-				$config['pk']	=	$table->{self::$key};
+				$config['pk']	=	(int)$table->{self::$key};
 			}
+			$config['isNew']	=	(int)$isNew;
 			$config['author']	=	$table->{self::$author};
 			$config['parent']	=	$table->{self::$parent};
 		}
@@ -96,7 +106,7 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 	}
 	
 	// onCCK_Storage_LocationAfterImport
-	public static function onCCK_Storage_LocationAfterImport( $fields, &$config = array() )
+	public static function onCCK_Storage_LocationAfterImports( $fields, &$config = array() )
 	{
 	}
 }

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,14 +19,17 @@ class plgCCK_FieldFreeText extends JCckPluginField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// onCCK_FieldConstruct
-	public function onCCK_FieldConstruct( $type, &$data = array() )
+	public function onCCK_FieldConstruct( $type, &$data = array(), $config = array() )
 	{
 		if ( self::$type != $type ) {
 			return;
 		}
+		$data['storage']			=	'none';
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		if ( !isset( $config['inherit'] ) ) {
+			$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -77,6 +80,8 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		$value		=	$field->defaultvalue;
 		
 		// Prepare
+		$value		=	JCckDevHelper::replaceLive( $value );
+		
 		if ( $field->bool8 ) {
 			$field->bool8	=	$config['doTranslation'];
 		}

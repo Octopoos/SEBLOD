@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,6 +15,73 @@ class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
 	
+	// authorise
+	public static function authorise( $rule, $pk )
+	{
+		return true;
+	}
+	
+	// onCCK_Storage_LocationSaveOrder
+	public static function onCCK_Storage_LocationSaveOrder( $pks = array(), $order = array() )
+	{
+		$table			=	static::_getTable();
+		$tableClassName	=	get_class( $table );
+		$contentType	=	new JUcmType;
+		$type			=	$contentType->getTypeByTable( $tableClassName );
+		$tagsObserver	=	$table->getObserverOfClass( 'JTableObserverTags' );
+		$conditions		=	array();
+		
+		if ( empty( $pks ) ) {
+			return;
+		}
+
+		foreach ( $pks as $i=>$pk ) {
+			$table->load( (int)$pk );
+			/*
+			if ( !$this->canEditState( $table ) ) {
+				unset( $pks[$i] );
+			} else*/if ( $table->ordering != $order[$i] ) {
+				$table->ordering	=	$order[$i];
+
+				if ( $type ) {
+					if (!empty( $tagsObserver ) && !empty( $type ) ) {
+						$table->tagsHelper				=	new JHelperTags;
+						$table->tagsHelper->typeAlias	=	$type->type_alias;
+						$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
+					}
+				}
+				if ( !$table->store() ) {
+					JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+
+					return false;
+				}
+				
+				// Remember to reorder within position and client_id
+				$condition	=	static::_getReorderConditions( $table );
+				$found		=	false;
+				
+				foreach ( $conditions as $cond ) {
+					if ( $cond[1] == $condition ) {
+						$found	=	true;
+						break;
+					}
+				}
+				if ( !$found ) {
+					$key			=	$table->getKeyName();
+					$conditions[]	=	array( $table->$key, $condition );
+				}
+			}
+		}
+
+		// Execute reorder for each condition
+		foreach ( $conditions as $cond ) {
+			$table->load( $cond[0] );
+			$table->reorder( $cond[1] );
+		}
+
+		return true;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// g_onCCK_Storage_LocationPrepareContent
@@ -58,7 +125,7 @@ class JCckPluginLocation extends JPlugin
 	{
 		JCckDatabase::execute( 'DELETE FROM #__cck_core WHERE id = '.(int)$pk );
 	}
-	
+
 	// g_onCCK_Storage_LocationStore
 	public function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config, $params = array() )
 	{		
@@ -107,7 +174,7 @@ class JCckPluginLocation extends JPlugin
 		}
 
 		// More
-		if ( $table && $table != $default ) {
+		if ( $table && $table != $default && $table != 'none' ) {
 			$more	=	JCckTable::getInstance( $table, 'id' );
 			$more->load( $pk, true );
 			if ( isset( $more->cck ) ) {
@@ -137,7 +204,7 @@ class JCckPluginLocation extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_checkIn
-	public function g_checkIn( $table )
+	public static function g_checkIn( $table )
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();
@@ -148,7 +215,7 @@ class JCckPluginLocation extends JPlugin
 				return false;
 			}
 			
-			if ( !$table->checkin( $pk ) ) {
+			if ( !$table->checkin() ) {
 				$app->enqueueMessage( $table->getError(), 'error' );
 				return false;
 			}
@@ -310,6 +377,11 @@ class JCckPluginLocation extends JPlugin
 			
 			$dispatcher->trigger( 'onContentAfterSave', array( 'com_categories.category', &$bridge, $isNew ) );
 		} else {
+			if ( !isset( $params['bridge_ordering'] ) ) {
+				$params['bridge_ordering']	=	1;
+			} else {
+				$params['bridge_ordering']	=	(int)$params['bridge_ordering'];
+			}
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
@@ -364,7 +436,12 @@ class JCckPluginLocation extends JPlugin
 				$bridge->publish_up	=	JFactory::getDate()->toSql();
 			}
 			if ( !$core->pkb ) {
-				$bridge->reorder( 'catid = '.(int)$bridge->catid.' AND state >= 0' );
+				if ( $params['bridge_ordering'] ) {
+					$max				=	JCckDatabase::loadResult( 'SELECT MAX(ordering) FROM #__content WHERE catid = '.(int)$bridge->catid );
+					$bridge->ordering	=	(int)$max + 1;
+				} else {
+					$bridge->reorder( 'catid = '.(int)$bridge->catid.' AND state >= 0' );
+				}
 			}
 			$bridge->check();
 			if ( empty( $bridge->language ) ) {
@@ -416,7 +493,7 @@ class JCckPluginLocation extends JPlugin
 			$author_id	=	JCckDatabase::loadResult( 'SELECT b.created_by FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pkb WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk );
 		}
 		if ( !$author_id ) {
-			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.pk = '.$pk ); // todo: a recuperer 
+			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk ); // todo: a recuperer
 		}
 
 		return $author_id;

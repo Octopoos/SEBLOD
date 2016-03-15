@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.0.0</version>
+	<version>3.8.0</version>
 	
 	<scriptfile>install/script.php</scriptfile>
 	
@@ -58,6 +58,10 @@
 					<option value="1">LIB_CCK_STORAGE_LOCATION_BRIDGE_TITLE_OPTION_CUSTOM</option>
 				</field>
 				<field name="bridge_default_title" type="text" default="#user_name#" label="" size="32" description="" class="inputbox" />
+				<field name="bridge_ordering" type="list" default="1" label="LIB_CCK_STORAGE_LOCATION_ORDERING" description="LIB_CCK_STORAGE_LOCATION_ORDERING_DESC" class="inputbox">
+					<option value="0">LIB_CCK_STORAGE_LOCATION_OPTION_DEFAULT</option>
+					<option value="1">LIB_CCK_STORAGE_LOCATION_OPTION_LAST</option>
+				</field>
 				<field name="" type="spacer" hr="true" />
 				<field name="item_tag_title" type="cck" construction="core_tag_title" default="h2" label="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS" description="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS_DESC" class="inputbox" />
 				<field name="item_class_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox"  js_appendto="jform_params_item_tag_title" js_format="html" hidden="true" />
@@ -78,6 +82,7 @@
 	
 	<cck_integration>
 		<component>com_users</component>
+		<context></context>
 		<options>{"default_type":"user","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","registration":"1"}</options>
 		<vars />
 		<view>users</view>

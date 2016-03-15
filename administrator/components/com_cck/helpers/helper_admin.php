@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,17 +15,6 @@ require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/common/admin.p
 // Helper
 class Helper_Admin extends CommonHelper_Admin
 {
-	// addFolderClass
-	public static function addFolderClass( &$css, $id, $color, $colorchar, $width = '20' )
-	{
-		if ( ! isset( $css[$id] ) ) {
-			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
-			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
-			$css[$id]	=	'.folderColor'.$id.' { width: '.$width.'px; height: 14px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
-						.	'vertical-align: middle; border: none; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; text-align:center; margin-left:auto; margin-right:auto; } ';
-		}
-	}
-	
 	// addInsidebox
 	public static function addInsidebox( $isNew )
 	{
@@ -97,6 +86,7 @@ class Helper_Admin extends CommonHelper_Admin
 						'search'=>'cck-search',
 						'seblod'=>'cck-seblod',
 						'service'=>'cck-services',
+						'session'=>'archive',
 						'site'=>'cck-multisite',
 						'template'=>'cck-template',
 						'type'=>'cck-form',

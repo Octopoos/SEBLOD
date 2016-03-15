@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,11 +17,18 @@ class CCKViewForm extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app					=	JFactory::getApplication();
+		$layout					=	$app->input->get( 'tmpl' );
+		$uniqId					=	'';
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$uniqId				=	'_'.$layout;
+		}
+		
 		$preconfig				=	array();
 		$preconfig['action']	=	'';
 		$preconfig['client']	=	'site';
-		$preconfig['formId']	=	'seblod_form';
-		$preconfig['submit']	=	'JCck.Core.submit';
+		$preconfig['formId']	=	'seblod_form'.$uniqId;
+		$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 		$preconfig['task']		=	$app->input->get( 'task', '' );
 		$preconfig['type']		=	$app->input->get( 'type', '' );
 		$preconfig['url']		=	'';
@@ -36,6 +43,7 @@ class CCKViewForm extends JViewLegacy
 	protected function prepareDisplay( $preconfig )
 	{
 		$app				=	JFactory::getApplication();
+		$config				=	JFactory::getConfig();
 		$this->form			=	$this->get( 'Form' );
 		$this->option		=	$app->input->get( 'option', '' );
 		$this->item			=	$this->get( 'Item' );
@@ -63,12 +71,13 @@ class CCKViewForm extends JViewLegacy
 		$title	=	$params->get( 'page_title' );
 		
 		if ( empty( $title ) ) {
-			$title	=	$app->getCfg( 'sitename' );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $app->getCfg( 'sitename' ), $title );
-		} elseif ( $app->getCfg( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $app->getCfg( 'sitename' ) );
+			$title	=	$config->get( 'sitename' );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
+			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
+		$config		=	NULL;
 		$this->document->setTitle( $title );
 		
 		if ( $params->get( 'menu-meta_description' ) ) {
@@ -86,7 +95,7 @@ class CCKViewForm extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-		$unique	=	'seblod_form_'.$type->name;
+		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		if ( isset( $config['id'] ) ) {
 			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
 		}
@@ -94,6 +103,13 @@ class CCKViewForm extends JViewLegacy
 		// Set
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
+		}
+		if ( $params->get( 'display_form_title', '' ) == '1' ) {
+			$this->title				=	$params->get( 'title_form_title', '' );
+		} elseif ( $params->get( 'display_form_title', '' ) == '0' ) {
+			$this->title				=		$menu->title;
+		} else {
+			$this->title				=		@$type->title;
 		}
 		$this->show_form_title		=	$params->get( 'show_form_title' );
 		if ( $this->show_form_title == '' ) {
@@ -114,9 +130,13 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
-
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			$params->set( 'show_page_heading', 0 );
+		}
+		
 		$this->config				=	&$config;
 		$this->data					=	&$data;
+		$this->form_id				=	$preconfig['formId'];
 		$this->id					=	&$id;
 		$this->params				=	&$params;
 		$this->skip					=	( $app->input->get( 'skip' ) ) ? '1' : '0';

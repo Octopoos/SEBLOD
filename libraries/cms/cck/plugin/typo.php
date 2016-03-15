@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,11 +42,12 @@ class JCckPluginTypo extends JPlugin
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 
 			if ( $applyLink && strpos( $value, '<a href' ) === false ) {
+				$link_attr		=	( isset( $field->link_attributes ) && $field->link_attributes != '' ) ? $field->link_attributes : '';
 				$link_class		=	( isset( $field->link_class ) && $field->link_class != '' ) ? 'class="'.$field->link_class.'" ' : '';
 				$link_onclick	=	( isset( $field->link_onclick ) && $field->link_onclick != '' ) ? 'onclick="'.$field->link_onclick.'" ' : '';
 				$link_rel		=	( isset( $field->link_rel ) && $field->link_rel != '' ) ? 'rel="'.$field->link_rel.'" ' : '';
 				$link_target	=	( isset( $field->link_target ) && $field->link_target != '' ) ? 'target="'.$field->link_target.'" ' : '';
-				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target );
+				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_attr );
 				$attr			=	( $attr != '' ) ? ' '.$attr : '';
 
 				return '<a href="'.$field->link.'"'.$attr.'>'.$value.'</a>';
