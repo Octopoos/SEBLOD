@@ -454,14 +454,14 @@ class plgSystemCCK extends JPlugin
 								return;
 							}
 							$itemId2	=	$options->get( 'profile_itemid', 0 );
-
-							if ( !$itemId2 ) {
-								$itemId2	=	$itemId;
-							}
 							$return		=	$app->input->getBase64( 'return', '' );
 							$return		=	$return ? '&return='.$return : '';
-							$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId2.$return;
-							$url		=	JRoute::_( $url );
+
+							if ( $itemId2 ) {
+								$url		=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId2.$return );
+							} else {
+								$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId.$return;
+							}							
 						} else {
 							require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.php';
 							$sef		=	0;
@@ -487,11 +487,18 @@ class plgSystemCCK extends JPlugin
 							$app->redirect( $url );
 						}
 					} elseif ( $view == 'registration' ) {
-						$type	=	$options->get( 'default_type', 'user' );
-						if ( !$type ) {
-							return;
+						$itemId2	=	(int)$options->get( 'registration_itemid', 0 );
+
+						if ( $itemId2 ) {
+							$url	=	JRoute::_( 'index.php?Itemid='.$itemId2 );
+						} else {
+							$type	=	$options->get( 'default_type', 'user' );
+							
+							if ( !$type ) {
+								return;
+							}
+							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&Itemid='.$itemId;
 						}
-						$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&Itemid='.$itemId;
 						$app->redirect( $url );
 					}
 				}
