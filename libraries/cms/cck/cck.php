@@ -192,39 +192,34 @@ abstract class JCck
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User
-	// todo: REFACT ALL USER STUFF !! //
 	
 	// _setUser
-	public static function _setUser( $userid = 0, $content_type = '', $profile = true )
-	{		
-		if ( self::$_user ) {
-			return self::$_user;
-		}
-
-		// jimport( 'cck.content.user' );
-		// self::$_user	=	CCK_User::getUser( $userid, $profile, $preferences );
+	protected static function _setUser( $userid = 0, $content_type = '', $profile = true )
+	{
 		self::$_user	=	JCckUser::getUser( $userid, '', true );
 	}
 	
 	// getUser
-	/*
-	public static function getUser( $userid = 0, $profile = true, $preferences = false )
-	{
-		Use JCckLegacy::getUser().
-		Note: preferences are removed since SEBLOD 3.2.0
-	}
-	*/
 	public static function getUser( $userid = 0, $content_type = '', $profile = true )
 	{
 		// Legacy Code, just in case..
 		if ( is_bool( $content_type ) ) {
 			return JCckLegacy::getUser( $userid, $content_type, $profile );
 		}
-		
+		$update		=	false;
+
+		if ( is_array( $userid ) ) {
+			$update	=	(bool)$userid[1];
+			$userid	=	(int)$userid[0];
+		}
 		if ( $userid ) {
-			// jimport( 'cck.content.user' );
-			// return CCK_User::getUser( $userid, $profile, $preferences );
-			return JCckUser::getUser( $userid, '', true );
+			if ( $update ) {
+				self::_setUser( $userid, $content_type, $profile );
+
+				return self::$_user;
+			} else {
+				return JCckUser::getUser( $userid, '', true );
+			}
 		}
 		
 		if ( ! self::$_user ) {
