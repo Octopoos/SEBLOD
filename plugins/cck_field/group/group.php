@@ -233,6 +233,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 				foreach ( $field->value as $elem ) {
 					if ( $elem->display ) {
 						$value	=	JCck::callFunc( 'plgCCK_Field'.$elem->type, 'onCCK_FieldRenderContent', $elem );
+						
 						if ( $value != '' ) {
 							if ( $elem->markup == 'none' ) {
 								$row	.=	$elem->label.$value;
@@ -306,7 +307,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		foreach ( $group as $elem ) {
-			if ( $elem->display ) {
+			if ( $elem->display > 1 ) {
 				JCck::callFunc( 'plgCCK_Field'.$elem->type, 'onCCK_FieldRenderForm', $elem );
 
 				if ( $elem->markup == 'none' ) {
@@ -319,9 +320,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
 				}
 			}
-			$html	.=	$elem->form;
+			if ( $elem->display ) {
+				$html	.=	$elem->form;
+			}
 
-			if ( $elem->display && $elem->markup != 'none' ) {
+			if ( $elem->display > 1 && $elem->markup != 'none' ) {
 				$html	.=	'</div>';
 				$html	.=	'</div>';
 			}
