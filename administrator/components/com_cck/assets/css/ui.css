@@ -407,21 +407,27 @@ span.c_mat{display:inline-block;}
 .insidebox {color:#a8a8a8; font-size:10px; position:relative; top:6px; left:-19px;}
 div.conditional table.adminlist tr.row2 td {background-color:#f0f0f0;}
 div.conditional table.adminlist tr td.states {vertical-align:top;}
-div.conditional table.adminlist tr td.states .begin{float:left; position:relative; top:8px;}
+div.conditional table.adminlist tr td.states .begin{float:left; position:relative; top:5px;}
 div.conditional table.adminlist tr td.states div.conditional_states{padding:0px; height:30px;}
-div.conditional table.adminlist tr td.states div.define{float: right; padding-right:10px;}
-div.conditional table.adminlist tr td.states div.selector{float:right; position:relative; top:4px; margin-right:10px;}
-div.conditional table.adminlist tr td.states div.selector input{padding:2px;}
-div.conditional table.adminlist tr td.ope{font-weight:bold; text-transform:uppercase; padding: 14px 4px 6px 4px; vertical-align:top;}
-div.conditional table.adminlist tr td.ope .inputbox{width:48px; margin-top:12px; padding:1px 2px; text-transform:lowercase}
+div.conditional table.adminlist tr td.states .state_kk{margin-right: 2px;}
+div.conditional table.adminlist tr td.states div.define{float: right; padding-right:5px;}
+div.conditional table.adminlist tr td.states div.selector{float:right; position:relative; top:3px; margin-right:10px;}
+div.conditional table.adminlist tr td.states div.selector input{padding:2px; margin-bottom: 0;}
+div.conditional table.adminlist tr td.ope{font-weight:bold; text-transform:uppercase; padding: 5px 4px 6px 4px; vertical-align:top;}
+div.conditional table.adminlist tr td.ope .inputbox{width:54px; margin:6px 0 8px 0; padding:1px 2px; text-transform:lowercase; position:relative; left:2px;}
 div.conditional table.adminlist tr td .inputbox.blue{color:#146295; font-size:1em;}
 div.conditional table.adminlist tr td.triggers {vertical-align:top;}
 div.conditional table.adminlist tr td.triggers div.conditional_conditions{padding:0px; height:30px;}
+div.conditional table.adminlist tr td.triggers div.conditional_conditions input.input-mini{width:70px;}
 div.conditional table.adminlist tr td.triggers span.equal{padding-left: 5px; padding-right: 8px;}
 div.conditional table.adminlist tr td.triggers span.fill{font-size:15px; position:relative; top:2px; cursor:pointer; color:#eb8207;}
+div.conditional table.adminlist tr td.triggers span.fill > .icon-menu-2{color: #0088CC; font-size:13px; position: relative; left:-22px; top:-4px;}
 div.conditional table.adminlist tr td span.del{float:right; position:relative; right:4px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/del-default.gif); background-repeat:no-repeat; cursor:pointer; }
+div.conditional table.adminlist tr td span.del.icon-minus {background:none; color:#e9594d;}
 span.add{float:right; position:relative; top:2px; right:6px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/add-default.gif); background-repeat:no-repeat; cursor:pointer; }
+span.add.icon-plus {background:none; color:#65ab55;}
 span.star{font-size:1.2em!important;}
+div.conditional table.adminlist tr td.states span.star{position:relative; top: -5px; left: -1px;}
 span.star2{color:#eb8207; font-size:0.90em!important; text-transform:uppercase;}
 div.info{float:left;color:#eb8207;}
 ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207; cursor: pointer; font-size:15px; position:relative; top:9px;}

@@ -51,7 +51,7 @@ div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow.pn
 div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
 div#seblod-sidebar ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
 
-ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: normal; font-size: 15px; position: relative; top: 2px;}
+ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
 ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #00416a; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
 ul.sortable li span.c_mat, ul.sortable li span.c_res{top: 1px;}
 ul.sortable li span.c_live{font-weight: normal;}

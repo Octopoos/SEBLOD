@@ -253,7 +253,16 @@ $doc->addScriptDeclaration( $js );
 ?>
 
 <?php
-echo '<div class="seblod"><div class="legend top center">'.$field->title.'<span class="add"></span></div></div>';
+if ( JCck::on() ) {
+	$add	=	'add icon-plus';
+	$del	=	'del icon-minus';
+	$fill	=	'<span class="icon-menu-2"></span>';
+} else {
+	$add	=	'add';
+	$del	=	'icon-minus';
+	$fill	=	'&laquo;';
+}
+echo '<div class="seblod"><div class="legend top center">'.$field->title.'<span class="'.$add.'"></span></div></div>';
 
 for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	$condition		=	'cds'.$i;
@@ -278,39 +287,39 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	$t_value0		=	JHtml::_( 'select.genericlist', $triggerstates_list, 'conditions0', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', 
 						'isEqual', $condition.'_conditions0' )
 					.	'<input type="text" id="'.$condition.'_conditions0_value" name="value" value="" class="inputbox input-mini triggers0" size="8" />'
-					.	'&nbsp;<span class="fill" name="condition0">&laquo;</span>';
+					.	'&nbsp;<span class="fill" name="condition0">'.$fill.'</span>';
 	$t_trigger0		=	JHtml::_( 'select.genericlist', $options, 'trigger', 'class="inputbox input-medium blue triggers0" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions0_trigger' );
 	
 	$t_value1		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions1', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
 						$condition.'_conditions1' )
 					.	'<input type="text" id="'.$condition.'_conditions1_value" name="value" value="" class="inputbox input-mini triggers1" size="8" />'
-					.	'&nbsp;<span class="fill" name="condition1">&laquo;</span>';
+					.	'&nbsp;<span class="fill" name="condition1">'.$fill.'</span>';
 	$t_trigger1		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers1 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions1_trigger' );
 	
 	$t_value2		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions2', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
 						$condition.'_conditions2' )
 					.	'<input type="text" id="'.$condition.'_conditions2_value" name="value" value="" class="inputbox input-mini triggers2" size="8" />'
-					.	'&nbsp;<span class="fill" name="condition2">&laquo;</span>';
+					.	'&nbsp;<span class="fill" name="condition2">'.$fill.'</span>';
 	$t_trigger2		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers2 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions2_trigger' );
 	
 	$t_value3		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions3', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
 						$condition.'_conditions3' )
 					.	'<input type="text" id="'.$condition.'_conditions3_value" name="value" value="" class="inputbox input-mini triggers3" size="8" />'
-					.	'&nbsp;<span class="fill" name="condition3">&laquo;</span>';
+					.	'&nbsp;<span class="fill" name="condition3">'.$fill.'</span>';
 	$t_trigger3		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers3 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions3_trigger' );
 						
 	$t_value4		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions4', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
 						$condition.'_conditions4' )
 					.	'<input type="text" id="'.$condition.'_conditions4_value" name="value" value="" class="inputbox input-mini triggers4" size="8" />'
-					.	'&nbsp;<span class="fill" name="condition4">&laquo;</span>';
+					.	'&nbsp;<span class="fill" name="condition4">'.$fill.'</span>';
 	$t_trigger4		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers4" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions4_trigger' );
 	
-	$remove		=	( $i > 0 ) ? '<span class="del"></span>' : '<span class="del" style="visibility: hidden;"></span>';
+	$remove		=	( $i > 0 ) ? '<span class="'.$del.'"></span>' : '<span class="'.$del.'" style="visibility: hidden;"></span>';
 	
 	echo '<div id="'.$condition.'" class="seblod conditional">'
 	 .	 '<div class="legend top left">'.'# '.($i + 1).'.</div>'
@@ -318,7 +327,7 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	 .	 '<tr class="half">'
 	 .	 '<th width="400px" align="center">'.JText::_( 'COM_CCK_STATES' ).'</th>'
 	 .	 '<th align="center"></td>'
-	 .	 '<th width="350px" align="center">'.JText::_( 'COM_CCK_TRIGGERS' ).'</td>'
+	 .	 '<th width="380px" align="center">'.JText::_( 'COM_CCK_TRIGGERS' ).'</td>'
 	 .	 '</tr>'
 	 .	 '<tr class="row0" height="145px">'
 	 .	 '<td width="400px" align="center" class="states">'
@@ -331,7 +340,7 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	 .	 '<div class="selector">'.$s_selector2.'<span class="star"> &sup1;</span>'.$s_revert2.'<span class="star">&sup2;</span></div><div class="define">'.$states2.'<span>'.$s_value2.'</span></div></div>'
 	 .	 '</td>'
 	 .	 '<td class="ope" align="center">'.JText::_( 'COM_CCK_WHEN' ).$t_rule.'</td>'
-	 .	 '<td width="350px" align="center" class="triggers">'
+	 .	 '<td width="380px" align="center" class="triggers">'
 	 .	 '<div class="conditional_conditions">'.$t_trigger0.$t_value0.'</div>'
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger1.$t_value1.'</div>'
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger2.$t_value2.'</div>'

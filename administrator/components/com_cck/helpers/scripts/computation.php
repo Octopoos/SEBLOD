@@ -217,7 +217,7 @@ echo '<div class="seblod"><div class="legend top center">'.$field->title.'</div>
  .	 JCckDev::getForm( 'core_computation_precision', '', $config )
  .	 '</li>'
  .	 JCckDev::renderForm( 'core_computation_recalc', '', $config )
- .	 JCckDev::renderForm( 'core_computation_event', '', $config, array( 'defaultvalue'=>'change', 'options'=>'None=none||Event=optgroup||Event Change=change||Event Keyup=keyup', 'storage_field'=>'event' ), array(), 'col2' )
+ .	 JCckDev::renderForm( 'core_computation_event', '', $config, array( 'defaultvalue'=>'change', 'options'=>'None=none||Event=optgroup||Event Change=change||Event Keyup=keyup', 'storage_field'=>'event' ) )
  .	 '</ul></div>';
 ?>
 <div class="seblod inverted" style="display:none;">
