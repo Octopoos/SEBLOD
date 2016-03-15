@@ -61,8 +61,11 @@ ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#00416a; padding
 ul.sortable li.field a:hover.b{color:#0088CC; padding-left:2px;}
 ul.sortable li.field a.b [class^="icon-"],
 ul.sortable li.field a.b [class*=" icon-"] {margin-right: 0;}
-ul.sortable li div.pane div.col1{height: 30px;right: 302px;}
-ul.sortable li div.pane div.col2{height: 30px;right: 52px;}
+ul.sortable li div.pane div.col1 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: 302px; }
+ul.sortable li div.pane div.col2 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: 52px; }
+ul.sortable li div.pane div.col1 > *,
+ul.sortable li div.pane div.col2 > * {display: block; margin: auto;}
+
 ul.sortable li div.pane div{color: #ffffff; font-weight: bold;}
 
 a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,

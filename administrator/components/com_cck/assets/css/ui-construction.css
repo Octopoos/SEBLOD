@@ -85,7 +85,7 @@ ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;
 ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200px;z-index: 900;}
 #linkage{display:block; height:24px; width:22px; z-index: 99;}
 #linkage_wrap{position:absolute; top:13px; right:15px; z-index: 99;}
-ul.sortable li div.pane span.text {font-size: 10px; line-height:22px;}
+ul.sortable li div.pane span.text {font-size: 10px;}
 ul.sortable li div.pane .hidden{display:inline-block;}
 div.colc .icon-menu-2{position: relative; left:-22px; font-size:12px;}
 div.colc .sp2se{margin-left:0; }
@@ -130,6 +130,6 @@ div.textdesc{float:left;line-height:34px;}
 a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#EB8207;}
 
 body.com_cck ul.sortable_header li div.pane{right: 24px;}
-body.com_cck ul.sortable li div.pane div.colc{padding-top: 3px;position: relative;width: 200px;z-index: 99;}
+body.com_cck ul.sortable li div.pane div.colc{padding-top: 0;position: relative;width: 200px;z-index: 99;}
 body.com_cck ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 97;font-size:11px;  top:-15px;}
 body.com_cck ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 98;
