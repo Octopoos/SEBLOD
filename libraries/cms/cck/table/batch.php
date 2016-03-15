@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -72,6 +72,32 @@ class JCckTableBatch extends JObject
 		}
 	}
 	
+	// bindArray
+	public function bindArray( $data )
+	{
+		if ( count( $data ) ) {
+			$k	=	key( $data );
+			if ( is_string( $k ) ) {
+				foreach ( $data[$k] as $v ) {
+					$row				=	new stdClass;
+					$row->$k			=	$v;
+					$this->_tbl_rows[]	=	$row;
+				}
+			} else {
+				foreach ( $data as $key=>$val ) {
+					if ( count( $val ) ) {
+						$row		=	new stdClass;
+						foreach ( $val as $k=>$v ) {
+							$row->$k	=	$v;
+							
+						}
+						$this->_tbl_rows[]	=	$row;
+					}
+				}
+			}
+		}
+	}
+
 	// check
 	public function check( $force = array(), $ignore = array(), $init = array() )
 	{

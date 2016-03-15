@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,7 +21,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $key			=	'id';
 	
 	protected static $access		=	'';
-	protected static $author		=	'';
+	protected static $author		=	'id';
+	protected static $author_object	=	'';
 	protected static $created_at	=	'registerDate';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -31,11 +32,14 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $to_route		=	'';
 	
 	protected static $context		=	'';
+	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'name ASC' );
 	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
+	protected static $routes		=	array();
+	protected static $sef			=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -202,8 +206,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		
 		// Init
 		$db		=	JFactory::getDbo();
+		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		$null	=	$db->getNullDate();
-		$now	=	JFactory::getDate()->toSql();
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {
@@ -329,7 +333,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			self::_initTable_fromSite( $table, $data, $config );
 			
 			if ( $isNew ) {
-				$activation	=	$parameters->get( 'useractivation' );
+				$activation		=	$parameters->get( 'useractivation' );
+
+				if ( empty( $data['password'] ) ) {
+					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password2']	=	$data['password'];
+				}
 				if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
 					$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
 					$data['block']						=	1;
@@ -346,7 +355,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			if ( ! $table->save() ) {
 				$app->enqueueMessage( JText::sprintf( 'COM_CCK_REGISTRATION_SAVE_FAILED', $table->getError() ), 'error' );
 				$config['error']	=	true;
-				return;
+
+				return false;
 			}
 			
 			if ( $isNew ) {
@@ -365,17 +375,25 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	
 			// Check Error
 			if ( self::$error === true ) {
+				$config['error']	=	true;
+
 				return false;
 			}
 			
 			// Prepare
 			if ( is_array( $data ) ) {
+				if ( $isNew && empty( $data['password'] ) ) {
+					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password2']	=	$data['password'];
+				}
 				$table->bind( $data );
 			}
 			self::_completeTable( $table, $data, $config, $parameters );
 			
 			// Store
-			$table->save();
+			if ( !$table->save() ) {
+				$config['error']	=	true;
+			}
 			
 			self::$pk	=	$table->{self::$key};
 			if ( !$config['pk'] ) {
@@ -493,7 +511,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$table->groups	=	array_unique( $table->groups );
 				}
 			} else {
-				$table->groups	=	NULL;
+				$table->groups	=	JUserHelper::getUserGroups( $table->{self::$key} );
 			}
 		}
 	}
@@ -562,7 +580,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
 													$data['name'],
 													$data['sitename'],
-													$data['siteurl'],
 													$data['username'],
 													$data['password_clear']
 									);
@@ -700,6 +717,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'author_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

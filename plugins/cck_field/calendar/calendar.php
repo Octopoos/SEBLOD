@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -38,12 +38,21 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
+		// Get some system objects.
+		$jconfig = JFactory::getConfig();
+		$juser = JFactory::getUser();
 		// Set
 		$value	=	trim( $value );
 		if ( $value == '' || $value == '0000-00-00 00:00:00' ) {
 			$field->value	=	'';
 			$field->text	=	'';
 		} else {
+			
+			$date = JFactory::getDate($value, 'UTC');
+			$date->setTimezone(new DateTimeZone($juser->getParam('timezone', $jconfig->get('offset'))));
+
+			// Transform the date string.
+			$value = $date->format('Y-m-d H:i:s', true, false);
 			$field->value	=	$value;
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
@@ -62,6 +71,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
+		// Get some system objects.
+		$jconfig = JFactory::getConfig();
+		$juser = JFactory::getUser();
 		// Init
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		if ( count( $inherit ) ) {
@@ -78,6 +90,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value		=	'';
 			$storedDate	=	'';
 		} else {
+			$date = JFactory::getDate($value, 'UTC');
+			$date->setTimezone(new DateTimeZone($juser->getParam('timezone', $jconfig->get('offset'))));
+
+			// Transform the date string.
+			$value = $date->format('Y-m-d H:i:s', true, false);
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
 			$value	=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
 			$Jdate	=	date( 'Y-m-d H:i:s',  $value  );
@@ -155,7 +172,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
-		
+
+		// Get some system objects.
+		$jconfig = JFactory::getConfig();
+		$juser = JFactory::getUser();
+			
 		// Init
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		if ( count( $inherit ) ) {
@@ -172,6 +193,12 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value		=	'';
 			$storedDate	=	'';
 		} else {
+
+			$date = JFactory::getDate($value, 'UTC');
+			$date->setTimezone(new DateTimeZone($juser->getParam('timezone', $jconfig->get('offset'))));
+
+			// Transform the date string.
+			$value = $date->format('Y-m-d H:i:s', true, false);
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
 			$value	=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
 			$Jdate	=	date( 'Y-m-d H:i:s',  $value  );
@@ -211,7 +238,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			if ( JCck::on() ) {
-				$form		.=	'<button class="btn" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
+				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
 			} else {
 				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';	
 			}
@@ -254,6 +281,17 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( is_array( $value ) ) {
 			$value	=	trim( $value[$xk] );
 		}
+
+		if((trim($value) != '0000-00-00 00:00:00') && (intval($value) > 0)){
+			// Get the server timezone setting.
+					$offset = JFactory::getConfig()->get('offset');
+
+					// Return an SQL formatted datetime string in UTC.
+					$value = JFactory::getDate($value, $offset)->toSql();
+		}
+
+		
+
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
 		$value	=	( $options2['storage_format'] == '0' ) ? $value : strtotime( $value );
@@ -294,21 +332,29 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$lang	=	JFactory::getLanguage();
 		$loaded	=	1;
 		
-		$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
-		$doc->addScript( self::$path.'assets/js/jscal2.js' );
-		$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/jscal2.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/border-radius.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css'.'" type="text/css" />';
+			echo '<script src="'.self::$path.'assets/js/jscal2.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js'.'" type="text/javascript"></script>';
+		} else {
+			$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
+			$doc->addScript( self::$path.'assets/js/jscal2.js' );
+			$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		}
 	}
 	
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
-		$doc	=	JFactory::getDocument();
 		$js	=	'
 				<script type="text/javascript">
 					var cal = Calendar.setup({';

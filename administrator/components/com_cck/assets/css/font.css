@@ -28,6 +28,22 @@
 div.sidebar-nav.quick-icons [class*="myicon-cck-"] {
 	margin-right: 9px;
 }
+div#cpanel [class*="myicon-cck-"] {
+	font-size: 48px;
+	margin: 10px 0;
+}
+div#cpanel .icon_small [class*="myicon-cck-"] {
+	font-size: 24px;
+	margin: 10px 0;
+}
+div#cpanel .icon_small_left [class*="myicon-cck-"] {
+	float: left;
+	margin: 3px 0 0 10px;
+}
+div#cpanel .icon_small_right [class*="myicon-cck-"] {
+	float: right;
+	margin: 3px 10px 0 0;
+}
 
 .myicon-cck-template:before {
 	content: "\74";

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -113,15 +113,21 @@ class CckRouter extends JComponentRouterBase
 			}
 			if ( !$legacy ) {
 				if ( isset( $menuItem->query['search'] ) ) {
-					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-					if ( $count == 2 && $params['doSEF'][0] == '4'  ) {
-						if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
-							require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-							$properties			=	array( 'parent_object' );
-							$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
-							if ( $properties['parent_object'] != '' ) {
-								$params['doSEF'][0]	=	'2';
-								$params['location']	=	$properties['parent_object'];
+					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->params->get( 'sef', '' ) );
+					
+					if ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) {
+						if ( $count == 1 ) {
+							if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+								require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+
+								$target				=	( $params['doSEF'][0] == '5' ) ? 'author_object' : 'parent_object';
+								$properties			=	array( $target );
+								$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+
+								if ( $properties[$target] != '' ) {
+									$params['doSEF'][0]	=	'2';
+									$params['location']	=	$properties[$target];
+								}
 							}
 						}
 					}
@@ -142,15 +148,17 @@ class CckRouter extends JComponentRouterBase
 				} elseif ( $count == 1 ) {
 					$vars['option']		=	'com_content';
 					
-					@list( $id, $alias )=	explode( ':', $segments[0], 2 );
-					$category			=	JCategories::getInstance('Content')->get( $id );
+					$idArray			=	explode( ':', $segments[0], 2 );
+					$id					=	(int)$idArray[0];
+					$alias				=	(string)@$idArray[1];
+					$category			=	JCategories::getInstance( 'Content' )->get( $id );
+
 					if ( $category && $category->id == $id && $category->alias == $alias ) {
 						$vars['view']	=	'categories';
 					} else {
 						$vars['view']	=	'article';
 					}
-					
-					$vars['id']		=	$segments[0];
+					$vars['id']			=	$segments[0];
 				}
 			}
 		}

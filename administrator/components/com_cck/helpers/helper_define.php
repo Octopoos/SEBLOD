@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,7 +17,7 @@ if ( is_file( JPATH_COMPONENT.'/_VERSION.php' ) ) {
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Core
 
-define( 'CCK_VERSION', 			( isset( $version ) && is_object( $version ) ) ? $version->getShortVersion() : '3.x' );
+define( 'CCK_VERSION', 			( isset( $version ) && is_object( $version ) ) ? $version->getFullVersion() : '3.x' );
 define( 'CCK_NAME',				'cck' );
 define( 'CCK_TITLE',			'CCK' );
 define( 'CCK_COM',				'com_'.CCK_NAME );

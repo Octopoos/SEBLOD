@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,7 +44,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 
 <div class="modal modal-small hide fade" id="<?php echo $target_id; ?>">
 	<div class="modal-header">
-		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
+		<button type="button" role="presentation" class="close" data-dismiss="modal">×</button>
 		<h3><?php echo $legend; ?></h3>
 	</div>
 	<div class="modal-body">
@@ -65,7 +65,11 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		        <div class="wrapper-icon span3">
 		            <div class="icon">
 		                <a href="<?php echo $link; ?>" target="_parent">
-		                    <?php echo JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+		                    <?php
+		                    $img	=	JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+		                    
+							echo str_replace( '<img ', '<img width="32" height="32" ', $img );
+		                    ?>
 		                    <span><?php echo $text; ?></span>
 						</a>
 		            </div>
@@ -77,7 +81,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://vip.seblod.com', '_blank'); return false;">
+		<button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('http://www.seblod.com/store/extensions/applications/', '_blank'); return false;">
 			<?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
 		</button>
 		<button class="btn" type="button" data-dismiss="modal">

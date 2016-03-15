@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,6 +42,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         </ul>
 	</div>
     
+    <!--
     <?php if ( !$this->isNew ) { ?>
         <div class="seblod">
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_SOURCES' ); ?></div>
@@ -65,6 +66,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             </div>
         </div>
     <?php } ?>
+    -->
 </div>
 
 <div class="clr"></div>

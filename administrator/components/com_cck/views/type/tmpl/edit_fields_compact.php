@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,8 +14,13 @@ $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $clone		=	'';
 $positions	=	array();
-?>
 
+if ( JCck::on() ) {
+    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+} else {
+    $attr   =   array( 'class'=>' edit', 'span'=>'' );
+}
+?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">
         <div class="seblod">
@@ -34,7 +39,7 @@ $positions	=	array();
 							$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
 						}
 						JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Type'.$this->item->master, array( &$field, $style, $data ) );
-						Helper_Workshop::displayField( $field, $type_field );
+						Helper_Workshop::displayField( $field, $type_field, $attr );
 					}
 				} else {
 					$positions[]	=	$pos->name;
@@ -65,7 +70,7 @@ $positions	=	array();
                         $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                     }
                     JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Type'.$this->item->master, array( &$field, $style, $data ) );
-                    Helper_Workshop::displayField( $field, $type_field );
+                    Helper_Workshop::displayField( $field, $type_field, $attr );
                 }
                 echo '</ul></div><div id="sortable_original" style="display: none;"></div>';
             }

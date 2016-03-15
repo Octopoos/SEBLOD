@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,6 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckDevHelper
 abstract class JCckDevHelper
 {
+	// alterTableAddColumn
+	public static function alterTableAddColumn( $table, $column, $column_prev = '', $type = 'VARCHAR(50)' )
+	{
+		$db			=	JFactory::getDbo();
+		$columns	=	$db->getTableColumns( $table );
+
+		if ( $column_prev != '' && $column != $column_prev ) {
+			if ( !isset( $columns[$column] ) ) {
+				JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' CHANGE '.JCckDatabase::quoteName( $column_prev ).' '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL' );
+			}
+		} elseif ( !isset( $columns[$column] ) ) {
+			JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL' );
+		}
+	}
+
 	// createFolder
 	public static function createFolder( $path, $mode = 0755 )
 	{
@@ -27,6 +42,19 @@ abstract class JCckDevHelper
 		return $path;
 	}
 
+	// explode
+	public static function explode( $delimiters, $string, $limit = null, $replace = array( 'search'=>array( ' ', "\r" ), 'replace'=>'' ) )
+	{
+		if ( is_array( $replace ) && isset( $replace['search'] ) && isset( $replace['replace'] ) ) {
+			$string		=	str_replace( $replace['search'], $replace['replace'], $string );
+		}
+
+		$string		=	str_replace( $delimiters, '||', $string );
+		$list		=	explode( '||', $string );
+		
+		return $list;
+	}
+
 	// formatBytes
 	public static function formatBytes( $bytes, $precision = 2 )
 	{ 
@@ -38,6 +66,12 @@ abstract class JCckDevHelper
 		$bytes	/=	pow( 1024, $pow );
 		
 		return round( $bytes, $precision ).' '.$units[$pow];
+	}
+	
+	// getAbsoluteUrl
+	public static function getAbsoluteUrl( $itemId )
+	{
+		return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) );
 	}
 	
 	// getBranch
@@ -140,7 +174,7 @@ abstract class JCckDevHelper
 	}
 	
 	// getRouteParams
-	public static function getRouteParams( $name )
+	public static function getRouteParams( $name, $sef = '' )
 	{
 		static $params	=	array();
 		
@@ -152,7 +186,13 @@ abstract class JCckDevHelper
 			$object->options	=	json_decode( $object->options );
 
 			$params[$name]				=	array();
-			$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+
+			if ( $sef != '' ) {
+				$params[$name]['doSEF']	=	$sef;
+			} else {
+				$params[$name]['doSEF']	=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+			}
+
 			$params[$name]['join_key']	=	'pk';
 			$params[$name]['location']	=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
 		}
@@ -242,13 +282,16 @@ abstract class JCckDevHelper
 		}
 		if ( $str != '' ) {
 			$str	=	str_replace( '$uri-&gt;get', '$uri->get', $str );
+			
 			if ( strpos( $str, '$uri->get' ) !== false ) {
 				$matches	=	'';
 				$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 				preg_match_all( $search, $str, $matches );
+				
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $k=>$v ) {
 						$variable	=	$matches[2][$k];
+						
 						if ( $v == 'Current' ) {
 							$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
 							$str		=	str_replace( $matches[0][$k], $request, $str );
@@ -256,6 +299,7 @@ abstract class JCckDevHelper
 							$value				=	'';
 							$custom_v			=	'';
 							static $custom_vars	=	array();
+							
 							if ( !isset( $custom_vars[$name] ) ) {
 								$custom_vars[$name]	=	explode( '&', $str );
 							}
@@ -277,14 +321,19 @@ abstract class JCckDevHelper
 							$str		=	str_replace( '&'.$custom_v.'='.$matches[0][$k], $value, $str );
 						} else {
 							$request	=	'get'.$v;
-							$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
+							
+							if ( $v == 'Int' ) {
+								$str		=	str_replace( $matches[0][$k], (int)$app->input->$request( $variable, '' ), $str );
+							} else {
+								$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
+							}
 						}
 					}
 				}
 			}
 		}
 		if ( $str != '' && strpos( $str, '$user->' ) !== false ) {
-			$user			=	JFactory::getUser();
+			$user			=	JCck::getUser();
 			if ( strpos( $str, '$user->getAuthorisedViewLevels()' ) !== false ) {
 				$access		=	implode( ',', $user->getAuthorisedViewLevels() );
 				$str		=	str_replace( '$user->getAuthorisedViewLevels()', $access, $str );
@@ -310,6 +359,12 @@ abstract class JCckDevHelper
 		}
 
 		return $str;
+	}
+
+	// secureField
+	public static function secureField( $field, $value )
+	{
+		JFactory::getSession()->set( 'cck_hash_live_'.$field->name, JApplication::getHash( $value ) );
 	}
 
 	// setDynamicVars

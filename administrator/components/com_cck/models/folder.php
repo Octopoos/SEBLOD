@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -139,15 +139,31 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['folders2']							=	JCckDatabase::loadObjectList( 'SELECT id, name, path FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['plugins']							=	CCK_Export::getCorePlugins();
 		$data['plugins']['cck_field_live']['stage']	=	true;
-		$data['processings']						=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_more_processings', 'folder' );
+		$data['processings']						=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_more_processings', 'id' );
+		$data['processings2']						=	JCckDatabase::loadObjectList( 'SELECT folder FROM #__cck_more_processings', 'folder' );
 		$data['styles']								=	JCckDatabase::loadObjectList( 'SELECT * FROM #__template_styles', 'id' );
 		$data['tables']								=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
-		$data['variations']							=	array( 'empty'=>true, 'joomla'=>true, 'seb_css3'=>true );
+		$data['variations']							=	array(
+															'empty'=>true,
+															'joomla'=>true,
+															'seb_css3'=>true,
+															'seb_css3b'=>true
+														);
+		
+		// Copyright
+		if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_packager"' ) > 0 ) {
+			$params		=	JComponentHelper::getParams( 'com_cck_packager' );
+			$copyright	=	$params->get( 'copyright' );
+		} else {
+			$copyright	=	'';
+		}
+
 		CCK_Export::createDir( $data['root_content'] );
 		CCK_Export::createDir( $data['root_elements'] );
 		CCK_Export::createDir( $data['root_extensions'] );
 		CCK_Export::createDir( $data['root_sql'] );
+		
 		if ( isset( $dependencies['categories'] ) ) {
 			$data['root_category']	=	CCK_Export::exportRootCategory( $folders['0'], $data, $extensions );
 		}
@@ -170,29 +186,29 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 					}
 				}
 			}
-			CCK_Export::exportElements( 'folder', $folders, $data, $extensions );
+			CCK_Export::exportElements( 'folder', $folders, $data, $extensions, 0, $copyright );
 			
 			if ( isset( $elements['fields'] ) ) {
 				$fields		=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.folder = '.(int)$folder->id );
-				CCK_Export::exportElements( 'field', $fields, $data, $extensions, 500 );
+				CCK_Export::exportElements( 'field', $fields, $data, $extensions, 500, $copyright );
 			}
 			if ( isset( $elements['templates'] ) ) {
 				$templates	=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_templates AS a WHERE a.folder = '.(int)$folder->id );
-				CCK_Export::exportElements( 'template', $templates, $data, $extensions );
+				CCK_Export::exportElements( 'template', $templates, $data, $extensions, 0, $copyright );
 			}
 			if ( isset( $elements['types'] ) ) {
 				$types		=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_types AS a WHERE a.folder = '.(int)$folder->id );
 				if ( count( $types ) ) {
 					$isApp	=	true;
 				}
-				CCK_Export::exportElements( 'type', $types, $data, $extensions );
+				CCK_Export::exportElements( 'type', $types, $data, $extensions, 0, $copyright );
 			}
 			if ( isset( $elements['searchs'] ) ) {
 				$searchs	=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_searchs AS a WHERE a.folder = '.(int)$folder->id );
 				if ( count( $searchs ) ) {
 					$isApp	=	true;
 				}
-				CCK_Export::exportElements( 'search', $searchs, $data, $extensions );
+				CCK_Export::exportElements( 'search', $searchs, $data, $extensions, 0, $copyright );
 			}
 		}
 		
@@ -224,6 +240,11 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			}
 		}
 
+		// Elements
+		if ( $copyright ) {
+			CCK_Export::update( $data['root_elements'], $copyright );
+		}
+
 		// Xml
 		$folders[0]->description	=	'SEBLOD 3.x '.$folders[0]->title.' App - www.seblod.com';
 		$folders[0]->name			=	$filename;
@@ -233,7 +254,12 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		
 		if ( is_object( $xml ) ) {
 			$manifest		=	JPATH_ADMINISTRATOR.'/manifests/packages/pkg_'.$filename.'.xml';
+
 			if ( is_file( $manifest ) ) {
+				if ( $copyright ) {
+					CCK_Export::update( $manifest, $copyright );
+				}
+
 				$manifest	=	JCckDev::fromXML( $manifest );
 				$tags		=	array(
 								'copyright',
@@ -264,11 +290,19 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$path_zip					.=	'.zip';
 
 		// Script
+		if ( is_file( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php' ) ) {
+			if ( $copyright ) {
+				CCK_Export::update( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $copyright );
+			}
+		} // todo: else
 		$script						=	$xml->addChild( 'scriptfile', 'pkg_script.php' );
 		JFile::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
 		$buffer						=	JFile::read( $path.'/pkg_script.php' );
 		$buffer						=	str_replace( '%class%', $filename, $buffer );
 		JFile::write( $path.'/pkg_script.php', $buffer );
+		if ( $copyright ) {
+			CCK_Export::update( $path.'/pkg_script.php', $copyright );
+		}
 
 		// Extensions
 		$files						=	$xml->addChild( 'files' );
@@ -301,7 +335,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 						// todo
 					}
 					if ( is_array( $f_file ) && $f_file['src'] != '' ) {
-						CCK_Export::exportFile( $f_type, $data, $f_file );
+						CCK_Export::exportFile( $f_type, $data, $f_file, array(), $copyright );
 						$file				=	$files->addChild( 'file', $f_name );
 						$file->addAttribute( 'type', $f_type );
 						$file->addAttribute( 'id', $f_id );
@@ -322,7 +356,21 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 					$l	=	$lang->addChild( 'language', $language.'/'.$language.'.pkg_'.$filename.'.ini' );
 					$l->addAttribute( 'tag', $language );
 					CCK_Export::createDir( $path.'/languages/'.$language );
+
+					if ( $copyright ) {
+						CCK_Export::update( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $copyright );
+					}
 					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.ini' );
+				}
+				if ( is_file( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' ) ) {
+					$l	=	$lang->addChild( 'language', $language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
+					$l->addAttribute( 'tag', $language );
+					CCK_Export::createDir( $path.'/languages/'.$language );
+
+					if ( $copyright ) {
+						CCK_Export::update( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $copyright );
+					}
+					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
 				}
 			}
 		}
@@ -348,7 +396,10 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 
 		CCK_Export::clean( $path );
 		CCK_Export::createFile( $path.'/pkg_'.$filename.'.xml', '<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML() );
-		
+
+		if ( $copyright ) {
+			CCK_Export::update( $path.'/pkg_'.$filename.'.xml', $copyright );
+		}
 		return CCK_Export::zip( $path, $path_zip );
 	}
 	

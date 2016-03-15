@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,11 +19,18 @@ class CCKViewForm extends JViewLegacy
 		$app	=	JFactory::getApplication();
 		
 		if ( $this->getlayout() != 'select' ) {
+			$layout					=	$app->input->get( 'tmpl' );
+			$uniqId					=	'';
+
+			if ( $layout == 'component' || $layout == 'raw' ) {
+				$uniqId				=	'_'.$layout;
+			}
+
 			$preconfig				=	array();
 			$preconfig['action']	=	'';
 			$preconfig['client']	=	'admin';
-			$preconfig['formId']	=	'seblod_form';
-			$preconfig['submit']	=	'JCck.Core.submit';
+			$preconfig['formId']	=	'seblod_form'.$uniqId;
+			$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 			$preconfig['task']		=	$app->input->get( 'task', '' );
 			$preconfig['type']		=	$app->input->get( 'type', '' );
 			$preconfig['url']		=	JFactory::getURI()->toString();
@@ -66,6 +73,7 @@ class CCKViewForm extends JViewLegacy
 		
 		$this->config	=	&$config;
 		$this->data		=	&$data;
+		$this->form_id	=	$preconfig['formId'];
 		$this->id		=	&$id;
 		$this->isNew	=	&$isNew;
 		$this->params	=	&$params;

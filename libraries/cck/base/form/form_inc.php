@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -131,6 +131,11 @@ if ( ! $canAccess ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 	}
 }
+if ( $type->storage_location == 'joomla_user' && $isNew ) {
+	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+	}
+}
 
 // Fields
 $fields		=	CCK_Form::getFields( array( $type->name, $type->parent ), $preconfig['client'], $stage, '', true, true );
@@ -200,7 +205,6 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
 $dispatcher	=	JDispatcher::getInstance();
-$session	=	JFactory::getSession();
 
 // Validation
 if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
@@ -256,14 +260,26 @@ foreach ( $fields as $field ) {
 		} else {
 			if ( $field->live ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
-				$hash		=	JApplication::getHash( $value );
-				$session->set( 'cck_hash_live_'.$field->name, $hash );
+
+				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
+					JCckDevHelper::secureField( $field, $value );
+				}
 			} else {
 				$value	=	( isset( $lives[$name] ) ) ? $lives[$name] : $field->live_value;
 			}
 		}
 	}
 	$field->value	=	$value;
+	
+	if ( $field->variation == 'hidden_isfilled' ) {
+		if ( $value != '' ) {
+			$field->variation	=	'hidden';
+
+			JCckDevHelper::secureField( $field, $value );
+		} else {
+			$field->variation	=	'';
+		}
+	}
 	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
 	
 	$position				=	$field->position;
@@ -277,7 +293,11 @@ foreach ( $fields as $field ) {
 
 // Merge
 if ( count( $config['fields'] ) ) {
-	$fields				=	array_merge( $fields, $config['fields'] );	// Test: a loop may be faster.
+	foreach ( $config['fields'] as $k=>$v ) {
+		if ( $v->restriction != 'unset' ) {
+			$fields[$k]	=	$v;
+		}
+	}
 	$config['fields']	=	NULL;
 	unset( $config['fields'] );
 }

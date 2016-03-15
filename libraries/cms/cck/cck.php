@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -50,8 +50,21 @@ abstract class JCck
 			return self::$_config;
 		}
 
+		$app			=	JFactory::getApplication();
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+
+		// Tweak Language: JText
+		$translate		=	(int)$config->params->get( 'language_jtext', 0 );
+		if ( $translate == 2 ) {
+			if ( !( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) ) ) {
+				if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+					$config->params->set( 'language_jtext', 0 );
+				} else {
+					$config->params->set( 'language_jtext', 1 );
+				}
+			}
+		}
 		
 		self::$_config	=&	$config;
 	}
@@ -115,8 +128,18 @@ abstract class JCck
 				$host2		=	$host.'/'.$path;
 			}
 			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
+				
+				foreach ( self::$_sites as $s ) {
+					$s->exclusions	=	array();
+					$json			=	json_decode( $s->configuration, true );
+
+					if ( isset( $json['exclusions'] ) && $json['exclusions'] != '' ) {
+						$s->exclusions	=	explode( '||', $json['exclusions'] );
+					}
+				}
 				foreach ( self::$_sites as $s ) {
 					if ( $s->aliases != '' ) {
 						$aliases	=	explode( '||', $s->aliases );
@@ -169,39 +192,34 @@ abstract class JCck
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User
-	// todo: REFACT ALL USER STUFF !! //
 	
 	// _setUser
-	public static function _setUser( $userid = 0, $content_type = '', $profile = true )
-	{		
-		if ( self::$_user ) {
-			return self::$_user;
-		}
-
-		// jimport( 'cck.content.user' );
-		// self::$_user	=	CCK_User::getUser( $userid, $profile, $preferences );
+	protected static function _setUser( $userid = 0, $content_type = '', $profile = true )
+	{
 		self::$_user	=	JCckUser::getUser( $userid, '', true );
 	}
 	
 	// getUser
-	/*
-	public static function getUser( $userid = 0, $profile = true, $preferences = false )
-	{
-		Use JCckLegacy::getUser().
-		Note: preferences are removed since SEBLOD 3.2.0
-	}
-	*/
 	public static function getUser( $userid = 0, $content_type = '', $profile = true )
 	{
 		// Legacy Code, just in case..
 		if ( is_bool( $content_type ) ) {
 			return JCckLegacy::getUser( $userid, $content_type, $profile );
 		}
-		
+		$update		=	false;
+
+		if ( is_array( $userid ) ) {
+			$update	=	(bool)$userid[1];
+			$userid	=	(int)$userid[0];
+		}
 		if ( $userid ) {
-			// jimport( 'cck.content.user' );
-			// return CCK_User::getUser( $userid, $profile, $preferences );
-			return JCckUser::getUser( $userid, '', true );
+			if ( $update ) {
+				self::_setUser( $userid, $content_type, $profile );
+
+				return self::$_user;
+			} else {
+				return JCckUser::getUser( $userid, '', true );
+			}
 		}
 		
 		if ( ! self::$_user ) {
@@ -293,7 +311,7 @@ abstract class JCck
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.6.0.min.js' );
+				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
 				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
@@ -310,7 +328,7 @@ abstract class JCck
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.6.0.min.js' );
+			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.7.1.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}

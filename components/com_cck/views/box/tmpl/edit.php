@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -73,7 +73,7 @@ if ( $this->doValidation == 1 ) {
 }
 $js		=	'if("undefined"===typeof JCck.Dev){JCck.Dev={}};'
 		.	'JCck.Dev.close = function() { if (parent.jQuery.fn.colorbox) {parent.jQuery.fn.colorbox.close();}'
-		.	'else {if (window.parent.SqueezeBox) {window.parent.SqueezeBox.close();};} }';
+		.	'else {if (window.parent.SqueezeBox) {window.parent.SqueezeBox.close();};} };';
 $doc->addScriptDeclaration( $js );
 ?>
 </form>

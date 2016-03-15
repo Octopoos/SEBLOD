@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -39,17 +39,17 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
+		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 		
 		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data );
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
 	{
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
@@ -57,6 +57,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
 		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
+		/*
+		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+		*/
 		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 
 		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
@@ -179,7 +182,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				} else {
 					$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 				}
-				$auto++;
+				if ( $field->required ) {
+					$auto++;
+				}
 			}
 			$count2			=	JCck::getConfig_Param( 'development_attr', 6 );
 			$opt_attr		=	'';
@@ -361,11 +366,16 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$attr	=	'class="'.$class.'"'.$size.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
 			$count	=	count( $opts );
 			$form	=	'';
+
 			if ( $field->variation == 'hidden_auto' ) {
 				if ( $auto == $count && is_object( $opts[$auto - 1] ) ) {
 					$count				=	0;
 					$field->variation	=	'hidden';
-					$value				=	$opts[$auto - 1]->value;	
+					$value				=	$opts[$auto - 1]->value;
+
+					if ( !$field->live ) {
+						JCckDevHelper::secureField( $field, $value );
+					}
 				} else {
 					$field->variation	=	'';
 				}
@@ -650,7 +660,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			// Language Detection
 			$opt_query	=	str_replace( '[lang]', $lang_code, $opt_query );
 			$opt_query	=	JCckDevHelper::replaceLive( $opt_query );
-			
 			$lists		=	( $static ) ? JCckDatabaseCache::loadObjectList( $opt_query ) : JCckDatabase::loadObjectList( $opt_query );
 			if ( count( $lists ) ) {
 				foreach ( $lists as $list ) {

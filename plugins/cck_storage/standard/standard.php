@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -93,7 +93,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		
 		switch ( $match ) {
 			case 'exact':
-				$sql	=	$target.' = '.JCckDatabase::quote( $value );
+				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+				if ( !$var_type ) {
+					$sql	=	$target.' = '.$value;
+				} else {
+					$sql	=	$target.' = '.JCckDatabase::quote( $value );
+				}
 				break;
 			case 'empty':
 				$sql	=	$target.' = ""';
@@ -265,7 +270,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$sql	=	$target.' != ""';
 				break;
 			case 'not_equal':
-				$sql	=	$target.' != '.JCckDatabase::quote( $value );
+				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+				if ( !$var_type ) {
+					$sql	=	$target.' != '.$value;
+				} else {
+					$sql	=	$target.' != '.JCckDatabase::quote( $value );
+				}
 				break;
 			case 'not_like':
 				$sql	=	$target.' NOT LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $value, true ).'%', false );

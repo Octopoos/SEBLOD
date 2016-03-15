@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,9 +21,9 @@ class CCKViewFolders extends JCckBaseLegacyViewList
 	{
 		return array(
 					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'lft'=>JText::_( 'COM_CCK_ORDERING' ),
+					'a.lft'=>JText::_( 'COM_CCK_ORDERING' ),
 					'a.published'=>JText::_( 'COM_CCK_STATUS' ),
-					'title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.title'=>JText::_( 'COM_CCK_TITLE' )
 				);
 	}
 

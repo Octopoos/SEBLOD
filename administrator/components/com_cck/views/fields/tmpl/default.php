@@ -4,27 +4,28 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$location	=	$this->state->get( 'filter.location' );
-$search		=	$this->state->get( 'filter.search' );
-$canOrder	=	0;
-$saveOrder	=	0;
-$title2		=	JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-fields.png" border="0" alt="" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'" />';
+$action_attr	=	( JCck::on() ) ? ' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"' : ' class="cbox"';
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$location		=	$this->state->get( 'filter.location' );
+$search			=	$this->state->get( 'filter.search' );
+$canOrder		=	0;
+$saveOrder		=	0;
+$top			=	( !JCck::on() ) ? 'border-top' : 'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_type_filter', 'core_folder_filter', 'core_state_filter', 'core_folder' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -94,8 +95,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
             	<?php if ( $item->id != 33 ) { ?>
-					<a class="cbox" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-fields.png" border="0" alt="" title="<?php echo $title2 ?>" /></a></td>
+					<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+						<?php echo $action; ?>
+					</a>
                 <?php } ?>
+            </td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
 					<?php

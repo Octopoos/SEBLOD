@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -49,12 +49,23 @@ class CCKModelCCK extends JModelLegacy
 			return;
 		}
 		
+		if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_packager"' ) > 0 ) {
+			$params		=	JComponentHelper::getParams( 'com_cck_packager' );
+			$copyright	=	$params->get( 'copyright' );
+		} else {
+			$copyright	=	'';
+		}
+
 		if ( $src && JFolder::exists( $src ) ) {
+			if ( $copyright ) {
+				CCK_Export::update( $src, $copyright );
+			}
 			JFolder::copy( $src, $path );
 			CCK_Export::clean( $path );
 		}
-		CCK_Export::exportLanguage( $src.'/'.$name.'.xml', JPATH_ADMINISTRATOR, $path );
-		CCK_Export::findFields( array( $src.'/tmpl/edit.php', $src.'/tmpl/edit2.php' ), $path.'/install' );	
+		CCK_Export::exportLanguage( $src.'/'.$name.'.xml', JPATH_ADMINISTRATOR, $path, $copyright );
+		CCK_Export::findFields( array( $src.'/tmpl/edit.php', $src.'/tmpl/edit2.php' ), $path.'/install' );
+		CCK_Export::update( $path.'/install', $copyright );
 		
 		return CCK_Export::zip( $path, $path_zip );
 	}

@@ -262,7 +262,7 @@ class CCK_ControllerForm extends JControllerForm
 		
 		if ($redirappend)
 		{
-			$append .= str_replace(' ', '&', $redirappend);
+			$append .= '&' . str_replace(' ', '&', $redirappend);
 		}
 		
 		if ($redirerror)

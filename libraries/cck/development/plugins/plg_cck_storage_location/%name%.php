@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,14 +15,17 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 {
 	protected static $type			=	'%name%';
 	protected static $table			=	'#__'; // TODO
+	protected static $table_object	=	array( '', '' ); // TODO
 	protected static $key			=	'id'; // TODO
 	
 	protected static $access		=	'access'; // TODO
 	protected static $author		=	''; // TODO
+	protected static $author_object	=	''; // TODO
 	protected static $created_at	=	''; // TODO
 	protected static $custom		=	'description'; // TODO
 	protected static $modified_at	=	''; // TODO
 	protected static $parent		=	''; // TODO
+	protected static $parent_object	=	''; // TODO
 	protected static $status		=	'state'; // TODO
 	protected static $to_route		=	'a.id as pk, a.title, a.alias'; // TODO
 	
@@ -30,13 +33,14 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	protected static $contexts		=	array(); //TODO
 	protected static $error			=	false;
 	protected static $ordering		=	array( 'alpha'=>'title ASC' ); // TODO
+	protected static $ordering2		=	array();
 	protected static $pk			=	0;
+	protected static $routes		=	array();
 	protected static $sef			=	array( '1'=>'full',
 											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
 											   '3'=>'full', '32'=>'id', '33'=>'alias',
 											   '4'=>'full', '42'=>'id', '43'=>'alias'
 										);
-	protected static $routes		=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -75,6 +79,24 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		}
 	}
 	
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( self::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		if ( $table == self::$table ) {
+			$storage	=	self::_getTable( $pk );
+		} else {
+			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
+		}
+	}
+
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
 	{
@@ -92,36 +114,6 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		} else {
 			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
 		}
-	}
-	
-	// onCCK_Storage_LocationPrepareSearch
-	public function onCCK_Storage_LocationPrepareSearch( $type, &$query, &$tables, &$t, &$config = array(), &$inherit = array(), $user )
-	{
-		if ( self::$type != $type ) {
-			return;
-		}
-		
-		// Prepare
-		// TODO
-		
-		// Set
-		// TODO
-	}
-	
-	// onCCK_Storage_LocationPrepareOrder
-	public function onCCK_Storage_LocationPrepareOrder( $type, &$order, &$tables, &$config = array() )
-	{
-		if ( self::$type != $type ) {
-			return;
-		}
-		
-		$order	=	( isset( self::$ordering[$order] ) ) ? $tables[self::$table]['_'] .'.'. self::$ordering[$order] : '';
-	}
-	
-	// onCCK_Storage_LocationPrepareList
-	public static function onCCK_Storage_LocationPrepareList( &$params )
-	{
-		// TODO
 	}
 	
 	// onCCK_Storage_LocationPrepareItems
@@ -147,6 +139,36 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 			}
 		}
 		$config['author']	=	$storages[self::$table][$config['pk']]->{self::$author};
+	}
+
+	// onCCK_Storage_LocationPrepareList
+	public static function onCCK_Storage_LocationPrepareList( &$params )
+	{
+		// TODO
+	}
+
+	// onCCK_Storage_LocationPrepareOrder
+	public function onCCK_Storage_LocationPrepareOrder( $type, &$order, &$tables, &$config = array() )
+	{
+		if ( self::$type != $type ) {
+			return;
+		}
+		
+		$order	=	( isset( self::$ordering[$order] ) ) ? $tables[self::$table]['_'] .'.'. self::$ordering[$order] : '';
+	}
+	
+	// onCCK_Storage_LocationPrepareSearch
+	public function onCCK_Storage_LocationPrepareSearch( $type, &$query, &$tables, &$t, &$config = array(), &$inherit = array(), $user )
+	{
+		if ( self::$type != $type ) {
+			return;
+		}
+		
+		// Prepare
+		// TODO
+		
+		// Set
+		// TODO
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Store
@@ -339,6 +361,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'author_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',
@@ -347,12 +370,14 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
+									'parent_object'=>'',
 									'routes'=>'',
 									'status'=>'',
 									'table'=>'',
+									'table_object'=>'',
 									'to_route'=>''
 								);
-
+		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,7 +26,7 @@ class JFormFieldCCKjs extends JFormField
 	{
 		$format	=	(string)$this->element['js_format'];
 		if ( $format != 'raw' ) {
-			JCck::loadjQuery( true, true, array( 'cck.dev-3.6.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+			JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		}
 		
 		return $this->_addScripts( $this->id, array( 'appendTo'=>(string)$this->element['js_appendto'],
