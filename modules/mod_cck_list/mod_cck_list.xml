@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.7.0</version>
+	<version>3.8.0</version>
 	
 	<files>
 		<folder>tmpl</folder>
@@ -56,12 +56,12 @@
 				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" />
 				<field name="" label="" type="spacer" hr="false" />
 				<field name="limit2" type="text" default="5" label="MOD_CCK_LIST_CONFIG_LIMIT2" description="MOD_CCK_LIST_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
+				<field name="limitstart" type="text" default="" label="MOD_CCK_LIST_CONFIG_LIMITSTART" description="MOD_CCK_LIST_CONFIG_LIMITSTART_DESC" size="8" class="inputbox" />
 				<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="MOD_CCK_LIST_CONFIG_ORDERING" default=""
 					   description="MOD_CCK_LIST_CONFIG_ORDERING_DESC" class="inputbox" />
 				<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 					   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
-				<field
-					name="ordering2" type="list" label="MOD_CCK_LIST_CONFIG_ORDERING2" default="" description="MOD_CCK_LIST_CONFIG_ORDERING2_DESC" class="inputbox">
+				<field name="ordering2" type="list" label="COM_CCK_CONFIG_ORDERING2" default="" description="COM_CCK_CONFIG_ORDERING2_DESC" class="inputbox">
 					<option value="">MOD_CCK_LIST_CONFIG_OPTION_NONE</option>
 					<option	value="random">MOD_CCK_LIST_CONFIG_OPTION_RANDOM</option>
 					<option	value="shuffle">MOD_CCK_LIST_CONFIG_OPTION_SHUFFLE</option>
@@ -83,6 +83,7 @@
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>
 				</field>
+				<field name="search2" type="cck" construction="core_search_type" label="MOD_CCK_LIST_SEARCH_ALT" description="MOD_CCK_LIST_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
 				<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>

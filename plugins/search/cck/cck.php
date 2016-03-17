@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -48,12 +48,20 @@ class plgSearchCCK extends JPlugin
 		if ( !is_object( $options ) ) {
 			$options	=	new JRegistry;
 		}
-		
+
+		$app			=	JFactory::getApplication();
 		$db				=	JFactory::getDbo();
 		$dispatcher		=	JDispatcher::getInstance();
 		$doClean		=	false;
+		$doCount		=	(int)$options->get( 'count' );
 		$doLimit		=	false;
-		$limit			=	$options->get( 'limit' );
+		$limit			=	(int)$options->get( 'limit' );
+		$doLimit		=	( $limit > 0 ) ? false : true;
+		$hasGroup		=	false;
+		$isLoadingMore	=	( $app->input->get( 'format' ) == 'raw' && $app->input->get( 'infinite' ) > 0 ) ? 1 : 0;
+		if ( $isLoadingMore ) {
+			$isLoadingMore	=	0; /* todo: only when it was triggered by the component itself */
+		}
 		$glues			=	1;
 		$order			=	'';
 		$order_string	=	'';
@@ -69,9 +77,9 @@ class plgSearchCCK extends JPlugin
 			foreach ( $config['joins'][$current['stage']] as $j ) {
 				if ( $j->table ) {
 					if ( !isset( $tables[$j->table] ) ) {
-						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and );
-					} elseif ( $j->and != '' ) {
-						$tables[$j->table.'@'.md5( $j->and )]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and );
+						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>@$j->and, 'join_type'=>@$j->type, 'join_mode'=>@$j->mode, 'join_query'=>@$j->query );
+					} elseif ( @$j->and != '' ) {
+						$tables[$j->table.'@'.md5( $j->and )]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and, 'join_type'=>@$j->type, 'join_mode'=>@$j->mode, 'join_query'=>@$j->query );
 					}
 				}
 			}
@@ -251,6 +259,7 @@ class plgSearchCCK extends JPlugin
 		
 		$inherit	=	array( 'bridge'=>'', 'query'=>'' );
 		$query		=	NULL;
+		$query2		=	'';
 		$results	=	array();
 		self::_setStorage( $tables, $config, $inherit );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -269,7 +278,7 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 				$query	=	$db->getQuery( true );
-				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb,t0.parent_id as parent' );
+				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb,t0.parent_id AS parent,t0.author_id AS author' );
 				$query->from( '`#__cck_core` AS t0' );
 				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
@@ -288,6 +297,12 @@ class plgSearchCCK extends JPlugin
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
+				if ( isset( $config['query_parts']['where'] ) ) {
+					if ( ( is_string( $config['query_parts']['where'] ) && $config['query_parts']['where'] != '' )
+						|| count( $config['query_parts']['where'] ) ) {
+						$query->where( $config['query_parts']['where'] );	
+					}
+				}
 				if ( isset( $config['query_parts']['having'] ) ) {
 					if ( ( is_string( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' )
 						|| count( $config['query_parts']['having'] ) ) {
@@ -295,15 +310,109 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
+					$hasGroup	=	true;
 					$query->group( $config['query_parts']['group'] );
 				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
-				if ( $doLimit ) {
+				
+				if ( $doLimit && $config['limitstart'] >= 0 ) {
 					$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
 				} else {
-					$db->setQuery( $query, 0, ( ( $limit > 0 ) ? $limit : '' ) );
+					$db->setQuery( $query, 0, $limit );
 				}
 				$results	=	$db->loadObjectList();
+
+				if ( $doLimit ) {
+					$count	=	count( $results );
+					
+					if ( ( $count < $config['limitend'] && !$config['limitstart'] ) || $isLoadingMore ) {
+						$config['total']		=	$count;
+					} else {
+						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
+							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.$tables['#__cck_core']['fields']['cck'].'"';
+							$config['total']	=	JCckDatabaseCache::loadResult( $query2 );
+
+							if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
+								$query->clear( 'limit' );
+								$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
+								$db->setQuery( $query );
+								$results2		=	$db->loadObjectList();
+								$query3			=	(string)$query;
+							}
+						} else {
+							if ( JCck::on() ) {
+								$query1				=	(string)$query;
+
+								if ( strpos( $query1, 'HAVING' ) !== false ) {
+									if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
+										// todo
+									}
+									$query->clear( 'order' )->clear( 'limit' );
+
+									$query2				=	$db->getQuery( true );
+									$query2->select( 'COUNT(*)' );
+									$query2->from( '('.(string)$query.') AS Count' );
+									$db->setQuery( $query2 );
+									$config['total']	=	$db->loadResult();
+									$query2				=	(string)$query2;
+								} else {
+									if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
+										$query->clear( 'limit' );
+										$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
+										$db->setQuery( $query );
+										$results2		=	$db->loadObjectList();
+										$query3			=	(string)$query;
+									}
+									$query->clear( 'order' )->clear( 'limit' )->clear( 'select' );
+									
+									if ( $hasGroup ) {
+										$query->clear( 'group' );
+										$query->select( 'COUNT(DISTINCT t0.id)' );
+									} else {
+										$query->select( 'COUNT(t0.id)' );
+									}
+									$db->setQuery( $query );
+									$config['total']	=	$db->loadResult();
+									$query2				=	(string)$query;
+								}
+							} else {
+								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
+									$query3				=	$db->getQuery( true );
+									$query3->select( 't0.id AS pid,t0.pk AS pk' );
+									$query3->from( '`#__cck_core` AS t0' );
+									self::_buildQuery( $dispatcher, $query3, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
+									if ( $where != '' ) {
+										$query3->where( $where );
+									}
+									$db->setQuery( $query3, 0, 0 );
+									$results2		=	$db->loadObjectList();
+									$query3			=	(string)$query3;
+								}
+								$query2				=	$db->getQuery( true );
+								$query2->select( 'COUNT(DISTINCT t0.id)' );
+								$query2->from( '`#__cck_core` AS t0' );
+								self::_buildQuery( $dispatcher, $query2, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
+								if ( $where != '' ) {
+									$query2->where( $where );
+								}
+								$db->setQuery( $query2, 0, 0 );
+								$config['total']	=	$db->loadResult();
+								$query2				=	(string)$query2;
+							}
+						}
+					}
+				}
+				if ( isset( $config['doQuery2'] ) && $config['doQuery2'] && isset( $results2 ) && count( $results2 ) ) {
+					$config['ids2']		=	'';
+					$config['pks2']		=	'';
+
+					foreach ( $results2 as $k=>$v ) {
+						$config['ids2']	.=	(int)$results2[$k]->pid.',';
+						$config['pks2']	.=	(int)$results2[$k]->pk.',';
+					}
+					$config['ids2']		=	substr( $config['ids2'], 0, -1 );
+					$config['pks2']		=	substr( $config['pks2'], 0, -1 );
+				}
 			} else {
 				$query	=	$db->getQuery( true );
 				$query->select( 't0.pk as pk' );
@@ -319,9 +428,18 @@ class plgSearchCCK extends JPlugin
 		
 		// Debug
 		if ( $options->get( 'debug' ) ) {
-			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'WHERE', 'ORDER BY', 'UNION' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />WHERE', '<br />ORDER BY', '<br />UNION' ),
-							  (string)$query ).'<br /><br />';
+			if ( !isset( $query1 ) ) {
+				$query1	=	(string)$query;
+			}
+			if ( $query2 ) {
+				$query2	.=	'<br />';
+			}
+			if ( isset( $query3 ) ) {
+				$query2	.=	$query3.'<br />';
+			}
+			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
+							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
+							  $query1.'<br />'.$query2 ).'<br />';
 		}
 		
 		unset( $fields );
@@ -360,9 +478,11 @@ class plgSearchCCK extends JPlugin
 					$query->select( ' '.$tv['_'].'.*' );
 				}
 				$key		=	( isset( $tables[$tk]['key'] ) ) ? $tables[$tk]['key'] : 'id';
+				$join_type	=	( isset( $tables[$tk]['join_type'] ) ) ? $tables[$tk]['join_type'] : 'LEFT';
 				$join_table	=	( isset( $tables[$tk]['join_table'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
 				$join_key	=	( isset( $tables[$tk]['join_key'] ) ) ? $tables[$tk]['join_key'] : ( ( $tk == $inherit['bridge'] ) ? 'pkb' : 'pk' );
 				$join_and	=	( isset( $tables[$tk]['join_and'] ) ) ? $tables[$tk]['join_and'] : '';
+				$join_mode	=	( isset( $tables[$tk]['join_mode'] ) ) ? $tables[$tk]['join_mode'] : 0;
 
 				if ( $join_table != '' && $join_key != '' ) {
 					if ( $join_and != '' && strpos( $tk, '@' ) !== false ) {
@@ -370,10 +490,15 @@ class plgSearchCCK extends JPlugin
 						$tk			=	$tk_table[0];
 					}
 					if ( $tk != '' ) {
-						if ( $join_and != '' ) {
-							$query->join( 'LEFT', '`'.$tk.'` AS '.$tv['_'].' ON ('.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key.' AND '.$tv['_'].'.'.$join_and.')' );
+						if ( $join_mode ) {
+							$tk	=	( isset( $tables[$tk]['join_query'] ) ) ? $tables[$tk]['join_query'] : '';
 						} else {
-							$query->join( 'LEFT', '`'.$tk.'` AS '.$tv['_'].' ON '.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key );
+							$tk	=	'`'.$tk.'`';
+						}
+						if ( $join_and != '' ) {
+							$query->join( $join_type, $tk.' AS '.$tv['_'].' ON ('.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key.' AND '.$tv['_'].'.'.$join_and.')' );
+						} else {
+							$query->join( $join_type, $tk.' AS '.$tv['_'].' ON '.$tv['_'].'.'.$key.' = '.$join_table.'.'.$join_key );
 						}	
 					}
 				}

@@ -22,10 +22,12 @@
 			<field name="show_list_title" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_SHOW_LIST_TITLE" description="COM_CCK_CONFIG_SHOW_LIST_TITLE_DESC" class="inputbox" />
 			<field name="tag_list_title" type="cck" construction="core_tag_title" default="" label="" description="" class="inputbox" />
-			<field name="class_list_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" />
+			<field name="class_list_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Class)'" />
 			<field name="cckjs" type="cckjs" label="" description=""
 				   js_appendto="jform_params_show_list_title=J(as tag),#jform_params_tag_list_title,J(with class),#jform_params_class_list_title"
 				   js_isvisiblewhen="div#jform_params_cckjs-more='jform_params_show_list_title','1',false" js_format="html" hidden="true" />
+			<field name="display_list_title" type="cck" construction="core_dev_select" cck_options="Menu Item=0||Custom=1" cck_selectlabel="Inherited" default="" label="LIB_CCK_TITLE" description="" class="inputbox" />
+			<field name="title_list_title" type="cck" construction="core_dev_text" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Title)'" js_appendto="jform_params_display_list_title=#jform_params_title_list_title" js_isvisiblewhen="div#jform_params_title_list_title-more='jform_params_display_list_title','1',false" js_format="html" hidden="true" />
 			<field name="show_list_desc" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_SHOW_LIST_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_LIST_DESCRIPTION_DESC" class="inputbox" />
 			<field name="list_desc" type="cck" construction="core_description" default="" label="Edit Description" description="..." class="inputbox" cck_selectlabel="Edit"
@@ -37,11 +39,19 @@
 				   label="COM_CCK_CONFIG_SHOW_SEARCH_LIST" description="COM_CCK_CONFIG_SHOW_SEARCH_LIST_DESC" class="inputbox" />
 			<field name="auto_redirect" type="cck" construction="core_auto_redirection" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_AUTO_REDIRECTION" description="COM_CCK_CONFIG_AUTO_REDIRECTION_DESC" class="inputbox" />
+			<field name="auto_redirect_vars" type="text" label="COM_CCK_CONFIG_AUTO_REDIRECTION_VARS" description="COM_CCK_CONFIG_AUTO_REDIRECTION_VARS_DESC" class="inputbox" size="50" />
 			<field name="limit2" type="text" default="0" label="COM_CCK_CONFIG_LIMIT2" description="COM_CCK_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
+			<field name="pagination2" type="cck" construction="core_pagination" cck_selectlabel="Inherited" label="COM_CCK_CONFIG_PAGINATION" default="" description="COM_CCK_CONFIG_PAGINATION_DESC" class="inputbox" />
 			<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="COM_CCK_CONFIG_ORDERING" default="" description="COM_CCK_CONFIG_ORDERING_DESC" class="inputbox" />
 			<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 				   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
-			
+			<field name="ordering2" type="list" label="COM_CCK_CONFIG_ORDERING2" default="" description="COM_CCK_CONFIG_ORDERING2_DESC" class="inputbox">
+					<option value="">COM_CCK_CONFIG_OPTION_NONE</option>
+					<option	value="random">COM_CCK_CONFIG_OPTION_RANDOM</option>
+					<option	value="shuffle">COM_CCK_CONFIG_OPTION_SHUFFLE</option>
+					<option	value="random_shuffle">COM_CCK_CONFIG_OPTION_RANDOM_SHUFFLE</option>
+				</field>
+
 			<field name="show_items_number" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER" description="COM_CCK_CONFIG_SHOW_ITEMS_NUMBER_DESC" class="inputbox" />
 			<field name="show_items_number_label" type="cck" construction="core_label_total" default="" label="" description="" class="inputbox" />
@@ -58,8 +68,6 @@
 				   label="COM_CCK_CONFIG_SHOW_PAGINATION" description="COM_CCK_CONFIG_SHOW_PAGINATION_DESC" class="inputbox" />
 			<field name="class_pagination" type="cck" construction="core_class_pagination" default="" label="" description="" class="inputbox" 
 				   js_appendto="jform_params_show_pagination=#jform_params_class_pagination" js_isvisiblewhen="div#jform_params_class_pagination-more='jform_params_show_pagination','-1,0,1',false" js_format="html" hidden="true" />
-			
-			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
 		</fieldset>
 		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
 			<field name="live" type="cckhidden" label="" description="" />
@@ -67,10 +75,15 @@
 		</fieldset>
 		<fieldset name="advanced">
 			<field name="search2" type="cck" construction="core_search_type" label="COM_CCK_CONFIG_SEARCH_ALT" description="COM_CCK_CONFIG_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
+			<field name="limit" type="text" default="0" label="COM_CCK_CONFIG_LIMIT" description="COM_CCK_CONFIG_LIMIT_DESC" size="8" class="inputbox" />
 			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
-			<option value="0">JNO</option>
+				<option value="0">JNO</option>
 				<option	value="1">JYES</option>
 			</field>
+			<field name="sef" type="cck" construction="core_sef" label="COM_CCK_CONFIG_SEF" description="COM_CCK_CONFIG_SEF_DESC" class="inputbox" cck_selectlabel="Inherited" />
+			<field name="display_form_title" type="cck" construction="core_dev_select" cck_options="Menu Item=0||Custom=1" cck_selectlabel="Inherited" default="" label="LIB_CCK_TITLE" description="" class="inputbox" />
+			<field name="title_form_title" type="cck" construction="core_dev_text" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Title)'" js_appendto="jform_params_display_form_title=#jform_params_title_form_title" js_isvisiblewhen="div#jform_params_title_form_title-more='jform_params_display_form_title','1',false" js_format="html" hidden="true" />
+			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
 		</fieldset>
 	</fields>
 </metadata>

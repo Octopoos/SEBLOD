@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /* ui-big */
@@ -110,7 +110,8 @@ ul#objects fieldset.radios label {
 	margin-left: 0px;
 }
 /* ******** */
-.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"] {
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"],
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"] {
 	color: #fff;
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 	background-color: #5bb75b;
@@ -130,13 +131,21 @@ ul#objects fieldset.radios label {
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:active,
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].active,
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].disabled,
-.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"][disabled] {
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"][disabled],
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"]:hover,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"]:focus,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"]:active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"].active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"].disabled,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"][disabled] {
 	color: #fff;
 	background-color: #51a351;
 	*background-color: #499249;
 }
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"]:active,
-.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].active {
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_2"].active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"]:active,
+.chzn-color.chzn-single.chzn-color-permissive[rel="value_3"].active {
 	background-color: #408140 \9;
 }
 #attrib-cck-overrides div.control-label{display:none;}

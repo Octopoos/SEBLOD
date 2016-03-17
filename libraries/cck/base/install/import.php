@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -492,7 +492,8 @@ class CCK_Import
 	// importProcessings
 	public static function importProcessings( $data )
 	{
-		$path	=	$data['root'].'/processings';
+		$path			=	$data['root'].'/processings';
+		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings', 'scriptfile', 'type' );
 
 		if ( file_exists( $path ) ) {
 			$files	=	JFolder::files( $path, '\.xml$' );
@@ -502,12 +503,20 @@ class CCK_Import
 					if ( !$xml || (string)$xml->attributes()->type != 'processings' ) {
 						break;
 					}
-					$name	=	(string)$xml->processing->name;
-					
-					if ( $name ) {
-						$table				=	JCckTable::getInstance( '#__cck_more_processings' );
-						$table->load( array( 'name'=>$name ) );
+					$name		=	(string)$xml->processing->name;
+					$scriptfile	=	(string)$xml->processing->scriptfile;
+					$state		=	(string)$xml->processing->published;
+					$type		=	(string)$xml->processing->type;
 
+					if ( $name && $scriptfile && $type != '' ) {
+						if ( isset( $processings[$scriptfile] ) ) {
+							if ( isset( $processings[$scriptfile][$type] ) ) {
+								continue;
+							} else {
+								$state		=	0;
+							}
+						}
+						$table				=	JCckTable::getInstance( '#__cck_more_processings' );
 						$table->name		=	$name;
 						$table->title		=	(string)$xml->processing->title;
 						
@@ -521,12 +530,12 @@ class CCK_Import
 							$table->folder	=	7;
 						}
 						
-						$table->type		=	(string)$xml->processing->type;
+						$table->type		=	$type;
 						$table->description	=	(string)$xml->processing->description;
 						$table->options		=	(string)$xml->processing->options;
 						$table->ordering	=	(string)$xml->processing->ordering;
-						$table->published	=	(string)$xml->processing->published;
-						$table->scriptfile	=	(string)$xml->processing->scriptfile;
+						$table->published	=	$state;
+						$table->scriptfile	=	$scriptfile;
 						
 						$table->store();
 					}

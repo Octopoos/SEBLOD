@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -32,14 +32,14 @@ if ( isset( $options2['task'] ) ) {
 		 .	 JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) )
 		 .	 '</li>';
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
-		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'TYPE', 'defaultvalue'=>'0', 'options'=>'Input=0||Button=1' ) );
+		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'TYPE', 'defaultvalue'=>'1', 'options'=>'Input=0||Button=1' ) );
 		echo JCckDev::renderForm( 'core_task', @$options2['task'], $config );
 		echo JCckDev::renderForm( 'core_bool3', @$options2['task_auto'], $config, array( 'label'=>'Auto Selection', 'defaultvalue'=>'1', 'storage_field'=>'json[options2][task_auto]' ) );
 		echo JCckDev::renderForm( 'core_task_exporter', $task_id['export'], $config, array( 'storage_field'=>'json[options2][task_id_export]' ) );
 		echo JCckDev::renderForm( 'core_task_processing', $task_id['process'], $config, array( 'storage_field'=>'json[options2][task_id_process]' ) );
 
-		echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'SHOW_ALTERNATIVE_LINK', 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=optgroup||Use Default=1||Custom=2' ) );
-		echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Show Alternative Or', 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1' ) );
+		echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'SHOW_ALTERNATIVE_LINK', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=optgroup||Use Default=1||Custom=2' ) );
+		echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Show Alternative Or', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=1' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_TEXT_LINK' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['alt_link_text'], $config, array( 'label'=>'Text', 'required'=>'required', 'size'=>14, 'storage_field'=>'json[options2][alt_link_text]' ) )

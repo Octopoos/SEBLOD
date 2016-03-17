@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.7.0</version>
+	<version>3.8.0</version>
 	
 	<files>
 		<folder>css</folder>
@@ -88,7 +88,7 @@
 			</fieldset>
 			
 			<fieldset name="positions" label="TPL_SEB_ONE_LEGEND_POSITIONS">
-				<field name="variation_default" type="cck" construction="core_variation" default="seb_css3" label="TPL_SEB_ONE_DEFAULT_VARIATION" description="" class="inputbox" />
+				<field name="variation_default" type="cck" construction="core_variation" default="" label="TPL_SEB_ONE_DEFAULT_VARIATION" description="" class="inputbox" cck_selectlabel="Inherited" />
 				<field name="position_force_height" type="hidden" default="1" label="Force Height" description="" />
 				<field name="position_margin" type="cck" construction="core_position_margin" default="8" more="px" label="TPL_SEB_ONE_MARGIN" description="" class="inputbox" />
 				<field name="positions_spacer" type="spacer" label="" hr="false" />

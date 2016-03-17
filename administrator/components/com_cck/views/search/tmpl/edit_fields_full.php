@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,8 +13,13 @@ defined( '_JEXEC' ) or die;
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
-?>
 
+if ( JCck::on() ) {
+    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+} else {
+    $attr   =   array( 'class'=>' edit', 'span'=>'' );
+}
+?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
         <div class="seblod">
@@ -32,7 +37,7 @@ $positions	=	array();
                             $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
                         }
                         JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                        Helper_Workshop::displayField( $field, $type_field );
+                        Helper_Workshop::displayField( $field, $type_field, $attr );
                     }
                 }
 				Helper_Workshop::displayPositionEnd();
@@ -51,7 +56,7 @@ $positions	=	array();
 										$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
 									}
 									JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-									Helper_Workshop::displayField( $field, $type_field );
+									Helper_Workshop::displayField( $field, $type_field, $attr );
 								}
 							} else {
 								$positions[]	=	$pos->name;
@@ -75,23 +80,29 @@ $positions	=	array();
     <div class="<?php echo $this->css['w30'].' '.$bar; ?> active" id="seblod-sidebar">
         <div class="seblod" id="seblod-sideblock">
             <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
-			<?php
-			if ( count( $this->fieldsAv ) ) {
-                echo '<div class="legend top center">'.$this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'].'</div>';
-                echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
-                $style	=	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
-                foreach ( $this->fieldsAv as $field ) {
-                    $type_field	=	'';
-                    if ( isset( $this->type_fields[$field->id] ) ) {
-                        $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
-                    }
-                    JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
-                    Helper_Workshop::displayField( $field, $type_field );
-                }
-                echo '</ul></div><div id="sortable_original" style="display: none;"></div>';
-            }
-            ?>
+            <div class="legend top flexenter"><?php echo $this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'] ?></div>
+            <div id="scroll">
+                <ul class="sortable connected" id="sortable2" myid="2">
+        			<?php include __DIR__.'/edit_fields_av.php'; ?>
+                </ul>
+            </div>
+            <div style="display: none;">
+                <ul id="sortable3"></ul>
+            </div>
         </div>
     </div>
 </div>
 <div class="clr" id="seblod-cleaner"></div>
+<div class="hide hidden" style="display: none;">
+    <?php
+    $lists  =   array( 'access', 'match_mode', 'restriction', 'stage' );
+
+    if ( count( $lists ) ) {
+        foreach ( $lists as $k=>$v ) {
+            if ( isset( $data[$v] ) ) {
+                echo JHtml::_( 'select.genericlist', $data[$v], '_wk_'.$v, 'size="1" class="thin hide" data-type="'.$v.'"', 'value', 'text', '' );   
+            }
+        }
+    }
+    ?>
+</div>

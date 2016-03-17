@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,7 +19,7 @@ class CommonHelper_Display
 		?>
 		<div class="copyright">
 			<strong><a target="_blank" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::_( 'COM_CCK_COPYRIGHT_SEBLOD_ADDON' ); ?>
-            <br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2015'; ?>
+            <br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2016'; ?>
 		</div>
 		<?php
 	}
@@ -27,15 +27,23 @@ class CommonHelper_Display
 	// quickJGrid
 	public static function quickJGrid( $type, $value = 0, $i, $canChange = true )
 	{
-		$states	= array( 0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE' ),
-						 1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE' ) );
-		
+		$states	=	array(
+						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
+						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
+					);
 		$state	=	JArrayHelper::getValue( $states, (int) $value, $states[1] );
-		$html	=	JHtml::_( 'image','admin/'.$state[0], JText::_( $state[2] ), NULL, true );
-		if ( $canChange ) {
-			$html	= '<a href="#" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_($state[3]).'">' .$html. '</a>';
-		}
 		
+		if ( JCck::on() ) {
+			$html	=	'<span class="icon-'.$state[5].'"></span>';
+		} else {
+			$html	=	JHtml::_( 'image','admin/'.$state[0], JText::_( $state[2] ), NULL, true );
+		}
+		if ( $canChange ) {
+			$html	= '<a href="#" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
+		} else {
+			$html	= '<a href="#" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
+		}
+
 		echo $html;
 	}
 
@@ -44,9 +52,9 @@ class CommonHelper_Display
 	{
 		$direction	=	'#' . $direction;
 		if ( $text == 'up' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-up.png" />&nbsp;</a>';
+			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;'.( JCck::on() ? '<span class="icon-arrow-up-2"></span>' : '<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-up.png" />&nbsp;' ).'</a>';
 		} elseif ( $text == 'down' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-down.png" />&nbsp;</a>';
+			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;'.( JCck::on() ? '<span class="icon-arrow-down-2"></span>' : '<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-down.png" />&nbsp;' ).'</a>';
 		} else {
 			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none; color: #666666;">&nbsp;'.$text.'&nbsp;</a>';
 		}

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -110,6 +110,7 @@ abstract class JCckDev
 			$config['doValidation']	=	2;
 			require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 		}
+		$config['id']				=	0;
 		$config['pk']				=	0;
 		
 		if ( count( $more ) ) {
@@ -177,7 +178,7 @@ abstract class JCckDev
 				if ( isset( $options['customAttr'] ) ) {
 					$label		=	isset( $options['customAttrLabel'] ) ? $options['customAttrLabel'] : JText::_( 'COM_CCK_CUSTOM_ATTRIBUTES' );
 					$html		.=	'<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" />'
-								.	'<label for="toggle_attr" class="toggle_attr">'.$label.'</label>';
+								.	'<label for="toggle_attr" class="toggle_attr inline">'.$label.'</label>';
 					$attribs	=	'';
 					
 					if ( is_array( $options['customAttr'] ) ) {
@@ -261,12 +262,13 @@ abstract class JCckDev
 					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"',
 															  'value', 'text', '', 'fields_list' );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
+					$target	=	( is_string( $options['fieldPicker'] ) ) ? $options['fieldPicker'] : 'string[options]';
 					$js2	.=	'var cur = 9999; var isNew = '.$isNew.';
 								$("ul.adminformlist").on("change", "select#fields_list", function() {
 									var val = $(this).val();
 									if (val) {
 										$("#sortable_core_options>div:last .button-add-core_options").click();
-										$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").val(val);
+										$("#sortable_core_options>div:last input:text[name=\''.$target.'[]\']").val(val);
 										'.$js3.'
 									}
 									if (isNew) {
@@ -276,7 +278,7 @@ abstract class JCckDev
 								});
 								';
 					if ( !$elem->options ) {
-						//$js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
+						// $js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
 					}
 					$css	.=	'.button-add{display:none;}';
 					if ( !$elem->options ) {
@@ -300,9 +302,22 @@ abstract class JCckDev
 			
 			return;
 		}
-		
-		if ( $elem->name ) {
-			JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
+		if ( $type == 'processing' ) {
+			$offset	=	0;
+			$path	=	$elem->scriptfile;
+			$pos	=	strpos( $path, '.' );
+
+			if ( $path[0] == '/' ) {
+				$offset	=	1;
+			}
+			$path	=	substr( $path, $offset, $pos );
+			$path	=	str_replace( '/', '_', $path );
+
+			JFactory::getLanguage()->load( 'files_pro_cck_'.$path.'.sys', JPATH_SITE, null, false, true );
+		} else {
+			if ( $elem->name ) {
+				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
+			}
 		}
 		Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 		
@@ -315,60 +330,88 @@ abstract class JCckDev
 			$js2	=	'if($("#typo_label").length) { $("#typo_label").val(parent.jQuery("#"+eid+"_typo_label").val()); }';
 			$js3	=	'if($("#typo_label").length) { parent.jQuery("#"+eid+"_typo_label").val($("#typo_label").val()); } excluded[0] = "typo_label"';
 		}
+		if ( !isset( $options['js']['load'] ) ) {
+			$options['js']['load']		=	'var eid = "'.$elem->id.'";
+											var elem = "'.$elem->id.'_'.$type.'_options";
+											var encoded = parent.jQuery("#"+elem).val();
+											var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
+											if (data) {
+												var j = 0;
+												$.each(data, function(k, v) {
+													if(!$("#"+k).length) {
+														if (typeof v === "object") {
+															var p = "'.$type.'";
+															var $clone = $("#'.$type.'_id").parent().clone().addClass("new").appendTo(".target");
+															$("li.new > *").attr("id",p+j).myVal(k).parent().removeClass("new");
+															var $clone = $("#'.$type.'_options_id").parent().clone().addClass("new").appendTo(".target");
+															$("li.new > *").attr("id",p+j+"_options").myVal($.toJSON(v)).parent().removeClass("new");
+														} else {
+															var temp = v.split("||");
+															var len = temp.length;
+															for(i = 0; i < len; i++) {
+																if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
+																$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
+															}
+														}
+													} else {
+														$("#"+k).myVal( v );
+													}
+												});
+											}
+											'.$js2;
+		}
+		if ( !isset( $options['js']['reset'] ) ) {
+			$options['js']['reset']		=	'var elem = "'.$elem->id.'_'.$type.'_options";
+											parent.jQuery("#"+elem).val("");
+											this.close();';
+		}
+		if ( !isset( $options['js']['submit'] ) ) {
+			$options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") === true ) {
+												var eid = "'.$elem->id.'";
+												var elem = "'.$elem->id.'_'.$type.'_options";
+												var data = {};
+												var excluded = [];
+												'.$js3.'
+												if (typeof cck_dev != "undefined") {
+													$.each(cck_dev, function(k, v) {
+														if(jQuery.inArray(v, excluded) == -1) {
+															if(!$("#"+v).length) {
+																var temp = [];
+																$("[name=\""+v+"\[\]\"]").each(function(i) {
+																	temp[i] = $(this).val();
+																});
+																data[v] = temp.join("||");
+															} else {
+																data[v] = $("#"+v).myVal();
+															}
+														}
+													});
+												} else {
+													$(".'.$type.'s").each(function(i) {
+														var v = $(this).myVal();
+														if (v != "") {
+															var enc = $(".'.$type.'s_options:eq("+i+")").myVal();
+															if (enc == "") {
+																enc = "{}";
+															}
+															var d = $.evalJSON(enc);
+															data[v] = d;
+														}
+													});
+												}
+												var encoded = $.toJSON(data);
+												parent.jQuery("#"+elem).val(encoded);
+												this.close();
+												return;
+											}';
+		}
 		$js	=	'
 				(function ($){
 					JCck.Dev = {
-						reset: function() {
-							var elem = "'.$elem->id.'_'.$type.'_options";
-							parent.jQuery("#"+elem).val("");
-							this.close();
-						},
-						submit: function() {
-							if ( $("#adminForm").validationEngine("validate") === true ) {
-								var eid = "'.$elem->id.'";
-								var elem = "'.$elem->id.'_'.$type.'_options";
-								var data = {};
-								var excluded = [];
-								'.$js3.'
-								$.each(cck_dev, function(k, v) {
-									if(jQuery.inArray(v, excluded) == -1) {
-										if(!$("#"+v).length) {
-											var temp = [];
-											$("[name=\""+v+"\[\]\"]").each(function(i) {
-												temp[i] = $(this).val();
-											});
-											data[v] = temp.join("||");
-										} else {
-											data[v] = $("#"+v).myVal();
-										}
-									}
-								});
-								var encoded = $.toJSON(data);
-								parent.jQuery("#"+elem).val(encoded);
-								this.close();
-								return;
-							}
-						}
+						reset: function() {'.$options['js']['reset'].'},
+						submit: function() {'.$options['js']['submit'].'}
 					}
-					$(document).ready(function(){
-						var eid = "'.$elem->id.'";
-						var elem = "'.$elem->id.'_'.$type.'_options";
-						var encoded = parent.jQuery("#"+elem).val();
-						var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-						$.each(data, function(k, v) {
-							if(!$("#"+k).length) {
-								var temp = v.split("||");
-								var len = temp.length;
-								for(i = 0; i < len; i++) {
-									if ( i+1 < len ) { $("#sortable_core_dev_texts>div:last .button-add-core_dev_texts").click(); }
-									$("[name=\""+k+"\[\]\"]:eq("+i+")").myVal(temp[i]);
-								}
-							} else {
-								$("#"+k).myVal( v );
-							}
-						});
-						'.$js2.'
-					});
+					$(document).ready(function(){'.$options['js']['load'].'});
 				})(jQuery); 
 			';
 		
@@ -395,8 +438,7 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
-		if (!class_exists('Helper_Include'))
-		{
+		if ( !class_exists( 'Helper_Include' ) ) {
 			require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php';
 		}
 		

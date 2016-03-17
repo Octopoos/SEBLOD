@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -48,6 +48,9 @@ if ( isset( $templateStyle->params['cck_client_item'] ) ) {
 	}
 }
 if ( $go_for_item || $go_for_both ) {
+	if ( isset( $app->cck_idx ) ) {
+		$app->cck_idx[0]	=	true;
+	}
 	$client			=	'item';
 	$fields			=	CCK_List::getFields_Items( $search->name, $client, $access );
 	$target_f		=	'fields';

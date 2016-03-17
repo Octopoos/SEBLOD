@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -132,7 +132,7 @@ class CCKController extends JControllerLegacy
 			}
 		} else {
 			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
-			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id'
+			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
 						.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
@@ -149,6 +149,7 @@ class CCKController extends JControllerLegacy
 								'location'=>$core->storage_location,
 								'pk'=>$core->pk,
 								'pkb'=>0,
+								'store_id'=>$core->store_id,
 								'task'=>'download',
 								'type'=>$core->type,
 								'type_id'=>$core->type_id,
@@ -207,10 +208,12 @@ class CCKController extends JControllerLegacy
 					if ( $id ) {
 						$event		=	'onCckDownloadSuccess';
 						if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-							$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+							$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 							if ( isset( $processing[$event] ) ) {
 								foreach ( $processing[$event] as $p ) {
 									if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+										$options	=	new JRegistry( $p->options );
+										
 										include_once JPATH_SITE.$p->scriptfile;
 									}
 								}
@@ -261,7 +264,7 @@ class CCKController extends JControllerLegacy
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
 	}
-
+	
 	// getRoute
 	public function getRoute()
 	{
@@ -320,11 +323,15 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
-		$output		=	1; // $params->get( 'output', 0 );
 		
 		$file		=	$model->prepareProcess( $params, $task_id, $ids, $config );
 		$link		=	( isset( $config['url'] ) && $config['url'] ) ? $config['url'] : $this->_getReturnPage();
 		if ( $file ) {
+			$output	=	$params->get( 'output', '' );
+
+			if ( $output == '' ) {
+				$output	=	1;
+			}
 			if ( $output > 0 ) {
 				$this->setRedirect( $link, JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
 			} else {
@@ -393,7 +400,7 @@ class CCKController extends JControllerLegacy
 		
 		if ( $id ) {
 			if ( $config['message_style'] ) {
-				if ( isset( $config['message'] ) ) {
+				if ( isset( $config['message'] ) && $config['message'] != '' ) {
 					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
 				} else {
 					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
@@ -507,15 +514,23 @@ class CCKController extends JControllerLegacy
 			}
 		}
 		if ( $id ) {
-			$char	=	( strpos( $link, '?' ) > 0 ) ? '&' : '?';
+			$char		=	( strpos( $link, '?' ) > 0 ) ? '&' : '?';
+			$hash		=	'';
+			if ( strpos( $link, '#' ) !== false ) {
+				$parts	=	explode( '#', $link );
+				$link	=	$parts[0];
+				$hash	=	'#'.$parts[1];
+			}
 			if ( isset( $config['thanks'] ) ) {
 				if ( !empty( $config['thanks'] ) ) {
 					$thanks			=	( @$config['thanks']->name ) ? $config['thanks']->name : 'thanks';
 					$thanks_value	=	( @$config['thanks']->value ) ? $config['thanks']->value : $preconfig['type'];
-					$link			.=	$char.$thanks.'='.$thanks_value;
+					$link			.=	$char.$thanks.'='.$thanks_value.$hash;
+				} else {
+					$link			.=	$hash;
 				}
 			} else {
-				$link			.=	$char.'thanks='.$preconfig['type'];
+				$link			.=	$char.'thanks='.$preconfig['type'].$hash;
 			}
 		}
 		if ( $msg != '' ) {
@@ -577,9 +592,10 @@ class CCKController extends JControllerLegacy
 	{
 		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
 
-		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
-		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : (int)$data['id'];
+		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : (int)$data['itemId'];
 		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['tmpl']		=	( !isset( $data['tmpl'] ) ) ? '' : $data['tmpl'];
 		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
 		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
 		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];

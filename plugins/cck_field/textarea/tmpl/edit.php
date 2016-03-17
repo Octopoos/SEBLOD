@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,6 +21,7 @@ defined( '_JEXEC' ) or die;
         echo JCckDev::renderForm( 'core_rows', $this->item->rows, $config, array( 'defaultvalue'=>'3' ) );
 		echo JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config );
         echo JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config );
+        echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Characters Remaining', 'defaultvalue'=>'0', 'options'=>'Show=1||Hide=0' ) );
 		
         echo JCckDev::renderHelp( 'field', 'seblod-2-x-textarea-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'COM_CCK_PROCESSING_DESC_TEXTAREA' ), 2 );
