@@ -294,49 +294,63 @@ class Helper_Workshop
 	// getParams
 	public static function getParams( $element, $master, $client )
 	{
-		$data		=	array();
-		$data['_']	=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
-							   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ) );
-		
+		$data			=	array();
+		$data['_']		=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
+								   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ) );
+		$data['label']	=	true;
+
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
-				$data['link']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true ) );
-				$data['typo']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true ) );
+				$data['link']		=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true )
+										);
+				$data['typo']		=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true )
+										);
 				$data['markup']		=	array(
-											JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
 				$data['access']		=	JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
 				$data['restriction']=	array_merge(
-											array( ""=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', 'hidden_isfilled', JText::_( 'COM_CCK_HIDDEN_IS_FILLED_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
-				$data['live']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ) ), Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
-				$data['stage']		=	array( '0'=>JHtml::_( 'select.option', '0', JText::_( 'COM_CCK_STAGE_FINAL' ) ),
-											   '100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAGE_TEMP' ) ),
-											   '1'=>JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_STAGE_1ST' ) ),
-											   '2'=>JHtml::_( 'select.option', '2', JText::_( 'COM_CCK_STAGE_2ND' ) ),
-											   '3'=>JHtml::_( 'select.option', '3', JText::_( 'COM_CCK_STAGE_3RD' ) ),
-											   '4'=>JHtml::_( 'select.option', '4', JText::_( 'COM_CCK_STAGE_4TH' ) ),
-											   '5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
-											   '101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
+				$data['variation']	=	array(
+											'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											'hidden_isfilled'=>JHtml::_( 'select.option', 'hidden_isfilled', JText::_( 'COM_CCK_HIDDEN_IS_FILLED_AND_SECURED' ) ),
+											'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
+											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
+				$data['live']		=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true )
+										);
+				$data['stage']		=	array(
+											'0'=>JHtml::_( 'select.option', '0', JText::_( 'COM_CCK_STAGE_FINAL' ) ),
+											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAGE_TEMP' ) ),
+											'1'=>JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_STAGE_1ST' ) ),
+											'2'=>JHtml::_( 'select.option', '2', JText::_( 'COM_CCK_STAGE_2ND' ) ),
+											'3'=>JHtml::_( 'select.option', '3', JText::_( 'COM_CCK_STAGE_3RD' ) ),
+											'4'=>JHtml::_( 'select.option', '4', JText::_( 'COM_CCK_STAGE_4TH' ) ),
+											'5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
+											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
 				$data['markup']		=	array(
-											JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
 				$data['access']		=	JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
-											array( ""=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			}
@@ -350,92 +364,106 @@ class Helper_Workshop
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 			} elseif ( $master == 'content' ) {
-				$data['link']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true ) );
-				$data['typo']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ), Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true ) );
+				$data['link']		=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_link', 'cck_', false, false, true )
+										);
+				$data['typo']		=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true )
+										);
 				$data['markup']		=	array(
-											JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
 				$data['access']		=	JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
 				$data['restriction']=	array_merge(
-											array( ""=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			} else {
 				$data['client']		=	$client;
-				$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-											   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-											   /*
-											   JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
-											   */
-											   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
-											   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
-				$data['match_mode']	=	array( 'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
-											   '100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),
-											   'alpha'=>JHtml::_( 'select.option', 'alpha', JText::_( 'COM_CCK_MATCH_BEGINNING_WITH' ) ),
-											   'empty'=>JHtml::_( 'select.option', 'empty', JText::_( 'COM_CCK_MATCH_EMPTY' ) ),
-											   'zeta'=>JHtml::_( 'select.option', 'zeta', JText::_( 'COM_CCK_MATCH_ENDING_WITH' ) ),
-											   'exact'=>JHtml::_( 'select.option', 'exact', JText::_( 'COM_CCK_MATCH_EXACT_PHRASE' ) ),
-											   ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_MATCH_DEFAULT_PHRASE' ) ),
-											   '101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_DATE_AND_TIME' ) ),
-											   'date_past_only'=>JHtml::_( 'select.option', 'date_past_only', JText::_( 'COM_CCK_MATCH_DATE_PAST_ONLY' ) ),
-											   'date_past'=>JHtml::_( 'select.option', 'date_past', JText::_( 'COM_CCK_MATCH_DATE_PAST' ) ),
-											   'date_future'=>JHtml::_( 'select.option', 'date_future', JText::_( 'COM_CCK_MATCH_DATE_FUTURE' ) ),
-											   'date_future_only'=>JHtml::_( 'select.option', 'date_future_only', JText::_( 'COM_CCK_MATCH_DATE_FUTURE_ONLY' ) ),
-											   '103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '104'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_EXCLUSION' ) ),
-											   'not_alpha'=>JHtml::_( 'select.option', 'not_alpha', JText::_( 'COM_CCK_MATCH_NOT_BEGINNING_WITH' ) ),
-											   'not_empty'=>JHtml::_( 'select.option', 'not_empty', JText::_( 'COM_CCK_MATCH_NOT_EMPTY' ) ),
-											   'not_zeta'=>JHtml::_( 'select.option', 'not_zeta', JText::_( 'COM_CCK_MATCH_NOT_ENDING_WITH' ) ),
-											   'not_equal'=>JHtml::_( 'select.option', 'not_equal', JText::_( 'COM_CCK_MATCH_NOT_EQUAL' ) ),
-											   'not_null'=>JHtml::_( 'select.option', 'not_null', JText::_( 'COM_CCK_MATCH_NOT_NULL' ) ),
-											   'not_any_exact'=>JHtml::_( 'select.option', 'not_any_exact', JText::_( 'COM_CCK_MATCH_NOT_ANY_WORDS_EXACT' ) ),
-											   'not_like'=>JHtml::_( 'select.option', 'not_like', JText::_( 'COM_CCK_MATCH_NOT_LIKE' ) ),
-											   '105'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '106'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_GEO_DISTANCE' ) ),
-											   'radius_higher'=>JHtml::_( 'select.option', 'radius_higher', JText::_( 'COM_CCK_MATCH_RADIUS_HIGHER' ) ),
-											   'radius_lower'=>JHtml::_( 'select.option', 'radius_lower', JText::_( 'COM_CCK_MATCH_RADIUS_LOWER' ) ),
-											   '107'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '108'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_NULL' ) ),
-											   'is_null'=>JHtml::_( 'select.option', 'is_null', JText::_( 'COM_CCK_MATCH_IS_NULL' ) ),
-											   'is_not_null'=>JHtml::_( 'select.option', 'is_not_null', JText::_( 'COM_CCK_MATCH_IS_NOT_NULL' ) ),
-											   '109'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '110'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_NUMERIC' ) ),
-											   'num_higher_only'=>JHtml::_( 'select.option', 'num_higher_only', JText::_( 'COM_CCK_MATCH_NUMERIC_HIGHER_ONLY' ) ),
-											   'num_higher'=>JHtml::_( 'select.option', 'num_higher', JText::_( 'COM_CCK_MATCH_NUMERIC_HIGHER' ) ),
-											   'num_lower'=>JHtml::_( 'select.option', 'num_lower', JText::_( 'COM_CCK_MATCH_NUMERIC_LOWER' ) ),
-											   'num_lower_only'=>JHtml::_( 'select.option', 'num_lower_only', JText::_( 'COM_CCK_MATCH_NUMERIC_LOWER_ONLY' ) ),
-											   '111'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-											   '112'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_WORDS' ) ),
-											   'any'=>JHtml::_( 'select.option', 'any', JText::_( 'COM_CCK_MATCH_ANY_WORDS' ) ),
-											   'any_exact'=>JHtml::_( 'select.option', 'any_exact', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT' ) ),
-											   'each'=>JHtml::_( 'select.option', 'each', JText::_( 'COM_CCK_MATCH_EACH_WORD' ) ),
-											   'each_exact'=>JHtml::_( 'select.option', 'each_exact', JText::_( 'COM_CCK_MATCH_EACH_WORD_EXACT' ) ),
-											   'nested_exact'=>JHtml::_( 'select.option', 'nested_exact', JText::_( 'COM_CCK_MATCH_NESTED_EXACT' ) ),
-											   '113'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
-				$data['live']		=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-															JHtml::_( 'select.option', 'stage', JText::_( 'COM_CCK_STAGE' ) ) 
-														), Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
-				$data['stage']		=	array( '0'=>JHtml::_( 'select.option', '0', JText::_( 'COM_CCK_STAGE_FINAL' ) ),
-											   '100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAGE_TEMP' ) ),
-											   '1'=>JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_STAGE_1ST' ) ),
-											   '2'=>JHtml::_( 'select.option', '2', JText::_( 'COM_CCK_STAGE_2ND' ) ),
-											   '3'=>JHtml::_( 'select.option', '3', JText::_( 'COM_CCK_STAGE_3RD' ) ),
-											   '4'=>JHtml::_( 'select.option', '4', JText::_( 'COM_CCK_STAGE_4TH' ) ),
-											   '5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
-											   '101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
+				$data['variation']	=	array(
+											'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ),
+											'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ),
+											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'form_filter'=>JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
+											/*
+											'form_filter_ajax'=>JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
+											*/
+											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
+				$data['match_mode']	=	array(
+											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
+											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_BASIC' ) ),
+											'alpha'=>JHtml::_( 'select.option', 'alpha', JText::_( 'COM_CCK_MATCH_BEGINNING_WITH' ) ),
+											'empty'=>JHtml::_( 'select.option', 'empty', JText::_( 'COM_CCK_MATCH_EMPTY' ) ),
+											'zeta'=>JHtml::_( 'select.option', 'zeta', JText::_( 'COM_CCK_MATCH_ENDING_WITH' ) ),
+											'exact'=>JHtml::_( 'select.option', 'exact', JText::_( 'COM_CCK_MATCH_EXACT_PHRASE' ) ),
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_MATCH_DEFAULT_PHRASE' ) ),
+											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_DATE_AND_TIME' ) ),
+											'date_past_only'=>JHtml::_( 'select.option', 'date_past_only', JText::_( 'COM_CCK_MATCH_DATE_PAST_ONLY' ) ),
+											'date_past'=>JHtml::_( 'select.option', 'date_past', JText::_( 'COM_CCK_MATCH_DATE_PAST' ) ),
+											'date_future'=>JHtml::_( 'select.option', 'date_future', JText::_( 'COM_CCK_MATCH_DATE_FUTURE' ) ),
+											'date_future_only'=>JHtml::_( 'select.option', 'date_future_only', JText::_( 'COM_CCK_MATCH_DATE_FUTURE_ONLY' ) ),
+											'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'104'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_EXCLUSION' ) ),
+											'not_alpha'=>JHtml::_( 'select.option', 'not_alpha', JText::_( 'COM_CCK_MATCH_NOT_BEGINNING_WITH' ) ),
+											'not_empty'=>JHtml::_( 'select.option', 'not_empty', JText::_( 'COM_CCK_MATCH_NOT_EMPTY' ) ),
+											'not_zeta'=>JHtml::_( 'select.option', 'not_zeta', JText::_( 'COM_CCK_MATCH_NOT_ENDING_WITH' ) ),
+											'not_equal'=>JHtml::_( 'select.option', 'not_equal', JText::_( 'COM_CCK_MATCH_NOT_EQUAL' ) ),
+											'not_null'=>JHtml::_( 'select.option', 'not_null', JText::_( 'COM_CCK_MATCH_NOT_NULL' ) ),
+											'not_any_exact'=>JHtml::_( 'select.option', 'not_any_exact', JText::_( 'COM_CCK_MATCH_NOT_ANY_WORDS_EXACT' ) ),
+											'not_like'=>JHtml::_( 'select.option', 'not_like', JText::_( 'COM_CCK_MATCH_NOT_LIKE' ) ),
+											'105'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'106'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_GEO_DISTANCE' ) ),
+											'radius_higher'=>JHtml::_( 'select.option', 'radius_higher', JText::_( 'COM_CCK_MATCH_RADIUS_HIGHER' ) ),
+											'radius_lower'=>JHtml::_( 'select.option', 'radius_lower', JText::_( 'COM_CCK_MATCH_RADIUS_LOWER' ) ),
+											'107'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'108'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_NULL' ) ),
+											'is_null'=>JHtml::_( 'select.option', 'is_null', JText::_( 'COM_CCK_MATCH_IS_NULL' ) ),
+											'is_not_null'=>JHtml::_( 'select.option', 'is_not_null', JText::_( 'COM_CCK_MATCH_IS_NOT_NULL' ) ),
+											'109'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'110'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_NUMERIC' ) ),
+											'num_higher_only'=>JHtml::_( 'select.option', 'num_higher_only', JText::_( 'COM_CCK_MATCH_NUMERIC_HIGHER_ONLY' ) ),
+											'num_higher'=>JHtml::_( 'select.option', 'num_higher', JText::_( 'COM_CCK_MATCH_NUMERIC_HIGHER' ) ),
+											'num_lower'=>JHtml::_( 'select.option', 'num_lower', JText::_( 'COM_CCK_MATCH_NUMERIC_LOWER' ) ),
+											'num_lower_only'=>JHtml::_( 'select.option', 'num_lower_only', JText::_( 'COM_CCK_MATCH_NUMERIC_LOWER_ONLY' ) ),
+											'111'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+											'112'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_WORDS' ) ),
+											'any'=>JHtml::_( 'select.option', 'any', JText::_( 'COM_CCK_MATCH_ANY_WORDS' ) ),
+											'any_exact'=>JHtml::_( 'select.option', 'any_exact', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT' ) ),
+											'each'=>JHtml::_( 'select.option', 'each', JText::_( 'COM_CCK_MATCH_EACH_WORD' ) ),
+											'each_exact'=>JHtml::_( 'select.option', 'each_exact', JText::_( 'COM_CCK_MATCH_EACH_WORD_EXACT' ) ),
+											'nested_exact'=>JHtml::_( 'select.option', 'nested_exact', JText::_( 'COM_CCK_MATCH_NESTED_EXACT' ) ),
+											'113'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
+				$data['live']		=	array_merge(
+											array(
+												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+												'stage'=>JHtml::_( 'select.option', 'stage', JText::_( 'COM_CCK_STAGE' ) )
+											),
+											Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
+				$data['stage']		=	array(
+											'0'=>JHtml::_( 'select.option', '0', JText::_( 'COM_CCK_STAGE_FINAL' ) ),
+											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAGE_TEMP' ) ),
+											'1'=>JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_STAGE_1ST' ) ),
+											'2'=>JHtml::_( 'select.option', '2', JText::_( 'COM_CCK_STAGE_2ND' ) ),
+											'3'=>JHtml::_( 'select.option', '3', JText::_( 'COM_CCK_STAGE_3RD' ) ),
+											'4'=>JHtml::_( 'select.option', '4', JText::_( 'COM_CCK_STAGE_4TH' ) ),
+											'5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
+											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
 				$data['markup']		=	array(
-											JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
 				$data['access']		=	JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
-											array( ""=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			}

@@ -184,6 +184,16 @@ Helper_Display::quickCopyright();
 								if (!(!elem || elem=="undefined")) {
 									parent.jQuery(elem).before(obj.html);
 								}
+								var target_id = "#layer_fields_options";
+								if (obj.construction != "") {
+									parent.jQuery(target_id).after('<div id="layer_fields_options_tmp">'+obj.construction+'</div>');
+									parent.jQuery(target_id+"_tmp select").each(function(i) {
+										if (!parent.jQuery(target_id+" #"+$(this).attr("id")).length) {
+											$(this).appendTo(parent.jQuery(target_id));
+										}
+						  			});
+									parent.jQuery(target_id+"_tmp").remove();
+								}
 								if (task=="field.save2new") {
 									$('#ajaxMessage').html('');
 									window.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");

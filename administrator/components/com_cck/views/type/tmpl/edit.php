@@ -14,7 +14,6 @@ $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state', 'core_client_type',
 										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
-$doc		=	JFactory::getDocument();
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -420,6 +419,17 @@ Helper_Display::quickCopyright();
 			if (type == "restriction") {
 				$("#"+cid+"_options").val("");
 				if($("#"+cid).val()!="") { $(p).find(".c_res").removeClass('hidden'); } else { $(p).find(".c_res").addClass('hidden'); }
+			} else if (type == "live") {
+				var p = $el.parents().eq(3);
+				$("#"+cid+"_options").val("");			
+				if($("#"+cid).val()!=""&&$("#"+cid).val()!="stage") { $(p).find(".c_live0").addClass('hide'); $(p).find(".c_live").removeClass('show').addClass('hide'); $(p).find(".c_live2").removeClass('hide');}
+				else { $(p).find(".c_live0").removeClass('hide'); $(p).find(".c_live").removeClass('hide').addClass('show'); $(p).find(".c_live2").addClass('hide');}
+			} else if (type == "typo") {
+				$("#"+cid+"_options").val("");
+				if($("#"+cid).val()!="") { $(p).find(".c_typo").removeClass('hidden'); } else { $(p).find(".c_typo").addClass('hidden'); }
+			} else if (type == "link") {
+				$("#"+cid+"_options").val("");
+				if($("#"+cid).val()!="") { $(p).find(".c_link").removeClass('hidden'); } else { $(p).find(".c_link").addClass('hidden'); }
 			} else if (type == "match_mode") {
 				if($("#"+cid).val()!="none") { $(p).find(".c_mat").removeClass('hidden'); } else { $(p).find(".c_mat").addClass('hidden'); }
 			}
@@ -427,6 +437,12 @@ Helper_Display::quickCopyright();
 		updateTrash: function(target) {
 			if (JCck.Dev.trash) { $(target).prepend(JCck.Dev.trash); }
 			JCck.Dev.trash = $(target+" li").detach();
+
+			$(target+" select").each(function(i) {
+				if (!$("#layer_fields_options #"+$(this).attr("id")).length) {
+					$(this).appendTo("#layer_fields_options");
+				}
+  			});
 		}
 	}
 	Joomla.submitbutton = function(task) {
@@ -484,13 +500,6 @@ Helper_Display::quickCopyright();
 				JCck.Dev.switchPos();
 			}
 		});
-		$("div#layers").on("change", "select.c_live_ck", function() {
-			var field = $(this).parents().eq(3).attr("id");
-			var cid = $(this).attr("id");
-			$("#"+cid+"_options").val("");
-			if(this.value!=""&&this.value!="stage") { $("#"+field+" .c_live0").addClass('hide'); $("#"+field+" .c_live").removeClass('show').addClass('hide'); $("#"+field+" .c_live2").removeClass('hide');}
-			else { $("#"+field+" .c_live0").removeClass('hide'); $("#"+field+" .c_live").removeClass('hide').addClass('show'); $("#"+field+" .c_live2").addClass('hide');}
-		});
 		$("div#layers").on("click", "span.c_live", function() {
 			var field = $(this).attr("name");
 			var cur = "none";
@@ -535,12 +544,6 @@ Helper_Display::quickCopyright();
 			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/helpers/scripts/validation.php&type=type&id="+field+"&name="+validation+"&validation=1";
 			$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 		});
-		$("div#layers").on("change", "select.c_typo_ck", function() {
-			var field = $(this).parents().eq(3).attr("id");
-			var cid = $(this).attr("id");
-			$("#"+cid+"_options").val("");
-			if(this.value!="") { $("#"+field+" .c_typo").removeClass('hidden'); } else { $("#"+field+" .c_typo").addClass('hidden'); }
-		});
 		$("div#layers").on("click", "span.c_typo", function() {
 			var field = $(this).attr("name");
 			var typo = $("#"+field+"_typo").val();
@@ -548,12 +551,6 @@ Helper_Display::quickCopyright();
 				var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_typo/"+typo+"/tmpl/edit.php&id="+field+"&name="+typo+"&validation=1";
 				$.fn.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
 			}
-		});
-		$("div#layers").on("change", "select.c_link_ck", function() {
-			var field = $(this).parents().eq(3).attr("id");
-			var cid = $(this).attr("id");
-			$("#"+cid+"_options").val("");
-			if(this.value!="") { $("#"+field+" .c_link").removeClass('hidden'); } else { $("#"+field+" .c_link").addClass('hidden'); }
 		});
 		$("div#layers").on("click", "span.c_link", function() {
 			var field = $(this).attr("name");
@@ -584,8 +581,11 @@ Helper_Display::quickCopyright();
 			var to = $(this).attr("data-to");
 			var v = $(this).val();
 			var txt = $("#"+id+" option:selected").text();
+			if ($(this).attr("data-type") == "variation") {
+				txt = txt.replace('(*)', '<span class="icon-key"></span>');
+			}
 			$("#"+to).val(v);
-			$(this).parent().find("[data-id=\""+to+"\"]").text(txt);
+			$(this).parent().find("[data-id=\""+to+"\"]").html(txt);
 			JCck.Dev.update($(this), $(this).attr("data-type"), 'to');
 			$(this).trigger("mouseleave");
 		});
@@ -597,10 +597,18 @@ Helper_Display::quickCopyright();
 		});
 		$("div#layers").on("click", ".sp2se", function() {
 			var id = $(this).attr("data-id");
-			var to = "_wk_"+$(this).attr("data-to");
+			var target = $(this).attr("data-to");
+			var tab = target.split("-");
+			var to = "_wk_"+target;
 			var v = $("#"+id).val();
 			$(this).addClass("hide");
-			$("#"+to).clone().attr("id",id+"_cur").val(v).addClass("se2sp").attr("data-to",id).prependTo($(this).parent()).removeClass("hide").triggersDropdown();
+			
+			var $el = $("#"+to).clone();
+			var html = $el.html();
+			if (tab[0]=='variation') {
+				$el.html(html.replace(new RegExp('&lt;span class="icon-key"&gt;&lt;/span&gt;', 'g'), '(*)'));
+			}
+			$el.attr("id",id+"_cur").val(v).addClass("se2sp").attr("data-to",id).prependTo($(this).parent()).removeClass("hide").triggersDropdown();
 		});
 		$("div#layers").on("contextmenu", ".sp2se", function() {
 			var id = $(this).attr("data-id");
@@ -624,7 +632,7 @@ Helper_Display::quickCopyright();
 				$next = $("#"+to+" option:first");
 			}
 			$("#"+id).val($next.val());
-			$(this).text($next.text());
+			$(this).html($next.text());
 			JCck.Dev.update($(this), $(this).attr("data-to"), 'id');
 			return false;
 		});

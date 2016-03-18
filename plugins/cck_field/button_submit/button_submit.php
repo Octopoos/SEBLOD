@@ -38,40 +38,54 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	}
 
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
 		$data['live']		=	NULL;
 		$data['validation']	=	NULL;
-		$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-									   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-									   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-									   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-									   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-									   JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-									   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-									   JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-									   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 
-		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data );
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']	=	array(
+										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+									);
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}
 
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
 		$data['live']		=	NULL;
 		$data['match_mode']	=	NULL;
 		$data['validation']	=	NULL;
-		$data['variation']	=	array( JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-									   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-									   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-									   JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-									   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-									   JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-									   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-									   JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-									   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 
-		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']	=	array(
+										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
+										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+									);
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare

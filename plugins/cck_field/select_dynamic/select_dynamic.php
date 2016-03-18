@@ -39,30 +39,40 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-		
-		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data );
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
+			$data['variation']['hidden_auto']	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
+			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}
-
+	
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
-		/*
-		$data['variation'][]	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
-		*/
-		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-
-		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
+			$data['variation']['hidden_auto']	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
+			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
+			$data['variation']['list']			=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
+			$data['variation']['list_filter']	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
+			/*
+			$data['variation']['list_filter_ajax']	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+			*/
+			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
