@@ -251,6 +251,17 @@ class plgSearchCCK extends JPlugin
 			$where	=	str_replace( 'OR )', ')', $where );
 		}
 		$where		=	str_replace( 'AND ()', '', $where );
+		$pos		=	strpos( $where, '() AND' );
+		
+		if ( $pos !== false && $pos == 0 ) {
+			$where	=	substr( $where, 6 );
+		} else {
+			$pos	=	strpos( $where, 'AND' );
+
+			if ( $pos !== false && $pos == 0 ) {
+				$where	=	substr( $where, 3 );
+			}
+		}
 		
 		// -------- -------- Order
 		if ( ! $order ) {
