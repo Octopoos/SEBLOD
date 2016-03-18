@@ -434,6 +434,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Init
 		$app		=	JFactory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
+
 		if ( count( $inherit ) ) {
 			$name		=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 			$xk			=	( isset( $inherit['xk'] ) ) ? $inherit['xk'] : -1;
@@ -445,6 +446,11 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$imageTitle	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_title'] 	: @$config['post'][$name.'_title'];
 			$imageDesc	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_description'] 	: @$config['post'][$name.'_description'];
 			$imageCustomDir	=	( isset( $inherit['post'] ) ) ? @$inherit['post'][$name.'_path'] : @$config['post'][$name.'_path'];
+
+			if ( isset( $field->error ) && $field->error === true ) {
+				$field->error = false;
+			}
+
 		} else {
 			$name		=	$field->name;
 			$xk			=	-1;
