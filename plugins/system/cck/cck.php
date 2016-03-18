@@ -633,7 +633,7 @@ class plgSystemCCK extends JPlugin
 						preg_match_all( $search, $buffer, $matches );
 						if ( count( $matches[1] ) ) {
 							$i		=	0;
-							$style	=	'height:14px; color:#ffffff; background-color:#0088CC; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
+							$style	=	'height:14px; color:#ffffff; background-color:#3b99fc; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
 							foreach ( $matches[1] as $match ) {
 								if ( isset( $list[$match] ) ) {
 									$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';

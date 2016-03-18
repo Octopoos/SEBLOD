@@ -219,7 +219,7 @@ div.seblod div.legend {
 	color: #08c;
 	font-size: 1.18em;
 	font-weight: 700;
-	margin-left: 5px;
+	margin-left: 0;
 	margin-bottom: 5px;
 	width:100%;
 }
@@ -421,14 +421,15 @@ div.conditional table.adminlist tr td.triggers div.conditional_conditions{paddin
 div.conditional table.adminlist tr td.triggers div.conditional_conditions input.input-mini{width:70px;}
 div.conditional table.adminlist tr td.triggers span.equal{padding-left: 5px; padding-right: 8px;}
 div.conditional table.adminlist tr td.triggers span.fill{font-size:15px; position:relative; top:2px; cursor:pointer; color:#eb8207;}
-div.conditional table.adminlist tr td.triggers span.fill > .icon-menu-2{color: #0088CC; font-size:13px; position: relative; left:-22px; top:-4px;}
+div.conditional table.adminlist tr td.triggers span.fill > .icon-menu-2{color: #3b99fc; font-size:13px; position: relative; left:-22px; top:-4px;}
 div.conditional table.adminlist tr td span.del{float:right; position:relative; right:4px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/del-default.gif); background-repeat:no-repeat; cursor:pointer; }
 div.conditional table.adminlist tr td span.del.icon-minus {background:none; color:#e9594d;}
 span.add{float:right; position:relative; top:2px; right:6px; width:16px; height:16px; background-image:url(../../../../../media/cck/images/16/add-default.gif); background-repeat:no-repeat; cursor:pointer; }
-span.add.icon-plus {background:none; color:#65ab55;}
+span.add.icon-plus {background:none; color:#65ab55; position:relative; right:5px;}
 span.star{font-size:1.2em!important;}
+div.seblod.conditional span.star{color: #3b99fc;}
 div.conditional table.adminlist tr td.states span.star{position:relative; top: -5px; left: -1px;}
-span.star2{color:#eb8207; font-size:0.90em!important; text-transform:uppercase;}
+span.star2{color:#3b99fc; font-size:0.90em!important; text-transform:uppercase;}
 div.info{float:left;color:#eb8207;}
 ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207; cursor: pointer; font-size:15px; position:relative; top:9px;}
 #layer div.seblod div.attr{padding-top:3px;}
@@ -442,6 +443,7 @@ div.seblod input.inputbox.mini2{padding:2px;margin:0px 7px 5px 0px;}
 div.seblod input.inputbox.mini2.middle{padding:2px;margin:0px 9px 5px 1px;}
 div.seblod.conditional .button-add{display:none;}
 div.seblod input#toggle_attr {position:relative; top:6px;}
+div.seblod.conditional input#toggle_attr {clear:left;}
 div.seblod label.toggle_attr{clear:none;color:#eb8207;font-size:11px;position:relative;top:2px;}
 div#layer div.seblod label.toggle_attr{width:167px;height:auto; margin-bottom:0px;}
 div.attr span.star{float:left;}
@@ -456,7 +458,7 @@ body.com_cck div.seblod:not(.cpanel_news) div.legend,
 body.com_cck_ecommerce div.seblod:not(.cpanel_news) div.legend,
 body.com_cck_webservices div.seblod:not(.cpanel_news) div.legend,
 body.contentpane.component div.seblod div.legend,
-div.accordion div.seblod div.legend {color:#0088CC; font-size:1em;}
+div.accordion div.seblod div.legend {color:#3b99fc; font-size:1em;}
 div.accordion div.seblod{border:0;}
 
 body.contentpane.component ul.adminformlist-1col,
@@ -472,10 +474,11 @@ body.com_cck .insidebox, body.contentpane.component .insidebox {top:2px;}
 body.com_cck ul.adminformlist li span.c_link,
 body.contentpane.component ul.adminformlist li span.c_link,
 body.com_cck ul.adminformlist li span.c_link2,
-body.contentpane.component ul.adminformlist li span.c_link2 {color:#0088CC;}
+body.contentpane.component ul.adminformlist li span.c_link2 {color:#3b99fc;}
 
 body.com_cck div.seblod label.toggle_attr,
-body.contentpane.component div.seblod label.toggle_attr{color:#0088CC;font-size:1em;}
+body.contentpane.component div.seblod label.toggle_attr{color:#3b99fc;font-size:1em;}
+body.contentpane.component div.seblod.conditional label.toggle_attr{clear:right;}
 
 body.com_cck div.seblod input.inputbox.mini2,
 body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 18px 5px 0;}

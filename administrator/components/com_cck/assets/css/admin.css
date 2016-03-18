@@ -52,7 +52,7 @@ th.caret-fix > a:first-child > span{float:left; position:relative; left:3px;}
 .switch span.notice {background-position:left; background-repeat:no-repeat; text-indent: 25px;}
 .switch span.unlinked {background-image: url("../images/24/icon-24-unlock.png");}
 
-.switch span.linkage.icon-lock{left: -2px; margin: 5px 0 0 6px; font-size: 18px; color:#0088cc; background-image:none;}
+.switch span.linkage.icon-lock{left: -2px; margin: 5px 0 0 6px; font-size: 18px; color:#3b99fc; background-image:none;}
 .switch span.linkage.unlinked.icon-lock:before{content: "\e267"; color:#eb8207;}
 
 .cck_radius2 {-webkit-border-radius: 2px!important; -moz-border-radius: 2px!important; border-radius: 2px!important;}
@@ -95,7 +95,7 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 
 #toggle_more{top:76px;}
 #toggle_more_workshop{top:98px;}
-.toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle.png"); background-repeat:no-repeat; background-size: cover;}
+.toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle3.png"); background-repeat:no-repeat; background-size: cover;}
 .toggle_more.closed{background-position:0 0;}
 .toggle_more.open{background-position:0 -10px;}
 
@@ -136,7 +136,7 @@ pre.cck-xml{font-family: "Arial", "Helvetica", sans-serif; font-size:12px; paddi
 .img-action{max-width: inherit;}
 body #j-main-container{padding-left:0;}
 body #j-main-container > .btn-toolbar{margin-top:15px;}
-ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #0088cc; margin-bottom: 6px;}
+ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #3b99fc; margin-bottom: 6px;}
 ul.nav.nav-list li a[href='#']:hover{background:none;}
 div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
 div.seblod-manager .table .dropdown-menu{left: inherit; right: 0;}
@@ -166,12 +166,12 @@ body.com_cck_exporter div.how-to-setup a,
 body.com_cck_importer div.how-to-setup a,
 body.contentpane.component div.how-to-setup a,
 body.com_cck span#storage_field_pick,
-body.contentpane.component span#storage_field_pick {color:#0088CC;}
+body.contentpane.component span#storage_field_pick {color:#3b99fc;}
 body.com_cck span#storage_field_pick,
 body.contentpane.component span#storage_field_pick {top:10px;}
 
-body.contentpane.component div.seblod.preview div.cck_forms.cck_admin div.cck_desc{color:#0088CC;}
-body.contentpane.component div.toggle-selection a{color:#0088CC;}
+body.contentpane.component div.seblod.preview div.cck_forms.cck_admin div.cck_desc{color:#3b99fc;}
+body.contentpane.component div.toggle-selection a{color:#3b99fc;}
 
 .sly-wrapper .sly { height: 145px; }
 .sly-wrapper .sly ul { height: 100%; }
@@ -181,7 +181,7 @@ body.contentpane.component div.toggle-selection a{color:#0088CC;}
 .sly-wrapper .scrollbar .handle { width: 100px; height: 100%; }
 .sly-wrapper .pages{margin-bottom: 0;}
 
-.mini-desc{color:#0088CC; font-size: 11px; font-style: italic;}
+.mini-desc{color:#3b99fc; font-size: 11px; font-style: italic;}
 body.com_cck div#status{box-shadow:none;}
 
 div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5px;}
@@ -225,9 +225,9 @@ body.com_cck fieldset.btn-group-yesno .btn-success.active,
 body.com_cck fieldset.btn-group-yesno .btn-success.disabled,
 body.com_cck fieldset.btn-group-yesno .btn-success[disabled] {
 	color: #fff;
-	background-color: #00416a;
-	*background-color: #00416a;
-	border-color: #1a3867 #1a3867 #1a3867;
+	background-color: #16396f;
+	*background-color: #16396f;
+	border-color: #16396f #16396f #16396f;
 }
 
 body.admin.view-list div.seblod.first,
@@ -246,5 +246,5 @@ body.contentpane.component .span12{margin-left:0px; width:100%;}
 
 body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; position:relative; top:6px;}
 
-body.com_cck span.value-picker {color: #0088CC; top:9px;}
+body.com_cck span.value-picker {color: #3b99fc; top:9px;}
 body:not(.com_cck) div.alert.alert-info > div{text-align: center};
