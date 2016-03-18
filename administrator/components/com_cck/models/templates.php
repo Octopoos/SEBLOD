@@ -47,6 +47,7 @@ class CCKModelTemplates extends JModelList
 	// getListQuery
 	protected function getListQuery()
 	{
+		$app	=	JFactory::getApplication();
 		$db		=	$this->getDbo();
 		$query	=	$db->getQuery( true );	
 		
@@ -101,8 +102,16 @@ class CCKModelTemplates extends JModelList
 		}
 		
 		// Filter Search
-		$location	=	$this->getState( 'filter.location' );
-		$search		=	$this->getState( 'filter.search' );
+		if ( ( $folder = $app->input->getInt( 'folder_id', 0 ) ) > 0 ) {
+			$location	=	'folder_id';
+			$search		=	$folder;
+				
+			$this->setState( 'filter.location', $location );
+			$this->setState( 'filter.search', $search );
+		} else {
+			$location	=	$this->getState( 'filter.location' );
+			$search		=	$this->getState( 'filter.search' );
+		}
 		if ( ! empty( $search ) ) {
 			switch ( $location ) {
 				case 'id':
