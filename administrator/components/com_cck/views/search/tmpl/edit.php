@@ -26,7 +26,7 @@ if ( $lang->hasKey( $key ) == 1 ) {
 if ( JCck::on() ) {
 	JHtml::_( 'bootstrap.tooltip' );
 	$sidebar_inner	=	288;
-	$sidebar_top	=	88;
+	$sidebar_top	=	85;
 	$tooltipJS		=	'';
 } else {
 	$sidebar_inner	=	0;

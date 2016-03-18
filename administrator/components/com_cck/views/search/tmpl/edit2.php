@@ -33,7 +33,6 @@ if ( $this->item->client == 'list' ) {
 <div class="layers" id="layer_fields" <?php echo ( $this->item->layer == 'fields' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_fields_'.$this->uix.'.php'; ?></div>
 <div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_configuration.php'; ?></div>
 <div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_template.php'; ?></div>
-
 <script type="text/javascript">
 JCck.Dev.setSidebar();
 (function ($){

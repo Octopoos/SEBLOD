@@ -26,7 +26,7 @@ if ( $lang->hasKey( $key ) == 1 ) {
 if ( JCck::on() ) {
 	JHtml::_( 'bootstrap.tooltip' );
 	$sidebar_inner	=	288;
-	$sidebar_top	=	88;
+	$sidebar_top	=	85;
 	$tooltipJS		=	'';
 } else {
 	$sidebar_inner	=	0;
@@ -437,7 +437,7 @@ Helper_Display::quickCopyright();
 		updateTrash: function(target) {
 			if (JCck.Dev.trash) { $(target).prepend(JCck.Dev.trash); }
 			JCck.Dev.trash = $(target+" li").detach();
-
+			
 			$(target+" select").each(function(i) {
 				if (!$("#layer_fields_options #"+$(this).attr("id")).length) {
 					$(this).appendTo("#layer_fields_options");
