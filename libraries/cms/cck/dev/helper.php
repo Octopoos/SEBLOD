@@ -347,6 +347,25 @@ abstract class JCckDevHelper
 				}
 			}
 		}
+		if ( $str != '' && strpos( $str, '$site->' ) !== false ) {
+			$site	=	JCck::getSite();
+			if ( strpos( $str, '$site->getViewLevels()' ) !== false ) {
+				$access		=	$site->viewlevels;
+				if ( $site->guest_only_viewlevel ) {
+					$access	.=	','.$site->guest_only_viewlevel;
+				}
+				$str		=	str_replace( '$site->getViewLevels()', $access, $str );
+			}
+			$matches		=	'';
+			$search			=	'#\$site\->([a-zA-Z0-9_]*)#';
+			preg_match_all( $search, $str, $matches );
+			if ( count( $matches[1] ) ) {
+				foreach ( $matches[1] as $k=>$v ) {
+					$v2		=	( isset( $site->$v ) ) ? $site->$v : '';
+					$str	=	str_replace( $matches[0][$k], $v2, $str );
+				}
+			}
+		}
 		if ( $str != '' && strpos( $str, 'J(' ) !== false ) {
 			$matches	=	'';
 			$search		=	'#J\((.*)\)#U';
