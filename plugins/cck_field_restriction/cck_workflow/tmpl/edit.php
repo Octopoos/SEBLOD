@@ -20,6 +20,7 @@ JCckDev::initScript( 'restriction', $this->item );
 		echo JCckDev::renderForm( 'core_location2', '', $config, array( 'label'=>'Location' ) );
 		echo JCckDev::renderForm( 'core_action2', '', $config );
 		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Author', 'selectlabel'=>'Any Author', 'options'=>'Current=1||Someone Else=-1', 'required'=>'', 'storage_field'=>'author' ) );
         ?>
     </ul>
 </div>
