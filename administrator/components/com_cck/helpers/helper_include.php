@@ -52,6 +52,7 @@ class Helper_Include extends CommonHelper_Include
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.8.0.min.js' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
 				}

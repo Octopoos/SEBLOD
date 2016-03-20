@@ -34,7 +34,7 @@ if ( $this->item->client == 'list' ) {
 <div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_configuration.php'; ?></div>
 <div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_template.php'; ?></div>
 <script type="text/javascript">
-JCck.Dev.setSidebar();
+JCck.DevHelper.setSidebar();
 (function ($){
 $("#pos-1 input:radio[name='positions']").attr("checked", "checked");
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}

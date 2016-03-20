@@ -19,7 +19,7 @@ class Helper_Workshop
 	public static function displayField( &$field, $type_field = '', $attr = array() )
 	{
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.Dev.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.Dev.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -129,12 +129,12 @@ class Helper_Workshop
 		$root		=	JROOT_MEDIA_CCK;
 				
 		$bar		.=	'<a class="hasTooltip cbox qtip_cck icons icon-add" title="'.JText::_( 'COM_CCK_ADD_FIELD' ).'" href="index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text"></a>'
-					.	'<a class="hasTooltip first qtip_cck icons icon-up" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_UP' ).'" href="javascript: JCck.Dev.moveTop();"></a>';
+					.	'<a class="hasTooltip first qtip_cck icons icon-up" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_UP' ).'" href="javascript: JCck.DevHelper.moveTop();"></a>';
 		if ( $uix == 'full' ) {
-			$bar	.=	'<a class="hasTooltip qtip_cck icons icon-right" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_RIGHT' ).'" href="javascript: JCck.Dev.moveAcross(\'#sortable2\');"></a>'
-					.	'<a class="hasTooltip qtip_cck icons icon-left" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_LEFT' ).'" href="javascript: JCck.Dev.moveAcross();"></a>';
+			$bar	.=	'<a class="hasTooltip qtip_cck icons icon-right" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_RIGHT' ).'" href="javascript: JCck.DevHelper.moveAcross(\'#sortable2\');"></a>'
+					.	'<a class="hasTooltip qtip_cck icons icon-left" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_LEFT' ).'" href="javascript: JCck.DevHelper.moveAcross();"></a>';
 		}
-		$bar		.=	'<a class="hasTooltip qtip_cck icons icon-down" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_DOWN' ).'" href="javascript: JCck.Dev.moveBottom();"></a>';
+		$bar		.=	'<a class="hasTooltip qtip_cck icons icon-down" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_DOWN' ).'" href="javascript: JCck.DevHelper.moveBottom();"></a>';
 		
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
