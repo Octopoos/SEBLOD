@@ -526,7 +526,7 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (420, 'Article UrlC Target', 'art_urlc_target', 28, 'select_simple', '', 1, 'URL Target Window', 'Use Global', 3, '', '', '', 'Open in Parent Window=0||Open in New Window=1||Open in Popup=2||Open in Modal=3', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'json', '', 'joomla_article', '#__content', 'urls', 'targetc', '', '', 0, '0000-00-00 00:00:00'),
 (421, 'Article Urls Position', 'art_urls_position', 16, 'select_simple', '', 1, 'Positioning of the Links', 'Use Global', 3, '', '', '', 'Above=0||Below=1', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'json', '', 'joomla_article', '#__content', 'attribs', 'urls_position', '', '', 0, '0000-00-00 00:00:00'),
 (422, 'User Email2', 'user_email2', 13, 'email', '', 1, 'Confirm Email', ' ', 3, '', '', '', '', '{"send":"0","send_field":"","from":"0","from_param":"","from_name":"0","from_name_param":"","subject":"","to":"","message":"","to_field":"","message_field":"","send_attachment_field":"","attachment_field":"","cc":"0","cc_param":"","bcc":"0","bcc_param":""}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'none', '', '', '', 'email', '', '', '', 0, '0000-00-00 00:00:00'),
-(423, 'User Gender', 'user_gender', 29, 'radio', '', 1, 'Gender', ' ', 3, '', '', 'M', 'Male=M||Female=F', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'gender', '', '', '', 0, '0000-00-00 00:00:00'),
+(423, 'User Gender', 'user_gender', 29, 'radio', '', 1, 'Gender', ' ', 3, '', '', 'M', 'Male=M||Female=F||Company=C', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'gender', '', '', '', 0, '0000-00-00 00:00:00'),
 (424, 'User Last Name', 'user_last_name', 29, 'text', '', 1, 'Last Name', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'last_name', '', '', '', 0, '0000-00-00 00:00:00'),
 (425, 'User First Name', 'user_first_name', 29, 'text', '', 1, 'First Name', ' ', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'first_name', '', '', '', 0, '0000-00-00 00:00:00'),
 (426, 'User About Me', 'user_about_me', 29, 'textarea', '', 1, 'About Me', ' ', 3, '', '', '', '', '', 0, 255, 32, 32, 5, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'about_me', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -640,7 +640,9 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (539, 'Tab2 Options (Panel)', 'tab2_options', 3, 'tabs', '', 1, 'Options', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_options', '', '', '', 0, '0000-00-00 00:00:00'),
 (540, 'Tab2 Media (Panel)', 'tab2_media', 3, 'tabs', '', 1, 'Media', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_media', '', '', '', 0, '0000-00-00 00:00:00'),
 (541, 'Tab2 Permissions (Panel)', 'tab2_permissions', 3, 'tabs', '', 1, 'Permissions', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_permissions', '', '', '', 0, '0000-00-00 00:00:00'),
-(542, 'Core List Display Alt', 'core_list_display_alt', 3, 'select_simple', '', 0, 'Display Alt', ' ', 3, '', '', '0', 'Yes=1||No=0', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'display_alt', '', '', '', 0, '0000-00-00 00:00:00');
+(542, 'Core List Display Alt', 'core_list_display_alt', 3, 'select_simple', '', 0, 'Display Alt', ' ', 3, '', '', '0', 'Yes=1||No=0', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'display_alt', '', '', '', 0, '0000-00-00 00:00:00'),
+(543, 'User Company', 'user_company', 29, 'text', '', 1, 'Company', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company', '', '', '', 0, '0000-00-00 00:00:00'),
+(544, 'User Company VAT ID', 'user_company_vat_id', 29, 'text', '', 1, 'VAT ID', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company_vat_id', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -681,7 +683,7 @@ INSERT IGNORE INTO `#__cck_core_folders` (`id`, `asset_id`, `parent_id`, `path`,
 (13, 0, 5, 'joomla/joomla_user', 'User', 'joomla_user', '#578ad6', 'U', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user/images/icon.png', 2, 31, 38, '', 'joomla_user', 1, 1, 1, 0, '0000-00-00 00:00:00'),
 (6, 0, 2, 'seblod', 'SEBLOD', 'seblod', '#184d9d', '', '#ffffff', 'type,field,search,template', '', 1, 44, 49, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (7, 0, 6, 'seblod/apps', 'Apps', 'apps', '#184d9d', 'A', '#ffffff', 'type,field,search,template', '', 2, 45, 46, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(3, 0, 2, 'core', 'Core', 'core', '#ad0aff', '*', '#ffffff', 'type,field,search,template', '', 1, 2, 3, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(3, 0, 2, 'core', 'Core', 'core', '#184d9d', '*', '#ffffff', 'type,field,search,template', '', 1, 2, 3, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (8, 0, 6, 'seblod/demo', 'Demo', 'demo', '#184d9d', 'D', '#ffffff', 'type,field,search,template', '', 2, 47, 48, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (5, 0, 2, 'joomla', 'JOOMLA', 'joomla', '#578ad6', '', '#ffffff', 'type,field,search,template', '', 1, 4, 43, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (15, 0, 10, 'joomla/joomla_article/publishing', 'Publishing', 'publishing', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 14, 15, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
@@ -1350,9 +1352,9 @@ INSERT IGNORE INTO `#__cck_core_type_field` (`typeid`, `fieldid`, `client`, `ord
 (8, 428, 'site', 8, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 2, '', '', '', '', '', '', 'mainbody'),
 (8, 498, 'site', 7, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 2, '', '', '', '', '', '', 'mainbody'),
 (8, 310, 'site', 6, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(8, 312, 'site', 5, '', '', '', 'required', '', 'confirm', '{"alert":"","field":"user_password"}', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(8, 312, 'site', 5, '', '', '', '', '', 'confirm', '{"alert":"","field":"user_password"}', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 309, 'site', 3, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(8, 311, 'site', 4, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(8, 311, 'site', 4, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 308, 'site', 2, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 476, 'site', 1, 'Account', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 2, '', '', '', '', '', '', 'mainbody');
 
@@ -1514,5 +1516,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
   `website` varchar(255) NOT NULL,
   `birthdate` datetime NOT NULL,
   `birthplace` varchar(255) NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `company_vat_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
