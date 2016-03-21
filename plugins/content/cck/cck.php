@@ -227,6 +227,8 @@ class plgContentCCK extends JPlugin
 			return;
 		}
 
+		$matches[1] = (int) preg_replace("/[^0-9]/","",$matches[1]);
+
 		$join			=	' LEFT JOIN #__cck_core_folders AS f ON f.id = b.folder';
 		$join_select	=	', f.app as folder_app';
 		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, a.author_id AS author, b.id AS type_id, b.alias AS type_alias, b.indexed, b.parent, b.stylesheets,'
