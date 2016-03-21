@@ -60,7 +60,7 @@ class CCKViewList extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
-		$pagination					=	$this->getModel()->_getPagination( $total );
+		$pagination					=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
 		if ( !is_object( @$options ) ) {

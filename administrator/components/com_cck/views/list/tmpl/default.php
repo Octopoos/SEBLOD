@@ -67,16 +67,24 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 				$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ) ) );
 			}
 			$item_number	=	'<div class="'.$this->class_items_number.'"><span>'.$this->total.'</span>&nbsp;'.$label.'</div>';
-		}	
-	    echo '<div class="seblod '.$this->class_pagination.'">';
-		if ( $this->show_pagination > -1 ) {
+		}
+		if ( isset( $this->pagination->pagesTotal ) ) {
+			$pages_total	=	$this->pagination->pagesTotal;
+		} elseif ( isset( $this->pagination->{'pages.total'} ) ) {
+			$pages_total	=	$this->pagination->{'pages.total'};
+		} else {
+			$pages_total	=	0;
+		}
+		if ( $this->show_pagination > -1 && $pages_total > 1 ) {
+			echo '<div class="seblod '.$this->class_pagination.'">';
+
 			if ( JCck::on() ) {
 				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $this->pagination->getListFooter() );
 			} else {
 				echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
 			}
+			echo '</div>';
 		}
-	    echo '</div>';
 	}
     ?>
 </div>
