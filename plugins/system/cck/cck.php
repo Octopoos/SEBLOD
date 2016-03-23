@@ -112,8 +112,7 @@ class plgSystemCCK extends JPlugin
 						if ( $forced == true ) {
 							$tag	=	JFactory::getLanguage()->getDefault();
 						}
-						JFactory::getConfig()->set( 'language', $tag );
-						JFactory::getLanguage()->setLanguage( $tag );
+						$this->_setLanguage( $tag );
 					}
 				}
 			}
@@ -848,6 +847,19 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 	
+	// _setLanguage
+	protected function _setLanguage( $tag )
+	{
+		$app	=	JFactory::getApplication();
+		$lang	=	JLanguage::getInstance( $tag );
+		
+		$app->loadLanguage( $lang );
+		JFactory::$language = $app->getLanguage();
+
+		JFactory::getConfig()->set( 'language', $tag );
+		JFactory::getLanguage()->setLanguage( $tag );
+	}
+
 	// _setTemplateStyle
 	protected function _setTemplateStyle( $style )
 	{
