@@ -12,9 +12,9 @@ defined( '_JEXEC' ) or die;
 
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
 	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
-	$js	=	'if (jQuery("#seblod_form").validationEngine("validate",task) === true) { JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("seblod_form")); }';
+	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'")); }';
 } else {
-	$js	=	'JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("seblod_form"));';
+	$js	=	'JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'"));';
 }
 $app	=	JFactory::getApplication();
 $doc	=	JFactory::getDocument();
@@ -30,8 +30,8 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 		.				'return false;'
 		.			'}'
 		.		'}'
-		.		'jQuery("#seblod_form").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
-		.		'JCck.Core.submitForm(task,document.getElementById(\'seblod_form\'));'
+		.		'jQuery("#'.$this->form_id.'").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
+		.		'JCck.Core.submitForm(task,document.getElementById(\''.$this->form_id.'\'));'
 		.	'};'
 		.	'';
 $doc->addScriptDeclaration( $js );
@@ -52,7 +52,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 if ( $this->show_form ) {
-	echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="seblod_form" name="seblod_form">';
+	echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 }
 if ( $this->show_form == 1 ) {
 	echo ( $this->raw_rendering ) ? $this->form : '<div class="cck_page_search'.$this->pageclass_sfx.' cck-clrfix">' . $this->form . '</div><div class="clr"></div>';

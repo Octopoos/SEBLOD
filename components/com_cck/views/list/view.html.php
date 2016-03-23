@@ -17,6 +17,13 @@ class CCKViewList extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app						=	JFactory::getApplication();
+		$layout						=	$app->input->get( 'tmpl' );
+		$uniqId						=	'';
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$uniqId					=	'_'.$layout;
+		}
+		
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
@@ -24,8 +31,8 @@ class CCKViewList extends JViewLegacy
 		$preconfig['itemId']		=	'';
 		$preconfig['task']			=	$app->input->get( 'task', 'search' );
 		$preconfig['doPagination']	=	1;
-		$preconfig['formId']		=	'seblod_form';
-		$preconfig['submit']		=	'JCck.Core.submit';
+		$preconfig['formId']		=	'seblod_form'.$uniqId;
+		$preconfig['submit']		=	'JCck.Core.submit'.$uniqId;
 		
 		JCck::loadjQuery();
 		$this->prepareDisplay( $preconfig );
@@ -183,13 +190,17 @@ class CCKViewList extends JViewLegacy
 		} else {
 			$this->callback_pagination	=	'';
 		}
+		
+		// Force Titles to be hidden
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$params->set( 'show_page_heading', 0 );
+			$this->show_list_title	=	false;
 		}
 		
 		$this->config					=	&$config;
 		$this->data						=	&$data;
 		$this->form						=	&$form;
+		$this->form_id					=	$preconfig['formId'];
 		$this->home						=	&$home;
 		$this->items					=	&$items;
 		$this->limitend					=	$config['limitend'];
