@@ -13,6 +13,12 @@ defined( '_JEXEC' ) or die;
 // View
 class CCKViewCck extends JCckBaseLegacyView
 {
+    // completeUI
+    public function completeUI()
+    {
+        $this->document->setTitle( JText::_( 'LIB_CCK_SEBLOD' ) );
+    }
+
     // prepareSidebar
     protected function prepareSidebar()
     {
