@@ -431,7 +431,7 @@ div.seblod.conditional span.star{color: #3b99fc;}
 div.conditional table.adminlist tr td.states span.star{position:relative; top: -5px; left: -1px;}
 span.star2{color:#3b99fc; font-size:0.90em!important; text-transform:uppercase;}
 div.info{float:left;color:#eb8207;}
-ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207; cursor: pointer; font-size:15px; position:relative; top:9px;}
+ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207; cursor: pointer; font-size:15px; font-weight:bold; position:relative; top:9px;}
 #layer div.seblod div.attr{padding-top:3px;}
 
 div.seblod div.attr{display:none;float:left;max-width:240px;}
