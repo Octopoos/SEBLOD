@@ -306,7 +306,7 @@ class JCckPluginField extends JPlugin
 			$column2			=	'';
 		} else {
 			$value			=	@$field->variation;
-			$text			=	$data['variation'][$value]->text;
+			$text			=	( isset( $data['variation'][$value] ) ) ? $data['variation'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$to				=	( isset( $config['construction']['variation'][$field->type] ) ) ? 'variation-'.$field->type : 'variation';
 			$column2		=	'<input type="hidden" id="'.$name.'_variation" name="ffp['.$name.'][variation]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_variation" data-to="'.$to.'">'.$text.'</span>'
@@ -331,7 +331,7 @@ class JCckPluginField extends JPlugin
 			}
 			$value				=	@$field->live;
 			$to					=	( isset( $config['construction']['live'][$field->type] ) ) ? 'live-'.$field->type : 'live';
-			$text				=	$data['live'][$value]->text;
+			$text				=	( isset( $data['live'][$value] ) ) ? $data['live'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$text2				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	'<input type="hidden" id="'.$name.'_live" name="ffp['.$name.'][live]" value="'.$value.'" />'
 								.	'<span class="text blue sp2se" data-id="'.$name.'_live" data-to="'.$to.'">'.$text.'</span>';
@@ -361,7 +361,7 @@ class JCckPluginField extends JPlugin
 		}
 		$value				=	@(int)$field->stage;
 		$value				=	(string)$value;
-		$text				=	@$data['stage'][$value]->text;
+		$text				=	( isset( $data['stage'][$value] ) ) ? $data['stage'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column2			=	'<input type="hidden" id="ffp'.$name.'_stage" name="ffp['.$name.'][stage]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_stage" data-to="stage">'.$text.'</span>';
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
@@ -369,11 +369,11 @@ class JCckPluginField extends JPlugin
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
 		$value				=	( @$field->access ) ? (int)$field->access : 1;
-		$text				=	$data['access'][$value]->text;
+		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
 		$value				=	@$field->restriction;
-		$text				=	$data['restriction'][$value]->text;
+		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_restriction" data-to="'.$to.'">'.$text.'</span>'
@@ -399,7 +399,7 @@ class JCckPluginField extends JPlugin
 		} else {
 			$value			=	@$field->markup;
 			$to				=	( isset( $config['construction']['markup'][$field->type] ) ) ? 'markup-'.$field->type : 'markup';
-			$text			=	$data['markup'][$value]->text;
+			$text			=	( isset( $data['markup'][$value] ) ) ? $data['markup'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
@@ -425,7 +425,7 @@ class JCckPluginField extends JPlugin
 		// 2
 		$hide				=	( @$field->link != '' ) ? '' : ' hidden';
 		$value				=	@$field->link;
-		$text				=	$data['link'][$value]->text;
+		$text				=	( isset( $data['link'][$value] ) ) ? $data['link'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['link'][$field->type] ) ) ? 'link-'.$field->type : 'link';
 		$column1			=	'<input type="hidden" id="'.$name.'_link" name="ffp['.$name.'][link]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_link" data-to="'.$to.'">'.$text.'</span>'
@@ -434,7 +434,7 @@ class JCckPluginField extends JPlugin
 							.	' <span class="c_link'.$hide.'" name="'.$name.'">+</span>';
 		$hide				=	( @$field->typo != '' ) ? '' : ' hidden';
 		$value				=	@$field->typo;
-		$text				=	$data['typo'][$value]->text;
+		$text				=	( isset( $data['typo'][$value] ) ) ? $data['typo'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['typo'][$field->type] ) ) ? 'typo-'.$field->type : 'typo';
 		$column2			=	'<input type="hidden" id="'.$name.'_typo" name="ffp['.$name.'][typo]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_typo" data-to="'.$to.'">'.$text.'</span>'
@@ -450,7 +450,7 @@ class JCckPluginField extends JPlugin
 		} else {
 			$value			=	@$field->markup;
 			$to				=	( isset( $config['construction']['markup'][$field->type] ) ) ? 'markup-'.$field->type : 'markup';
-			$text			=	$data['markup'][$value]->text;
+			$text			=	( isset( $data['markup'][$value] ) ) ? $data['markup'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
@@ -461,11 +461,11 @@ class JCckPluginField extends JPlugin
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
 		$value				=	( @$field->access ) ? (int)$field->access : 1;
-		$text				=	$data['access'][$value]->text;
+		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
 		$value				=	@$field->restriction;
-		$text				=	$data['restriction'][$value]->text;
+		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_restriction" data-to="'.$to.'">'.$text.'</span>'
@@ -494,7 +494,7 @@ class JCckPluginField extends JPlugin
 			$column2			=	'';
 		} else {
 			$value			=	@$field->variation;
-			$text			=	$data['variation'][$value]->text;
+			$text			=	( isset( $data['variation'][$value] ) ) ? $data['variation'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$to				=	( isset( $config['construction']['variation'][$field->type] ) ) ? 'variation-'.$field->type : 'variation';
 			$column2		=	'<input type="hidden" id="'.$name.'_variation" name="ffp['.$name.'][variation]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_variation" data-to="'.$to.'">'.$text.'</span>'
@@ -519,7 +519,7 @@ class JCckPluginField extends JPlugin
 			}
 			$value				=	@$field->live;
 			$to					=	( isset( $config['construction']['live'][$field->type] ) ) ? 'live-'.$field->type : 'live';
-			$text				=	$data['live'][$value]->text;
+			$text				=	( isset( $data['live'][$value] ) ) ? $data['live'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$text2				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	'<input type="hidden" id="'.$name.'_live" name="ffp['.$name.'][live]" value="'.$value.'" />'
 								.	'<span class="text blue sp2se" data-id="'.$name.'_live" data-to="'.$to.'">'.$text.'</span>';
@@ -538,7 +538,7 @@ class JCckPluginField extends JPlugin
 		} else {
 			$hide				=	( @$field->match_mode != 'none' ) ? '' : ' hidden';
 			$value				=	@$field->match_mode;
-			$text				=	$data['match_mode'][$value]->text;
+			$text				=	( isset( $data['match_mode'][$value] ) ) ? $data['match_mode'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$to					=	( isset( $config['construction']['match_mode'][$field->type] ) ) ? 'match_mode-'.$field->type : 'match_mode';
 			$column1			=	'<input type="hidden" id="'.$name.'_match_mode" name="ffp['.$name.'][match_mode]" value="'.$value.'" />'
 								.	'<span class="text blue sp2se" data-id="'.$name.'_match_mode" data-to="match_mode">'.$text.'</span>'
@@ -549,7 +549,7 @@ class JCckPluginField extends JPlugin
 		}
 		$value				=	@(int)$field->stage;
 		$value				=	(string)$value;
-		$text				=	@$data['stage'][$value]->text;
+		$text				=	( isset( $data['stage'][$value] ) ) ? $data['stage'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column2			=	'<input type="hidden" id="ffp'.$name.'_stage" name="ffp['.$name.'][stage]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_stage" data-to="stage">'.$text.'</span>';
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
@@ -557,11 +557,11 @@ class JCckPluginField extends JPlugin
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
 		$value				=	( @$field->access ) ? (int)$field->access : 1;
-		$text				=	$data['access'][$value]->text;
+		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
 		$value				=	@$field->restriction;
-		$text				=	$data['restriction'][$value]->text;
+		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_restriction" data-to="'.$to.'">'.$text.'</span>'
@@ -584,7 +584,7 @@ class JCckPluginField extends JPlugin
 		} else {
 			$value			=	@$field->markup;
 			$to				=	( isset( $config['construction']['markup'][$field->type] ) ) ? 'markup-'.$field->type : 'markup';
-			$text			=	$data['markup'][$value]->text;
+			$text			=	( isset( $data['markup'][$value] ) ) ? $data['markup'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
@@ -1021,7 +1021,7 @@ class JCckPluginField extends JPlugin
 				$parent		=	$config['formId'];
 				$submit		=	$config['submit'];
 			} else {
-				$parent		=	( JFactory::getApplication()->isAdmin() ) ? 'adminForm' : 'seblod_form';
+				$parent		=	'seblod_form';
 				$submit		=	'JCck.Core.submit';
 			}
 			if ( $field->script ) {
@@ -1037,30 +1037,29 @@ class JCckPluginField extends JPlugin
 			$field->form	=	'';
 			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
 			if ( count( $options ) ) {
-				
-				static $loaded	=	0;
-				if ( !$loaded ) {
+				static $loaded	=	array();
+				if ( !isset($loaded[$id] ) ) {
 					if ( isset( $config['submit'] ) && isset( $config['formId'] ) ) {
 						$parent		=	$config['formId'];
 						$submit		=	$config['submit'];
 					} else {
-						$parent		=	( JFactory::getApplication()->isAdmin() ) ? 'adminForm' : 'seblod_form';	
+						$parent		=	'seblod_form';	
 						$submit		=	'JCck.Core.submit';
 					}
-					$doc		=	JFactory::getDocument();
-					$then		=	'';
+					$doc			=	JFactory::getDocument();
+					$then			=	'';
 					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
 						if ( $variation == 'list_filter_ajax' ) {
 							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
 						}
-						$then	.=	' $(".list-variation-items > li").removeClass("active"); $(this).parent().addClass("active")';
+						$then		.=	' $("#'.$id.'_ > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
-						$then	=	' '.$submit.'("search");';
+						$then		=	' '.$submit.'("search");';
 					}
-					$js			=	'$("form#'.$parent.'").on("click", ".list-variation-items > li a", function() { var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
-					$js			=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
+					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() {var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
+					$js				=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
 					$doc->addScriptDeclaration( $js );
-					$loaded		=	1;
+					$loaded[$id]	=	1;
 				}
 				foreach ( $options as $opt ) {
 					$o		=	explode( '=', $opt );
@@ -1075,7 +1074,7 @@ class JCckPluginField extends JPlugin
 				if ( $field->form != '' ) {
 					$class			=	'list-variation-items';
 					$class			=	( $field->css != '' ) ? $class.' '.$field->css : $class;
-					$field->form	=	'<ul class="'.$class.'">'.$field->form.'</ul>';
+					$field->form	=	'<ul class="'.$class.'" id="'.$id.'_">'.$field->form.'</ul>';
 				}
 			}
 			$field->form	.=	$base;
