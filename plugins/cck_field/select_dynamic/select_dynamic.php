@@ -166,7 +166,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( parent::g_isStaticVariation( $field, $field->variation, true ) ) {
 			$form			=	'';
 			$field->text	=	'';
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
 			$attr		=	array( 'option.attr'=>'data-cck' );
 			$auto		=	1;
