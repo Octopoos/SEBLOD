@@ -141,20 +141,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             </td>
             <td class="center hidden-phone small"><?php echo JText::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>
             <?php if ( $location == 'folder_id' ) { ?>
-				<td class="order">
+				<td class="center order">
 					<?php if ( $canChange ) {
-							if ( $saveOrder ) {
-								if ( $listDir == 'asc' ) { ?>
-								<span><?php echo $this->pagination->orderUpIcon( $i, ( @$this->items[$i-1]->folder == $item->folder), 'fields.orderup', 'JLIB_HTML_MOVE_UP', $ordering ); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon( $i, $this->pagination->total,
-																				 ( @$this->items[$i+1]->folder == $item->folder), 'fields.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering ); ?></span>
-							<?php } elseif ( $listDir == 'desc' ) { ?>
-								<span><?php echo $this->pagination->orderUpIcon( $i, ( @$this->items[$i-1]->folder == $item->folder), 'fields.orderdown', 'JLIB_HTML_MOVE_UP', $ordering ); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon( $i, $this->pagination->total,
-																				 ( @$this->items[$i+1]->folder == $item->folder), 'fields.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering ); ?></span>
-							<?php }
-							} $disabled	=	$saveOrder ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled; ?> class="text-area-order input-mini" />
+						$disabled	=	$saveOrder ?  '' : 'disabled="disabled"'; ?>
+						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled; ?> class="text-area-order input-mini" style="text-align:center; width:30px;" />
 					<?php } else {
 						echo $item->ordering;
 					} ?>

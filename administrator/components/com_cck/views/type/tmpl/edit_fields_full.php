@@ -93,8 +93,8 @@ if ( JCck::on() ) {
                     if ( $k2 == '_' ) {
                         if ( isset( $data[$k] ) ) {
                             if ( $k == 'variation' ) {
-                                 $data['variation'][]=   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
-                                 $data['variation'][]=   JHtml::_( 'select.option', '</OPTGROUP>', '' );    
+                                 $data['variation']['300']  =   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+                                 $data['variation']['301']  =   JHtml::_( 'select.option', '</OPTGROUP>', '' );
                             }
                             echo JHtml::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }

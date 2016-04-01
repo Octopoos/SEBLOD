@@ -294,10 +294,14 @@ class Helper_Workshop
 	// getParams
 	public static function getParams( $element, $master, $client )
 	{
-		$data			=	array();
-		$data['_']		=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
-								   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ) );
-		$data['label']	=	true;
+		$data					=	array();
+		$data['_']				=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
+										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ) );
+		
+		$data['computation']	=	true;
+		$data['conditional']	=	true;
+		$data['label']			=	true;
+		$data['markup_class']	=	true;
 
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {

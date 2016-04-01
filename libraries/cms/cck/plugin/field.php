@@ -383,14 +383,22 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 4, $style, $column1, $column2 );
 		
 		// 5
-		$column1			=	'<input type="hidden" id="ffp_'.$name.'_conditional" name="ffp['.$name.'][conditional]" value="'.( ( @$field->conditional != '' ) ? $field->conditional : '' ).'" />'
+		if ( !$data['conditional'] ) {
+			$column1		=	'';
+		} else {
+			$column1		=	'<input type="hidden" id="ffp_'.$name.'_conditional" name="ffp['.$name.'][conditional]" value="'.( ( @$field->conditional != '' ) ? $field->conditional : '' ).'" />'
 							.	'<span class="text blue c_cond" name="'.$name.'">'.( ( @$field->conditional != '' ) ? '&lt; '.$data['_']['edit'].' /&gt;' : $data['_']['add'] ).'</span>'
 							.	'<input type="hidden" id="ffp_'.$name.'_conditional_options" name="ffp['.$name.'][conditional_options]" '
 							.	'value="'.( ( @$field->conditional_options != '' ) ? htmlspecialchars( $field->conditional_options ) : '' ).'" />';
-		$column2			=	'<input type="hidden" id="ffp_'.$name.'_computation" name="ffp['.$name.'][computation]" value="'.( ( @$field->computation != '' ) ? $field->computation : '' ).'" />'
+		}
+		if ( !$data['computation'] ) {
+			$column2		=	'';
+		} else {
+			$column2		=	'<input type="hidden" id="ffp_'.$name.'_computation" name="ffp['.$name.'][computation]" value="'.( ( @$field->computation != '' ) ? $field->computation : '' ).'" />'
 							.	'<span class="text blue c_comp" name="'.$name.'">'. ( ( @$field->computation != '' ) ? '&lt; '.$data['_']['edit'].' /&gt;' : $data['_']['add'] ) .'</span>'
 							.	'<input type="hidden" id="ffp_'.$name.'_computation_options" name="ffp['.$name.'][computation_options]" '
 							.	'value="'.( ( @$field->computation_options != '' ) ? htmlspecialchars( $field->computation_options ) : '' ).'" />';
+		}
 		$field->params[]	=	self::g_getParamsHtml( 5, $style, $column1, $column2 );
 
 		// 6
@@ -403,8 +411,12 @@ class JCckPluginField extends JPlugin
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
-		$column2			=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+		if ( !$data['markup_class'] ) {
+			$column2		=	'';
+		} else {
+			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
+		}
 		$field->params[]	=	self::g_getParamsHtml( 6, $style, $column1, $column2 );
 	}
 	
@@ -454,8 +466,12 @@ class JCckPluginField extends JPlugin
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
-		$column2			=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+		if ( !$data['markup_class'] ) {
+			$column2		=	'';
+		} else {
+			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
+		}
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
@@ -541,7 +557,7 @@ class JCckPluginField extends JPlugin
 			$text				=	( isset( $data['match_mode'][$value] ) ) ? $data['match_mode'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 			$to					=	( isset( $config['construction']['match_mode'][$field->type] ) ) ? 'match_mode-'.$field->type : 'match_mode';
 			$column1			=	'<input type="hidden" id="'.$name.'_match_mode" name="ffp['.$name.'][match_mode]" value="'.$value.'" />'
-								.	'<span class="text blue sp2se" data-id="'.$name.'_match_mode" data-to="match_mode">'.$text.'</span>'
+								.	'<span class="text blue sp2se" data-id="'.$name.'_match_mode" data-to="'.$to.'">'.$text.'</span>'
 								.	'<input type="hidden" id="'.$name.'_match_value" name="ffp['.$name.'][match_value]" value="'.@$field->match_value.'" />'
 								.	'<input type="hidden" id="'.$name.'_match_collection" name="ffp['.$name.'][match_collection]" value="'.@$field->match_collection.'" />'
 								.	'<input type="hidden" id="'.$name.'_match_options" name="ffp['.$name.'][match_options]" value="'.htmlspecialchars( @$field->match_options ).'" />'
@@ -571,10 +587,14 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 4, $style, $column1, $column2 );
 		
 		// 5
-		$column1			=	'<input type="hidden" id="ffp_'.$name.'_conditional" name="ffp['.$name.'][conditional]" value="'.( ( @$field->conditional != '' ) ? $field->conditional : '' ).'" />'
+		if ( !$data['conditional'] ) {
+			$column1		=	'';
+		} else {
+			$column1		=	'<input type="hidden" id="ffp_'.$name.'_conditional" name="ffp['.$name.'][conditional]" value="'.( ( @$field->conditional != '' ) ? $field->conditional : '' ).'" />'
 							.	'<span class="text blue c_cond" name="'.$name.'">'.( ( @$field->conditional != '' ) ? '&lt; '.$data['_']['edit'].' /&gt;' : $data['_']['add'] ).'</span>'
 							.	'<input type="hidden" id="ffp_'.$name.'_conditional_options" name="ffp['.$name.'][conditional_options]" '
 							.	'value="'.( ( @$field->conditional_options != '' ) ? htmlspecialchars( $field->conditional_options ) : '' ).'" />';
+		}
 		$column2			=	'';
 		$field->params[]	=	self::g_getParamsHtml( 5, $style, $column1, $column2 );	
 		
@@ -588,8 +608,12 @@ class JCckPluginField extends JPlugin
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
-		$column2			=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+		if ( !$data['markup_class'] ) {
+			$column2		=	'';
+		} else {
+			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
+		}
 		$field->params[]	=	self::g_getParamsHtml( 6, $style, $column1, $column2 );
 
 		// 7
@@ -676,8 +700,12 @@ class JCckPluginField extends JPlugin
 			$column1		=	'<input type="hidden" id="'.$name.'_markup" name="ffp['.$name.'][markup]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="'.$name.'_markup" data-to="'.$to.'">'.$text.'</span>';
 		}
-		$column2			=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+		if ( !$data['markup_class'] ) {
+			$column2		=	'';
+		} else {
+			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
+		}
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
