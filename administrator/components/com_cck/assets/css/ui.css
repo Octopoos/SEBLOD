@@ -445,7 +445,7 @@ div.seblod.conditional .button-add{display:none;}
 div.seblod input#toggle_attr {position:relative; top:6px;}
 div.seblod.conditional input#toggle_attr {clear:left;}
 div.seblod label.toggle_attr{clear:none;color:#eb8207;font-size:11px;position:relative;top:2px;}
-div#layer div.seblod label.toggle_attr{width:167px;height:auto; margin-bottom:0px;}
+div#layer div.seblod label.toggle_attr{width:180px;height:auto; margin-bottom:0px;}
 div.attr span.star{float:left;}
 div.attr input[type="checkbox"]{position:relative; top:3px;margin-left:4px;}
 img#storage_alter_table_notice{position:relative; top:8px;}
