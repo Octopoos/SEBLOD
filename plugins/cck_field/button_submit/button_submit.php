@@ -201,6 +201,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
 		if ( $task == 'cancel' ) {
 			$click	=	' onclick="JCck.Core.submitForm(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
+		} elseif ( $task == 'reset' ) {
+			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
+			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.'"' : '';
+		} elseif ( $task == 'reset2save' ) {
+			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
+			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
 		} else {
 			if ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
 				$click	=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
@@ -226,7 +232,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				}
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
 			} else {
-				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
 			}
 		}
 		if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
