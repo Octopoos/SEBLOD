@@ -80,6 +80,10 @@
 					<option value="fixed">TPL_SEB_TABLE_TABLE_LAYOUT_FIXED</option>
 				</field>
 				<field name="class_table_tr_odd" type="cck" construction="core_class_table_tr_odd" default="" label="TPL_SEB_TABLE_CLASS_TR_ODD" description="" class="inputbox" />
+				<field name="table_columns" type="list" default="0" label="TPL_SEB_TABLE_TABLE_EMPTY_COLUMNS" description="" class="inputbox">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
 				<field name="position_margin" type="cck" construction="core_position_margin" default="10" more="px" label="TPL_SEB_TABLE_MARGIN" description="" class="inputbox" />
 			</fieldset>
 		</fields>
