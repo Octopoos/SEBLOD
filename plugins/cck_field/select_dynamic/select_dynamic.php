@@ -45,6 +45,8 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
 			$data['variation']['hidden_auto']	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
 			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -67,6 +69,8 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$data['variation']['list_filter_ajax']	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
 			*/
 			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['205']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['206']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {

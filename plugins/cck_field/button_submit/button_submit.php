@@ -40,8 +40,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['live']		=	NULL;
-		$data['validation']	=	NULL;
+		$data['computation']	=	NULL;
+		$data['live']			=	NULL;
+		$data['validation']		=	NULL;
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(

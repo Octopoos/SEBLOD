@@ -36,6 +36,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
+			$data['match_mode']	=	array(
+										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_AUTO' ) )
+									);
+
+			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
+		} else {
+			$data['match_mode']									=	$config['construction']['match_mode'][self::$type];
+		}
+		
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
 
 	// onCCK_FieldDelete
@@ -410,10 +427,12 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Set
 		$field->form		=	$form;
 		
-		if ( $value != '' ) {
-			$field->match_mode	=	'not_empty';
-		} else {
-			$field->match_mode	=	'';
+		if ( $field->match_mode != 'none' ) {
+			if ( $value != '' ) {
+				$field->match_mode	=	'not_empty';
+			} else {
+				$field->match_mode	=	'';
+			}
 		}
 		$field->type		=	'checkbox';
 		$field->value		=	$value;

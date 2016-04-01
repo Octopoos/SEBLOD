@@ -40,6 +40,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
 		$data['label']		=	NULL;
+		$data['live']		=	NULL;
 		$data['match_mode']	=	NULL;
 		$data['markup']		=	NULL;
 		$data['validation']	=	NULL;
@@ -59,10 +60,12 @@ class plgCCK_FieldDiv extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['label']		=	NULL;
-		$data['markup']		=	NULL;
-		$data['validation']	=	NULL;
-		$data['variation']	=	NULL;
+		$data['computation']	=	NULL;
+		$data['label']			=	NULL;
+		$data['live']			=	NULL;
+		$data['markup']			=	NULL;
+		$data['validation']		=	NULL;
+		$data['variation']		=	NULL;
 		
 		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}

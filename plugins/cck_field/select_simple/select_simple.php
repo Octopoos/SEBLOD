@@ -45,6 +45,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 			$data['variation']['list_filter_ajax']	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
 			*/
 			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
