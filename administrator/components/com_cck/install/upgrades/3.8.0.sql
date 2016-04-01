@@ -18,8 +18,8 @@ INSERT INTO `#__cck_more_processings` (`id`, `title`, `name`, `folder`, `type`, 
 
 UPDATE `#__cck_core_fields` SET `options2` = '{"preparecontent":"","prepareform":"$class = (JCck::on()) ? ''icon-lock '' : ''''; $value = $field->defaultvalue;\\r\\nif ( $value == ''0'' ) {\\r\\n $c0 = ''checked=\\"checked\\"''; $c1 = ''''; $class .= ''unlinked'';\\r\\n} else {\\r\\n $c0 = ''''; $c1 = ''checked=\\"checked\\"''; $class .= ''linked'';\\r\\n}\\r\\n$desc = JText::_( ''COM_CCK_STORAGE_DESC_SHORT'' );\\r\\n$form = ''<input type=\\"radio\\" id=\\"''.$name.''0\\" name=\\"''.$name.''\\" value=\\"0\\" ''.$c0\\r\\n      . '' style=\\"display:none;\\" \\/>''\\r\\n      . ''<input type=\\"radio\\" id=\\"''.$name.''1\\" name=\\"''.$name.''\\" value=\\"1\\" ''.$c1\\r\\n      . '' style=\\"display:none;\\" \\/>''\\r\\n      . ''<a href=\\"javascript: void(0);\\" id=\\"''.$name.''\\" class=\\"switch qtip_cck\\" title=\\"''\\r\\n      . $desc.''\\">''\\r\\n      . ''<span class=\\"''.$name.'' ''.$class.''\\">''\\r\\n      . ''<\\/span>''\\r\\n      . ''<\\/a>'';","preparestore":""}' WHERE `id` = 106;
 
-UPDATE `#__cck_core_fields` SET `options` = REPLACE( `attributes`, 'JCck.Dev.', 'JCck.DevHelper.' ) WHERE `id` IN (56,454);
-UPDATE `#__cck_core_fields` SET `options` = REPLACE( `script`, 'JCck.Dev.', 'JCck.DevHelper.' ) WHERE `id` IN (38,39);
+UPDATE `#__cck_core_fields` SET `attributes` = REPLACE( `attributes`, 'JCck.Dev.', 'JCck.DevHelper.' ) WHERE `id` IN (56,454);
+UPDATE `#__cck_core_fields` SET `script` = REPLACE( `script`, 'JCck.Dev.', 'JCck.DevHelper.' ) WHERE `id` IN (38,39);
 
 UPDATE `#__cck_core_fields` SET `options` = REPLACE( `options`, 'file-add', 'file-add||file-check||file-minus||file-plus' ) WHERE `id` = 289;
 
