@@ -433,7 +433,7 @@ class JCckPluginLocation extends JPlugin
 			$bridge->version++;
 			
 			if ( $bridge->state == 1 && intval( $bridge->publish_up ) == 0 ) {
-				$bridge->publish_up	=	JFactory::getDate()->toSql();
+				$bridge->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 			}
 			if ( !$core->pkb ) {
 				if ( $params['bridge_ordering'] ) {
@@ -444,6 +444,7 @@ class JCckPluginLocation extends JPlugin
 				}
 			}
 			$bridge->check();
+
 			if ( empty( $bridge->language ) ) {
 				$bridge->language	=	'*';
 			}
