@@ -29,6 +29,6 @@ div.cck_button.cck_button_add > .icon-plus { color:#65ab55; }
 div.cck_button.cck_button_drag { cursor:move; height: 16px; margin-left: 2px; }
 div.cck_button.cck_button_drag > .icon-circle { color:#4d6ae9; }
 div.horizontal_gx { overflow:auto; }
-div.vertical_gx { overflow:auto; }
+div.vertical_gx {float:left; overflow:auto; position:relative; width:100%; padding: 0; margin: 0;}
 div.vertical div.horizontal_gx div.cck_forms { float: left; padding:0 10px 10px 0; width: auto; }
 div.cck_cgx_form { float:left; }
