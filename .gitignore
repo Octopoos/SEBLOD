@@ -513,6 +513,7 @@
 /administrator/manifests/packages/pkg_cck_ecommerce.xml
 /administrator/manifests/packages/pkg_cck_field_code.xml
 /administrator/manifests/packages/pkg_cck_field_geoip.xml
+/administrator/manifests/packages/pkg_cck_field_join_x.xml
 /administrator/manifests/packages/pkg_cck_field_restriction_joomla_acl.xml
 /administrator/manifests/packages/pkg_cck_field_seblod.xml
 /administrator/manifests/packages/pkg_cck_field_sql.xml
@@ -694,6 +695,7 @@
 /language/en-GB/en-GB.pkg_cck_webservices.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_code.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_geoip.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_join_x.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_seblod.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_sql.sys.ini
@@ -814,6 +816,7 @@
 /language/fr-FR/fr-FR.pkg_cck_webservices.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_code.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_geoip.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_join_x.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_seblod.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_sql.sys.ini
@@ -1672,6 +1675,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.sys.ini
 /plugins/cck_field_link/history_back_js/*
+
+######## SEBLOD Plug-ins >> Link >> JoinX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_join_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_join_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_join_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_join_x.sys.ini
+/plugins/cck_field_link/join_x/*
 
 ######## SEBLOD Plug-ins >> Link >> Joomla! Menu Item
 
