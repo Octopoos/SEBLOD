@@ -1297,6 +1297,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_button_reset.sys.ini
 /plugins/cck_field/button_reset/*
 
+######## SEBLOD Plug-ins >> Field >> Captcha Math
+
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_math.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_math.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_math.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_math.sys.ini
+/plugins/cck_field/captcha_math/*
+
 ######## SEBLOD Plug-ins >> Field >> Captcha Recaptcha
 
 /administrator/language/en-GB/en-GB.plg_cck_field_captcha_recaptcha.ini
@@ -1404,6 +1412,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.sys.ini
 /plugins/cck_field/join_x/*
+
+######## SEBLOD Plug-ins >> Field >> Joomla! Article
+
+/administrator/language/en-GB/en-GB.plg_cck_field_joomla_article.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_joomla_article.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_joomla_article.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_joomla_article.sys.ini
+/plugins/cck_field/joomla_article/*
 
 ######## SEBLOD Plug-ins >> Field >> Message Redirection
 
@@ -1644,6 +1660,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_video_vimeo.sys.ini
 /plugins/cck_field/video_vimeo/*
 
+######## SEBLOD Plug-ins >> Field >> Video Youtube
+
+/administrator/language/en-GB/en-GB.plg_cck_field_video_youtube.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_video_youtube.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_youtube.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_youtube.sys.ini
+/plugins/cck_field/video_youtube/*
+
 ######## SEBLOD Plug-ins >> Link >> Custom
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_custom.ini
@@ -1852,6 +1876,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_message.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_message.sys.ini
 /plugins/cck_storage_location/joomla_message/*
+
+######## SEBLOD Plug-ins >> Object >> Joomla! Module
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.sys.ini
+/plugins/cck_storage_location/joomla_module/*
 
 ######## SEBLOD Plug-ins >> Object >> Joomla! Redirection
 
