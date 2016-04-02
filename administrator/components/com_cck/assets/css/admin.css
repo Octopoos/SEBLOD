@@ -70,6 +70,7 @@ div.preview fieldset.checkboxes, div.preview fieldset.radios{ border: none;margi
 div.preview fieldset.checkboxes.vertical input.inputbox, div.preview fieldset.radios.vertical input.inputbox{ clear:both;}
 div.preview fieldset.checkboxes input.inputbox, div.preview fieldset.radios input.inputbox{float:left;padding: 1px;margin: 5px 5px 0 0 !important;}
 div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:none;display:block;float:left;line-height:190%;margin:0;padding-right:20px;}
+div.preview > div > div.cck_admin.cck_jform_usergroups{text-align: left;}
 
 input#storage_field{padding-right: 15px; margin-right:0px;}
 span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
