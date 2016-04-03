@@ -345,6 +345,8 @@ class plgSystemCCK extends JPlugin
 						}
 						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
 						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target, $class, $style ), 'notice' );
+					} elseif ( $view == 'manage' ) {
+						$doc->addStyleDeclaration( 'span[data-original-title="SEBLOD (App Builder & CCK)"]{font-weight:bold;}');
 					}
 					break;
 				case 'com_menus':
