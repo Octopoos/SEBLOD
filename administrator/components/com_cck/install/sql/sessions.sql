@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_sessions` (
   `options` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_extension` (`extension`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;

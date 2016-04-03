@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_countries` (
   `code2` varchar(5) NOT NULL,
   `code3` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=247 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=247 ;
 
 
 -- --------------------------------------------------------
