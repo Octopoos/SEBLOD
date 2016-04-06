@@ -644,7 +644,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path,
+			$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>$forbidden_ext,
 									   'file_name'=>$item_custom_name, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, 'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field'=>$field->storage_field, 'storage_field2'=>($field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$item_custom_title );

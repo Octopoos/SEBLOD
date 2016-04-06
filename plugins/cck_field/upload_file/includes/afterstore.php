@@ -71,11 +71,29 @@ if ( ! JFolder::exists( JPATH_SITE.'/'.$file_path ) ) {
 	$file_body	=	'<!DOCTYPE html><title></title>';
 	JFile::write( JPATH_SITE.'/'.$file_path.'/index.html', $file_body );
 }
-if ( JFile::upload( $tmp_name, $location ) ) {
-	$value	=	$file_location;
+$safeFileOptions		=	array();
+
+if ( $process['forbidden_ext'] ) {
+	$forbiddenExtensions	=	array( 'php', 'phps', 'php5', 'php3', 'php4', 'inc', 'pl', 'cgi', 'fcgi', 'java', 'jar', 'py' );
+	$safeExtensions			=	JCck::getConfig_Param( 'media_content_forbidden_extensions_whitelist', 'php' );
+
+	if ( $safeExtensions != '' ) {
+		$safeExtensions		=	explode( ',', $safeExtensions );
+
+		if ( count( $safeExtensions ) ) {
+			$safeExtensions		=	array_diff( $forbiddenExtensions, $safeExtensions );
+			$safeFileOptions	=	array(
+										'forbidden_extensions'=>$safeExtensions
+									);
+		}
+	}
+}
+if ( JFile::upload( $tmp_name, $location, false, false, $safeFileOptions ) ) {
+	$value					=	$file_location;
 	$fields[$name]->value	=	$value;
 } else {
-	$value	=	'';
+	$value					=	'';
+
 	if ( $x2k > -1 ) {
 		if ( $array_x ) { //GroupX
 			$search		=	'::'.$name.'|'.$x2k.'|'.$parent_name.'::'.'{"file_location":"'.$old_path.$file_name.'","file_title":"'.$file_title.'"}'.'::/'.$name.'|'.$x2k.'|'.$parent_name.'::';
