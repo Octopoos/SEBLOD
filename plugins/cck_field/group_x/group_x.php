@@ -401,7 +401,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			} else {
 				$orientation=	( $field->bool == 1 ) ? 'vertical_gx' : 'horizontal_gx';
 				$width		=	'';			
-				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$css.$orientation.' '.$width.'">';
+				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.$css.' '.$width.'">';
 				for ( $i = 0; $i < $count; $i++ ) {
 					$html	.=	self::_formHTML( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
