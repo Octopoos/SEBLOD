@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$object	=	'joomla_article';
+$object	=	'joomla_user_group';
 
 echo JCckDev::getForm( 'core_form', '', $config, array( 'label'=>'Content Type', 'selectlabel'=>'Generic', 'options'=>'Linked to Content Type=optgroup', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND storage_location=\"'.$object.'\"","value":"name","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 'bool4'=>1, 'required'=>'', 'css'=>'storage-cck-more', 'attributes'=>'disabled="disabled"', 'storage_field'=>'storage_cck' ) );
 ?>

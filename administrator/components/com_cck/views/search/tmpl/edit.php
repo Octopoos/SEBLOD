@@ -77,7 +77,6 @@ if ( $this->item->client == 'list' ) {
         	</div>
         </div>
         <div id="toggle_more" class="toggle_more <?php echo $this->panel_class; ?>"></div>
-		<input type="hidden" id="storage_location" name="storage_location" value="joomla_article" />
 	</div>
 	<div class="seblod first" id="more" style="<?php echo $this->panel_style; ?>height:<?php echo $this->css['panel_height']; ?>;">
     	<div>
