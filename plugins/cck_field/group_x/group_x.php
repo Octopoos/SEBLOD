@@ -280,7 +280,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$f_value			=	@$val[$f_name];
 						$inherit			=	array( 'xk' => $key, 'xi' => $xi, 'parent' => $name, 'array_x' => 1, 'post' => $val );
 						$results			=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $f_value, &$config, $inherit, true ) );
-						$v					=	$results[0];
+						$v					=	@$results[0];
 						$store				.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$text				.=	'<li style="line-height:10px;">'.$f_label.' : '.$v.'</li>';
 						// todo: add childs (secondary) storages.. not primary!
@@ -370,7 +370,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$buttons 	= 	$field->bool2 || $field->bool3 || $field->bool4;
 		$html		=	'';
 		$empty		=	'';
-		$css 		=	( $field->css ) ? $field->css.' ' : '';
+		$css 		=	( $field->css ) ? ' '.$field->css : '';
 		
 		if ( $count ) {
 			if ( $field->bool == 2 ) {
@@ -381,7 +381,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$head	.=	'<tr class="head">';
 						foreach ( $field->form[$i] as $elem ) {
 							if ( $elem->display > 1 ) {
-								$head	.=	'<th>'.$elem->label.'</th>';
+								$class	=	( @$elem->markup_class ) ? ' class="'.trim( @$elem->markup_class ).'"' : '';
+								$head	.=	'<th'.$class.'>'.$elem->label.'</th>';
 							}
 						}
 						$head 	.=	( $buttons ) ? '<th></th>' : '';
@@ -391,7 +392,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				}
 				$head		=	'<thead>'.$head.'</thead>';
 				$html		=	'<tbody id="cck1_sortable_'.$field->name.'" >'.$html.'</tbody>';
-				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="'.$css.'table">'.$head.$html.$foot.'</table>';
+				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="table'.$css.'">'.$head.$html.$foot.'</table>';
 
 				if ( $field->bool2 ) {
 					$empty		=	self::_formTABLE( $field, @$field->form[$i], 0, 0, $buttons, $config );
@@ -496,7 +497,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$js2				=	'';
 		$js_format			=	( $i == 0 && $size_group == 0 ) ? 'raw' : 'html';
 		$rId				=	$config['rendering_id'];
-		$class				=	( ( $i % 2 ) ) ? ' even' : ' odd';
+		$class				=	'cck_cgx cck_cgx_form';
+		$class2				=	( $i % 2 ) ? ' even' : ' odd';
 
 		if ( $buttons ) {
 			if ( $field->bool3 ) {
@@ -509,36 +511,41 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"></div>';
 			}
 		}
-
 		if ( $size_group == 1 ) {
-			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first cck_form_group_x_last'.$class.'">';
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first cck_form_group_x_last'.$class2.'">';
 			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first cck_cgx_button_last">'.$html_div_buttons.'</td>' : '';
-			$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first cck_cgx_form_last">';
+			$class		.=	' cck_cgx_form_first cck_cgx_form_last';
 		} elseif ( $size_group == 0 ) {
-			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class.'">';
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class2.'">';
 			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</td>' : '';
-			$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		} elseif ( $i == 0 ) {
-			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first'.$class.'">';
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first'.$class2.'">';
 			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first">'.$html_div_buttons.'</td>' : '';
-			$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first">';
+			$class		.=	' cck_cgx_form_first';
 		} elseif ( $i == $size_group -1 ) {
-			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_last'.$class.'">';
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_last'.$class2.'">';
 			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_last">'.$html_div_buttons.'</td>' : '';
-			$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_last">';
+			$class		.=	' cck_cgx_form_last';
 		} else {
-			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class.'">';
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class2.'">';
 			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</td>' : '';
-			$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		}
 
 		if ( count( $group ) ) {
-			foreach ( $group as $elem ) 
-			{
+			foreach ( $group as $elem ) {
+				if ( @$elem->markup_class ) {
+					$class2	=	$class.@$elem->markup_class;
+				}
+				$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="'.$class2.'">';
+
 				if ( $elem->display > 1 ) {
 					$html	.=	$td;
 				}
-				$html		.=	'<div class="cck_forms">'.$elem->form.'</div>';
+				if ( $elem->markup == 'none' ) {
+					$html	.=	$elem->form;
+				} else {
+					$html	.=	'<div class="cck_forms">'.$elem->form.'</div>';
+				}
 				if ( $elem->display > 1 ) {
 					$html	.=	'</td>';			
 				}
