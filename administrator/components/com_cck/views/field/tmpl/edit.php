@@ -182,7 +182,9 @@ Helper_Display::quickCopyright();
 								$("#myid").val(obj.id); $("#jform_id").val(obj.id);
 								var elem = parent.jQuery('input:radio[name="positions"]:checked').attr('golast');
 								if (!(!elem || elem=="undefined")) {
-									parent.jQuery(elem).before(obj.html);
+									if (!parent.jQuery("ul#sortable1 li#"+obj.id).length) {
+										parent.jQuery(elem).before(obj.html);
+									}
 								}
 								var target_id = "#layer_fields_options";
 								if (obj.construction != "") {
