@@ -85,7 +85,7 @@ class CCKViewCck extends JCckBaseLegacyView
         foreach ( $more as $k=>$v ) {
             $buttons[]  =   array(
                                 'access'=>array( 'core.manage', 'com_cck' ),
-                                'group' =>'COM_CCK_SEBLOD_COM',
+                                'group' =>'COM_CCK_SEBLOD_STORE',
                                 'image' =>'download',
                                 'link'  =>JRoute::_( 'http://www.seblod.com/store/extensions?seb_item_category='.$v ),
                                 'target'=>'_blank',
