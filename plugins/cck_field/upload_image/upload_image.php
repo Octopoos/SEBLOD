@@ -289,7 +289,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete['.$xk.']" value="1" />';				
 			}
 		} elseif ( $name[(strlen($name) - 1 )] == ']' ) { //GroupX
@@ -306,7 +306,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete]" value="1" />';
 			}
 		} else { //Default
@@ -322,7 +322,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$name.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$name.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$name.'_delete" name="'.$name.'_delete" value="1" />';
 			}
 		}
@@ -333,7 +333,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['custom_path']	=	@$options2['custom_path'];
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
 		}
 		
 		if ( $options2['form_preview'] != -1 && $value['image_location'] ) {

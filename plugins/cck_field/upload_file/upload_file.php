@@ -282,7 +282,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false ); 
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete['.$xk.']" value="1" />';				
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -295,7 +295,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false );
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete]" value="1" />';
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -307,7 +307,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  @$options2['path_label'].$fold_3	, $value3, 'upload_file', false );
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$name.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$name.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$name.'_delete" name="'.$name.'_delete" value="1" />';
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -322,7 +322,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
