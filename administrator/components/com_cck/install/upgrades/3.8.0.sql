@@ -41,3 +41,13 @@ ALTER IGNORE TABLE `#__cck_store_item_users` ADD `company_vat_id` VARCHAR( 255 )
 INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_cck`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
 (543, 'User Company', 'user_company', 29, 'text', '', 1, 'Company', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company', '', '', '', 0, '0000-00-00 00:00:00'),
 (544, 'User Company VAT ID', 'user_company_vat_id', 29, 'text', '', 1, 'VAT ID', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company_vat_id', '', '', '', 0, '0000-00-00 00:00:00');
+
+ALTER TABLE `#__cck_core` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `#__cck_core` CHANGE `pk` `pk` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core` CHANGE `pkb` `pkb` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core` CHANGE `parent_id` `parent_id` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core_fields` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `#__cck_core_search_field` CHANGE `fieldid` `fieldid` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core_search_field` CHANGE `access` `access` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'search,list,item';
+ALTER TABLE `#__cck_core_type_field` CHANGE `fieldid` `fieldid` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core_type_field` CHANGE `access` `access` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'admin,site,intro,content';
