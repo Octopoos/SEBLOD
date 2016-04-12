@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core` (
   PRIMARY KEY (`id`),
   KEY `idx_cck` (`cck`),
   KEY `idx_pk` (`pk`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 -- --------------------------------------------------------
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_fields` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_type` (`type`),
   KEY `idx_folder` (`folder`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5000 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5000 ;
 
 
 INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_cck`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
@@ -660,7 +660,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_folders` (
   `checked_out_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_parent_id` (`parent_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_folders` (`id`, `asset_id`, `parent_id`, `path`, `title`, `name`, `color`, `introchar`, `colorchar`, `elements`, `icon_path`, `depth`, `lft`, `rgt`, `description`, `app`, `featured`, `home`, `published`, `checked_out`, `checked_out_time`) VALUES
@@ -706,7 +706,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_objects` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_component` (`component`),
   KEY `idx_view` (`view`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `context`, `options`, `vars`, `view`) VALUES
@@ -758,7 +758,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_searchs` (
   KEY `idx_template_filter` (`template_filter`),
   KEY `idx_template_list` (`template_list`),
   KEY `idx_template_item` (`template_item`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_searchs` (`id`, `title`, `name`, `alias`, `folder`, `content`, `template_search`, `template_filter`, `template_list`, `template_item`, `description`, `access`, `published`, `options`, `location`, `sef_route`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`) VALUES
@@ -892,7 +892,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `created_user_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 -- --------------------------------------------------------
@@ -912,7 +912,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_templates` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `idx_folder` (`folder`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_templates` (`id`, `title`, `name`, `folder`, `mode`, `description`, `featured`, `published`, `checked_out`, `checked_out_time`) VALUES
@@ -961,7 +961,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   KEY `idx_template_site` (`template_site`),
   KEY `idx_template_content` (`template_content`),
   KEY `idx_template_intro` (`template_intro`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `location`, `parent`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`, `access`, `created_date`, `created_user_id`, `modified_date`, `modified_user_id`) VALUES
@@ -1457,7 +1457,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_versions` (
   `checked_out_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `type_id_version` (`e_id`,`e_type`,`e_version`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e_type`, `e_version`, `e_core`, `e_more`, `e_more1`, `e_more2`, `e_more3`, `e_more4`, `e_more5`, `date_time`, `user_id`, `note`, `checked_out`, `checked_out_time`) VALUES
