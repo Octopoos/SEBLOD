@@ -198,5 +198,6 @@
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
 		<field name="uix" type="hidden" default="" />
+		<field name="utf8_conversion" type="hidden" default="" />
 	</fieldset>
 </config>
