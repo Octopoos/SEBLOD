@@ -127,7 +127,7 @@
 		<field name="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_LEGEND" type="spacer" hr="false" />
 		<field name="media_content_forbidden_extensions" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_DESC" class="btn-group btn-group-yesno">
 			<option value="0">None</option>
-			<option value="1">Whitelist</option>
+			<option value="1">COM_CCK_WHITELIST</option>
 		</field>
 		<field name="media_content_forbidden_extensions_whitelist" type="text" size="98" default="php" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST_DESC" class="inputbox input-xlarge" />
 		<field name="cckjsm1" type="cckjs" label="" description="" js_appendto="jform_media_preset1_extensions=#jform_media_preset1_extensions_label" js_format="html" hidden="true" />
