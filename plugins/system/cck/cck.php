@@ -440,7 +440,6 @@ class plgSystemCCK extends JPlugin
 			if ( $option == 'com_users' ) {
 				$options	=	JCckDatabase::loadResult( 'SELECT a.options FROM #__cck_core_objects AS a WHERE a.name = "joomla_user"' );
 				$options	=	new JRegistry( $options );
-				$itemId		=	$app->input->getInt( 'Itemid', 0 );
 				
 				if ( $options->get( 'registration', 1 ) ) {
 					if ( $view == 'profile' ) {
@@ -506,17 +505,28 @@ class plgSystemCCK extends JPlugin
 			}
 			
 			if ( $option == 'com_content' && $view == 'form' && $layout == 'edit' ) {
-				$itemId	=	$app->input->getInt( 'Itemid', 0 );
 				$aid	=	$app->input->getInt( 'a_id', 0 );
 				$return	=	$app->input->getBase64( 'return' );
 				if ( !$aid ) {
 					return;
 				}
-				$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
-				if ( !$type ) {
-					return;
+				$userType = JCckDatabase::loadObject( 'SELECT cck,pk FROM #__cck_core WHERE storage_location="joomla_user" AND pkb='.(int)$aid );
+
+				if ($userType)
+				{
+					$type = $userType->cck;
+					$aid  = (int)$userType->pk;
+				}
+				else
+				{
+					$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
+					if ( !$type ) {
+						return;
+					}
+
 				}
 				$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$aid.'&Itemid='.$itemId.'&return='.$return;
+
 				$app->redirect( $url );
 			}
 			

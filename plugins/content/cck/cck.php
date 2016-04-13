@@ -221,6 +221,7 @@ class plgContentCCK extends JPlugin
 	// _prepare
 	protected function _prepare( $context, &$article, &$params, $page = 0 )
 	{
+		$originalId = $article->id;
 		$property	=	'text';
 		preg_match( '#::cck::(\d+)::/cck::#U', $article->$property, $matches );
 	  	if ( ! @$matches[1] ) {
@@ -363,6 +364,9 @@ class plgContentCCK extends JPlugin
 		}
 		
 		$this->_render( $context, $article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
+
+		$article->id = $originalId;
+
 	}
 	
 	// _process
