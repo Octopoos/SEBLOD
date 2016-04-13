@@ -104,7 +104,7 @@ class plgContentCCK extends JPlugin
 
 		// Core
 		if ( $custom ) {
-			preg_match( '#::cck::(.*)::/cck::#U', $data->$custom, $matches );
+			preg_match( '#::cck::(\d+)::/cck::#U', $data->$custom, $matches );
 			$id		=	$matches[1];
 
 			if ( ! $id ) {
@@ -222,7 +222,7 @@ class plgContentCCK extends JPlugin
 	protected function _prepare( $context, &$article, &$params, $page = 0 )
 	{
 		$property	=	'text';
-		preg_match( '#::cck::(.*)::/cck::#U', $article->$property, $matches );
+		preg_match( '#::cck::(\d+)::/cck::#U', $article->$property, $matches );
 	  	if ( ! @$matches[1] ) {
 			return;
 		}
@@ -471,7 +471,7 @@ class plgContentCCK extends JPlugin
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
-
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -517,10 +517,11 @@ class plgContentCCK extends JPlugin
 			}
 		}
 		
-		if ( $p_title != '' && isset($fields[$p_title]->value) && !empty($fields[$p_title]->value) ) {
-			$this->title	=	$fields[$p_title]->value;
-		}
-		
+		// Set Title
+		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
+ 			$this->title	=	$fields[$p_title]->value;
+ 		}
+ 		
 		// Finalize
 		$doc->fields	=	&$fields;
 		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JURI::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
