@@ -83,6 +83,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$years			=	$interval->format( '%y' );
 		$months			=	$interval->format( '%m' );
 		$days			=	$interval->format( '%d' );
+        	$state = ($date1 < $now) ? 'COM_CCK_AGO_SENTENCE' : 'COM_CCK_TIMELEFT_SENTENCE';
 
 		if ( $limit && $days >= $limit ) {
 			$value		=	self::_getValueWithFormatStorage( $value );
@@ -95,16 +96,16 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 				$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
 
 				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
-				$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+				$interval		=	JText::sprintf( $state, $interval );
 			} elseif ( $months != 0 ) {
 				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
 				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
 
 				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
-				$interval		=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+				$interval		=	JText::sprintf( $state, $interval );
 			} else {
 				if ( $days > 1 ) {
-					$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
+					$interval	=	JText::sprintf( $state, $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
 				} elseif ( $days > 0 ) {
 					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
 				} else {
@@ -125,7 +126,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
 							} elseif ( $minutes < 60 ) {
 								$interval	=	( $minutes > 1 ) ? $minutes.' '.$text_minutes : $minutes.' '.$text_minute;
-								$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+								$interval	=	JText::sprintf( $state, $interval );
 							} else {
 								$unit		=	1;
 							}
@@ -138,7 +139,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
 							} else {
 								$interval	=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
-								$interval	=	JText::sprintf( 'COM_CCK_AGO_SENTENCE', $interval );
+								$interval	=	JText::sprintf( $state, $interval );
 							}
 						}
 					}
