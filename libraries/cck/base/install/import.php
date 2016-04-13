@@ -505,7 +505,7 @@ class CCK_Import
 	public static function importProcessings( $data )
 	{
 		$path			=	$data['root'].'/processings';
-		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings', 'scriptfile', 'type' );
+		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings AND published != -44', 'scriptfile', 'type' );
 
 		if ( file_exists( $path ) ) {
 			$files	=	JFolder::files( $path, '\.xml$' );

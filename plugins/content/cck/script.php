@@ -243,6 +243,9 @@ class plgContentCCKInstallerScript
 									. '"core.delete":[],"core.delete.own":[],"core.edit":{"4":0},"core.edit.own":{"2":1}}' );
 				Helper_Admin::initACL( array( 'table'=>'type', 'name'=>'form', 'rules'=>$rules ), $pks, $rules2 );
 			}
+
+			// Set Utf8mb4 flag
+			self::_setUtf8mb4();
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
@@ -471,6 +474,9 @@ class plgContentCCKInstallerScript
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
 		
+		// Force Auto Increments
+		self::_forceAutoIncrements();
+
 		// Overrides
 		$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src';
 		if ( JFolder::exists( $path ) ) {
@@ -633,6 +639,82 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
 		}
+	}
+
+	// _forceAutoIncrements
+	protected function _forceAutoIncrements()
+	{
+		$tables =	array(
+						'#__cck_core_fields'=>5000,
+						'#__cck_core_folders'=>500,
+						'#__cck_core_searchs'=>500,
+						'#__cck_core_sites'=>500,
+						'#__cck_core_templates'=>500,
+						'#__cck_core_types'=>500,
+						'#__cck_core_versions'=>500,
+						'#__cck_more_jobs'=>500,
+						'#__cck_more_processings'=>500,
+						'#__cck_more_sessions'=>500
+					);
+
+		if ( count( $tables ) ) {
+			foreach ( $tables as $name=>$auto_inc ) {
+				$max	=	(int)JCckDatabase::loadResult( 'SELECT MAX(id) FROM '.$name );
+
+				if ( $max < $auto_inc ) {
+					// Add temp entry
+					$table	=	JCckTable::getInstance( $name );
+
+					if ( $table->load( $auto_inc, true ) ) {
+						if ( property_exists( $table, 'published' ) ) {
+							$table->published   =   -44;
+							$table->store();
+						}
+					}
+				} elseif ( $max > $auto_inc ) {
+					// Remove temp entry (id = $auto_inc && published = -44 && title == '')
+					$table	=	JCckTable::getInstance( $name );
+					$table->load( $auto_inc );
+
+					if ( isset( $table->published ) && $table->published == -44 ) {
+						if ( ( isset( $table->title ) && $table->title == '' )
+						  || ( isset( $table->e_title ) && $table->e_title == '' ) ) {
+							$table->delete( $auto_inc );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// _setUtf8mb4
+	protected function _setUtf8mb4()
+	{
+		$db			=	JFactory::getDbo();
+		$name		=	$db->getName();
+		$params		=	JComponentHelper::getParams( 'com_cck' );
+		$status		=	(int)$params->get( 'utf8_conversion', '' );
+		$utf8mb4	=	false;
+
+		if ( stristr( $name, 'mysql' ) === false ) {
+			return;
+		}
+
+		if ( !JCck::on( '3.5 ' ) ) {
+		    return;
+		}
+
+		if ( $status > 0 ) {
+		    return;
+		}
+
+		if ( JCck::on( '3.5' ) ) {
+			$utf8mb4	=	$db->hasUTF8mb4Support();
+		}
+
+		$params->set( 'utf8_conversion', ( $utf8mb4 ? '2' : '1' ) );
+		$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+		$db->execute();
 	}
 }
 ?>

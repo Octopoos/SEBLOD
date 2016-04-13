@@ -1,4 +1,7 @@
 
+ALTER TABLE `#__cck_more_sessions` ADD `published` TINYINT(3) NOT NULL DEFAULT '1' AFTER `options`;
+ALTER TABLE `#__cck_core_versions` ADD `published` TINYINT(3) NOT NULL DEFAULT '1' AFTER `note`;
+
 ALTER TABLE `#__cck_core_sites` ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT '1' AFTER `checked_out_time`;
 ALTER TABLE `#__cck_core_sites` ADD `created_date` DATETIME NOT NULL AFTER `access`;
 ALTER TABLE `#__cck_core_sites` ADD `created_user_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `created_date`;

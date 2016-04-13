@@ -94,6 +94,7 @@ class CCKModelTemplates extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Mode
 		$mode	=	trim( $this->getState( 'filter.mode' ) );

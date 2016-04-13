@@ -43,11 +43,11 @@ class CCKModelFolders extends JModelList
 	public function getItems()
 	{
 		if ( $items = parent::getItems() ) {
-			$templates		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_templates AS a GROUP BY a.folder', 'folder' );
-			$types			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_types AS a GROUP BY a.folder', 'folder' );
-			$fields			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_fields AS a GROUP BY a.folder', 'folder' );
-			$searchs		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_searchs AS a GROUP BY a.folder', 'folder' );
-			$processings	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_processings AS a GROUP BY a.folder', 'folder' );
+			$templates		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_templates AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$types			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_types AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$fields			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_fields AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$searchs		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_searchs AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$processings	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_processings AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
 			
 			foreach ( $items as $item ) {
 				$item->templates_nb		=	@$templates[$item->id]->num ? $templates[$item->id]->num : 0;
@@ -115,6 +115,7 @@ class CCKModelFolders extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Depth
 		$depth	=	$this->getState( 'filter.depth' );

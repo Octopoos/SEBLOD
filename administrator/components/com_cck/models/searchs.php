@@ -135,6 +135,7 @@ class CCKModelSearchs extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Search
 		if ( ( $folder = $app->input->getInt( 'folder_id', 0 ) ) > 0 ) {
