@@ -223,8 +223,8 @@ class Helper_Include extends CommonHelper_Include
 										$("#ajaxMessage").html("").html("<span>Successfuly saved! "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
 										.hide()
 										.fadeIn(2000, function() {
-											if ( parent.jQuery.fn.colorbox ) {
-												parent.jQuery.fn.colorbox.close();
+											if ( parent.jQuery.colorbox ) {
+												parent.jQuery.colorbox.close();
 											}
 										});
 									}
