@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -34,10 +34,16 @@ abstract class JCckContentArticle
 			$content_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.(int)$row->id );
 		}
 		if ( $content_type ) {
-			$fields		=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.(int)$row->id );
-			if ( count( $fields ) ) {
-				foreach ( $fields as $k=>$v ) {
-					$row->$k	=	$v;
+			$tables		=	JCckDatabaseCache::getTableList( true );
+			$hasMore	=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$content_type] );
+
+			if ( $hasMore ) {
+				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.(int)$row->id );
+
+				if ( count( $fields ) ) {
+					foreach ( $fields as $k=>$v ) {
+						$row->$k	=	$v;
+					}
 				}
 			}
 		}

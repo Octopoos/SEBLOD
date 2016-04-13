@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,7 +46,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 }
 
 echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ).'" autocomplete="off" method="get" id="'.$this->config['formId'].'" name="'.$this->config['formId'].'">';
-echo '<div class="seblod first">' . $this->form . '</div>';
+echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 ?>
 
 <div class="cck_page_list<?php echo $this->pageclass_sfx; ?>" id="system">

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -211,7 +211,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			if ( JCck::on() ) {
-				$form		.=	'<button class="btn" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
+				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
 			} else {
 				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';	
 			}
@@ -294,21 +294,29 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$lang	=	JFactory::getLanguage();
 		$loaded	=	1;
 		
-		$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
-		$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
-		$doc->addScript( self::$path.'assets/js/jscal2.js' );
-		$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/jscal2.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/border-radius.css'.'" type="text/css" />';
+			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css'.'" type="text/css" />';
+			echo '<script src="'.self::$path.'assets/js/jscal2.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js'.'" type="text/javascript"></script>';
+		} else {
+			$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
+			$doc->addStyleSheet( self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css' );
+			$doc->addScript( self::$path.'assets/js/jscal2.js' );
+			$doc->addScript( self::$path.'assets/js/lang/'.self::_getTag_Lang( $lang ).'.js' );
+		}
 	}
 	
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
-		$doc	=	JFactory::getDocument();
 		$js	=	'
 				<script type="text/javascript">
 					var cal = Calendar.setup({';

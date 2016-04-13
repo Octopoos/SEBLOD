@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -43,6 +43,10 @@ abstract class JCckUser
 			$user->where_clause	=	'user_id='.$user->id;
 		} else {
 			$user->session_id	=	JFactory::getSession()->getId();
+
+			if ( empty( $user->session_id ) ) {
+				$user->session_id	=	uniqid(); /* Not good, but better than empty */
+			}
 			$user->where_clause	=	'session_id="'.$user->session_id.'"';
 		}
 		

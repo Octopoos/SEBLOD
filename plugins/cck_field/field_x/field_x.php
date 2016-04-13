@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -282,7 +282,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$params['empty_html']	=	preg_replace( "/(\r\n|\n|\r)/", " ", $params['empty_html'] );
 		$params['empty_html']	=	str_replace( $search, $replace, $params['empty_html'] );
 		
-		$css_s	=	self::$path.'assets/css/style.css';
+		$css_s	=	self::$path.'assets/css/style2.css';
 		$js		=	'jQuery(document).ready(function($) {';
 		if ( $params['drag'] ) {
 			$js	.=	'$("#sortable_'.$id.'").sortable({'
@@ -376,17 +376,17 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$html	.=	'<div id="collection-group-button-'.$field->name.'__'.$i.'" class="collection-group-button">';
 		if ( $field->bool3 ) {
 			$html	.=	'<div class="button-del">'
-					.		'<img id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.'" src="'.self::$path.'assets/images/del-default.gif" alt="Del"/>'
+					.		'<span id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.' icon-minus"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool2 ) {
 			$html	.=	'<div class="button-add">'
-					.		'<img id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.'" src="'.self::$path.'assets/images/add-default.gif" alt="Add"/> '
+					.		'<span id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.' icon-plus"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool4 ) {
 			$html	.=	'<div class="button-drag">'
-					.		'<img id="button_drag'.'" src="'.self::$path.'assets/images/drag-default.gif" alt="Drag"/>'
+					.		'<span id="button_drag'.'" class="icon-circle"></span>'
 					.	'</div> ';
 		}
 		$html	.=	'</div>';

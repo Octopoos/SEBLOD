@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -54,7 +54,9 @@ abstract class JCckDevField
 				$inherit['name']	=	$config['inherit'].'['.$name.']';
 			}
 		} else {
-			$inherit['name']	=	$name;
+			if ( ! isset( $inherit['name'] ) ) {
+				$inherit['name']	=	$name;
+			}
 		}
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
@@ -102,14 +104,20 @@ abstract class JCckDevField
 		$field->conditional_options	=	'';
 		$field->markup				=	'';
 		$field->markup_class		=	'';
+		
+		$inherit	=	array();
+
 		if ( count( $override ) ) {
-			foreach ( $override as $k => $v ) {
+			foreach ( $override as $k=>$v ) {
+				if ( $k == 'id' ) {
+					$inherit['id']	=	$v;
+				}
 				$field->$k	=	$v;
 			}
 		}
 		
 		$dispatcher	=	JDispatcher::getInstance();
-		$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config ) );
+		$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
 		return JCck::callFunc( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', $field );
 	}

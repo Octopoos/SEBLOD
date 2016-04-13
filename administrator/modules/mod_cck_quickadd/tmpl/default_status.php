@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,7 +21,7 @@ if ( JCck::on() ) {
 	?>
 	<div class="btn-group cck-quickadd">
 		<button href="<?php echo $href; ?>" class="btn btn-small<?php echo $class; ?>" data-toggle="modal" data-target="#collapseModal3">
-			<i class="icon-plus"></i>
+			<span class="icon-plus"></span>
 			<?php echo $label; ?>
 		</button>
 	</div>

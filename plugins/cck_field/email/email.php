@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -313,11 +313,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 				}
 			}
 			
-			$body		=	str_replace( '[id]', $config['id'], $body );
-			$body		=	str_replace( '[pk]', $config['pk'], $body );
-			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
-			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
-
 			if ( isset( $config['registration_activation'] ) ) {
 				$body		=	str_replace( '[activation]', JURI::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
 				$body		=	str_replace( '[username]', $fields['username']->value, $body );
@@ -369,7 +364,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
 				preg_match_all( $search, $body, $matches );
 				if ( count( $matches[1] ) ) {
-					for ( $i = 0, $n = count( $matches ); $i <= $n; $i++ ) {
+					for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ ) {
 						$attr	=	strtolower( $matches[1][$i] );
 						$match	=	$matches[2][$i];
 						if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' ){
@@ -392,7 +387,24 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-	
+			
+			$body		=	str_replace( '[id]', $config['id'], $body );
+			$body		=	str_replace( '[pk]', $config['pk'], $body );
+			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
+			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
+
+			if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
+				$user			=	JCck::getUser();
+				$matches		=	'';
+				$search			=	'#\$user\->([a-zA-Z0-9_]*)#';
+				preg_match_all( $search, $body, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $k=>$v ) {
+						$body	=	str_replace( $matches[0][$k], $user->$v, $body );
+					}
+				}
+			}
+
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
 				$matches	=	NULL;

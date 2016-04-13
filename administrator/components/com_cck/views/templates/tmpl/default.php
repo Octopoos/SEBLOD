@@ -4,23 +4,24 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$title2		=	JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-templates.png" border="0" alt="" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ).'" />';
+$action_attr	=	( JCck::on() ) ? ' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ).'"' : ' class="cbox"';
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$top			=	( !JCck::on() ) ? 'border-top' : 'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_type_filter_template', 'core_folder_filter', 'core_state_filter', 'core_folder' ) );
 jimport( 'joomla.filesystem.folder' );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
@@ -48,9 +49,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.mode', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_DETAILS' ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_FEATURED', 'a.featured', $listDir, $listOrder ); ?></th>
+			<th width="15%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.mode', $listDir, $listOrder ); ?></th>
+			<th width="15%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_DETAILS' ); ?></th>
 			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -75,7 +75,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
-            	<a class="cbox" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-templates.png" border="0" alt="" title="<?php echo $title2 ?>" /></a>
+            	<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+            		 <?php echo $action; ?>
+            	</a>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -148,8 +150,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				echo $overrides.'<br />'.$positions.'<br />'.$variations;
 				?>
 			</td>
-			<td class="center hidden-phone"><?php Helper_Display::quickJGrid( 'featured', $item->featured, $i, false ); ?></td>
-			<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
+			<td class="center">
+				<div class="btn-group">
+					<?php
+					echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
+
+					Helper_Display::quickJGrid( 'featured', $item->featured, $i, false );
+					?>
+				</div>
+			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
 		<?php
@@ -159,7 +168,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<tfoot>
 		<tr height="40px;">
 	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
-			<td class="center" colspan="9" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td class="center" colspan="8" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>

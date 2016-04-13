@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -74,6 +74,9 @@ $js		=	'
 					$("#storage_table").hide();
 				}
 				$("#op-"+v).show();
+				if ($("#storage").val() == "none"){
+					$(".storage-cck-more").attr("disabled","disabled"); $(".storage-cck-more").parent().hide();
+				}
 				if ($("#jform_id").val()==0){
 					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
 						$(".storage-cck-more").parent().remove();
@@ -144,7 +147,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 			}
 			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
 			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
-			echo '<span id="storage_field_pick" name="storage_field_pick">&laquo;</span>';
+			echo '<span id="storage_field_pick" name="storage_field_pick">'.( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ).'</span>';
 			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_table'], '', $config, array( 'attributes'=>'style="width:45px;"' ) );

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,7 +19,7 @@ class JCckPluginValidation extends JPlugin
 	
 	// g_onCCK_Field_ValidationPrepareForm
 	public static function g_onCCK_Field_ValidationPrepareForm( &$field, $fieldId, &$config, $rule, $definition )
-	{		
+	{
 		$validation	=	self::g_getValidation( $field->validation_options );
 		
 		if ( $validation->alert != '' ) {
@@ -110,7 +110,7 @@ class JCckPluginValidation extends JPlugin
 	}
 	
 	// g_getValidation
-	public static function g_getValidation( $params )
+	public static function g_getValidation( $params, $legacy = true )
 	{
 		if ( ! $params ) {
 			$validation			=	new stdClass;
@@ -121,6 +121,11 @@ class JCckPluginValidation extends JPlugin
 		
 		$registry	=	new JRegistry;
 		$registry->loadString( $params );
+
+		if ( !$legacy ) {
+			return $registry;
+		}
+
 		$validation	=	$registry->toObject();
 		
 		return $validation;

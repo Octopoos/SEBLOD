@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,18 +14,7 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 
 // Plugin
 class plgUserCCK extends JPlugin
-{
-	// onUserBeforeDeleteNote
-	public function onUserBeforeDeleteNote( $note )
-	{
-		$pk	=	$note['id'];
-		if ( !$pk ) {
-			return true;
-		}
-		
-		return $this->_delete( $pk, 'joomla_user_note', 'user_notes' );
-	}
-	
+{	
 	// onUserBeforeDeleteGroup
 	public function onUserBeforeDeleteGroup( $group )
 	{
@@ -55,11 +44,13 @@ class plgUserCCK extends JPlugin
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterSave';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}
@@ -74,11 +65,13 @@ class plgUserCCK extends JPlugin
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserBeforeSave';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}

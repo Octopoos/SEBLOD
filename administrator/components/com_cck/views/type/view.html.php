@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,6 +37,14 @@ class CCKViewType extends JViewLegacy
 			case 'edit2':
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
+				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
 				break;
 			default:
 				break;
@@ -104,9 +112,9 @@ class CCKViewType extends JViewLegacy
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
-			$featured			=	$this->state->get( 'skeleton_id', 0 );
+			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
 			$this->item->access	=	3;
-			if ( $featured == 11 ) {
+			if ( $featured == 11 ) { // TODO: dynamic mapping
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {
 				$this->item->storage_location	=	'joomla_user';

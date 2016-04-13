@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -119,7 +119,7 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 				$value	=	$storage->values[$P][$field->storage_field2];
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
-					$value	=	$value[$field->storage_field3];
+					$value	=	@$value[$field->storage_field3];
 				}
 			}
 		}

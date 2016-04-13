@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -61,7 +61,8 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$link_rel			=	$link->get( 'rel', '' );
 		$link_target		=	$link->get( 'target', '' );
 		$tmpl				=	$link->get( 'tmpl', '' );
-		$tmpl				=	$tmpl ? 'tmpl='.$tmpl : '';
+		$tmpl				=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
+		$tmpl				=	( $tmpl ) ? 'tmpl='.$tmpl : '';
 		$vars				=	$tmpl;
 		
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
@@ -80,8 +81,10 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			} else {
 				//
 			}
-		} else {
+		} elseif ( $content != '2' ) {
 			$field->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+		} else {
+			$field->link		=	'';
 		}
 		if ( $field->link ) {
 			if ( $vars ) {
@@ -163,11 +166,16 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 
 		$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
 		$target					=	 $fields[$name]->typo_target;
+
+		if ( isset( $fields[$name]->typo_mode ) && $fields[$name]->typo_mode ) {
+			$target	=	'typo';
+		}
 		if ( $fields[$name]->link ) {
 			if ( $process['vars'] ) {
 				$fields[$name]->link	.=	( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['vars'] : '?'.$process['vars'];
 			}
 			if ( $process['custom'] ) {
+				$process['custom']		=	parent::g_getCustomVars( self::$type, $fields[$name], $process['custom'], $config );
 				$fields[$name]->link	.=	( $process['custom'][0] == '#' ) ? $process['custom'] : ( ( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['custom'] : '?'.$process['custom'] );
 			}
 			JCckPluginLink::g_setHtml( $fields[$name], $target );

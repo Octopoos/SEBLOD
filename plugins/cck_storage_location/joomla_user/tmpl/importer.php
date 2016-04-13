@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,7 +21,7 @@ defined( '_JEXEC' ) or die;
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
-		echo JCckDev::renderForm( 'core_bool', 0, $config, array( 'label'=>'Force Password', 'storage_field'=>'options[force_password]' ) );
+		echo JCckDev::renderForm( 'core_bool', 0, $config, array( 'label'=>'Password', 'options'=>'Clear=0||MD5=1', 'storage_field'=>'options[force_password]' ) );
 		?>
 	</ul><div class="clr"></div>
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>

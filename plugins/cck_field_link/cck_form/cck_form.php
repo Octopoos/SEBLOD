@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -48,6 +48,14 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
 			$return		=	$app->input->get( 'return' );
 		} else {
+			$return2	=	$link->get( 'redirection_custom', '' );
+			if ( $return2 != '' ) {
+				if ( $return2[0] == '#' ) {
+					$uri	.=	$return2;
+				} else {
+					$uri	.=	( strpos( $return2, '?' ) !== false ? '&' : '?' ).$return2;
+				}
+			}
 			$return		=	base64_encode( $uri );
 		}
 		
@@ -115,7 +123,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		} elseif ( $form == '-2' ) {
 			$form		=	'#'.$link->get( 'form_fieldname', '' ).'#';
 
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ) ) );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ), 'form'=>'-2' ) );
 		} elseif ( $form != '' ) {
 			$user 		=	JCck::getUser();
 			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
@@ -135,7 +143,8 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$link_title		=	$link->get( 'title', '' );
 		$link_title2	=	$link->get( 'title_custom', '' );
 		$tmpl			=	$link->get( 'tmpl', '' );
-		$tmpl			=	$tmpl ? '&tmpl='.$tmpl : '';
+		$tmpl			=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
+		$tmpl			=	( $tmpl ) ? '&tmpl='.$tmpl : '';
 		$vars			=	$tmpl;	// + live
 		
 		/*
@@ -192,27 +201,36 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		$name		=	$process['name'];
-		$fieldname	=	$process['fieldname'];
-		$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
-		$user 		=	JCck::getUser();
-			
-		$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
-		$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+		$name	=	$process['name'];
+		
+		if ( isset( $process['form'] ) && $process['form'] == '-2' ) {
+			$fieldname	=	$process['fieldname'];
+			$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
+			$user 		=	JCck::getUser();
+				
+			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+			$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
 
-		// Check Permissions
-		if ( $canCreate ) {
-			$fields[$name]->link	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->link );
-			$fields[$name]->html	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->html );
-			$fields[$name]->typo	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->typo );
-		} else {
-			$fields[$name]->link	=	'';
-			$target					=	 $fields[$name]->typo_target;
-
-			if ( $fields[$name]->typo ) {
-				$fields[$name]->typo	=	$fields[$name]->$target; // todo: str_replace link+target par target
+			// Check Permissions
+			if ( $canCreate ) {
+				$fields[$name]->link	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->link );
+				$fields[$name]->html	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->html );
+				$fields[$name]->typo	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->typo );
 			} else {
-				$fields[$name]->html	=	$fields[$name]->$target;
+				$fields[$name]->link	=	'';
+				$target					=	 $fields[$name]->typo_target;
+
+				if ( $fields[$name]->typo ) {
+					$fields[$name]->typo	=	$fields[$name]->$target; // todo: str_replace link+target par target
+				} else {
+					$fields[$name]->html	=	$fields[$name]->$target;
+				}
+			}
+		} else {
+			$name	=	$process['name'];
+			
+			if ( count( $process['matches'][1] ) ) {
+				self::g_setCustomVars( $process, $fields, $name );
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,6 +26,7 @@ $js		=	'
 					reset: function() {
 						parent.jQuery("#'.$name.'_match_collection").val("");
 						parent.jQuery("#'.$name.'_match_value").val("");
+						parent.jQuery("#'.$name.'_match_options").val("");
 						this.close();
 					},
 					submit: function() {
@@ -53,12 +54,14 @@ $js		=	'
 					$("#match_mode").val(parent.jQuery("#'.$name.'_match_mode").val());
 					var encoded = parent.jQuery("#'.$name.'_match_options").val();
 					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-					$.each(data, function(k, v) {
-						var elem = "match_options_"+k;
-						$("#"+elem).myVal(v);
-					});
+					if (data) {
+						$.each(data, function(k, v) {
+							var elem = "match_options_"+k;
+							$("#"+elem).myVal(v);
+						});
+					}
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
-					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact","not_any_exact");
+					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
 					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");
 					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact");
 					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");

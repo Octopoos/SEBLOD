@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,8 +44,8 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	{
 		$app	=	JFactory::getApplication();
 		$html	=	$typo->get( 'html', '' );
-		
-		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
+
+		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*html*' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
 			$html		=	parent::g_hasLink( $field, $typo, $html );
 		}
 		if ( $html != '' ) {
@@ -54,10 +54,12 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $target ) {
-					if ( is_array( $field->$target ) ) {
-						$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
-					} else {
-						$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+					if ( isset( $field->$target ) ) {
+						if ( is_array( $field->$target ) ) {
+							$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
+						} else {
+							$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+						}	
 					}
 				}
 			}

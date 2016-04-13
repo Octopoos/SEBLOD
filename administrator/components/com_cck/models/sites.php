@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,13 +46,20 @@ class CCKModelSites extends JModelList
 			
 			foreach ( $items as $item ) {
 				$viewlevels		=	( $item->guest_only_viewlevel ) ? $item->guest_only_viewlevel.','.$item->viewlevels : $item->viewlevels;
-				$query			=	'SELECT COUNT(a.id) FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pk WHERE a.storage_location = "joomla_article" AND b.access IN ('.$viewlevels.');';				
-				$item->articles	=	JCckDatabase::loadResult( $query );
-				
-				
 				$groups			=	( $item->guest_only_group ) ? $item->guest_only_group.','.$item->groups : $item->groups;
-				$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$groups.');';
-				$item->users	=	JCckDatabase::loadResult( $query );
+
+				if ( $viewlevels ) {
+					$query			=	'SELECT COUNT(a.id) FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pk WHERE a.storage_location = "joomla_article" AND b.access IN ('.$viewlevels.');';				
+					$item->articles	=	JCckDatabase::loadResult( $query );
+				} else {
+					$item->articles	=	0;
+				}
+				if ( $groups ) {
+					$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$groups.');';
+					$item->users	=	JCckDatabase::loadResult( $query );
+				} else {
+					$item->users	=	0;
+				}
 			}
 		}
 		
@@ -183,7 +190,7 @@ class CCKModelSites extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'title', 'asc' );
+		parent::populateState( 'a.title', 'asc' );
 	}
 }
 ?>
