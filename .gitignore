@@ -183,6 +183,8 @@
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_module.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_module.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.ini
@@ -243,6 +245,10 @@
 /administrator/language/en-GB/en-GB.plg_system_remember.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_stats.ini
+/administrator/language/en-GB/en-GB.plg_system_stats.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_updatenotification.ini
+/administrator/language/en-GB/en-GB.plg_system_updatenotification.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_yubikey.ini
@@ -400,6 +406,8 @@
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_article.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_readmore.ini
@@ -458,6 +466,10 @@
 /administrator/language/fr-FR/fr-FR.plg_system_remember.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_system_sef.ini
 /administrator/language/fr-FR/fr-FR.plg_system_sef.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_system_stats.ini
+/administrator/language/fr-FR/fr-FR.plg_system_stats.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_system_updatenotification.ini
+/administrator/language/fr-FR/fr-FR.plg_system_updatenotification.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_totp.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_totp.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_yubikey.ini
@@ -527,6 +539,7 @@
 /administrator/manifests/packages/pkg_cck_toolbox.xml
 /administrator/manifests/packages/pkg_cck_vip_unzip_first.xml
 /administrator/manifests/packages/pkg_cck_webservices.xml
+/administrator/manifests/packages/pkg_en-GB.xml
 /administrator/manifests/packages/pkg_fr-FR.xml
 /administrator/manifests/packages/pkg_seb_accordion.xml
 /administrator/manifests/packages/pkg_seb_backstretch.xml
@@ -592,6 +605,7 @@
 /components/com_finder/*
 /components/com_mailto/*
 /components/com_media/*
+/components/com_modules/*
 /components/com_newsfeeds/*
 /components/com_search/*
 /components/com_tags/*
@@ -903,6 +917,7 @@
 /libraries/idna_convert/*
 /libraries/joomla/*
 /libraries/legacy/*
+/libraries/php-encryption/*
 /libraries/phpass/*
 /libraries/phpmailer/*
 /libraries/phputf8/*
@@ -936,9 +951,11 @@
 /media/media/*
 /media/mod_languages/*
 /media/overrider/*
+/media/plg_captcha_recaptcha/*
 /media/plg_quickicon_extensionupdate/*
 /media/plg_quickicon_joomlaupdate/*
 /media/plg_system_highlight/*
+/media/plg_system_stats/*
 /media/system/*
 /media/index.html
 /modules/mod_articles_archive/*
@@ -993,6 +1010,7 @@
 /plugins/editors/index.html
 /plugins/editors-xtd/article/*
 /plugins/editors-xtd/image/*
+/plugins/editors-xtd/module/*
 /plugins/editors-xtd/pagebreak/*
 /plugins/editors-xtd/readmore/*
 /plugins/editors-xtd/index.html
@@ -1031,6 +1049,8 @@
 /plugins/system/redirect/*
 /plugins/system/remember/*
 /plugins/system/sef/*
+/plugins/system/stats/*
+/plugins/system/updatenotification/*
 /plugins/system/index.html
 /plugins/twofactorauth/totp/*
 /plugins/twofactorauth/yubikey/*
