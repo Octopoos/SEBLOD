@@ -676,10 +676,12 @@ class plgContentCCKInstallerScript
 					$table	=	JCckTable::getInstance( $name );
 					$table->load( $auto_inc );
 
-					if ( isset( $table->published ) && $table->published == -44 ) {
-						if ( ( isset( $table->title ) && $table->title == '' )
-						  || ( isset( $table->e_title ) && $table->e_title == '' ) ) {
-							$table->delete( $auto_inc );
+					if ( is_object( $table ) && $table->id > 0 ) {
+						if ( isset( $table->published ) && $table->published == -44 ) {
+							if ( ( isset( $table->title ) && $table->title == '' )
+							  || ( isset( $table->e_title ) && $table->e_title == '' ) ) {
+								$table->delete( $auto_inc );
+							}
 						}
 					}
 				}
