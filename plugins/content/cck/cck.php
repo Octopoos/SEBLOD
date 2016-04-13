@@ -471,9 +471,7 @@ class plgContentCCK extends JPlugin
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
-					if ( $p_title != '' && $p_title == $field->name ) {
-						$this->title	=	$value;
-					}
+
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -517,6 +515,10 @@ class plgContentCCK extends JPlugin
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
 				}
 			}
+		}
+		
+		if ( $p_title != '' && isset($fields[$p_title]->value) && !empty($fields[$p_title]->value) ) {
+			$this->title	=	$fields[$p_title]->value;
 		}
 		
 		// Finalize
