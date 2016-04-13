@@ -517,8 +517,8 @@ class plgContentCCK extends JPlugin
 			}
 		}
 		
-		if ( $p_title != '' && isset($fiels[$field->name]->value) && !empty($fiels[$field->name]->value) ) {
-			$this->title	=	$fiels[$field->name]->value;
+		if ( $p_title != '' && isset($fields[$p_title]->value) && !empty($fields[$p_title]->value) ) {
+			$this->title	=	$fields[$p_title]->value;
 		}
 		
 		// Finalize
