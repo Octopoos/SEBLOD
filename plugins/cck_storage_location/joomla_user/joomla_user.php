@@ -511,7 +511,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$table->groups	=	array_unique( $table->groups );
 				}
 			} else {
-				$table->groups	=	NULL;
+				$table->groups	=	JUserHelper::getUserGroups( $table->{self::$key} );
 			}
 		}
 	}

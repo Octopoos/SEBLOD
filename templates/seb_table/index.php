@@ -16,6 +16,7 @@ $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
 $attributes		=	$cck->item_attributes ? ' '.$cck->item_attributes : '';
+$table_columns	=	$cck->getStyleParam( 'table_columns', 0 );
 $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
 $table_width	=	0;
@@ -126,7 +127,9 @@ if ( !$isMore ) {
 					}
 				}
 				if ( $col == '' ) {
-					$head[$name]['count']--;
+					if ( !$table_columns ) {
+						$head[$name]['count']--;
+					}
 				}
 				$body[$i]['cols'][$name]	=	'<td'.$attr['class'][$name].$width.'>'.$col.'</td>';
 			}

@@ -60,7 +60,9 @@ class CommonHelper_Admin
                         if ( strpos( $image, 'icon-cck-' ) !== false ) {
                         	echo '<span class="'.$image.'"></span>';
                         } else {
-							echo JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+							$img	=	JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+
+							echo str_replace( '<img ', '<img width="'.$size.'" height="'.$size.'" ', $img );
                         }
                         ?>
                         <span><?php echo $text; ?></span>
@@ -375,7 +377,15 @@ class CommonHelper_Admin
 			$plugin->text								=	JText::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
 			$params										=	JCckDev::fromJSON( $plugin->params );
 			$group										=	JText::_( $params['group'] );
-			$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+
+			if ( $prefix.$folder == 'cck_field_link'
+			  || $prefix.$folder == 'cck_field_live'
+			  || $prefix.$folder == 'cck_field_restriction'
+			  || $prefix.$folder == 'cck_field_typo' ) {
+				$groups[$group][$plugin->value]				=	$plugin;
+			} else {
+				$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+			}
 		}
 		if ( ! isset( $groups ) ) {
 			return $options;

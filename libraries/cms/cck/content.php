@@ -173,6 +173,20 @@ class JCckContent
 		return ( $nb ) ? true : false;
 	}
 
+	// dump
+	public function dump()
+	{
+		if ( $this->_instance_base ) {
+			dump( $this->_instance_base );
+		}
+		if ( $this->_instance_core ) {
+			dump( $this->_instance_core );
+		}
+		if ( $this->_instance_more ) {
+			dump( $this->_instance_more );
+		}
+	}
+
 	// get
 	public function get( $name, $default = '' )
 	{

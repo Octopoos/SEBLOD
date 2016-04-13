@@ -53,16 +53,22 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             ?>
         </ul>
 		<?php if ( !$this->isNew ) { ?>
-			<img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+            <?php if ( JCck::on() ) { ?>
+                <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
+            <?php } else { ?>
+                <img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+            <?php } ?>
 		<?php } ?>
 	</div>
 
     <div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_SITE_ALIASES' ); ?></div>
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_URLS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
             $aliases    =   JCckDev::fromSTRING( $this->item->aliases );
-            echo '<li>'.JCckDev::getForm( 'core_options', $aliases, $config, array( 'storage_field'=>'aliases' ) ).'</li>';
+            $exclusions =   JCckDev::fromSTRING( @$cfg['exclusions'] );
+            echo JCckDev::renderForm( 'core_options', $aliases, $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) );
+            echo JCckDev::renderForm( 'core_options', $exclusions, $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ) );
             ?>
         </ul>
     </div>

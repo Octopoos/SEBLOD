@@ -34,6 +34,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		
 		$this->prepareToolbar();
 		$this->prepareUI();
+		$this->completeUI();
 		
 		parent::display( $tpl );
 	}
@@ -43,7 +44,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	{
 		return array(
 					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.title'=>JText::_( 'COM_CCK_TITLE' )
 				);
 	}
 	
@@ -62,6 +63,12 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		$this->state		=	$this->get( 'State' );
 	}
 	
+	// completeUI
+	public function completeUI()
+	{
+		$this->document->setTitle( JText::_( $this->vTitle.'_MANAGER' ) );
+	}
+
 	// prepareUI
 	public function prepareUI()
 	{

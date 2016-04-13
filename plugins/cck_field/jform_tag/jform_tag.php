@@ -222,12 +222,33 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		$field->text	=	'';
 
 		$values			=	( is_array( $field->value ) ) ? implode( ',', $field->value ) : $field->value;
-
+		
 		if ( $values != '' ) {
-			$texts		=	JCckDatabase::loadColumn( 'SELECT title FROM #__tags WHERE id IN ('.$values.')' );
+			$values		=	explode( ',', $values );
+			$existing	=	array();
+			$new		=	array();
+			$texts		=	'';
 
+			if ( count( $values ) ) {
+				foreach ( $values as $k=>$v ) {
+					if ( strpos( $v, '#new#' ) !== false ) {
+						$new[]		=	substr( $v, 5 );
+					} elseif ( is_numeric( $v ) ) {
+						$existing[]	=	$v;
+					}
+				}
+			}
+			$existing	=	implode( ',', $existing );
+			
+			if ( $existing != '' ) {
+				$texts		=	JCckDatabase::loadColumn( 'SELECT title FROM #__tags WHERE id IN ('.$existing.')' );
+			}
 			if ( is_array( $texts ) ) {
 				$field->text	=	implode( ',', $texts );
+			}
+			if ( count( $new ) ) {
+				$new			=	implode( ',', $new );
+				$field->text	.=	( $field->text != '' ) ? ','.$new : $new;
 			}
 		}
 

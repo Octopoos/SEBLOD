@@ -12,7 +12,24 @@ defined( '_JEXEC' ) or die;
 
 // JCckDatabase
 abstract class JCckDatabase
-{
+{	
+	// convertUtf8mb4QueryToUtf8
+	public static function convertUtf8mb4QueryToUtf8( $query )
+	{
+		if ( JCck::on( '3.5' ) ) {
+			return JFactory::getDbo()->convertUtf8mb4QueryToUtf8( $query );
+		}
+
+		$beginningOfQuery	=	substr( $query, 0, 12 );
+		$beginningOfQuery	=	strtoupper( $beginningOfQuery );
+
+		if ( !in_array( $beginningOfQuery, array( 'ALTER TABLE ', 'CREATE TABLE' ) ) ) {
+			return $query;
+		}
+
+		return str_replace( 'utf8mb4', 'utf8', $query );
+	}
+
 	// doQuery (deprecated)
 	public static function doQuery( $query )
 	{
@@ -28,9 +45,18 @@ abstract class JCckDatabase
 	// execute
 	public static function execute( $query )
 	{
-		$db		=	JFactory::getDbo();
+		$db			=	JFactory::getDbo();
+		$utf8mb4	=	false;
 		
+		if ( JCck::on( '3.5' ) ) {
+			$utf8mb4	=	$db->hasUTF8mb4Support();
+		}
+		if ( !$utf8mb4 ) {
+			$query		=	self::convertUtf8mb4QueryToUtf8( $query );
+		}
+
 		$db->setQuery( $query );
+		
 		if ( ! $db->execute() ) {
 			return false;
 		}

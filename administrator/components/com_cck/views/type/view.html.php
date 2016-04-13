@@ -38,6 +38,14 @@ class CCKViewType extends JViewLegacy
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
 				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
+				break;
 			default:
 				break;
 		}
@@ -68,10 +76,24 @@ class CCKViewType extends JViewLegacy
 							);
 		}
 		$this->uix	=	JCck::getUIX();
-		
+		$this->completeUI();
+
 		parent::display( $tpl );
 	}
 	
+	// completeUI
+	function completeUI()
+	{
+		$title	=	'COM_CCK_CONTENT_TYPE';
+
+		if ( JFactory::getLanguage()->hasKey( $title.'2' ) ) {
+			$title	=	$title.'2';
+		}
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( $title );
+
+		$this->document->setTitle( $title );
+	}
+
 	// prepareDelete
 	function prepareDelete()
 	{		
@@ -104,9 +126,9 @@ class CCKViewType extends JViewLegacy
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
-			$featured			=	$this->state->get( 'skeleton_id', 0 );
+			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
 			$this->item->access	=	3;
-			if ( $featured == 11 ) {
+			if ( $featured == 11 ) { // TODO: dynamic mapping
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {
 				$this->item->storage_location	=	'joomla_user';

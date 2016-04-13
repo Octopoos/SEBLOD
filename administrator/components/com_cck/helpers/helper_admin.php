@@ -208,7 +208,7 @@ class Helper_Admin extends CommonHelper_Admin
 			$vSubtitle	=	' <span class="subtitle">[ '.JText::_( 'COM_CCK_SEBLOD_WORKSHOP' ).' ]</span>';
 			require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 			if ( !JCck::on() ) {
-				$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.Dev.previewPositions();' );
+				$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.DevHelper.previewPositions();' );
 				$bar->appendButton( 'CckSeparator' );
 			}
 		}
@@ -242,7 +242,7 @@ class Helper_Admin extends CommonHelper_Admin
 			JToolBarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
 		}
 		if ( ( $vName == 'type' || $vName == 'search' ) && JCck::on() ) {
-			$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.Dev.previewPositions();' );
+			$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.DevHelper.previewPositions();' );
 		}
 	}
 	

@@ -35,7 +35,9 @@ class JCckDevImage
 		$this->_extension	=	strtolower( $this->_pathinfo['extension'] );
 
 		if ( in_array( $this->_extension, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
-			$this->_exif 	=	exif_read_data( $path, 0, true );
+			if ( function_exists( 'exif_read_data' ) ) {
+				$this->_exif 	=	exif_read_data( $path, 0, true );
+			}
 		}
 		
 		$this->_resource 	= 	$this->_createResource( $this->_extension, $path );

@@ -67,19 +67,23 @@
 		<fields name="params">
 			<fieldset name="fields" label="TPL_SEB_TABLE_LEGEND_STYLE">
 				<field name="cck_client_item" type="hidden" default="0" />
-				<field name="class_table" type="cck" construction="core_class_table" default="category zebra table" label="TPL_SEB_TABLE_CLASS_TABLE" description="" class="inputbox" />
+				<field name="class_table" type="cck" construction="core_class_table" default="table table-striped" label="TPL_SEB_TABLE_CLASS_TABLE" description="" class="inputbox" />
 				<field name="table_header" type="list" default="0" label="TPL_SEB_TABLE_TABLE_HEADER" description="" class="inputbox">
 					<option value="0">TPL_SEB_TABLE_TABLE_HEADER_ABOVE</option>
 					<option value="-1">TPL_SEB_TABLE_TABLE_HEADER_BELOW</option>
 					<option value="1">TPL_SEB_TABLE_TABLE_HEADER_BOTH</option>
 				</field>
-				<field name="class_table_tr_even" type="cck" construction="core_class_table_tr_even" default="cat-list-row%i" label="TPL_SEB_TABLE_CLASS_TR_EVEN" description="" class="inputbox" />
+				<field name="class_table_tr_even" type="cck" construction="core_class_table_tr_even" default="" label="TPL_SEB_TABLE_CLASS_TR_EVEN" description="" class="inputbox" />
 				<field name="table_layout" type="list" default="" label="TPL_SEB_TABLE_TABLE_LAYOUT" description="" class="inputbox">
 					<option value="">TPL_SEB_TABLE_TABLE_LAYOUT_AUTO</option>
 					<option value="calculated">TPL_SEB_TABLE_TABLE_LAYOUT_CALCULATED</option>
 					<option value="fixed">TPL_SEB_TABLE_TABLE_LAYOUT_FIXED</option>
 				</field>
-				<field name="class_table_tr_odd" type="cck" construction="core_class_table_tr_odd" default="cat-list-row%i" label="TPL_SEB_TABLE_CLASS_TR_ODD" description="" class="inputbox" />
+				<field name="class_table_tr_odd" type="cck" construction="core_class_table_tr_odd" default="" label="TPL_SEB_TABLE_CLASS_TR_ODD" description="" class="inputbox" />
+				<field name="table_columns" type="list" default="0" label="TPL_SEB_TABLE_TABLE_EMPTY_COLUMNS" description="" class="inputbox">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
 				<field name="position_margin" type="cck" construction="core_position_margin" default="10" more="px" label="TPL_SEB_TABLE_MARGIN" description="" class="inputbox" />
 			</fieldset>
 		</fields>

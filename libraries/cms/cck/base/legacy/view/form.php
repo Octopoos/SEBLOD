@@ -25,9 +25,10 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 		} elseif ( $this->getLayout() == 'edit' || $this->getLayout() == 'edit2' || $this->getLayout() == 'process' ) {
 			$this->prepareDisplay();
 		}
-		
+
 		$this->prepareToolbar();
 		$this->prepareUI();
+		$this->completeUI();
 		
 		parent::display( $tpl );
 	}
@@ -43,6 +44,14 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	{
 	}
 	
+	// completeUI
+	public function completeUI()
+	{
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( 'COM_CCK_'.$this->vName );
+		
+		$this->document->setTitle( $title );
+	}
+
 	// prepareUI
 	public function prepareUI()
 	{

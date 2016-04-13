@@ -14,6 +14,7 @@
 	
 	<files>
 		<folder>assets</folder>
+		<folder>classes</folder>
 		<folder>install</folder>
 		<folder>tmpl</folder>
 		

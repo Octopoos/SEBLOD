@@ -167,9 +167,6 @@ class CCKController extends JControllerLegacy
 	public function ajax_field_li( $field = NULL, $client = '' )
 	{
 		$app		=	JFactory::getApplication();
-		$config		=	array(
-							'task'=>'ajax_field_li'
-						);
 		$lang		=	JFactory::getLanguage();
 
 		if ( is_object( $field ) ) {
@@ -203,15 +200,47 @@ class CCKController extends JControllerLegacy
 		
 		$style		=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
 		$data		=	Helper_Workshop::getParams( $element, $master, $client );
+		$data2      =   array(
+							'construction'=>array(
+												'access'=>array( '_' ),
+												'link'=>array( '_' ),
+												'live'=>array( '_' ),
+												'markup'=>array( '_' ),
+												'match_mode'=>array( '_' ),
+												'restriction'=>array( '_' ),
+												'stage'=>array( '_' ),
+												'typo'=>array( '_' ),
+												'variation'=>array( '_' )
+											),
+							'task'=>'ajax_field_li'
+						);
+		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
-		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, $config ) );
-		
+		if ( JCck::on() ) {
+			$attr	=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+		} else {
+			$attr	=	array( 'class'=>' edit', 'span'=>'' );
+		}
 		$json		=	array();
 		ob_start();
-		Helper_Workshop::displayField( $field );
-		$json["id"]		=	(int)$field->id;
-		$json["html"]	=	ob_get_clean();
+		Helper_Workshop::displayField( $field, '', $attr );
+		$json["construction"]	=	'';
+		$json["id"]				=	(int)$field->id;
+		$json["html"]			=	ob_get_clean();
 		
+		if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {
+			foreach ( $data2['construction'] as $k=>$v ) {
+				if ( count( $v ) ) {
+					foreach ( $v as $k2=>$v2 ) {
+						if ( $k2 != '_' ) {
+							if ( count( $v2 ) ) {
+								$json["construction"]	.=	JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
+							}
+						}
+					}
+				}
+			}
+		}
 		if ( $return !== false ) {
 			return JCckDev::toJSON( $json );
 		}

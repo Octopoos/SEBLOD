@@ -357,11 +357,11 @@ class CCK_List
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();
-		
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$data	=	'';
 		$list	=	array(
 						'doSEF'=>$config['doSEF'],
+						'formId'=>$config['formId'],
 						'isCore'=>$config['doQuery'],
 						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
 						'location'=>$config['location'],

@@ -498,9 +498,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			$replyTo		=	NULL;
-			$replyToName	=	NULL;
-
 			if ( $process['format'] == '0' ) {
 				$format		=	false;
 				$body		=	strip_tags( $body );
@@ -510,7 +507,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
-			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach, $replyTo, $replyToName );
+			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach );
 		}
 	}
 	

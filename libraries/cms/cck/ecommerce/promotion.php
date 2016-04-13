@@ -83,6 +83,12 @@ abstract class JCckEcommercePromotion
 							$total				=	$total - $promotion;
 							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 							break;
+						case 'set':
+							$promotion			=	$total - $p->discount_amount;
+							$res				=	$promotion;
+							$text				=	'"'.JCckEcommerceCurrency::format( $p->discount_amount ).'"';
+							$total				=	$total - $promotion;
+							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
 						default:
 							break;
 					}

@@ -113,6 +113,15 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 			// $data	=	$this->preStore( $data );
 		}
 		
+		if ( isset( $data['aliases'] ) && is_array( $data['aliases'] ) && count( $data['aliases'] ) ) {
+			$data['aliases']	=	implode( '||', $data['aliases'] );
+		}
+		if ( isset( $data['exclusions'] ) && is_array( $data['exclusions'] ) && count( $data['exclusions'] ) ) {
+			$data['json']['configuration']['exclusions']	=	implode( '||', $data['exclusions'] );
+			
+			unset( $data['exclusions'] );
+		}
+		
 		// todo: call generic->store = JSON
 		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
 			foreach ( $data['json'] as $k => $v ) {
@@ -120,9 +129,6 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 					$data[$k]	=	JCckDev::toJSON( $v );
 				}
 			}
-		}
-		if ( isset( $data['aliases'] ) && is_array( $data['aliases'] ) && count( $data['aliases'] ) ) {
-			$data['aliases']	=	implode( '||', $data['aliases'] );
 		}
 		
 		// todo: call plugins->prepareStore()

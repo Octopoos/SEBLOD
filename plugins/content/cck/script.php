@@ -243,6 +243,9 @@ class plgContentCCKInstallerScript
 									. '"core.delete":[],"core.delete.own":[],"core.edit":{"4":0},"core.edit.own":{"2":1}}' );
 				Helper_Admin::initACL( array( 'table'=>'type', 'name'=>'form', 'rules'=>$rules ), $pks, $rules2 );
 			}
+
+			// Set Utf8mb4 flag
+			self::_setUtf8mb4();
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
@@ -464,10 +467,16 @@ class plgContentCCKInstallerScript
 				JCckDatabase::doQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $com_cck->params->toString() ).'" WHERE type = "component" AND element = "com_cck"' );
 			}
 			
-			// Folder Tree
+			// Convert Tables To Utf8mb4
+			self::_convertTablesToUtf8mb4();
+
+			// Rebuild Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
 		
+		// Force Auto Increments
+		self::_forceAutoIncrements();
+
 		// Overrides
 		$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src';
 		if ( JFolder::exists( $path ) ) {
@@ -516,6 +525,198 @@ class plgContentCCKInstallerScript
 		$table->path	=	'SEBLOD 3.x/'.$addon->title;
 		$table->store();
 		$table->rebuildPath( $table->id );
+	}
+
+	// _convertTablesToUtf8mb4
+	protected function _convertTablesToUtf8mb4()
+	{
+		$app		=	JFactory::getApplication();
+		$db			=	JFactory::getDbo();
+		$name		=	$db->getName();
+		$params		=	JComponentHelper::getParams( 'com_cck' );
+		$status		=	(int)$params->get( 'utf8_conversion', '' );
+		$utf8mb4	=	false;
+
+		if ( stristr( $name, 'mysql' ) === false ) {
+			return;
+		}
+
+		if ( !JCck::on( '3.5 ' ) ) {
+		    return;
+		}
+
+		if ( $status > 0 ) {
+		    return;
+		}
+
+		if ( JCck::on( '3.5' ) ) {
+			$utf8mb4	=	$db->hasUTF8mb4Support();
+		}
+
+		$i			=	0;
+		$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
+		$tables		=	$db->getTableList();
+
+		if ( count( $tables ) ) {
+		    foreach ( $tables as $name ) {
+				$continue	=	false;
+				$pos		=	strpos( $name, $prefix.'cck_' );
+
+		        if ( !( $pos !== false && $pos == 0 ) ) {
+					continue;
+				}
+				$columns	=	$db->getTableColumns( $name, false );
+
+				if ( count( $columns ) ) {
+					foreach ( $columns as $column ) {
+					    if ( isset( $column->Collation ) && $column->Collation ) {
+							$collations	=	explode( '_', $column->Collation );
+							$charset	=	@$collations[0];
+
+							// Convert only if utf8
+							if ( $charset ) {
+								$charset = strtolower( $charset );
+
+								if ( $charset !== 'utf8' && $charset !== 'utf8mb4' ) {
+									$continue	=	true;
+									break;
+								}
+							}
+
+							// Convert only if indexes allow it
+							if ( isset( $column->Key ) && $column->Key ) {
+								$type		=	'';
+
+							    if ( isset( $column->Type ) && $column->Type ) {
+									$type	=	$column->Type;
+								}
+							    if ( $type != '' ) {
+									$types	=	explode( '(', $type );
+									$type	=	@$types[1];
+									
+									if ( $type ) {
+										$len	=	strlen( $type );
+
+										if ( $type[$len - 1] == ')' ) {
+											$type	=	substr( $type, 0, -1 );
+										}
+										if ( $type ) {
+											if ( (int)$type > 191 ) {
+												$continue	=	true;
+												break;    
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+		        if ( $continue ) {
+					$app->enqueueMessage( '<strong>'.$name.'</strong> not converted to utf8mb4. Please check this table manually.', 'error' );
+					continue;
+				}
+				$query	=	'ALTER TABLE `'.$name.'` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;';
+				$query2	=	'ALTER TABLE `'.$name.'` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;';
+
+		        if ( !$utf8mb4 ) {
+					$query	=	$db->convertUtf8mb4QueryToUtf8( $query );
+					$query2	=	$db->convertUtf8mb4QueryToUtf8( $query2 );
+				}
+				$db->setQuery( $query );
+				$db->execute();
+				$db->setQuery( $query2 );
+				$db->execute();
+
+				$i++;
+			}
+			$message	=	( $utf8mb4 ) ? 'utf8mb4_unicode_ci' : 'utf8_unicode_ci (as utf8mb4_unicode_ci is not supported)';
+			$message	=	'<strong>'.$i.' tables</strong> converted to '.$message.'.';
+			
+			$app->enqueueMessage( $message );
+
+			$params->set( 'utf8_conversion', ( $utf8mb4 ? '2' : '1' ) );
+			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+			$db->execute();
+		}
+	}
+
+	// _forceAutoIncrements
+	protected function _forceAutoIncrements()
+	{
+		$tables =	array(
+						'#__cck_core_fields'=>5000,
+						'#__cck_core_folders'=>500,
+						'#__cck_core_searchs'=>500,
+						'#__cck_core_sites'=>500,
+						'#__cck_core_templates'=>500,
+						'#__cck_core_types'=>500,
+						'#__cck_core_versions'=>500,
+						'#__cck_more_jobs'=>500,
+						'#__cck_more_processings'=>500,
+						'#__cck_more_sessions'=>500
+					);
+
+		if ( count( $tables ) ) {
+			foreach ( $tables as $name=>$auto_inc ) {
+				$max	=	(int)JCckDatabase::loadResult( 'SELECT MAX(id) FROM '.$name );
+
+				if ( $max < $auto_inc ) {
+					// Add temp entry
+					$table	=	JCckTable::getInstance( $name );
+
+					if ( $table->load( $auto_inc, true ) ) {
+						if ( property_exists( $table, 'published' ) ) {
+							$table->published   =   -44;
+							$table->store();
+						}
+					}
+				} elseif ( $max > $auto_inc ) {
+					// Remove temp entry (id = $auto_inc && published = -44 && title == '')
+					$table	=	JCckTable::getInstance( $name );
+					$table->load( $auto_inc );
+
+					if ( is_object( $table ) && $table->id > 0 ) {
+						if ( isset( $table->published ) && $table->published == -44 ) {
+							if ( ( isset( $table->title ) && $table->title == '' )
+							  || ( isset( $table->e_title ) && $table->e_title == '' ) ) {
+								$table->delete( $auto_inc );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// _setUtf8mb4
+	protected function _setUtf8mb4()
+	{
+		$db			=	JFactory::getDbo();
+		$name		=	$db->getName();
+		$params		=	JComponentHelper::getParams( 'com_cck' );
+		$status		=	(int)$params->get( 'utf8_conversion', '' );
+		$utf8mb4	=	false;
+
+		if ( stristr( $name, 'mysql' ) === false ) {
+			return;
+		}
+
+		if ( !JCck::on( '3.5 ' ) ) {
+		    return;
+		}
+
+		if ( $status > 0 ) {
+		    return;
+		}
+
+		if ( JCck::on( '3.5' ) ) {
+			$utf8mb4	=	$db->hasUTF8mb4Support();
+		}
+
+		$params->set( 'utf8_conversion', ( $utf8mb4 ? '2' : '1' ) );
+		$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+		$db->execute();
 	}
 }
 ?>

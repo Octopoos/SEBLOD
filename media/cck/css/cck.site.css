@@ -209,3 +209,8 @@ fieldset div.cck_forms.cck_site ul.adminformlist fieldset{
 /* TEMPORARY.. until a proper group markup */
 ul.adminformlist, ul.adminformlist li {margin:0; padding:0; width:auto; list-style:none;}
 div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0px 5px 0px; line-height:23px; height:30px;}
+
+.btn [class^="icon-"],
+.btn [class*=" icon-"] {
+    margin-right:0;
+}

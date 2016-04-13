@@ -16,14 +16,20 @@ class CCKViewFolders extends JCckBaseLegacyViewList
 	protected $vName	=	'folder';
 	protected $vTitle	=	_C0_TEXT;
 	
+	// completeUI
+	public function completeUI()
+	{
+		$this->document->setTitle( JText::_( 'COM_CCK_'.$this->vTitle.'_MANAGER' ) );
+	}
+
 	// getSortFields
 	protected function getSortFields()
 	{
 		return array(
 					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'lft'=>JText::_( 'COM_CCK_ORDERING' ),
+					'a.lft'=>JText::_( 'COM_CCK_ORDERING' ),
 					'a.published'=>JText::_( 'COM_CCK_STATUS' ),
-					'title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.title'=>JText::_( 'COM_CCK_TITLE' )
 				);
 	}
 

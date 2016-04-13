@@ -183,6 +183,8 @@
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_module.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_module.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.ini
@@ -243,6 +245,10 @@
 /administrator/language/en-GB/en-GB.plg_system_remember.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.ini
 /administrator/language/en-GB/en-GB.plg_system_sef.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_stats.ini
+/administrator/language/en-GB/en-GB.plg_system_stats.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_updatenotification.ini
+/administrator/language/en-GB/en-GB.plg_system_updatenotification.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_yubikey.ini
@@ -400,6 +406,8 @@
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_article.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_readmore.ini
@@ -458,6 +466,10 @@
 /administrator/language/fr-FR/fr-FR.plg_system_remember.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_system_sef.ini
 /administrator/language/fr-FR/fr-FR.plg_system_sef.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_system_stats.ini
+/administrator/language/fr-FR/fr-FR.plg_system_stats.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_system_updatenotification.ini
+/administrator/language/fr-FR/fr-FR.plg_system_updatenotification.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_totp.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_totp.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_twofactorauth_yubikey.ini
@@ -513,6 +525,7 @@
 /administrator/manifests/packages/pkg_cck_ecommerce.xml
 /administrator/manifests/packages/pkg_cck_field_code.xml
 /administrator/manifests/packages/pkg_cck_field_geoip.xml
+/administrator/manifests/packages/pkg_cck_field_join_x.xml
 /administrator/manifests/packages/pkg_cck_field_restriction_joomla_acl.xml
 /administrator/manifests/packages/pkg_cck_field_seblod.xml
 /administrator/manifests/packages/pkg_cck_field_sql.xml
@@ -526,6 +539,7 @@
 /administrator/manifests/packages/pkg_cck_toolbox.xml
 /administrator/manifests/packages/pkg_cck_vip_unzip_first.xml
 /administrator/manifests/packages/pkg_cck_webservices.xml
+/administrator/manifests/packages/pkg_en-GB.xml
 /administrator/manifests/packages/pkg_fr-FR.xml
 /administrator/manifests/packages/pkg_seb_accordion.xml
 /administrator/manifests/packages/pkg_seb_backstretch.xml
@@ -591,6 +605,7 @@
 /components/com_finder/*
 /components/com_mailto/*
 /components/com_media/*
+/components/com_modules/*
 /components/com_newsfeeds/*
 /components/com_search/*
 /components/com_tags/*
@@ -694,6 +709,7 @@
 /language/en-GB/en-GB.pkg_cck_webservices.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_code.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_geoip.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_join_x.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_seblod.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_sql.sys.ini
@@ -814,6 +830,7 @@
 /language/fr-FR/fr-FR.pkg_cck_webservices.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_code.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_geoip.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_join_x.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_seblod.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_sql.sys.ini
@@ -900,6 +917,7 @@
 /libraries/idna_convert/*
 /libraries/joomla/*
 /libraries/legacy/*
+/libraries/php-encryption/*
 /libraries/phpass/*
 /libraries/phpmailer/*
 /libraries/phputf8/*
@@ -933,9 +951,11 @@
 /media/media/*
 /media/mod_languages/*
 /media/overrider/*
+/media/plg_captcha_recaptcha/*
 /media/plg_quickicon_extensionupdate/*
 /media/plg_quickicon_joomlaupdate/*
 /media/plg_system_highlight/*
+/media/plg_system_stats/*
 /media/system/*
 /media/index.html
 /modules/mod_articles_archive/*
@@ -990,6 +1010,7 @@
 /plugins/editors/index.html
 /plugins/editors-xtd/article/*
 /plugins/editors-xtd/image/*
+/plugins/editors-xtd/module/*
 /plugins/editors-xtd/pagebreak/*
 /plugins/editors-xtd/readmore/*
 /plugins/editors-xtd/index.html
@@ -1028,6 +1049,8 @@
 /plugins/system/redirect/*
 /plugins/system/remember/*
 /plugins/system/sef/*
+/plugins/system/stats/*
+/plugins/system/updatenotification/*
 /plugins/system/index.html
 /plugins/twofactorauth/totp/*
 /plugins/twofactorauth/yubikey/*
@@ -1294,6 +1317,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_button_reset.sys.ini
 /plugins/cck_field/button_reset/*
 
+######## SEBLOD Plug-ins >> Field >> Captcha Math
+
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_math.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_math.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_math.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_math.sys.ini
+/plugins/cck_field/captcha_math/*
+
 ######## SEBLOD Plug-ins >> Field >> Captcha Recaptcha
 
 /administrator/language/en-GB/en-GB.plg_cck_field_captcha_recaptcha.ini
@@ -1401,6 +1432,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_join_x.sys.ini
 /plugins/cck_field/join_x/*
+
+######## SEBLOD Plug-ins >> Field >> Joomla! Article
+
+/administrator/language/en-GB/en-GB.plg_cck_field_joomla_article.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_joomla_article.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_joomla_article.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_joomla_article.sys.ini
+/plugins/cck_field/joomla_article/*
 
 ######## SEBLOD Plug-ins >> Field >> Message Redirection
 
@@ -1641,6 +1680,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_video_vimeo.sys.ini
 /plugins/cck_field/video_vimeo/*
 
+######## SEBLOD Plug-ins >> Field >> Video Youtube
+
+/administrator/language/en-GB/en-GB.plg_cck_field_video_youtube.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_video_youtube.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_youtube.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_video_youtube.sys.ini
+/plugins/cck_field/video_youtube/*
+
 ######## SEBLOD Plug-ins >> Link >> Custom
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_custom.ini
@@ -1672,6 +1719,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.sys.ini
 /plugins/cck_field_link/history_back_js/*
+
+######## SEBLOD Plug-ins >> Link >> JoinX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_join_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_join_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_join_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_join_x.sys.ini
+/plugins/cck_field_link/join_x/*
 
 ######## SEBLOD Plug-ins >> Link >> Joomla! Menu Item
 
@@ -1842,6 +1897,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_message.sys.ini
 /plugins/cck_storage_location/joomla_message/*
 
+######## SEBLOD Plug-ins >> Object >> Joomla! Module
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.sys.ini
+/plugins/cck_storage_location/joomla_module/*
+
 ######## SEBLOD Plug-ins >> Object >> Joomla! Redirection
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_redirection.ini
@@ -1897,6 +1960,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_store.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_store.sys.ini
 /plugins/cck_storage_location/cck_ecommerce_store/*
+
+######## SEBLOD Plug-ins >> Object >> SEBLOD eCommerce Subscription
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_ecommerce_subscription.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_ecommerce_subscription.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_subscription.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_cck_ecommerce_subscription.sys.ini
+/plugins/cck_storage_location/cck_ecommerce_subscription/*
 
 ######## SEBLOD Plug-ins >> Object >> SEBLOD Content Type
 

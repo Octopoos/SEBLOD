@@ -103,6 +103,7 @@ class CCKModelSites extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Search
 		$location	=	$this->getState( 'filter.location' );
@@ -190,7 +191,7 @@ class CCKModelSites extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'title', 'asc' );
+		parent::populateState( 'a.title', 'asc' );
 	}
 }
 ?>

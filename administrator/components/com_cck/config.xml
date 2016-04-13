@@ -124,6 +124,12 @@
 		<field name="media_preset2_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
 		<field name="media_preset3_extensions" type="text" size="86" default="" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESET3" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESETS_DESC" class="inputbox input-xlarge" />
 		<field name="media_preset3_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
+		<field name="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_LEGEND" type="spacer" hr="false" />
+		<field name="media_content_forbidden_extensions" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_DESC" class="btn-group btn-group-yesno">
+			<option value="0">None</option>
+			<option value="1">COM_CCK_WHITELIST</option>
+		</field>
+		<field name="media_content_forbidden_extensions_whitelist" type="text" size="98" default="php" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST_DESC" class="inputbox input-xlarge" />
 		<field name="cckjsm1" type="cckjs" label="" description="" js_appendto="jform_media_preset1_extensions=#jform_media_preset1_extensions_label" js_format="html" hidden="true" />
 		<field name="cckjsm2" type="cckjs" label="" description="" js_appendto="jform_media_preset2_extensions=#jform_media_preset2_extensions_label" js_format="html" hidden="true" />
 		<field name="cckjsm3" type="cckjs" label="" description="" js_appendto="jform_media_preset3_extensions=#jform_media_preset3_extensions_label" js_format="html" hidden="true" />
@@ -131,6 +137,10 @@
 	
 	<fieldset name="fs_multisite" label="COM_CCK_CONFIG_FIELDSET_MULTISITE" description="COM_CCK_CONFIG_FIELDSET_MULTISITE_DESC">
 		<field name="multisite" type="radio" default="0" label="COM_CCK_CONFIG_MULTISITE" description="COM_CCK_CONFIG_MULTISITE_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="multisite_login" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_LOGIN" description="COM_CCK_CONFIG_MULTISITE_LOGIN_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
@@ -188,5 +198,6 @@
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
 		<field name="uix" type="hidden" default="" />
+		<field name="utf8_conversion" type="hidden" default="" />
 	</fieldset>
 </config>

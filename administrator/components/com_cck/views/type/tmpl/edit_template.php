@@ -14,7 +14,6 @@ if ( is_object( $this->style ) ) {
 	$this->style->params	=	JCckDev::fromJSON( $this->style->params );
 }
 ?>
-
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>

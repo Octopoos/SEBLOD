@@ -44,12 +44,12 @@ hr {background-color:#cccccc; border:0; color:#cccccc; height:1px; width:100%;}
 #config-tabs-com_cck_packager_configuration dt.open h3 a,
 #config-tabs-com_cck_toolbox_configuration dt.open h3 a,
 #config-tabs-com_cck_updater_configuration dt.open h3 a,
-#config-tabs-com_cck_webservices_configuration dt.open h3 a {color:#0088CC !important;	font-weight:bold !important;}
+#config-tabs-com_cck_webservices_configuration dt.open h3 a {color:#3b99fc !important;	font-weight:bold !important;}
 div.configuration {padding-top:6px !important;}
 fieldset button {-webkit-border-radius:3px;	-moz-border-radius:3px; border-radius:3px;	padding:2px 4px;}
 fieldset button:hover {background-color: #ffffdd !important;}
-p.tab-description {color:#0088CC; font-size:1.10em; font-style:italic;}
-span.legend {color:#0088CC;	font-size:1.10em; font-weight:700; }
+p.tab-description {color:#3b99fc; font-size:1.10em; font-style:italic;}
+span.legend {color:#3b99fc;	font-size:1.10em; font-weight:700; }
 dd.tabs .inputbox, dd.tabs select {-webkit-border-radius: 3px; -moz-border-radius: 3px;	border-radius:3px; padding: 5px;}
 dd.tabs textarea.inputbox {font-size: 100%;}
 dd.tabs #jform_description-lbl {margin-top: 8px;!important}

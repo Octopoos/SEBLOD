@@ -79,6 +79,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doTypo'=>$p_typo,
 							'error'=>0,
 							'fields'=>array(),
+							'formId'=>$list['formId'],
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$list['itemId'],
@@ -170,7 +171,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 		
 		// Merge
 		if ( count( $config['fields'] ) ) {
-			$fieldsI			=	array_merge( $fieldsI, $config['fields'] );	// Test: a loop may be faster.
+			foreach ( $config['fields'] as $k=>$v ) {
+				if ( $v->restriction != 'unset' ) {
+					$fieldsI[$k]	=	$v;
+				}
+			}
 			$config['fields']	=	NULL;
 			unset( $config['fields'] );
 		}
@@ -195,6 +200,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'doTypo'=>$p_typo,
 							'error'=>0,
 							'fields'=>array(),
+							'formId'=>$list['formId'],
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$list['itemId'],
@@ -288,7 +294,11 @@ for ( $i = 0; $i < $count; $i++ ) {
 		
 		// Merge
 		if ( count( $config['fields'] ) ) {
-			$fieldsI			=	array_merge( $fieldsI, $config['fields'] );	// Test: a loop may be faster.
+			foreach ( $config['fields'] as $k=>$v ) {
+				if ( $v->restriction != 'unset' ) {
+					$fieldsI[$k]	=	$v;
+				}
+			}
 			$config['fields']	=	NULL;
 			unset( $config['fields'] );
 		}

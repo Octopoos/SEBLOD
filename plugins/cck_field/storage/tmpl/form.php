@@ -36,8 +36,8 @@ if ( $config['tmpl'] == 'ajax' ) {
 						var custom = $("#storage_location").find("option:selected").attr("data-custom");
 						$("#storage_field").val(custom);
 					}
-					$(".object-params").hide();
-					$("#op-"+v).show();
+					$(".object-params").hide(); $(".object-params select").prop("disabled",true);
+					$("#op-"+v).show(); $("#op-"+v+" select").prop("disabled",false);
 				});
 				$("#storage_alter").live("change", function() {
 					$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").toggle();
@@ -69,11 +69,7 @@ $js		=	'
 					$("#storage_location, #storage_field, #storage_alter").hide().attr("disabled", "disabled");
 					$("#storage_field_pick").hide();
 				}
-				var v = $("#storage_location").val();
-				if (v != "free") {
-					$("#storage_table").hide();
-				}
-				$("#op-"+v).show();
+				var storage_location = $("#storage_location").val();
 				if ($("#storage").val() == "none"){
 					$(".storage-cck-more").attr("disabled","disabled"); $(".storage-cck-more").parent().hide();
 				}
@@ -92,7 +88,7 @@ $js		=	'
 				$("#toggle_more2").css({"top":h});
 				
 				if (parent.jQuery("input:radio[name=\'linkage\']:checked") && !$("#myid").val()) {
-					if (parent.jQuery("input:radio[name=\'linkage\']:checked").val() == 1 && parent.jQuery("#name").val()) {
+					if (parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0 && parent.jQuery("#name").val()) {
 						var t = parent.jQuery("#name").val();
 						$("#storage_cck").val(t);
 						//
@@ -120,7 +116,12 @@ $js		=	'
 							$("#storage_field").val(custom);
 						}
 					}
+				} else {
+					if (storage_location != "free") {
+						$("#storage_table").hide();
+					}
 				}
+				$("#op-"+storage_location).show(); $("#op-"+storage_location+" select").prop("disabled",false);
 				'.$js.'
 			});
 			'
@@ -147,7 +148,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 			}
 			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
 			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
-			echo '<span id="storage_field_pick" name="storage_field_pick">&laquo;</span>';
+			echo '<span id="storage_field_pick" name="storage_field_pick">'.( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ).'</span>';
 			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_table'], '', $config, array( 'attributes'=>'style="width:45px;"' ) );

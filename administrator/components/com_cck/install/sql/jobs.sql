@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_jobs` (
   `checked_out_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__cck_more_job_processing` (
@@ -23,4 +23,4 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_job_processing` (
   PRIMARY KEY (`id`),
   KEY `job_id` (`job_id`),
   KEY `processing_id` (`processing_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;

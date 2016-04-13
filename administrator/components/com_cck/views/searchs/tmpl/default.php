@@ -16,6 +16,7 @@ $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
+$hasDropdown	=	JCck::on();
 $label			=	JText::_( 'COM_CCK_FIELDS' );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
@@ -119,28 +120,30 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	'<strong>'.$item->searchTemplate.'</strong><br />'.$item->searchFields.' '.$label;
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->searchTemplate.')';
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->orderFields.' '.$label;
-                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	'<strong>'.$item->listTemplate.'</strong><br />'.$item->listFields.' '.$label;
-                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->listTemplate.')';
+                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	'<strong>'.$item->itemTemplate.'</strong><br />'.$item->itemFields.' '.$label;
-                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="edit-view hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->itemTemplate.')';
+                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center">
 				<div class="btn-group">
 				<?php
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'searchs.version' );
+				if ( $hasDropdown ) {
+					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'searchs.version' );
 
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );	
+					if ( $item->versions ) {
+						JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+					}
+					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				}
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );			
 				?>
 				</div>
 			</td>

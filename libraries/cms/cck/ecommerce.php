@@ -158,7 +158,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$pay_key] ) ) {
-			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.info_billing'
+			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.info_billing'
 															. ' FROM #__cck_more_ecommerce_orders AS a'
 															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
 															. ' WHERE a.pay_key = "'.$pay_key.'"' );
@@ -347,7 +347,7 @@ abstract class JCckEcommerce
 	{
 		$db			=	JFactory::getDbo();
 		$null		=	$db->getNullDate();
-		$now		=	JFactory::getDate()->toSql();
+		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
 
 		$zones[]	=	0;
 		

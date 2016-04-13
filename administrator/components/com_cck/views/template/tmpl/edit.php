@@ -42,6 +42,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         </ul>
 	</div>
     
+    <!--
     <?php if ( !$this->isNew ) { ?>
         <div class="seblod">
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_SOURCES' ); ?></div>
@@ -65,6 +66,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             </div>
         </div>
     <?php } ?>
+    -->
 </div>
 
 <div class="clr"></div>
