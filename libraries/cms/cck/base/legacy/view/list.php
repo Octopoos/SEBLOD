@@ -34,6 +34,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		
 		$this->prepareToolbar();
 		$this->prepareUI();
+		$this->completeUI();
 		
 		parent::display( $tpl );
 	}
@@ -62,6 +63,12 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		$this->state		=	$this->get( 'State' );
 	}
 	
+	// completeUI
+	public function completeUI()
+	{
+		$this->document->setTitle( JText::_( $this->vTitle.'_MANAGER' ) );
+	}
+
 	// prepareUI
 	public function prepareUI()
 	{

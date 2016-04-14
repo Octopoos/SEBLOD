@@ -11,6 +11,18 @@
 defined( '_JEXEC' ) or die;
 
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
+$data2      =   array(
+                    'construction'=>array(
+                                        'access'=>array( '_' ),
+                                        'link'=>array( '_' ),
+                                        'live'=>array( '_' ),
+                                        'markup'=>array( '_' ),
+                                        'restriction'=>array( '_' ),
+                                        'stage'=>array( '_' ),
+                                        'typo'=>array( '_' ),
+                                        'variation'=>array( '_' )
+                                    )
+                );
 
 if ( JCck::on() ) {
     $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
@@ -18,4 +30,18 @@ if ( JCck::on() ) {
     $attr   =   array( 'class'=>' edit', 'span'=>'' );
 }
 include __DIR__.'/edit_fields_av.php';
+
+if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {
+    foreach ( $data2['construction'] as $k=>$v ) {
+        if ( count( $v ) ) {
+            foreach ( $v as $k2=>$v2 ) {
+                if ( $k2 != '_' ) {
+                    if ( count( $v2 ) ) {
+                        echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
+                    }
+                }
+            }
+        }
+    }
+}
 ?>

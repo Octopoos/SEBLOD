@@ -29,14 +29,14 @@ div.seb-wrapper.compact ul.more_pos{padding: 0; display:none;}
 div.seb-wrapper.compact ul.more_pos li.position div.pane, ul.more_pos li.position input.selector{display: none;}
 div.seb-wrapper.compact ul.more_pos li{list-style: none outside none;margin: 1px;padding: 8px;position: relative;width: auto; width: 112px; float: left; text-transform:lowercase;}
 div.seb-wrapper.compact ul.more_pos li{border: 1px solid #dedede ; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
-div.seb-wrapper.compact ul.more_pos li{background-color: #00416a; color: #fff; font-weight: bold;}
+div.seb-wrapper.compact ul.more_pos li{background-color: #16396f; color: #fff; font-weight: bold;}
 div.seb-wrapper.compact ul.more_pos li span.title{font-size:9px!important;}
 div.seb-wrapper.compact span.toggle{color:#146295; font-size:0.95em; font-weight:bold; text-transform:uppercase; float:right; cursor:pointer; padding-top:3px;}
 
 /* ui-construction  (sidebar) */
 .seblod-wrapper{position: relative;width: 100%;overflow: hidden;}
 #seblod-main > div.seblod{margin-right:0 !important;}
-#seblod-sidebar{right: 0px;width: 30%; position:relative; margin-left:10px !important;}
+#seblod-sidebar{right: 0px;width: 32%; position:relative; margin-left:10px !important;}
 div.seb-wrapper #seblod-sidebar{top: 0px; position:absolute;}
 .active{position: absolute;}
 .passive{float: left;}
@@ -108,26 +108,26 @@ div.colc::selection {background: none;}
 div.seblod div.legend.flexenter .inputbox{font-size: 11px;}
 
 #minwidth-body .colorpicker{display:none;}
-div.subtabs{color:#00416a; font-size:0.95em;}
+div.subtabs{color:#16396f; font-size:0.95em;}
 div.subtabs div{float:left; position:relative;}
 div.full fieldset#client div.subtabs{width: 320px;}
 div.compact fieldset#client div.subtabs{width: 160px;}
 fieldset#layer div.subtabs{width: 240px;}
-div.full #subtab1 {width:90px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:55px; height:3px; top:10px;}
+div.full #subtab1 {width:90px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:55px; height:3px; top:10px;}
 div.full #subtab2 {width:80px; top: 6px;}
-div.full #subtab3 {width:90px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
-div.compact #subtab1 {width:25px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:27px; height:3px; top:10px;}
+div.full #subtab3 {width:90px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
+div.compact #subtab1 {width:25px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:27px; height:3px; top:10px;}
 div.compact #subtab2 {width:80px; top: 6px;}
-div.compact #subtab3 {width:25px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
-div #subtab4 {width:50px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:50px; height:3px; top:10px;}
+div.compact #subtab3 {width:25px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
+div #subtab4 {width:50px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:50px; height:3px; top:10px;}
 div #subtab5 {width:80px; top: 6px;}
-div #subtab6 {width:50px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
+div #subtab6 {width:50px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
 
 div.pagetitle span.subtitle{color:#999999;}
 div.textdesc{float:left;line-height:34px;}
 
 .c_acc_ck,.c_link_ck,.c_live_ck,.c_typo_ck,.c_res_ck{max-width:180px!important;}
-a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#EB8207;}
+a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#3b99fc; margin-top: 8px;}
 
 body.com_cck ul.sortable_header li div.pane{right: 24px;}
 body.com_cck ul.sortable li div.pane div.colc{padding-top: 0;position: relative;width: 200px;z-index: 99;}

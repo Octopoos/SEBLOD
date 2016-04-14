@@ -28,18 +28,18 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		parent::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data );
+		parent::g_onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 		
 		krsort( $field->params );
 		$field->params	=	implode( '', $field->params );
 	}
 		
 	// onCCK_FieldConstruct_TypeContent
-	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), $config = array() )
+	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), &$config = array() )
 	{
-		parent::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data );
+		parent::g_onCCK_FieldConstruct_TypeContent( $field, $style, $data, $config );
 		
 		krsort( $field->params );
 		$field->params	=	implode( '', $field->params );
@@ -280,7 +280,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$f_value			=	@$val[$f_name];
 						$inherit			=	array( 'xk' => $key, 'xi' => $xi, 'parent' => $name, 'array_x' => 1, 'post' => $val );
 						$results			=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $f_value, &$config, $inherit, true ) );
-						$v					=	$results[0];
+						$v					=	@$results[0];
 						$store				.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$text				.=	'<li style="line-height:10px;">'.$f_label.' : '.$v.'</li>';
 						// todo: add childs (secondary) storages.. not primary!
@@ -366,11 +366,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 		}
 
-		$count	=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
-		$html	=	'';
-		$js		=	'';
-		$js2	=	'';
-		$empty	=	'';
+		$count		=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
+		$buttons 	= 	$field->bool2 || $field->bool3 || $field->bool4;
+		$html		=	'';
+		$empty		=	'';
+		$css 		=	( $field->css ) ? ' '.$field->css : '';
 		
 		if ( $count ) {
 			if ( $field->bool == 2 ) {
@@ -381,82 +381,33 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$head	.=	'<tr class="head">';
 						foreach ( $field->form[$i] as $elem ) {
 							if ( $elem->display > 1 ) {
-								$head	.=	'<th>'.$elem->label.'</th>';
+								$class	=	( @$elem->markup_class ) ? ' class="'.trim( @$elem->markup_class ).'"' : '';
+								$head	.=	'<th'.$class.'>'.$elem->label.'</th>';
 							}
 						}
+						$head 	.=	( $buttons ) ? '<th></th>' : '';
 						$head	.=	'</tr>';
 					}
-					$class	=	( ( $i % 2 ) ) ? 'even' : 'odd';
-					$html	.=	'<tr class="'.$class.'">';
-					foreach ( $field->form[$i] as $elem ) {
-						if ( $elem->display > 1 ) {
-							$html	.=	'<td class="cck_'.$elem->name.'">';
-						}
-						$html		.=	$elem->form;
-						if ( $elem->display > 1 ) {
-							$html	.=	'</td>';
-						}
-						if ( @$elem->computation ) {
-							$computation			=	new JRegistry;
-							$computation->loadString( $elem->computation_options );
-							$computation_options	=	$computation->toObject();
-							if ( $computation_options->calc == 'custom' ) {
-								$computed	=	'';
-								if ( count( $computation_options->fields ) ) {
-									foreach ( $computation_options->fields as $k=>$v ) {
-										$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
-									}
-									$computed		=	substr( $computed, 0, -1 );
-								}
-								$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-								$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
-								$format		=	'';
-								if ( $computation_options->format == 'toFixed' ) {
-									$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
-								} elseif ( $computation_options->format ) {
-									$format	=	'.'.$computation_options->format.'()';
-								}
-								if ( @$computation_options->recalc ) {
-									$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
-																				   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );' );
-								} else {
-									$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
-																  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
-									if ( $event != 'none' ) {
-										$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
-									}
-									JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
-								}
-							} else {
-								$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
-								$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
-								$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
-								if ( @$computation_options->recalc ) {
-									$config['computation'][$event][]	=	array( '_'=>$computed,
-																				   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
-								} else {
-									$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
-								}
-							}
-							$config['doComputation']	=	1;
-						}
-					}
-					$html	.=	'</tr>';
+					$html	.=	self::_formTABLE( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
 				$head		=	'<thead>'.$head.'</thead>';
-				$html		=	'<tbody>'.$html.'</tbody>';
-				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="category zebra table">'.$head.$html.$foot.'</table>';
+				$html		=	'<tbody id="cck1_sortable_'.$field->name.'" >'.$html.'</tbody>';
+				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="table'.$css.'">'.$head.$html.$foot.'</table>';
+
+				if ( $field->bool2 ) {
+					$empty		=	self::_formTABLE( $field, @$field->form[$i], 0, 0, $buttons, $config );
+				}
+
 			} else {
 				$orientation=	( $field->bool == 1 ) ? 'vertical_gx' : 'horizontal_gx';
-				$width		=	'';
-				
-				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.' '.$width.'">';
+				$width		=	'';			
+				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.$css.' '.$width.'">';
 				for ( $i = 0; $i < $count; $i++ ) {
-					$html	.=	self::_formHTML( $field, $field->form[$i], $i, $count, $config );
+					$html	.=	self::_formHTML( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
 				$html		.=	'</div>';
 				if ( $field->bool2 ) {
-					$empty		=	self::_formHTML( $field, @$field->form[$i], 0, 0, $config );
+					$empty		=	self::_formHTML( $field, @$field->form[$i], 0, 0, $buttons, $config );
 				}
 			}
 		}
@@ -466,11 +417,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			self::_addScript( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
 												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty ) );
 		}
-		
-		if ( $js ) {
-			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
-		}
-		
+				
 		return $html;
 	}
 	
@@ -492,9 +439,9 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		JCck::loadjQueryUI();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script src="'.self::$path.'assets/js/script.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script2.js'.'" type="text/javascript"></script>';
 		} else {
-			$doc->addScript( self::$path.'assets/js/script.js' );
+			$doc->addScript( self::$path.'assets/js/script2.js' );
 		}
 	}
 	
@@ -541,8 +488,129 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 	}
 
+	// _formTABLE
+	protected static function _formTABLE( $field, $group, $i, $size_group, $buttons, &$config )
+	{
+		$client				=	'cck_'.$config['client'];
+		$html_div_buttons	=	'';
+		$js					=	'';
+		$js2				=	'';
+		$js_format			=	( $i == 0 && $size_group == 0 ) ? 'raw' : 'html';
+		$rId				=	$config['rendering_id'];
+		$class				=	'cck_cgx cck_cgx_form';
+		$class2				=	( $i % 2 ) ? ' even' : ' odd';
+
+		if ( $buttons ) {
+			if ( $field->bool3 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"></div>';
+			}
+			if ( $field->bool2 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"></div>';
+			}
+			if ( $field->bool4 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"></div>';
+			}
+		}
+		if ( $size_group == 1 ) {
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first cck_form_group_x_last'.$class2.'">';
+			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first cck_cgx_button_last">'.$html_div_buttons.'</td>' : '';
+			$class		.=	' cck_cgx_form_first cck_cgx_form_last';
+		} elseif ( $size_group == 0 ) {
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class2.'">';
+			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</td>' : '';
+		} elseif ( $i == 0 ) {
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first'.$class2.'">';
+			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first">'.$html_div_buttons.'</td>' : '';
+			$class		.=	' cck_cgx_form_first';
+		} elseif ( $i == $size_group -1 ) {
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_last'.$class2.'">';
+			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_last">'.$html_div_buttons.'</td>' : '';
+			$class		.=	' cck_cgx_form_last';
+		} else {
+			$html		=	'<tr id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x'.$class2.'">';
+			$buttons	=	( $buttons ) ? '<td id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</td>' : '';
+		}
+
+		if ( count( $group ) ) {
+			foreach ( $group as $elem ) {
+				if ( @$elem->markup_class ) {
+					$class2	=	$class.@$elem->markup_class;
+				}
+				$td			=	'<td id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="'.$class2.'">';
+
+				if ( $elem->display > 1 ) {
+					$html	.=	$td;
+				}
+				if ( $elem->markup == 'none' ) {
+					$html	.=	$elem->form;
+				} else {
+					$html	.=	'<div class="cck_forms">'.$elem->form.'</div>';
+				}
+				if ( $elem->display > 1 ) {
+					$html	.=	'</td>';			
+				}
+				if ( @$elem->computation ) {
+					$computation			=	new JRegistry;
+					$computation->loadString( $elem->computation_options );
+					$computation_options	=	$computation->toObject();
+					if ( $computation_options->calc == 'custom' ) {
+						$computed	=	'';
+						if ( count( $computation_options->fields ) ) {
+							foreach ( $computation_options->fields as $k=>$v ) {
+								$computed	.=	chr( 97 + $k ).':$("#'.$field->name.'_'.$i.'_'.$v.'")'.',';
+							}
+							$computed		=	substr( $computed, 0, -1 );
+						}
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
+						$format		=	'';
+						if ( $computation_options->format == 'toFixed' ) {
+							$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
+						} elseif ( $computation_options->format ) {
+							$format	=	'.'.$computation_options->format.'()';
+						}
+						if ( @$computation_options->recalc ) {
+							$config['computation'][$event][]	=	array( '_'=>str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ),
+																		   'js'=>'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );' );
+						} else {
+							$js2	.=	'JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.' = function() {'.'$("#'.$field->name.'_'.$i.'_'.$elem->name.'").calc( "'
+														  .$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );'.'}';
+							if ( $event != 'none' ) {
+								$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
+							}
+							JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
+						}
+					} else {
+						$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
+						$event		=	@$computation_options->event ? $computation_options->event : 'keyup';
+						$targets	=	@$computation_options->targets ? ', '.json_encode( $computation_options->targets ) : '';
+						if ( @$computation_options->recalc ) {
+							$config['computation'][$event][]	=	array( '_'=>$computed,
+																		   'js'=>'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');' );
+						} else {
+							$js		.=	'$("'.$computed.'").'.$computation_options->calc.'("'.$event.'", "#'.$field->name.'_'.$i.'_'.$elem->name.'"'.$targets.');';
+						}
+					}
+					$config['doComputation']	=	1;
+				}
+			}
+			$html	.=	$buttons;
+		}
+		$html	.=	'</tr>';
+
+		if ( $js ) {
+			if ( $js_format == 'raw' ) {
+				$html	.=	'<script type="text/javascript">(function ($){'.$js.'})(jQuery);</script>';
+			} else {
+				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+			}
+		}
+
+		return $html;
+	}
+
 	// _formHTML
-	protected static function _formHTML( $field, $group, $i, $size_group, &$config )
+	protected static function _formHTML( $field, $group, $i, $size_group, $buttons, &$config )
 	{
 		$client				=	'cck_'.$config['client'];
 		$html_div_buttons	=	'';
@@ -551,35 +619,37 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$js_format			=	( $i == 0 && $size_group == 0 ) ? 'raw' : 'html';
 		$rId				=	$config['rendering_id'];
 		
-		if ( $field->bool3 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"><span class="icon-minus"></span></div>';
-		}
-		if ( $field->bool2 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"><span class="icon-plus"></span></div>';
-		}
-		if ( $field->bool4 ) {
-			$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"><span class="icon-circle"></span></div>';
+		if ( $buttons ) {
+			if ( $field->bool3 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"><span class="icon-minus"></span></div>';
+			}
+			if ( $field->bool2 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"><span class="icon-plus"></span></div>';
+			}
+			if ( $field->bool4 ) {
+				$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"><span class="icon-circle"></span></div>';
+			}
 		}
 		
 		if ( $size_group == 1 ) {
 			$html	=	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first cck_form_group_x_last">';
-			$html	.=	'<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first cck_cgx_button_last">'.$html_div_buttons.'</aside>';
+			$html	.=	( $buttons ) ? '<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first cck_cgx_button_last">'.$html_div_buttons.'</aside>' : '';
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first cck_cgx_form_last">';			
 		} elseif ( $size_group == 0 ) {
 			$html	=	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x">';
-			$html	.=	'<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</aside>';
+			$html	.=	( $buttons ) ? '<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</aside>' : '';
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		} elseif ( $i == 0 ) {
 			$html	=	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_first">';
-			$html	.=	'<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first">'.$html_div_buttons.'</aside>';
+			$html	.=	( $buttons ) ? '<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_first">'.$html_div_buttons.'</aside>' : '';
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first">';
 		} elseif ( $i == $size_group -1 ) {
 			$html	=	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x cck_form_group_x_last">';
-			$html	.=	'<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_last">'.$html_div_buttons.'</aside>';
+			$html	.=	( $buttons ) ? '<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button cck_cgx_button_last">'.$html_div_buttons.'</aside>' : '';
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_last">';
 		} else {
 			$html	=	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group_x">';
-			$html	.=	'<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</aside>';
+			$html	.=	( $buttons ) ? '<aside id="'.$rId.'_button_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_button">'.$html_div_buttons.'</aside>' : '';
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		}
 		

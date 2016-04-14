@@ -36,6 +36,23 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
+			$data['match_mode']	=	array(
+										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_AUTO' ) )
+									);
+
+			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
+		} else {
+			$data['match_mode']									=	$config['construction']['match_mode'][self::$type];
+		}
+		
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
 
 	// onCCK_FieldDelete
@@ -265,7 +282,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false ); 
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete['.$xk.']" value="1" />';				
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -278,7 +295,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false );
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete]" value="1" />';
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -290,7 +307,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more2	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  @$options2['path_label'].$fold_3	, $value3, 'upload_file', false );
 			}
 			if ( $options2['delete_box'] && $value['file_location'] && $location != '' ) {
-				$onchange	=	' onchange="$(\''.$name.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$name.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$name.'_delete" name="'.$name.'_delete" value="1" />';
 			}
 			if ( $options2['title_file'] == '1' && $options2['multivalue_mode'] == '1' ) {
@@ -305,7 +322,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
@@ -375,10 +392,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Set
 		$field->form		=	$form;
 		
-		if ( $value != '' ) {
-			$field->match_mode	=	'not_empty';
-		} else {
-			$field->match_mode	=	'';
+		if ( $field->match_mode != 'none' ) {
+			if ( $value != '' ) {
+				$field->match_mode	=	'not_empty';
+			} else {
+				$field->match_mode	=	'';
+			}
 		}
 		$field->type		=	'checkbox';
 		$field->value		=	$value;
@@ -625,7 +644,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path,
+			$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>$forbidden_ext,
 									   'file_name'=>$item_custom_name, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, 'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field'=>$field->storage_field, 'storage_field2'=>($field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$item_custom_title );

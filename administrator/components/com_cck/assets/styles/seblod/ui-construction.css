@@ -8,12 +8,12 @@
 
 /*toggle*/
 div.seblod fieldset.toggle{background-color:#FFFFFF;}
-fieldset.toggle label.selected{background: none repeat scroll 0 0 #00416a;color: #ffffff; border-color:#00416a;}
+fieldset.toggle label.selected{background: none repeat scroll 0 0 #16396f;color: #ffffff; border-color:#16396f;}
 fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid;color: #cccccc;text-decoration: line-through; cursor: default!important;}
-fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid; color: #00416a;}
-fieldset.toggle label:hover{background-color: #00416a;color: #ffffff; border-color:#00416a;}
+fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid; color: #16396f;}
+fieldset.toggle label:hover{background-color: #16396f;color: #ffffff; border-color:#16396f;}
 fieldset.toggle label.first{border-left: 1px solid #dedede !important; -webkit-border-top-left-radius:2px; -webkit-border-bottom-left-radius:2px; -moz-border-radius-topleft:2px; -moz-border-radius-bottomleft:2px; border-top-left-radius:2px; border-bottom-left-radius:2px;}
-fieldset.toggle label.first.selected,fieldset.toggle label:hover.first{border-left: 1px solid #00416a !important;}
+fieldset.toggle label.first.selected,fieldset.toggle label:hover.first{border-left: 1px solid #16396f !important;}
 fieldset.toggle label.last{-webkit-border-top-right-radius:2px; -webkit-border-bottom-right-radius:2px; -moz-border-radius-topright:2px; -moz-border-radius-bottomright:2px; border-top-right-radius:2px; border-bottom-right-radius:2px;}
 
 .loading{top:68px!important;}
@@ -21,7 +21,7 @@ fieldset.toggle label.last{-webkit-border-top-right-radius:2px; -webkit-border-b
 /*sortable*/
 ul.sortable li{background-color: #f1f1f1 ;border: 1px solid #dedede ; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
 ul.sortable li.div_clear{}
-ul.sortable li span.title{color: #00416a !important;}
+ul.sortable li span.title{color: #16396f !important;}
 ul.sortable li span.subtitle{color: #999 !important;}
 ul.sortable li.panel_slider span.title{color: #000000 !important;}
 ul.sortable li.drop-highlight{background-color: #ffffff !important;border: 1px dashed #dedede !important;}
@@ -30,35 +30,36 @@ li.ui-selected{background: #ffffcc !important;}
 li.ui-sortable-helper{background: #ffffcc !important;}
 ul.sortable li.t-tabs,ul.sortable li.t-search_operator,ul.sortable li.t-div{background-color: #dedede;}
 /*li:hover.ui-selectee{border-color: #bbbbbb !important;}*/
-ul.sortable li.position{background-color: #00416a !important; border-color:#00416a;}
+ul.sortable li.position{background-color: #16396f !important; border-color:#16396f;}
 ul.sortable li.position span.title{color: #ffffff !important;}
-div.seblod .selector{background-color: #00416a !important;border-color: #00416a !important;}
-div.seblod .thin.blue{background-color: #ffffff;border-color: #00416a;color: #00416a;}
-div.pane span.text.blue{color: #00416a;!important;}
+div.seblod .selector{background-color: #16396f !important;border-color: #16396f !important;}
+div.seblod .thin.blue{background-color: #ffffff;border-color: #16396f;color: #16396f;}
+div.pane span.text.blue{color: #16396f;!important;}
+div.pane span.text > span.icon-key{position: relative; left: 4px;}
 div.pane span.c_live2, div.pane span.c_mat2, div.pane span.c_comp, div.pane span.c_cond, div.pane span.c_val, div.pane .sp2se{cursor: pointer;font-size:0.95em;}
 div.pane span.c_live2:hover, div.pane span.c_mat2:hover, div.pane span.c_comp:hover, div.pane span.c_cond:hover, div.pane span.c_val:hover, div.pane span.sp2se:hover{text-decoration:underline;}
 div.seblod input[type="radio"].selector:checked{color: #f1f1f1 !important;}
 ul.sortable_header li{color: #ffffff !important;}
-ul.sortable_header li div.pane div{background-color: #00416a !important;border-left: 1px solid #00416a !important;border-right: 1px solid #00416a !important;border-top: 1px solid #00416a !important;}
+ul.sortable_header li div.pane div{background-color: #16396f !important;border-left: 1px solid #16396f !important;border-right: 1px solid #16396f !important;border-top: 1px solid #16396f !important;}
 
-ul.sortable li.field div.drag{background: url(images/grip2.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
-ul.sortable li.field div:hover.drag{background: url(images/grip2.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+ul.sortable li.field div.drag{background: url(images/grip3.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip3.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
 ul.sortable li.field div.drag {cursor: move;height: 14px;position: absolute;right: 1px;top: 8px;width: 23px;}
 div#seblod-main ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
-div#seblod-main ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 0 transparent; background-size: cover;}
-div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
-div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
-div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 0 transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
 div#seblod-sidebar ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
 
 ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
-ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #00416a; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
-ul.sortable li span.c_mat, ul.sortable li span.c_res{top: 1px;}
-ul.sortable li span.c_live{font-weight: normal;}
+ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #16396f; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 0;}
+ul.sortable li span:hover.c_live, ul.sortable li span:hover.c_mat, ul.sortable li span:hover.c_link, ul.sortable li span:hover.c_typo, ul.sortable li span:hover.c_res{color: #3b99fc;}
+ul.sortable li span.c_live{font-weight: normal; top:2px;}
 
 ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
-ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#00416a; padding-left:2px;}
-ul.sortable li.field a:hover.b{color:#0088CC; padding-left:2px;}
+ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#16396f; padding-left:2px;}
+ul.sortable li.field a:hover.b{color:#3b99fc; padding-left:2px;}
 ul.sortable li.field a.b [class^="icon-"],
 ul.sortable li.field a.b [class*=" icon-"] {margin-right: 0;}
 ul.sortable li div.pane div.col1 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: 302px; }
@@ -69,12 +70,12 @@ ul.sortable li div.pane div.col2 > * {display: block; margin: auto;}
 ul.sortable li div.pane div{color: #ffffff; font-weight: bold;}
 
 a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,
-a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons2.png); background-size: cover;}
+a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons3.png); background-size: cover;}
 div#seblod-sidebar a.panel { float:left; width:20px; height:20px; text-align:center; cursor:pointer; font-size:14px !important; font-weight:bold;
 	line-height:20px; border:1px solid #dedede; text-decoration:none !important; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
-div#seblod-sidebar a.panel{background: none repeat scroll 0 0 #f1f1f1; color: #00416a;}
-div#seblod-sidebar a.panel:hover{background-color:#00416a; color:#ffffff; border-color: #00416a;}
-div#seblod-sidebar a.panel.selected{background-color:#00416a; color:#ffffff; border-color: #00416a;}
+div#seblod-sidebar a.panel{background: none repeat scroll 0 0 #f1f1f1; color: #16396f;}
+div#seblod-sidebar a.panel:hover{background-color:#16396f; color:#ffffff; border-color: #16396f;}
+div#seblod-sidebar a.panel.selected{background-color:#16396f; color:#ffffff; border-color: #16396f;}
 
 /*sidebar*/
 a:link.icons.icon-add, a:visited.icons.icon-add{background-position: 0 0;}
@@ -94,9 +95,9 @@ a:hover.icons.icon-toggle{background-position: 0 -220px;}
 
 /* Joomla 3.x */
 div.row-fluid div.span12 ul.sortable li.position,
-div.row-fluid div.span12 fieldset.toggle label:hover,
+div.row-fluid div.span12 fieldset.toggle label:hover:not(.disabled),
 div.row-fluid div.span12 fieldset.toggle label.selected{
-	background-color: #00416a;
+	background-color: #16396f;
 }
-div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#00416a!important;}
+div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#16396f!important;}
 div.row-fluid div.span12 ul.sortable_header li div.pane{top:-15px;}

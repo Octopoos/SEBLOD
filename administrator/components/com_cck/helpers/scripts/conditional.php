@@ -139,7 +139,6 @@ $js		=	'
 					}
     			}
 				$(document).ready(function(){
-					$("#titlebox").html("'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).'");
 					var elem = "ffp_'.$this->item->name.'_conditional";
 					var conditions = parent.jQuery("#"+elem).val();
 					var n = conditions.split(",").length;
@@ -262,10 +261,10 @@ if ( JCck::on() ) {
 	$del	=	'icon-minus';
 	$fill	=	'&laquo;';
 }
-echo '<div class="seblod"><div class="legend top center">'.$field->title.'<span class="'.$add.'"></span></div></div>';
 
 for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	$condition		=	'cds'.$i;
+	$legend			=	( $i == 0 ) ? '<div class="legend top left">'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).'<span class="add icon-plus"></span></div>' : '';
 	
 	$states0		=	JHtml::_( 'select.genericlist', $states_list, 'states0', 'class="inputbox input-medium blue state_kk"', 'value', 'text', '', $condition.'_states0' );
 	$s_value0		=	'<input type="text" id="'.$condition.'_states0_'.'value" name="value" value="" class="inputbox input-mini states0" size="8" />';
@@ -320,8 +319,8 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 						$condition.'_conditions4_trigger' );
 	
 	$remove		=	( $i > 0 ) ? '<span class="'.$del.'"></span>' : '<span class="'.$del.'" style="visibility: hidden;"></span>';
-	
-	echo '<div id="'.$condition.'" class="seblod conditional">'
+
+	echo '<div id="'.$condition.'" class="seblod conditional">'.$legend
 	 .	 '<div class="legend top left">'.'# '.($i + 1).'.</div>'
 	 .	 '<table class="adminlist cck_radius2">'
 	 .	 '<tr class="half">'

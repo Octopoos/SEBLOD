@@ -130,8 +130,11 @@ class CCKViewForm extends JViewLegacy
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
 		}
+
+		// Force Titles to be hidden
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$params->set( 'show_page_heading', 0 );
+			$this->show_form_title	=	false;
 		}
 		
 		$this->config				=	&$config;

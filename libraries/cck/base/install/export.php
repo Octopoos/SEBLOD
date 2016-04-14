@@ -513,6 +513,11 @@ class CCK_Export
 			}
 			if ( $el->link != '' ) {
 				self::exportPlugin( 'cck_field_link', $el->link, $data, $extensions );
+
+				if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.$el->link.'/classes/app.php' ) ) {
+					require_once JPATH_SITE.'/plugins/cck_field_link/'.$el->link.'/classes/app.php';
+					JCck::callFunc_Array( 'plgCCK_Field_Link'.$el->link.'_App', 'onCCK_Field_LinkExportType_Field', array( $fields[$el->fieldid], &$el, &$data, &$extensions ) );
+				}
 			}
 			if ( $el->live != '' ) {
 				self::exportPlugin( 'cck_field_live', $el->live, $data, $extensions );
@@ -616,6 +621,11 @@ class CCK_Export
 			}
 			if ( $el->link != '' ) {
 				self::exportPlugin( 'cck_field_link', $el->link, $data, $extensions );
+
+				if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.$el->link.'/classes/app.php' ) ) {
+					require_once JPATH_SITE.'/plugins/cck_field_link/'.$el->link.'/classes/app.php';
+					JCck::callFunc_Array( 'plgCCK_Field_Link'.$el->link.'_App', 'onCCK_Field_LinkExportSearch_Field', array( $fields[$el->fieldid], &$el, &$data, &$extensions ) );
+				}
 			}
 			if ( $el->live != '' ) {
 				self::exportPlugin( 'cck_field_live', $el->live, $data, $extensions );
@@ -858,6 +868,10 @@ class CCK_Export
 		if ( isset( $xml->{$elemtype}->type ) && $xml->{$elemtype}->type == 'component' &&
 			 isset( $xml->{$elemtype}->component_id ) && $xml->{$elemtype}->component_id ) {
 			$xml->{$elemtype}->component_id	=	JCckDatabase::loadResult( 'SELECT element FROM #__extensions WHERE extension_id = '.$xml->{$elemtype}->component_id );
+		}
+		if ( isset( $xml->{$elemtype}->level ) && (int)$xml->{$elemtype}->level > 1 &&
+			 isset( $xml->{$elemtype}->parent_id ) && (int)$xml->{$elemtype}->parent_id ) {
+			$xml->{$elemtype}->parent_id	=	JCckDatabase::loadResult( 'SELECT alias FROM #__menu WHERE id = '.(int)$xml->{$elemtype}->parent_id );
 		}
 	}
 

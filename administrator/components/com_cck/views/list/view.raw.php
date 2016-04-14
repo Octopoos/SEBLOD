@@ -23,6 +23,13 @@ class CCKViewList extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app						=	JFactory::getApplication();
+		$layout						=	$app->input->get( 'tmpl' );
+		$uniqId						=	'';
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$uniqId					=	'_'.$layout;
+		}
+		
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
@@ -30,8 +37,8 @@ class CCKViewList extends JViewLegacy
 		$preconfig['itemId']		=	0;
 		$preconfig['task']			=	$app->input->get( 'task', 'search' );
 		$preconfig['doPagination']	=	1;
-		$preconfig['formId']		=	'adminForm';
-		$preconfig['submit']		=	'JCck.Core.submit';
+		$preconfig['formId']		=	'seblod_form'.$uniqId;
+		$preconfig['submit']		=	'JCck.Core.submit'.$uniqId;
 		
 		JCck::loadjQuery();
 		$this->prepareDisplay( $preconfig );

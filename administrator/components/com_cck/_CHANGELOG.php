@@ -22,11 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.0 Upgrade Release [xx-Feb-2016] -------------
+-------------------- 3.8.0 Upgrade Release [xx-Apr-2016] -------------
 
 ! Memory & Performance optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
+
++ "Button Free", "Search Generic", "Search Ordering" Field Plug-ins added. (included in Core for Free now, yeah!)
++ "Joomla! JGrid" Typography Plug-in added.
 
 + "Count" (Auto / Estimate) parameter added on Search Types.
 + "Load" behaviour added to Infinite Pagination on Search Types.
@@ -42,18 +45,21 @@ $ -> Language fix or change
 
 + "Alternative Search Type" parameter added on List module.
 + "Auto Redirection (Vars)", "SEF" parameters added on List Menu Items.
++ "Exclusions" (URLs) capability added on Sites >> force URLs with joomla's default language.
 + "Export", "Process" tasks (Submit Button) support added on Content views.
 + "Hidden & Anonymous" Field Variation added on Forms.
 + "Hidden when filled" Field Variation added on Forms.
-+ "Limit", "Pagination" parameters added on List Menu Items.
++ "Final Ordering" (Random/Shuffle), "Limit", "Pagination" parameters added on List Menu Items.
 + "seb_css3b" variation added (cleaner version of seb_css3).
-+ Title (Inherited / Menu Item / Custom) parameter added on Forms & Lists Menu Items.
++ Title (Inherited / Menu Item / Custom) parameter added on Form & List Menu Items.
 + "URL" mode added to "Menu Item Target" on Search module.
 + "Validation" parameters added on Search Types.
 
 + "Alternative Format", "Unit", "Time Zone" parameters added on Date Typography plug-in.
++ "Author" condition added on Workflow Restriction plug-in.
 + "Auto" Tmpl parameter added on Content, "SEBLOD Form", "SEBLOD List" Link plug-ins.
 + "Behavior" parameter added on Clear Typo plug-in.
++ "Bridge Ordering" parameter added on Joomla! User, Joomla! Usergroup Object plug-ins.
 + Content Type (Form) added on Workflow Restriction plug-in.
 + "Default Value" added on Joomla! User Live plug-in.
 + "JForm Usergroup" plug-in improved >> Native Search behavior.
@@ -63,27 +69,39 @@ $ -> Language fix or change
 + "Redirection (Variables)" added on Delete, SEBLOD Form Link plug-ins.
 + "Rel" parameter added on Link plug-in.
 + "Remaining Characters" added on Textarea plug-in.
++ "Reset" tasks added on Submit Button plug-in.
 + "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
++ $site->... syntaxes processes added on Freetext/Select Dynamic plug-ins.
 
 + "#__cck_store_item_..." support added in JCckContent class.
 + js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
 
 + "Add to Cart" permission added.
++ "Allow Login on all Sites" (Multi-sites) added on SEBLOD Options.
++ "Forbidden Extensions White List" parameter added on SEBLOD Options >> Must be allowed from Upload Files
++ "Registration Menu Item" parameter added on SEBLOD Options > Integration > Joomla! User.
 + "Yes, but English" (Language >> JText) added on SEBLOD Options.
 + Various Improvements for upcoming SEBLOD eCommerce add-on.
 
+^ CHARSET updated to "utf8mb4" and DEFAULT COLLATE to "utf8mb4_unicode_ci".
 ^ Events changed in SEBLOD core for Content Type, Field, Folder, Search Type, Template:
 	>> "onContentBeforeSave" replaced by "onCckConstructionBeforeSave"
 	>> "onContentAfterSave" replaced by "onCckConstructionAfterSave"
 	>> "onContentBeforeDelete" replaced by "onCckConstructionBeforeDelete"
 	>> "onContentAfterDelete" replaced by "onCckConstructionAfterDelete"
 - "onUserBeforeDeleteNote" event removed, use "onContentBeforeDelete"/"onContentAfterDelete".
+- Various INT(11) updated to UNSIGNED INT(10).
 
+- "Captcha Math", "Joomla Article (Related)", "Youtube" plug-ins removed from Core package.
+	>> available for Free on SEBLOD.com/store
+
+! Back-end UI reworked: performance/responsiveness improved greatly + look & feel is cleaner :)
 ! Copyright Updated.
 ! Force Random Password to have 20 characters.
 ! Object Plug-ins (exporter.php, importer.php) updated for Exporter/Importer Add-ons.
 ! Prepare "Jobs" for upcoming SEBLOD Toolbox Add-on.
+! Prevent reset of auto_increment in InnoDB.
 ! SEBLOD.com Urls updated in Admin Menu Module.
 ! Sites generation refactored for greater flexibility.
 ! Various images added for all supported Object plug-ins.
@@ -91,39 +109,51 @@ $ -> Language fix or change
 ^ AfterStore processing/events not executed anymore if an error is thrown while storing.
 ^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
+^ Form/List titles, Page Heading forced to be hidden when tmpl=raw on Forms & Lists.
+^ "Group X" refactored (cleaner JS, actions/buttons support added for Table mode).
 ^ jQuery Validation script updated for AJAX and Confirm validations.
 ^ One (seb_one) updated with "Inherited" variation parameter.
-^ "show_page_heading" parameter forced to 0 when tmpl=raw on Forms & Lists.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
+	>> "Empty Columns" parameter added for the previous behaviour
 
 # Add missing options pre/post before/after store processing.
 # AJAX availability issue fixed >> no need to clic more than once now, yeah!
+# AJAX availability issue fixed >> (POST) check using the "Fields" parameter.
 # "Alternative Search" issue fixed for Infinite pagination.
 # "allowUserRegistration" now supported.
+# Checkbox (Delete File) "onchange" issue fixed on Upload File/Image plug-in.
 # Cookie issue while creating a new Search Type (back-end) fixed.
 # Custom Attributes issue fixed on Cotnent plug-in (beforeRender).
 # Cyrillic issue fixed (while creating a field from a Content Type).
 # < p > removed from Freetexts field in install.sql
 # Empty message issue fixed after (submitting a Form).
+# Execution time issue fixed for Bridge creation (when there are a lot of articles in category)
+# Filtering (form App Folder) issue fixed on back-end.
 # Hardcoded condition (preventing required/validation) removed on Password field.
-# HTML output improved on "Group" and "Group X" (Form views) Field plug-ins when markup=none.
+# HTML output improved on "Group" and "Group X" (Form views) Field plug-ins (markup=none or restrictions).
 # Issues fixed on JCckContent class.
+# Language assignement issue fixed in multi-sites system.
 # Keep "return" in "user profile edit" redirection.
 # Maxlength validation fixed on Messages (Configuration) on back-end.
+# Menu ItemIds managed for App Export/Import (in Content, SEBLOD Form/List Link Plug-ins)
+# Missing Language file issue fixed on the Calendar Plug-in.
 # Missing Languages files (for Package Export) added.
 # Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
 # Native Search behaviors fixed for Upload File/Image plug-ins.
 # Nested Lists (using "Items" view) issue fixed.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
+# "Profile Menu Item" (SEBLOD Options > Integration > Joomla! User) route fixed.
 # "Prepare Content" issue fixed on "Joomla! Module" plug-in >> "PrepareContent" method.
 # Processing Export issue fixed.
 # Registration email/mode using COM_CCK_EMAIL_REGISTERED_BODY fixed.
 # Router issue (related to 2 segments URLs) fixed (regression.. :/).
 # SEF parameter properly propagated during List rendering.
+# Sub-menu item issue fixed in App Export/Import.
 # Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
 # Syntax (replacement) issues fixed on "Email" plug-in.
 # Time Zone now applied automatically by "Date" Typo plug-in.
 # Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
+# User's groups (erased after user profile edition on front-end) issue fixed. Good catch Lionel ! ;)
 # Various improvements or issues fixed.
 
 -------------------- 3.7.2 Upgrade Release [19-Sep-2015] -------------

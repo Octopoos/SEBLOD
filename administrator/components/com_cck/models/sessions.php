@@ -65,6 +65,9 @@ class CCKModelSessions extends JModelList
 		// Where
 		$query->where( 'a.extension = "'.(string)$extension.'"' );
 		
+		// Force State
+		$query->where( 'a.published != -44' );
+
 		// Filter Search
 		$location	=	$this->getState( 'filter.location' );
 		$search		=	$this->getState( 'filter.search' );

@@ -16,6 +16,17 @@ class CCKViewTypes extends JCckBaseLegacyViewList
 	protected $vName	=	'type';
 	protected $vTitle	=	_C2_TEXT;
 	
+	// completeUI
+	public function completeUI()
+	{
+		$title	=	'COM_CCK_CONTENT_TYPE_MANAGER';
+
+		if ( JFactory::getLanguage()->hasKey( $title.'2' ) ) {
+			$title	=	$title.'2';
+		}
+		$this->document->setTitle( JText::_( $title ) );
+	}
+
 	// getSortFields
 	protected function getSortFields()
 	{

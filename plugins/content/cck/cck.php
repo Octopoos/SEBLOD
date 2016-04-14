@@ -104,7 +104,7 @@ class plgContentCCK extends JPlugin
 
 		// Core
 		if ( $custom ) {
-			preg_match( '#::cck::(.*)::/cck::#U', $data->$custom, $matches );
+			preg_match( '#::cck::(\d+)::/cck::#U', $data->$custom, $matches );
 			$id		=	$matches[1];
 
 			if ( ! $id ) {
@@ -222,7 +222,7 @@ class plgContentCCK extends JPlugin
 	protected function _prepare( $context, &$article, &$params, $page = 0 )
 	{
 		$property	=	'text';
-		preg_match( '#::cck::(.*)::/cck::#U', $article->$property, $matches );
+		preg_match( '#::cck::(\d+)::/cck::#U', $article->$property, $matches );
 	  	if ( ! @$matches[1] ) {
 			return;
 		}
@@ -241,7 +241,7 @@ class plgContentCCK extends JPlugin
 		$cck			=	JCckDatabase::loadObject( $query );
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
-		$article->id	=	(int)$cck->pk;
+		
 		if ( ! $contentType ) {
 			return;
 		}
@@ -446,7 +446,7 @@ class plgContentCCK extends JPlugin
 							   'isNew'=>0,
 							   'Itemid'=>$app->input->getInt( 'Itemid', 0 ),
 							   'location'=>$cck->storage_location,
-							   'pk'=>$article->id,
+							   'pk'=>$cck->pk,
 							   'pkb'=>$cck->pkb,
 							   'storages'=>array(),
 							   'store_id'=>(int)$cck->store_id,
@@ -471,9 +471,7 @@ class plgContentCCK extends JPlugin
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
-					if ( $p_title != '' && $p_title == $field->name ) {
-						$this->title	=	$value;
-					}
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -518,6 +516,11 @@ class plgContentCCK extends JPlugin
 				}
 			}
 		}
+		
+		// Set Title
+		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
+ 			$this->title	=	$fields[$p_title]->value;
+ 		}
 		
 		// Finalize
 		$doc->fields	=	&$fields;

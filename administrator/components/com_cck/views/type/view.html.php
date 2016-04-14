@@ -76,10 +76,24 @@ class CCKViewType extends JViewLegacy
 							);
 		}
 		$this->uix	=	JCck::getUIX();
-		
+		$this->completeUI();
+
 		parent::display( $tpl );
 	}
 	
+	// completeUI
+	function completeUI()
+	{
+		$title	=	'COM_CCK_CONTENT_TYPE';
+
+		if ( JFactory::getLanguage()->hasKey( $title.'2' ) ) {
+			$title	=	$title.'2';
+		}
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( $title );
+
+		$this->document->setTitle( $title );
+	}
+
 	// prepareDelete
 	function prepareDelete()
 	{		

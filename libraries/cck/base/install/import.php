@@ -290,9 +290,18 @@ class CCK_Import
 					$name	=	'';
 				}
 			}
+			
 			if ( $name ) {
 				$str2		=	$item->id.', "'.$name.'", ';
 				$attributes	=	$j->attributes();
+				
+				if ( (string)$attributes->link != '' ) {
+					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
+						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
+						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
+					}
+				}
+				
 				foreach ( $data['tables_columns'][$table] as $key=>$val ) {
 					if ( isset( $attributes[$key] ) ) {
 						$str2	.=	'"'.$db->escape( (string)$attributes[$key] ).'", ';
@@ -374,6 +383,9 @@ class CCK_Import
 
 		if ( $table->type == 'component' ) {
 			$table->component_id	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table->component_id.'"' );
+		}
+		if ( $table->level > 1 ) {
+			$table->parent_id		=	JCckDatabase::loadResult( 'SELECT id FROM #__menu WHERE alias = "'.$table->parent_id.'"' );
 		}
 		$table->setLocation( $table->parent_id, 'last-child' );
 
@@ -493,7 +505,7 @@ class CCK_Import
 	public static function importProcessings( $data )
 	{
 		$path			=	$data['root'].'/processings';
-		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings', 'scriptfile', 'type' );
+		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings WHERE published != -44', 'scriptfile', 'type' );
 
 		if ( file_exists( $path ) ) {
 			$files	=	JFolder::files( $path, '\.xml$' );
@@ -665,7 +677,7 @@ class CCK_Import
 						}
 						
 						$sql_query	=	( $sql_query ) ? substr( $sql_query, 0, -1 ) : '';
-						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;' );
+						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 					}
 				}
 			}

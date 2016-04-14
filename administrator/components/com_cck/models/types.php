@@ -116,8 +116,17 @@ class CCKModelTypes extends JModelList
 		} else {
 			$folderId	=	$this->getState( 'filter.folder' );
 			$published	=	$this->getState( 'filter.state' );
-			$location	=	$this->getState( 'filter.location' );
-			$search		=	$this->getState( 'filter.search' );
+
+			if ( ( $folder = $app->input->getInt( 'folder_id', 0 ) ) > 0 ) {
+				$location	=	'folder_id';
+				$search		=	$folder;
+				
+				$this->setState( 'filter.location', $location );
+				$this->setState( 'filter.search', $search );
+			} else {
+				$location	=	$this->getState( 'filter.location' );
+				$search		=	$this->getState( 'filter.search' );
+			}
 		}
 		
 		// Filder Folder
@@ -150,6 +159,7 @@ class CCKModelTypes extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Search
 		if ( ! empty( $search ) ) {

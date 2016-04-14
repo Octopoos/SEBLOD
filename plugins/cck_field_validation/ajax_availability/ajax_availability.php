@@ -166,10 +166,10 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		} else {
 			foreach ( $where as $w ) {
 				if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
-					$v		=	$fields[$w]->value;
+					$v		=	$values[$w]->value;
 					if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
 						$s_fields[$s_field]	=	'';
-						$and				.=	' '.$values[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
+						$and				.=	' AND '.$values[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
 					}
 				}
 			}
@@ -183,8 +183,9 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 	// onCCK_Field_ValidationBeforeStore
 	public static function onCCK_Field_ValidationBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		$and	=	self::_where( $validation->table, $validation->fieldnames, $fields );
-		$error	=	self::_check( $process['validation'], $process['value'], $config, $and );
+		$validation	=	$process['validation'];
+		$and		=	self::_where( $validation->table, $validation->fieldnames, $fields );
+		$error		=	self::_check( $process['validation'], $process['value'], $config, $and );
 
 		if ( $error ) {
 			self::_setError( $process['name'], $config );

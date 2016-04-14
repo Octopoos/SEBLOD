@@ -25,7 +25,8 @@ class JCckBaseLegacyView extends JViewLegacy
 		$this->prepareSidebar();
 		$this->prepareToolbar();
 		$this->prepareUI();
-		
+		$this->completeUI();
+
 		parent::display( $tpl );
 	}
 	
@@ -60,6 +61,11 @@ class JCckBaseLegacyView extends JViewLegacy
 		Helper_Admin::addToolbarSupportButton();
 	}
 	
+	// completeUI
+	public function completeUI()
+	{
+	}
+
 	// prepareUI
 	protected function prepareUI()
 	{
