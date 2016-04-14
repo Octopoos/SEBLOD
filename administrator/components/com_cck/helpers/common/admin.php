@@ -378,7 +378,10 @@ class CommonHelper_Admin
 			$params										=	JCckDev::fromJSON( $plugin->params );
 			$group										=	JText::_( $params['group'] );
 
-			if ( $prefix.$folder == 'cck_field_restriction' ) {
+			if ( $prefix.$folder == 'cck_field_link'
+			  || $prefix.$folder == 'cck_field_live'
+			  || $prefix.$folder == 'cck_field_restriction'
+			  || $prefix.$folder == 'cck_field_typo' ) {
 				$groups[$group][$plugin->value]				=	$plugin;
 			} else {
 				$groups[$group][$group.'_'.$plugin->text]	=	$plugin;

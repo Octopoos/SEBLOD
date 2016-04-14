@@ -34,10 +34,11 @@ if ( count( $this->fieldsAv ) ) {
             }
         }
         $type_field	=	'';
+        
         if ( isset( $this->type_fields[$field->id] ) ) {
             $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
         }
-        JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data ) );
+        JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
         Helper_Workshop::displayField( $field, $type_field, $attr );
     }
 }

@@ -275,7 +275,9 @@ foreach ( $fields as $field ) {
 		if ( $value != '' ) {
 			$field->variation	=	'hidden';
 
-			JCckDevHelper::secureField( $field, $value );
+			if ( !$id ) {
+				JCckDevHelper::secureField( $field, $value );
+			}
 		} else {
 			$field->variation	=	'';
 		}

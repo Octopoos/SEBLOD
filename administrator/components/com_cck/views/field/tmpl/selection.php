@@ -210,10 +210,13 @@ $js		=	'
 						} else {
 							var v = parent.jQuery(elem2).val();
 						}
-						$(elem).myVal(v);
+						if (v != "") {
+							$(elem).myVal(v);
+						}
 					} else {
 						$("div.preview ul").attr("id", "'.$this->item->name.'");
-						$(elem+" input").val(parent.jQuery(elem2).val().split(","));
+						var v2 = parent.jQuery(elem2).val().split(",");
+						$(elem+" input").val(v2);
 					}
 					if (toggle=="1") {
 						$("div.toggle-selection").html(\'<a href="#" id="toggle_selection">Toggle</a>\');

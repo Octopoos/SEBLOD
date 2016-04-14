@@ -56,17 +56,10 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 	// _authorise
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
-		$app		=	JFactory::getApplication();
 		$action		=	$restriction->get( 'action', '' );
+		$author		=	$restriction->get( 'author', '' );
 		$location	=	$restriction->get( 'location', '' );
 		$type		=	$restriction->get('form', '');
-		
-		if ( $location ) {
-			if ( !$app->{'is'.$location}() ) {
-				$field->display	=	0;
-				return false;
-			}
-		}
 		
 		if ( $action ) {
 			if ( ( $action == 'add' && !$config['isNew'] )
@@ -75,9 +68,24 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 				return false;
 			}
 		}
+
+		if ( $author ) {
+			if ( ( $author  == '1' && $config['author'] != JFactory::getUser()->get( 'id' ) )
+			  || ( $author  == '-1' && $config['author'] == JFactory::getUser()->get( 'id' ) ) ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
 		
 		if ( $type ) {
 			if ( $type != $config['type'] ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
+
+		if ( $location ) {
+			if ( !JFactory::getApplication()->{'is'.$location}() ) {
 				$field->display	=	0;
 				return false;
 			}

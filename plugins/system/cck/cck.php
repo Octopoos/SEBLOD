@@ -112,8 +112,7 @@ class plgSystemCCK extends JPlugin
 						if ( $forced == true ) {
 							$tag	=	JFactory::getLanguage()->getDefault();
 						}
-						JFactory::getConfig()->set( 'language', $tag );
-						JFactory::getLanguage()->setLanguage( $tag );
+						$this->_setLanguage( $tag );
 					}
 				}
 			}
@@ -346,6 +345,8 @@ class plgSystemCCK extends JPlugin
 						}
 						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
 						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target, $class, $style ), 'notice' );
+					} elseif ( $view == 'manage' ) {
+						$doc->addStyleDeclaration( 'span[data-original-title="SEBLOD (App Builder & CCK)"]{font-weight:bold;}');
 					}
 					break;
 				case 'com_menus':
@@ -505,15 +506,21 @@ class plgSystemCCK extends JPlugin
 			}
 			
 			if ( $option == 'com_content' && $view == 'form' && $layout == 'edit' ) {
-				$itemId	=	$app->input->getInt( 'Itemid', 0 );
 				$aid	=	$app->input->getInt( 'a_id', 0 );
 				$return	=	$app->input->getBase64( 'return' );
 				if ( !$aid ) {
 					return;
 				}
-				$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
-				if ( !$type ) {
-					return;
+				$bridgeType	=	JCckDatabase::loadObject( 'SELECT cck, pk FROM #__cck_core WHERE storage_location IN ("joomla_user","joomla_user_group") AND pkb='.(int)$aid );
+				
+				if ( is_object( $bridgeType ) && $bridgeType->cck ) {
+					$type	=	$bridgeType->cck;
+					$aid	=	(int)$bridgeType->pk;
+				} else {
+					$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
+					if ( !$type ) {
+						return;
+					}
 				}
 				$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$aid.'&Itemid='.$itemId.'&return='.$return;
 				$app->redirect( $url );
@@ -633,7 +640,7 @@ class plgSystemCCK extends JPlugin
 						preg_match_all( $search, $buffer, $matches );
 						if ( count( $matches[1] ) ) {
 							$i		=	0;
-							$style	=	'height:14px; color:#ffffff; background-color:#0088CC; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
+							$style	=	'height:14px; color:#ffffff; background-color:#3b99fc; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
 							foreach ( $matches[1] as $match ) {
 								if ( isset( $list[$match] ) ) {
 									$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';
@@ -848,6 +855,19 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 	
+	// _setLanguage
+	protected function _setLanguage( $tag )
+	{
+		$app	=	JFactory::getApplication();
+		$lang	=	JLanguage::getInstance( $tag );
+		
+		$app->loadLanguage( $lang );
+		JFactory::$language = $app->getLanguage();
+
+		JFactory::getConfig()->set( 'language', $tag );
+		JFactory::getLanguage()->setLanguage( $tag );
+	}
+
 	// _setTemplateStyle
 	protected function _setTemplateStyle( $style )
 	{

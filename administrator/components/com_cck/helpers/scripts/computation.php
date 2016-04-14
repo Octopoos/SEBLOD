@@ -86,7 +86,6 @@ $js		=	'
 					}
     			}
 				$(document).ready(function() {
-					$("#titlebox").html("'.JText::_( 'COM_CCK_COMPUTATION_RULES' ).'");
 					var elem = "ffp_'.$this->item->name.'_computation";
 					var computation = parent.jQuery("#"+elem).val();
 					var n = computation.split(",").length;
@@ -198,8 +197,7 @@ $selectors	=	explode( ',', $this->item->title );
 ?>
 
 <?php
-echo '<div class="seblod"><div class="legend top center">'.$field->title.'</div></div>'
- .	 '<div class="seblod conditional">'
+echo '<div class="seblod conditional"><div class="legend top left">'.JText::_( 'COM_CCK_COMPUTATION_RULES' ).'</div>'
  .	 '<ul class="adminformlist adminformlist-2cols">'
  .	 '<li class="w100"><label>'.JText::_( 'COM_CCK_COMPUTATION' ).'</label>'
  .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'sum', 'selectlabel'=>'Select', 'required'=>'required', 'storage_field'=>'math',

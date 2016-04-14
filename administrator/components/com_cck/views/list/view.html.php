@@ -21,6 +21,13 @@ class CCKViewList extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app						=	JFactory::getApplication();
+		$layout						=	$app->input->get( 'tmpl' );
+		$uniqId						=	'';
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$uniqId					=	'_'.$layout;
+		}
+
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
@@ -28,8 +35,8 @@ class CCKViewList extends JViewLegacy
 		$preconfig['itemId']		=	0;
 		$preconfig['task']			=	$app->input->get( 'task', 'search' );
 		$preconfig['doPagination']	=	1;
-		$preconfig['formId']		=	'adminForm';
-		$preconfig['submit']		=	'JCck.Core.submit';
+		$preconfig['formId']		=	'seblod_form'.$uniqId;
+		$preconfig['submit']		=	'JCck.Core.submit'.$uniqId;
 		
 		JCck::loadjQuery();
 		$this->prepareDisplay( $preconfig );
@@ -60,7 +67,7 @@ class CCKViewList extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
-		$pagination					=	$this->getModel()->_getPagination( $total );
+		$pagination					=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
 		if ( !is_object( @$options ) ) {
@@ -82,6 +89,7 @@ class CCKViewList extends JViewLegacy
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form					=	&$form;
+		$this->form_id				=	$preconfig['formId'];
 		$this->items				=	&$items;
 		$this->pagination			=	&$pagination;
 		$this->params				=	&$params;

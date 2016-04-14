@@ -22,7 +22,7 @@ if ( is_object( $this->style ) ) {
             	<?php
                 if ( $this->item->client == 'list' ) {
 					echo JCckDev::renderForm( $cck['core_template'], $this->item->template, $config, array( 'selectlabel'=>( ( isset( $this->item->template ) && $this->item->template ) ? 'Disable List Template' : 'Enable List Template' ),
-						'options2'=>'{"query":"SELECT DISTINCT a.template AS value, CONCAT(b.title,\" - \",b.name) AS text FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.id AND b.mode=2 ORDER BY b.title"}' ) );
+						'options2'=>'{"query":"SELECT DISTINCT a.template AS value, CONCAT(b.title,\" - \",b.name) AS text FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.id AND b.published !=-44 AND b.mode=2 ORDER BY b.title"}' ) );
 				} else {
 					echo JCckDev::renderForm( $cck['core_template'], $this->item->template, $config );
 				}
