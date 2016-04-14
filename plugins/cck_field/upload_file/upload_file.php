@@ -434,10 +434,16 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$array_x	=	( isset( $inherit['array_x'] ) ) ? $inherit['array_x'] : 0;
 			$itemPath	=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_hidden'] : @$config['post'][$name.'_hidden'];
 			$deleteBox	=	( isset( $inherit['post'] ) ) ? @$inherit['post'][$name.'_delete'] : @$config['post'][$name.'_delete'];
+
 			if ( $options2['multivalue_mode'] ) {
 				$item_custom_dir	.=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_path'] : @$config['post'][$name.'_path'];
 				$item_custom_title	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_title'] 	: @$config['post'][$name.'_title'];
 			}
+
+			if ( isset( $field->error ) && $field->error === true ) {
+				$field->error = false;
+			}
+
 		} else {
 			$name		=	$field->name;
 			$xk			=	-1;
