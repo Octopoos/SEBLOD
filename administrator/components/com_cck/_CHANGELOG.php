@@ -73,6 +73,7 @@ $ -> Language fix or change
 + "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
 + $site->... syntaxes processes added on Freetext/Select Dynamic plug-ins.
++ Timeleft support added on Date Typography plug-in.
 
 + "#__cck_store_item_..." support added in JCckContent class.
 + js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
@@ -108,10 +109,12 @@ $ -> Language fix or change
 
 ^ AfterStore processing/events not executed anymore if an error is thrown while storing.
 ^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
+^ Document title can now be altered in BeforeRender event/process.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
 ^ Form/List titles, Page Heading forced to be hidden when tmpl=raw on Forms & Lists.
 ^ "Group X" refactored (cleaner JS, actions/buttons support added for Table mode).
 ^ jQuery Validation script updated for AJAX and Confirm validations.
+^ Mobile Detect updated to 2.8.20.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 	>> "Empty Columns" parameter added for the previous behaviour
@@ -139,6 +142,7 @@ $ -> Language fix or change
 # Missing Language file issue fixed on the Calendar Plug-in.
 # Missing Languages files (for Package Export) added.
 # Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
+# Native Joomla edit button/link fixed for bridge items.
 # Native Search behaviors fixed for Upload File/Image plug-ins.
 # Nested Lists (using "Items" view) issue fixed.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
