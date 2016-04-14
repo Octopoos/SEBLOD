@@ -506,15 +506,21 @@ class plgSystemCCK extends JPlugin
 			}
 			
 			if ( $option == 'com_content' && $view == 'form' && $layout == 'edit' ) {
-				$itemId	=	$app->input->getInt( 'Itemid', 0 );
 				$aid	=	$app->input->getInt( 'a_id', 0 );
 				$return	=	$app->input->getBase64( 'return' );
 				if ( !$aid ) {
 					return;
 				}
-				$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
-				if ( !$type ) {
-					return;
+				$bridgeType	=	JCckDatabase::loadObject( 'SELECT cck, pk FROM #__cck_core WHERE storage_location IN ("joomla_user","joomla_user_group") AND pkb='.(int)$aid );
+				
+				if ( is_object( $bridgeType ) && $bridgeType->cck ) {
+					$type	=	$bridgeType->cck;
+					$aid	=	(int)$bridgeType->pk;
+				} else {
+					$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
+					if ( !$type ) {
+						return;
+					}
 				}
 				$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$aid.'&Itemid='.$itemId.'&return='.$return;
 				$app->redirect( $url );

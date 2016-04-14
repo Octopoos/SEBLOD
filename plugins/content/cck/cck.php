@@ -241,7 +241,7 @@ class plgContentCCK extends JPlugin
 		$cck			=	JCckDatabase::loadObject( $query );
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
-		$article->id	=	(int)$cck->pk;
+		
 		if ( ! $contentType ) {
 			return;
 		}
@@ -446,7 +446,7 @@ class plgContentCCK extends JPlugin
 							   'isNew'=>0,
 							   'Itemid'=>$app->input->getInt( 'Itemid', 0 ),
 							   'location'=>$cck->storage_location,
-							   'pk'=>$article->id,
+							   'pk'=>$cck->pk,
 							   'pkb'=>$cck->pkb,
 							   'storages'=>array(),
 							   'store_id'=>(int)$cck->store_id,
@@ -521,7 +521,7 @@ class plgContentCCK extends JPlugin
 		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
  			$this->title	=	$fields[$p_title]->value;
  		}
- 		
+		
 		// Finalize
 		$doc->fields	=	&$fields;
 		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JURI::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
