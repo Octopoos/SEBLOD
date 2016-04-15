@@ -52,7 +52,7 @@ if ( $config['tmpl'] == 'ajax' ) {
 						location = $("#storage_table").val();	
 					}
 					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name=map&type=storage_field&id="+field;
-					$.fn.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
+					$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
 				});
 			'
 			;

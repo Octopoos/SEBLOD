@@ -29,7 +29,7 @@ if ( $elem ) {
 	$js	=	'
 			jQuery(document).ready(function($){
 				$("'.$elem.'").live("click", function(e) { e.preventDefault();
-					$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
+					$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
 					return false;
 				});
 			});
