@@ -27,6 +27,8 @@ UPDATE `#__cck_core_fields` SET `script` = REPLACE( `script`, 'JCck.Dev.', 'JCck
 
 UPDATE `#__cck_core_fields` SET `options` = REPLACE( `options`, 'file-add', 'file-add||file-check||file-minus||file-plus' ) WHERE `id` = 289;
 
+UPDATE `#__cck_core_fields` SET `options2` = REPLACE( `options2`, '$.fn.colorbox(', '$.colorbox(' ) WHERE `id` = 457;
+
 INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_cck`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
 (584, 'Icon File Plus', 'icon_file_plus', 3, 'icon', '', 1, 'Add', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'file-plus', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'icon_file_add', '', '', '', 0, '0000-00-00 00:00:00'),
 (585, 'Icon File Check', 'icon_file_check', 3, 'icon', '', 1, 'Select', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'file-check', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'icon_file_check', '', '', '', 0, '0000-00-00 00:00:00'),
