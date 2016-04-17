@@ -197,6 +197,7 @@
 		<field name="css_core" type="cck" construction="core_css_core" default="1" label="COM_CCK_CONFIG_STYLESHEETS" description="COM_CCK_CONFIG_STYLESHEETS_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
+		<field name="initial_version" type="hidden" default="" />
 		<field name="uix" type="hidden" default="" />
 		<field name="utf8_conversion" type="hidden" default="" />
 	</fieldset>
