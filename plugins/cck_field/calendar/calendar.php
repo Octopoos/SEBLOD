@@ -17,18 +17,14 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	protected static $friendly	=	1;
 	protected static $path;
 
-	protected $offset = null;
-	protected $userTimeZone = null;
+	protected $userTimeZone		=	null;
 
-	public function __construct(&$subject, $config = array())
+	// __construct
+	public function __construct( &$subject, $config = array() )
 	{
-		// Get some system objects.
-		$jconfig = JFactory::getConfig();
-		$juser = JFactory::getUser();
+		$this->userTimeZone	=	new DateTimeZone( JFactory::getUser()->getParam( 'timezone', JFactory::getConfig()->get( 'offset' ) ) );
 
-		$this->userTimeZone = new DateTimeZone( $juser->getParam('timezone', $jconfig->get('offset')) );
-
-		parent::__construct($subject, $config);
+		parent::__construct( $subject, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
@@ -58,17 +54,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$field->value	=	'';
 			$field->text	=	'';
 		} else {
-			
-			$date = JFactory::getDate($value, 'UTC');
-			$date->setTimezone($this->userTimeZone);
+			$date			=	JFactory::getDate( $value, 'UTC' );
+			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
-			$value = $date->format('Y-m-d H:i:s', true, true);
+			$value			=	$date->format( 'Y-m-d H:i:s', true, true );
 			$field->value	=	$value;
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
 			$value			=	( trim( $value ) == '' ) ? '' : ( ( $options2['storage_format'] == '0' ) ? strtotime ( $value ) : $value );		
-			$field->text	=	( $value == '' ) ? '' : $date->format(@$options2['format'], true, true);
+			$field->text	=	( $value == '' ) ? '' : $date->format( @$options2['format'], true, true );
 		}
 		$field->typo_target	=	'text';
 	}
@@ -98,16 +93,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value		=	'';
 			$storedDate	=	'';
 		} else {
-			$date = JFactory::getDate($value, 'UTC');
-			$date->setTimezone($this->userTimeZone);
+			$date		=	JFactory::getDate( $value, 'UTC' );
+			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
-			$value = $date->format('Y-m-d H:i:s', true, true);
+			$value		=	$date->format( 'Y-m-d H:i:s', true, true );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$value	=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
-			$Jdate	=	date( 'Y-m-d H:i:s',  $value  );
+			$value		=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
+			$Jdate		=	date( 'Y-m-d H:i:s',  $value  );
 			$storedDate	=	date( 'Ymd', $value );
-			$value	=	$date->format(@$options2['format'], true, true);
+			$value		=	$date->format( @$options2['format'], true, true );
 		}
 		$default_hour	=	@$options2['default_hour'];
 		$default_min	=	@$options2['default_min'];
@@ -197,17 +192,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value		=	'';
 			$storedDate	=	'';
 		} else {
-
-			$date = JFactory::getDate($value, 'UTC');
-			$date->setTimezone($this->userTimeZone);
+			$date		=	JFactory::getDate( $value, 'UTC' );
+			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
-			$value = $date->format('Y-m-d H:i:s', true, true);
+			$value		=	$date->format( 'Y-m-d H:i:s', true, true );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$value	=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
-			$Jdate	=	date( 'Y-m-d H:i:s',  $value  );
+			$value		=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
+			$Jdate		=	date( 'Y-m-d H:i:s',  $value  );
 			$storedDate	=	date( 'Ymd', $value );
-			$value	=	$date->format(@$options2['format'], true, true);
+			$value		=	$date->format( @$options2['format'], true, true );
 		}
 		$default_hour	=	@$options2['default_hour'];
 		$default_min	=	@$options2['default_min'];
@@ -285,19 +279,14 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( is_array( $value ) ) {
 			$value	=	trim( $value[$xk] );
 		}
-
-		if((trim($value) != '0000-00-00 00:00:00') && (intval($value) > 0)){
-
-					// Return an SQL formatted datetime string in UTC.
-					$date = JFactory::getDate($value, $this->userTimeZone);
-					$value = $date->toSql();
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) ) {
+			// Return an SQL formatted datetime string in UTC.
+			$date	=	JFactory::getDate( $value, $this->userTimeZone );
+			$value	=	$date->toSql();
 		}
-
-		
-
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-		$value	=	( $options2['storage_format'] == '0' ) ? $value : strtotime( $value );
+		$value		=	( $options2['storage_format'] == '0' ) ? $value : strtotime( $value );
     		
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
@@ -502,3 +491,4 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		return self::$friendly;
 	}
 }
+?>
