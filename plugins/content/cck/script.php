@@ -181,15 +181,63 @@ class plgContentCCKInstallerScript
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_blog" ORDER BY id';
 			$db->setQuery( $query );
 			$style2	=	$db->loadResult();
-			//
+			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_table" ORDER BY id';
+			$db->setQuery( $query );
+			$style3	=	$db->loadResult();
+			
+			// - Content Types
 			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style.', template_site = '.$style.', template_content = '.$style.', template_intro = '.$style;
 			$db->setQuery( $query );
 			$db->execute();
-			//
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.', template_list = '.$style2.', template_item = '.$style;
+			
+			// - Search Types (Blog)
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.', template_list = '.$style2.', template_item = '.$style.' WHERE id IN (1,5,8)';
+			$db->setQuery( $query );
+			$db->execute();
+
+			// - Search Types (Table)
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.' WHERE id IN (11,15,18)';
 			$db->setQuery( $query );
 			$db->execute();
 			
+			$searchs	=	array(
+								'11'=>array(
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+									  ),
+								'15'=>array(
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+									  ),
+								'18'=>array(
+										'list'=>(int)$style3
+									  )
+							);
+
+			if ( count( $searchs ) ) {
+				foreach ( $searchs as $k=>$v ) {
+					$s	=	0;
+
+					if ( is_array( $v ) ) {
+						if ( is_array( $v['list'] ) ) {
+							$query	=	'INSERT INTO #__template_styles (template, client_id, home, title, params) VALUES ("'.$v['list'][0].'",'.$v['list'][1].',"'.$v['list'][2].'","'.$v['list'][3].'","'.$db->escape( $v['list'][4] ).'")';
+							$db->setQuery( $query );
+							if ( $db->execute() ) {
+								$query	=	'SELECT MAX(id) FROM #__template_styles';
+								$db->setQuery( $query );
+								$s		=	$db->loadResult();
+							}
+						} elseif ( $v['list'] ) {
+							$s	=	$v['list'];
+						}
+
+						if ( $s ) {
+							$query	=	'UPDATE #__cck_core_searchs SET template_list = '.$s.' WHERE id = '.(int)$k;
+							$db->setQuery( $query );
+							$db->execute();
+						}
+					}
+				}
+			}
+
 			// Add Categories
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
@@ -228,6 +276,10 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
 			
+			// Init Default Variations
+			$params->set( 'site_variation', 'seb_css3b' );
+			$params->set( 'site_variation_form', 'seb_css3b' );
+
 			// Init ACL
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_folders ORDER BY lft' );
@@ -244,8 +296,13 @@ class plgContentCCKInstallerScript
 				Helper_Admin::initACL( array( 'table'=>'type', 'name'=>'form', 'rules'=>$rules ), $pks, $rules2 );
 			}
 
+			// Set Initial Version
+			$params->set( 'initial_version', $app->cck_core_version );
+			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+			$db->execute();
+
 			// Set Utf8mb4 flag
-			self::_setUtf8mb4();
+			self::_setUtf8mb4( $params );
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
@@ -690,11 +747,10 @@ class plgContentCCKInstallerScript
 	}
 
 	// _setUtf8mb4
-	protected function _setUtf8mb4()
+	protected function _setUtf8mb4( $params )
 	{
 		$db			=	JFactory::getDbo();
 		$name		=	$db->getName();
-		$params		=	JComponentHelper::getParams( 'com_cck' );
 		$status		=	(int)$params->get( 'utf8_conversion', '' );
 		$utf8mb4	=	false;
 
