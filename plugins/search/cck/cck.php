@@ -178,6 +178,13 @@ class plgSearchCCK extends JPlugin
 					$sql	=	'';
 					array_pop( $where2 );
 					if ( isset( $field->children[$value] ) ) {
+						if ( isset( $field->children[$value]->prepend ) ) {
+							if ( is_object( $field->children[$value]->prepend ) ) {
+								if ( !isset( $fields_order[$field->children[$value]->prepend->name] )  ) {
+									$fields_order[$field->children[$value]->prepend->name]	=	$field->children[$value]->prepend;
+								}
+							}
+						}
 						if ( !isset( $fields_order[$field->children[$value]->name] )  ) {
 							$fields_order[$field->children[$value]->name]	=	$field->children[$value];
 						}
