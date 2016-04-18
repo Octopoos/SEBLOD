@@ -124,10 +124,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 				if ( $config['doTranslation'] ) {
 					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 				}
-				$opt	=	'<option value="'.( ( $field->storage_field == 'parent_id' ) ? 1 : '' ).'">'.'- '.$field->selectlabel.' -'.'</option>';
-			}
-			if ( $config['client'] == 'search' ) {
-				$opt	.=	'<option value="">'.'- '.JText::_( 'COM_CCK_ALL_CATEGORIES' ).' -'.'</option>';
+				$opt	=	'<option value="'.( ( $field->storage_field == 'parent_id' && $config['client'] != 'search' ) ? 1 : '' ).'">'.'- '.$field->selectlabel.' -'.'</option>';
 			}
 			$multiple	=	( $field->bool3 == 1 ) ? 'multiple="multiple"' : '';
 			$size		=	( $field->rows ) ? $field->rows : 1;
