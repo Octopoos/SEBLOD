@@ -30,6 +30,7 @@ $ -> Language fix or change
 
 + "Button Free", "Search Generic", "Search Ordering" Field Plug-ins added. (included in Core for Free now, yeah!)
 + "Joomla! JGrid" Typography Plug-in added.
++ "URL Variable" Restriction Plug-in added.
 
 + "Count" (Auto / Estimate) parameter added on Search Types.
 + "Load" behaviour added to Infinite Pagination on Search Types.
@@ -108,6 +109,7 @@ $ -> Language fix or change
 ! Various images added for all supported Object plug-ins.
 
 ^ AfterStore processing/events not executed anymore if an error is thrown while storing.
+^ Colorbox updated to 1.6.3.
 ^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
 ^ Document title can now be altered in BeforeRender event/process.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
