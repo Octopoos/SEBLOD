@@ -114,7 +114,7 @@ $ -> Language fix or change
 ^ Form/List titles, Page Heading forced to be hidden when tmpl=raw on Forms & Lists.
 ^ "Group X" refactored (cleaner JS, actions/buttons support added for Table mode).
 ^ jQuery Validation script updated for AJAX and Confirm validations.
-^ Mobile Detect updated to 2.8.20.
+^ Mobile Detect updated to 2.8.21.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 	>> "Empty Columns" parameter added for the previous behaviour
