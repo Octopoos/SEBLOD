@@ -125,7 +125,7 @@ $js		=	'
 			';
 JHtml::_( 'behavior.framework' );
 $doc->addScriptDeclaration( $js );
-$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.'.$client.'.css' );
+$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$client.'.css' );
 ?>
 
 <form method="post" id="adminForm" name="adminForm">

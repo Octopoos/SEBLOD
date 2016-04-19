@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 $dir	=	( $alignment ) ? 'pull-'.$alignment : ( ( $doc->direction == 'rtl' ) ? 'pull-right' : '' );
 $class	=	( $enabled ) ? 'nav '.$dir : 'nav disabled '.$dir;
 
-require JModuleHelper::getLayoutPath('mod_cck_menu', $enabled ? 'default_enabled' : 'default_disabled');
+require JModuleHelper::getLayoutPath( 'mod_cck_menu', $enabled ? 'default_enabled' : 'default_disabled' );
 
 $menu->renderMenu( 'menu'.$module->id, $class );
+?>

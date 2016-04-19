@@ -154,8 +154,8 @@ class CommonHelper_Include
 			$options	=	'{}';
 		}
 		
-		$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
-		$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.8.0.min.js' );
+		$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.validation-3.6.0.css' );
+		$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.8.0.min.js' );
 		
 		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		$doc->addScriptDeclaration( $js );

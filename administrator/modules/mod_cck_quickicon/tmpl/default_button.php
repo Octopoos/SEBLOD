@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 ?>
-
 <div class="wrapper-icon">
 	<div class="icon">
 		<a href="<?php echo $button['link']; ?>" target="<?php echo $button['target']; ?>">

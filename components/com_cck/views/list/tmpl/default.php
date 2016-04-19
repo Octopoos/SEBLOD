@@ -30,7 +30,7 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 		.				'return false;'
 		.			'}'
 		.		'}'
-		.		'jQuery("#'.$this->form_id.'").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JFactory::getURI() ).'">\');'
+		.		'jQuery("#'.$this->form_id.'").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">\');'
 		.		'JCck.Core.submitForm(task,document.getElementById(\''.$this->form_id.'\'));'
 		.	'};'
 		.	'';

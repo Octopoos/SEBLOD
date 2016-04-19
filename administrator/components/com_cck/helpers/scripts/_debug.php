@@ -22,7 +22,7 @@ $profiler	=	new JProfiler();
 $js			=	'';
 $js2		=	'';
 $js_script	=	'';
-$js_script	=	JURI::root( true ).$js_script;
+$js_script	=	JUri::root( true ).$js_script;
 echo '<br /><div style="color: #999999; font-size: 10px; font-weight: bold;">-------- Debug --------<br />';
 // -------- -------- -------- -------- -------- -------- -------- -------- //
 

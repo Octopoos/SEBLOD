@@ -43,7 +43,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
-		$uri			=	(string)JFactory::getUri();
+		$uri			=	JUri::getInstance()->toString();
 
 		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
 			$return		=	$app->input->get( 'return' );

@@ -96,8 +96,8 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
-			$host			=	JURI::getInstance()->getHost();
-			$path			=	JURI::getInstance()->getPath();
+			$host			=	JUri::getInstance()->getHost();
+			$path			=	JUri::getInstance()->getPath();
 			$host2			=	'';
 			if ( $path ) {
 				$path	=	substr( $path, 1 );
@@ -257,7 +257,7 @@ abstract class JCck
 				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
 				$version	=	new JCckEcommerceVersion;
 			}
-			$doc->addScript( JURI::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.js' );
 		}
 		
 		$loaded[$key]	=	true;
@@ -273,34 +273,34 @@ abstract class JCck
 			JHtml::_( 'bootstrap.framework' );
 		} else {
 			if ( !( isset( $app->cck_jquery ) && $app->cck_jquery === true ) ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery/js/jquery-1.8.3.min.js' );
+				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-1.8.3.min.js' );
 				$app->cck_jquery	=	true;
 			}
 			if ( $noconflict === true && !( isset( $app->cck_jquery_noconflict ) && $app->cck_jquery_noconflict === true ) ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery/js/jquery-noconflict.js' );
+				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-noconflict.js' );
 				$app->cck_jquery_noconflict	=	true;
 			}
 		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JURI::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
-				$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
+				$doc->addScript( JUri::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
+				$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					foreach ( $dev as $v ) {
-						echo '<script src="'.JURI::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+						echo '<script src="'.JUri::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
 					}
 				} else {			
 					foreach ( $dev as $v ) {
-						$doc->addScript( JURI::root( true ).'/media/cck/js/'.$v );
+						$doc->addScript( JUri::root( true ).'/media/cck/js/'.$v );
 					}
 				}
 				$app->cck_jquery_dev	=	true;
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.core-3.7.1.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.7.1.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}
@@ -312,7 +312,7 @@ abstract class JCck
 		$app	=	JFactory::getApplication();
 		if ( !( isset( $app->cck_jquery_ui ) && $app->cck_jquery_ui === true ) ) {
 			$doc	=	JFactory::getDocument();
-			$doc->addScript( JURI::root( true ).'/media/cck/js/jquery.ui.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.min.js' );
 			$app->cck_jquery_ui	=	true;
 		}
 	}
@@ -324,8 +324,8 @@ abstract class JCck
 		if ( !( isset( $app->cck_modal_box ) && $app->cck_modal_box === true ) ) {
 			$style	=	$app->isAdmin() ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
 			$doc	=	JFactory::getDocument();
-			$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
-			$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
+			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			$app->cck_modal_box	=	true;
 		}
 	}

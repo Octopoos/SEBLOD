@@ -51,7 +51,6 @@ $class	=	'cck-pos-'.$position.' '.$variation.' '.$orientation;
 $cck->addCSS( $css );
 $cck->setHeight( $height, $id );
 ?>
-
 <div id="<?php echo $id; ?>" class="<?php echo $class .' '. $cck->id.'-deepest'; ?>">
 	<?php if ( $legend != '' ) { ?>
 	    <div class="legend top <?php echo $options->get( 'legend_align', 'left' ); ?>"><?php echo JText::_( $legend ); ?></div>

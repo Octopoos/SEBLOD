@@ -16,9 +16,7 @@ $config		=	JCckDev::init( array(), true );
 $isImage	=	( JFile::getExt( $this->file ) == 'png' || JFile::getExt( $this->file ) == 'jpg' ) ? 1 : 0;
 $doc		=	JFactory::getDocument();
 ?>
-
 <form action="<?php echo JRoute::_( 'index.php' ) ?>" method="post" id="adminForm" name="adminForm">
-
 <div id="toolbarBox" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
     <div style="float: left; padding-right: 8px;" id="messageBox"></div>
     <?php if ( JCck::on() ) { ?>
@@ -47,7 +45,6 @@ $doc		=	JFactory::getDocument();
         <?php } ?>
     <?php } ?>
 </div>
-
 <div class="width-100 bg-dark fltlft">
     <div id="layout" style="text-align: center; margin-top: 10px">
 		<?php
@@ -64,9 +61,7 @@ $doc		=	JFactory::getDocument();
         ?>
     </div>
 </div>
-
 <div class="clr"></div>
-
 <?php
 if ( $this->doValidation == 1 ) {
 	JCckDev::validate( $config );

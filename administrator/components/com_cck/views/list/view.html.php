@@ -127,7 +127,7 @@ class CCKViewList extends JViewLegacy
 				$creation	=	false;
 			}
 			if ( $canCreate && $creation ) {
-				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( JFactory::getURI() );
+				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( JUri::getInstance()->toString() );
 				$bar->prependButton( 'CckLink', 'new', JText::_( 'JTOOLBAR_NEW' ), $link, '_self' );
 			}
 		}

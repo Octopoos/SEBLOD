@@ -88,7 +88,7 @@ if ( $go_for_item || $go_for_both ) {
 	
 	include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list_items.php';
 	
-	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>JURI::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
+	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>JUri::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
 	$doc->i_infos			=	$infos;
 	$doc->i_params			=	$rparamsI;
 	$doc->i_positions		=	$positions;
@@ -108,7 +108,7 @@ if ( $go_for_item || $go_for_both ) {
 }
 
 // Finalize
-$infos			=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+$infos			=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'content', $search->name, 'list', $positions, $positions_p, $infos );
 $data			=	$doc->render( false, $rparams );
 ?>

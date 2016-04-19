@@ -307,9 +307,9 @@ class CCK_Item
 			}
 			if ( $css == 1 || $css == 2 ) {
 				if ( $this->isFile( $this->path.'/css/list.css' ) ) {
-					JFactory::getDocument()->addStyleSheet( JURI::root( true ).'/templates/'.$this->name.'/css/list.css' );
+					JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/templates/'.$this->name.'/css/list.css' );
 				} else {
-					JFactory::getDocument()->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.list.css' );
+					JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.list.css' );
 				}
 			}
 			$cache[$this->type]	=	'';

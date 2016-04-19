@@ -388,14 +388,14 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$head 	.=	( $buttons ) ? '<th></th>' : '';
 						$head	.=	'</tr>';
 					}
-					$html	.=	self::_formTABLE( $field, $field->form[$i], $i, $count, $buttons, $config );
+					$html	.=	self::_getHtmlTable( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
 				$head		=	'<thead>'.$head.'</thead>';
 				$html		=	'<tbody id="cck1_sortable_'.$field->name.'" >'.$html.'</tbody>';
 				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="table'.$css.'">'.$head.$html.$foot.'</table>';
 
 				if ( $field->bool2 ) {
-					$empty		=	self::_formTABLE( $field, @$field->form[$i], 0, 0, $buttons, $config );
+					$empty		=	self::_getHtmlTable( $field, @$field->form[$i], 0, 0, $buttons, $config );
 				}
 
 			} else {
@@ -403,11 +403,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				$width		=	'';			
 				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.$css.' '.$width.'">';
 				for ( $i = 0; $i < $count; $i++ ) {
-					$html	.=	self::_formHTML( $field, $field->form[$i], $i, $count, $buttons, $config );
+					$html	.=	self::_getHtml( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
 				$html		.=	'</div>';
 				if ( $field->bool2 ) {
-					$empty		=	self::_formHTML( $field, @$field->form[$i], 0, 0, $buttons, $config );
+					$empty		=	self::_getHtml( $field, @$field->form[$i], 0, 0, $buttons, $config );
 				}
 			}
 		}
@@ -488,8 +488,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 	}
 
-	// _formTABLE
-	protected static function _formTABLE( $field, $group, $i, $size_group, $buttons, &$config )
+	// _getHtmlTable
+	protected static function _getHtmlTable( $field, $group, $i, $size_group, $buttons, &$config )
 	{
 		$client				=	'cck_'.$config['client'];
 		$html_div_buttons	=	'';
@@ -609,8 +609,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		return $html;
 	}
 
-	// _formHTML
-	protected static function _formHTML( $field, $group, $i, $size_group, $buttons, &$config )
+	// _getHtml
+	protected static function _getHtml( $field, $group, $i, $size_group, $buttons, &$config )
 	{
 		$client				=	'cck_'.$config['client'];
 		$html_div_buttons	=	'';

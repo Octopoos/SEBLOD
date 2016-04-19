@@ -69,7 +69,7 @@ class modCCKBreadCrumbsHelper
 				}
 			}
 		} elseif ( $pathway_mode == 1 ) {
-			$base		=	JFactory::getConfig()->get( 'sef_rewrite' ) ? JURI::base( true ).'/' : JURI::base( true ).'/index.php/';
+			$base		=	JFactory::getConfig()->get( 'sef_rewrite' ) ? JUri::base( true ).'/' : JUri::base( true ).'/index.php/';
 			$pathway	=	$app->getPathway();
 			$items		=	$pathway->getPathWay();
 			$count 		=	count( $items );

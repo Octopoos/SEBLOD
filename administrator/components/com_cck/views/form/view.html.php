@@ -33,7 +33,7 @@ class CCKViewForm extends JViewLegacy
 			$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 			$preconfig['task']		=	$app->input->get( 'task', '' );
 			$preconfig['type']		=	$app->input->get( 'type', '' );
-			$preconfig['url']		=	JFactory::getURI()->toString();
+			$preconfig['url']		=	JUri::getInstance()->toString();
 			
 			JCck::loadjQuery();
 			Helper_Include::addStyleSheets( false );

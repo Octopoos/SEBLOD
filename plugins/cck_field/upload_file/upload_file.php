@@ -329,10 +329,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$more	=	'';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
 			if ( isset( $config['id'] ) && $config['id'] ) {
-				$link	=	JURI::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
+				$link	=	JUri::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
 				$target	=	'';
 			} else {
-				$link	=	JURI::root().$value2;
+				$link	=	JUri::root().$value2;
 				$target	=	'target="_blank"';
 			}
 			$title	=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
@@ -340,7 +340,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$label		=	'';
 				$preview	=	'<span class="cck_preview">'.$title.'</span>';
 			} else if ( $options2['preview'] == 1 ) {
-				$preview	=	'<a href="'.$link.'"'.$target.' title="'.$value['file_title'].'"><img src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
+				$preview	=	'<a href="'.$link.'"'.$target.' title="'.$value['file_title'].'"><img src="'.JUri::root().'media/cck/images/16/icon-16-preview.png" alt="" title=""/></a>';
 			} else {
 				$preview	=	'<a class="cck_preview" href="'.$link.'"'.$target.' title="'.$value['file_title'].'">'.$title.'</a>';
 			}

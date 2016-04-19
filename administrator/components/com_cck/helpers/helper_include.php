@@ -167,8 +167,8 @@ class Helper_Include extends CommonHelper_Include
 		$doc	=	JFactory::getDocument();
 		
 		if ( $script === true ) {
-			$doc->addStyleSheet( JURI::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
-			$doc->addScript( JURI::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
+			$doc->addStyleSheet( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
+			$doc->addScript( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
 		}
 	}
 	

@@ -26,7 +26,6 @@ $class	=	$variation.' '.$orientation;
 $cck->addCSS( '/* Variation: '.$variation.' on '.$id.' */' ."\n" . $css  );
 $cck->setHeight( $height, $id, $cck->id.'-deepest' );
 ?>
-
 <fieldset id="<?php echo $id; ?>" class="adminform <?php echo $class; ?>">    
 	<?php if ( $legend != '' ) { ?>
 	    <legend><?php echo JText::_( $legend ); ?></legend>

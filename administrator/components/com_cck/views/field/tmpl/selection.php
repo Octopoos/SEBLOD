@@ -228,7 +228,7 @@ $js		=	'
 			})(jQuery);
 			';
 Helper_Include::addDependencies( 'box', 'edit' );
-$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.admin.css' );
+$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
 $doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}table.DynarchCalendar-topCont{top:0px!important;left:16px!important;}' );
 $doc->addScriptDeclaration( $js );
 ?>

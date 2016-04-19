@@ -258,10 +258,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 		if ( $count ) {
 			$html	.=	'<div id="sortable_'.$field->name.'" class="adminformlist">';
 			for ( $i = 0; $i < $count - 1; $i++ ) {
-				$html	.=	self::_formHTML( $field, $field->form[$i], $i );
+				$html	.=	self::_getHtml( $field, $field->form[$i], $i );
 			}
 			$html	.=	'</div>';
-			$empty	=	self::_formHTML( $field, $field->form[$i], 0 );
+			$empty	=	self::_getHtml( $field, $field->form[$i], 0 );
 		}
 		self::_addScripts( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
 												'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty ), $config );
@@ -365,8 +365,8 @@ class plgCCK_FieldField_X extends JCckPluginField
 		}
 	}
 
-	// _formHTML
-	protected static function _formHTML( $field, $elem, $i )
+	// _getHtml
+	protected static function _getHtml( $field, $elem, $i )
 	{
 		$html	=	'<div>';
 		$html	.=	'<div id="collection-group-wrap-'.$field->name.'__'.$i.'" class="collection-group-wrap">';

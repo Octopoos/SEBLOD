@@ -80,7 +80,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				foreach ( $matches[1] as $k=>$v ) {
 					$variable	=	$matches[2][$k];
 					if ( $v == 'Current' ) {
-						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
+						$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
 						$html		=	str_replace( $matches[0][$k], $request, $html );						
 					} else {
 						$request	=	'get'.$v;
