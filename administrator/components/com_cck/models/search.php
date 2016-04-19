@@ -212,6 +212,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			$item->params				=	'{}';
 			$item->type					=	'component';
 			
+			$item->access				=	$data['access'];
 			$item->client_id			=	0;
 			$item->home					=	0;
 			$item->language				=	'*';
