@@ -214,7 +214,7 @@ class Helper_Workshop
 		if ( ! isset( $item->id ) ) {
 			$fields	=	array();
 			if ( $featured != '' ) {
-				$where	=	'WHERE '.$featured.' AND a.storage != "dev" AND ( a.storage_table NOT LIKE "#__cck_store_form_%" )';
+				$where	=	'WHERE '.$featured.' AND a.type != "" AND a.storage != "dev" AND ( a.storage_table NOT LIKE "#__cck_store_form_%" )';
 				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
 				if ( count( $fields ) ) {
 					$list	=	array();
