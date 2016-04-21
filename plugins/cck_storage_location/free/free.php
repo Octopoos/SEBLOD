@@ -179,6 +179,9 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( !is_object( $item ) ) {
 			return false;
 		}
+		if ( !$item->storage_table ) {
+			return false;
+		}
 		$table		=	JCckTable::getInstance( $item->storage_table, 'id' );
 		$table->load( $pk );
 		
