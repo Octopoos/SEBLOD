@@ -44,6 +44,11 @@ class CckRouter extends JComponentRouterBase
 			return $segments;
 		}
 		
+		// Prevent..		
+		if ( $view == 'box' ) {
+			return $segments;
+		}
+
 		// SEBLOD => Form
 		if ( $view == 'form' ) {
 			$segments[]	=	'form';
