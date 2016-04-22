@@ -45,8 +45,8 @@ $doc		=	JFactory::getDocument();
         <?php } ?>
     <?php } ?>
 </div>
-<div class="width-100 bg-dark fltlft">
-    <div id="layout" style="text-align: center; margin-top: 10px">
+<div>
+    <div id="layout" style="text-align: center; margin-top: 10px; float: left;">
 		<?php
 		if ( $this->function ) {
 			$this->onceFile( 'require', $config );
