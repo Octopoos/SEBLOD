@@ -22,12 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.0 Upgrade Release [xx-Apr-2016] -------------
+-------------------- 3.8.0 Upgrade Release [26-Apr-2016] -------------
 
 ! Memory & Performance optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
 
++ "Article Manager", "Category Manager", "User Manager" included in install.sql
 + "Button Free", "Search Generic", "Search Ordering" Field Plug-ins added. (included in Core for Free now, yeah!)
 + "Joomla! JGrid" Typography Plug-in added.
 + "URL Variable" Restriction Plug-in added.
@@ -56,6 +57,7 @@ $ -> Language fix or change
 + "URL" mode added to "Menu Item Target" on Search module.
 + "Validation" parameters added on Search Types.
 
++ Additionnal "Order By" can be prepended in Search Ordering Field plug-in.
 + "Alternative Format", "Unit", "Time Zone" parameters added on Date Typography plug-in.
 + "Author" condition added on Workflow Restriction plug-in.
 + "Auto" Tmpl parameter added on Content, "SEBLOD Form", "SEBLOD List" Link plug-ins.
@@ -133,6 +135,7 @@ $ -> Language fix or change
 # < p > removed from Freetexts field in install.sql
 # Empty message issue fixed after (submitting a Form).
 # Execution time issue fixed for Bridge creation (when there are a lot of articles in category)
+# Fields (id >= 533 AND id < 5000) patched for some websites (InnoDB issue).
 # Filtering (form App Folder) issue fixed on back-end.
 # Hardcoded condition (preventing required/validation) removed on Password field.
 # HTML output improved on "Group" and "Group X" (Form views) Field plug-ins (markup=none or restrictions).
@@ -157,6 +160,7 @@ $ -> Language fix or change
 # Sub-menu item issue fixed in App Export/Import.
 # Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
 # Syntax (replacement) issues fixed on "Email" plug-in.
+# Time Zone issues fixed in Calendar Field plug-in.
 # Time Zone now applied automatically by "Date" Typo plug-in.
 # Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
 # User's groups (erased after user profile edition on front-end) issue fixed. Good catch Lionel ! ;)
