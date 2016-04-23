@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS `#__cck_core` (
 
 
 CREATE TABLE IF NOT EXISTS `#__cck_core_downloads` (
-  `id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
   `field` varchar(50) NOT NULL,
   `collection` varchar(50) NOT NULL,
   `x` int(11) NOT NULL,
-  `hits` int(11) NOT NULL,
+  `hits` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`,`field`,`collection`,`x`),
   KEY `idx_contentid` (`id`),
   KEY `idx_item` (`field`)

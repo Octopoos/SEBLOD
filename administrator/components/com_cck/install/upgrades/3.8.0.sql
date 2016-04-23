@@ -74,3 +74,5 @@ ALTER TABLE `#__cck_core_search_field` CHANGE `fieldid` `fieldid` INT(10) UNSIGN
 ALTER TABLE `#__cck_core_search_field` CHANGE `access` `access` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'search,list,item';
 ALTER TABLE `#__cck_core_type_field` CHANGE `fieldid` `fieldid` INT(10) UNSIGNED NOT NULL;
 ALTER TABLE `#__cck_core_type_field` CHANGE `access` `access` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'admin,site,intro,content';
+ALTER TABLE `#__cck_core_downloads` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `#__cck_core_downloads` CHANGE `hits` `hits` INT(10) UNSIGNED NOT NULL;
