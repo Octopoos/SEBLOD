@@ -97,7 +97,7 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 			$form	=	JForm::getInstance( $id, $xml );
 			$form->setValue( 'asset_id', null, $value );
 			$form	=	$form->getInput( $name );
-			$form	=	str_replace( '<select name="'.$name.'[', '<select class="inputbox" name="'.$name.'[', $form );
+			$form	=	str_replace( 'onchange="sendPermissions.call(this, event)"', '', $form );
 		} else {
 			// Modal Box
 			$app			=	JFactory::getApplication();
