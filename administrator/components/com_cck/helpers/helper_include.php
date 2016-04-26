@@ -93,9 +93,7 @@ class Helper_Include extends CommonHelper_Include
 					Helper_Include::addColorbox( '850', '585', $script, 'cbox', ', scrolling:false, onLoad: function(){ $("#cboxClose").remove();}' );
 				} elseif ( $view == 'types' || $view == 'searchs' ) {
 					Helper_Include::addColorbox( '850', '430', true, 'cbox_button', ', scrolling:false' );
-				} elseif ( $view == 'variations' ) {
-					JHtml::_( 'behavior.framework', false );
-				} 
+				}
 				if ( $view == 'searchs' || $view == 'sites' ) {
 					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );

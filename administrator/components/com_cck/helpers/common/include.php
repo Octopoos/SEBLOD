@@ -21,7 +21,7 @@ class CommonHelper_Include
 		
 		if ( $script !== false ) {
 			if ( JCck::on() ) {
-				JHtml::_( 'behavior.framework', false );
+				JHtml::_( 'bootstrap.framework' );
 				JHtml::_( 'bootstrap.tooltip' );
 			}
 			JCck::loadjQuery( true, true, true );
