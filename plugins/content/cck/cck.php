@@ -176,7 +176,7 @@ class plgContentCCK extends JPlugin
 						.	' LEFT JOIN #__template_styles AS c ON c.id = b.template_content'
 						.	' LEFT JOIN #__template_styles AS d ON d.id = b.template_intro'
 						.	$join
-						.	' WHERE a.id = "'.(string)$matches[1].'"'
+						.	' WHERE a.id = "'.JCckDatabase::escape((string)$matches[1]).'"'
 						;
 		$cck			=	JCckDatabase::loadObject( $query );
 		$contentType	=	(string)$cck->cck;
