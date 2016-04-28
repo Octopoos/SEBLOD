@@ -276,10 +276,11 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
 			
-			// Init Default Variations
+			// Init Default Config
 			$params->set( 'site_variation', 'seb_css3b' );
 			$params->set( 'site_variation_form', 'seb_css3b' );
-
+			$params->set( 'optimize_memory', '1' );
+			
 			// Init ACL
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_folders ORDER BY lft' );
