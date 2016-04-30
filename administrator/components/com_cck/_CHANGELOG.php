@@ -22,7 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.0 Upgrade Release [26-Apr-2016] -------------
+-------------------- 3.8.0 Upgrade Release [30-Apr-2016] -------------
+
+* Security Release:
+  >> Text Filter Settings (Configuration) applied on Textarea, Wysiwyg Editor.
+  >> Variables (that were not protected) now escaped/secured.
 
 ! Memory & Performance optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
