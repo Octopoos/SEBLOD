@@ -234,7 +234,7 @@ if ( $context != '' ) {
 	}
 }
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
-	$menu				=	$app->getMenu()->getItem( $app->input->get( 'Itemid' ) );
+	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
 	if ( is_object( $menu ) && isset( $menu->params ) ) {
 		$preconfig['limit']		=	$menu->params->get( 'limit' );
@@ -443,8 +443,7 @@ if ( $preconfig['task'] == 'search' ) {
 							$return		=	'&'.$preconfig['auto_redirect_vars'].'='.$return;
 						}
 					}
-					$uri			=	$_SERVER["HTTP_REFERER"];
-					$return			.=	'&return='.base64_encode( $uri );
+					$return			.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
 					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return );
 					$app->redirect( $redirect_url );
 					return;
@@ -488,8 +487,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( $no_action ) {
 				if ( $no_action == 'auto_redirect' ) {
 					if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
-						$uri			=	$_SERVER["HTTP_REFERER"];
-						$return			=	base64_encode( $uri );
+						$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
 						$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
 						$app->redirect( $redirect_url );
 					}
@@ -533,7 +531,7 @@ if ( $preconfig['show_form'] > 0 ) {
 	}
 	
 	$doc->fields	=	&$fields['search'];
-	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
 }

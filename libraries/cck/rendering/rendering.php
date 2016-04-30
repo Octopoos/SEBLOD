@@ -176,7 +176,7 @@ class CCK_Rendering
 		$this->positions2	=	array();
 		$this->positions_m	=	$me->positions_more;
 		
-		$this->base			=	JURI::root( true );
+		$this->base			=	JUri::root( true );
 		$this->css			=	'';
 		$this->js			=	'';
 		$this->profiler		=	@$me->profiler;
@@ -238,17 +238,17 @@ class CCK_Rendering
 			$css	=	$css * -1;
 		}
 		if ( $base ) {
-			$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.css' );
+			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.css' );
 			if ( $this->responsive ) {
-				$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.responsive.css' );
+				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.responsive.css' );
 			}
 		}
 		if ( $css == 1 || ( $css == 2 && $this->mode == 'content' ) || ( $css == 3 && $this->mode == 'form' ) ) {
 			if ( $this->client != 'list' ) {
 				if ( $this->isFile( $this->path.'/css/'.$this->client.'.css' ) ) {
-					$doc->addStyleSheet( JURI::root( true ).'/templates/'.$this->name. '/css/'.$this->client.'.css' );
+					$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->name. '/css/'.$this->client.'.css' );
 				} else {
-					$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.'.$this->client.'.css' );
+					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$this->client.'.css' );
 				}
 			}
 		}
@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.calculation-3.0.0.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.0.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';
@@ -1069,7 +1069,7 @@ class CCK_Rendering
 		$app	=	JFactory::getApplication();
 		
 		if ( $app->input->get( 'format' ) == 'raw' ) {
-			$infinite	=	$app->input->get( 'infinite' );
+			$infinite	=	$app->input->getInt( 'infinite' );
 
 			if ( $infinite == -1 ) {
 				return -1;

@@ -129,7 +129,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 			$multiple	=	( $field->bool3 == 1 ) ? 'multiple="multiple"' : '';
 			$size		=	( $field->rows ) ? $field->rows : 1;
 			$size		=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
-			$extension	=	$app->input->getString( 'extension', @$options2['extension'] );
+			$extension	=	$app->input->get( 'extension', @$options2['extension'] );
 			$extension	=	( $extension ) ? $extension : 'com_content';
 			
 			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );	

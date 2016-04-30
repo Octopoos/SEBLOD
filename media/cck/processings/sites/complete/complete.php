@@ -12,6 +12,10 @@ $app			=	JFactory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
 $type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,3,6,7 */
 $groups			=	explode( ',', $type );
+
+jimport( 'joomla.utilities.arrayhelper' );
+JArrayHelper::toInteger( $groups );
+
 $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
 $sitetitle		=	$item->title;
 $sitename		=	$item->name;

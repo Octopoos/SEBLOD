@@ -569,7 +569,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 		$app		=	JFactory::getApplication();
 		$assoc		=	JCckDevHelper::hasLanguageAssociations();
-		$extension	=	$app->input->getString( 'extension', 'com_content' );
+		$extension	=	$app->input->get( 'extension', 'com_content' );
 		$component	=	str_replace('com_', '', $extension );
 
 		if (!$assoc || !$extension || !$component ) {
