@@ -81,7 +81,7 @@ $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stage
 if ( $stages > 1 ) {
 	$stage	=	$preconfig['stage'];
 }
-$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$preconfig['type'].'"' );
+$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.JCckDatabase::escape( $preconfig['type'] ).'"' );
 $fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $stage, '', true );
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context

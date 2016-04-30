@@ -242,46 +242,39 @@ class CCK_List
 	public static function getPropertyColumns_asString( $level )
 	{
 		if ( !$level ) {
-			return; // 67
+			return array(); /* ALL */
 		}
 
 		$columns	=	array(
+							'access',
 							'computation_options',
 							'conditional_options',
+							'folder',
 							'link_options',
+							'linked',
 							'live_options',
 							'match_collection',
 							'match_mode',
 							'match_options',
 							'match_value',
+							'ordering',
+							'published',
 							'restriction_options',
+							'storage',
+							'storage_cck',
+							'storage_location',
+							'storage_table',
+							'storage_field',
+							'storage_field2',
+							'storage_params',
 							'typo_label',
 							'typo_options',
 							'validation',
 							'validation_options'
 						);
 
-		if ( $level == 1 ) {
-			return $columns; // 62
-		}
-
-		$columns[]	=	'access';
-		$columns[]	=	'folder';
-		$columns[]	=	'location';
-		$columns[]	=	'ordering';
-		$columns[]	=	'published';
-		$columns[]	=	'restriction';
-		$columns[]	=	'sorting';
-		$columns[]	=	'storage';
-		$columns[]	=	'storage_cck';
-		$columns[]	=	'storage_location';
-		$columns[]	=	'storage_table';
-		$columns[]	=	'storage_field';
-		$columns[]	=	'storage_field2';
-		$columns[]	=	'storage_params';
-
-		if ( $level == 2 ) {
-			return $columns; // 48
+		if ( $level < 3 ) {
+			return $columns; /* ~45 */
 		}
 
 		$columns[]	=	'attributes';
@@ -299,6 +292,7 @@ class CCK_List
 		$columns[]	=	'defaultvalue';
 		$columns[]	=	'divider';
 		$columns[]	=	'extended';
+		$columns[]	=	'location';
 		$columns[]	=	'maxlength';
 		$columns[]	=	'minlength';
 		$columns[]	=	'options';
@@ -307,8 +301,9 @@ class CCK_List
 		$columns[]	=	'rows';
 		$columns[]	=	'selectlabel';
 		$columns[]	=	'size';
+		$columns[]	=	'sorting';
 		
-		return $columns; // 26
+		return $columns; /* ~21 */
 	}
 
 	// getSearch
@@ -319,7 +314,7 @@ class CCK_List
 				.	' a.options, a.template_search, a.template_filter, a.template_list, a.template_item'
 				.	' FROM #__cck_core_searchs AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
-				.	' WHERE a.name ="'.(string)$name.'" AND a.published = 1';
+				.	' WHERE a.name ="'.JCckDatabase::escape( (string)$name ).'" AND a.published = 1';
 		
 		return JCckDatabase::loadObject( $query );
 	}
