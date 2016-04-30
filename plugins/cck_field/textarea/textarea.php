@@ -135,6 +135,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$value	=	JRequest::getVar( $name, '', 'post', 'string', JREQUEST_ALLOWRAW );
 		}
 		
+		// Make it safe
+		$value		=	JComponentHelper::filterText( $value );
+
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		
