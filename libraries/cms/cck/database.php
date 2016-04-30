@@ -12,7 +12,27 @@ defined( '_JEXEC' ) or die;
 
 // JCckDatabase
 abstract class JCckDatabase
-{	
+{
+	// clean
+	public static function clean( $text )
+	{
+		if ( is_numeric( $text ) ) {
+			return (string)$text;
+		} else {
+			$len	=	strlen( $text );
+
+			if ( $text[0] == "'" && $text[$len - 1] == "'" ) {
+				$t	=	substr( $text, 1, - 1 );
+
+				if ( is_numeric( $t ) || strlen( $t ) == 0 ) {
+					return "'".(string)$t."'";
+				}
+			}
+		}
+
+		return '0';
+	}
+	
 	// convertUtf8mb4QueryToUtf8
 	public static function convertUtf8mb4QueryToUtf8( $query )
 	{

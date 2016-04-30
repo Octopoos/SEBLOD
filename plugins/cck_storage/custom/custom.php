@@ -151,16 +151,16 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 		
 		switch ( $match ) {
 			case 'exact':
-				$sql		=	( !$TA ) ? $target.' = "'.$TA.$value.$TZ.'"' : $target.' REGEXP "'.$TA.$value.$TZ.'"';
+				$sql		=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $value ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $value ).$TZ.'"';
 				break;
 			case 'empty':
 				$sql		=	$target.' REGEXP "'.$TA.$TZ.'"';
 				break;
 			case 'alpha':
-				$sql		=	$target.' REGEXP "'.$TA.$value.'.*'.$TZ.'"';
+				$sql		=	$target.' REGEXP "'.$TA.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 			case 'zeta': /* Zeta is not the last letter of Greek alphabet but.. this won't be an issue here. */
-				$sql		=	$target.' REGEXP "'.$TA.'.*'.$value.$TZ.'"';
+				$sql		=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).$TZ.'"';
 				break;
 			case 'any':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
@@ -169,7 +169,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 					$fragments	=	array();
 					foreach ( $values as $v ) {
 						if ( strlen( $v ) > 0 ) {
-							$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+							$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $v ).'.*'.$TZ.'"';
 						}
 					}
 					if ( count( $fragments ) ) {
@@ -184,7 +184,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 					$fragments	=	array();
 					foreach ( $values as $v ) {
 						if ( strlen( $v ) > 0 ) {
-							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.$v.$TZ.'"' : $target.' REGEXP "'.$TA.$v.$TZ.'"';
+							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"';
 						}
 					}
 					if ( count( $fragments ) ) {
@@ -201,16 +201,16 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.$v.$TZ.'"' : $target.' REGEXP "'.$TA.$v.$TZ.'"' )
-												.	$target.' REGEXP "'.$TA.$v.$separator.'.*'.$TZ.'"'
-												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$separator.'.*'.$TZ.'"'
-												.	$target.' REGEXP "'.$TA.'.*'.$separator.$v.$TZ.'"';
+								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' )
+												.	$target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$TZ.'"';
 							}
 						}
 					} else {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.$v.'.*'.$TZ.'"';
+								$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $v ).'.*'.$TZ.'"';
 							}
 						}
 					}
@@ -232,7 +232,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 					$fragments	=	array();
 					foreach ( $values as $v ) {
 						if ( $v != '' ) {
-							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.$v.$TZ.'"' : $target.' REGEXP "'.$TA.$v.$TZ.'"';
+							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"';
 						}
 					}
 					if ( count( $fragments ) ) {
@@ -277,22 +277,22 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				$sql		=	$target.' REGEXP "'.$TA.$range.$TZ.'"';
 				break;
 			case 'not_alpha':
-				$sql		=	$target.' NOT REGEXP "'.$TA.$value.'.*'.$TZ.'"';
+				$sql		=	$target.' NOT REGEXP "'.$TA.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 			case 'not_any_exact':
 				// todo
 				break;
 			case 'not_zeta': /* Zeta is not the last letter of Greek alphabet but.. this won't be an issue here. */
-				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.$value.$TZ.'"';
+				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).$TZ.'"';
 				break;
 			case 'not_empty':
 				$sql		=	$target.' NOT REGEXP "'.$TA.$TZ.'"';
 				break;
 			case 'not_equal':
-				$sql		=	$target.' NOT REGEXP "'.$TA.$value.$TZ.'"';
+				$sql		=	$target.' NOT REGEXP "'.$TA.JCckDatabase::escape( $value ).$TZ.'"';
 				break;
 			case 'not_like':
-				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.$value.'.*'.$TZ.'"';
+				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 			case 'not_null':
 				$sql		=	$target.' NOT REGEXP "'.$TA.'0'.$TZ.'"';
@@ -311,7 +311,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				return;
 				break;
 			default:
-				$sql		=	$target.' REGEXP "'.$TA.'.*'.$value.'.*'.$TZ.'"';
+				$sql		=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 		}
 		
