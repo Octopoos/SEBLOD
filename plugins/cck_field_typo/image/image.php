@@ -25,7 +25,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		if ( self::$type != $field->typo ) {
 			return;
 		}
-		self::$path	=	JURI::root().'plugins/cck_field_typo/'.self::$type.'/';
+		self::$path	=	JUri::root().'plugins/cck_field_typo/'.self::$type.'/';
 		
 		// Prepare
 		if ( $field->value && $field->value != '' ) {

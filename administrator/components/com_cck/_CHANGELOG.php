@@ -22,14 +22,20 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.0 Upgrade Release [xx-Apr-2016] -------------
+-------------------- 3.8.0 Upgrade Release [30-Apr-2016] -------------
+
+* Security Release:
+  >> Text Filter Settings (Configuration) applied on Textarea, Wysiwyg Editor.
+  >> Variables (that were not protected) now escaped/secured.
 
 ! Memory & Performance optimizations on List rendering.
 ! Performance improvements on Search system >> SQL queries refactored.
 ^ Publishing comparison based on the minute (instead of second) for SQL optimizations.
 
++ "Article Manager", "Category Manager", "User Manager" included in install.sql
 + "Button Free", "Search Generic", "Search Ordering" Field Plug-ins added. (included in Core for Free now, yeah!)
 + "Joomla! JGrid" Typography Plug-in added.
++ "URL Variable" Restriction Plug-in added.
 
 + "Count" (Auto / Estimate) parameter added on Search Types.
 + "Load" behaviour added to Infinite Pagination on Search Types.
@@ -55,6 +61,7 @@ $ -> Language fix or change
 + "URL" mode added to "Menu Item Target" on Search module.
 + "Validation" parameters added on Search Types.
 
++ Additionnal "Order By" can be prepended in Search Ordering Field plug-in.
 + "Alternative Format", "Unit", "Time Zone" parameters added on Date Typography plug-in.
 + "Author" condition added on Workflow Restriction plug-in.
 + "Auto" Tmpl parameter added on Content, "SEBLOD Form", "SEBLOD List" Link plug-ins.
@@ -73,6 +80,7 @@ $ -> Language fix or change
 + "Routing context" parameter: "Best" mode added on Joomla! Category Object plug-in.
 ^ Script/Styles improved on Calendar, GroupX plug-ins when tmpl=raw.
 + $site->... syntaxes processes added on Freetext/Select Dynamic plug-ins.
++ Timeleft support added on Date Typography plug-in.
 
 + "#__cck_store_item_..." support added in JCckContent class.
 + js_replacehtml="" (jQuery from Xml) added.	[Dev. Framework]
@@ -107,11 +115,14 @@ $ -> Language fix or change
 ! Various images added for all supported Object plug-ins.
 
 ^ AfterStore processing/events not executed anymore if an error is thrown while storing.
+^ Colorbox updated to 1.6.3.
 ^ Custom Variables ($uri->get(...) in Links) removed when empty >> proper URLs.
+^ Document title can now be altered in BeforeRender event/process.
 ^ "Exact" match mode + "Unquoted" applied to fields stored in Int/Tinyint formats.
 ^ Form/List titles, Page Heading forced to be hidden when tmpl=raw on Forms & Lists.
 ^ "Group X" refactored (cleaner JS, actions/buttons support added for Table mode).
 ^ jQuery Validation script updated for AJAX and Confirm validations.
+^ Mobile Detect updated to 2.8.21.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 	>> "Empty Columns" parameter added for the previous behaviour
@@ -128,6 +139,7 @@ $ -> Language fix or change
 # < p > removed from Freetexts field in install.sql
 # Empty message issue fixed after (submitting a Form).
 # Execution time issue fixed for Bridge creation (when there are a lot of articles in category)
+# Fields (id >= 533 AND id < 5000) patched for some websites (InnoDB issue).
 # Filtering (form App Folder) issue fixed on back-end.
 # Hardcoded condition (preventing required/validation) removed on Password field.
 # HTML output improved on "Group" and "Group X" (Form views) Field plug-ins (markup=none or restrictions).
@@ -139,6 +151,7 @@ $ -> Language fix or change
 # Missing Language file issue fixed on the Calendar Plug-in.
 # Missing Languages files (for Package Export) added.
 # Missing ->values added in PrepareForm on Checkbox, Select Multiple plug-ins.
+# Native Joomla edit button/link fixed for bridge items.
 # Native Search behaviors fixed for Upload File/Image plug-ins.
 # Nested Lists (using "Items" view) issue fixed.
 # Permission issue fixed when Edit button/link is the 1st field assigned.
@@ -151,6 +164,7 @@ $ -> Language fix or change
 # Sub-menu item issue fixed in App Export/Import.
 # Styling issues fixed in Quick Add Modal (back-end) (regression since Joomla! 3.4.x)
 # Syntax (replacement) issues fixed on "Email" plug-in.
+# Time Zone issues fixed in Calendar Field plug-in.
 # Time Zone now applied automatically by "Date" Typo plug-in.
 # Typo issue (onBeforeRender) fixed on Conten Link plug-in, Date Typo plug-in.
 # User's groups (erased after user profile edition on front-end) issue fixed. Good catch Lionel ! ;)

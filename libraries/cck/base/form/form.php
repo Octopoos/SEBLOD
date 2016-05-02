@@ -42,12 +42,12 @@ class CCK_Form
 
 		// Client
 		if ( $client == 'all' )  {
-			$where 	=	' WHERE b.name = "'.$type.'"';
+			$where 	=	' WHERE b.name = "'.JCckDatabase::escape( $type ).'"';
 		} else {
 			if ( $parent != '' ) {
-				$where 	=	' WHERE (b.name = "'.$type.'" OR b.name = "'.$parent.'") AND c.client = "'.$client.'"';
+				$where 	=	' WHERE (b.name = "'.JCckDatabase::escape( $type ).'" OR b.name = "'.$parent.'") AND c.client = "'.$client.'"';
 			} else {
-				$where 	=	' WHERE b.name = "'.$type.'" AND c.client = "'.$client.'"';
+				$where 	=	' WHERE b.name = "'.JCckDatabase::escape( $type ).'" AND c.client = "'.$client.'"';
 			}
 		}
 		if ( $stage > -1 ) {
@@ -118,7 +118,7 @@ class CCK_Form
 				.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets'
 				.	' FROM #__cck_core_types AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
-				.	' WHERE a.name ="'.(string)$name.'" AND a.published = 1';
+				.	' WHERE a.name ="'.JCckDatabase::escape( (string)$name ).'" AND a.published = 1';
 		
 		return JCckDatabase::loadObject( $query );
 	}

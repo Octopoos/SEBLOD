@@ -249,4 +249,4 @@ body.contentpane.component .span12{margin-left:0px; width:100%;}
 body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; position:relative; top:6px;}
 
 body.com_cck span.value-picker {color: #3b99fc; top:9px;}
-body:not(.com_cck) div.alert.alert-info > div{text-align: center};
+body:not(.com_cck) div.alert.alert-info > div{text-align: center;}

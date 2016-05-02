@@ -130,13 +130,13 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		}
 
 		if ( $itemId == '-2' ) {
-			$itemId				=	JFactory::getApplication()->input->get( 'Itemid' );
+			$itemId				=	JFactory::getApplication()->input->getInt( 'Itemid' );
 			$fieldname2			=	$process['fieldname2'];
 			if ( isset( $fields[$fieldname2] ) ) {
 				$itemId			=	(int)$fields[$fieldname2]->value;
 			}
 		} elseif ( $itemId == '-3' ) {
-			$itemId		=	JFactory::getApplication()->input->get( 'Itemid' );
+			$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
 			$itemIds	=	$process['fieldnames'];
 			$items		=	explode( '||', $itemIds );
 			if ( count( $items ) ) {

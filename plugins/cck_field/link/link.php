@@ -65,7 +65,7 @@ class plgCCK_FieldLink extends JCckPluginField
 			$extension	=	array( '.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF' );
 
 			foreach ( $extension as $ext ){
-				$text	=	( strpos($text, $ext ) !== false ) ? '<img src="'.JURI::base().$text.'" title="'.$link.'" />' : $text;
+				$text	=	( strpos($text, $ext ) !== false ) ? '<img src="'.JUri::base().$text.'" title="'.$link.'" />' : $text;
 			}
 
 			$field->text		=	$text;

@@ -24,12 +24,12 @@ if ( $css ) {
 	$doc->addStyleDeclaration( $css );
 }
 if ( $elem ) {
-	$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-	$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+	$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+	$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 	$js	=	'
 			jQuery(document).ready(function($){
 				$("'.$elem.'").live("click", function(e) { e.preventDefault();
-					$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
+					$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
 					return false;
 				});
 			});

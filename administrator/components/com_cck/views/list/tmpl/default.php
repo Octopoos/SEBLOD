@@ -35,7 +35,7 @@ Joomla.submitbutton = function(task, cid)
 			return false;
 		}
 	}
-	jQuery("#<?php echo $this->form_id; ?>").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JFactory::getURI() ); ?>">');
+	jQuery("#<?php echo $this->form_id; ?>").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JUri::getInstance()->toString() ); ?>">');
 	JCck.Core.submitForm(task);
 }
 </script>

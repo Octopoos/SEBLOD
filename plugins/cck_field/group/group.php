@@ -281,7 +281,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 			if ( $field->markup != 'none' ) {
 				$html	.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.' '.$width.'">';
 			}
-			$html	.=	self::_formHTML( $field, $field->form, 0, $count - 1, $config );
+			$html	.=	self::_getHtml( $field, $field->form, 0, $count - 1, $config );
 			
 			if ( $field->markup != 'none' ) {
 				$html	.=	'</div>';
@@ -293,8 +293,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
-	// _formHTML
-	protected static function _formHTML( $field, $group, $i, $size_group, &$config )
+	// _getHtml
+	protected static function _getHtml( $field, $group, $i, $size_group, &$config )
 	{
 		$client	=	'cck_'.$config['client'];
 		$html	=	'';

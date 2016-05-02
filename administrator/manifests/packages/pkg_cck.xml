@@ -96,6 +96,7 @@
 			<file type="plugin" id="url_variable" group="cck_field_live">plg_cck_field_live_url_variable.zip</file>
 			<!-- Plugin // CCK Field Restriction -->
 			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
+			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
 			<!-- Plugin // CCK Field Typo -->
 			<file type="plugin" id="bold" group="cck_field_typo">plg_cck_field_typo_bold.zip</file>
 			<file type="plugin" id="clear" group="cck_field_typo">plg_cck_field_typo_clear.zip</file>

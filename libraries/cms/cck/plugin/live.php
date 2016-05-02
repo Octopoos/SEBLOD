@@ -20,7 +20,7 @@ class JCckPluginLive extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JURI::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 	
 	// g_getLive

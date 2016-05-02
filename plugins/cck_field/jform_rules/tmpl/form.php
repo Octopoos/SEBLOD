@@ -54,7 +54,7 @@ $xml	=	'
 $form	=	JForm::getInstance( $this->item->id, $xml );
 $form->setValue( 'asset_id', null, (int)$this->item->type );
 $form	=	$form->getInput( $this->item->id );
-$form	=	str_replace( '<select name="'.$this->item->id.'[', '<select class="inputbox" name="'.$this->item->id.'[', $form );
+$form	=	str_replace( 'onchange="sendPermissions.call(this, event)"', '', $form );
 
 // Set
 $js		=	'
@@ -125,7 +125,7 @@ $js		=	'
 			';
 JHtml::_( 'behavior.framework' );
 $doc->addScriptDeclaration( $js );
-$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.'.$client.'.css' );
+$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$client.'.css' );
 ?>
 
 <form method="post" id="adminForm" name="adminForm">

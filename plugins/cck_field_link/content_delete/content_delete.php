@@ -42,7 +42,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$redirection	=	$link->get( 'redirection', '' );
 		$return			=	'';
 		$task			=	( JFactory::getApplication()->isAdmin() ) ? 'list.delete' : 'delete';
-		$uri			=	(string)JFactory::getURI();
+		$uri			=	JUri::getInstance()->toString();
 		
 		// Return
 		if ( $redirection == 'url' ) {

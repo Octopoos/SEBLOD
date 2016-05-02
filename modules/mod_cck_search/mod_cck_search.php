@@ -29,7 +29,7 @@ if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
 	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
 }
 if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JURI::root( true ).'/media/cck' );
+	define( 'JROOT_MEDIA_CCK',	JUri::root( true ).'/media/cck' );
 }
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );

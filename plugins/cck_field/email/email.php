@@ -299,7 +299,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$subject	=	str_replace( '[id]', $config['id'], $subject );
 			$subject	=	str_replace( '[pk]', $config['pk'], $subject );
 			$subject	=	str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
-			$subject	=	str_replace( '[siteurl]', JURI::base(), $subject );
+			$subject	=	str_replace( '[siteurl]', JUri::base(), $subject );
 			
 			// J(translate) for subject
 			if ( $subject != '' && strpos( $subject, 'J(' ) !== false ) {
@@ -314,7 +314,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 			
 			if ( isset( $config['registration_activation'] ) ) {
-				$body		=	str_replace( '[activation]', JURI::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
+				$body		=	str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
 				$body		=	str_replace( '[username]', $fields['username']->value, $body );
 				$subject	=	str_replace( '[username]', $fields['username']->value, $subject );
 			}
@@ -391,7 +391,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$body		=	str_replace( '[id]', $config['id'], $body );
 			$body		=	str_replace( '[pk]', $config['pk'], $body );
 			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
-			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
+			$body		=	str_replace( '[siteurl]', JUri::base(), $body );
 
 			if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
 				$user			=	JCck::getUser();

@@ -13,3 +13,4 @@ defined( '_JEXEC' ) or die;
 $modal_layout	=	$params->get( 'modal_box_layout', 'icon' );
 
 require JModuleHelper::getLayoutPath( 'mod_cck_quickadd', $params->get( 'layout', 'default' ) );
+?>

@@ -77,7 +77,7 @@ class CCKController extends JControllerLegacy
 		$model	=	$this->getModel( 'list' );
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
@@ -97,9 +97,9 @@ class CCKController extends JControllerLegacy
 		$app		=	JFactory::getApplication();
 		$id			=	$app->input->getInt( 'id', 0 );
 		$fieldname	=	$app->input->getString( 'file', '' );
-		$collection	=	$app->input->getString( 'collection', '' );
-		$xi			=	$app->input->getString( 'xi', 0 );
-		$client		=	$app->input->getString( 'client', 'content' );
+		$collection	=	$app->input->get( 'collection', '' );
+		$xi			=	$app->input->getInt( 'xi', 0 );
+		$client		=	$app->input->get( 'client', 'content' );
 		$restricted	=	'';
 		$user		=	JFactory::getUser();
 		
@@ -131,7 +131,7 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 		} else {
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
 			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
@@ -175,8 +175,8 @@ class CCKController extends JControllerLegacy
 			}
 			JPluginHelper::importPlugin( 'cck_field' );
 			
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' ); //#
-			
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
+
 			if ( $restricted ) {
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
 				$field->restriction			=	$restricted;
@@ -203,7 +203,7 @@ class CCKController extends JControllerLegacy
 			if ( $path ) {
 				$task2	=	isset( $field->task ) ? $field->task : 'download';
 				if ( $task2 == 'read' ) {
-					$this->setRedirect( JURI::root( true ).'/'.$file );
+					$this->setRedirect( JUri::root( true ).'/'.$file );
 				} else {
 					if ( $id ) {
 						$event		=	'onCckDownloadSuccess';
@@ -245,7 +245,7 @@ class CCKController extends JControllerLegacy
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $ids );
 
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
@@ -297,7 +297,9 @@ class CCKController extends JControllerLegacy
 				}
 			}
 		}
-		
+		if ( !$location || !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php' ) ) {
+			return JUri::root();
+		}
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
 		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
 	}
@@ -317,7 +319,7 @@ class CCKController extends JControllerLegacy
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
@@ -554,6 +556,7 @@ class CCKController extends JControllerLegacy
 		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
 
 		// Sanitize the input
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $pks );
 		JArrayHelper::toInteger( $order );
 
@@ -574,11 +577,11 @@ class CCKController extends JControllerLegacy
 	// _download_hits
 	protected function _download_hits( $id, $fieldname, $collection = '', $x = 0 )
 	{
-		$where	=	'a.id = '.(int)$id.' AND a.field = "'.(string)$fieldname.'" AND a.collection = "'.(string)$collection.'" AND a.x = '.(int)$x;
+		$where	=	'a.id = '.(int)$id.' AND a.field = "'.JCckDatabase::escape( (string)$fieldname ).'" AND a.collection = "'.JCckDatabase::escape( (string)$collection ).'" AND a.x = '.(int)$x;
 		$hits	=	JCckDatabase::loadResult( 'SELECT a.hits FROM #__cck_core_downloads AS a WHERE '.$where );
 		
 		if ( !$hits ) {
-			JCckDatabase::execute( 'INSERT INTO #__cck_core_downloads(`id`, `field`, `collection`, `x`, `hits`) VALUES('.(int)$id.', "'.(string)$fieldname.'", "'.(string)$collection.'", '.(int)$x.', 1)' );
+			JCckDatabase::execute( 'INSERT INTO #__cck_core_downloads(`id`, `field`, `collection`, `x`, `hits`) VALUES('.(int)$id.', "'.JCckDatabase::escape( (string)$fieldname ).'", "'.JCckDatabase::escape( (string)$collection ).'", '.(int)$x.', 1)' );
 		} else {
 			$hits++;
 			JCckDatabase::execute( 'UPDATE #__cck_core_downloads AS a SET a.hits = '.(int)$hits.' WHERE '.$where.' AND a.id = '.(int)$id );
@@ -615,7 +618,7 @@ class CCKController extends JControllerLegacy
 		/* Joomla! 3.2 FIX */
 
 		if ( empty( $return ) || !JUri::isInternal( $check ) ) {
-			return ( $base == true ) ? JURI::base() : '';
+			return ( $base == true ) ? JUri::base() : '';
 		} else {
 			return urldecode( base64_decode( $return ) );
 		}

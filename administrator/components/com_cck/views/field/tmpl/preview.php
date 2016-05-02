@@ -23,7 +23,7 @@ if ( $field->type == 'checkbox' || $field->type == 'radio' ) {
 
 // Set
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.admin.css' );
+$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
 $doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}' );
 $doc->addScriptDeclaration( 'jQuery(document).ready(function($){ $("#submitBox,#resetBox").hide(); });' );
 Helper_Include::addDependencies( 'box', 'edit' );

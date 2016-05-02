@@ -368,7 +368,7 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 				default:
-					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"' );
+					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.JCckDatabase::escape( $option ).'"' );
 					$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout, 'id'=>$id );
 					if ( count( $locations ) ) {
 						foreach ( $locations as $location ) {
@@ -534,10 +534,10 @@ class plgSystemCCK extends JPlugin
 				if ( is_array( $custom ) && count( $custom ) ) {
 					$css_def	=	implode( '-', $custom );
 					$css_def	=	( $css_def == 'base-spacing-writing' ) ? 'all' : $css_def;
-					$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
+					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
 				}
 			} elseif ( $css_def ) {
-				$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
+				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
 			}
 			if ( $css != '' ) {
 				$doc->addStyleDeclaration( $css );
@@ -585,7 +585,7 @@ class plgSystemCCK extends JPlugin
 		// site
 		if ( $app->isSite() ) {
 			if ( $this->multisite === true && $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
-				$uri		=	JFactory::getURI();
+				$uri		=	JUri::getInstance();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
 				if ( JCck::on() ) {
@@ -837,7 +837,7 @@ class plgSystemCCK extends JPlugin
 		$home		=	$menu->getDefault();
 		$my			=	$menu->getItem( $id );
 		
-		$path		=	substr( JURI::getInstance()->getPath(), 1 );
+		$path		=	substr( JUri::getInstance()->getPath(), 1 );
 		
 		// todo: need to be improved!
 		if ( !( !$path || $path == 'index.php/'.@$my->alias || $path == @$my->alias.'.html' ) ) {
@@ -861,8 +861,10 @@ class plgSystemCCK extends JPlugin
 		$app	=	JFactory::getApplication();
 		$lang	=	JLanguage::getInstance( $tag );
 		
-		$app->loadLanguage( $lang );
-		JFactory::$language = $app->getLanguage();
+		if ( JCck::on() ) {
+			$app->loadLanguage( $lang );
+			JFactory::$language	=	$app->getLanguage();
+		}
 
 		JFactory::getConfig()->set( 'language', $tag );
 		JFactory::getLanguage()->setLanguage( $tag );

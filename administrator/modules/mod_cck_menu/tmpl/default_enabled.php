@@ -140,7 +140,7 @@ if ( $mode == 1 || $mode == 2 ) {
 		}
 	}
 } elseif ( $mode == 5 ) {
-	$groups	= implode( ',', $user->getAuthorisedViewLevels() );
+	$groups	=	implode( ',', $user->getAuthorisedViewLevels() );
 	$items	=	JCckDatabase::loadObjectList( 'SELECT a.id, a.name, a.title as text FROM #__cck_core_searchs AS a'
 											. ' WHERE a.published = 1 AND a.location != "none" AND a.location != "site" AND a.access IN ('.$groups.') ORDER BY text' );
 	$link	=	'index.php?option=com_cck&view=list&search=';

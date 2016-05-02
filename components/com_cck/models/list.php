@@ -46,8 +46,11 @@ class CCKModelList extends JModelLegacy
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 		
 		$nb		=	0;
+
+		if ( !count( $pks ) ) {
+			return $nb;
+		}
 		$pks_in	=	implode( ',', $pks );
-		
 		$items	=	JCckDatabase::loadObjectList( 'SELECT a.id, a.cck, a.pk, a.pkb, a.storage_location, a.storage_table, a.author_id, b.id as type_id FROM #__cck_core as a'
 												. ' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
 												. ' WHERE a.id IN ('.$pks_in.')', 'id' );

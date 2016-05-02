@@ -293,7 +293,7 @@ abstract class JCckDevHelper
 						$variable	=	$matches[2][$k];
 						
 						if ( $v == 'Current' ) {
-							$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
+							$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
 							$str		=	str_replace( $matches[0][$k], $request, $str );
 						} elseif ( $v == 'Array' ) {
 							$value				=	'';

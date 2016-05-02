@@ -93,9 +93,7 @@ class Helper_Include extends CommonHelper_Include
 					Helper_Include::addColorbox( '850', '585', $script, 'cbox', ', scrolling:false, onLoad: function(){ $("#cboxClose").remove();}' );
 				} elseif ( $view == 'types' || $view == 'searchs' ) {
 					Helper_Include::addColorbox( '850', '430', true, 'cbox_button', ', scrolling:false' );
-				} elseif ( $view == 'variations' ) {
-					JHtml::_( 'behavior.framework', false );
-				} 
+				}
 				if ( $view == 'searchs' || $view == 'sites' ) {
 					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
 					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
@@ -151,9 +149,8 @@ class Helper_Include extends CommonHelper_Include
 			$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
 			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			
-			$js	=	'
-					$(".'.$class.'").live("click", function(e) { e.preventDefault();
-						$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
+			$js	=	'$(document).on("click",".'.$class.'", function(e) { e.preventDefault();
+						$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
 						return false;
 					});
 					';
@@ -168,8 +165,8 @@ class Helper_Include extends CommonHelper_Include
 		$doc	=	JFactory::getDocument();
 		
 		if ( $script === true ) {
-			$doc->addStyleSheet( JURI::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
-			$doc->addScript( JURI::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
+			$doc->addStyleSheet( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
+			$doc->addScript( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
 		}
 	}
 	
@@ -224,8 +221,8 @@ class Helper_Include extends CommonHelper_Include
 										$("#ajaxMessage").html("").html("<span>Successfuly saved! "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
 										.hide()
 										.fadeIn(2000, function() {
-											if ( parent.jQuery.fn.colorbox ) {
-												parent.jQuery.fn.colorbox.close();
+											if ( parent.jQuery.colorbox ) {
+												parent.jQuery.colorbox.close();
 											}
 										});
 									}

@@ -124,9 +124,9 @@ abstract class JCckDevIntegration
 							ul.toolbar-tiplist li:hover {background-color: #ffffff; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;}
 							';
 				$doc->addStyleDeclaration( $css );
-				$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-qtip/css/jquery.qtip.css' );
+				$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-qtip/css/jquery.qtip.css' );
 				JCck::loadjQuery();
-				$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-qtip/js/jquery.qtip.min.js' );
+				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-qtip/js/jquery.qtip.min.js' );
 				
 				// Tooltip
 				$html		=	'<div><ul class="toolbar-tiplist">'.$html.'</ul></div>' . '<div class="clr"></div>';
@@ -162,18 +162,17 @@ abstract class JCckDevIntegration
 		} else {
 			JCck::loadjQuery();
 			$doc	=	JFactory::getDocument();
-			$uri	=	JFactory::getURI();
-			$return	=	base64_encode( $uri );
+			$return	=	base64_encode( JUri::getInstance()->toString() );
 
-			$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-			$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 			$href	=	'index.php?option=com_cck&view=form&layout=select&tmpl=component&variables='.base64_encode( $variables ).'&return='.$return;
 			$js		=	'
 						jQuery(document).ready(function($){
 							var origin = $("#toolbar-new a").attr("onclick");
 							$("#toolbar-new a").attr("onclick","").attr("onclick2",origin).attr("href","'.$href.'");
 							$("#toolbar-new a").live("click", function(e) { e.preventDefault();
-								$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
+								$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
 								return false;
 							});
 						});

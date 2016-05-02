@@ -40,7 +40,7 @@ class CCKControllerList extends JControllerAdmin
 		$model	=	$this->getModel();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
@@ -68,7 +68,7 @@ class CCKControllerList extends JControllerAdmin
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
@@ -102,7 +102,7 @@ class CCKControllerList extends JControllerAdmin
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		
-		jimport('joomla.utilities.arrayhelper');
+		jimport( 'joomla.utilities.arrayhelper' );
 		JArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
@@ -135,7 +135,7 @@ class CCKControllerList extends JControllerAdmin
 		$return	=	$app->input->getBase64( 'return' );
 		
 		if ( empty( $return ) || !JUri::isInternal( base64_decode( $return ) ) ) {
-			return ( $base == true ) ? JURI::base() : 'index.php?option=com_cck';
+			return ( $base == true ) ? JUri::base() : 'index.php?option=com_cck';
 		} else {
 			return base64_decode( $return );
 		}

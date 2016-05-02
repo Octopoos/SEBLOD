@@ -23,11 +23,9 @@ if ( count( $this->fieldsAv ) ) {
                 $data['tables'][$field->storage_table]  =   JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
             }
             if ( @$field->match_mode == '' && isset( $data['tables'][$field->storage_table][$field->storage_field] ) ) {
-                if ( $data['tables'][$field->storage_table][$field->storage_field]->Type == 'tinyint(3)'
-                  || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'tinyint(3) unsigned'
-                  || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(11)'
-                  || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10)'
-                  || $data['tables'][$field->storage_table][$field->storage_field]->Type == 'int(10) unsigned' ) {
+                $pos    =   strpos( $data['tables'][$field->storage_table][$field->storage_field]->Type, 'int(' );
+                
+                if ( $pos !== false ) {
                     $field->match_mode      =   'exact';
                     $field->match_options   =   '{"var_type":"0"}';
                 }

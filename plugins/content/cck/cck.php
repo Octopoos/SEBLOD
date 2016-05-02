@@ -524,7 +524,7 @@ class plgContentCCK extends JPlugin
 		
 		// Finalize
 		$doc->fields	=	&$fields;
-		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JURI::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
+		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JUri::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
 		$doc->finalize( 'content', $contentType, $client, $positions, $positions_more, $infos, $cck->id );
 		
 		$data					=	$doc->render( false, $params );

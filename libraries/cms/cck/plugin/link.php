@@ -99,7 +99,7 @@ class JCckPluginLink extends JPlugin
 					$variable	=	$matches[3][$k];
 					
 					if ( $v == 'Current' ) {
-						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
+						$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
 						$custom		=	str_replace( $matches[0][$k], $matches[1][$k].'='.$request, $custom );						
 					} elseif ( $v == 'Array' ) {
 						$name				=	$field->name;
@@ -184,7 +184,7 @@ class JCckPluginLink extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JURI::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 	
 	// g_getLink

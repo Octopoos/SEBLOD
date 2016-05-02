@@ -120,6 +120,12 @@ abstract class JCckEcommerceCart
 		return $cache[$definition];
 	}
 
+	// isValidType
+	public static function isValidType( $type )
+	{
+		return JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.JCckDatabase::escape( $type ).'" AND published = 1' );
+	}
+
 	// prepareFormula
 	public static function prepareFormula( $formula )
 	{

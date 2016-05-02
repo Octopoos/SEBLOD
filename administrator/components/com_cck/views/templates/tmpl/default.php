@@ -66,7 +66,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEditOwn		=	'';
 		
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
-		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file='.JURI::root().'/templates/'.$item->name.'/template_preview.png' );
+		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file='.JUri::root().'/templates/'.$item->name.'/template_preview.png' );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );

@@ -23,7 +23,7 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		}
 		$app		=	JFactory::getApplication();
 		$addform	=	new SimpleXMLElement( '<form />' );
-		$extension	=	$app->input->getString( 'extension', 'com_content' );
+		$extension	=	$app->input->get( 'extension', 'com_content' );
 		$fields		=	$addform->addChild( 'fields' );
 		$fields->addAttribute( 'name', $name );
 		$fieldset	=	$fields->addChild( 'fieldset' );

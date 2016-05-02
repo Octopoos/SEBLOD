@@ -20,7 +20,6 @@ $roots	=	array( 0=>'',
 			);
 
 if ( JCck::on() ) {
-	
 	// Joomla 3.0
 	if ( !class_exists( 'modCckMenuHelper' ) ) {
 		require __DIR__ . '/helper.php';
@@ -49,7 +48,6 @@ if ( JCck::on() ) {
 	require JModuleHelper::getLayoutPath( 'mod_cck_menu', $params->get( 'layout', 'default' ) );
 
 } else {
-
 	// Joomla 2.5
 	require_once dirname(__FILE__).'/helper.php';
 	require_once dirname( __FILE__ ).'/cck_menu.php';
@@ -57,7 +55,7 @@ if ( JCck::on() ) {
 	$app		=	JFactory::getApplication();
 	$hide		=	$app->input->getBool( 'hidemainmenu' );
 	$document 	=	JFactory::getDocument();
-	$root		=	JURI::root( true );
+	$root		=	JUri::root( true );
 	$document->addStyleSheet( $root.'/administrator/modules/mod_cck_menu/assets/css/cck_menu.css' );
 
 	$moduleid	=	$module->id;
@@ -89,5 +87,4 @@ if ( JCck::on() ) {
 		cckjs_menu_init('cck_menu_jseblod'+jseblodmenuid);
 	</script>
 	<?php } ?>
-
 <?php } ?>

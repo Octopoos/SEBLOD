@@ -529,7 +529,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( $auto_email ) {
 			switch ( $activation ) {
 				case 2:
-					$base				=	JURI::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
+					$base				=	JUri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
 					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
 					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 					if ( $sendpassword ) {
@@ -552,7 +552,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					}
 					break;
 				case 1:
-					$base				=	JURI::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
+					$base				=	JUri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
 					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
 					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 					if ( $sendpassword ) {

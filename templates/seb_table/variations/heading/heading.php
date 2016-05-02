@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-$app		=	JFactory::getApplication();
 $column		=	'';
 if ( $options->get( 'order_by' ) ) {
 	$column	=	$options->get( 'order_by_fieldname' );

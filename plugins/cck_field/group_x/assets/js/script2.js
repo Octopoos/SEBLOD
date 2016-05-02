@@ -14,7 +14,7 @@
 
 			$("body").on('click', '.cck_button_add_'+name, function() {
 
-				elem = $(this).closest('[id^="cck1r_forms_' +name);
+				elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
 				length = ( elem.parent().children().length );
 
 				if (length < max_element) {
@@ -53,7 +53,7 @@
 		remove: function(name,min_element) {
 			var elem, position, Child;
 			$("body").on('click', '.cck_button_del_'+name, function() {
-				elem = $(this).closest('[id^="cck1r_forms_' +name);
+				elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
 				var n	=	elem.parent().children().length;
 				if (n > min_element) {
 					position	=	position_in_gx( elem );

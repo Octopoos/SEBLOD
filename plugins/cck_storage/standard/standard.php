@@ -95,7 +95,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'exact':
 				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
 				if ( !$var_type ) {
-					$sql	=	$target.' = '.$value;
+					$sql	=	$target.' = '.JCckDatabase::clean( $value );
 				} else {
 					$sql	=	$target.' = '.JCckDatabase::quote( $value );
 				}
@@ -147,7 +147,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 						if ( !$var_type ) {
 							foreach ( $values as $v ) {
 								if ( strlen( $v ) > 0 ) {
-									$fragments[] 	=	$v;
+									$fragments[] 	=	JCckDatabase::clean( $v );
 								}
 							}
 						} else {
@@ -248,7 +248,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					if ( !$var_type ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	$v;
+								$fragments[] 	=	JCckDatabase::clean( $v );
 							}
 						}
 					} else {
@@ -272,7 +272,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'not_equal':
 				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
 				if ( !$var_type ) {
-					$sql	=	$target.' != '.$value;
+					$sql	=	$target.' != '.JCckDatabase::clean( $value );
 				} else {
 					$sql	=	$target.' != '.JCckDatabase::quote( $value );
 				}

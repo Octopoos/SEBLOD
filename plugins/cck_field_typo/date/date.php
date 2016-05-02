@@ -24,7 +24,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		if ( self::$type != $field->typo ) {
 			return;
 		}
-		self::$path	=	JURI::root().'plugins/cck_field_typo/'.self::$type.'/';
+		self::$path	=	JUri::root().'plugins/cck_field_typo/'.self::$type.'/';
 		
 		// Prepare
 		if ( $field->value && $field->value != '' && $field->value != '0000-00-00 00:00:00' ) {

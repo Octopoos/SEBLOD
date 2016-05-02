@@ -56,7 +56,7 @@ define( '_C6_LINK',				CCK_LINK.'&view='._C6_NAME );
 define( '_C7_LINK',				CCK_LINK.'&view='._C7_NAME );
 define( '_C8_LINK',				CCK_LINK.'&view='._C8_NAME );
 
-$root	=	JURI::root( true );
+$root	=	JUri::root( true );
 define( 'JROOT_CCK',			$root );
 define( 'JROOT_MEDIA_CCK',		$root.'/media/cck' );
 define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );

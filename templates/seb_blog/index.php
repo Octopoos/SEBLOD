@@ -129,7 +129,7 @@ $css							.=	'#'.$cck->id.' div.cck-odd{border:'.$odd_border_size.'px '.$odd_bo
 
 // Add CSS file
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JURI::root( true ).'/templates/'.$this->template.'/css/style.css' );
+$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->template.'/css/style.css' );
 
 // Set template
 echo '<div id="'.$id.'" class="'.$cck->id_class.'cck-f100 cck-pad-'.$item_margin.'">';	

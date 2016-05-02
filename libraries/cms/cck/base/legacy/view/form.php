@@ -60,7 +60,7 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 									   'w70'=>'span8',
 									   'wrapper'=>'container',
 									   'wrapper2'=>'row-fluid',
-									   'wrapper_tmpl'=>'span'
+									   'wrapper_tmpl'=>'span12'
 								);
 		} else {
 			$this->css		=	array( 'w30'=>'width-30',

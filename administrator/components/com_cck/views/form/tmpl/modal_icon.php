@@ -24,7 +24,7 @@ if ( isset( $params['quickadd'] ) && $params['quickadd'] == 1 ) {
 	$url	=	'';
 }
 $items		=	JCckDevIntegration::getForms( $url, $type );
-$doc->addStyleSheet( JURI::root( true ).'/administrator/components/com_cck/assets/css/cpanel.css' );
+$doc->addStyleSheet( JUri::root( true ).'/administrator/components/com_cck/assets/css/cpanel.css' );
 $target_id	=	( isset( $target_id ) ) ? $target_id : 'collapseModal2';
 
 if ( $legacy == 1 ) {

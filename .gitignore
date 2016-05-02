@@ -1301,14 +1301,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_button_cancel.sys.ini
 /plugins/cck_field/button_cancel/*
 
-######## SEBLOD Plug-ins >> Field >> Button Free
-
-/administrator/language/en-GB/en-GB.plg_cck_field_button_free.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_button_free.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_button_free.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_button_free.sys.ini
-/plugins/cck_field/button_free/*
-
 ######## SEBLOD Plug-ins >> Field >> Button Reset
 
 /administrator/language/en-GB/en-GB.plg_cck_field_button_reset.ini
@@ -1457,14 +1449,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_radio_numeric.sys.ini
 /plugins/cck_field/radio_numeric/*
 
-######## SEBLOD Plug-ins >> Field >> Search Generic
-
-/administrator/language/en-GB/en-GB.plg_cck_field_search_generic.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_search_generic.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_generic.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_generic.sys.ini
-/plugins/cck_field/search_generic/*
-
 ######## SEBLOD Plug-ins >> Field >> Search Join
 
 /administrator/language/en-GB/en-GB.plg_cck_field_search_join.ini
@@ -1480,14 +1464,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_operator.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_operator.sys.ini
 /plugins/cck_field/search_operator/*
-
-######## SEBLOD Plug-ins >> Field >> Search Ordering
-
-/administrator/language/en-GB/en-GB.plg_cck_field_search_ordering.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_search_ordering.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_ordering.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_ordering.sys.ini
-/plugins/cck_field/search_ordering/*
 
 ######## SEBLOD Plug-ins >> Field >> Search Pagination
 
@@ -2111,14 +2087,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_fields.sys.ini
 /plugins/cck_field_restriction/cck_fields/*
 
-######## SEBLOD Plug-ins >> Restriction >> URL Variable
-
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_url_variable.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_url_variable.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_url_variable.sys.ini
-/plugins/cck_field_restriction/url_variable/*
-
 ######## SEBLOD Plug-ins >> Restriction >> X
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_x.ini
@@ -2145,10 +2113,6 @@ Temporary Items
 /administrator/language/en-GB/en-GB.plg_cck_field_typo_joomla_content_prepare.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_content_prepare.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_content_prepare.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_typo_joomla_jgrid.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_typo_joomla_jgrid.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_jgrid.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_jgrid.sys.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_typo_joomla_jtext.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_typo_joomla_jtext.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_jtext.ini
@@ -2162,7 +2126,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_pathway.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_typo_joomla_pathway.sys.ini
 /plugins/cck_field_typo/joomla_content_prepare/*
-/plugins/cck_field_typo/joomla_jgrid/*
 /plugins/cck_field_typo/joomla_jtext/*
 /plugins/cck_field_typo/joomla_message/*
 /plugins/cck_field_typo/joomla_pathway/*

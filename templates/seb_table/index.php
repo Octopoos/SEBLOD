@@ -31,7 +31,7 @@ $class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i'
 $class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
 
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JURI::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
+$doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
 
 // Set
 $isMore			=	$cck->isLoadingMore();

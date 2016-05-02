@@ -105,9 +105,9 @@ class CommonHelper_Display
 						.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content{-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;}
 						';
 			
-			$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-qtip/css/jquery.qtip.css' );
+			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-qtip/css/jquery.qtip.css' );
 			JCck::loadjQuery();
-			$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-qtip/js/jquery.qtip.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-qtip/js/jquery.qtip.min.js' );
 			
 			foreach ( $items as $item ) {
 				$html	.=	'<li><a class="featured_sessions" href="javascript:void(0);" mydata="'.$item->type.'"'
