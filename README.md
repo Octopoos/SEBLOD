@@ -18,3 +18,4 @@ Going Further
 Get Involved?
 ======
 Anyone that want to help & get involved in the development of SEBLOD should use the "Master" branch, and Pull Request only to the "Master" branch.
+And, please give us a star to help the project, as well. Thanks ! :)
