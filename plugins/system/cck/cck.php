@@ -265,14 +265,15 @@ class plgSystemCCK extends JPlugin
 			
 			if( ( count( array_diff( $authlevels, $viewlevels ) ) ) || ( count( array_diff( $viewlevels, $authlevels ) ) ) ) {
 				jimport( 'cck.joomla.user.user' );
-				$shadow	=	new CCKUser( $user->get( 'id' ) );
-				$shadow->setAuthorisedViewLevels( $viewlevels );
-				$shadow->makeHimLive();
+				$userShadow		=	new CCKUser( $user->get( 'id' ) );
+				$userShadow->setAuthorisedViewLevels( $viewlevels );
+				$userShadow->makeHimLive();
 			}
 		} else {
 			if ( $app->isAdmin() ) {
 				return;
 			}
+			$init		=	true;
 			$session	=	JFactory::getSession();
 			$session->set( 'user', JFactory::getUser( 0 ) );
 			
@@ -280,9 +281,20 @@ class plgSystemCCK extends JPlugin
 				return;
 			}
 			
-			$user			=	new JUser( $this->site->guest );
-			$user->guest	=	1;
+			if ( isset( $user->cck_multisite ) ) {
+				$init	=	false;
+			}
+			$user					=	new JUser( $this->site->guest );
+			$user->guest			=	1;
+			$user->cck_multisite	=	1;
+
 			$session->set( 'user', $user );
+
+			if ( (int)$init && JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
+				$menuShadow->makeHimLive();
+			}
 			
 			$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
 			$style	=	$this->site_cfg->get( 'template_style', '' );
