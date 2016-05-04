@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.8.1 Upgrade Release [6-May-2016] --------------
+
++ Country List updated in install.sql to include German translation.
+
+# Missing Menu Items in Multi-sites (on first load) issue fixed (regression since Joomla! 3.5.x).
+
 -------------------- 3.8.0 Upgrade Release [30-Apr-2016] -------------
 
 * Security Release:
