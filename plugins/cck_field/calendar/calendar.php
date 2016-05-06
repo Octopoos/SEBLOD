@@ -233,8 +233,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$form		=	'<input type="text" id="'.$id.'_hidden" name="'.$name.'_hidden" value="'.$value.'" '.$attr.' />'
 					.	$form_more;
 		
-		// Set
-		if ( ! $field->variation ) {
+		if ( !parent::g_isStaticVariation( $field, $field->variation, true ) ) {
 			if ( JCck::on() ) {
 				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
 			} else {
@@ -246,6 +245,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$field->form			=	$form;
 			$field->markup_class	.=	' input-append';
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
+		}
+
+		// Set
+		if ( ! $field->variation ) {
+			//
 		} else {
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
