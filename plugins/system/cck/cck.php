@@ -269,6 +269,12 @@ class plgSystemCCK extends JPlugin
 				$userShadow->setAuthorisedViewLevels( $viewlevels );
 				$userShadow->makeHimLive();
 			}
+
+			if ( JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$user->get( 'id' ) ) );
+				$menuShadow->makeHimLive();
+			}
 		} else {
 			if ( $app->isAdmin() ) {
 				return;
