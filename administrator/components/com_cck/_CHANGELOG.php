@@ -26,7 +26,12 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include German translation.
 
-# Missing Menu Items in Multi-sites (on first load) issue fixed (regression since Joomla! 3.5.x).
+# Filter Variation fixed in Calendar plug-in.
+# Menu Items in Multi-sites (on first load) issue fixed (regression since Joomla! 3.5.x).
+# Missing translations added.
+# Multi-sites no more automatically activated after first creation (regression since SEBLOD 3.8.0).
+# Remaining Mac OS files (.DS_Store) removed from com_cck.zip
+# "User Activation State" storage is now "none".
 
 -------------------- 3.8.0 Upgrade Release [30-Apr-2016] -------------
 
