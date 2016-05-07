@@ -22,16 +22,19 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.1 Upgrade Release [6-May-2016] --------------
+-------------------- 3.8.1 Upgrade Release [7-May-2016] --------------
 
 + Country List updated in install.sql to include German translation.
 
+# clearForm() fixed for multiple select in Firefox.
 # Filter Variation fixed in Calendar plug-in.
 # Menu Items in Multi-sites (on first load) issue fixed (regression since Joomla! 3.5.x).
 # Missing translations added.
 # Multi-sites no more automatically activated after first creation (regression since SEBLOD 3.8.0).
+# Pagination on Lists (on back-end) fixed (regression since SEBLOD 3.8.0).
 # Remaining Mac OS files (.DS_Store) removed from com_cck.zip
 # "User Activation State" storage is now "none".
+# Various issues related to the router fixed.
 
 -------------------- 3.8.0 Upgrade Release [30-Apr-2016] -------------
 
