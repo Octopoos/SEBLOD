@@ -44,7 +44,7 @@ INSERT IGNORE INTO `#__cck_more_countries` (`id`, `name_en`, `name_fr`, `name_de
 	(27, 'Bolivia, Plurinational State of', 'Bolivie, l\'état plurinational de', 'Bolivien', 'Боливия', 'BO', 'BOL'),
 	(28, 'Bosnia and Herzegovina', 'Bosnie-herzégovine', 'Bosnien und Herzegowina', 'Босния и Герцеговина', 'BA', 'BIH'),
 	(29, 'Botswana', 'Botswana', 'Botsuana', 'Ботсвана', 'BW', 'BWA'),
-	(30, 'Bouvet Island', 'Bouvet, île', 'Bouvetinsel', 'Остров Буве\r\n', 'BV', 'BVT'),
+	(30, 'Bouvet Island', 'Bouvet, île', 'Bouvetinsel', 'Остров Буве', 'BV', 'BVT'),
 	(31, 'Brazil', 'Brésil', 'Brasilien', 'Бразилия', 'BR', 'BRA'),
 	(32, 'British Indian Ocean Territory', 'Océan indien, territoire britannique de l\'', 'Britische Territorien im Indischen Ozean', 'Британская Территория В Индийском Океане', 'IO', 'IOT'),
 	(33, 'Brunei Darussalam', 'Brunéi darussalam', 'Brunei Darussalam', 'Бруней', 'BN', 'BRN'),
