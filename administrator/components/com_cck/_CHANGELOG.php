@@ -26,6 +26,8 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include German translation.
 
+^ Mobile Detect updated to 2.8.22.
+
 # clearForm() fixed for multiple select in Firefox.
 # Filter Variation fixed in Calendar plug-in.
 # Menu Items in Multi-sites (on first load) issue fixed (regression since Joomla! 3.5.x).
