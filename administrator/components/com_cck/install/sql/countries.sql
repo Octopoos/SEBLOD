@@ -120,7 +120,7 @@ INSERT IGNORE INTO `#__cck_more_countries` (`id`, `name_en`, `name_fr`, `name_de
 	(103, 'Iran, Islamic Republic of', 'Iran, république islamique d\'', 'Iran, Islam. Rep.', 'Иран', 'IR', 'IRN'),
 	(104, 'Iraq', 'Iraq', 'Irak', 'Ирак', 'IQ', 'IRQ'),
 	(105, 'Ireland', 'Irlande', 'Irland', 'Ирландия', 'IE', 'IRL'),
-	(106, 'Isle of Man', 'Île de man', 'Isle of Man', 'Остров Мэн\r\nПеревести вGoogleBing\r\n', 'IM', 'IMN'),
+	(106, 'Isle of Man', 'Île de man', 'Isle of Man', 'Остров Мэн', 'IM', 'IMN'),
 	(107, 'Israel', 'Israël', 'Israel', 'Израиль', 'IL', 'ISR'),
 	(108, 'Italy', 'Italie', 'Italien', 'Италия', 'IT', 'ITA'),
 	(109, 'Jamaica', 'Jamaïque', 'Jamaika', 'Ямайка', 'JM', 'JAM'),
