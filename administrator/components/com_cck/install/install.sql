@@ -645,7 +645,7 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (601, 'User State', 'user_state', 24, 'select_simple', '', 1, 'Status', ' ', 3, '', '', '0', 'Enabled=0||Disabled=1', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'block', '', '', '', 0, '0000-00-00 00:00:00'),
 (602, 'User States', 'user_states', 24, 'select_simple', '', 1, 'Status', ' ', 3, '', '', '', 'Enabled=0||Disabled=1', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'block', '', '', '', 0, '0000-00-00 00:00:00'),
 (603, 'User Activation', 'user_activation', 24, 'text', '', 1, 'Activation', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'activation', '', '', '', 0, '0000-00-00 00:00:00'),
-(604, 'User Activation State', 'user_activation_state', 13, 'select_simple', '', 1, 'Activation Status', 'Any Activation Status', 3, '', '', '', 'Activated=0||Unactivated=1', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'activation', '', '', '', 0, '0000-00-00 00:00:00'),
+(604, 'User Activation State', 'user_activation_state', 13, 'select_simple', '', 1, 'Activation Status', 'Any Activation Status', 3, '', '', '', 'Activated=0||Unactivated=1', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'activation', '', '', '', 0, '0000-00-00 00:00:00'),
 (605, 'User Activation State (Activated)', 'user_activation_state_activated', 13, 'text', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'activation', '', '', '', 0, '0000-00-00 00:00:00'),
 (606, 'User Activation State (Unactivated)', 'user_activation_state_unactivated', 13, 'text', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__users', 'activation', '', '', '', 0, '0000-00-00 00:00:00');
 
@@ -921,8 +921,8 @@ INSERT IGNORE INTO `#__cck_core_search_field` (`searchid`, `fieldid`, `client`, 
 (18, 602, 'search', 14, '', 'hidden', '', '', '', '', '', '', '', '', '', '0,1', '', '', '', 'any_exact', '{"var_type":"0"}', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'hidden'),
 (18, 603, 'list', 6, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', '', '', '', 'joomla_jgrid', -2, '{"type":"activation","class":"btn hasTooltip","start":"1","class2":"input-small","identifier":"id","use_identifier":"1","identifier_suffix":"","identifier_name":"","trigger":"0"}', 0, 1, '', '', '', '', '', '', 'column-h'),
 (18, 604, 'search', 8, 'clear', 'form_filter', '', '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(18, 605, 'search', 15, '', '', '', '', '', '', '', '', '', '', '', ''''',''0''', '', '', '', 'any_exact', '{"table":"","var_type":"0","var_mode":"0","fieldname1":"","fieldname2":"","fieldname3":"","var_unit":"0"}', ',', '', 0, '', 0, 1, 'url_variable', '{"do":"0","trigger":"user_activation_state","match":"isEqual","values":"0"}', '', '', '', '', 'clear'),
-(18, 606, 'search', 16, '', '', '', '', '', '', '', '', '', '', '', ''''',''0''', '', '', '', 'not_any_exact', '{"table":"","var_type":"0","var_mode":"0","fieldname1":"","fieldname2":"","fieldname3":"","var_unit":"0"}', ',', '', 0, '', 0, 1, 'url_variable', '{"do":"0","trigger":"user_activation_state","match":"isEqual","values":"1"}', '', '', '', '', 'clear');
+(18, 605, 'search', 15, '', 'hidden', '', '', '', '', '', '', '', '', '', ''''',''0''', '', '', '', 'any_exact', '{"table":"","var_type":"0","var_mode":"0","fieldname1":"","fieldname2":"","fieldname3":"","var_unit":"0"}', ',', '', 0, '', 0, 1, 'url_variable', '{"do":"0","trigger":"user_activation_state","match":"isEqual","values":"0"}', '', '', '', '', 'clear'),
+(18, 606, 'search', 16, '', 'hidden', '', '', '', '', '', '', '', '', '', ''''',''0''', '', '', '', 'not_any_exact', '{"table":"","var_type":"0","var_mode":"0","fieldname1":"","fieldname2":"","fieldname3":"","var_unit":"0"}', ',', '', 0, '', 0, 1, 'url_variable', '{"do":"0","trigger":"user_activation_state","match":"isEqual","values":"1"}', '', '', '', '', 'clear');
 
 
 -- --------------------------------------------------------
@@ -1255,13 +1255,13 @@ INSERT IGNORE INTO `#__cck_core_type_field` (`typeid`, `fieldid`, `client`, `ord
 (8, 311, 'site', 4, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 312, 'admin', 6, '', '', '', '', '', 'confirm', '{"alert":"","field":"user_password"}', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 312, 'site', 5, '', '', '', '', '', 'confirm', '{"alert":"","field":"user_password"}', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(8, 321, 'admin', 18, '&nbsp;', '', '', '', '', '', '', '', '', '', '', '2', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(8, 321, 'admin', 18, 'clear', '', '', '', '', '', '', '', '', '', '', '2', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 322, 'admin', 9, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 362, 'admin', 11, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 363, 'admin', 12, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 364, 'admin', 8, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 365, 'admin', 15, '', 'value', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{"location":"","action":"edit"}', '', '', '', '', 'mainbody'),
-(8, 399, 'admin', 20, ' ', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(8, 399, 'admin', 20, 'clear', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 423, 'admin', 23, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 424, 'admin', 25, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (8, 425, 'admin', 24, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),

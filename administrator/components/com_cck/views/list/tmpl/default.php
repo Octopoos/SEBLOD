@@ -78,10 +78,13 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 		if ( $this->show_pagination > -1 && $pages_total > 1 ) {
 			echo '<div class="seblod '.$this->class_pagination.'">';
 
+			$pages	=	str_replace( 'document.adminForm.limitstart', 'document.'.$this->config['formId'].'.limitstart', $this->pagination->getListFooter() );
+			$pages	=	str_replace( 'Joomla.submitform()', 'Joomla.submitform(\'\',document.getElementById(\''.$this->config['formId'].'\'))', $pages );
+
 			if ( JCck::on() ) {
-				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $this->pagination->getListFooter() );
+				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $pages );
 			} else {
-				echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $this->pagination->getListFooter() );
+				echo str_replace( '<div class="container">', '<div class="container">'.$item_number, $pages );
 			}
 			echo '</div>';
 		}

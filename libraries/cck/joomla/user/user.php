@@ -1,16 +1,14 @@
 <?php
 /**
- * @package     Joomla.Platform
- * @subpackage  User
- *
- * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
- */
+* @version 			SEBLOD 3.x Core ~ $Id: user.php sebastienheraud $
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
-defined('JPATH_PLATFORM') or die;
-
-jimport( 'joomla.access.access' );
-jimport( 'joomla.registry.registry' );
+defined( 'JPATH_PLATFORM' ) or die;
 
 // CCKUser
 class CCKUser extends JUser
@@ -42,7 +40,6 @@ class CCKUser extends JUser
 	public function makeHimLive()
 	{
 		JFactory::getSession()->set( 'user', $this->_user );
-		
-		//echo implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
 	}
 }
+?>

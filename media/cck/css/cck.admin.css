@@ -85,6 +85,7 @@ div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview{padd
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview span{line-height:26px;}
 
 /*ADMIN GENERIQUE JFORM USER GROUP*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups{float:left;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul{padding:0;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}

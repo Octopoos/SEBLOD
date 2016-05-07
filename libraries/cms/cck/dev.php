@@ -327,7 +327,7 @@ abstract class JCckDev
 		$js2		=	'';
 		$js3		=	'';
 		if ( $type == 'typo' ) {
-			$js2	=	'if($("#typo_label").length) { $("#typo_label").val(parent.jQuery("#"+eid+"_typo_label").val()); }';
+			$js2	=	'if($("#typo_label").length) { if (parent.jQuery("#"+eid+"_typo_label").val()) { $("#typo_label").val(parent.jQuery("#"+eid+"_typo_label").val()); }}';
 			$js3	=	'if($("#typo_label").length) { parent.jQuery("#"+eid+"_typo_label").val($("#typo_label").val()); } excluded[0] = "typo_label"';
 		}
 		if ( !isset( $options['js']['load'] ) ) {

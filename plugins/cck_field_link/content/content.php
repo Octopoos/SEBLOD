@@ -68,7 +68,15 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
 			$pk				=	( $content == '2' ) ? 0 : $config['pk'];
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$link->get( 'content_location', $config['location'] ), 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
+
+			if ( $content == '2' ) {
+				$location	=	$link->get( 'content_location' );
+				$pk			=	0;
+			} else {
+				$location	=	$config['location'];
+				$pk			=	$config['pk'];
+			}
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
 		}
 		$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
 		

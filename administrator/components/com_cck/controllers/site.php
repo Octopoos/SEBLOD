@@ -37,7 +37,7 @@ class CCKControllerSite extends JControllerForm
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		
-		if ( $recordId == 10 || $recordId == 500 ) {
+		if ( $recordId == 10 || $recordId == 500 || $recordId == 501 ) {
 			$db					=	JFactory::getDbo();
 			$params				=	JCckDatabase::loadResult( 'SELECT params FROM #__extensions WHERE element = "com_cck"' );
 			$config				=	JCckDev::fromJSON( $params, 'object' );
