@@ -67,8 +67,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
-			$pk				=	( $content == '2' ) ? 0 : $config['pk'];
-
+			
 			if ( $content == '2' ) {
 				$location	=	$link->get( 'content_location' );
 				$pk			=	0;

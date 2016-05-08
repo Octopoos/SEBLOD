@@ -22,9 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.1 Upgrade Release [7-May-2016] --------------
+-------------------- 3.8.1 Upgrade Release [8-May-2016] --------------
 
 + Country List updated in install.sql to include German translation.
+
+^ Mobile Detect updated to 2.8.22.
 
 # clearForm() fixed for multiple select in Firefox.
 # Filter Variation fixed in Calendar plug-in.
