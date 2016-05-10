@@ -725,6 +725,27 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// _getRoute
 	public static function _getRoute( $sef, $itemId, $id, $path = '', $option = '' )
 	{
+		static $itemIds	=	array();
+
+		if ( !isset( $itemIds[$itemId] ) ) {
+			$menu				=	JFactory::getApplication()->getMenu();
+			$item				=	$menu->getItem( $itemId );
+
+			if ( !is_object( $item ) ) {
+				$itemIds[$itemId]	=	'/';
+			} else {
+				$itemIds[$itemId]	=	'option='.$item->query['option'].'&view='.$item->query['view'];
+			}
+		}
+		$query	=	$itemIds[$itemId];
+
+		// Check Query
+		if ( $query == '/' ) { /* TODO: check if no itemid */
+			return ''; /* No Link */
+		} elseif ( $query == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+			return 'index.php?Itemid='.$itemId; /* Direct Link */
+		}
+
 		$option	=	( $option != '' ) ? 'option='.$option.'&' : '';
 		$link	=	'index.php?'.$option.'view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )].$path;
 
