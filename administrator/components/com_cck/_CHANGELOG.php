@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.8.2 Upgrade Release [13-May-2016] -------------
+
++ Country List updated in install.sql to include Russian translation.
+
++ getPk() method added to JCckContent class.
+
+# ...
+
 -------------------- 3.8.1 Upgrade Release [8-May-2016] --------------
 
 + Country List updated in install.sql to include German translation.
