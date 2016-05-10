@@ -84,7 +84,11 @@ class plgCCK_FieldDiv extends JCckPluginField
 		$html	=	'';
 		
 		// Prepare
-		if ( $field->bool == 2 ) {
+		if ( $field->bool == -1 ) {
+			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
+			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
+			$html	=	'<div'.$attr.'></div>';
+		} elseif ( $field->bool == 2 ) {
 			$html	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
 			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
@@ -119,7 +123,11 @@ class plgCCK_FieldDiv extends JCckPluginField
 		}
 		
 		// Prepare
-		if ( $field->bool == 2 ) {
+		if ( $field->bool == -1 ) {
+			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
+			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
+			$form	=	'<div'.$attr.'></div>';
+		} elseif ( $field->bool == 2 ) {
 			$form	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
 			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
