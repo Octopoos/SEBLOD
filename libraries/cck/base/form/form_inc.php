@@ -42,6 +42,7 @@ $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 $options	=	new JRegistry;
 $options->loadString( $type->{'options_'.$preconfig['client']} );
 
+$author			=	0;
 $current		=	( $options->get( 'redirection' ) == 'current_full' ) ? JUri::getInstance()->toString() : JUri::current();
 $no_message		=	$options->get( 'message_no_access' );
 $no_redirect	=	$options->get( 'redirection_url_no_access', 'index.php?option=com_users&view=login' );
@@ -74,6 +75,9 @@ if ( $id > 0 ) {
 			}
 		}
 	}
+	if ( !$translate_id ) {
+		$author			=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
+	}
 } else {
 	$isNew				=	1;
 	if ( $type->location && (( $app->isAdmin() && $type->location != 'admin' ) || ( $app->isSite() && $type->location != 'site' )) ) {
@@ -99,7 +103,7 @@ $post	=	( $retry && $retry == $type->name ) ? JRequest::get( 'post' ) : array();
 $config	=	array( 'action'=>$preconfig['action'],
 				   'asset'=>'com_content',
 				   'asset_id'=>0,
-				   'author'=>0,
+				   'author'=>$author,
 				   'client'=>$preconfig['client'],
 				   'core'=>true,
 				   'custom'=>'',
