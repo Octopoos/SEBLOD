@@ -26,9 +26,13 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include Russian translation.
 
++ "Both" behaviour added in Div plug-in.
 + getPk() method added to JCckContent class.
 
-# ...
+# getConfig_Param() fixed for CLI (regression since SEBLOD 3.8.0).
+# Init "author" in Form Edition (pre-onCCK_Storage_LocationPrepareForm).
+# One more fix applied to the router.
+# User Export ("All Fields") fixed.
 
 -------------------- 3.8.1 Upgrade Release [8-May-2016] --------------
 
