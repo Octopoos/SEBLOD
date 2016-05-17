@@ -1,12 +1,12 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core
-* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
-* @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
-* @license 			GNU General Public License version 2 or later; see _LICENSE.php
-**/
+ * @version 			SEBLOD 3.x Core
+ * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+ * @url				http://www.seblod.com
+ * @editor			Octopoos - www.octopoos.com
+ * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+ * @license 			GNU General Public License version 2 or later; see _LICENSE.php
+ **/
 
 defined( '_JEXEC' ) or die;
 
@@ -26,9 +26,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		parent::__construct( $subject, $config );
 	}
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
-	
+
 	// onCCK_FieldConstruct
 	public function onCCK_FieldConstruct( $type, &$data = array() )
 	{
@@ -37,9 +37,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 	}
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
-	
+
 	// onCCK_FieldPrepareContent
 	public function onCCK_FieldPrepareContent( &$field, $value = '', &$config = array() )
 	{
@@ -50,6 +50,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		// Set
 		$value	=	trim( $value );
+
 		if ( $value == '' || $value == '0000-00-00 00:00:00' ) {
 			$field->value	=	'';
 			$field->text	=	'';
@@ -60,14 +61,13 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			// Transform the date string.
 			$value			=	$date->format( 'Y-m-d H:i:s', true, true );
 			$field->value	=	$value;
-			$options2		=	JCckDev::fromJSON( $field->options2 );
-			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$value			=	( trim( $value ) == '' ) ? '' : ( ( $options2['storage_format'] == '0' ) ? strtotime ( $value ) : $value );		
-			$field->text	=	( $value == '' ) ? '' : $date->format( @$options2['format'], true, true );
+
+			$this->_setText($field, $value, $date);
+
 		}
 		$field->typo_target	=	'text';
 	}
-	
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -86,7 +86,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		
+
 		$value		=	( trim( $value ) != '' ) ? trim( $value ) : trim( $field->defaultvalue );
 		if ( trim( $value ) == '' || $value == '0000-00-00 00:00:00' ) {
 			$Jdate		=	'';
@@ -115,7 +115,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-		
+
 		// Prepare
 		if ( strpos( $name, '[]' ) !== false ) { //FieldX
 			$nameH	=	substr( $name, 0, -2 );
@@ -131,18 +131,18 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$readonly	=	( $field->bool2 ) ? '' : ' readonly="readonly"';
 		$attr		=	'class="'.$class.'" size="'.$field->size.'"'.$readonly.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />'
-					.	$form_more;
-		
+			.	$form_more;
+
 		// Set
 		if ( ! $field->variation ) {
 			if ( JCck::on() ) {
 				$form		.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
 			} else {
-				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'-trigger" />';	
+				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'-trigger" />';
 			}
-			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'], 
-								'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
-								'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
+			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
+			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
+			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
 			$field->form			=	$form;
 			$field->markup_class	.=	' input-append';
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
@@ -150,13 +150,13 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$Jdate; //$value;
-		
+
 		// Return
 		if ( $return === true ) {
 			return $field;
 		}
 	}
-	
+
 	// onCCK_FieldPrepareResource
 	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
 	{
@@ -175,7 +175,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
-			
+
 		// Init
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		if ( count( $inherit ) ) {
@@ -185,7 +185,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		
+
 		$value		=	( trim( $value ) != '' ) ? trim( $value ) : trim( $field->defaultvalue );
 		if ( trim( $value ) == '' || $value == '0000-00-00 00:00:00' ) {
 			$Jdate		=	'';
@@ -215,7 +215,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-		
+
 		// Prepare
 		if ( strpos( $name, '[]' ) !== false ) { //FieldX
 			$nameH	=	substr( $name, 0, -2 );
@@ -231,17 +231,17 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$readonly	=	( $field->bool2 ) ? '' : ' readonly="readonly"';
 		$attr		=	'class="'.$class.'" size="'.$field->size.'"'.$readonly.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form		=	'<input type="text" id="'.$id.'_hidden" name="'.$name.'_hidden" value="'.$value.'" '.$attr.' />'
-					.	$form_more;
-		
+			.	$form_more;
+
 		if ( !parent::g_isStaticVariation( $field, $field->variation, true ) ) {
 			if ( JCck::on() ) {
 				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
 			} else {
-				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';	
+				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';
 			}
-			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'], 
-								'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
-								'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'search', 'input_text'=>$field->bool2 ) );
+			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
+			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
+			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'search', 'input_text'=>$field->bool2 ) );
 			$field->form			=	$form;
 			$field->markup_class	.=	' input-append';
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
@@ -253,23 +253,23 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		} else {
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
-		
+
 		// Set
 		$field->value	=	( $Jdate == '' ) ? '' : date( $format_search, strtotime( $Jdate ) );
-		
+
 		// Return
 		if ( $return === true ) {
 			return $field;
 		}
 	}
-	
+
 	// onCCK_FieldPrepareStore
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
 			return;
 		}
-		
+
 		// Init
 		if ( count( $inherit ) ) {
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
@@ -280,46 +280,52 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$xk		=	-1;
 			$value	=	@$config['post'][$name.'_hidden'];
 		}
+
 		if ( is_array( $value ) ) {
 			$value	=	trim( $value[$xk] );
 		}
+
+		$date = null;
+
 		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) ) {
 			// Return an SQL formatted datetime string in UTC.
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
 			$value	=	$date->toSql();
 		}
-		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-		$value		=	( $options2['storage_format'] == '0' ) ? $value : strtotime( $value );
-    		
+
+		$this->_setText( $field, $value, $date );
+
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
-		
+
 		// Set or Return
 		if ( $return === true ) {
 			return $value;
 		}
-		
+
 		$field->value	=	$value;
+
+
+
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render
-	
+
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
 		return parent::g_onCCK_FieldRenderContent( $field, 'text' );
 	}
-	
+
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
-	
+
 	// _addScripts
 	protected static function _addScripts( $params = array() )
 	{
@@ -327,7 +333,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( $loaded ) {
 			return;
 		}
-		
+
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		$lang	=	JFactory::getLanguage();
@@ -337,6 +343,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( !is_file( JPATH_SITE.'/plugins/cck_field/calendar/'.$path ) ) {
 			$path	=	'assets/js/lang/en.js';
 		}
+
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/jscal2.css'.'" type="text/css" />';
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/border-radius.css'.'" type="text/css" />';
@@ -351,7 +358,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$doc->addScript( self::$path.$path );
 		}
 	}
-	
+
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
@@ -396,17 +403,17 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		$js	.=	'</script>
 				';
-				
+
 		return $js;
 	}
-	
+
 	// _toSearchFormat
 	protected static function _toSearchFormat( $params = array() )
 	{
 		$pos_hour1	=	stripos( $params['format'], 'g' );
 		$pos_hour2	=	stripos( $params['format'], 'h' );
 		$pos_min	=	stripos( $params['format'], 'i' );
-		
+
 		if ($params['time'] == '0' ) {
 			$format_hour	=	$params['default_hour'];
 			$format_min		=	$params['default_min'];
@@ -424,7 +431,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			}
 			$format_sec			=	'00';
 		}
-		
+
 		return 'Y-m-d '.$format_hour.':'.$format_min.':'.$format_sec;
 	}
 
@@ -443,11 +450,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		$format	=	strtr( $params['format'], $pre_trans );
 		$trans	=	array( 'D'=>'%a', 'l'=>'%A', 'M'=>'%b', 'F'=>'%B', 'd'=>'%d', 'j'=>'%e', 'z'=>'%j', 'm'=>'%m', 'n'=>'%o', 'i'=>'%M',
-						   'A'=>'%p', 'a'=>'%P', 'W'=>'%W', 'N'=>'%u', 'w'=>'%w', 'y'=>'%y', 'Y'=>'%Y', 'S'=>'', 's'=>'%S', '%H'=>'%H', '%I'=>'%I', '%k'=>'%k', '%l'=>'%l', '%M'=>'%M' );
-		
+		                      'A'=>'%p', 'a'=>'%P', 'W'=>'%W', 'N'=>'%u', 'w'=>'%w', 'y'=>'%y', 'Y'=>'%Y', 'S'=>'', 's'=>'%S', '%H'=>'%H', '%I'=>'%I', '%k'=>'%k', '%l'=>'%l', '%M'=>'%M' );
+
 		return strtr( $format, $trans );
 	}
-	
+
 	// _availableDates
 	protected static function _availableDates( $params = array() )
 	{
@@ -485,7 +492,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 				$tag	=	substr( $lang->getTag(), 0, 2 );
 				break;
 		}
-		
+
 		return $tag;
 	}
 
@@ -494,5 +501,14 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	{
 		return self::$friendly;
 	}
+
+	private function _setText( &$field, &$value, $date = null )
+	{
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+
+		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
+		$value			=	( trim( $value ) == '' ) ? '' : ( ( $options2['storage_format'] == '0' ) ? strtotime ( $value ) : $value );
+
+		$field->text	=	( $value == '' || $date === null ) ? '' : $date->format( @$options2['format'], true, true );
+	}
 }
-?>
