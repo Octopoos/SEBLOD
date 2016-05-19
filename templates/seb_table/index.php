@@ -42,8 +42,8 @@ if ( $cck->isGoingToLoadMore() ) {
 // -- Render
 if ( !$isMore ) {
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
-	<div>
+<div id="<?php echo $cck->id; ?>" class="cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
+	<div class="<?php echo $cck->id_class; ?>">
 	<?php }
 	$attr		=	array(
 						'class'=>array(),
