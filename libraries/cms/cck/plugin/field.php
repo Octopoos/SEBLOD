@@ -1014,7 +1014,11 @@ class JCckPluginField extends JPlugin
 	// g_addScriptDeclaration
 	public static function g_addScriptDeclaration( $script )
 	{
-		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script type="text/javascript">jQuery(document).ready(function($){'.$script.'});</script>';
+		} else {
+			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		}
 	}
 	
 	//g_doConditionalStates
