@@ -469,6 +469,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$cc		=	NULL;
 					break;
 			}
+			if ( ( is_string( $cc ) && empty( $cc ) ) || is_array( $cc ) && empty( $cc[0] ) ) {
+				$cc	=	array();
+			}
 			$bcc	=	$process['bcc'];
 			switch ( $bcc ) {
 				case 3:
@@ -480,6 +483,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 				default:
 					$bcc	=	NULL;
 					break;
+			}
+			if ( ( is_string( $bcc ) && empty( $bcc ) ) || is_array( $bcc ) && empty( $bcc[0] ) ) {
+				$bcc	=	array();
 			}
 			$send_attach	=	$process['send_attach'];
 			if ( $send_attach != 1 && strlen( $process['send_attach'] ) > 1 ){
@@ -507,6 +513,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
+
 			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach );
 		}
 	}
