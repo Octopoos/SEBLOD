@@ -725,25 +725,48 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// _getRoute
 	public static function _getRoute( $sef, $itemId, $id, $path = '', $option = '' )
 	{
+		static $isAdmin	=	-1;
 		static $itemIds	=	array();
 
-		if ( !isset( $itemIds[$itemId] ) ) {
-			$menu				=	JFactory::getApplication()->getMenu();
-			$item				=	$menu->getItem( $itemId );
-
-			if ( !is_object( $item ) ) {
-				$itemIds[$itemId]	=	'/';
-			} else {
-				$itemIds[$itemId]	=	'option='.$item->query['option'].'&view='.$item->query['view'];
-			}
+		if ( $isAdmin == -1 ) {
+			$isAdmin	=	JFactory::getApplication()->isAdmin();
 		}
-		$query	=	$itemIds[$itemId];
 
-		// Check Query
-		if ( $query == '/' ) { /* TODO: check if no itemid */
-			return ''; /* No Link */
-		} elseif ( $query == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
-			return 'index.php?Itemid='.$itemId; /* Direct Link */
+		if ( $itemId && !$isAdmin ) {
+			$mode	=	@$sef[0];
+			$index	=	$itemId.'_'.$mode;
+			
+			if ( !isset( $itemIds[$index] ) ) {
+				$menu				=	JFactory::getApplication()->getMenu();
+				$item				=	$menu->getItem( $itemId );
+
+				if ( !is_object( $item ) ) {
+					$itemIds[$index]	=	'/';
+				} else {
+					$app		=	JFactory::getApplication();
+					$isChild	=	false;
+
+					if ( $app->input->get( 'view' ) == self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+						$item2	=	$menu->getItem( $item->parent_id );
+
+						if ( is_object( $item2 ) && $item2->query['option'] == 'com_cck' && $item2->query['view'] == 'list' ) {
+							$isChild	=	true;
+							$itemId		=	$item2->id;
+						}
+					}
+					if ( !$isChild ) {
+						$itemIds[$index]	=	'option='.$item->query['option'].'&view='.$item->query['view'];
+					}
+				}
+			}
+			$query	=	$itemIds[$index];
+
+			// Check Query
+			if ( $query == '/' ) {
+				return ''; /* No Link */
+			} elseif ( $query == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			}
 		}
 
 		$option	=	( $option != '' ) ? 'option='.$option.'&' : '';

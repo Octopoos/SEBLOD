@@ -43,7 +43,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
 											   '3'=>'full', '32'=>'id', '33'=>'alias',
 											   '4'=>'full', '42'=>'id', '43'=>'alias',
-											   '5'=>'full', '52'=>'id', '53'=>'alias'
+											   '5'=>'full', '52'=>'id', '53'=>'alias',
+											   '8'=>'full', '82'=>'id', '83'=>'alias',
 										);
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
@@ -696,7 +697,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$path	=	'&catid='.$item->catid;
 			} elseif ( $sef[0] == '5' ) {
 				$path	=	'&userid='.( isset( $item->author_alias ) ? $item->author_alias : $item->created_by );
-			} elseif ( $sef[0] == '4' ) {
+			} elseif ( $sef[0] == '4' || $sef[0] == '8' ) {
 				$path	=	'&catid='.( isset( $item->category_alias ) ? $item->category_alias : $item->catid );
 			} elseif ( $sef[0] == '3' ) {
 				$path	=	( $config['type'] ) ? '&typeid='.$config['type'] : '';
@@ -726,10 +727,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$path	=	'&catid='.$storage[self::$table]->catid;
 			} elseif ( $sef[0] == '5' ) {
 				$path	=	'&userid='.( isset( $storage[self::$table]->author_alias ) ? $storage[self::$table]->author_alias : $storage[self::$table]->created_by );
-			} elseif ( $sef[0] == '4' ) {
+			} elseif ( $sef[0] == '4' || $sef[0] == '8' ) {
 				$path	=	'&catid='.( isset( $storage[self::$table]->category_alias ) ? $storage[self::$table]->category_alias : $storage[self::$table]->catid );
 			} elseif ( $sef[0] == '3' ) {
 				$path	=	'&typeid='.$config['type'];
+			} elseif (  $sef == '10') {
+				$path	=	'&catid='.( isset( $storage[self::$table]->category_alias ) ? $storage[self::$table]->category_alias : $storage[self::$table]->catid );
 			} else {
 				$path	=	'';
 			}
@@ -844,25 +847,48 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _getRoute
 	public static function _getRoute( $sef, $itemId, $id, $path = '', $option = '', $lang = '' )
 	{
+		static $isAdmin	=	-1;
 		static $itemIds	=	array();
 
-		if ( !isset( $itemIds[$itemId] ) ) {
-			$menu				=	JFactory::getApplication()->getMenu();
-			$item				=	$menu->getItem( $itemId );
-
-			if ( !is_object( $item ) ) {
-				$itemIds[$itemId]	=	'/';
-			} else {
-				$itemIds[$itemId]	=	'option='.$item->query['option'].'&view='.$item->query['view'];
-			}
+		if ( $isAdmin == -1 ) {
+			$isAdmin	=	JFactory::getApplication()->isAdmin();
 		}
-		$query	=	$itemIds[$itemId];
+		
+		if ( $itemId && !$isAdmin && $sef != '10' ) {
+			$mode	=	@$sef[0];
+			$index	=	$itemId.'_'.$mode;
 
-		// Check Query
-		if ( $query == '/' ) { /* TODO: check if no itemid */
-			return ''; /* No Link */
-		} elseif ( $query == 'option=com_content&view=article' ) {
-			return 'index.php?Itemid='.$itemId; /* Direct Link */
+			if ( !isset( $itemIds[$index] ) ) {
+				$menu				=	JFactory::getApplication()->getMenu(); /* JMenu::getInstance( 'site' ); */
+				$item				=	$menu->getItem( $itemId );
+
+				if ( !is_object( $item ) ) {
+					$itemIds[$index]	=	'/';
+				} else {
+					$app		=	JFactory::getApplication();
+					$isChild	=	false;
+
+					if ( $app->input->get( 'view' ) == 'article' ) {
+						$item2	=	$menu->getItem( $item->parent_id );
+
+						if ( is_object( $item2 ) && $item2->query['option'] == 'com_cck' && $item2->query['view'] == 'list' ) {
+							$isChild	=	true;
+							$itemId		=	$item2->id;
+						}
+					}
+					if ( !$isChild ) {
+						$itemIds[$index]	=	'option='.$item->query['option'].'&view='.$item->query['view'];
+					}
+				}
+			}
+			$query	=	$itemIds[$index];
+
+			// Check Query
+			if ( $query == '/' ) {
+				return ''; /* No Link */
+			} elseif ( $query == 'option=com_content&view=article' ) {
+				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			}
 		}
 
 		$option	=	( $option != '' ) ? 'option='.$option.'&' : '';

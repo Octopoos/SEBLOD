@@ -120,19 +120,18 @@ class CckRouter extends JComponentRouterBase
 				if ( isset( $menuItem->query['search'] ) ) {
 					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->params->get( 'sef', '' ) );
 					
-					if ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) {
-						if ( $count == 1 ) {
-							if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
-								require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+					if ( ( ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) && $count == 1 )
+					  || ( ( $params['doSEF'][0] == '8' ) && ( $count == 1 || $count == 2 ) ) ) {
+						if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+							require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 
-								$target				=	( $params['doSEF'][0] == '5' ) ? 'author_object' : 'parent_object';
-								$properties			=	array( $target );
-								$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+							$target				=	( $params['doSEF'][0] == '5' ) ? 'author_object' : 'parent_object';
+							$properties			=	array( $target );
+							$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
 
-								if ( $properties[$target] != '' ) {
-									$params['doSEF'][0]	=	'2';
-									$params['location']	=	$properties[$target];
-								}
+							if ( $properties[$target] != '' ) {
+								$params['doSEF'][0]	=	'2';
+								$params['location']	=	$properties[$target];
 							}
 						}
 					}
