@@ -22,16 +22,21 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.2 Upgrade Release [13-May-2016] -------------
+-------------------- 3.8.2 Upgrade Release [20-May-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
++ Keyboard Shortcuts added in Content/Search UI for various parameters (1-7).
++ Router improved
+  >> 3 segments URLs (i.e. /parent/parent/...).
+  >> support added on back-end via AJAX.
 
++ "Action" parameter added ("No Search") on Search Types.
 + "Both" behaviour added in Div plug-in.
 + getPk() method added to JCckContent class.
 
+# A few more fixes applied to the router.
 # getConfig_Param() fixed for CLI (regression since SEBLOD 3.8.0).
 # Init "author" in Form Edition (pre-onCCK_Storage_LocationPrepareForm).
-# One more fix applied to the router.
 # User Export ("All Fields") fixed.
 
 -------------------- 3.8.1 Upgrade Release [8-May-2016] --------------
