@@ -126,7 +126,7 @@ class plgSystemCCK extends JPlugin
 
 		if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
 			$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
-			if ( isset( $item->query['view'] ) && $item->query['view'] == 'list' ) {
+			if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
 				$urlvars	=	$item->params->get( 'urlvars' );
 				if ( $urlvars ) {
 					$vars		=	explode( '&', $urlvars );
@@ -477,7 +477,16 @@ class plgSystemCCK extends JPlugin
 							$return		=	$return ? '&return='.$return : '';
 
 							if ( $itemId2 ) {
-								$url		=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId2.$return );
+								$item		=	$app->getMenu()->getItem( $itemId2 );
+								$urlvars	=	'';
+								if ( is_object( $item ) ) {
+									$urlvars	=	$item->params->get( 'urlvars' );
+
+									if ( $urlvars != '' ) {
+										$urlvars	=	'&'.$urlvars;
+									}
+								}
+								$url		=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId2.$urlvars.$return );
 							} else {
 								$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId.$return;
 							}							
