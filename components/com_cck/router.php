@@ -131,7 +131,19 @@ class CckRouter extends JComponentRouterBase
 
 							if ( $properties[$target] != '' ) {
 								$params['doSEF'][0]	=	'2';
-								$params['location']	=	$properties[$target];
+								$isNew			=	true;
+
+								$parent_id		=	$menuItem->parent_id;
+								$parent			=	$menu->getItem( $parent_id );
+
+								if ( is_object( $parent ) ) {
+									if ( $parent->query['option'] == 'com_cck' && $parent->query['view'] == 'list' ) {
+										$isNew	=	false;
+									}
+								}
+								if ( $isnew ) {
+									$params['location']	=	$properties[$target];
+								}
 							}
 						}
 					}
