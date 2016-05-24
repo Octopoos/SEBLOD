@@ -749,7 +749,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					if ( $app->input->get( 'view' ) == self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
 						$item2	=	$menu->getItem( $item->parent_id );
 
-						if ( is_object( $item2 ) && $item2->query['option'] == 'com_cck' && $item2->query['view'] == 'list' ) {
+						if ( is_object( $item2 ) && @$item2->query['option'] == 'com_cck' && @$item2->query['view'] == 'list' ) {
 							$isChild	=	true;
 							$itemId		=	$item2->id;
 						}
