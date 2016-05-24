@@ -607,7 +607,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					if ( count( $legal_ext ) ) {
 						$legal		=	( strrpos( $item_custom_dir, '.' ) ) ? substr( $item_custom_dir, strrpos( $item_custom_dir, '.' ) + 1 ) : '';
 						if ( $legal && array_search( $legal, $legal_ext ) === false ) {
-							JFactory::getApplication()->enqueueMessage( $imageCustomDir .' - '. JText::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
+							JFactory::getApplication()->enqueueMessage( $item_custom_dir .' - '. JText::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
 							$field->error	=	true;
 						}
 					}

@@ -88,6 +88,14 @@ if ( $process['forbidden_ext'] ) {
 		}
 	}
 }
+else
+{
+	$safeFileOptions	= array(
+		'php_ext_content_extensions' => array('joomla') // Fake extension to trick is_empty check in JInput::isSafe
+	);
+}
+
+
 if ( JFile::upload( $tmp_name, $location, false, false, $safeFileOptions ) ) {
 	$value					=	$file_location;
 	$fields[$name]->value	=	$value;
