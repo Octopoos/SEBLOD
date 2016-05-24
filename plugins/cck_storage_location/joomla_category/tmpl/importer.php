@@ -31,7 +31,12 @@ defined( '_JEXEC' ) or die;
 </div>
 
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-	$('#options_key_fieldname').isVisibleWhen('options_key','-1');
-});
+(function ($){
+	JCck.Dev.applyConditionalStates = function() {
+		$('#options_key_fieldname').isVisibleWhen('options_key','-1');
+	}
+	$(document).ready(function() {
+		JCck.Dev.applyConditionalStates();
+	});
+})(jQuery);
 </script>
