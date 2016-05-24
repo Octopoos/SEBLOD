@@ -513,7 +513,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
-
 			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach );
 		}
 	}
