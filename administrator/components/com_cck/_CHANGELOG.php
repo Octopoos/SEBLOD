@@ -35,6 +35,8 @@ $ -> Language fix or change
 + "Both" behaviour added in Div plug-in.
 + getPk() method added to JCckContent class.
 
+^ Colorbox updated to 1.6.4.
+
 # A few more fixes applied to the router.
 # getConfig_Param() fixed for CLI (regression since SEBLOD 3.8.0).
 # Init "author" in Form Edition (pre-onCCK_Storage_LocationPrepareForm).
