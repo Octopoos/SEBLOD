@@ -43,6 +43,8 @@ if ( ! $search ) {
 	$app->enqueueMessage( 'Oops! Search Type not found.. ; (', 'error' ); return;
 }
 $lang->load( 'pkg_app_cck_'.$search->folder_app, JPATH_SITE, null, false, false );
+
+$no_action					=	'';
 $options					=	new JRegistry;
 $options->loadString( $search->options );
 $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['show_form'] : (int)$options->get( 'show_form', 1 );
