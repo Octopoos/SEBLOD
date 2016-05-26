@@ -69,7 +69,9 @@ class plgCCK_Storage_LocationJoomla_User_Importer extends plgCCK_Storage_Locatio
 			if ( $data['password'] ) {
 				$data['password2']	=	$data['password'];
 			}
-			$table->bind( $data );
+			if ( !empty( $data ) ) {
+				$table->bind( $data );
+			}
 			if ( isset( $config['params']['force_password'] ) && $config['params']['force_password'] ) {
 				$table->password	=	$table->password_clear;
 			}

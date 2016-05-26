@@ -68,7 +68,9 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			self::_initTable( $table, $data, $config, true );
 			
 			// Prepare
-			$table->bind( $data );
+			if ( !empty( $data ) ) {
+				$table->bind( $data );
+			}
 			if ( $isNew && !isset( $data['rules'] ) ) {
 				$data['rules']	=	array( 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array() );
 				$rules			=	new JAccessRules( $data['rules'] );
