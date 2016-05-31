@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.2 Upgrade Release [25-May-2016] -------------
+-------------------- 3.8.2 Upgrade Release [1-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
 + Keyboard Shortcuts added in Content/Search UI for various parameters (1-7).
