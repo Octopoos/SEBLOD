@@ -1060,7 +1060,9 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( $field->script );
 			}
 			if ( $variation == 'form_filter_ajax' ) {
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var v=$(this).myVal(); JCck.Core.loadmore("&start=0&"+$(this).attr("name")+"="+v,0,1); });' );
+				$field->form	=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
+
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0"+q,0,1); });' );
 			} else {
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 			}
@@ -1082,7 +1084,8 @@ class JCckPluginField extends JPlugin
 					$then			=	'';
 					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
 						if ( $variation == 'list_filter_ajax' ) {
-							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
+							$base	=	str_replace( 'class="', 'data-cck-ajax="" class="', $base );
+							$then	=	' var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+q,0,1);';
 						}
 						$then		.=	' $("#'.$id.'_ > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
@@ -1090,7 +1093,7 @@ class JCckPluginField extends JPlugin
 					}
 					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() {var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js				=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
-					$doc->addScriptDeclaration( $js );
+					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
 				}
 				foreach ( $options as $opt ) {
