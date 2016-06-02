@@ -22,18 +22,18 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.2 Upgrade Release [1-Jun-2016] -------------
+-------------------- 3.8.2 Upgrade Release [2-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
 + Keyboard Shortcuts added in Content/Search UI for various parameters (1-7).
 + Router improved
   >> 3 segments URLs (i.e. /parent/parent/...).
   >> support added on back-end via AJAX.
-+ URL Query (Vars) added on Form menu item.
 
 + "Action" parameter added ("No Search") on Search Types.
 + "Both" behaviour added in Div plug-in.
 + getPk() method added to JCckContent class.
++ URL Query (Vars) added on Form menu item.
 
 ^ Colorbox updated to 1.6.4.
 
