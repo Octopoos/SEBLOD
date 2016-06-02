@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.8.3 Upgrade Release [x-Jun-2016] -------------
+
++ ...
+
+# One more fix to clearForm().
+
 -------------------- 3.8.2 Upgrade Release [2-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
