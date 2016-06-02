@@ -28,7 +28,12 @@ $options	=	implode( '||', $options );
 </div>
 
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-	//$('#columns_core_selected').isVisibleWhen('columns_core','1');
-});
+(function ($){
+	JCck.Dev.applyConditionalStates = function() {
+		$('#columns_core_selected').isVisibleWhen('columns_core','1');
+	}
+	$(document).ready(function() {
+		JCck.Dev.applyConditionalStates();
+	});
+})(jQuery);
 </script>

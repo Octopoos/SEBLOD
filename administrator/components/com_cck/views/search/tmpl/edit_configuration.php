@@ -88,6 +88,15 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         </ul>
 	</div>
     <div class="seblod">
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_SEARCH' ); ?></div>
+        <ul class="adminformlist adminformlist-2cols">
+            <?php
+            echo JCckDev::renderBlank();
+            echo JCckDev::renderForm( 'core_action', @$options['action_no_search'], $config, array( 'storage_field'=>'options[action_no_search]' ) );
+            ?>
+        </ul>
+    </div>
+    <div class="seblod">
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php

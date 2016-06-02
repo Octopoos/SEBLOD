@@ -58,7 +58,7 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 			$tag					=	'';
 		}
 		
-		$class					=	JCck::on( '3.4' ) ? ' class="hasTooltip"' : '';
+		$class					=	( JCck::on( '3.4' ) && $uri['view'] != 'featured' ) ? ' class="hasTooltip"' : '';
 		$data['doIntegration']	=	false;
 		$data['multilanguage']	=	$data['options']->get( 'multilanguage', 0 );
 		if ( $data['multilanguage'] ) {

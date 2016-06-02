@@ -77,7 +77,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	// onCCK_Field_TypoBeforeRenderContent
 	public static function onCCK_Field_TypoBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		if ( $fields[$process['alt_fieldname']] ) {
+		if ( @$fields[$process['alt_fieldname']] ) {
 			if ( is_array( $fields[$process['name']]->value ) ) {
 				foreach ( $fields[$process['name']]->value as $k=>$field ) {
 					if ( isset( $field->image_alt ) && $field->image_alt ) {

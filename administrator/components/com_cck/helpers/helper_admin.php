@@ -148,7 +148,7 @@ class Helper_Admin extends CommonHelper_Admin
 				JToolBarHelper::custom( $vName.'s'.'.checkin', 'checkin', 'checkin', 'JTOOLBAR_CHECKIN', true );
 			}
 			if ( $vName == 'type' || $vName == 'search' ) {
-				JToolBarHelper::custom( $vName.'s'.'.version', 'archive', 'archives', 'JTOOLBAR_ARCHIVE', true );
+				JToolBarHelper::custom( $vName.'s'.'.version', 'unarchive', 'archives', 'JTOOLBAR_ARCHIVE', true );
 			}
 			if ( !( $vName == 'folder' || $vName == 'site' ) ) {
 				$bar->appendButton( 'CckSeparator' );

@@ -86,7 +86,7 @@ class plgSearchCCK extends JPlugin
 			$t2		=	count( $tables );
 		}
 		foreach ( $fields as $field ) {
-			if ( !$field->state ) {
+			if ( !@$field->state ) {
 				continue;
 			}
 			if ( $current['stage'] != (int)$field->stage ) {

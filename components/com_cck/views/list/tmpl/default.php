@@ -90,7 +90,7 @@ if ( !$this->raw_rendering ) { ?>
 	} else {
 		$pages_total	=	0;
 	}
-	$hasAjax			=	( $pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ? true : false;
+	$hasAjax			=	( $this->filter_ajax || ( $pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ) ? true : false;
 	$pagination_replace	=	'';
 	if ( $this->show_pagination > -2 && $pages_total > 1 ) {
 		$url			=	JUri::getInstance()->toString().'&';
@@ -158,17 +158,27 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 
 <?php if ( $hasAjax ) {
 $context	=	'&context={\'Itemid\':'.$app->input->getInt( 'Itemid', 0 ).',\'view\':\'list\'}';
+$pre		=	'';
+$url		=	JUri::current();
+
+if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+	$pre	=	'#seblod_form_raw ';
+	
+	if ( $app->input->get( 'search' ) != '' ) {
+		$url	=	JUri::root().'index.php?option=com_cck&view=list&search='.$app->input->get( 'search' );
+	}
+}
 ?>
 <script type="text/javascript">
 (function ($){
 	JCck.Core.loadmore = function(more,stop,search) {
-		var elem = ".cck-loading-more";
+		var elem = "<?php echo $pre; ?>.cck-loading-more";
 		var search = search || 0;
 		$.ajax({
 			cache: false,
-			data: "format=raw&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
+			data: "format=raw&task=search&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
 			type: "GET",
-			url: "<?php echo JUri::current(); ?>",
+			url: "<?php echo $url; ?>",
 			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
 			success: function(response){
 				if (stop != 1) {

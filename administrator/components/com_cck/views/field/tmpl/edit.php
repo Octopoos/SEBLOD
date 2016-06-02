@@ -145,6 +145,7 @@ Helper_Display::quickCopyright();
 (function ($){
 	JCck.Dev = {
 		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ) ?>",
+		name:"field",
 		transliteration:<?php echo $transliterate; ?>,
 		ajaxLayer: function(view, layout, elem, mydata) {
 			var loading = "<img align='center' src='<?php echo $ajax_load; ?>' alt='' />";  
@@ -184,6 +185,7 @@ Helper_Display::quickCopyright();
 								if (!(!elem || elem=="undefined")) {
 									if (!parent.jQuery("ul#sortable1 li#"+obj.id).length) {
 										parent.jQuery(elem).before(obj.html);
+										JCck.DevHelper.switchP(JCck.DevHelper.getPane('parent'), obj.id, 'parent');
 									}
 								}
 								var target_id = "#layer_fields_options";

@@ -202,6 +202,12 @@ class JCckContent
 	{
 		return $this->_id;
 	}
+
+	// getPk
+	public function getPk()
+	{
+		return $this->_pk;
+	}
 	
 	// getTable
 	public function getTable()

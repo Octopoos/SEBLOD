@@ -36,7 +36,7 @@ class JCckDevImage
 
 		if ( in_array( $this->_extension, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
 			if ( function_exists( 'exif_read_data' ) ) {
-				$this->_exif 	=	exif_read_data( $path, 0, true );
+				$this->_exif 	=	@exif_read_data( $path, 0, true );
 			}
 		}
 		

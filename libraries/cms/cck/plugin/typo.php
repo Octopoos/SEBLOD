@@ -38,7 +38,7 @@ class JCckPluginTypo extends JPlugin
 	// g_hasLink
 	public static function g_hasLink( &$field, $typo, $value, &$config = array() )
 	{
-		if ( $field->link != '' ) {
+		if ( isset( $field->link ) && $field->link != '' ) {
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 
 			if ( $applyLink && strpos( $value, '<a href' ) === false ) {

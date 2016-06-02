@@ -195,7 +195,11 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		$idx1	=	$process['s_table'];
 		$idx2	=	$process['s_field'];
 		if ( $idx1 && $idx2 ) {
-			$storages[$idx1][$idx2]	=	'{' . substr( $storages[$idx1][$idx2], 0, -1 ) . '}';
+			if ( is_array( $storages[$idx1][$idx2] ) ) {
+				$storages[$idx1][$idx2]	=	json_encode( $storages[$idx1][$idx2] );
+			} else {
+				$storages[$idx1][$idx2]	=	'{' . substr( $storages[$idx1][$idx2], 0, -1 ) . '}';
+			}
 		}
 	}
 	

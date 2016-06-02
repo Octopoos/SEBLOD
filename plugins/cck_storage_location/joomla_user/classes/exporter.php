@@ -15,8 +15,8 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.p
 // Class
 class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_LocationJoomla_User
 {
-	protected static $columns_excluded	=	array( 'isRoot', 'password_clear', 'usertype', 'guest', 'aid' );
-	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid' );
+	protected static $columns_excluded	=	array( 'isRoot', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
+	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()

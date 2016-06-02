@@ -363,6 +363,20 @@ class CCKController extends JControllerLegacy
 		echo json_encode( $return );
 	}
 
+	// route
+	public function route()
+	{
+		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
+		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
+		
+		if ( $url != '' ) {
+			if ( $url[0] == '/' ) {
+				$url	=	substr( $url, 1 );
+			}
+		}
+		echo JRoute::_( $url );
+	}
+
 	// save	
 	public function save( $isAjax = false )
 	{

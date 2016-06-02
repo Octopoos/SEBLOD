@@ -44,6 +44,9 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 					JCck::loadjQueryUI();
 				}
+				if ( $tmpl == 'component' ) {
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.8.2.min.js' );
+				}
 				Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', $script, $tmpl );
 				Helper_Include::addTooltip( 'img[title].qtip_cck', 'right center', 'left center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', false, $tmpl );
 				break;
@@ -52,7 +55,7 @@ class Helper_Include extends CommonHelper_Include
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.8.0.min.js' );
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.8.2.min.js' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
 				}
