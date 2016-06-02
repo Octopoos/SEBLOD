@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_ValidationEmail extends JCckPluginValidation
 {
 	protected static $type	=	'email';
-	protected static $regex	=	'/^([A-Za-z0-9_\-\.\'])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,6})$/';
+	protected static $regex	=	'/^([A-Za-z0-9_\-\.\'])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,10})$/';
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 
