@@ -69,7 +69,7 @@ ul.sortable li.panel_slider {}
 ul.sortable input, ul.sortable select{width:auto;height:auto;margin:0;}
 ul.sortable span, ul.sortable input, ul.sortable select{font-size:11px;}
 li span.title{cursor: pointer;font-weight: bold;padding: 10px;position: relative;}
-li.position span.title{text-transform:uppercase; padding:4px;}
+li.position span.title{text-transform:uppercase; padding:4px; cursor: default;}
 li.position span.capitalize{text-transform:none!important;}
 ul.sortable li span.subtitle{cursor: pointer;font-weight: bold;padding: 10px;position: relative;}
 ul.sortable li.drop-highlight{height: 1em;}

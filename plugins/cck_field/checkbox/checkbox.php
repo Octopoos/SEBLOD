@@ -360,7 +360,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
-	{		
+	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 	
