@@ -81,15 +81,25 @@ class Helper_Workshop
 	}
 	
 	// displayPosition
-	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css )
+	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css, $info = array() )
 	{
 		$dir	=	'down';
 		$to		=	$p + 1;
 		$hide	=	( $variation_status != '' ) ? '' : ' hidden';
-		
+
+		if ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$name.'.php' ) ) {
+			$attr	=	' data-path="'.'templates/'.$info['template'].'/positions/'.$name.'.php'.'"';
+			$class	=	' overridden';
+		} elseif ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$info['name'].'/'.$info['view'].'/'.$name.'.php' ) ) {
+			$attr	=	' data-path="'.'templates/'.$info['template'].'/positions/'.$info['name'].'/'.$info['view'].'/'.$name.'.php'.'"';
+			$class	=	' overridden';
+		} else {
+			$attr	=	'';
+			$class	=	'';
+		}
 		$pos	=	'<li class="position ui-state-disabled" id="pos-'.$p.'">'
 				.	'<input class="selector" type="radio" id="position'.$p.'" name="positions" gofirst="#pos-'.($to-1).'" golast="#pos-'.$to.'" />'
-				.	'<span class="title">'.$title.'</span>'
+				.	'<span class="title'.$class.'"'.$attr.'>'.$title.'</span>'
 				.	'<input type="hidden" name="ff[pos-'.$name.']" value="position" />'
 				.	'<div class="pane la">'
 				.	'<div class="col1"><div class="colc">'.$legend.'</div></div>'
