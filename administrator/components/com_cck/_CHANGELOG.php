@@ -24,14 +24,16 @@ $ -> Language fix or change
 
 -------------------- 3.8.3 Upgrade Release [x-Jun-2016] -------------
 
-+ ...
++ "Integers" mode added in URL Variable Live plug-in.
++ Position Overrides' path displayed in Content/Search Types UI.
 
 # One more fix to clearForm().
+# Router now handles the "Intranet App for SEBLOD" correclty.
 
 -------------------- 3.8.2 Upgrade Release [2-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
-+ Keyboard Shortcuts added in Content/Search UI for various parameters (1-7).
++ Keyboard Shortcuts added in Content/Search Types UI for various parameters (1-7).
 + Router improved
   >> 3 segments URLs (i.e. /parent/parent/...).
   >> support added on back-end via AJAX.
