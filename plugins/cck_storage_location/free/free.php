@@ -21,6 +21,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -423,6 +424,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

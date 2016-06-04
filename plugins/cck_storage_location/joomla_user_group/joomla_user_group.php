@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -474,6 +475,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 									'access'=>'',
 									'author'=>'',
 									'author_object'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',
