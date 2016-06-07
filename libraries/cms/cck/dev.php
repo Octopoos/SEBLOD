@@ -15,6 +15,12 @@ abstract class JCckDev
 {
 	public static $_urls		=	array();
 	
+	// addField
+	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
+	{
+		$config['fields'][]	=	$name;
+	}
+
 	// addScript
 	public static function addScript( $url, $type = "text/javascript", $defer = false, $async = false )
 	{
