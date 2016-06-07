@@ -760,13 +760,13 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					}
 				}
 			}
-			$query	=	$itemIds[$index];
-
-			// Check Query
-			if ( $query == '/' ) {
-				return ''; /* No Link */
-			} elseif ( $query == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
-				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			if ( isset( $itemIds[$index] ) ) {
+				// Check Query
+				if ( $itemIds[$index] == '/' ) {
+					return ''; /* No Link */
+				} elseif ( $itemIds[$index] == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+					return 'index.php?Itemid='.$itemId; /* Direct Link */
+				}
 			}
 		}
 

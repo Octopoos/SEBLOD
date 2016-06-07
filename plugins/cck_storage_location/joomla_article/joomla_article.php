@@ -882,13 +882,13 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				}
 			}
-			$query	=	$itemIds[$index];
-
-			// Check Query
-			if ( $query == '/' ) {
-				return ''; /* No Link */
-			} elseif ( $query == 'option=com_content&view=article' ) {
-				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			if ( isset( $itemIds[$index] ) ) {
+				// Check Query
+				if ( $itemIds[$index] == '/' ) {
+					return ''; /* No Link */
+				} elseif ( $itemIds[$index] == 'option=com_content&view=article' ) {
+					return 'index.php?Itemid='.$itemId; /* Direct Link */
+				}
 			}
 		}
 
