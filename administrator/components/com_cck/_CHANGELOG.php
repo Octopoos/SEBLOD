@@ -24,9 +24,11 @@ $ -> Language fix or change
 
 -------------------- 3.8.3 Upgrade Release [x-Jun-2016] -------------
 
++ Country List updated in install.sql to include Spanish translation.
 + "Integers" mode added in URL Variable Live plug-in.
 + Position Overrides' path displayed in Content/Search Types UI.
 
+# Email Validation plug-in altered for new TLDs
 # One more fix to clearForm().
 # Router now handles the "Intranet App for SEBLOD" correclty.
 
