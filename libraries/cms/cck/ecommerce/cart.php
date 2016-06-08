@@ -120,6 +120,14 @@ abstract class JCckEcommerceCart
 		return $cache[$definition];
 	}
 
+	// hasQuantity
+	public static function hasQuantity( $type )
+	{
+		$cart_def	=	JCckEcommerce::getCartDefinition( $type );
+
+		return $cart_def->quantity;
+	}
+
 	// isValidType
 	public static function isValidType( $type )
 	{

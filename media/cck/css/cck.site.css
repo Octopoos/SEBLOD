@@ -162,6 +162,10 @@ div.cck_forms.cck_site div.cck_form.cck_form_link div.cck_forms{clear:both;}
 
 /*SITE GENERIQUE PRODUCTS*/
 div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products{width:100%;}
+div.cck_forms.cck_cck_ecommerce_products input.inputbox,
+div.cck_forms.cck_cck_ecommerce_products textarea.inputbox,
+div.cck_forms.cck_cck_ecommerce_products select.inputbox,
+div.cck_forms.cck_cck_ecommerce_products button.inputbox {float: none !important;}
 
 /*SITE GENERIQUE CCK_FIELD_PARAMS*/
 div.cck_form_cck_field_params ul.adminformlist,
