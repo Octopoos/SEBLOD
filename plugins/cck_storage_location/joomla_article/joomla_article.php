@@ -546,7 +546,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 	
 	// _getReorderConditions
-	protected function _getReorderConditions( $table )
+	protected static function _getReorderConditions( $table )
 	{
 		$conditions	=	array(
 							'catid = '.(int)$table->catid
