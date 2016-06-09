@@ -1,12 +1,12 @@
 <?php
 /**
- * @version 			SEBLOD 3.x Core
- * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
- * @url				http://www.seblod.com
- * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
- * @license 			GNU General Public License version 2 or later; see _LICENSE.php
- **/
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
 defined( '_JEXEC' ) or die;
 
@@ -113,9 +113,8 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 
 			$form		=	str_replace( 'value="0"', 'value=""', $form );
 
-			if ( JFactory::getApplication()->isSite() )
-			{
-				$form		=	str_replace( 'data-url="index.php?', 'data-url="' . JUri::root() . 'administrator/index.php?', $form );
+			if ( JFactory::getApplication()->isSite() ) {
+				$form		=	str_replace( '="index.php?', '="' . JUri::root() . 'administrator/index.php?', $form );
 			}
 
 			// Set
@@ -193,3 +192,4 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
+?>
