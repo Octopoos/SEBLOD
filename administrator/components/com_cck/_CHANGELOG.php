@@ -22,11 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.3 Upgrade Release [9-Jun-2016] -------------
+-------------------- 3.8.3 Upgrade Release [10-Jun-2016] ------------
 
 + Country List updated in install.sql to include Spanish translation.
-+ "Integers" mode added in URL Variable Live plug-in.
 + Position Overrides' path displayed in Content/Search Types UI.
+
++ "Integers" mode added in URL Variable Live plug-in.
 
 # Back-end UI Drag and Drop responsiveness fixed (regression since SEBLOD 3.8.2). 
 # Email Validation plug-in altered for new TLDs
