@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'created_user_id';
 	protected static $author_object	=	'joomla_user';
+	protected static $child_object	=	'joomla_article';
 	protected static $created_at	=	'created_time';
 	protected static $custom		=	'description';
 	protected static $modified_at	=	'modified_time';
@@ -759,13 +760,13 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					}
 				}
 			}
-			$query	=	$itemIds[$index];
-
-			// Check Query
-			if ( $query == '/' ) {
-				return ''; /* No Link */
-			} elseif ( $query == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
-				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			if ( isset( $itemIds[$index] ) ) {
+				// Check Query
+				if ( $itemIds[$index] == '/' ) {
+					return ''; /* No Link */
+				} elseif ( $itemIds[$index] == 'option=com_content&view='.self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+					return 'index.php?Itemid='.$itemId; /* Direct Link */
+				}
 			}
 		}
 
@@ -821,6 +822,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'access'=>'',
 									'author'=>'',
 									'author_object'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

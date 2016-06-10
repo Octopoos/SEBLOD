@@ -41,6 +41,7 @@ table.adminlist tr td span {font-size: 1.1em;}
 input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius:3px;}
 .seblod-manager input[type="checkbox"]{margin:0;}
 .seblod-manager .table,.cck_page_list .table{margin-bottom:0;}
+.seblod-manager td .btn-group.open .dropdown-toggle {box-shadow: none;}
 .pagination.pagination-toolbar{padding-top:4px;}
 .pagination-toolbar .pagination-list li span[class^="icon-"],
 .pagination-toolbar .pagination-list li span[class*=" icon-"]{position:relative; top:2px;}
@@ -142,6 +143,7 @@ ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #3b99fc; margin-bottom: 
 ul.nav.nav-list li a[href='#']:hover{background:none;}
 div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
 div.seblod-manager .table .dropdown-menu{left: inherit; right: 0;}
+div.seblod-manager .table .dropdown-submenu .dropdown-menu{right: -1px;}
 div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}

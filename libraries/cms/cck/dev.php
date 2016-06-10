@@ -15,6 +15,12 @@ abstract class JCckDev
 {
 	public static $_urls		=	array();
 	
+	// addField
+	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
+	{
+		$config['fields'][]	=	$name;
+	}
+
 	// addScript
 	public static function addScript( $url, $type = "text/javascript", $defer = false, $async = false )
 	{
@@ -333,6 +339,7 @@ abstract class JCckDev
 		if ( !isset( $options['js']['load'] ) ) {
 			$options['js']['load']		=	'var eid = "'.$elem->id.'";
 											var elem = "'.$elem->id.'_'.$type.'_options";
+											if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 											var encoded = parent.jQuery("#"+elem).val();
 											var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
 											if (data) {
@@ -362,6 +369,7 @@ abstract class JCckDev
 		}
 		if ( !isset( $options['js']['reset'] ) ) {
 			$options['js']['reset']		=	'var elem = "'.$elem->id.'_'.$type.'_options";
+											if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 											parent.jQuery("#"+elem).val("");
 											this.close();';
 		}
@@ -369,6 +377,7 @@ abstract class JCckDev
 			$options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") === true ) {
 												var eid = "'.$elem->id.'";
 												var elem = "'.$elem->id.'_'.$type.'_options";
+												if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 												var data = {};
 												var excluded = [];
 												'.$js3.'

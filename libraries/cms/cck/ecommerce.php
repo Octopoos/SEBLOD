@@ -192,6 +192,19 @@ abstract class JCckEcommerce
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Products
 
+	// getCartDefinition
+	public static function getProductDefinition( $name )
+	{
+		static $definitions	=	array();
+		
+		if ( !isset( $definitions[$name] ) ) {
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, quantity'
+															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
+		}
+		
+		return $definitions[$name];
+	}
+
 	// getTotal
 	public static function getTotal( $items, $cart_type, $params = array() )
 	{

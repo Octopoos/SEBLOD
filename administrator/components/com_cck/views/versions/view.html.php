@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKViewVersions extends JCckBaseLegacyViewList
 {
 	protected $vName	=	'version';
+	protected $vTitle	=	_C6_TEXT;
 
 	// getSortFields
 	protected function getSortFields()

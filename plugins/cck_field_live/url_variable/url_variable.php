@@ -63,6 +63,14 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 				$filter		=	$options->get( 'type', 'string' );
 				if ( $filter == 'array' ) {
 					$live		=	$app->input->get( $variable, $default, 'array' );
+				} elseif ( $filter == 'integers' ) {
+					$live		=	(string)$app->input->getString( $variable, $default );
+					$live		=	explode( ',', $live );
+
+					jimport( 'joomla.utilities.arrayhelper' );
+					JArrayHelper::toInteger( $live );
+
+					$live		=	implode( ',', $live );
 				} else {
 					$request	=	'get'.ucfirst( $filter );
 					$live		=	(string)$app->input->$request( $variable, $default );

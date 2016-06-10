@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'created_by';
 	protected static $author_object	=	'joomla_user';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'created';
 	protected static $custom		=	'introtext';
 	protected static $modified_at	=	'modified';
@@ -545,7 +546,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 	
 	// _getReorderConditions
-	protected function _getReorderConditions( $table )
+	protected static function _getReorderConditions( $table )
 	{
 		$conditions	=	array(
 							'catid = '.(int)$table->catid
@@ -881,13 +882,13 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				}
 			}
-			$query	=	$itemIds[$index];
-
-			// Check Query
-			if ( $query == '/' ) {
-				return ''; /* No Link */
-			} elseif ( $query == 'option=com_content&view=article' ) {
-				return 'index.php?Itemid='.$itemId; /* Direct Link */
+			if ( isset( $itemIds[$index] ) ) {
+				// Check Query
+				if ( $itemIds[$index] == '/' ) {
+					return ''; /* No Link */
+				} elseif ( $itemIds[$index] == 'option=com_content&view=article' ) {
+					return 'index.php?Itemid='.$itemId; /* Direct Link */
+				}
 			}
 		}
 
@@ -946,6 +947,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 									'access'=>'',
 									'author'=>'',
 									'author_object'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

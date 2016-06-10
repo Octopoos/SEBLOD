@@ -22,10 +22,23 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.8.3 Upgrade Release [10-Jun-2016] ------------
+
++ Country List updated in install.sql to include Spanish translation.
++ Position Overrides' path displayed in Content/Search Types UI.
+
++ "Integers" mode added in URL Variable Live plug-in.
+
+# Back-end UI Drag and Drop responsiveness fixed (regression since SEBLOD 3.8.2). 
+# Email Validation plug-in altered for new TLDs
+# "JForm User" issues fixed.
+# One more fix to clearForm().
+# Router now handles the "Intranet App for SEBLOD" correclty.
+
 -------------------- 3.8.2 Upgrade Release [2-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
-+ Keyboard Shortcuts added in Content/Search UI for various parameters (1-7).
++ Keyboard Shortcuts added in Content/Search Types UI for various parameters (1-7).
 + Router improved
   >> 3 segments URLs (i.e. /parent/parent/...).
   >> support added on back-end via AJAX.
