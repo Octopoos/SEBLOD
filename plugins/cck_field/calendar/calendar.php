@@ -87,23 +87,30 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 
+		// take care of default now, today etc. offsets
+		$defaultValueDate      = JFactory::getDate( $value, $this->userTimeZone );
+		$field->defaultvalue   = $defaultValueDate->toSql();
+
 		$value		=	( trim( $value ) != '' ) ? trim( $value ) : trim( $field->defaultvalue );
-		if ( trim( $value ) == '' || $value == '0000-00-00 00:00:00' ) {
+
+		if ( trim( $value ) == '' || $value == '0000-00-00 00:00:00' )
+		{
 			$Jdate		=	'';
 			$value		=	'';
 			$storedDate	=	'';
-		} else {
+		}
+		else
+		{
 			$date		=	JFactory::getDate( $value, 'UTC' );
 			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
-			$value		=	$date->format( 'Y-m-d H:i:s', true, true );
+			$Jdate	=	$date->format( 'Y-m-d H:i:s', true, true );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$value		=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
-			$Jdate		=	date( 'Y-m-d H:i:s',  $value  );
-			$storedDate	=	date( 'Ymd', $value );
+			$storedDate	=	$date->format( 'Ymd', true, true );
 			$value		=	$date->format( @$options2['format'], true, true );
 		}
+
 		$default_hour	=	@$options2['default_hour'];
 		$default_min	=	@$options2['default_min'];
 		$default_sec	=	@$options2['default_sec'];
@@ -186,7 +193,12 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 
+		// take care of default now, today etc. offsets
+		$defaultValueDate      = JFactory::getDate( $value, $this->userTimeZone );
+		$field->defaultvalue   = $defaultValueDate->toSql();
 		$value		=	( trim( $value ) != '' ) ? trim( $value ) : trim( $field->defaultvalue );
+
+
 		if ( trim( $value ) == '' || $value == '0000-00-00 00:00:00' ) {
 			$Jdate		=	'';
 			$value		=	'';
@@ -196,11 +208,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
-			$value		=	$date->format( 'Y-m-d H:i:s', true, true );
+			$Jdate		=	$date->format( 'Y-m-d H:i:s', true, true );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$value		=	( $options2['storage_format'] == '0' ) ? strtotime( $value ) : $value;
-			$Jdate		=	date( 'Y-m-d H:i:s',  $value  );
-			$storedDate	=	date( 'Ymd', $value );
+			$storedDate	=	$date->format( 'Ymd', true, true );
 			$value		=	$date->format( @$options2['format'], true, true );
 		}
 		$default_hour	=	@$options2['default_hour'];
@@ -255,7 +265,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		// Set
-		$field->value	=	( $Jdate == '' ) ? '' : date( $format_search, strtotime( $Jdate ) );
+		$field->value	=	( $Jdate == '' ) ? '' : $date->format($format_search);
 
 		// Return
 		if ( $return === true ) {
@@ -286,11 +296,20 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		$date = null;
+		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) ) {
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) )
+		{
 			// Return an SQL formatted datetime string in UTC.
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
-			$value	=	$date->toSql();
+			if ( $options2['storage_format'] == '0' )
+			{
+				$value	=	$date->toSql();
+			}
+			else
+			{
+				$value	=	$date->toUnix();
+			}
 		}
 
 		$this->_setText( $field, $value, $date );
@@ -505,9 +524,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	private function _setText( &$field, &$value, $date = null )
 	{
 		$options2		=	JCckDev::fromJSON( $field->options2 );
-
 		$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-		$value			=	( trim( $value ) == '' ) ? '' : ( ( $options2['storage_format'] == '0' ) ? strtotime ( $value ) : $value );
 
 		$field->text	=	( $value == '' || $date === null ) ? '' : $date->format( @$options2['format'], true, true );
 	}
