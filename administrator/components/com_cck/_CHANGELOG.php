@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.x.x Upgrade Release [xx-xxx-2016] ------------
+
++ Country List updated in install.sql to include Italian translation.
++ Allow syntaxes to retrive Group X values in HTML Typography plug-in.
+
+# Page Title (override) issue fixed for view=category.
+# Minor issues fixed.
+
 -------------------- 3.8.3 Upgrade Release [10-Jun-2016] ------------
 
 + Country List updated in install.sql to include Spanish translation.
