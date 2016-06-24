@@ -87,10 +87,10 @@ class Helper_Workshop
 		$to		=	$p + 1;
 		$hide	=	( $variation_status != '' ) ? '' : ' hidden';
 
-		if ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$name.'.php' ) ) {
+		if ( !empty($info) && is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$name.'.php' ) ) {
 			$attr	=	' data-path="'.'templates/'.$info['template'].'/positions/'.$name.'.php'.'"';
 			$class	=	' overridden';
-		} elseif ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$info['name'].'/'.$info['view'].'/'.$name.'.php' ) ) {
+		} elseif ( !empty($info) && is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$info['name'].'/'.$info['view'].'/'.$name.'.php' ) ) {
 			$attr	=	' data-path="'.'templates/'.$info['template'].'/positions/'.$info['name'].'/'.$info['view'].'/'.$name.'.php'.'"';
 			$class	=	' overridden';
 		} else {
