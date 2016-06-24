@@ -64,6 +64,7 @@ if ( !is_object( @$options ) ) {
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
 $show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+$tag_desc			=	$params->get( 'tag_list_desc', 'div' );
 if ( $show_list_title == '' ) {
 	$show_list_title	=	$options->get( 'show_list_title', '1' );
 	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
