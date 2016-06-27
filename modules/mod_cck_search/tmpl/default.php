@@ -16,8 +16,20 @@ if ( $show_list_title ) {
 	$class		=	$class ? ' class="'.$class.'"' : '';
 	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
 }
+if ( $description != '' ) {
+	$description	=	JHtml::_( 'content.prepare', $description );
+
+	if ( !( $tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
+		$tag_desc	=	'div';
+	}
+	$description	=	'<'.$tag_desc.' class="cck_module_desc'.$class_sfx.'">' . $description . '</'.$tag_desc.'>';
+
+	if ( $tag_desc == 'div' ) {
+		$description	.=	'<div class="clr"></div>';
+	}
+}
 if ( $show_list_desc == 1 && $description != '' ) {
-	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
+	echo $description;
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
 	Helper_Include::addValidation( $config['validation'], $config['validation_options'], $formId );
@@ -50,3 +62,8 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 </div>
 <?php } ?>
 </form>
+<?php
+if ( $show_list_desc == 2 && $description != '' ) {
+	echo $description;
+}
+?>

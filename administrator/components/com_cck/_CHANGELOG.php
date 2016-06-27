@@ -22,6 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.8.4 Upgrade Release [27-Jun-2016] ------------
+
++ Country List updated in install.sql to include Italian translation.
+
++ Allow syntaxes to retrieve Group X values in HTML Typography plug-in.
++ "Description Tag" (div|p) added on List/Search modules.
+
+# Missing "TagsHelperRoute" class (in back-end) issue fixed.
+# Page Title (override) issue fixed for view=category.
+# Minor issues fixed.
+
 -------------------- 3.8.3 Upgrade Release [10-Jun-2016] ------------
 
 + Country List updated in install.sql to include Spanish translation.

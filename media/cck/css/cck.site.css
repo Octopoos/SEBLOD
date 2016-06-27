@@ -162,6 +162,8 @@ div.cck_forms.cck_site div.cck_form.cck_form_link div.cck_forms{clear:both;}
 
 /*SITE GENERIQUE PRODUCTS*/
 div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products{width:100%;}
+div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products .table th,
+div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products .table td{vertical-align: middle;}
 div.cck_forms.cck_cck_ecommerce_products input.inputbox,
 div.cck_forms.cck_cck_ecommerce_products textarea.inputbox,
 div.cck_forms.cck_cck_ecommerce_products select.inputbox,

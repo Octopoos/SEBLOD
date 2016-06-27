@@ -27,43 +27,58 @@ abstract class JCckEcommerceTax
 		$taxes		=	JCckEcommerce::getTaxes( $type, $my_zones );
 
 		if ( count( $taxes ) ) {
-			foreach ( $taxes as $p ) {
+			foreach ( $taxes as $t ) {
 				if ( isset( $params['target'] ) && $params['target'] ) {
-					if ( $params['target'] == 'order' && $p->target == 0 ) {
+					if ( $params['target'] == 'order' && $t->target == 0 ) {
 						// OK
-					} elseif ( $params['target'] == 'product' && $p->target == 1 ) {
+					} elseif ( $params['target'] == 'product' && $t->target == 1 ) {
+						// OK
+					} elseif ( $params['target'] == 'shipping' && $t->target == 3 ) {
 						// OK
 					} else {
 						continue;
 					}
 				}
-				$groups		=	explode( ',', $p->groups );
+				$groups		=	explode( ',', $t->groups );
 				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
-					switch ( $p->tax ) {
+					switch ( $t->tax ) {
 						case 'plus':
-							$tax				=	$p->tax_amount;
-							$res				+=	$tax;
-							$total				+=	$tax;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
+							$tax						=	$t->tax_amount;
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
 							break;
 						case 'percentage':
-							$tax				=	$total * $p->tax_amount / 100;
-							$res				+=	$tax;
-							$total				+=	$tax;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
+							$tax						=	$total * $t->tax_amount / 100;
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
 							break;
 						default:
 							break;
 					}
-					
 				}
 			}
 		}
 
 		if ( $res ) {
 			$results['total']	=	(float)$res;
-
+			
 			return (object)$results;
 		}
 

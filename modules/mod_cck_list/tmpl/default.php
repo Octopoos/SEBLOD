@@ -16,8 +16,20 @@ if ( $show_list_title ) {
 	$class		=	$class ? ' class="'.$class.'"' : '';
 	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
 }
+if ( $show_list_desc && $description != '' ) {
+	$description	=	JHtml::_( 'content.prepare', $description );
+	
+	if ( !( $tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
+		$tag_desc	=	'div';
+	}
+	$description	=	'<'.$tag_desc.' class="cck_module_desc'.$class_sfx.'">' . $description . '</'.$tag_desc.'>';
+
+	if ( $tag_desc == 'div' ) {
+		$description	.=	'<div class="clr"></div>';
+	}
+}
 if ( $show_list_desc == 1 && $description != '' ) {
-	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
+	echo $description;
 }
 ?>
 <?php if ( !$raw_rendering ) { ?>
@@ -35,6 +47,6 @@ if ( $search->content > 0 ) {
 </div>
 <?php }
 if ( $show_list_desc == 2 && $description != '' ) {
-	echo '<div class="cck_module_desc'.$class_sfx.'">' . JHtml::_( 'content.prepare', $description ) . '</div><div class="clr"></div>';
+	echo $description;
 }
 ?>

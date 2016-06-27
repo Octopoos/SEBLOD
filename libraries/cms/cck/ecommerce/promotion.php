@@ -28,18 +28,20 @@ abstract class JCckEcommercePromotion
 		if ( count( $promotions ) ) {
 			foreach ( $promotions as $p ) {
 				if ( isset( $params['target'] ) && $params['target'] ) {
-					if ( $params['target'] == 'order' && $p->target == 0 ) {
+					if ( $params['target'] == 'order2' && $p->target == 0 ) {
 						// OK
-					} elseif ( $params['target'] == 'product' ) {
-						if ( $p->target == 1 ) {
+					} elseif ( $params['target'] == 'order' && $p->target == -1 ) {
+						// OK
+					} elseif ( $params['target'] == 'product' && $p->target == 1 ) {
+						if ( $p->target_products == 0 ) {
 							// OK
-						} elseif ( $p->target == 2 ) {
+						} elseif ( $p->target_products == 2 ) {
 							$products	=	self::getTargets( $p->id );
 
 							if ( !isset( $products[$params['target_id']] ) ) {
 								continue;
 							}
-						} elseif ( $p->target == -2 ) {
+						} elseif ( $p->target_products == -2 ) {
 							$products	=	self::getTargets( $p->id );
 							
 							if ( isset( $products[$params['target_id']] ) ) {
@@ -62,33 +64,65 @@ abstract class JCckEcommercePromotion
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->discount ) {
 						case 'free':
-							$promotion			=	0;
-							$res				=	$promotion;
-							$text				=	JText::_( 'COM_CCK_FREE' );
-							$total				=	$promotion;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>'', 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
+							$promotion					=	0;
+							$res						=	$promotion;
+							$text						=	JText::_( 'COM_CCK_FREE' );
+							$total						=	$promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>'',
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
 						case 'minus':
-							$promotion			=	$p->discount_amount * -1;
-							$res				+=	$promotion;
-							$text				=	'- '.JCckEcommerceCurrency::format( $p->discount_amount );
-							$total				+=	$promotion;
-							$total				=	( $total < 0 ) ? 0 : $total;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
+							$promotion					=	$p->discount_amount * -1;
+							$res						+=	$promotion;
+							$text						=	'- '.JCckEcommerceCurrency::format( $p->discount_amount );
+							$total						+=	$promotion;
+							$total						=	( $total < 0 ) ? 0 : $total;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
 						case 'percentage':
-							$promotion			=	$total * $p->discount_amount / 100;
-							$res				=	$promotion;
-							$text				=	'- '.$p->discount_amount.' %';
-							$total				=	$total - $promotion;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
+							$promotion					=	$total * $p->discount_amount / 100;
+							$res						=	$promotion;
+							$text						=	'- '.$p->discount_amount.' %';
+							$total						=	$total - $promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
 						case 'set':
-							$promotion			=	$total - $p->discount_amount;
-							$res				=	$promotion;
-							$text				=	'"'.JCckEcommerceCurrency::format( $p->discount_amount ).'"';
-							$total				=	$total - $promotion;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'promotion'=>$p->discount, 'promotion_amount'=>(string)$promotion, 'text'=>$text, 'title'=>$p->title, 'code'=>@(string)$params['code'] );
+							$promotion					=	$total - $p->discount_amount;
+							$res						=	$promotion;
+							$text						=	'"'.JCckEcommerceCurrency::format( $p->discount_amount ).'"';
+							$total						=	$total - $promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 						default:
 							break;
 					}
@@ -99,7 +133,7 @@ abstract class JCckEcommercePromotion
 		if ( $res ) {
 			$results['text']	=	$text;
 			$results['total']	=	(float)$res;
-
+			
 			return (object)$results;
 		}
 

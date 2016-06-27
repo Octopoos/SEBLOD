@@ -420,8 +420,12 @@ class plgCCK_FieldGroup extends JCckPluginField
 				.	$where
 				.	$order
 				;
-		$db->setQuery( $query );
-		$fields	=	$db->loadObjectList( 'name' ); //#
+		if ( $config['client'] == 'list' || $config['client'] == 'item' ) {
+			$fields	=	JCckDatabaseCache::loadObjectList( $query, 'name' );
+		} else {
+			$db->setQuery( $query );
+			$fields	=	$db->loadObjectList( 'name' ); //#
+		}
 		
 		if ( ! count( $fields ) ) {
 			return array();
