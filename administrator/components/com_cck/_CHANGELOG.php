@@ -26,7 +26,7 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include Italian translation.
 
-+ Allow syntaxes to retrive Group X values in HTML Typography plug-in.
++ Allow syntaxes to retrieve Group X values in HTML Typography plug-in.
 + "Description Tag" (div|p) added on List/Search modules.
 
 # Missing "TagsHelperRoute" class (in back-end) issue fixed.
