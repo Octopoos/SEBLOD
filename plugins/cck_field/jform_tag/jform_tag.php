@@ -38,6 +38,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		JLoader::register('TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php');
 
 		$html	=	'';
 
