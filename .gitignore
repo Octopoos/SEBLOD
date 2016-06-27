@@ -2080,6 +2080,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_store.sys.ini
 /plugins/cck_field_restriction/cck_ecommerce_store/*
 
+######## SEBLOD Plug-ins >> Restriction >> SEBLOD eCommerce Subscription
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_ecommerce_subscription.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_ecommerce_subscription.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_subscription.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_subscription.sys.ini
+/plugins/cck_field_restriction/cck_ecommerce_subscription/*
+
 ######## SEBLOD Plug-ins >> Restriction >> SEBLOD Fields
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_fields.ini
