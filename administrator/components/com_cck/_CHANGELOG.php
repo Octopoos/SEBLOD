@@ -29,6 +29,7 @@ $ -> Language fix or change
 + Allow syntaxes to retrive Group X values in HTML Typography plug-in.
 + "Description Tag" (div|p) added on List/Search modules.
 
+# Missing "TagsHelperRoute" class (in back-end) issue fixed.
 # Page Title (override) issue fixed for view=category.
 # Minor issues fixed.
 
