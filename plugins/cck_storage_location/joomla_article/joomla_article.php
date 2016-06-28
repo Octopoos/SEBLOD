@@ -439,7 +439,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$table->load( $pk );
 			if ( $table->id ) {
 				if ( $join ) { // todo:join
-					$join					=	JCckDatabase::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->catid );	//@
+					$join					=	JCckDatabaseCache::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->catid );	//@
 					if ( is_object( $join ) && isset( $join->title ) ) {
 						$table->category_title	=	$join->title;
 						$table->category_alias	=	$join->alias;
