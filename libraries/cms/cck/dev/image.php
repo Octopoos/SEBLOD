@@ -39,7 +39,7 @@ class JCckDevImage
 				$this->_exif 	=	@exif_read_data( $path, 0, true );
 			}
 		}
-		
+
 		$this->_resource 	= 	$this->_createResource( $this->_extension, $path );
 		list( $this->_width, $this->_height )	=	getimagesize( $path );
 		$this->_ratio 		= 	$this->_width / $this->_height;
@@ -65,10 +65,14 @@ class JCckDevImage
 	}
 
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat, $quality = 100 )
-	{
-		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
+	public function createThumb($image, $tnumber, $twidth, $theight, $tformat, $watermark = null, $k = 1, $quality = 100) {
+
+		if (!( $twidth && trim($twidth) != '' && is_numeric($twidth) ) && !( $theight && trim($theight) != '' && is_numeric($theight) )) {
 			return false;
+		}
+
+		if ($watermark) {
+			$watermark_obj = new JCckDevImage($watermark);
 		}
 		
 		$path 			=	$this->_pathinfo['dirname'];
@@ -92,7 +96,17 @@ class JCckDevImage
 			JCckDevHelper::createFolder( $path . '/_thumb'.$tnumber );
 			$thumbLocation	=	$path . '/_thumb'.$tnumber . '/' . $this->_pathinfo['basename'];
 		}
-		
+
+		if ($watermark) {
+			$wmImage		 = $watermark_obj->_resource;
+			$wm_width		 = $watermark_obj->_width;
+			$wm_height		 = $watermark_obj->_height;
+			$WmImgKoeff		 = $wm_height / $wm_width;
+			$new_wm_width	 = $k * $info['thumbWidth'];
+			$new_wm_height	 = $new_wm_width * $WmImgKoeff;
+
+			imagecopyresized($thumbImage, $wmImage, ($info['thumbWidth'] - $new_wm_width) / 2, ($info['thumbHeight'] - $new_wm_height) / 2, 0, 0, $new_wm_width, $new_wm_height, $wm_width, $wm_height); // Копируем изображение водяного знака на изображение источник
+		}
 		// Create image
 		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation, $quality );
 
@@ -124,7 +138,7 @@ class JCckDevImage
 			$this->_generateThumb( $this->_extension, $rotate, $this->_pathinfo['dirname'].'/'.$this->_pathinfo['basename'] );
 		}
 	}
-	
+
 	// _createResource
 	protected function _createResource( $ext, $path )
 	{
@@ -161,7 +175,27 @@ class JCckDevImage
 
 		JFile::write( $file, $output );
 	}
+	public function createWatermark($image, $watermark, $k, $quality = 100) {
 
+		$path			 = $this->_pathinfo['dirname'];
+		$file			 = $this->_pathinfo['basename'];
+		$resImage		 = $this->_resource;
+		$wmImage		 = $watermark->_resource;
+		$thumbWidth		 = $this->_width;
+		$thumbHeight	 = $this->_height;
+		$wm_width		 = $watermark->_width;
+		$wm_height		 = $watermark->_height;
+		$WmImgKoeff		 = $wm_height / $wm_width;
+		$new_wm_width	 = $k * $thumbWidth;
+		$new_wm_height	 = $new_wm_width * $WmImgKoeff;
+
+		imagecopyresized($resImage, $wmImage, ($thumbWidth - $new_wm_width) / 2, ($thumbHeight - $new_wm_height) / 2, 0, 0, $new_wm_width, $new_wm_height, $wm_width, $wm_height);
+		// Create image
+		$this->_generateThumb($this->_extension, $resImage, $path . '/' . $file, $quality);
+
+
+		return true;
+	}
 	// _prepareDimensions
 	protected function _prepareDimensions( $src_w, $src_h, $dest_w, $dest_h, $action ) 
 	{
