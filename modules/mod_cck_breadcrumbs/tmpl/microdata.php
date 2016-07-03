@@ -21,10 +21,9 @@ defined( '_JEXEC' ) or die;
 		echo '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">';
 		if ( $i < $count -1 ) { // If not the last item in the breadcrumbs add the separator
 			if ( !empty($list[$i]->link ) ) {
-				echo '<a itemscope itemtype="http://schema.org/Thing"
-       itemprop="item" href="'.$list[$i]->link.'" class="pathway"><span itemprop="name">'.$list[$i]->name.'</span></a>';
+				echo '<a itemprop="item" href="'.$list[$i]->link.'" class="pathway"><span itemprop="name">'.$list[$i]->name.'</span></a>';
 			} else {
-				echo '<span itemscope itemtype="http://schema.org/Thing" itemprop="item" class="pathway"><span itemprop="name">'.$list[$i]->name.'</span></span>';
+				echo '<span itemprop="item" class="pathway"><span itemprop="name">'.$list[$i]->name.'</span></span>';
 			}
 			echo '<meta itemprop="position" content="'.($i+1).'" />';
 			echo '<span class="'.$separator_class.' ">'.$separator.'</span>';
@@ -32,11 +31,11 @@ defined( '_JEXEC' ) or die;
 			// }
 		} elseif ( $show_last ) { // when $i == $count -1 and 'showLast' is true
 			// if ( $i > 0 ) {
-			// 	echo '<span class=" turd '.$separator_class.'">'.$separator.'</span>';
+			// 	echo '<span class="'.$separator_class.'">'.$separator.'</span>';
 			// }
-			echo '<span itemscope itemtype="http://schema.org/Thing" itemprop="item" class="pathway-last"><span itemprop="name">'.$list[$i]->name.'</span></span>';
+			echo '<span itemprop="item" class="pathway-last"><span itemprop="name">'.$list[$i]->name.'</span></span>';
 		}
-		echo '</li><wbr>';
+		echo '</li>;
 	}
 	?>
 	</ul>
