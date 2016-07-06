@@ -1,0 +1,2 @@
+
+UPDATE `#__cck_core_fields` SET `options` = '{"query":"","table":"#__cck_core_types","name":"title","where":"parent = \\"\\" AND storage_location != \\"none\\" AND published != -44","value":"name","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}' WHERE `id` = 531;
