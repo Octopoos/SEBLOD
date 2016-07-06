@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceRule
 {
 	// apply
-	public static function apply( $type, &$total, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array() )
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */

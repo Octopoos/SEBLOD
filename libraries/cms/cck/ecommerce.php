@@ -249,12 +249,13 @@ abstract class JCckEcommerce
 		
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$options	=	$params;
-				$price		=	$item->price;
-				
+				$options				=	$params;
+				$options['target_id']	=	$item->product_id;
+				$price					=	$item->price;
+
 				// Taxes
 				if ( $apply_taxes ) {
-					JCckEcommerceTax::apply( '', $price, $options );
+					JCckEcommerceTax::apply( '', $price, $items, $options );
 				}
 				
 				// Formula
@@ -265,8 +266,6 @@ abstract class JCckEcommerce
 				
 				// Promotions
 				if ( $apply_promotions ) {
-					$options['target_id']	=	$item->product_id;
-
 					JCckEcommercePromotion::apply( '', $price, $options );
 				}
 				

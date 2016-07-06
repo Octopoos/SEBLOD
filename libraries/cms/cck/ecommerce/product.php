@@ -51,7 +51,7 @@ abstract class JCckEcommerceProduct
 		static $definitions	=	array();
 
 		if ( !count( $definitions ) ) {
-			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options FROM #__cck_more_ecommerce_product_definitions WHERE published = 1' );
+			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_tax_field, request_tax_field_live, request_tax_field_live_options FROM #__cck_more_ecommerce_product_definitions WHERE published = 1' );
 			
 			if ( count( $items ) ) {
 				foreach ( $items as $item ) {
@@ -70,25 +70,28 @@ abstract class JCckEcommerceProduct
 				}
 				if ( count( $definitions ) ) {
 					JPluginHelper::importPlugin( 'cck_field_live' );
-
+					
 					$config			=	array();
 					$dispatcher		=	JDispatcher::getInstance();
-
+					$keys			=	array( 'payment', 'tax' );
+					
 					foreach ( $definitions as $name=>$product_def ) {
-						if ( $product_def->request_payment_field_live != '' ) {
-							$field			=	(object)array(
-												'live'=>$product_def->request_payment_field_live,
-												'live_options'=>$product_def->request_payment_field_live_options,
-											);
-							$suffix			=	'';
-						
-							$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+						foreach( $keys as $key ) {
+							if ( $product_def->{'request_'.$key.'_field_live'} != '' ) {
+								$field			=	(object)array(
+													'live'=>$product_def->{'request_'.$key.'_field_live'},
+													'live_options'=>$product_def->{'request_'.$key.'_field_live_options'},
+												);
+								$suffix			=	'';
+								
+								$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
-							if ( $suffix != '' ) {
-								if ( $product_def->request_payment_field != '' ) {
-									$definitions[$name]->request_payment_field	.=	'_'.$suffix;
-								} else {
-									$definitions[$name]->request_payment_field	=	$suffix;
+								if ( $suffix != '' ) {
+									if ( $product_def->{'request_'.$key.'_field'} != '' ) {
+										$definitions[$name]->{'request_'.$key.'_field'}	.=	'_'.$suffix;
+									} else {
+										$definitions[$name]->{'request_'.$key.'_field'}	=	$suffix;
+									}
 								}
 							}
 						}

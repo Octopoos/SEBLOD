@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceTax
 {
 	// apply
-	public static function apply( $type, &$total, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array() )
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
@@ -58,6 +58,36 @@ abstract class JCckEcommerceTax
 							break;
 						case 'percentage':
 							$tax						=	$total * $t->tax_amount / 100;
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
+							break;
+						case 'product_amount':
+							$tax						=	0;
+							
+							if ( $params['target'] == 'shipping' ) {
+								continue;
+							} elseif ( $params['target'] == 'product' ) {
+								if ( !isset( $items[$params['target_id']] ) ) {
+									continue;
+								}
+								$tax					=	$items[$params['target_id']]->tax;
+							} else {
+								if ( count( $items ) ) {
+									foreach ( $items as $item ) {
+										if ( isset( $item->tax ) && $item->tax != '' ) {
+											$tax		+=	(float)$item->tax;
+										}
+									}
+								}
+							}
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
