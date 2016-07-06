@@ -42,6 +42,13 @@ $js		=	'
 						parent.jQuery("#"+eid+"_required_alert").val("");
 						parent.jQuery("#"+eid+"_validation").val("");
 						parent.jQuery("#"+eid+"_validation_options").val("");
+
+						if (parent.jQuery("#"+eid+"_required").val()) {
+							var txt = Joomla.JText._("COM_CCK_REQUIRED");
+						} else {
+							var txt = Joomla.JText._("COM_CCK_OPTIONAL");
+						}
+						parent.jQuery("span[name=\'"+eid+"\'].c_val").html(txt);
 						this.close();
 					},
 					setOptions: function(opts) {
@@ -110,6 +117,9 @@ $js		=	'
 			})(jQuery);
 			';
 $doc->addScriptDeclaration( $js );
+
+JText::script( 'COM_CCK_OPTIONAL' );
+JText::script( 'COM_CCK_REQUIRED' );
 ?>
 
 <div class="seblod">
