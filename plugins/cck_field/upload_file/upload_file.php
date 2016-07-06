@@ -709,7 +709,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	// _getHits
 	protected static function _getHits( $id, $fieldname, $collection = '', $x = 0 )
 	{
-		$query	= 'SELECT a.hits FROM #__cck_core_downloads AS a WHERE a.id = '.(int)$id.' AND a.field = "'.(string)$fieldname.'" AND a.collection = "'.(string)$collection.'" AND a.x = '.(int)$x;
+		$query	=	'SELECT a.hits FROM #__cck_core_downloads AS a WHERE a.id = '.(int)$id.' AND a.field = "'.(string)$fieldname.'" AND a.collection = "'.(string)$collection.'" AND a.x = '.(int)$x;
 		$hits	=	JCckDatabase::loadResult( $query ); //@
 		
 		return ( $hits ) ? $hits : 0;
