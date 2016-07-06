@@ -79,16 +79,24 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			return;
 		}
 		
-		// Init
-		$P	=	$field->storage_field;
-
+		// Prepare
 		if ( $config['collection'] != '' ) {
 			$matches	=	json_decode( $field->value, true );
+			$P			=	$field->storage_field; /* Guess: it should be the $field->name? */
+			
+			if ( $field->storage_field2 != '' && $field->storage_field2 != $P ) {
+				$P		=	$field->storage_field2;
+			}
 			$value		=	$matches[$P][$config['xi']];
 		} else {
 			$matches	=	json_decode( $field->value, true );
-			if ( isset( $matches[$field->storage_field2] ) ) {
-				$value	=	$matches[$field->storage_field2];
+			$P			=	$field->storage_field2;
+
+			if ( $P == '' ) {
+				$P		=	$field->name;
+			}
+			if ( isset( $matches[$P] ) ) {
+				$value	=	$matches[$P];
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
 				}
