@@ -263,11 +263,11 @@ class JCckPluginField extends JPlugin
 							if ( $data['storage_cck'] != '' ) {
 								// #__cck_store_form_
 								$table	=	'#__cck_store_form_'.$data['storage_cck'];
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 							} else {
 								// #__cck_store_item_
 								$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 							}
 							$columns2	=	$db->getTableColumns( $table );
 							if ( !isset( $columns2[$data['storage_field']] ) ) {
