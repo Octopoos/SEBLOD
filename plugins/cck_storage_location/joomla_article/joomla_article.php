@@ -783,12 +783,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// parseRoute
 	public static function parseRoute( &$vars, $segments, $n, $config )
 	{
+		$active			=	JFactory::getApplication()->getMenu()->getActive();
+		$id				=	0;
 		$join			=	'';
 		$where			=	'';
 		
 		$vars['option']	=	'com_content';
 		$vars['view']	=	'article';
 		
+		// Prepare the query
 		if ( $n == 2 ) {
 			if ( $config['doSEF'][0] == '5' ) {
 				$join				.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
@@ -807,31 +810,42 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$where			=	' AND b.alias = "'.$segments[0].'"';
 				}
 			}
-		} else {
-			if ( $config['doSEF'][0] == '2' && isset( $config['doSEF'][1] ) && $config['doSEF'][1] == '4' ) {
-				$active				=	JFactory::getApplication()->getMenu()->getActive();
-				if ( isset( $active->query['search'] ) && $active->query['search'] ) {
-					$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
-					if ( $cck ) {
-						$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
-						$where		=	( strpos( $cck, ',' ) !== false ) ? ' AND b.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND b.cck = "'.$cck.'"';
-					}
-				}
+		}
+		
+		// Retrieve Content Type(s)
+		if ( isset( $active->query['search'] ) && $active->query['search'] ) {
+			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
+			
+			if ( $cck != '' ) {
+				$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
+				$where		=	( strpos( $cck, ',' ) !== false ) ? ' AND b.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND b.cck = "'.$cck.'"';
 			}
 		}
+
+		// Identity the PK
 		if ( self::$sef[$config['doSEF']] == 'full' ) {
 			$idArray				=	explode( ':', $segments[$n - 1], 2 );
-			$vars['id'] 			=	(int)$idArray[0];
+			$id 					=	(int)$idArray[0];
+
+			if ( $where != '' ) {
+				$where				=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+			}
 		} else {
 			if ( is_numeric( $segments[$n - 1] ) ) {
-				$vars['id']			=	$segments[$n - 1];
+				$id					=	$segments[$n - 1];
+
+				if ( $where != '' ) {
+					$where			=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+				}
 			} else {
 				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-				$query				=	'SELECT a.id FROM '.self::$table.' AS a'
-									.	$join
-									.	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
-				$vars['id']			=	(int)JCckDatabaseCache::loadResult( $query );
+				$where				=	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
 			}
+		}
+		if ( $where != '' ) {
+			$vars['id']	=	(int)JCckDatabaseCache::loadResult( 'SELECT a.id FROM '.self::$table.' AS a'.$join.$where );
+		} else {
+			$vars['id']	=	$id;
 		}
 	}
 	
@@ -911,9 +925,32 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// access
-	public static function access( $pk )
+	public static function access( $pk, $checkAccess = true )
 	{
-		return JCckDatabaseCache::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.self::$key.' = '.$pk.' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).') AND '.self::$status.' = 1' );
+		$db		=	JFactory::getDbo();
+		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		$null	=	$db->getNullDate();
+
+		$states	=	self::_getStaticParam( 'allowed_status', '1,2' );
+		$states	=	explode( ',', $states );
+		
+		jimport( 'joomla.utilities.arrayhelper' );
+		JArrayHelper::toInteger( $states );
+		
+		$states	=	( count( $states ) > 1 ) ? 'IN ('.implode( ',', $states ).')' : '= '.(int)$states[0];
+		$query	=	'SELECT '.self::$key
+				.	' FROM '.self::$table
+				.	' WHERE '.self::$key.' = '.(int)$pk
+				.	' AND '.self::$status.' '.$states
+				.	' AND ( publish_up = '.$db->quote( $null ).' OR publish_up <= '.$db->quote( $now ).' )'
+				.	' AND ( publish_down = '.$db->quote( $null ).' OR publish_down >= '.$db->quote( $now ).' )'
+				;
+		
+		if ( $checkAccess ) {
+			$query	.=	' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+		}
+
+		return (int)JCckDatabaseCache::loadResult( $query );
 	}
 
 	// authorise
@@ -974,6 +1011,20 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 		
 		return $properties;
+	}
+
+	// _getStaticParam (todo: need to be improved and moved)
+	protected static function _getStaticParam( $name, $default = '' )
+	{
+		static $params	=	array();
+
+		if ( !isset( $params[$name] ) ) {
+			$plg			=	JPluginHelper::getPlugin( 'cck_storage_location', 'joomla_article' );
+			$plg_params		=	new JRegistry( $plg->params );
+			$params[$name]	=	$plg_params->get( $name, $default );
+		}
+
+		return $params[$name];
 	}
 }
 ?>
