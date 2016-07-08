@@ -46,6 +46,8 @@
 					<option value="2">JARCHIVED</option>
 					<option value="-2">JTRASHED</option>
 				</field>
+				<field name="spacer" type="spacer" hr="false" label="" />
+				<field name="allowed_status" type="cck" construction="core_dev_text" default="1,2" label="LIB_CCK_STORAGE_LOCATION_ALLOWED_STATUS" description="LIB_CCK_STORAGE_LOCATION_ALLOWED_STATUS_DESC" cck_attributes="placeholder='1,2'" />
 				<field name="" type="spacer" hr="true" />
 				<field name="item_tag_title" type="cck" construction="core_tag_title" default="h2" label="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS" description="LIB_CCK_STORAGE_LOCATION_ITEM_TITLE_TAG_CLASS_DESC" class="inputbox" />
 				<field name="item_class_title" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox"  js_appendto="jform_params_item_tag_title" js_format="html" hidden="true" />

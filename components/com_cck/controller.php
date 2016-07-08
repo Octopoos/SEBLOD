@@ -139,6 +139,17 @@ class CCKController extends JControllerLegacy
 						.	' WHERE a.id ='.(int)$id;
 			$core		=	JCckDatabase::loadObject( $query );
 
+			if ( !is_object( $core ) ) {
+				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+				return;
+			}
+			JPluginHelper::importPlugin( 'cck_storage_location' );
+
+			if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
+				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+				return;
+			}
+
 			$config		=	array(
 								'author'=>$core->author_id,
 								'client'=>$client,
@@ -157,7 +168,7 @@ class CCKController extends JControllerLegacy
 							);
 			$dispatcher		=	JDispatcher::getInstance();
 			$field->value	=	$core->value;
-			$pk			=	$core->pk;
+			$pk				=	$core->pk;
 			$value			=	'';
 
 			JPluginHelper::importPlugin( 'cck_storage' );
