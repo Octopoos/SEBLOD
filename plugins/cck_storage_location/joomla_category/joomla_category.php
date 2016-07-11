@@ -364,14 +364,32 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			return false;
 		}
 		if ( !$table->store() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			$error		=	true;
 
 			if ( $isNew ) {
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-			}
-			$config['error']	=	true;
+				$i		=	2;
+				$alias	=	$table->alias.'-'.$i;
+				$test	=	JTable::getInstance( 'category' );
+				
+				while ( $test->load( array( 'alias'=>$alias, 'parent_id'=>$table->parent_id ) ) ) {
+					$alias		=	$table->alias.'-'.$i++;
+				}
+				$table->alias	=	$alias;
 
-			return false;
+				if ( $table->store() ) {
+					$error		=	false;
+				}
+			}
+			if ( $error ) {
+				JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+
+				if ( $isNew ) {
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+				}
+				$config['error']	=	true;
+
+				return false;
+			}
 		}
 		
 		// Checkin

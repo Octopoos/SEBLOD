@@ -47,7 +47,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 											   '5'=>'full', '52'=>'id', '53'=>'alias',
 											   '8'=>'full', '82'=>'id', '83'=>'alias',
 										);
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// onCCK_Storage_LocationConstruct
@@ -397,14 +397,32 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 		
 		if ( !$table->store() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
-			
-			if ( $isNew ) {
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-			}
-			$config['error']	=	true;
+			$error		=	true;
 
-			return false;
+			if ( $isNew ) {
+				$i		=	2;
+				$alias	=	$table->alias.'-'.$i;
+				$test	=	JTable::getInstance( 'content' );
+				
+				while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
+					$alias		=	$table->alias.'-'.$i++;
+				}
+				$table->alias	=	$alias;
+
+				if ( $table->store() ) {
+					$error		=	false;
+				}
+			}
+			if ( $error ) {
+				JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+
+				if ( $isNew ) {
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+				}
+				$config['error']	=	true;
+
+				return false;
+			}
 		}
 		
 		// Featured
