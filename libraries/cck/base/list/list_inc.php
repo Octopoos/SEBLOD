@@ -111,7 +111,7 @@ $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 if ( $limitstart != -1 ) {
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
-			$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+			$this->state->set( 'limit', (int)$limitend );
 		}
 		$limitend	=	(int)$this->state->get( 'limit' );
 	}
