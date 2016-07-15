@@ -44,12 +44,13 @@ $preconfig['itemId']		=	'';
 $preconfig['task']			=	'search';
 $preconfig['show_form']		=	'0';
 $preconfig['auto_redirect']	=	0;
+$preconfig['limit']			=	$params->get( 'limit', 0 );
 $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
 $limitstart	=	(int)$params->get( 'limitstart', '' );
-$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : -1;
+$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : 0;
 $live		=	urldecode( $params->get( 'live' ) );
 $pagination	=	-2;
 $variation	=	$params->get( 'variation' );
