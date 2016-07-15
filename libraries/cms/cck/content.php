@@ -324,8 +324,34 @@ class JCckContent
 	{
 		$status	=	$this->{'_instance_'.$instance_name}->bind( $data );
 		$status	=	$this->{'_instance_'.$instance_name}->check();
-		$status	=	$this->{'_instance_'.$instance_name}->store();
-		
+
+		/* TODO: this is no good, and will need to move, but later! */
+		if ( $instance_name == 'base' ) {
+			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
+				$this->{'_instance_'.$instance_name}->language	=	'*';
+			}
+			$status			=	$this->{'_instance_'.$instance_name}->store();
+
+			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
+				$i			=	2;
+				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
+				$property	=	$this->_columns['parent'];
+				$test		=	JTable::getInstance( 'content' );
+				
+				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
+					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
+				}
+				$this->{'_instance_'.$instance_name}->alias	=	$alias;
+
+				$status		=	$this->{'_instance_'.$instance_name}->store();
+
+				/* TODO: publish_up */
+			}
+		} else {
+			$status			=	$this->{'_instance_'.$instance_name}->store();
+		}
+		/* TODO: this is no good, and will need to move, but later! */
+
 		if ( $status ) {
 			switch( $instance_name ) {
 				case 'base':
