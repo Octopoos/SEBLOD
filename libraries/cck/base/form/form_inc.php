@@ -374,7 +374,13 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 }
 
 // Versions
-if ( $app->isAdmin() && JCck::on( '3.2' ) && @$config['base']->location == 'joomla_article' ) {
-	JToolbarHelper::versions( 'com_content.article', $config['pk'] );
+if ( $app->isAdmin() && JCck::on( '3.2' ) ) {
+	if ( @$config['base']->location == 'joomla_article' ) { // TODO: getContext / params from any object
+		$object_params	=	JComponentHelper::getParams( 'com_content' );
+
+		if ( $object_params->get( 'save_history', 0 ) ) {
+			JToolbarHelper::versions( 'com_content.article', $config['pk'] );
+		}
+	}
 }
 ?>
