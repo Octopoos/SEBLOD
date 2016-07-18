@@ -50,7 +50,11 @@ $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
 $limitstart	=	(int)$params->get( 'limitstart', '' );
-$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : 0;
+$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : -1;
+
+if ( $limitstart == -1 && (int)$preconfig['limit2'] > 0 ) {
+	$limitstart	=	0;
+}
 $live		=	urldecode( $params->get( 'live' ) );
 $pagination	=	-2;
 $variation	=	$params->get( 'variation' );
