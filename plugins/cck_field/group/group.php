@@ -86,7 +86,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					//					
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
-					$target	=	$content[$f_name]->typo_target;
+					
+					$target	=	( isset( $content[$f_name]->typo_target ) ) ? $content[$f_name]->typo_target : 'value';
 					if ( $content[$f_name]->link != '' ) {
 						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$content[$f_name], &$config ) );
 						if ( $content[$f_name]->link && !@$content[$f_name]->linked ) {
