@@ -307,23 +307,29 @@ class JCckPluginLocation extends JPlugin
 			if ( isset( $config['storages']['#__categories'] ) ) {
 				$bridge->bind( $config['storages']['#__categories'] );
 			}
-			if ( $params['bridge_default_title_mode'] && $params['bridge_default_title'] != '' && strpos( $params['bridge_default_title'], '#' ) !== false ) {
-				$title		=	$params['bridge_default_title'];
-				$matches	=	array();
-				preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $params['bridge_default_title'], $matches );
-				if ( count( $matches[1] ) ) {
-					$fieldnames	=	'"'.implode( '","', $matches[1] ).'"';
-					$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.$fieldnames.') AND storage_field2 = ""', 'name' );
-					foreach ( $matches[1] as $match ) {
-						$value	=	'';
-						if ( isset( $fields[$match] ) ) {
-							if ( isset( $config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field] ) ) {
-								$value	=	$config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field];
+			if ( $params['bridge_default_title_mode'] && $params['bridge_default_title'] != '' ) {
+				$title	=	$params['bridge_default_title'];
+				$title	=	str_replace( '[pk]', $pk, $title );
+
+				if ( strpos( $params['bridge_default_title'], '#' ) !== false ) {
+					$matches	=	array();
+					preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $params['bridge_default_title'], $matches );
+					if ( count( $matches[1] ) ) {
+						$fieldnames	=	'"'.implode( '","', $matches[1] ).'"';
+						$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.$fieldnames.') AND storage_field2 = ""', 'name' );
+						foreach ( $matches[1] as $match ) {
+							$value	=	'';
+							if ( isset( $fields[$match] ) ) {
+								if ( isset( $config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field] ) ) {
+									$value	=	$config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field];
+								}
 							}
+							$title	=	str_replace( '#'.$match.'#', $value, $title );
 						}
-						$title	=	str_replace( '#'.$match.'#', $value, $title );
+						$bridge->title	=	trim( $title );
 					}
-					$bridge->title	=	trim( $title );
+				} else {
+					$bridge->title		=	trim( $title );
 				}
 			}
 			if ( ! $bridge->title ) {
@@ -410,23 +416,31 @@ class JCckPluginLocation extends JPlugin
 			if ( isset( $config['storages']['#__content'] ) ) {
 				$bridge->bind( $config['storages']['#__content'] );
 			}
-			if ( $params['bridge_default_title_mode'] && $params['bridge_default_title'] != '' && strpos( $params['bridge_default_title'], '#' ) !== false ) {
-				$title		=	$params['bridge_default_title'];
-				$matches	=	array();
-				preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $params['bridge_default_title'], $matches );
-				if ( count( $matches[1] ) ) {
-					$fieldnames	=	'"'.implode( '","', $matches[1] ).'"';
-					$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.$fieldnames.') AND storage_field2 = ""', 'name' );
-					foreach ( $matches[1] as $match ) {
-						$value	=	'';
-						if ( isset( $fields[$match] ) ) {
-							if ( isset( $config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field] ) ) {
-								$value	=	$config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field];
+			if ( $params['bridge_default_title_mode'] && $params['bridge_default_title'] != '' ) {
+				$title	=	$params['bridge_default_title'];
+				$title	=	str_replace( '[pk]', $pk, $title );
+
+				if ( strpos( $params['bridge_default_title'], '#' ) !== false ) {
+					$matches	=	array();
+
+					preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $params['bridge_default_title'], $matches );
+
+					if ( count( $matches[1] ) ) {
+						$fieldnames	=	'"'.implode( '","', $matches[1] ).'"';
+						$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.$fieldnames.') AND storage_field2 = ""', 'name' );
+						foreach ( $matches[1] as $match ) {
+							$value	=	'';
+							if ( isset( $fields[$match] ) ) {
+								if ( isset( $config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field] ) ) {
+									$value	=	$config['storages'][$fields[$match]->storage_table][$fields[$match]->storage_field];
+								}
 							}
+							$title	=	str_replace( '#'.$match.'#', $value, $title );
 						}
-						$title	=	str_replace( '#'.$match.'#', $value, $title );
+						$bridge->title	=	trim( $title );
 					}
-					$bridge->title	=	trim( $title );
+				} else {
+					$bridge->title		=	trim( $title );
 				}
 			}
 			if ( ! $bridge->title ) {
