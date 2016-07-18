@@ -220,7 +220,7 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, quantity'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, quantity, request_stock_field'
 															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 		}
 		
@@ -439,7 +439,7 @@ abstract class JCckEcommerce
 					.	' AND b.zone_id IN ('.implode( ',', $zones ).')'
 					.	' ORDER BY a.title';
 		$taxes		=	JCckDatabase::loadObjectListArray( $query, 'type' );
-
+		
 		return $taxes;
 	}
 

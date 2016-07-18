@@ -81,9 +81,13 @@ abstract class JCckEcommerceTax
 								$tax					=	$items[$params['target_id']]->tax;
 							} else {
 								if ( count( $items ) ) {
-									foreach ( $items as $item ) {
-										if ( isset( $item->tax ) && $item->tax != '' ) {
-											$tax		+=	(float)$item->tax;
+									if ( isset( $params['target_id'] ) && $params['target_id'] ) {
+										$tax			=	$items[$params['target_id']]->tax;
+									} else {
+										foreach ( $items as $item ) {
+											if ( isset( $item->tax ) && $item->tax != '' ) {
+												$tax		+=	(float)$item->tax;
+											}
 										}
 									}
 								}
