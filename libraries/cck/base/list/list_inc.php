@@ -304,7 +304,7 @@ foreach ( $fields['search'] as $field ) {
 	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
-	if ( $field->stage != 0 ) {
+	if ( (int)$field->stage > 0 ) {
 		$stages[$field->stage]	=	0;
 	}
 
