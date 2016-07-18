@@ -95,10 +95,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				}
 				break;
 			case 'featured':
-				static $loaded = 0;
-				if ( !$loaded ) {
+				static $loadedF = 0;
+				if ( !$loadedF ) {
 					JHtml::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
-					$loaded	=	1;
+					$loadedF	=	1;
 				}
 				$value		=	JHtml::_( 'contentadministrator.featured', $field->value, $pks[$pk], false /*$canChange*/ );
 
