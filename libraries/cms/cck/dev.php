@@ -75,7 +75,7 @@ abstract class JCckDev
 		$doc	=	JFactory::getDocument();
 		
 		if ( $value == 'none' ) {
-			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).attr("disabled", "disabled"); $("#force_storage").val( "1" ); });';
+			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" ); });';
 		} else {
 			$js		=	'jQuery(document).ready(function($){ if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); } });';
 		}
@@ -167,15 +167,12 @@ abstract class JCckDev
 					$c1 	=	'';
 					$class	=	'unpublish icon-flag';
 				}
-				$btn	=	( JCck::on() ) ? 'btn btn-micro ' : '';
-				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="'.$btn.'jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
+				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="btn btn-micro jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
 						.	'<input type="radio" id="bool80" name="bool8" value="0" '.$c0.' style="display:none;" />'
 						.	'<input type="radio" id="bool81" name="bool8" value="1" '.$c1. ' style="display:none;" />';
-				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");';
-				if ( JCck::on() ) {
-					$js2.=	'$("a#bool8 .hasTooltip").tooltip({});';
-				}
-				$js2	.=	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
+				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");'
+						.	'$("a#bool8 .hasTooltip").tooltip({});'
+						.	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
 						.	'$("#bool8 span").removeClass("unpublish").addClass("publish"); $("#bool81").prop("checked", true); $("#bool80").prop("checked", false); } else {'
 						.	'$("#bool8 span").removeClass("publish").addClass("unpublish"); $("#bool81").prop("checked", false); $("#bool80").prop("checked", true); } });';
 			}
@@ -325,7 +322,6 @@ abstract class JCckDev
 				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
 			}
 		}
-		Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 		
 		if ( $type == 'validation' ) {
 			return;

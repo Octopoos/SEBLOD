@@ -41,9 +41,6 @@ class JFormFieldCCKexport extends JFormField
 			$url	=	'index.php?option=com_cck&task=export'.$extension.$id;
 			$text	=	self::_getHtml( JText::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
 		}
-		if ( !JCck::on() ) {
-			$text	=	'<div style="float: left; padding-top: 7px; font-weight: bold;">'.$text.'</div>';
-		}
 		
 		return $text;
 	}
@@ -51,15 +48,10 @@ class JFormFieldCCKexport extends JFormField
 	// _getHtml
 	protected function _getHtml( $text, $url, $class = '' )
 	{
-		if ( JCck::on() ) {
-			$html	=	'<a href="'.$url.'" class="btn'.$class.'">'
-					.	'<span class="icon-download"></span>'
-					.	"\n".$text
-					.	'</a>';
-
-		} else {
-			$html	=	'<a href="'.$url.'">'.$text.' &dArr;</a>';
-		}
+		$html	=	'<a href="'.$url.'" class="btn'.$class.'">'
+				.	'<span class="icon-download"></span>'
+				.	"\n".$text
+				.	'</a>';
 
 		return $html;
 	}

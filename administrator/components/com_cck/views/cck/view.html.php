@@ -22,9 +22,6 @@ class CCKViewCck extends JCckBaseLegacyView
     // prepareSidebar
     protected function prepareSidebar()
     {
-        if ( !JCck::on() ) {
-            return;
-        }
         $buttons        =   array();
         if ( JCck::getUIX() == 'compact' ) {
             $core       =   array(
@@ -108,11 +105,8 @@ class CCKViewCck extends JCckBaseLegacyView
 		$bar	=	JToolBar::getInstance( 'toolbar' );
 		$canDo	=	Helper_Admin::getActions();
 		
-		if ( JCck::on() ) {
-			JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
-		} else {
-			JToolBarHelper::title( '&nbsp;', 'seblod.png' );
-		}
+		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		
 		if ( $canDo->get( 'core.admin' ) ) {
 			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}

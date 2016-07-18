@@ -28,7 +28,7 @@ if ( $elem ) {
 	$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 	$js	=	'
 			jQuery(document).ready(function($){
-				$("'.$elem.'").live("click", function(e) { e.preventDefault();
+				$("'.$elem.'").on("click", function(e) { e.preventDefault();
 					$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
 					return false;
 				});

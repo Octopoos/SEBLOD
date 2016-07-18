@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-$class		=	( JCck::on() ) ? '' : ' class="hide"';
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 ?>
 

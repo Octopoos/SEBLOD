@@ -33,20 +33,18 @@ if ( $listDir == 'asc' ) {
 		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="document.getElementById(\'filter_search\').value=\'\';document.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
 		?>
 	</div>
-	<?php if ( JCck::on() ) { ?>
-		<div class="<?php echo $this->css['filter_search_list']; ?>">
-			<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
-			<select name="sortTable" id="sortTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
-				<option value=""><?php echo JText::_( 'JGLOBAL_SORT_BY' );?></option>
-				<?php echo JHtml::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
-			</select>
-			<select name="directionTable" id="directionTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
-				<option value="asc"<?php echo $selected_asc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
-				<option value="desc"<?php echo $selected_desc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
-			</select>
-			<?php echo $this->pagination->getLimitBox(); ?>
-		</div>
-	<?php } ?>
+	<div class="<?php echo $this->css['filter_search_list']; ?>">
+		<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
+		<select name="sortTable" id="sortTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
+			<option value=""><?php echo JText::_( 'JGLOBAL_SORT_BY' );?></option>
+			<?php echo JHtml::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
+		</select>
+		<select name="directionTable" id="directionTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
+			<option value="asc"<?php echo $selected_asc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
+			<option value="desc"<?php echo $selected_desc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
+		</select>
+		<?php echo $this->pagination->getLimitBox(); ?>
+	</div>
 	<div class="<?php echo $this->css['filter_select']; ?>">
         <?php
         echo $this->html['filter_select_header'];

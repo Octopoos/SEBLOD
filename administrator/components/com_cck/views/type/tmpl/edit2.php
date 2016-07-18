@@ -28,7 +28,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 <script type="text/javascript">
 JCck.DevHelper.setSidebar();
 (function ($){
-$("#pos-1 input:radio[name='positions']").attr("checked", "checked");
+$("#pos-1 input:radio[name='positions']").prop("checked", true);
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}
 $("#options_tag_form_title").isVisibleWhen('options_show_form_title','1');
 $("#options_validation_background_color").isDisabledWhen('options_validation_position','inline');

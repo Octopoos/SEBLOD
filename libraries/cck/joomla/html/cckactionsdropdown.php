@@ -10,22 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actionsdropdown.php' );
+JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actionsdropdown.php' );
 
-	// JHtmlCckActionsDropdown
-	abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
+// JHtmlCckActionsDropdown
+abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
+{
+	// addCustomLinkItem
+	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
 	{
-		// addCustomLinkItem
-		public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
-		{
-			static::$dropDownList[] = '<li>'
-				. '<a href = "'.$link.'">'
-				. ($icon ? '<span class="icon-' . $icon . '"></span> ' : '')
-				. $label
-				. '</a>'
-				. '</li>';
-		}
+		static::$dropDownList[] = '<li>'
+			. '<a href = "'.$link.'">'
+			. ($icon ? '<span class="icon-' . $icon . '"></span> ' : '')
+			. $label
+			. '</a>'
+			. '</li>';
 	}
 }
 ?>

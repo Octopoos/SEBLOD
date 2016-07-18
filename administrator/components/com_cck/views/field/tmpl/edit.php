@@ -27,39 +27,29 @@ if ( $lang->hasKey( $key ) == 1 ) {
 	$transliterate	=	'{}';
 }
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), $tmpl );
-if ( JCck::on() ) {
-	JHtml::_( 'bootstrap.tooltip' );
-}
+
+JHtml::_( 'bootstrap.tooltip' );
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <?php if ( $tmpl ) { ?>
-	<?php if ( JCck::on() ) { ?>
-        <div id="ajaxToolbar" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
-            <div style="float: left; padding-right: 8px;" id="ajaxMessage"></div>
-            <a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><i class="icon-apply"></i>
-				<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
-			</a>
-            <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><i class="icon-save"></i>
-				<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
-			</a>
-            <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><i class="icon-save-new"></i>
-				<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
-			</a>
-            <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><i class="icon-cancel"></i>
-				<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
-            </a>
-        </div>
-    <?php } else { ?>
-        <div id="ajaxToolbar" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
-            <div style="float: left; padding-right: 8px;" id="ajaxMessage"></div>
-            <a href="javascript:void(0);" class="togglebutton submit_ajax" data-task="apply"><?php echo JText::_( 'COM_CCK_SAVE' ); ?></a>
-            <a href="javascript:void(0);" class="togglebutton submit_ajax" data-task="save"><?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?></a>
-            <a href="javascript:void(0);" class="togglebutton submit_ajax" data-task="save2new"><?php echo JText::_( 'COM_CCK_SAVE_AND_NEW' ); ?></a>
-            <a href="javascript:void(0);" class="togglebutton" id="cancel_ajax"><?php echo JText::_( 'COM_CCK_CLOSE' ); ?></a>
-        </div>
-<?php } } ?>
+    <div id="ajaxToolbar" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
+        <div style="float: left; padding-right: 8px;" id="ajaxMessage"></div>
+        <a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><i class="icon-apply"></i>
+			<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
+		</a>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><i class="icon-save"></i>
+			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
+		</a>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><i class="icon-save-new"></i>
+			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
+		</a>
+        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><i class="icon-cancel"></i>
+			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
+        </a>
+    </div>
+<?php } ?>
 
 <div class="<?php echo $wrap; ?>">
 	<div class="seblod first">
@@ -259,17 +249,17 @@ Helper_Display::quickCopyright();
 	}
 	<?php } ?>
 	$(document).ready(function() {
-		$("#type").live('change', function() {
+		$("#type").on('change', function() {
 			var cur = $("#myid").val();
 			var data = "id="+cur+"&ajax_type="+$("#type").val();
 			JCck.Dev.ajaxLayer("field", "edit2", "#layer", data);
 		});
-		$(".submit_ajax").live("click", function() {
+		$(".submit_ajax").on("click", function() {
 			var task = $(this).attr("data-task");
 			task = "field."+task;
 			JCck.Dev.submit(task);
 		});
-		$("#cancel_ajax").live("click", function() {
+		$("#cancel_ajax").on("click", function() {
 			JCck.Dev.ajaxTask("field.cancel");
 			parent.jQuery.colorbox.close();
 		});

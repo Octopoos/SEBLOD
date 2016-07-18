@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKViewVariations extends JCckBaseLegacyViewList
 {
 	protected $vName	=	'variation';
+	protected $vTitle	=	_C7_TEXT;
 
 	// prepareToolbar
 	public function prepareToolbar()

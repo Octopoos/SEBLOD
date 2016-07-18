@@ -33,7 +33,7 @@ class CCKControllerSite extends JControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelSite &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		

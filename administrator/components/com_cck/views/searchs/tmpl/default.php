@@ -10,18 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
-$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-searchs.png" border="0" alt="" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'" />';
-$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"' : '';
+$action			=	'<span class="icon-eye"></span>';
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"';
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
-$hasDropdown	=	JCck::on();
 $label			=	JText::_( 'COM_CCK_FIELDS' );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
 $templates		=	JCckDatabase::loadObjectList( 'SELECT name, title FROM #__cck_core_templates WHERE mode = 2 AND published = 1 ORDER BY name', 'name' );
 $scroll			=	( count( $templates ) >= 3 ) ? 1 : 0;
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
@@ -136,14 +135,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<?php
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				if ( $hasDropdown ) {
-					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'searchs.version' );
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'searchs.version' );
 
-					if ( $item->versions ) {
-						JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
-					}
-					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
 				}
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				?>
 				</div>
 			</td>

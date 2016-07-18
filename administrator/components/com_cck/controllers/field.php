@@ -101,7 +101,7 @@ class CCKControllerField extends CCK_ControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelField &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		$app	=	JFactory::getApplication();
 		$task	=	$this->getTask();

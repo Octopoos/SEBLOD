@@ -175,13 +175,9 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		} else {
 			$orientation	=	'';
 		}
-		if ( JCck::on() ) {
-			$attr	=	'class="checkbox'.$validate.'" size="1"';
-		} else {
-			$attr	=	'class="inputbox checkbox'.$validate.'" size="1"';
-		}
-		
+		$attr	=	'class="checkbox'.$validate.'" size="1"';
 		$attr_key	=	'data-cck';
+
 		if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
 			$k	=	0;
 			foreach ( $opts as $i=>$o ) {

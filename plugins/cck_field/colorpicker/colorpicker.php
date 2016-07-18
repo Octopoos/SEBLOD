@@ -158,7 +158,7 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 		$js		=	'
 					jQuery(document).ready(function($){
 						if ($("#'.$id.'").val() != "#ffffff") { $("#'.$id.'").css({"border-color":$("#'.$id.'").val()}); }
-						$("#'.$id.'").live("keyup", function() {
+						$(document).on("keyup", "#'.$id.'", function() {
 							$("#'.$id.'").css({"border-color":$("#'.$id.'").val()});
 						});
 						$("#'.$id.'").ColorPicker({

@@ -208,26 +208,25 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 		
 		if ( !$inline ) {
 			if ( empty( $config['client'] ) ) {
+				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+
 				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
 					$doc->addScript( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+
+					$js	=	'$(document).ready(function() {'.$js.'});';
 				}
 				$doc->addStyleSheet( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
-				
-				$js	=	' $(".'.self::$type.'_box").live("click", function(e) { e.preventDefault();'
-					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} elseif ( $params['inherited'] == true ) {
 				JCck::loadModalBox();
-				$js	=	' $(".'.self::$type.'_box").live("click", function(e) { e.preventDefault();'
+				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
 					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+				$js	=	'$(document).ready(function() {'.$js.'});';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} else {
 				JCck::loadModalBox();
-				$js	=	'
-						jQuery(document).ready(function($){
-							$(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}});
-						});
-						';
+				$js	=	'jQuery(document).ready(function($){ $(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
 				$doc->addScriptDeclaration( $js );
 			}
 		}

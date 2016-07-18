@@ -23,14 +23,10 @@ if ( $lang->hasKey( $key ) == 1 ) {
 } else {
 	$transliterate	=	'{}';
 }
-if ( JCck::on() ) {
-	JHtml::_( 'bootstrap.tooltip' );
-	$sidebar_inner	=	288;
-	$sidebar_top	=	85;
-} else {
-	$sidebar_inner	=	0;
-	$sidebar_top	=	0;
-}
+JHtml::_( 'bootstrap.tooltip' );
+$sidebar_inner	=	288;
+$sidebar_top	=	85;
+
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 

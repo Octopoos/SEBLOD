@@ -10,22 +10,22 @@
 
 defined( '_JEXEC' ) or die;
 
-$action		=	( JCck::on() ) ? '<span class="icon-download"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-download.png" border="0" alt="" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'" />';
-$action_attr=	( JCck::on() ) ? ' class="app-download btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'"' : ' class="app-download"';
-$uix		=	JCck::getUIX();
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$hasToolbox	=	JCckToolbox::getConfig()->def( 'KO' ) ? false : true;
-$images		=	array( '0'=>'16/icon-16-download.png', '1'=>'24/icon-24-download.png' );
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$link2		=	'index.php?option='.$this->option.'&task=folder.export&id=';
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	'<span class="icon-download"></span>';
+$action_attr	=	' class="app-download btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'"';
+$uix			=	JCck::getUIX();
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$hasToolbox		=	JCckToolbox::getConfig()->def( 'KO' ) ? false : true;
+$images			=	array( '0'=>'16/icon-16-download.png', '1'=>'24/icon-24-download.png' );
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$link2			=	'index.php?option='.$this->option.'&task=folder.export&id=';
+$top			=	'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'checkbox', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text' ), true, array( 'vName' => '' ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'checkbox', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text' ), true, array( 'vName' => '' ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_folder_filter', 'core_state_filter', 'core_depth_filter', 'core_app_stuff' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
@@ -57,7 +57,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</th>
 			<th class="center caret-fix" colspan="2">
 				<?php
-				echo JHtml::_( 'grid.sort', ( JCck::on() ? '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>' : '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />' ), 'a.lft', $listDir, $listOrder );
+				echo JHtml::_( 'grid.sort', '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>', 'a.lft', $listDir, $listOrder );
                 echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder );				
 				?>
 			</th>

@@ -56,9 +56,8 @@ if ( $legacy == 1 ) {
 // Set
 JCck::loadjQuery();
 Helper_Include::addStyleSheets( true );
-if ( JCck::on() ) {
-	JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/cpanel.css', array(), false );
-}
+
+JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/cpanel.css', array(), false );
 
 $doc	=	JFactory::getDocument();
 $js		=	'jQuery(document).ready(function($){ $("#standard-content").attr("onclick","parent."+parent.jQuery("#toolbar-new a").attr("onclick2")); });';

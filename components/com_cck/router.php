@@ -13,21 +13,6 @@ defined( '_JEXEC' ) or die;
 jimport( 'joomla.application.categories' );
 
 // CckRouter
-if ( !JCck::on() ) {
-	interface JComponentRouterInterface
-	{
-		public function preprocess($query);
-		public function build(&$query);
-		public function parse(&$segments);
-	}
-	abstract class JComponentRouterBase implements JComponentRouterInterface
-	{
-		public function preprocess($query)
-		{
-			return $query;
-		}
-	}
-}
 class CckRouter extends JComponentRouterBase
 {
 	// build

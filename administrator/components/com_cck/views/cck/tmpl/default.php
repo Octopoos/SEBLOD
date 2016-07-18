@@ -75,17 +75,8 @@ if ( $app->input->get( 'debug', 0 ) == 1 ) {
                         </li>
                     </ul>
                 </div>
-            <?php } elseif ( !JCck::on() ) {
-                echo JCckDevAccordion::open( 'cckOptions', 'collapse1', JText::_( 'COM_CCK_PANE_MORE' ) );
-                ?>
-                <div class="<?php echo $this->css['items']; ?>">
-                    <ul class="adminformlist inline">
-                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=16"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_ADDON' ); ?></a></li>
-                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=19"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_PLUGIN_FIELD' ); ?></a></li>
-                        <li><a target="_blank" href="http://www.seblod.com/store/extensions?seb_item_category=27"><?php echo JText::sprintf( 'COM_CCK_PANE_MORE_TEMPLATE' ); ?></a></li>
-                    </ul>
-                </div>
-            <?php } echo JCckDevAccordion::end(); ?>
+            <?php } ?>
+            <?php echo JCckDevAccordion::end(); ?>
             <?php if ( $uix != 'compact' ) { ?>
             <div class="alert alert-info">
                 <a href="http://jed.seblod.com" target="_blank" class="close"><span class="icon-arrow-right-2"></span></a>

@@ -326,11 +326,6 @@ class plgSystemCCK extends JPlugin
 		
 		if ( $app->isAdmin() ) {			
 			switch ( $option ) {
-				case 'com_cck':
-					if ( !JCck::on() && $view == 'sites' ) {
-						JCckDevIntegration::addDropdown( $view );
-					}
-					break;
 				case 'com_config':
 					$com	=	$app->input->get( 'component', '' );
 					if ( $com == 'com_cck' || $com == 'com_cck_builder'
@@ -403,7 +398,7 @@ class plgSystemCCK extends JPlugin
 					break;
 			}
 		} elseif ( $app->isSite() ) {
-			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && JCck::on() && isset( $doc->_links ) && count( $doc->_links ) ) {
+			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && isset( $doc->_links ) && count( $doc->_links ) ) {
 				foreach ( $doc->_links as $k=>$link ) {
 					if ( $link['relation'] == 'canonical' ) {
 						unset( $doc->_links[$k] );
@@ -615,13 +610,8 @@ class plgSystemCCK extends JPlugin
 				$uri		=	JUri::getInstance();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				if ( JCck::on() ) {
-					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-					$app->setBody( $this->offline_buffer );
-				} else {
-					JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-					JResponse::setBody( $this->offline_buffer );
-				}
+				$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+				$app->setBody( $this->offline_buffer );
 			}
 			return;
 		}
@@ -632,7 +622,7 @@ class plgSystemCCK extends JPlugin
 			$type		=	JFactory::getDocument()->getType();
 
 			if ( $type == 'html' ) {
-				$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
+				$buffer	=	$app->getBody();
 				$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
 				
 				switch ( $option ) {
@@ -706,23 +696,14 @@ class plgSystemCCK extends JPlugin
 						}
 						break;
 				}
-
-				if ( JCck::on() ) {
-					$app->setBody( $buffer );
-				} else {
-					JResponse::setBody( $buffer );
-				}
+				$app->setBody( $buffer );
 			} elseif ( $option == 'com_cck' && $type == 'raw' ) {
 				if ( $layout == 'edit3' || $layout == 'edit4' ) {
-					$buffer	=	( JCck::on() ) ? $app->getBody() : JResponse::getBody();
+					$buffer	=	$app->getBody();
 					$buffer	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $buffer );
 					
 					if ( $buffer != '' ) {
-						if ( JCck::on() ) {
-							$app->setBody( $buffer );
-						} else {
-							JResponse::setBody( $buffer );
-						}	
+						$app->setBody( $buffer );
 					}
 				}
 			}
@@ -831,25 +812,6 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 		
-		if ( !JCck::on() ) {
-			if ( $option == 'com_cck' ) {
-				if ( $view == 'types' ) {
-					$replace	=	'<a href="index.php?option=com_cck&view=versions&filter_e_type=type&e_id=0">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				} elseif( $view == 'searchs' ) {
-					$replace	=	'<a href="index.php?option=com_cck&view=versions&filter_e_type=search&e_id=0">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				} elseif( $view == 'versions' ) {
-					$replace	=	'<a href="#" class="active">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				}
-			}
-			
-			$search		=	'<ul id="submenu">';
-			$replace	=	'<ul class="lavaLampNoImage" id="submenu">';
-			$buffer		=	str_replace( $search, $replace, $buffer );
-		}
-		
 		return $buffer;
 	}
 	
@@ -888,10 +850,8 @@ class plgSystemCCK extends JPlugin
 		$app	=	JFactory::getApplication();
 		$lang	=	JLanguage::getInstance( $tag );
 		
-		if ( JCck::on() ) {
-			$app->loadLanguage( $lang );
-			JFactory::$language	=	$app->getLanguage();
-		}
+		$app->loadLanguage( $lang );
+		JFactory::$language	=	$app->getLanguage();
 
 		JFactory::getConfig()->set( 'language', $tag );
 		JFactory::getLanguage()->setLanguage( $tag );

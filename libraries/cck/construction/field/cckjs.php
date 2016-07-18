@@ -46,7 +46,7 @@ class JFormFieldCCKjs extends JFormField
 		$tweak	=	false;
 		$tweaks	=	array();
 
-		if ( JCck::on() && ( $option == 'com_menus' || $option == 'com_modules' ) ) {
+		if ( $option == 'com_menus' || $option == 'com_modules' ) {
 			$tweak		=	true;
 		}
 

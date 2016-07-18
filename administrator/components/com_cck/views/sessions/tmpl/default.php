@@ -15,7 +15,7 @@ $user		=	JFactory::getUser();
 $userId		=	$user->id;
 $listOrder	=	$this->state->get( 'list.ordering' );
 $listDir	=	$this->state->get( 'list.direction' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$top		=	'content';
 
 $config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',

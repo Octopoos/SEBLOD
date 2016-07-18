@@ -57,8 +57,8 @@ INSERT INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `fo
 (35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 'none', 1, 0, '0000-00-00 00:00:00');
 
 
-ALTER IGNORE TABLE `#__cck_store_item_users` ADD `birthdate` DATETIME NOT NULL AFTER `website`;
-ALTER IGNORE TABLE `#__cck_store_item_users` ADD `birthplace` VARCHAR( 255 ) NOT NULL AFTER  `birthdate`;
+ALTER TABLE `#__cck_store_item_users` ADD `birthdate` DATETIME NOT NULL AFTER `website`;
+ALTER TABLE `#__cck_store_item_users` ADD `birthplace` VARCHAR( 255 ) NOT NULL AFTER  `birthdate`;
 
 
 UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field' AND `element` IN ("div");

@@ -304,18 +304,8 @@ abstract class JCck
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
-		if ( self::on() ) {
-			JHtml::_( 'bootstrap.framework' );
-		} else {
-			if ( !( isset( $app->cck_jquery ) && $app->cck_jquery === true ) ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-1.8.3.min.js' );
-				$app->cck_jquery	=	true;
-			}
-			if ( $noconflict === true && !( isset( $app->cck_jquery_noconflict ) && $app->cck_jquery_noconflict === true ) ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-noconflict.js' );
-				$app->cck_jquery_noconflict	=	true;
-			}
-		}
+		JHtml::_( 'bootstrap.framework' );
+		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
 				$doc->addScript( JUri::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
@@ -335,7 +325,7 @@ abstract class JCck
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.8.3.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.9.0.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$app->cck_jquery_more	=	true;
 		}

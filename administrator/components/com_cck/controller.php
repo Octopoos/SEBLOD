@@ -31,7 +31,7 @@ class CCKController extends JControllerLegacy
 			require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
 			
 			if ( !( $layout == 'edit' || $layout == 'edit2' ) ) {
-				if ( !( JCck::on() && $view == $this->default_view ) ) {
+				if ( $view != $this->default_view ) {
 					Helper_Admin::addSubmenu( $this->default_view, $view );
 				}
 			}
@@ -148,7 +148,7 @@ class CCKController extends JControllerLegacy
 	public function ajaxSaveIntegration()
 	{
 		$app		=	JFactory::getApplication();
-		$json		=	( JCck::on() ) ? $app->input->JSON->getRaw() : $app->input->getRaw( 'integration' );
+		$json		=	$app->input->JSON->getRaw();
 		$objects	=	json_decode( $json );
 		
 		if ( count( $objects ) ) {
@@ -216,11 +216,7 @@ class CCKController extends JControllerLegacy
 						);
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
-		if ( JCck::on() ) {
-			$attr	=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-		} else {
-			$attr	=	array( 'class'=>' edit', 'span'=>'' );
-		}
+		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 		$json		=	array();
 		ob_start();
 		Helper_Workshop::displayField( $field, '', $attr );

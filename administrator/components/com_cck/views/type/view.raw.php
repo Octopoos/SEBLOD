@@ -50,31 +50,17 @@ class CCKViewType extends JViewLegacy
 				break;
 		}
 		
-		if ( JCck::on() ) {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'132px',
-								   'w30'=>'span4',
-								   'w70'=>'span8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>'$(".hasTooltip").tooltip({});'
-							);
-		} else {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'105px',
-								   'w30'=>'width-30',
-								   'w70'=>'width-70 fltlft',
-								   'wrapper'=>'sebwrapper',
-								   'wrapper2'=>'seb-wrapper workshop',
-								   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>''
-							);
-		}
+		$this->css	=	array( '_'=>'',
+							   'panel_height'=>'132px',
+							   'w30'=>'span4',
+							   'w70'=>'span8',
+							   'wrapper'=>'container',
+							   'wrapper2'=>'row-fluid',
+							   'wrapper_tmpl'=>'span'
+						);
+		$this->js	=	array( '_'=>'',
+							   'tooltip'=>'$(".hasTooltip").tooltip({});'
+						);
 		$this->uix	=	JCck::getUIX();
 		
 		parent::display( $tpl );
@@ -158,15 +144,14 @@ class CCKViewType extends JViewLegacy
 		$this->variations	=	Helper_Workshop::getPositionVariations( $this->style->template );
 		
 		// Filters
-		$max_width				=	( JCck::on() ) ? '' : ' style="max-width:180px;"';
 		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
-		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"'.$max_width, 'value', 'text', '', 'filter1' );
+		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"', 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
 		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
-		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"'.$max_width, 'value', 'text', '', 'filter4' );
+		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"', 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"'.$max_width, 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
+		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"', 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
 	}
 
 	// prepareDisplay_Ajax2

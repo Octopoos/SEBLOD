@@ -10,30 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	// TableAdapter
-	class CCK_TableTypeAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( JTable $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-} else {
-	// TableAdapter
-	class CCK_TableTypeAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-}
-
 // Table
-class CCK_TableType extends CCK_TableTypeAdapter
+class CCK_TableType extends JTable
 {
 	// __construct
 	function __construct( &$db )
@@ -46,6 +24,12 @@ class CCK_TableType extends CCK_TableTypeAdapter
 	{
 		$k	=	$this->_tbl_key;
 		return 'com_cck.form.'.(int)$this->$k;
+	}
+
+	// _getAssetParentId
+	protected function _getAssetParentId( JTable $table = null, $id = null )
+	{
+		return $this->_getAssetParentId2( $table, $id );
 	}
 
 	// _getAssetTitle

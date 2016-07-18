@@ -55,21 +55,12 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	// prepareUI
 	public function prepareUI()
 	{
-		if ( JCck::on() ) {
-			$this->css		=	array( 'w30'=>'span4',
-									   'w70'=>'span8',
-									   'wrapper'=>'container',
-									   'wrapper2'=>'row-fluid',
-									   'wrapper_tmpl'=>'span12'
-								);
-		} else {
-			$this->css		=	array( 'w30'=>'width-30',
-									   'w70'=>'width-70 fltlft',
-									   'wrapper'=>'sebwrapper',
-									   'wrapper2'=>'seb-wrapper',
-									   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-								);
-		}
+		$this->css		=	array( 'w30'=>'span4',
+								   'w70'=>'span8',
+								   'wrapper'=>'container',
+								   'wrapper2'=>'row-fluid',
+								   'wrapper_tmpl'=>'span12'
+							);
 	}
 	
 	// prepareToolbar
