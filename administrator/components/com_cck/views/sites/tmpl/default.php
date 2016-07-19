@@ -127,66 +127,67 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				status:0,
+				addNew: function() {
+					var grp = $("#site_grp").val();
+					var url = "index.php?option=com_cck&task=site.add&type="+grp;
+					window.location.href = url;
+					return false;
+				},
+				addScroll: function() {
+					var sly = new Sly(".sly",{
+						horizontal: 1,
+						activeMiddle: 1,
+						itemNav: "basic",
+						smart: 1,
+						dragHandle: 0,
+						dynamicHandle: 0,
+						dragContent: 1,
+						startAt: 1,
+						scrollBy: 0,
+						speed: 300,
+						activePageOn: "click",
+						clickBar: 1
+					}).init();
+				}
+			}
+			Joomla.orderTable = function()
+			{
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			}
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+			$(document).ready(function() {
+				$(".sly ul li").on("click", function () {
+					$(".sly ul li").removeClass("active"); $(this).addClass("active");
+					$("#site_grp").val($(this).attr("data-values"));
+				});
+				JCck.Dev.addScroll();
+				$(".sly ul li").removeClass("active"); $(".sly ul li:eq(1)").addClass("active");
+			});
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	JCck.Dev = {
-		status:0,
-		addNew: function() {
-			var grp = $("#site_grp").val();
-			var url = "index.php?option=com_cck&task=site.add&type="+grp;
-			window.location.href = url;
-			return false;
-		},
-		addScroll: function() {
-			var sly = new Sly('.sly',{
-				horizontal: 1,
-				activeMiddle: 1,
-				itemNav: "basic",
-				smart: 1,
-				dragHandle: 0,
-				dynamicHandle: 0,
-				dragContent: 1,
-				startAt: 1,
-				scrollBy: 0,
-				speed: 300,
-				activePageOn: "click",
-				clickBar: 1
-			}).init();
-		}
-	}
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-	$(document).ready(function() {
-		$(".sly ul li").on('click', function () {
-			$(".sly ul li").removeClass("active"); $(this).addClass("active");
-			$("#site_grp").val($(this).attr("data-values"));
-		});
-		JCck.Dev.addScroll();
-		$(".sly ul li").removeClass("active"); $(".sly ul li:eq(1)").addClass("active");
-	});
-})(jQuery);
-</script>

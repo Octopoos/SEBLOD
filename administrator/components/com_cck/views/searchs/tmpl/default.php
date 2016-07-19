@@ -174,73 +174,74 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 JFactory::getDocument()->addStyleDeclaration('.sly > ul{position:relative; left:274px;}');
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				status:0,
+				addNew: function(skip) {
+					var tpl_s = "'.$template_name.'";
+					var tpl_f = "'.$template_name.'";
+					var tpl_l = $("#tpl_list").val();
+					var tpl_i = "'.$template_name.'";
+					var skip = skip || "";
+					var featured = $("#featured").val();
+					var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
+					window.location.href = url;
+					return false;
+				},
+				addScroll: function() {
+					var sly = new Sly(".sly",{
+						horizontal: 1,
+						itemNav: "forceCentered",
+						smart: 1,
+						activateOn: "click",
+						mouseDragging: 1,
+						touchDragging: 1,
+						releaseSwing: 1,
+						startAt: 2,
+						scrollBar: null,
+						scrollBy: 1,
+						speed: 300,
+						elasticBounds: 1,
+						dragHandle: 1,
+						dynamicHandle: 1,
+						clickBar: 1,
+					}).init();
+				}
+			}
+			Joomla.orderTable = function()
+			{
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			}
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+			$(document).ready(function() {
+				$(".sly ul li").on("click", function () {
+					$(".sly ul li").removeClass("active"); $(this).addClass("active");
+					$("#tpl_list").val($(this).attr("data-name"));
+				});
+				JCck.Dev.addScroll();
+			});
+		})(jQuery);
+		';
+$doc->addStyleDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	JCck.Dev = {
-		status:0,
-		addNew: function(skip) {
-			var tpl_s = "<?php echo $template_name; ?>";
-			var tpl_f = "<?php echo $template_name; ?>";
-			var tpl_l = $("#tpl_list").val();
-			var tpl_i = "<?php echo $template_name; ?>";
-			var skip = skip || "";
-			var featured = $("#featured").val();
-			var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
-			window.location.href = url;
-			return false;
-		},
-		addScroll: function() {
-			var sly = new Sly('.sly',{
-				horizontal: 1,
-				itemNav: 'forceCentered',
-				smart: 1,
-				activateOn: 'click',
-				mouseDragging: 1,
-				touchDragging: 1,
-				releaseSwing: 1,
-				startAt: 2,
-				scrollBar: null,
-				scrollBy: 1,
-				speed: 300,
-				elasticBounds: 1,
-				dragHandle: 1,
-				dynamicHandle: 1,
-				clickBar: 1,
-			}).init();
-		}
-	}
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-	$(document).ready(function() {
-		$(".sly ul li").on('click', function () {
-			$(".sly ul li").removeClass("active"); $(this).addClass("active");
-			$("#tpl_list").val($(this).attr("data-name"));
-		});
-		JCck.Dev.addScroll();
-	});
-})(jQuery);
-</script>
