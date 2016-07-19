@@ -208,7 +208,7 @@ $js	=	'
 			}
 		})(jQuery);
 		';
-$doc->addStyleDeclaration( $js );
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
