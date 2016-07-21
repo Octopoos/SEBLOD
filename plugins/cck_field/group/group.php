@@ -131,6 +131,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$fields		=	self::_getChildren( $field, $config );
 		$xn			=	( $value ) ? $value : $field->rows;
 		$form		=	array();
+
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
 			foreach ( $fields as $f ) {
 				if ( is_object( $f ) ) {
@@ -409,7 +410,6 @@ class plgCCK_FieldGroup extends JCckPluginField
 		
 		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
 		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
-				.	' AND a.type != "form_action"'
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';
 		
