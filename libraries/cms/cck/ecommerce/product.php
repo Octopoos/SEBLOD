@@ -13,13 +13,13 @@ defined( '_JEXEC' ) or die;
 // JCckEcommerceProduct
 abstract class JCckEcommerceProduct
 {
-	// getDefinition
+	// getDefinition (retrieve the primary definition of a Content Type)
 	public static function getDefinition( $type )
 	{
 		static $definitions	=	array();
 		
 		if ( !count( $definitions ) ) {
-			$items			=	JCckDatabase::loadObjectList( 'SELECT name, content_type FROM #__cck_more_ecommerce_product_definitions WHERE published = 1' );
+			$items			=	JCckDatabase::loadObjectList( 'SELECT name, content_type FROM #__cck_more_ecommerce_product_definitions WHERE published = 1 AND type != "alternative"' );
 			
 			if ( count( $items ) ) {
 				foreach ( $items as $item ) {
@@ -39,19 +39,19 @@ abstract class JCckEcommerceProduct
 			}
 		}
 		if ( !( isset( $definitions[$type] ) && $definitions[$type] ) ) {
-			return (object)array( 'quantity'=>'' );
+			return (object)array( 'quantity'=>'', 'request_stock_field'=>'' );
 		}
 		
 		return JCckEcommerce::getProductDefinition( $definitions[$type]->name );
 	}
 
-	// getDefinitions
+	// getDefinitions (retrieve all primary definitions)
 	public static function getDefinitions()
 	{
 		static $definitions	=	array();
 
 		if ( !count( $definitions ) ) {
-			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_stock_field, request_tax_field, request_tax_field_live, request_tax_field_live_options FROM #__cck_more_ecommerce_product_definitions WHERE published = 1' );
+			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_stock_field, request_tax_field, request_tax_field_live, request_tax_field_live_options FROM #__cck_more_ecommerce_product_definitions WHERE published = 1 AND type != "alternative"' );
 			
 			if ( count( $items ) ) {
 				foreach ( $items as $item ) {

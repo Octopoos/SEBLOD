@@ -220,7 +220,7 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, quantity, request_stock_field'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field'
 															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 		}
 		
@@ -367,7 +367,7 @@ abstract class JCckEcommerce
 
 		$zones[]	=	0;
 		
-		$query		=	'SELECT a.id, a.title, a.type, a.cost, a.cost_amount, a.min, a.max, a.target_type'
+		$query		=	'SELECT a.id, a.title, a.type, a.cost, a.cost_amount, a.target_products, a.min, a.max, a.mode, a.target_type'
 					.	' FROM #__cck_more_ecommerce_shipping_rules AS a'
 					.	' LEFT JOIN #__cck_more_ecommerce_zone_rule AS b ON b.rule_id = a.id'
 					.	' WHERE a.published = 1'

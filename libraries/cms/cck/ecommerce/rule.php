@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceRule
 {
 	// apply
-	public static function apply( $type, &$total, $items, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array(), $totals = array() )
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
@@ -30,15 +30,73 @@ abstract class JCckEcommerceRule
 		if ( count( $rules ) ) {
 			foreach ( $rules as $r ) {
 				if ( isset( $r->target_type ) && $r->target_type ) {
-					if ( !isset( $params['target_types'][$r->target_type] ) ) {
+					$continue					=	true;
+					$product_def				=	JCckEcommerce::getProductDefinition( $r->target_type );
+					$content_types				=	explode( '||', $product_def->content_type );
+					
+					if ( count( $content_types ) ) {
+						foreach ( $content_types as $content_type ) {
+							if ( isset( $params['content_types'][$content_type] ) ) {
+								$continue		=	false;
+								break;
+							}
+						}
+					}
+					if ( $continue ) {
 						continue;
 					}
 				}
-				if ( $total2 < (int)$r->min ) {
-					continue;
+				if ( isset( $r->target_products ) && $r->target_products ) {
+					if ( $r->target_products == 2 ) {
+						$continue	=	true;
+						$products	=	self::getTargets( $r->id );
+
+						if ( count( $products ) ) {
+							foreach ( $products as $product ) {
+								if ( isset( $items[$product] ) ) {
+									$continue	=	false;
+									break;
+								}
+							}
+						}
+						if ( $continue ) {
+							continue;
+						}
+					} elseif ( $r->target_products == -2 ) {
+						$continue	=	false;
+						$products	=	self::getTargets( $r->id );
+
+						if ( count( $products ) ) {
+							foreach ( $products as $product ) {
+								if ( isset( $items[$product] ) ) {
+									$continue	=	true;
+									break;
+								}
+							}
+						}
+						if ( $continue ) {
+							continue;
+						}
+					}
 				}
-				if ( (int)$r->max && $total2 > (int)$r->max ) {
-					continue;
+				if ( $r->mode ) {
+					if ( !isset( $totals[$r->target_type] ) ) {
+						continue;
+					} else {
+						if ( $totals[$r->target_type] < (int)$r->min ) {
+							continue;
+						}
+						if ( (int)$r->max && $totals[$r->target_type] > (int)$r->max ) {
+							continue;
+						}
+					}
+				} else {
+					if ( $total2 < (int)$r->min ) {
+						continue;
+					}
+					if ( (int)$r->max && $total2 > (int)$r->max ) {
+						continue;
+					}
 				}
 				switch ( $r->cost ) {
 					case 'free':
@@ -79,6 +137,18 @@ abstract class JCckEcommerceRule
 		}
 
 		return null;
+	}
+
+	// getTargets
+	public static function getTargets( $id )
+	{
+		static $cache	=	array();
+
+		if ( !isset( $cache[$id] ) ) {
+			$cache[$id]	=	JCckDatabase::loadColumn( 'SELECT product_id FROM #__cck_more_ecommerce_shipping_rule_product WHERE rule_id = '.(int)$id );
+		}
+
+		return $cache[$id];
 	}
 }
 ?>
