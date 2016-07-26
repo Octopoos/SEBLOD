@@ -455,8 +455,35 @@ abstract class JCckEcommerce
 			return $zones;
 		}
 		$where	=	'countries = "'.$user->country.'" OR countries LIKE "'.$user->country.'||%" OR countries LIKE "%||'.$user->country.'" OR countries LIKE "%||'.$user->country.'||%"';
-		$zones	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
+		$items	=	JCckDatabase::loadObjectList( 'SELECT id, profile FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
 
+		if ( count( $items ) ) {
+			foreach ( $items as $item ) {
+				$isValid	=	true;
+
+				if ( $item->profile ) {
+					$profile	=	json_decode( $item->profile );
+
+					if ( is_object( $profile ) ) {
+						$target	=	$profile->trigger;
+
+						if ( $profile->match == 'isFilled' ) {
+							if ( $user->$target == '' ) {
+								$isValid	=	false;
+							}
+						} elseif ( $profile->match == 'isEmpty' ) {
+							if ( $user->$target != '' ) {
+								$isValid	=	false;
+							}
+						}
+					}
+				}
+
+				if ( $isValid ) {
+					$zones[]	=	$item->id;
+				}
+			}
+		}
 		return $zones;
 	}
 }
