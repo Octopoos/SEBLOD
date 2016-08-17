@@ -603,7 +603,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$rows		=	JCckDatabase::loadObjectList( 'SELECT name, email, sendEmail FROM #__users WHERE sendEmail = 1' );
 			if ( count( $rows ) ) {
 				foreach ( $rows as $row ) {
-					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $emailSubject, $body );
+					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
 					if ( $return !== true ) {
 						JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_REGISTRATION_ACTIVATION_NOTIFY_SEND_MAIL_FAILED' ), 'error' );
 						
