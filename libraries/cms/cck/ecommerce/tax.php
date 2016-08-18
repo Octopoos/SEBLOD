@@ -44,7 +44,7 @@ abstract class JCckEcommerceTax
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $t->tax ) {
 						case 'plus':
-							$tax						=	$t->tax_amount;
+							$tax						=	(float)number_format( $t->tax_amount, 2 );
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
@@ -57,7 +57,7 @@ abstract class JCckEcommerceTax
 															);
 							break;
 						case 'percentage':
-							$tax						=	$total * $t->tax_amount / 100;
+							$tax						=	(float)number_format( $total * $t->tax_amount / 100, 2 );
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
@@ -78,15 +78,15 @@ abstract class JCckEcommerceTax
 								if ( !isset( $items[$params['target_id']] ) ) {
 									continue;
 								}
-								$tax					=	$items[$params['target_id']]->tax;
+								$tax					=	(float)number_format( $items[$params['target_id']]->tax, 2 );
 							} else {
 								if ( count( $items ) ) {
 									if ( isset( $params['target_id'] ) && $params['target_id'] ) {
-										$tax			=	$items[$params['target_id']]->tax;
+										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2 );
 									} else {
 										foreach ( $items as $item ) {
 											if ( isset( $item->tax ) && $item->tax != '' ) {
-												$tax		+=	(float)$item->tax;
+												$tax	+=	(float)number_format( $item->tax, 2 );
 											}
 										}
 									}

@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 // JCckEcommerceCurrency
 abstract class JCckEcommerceCurrency
 {
-	// apply
+	// format
 	public static function format( $amount, $format = true )
 	{
 		if ( $format ) {
