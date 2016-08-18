@@ -146,7 +146,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'types.version' );
 
 				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
 				}
 				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				?>
