@@ -242,10 +242,15 @@ foreach ( $fields as $field ) {
 			if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 				$config['storages'][$Pt]	=	'';
 				$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$field, &$config['storages'][$Pt], $id, &$config ) );
+				
 				if ( !isset( $config['base'] ) ) {
 					$config['base']				=	new stdClass;
 					$config['base']->location	=	$field->storage_location;
 					$config['base']->table		=	$Pt;
+
+					if ( !@$config['id'] && $config['base']->location ) {
+						$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
+					}
 				}
 				if ( $config['author'] ) {
 					// ACL
@@ -368,7 +373,7 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 			$config['base']->table	=	$properties['table'];
 		}
 	}
-	$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );	
+	$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
 } else {
 	$config['id']	=	( @$config['id'] ) ? $config['id'] : 0;
 }
