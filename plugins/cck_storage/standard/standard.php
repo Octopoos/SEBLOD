@@ -167,15 +167,22 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'each_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
-				if ( count( $values ) ) {
+				$count		=	count( $values );
+				if ( $count ) {
 					$fragments	=	array();
+					$var_count	=	( $field->match_options ) ? $field->match_options->get( 'var_count', '' ) : '';
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	$target.' = '.JCckDatabase::quote( $v )
-												.	' OR '.$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
+								$fragment		=	'';
+
+								if ( $count == 1 ) {
+									$fragment 	.=	$target.' = '.JCckDatabase::quote( $v ).' OR ';
+								}
+								$fragment		.=	$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
 												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
 												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
+								$fragments[] 	=	$fragment;
 							}
 						}
 					} else {
@@ -187,6 +194,23 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					}
 					if ( count( $fragments ) ) {
 						$sql	=	'((' . implode( ') AND (', $fragments ) . '))';
+					}
+					if ( $var_count != '' ) {
+						if ( (int)$var_count == 0 ) {
+							$idx	=	'diff_'.$field->name;
+
+							if ( !isset( $config['query_parts'] ) ) {
+								$config['query_parts']	=	array();
+							}
+							if ( !isset( $config['query_parts']['select'] ) ) {
+								$config['query_parts']['select']	=	array();
+							}
+							if ( !isset( $config['query_parts']['having'] ) ) {
+								$config['query_parts']['having']	=	array();
+							}
+							$config['query_parts']['select'][]		=	'LENGTH('.$target.') - LENGTH(REPLACE('.$target.',"'.$separator.'","")) AS '.$idx;
+							$config['query_parts']['having'][]		=	$idx.' = '.( $count - 1 );
+						}
 					}
 				}
 				break;
