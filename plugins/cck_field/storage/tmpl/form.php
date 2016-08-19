@@ -23,7 +23,19 @@ if ( $config['tmpl'] == 'ajax' ) {
 					$("#storage_more").slideToggle();
 				});
 				$("#adminForm").on("change", "#storage", function() { var v = $("#storage").val(); JCck.Dev.toggleTranslation();
-					if ( v == "dev" ) { $("#storage_more, .storage_more").show(); $("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").prop("disabled", false).show(); $("#storage_field_pick").show(); $("#storage_field").val(""); } else { $("#storage_more, .storage_more").hide(); if ( v == "none" ) { $("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").hide().prop("disabled", true); $("#storage_field_pick").hide(); } else { var custom = $("#storage_location").find("option:selected").attr("data-custom"); $("#storage_location, #storage_field, #storage_alter").prop("disabled", false).show(); $("#storage_field_pick").show(); if (v == "standard") { if (custom && custom == $("#storage_field").val()){$("#storage_field").val("");}} else if (v == "custom" && !$("#storage_field").val()) {$("#storage_field").val(custom);} if ( $("#storage_location").val() == "free" ) { $("#storage_table").prop("disabled", false).show(); } } }
+					if ( v == "dev" ) {
+						$("#storage_more, .storage_more").show(); $("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").prop("disabled", false).show(); $("#storage_field_pick").show(); $("#storage_field").val("");
+					} else {
+						$("#storage_more, .storage_more").hide();
+						if ( v == "none" ) {
+							$("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").hide().prop("disabled", true); $("#storage_field_pick").hide(); $(".object-params").hide(); $(".object-params select").prop("disabled",true);
+						} else {
+							var custom = $("#storage_location").find("option:selected").attr("data-custom"); $("#storage_location, #storage_field, #storage_alter").prop("disabled", false).show(); $("#storage_field_pick").show();
+							if (v == "standard") { if (custom && custom == $("#storage_field").val()){$("#storage_field").val("");}} else if (v == "custom" && !$("#storage_field").val()) {$("#storage_field").val(custom);}
+							var sl = $("#storage_location").val(); $("#op-"+sl).show();
+							if (sl == "free") { $("#storage_table").prop("disabled", false).show(); } else { $("#op-"+sl+" select").prop("disabled",false); }
+						}
+					}
 				});
 				$("#adminForm").on("change", "#storage_location", function() {
 					var v = $("#storage_location").val();
@@ -119,7 +131,9 @@ $js		=	'
 						$("#storage_table").hide();
 					}
 				}
-				$("#op-"+storage_location).show(); $("#op-"+storage_location+" select").prop("disabled",false);
+				if ($("#storage").val() != "none") {
+					$("#op-"+storage_location).show(); $("#op-"+storage_location+" select").prop("disabled",false);
+				}
 				'.$js.'
 			});
 			'
