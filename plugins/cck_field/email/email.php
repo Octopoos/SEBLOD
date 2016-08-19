@@ -166,7 +166,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$moreattach			=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
 		
 		// Prepare
-		if ( $options2['to'] != '' ) {
+		if ( isset($options2['to']) && $options2['to'] != '' ) {
 			$to		=	self::_split( $options2['to'] );
 			$dest	=	array_merge( $dest, $to );
 			$valid	=	1;
@@ -174,7 +174,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		if ( $moredest ) {
 			$valid	=	1;
 		}
-		if ( $options2['to_admin'] != '' ) {
+		if ( isset($options2['to_admin']) && $options2['to_admin'] != '' ) {
 			$to_admin	=	( count( $options2['to_admin'] ) ) ? implode( ',', $options2['to_admin'] ) : $options2['to_admin'];
 			if ( strpos( $to_admin, ',' ) !== false ) {
 				$recips = explode( ',', $to_admin );
