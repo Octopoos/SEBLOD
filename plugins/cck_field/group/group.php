@@ -413,8 +413,13 @@ class plgCCK_FieldGroup extends JCckPluginField
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';
 		
+		if ( $client == 'intro' || $client == 'content' ) {
+			$cc	=	'';
+		} else {
+			$cc	=	'c.required, c.required_alert, ';
+		}
 		$query	= ' SELECT DISTINCT a.*, c.client,'
-		        . 	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.link, c.link_options, c.typo, c.typo_label, c.typo_options, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
+		        . 	' c.label as label2, c.variation, c.variation_override, '.$cc.'c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.link, c.link_options, c.typo, c.typo_label, c.typo_options, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a'
 				.	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
 				.	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
