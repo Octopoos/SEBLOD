@@ -224,7 +224,7 @@ if ( $config['validate'] ) {
 // Store
 $k	=	0;
 foreach ( $config['storages'] as $data ) {
-	if ( isset( $data['_']) && $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
+	if ( isset( $data['_'] ) && $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
 		$dispatcher->trigger( 'onCCK_Storage_LocationStore', array( $data['_']->location, $data, &$config, $id ) );
 		$k++;
 	}
