@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // CommonHelper
 class CommonHelper_Display
 {
@@ -31,7 +33,7 @@ class CommonHelper_Display
 						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
 						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
 					);
-		$state	=	JArrayHelper::getValue( $states, (int) $value, $states[1] );
+		$state	=	ArrayHelper::getValue( $states, (int) $value, $states[1] );
 		$html	=	'<span class="icon-'.$state[5].'"></span>';
 
 		if ( $canChange ) {

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Controller
 class CCKController extends JControllerLegacy
 {
@@ -76,9 +78,7 @@ class CCKController extends JControllerLegacy
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel( 'list' );
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $cid );
+		$cid	=	ArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
 			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); // todo: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb );
@@ -255,9 +255,7 @@ class CCKController extends JControllerLegacy
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
@@ -329,9 +327,7 @@ class CCKController extends JControllerLegacy
 		$config		=	array();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
@@ -581,9 +577,8 @@ class CCKController extends JControllerLegacy
 		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
 
 		// Sanitize the input
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $pks );
-		JArrayHelper::toInteger( $order );
+		$pks	=	ArrayHelper::toInteger( $pks );
+		$order	=	ArrayHelper::toInteger( $order );
 
 		// Get the model
 		$model 	= 	$this->getModel( 'list' );

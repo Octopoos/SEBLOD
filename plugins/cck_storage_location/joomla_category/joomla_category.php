@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
 // Plugin
@@ -822,10 +824,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	{
 		$states	=	self::_getStaticParam( 'allowed_status', '1,2' );
 		$states	=	explode( ',', $states );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $states );
-
+		$states	=	ArrayHelper::toInteger( $states );
 		$states	=	( count( $states ) > 1 ) ? 'IN ('.implode( ',', $states ).')' : '= '.(int)$states[0];
 		$query	=	'SELECT '.self::$key
 				.	' FROM '.self::$table

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
@@ -44,8 +46,7 @@ class CCKControllerFolders extends JControllerAdmin
 			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
+			$cid	=	ArrayHelper::toInteger( $cid );
 			
 			$model	=	$this->getModel();
 			if ( $model->clearACL( $cid ) ) {
@@ -67,9 +68,7 @@ class CCKControllerFolders extends JControllerAdmin
 		
 		$app		=	JFactory::getApplication();
 		$cid		=	$app->input->get( 'cid', array(), 'array' );
-
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $cid );
+		$cid		=	ArrayHelper::toInteger( $cid );
 
 		$recordId	= (int) (count($cid) ? $cid[0] : 2 );
 		$model		=	$this->getModel();

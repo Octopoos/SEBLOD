@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'cck.joomla.application.component.controllerform' );
 
 // Controller
@@ -22,7 +24,7 @@ class CCKControllerField extends CCK_ControllerForm
 	{
 		$app		=	JFactory::getApplication();
 		$user		=	JFactory::getUser();
-		$folderId	=	JArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
+		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
 		if ( $folderId ) {

@@ -9,8 +9,9 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'cck.joomla.access.rules' );
-jimport( 'joomla.utilities.arrayhelper' );
 
 // CCKAccess
 class CCKAccess
@@ -310,7 +311,7 @@ class CCKAccess
 				$result = $db->loadColumn();
 
 				// Clean up any NULL or duplicate values, just in case
-				JArrayHelper::toInteger($result);
+				$result = ArrayHelper::toInteger($result);
 
 				if (empty($result))
 				{
@@ -359,7 +360,7 @@ class CCKAccess
 		$result = $db->loadColumn();
 
 		// Clean up any NULL values, just in case
-		JArrayHelper::toInteger($result);
+		$result = ArrayHelper::toInteger($result);
 
 		return $result;
 	}
