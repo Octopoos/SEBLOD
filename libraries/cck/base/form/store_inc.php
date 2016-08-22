@@ -141,7 +141,15 @@ if ( count( $fields ) ) {
 			// More storages
 			$storages	=	JCckDev::fromJSON( $field->storages, 'object' );
 		}
+
+		// Was it the last one?
+		if ( $config['error'] == 2 ) {
+			break;
+		}
 	}
+}
+if ( $config['error'] == 2 ) {
+	$config['error']	=	false;
 }
 
 // Merge
