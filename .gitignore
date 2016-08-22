@@ -203,6 +203,12 @@
 /administrator/language/en-GB/en-GB.plg_finder_tags.sys.ini
 /administrator/language/en-GB/en-GB.plg_finder_weblinks.ini
 /administrator/language/en-GB/en-GB.plg_finder_weblinks.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_folderinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_folderinstaller.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_packageinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_packageinstaller.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_urlinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_urlinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.ini
@@ -426,6 +432,12 @@
 /administrator/language/fr-FR/fr-FR.plg_finder_tags.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_weblinks.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_weblinks.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_folderinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_folderinstaller.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_packageinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_packageinstaller.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_urlinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_urlinstaller.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_installer_webinstaller.ini
 /administrator/language/fr-FR/fr-FR.plg_installer_webinstaller.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_quickicon_extensionupdate.ini
@@ -1025,6 +1037,9 @@
 /plugins/finder/newsfeeds/*
 /plugins/finder/tags/*
 /plugins/finder/weblinks/*
+/plugins/installer/folderinstaller/*
+/plugins/installer/packageinstaller/*
+/plugins/installer/urlinstaller/*
 /plugins/installer/webinstaller/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
