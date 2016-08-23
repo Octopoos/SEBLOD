@@ -25,6 +25,7 @@ JCckDev::initScript( 'typo', $this->item );
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'id', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'identifier' ) )
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'1', 'storage_field'=>'use_identifier' ) )
 			. '</li>';
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_CONTAINER_NAME' ).'</label>'
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-xsmall', 'storage_field'=>'identifier_suffix' ) )
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'size'=>13, 'storage_field'=>'identifier_name' ) )
@@ -42,7 +43,10 @@ JCckDev::initScript( 'typo', $this->item );
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#class').isVisibleWhen('type','activation,block,featured,state');
-	$('#class2,#identifier,#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden');
+	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden');
+	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,increment');
+	$('#identifier_suffix').isDisabledWhen('type','increment');
+	$('#blank_li').isVisibleWhen('type','increment');
 	$('#start').isVisibleWhen('type','increment');
 	$('#trigger').isVisibleWhen('type','form,selection');
 });

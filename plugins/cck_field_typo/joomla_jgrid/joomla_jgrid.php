@@ -13,7 +13,8 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 {
-	protected static $type	=	'joomla_jgrid';
+	protected static $type		=	'joomla_jgrid';
+	protected static $increment	=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
@@ -154,6 +155,17 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$value				=	$field->form;
 				break;
 			case 'increment':
+				$identifier_name	=	$typo->get( 'identifier_name', '' );
+
+				if ( $identifier_name != '' ) {
+					if ( !isset( self::$increment[$identifier_name] ) ) {
+						self::$increment[$identifier_name]	=	array( 'i'=>0, 'pks'=>array() );
+					}
+					if ( !isset( self::$increment[$identifier_name]['pks'][$config['pk']] ) ) {
+						self::$increment[$identifier_name]['pks'][$config['pk']]	=	self::$increment[$identifier_name]['i'];
+						self::$increment[$identifier_name]['i']++;
+					}
+				}
 				$value		=	( !$start ) ? $i - 1 : $i;
 				break;
 			case 'selection':
@@ -210,6 +222,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 		}
 		
 		return $value;
+	}
+
+	// getStaticValue
+	public static function getStaticValue( $identifier, $pk = 0 )
+	{
+		if ( $pk ) {
+			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['pks'][$pk] : 0;
+		} else {
+			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['i'] : 0;
+		}
 	}
 }
 ?>
