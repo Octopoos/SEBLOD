@@ -219,7 +219,7 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }
@@ -241,7 +241,7 @@ if ( !$k ) {
 	$config['pk']	=	-1;
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }
