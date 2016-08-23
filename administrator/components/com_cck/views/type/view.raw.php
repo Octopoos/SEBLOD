@@ -119,7 +119,17 @@ class CCKViewType extends JViewLegacy
 		// Fields
 		$pos					=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
 		$this->fields			=	Helper_Workshop::getFields( 'type', $this->item, 'a.folder = '.(int)$featured, false, false, $pos  );
-		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, '', 'a.folder = '.(int)$folder );
+		
+		if ( $this->item->parent != '' ) {
+			$names				=	JCckDatabase::loadColumn( 'SELECT a.name FROM #__cck_core_fields AS a WHERE a.storage_table = "#__cck_store_form_'.$this->item->parent.'"' );
+
+			if ( count( $names ) ) {
+				$names			=	'"'.implode( '","', $names ).'"';
+			}
+			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'type', $this->item, '', 'a.folder = '.(int)$folder, ( $names != '' ? 'a.name IN ('.$names.')' : '' ) );
+		} else {
+			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'type', $this->item, '', 'a.folder = '.(int)$folder );
+		}
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
 		// Positions
@@ -169,14 +179,25 @@ class CCKViewType extends JViewLegacy
 			$this->item->storage_location	=	'joomla_user_group';
 		}	
 		$location	=	( $this->item->storage_location == '' ) ? 'joomla_article' : $this->item->storage_location;
+		$or			=	'';
 
 		// Fields
 		if ( !$isScoped ) {
 			$and	=	'(a.storage_location != "'.$location.'" AND a.storage != "none")';
 		} else {
+			if ( $this->item->parent != '' ) {
+				$names		=	JCckDatabase::loadColumn( 'SELECT a.name FROM #__cck_core_fields AS a WHERE a.storage_table = "#__cck_store_form_'.$this->item->parent.'"' );
+
+				if ( count( $names ) ) {
+					$names	=	'"'.implode( '","', $names ).'"';
+				}
+				if ( $names != '' ) {
+					$or	=	'a.name IN ('.$names.')';	
+				}
+			}
 			$and	=	'(a.storage_location = "'.$location.'" OR a.storage = "none")';
 		}
-		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, $and, 'a.folder != '.(int)$folder );
+		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, $and, 'a.folder != '.(int)$folder, $or );
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
 		// Languages (todo: optimize)

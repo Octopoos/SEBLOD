@@ -266,7 +266,7 @@ class Helper_Workshop
 	}
 	
 	// getFieldsAv
-	public static function getFieldsAv( $element, $item, $and, $folder = '' )
+	public static function getFieldsAv( $element, $item, $and, $folder = '', $or = '' )
 	{
 		$excluded	=	self::getFields( $element, $item, '', true );
 		$select		=	'';
@@ -276,7 +276,10 @@ class Helper_Workshop
 			$where	.=	' AND '.$and;
 		}
 		if ( $element == 'type' && $item->storage_location != 'none' ) {
-			$where	.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+			if ( $or != '' ) {
+				$or	=	' OR ('.$or.')';
+			}
+			$where	.=	' AND ( (a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'") '.$or.')';
 		} elseif ( $element == 'search' ) {
 			$select	=	', a.storage_table, a.storage_field';
 		}
