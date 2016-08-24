@@ -185,7 +185,7 @@ class plgSystemCCK extends JPlugin
 		}
 		$user	=	JFactory::getUser();
 		
-		if ( $user->id > 0 && @$user->guest != 1 ) {
+		if ( $user->id > 0 && is_object( $this->site ) && $user->id != $this->site->guest ) {
 			if ( $app->isSite() ) {
 				$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
 				
@@ -195,10 +195,6 @@ class plgSystemCCK extends JPlugin
 					$this->site_cfg->set( 'set_template_style', true );
 					$this->_setTemplateStyle( $style );
 				}
-			}
-			
-			if ( isset( $user->cck_multisite ) ) {
-				return;
 			}
 			
 			if ( ! $this->site ) {
@@ -276,24 +272,18 @@ class plgSystemCCK extends JPlugin
 			if ( $app->isAdmin() ) {
 				return;
 			}
-			$init		=	true;
 			$session	=	JFactory::getSession();
 			$session->set( 'user', JFactory::getUser( 0 ) );
 			
 			if ( ! $this->site ) {
 				return;
 			}
-			
-			if ( isset( $user->cck_multisite ) ) {
-				$init	=	false;
-			}
-			$user					=	new JUser( $this->site->guest );
-			$user->guest			=	1;
-			$user->cck_multisite	=	1;
+			$user			=	new JUser( $this->site->guest );
+			$user->guest	=	1;
 
 			$session->set( 'user', $user );
 
-			if ( (int)$init && JCck::on( '3.5' ) ) {
+			if ( JCck::on( '3.5' ) ) {
 				jimport( 'cck.joomla.menu.menu' );
 				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
 				$menuShadow->makeHimLive();
