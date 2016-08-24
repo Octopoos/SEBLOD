@@ -77,13 +77,13 @@ class CCK_TableType extends JTable
 
 		if ( $this->id ) {
 			$this->modified_date		=	$date->toSql();
-			$this->modified_user_id		=	$user->get( 'id' );
+			$this->modified_user_id		=	$user->id;
 		} else {
 			if ( !(int)$this->created_date ) {
 				$this->created_date		=	$date->toSql();
 			}
 			if ( empty( $this->created_user_id ) ) {
-				$this->created_user_id	=	$user->get( 'id' );
+				$this->created_user_id	=	$user->id;
 			}
 		}
 

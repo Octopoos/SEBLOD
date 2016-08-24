@@ -87,7 +87,7 @@ class JCckContent
 			}
 		}
 		if ( !$author_id ) {
-			$user_id		=	JFactory::getUser()->get( 'id' );
+			$user_id		=	JFactory::getUser()->id;
 			
 			if ( $user_id ) {
 				$author_id	=	$user_id;

@@ -75,8 +75,8 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			if ( !$link->get( 'no_access', 0 ) ) {
 				$field->display	=	0;
 			}

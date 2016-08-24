@@ -216,7 +216,7 @@ class JCckPluginLocation extends JPlugin
 		$user	=	JFactory::getUser();
 		
 		if ( $table->checked_out > 0 ) {
-			if ( $table->checked_out != $user->get( 'id' ) && !$user->authorise( 'core.admin', 'com_checkin' ) ) {
+			if ( $table->checked_out != $user->id && !$user->authorise( 'core.admin', 'com_checkin' ) ) {
 				$app->enqueueMessage( JText::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
 				return false;
 			}

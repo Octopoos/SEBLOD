@@ -275,8 +275,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}

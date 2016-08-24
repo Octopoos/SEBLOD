@@ -248,8 +248,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -461,8 +461,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$data['parent_id']		=	$this->params->get( 'base_default-parent_id', 1 );
 				}
 			}
-			if ( ( $user->get( 'id' ) > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
-				$data[self::$author]	=	$user->get( 'id' );
+			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
+				$data[self::$author]	=	$user->id;
 			}
 		} else {
 			$data[self::$key]	=	$table->{self::$key};

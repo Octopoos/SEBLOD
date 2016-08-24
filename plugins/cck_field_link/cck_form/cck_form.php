@@ -102,7 +102,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 					}
 					if ( isset( $cache[$index.'_pks'][$config['pk']] )
 						&& isset( $cache[$index][$cache[$index.'_pks'][$config['pk']]->map] )   
-						&& $cache[$index][$cache[$index.'_pks'][$config['pk']]->map]->author_id == $user->get( 'id' ) ) {
+						&& $cache[$index][$cache[$index.'_pks'][$config['pk']]->map]->author_id == $user->id ) {
 						$canEditOwnContent	=	true;
 					}
 				}
@@ -112,8 +112,8 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 
 			// Check Permissions
 			if ( !( $canEdit && $canEditOwn
-				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->get( 'id' ) ) )
-				|| ( $canEditOwn && ( $config['author'] == $user->get( 'id' ) ) )
+				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
+				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
 				|| ( $canEditOwnContent ) ) ) {
 				if ( !$link->get( 'no_access', 0 ) ) {
 					$field->display	=	0;

@@ -161,8 +161,7 @@ class Helper_Admin extends CommonHelper_Admin
 	{
 		$bar		=	JToolBar::getInstance( 'toolbar' );
 		$user		=	JFactory::getUser();
-		$userId		=	$user->get( 'id' );
-		$checkedOut	= 	! ( $vMore['checked_out'] == 0 || $vMore['checked_out'] == $userId );
+		$checkedOut	= 	! ( $vMore['checked_out'] == 0 || $vMore['checked_out'] == $user->id );
 		$canDo		=	self::getActions( $vMore['folder'] );
 		$vSubtitle	=	'';
 		

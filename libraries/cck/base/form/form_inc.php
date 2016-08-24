@@ -62,7 +62,7 @@ if ( $id > 0 ) {
 	
 	// canEditOwnContent
 	jimport( 'cck.joomla.access.access' );
-	$canEditOwnContent	=	CCKAccess::check( $user->get( 'id' ), 'core.edit.own.content', 'com_cck.form.'.$type->id );
+	$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$type->id );
 	if ( $canEditOwnContent ) {
 		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
 		$canEditOwnContent	=	false;
@@ -70,7 +70,7 @@ if ( $id > 0 ) {
 			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$id );
 			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.(int)$related_content_id );
 
-			if ( $related_content->author_id == $user->get( 'id' ) ) {
+			if ( $related_content->author_id == $user->id ) {
 				$canEditOwnContent	=	true;
 			}
 		}
@@ -255,11 +255,11 @@ foreach ( $fields as $field ) {
 				if ( $config['author'] ) {
 					// ACL
 					if ( $canEditOwn && ! $canAccess ) {
-						if ( ( $user->get( 'id' ) != $config['author'] ) && !$canEditOwnContent ) {
+						if ( ( $user->id != $config['author'] ) && !$canEditOwnContent ) {
 							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 						}
 					} elseif ( ! $canEditOwn && $canAccess ) {
-						if ( $user->get( 'id' ) == $config['author'] ) {
+						if ( $user->id == $config['author'] ) {
 							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 						}
 					}
@@ -321,7 +321,7 @@ if ( !$canAccess && $canEditOwn && !$config['author'] ) {
 	} else {
 		$config['author']	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.id = '.(int)$config['id'] );
 	}
-	if ( ( !$config['author'] || ( $config['author'] != $user->get( 'id' ) ) ) && !$canEditOwnContent ) {
+	if ( ( !$config['author'] || ( $config['author'] != $user->id ) ) && !$canEditOwnContent ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 	}
 }
