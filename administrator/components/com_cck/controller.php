@@ -188,7 +188,7 @@ class CCKController extends JControllerLegacy
 				$master	=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
 			}
 			
-			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
+			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage_table, a.storage_field FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
 			if ( !is_object( $field ) ) {
 				return;
 			}
@@ -214,6 +214,19 @@ class CCKController extends JControllerLegacy
 											),
 							'task'=>'ajax_field_li'
 						);
+
+		if ( $master == 'search' && @$field->storage_table != '' ) {
+			$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+
+            if ( isset( $columns[$field->storage_field] ) ) {
+                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
+                
+                if ( $pos !== false ) {
+                    $field->match_mode      =   'exact';
+                    $field->match_options   =   '{"var_type":"0"}';
+                }
+            }
+		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
 		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
