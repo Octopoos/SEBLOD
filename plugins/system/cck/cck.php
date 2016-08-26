@@ -278,11 +278,14 @@ class plgSystemCCK extends JPlugin
 			if ( ! $this->site ) {
 				return;
 			}
+			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
+				return;
+			}
 			$user			=	new JUser( $this->site->guest );
 			$user->guest	=	1;
 
 			$session->set( 'user', $user );
-
+			
 			if ( JCck::on( '3.5' ) ) {
 				jimport( 'cck.joomla.menu.menu' );
 				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
