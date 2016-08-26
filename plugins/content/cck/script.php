@@ -113,6 +113,9 @@ class plgContentCCKInstallerScript
 					$addon->title	=	$titles[$addon->element];
 					self::_addAddon( $addon, $seblod );
 				}
+				$query		=	'UPDATE #__menu SET alias = CONCAT(UCASE(LEFT(alias,1)),SUBSTRING(alias,2)) WHERE link LIKE "index.php?option=com_cck_%" AND parent_id = '.(int)$seblod->id;
+				$db->setQuery( $query );
+				$db->execute();
 			}
 		}	
 		
