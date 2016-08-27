@@ -113,6 +113,7 @@ abstract class JCckEcommerceCart
 		$user			=	JCck::getUser();
 		
 		if ( !isset( $cache[$definition] ) ) {
+			require_once JPATH_SITE.'/modules/mod_cck_ecommerce_cart/helper.php';
 			$items	=	modCCKeCommerceCartHelper::getItems( $user, $definition );
 
 			if ( is_array( $items ) ) {
