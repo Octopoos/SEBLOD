@@ -247,9 +247,20 @@ class plgSystemCCK extends JPlugin
 			$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
 
 			if ( $multisite ) {
-				$viewlevels	=	array_diff( $authlevels, $nolevels );
+				if ( count( $nolevels) ) {
+					foreach ( $nolevels as $k=>$v ) {
+						$nolevels[$k]	=	(int)$v;
+					}
+				}
+				$viewlevels		=	array_diff( $authlevels, $nolevels );
+				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
+				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
+
+				if ( count( $otherlevels ) ) {
+					$viewlevels	=	array_merge( $viewlevels, $otherlevels );
+				}
 			} else {
-				$viewlevels	=	$authlevels;
+				$viewlevels		=	$authlevels;
 			}
 			
 			if ( $app->isAdmin() && $this->site->guest_only_viewlevel > 0 ) {
