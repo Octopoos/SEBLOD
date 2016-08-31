@@ -726,7 +726,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_objects` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_component` (`component`),
   KEY `idx_view` (`view`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=10 ;
 
 
 INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `context`, `options`, `vars`, `view`) VALUES
