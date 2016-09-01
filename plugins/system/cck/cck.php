@@ -615,7 +615,9 @@ class plgSystemCCK extends JPlugin
 				$uri		=	JUri::getInstance();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				$app->setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
+				if ( !isset( $app->cck_app['Header']['Status'] ) ) {
+					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+				}
 				$app->setBody( $this->offline_buffer );
 			}
 			return;
