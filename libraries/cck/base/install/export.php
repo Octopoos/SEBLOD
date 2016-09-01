@@ -849,6 +849,12 @@ class CCK_Export
 	// exportJoomla_Menu
 	public static function exportJoomla_Menu( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
 	{
+		if ( isset( $xml->{$elemtype}->asset_id ) ) {
+			$xml->{$elemtype}->asset_id	=	'';
+		}
+		
+		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
+		$xml->addChild( 'acl', (string)$acl );
 	}
 
 	// exportJoomla_MenuItem
