@@ -22,6 +22,82 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.9.0 Upgrade Release [1-Sep-2016] ------------
+
+* Security Release:
+  >> Status (+ Publication dates) applied on Download task.
+
++ Extensive cleaning performed.
+  >> Deprecated Jquery stuff removed.
+  >> Deprecated SEBLOD stuff removed.
+  >> Joomla! 2.5 not supported anymore. :)
+  >> PHP 5.2 not supported anymore. :)
+
+! Memory & Performance optimizations on List rendering (for modules).
+
++ Keyboard Shortcut added in Content/Search Types UI to add a new field (n).
++ Match mode automation (multiple vs single selection) added.
++ Suffix forced for existing/identical "alias" on submission.
+  >> available on JCckContent class
+  >> support added on Article/Category Object plug-ins
+
++ $cck->retrieveValue(...); implemented in Template Framework.
+  >> alternative to getValue with restriction applied.
++ "Limit" parameter added on List module.
++ "[pk]" syntax allowed in Bridge Title parameter.
++ "User Grp Password" group (used from User Content Type) added in install.sql
+
+^ "Exact" match mode + "Unquoted" forced for Int/Tinyint while creating new fields.
+^ "Match Occurences" parameter added for "Each Word Exact" match mode.
+^ "PrepareExport" applied on Link, Textarea, Wysiwyg Editor plug-ins.
+^ Primary Key for "More" tables now created as UNSIGNED INT(10).
+  >> "#__cck_store_form_..."
+  >> "#__cck_store_item_..."
+
+^ jQuery UI updated to 1.12.0
+^ jQuery UI Effect updated to 1.12.0
+
+^ "/alias (Safe)" is now deprecated.
+  >> "SEF Content Type(s)" now triggers "Safe" mode on its own.
+
+- Deprecated "CCK" class removed.
+- Deprecated "CCK_Database" class removed.
+- Deprecated "CCK_Dev" class removed.
+- Deprecated "CCK_Field" class removed.
+- Deprecated "CCK_Language" class removed.
+
+- Deprecated use of jQuery.fn.attr('checked') removed.
+- Deprecated use of jQuery.fn.attr('disabled') removed.
+- Deprecated use of jQuery.fn.die() removed.
+- Deprecated use of jQuery.fn.live() removed.
+- Deprecated use of jQuery.fn.removeAttr('checked') removed.
+- Deprecated use of jQuery.fn.removeAttr('disabled') removed.
+- Deprecated use of jQuery.fn.size() removed.
+
+- jquery-1.8.3.min.js removed.
+- jquery.jstree.min.js script removed.
+- jquery.lavalamp.min.js script removed.
+- jquery-noconflict.js script removed.
+- jquery.qtip.min.js script removed.
+
+- Permanent "limit" variable removed on Lists.
+
+# A few "ALTER IGNORE TABLE" replaced by "ALTER TABLE" for MySQL 5.7.4+ support.
+# "Auto Redirection (Vars)" now applied on Content redirection as well.
+# Download Link/Task now applied on Upload File plug-in.
+# "Form Action" Fields can now be included in a "Group" Field.
+# Guest issue on Multi-sites fixed (regression since Joomla! 3.6.0)
+# Green validation popup style fixed.
+# Initial Accesslevels forced back in Multi-sites.
+# Issues fixed on Group plug-in.
+# JSON issue (PrepareDownload) fixed.
+# Missing required "star" added in Group output.
+# Missing Parent's fields while editing a Child Content Type issue fixed.
+# Offline mode fixed in Multi-sites. (regression)
+# Path issue fixed for "Modal Box Style" parameter on SEBLOD Options.
+# User activation issue fixed on Multi-sites.
+# Various improvements or issues fixed.
+
 -------------------- 3.8.4 Upgrade Release [27-Jun-2016] ------------
 
 + Country List updated in install.sql to include Italian translation.
