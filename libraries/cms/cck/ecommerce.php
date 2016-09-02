@@ -220,7 +220,7 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field, request_weight_field'
 															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 		}
 		

@@ -80,24 +80,35 @@ abstract class JCckEcommerceRule
 					}
 				}
 				if ( $r->mode ) {
-					if ( !isset( $totals[$r->target_type] ) ) {
+					if ( !isset( $totals[$type][$r->target_type] ) ) {
 						continue;
 					} else {
-						if ( $totals[$r->target_type] < (int)$r->min ) {
+						if ( $totals[$type][$r->target_type] < (int)$r->min ) {
 							continue;
 						}
-						if ( (int)$r->max && $totals[$r->target_type] > (int)$r->max ) {
+						if ( (int)$r->max && $totals[$type][$r->target_type] > (int)$r->max ) {
 							continue;
 						}
 					}
 				} else {
-					if ( $total2 < (int)$r->min ) {
-						continue;
-					}
-					if ( (int)$r->max && $total2 > (int)$r->max ) {
-						continue;
+					if ( $type != 'total' ) {
+						if ( $totals[$type]['_'] < (int)$r->min ) {
+							continue;
+						}
+						if ( (int)$r->max && $totals[$type]['_'] > (int)$r->max ) {
+							continue;
+						}
+					} else {
+						if ( $total2 < (int)$r->min ) {
+							continue;
+						}
+						if ( (int)$r->max && $total2 > (int)$r->max ) {
+							continue;
+						}
 					}
 				}
+
+				// Apply
 				switch ( $r->cost ) {
 					case 'free':
 						$cost						=	0;

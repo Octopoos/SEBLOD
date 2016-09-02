@@ -39,7 +39,12 @@ abstract class JCckEcommerceProduct
 			}
 		}
 		if ( !( isset( $definitions[$type] ) && $definitions[$type] ) ) {
-			return (object)array( 'quantity'=>'', 'request_stock_field'=>'' );
+			return (object)array(
+							'name'=>'',
+							'quantity'=>'',
+							'request_stock_field'=>'',
+							'request_weight_field'
+						   );
 		}
 		
 		return JCckEcommerce::getProductDefinition( $definitions[$type]->name );
@@ -51,7 +56,7 @@ abstract class JCckEcommerceProduct
 		static $definitions	=	array();
 
 		if ( !count( $definitions ) ) {
-			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_stock_field, request_tax_field, request_tax_field_live, request_tax_field_live_options FROM #__cck_more_ecommerce_product_definitions WHERE published = 1 AND type != "alternative"' );
+			$items			=	JCckDatabase::loadObjectList( 'SELECT content_type, name, type, quantity, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_stock_field, request_tax_field, request_tax_field_live, request_tax_field_live_options, request_weight_field FROM #__cck_more_ecommerce_product_definitions WHERE published = 1 AND type != "alternative"' );
 			
 			if ( count( $items ) ) {
 				foreach ( $items as $item ) {
