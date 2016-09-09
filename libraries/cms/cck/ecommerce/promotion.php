@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommercePromotion
 {
 	// apply
-	public static function apply( $type, &$total, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array() )
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
@@ -32,7 +32,8 @@ abstract class JCckEcommercePromotion
 						// OK
 					} elseif ( $params['target'] == 'order' && $p->target == -1 ) {
 						// OK
-					} elseif ( $params['target'] == 'product' && $p->target == 1 ) {
+					} elseif ( ( $params['target'] == 'product' && $p->target == 1 )
+						    || ( $params['target'] == 'product2' && $p->target == 2 ) ) {
 						if ( $p->target_products == 0 ) {
 							// OK
 						} elseif ( $p->target_products == 2 ) {
@@ -54,13 +55,43 @@ abstract class JCckEcommercePromotion
 						continue;
 					}
 				}
+				if ( $p->target_attributes != '' ) {
+					$attribute	=	false;
+					
+					if ( isset( $items[$params['target_id']] ) ) {
+						$attributes	=	json_decode( $p->target_attributes );
+
+						if ( is_object( $attributes ) ) {						
+							$target	=	$attributes->trigger;
+
+							if ( $target && isset( $items[$params['target_id']]->$target ) ) {
+								if ( $attributes->match == 'isFilled' ) {
+									if ( $items[$params['target_id']]->$target != '' ) {
+										$attribute	=	true;
+									}
+								} elseif ( $attributes->match == 'isEmpty' ) {
+									if ( $items[$params['target_id']]->$target == '' ) {
+										$attribute	=	true;
+									}
+								} elseif ( $attributes->match == 'isEqual' ) {
+									if ( $items[$params['target_id']]->$target == $attributes->values ) {
+										$attribute	=	true;
+									}
+								}
+							}
+						}				
+					}
+					if ( !$attribute ) {
+						continue;
+					}
+				}
 				if ( $p->type == 'coupon' ) {
 					if ( $p->code && ( $p->code != @$params['code'] ) ) {
 						continue;
 					}
 				}
 				$groups		=	explode( ',', $p->groups );
-
+				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->discount ) {
 						case 'free':

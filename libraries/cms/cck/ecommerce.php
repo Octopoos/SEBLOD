@@ -220,8 +220,15 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field, request_weight_field'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field, request_weight_field, attribute, attributes'
 															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
+
+			if ( $definitions[$name]->attributes == '' ) {
+				$definitions[$name]->attributes	=	array();
+			} else {
+				$definitions[$name]->attributes	=	explode( '||', $definitions[$name]->attributes );
+				$definitions[$name]->attributes	=	array_flip( $definitions[$name]->attributes );
+			}
 		}
 		
 		return $definitions[$name];
@@ -266,7 +273,10 @@ abstract class JCckEcommerce
 				
 				// Promotions
 				if ( $apply_promotions ) {
-					JCckEcommercePromotion::apply( '', $price, $options );
+					JCckEcommercePromotion::apply( '', $price, $items, $options );
+
+					$options['target']	=	'product2';
+					JCckEcommercePromotion::apply( '', $price, $items, $options );
 				}
 				
 				// Quantity /* Alter Price */
@@ -309,7 +319,7 @@ abstract class JCckEcommerce
 		$null	=	$db->getNullDate();
 		$now	=	JFactory::getDate()->toSql();
 
-		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_products'
+		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products'
 														.  ' FROM #__cck_more_ecommerce_promotions AS a'
 														.  ' WHERE a.published = 1'
 														.  ' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
@@ -455,7 +465,7 @@ abstract class JCckEcommerce
 			return $zones;
 		}
 		$where	=	'countries = "'.$user->country.'" OR countries LIKE "'.$user->country.'||%" OR countries LIKE "%||'.$user->country.'" OR countries LIKE "%||'.$user->country.'||%"';
-		$items	=	JCckDatabase::loadObjectList( 'SELECT id, profile FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
+		$items	=	JCckDatabaseCache::loadObjectList( 'SELECT id, profile FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
 
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
