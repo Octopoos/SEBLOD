@@ -164,5 +164,8 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			}
 		}
 	}
+	$(document).ready(function() {
+		$("#toolbar-save-new button").prop("disabled",true);
+	});
 })(jQuery);
 </script>
