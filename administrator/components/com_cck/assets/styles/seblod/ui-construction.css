@@ -32,7 +32,7 @@ ul.sortable li.t-tabs,ul.sortable li.t-search_operator,ul.sortable li.t-div{back
 /*li:hover.ui-selectee{border-color: #bbbbbb !important;}*/
 ul.sortable li.position{background-color: #16396f !important; border-color:#16396f;}
 ul.sortable li.position span.title{color: #ffffff !important;}
-ul.sortable li.position span.title.overridden::before{content: attr(data-path); width: 100%; position: absolute; left: 4px; bottom: -7px; color: #3b99fc; font-size: 8px;}
+ul.sortable li.position span.title.overridden::before{content: attr(data-path); width: 100%; position: absolute; left: 12px; bottom: -3px; color: #3b99fc; font-size: 8px;}
 
 div.seblod .selector{background-color: #16396f !important;border-color: #16396f !important;}
 div.seblod .thin.blue{background-color: #ffffff;border-color: #16396f;color: #16396f;}
