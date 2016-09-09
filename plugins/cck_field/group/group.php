@@ -397,7 +397,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		if ( $js ) {
-			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
+			} else {
+				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+			}
 		}
 		
 		return $html;
