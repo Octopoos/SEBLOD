@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.9.1 Upgrade Release [xx-Sep-2016] -----------
+
+# Broken Conditional States fixed on Group when tmpl=raw.
+
 -------------------- 3.9.0 Upgrade Release [1-Sep-2016] ------------
 
 * Security Release:
