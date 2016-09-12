@@ -26,6 +26,7 @@ $ -> Language fix or change
 
 # Broken Conditional States fixed on Group when tmpl=raw. 
 # Download task updated on back-end.
+# Markup fixed on Group plug-in.
 # Minor issues fixed on back-end.
 
 -------------------- 3.9.0 Upgrade Release [1-Sep-2016] ------------
