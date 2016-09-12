@@ -24,7 +24,8 @@ $ -> Language fix or change
 
 -------------------- 3.9.1 Upgrade Release [xx-Sep-2016] -----------
 
-# Broken Conditional States fixed on Group when tmpl=raw.
+# Broken Conditional States fixed on Group when tmpl=raw. 
+# Download task updated on back-end.
 # Minor issues fixed on back-end.
 
 -------------------- 3.9.0 Upgrade Release [1-Sep-2016] ------------
