@@ -187,10 +187,10 @@ $js	=	'
 		(function ($){
 			JCck.Dev = {
 				addNew: function(id) {
-					var tpl_a = "<?php echo $template_name; ?>";
-					var tpl_s = "<?php echo $template_name; ?>";
-					var tpl_c = "<?php echo $template_name; ?>";
-					var tpl_i = "<?php echo $template_name; ?>";
+					var tpl_a = "'. $template_name .'";
+					var tpl_s = "'. $template_name .'";
+					var tpl_c = "'. $template_name .'";
+					var tpl_i = "'. $template_name .'";
 					var url = "index.php?option=com_cck&task=type.add&skeleton_id="+id+"&tpl_a="+tpl_a+"&tpl_s="+tpl_s+"&tpl_c="+tpl_c+"&tpl_i="+tpl_i;
 					window.location.href = url;
 					return false;
