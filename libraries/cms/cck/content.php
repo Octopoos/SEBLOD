@@ -396,6 +396,13 @@ class JCckContent
 	{
 		$this->{'_instance_'.$instance_name}->$property	=	$value;
 	}
+
+	// updateType
+	public function updateType( $cck )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_instance_core->store();
+	}
 	
 	// _getProperties
 	protected function _getProperties()
