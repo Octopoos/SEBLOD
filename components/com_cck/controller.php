@@ -150,6 +150,9 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 
+			JPluginHelper::importPlugin( 'cck_storage' );
+			JPluginHelper::importPlugin( 'cck_field' );
+
 			$config		=	array(
 								'author'=>$core->author_id,
 								'client'=>$client,
@@ -171,7 +174,6 @@ class CCKController extends JControllerLegacy
 			$pk				=	$core->pk;
 			$value			=	'';
 
-			JPluginHelper::importPlugin( 'cck_storage' );
 			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
@@ -184,10 +186,8 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
 			}
-			JPluginHelper::importPlugin( 'cck_field' );
-			
 			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
-
+			
 			if ( $restricted ) {
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
 				$field->restriction			=	$restricted;
