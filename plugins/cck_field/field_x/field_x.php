@@ -371,7 +371,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$html	=	'<div>';
 		$html	.=	'<div id="collection-group-wrap-'.$field->name.'__'.$i.'" class="collection-group-wrap">';
 		$html	.=	'<div id="collection-group-form-'.$field->name.'__'.$i.'" class="collection-group-form">';
-		$html	.=	$elem->form;
+		$html	.=	mb_convert_encoding($elem->form, 'HTML-ENTITIES');
 		$html	.=	'</div>';
 		$html	.=	'<div id="collection-group-button-'.$field->name.'__'.$i.'" class="collection-group-button">';
 		if ( $field->bool3 ) {
