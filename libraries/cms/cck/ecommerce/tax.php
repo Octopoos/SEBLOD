@@ -44,7 +44,12 @@ abstract class JCckEcommerceTax
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $t->tax ) {
 						case 'plus':
+
 							$tax						=	(float)number_format( $t->tax_amount, 2 );
+
+							if ( $params['target'] == 'product' ) {
+								$tax					=	$tax * $items[$params['target_id']]->quantity;
+							}
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
@@ -68,6 +73,7 @@ abstract class JCckEcommerceTax
 																'title'=>$t->title,
 																'type'=>$t->type
 															);
+
 							break;
 						case 'product_amount':
 							$tax						=	0;
@@ -78,15 +84,28 @@ abstract class JCckEcommerceTax
 								if ( !isset( $items[$params['target_id']] ) ) {
 									continue;
 								}
+								if ( empty( $items[$params['target_id']]->price ) ) {
+									continue;
+								}
 								$tax					=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+								$tax					=	$tax * $items[$params['target_id']]->quantity;
 							} else {
 								if ( count( $items ) ) {
 									if ( isset( $params['target_id'] ) && $params['target_id'] ) {
+										if ( empty( $items[$params['target_id']]->price ) ) {
+											continue;
+										}
 										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+										$tax			=	$tax * $items[$params['target_id']]->quantity;
 									} else {
 										foreach ( $items as $item ) {
+											if ( empty( $item->price ) ) {
+												continue;
+											}
 											if ( isset( $item->tax ) && $item->tax != '' ) {
-												$tax	+=	(float)number_format( $item->tax, 2 );
+												$amount	=	(float)number_format( $item->tax, 2 );
+												$amount	=	$amount * $item->quantity;
+												$tax	+=	$amount;
 											}
 										}
 									}
