@@ -324,7 +324,7 @@ class JCckContent
 	{
 		$status	=	$this->{'_instance_'.$instance_name}->bind( $data );
 		$status	=	$this->{'_instance_'.$instance_name}->check();
-
+		
 		/* TODO: this is no good, and will need to move, but later! */
 		if ( $instance_name == 'base' ) {
 			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
@@ -397,10 +397,24 @@ class JCckContent
 		$this->{'_instance_'.$instance_name}->$property	=	$value;
 	}
 
+	// setType
+	public function setType( $cck, $reload = true )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+
+		if ( $reload ) {
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+			$this->_instance_more->load( $this->_pk );
+		}
+	}
+
 	// updateType
 	public function updateType( $cck )
 	{
 		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+
 		$this->_instance_core->store();
 	}
 	
