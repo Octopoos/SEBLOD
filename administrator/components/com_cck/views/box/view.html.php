@@ -39,17 +39,10 @@ class CCKViewBox extends JViewLegacy
 			$this->doValidation	=	$this->state->get( 'validation', 0 );
 		}
 		
-		if ( JCck::on() ) {
-			$this->css		=	array( 'items'=>'seblod-manager',
-									   'table'=>'table table-striped',
-									   'wrapper_tmpl'=>'span12'
-									);
-		} else {
-			$this->css		=	array( 'items'=>'seblod',
-									   'table'=>'adminlist',
-									   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-									);
-		}
+		$this->css		=	array( 'items'=>'seblod-manager',
+								   'table'=>'table table-striped',
+								   'wrapper_tmpl'=>'span12'
+								);
 		
 		JFactory::getApplication()->input->set( 'hidemainmenu', true );
 		

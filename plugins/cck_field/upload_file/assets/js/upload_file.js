@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-	$(".lock_file").live('click', function(){
+	$(document).on('click', ".lock_file", function(){
 		var $child = $(this).children();
 		var $next = $(this).next();
 		if ( $child.hasClass('linked') ){

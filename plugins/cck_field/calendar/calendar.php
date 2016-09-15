@@ -1,12 +1,12 @@
 <?php
 /**
- * @version 			SEBLOD 3.x Core
- * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
- * @url				http://www.seblod.com
- * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
- * @license 			GNU General Public License version 2 or later; see _LICENSE.php
- **/
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
 defined( '_JEXEC' ) or die;
 
@@ -146,16 +146,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		// Set
 		if ( ! $field->variation ) {
-			if ( JCck::on() ) {
-				$form		.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
-			} else {
-				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'-trigger" />';
-			}
-			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
-			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
-			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
+			$form			.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
+			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'], 
+								'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
+								'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
 			$field->form			=	$form;
-			$field->markup_class	.=	' input-append';
+			if ( isset( $field->markup_class ) ) {
+				$field->markup_class	.=	' input-append';
+			} else {
+				$field->markup_class	=	' input-append';
+			}
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
 		} else {
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
@@ -256,14 +256,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			.	$form_more;
 
 		if ( !parent::g_isStaticVariation( $field, $field->variation, true ) ) {
-			if ( JCck::on() ) {
-				$form		.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
-			} else {
-				$form		.=	'<img src="'.self::$path.'assets/images/calendar.png" alt="Calendar" class="calendar" id="'.$id.'_hidden-trigger" />';
-			}
-			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
-			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
-			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'search', 'input_text'=>$field->bool2 ) );
+			$form			.=	'<button class="btn btn-default" id="'.$id.'_hidden-trigger"><span class="icon-calendar"></span></button>';
+			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'], 
+								'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
+								'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'search', 'input_text'=>$field->bool2 ) );
+			
 			$field->form			=	$form;
 			$field->markup_class	.=	' input-append';
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
@@ -335,9 +332,6 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		$field->value	=	$value;
-
-
-
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 
@@ -430,7 +424,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$js	.=	'this.hide(); jQuery("#'.$id.'").trigger("change"); }';
 		$js	.=		'});';
 		if ( $params['input_text'] ) {
-			$js	.=	'jQuery(document).ready(function($){ $("#'.$id1.'").live("change", function() { $("#'.$id2.'").val($("#'.$id1.'").val()); }); });';
+			$js	.=	'jQuery(document).ready(function($){ $(document).on("change", "#'.$id1.'", function() { $("#'.$id2.'").val($("#'.$id1.'").val()); }); });';
 		}
 		$js	.=	'</script>
 				';
@@ -542,3 +536,4 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$field->text	=	( $value == '' || $date === null ) ? '' : $date->format( @$options2['format'], true, true );
 	}
 }
+?>

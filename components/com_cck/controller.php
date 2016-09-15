@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Controller
 class CCKController extends JControllerLegacy
 {
@@ -76,9 +78,7 @@ class CCKController extends JControllerLegacy
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel( 'list' );
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $cid );
+		$cid	=	ArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
 			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); // todo: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb );
@@ -139,6 +139,20 @@ class CCKController extends JControllerLegacy
 						.	' WHERE a.id ='.(int)$id;
 			$core		=	JCckDatabase::loadObject( $query );
 
+			if ( !is_object( $core ) ) {
+				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+				return;
+			}
+			JPluginHelper::importPlugin( 'cck_storage_location' );
+
+			if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
+				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+				return;
+			}
+
+			JPluginHelper::importPlugin( 'cck_storage' );
+			JPluginHelper::importPlugin( 'cck_field' );
+
 			$config		=	array(
 								'author'=>$core->author_id,
 								'client'=>$client,
@@ -157,10 +171,9 @@ class CCKController extends JControllerLegacy
 							);
 			$dispatcher		=	JDispatcher::getInstance();
 			$field->value	=	$core->value;
-			$pk			=	$core->pk;
+			$pk				=	$core->pk;
 			$value			=	'';
 
-			JPluginHelper::importPlugin( 'cck_storage' );
 			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
@@ -173,10 +186,8 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
 			}
-			JPluginHelper::importPlugin( 'cck_field' );
-			
 			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
-
+			
 			if ( $restricted ) {
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
 				$field->restriction			=	$restricted;
@@ -244,9 +255,7 @@ class CCKController extends JControllerLegacy
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
@@ -318,9 +327,7 @@ class CCKController extends JControllerLegacy
 		$config		=	array();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
@@ -361,6 +368,20 @@ class CCKController extends JControllerLegacy
 		}
 		
 		echo json_encode( $return );
+	}
+
+	// route
+	public function route()
+	{
+		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
+		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
+		
+		if ( $url != '' ) {
+			if ( $url[0] == '/' ) {
+				$url	=	substr( $url, 1 );
+			}
+		}
+		echo JRoute::_( $url );
 	}
 
 	// save	
@@ -556,9 +577,8 @@ class CCKController extends JControllerLegacy
 		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
 
 		// Sanitize the input
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $pks );
-		JArrayHelper::toInteger( $order );
+		$pks	=	ArrayHelper::toInteger( $pks );
+		$order	=	ArrayHelper::toInteger( $order );
 
 		// Get the model
 		$model 	= 	$this->getModel( 'list' );

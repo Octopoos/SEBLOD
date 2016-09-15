@@ -25,11 +25,11 @@ $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(string)$params->get( 'menu_item', '' );
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
+if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
 }
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JUri::root( true ).'/media/cck' );
+if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+	define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
 }
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
@@ -72,6 +72,7 @@ if ( !is_object( @$options ) ) {
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
 $show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+$tag_desc			=	$params->get( 'tag_list_desc', 'div' );
 if ( $show_list_title == '' ) {
 	$show_list_title	=	$options->get( 'show_list_title', '1' );
 	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );

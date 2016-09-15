@@ -16,8 +16,7 @@ $id			=	$this->item->id;
 $name		=	$this->item->name;
 $lang   	=	JFactory::getLanguage();
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-//Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
+// Helper_Include::addDependencies( 'box', 'edit' );
 
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
@@ -42,12 +41,24 @@ $js		=	'
 						parent.jQuery("#"+eid+"_required_alert").val("");
 						parent.jQuery("#"+eid+"_validation").val("");
 						parent.jQuery("#"+eid+"_validation_options").val("");
+
+						if (parent.jQuery("#"+eid+"_required").val()) {
+							var txt = Joomla.JText._("COM_CCK_REQUIRED");
+						} else {
+							var txt = Joomla.JText._("COM_CCK_OPTIONAL");
+						}
+						parent.jQuery("span[name=\'"+eid+"\'].c_val").html(txt);
 						this.close();
 					},
 					setOptions: function(opts) {
 						var data = $.evalJSON(opts);
 						$.each(data, function(k, v) {
-							$("#"+k).myVal(v);
+							if (jQuery.isArray(v)) {
+								var encoded	= $.toJSON(v);
+								$("#"+k).myVal(encoded);
+							} else {
+								$("#"+k).myVal(v);
+							}
 						});
 					},
 					submit: function() {
@@ -68,9 +79,17 @@ $js		=	'
 							parent.jQuery("#"+eid+"_validation").val(data);
 							data = {};
 							data["alert"] = ($("#alert").prop("disabled") !== false) ? "" : $("#alert").myVal();
+							var v = "";
+							var len = 0;
 							$("#layer input.text, #layer select.select, #layer fieldset.checkbox, #layer fieldset.radios").each(function(i) {
 								id = $(this).attr("id");
-								data[id] = $(this).myVal();
+								v = $(this).myVal();
+								len = v.length;
+								if (v[0] == "[" && v[(len-1)] == "]") {
+									data[id] = $.evalJSON(v);
+								} else {
+									data[id] = v;
+								}
 							});
 							var encoded	= $.toJSON(data);
 							parent.jQuery("#"+eid+"_validation_options").val(encoded).next("span").html(text);
@@ -97,7 +116,7 @@ $js		=	'
 					var opts = parent.jQuery("#"+eid+"_validation_options").val();
 					opts = (opts != "") ? opts : "{}";
 					JCck.Dev.setOptions(opts);
-					$("#validation").live("change", function() {
+					$("#validation").on("change", function() {
 						var validation = $(this).val();
 						if (validation) {
 							JCck.Dev.ajaxLayer("#layer", "&file=plugins/cck_field_validation/"+validation+"/tmpl/edit.php&name="+validation, opts);
@@ -110,6 +129,9 @@ $js		=	'
 			})(jQuery);
 			';
 $doc->addScriptDeclaration( $js );
+
+JText::script( 'COM_CCK_OPTIONAL' );
+JText::script( 'COM_CCK_REQUIRED' );
 ?>
 
 <div class="seblod">

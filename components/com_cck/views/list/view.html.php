@@ -199,6 +199,7 @@ class CCKViewList extends JViewLegacy
 		
 		$this->config					=	&$config;
 		$this->data						=	&$data;
+		$this->filter_ajax				=	( isset( $hasAjax ) && $hasAjax ) ? true : false;
 		$this->form						=	&$form;
 		$this->form_id					=	$preconfig['formId'];
 		$this->home						=	&$home;

@@ -196,9 +196,6 @@ class plgContentCCK extends JPlugin
 	// onContentBeforeDisplay
 	public function onContentBeforeDisplay( $context, &$article, &$params, $limitstart = 0 )
 	{
-		if ( $this->title ) {
-			$article->title	=	$this->title;
-		}
 		if ( JCck::getConfig_Param( 'hide_edit_icon', 0 ) ) {
 			if ( isset( $article->params ) ) {
 				$article->params->set( 'access-edit', false );
@@ -521,6 +518,13 @@ class plgContentCCK extends JPlugin
 		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
  			$this->title	=	$fields[$p_title]->value;
  		}
+		if ( $this->title ) {
+			if ( is_object( $article ) && isset( $article->title ) ) {
+				$article->title	=	$this->title;
+			} else {
+				JFactory::getDocument()->setTitle( $this->title );
+			}
+		}
 		
 		// Finalize
 		$doc->fields	=	&$fields;

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'cck.joomla.application.component.controllerform' );
 
 // Controller
@@ -22,7 +24,7 @@ class CCKControllerType extends CCK_ControllerForm
 	{
 		$app		=	JFactory::getApplication();
 		$user		=	JFactory::getUser();
-		$folderId	=	JArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
+		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
 		if ( $folderId ) {
@@ -93,7 +95,7 @@ class CCKControllerType extends CCK_ControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelType &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		

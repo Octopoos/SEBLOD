@@ -53,7 +53,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 	jQuery(document).ready(function($) {
 		$('#json_options2_time_pos').isVisibleWhen('json_options2_time','12,24',false);
 		$('#json_options2_default_hour').isVisibleWhen('json_options2_time','0');
-		$('#json_options2_storage_format').live('change', function() {
+		$('#json_options2_storage_format').on('change', function() {
 			if ($(this).val() == 1)  {
 				$('#storage_alter_type').val('INT(11)');
 				$('#storage_alter0').click();

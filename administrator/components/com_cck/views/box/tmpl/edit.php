@@ -22,30 +22,20 @@ $doc		=	JFactory::getDocument();
 <div id="titlebox" style="float:left; color:#eb8207; font-size:0.90em; font-weight:bold; text-transform:uppercase;"></div>
 <div id="toolbarBox" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
     <div style="float: left; padding-right: 8px;" id="messageBox"></div>
-    <?php if ( JCck::on() ) { ?>
-		<?php if ( $isImage == 1 ) { ?>
-            <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
-				<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
-			</a>
-        <?php } else { ?>
-            <a href="javascript:void(0);" id="submitBox" class="btn btn-small" onclick="JCck.Dev.submit();"><i class="icon-save"></i>
-				<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
-			</a>
-            <a href="javascript:void(0);" id="resetBox" class="btn btn-small" onclick="JCck.Dev.reset();"><i class="icon-refresh"></i>
-				<?php echo JText::_( 'COM_CCK_RESET' ); ?>
-			</a>
-            <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
-				<?php echo JText::_( 'COM_CCK_CANCEL' ); ?>
-			</a>
-        <?php } ?>
-	<?php } else { ?>
-		<?php if ( $isImage == 1 ) { ?>
-            <a href="javascript:void(0);" id="closeBox" class="togglebutton" onclick="JCck.Dev.close();"><?php echo JText::_( 'COM_CCK_CLOSE' ); ?></a>
-        <?php } else { ?>
-            <a href="javascript:void(0);" id="submitBox" class="togglebutton" onclick="JCck.Dev.submit();"><?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?></a>
-            <a href="javascript:void(0);" id="resetBox" class="togglebutton" onclick="JCck.Dev.reset();"><?php echo JText::_( 'COM_CCK_RESET' ); ?></a>
-            <a href="javascript:void(0);" id="closeBox" class="togglebutton" onclick="JCck.Dev.close();"><?php echo JText::_( 'COM_CCK_CANCEL' ); ?></a>
-        <?php } ?>
+	<?php if ( $isImage == 1 ) { ?>
+        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
+			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
+		</a>
+    <?php } else { ?>
+        <a href="javascript:void(0);" id="submitBox" class="btn btn-small" onclick="JCck.Dev.submit();"><i class="icon-save"></i>
+			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
+		</a>
+        <a href="javascript:void(0);" id="resetBox" class="btn btn-small" onclick="JCck.Dev.reset();"><i class="icon-refresh"></i>
+			<?php echo JText::_( 'COM_CCK_RESET' ); ?>
+		</a>
+        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
+			<?php echo JText::_( 'COM_CCK_CANCEL' ); ?>
+		</a>
     <?php } ?>
 </div>
 <div class="clearfix"></div>

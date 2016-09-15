@@ -141,7 +141,15 @@ if ( count( $fields ) ) {
 			// More storages
 			$storages	=	JCckDev::fromJSON( $field->storages, 'object' );
 		}
+
+		// Was it the last one?
+		if ( $config['error'] == 2 ) {
+			break;
+		}
 	}
+}
+if ( $config['error'] == 2 ) {
+	$config['error']	=	false;
 }
 
 // Merge
@@ -211,7 +219,7 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }
@@ -224,7 +232,7 @@ if ( $config['validate'] ) {
 // Store
 $k	=	0;
 foreach ( $config['storages'] as $data ) {
-	if ( $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
+	if ( isset( $data['_'] ) && $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
 		$dispatcher->trigger( 'onCCK_Storage_LocationStore', array( $data['_']->location, $data, &$config, $id ) );
 		$k++;
 	}
@@ -233,7 +241,7 @@ if ( !$k ) {
 	$config['pk']	=	-1;
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }

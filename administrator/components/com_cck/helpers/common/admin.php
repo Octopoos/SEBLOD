@@ -81,39 +81,20 @@ class CommonHelper_Admin
 	// addSubmenuEntries
 	public static function addSubmenuEntries( $option, $vName, $items, $addons = array() )
 	{
-		if ( JCck::on() ) {
-			$root	=	CCK_LABEL;
-			$user	=	JFactory::getUser();
-			JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												constant( '_C'.$item['val'].'_LINK' ),
-												$active );
-					}
-				}
-			}
-		} else {
-			$root	=	'<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-star.png" border="0" alt=" " width="12" height="12" />';
-			$user	=	JFactory::getUser();
-			JSubMenuHelper::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JSubMenuHelper::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JSubMenuHelper::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												  constant( '_C'.$item['val'].'_LINK' ),
-												  $vName == constant( '_C'.$item['val'].'_NAME' ) );
-					}
+		$root	=	CCK_LABEL;
+		$user	=	JFactory::getUser();
+		JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
+		
+		if ( count( $items) ) {
+			foreach ( $items as $item ) {
+				if ( isset( $item['link'] ) ) {
+					JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
+				} else {
+					$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
+					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
+					JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
+											constant( '_C'.$item['val'].'_LINK' ),
+											$active );
 				}
 			}
 		}
@@ -150,9 +131,6 @@ class CommonHelper_Admin
 	// addToolbarHistoryButton
 	public static function addToolbarHistoryButton( $extension = 'com_cck' )
 	{
-		if ( !JCck::on() ) {
-			return;
-		}
 		$pk	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$extension.'"' );
 		
 		if ( $pk > 0 ) {

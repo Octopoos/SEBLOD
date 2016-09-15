@@ -168,6 +168,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		// Prepare
 		if ( parent::g_isStaticVariation( $field, $field->variation, true ) ) {
+			if ( is_array( $value ) ) {
+				$value		=	implode( $divider, $value );
+			}
 			$form			=	'';
 			$field->text	=	'';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );

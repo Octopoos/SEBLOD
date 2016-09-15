@@ -113,11 +113,25 @@ abstract class JCckEcommerceCart
 		$user			=	JCck::getUser();
 		
 		if ( !isset( $cache[$definition] ) ) {
-			$cache[$definition]	=	JCckDatabase::loadResult( 'SELECT COUNT(a.id) FROM #__cck_more_ecommerce_cart_product AS a'
-															. ' LEFT JOIN #__cck_more_ecommerce_carts AS b ON b.id = a.cart_id WHERE b.type = "'.$definition.'" AND b.'.(string)$user->where_clause.' AND b.state = 1' );
-		}
+			require_once JPATH_SITE.'/modules/mod_cck_ecommerce_cart/helper.php';
+			$items	=	modCCKeCommerceCartHelper::getItems( $user, $definition );
 
+			if ( is_array( $items ) ) {
+				$cache[$definition]	=	count( $items );
+			} else {
+				$cache[$definition]	=	0;
+			}
+		}
+		
 		return $cache[$definition];
+	}
+
+	// hasQuantity
+	public static function hasQuantity( $type )
+	{
+		$cart_def	=	JCckEcommerce::getCartDefinition( $type );
+
+		return $cart_def->quantity;
 	}
 
 	// isValidType

@@ -13,9 +13,9 @@ defined( '_JEXEC' ) or die;
 // JCckVersion
 final class JCckVersion extends JCckVersionObject
 {
-	public $RELEASE = '3.8';
+	public $RELEASE = '3.9';
 	
-	public $DEV_LEVEL = '2';
+	public $DEV_LEVEL = '1';
 
 	public $DEV_STATUS = '';
 }

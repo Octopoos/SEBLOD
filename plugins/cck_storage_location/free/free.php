@@ -21,6 +21,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -194,8 +195,8 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -293,7 +294,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				self::_completeTable( $table, $data, $config );
 				
 				// Store
-				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->get( 'id' ), 0, $config ) ) {
+				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->id, 0, $config ) ) {
 					$config['error']	=	true;
 
 					return false;
@@ -339,7 +340,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$core->pk				=	self::$pk;
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
-		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->get( 'id' );
+		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->id;
 		$core->storeIt();
 	}
 	
@@ -423,6 +424,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		static $autorized	=	array(
 									'access'=>'',
 									'author'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

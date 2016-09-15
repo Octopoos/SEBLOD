@@ -14,7 +14,7 @@ require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/common/include
 
 // Helper
 class Helper_Include extends CommonHelper_Include
-{	
+{
 	// addDependencies
 	public static function addDependencies( $view, $layout, $tmpl = '' )
 	{
@@ -34,7 +34,6 @@ class Helper_Include extends CommonHelper_Include
 				break;
 			case 'template':
 				JCck::loadjQuery( true, true, true );
-				Helper_Include::addJSTree( 'cck_tree', $script );
 				break;
 			case 'site':
 				JCck::loadjQuery( true, true, true );
@@ -44,21 +43,21 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 					JCck::loadjQueryUI();
 				}
-				Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', $script, $tmpl );
-				Helper_Include::addTooltip( 'img[title].qtip_cck', 'right center', 'left center', 'ui-tooltip-cck-indigo_dye ui-tooltip-shadow', false, $tmpl );
+				if ( $tmpl == 'component' ) {
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.9.0.min.js' );
+				}
 				break;
 			case 'type':
 			case 'search':
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.8.0.min.js' );
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.9.0.min.js' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
 				}
 				Helper_Include::addColorbox_Live( '930', '550', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
-				Helper_Include::addTooltip( '', '', '', '', $script );
 				break;
 			case 'session':
 			case 'version':
@@ -81,12 +80,11 @@ class Helper_Include extends CommonHelper_Include
 				} else {
 					JCck::loadjQuery();
 				}
-				if ( JCck::on() ) {
-					JHtml::_( 'bootstrap.tooltip' );
-					JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
-				}
-				Helper_Include::addLavalamp( '#submenu' );
+				JHtml::_( 'bootstrap.tooltip' );
+				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+				
 				Helper_Include::addSmoothScrool();
+				
 				if ( $view == 'fields' ) {
 					Helper_Include::addColorbox( '500', '300', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				} elseif ( $view == 'templates' ) {
@@ -109,7 +107,6 @@ class Helper_Include extends CommonHelper_Include
 				$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
 				JCck::loadjQuery();
 				Helper_Include::addColorbox( '930', '430', true, 'cbox_button' );
-				Helper_Include::addLavalamp( '#submenu' );
 				break;
 			default:
 				break;
@@ -168,26 +165,6 @@ class Helper_Include extends CommonHelper_Include
 			$doc->addStyleSheet( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
 			$doc->addScript( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
 		}
-	}
-	
-	// addJSTree
-	public static function addJSTree( $id, $script = true )
-	{
-		$doc	=	JFactory::getDocument();
-		
-		if ( $script === true ) {
-			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-jstree/js/jquery.hotkeys.js' );
-			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-jstree/js/jquery.jstree.min.js' );
-		}
-		
-		$js		=	'
-					jQuery(document).ready(function($){
-						$("#'.$id.'").jstree({
-							"themes" : { "theme":"default", "dots":false }, "plugins" : ["themes","html_data","ui","hotkeys"], "core" : { "initially_open" : [ "phtml_1" ] }
-						}).bind("loaded.jstree", function (event, data) {});
-					});
-					';
-		$doc->addScriptDeclaration( $js );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //

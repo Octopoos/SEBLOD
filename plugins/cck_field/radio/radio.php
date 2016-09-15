@@ -155,26 +155,19 @@ class plgCCK_FieldRadio extends JCckPluginField
 		} else {
 			$orientation	=	'';
 		}
-		if ( JCck::on() ) {
-			if ( strpos( $field->css, 'btn-group' ) !== false ) {
-				$class		=	'radios radio'.$orientation . ( $field->css ? ' '.$field->css : '' );
-				$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-				$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
-				$attr		=	'class="'.$validate.'" size="1"';
-			} else {
-				$class		=	'radios'.$orientation . ( $field->css ? ' '.$field->css : '' );
-				$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-				$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
-				$attr		=	'class="radio'.$validate.'" size="1"';
-			}
-			$attr_key	=	'data-cck';
+		if ( strpos( $field->css, 'btn-group' ) !== false ) {
+			$class		=	'radios radio'.$orientation . ( $field->css ? ' '.$field->css : '' );
+			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
+			$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
+			$attr		=	'class="'.$validate.'" size="1"';
 		} else {
 			$class		=	'radios'.$orientation . ( $field->css ? ' '.$field->css : '' );
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 			$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
-			$attr		=	'class="inputbox radio'.$validate.'" size="1"';
-			$attr_key	=	'data-cck';
+			$attr		=	'class="radio'.$validate.'" size="1"';
 		}
+		$attr_key	=	'data-cck';
+
 		if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
 			$k	=	0;
 			foreach ( $opts as $i=>$o ) {

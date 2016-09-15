@@ -41,32 +41,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_featured'], $this->item->featured, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'Featured=1||No=0', 'css'=>'btn-group btn-group-yesno' ) ); ?>
         </ul>
 	</div>
-    
-    <!--
-    <?php if ( !$this->isNew ) { ?>
-        <div class="seblod">
-            <div class="legend top left"><?php echo JText::_( 'COM_CCK_SOURCES' ); ?></div>
-            <div id="cck_tree" class="cck_tree" style="padding-left:22px; width: 240px; float: left;">
-	            <?php echo $this->item->tree; ?>
-            </div>
-            <div style="float: left;">
-	            <?php
-				if ( count( $this->item->files ) ) {
-					$html	=	'<table class="adminlist mediamanager cck_radius2 table table-striped table-bordered">';
-					foreach ( $this->item->files as $k => $f ) {
-						$html	.=	'<tr class="row'.( $k % 2 ).'">'
-								.	'<td>'.$f.'</td>'
-								.	'<td class="hidden-phone">'.'/'.'templates'.'/'.$this->item->name.'/'.$f.'</td>'
-								.	'</tr>';
-					}
-					$html	.=	'</table>';
-					echo $html;
-				}
-				?>
-            </div>
-        </div>
-    <?php } ?>
-    -->
 </div>
 
 <div class="clr"></div>

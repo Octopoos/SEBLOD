@@ -86,7 +86,7 @@ class plgSearchCCK extends JPlugin
 			$t2		=	count( $tables );
 		}
 		foreach ( $fields as $field ) {
-			if ( !$field->state ) {
+			if ( !@$field->state ) {
 				continue;
 			}
 			if ( $current['stage'] != (int)$field->stage ) {
@@ -358,64 +358,39 @@ class plgSearchCCK extends JPlugin
 								$query3			=	(string)$query;
 							}
 						} else {
-							if ( JCck::on() ) {
-								$query1				=	(string)$query;
+							$query1				=	(string)$query;
 
-								if ( strpos( $query1, 'HAVING' ) !== false ) {
-									if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
-										// todo
-									}
-									$query->clear( 'order' )->clear( 'limit' );
-
-									$query2				=	$db->getQuery( true );
-									$query2->select( 'COUNT(*)' );
-									$query2->from( '('.(string)$query.') AS Count' );
-									$db->setQuery( $query2 );
-									$config['total']	=	$db->loadResult();
-									$query2				=	(string)$query2;
-								} else {
-									if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
-										$query->clear( 'limit' );
-										$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
-										$db->setQuery( $query );
-										$results2		=	$db->loadObjectList();
-										$query3			=	(string)$query;
-									}
-									$query->clear( 'order' )->clear( 'limit' )->clear( 'select' );
-									
-									if ( $hasGroup ) {
-										$query->clear( 'group' );
-										$query->select( 'COUNT(DISTINCT t0.id)' );
-									} else {
-										$query->select( 'COUNT(t0.id)' );
-									}
-									$db->setQuery( $query );
-									$config['total']	=	$db->loadResult();
-									$query2				=	(string)$query;
-								}
-							} else {
+							if ( strpos( $query1, 'HAVING' ) !== false ) {
 								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
-									$query3				=	$db->getQuery( true );
-									$query3->select( 't0.id AS pid,t0.pk AS pk' );
-									$query3->from( '`#__cck_core` AS t0' );
-									self::_buildQuery( $dispatcher, $query3, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
-									if ( $where != '' ) {
-										$query3->where( $where );
-									}
-									$db->setQuery( $query3, 0, 0 );
-									$results2		=	$db->loadObjectList();
-									$query3			=	(string)$query3;
+									// todo
 								}
+								$query->clear( 'order' )->clear( 'limit' );
+
 								$query2				=	$db->getQuery( true );
-								$query2->select( 'COUNT(DISTINCT t0.id)' );
-								$query2->from( '`#__cck_core` AS t0' );
-								self::_buildQuery( $dispatcher, $query2, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
-								if ( $where != '' ) {
-									$query2->where( $where );
-								}
-								$db->setQuery( $query2, 0, 0 );
+								$query2->select( 'COUNT(*)' );
+								$query2->from( '('.(string)$query.') AS Count' );
+								$db->setQuery( $query2 );
 								$config['total']	=	$db->loadResult();
 								$query2				=	(string)$query2;
+							} else {
+								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
+									$query->clear( 'limit' );
+									$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
+									$db->setQuery( $query );
+									$results2		=	$db->loadObjectList();
+									$query3			=	(string)$query;
+								}
+								$query->clear( 'order' )->clear( 'limit' )->clear( 'select' );
+								
+								if ( $hasGroup ) {
+									$query->clear( 'group' );
+									$query->select( 'COUNT(DISTINCT t0.id)' );
+								} else {
+									$query->select( 'COUNT(t0.id)' );
+								}
+								$db->setQuery( $query );
+								$config['total']	=	$db->loadResult();
+								$query2				=	(string)$query;
 							}
 						}
 					}
@@ -455,8 +430,8 @@ class plgSearchCCK extends JPlugin
 			if ( isset( $query3 ) ) {
 				$query2	.=	$query3.'<br />';
 			}
-			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
+			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'HAVING', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
+							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />HAVING', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
 							  $query1.'<br />'.$query2 ).'<br />';
 		}
 		

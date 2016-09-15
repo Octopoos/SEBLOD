@@ -13,7 +13,14 @@ defined( '_JEXEC' ) or die;
 // -------- -------- -------- -------- -------- -------- -------- -------- // Core
 
 $root	=	JUri::root( true );
-define( 'JROOT_CCK',			$root );
-define( 'JROOT_MEDIA_CCK',		$root.'/media/cck' );
-define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
+
+if ( ! defined( 'JROOT_CCK' ) ) {
+	define( 'JROOT_CCK', $root );
+}
+if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+	define( 'JROOT_MEDIA_CCK', $root.'/media/cck' );
+}
+if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
+}
 ?>

@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -251,8 +252,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -339,7 +340,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$config['pk']	=	self::$pk;
 		}
 		
-		$config['author']	=	JFactory::getUser()->get( 'id' );
+		$config['author']	=	JFactory::getUser()->id;
 		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
 	}
 	
@@ -474,6 +475,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 									'access'=>'',
 									'author'=>'',
 									'author_object'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

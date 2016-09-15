@@ -87,7 +87,7 @@ class JCckContent
 			}
 		}
 		if ( !$author_id ) {
-			$user_id		=	JFactory::getUser()->get( 'id' );
+			$user_id		=	JFactory::getUser()->id;
 			
 			if ( $user_id ) {
 				$author_id	=	$user_id;
@@ -324,8 +324,34 @@ class JCckContent
 	{
 		$status	=	$this->{'_instance_'.$instance_name}->bind( $data );
 		$status	=	$this->{'_instance_'.$instance_name}->check();
-		$status	=	$this->{'_instance_'.$instance_name}->store();
 		
+		/* TODO: this is no good, and will need to move, but later! */
+		if ( $instance_name == 'base' ) {
+			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
+				$this->{'_instance_'.$instance_name}->language	=	'*';
+			}
+			$status			=	$this->{'_instance_'.$instance_name}->store();
+
+			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
+				$i			=	2;
+				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
+				$property	=	$this->_columns['parent'];
+				$test		=	JTable::getInstance( 'content' );
+				
+				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
+					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
+				}
+				$this->{'_instance_'.$instance_name}->alias	=	$alias;
+
+				$status		=	$this->{'_instance_'.$instance_name}->store();
+
+				/* TODO: publish_up */
+			}
+		} else {
+			$status			=	$this->{'_instance_'.$instance_name}->store();
+		}
+		/* TODO: this is no good, and will need to move, but later! */
+
 		if ( $status ) {
 			switch( $instance_name ) {
 				case 'base':
@@ -369,6 +395,27 @@ class JCckContent
 	public function set( $instance_name, $property, $value )
 	{
 		$this->{'_instance_'.$instance_name}->$property	=	$value;
+	}
+
+	// setType
+	public function setType( $cck, $reload = true )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+
+		if ( $reload ) {
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+			$this->_instance_more->load( $this->_pk );
+		}
+	}
+
+	// updateType
+	public function updateType( $cck )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+
+		$this->_instance_core->store();
 	}
 	
 	// _getProperties

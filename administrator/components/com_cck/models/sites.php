@@ -147,31 +147,6 @@ class CCKModelSites extends JModelList
 		return JTable::getInstance( $type, $prefix, $config );
 	}
 
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
-	}
-
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{

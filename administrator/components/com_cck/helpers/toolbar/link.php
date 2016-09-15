@@ -21,7 +21,16 @@ class JButtonCckLink extends JButton
 	public function fetchButton( $type = 'CckLink', $name = '', $text = '', $url = '', $target = '' )
 	{
 		$class	=	$this->fetchIconClass( $name );
-		$class2	=	( $name == 'apply' || $name == 'new' ) ? 'btn btn-small btn-success' : 'btn btn-small';
+
+		if ( $name == 'apply' || $name == 'new' ) {
+			$class2	=	'btn btn-small btn-success';
+		} elseif ( $name == 'cck-extension' ) {
+			//$class	.=	' icon-arrow-left';
+			$class2	=	'btn btn-small btn-primary';
+		} else {
+			$class2	=	'btn btn-small';
+		}
+
 		$target	=	$target ? ' target="'.$target.'"' : '';
 		$text	=	JText::_( $text );
 		

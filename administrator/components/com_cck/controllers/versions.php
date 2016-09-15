@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
@@ -26,9 +28,7 @@ class CCKControllerVersions extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'Version', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// delete
@@ -46,8 +46,7 @@ class CCKControllerVersions extends JControllerAdmin
 			$model	=	$this->getModel();
 			
 			// Make sure the item ids are integers
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
+			$cid	=	ArrayHelper::toInteger( $cid );
 			
 			// Remove the items.
 			if ( $model->delete( $cid ) ) {

@@ -36,7 +36,7 @@ if ( $this->item->client == 'list' ) {
 <script type="text/javascript">
 JCck.DevHelper.setSidebar();
 (function ($){
-$("#pos-1 input:radio[name='positions']").attr("checked", "checked");
+$("#pos-1 input:radio[name='positions']").prop("checked", true);
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}
 var block_item = <?php echo $block_item; ?>;
 if (block_item) {$("#client5_label").addClass("disabled"); $("#client5").prop("disabled", true);} else {$("#client5_label").removeClass("disabled"); $("#client5").prop("disabled", false);}

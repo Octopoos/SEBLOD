@@ -203,6 +203,12 @@
 /administrator/language/en-GB/en-GB.plg_finder_tags.sys.ini
 /administrator/language/en-GB/en-GB.plg_finder_weblinks.ini
 /administrator/language/en-GB/en-GB.plg_finder_weblinks.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_folderinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_folderinstaller.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_packageinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_packageinstaller.sys.ini
+/administrator/language/en-GB/en-GB.plg_installer_urlinstaller.ini
+/administrator/language/en-GB/en-GB.plg_installer_urlinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.ini
@@ -426,6 +432,12 @@
 /administrator/language/fr-FR/fr-FR.plg_finder_tags.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_weblinks.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_weblinks.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_folderinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_folderinstaller.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_packageinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_packageinstaller.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_urlinstaller.ini
+/administrator/language/fr-FR/fr-FR.plg_installer_urlinstaller.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_installer_webinstaller.ini
 /administrator/language/fr-FR/fr-FR.plg_installer_webinstaller.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_quickicon_extensionupdate.ini
@@ -1025,6 +1037,9 @@
 /plugins/finder/newsfeeds/*
 /plugins/finder/tags/*
 /plugins/finder/weblinks/*
+/plugins/installer/folderinstaller/*
+/plugins/installer/packageinstaller/*
+/plugins/installer/urlinstaller/*
 /plugins/installer/webinstaller/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
@@ -1153,22 +1168,10 @@ Temporary Items
 /administrator/language/en-GB/en-GB.com_cck_ecommerce.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cck_ecommerce.ini
 /administrator/language/fr-FR/fr-FR.com_cck_ecommerce.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_cck_sandbox.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_cck_sandbox.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_cck_sandbox.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_cck_sandbox.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_paypal_adaptive_payments.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_paypal_adaptive_payments.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_paypal_adaptive_payments.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_paypal_adaptive_payments.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_westpac_payway.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_westpac_payway.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_westpac_payway.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_westpac_payway.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_shipping_cck_sandbox.ini
-/administrator/language/en-GB/en-GB.plg_cck_ecommerce_shipping_cck_sandbox.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_shipping_cck_sandbox.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_shipping_cck_sandbox.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_payment_*
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_payment_*
+/administrator/language/en-GB/en-GB.plg_cck_ecommerce_shipping_*
+/administrator/language/fr-FR/fr-FR.plg_cck_ecommerce_shipping_*
 /components/com_cck_ecommerce/*
 /language/en-GB/en-GB.com_cck_ecommerce.ini
 /language/en-GB/en-GB.mod_cck_ecommerce_cart.ini
@@ -2080,6 +2083,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_store.sys.ini
 /plugins/cck_field_restriction/cck_ecommerce_store/*
 
+######## SEBLOD Plug-ins >> Restriction >> SEBLOD eCommerce Subscription
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_ecommerce_subscription.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_ecommerce_subscription.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_subscription.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_ecommerce_subscription.sys.ini
+/plugins/cck_field_restriction/cck_ecommerce_subscription/*
+
 ######## SEBLOD Plug-ins >> Restriction >> SEBLOD Fields
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_fields.ini
@@ -2087,6 +2098,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_fields.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_fields.sys.ini
 /plugins/cck_field_restriction/cck_fields/*
+
+######## SEBLOD Plug-ins >> Restriction >> SEBLOD Options
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_options.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_options.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_options.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_options.sys.ini
+/plugins/cck_field_restriction/cck_options/*
 
 ######## SEBLOD Plug-ins >> Restriction >> X
 

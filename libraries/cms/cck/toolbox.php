@@ -51,21 +51,13 @@ abstract class JCckToolbox
 				foreach ( $app->cck_document['styleSheets'] as $k=>$v ) {
 					$head['styleSheets'][$k]	=	$v;
 				}
-				if ( JCck::on() ) {
-					$doc->setHeadData( array( 'styleSheets'=>$head['styleSheets'] ) );
-				} else {
-					$doc->_styleSheets			=	$head['styleSheets'];
-				}
+				$doc->setHeadData( array( 'styleSheets'=>$head['styleSheets'] ) );
 			}
 			if ( isset( $app->cck_document['scripts'] ) && count( $app->cck_document['scripts'] ) ) {
 				foreach ( $app->cck_document['scripts'] as $k=>$v ) {
 					$head['scripts'][$k]		=	$v;
 				}
-				if ( JCck::on() ) {
-					$doc->setHeadData( array( 'scripts'=>$head['scripts'] ) );
-				} else {
-					$doc->_scripts				=	$head['scripts'];
-				}
+				$doc->setHeadData( array( 'scripts'=>$head['scripts'] ) );
 			}
 		}
 	}

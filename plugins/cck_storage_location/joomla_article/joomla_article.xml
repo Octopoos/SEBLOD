@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.8.2</version>
+	<version>3.9.1</version>
 	
 	<scriptfile>install/script.php</scriptfile>
 	
@@ -48,6 +48,7 @@
 					<option value="-2">JTRASHED</option>
 				</field>
 				<field name="spacer" type="spacer" hr="false" label="" />
+				<field name="allowed_status" type="cck" construction="core_dev_text" default="1,2" label="LIB_CCK_STORAGE_LOCATION_ALLOWED_STATUS" description="LIB_CCK_STORAGE_LOCATION_ALLOWED_STATUS_DESC" cck_attributes="placeholder='1,2'" />
 				<field name="auto_readmore" type="list" default="1" label="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE" description="PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE_DESC" class="inputbox">
 					<option value="1">JYES</option>
 					<option value="2">PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE_LEGACY</option>

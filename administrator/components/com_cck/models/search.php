@@ -71,10 +71,9 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( $skip	=	(string)$app->getUserState( CCK_COM.'.add.search.skip' ) ) {
 				$this->setState( 'skip', $skip );
 			}
-		} else {
-			if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
-				$this->setState( 'client', $client );
-			}
+		}
+		if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
+			$this->setState( 'client', $client );
 		}
 		
 		$this->setState( 'search.id', $pk );

@@ -41,7 +41,19 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		
 		$field->value	=	$value;
 	}
-	
+
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	strip_tags( $field->value );
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -226,26 +238,25 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 
 			if ( !$loaded ) {
 				if ( empty( $config['client'] ) ) {
+					$js	=	' $(document).on("click", ".wysiwyg_editor_box", function(e) { e.preventDefault();'
+						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+
 					if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
 						$doc->addScript( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+
+						$js	=	'$(document).ready(function() {'.$js.'});';
 					}
 					$doc->addStyleSheet( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
-				
-					$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
-						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				} elseif ( $params['inherited'] == true ) {
 					JCck::loadModalBox();
-					$js	=	' $(".wysiwyg_editor_box").live("click", function(e) { e.preventDefault();'
+					$js	=	' $(document).on("click", ".wysiwyg_editor_box", function(e) { e.preventDefault();'
 						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+					$js	=	'$(document).ready(function() {'.$js.'});';
 					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				} else {
 					JCck::loadModalBox();
-					$js	=	'
-							jQuery(document).ready(function($){
-							$(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){$("#cboxClose").remove();}});
-						});
-							';
+					$js	=	'jQuery(document).ready(function($){ $(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
 					$doc->addScriptDeclaration( $js );
 				}
 				$loaded		=	1;

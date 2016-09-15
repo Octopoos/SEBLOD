@@ -31,7 +31,7 @@ class CCKController extends JControllerLegacy
 			require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
 			
 			if ( !( $layout == 'edit' || $layout == 'edit2' ) ) {
-				if ( !( JCck::on() && $view == $this->default_view ) ) {
+				if ( $view != $this->default_view ) {
 					Helper_Admin::addSubmenu( $this->default_view, $view );
 				}
 			}
@@ -148,7 +148,7 @@ class CCKController extends JControllerLegacy
 	public function ajaxSaveIntegration()
 	{
 		$app		=	JFactory::getApplication();
-		$json		=	( JCck::on() ) ? $app->input->JSON->getRaw() : $app->input->getRaw( 'integration' );
+		$json		=	$app->input->JSON->getRaw();
 		$objects	=	json_decode( $json );
 		
 		if ( count( $objects ) ) {
@@ -188,7 +188,7 @@ class CCKController extends JControllerLegacy
 				$master	=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
 			}
 			
-			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
+			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage_table, a.storage_field FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
 			if ( !is_object( $field ) ) {
 				return;
 			}
@@ -214,13 +214,22 @@ class CCKController extends JControllerLegacy
 											),
 							'task'=>'ajax_field_li'
 						);
+
+		if ( $master == 'search' && @$field->storage_table != '' ) {
+			$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+
+            if ( isset( $columns[$field->storage_field] ) ) {
+                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
+                
+                if ( $pos !== false ) {
+                    $field->match_mode      =   'exact';
+                    $field->match_options   =   '{"var_type":"0"}';
+                }
+            }
+		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
-		if ( JCck::on() ) {
-			$attr	=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-		} else {
-			$attr	=	array( 'class'=>' edit', 'span'=>'' );
-		}
+		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 		$json		=	array();
 		ob_start();
 		Helper_Workshop::displayField( $field, '', $attr );
@@ -318,9 +327,9 @@ class CCKController extends JControllerLegacy
 		$app		=	JFactory::getApplication();
 		$id			=	$app->input->getInt( 'id', 0 );
 		$fieldname	=	$app->input->getString( 'file', '' );
-		$collection	=	$app->input->getString( 'collection', '' );
-		$xi			=	$app->input->getString( 'xi', 0 );
-		$client		=	$app->input->getString( 'client', 'content' );
+		$collection	=	$app->input->get( 'collection', '' );
+		$xi			=	$app->input->getInt( 'xi', 0 );
+		$client		=	$app->input->get( 'client', 'content' );
 		$restricted	=	'';
 		$user		=	JFactory::getUser();
 		
@@ -344,7 +353,7 @@ class CCKController extends JControllerLegacy
 					}
 				}
 				if ( !$allowed ) {
-					$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
+					$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 					return;
 				}
 			} elseif ( strpos( $path, JPATH_ROOT.'/tmp/' ) === false ) {
@@ -352,42 +361,55 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 		} else {
-			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.( ( $collection != '' ) ? $collection : $fieldname ).'"' ); //#
-			$query	=	'SELECT a.pk, a.author_id, a.cck as type, b.'.$field->storage_field.' as value FROM #__cck_core AS a LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk WHERE a.id ='.(int)$id;
-			$core	=	JCckDatabase::loadObject( $query );
-			switch ( $field->storage ) { //todo: call plugins!
-				case 'custom':
-					if ( $collection != '' ) {
-						$regex	=	CCK_Content::getRegex_Group( $fieldname, $collection, $xi );
-						preg_match( $regex, $core->value, $matches );
-						$value	=	$matches[1];
-					} else {
-						$regex	=	CCK_Content::getRegex_Field( $fieldname );
-						preg_match( $regex, $core->value, $matches );
-						$value	=	$matches[1];
-					}
-					break;
-				case 'standard':
-				default:
-					$value	=	$core->value;
-					break;
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
+			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
+						.	' FROM #__cck_core AS a'
+						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
+						.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
+						.	' WHERE a.id ='.(int)$id;
+			$core		=	JCckDatabase::loadObject( $query );
+
+			if ( !is_object( $core ) ) {
+				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+				return;
 			}
+			JPluginHelper::importPlugin( 'cck_storage' );
+			JPluginHelper::importPlugin( 'cck_field' );
+
+			$config		=	array(
+								'author'=>$core->author_id,
+								'client'=>$client,
+								'collection'=>$collection,
+								'fieldname'=>$fieldname,
+								'id'=>$core->id,
+								'isNew'=>0,
+								'location'=>$core->storage_location,
+								'pk'=>$core->pk,
+								'pkb'=>0,
+								'store_id'=>$core->store_id,
+								'task'=>'download',
+								'type'=>$core->type,
+								'type_id'=>$core->type_id,
+								'xi'=>$xi
+							);
+			$dispatcher		=	JDispatcher::getInstance();
+			$field->value	=	$core->value;
+			$pk				=	$core->pk;
+			$value			=	'';
+
+			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
-			// $current	=	JSite::getMenu()->getActive()->id;
 			$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$core->type.'"', 'client' );
+														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
 			$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
 			$autorised	=	$user->getAuthorisedViewLevels();
 			$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
 			if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
-				$this->setRedirect( 'index.php', JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
+				$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
 			}
-			JPluginHelper::importPlugin( 'cck_field' );
-			$dispatcher	=	JDispatcher::getInstance();
-			$config		=	array( 'client'=>$client, 'id'=>id, 'pk'=>$core->pk, 'pkb'=>0 );
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' ); //#
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
 			
 			if ( $restricted ) {
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
@@ -395,28 +417,15 @@ class CCKController extends JControllerLegacy
 				$field->restriction_options	=	$clients[$client]->restriction_options;
 				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
 				if ( $allowed !== true ) {
-					$this->setRedirect( 'index.php', JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
+					$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 					return;
 				}
 			}
-			$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
-
-			// Path Folder
-			if ( $collection != '' ) {
-				$group_x	=	JCckDatabase::loadObject( 'SELECT a.options2 FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
-				$f_opt2		=	JCckDev::fromJSON( $group_x->options2 );
-			} else {
-				$f_opt2		=	JCckDev::fromJSON( $field->options2 );
-			}
-			$file	=	'';
-			if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
-				$file	.=	$f_opt2['path'];
-				$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $core->author_id.'/' : '';
-				$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $core->pk.'/' : '';
-			}
-			$file	.=	$field->value;
+			
+			$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
+			$file	=	$field->filename;
 		}
-		
+
 		$path	=	JPATH_ROOT.'/'.$file;
 		if ( is_file( $path ) && $file ) {
 			$size	=	filesize( $path ); 
@@ -431,7 +440,7 @@ class CCKController extends JControllerLegacy
 				include JPATH_ROOT.'/components/com_cck/download.php';
 			}
 		} else {
-			$this->setRedirect( 'index.php', JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
+			$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
 		}
 	}
 	

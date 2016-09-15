@@ -16,6 +16,7 @@ require_once JPATH_COMPONENT.'/helpers/helper_session.php';
 class CCKViewSessions extends JCckBaseLegacyViewList
 {
 	protected $vName	=	'session';
+	protected $vTitle	=	_C8_TEXT;
 
 	// getSortFields
 	protected function getSortFields()

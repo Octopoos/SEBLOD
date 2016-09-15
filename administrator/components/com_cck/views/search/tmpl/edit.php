@@ -23,14 +23,10 @@ if ( $lang->hasKey( $key ) == 1 ) {
 } else {
 	$transliterate	=	'{}';
 }
-if ( JCck::on() ) {
-	JHtml::_( 'bootstrap.tooltip' );
-	$sidebar_inner	=	288;
-	$sidebar_top	=	85;
-} else {
-	$sidebar_inner	=	0;
-	$sidebar_top	=	0;
-}
+JHtml::_( 'bootstrap.tooltip' );
+$sidebar_inner	=	288;
+$sidebar_top	=	85;
+
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 if ( $this->item->client == 'list' ) {
@@ -168,5 +164,8 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			}
 		}
 	}
+	$(document).ready(function() {
+		$("#toolbar-save-new button").prop("disabled",true);
+	});
 })(jQuery);
 </script>

@@ -50,32 +50,19 @@ class CCKViewSearch extends JViewLegacy
 				break;
 		}
 		
-		if ( JCck::on() ) {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'80px',
-								   'w30'=>'span4',
-								   'w70'=>'span8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>'$(".hasTooltip").tooltip({});'
-							);
-		} else {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'65px',
-								   'w30'=>'width-30',
-								   'w70'=>'width-70 fltlft',
-								   'wrapper'=>'sebwrapper',
-								   'wrapper2'=>'seb-wrapper workshop',
-								   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>''
-							);
-		}
+		$this->css	=	array( '_'=>'',
+							   'panel_height'=>'80px',
+							   'w30'=>'span4',
+							   'w70'=>'span8',
+							   'wrapper'=>'container',
+							   'wrapper2'=>'row-fluid',
+							   'wrapper_tmpl'=>'span'
+						);
+		$this->js	=	array( '_'=>'',
+							   'tooltip'=>'$(".hasTooltip").tooltip({});'
+						);
 		$this->uix	=	'full';
+		
 		$this->completeUI();
 
 		parent::display( $tpl );

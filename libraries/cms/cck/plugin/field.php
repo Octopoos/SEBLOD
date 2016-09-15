@@ -263,11 +263,11 @@ class JCckPluginField extends JPlugin
 							if ( $data['storage_cck'] != '' ) {
 								// #__cck_store_form_
 								$table	=	'#__cck_store_form_'.$data['storage_cck'];
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 							} else {
 								// #__cck_store_item_
 								$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 							}
 							$columns2	=	$db->getTableColumns( $table );
 							if ( !isset( $columns2[$data['storage_field']] ) ) {
@@ -1014,7 +1014,11 @@ class JCckPluginField extends JPlugin
 	// g_addScriptDeclaration
 	public static function g_addScriptDeclaration( $script )
 	{
-		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script type="text/javascript">jQuery(document).ready(function($){'.$script.'});</script>';
+		} else {
+			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		}
 	}
 	
 	//g_doConditionalStates
@@ -1056,7 +1060,9 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( $field->script );
 			}
 			if ( $variation == 'form_filter_ajax' ) {
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var v=$(this).myVal(); JCck.Core.loadmore("&start=0&"+$(this).attr("name")+"="+v,0,1); });' );
+				$field->form	=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
+
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0"+q,0,1); });' );
 			} else {
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 			}
@@ -1078,7 +1084,8 @@ class JCckPluginField extends JPlugin
 					$then			=	'';
 					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
 						if ( $variation == 'list_filter_ajax' ) {
-							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
+							$base	=	str_replace( 'class="', 'data-cck-ajax="" class="', $base );
+							$then	=	' var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+q,0,1);';
 						}
 						$then		.=	' $("#'.$id.'_ > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
@@ -1086,7 +1093,7 @@ class JCckPluginField extends JPlugin
 					}
 					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() {var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js				=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
-					$doc->addScriptDeclaration( $js );
+					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
 				}
 				foreach ( $options as $opt ) {

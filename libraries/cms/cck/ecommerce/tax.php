@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerceTax
 {
 	// apply
-	public static function apply( $type, &$total, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array() )
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
@@ -27,43 +27,111 @@ abstract class JCckEcommerceTax
 		$taxes		=	JCckEcommerce::getTaxes( $type, $my_zones );
 
 		if ( count( $taxes ) ) {
-			foreach ( $taxes as $p ) {
+			foreach ( $taxes as $t ) {
 				if ( isset( $params['target'] ) && $params['target'] ) {
-					if ( $params['target'] == 'order' && $p->target == 0 ) {
+					if ( $params['target'] == 'order' && $t->target == 0 ) {
 						// OK
-					} elseif ( $params['target'] == 'product' && $p->target == 1 ) {
+					} elseif ( $params['target'] == 'product' && $t->target == 1 ) {
+						// OK
+					} elseif ( $params['target'] == 'shipping' && $t->target == 3 ) {
 						// OK
 					} else {
 						continue;
 					}
 				}
-				$groups		=	explode( ',', $p->groups );
+				$groups		=	explode( ',', $t->groups );
 				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
-					switch ( $p->tax ) {
+					switch ( $t->tax ) {
 						case 'plus':
-							$tax				=	$p->tax_amount;
-							$res				+=	$tax;
-							$total				+=	$tax;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
+
+							$tax						=	(float)number_format( $t->tax_amount, 2 );
+
+							if ( $params['target'] == 'product' ) {
+								$tax					=	$tax * $items[$params['target_id']]->quantity;
+							}
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
 							break;
 						case 'percentage':
-							$tax				=	$total * $p->tax_amount / 100;
-							$res				+=	$tax;
-							$total				+=	$tax;
-							$results['items'][$p->id]	=	array( 'type'=>$p->type, 'tax'=>$p->tax, 'tax_amount'=>(string)$tax, 'title'=>$p->title );
+							$tax						=	(float)number_format( $total * $t->tax_amount / 100, 2 );
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
+
+							break;
+						case 'product_amount':
+							$tax						=	0;
+							
+							if ( $params['target'] == 'shipping' ) {
+								continue;
+							} elseif ( $params['target'] == 'product' ) {
+								if ( !isset( $items[$params['target_id']] ) ) {
+									continue;
+								}
+								if ( empty( $items[$params['target_id']]->price ) ) {
+									continue;
+								}
+								$tax					=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+								$tax					=	$tax * $items[$params['target_id']]->quantity;
+							} else {
+								if ( count( $items ) ) {
+									if ( isset( $params['target_id'] ) && $params['target_id'] ) {
+										if ( empty( $items[$params['target_id']]->price ) ) {
+											continue;
+										}
+										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+										$tax			=	$tax * $items[$params['target_id']]->quantity;
+									} else {
+										foreach ( $items as $item ) {
+											if ( empty( $item->price ) ) {
+												continue;
+											}
+											if ( isset( $item->tax ) && $item->tax != '' ) {
+												$amount	=	(float)number_format( $item->tax, 2 );
+												$amount	=	$amount * $item->quantity;
+												$tax	+=	$amount;
+											}
+										}
+									}
+								}
+							}
+							$res						+=	$tax;
+							$total						+=	$tax;
+							$results['items'][$t->id]	=	array(
+																'target'=>@$params['target'],
+																'tax'=>$t->tax,
+																'tax_amount'=>(string)$tax,
+																'text'=>'',
+																'title'=>$t->title,
+																'type'=>$t->type
+															);
 							break;
 						default:
 							break;
 					}
-					
 				}
 			}
 		}
 
 		if ( $res ) {
 			$results['total']	=	(float)$res;
-
+			
 			return (object)$results;
 		}
 

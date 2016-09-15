@@ -13,12 +13,7 @@ defined( '_JEXEC' ) or die;
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
-
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">

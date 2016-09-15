@@ -39,7 +39,7 @@ class CCK_TableSite extends JTable
 				$this->created_date		=	JFactory::getDate()->toSql();
 			}
 			if ( empty( $this->created_user_id ) ) {
-				$this->created_user_id	=	JFactory::getUser()->get( 'id' );
+				$this->created_user_id	=	JFactory::getUser()->id;
 			}
 		}
 

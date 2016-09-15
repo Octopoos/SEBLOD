@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'id';
 	protected static $author_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'registerDate';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -274,8 +275,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -602,7 +603,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$rows		=	JCckDatabase::loadObjectList( 'SELECT name, email, sendEmail FROM #__users WHERE sendEmail = 1' );
 			if ( count( $rows ) ) {
 				foreach ( $rows as $row ) {
-					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $emailSubject, $body );
+					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
 					if ( $return !== true ) {
 						JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_REGISTRATION_ACTIVATION_NOTIFY_SEND_MAIL_FAILED' ), 'error' );
 						
@@ -718,6 +719,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 									'access'=>'',
 									'author'=>'',
 									'author_object'=>'',
+									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
 									'contexts'=>'',

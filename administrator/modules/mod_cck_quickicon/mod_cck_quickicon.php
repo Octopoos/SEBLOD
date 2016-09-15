@@ -13,9 +13,7 @@ defined( '_JEXEC' ) or die;
 require_once dirname( __FILE__ ).'/helper.php';
 $buttons	=	modCCKQuickIconHelper::getButtons();
 
-if ( JCck::on() ) {
-	JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/font.css', array(), false );
-}
+JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/font.css', array(), false );
 
 require JModuleHelper::getLayoutPath( 'mod_cck_quickicon', $params->get( 'layout', 'default' ) );
 ?>

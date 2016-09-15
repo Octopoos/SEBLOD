@@ -16,7 +16,7 @@ abstract class JCckEcommerceStore
 	// apply
 	public static function countItems( $store_id, $object = 'joomla_article' )
 	{
-		$cache	=	array();
+		static $cache	=	array();
 		$count	=	0;
 		$user	=	JFactory::getUser();
 		

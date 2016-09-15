@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.8.2</version>
+	<version>3.9.1</version>
 	
 	<files>
 		<folder>tmpl</folder>
@@ -40,6 +40,10 @@
 				<field name="list_desc" type="cck" construction="core_description" default="" label="Edit Description" description="..." class="inputbox" cck_selectlabel="Edit"
 					   js_appendto="jform_params_show_list_desc=a.wysiwyg_editor_box"
 					   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" />
+				<field name="tag_list_desc" type="list" default="div" label="COM_CCK_CONFIG_DESCRIPTION_TAG" description="COM_CCK_CONFIG_DESCRIPTION_TAG_DESC" class="inputbox">
+					<option value="div">div</option>
+					<option value="p">p</option>
+				</field>
 				<field name="show_more" type="list" label="MOD_CCK_LIST_CONFIG_SHOW_MORE" default="1" class="inputbox"
 					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_DESC">
 					<option value="0">JNO</option>
@@ -84,6 +88,7 @@
 					<option	value="1">JYES</option>
 				</field>
 				<field name="search2" type="cck" construction="core_search_type" label="MOD_CCK_LIST_SEARCH_ALT" description="MOD_CCK_LIST_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
+				<field name="limit" type="text" default="0" label="LIB_CCK_LIMIT" description="LIB_CCK_LIMIT_DESC" size="8" class="inputbox" />
 				<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>

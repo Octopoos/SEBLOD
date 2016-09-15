@@ -15,7 +15,6 @@ $lang   =	JFactory::getLanguage();
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
@@ -63,6 +62,7 @@ $js		=	'
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
 					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
 					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");
+					$("#match_options_var_count").isVisibleWhen("match_mode","each_exact");
 					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact,not_any_exact");
 					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
@@ -97,6 +97,7 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
 		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Mode', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Simple=0||Multiple=1', 'storage_field'=>'match_options[var_mode]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Count', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'None=||Equal=0', 'storage_field'=>'match_options[var_count]', 'css'=>'match_options' ) );
 
 		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Latitude Field', 'storage_field'=>'match_options[fieldname1]', 'css'=>'match_options' ) );

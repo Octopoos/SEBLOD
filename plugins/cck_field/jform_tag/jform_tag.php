@@ -38,6 +38,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		JLoader::register( 'TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php' );
 
 		$html	=	'';
 
@@ -96,37 +98,33 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$field->text	=	'';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
-			if ( JCck::on() ) {
-				JHtml::_( 'formbehavior.chosen', 'select.tag' );
+			JHtml::_( 'formbehavior.chosen', 'select.tag' );
 
-				$options2	=	JCckDev::fromJSON( $field->options2 );
-				$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
-				$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
-				$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
-				$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
-				$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
-				$xml		=	'
-								<form>
-									<field
-										type="'.self::$type2.'"
-										name="'.$name.'"
-										id="'.$id.'"
-										label="'.htmlspecialchars( $field->label ).'"
-										class="'.$class.'"
-										'.$mode.'
-										'.$parent.'
-										'.$custom.'
-										'.$multiple.'
-									>
-									'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
-									</field>
-								</form>
-							';
-				$form	=	JForm::getInstance( $id, $xml );
-				$form	=	$form->getInput( $name, '', $value );
-			} else {
-				$form	=	'';
-			}
+			$options2	=	JCckDev::fromJSON( $field->options2 );
+			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
+			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
+			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
+			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
+			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
+			$xml		=	'
+							<form>
+								<field
+									type="'.self::$type2.'"
+									name="'.$name.'"
+									id="'.$id.'"
+									label="'.htmlspecialchars( $field->label ).'"
+									class="'.$class.'"
+									'.$mode.'
+									'.$parent.'
+									'.$custom.'
+									'.$multiple.'
+								>
+								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
+								</field>
+							</form>
+						';
+			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	$form->getInput( $name, '', $value );
 		}
 
 		// Set

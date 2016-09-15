@@ -39,6 +39,7 @@
 			<option value="0">JNO</option>
 				<option	value="1">JYES</option>
 			</field>
+			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />
 		</fieldset>
 	</fields>
 </metadata>

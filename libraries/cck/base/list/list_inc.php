@@ -43,6 +43,8 @@ if ( ! $search ) {
 	$app->enqueueMessage( 'Oops! Search Type not found.. ; (', 'error' ); return;
 }
 $lang->load( 'pkg_app_cck_'.$search->folder_app, JPATH_SITE, null, false, false );
+
+$no_action					=	'';
 $options					=	new JRegistry;
 $options->loadString( $search->options );
 $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['show_form'] : (int)$options->get( 'show_form', 1 );
@@ -103,12 +105,13 @@ if ( ! $count ) {
 // Init
 $limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
+$hasAjax	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 
 if ( $limitstart != -1 ) {
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
-			$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+			$this->state->set( 'limit', (int)$limitend );
 		}
 		$limitend	=	(int)$this->state->get( 'limit' );
 	}
@@ -273,7 +276,12 @@ foreach ( $fields['search'] as $field ) {
 		$field->variation_override	=	NULL;
 	}
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
-		
+
+	if ( $field->variation == 'form_filter_ajax' || $field->variation == 'list_filter_ajax' ) {
+		$hasAjax	=	true;
+		$isInfinite	=	true;
+	}
+
 	// Value
 	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
@@ -296,7 +304,7 @@ foreach ( $fields['search'] as $field ) {
 	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
-	if ( $field->stage != 0 ) {
+	if ( (int)$field->stage > 0 ) {
 		$stages[$field->stage]	=	0;
 	}
 
@@ -314,6 +322,11 @@ if ( isset( $doc ) ) {
 $config['limitstart']	=	$limitstart;
 $config['limitend']		=	$limitend;
 $config['doSelect']		=	$search->content ? false : true;
+
+if ( $doDebug ) {
+	$profiler	=	JProfiler::getInstance();
+}
+
 if ( $search->storage_location ) {
 	$config['type_object']	=	$search->storage_location;
 }
@@ -372,9 +385,6 @@ if ( $preconfig['task'] == 'search' ) {
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List
 
-	if ( $doDebug ) {
-		$profiler	=	JProfiler::getInstance();
-	}
 	if ( $preconfig['show_list'] ) {
 		$config['infinite']		=	$isInfinite;
 		$target					=	'search';
@@ -429,8 +439,21 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
 					// Content
+					$return			=	'';
+					if ( @$preconfig['auto_redirect_vars'] != '' ) {
+						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+
+						if ( $return != '' ) {
+							$return		=	$preconfig['auto_redirect_vars'].'='.$return;
+						}
+					}
 					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
 					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
+
+					if ( $return != '' ) {
+						$return			=	( strpos( $redirect_url, '?' ) !== false ) ? '&'.$return : '?'.$return;
+						$redirect_url	.=	$return;
+					}
 					$app->redirect( $redirect_url );
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {
@@ -466,8 +489,8 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 		} else {
 			$isCached	=	'';
-			$no_message	=	$options->get( 'message', '' );
 			$no_action	=	$options->get( 'action', '' );
+			$no_message	=	$options->get( 'message', '' );
 			$no_style	=	$options->get( 'message_style', 'message' );
 			
 			if ( ! $no_message ) {
@@ -484,36 +507,53 @@ if ( $preconfig['task'] == 'search' ) {
 					$app->enqueueMessage( $no_message, $no_style );
 				}
 			}
-			if ( $no_action ) {
-				if ( $no_action == 'auto_redirect' ) {
-					if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
-						$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
-						$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
-						$app->redirect( $redirect_url );
-					}
-					return;
-				} elseif ( $no_action == 'file' ) {
-					$templateStyle2	=	CCK_List::getTemplateStyle( ${$target}->template_list, array( 'rendering_css_core'=>${$target}->stylesheets ) );
-					$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.${$target}->name.'/no_result.php';
-					$file2			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/no_result.php';
-					
-					if ( file_exists( $file1 ) ) {
-						$file	=	$file1;
-					} elseif ( file_exists( $file2 ) ) {
-						$file	=	$file2;
-					} else {
-						$file	=	'';
-					}
-					if ( $file && is_file( $file ) ) {
-						ob_start();
-						include $file;
-						$data	=	ob_get_clean();
-					}
-				} else {
-					$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
-				}
-			}
+			
 		}
+	}
+} else {
+	$no_action	=	$options->get( 'action_no_search', '' );
+}
+if ( $no_action ) {
+	$config['infinite']		=	$isInfinite;
+	$target					=	'search';
+	if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
+		$target				=	'search2';
+		$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
+		$options2			=	new JRegistry;
+		$options2->loadString( $search2->options );
+
+		if ( $options2->get( 'sef' ) != '' ) {
+			$config['doSEF']	=	$options2->get( 'sef' );
+		}
+		$search->content		=	$search2->content;
+	}
+
+	if ( $no_action == 'auto_redirect' ) {
+		if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
+			$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
+			$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
+			$app->redirect( $redirect_url );
+		}
+		return;
+	} elseif ( $no_action == 'file' ) {
+		$templateStyle2	=	CCK_List::getTemplateStyle( ${$target}->template_list, array( 'rendering_css_core'=>${$target}->stylesheets ) );
+		$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.${$target}->name.'/no_result.php';
+		$file2			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/no_result.php';
+		
+		if ( file_exists( $file1 ) ) {
+			$file	=	$file1;
+		} elseif ( file_exists( $file2 ) ) {
+			$file	=	$file2;
+		} else {
+			$file	=	'';
+		}
+		if ( $file && is_file( $file ) ) {
+			ob_start();
+			include $file;
+			$data	=	ob_get_clean();
+		}
+	} else {
+		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 	}
 	if ( $doDebug ) {
 		echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';

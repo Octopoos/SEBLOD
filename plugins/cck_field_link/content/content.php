@@ -103,6 +103,31 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		}
 		if ( $app->isAdmin() ) {
 			$field->link	=	str_replace( '/administrator', '', $field->link );
+
+			$link_attr		=	' data-cck-route="'.base64_encode( $field->link ).'"';
+
+			static $loaded	=	0;
+
+			if ( !$loaded ) {
+				$loaded	=	1;
+				$js		=	'(function ($){
+								$(document).ready(function() {
+									
+									$("a[data-cck-route]").each(function(i) {
+										var $el = $(this);
+										$.ajax({
+											cache: false,
+											data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
+											type: "GET",
+											url: "'.JUri::root().'index.php?option=com_cck&task=route&format=raw",
+											beforeSend:function(){},
+											success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
+										});
+									});
+								});
+							})(jQuery);';
+				JFactory::getDocument()->addScriptDeclaration( $js );
+			}
 		}
 		if ( $link->get( 'path_type', 0 ) ) {
 			$field->link	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$field->link;

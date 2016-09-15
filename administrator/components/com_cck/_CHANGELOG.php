@@ -22,17 +22,134 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.8.2 Upgrade Release [13-May-2016] -------------
+-------------------- 3.9.1 Upgrade Release [12-Sep-2016] -----------
+
+# Broken Conditional States fixed on Group when tmpl=raw. 
+# Download task updated on back-end.
+# Markup fixed on Group plug-in.
+# Minor issues fixed on back-end.
+
+-------------------- 3.9.0 Upgrade Release [1-Sep-2016] ------------
+
+* Security Release:
+  >> Status (+ Publication dates) applied on Download task.
+
++ Extensive cleaning performed.
+  >> Deprecated Jquery stuff removed.
+  >> Deprecated SEBLOD stuff removed.
+  >> Joomla! 2.5 not supported anymore. :)
+  >> PHP 5.2 not supported anymore. :)
+
+! Memory & Performance optimizations on List rendering (for modules).
+
++ Keyboard Shortcut added in Content/Search Types UI to add a new field (n).
++ Match mode automation (multiple vs single selection) added.
++ Suffix forced for existing/identical "alias" on submission.
+  >> available on JCckContent class
+  >> support added on Article/Category Object plug-ins
+
++ $cck->retrieveValue(...); implemented in Template Framework.
+  >> alternative to getValue with restriction applied.
++ "Limit" parameter added on List module.
++ "[pk]" syntax allowed in Bridge Title parameter.
++ "User Grp Password" group (used from User Content Type) added in install.sql
+
+^ "Exact" match mode + "Unquoted" forced for Int/Tinyint while creating new fields.
+^ "Match Occurences" parameter added for "Each Word Exact" match mode.
+^ "PrepareExport" applied on Link, Textarea, Wysiwyg Editor plug-ins.
+^ Primary Key for "More" tables now created as UNSIGNED INT(10).
+  >> "#__cck_store_form_..."
+  >> "#__cck_store_item_..."
+
+^ jQuery UI updated to 1.12.0
+^ jQuery UI Effect updated to 1.12.0
+
+^ "/alias (Safe)" is now deprecated.
+  >> "SEF Content Type(s)" now triggers "Safe" mode on its own.
+
+- Deprecated "CCK" class removed.
+- Deprecated "CCK_Database" class removed.
+- Deprecated "CCK_Dev" class removed.
+- Deprecated "CCK_Field" class removed.
+- Deprecated "CCK_Language" class removed.
+
+- Deprecated use of jQuery.fn.attr('checked') removed.
+- Deprecated use of jQuery.fn.attr('disabled') removed.
+- Deprecated use of jQuery.fn.die() removed.
+- Deprecated use of jQuery.fn.live() removed.
+- Deprecated use of jQuery.fn.removeAttr('checked') removed.
+- Deprecated use of jQuery.fn.removeAttr('disabled') removed.
+- Deprecated use of jQuery.fn.size() removed.
+
+- jquery-1.8.3.min.js removed.
+- jquery.jstree.min.js script removed.
+- jquery.lavalamp.min.js script removed.
+- jquery-noconflict.js script removed.
+- jquery.qtip.min.js script removed.
+
+- Permanent "limit" variable removed on Lists.
+
+# A few "ALTER IGNORE TABLE" replaced by "ALTER TABLE" for MySQL 5.7.4+ support.
+# "Auto Redirection (Vars)" now applied on Content redirection as well.
+# Download Link/Task now applied on Upload File plug-in.
+# "Form Action" Fields can now be included in a "Group" Field.
+# Guest issue on Multi-sites fixed (regression since Joomla! 3.6.0)
+# Green validation popup style fixed.
+# Initial Accesslevels forced back in Multi-sites.
+# Issues fixed on Group plug-in.
+# JSON issue (PrepareDownload) fixed.
+# Missing required "star" added in Group output.
+# Missing Parent's fields while editing a Child Content Type issue fixed.
+# Offline mode fixed in Multi-sites. (regression)
+# Path issue fixed for "Modal Box Style" parameter on SEBLOD Options.
+# User activation issue fixed on Multi-sites.
+# Various improvements or issues fixed.
+
+-------------------- 3.8.4 Upgrade Release [27-Jun-2016] ------------
+
++ Country List updated in install.sql to include Italian translation.
+
++ Allow syntaxes to retrieve Group X values in HTML Typography plug-in.
++ "Description Tag" (div|p) added on List/Search modules.
+
+# Missing "TagsHelperRoute" class (in back-end) issue fixed.
+# Page Title (override) issue fixed for view=category.
+# Minor issues fixed.
+
+-------------------- 3.8.3 Upgrade Release [10-Jun-2016] ------------
+
++ Country List updated in install.sql to include Spanish translation.
++ Position Overrides' path displayed in Content/Search Types UI.
+
++ "Integers" mode added in URL Variable Live plug-in.
+
+# Back-end UI Drag and Drop responsiveness fixed (regression since SEBLOD 3.8.2). 
+# Email Validation plug-in altered for new TLDs
+# "JForm User" issues fixed.
+# One more fix to clearForm().
+# Router now handles the "Intranet App for SEBLOD" correclty.
+
+-------------------- 3.8.2 Upgrade Release [2-Jun-2016] -------------
 
 + Country List updated in install.sql to include Russian translation.
++ Keyboard Shortcuts added in Content/Search Types UI for various parameters (1-7).
++ Router improved
+  >> 3 segments URLs (i.e. /parent/parent/...).
+  >> support added on back-end via AJAX.
 
++ "Action" parameter added ("No Search") on Search Types.
 + "Both" behaviour added in Div plug-in.
 + getPk() method added to JCckContent class.
++ URL Query (Vars) added on Form menu item.
 
+^ Colorbox updated to 1.6.4.
+
+# A few more fixes applied to the router.
 # getConfig_Param() fixed for CLI (regression since SEBLOD 3.8.0).
 # Init "author" in Form Edition (pre-onCCK_Storage_LocationPrepareForm).
-# One more fix applied to the router.
-# User Export ("All Fields") fixed.
+# User Export ("All Fields") issue fixed.
+# User Import issue fixed.
+# Various improvements or issues fixed.
 
 -------------------- 3.8.1 Upgrade Release [8-May-2016] --------------
 

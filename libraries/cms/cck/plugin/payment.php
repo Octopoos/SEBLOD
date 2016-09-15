@@ -45,8 +45,13 @@ class JCckPluginPayment extends JPlugin
 		$cart_id	=	(int)JCckDatabase::loadResult( 'SELECT a.id FROM #__cck_more_ecommerce_carts AS a WHERE a.pay_key = "'.$config['pay_key'].'"' );
 		
 		if ( $cart_id ) {
+			$cart	=	JCckEcommerce::getCart( (int)$cart_id );
+
 			JCckDatabase::execute( 'UPDATE #__cck_more_ecommerce_carts SET pay_key = "" WHERE id = '.$cart_id );
-			JCckDatabase::execute( 'DELETE a.* FROM #__cck_more_ecommerce_cart_product AS a WHERE a.cart_id = '.$cart_id );
+			
+			if ( !$cart->permanent ) {
+				JCckDatabase::execute( 'DELETE a.* FROM #__cck_more_ecommerce_cart_product AS a WHERE a.cart_id = '.$cart_id );
+			}
 		}
 
 		// Execute Processings (Invoice, Notifications, ...)

@@ -15,6 +15,23 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 // Class
 class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_LocationJoomla_Article
 {
+	protected static $columns_excluded	=	array();
+	
+	// getColumnsToExport
+	public static function getColumnsToImport()
+	{
+		$table		=	self::_getTable();
+		$columns	=	$table->getProperties();
+		
+		foreach ( self::$columns_excluded as $column ) {
+			if ( array_key_exists( $column, $columns ) ) {
+				unset( $columns[$column] );
+			}
+		}
+
+		return array_keys( $columns );
+	}
+
 	// onCCK_Storage_LocationImport
 	public static function onCCK_Storage_LocationImport( $data, &$config = array(), $pk = 0 )
 	{
@@ -51,7 +68,9 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			self::_initTable( $table, $data, $config, true );
 			
 			// Prepare
-			$table->bind( $data );
+			if ( !empty( $data ) ) {
+				$table->bind( $data );
+			}
 			if ( $isNew && !isset( $data['rules'] ) ) {
 				$data['rules']	=	array( 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array() );
 				$rules			=	new JAccessRules( $data['rules'] );

@@ -13,7 +13,8 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 {
-	protected static $type	=	'joomla_jgrid';
+	protected static $type		=	'joomla_jgrid';
+	protected static $increment	=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
@@ -67,13 +68,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$title		=	( $activated == 0 ) ? 'COM_CCK_ACTIVATED' : 'COM_CCK_UNACTIVATED';
 					$value		=	JHtml::_('jgrid.state', JHtmlUsers::activateStates(), $activated, $pks[$pk], 'users.', false /*(boolean)$activated*/ );
 					$value		=	str_replace( array( 'title=""', 'title="COM_USERS_ACTIVATED"' ), 'title="'.JText::_( $title ).'"', $value );
-					if ( JCck::on() ) {
-						if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-							$class	.=	' disabled';
-							$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
-						}
-					} else {
-						$value		=	str_replace( 'btn-micro', 'btn-micro hasTooltip', $value );
+						
+					if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+						$class	.=	' disabled';
+						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 					}
 					/*
 					$value		=	str_replace( 'return listItemTask(', 'return JCck.Core.doTask(', $value );
@@ -85,13 +83,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$title		=	( $value == 1 ) ? 'COM_CCK_DISABLED' : 'COM_CCK_ENABLED';
 					$value		=	JHtml::_( 'jgrid.state', JHtmlUsers::blockStates(), $value, $pks[$pk], 'users.', false /*!$self*/ );
 					$value		=	str_replace( 'title=""', 'title="'.JText::_( $title ).'"', $value );
-					if ( JCck::on() ) {
-						if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-							$class	.=	' disabled';
-							$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
-						}
-					} else {
-						$value		=	str_replace( 'btn-micro', 'btn-micro hasTooltip', $value );
+
+					if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+						$class	.=	' disabled';
+						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 					}
 					/*
 					$value		=	str_replace( 'return listItemTask(', 'return JCck.listItemTask(', $value );
@@ -101,19 +96,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				}
 				break;
 			case 'featured':
-				static $loaded = 0;
-				if ( !$loaded ) {
+				static $loadedF = 0;
+				if ( !$loadedF ) {
 					JHtml::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
-					$loaded	=	1;
+					$loadedF	=	1;
 				}
 				$value		=	JHtml::_( 'contentadministrator.featured', $field->value, $pks[$pk], false /*$canChange*/ );
-				if ( JCck::on() ) {
-					if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-						$class	.=	' disabled';
-						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
-					}
-				} else {
-					$value		=	str_replace( 'btn-micro', 'btn-micro hasTooltip', $value );
+
+				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+					$class	.=	' disabled';
+					$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 				}
 				break;
 			case 'form':
@@ -163,6 +155,17 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$value				=	$field->form;
 				break;
 			case 'increment':
+				$identifier_name	=	$typo->get( 'identifier_name', '' );
+
+				if ( $identifier_name != '' ) {
+					if ( !isset( self::$increment[$identifier_name] ) ) {
+						self::$increment[$identifier_name]	=	array( 'i'=>0, 'pks'=>array() );
+					}
+					if ( !isset( self::$increment[$identifier_name]['pks'][$config['pk']] ) ) {
+						self::$increment[$identifier_name]['pks'][$config['pk']]	=	self::$increment[$identifier_name]['i'];
+						self::$increment[$identifier_name]['i']++;
+					}
+				}
 				$value		=	( !$start ) ? $i - 1 : $i;
 				break;
 			case 'selection':
@@ -208,13 +211,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				break;
 			case 'state':
 				$value		=	JHtml::_( 'jgrid.published', $field->value, $pks[$pk], '', false /*$canChange*/, 'cb', '' /*$item->publish_up*/, '' /*$item->publish_down*/ );
-				if ( JCck::on() ) {
-					if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-						$class	.=	' disabled';
-						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
-					}
-				} else {
-					$value		=	str_replace( 'btn-micro', 'btn-micro hasTooltip', $value );
+				
+				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+					$class	.=	' disabled';
+					$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 				}
 				break;
 			default:
@@ -222,6 +222,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 		}
 		
 		return $value;
+	}
+
+	// getStaticValue
+	public static function getStaticValue( $identifier, $pk = 0 )
+	{
+		if ( $pk ) {
+			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['pks'][$pk] : 0;
+		} else {
+			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['i'] : 0;
+		}
 	}
 }
 ?>

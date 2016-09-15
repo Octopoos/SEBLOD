@@ -13,7 +13,6 @@ defined( '_JEXEC' ) or die;
 $lang	=	JFactory::getLanguage();
 $lang->load( 'com_cck_default', JPATH_SITE );
 
-jimport( 'cck.development.development' ); // (deprecated)
 require_once JPATH_COMPONENT.'/helpers/helper_define.php';
 require_once JPATH_COMPONENT.'/helpers/helper_include.php';
 

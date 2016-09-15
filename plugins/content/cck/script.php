@@ -113,6 +113,9 @@ class plgContentCCKInstallerScript
 					$addon->title	=	$titles[$addon->element];
 					self::_addAddon( $addon, $seblod );
 				}
+				$query		=	'UPDATE #__menu SET alias = CONCAT(UCASE(LEFT(alias,1)),SUBSTRING(alias,2)) WHERE link LIKE "index.php?option=com_cck_%" AND parent_id = '.(int)$seblod->id;
+				$db->setQuery( $query );
+				$db->execute();
 			}
 		}	
 		
@@ -160,19 +163,6 @@ class plgContentCCKInstallerScript
 			$query	=	'UPDATE #__extensions SET enabled = 1 WHERE folder LIKE "cck_%"';
 			$db->setQuery( $query );
 			$db->execute();
-			
-			// Revert Version for Joomla! 2.5.x
-			if ( !JCck::on() ) {
-				$query	=	'SELECT id FROM #__cck_core_types WHERE version = 2 ORDER BY id';
-				$db->setQuery( $query );
-				$forms	=	$db->loadObjectList();
-				if ( count( $forms ) ) {
-					require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_version.php';
-					foreach ( $forms as $f ) {
-						Helper_Version::revert( 'type', $f->id, '1' );
-					}
-				}
-			}
 
 			// Set Template Styles
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_one" ORDER BY id';
@@ -322,7 +312,8 @@ class plgContentCCKInstallerScript
 									66=>'3.4.0', 67=>'3.4.1', 68=>'3.4.2', 69=>'3.4.3', 70=>'3.5.0', 71=>'3.5.1',
 									72=>'3.6.0', 73=>'3.6.1', 74=>'3.6.2', 75=>'3.6.3', 76=>'3.6.4', 77=>'3.6.5',
 									78=>'3.7.0', 79=>'3.7.1', 80=>'3.7.2', 81=>'3.7.3', 82=>'3.7.4', 83=>'3.7.5', 84=>'3.7.6', 85=>'3.7.7',
-									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5', 92=>'3.8.6' );
+									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5',
+									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2' );
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
 			$i			=	array_search( $old, $versions );
@@ -466,12 +457,6 @@ class plgContentCCKInstallerScript
 					$table->store();
 				}
 			}
-			if ( $i2 < 31 ) {
-				$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/tmp/joomla_message';
-				if ( JFolder::exists( $src ) ) {
-					JFolder::copy( $src, JPATH_SITE.'/plugins/cck_storage_location/joomla_message', '', true );
-				}
-			}
 			if ( $i2 < 33 ) {
 				$folders	=	array( 10, 11, 12, 13, 14 );
 				foreach ( $folders as $folder ) {
@@ -534,35 +519,6 @@ class plgContentCCKInstallerScript
 		
 		// Force Auto Increments
 		self::_forceAutoIncrements();
-
-		// Overrides
-		$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src';
-		if ( JFolder::exists( $path ) ) {
-			$folders	=	JFolder::folders( $path, '^joomla' );
-			$folders	=	array_reverse( $folders );
-			$count		=	count( $folders );
-			foreach ( $folders as $folder ) {
-				$version	=	str_replace( 'joomla', '', $folder );
-				if ( version_compare( JVERSION, $version, 'lt' ) ) {
-					$path	.=	'/'.$folder;
-					$len	=	strlen( $path );
-					$items	=	JFolder::files( $path, '.', true, true, array('index.html' ) );
-					if ( count( $items ) ) {
-						foreach ( $items as $item ) {
-							$dest	=	JPATH_SITE.substr( $item, $len );
-							JFile::copy( $item, $dest );
-						}
-					}
-					break;
-				}
-			}
-		}
-
-		// Tmp
-		$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/tmp';
-		if ( JFolder::exists( $path ) ) {
-			JFolder::delete( $path );
-		}
 	}
 	
 	// _addAddon

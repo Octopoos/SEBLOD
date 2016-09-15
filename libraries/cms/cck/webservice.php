@@ -77,8 +77,7 @@ abstract class JCckWebservice
 							);
 		$config			=	array();
 		$dispatcher		=	JDispatcher::getInstance();
-		$fields			=	array();
-
+		
 		// Override
 		if ( count( $data ) ) {
 			foreach ( $data as $k=>$v ) {
