@@ -267,28 +267,37 @@ class plgContentCCK extends JPlugin
 		$lang	=	JFactory::getLanguage();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
-		
-		$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
-					.	' FROM #__cck_core_type_field AS c'
-					.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
-					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
-					.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
-					.	' ORDER BY c.ordering ASC'
-					;
-		if ( $client === 'intro' ) {
+
+
+
+		if ( $client === 'intro' )
+		{
+			$query		= $this->getFieldsQuery('sc.name = "'.$contentType.'"', $client, $access, 'c.ordering ASC');
 			$fields		=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
+
 			if ( ! count( $fields ) ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
-						.	' FROM #__cck_core_type_field AS c'
-						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
-						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
-						.	' WHERE sc.name = "'.$contentType.'" AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
-						.	' ORDER BY c.ordering ASC'
-						;
+				$query		= $this->getFieldsQuery('sc.name = "'.$contentType.'"', $client, $access, 'c.ordering ASC');
 				$fields	=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
 			}
-		} else {
+		}
+		else
+		{
+
+
+			if ( $parent_type != '' )
+			{
+				$where	=	'(sc.name = "'.$contentType.'" OR sc.name = "'.$parent_type.'")';
+				$order  =	' c.typeid ASC,';
+			}
+			else
+			{
+				$where	=	'sc.name = "'.$contentType.'"';
+				$order	=	' c.ordering ASC';
+			}
+
+			$query		= $this->getFieldsQuery($where, $client, $access, $order);
+
 		    $fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 		}
 
@@ -329,6 +338,19 @@ class plgContentCCK extends JPlugin
 		}
 		
 		$this->_render( $context, $article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
+	}
+
+	private function getFieldsQuery($where, $client, $access, $order)
+	{
+		$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			.	' FROM #__cck_core_type_field AS c'
+			.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
+			.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
+			.	' WHERE ' .$where. ' AND sc.published = 1 AND c.client = "'.$client.'" AND c.access IN ('.$access.')'
+			.	' ORDER BY ' . $order;
+		;
+
+		return $query;
 	}
 	
 	// _process
@@ -396,9 +418,11 @@ class plgContentCCK extends JPlugin
 			.	' WHERE '.$w_type.' AND a.client ="'.$client.'"';	// todo::improve
 
 
-		if ( $client === 'intro' ) {
+		if ( $client === 'intro' )
+		{
 			$positions_more	=	JCckDatabaseCache::loadObjectList( $query, 'position' );
-		} else {
+		}
+		else {
 			$positions_more	=	JCckDatabase::loadObjectList( $query, 'position' );
 		}
 
