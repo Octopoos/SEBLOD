@@ -354,7 +354,7 @@ class plgSystemCCK extends JPlugin
 							$style	=	'top: -2px; position: relative;';
 						} else {
 							$class	=	'';
-							$link	=	'http://www.seblod.com/store/extensions/634';
+							$link	=	'https://www.seblod.com/store/extensions/634';
 							$target	=	'_blank';
 							$style	=	'text-decoration:underline;';
 						}

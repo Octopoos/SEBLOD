@@ -232,7 +232,7 @@ class CCK_Export
 				$xml->addAttribute( 'type', 'fields' );
 				$xml->addChild( 'author', 'Octopoos' );
 				$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-				$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+				$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 				$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 				$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 				$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
@@ -296,7 +296,7 @@ class CCK_Export
 		$xml->addAttribute( 'folder', 'content' );
 		$xml->addChild( 'author', 'Octopoos' );
 		$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-		$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+		$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 		$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 		$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 		$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
@@ -350,7 +350,7 @@ class CCK_Export
 		$xml->addAttribute( 'type', $plural );
 		$xml->addChild( 'author', 'Octopoos' );
 		$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-		$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+		$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 		$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 		$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 		$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
@@ -930,7 +930,7 @@ class CCK_Export
 				$xml->addAttribute( 'type', $plural );
 				$xml->addChild( 'author', 'Octopoos' );
 				$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-				$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+				$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 				$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 				$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 				$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
@@ -1037,7 +1037,7 @@ class CCK_Export
 					$xml->addAttribute( 'type', $plural );
 					$xml->addChild( 'author', 'Octopoos' );
 					$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-					$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+					$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 					$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 					$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 					$xml->addChild( 'description', 'SEBLOD 3.x - www.seblod.com' );
@@ -1152,7 +1152,7 @@ class CCK_Export
 		$xml->addChild( 'name', htmlspecialchars( $file->title ) );
 		$xml->addChild( 'author', 'Octopoos' );
 		$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-		$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+		$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 		$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 		$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 		$xml->addChild( 'creationDate', date( 'F Y' ) );
@@ -1172,7 +1172,7 @@ class CCK_Export
 		$xml->addChild( 'name', htmlspecialchars( $package->name ) );
 		$xml->addChild( 'author', 'Octopoos' );
 		$xml->addChild( 'authorEmail', 'contact@seblod.com' );
-		$xml->addChild( 'authorUrl', 'http://www.seblod.com' );
+		$xml->addChild( 'authorUrl', 'https://www.seblod.com' );
 		$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 		$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 		$xml->addChild( 'creationDate', date( 'F Y' ) );
@@ -1192,7 +1192,7 @@ class CCK_Export
 		$xml->addChild( 'name', htmlspecialchars( $package->title ) );
 		$xml->addChild( 'packagename', htmlspecialchars( $package->name ) );
 		$xml->addChild( 'packager', 'Octopoos' );
-		$xml->addChild( 'packagerurl', 'http://www.seblod.com' );
+		$xml->addChild( 'packagerurl', 'https://www.seblod.com' );
 		$xml->addChild( 'copyright', 'Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.' );
 		$xml->addChild( 'license', 'GNU General Public License version 2 or later.' );
 		$xml->addChild( 'creationDate', date( 'F Y' ) );

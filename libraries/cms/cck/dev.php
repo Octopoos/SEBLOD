@@ -563,7 +563,7 @@ abstract class JCckDev
 		
 		$app->cck_markup_closed	=	true;
 		
-		$link	=	'http://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
+		$link	=	'https://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="clr"></div><div class="how-to-setup">'
 				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'

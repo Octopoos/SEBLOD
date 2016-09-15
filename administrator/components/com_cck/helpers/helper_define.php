@@ -23,7 +23,7 @@ define( 'CCK_TITLE',			'CCK' );
 define( 'CCK_COM',				'com_'.CCK_NAME );
 define( 'CCK_MODEL',			CCK_TITLE.'Model' );
 define( 'CCK_TABLE',			CCK_NAME.'_Table' );
-define( 'CCK_WEBSITE',			'http://www.seblod.com' );
+define( 'CCK_WEBSITE',			'https://www.seblod.com' );
 
 define( '_C0_NAME',				'folders' );
 define( '_C1_NAME',				'templates' );
