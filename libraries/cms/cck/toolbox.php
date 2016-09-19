@@ -13,8 +13,9 @@ defined( '_JEXEC' ) or die;
 // JCckToolbox
 abstract class JCckToolbox
 {
-	public static $_me			=	'cck_toolbox';
-	public static $_config		=	NULL;
+	public static $_me		=	'cck_toolbox';
+	public static $_config	=	NULL;
+	public static $_urls	=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 
@@ -45,19 +46,105 @@ abstract class JCckToolbox
 	{
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-
+		
 		if ( isset( $app->cck_document ) ) {
 			if ( isset( $app->cck_document['styleSheets'] ) && count( $app->cck_document['styleSheets'] ) ) {
 				foreach ( $app->cck_document['styleSheets'] as $k=>$v ) {
 					$head['styleSheets'][$k]	=	$v;
+					unset( $app->cck_document['styleSheets'][$k] );
 				}
 				$doc->setHeadData( array( 'styleSheets'=>$head['styleSheets'] ) );
 			}
 			if ( isset( $app->cck_document['scripts'] ) && count( $app->cck_document['scripts'] ) ) {
 				foreach ( $app->cck_document['scripts'] as $k=>$v ) {
 					$head['scripts'][$k]		=	$v;
+					unset( $app->cck_document['scripts'][$k] );
+
+					$start	=	strpos( $k, '//' );
+					
+					$k		=	substr( $k, $start );
+					$end	=	strpos( $k, '?' );
+					$k		=	substr( $k, 0, $end+1 );
+
+					self::$_urls[$k]			=	true;
 				}
 				$doc->setHeadData( array( 'scripts'=>$head['scripts'] ) );
+			}
+		}
+	}
+
+	// setHeadAfterRender
+	public static function setHeadAfterRender()
+	{
+		$app	=	JFactory::getApplication();
+
+		if ( isset( $app->cck_document ) ) {
+			$countCss	=	0;
+			$countJs	=	0;
+
+			if ( isset( $app->cck_document['styleSheets'] ) ) {
+				$countCss	=	count( $app->cck_document['styleSheets'] );
+			}
+			if ( isset( $app->cck_document['scripts'] ) ) {
+				$countJs	=	count( $app->cck_document['scripts'] );
+			}
+
+			if ( $countCss || $countJs ) {
+				$body	=	$app->getBody();
+
+				if ( $countCss ) {
+					foreach ( $app->cck_document['styleSheets'] as $k=>$v ) {
+						$html	=	'<link rel="stylesheet" href="'.$k.'" />';
+						$body	=	str_replace( '</head>', $html.'</head>', $body );
+
+						unset( $app->cck_document['styleSheets'][$k] );
+					}
+				}
+				if ( $countJs ) {
+					$i	=	0;
+
+					foreach ( $app->cck_document['scripts'] as $k=>$v ) {
+						$k2	=	JCckDev::getMergedScript( $k );
+						
+						if ( $k2 == '' ) {
+							continue;
+						}
+						$replace	=	'';
+
+						if ( count( self::$_urls ) ) {
+							foreach ( self::$_urls as $k=>$v ) {
+								$match	=	'';
+								$search	=	'#<script(.*)src="(.*)'.addslashes( $k ).'(.*)"(.*)></script>#';
+								
+								preg_match( $search, $body, $match );
+
+								if ( count( $match ) && $match[0] != '' ) {
+									$replace	=	$match[0];
+								}
+							}
+						}
+						$html		=	'<script src="'.$k2.'"';
+
+						if ( $v['async'] ) {
+							$html	.=	' async="true"';
+						}
+						if ( $v['defer'] ) {
+							$html	.=	' defer="true"';
+						}
+						$html		.=	'></script>';
+
+						if ( $replace != '' ) {
+							$body	=	str_replace( $replace, $html, $body );
+						} else {
+							$body	=	str_replace( '</head>', $html.'</head>', $body );
+						}
+						$i++;
+
+						unset( $app->cck_document['scripts'][$k] );
+					}
+				}
+
+				$app->setBody( $body );
 			}
 		}
 	}
