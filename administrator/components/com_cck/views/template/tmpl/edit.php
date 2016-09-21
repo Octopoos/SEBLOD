@@ -41,6 +41,17 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_featured'], $this->item->featured, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'Featured=1||No=0', 'css'=>'btn-group btn-group-yesno' ) ); ?>
         </ul>
 	</div>
+
+    <div id="layer" style="text-align: center;">
+        <?php
+        JFactory::getLanguage()->load( 'tpl_'.$this->item->name, JPATH_SITE, null, false, true );
+        
+        $layer  =   JPATH_SITE.'/templates/'.$this->item->name.'/tmpl/edit.php';
+        if ( is_file( $layer ) ) {
+            include_once $layer;
+        }
+        ?>
+    </div>
 </div>
 
 <div class="clr"></div>

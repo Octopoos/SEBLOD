@@ -990,13 +990,30 @@ class CCK_Rendering
 		return $content;
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Style
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Style & Template
 
 	// getStyleParam
 	public function getStyleParam( $param = '', $default = '' )
 	{		
 		if ( isset( $this->params[$param] ) ) {
 			return $this->params[$param];
+		} else {
+			return $default;
+		}
+	}
+
+	// getTemplateParam
+	public function getTemplateParam( $param = '', $default = '' )
+	{		
+		static $templates = array();
+
+		if ( !isset( $templates[$this->template] ) ) {
+			$templates[$this->template]	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_templates WHERE name = "'.$this->template.'"' );
+			$templates[$this->template]	=	( $templates[$this->template] != '' ) ? json_decode( $templates[$this->template], true ) : array();
+		}
+
+		if ( isset( $templates[$this->template][$param] ) ) {
+			return $templates[$this->template][$param];
 		} else {
 			return $default;
 		}
