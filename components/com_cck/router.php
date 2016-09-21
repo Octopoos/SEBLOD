@@ -66,8 +66,11 @@ class CckRouter extends JComponentRouterBase
 			}
 		} else {
 			$params		=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-			JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+
+			if ( isset( $params['location'] ) && $params['location'] != '' && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {	
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+			}
 		}
 		
 		unset( $query['view'] );
