@@ -1033,6 +1033,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_templates` (
   `mode` tinyint(3) NOT NULL,
   `description` varchar(5120) NOT NULL,
   `featured` tinyint(3) NOT NULL DEFAULT '0',
+  `options` varchar(2048) NOT NULL,
   `published` tinyint(3) NOT NULL,
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL,
