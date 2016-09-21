@@ -1070,6 +1070,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `options_site` text NOT NULL,
   `options_content` text NOT NULL,
   `options_intro` text NOT NULL,
+  `admin_form` tinyint(3) NOT NULL DEFAULT '0',
   `location` varchar(50) NOT NULL,
   `parent` varchar(50) NOT NULL,
   `storage_location` varchar(50) NOT NULL,
