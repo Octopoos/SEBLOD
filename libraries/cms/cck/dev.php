@@ -73,35 +73,56 @@ abstract class JCckDev
 	public static function getMergedScript( $url )
 	{
 		$app	=	JFactory::getApplication();
+		$base	=	'';
+		$index	=	'';
+		$pos	=	strpos( $url, '?' );
 
-		if ( strpos( $url, '//maps.googleapis.com/maps/api/js?' ) !== false ) {
-			if ( isset( self::$_urls['google_maps'] ) ) {
-				$cur		=	self::$_urls['google_maps'];
-				$vars2		=	JCckDevHelper::getUrlVars( $url );
+		$base	=	substr( $url, 0, $pos );
+		$index	=	str_replace( array( 'http://', 'https://' ), '', $base );
 
-				if ( !$vars2->def( 'libraries' ) ) {
-					return '';
-				}
-				$vars		=	JCckDevHelper::getUrlVars( $cur );
-				$libraries	=	array();
-				$libraries[$vars->get( 'libraries' )]	=	'';
-				$libraries[$vars2->get( 'libraries' )]	=	'';
-				$libraries	=	 array_keys( $libraries );
+		if ( isset( self::$_urls[$index] ) ) {
+			$cur		=	self::$_urls[$index];
+			$cur_vars	=	JCckDevHelper::getUrlVars( $cur )->toArray();
+			$new_vars	=	JCckDevHelper::getUrlVars( $url )->toArray();
+			$vars		=	array();
 
-				if ( count( $libraries ) ) {
-					foreach ( $libraries as $k=>$v ) {
-						if ( $v == '' ) {
-							unset($libraries[$k]);
+			if ( count( $cur_vars ) ) {
+				foreach ( $cur_vars as $k=>$v ) {
+					if ( isset( $new_vars[$k] ) ) {
+						$values	=	array();
+						
+						if ( $v != '' ) {
+							$values[]	=	$v;
 						}
+						$v2		=	$new_vars[$k];
+
+						if ( $v2 != '' && !in_array( $v2, $values ) ) {
+							$values[]	=	$v2;
+						}
+						$vars[]	=	$k.'='.implode( ',', $values );
+						unset( $new_vars[$k] );
+					} else {
+						$vars[]	=	$k.'='.$v;
 					}
 				}
-
-				$url		=	str_replace( 'libraries='.$vars2->get( 'libraries' ), 'libraries='.implode( ',', $libraries ), $url );
-				unset( $app->cck_document['scripts'][$cur] );
 			}
-			self::$_urls['google_maps']	=	$url;
+
+			if ( count( $new_vars ) ) {
+				foreach ( $new_vars as $k=>$v ) {
+					$vars[]	=	$k.'='.$v;
+				}
+			}
+			if ( count( $vars ) ) {
+				$url	=	$base.'?'.implode( '&', $vars );
+			} else {
+				$url	=	$base;
+			}
+
+			unset( $app->cck_document['scripts'][$cur] );
 		}
 
+		self::$_urls[$index]	=	$url;
+		
 		return $url;
 	}
 
