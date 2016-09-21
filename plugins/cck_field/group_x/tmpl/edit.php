@@ -22,7 +22,7 @@ JCckDev::forceStorage( 'custom' );
 							'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}',
 							'required'=>'required', 'storage_field'=>'extended' ) );
 		echo JCckDev::renderForm( 'core_rows', $this->item->rows, $config, array( 'label'=>'DEFAULT', 'defaultvalue'=>'1' ) );
-		echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'ADD', 'defaultvalue'=>'1' ) );
+		echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'ADD', 'options'=>'No=0||Yes=1||Above=2||Below=3||Both=4', 'defaultvalue'=>'1' ) );
 		echo JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config, array( 'label'=>'MAXIMUM', 'defaultvalue'=>'10' ) );
 		echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'DEL', 'defaultvalue'=>'1' ) );
 		echo JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config, array( 'label'=>'MINIMUM', 'defaultvalue'=>'1' ) );
