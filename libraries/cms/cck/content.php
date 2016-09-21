@@ -62,7 +62,7 @@ class JCckContent
 		
 		$this->_type	=	$cck;
 		
-		if ( empty( $this->_object ) ) {
+		if ( empty( $this->_object ) || empty( $this->_table ) ) {
 			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			$this->_columns		=	$this->_getProperties();
 			$this->_table		=	$this->_columns['table'];
@@ -322,6 +322,14 @@ class JCckContent
 	// save
 	public function save( $instance_name, $data )
 	{
+		/* TODO: this is no good, and will need to move, but later! */
+		if ( $instance_name == 'base' ) {
+			if ( $this->_object == 'joomla_menu_item' ) {
+				$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
+			}
+		}
+		/* TODO: this is no good, and will need to move, but later! */
+
 		$status	=	$this->{'_instance_'.$instance_name}->bind( $data );
 		$status	=	$this->{'_instance_'.$instance_name}->check();
 		
