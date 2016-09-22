@@ -74,8 +74,8 @@
 			<option value="1">COM_CCK_VERSION_AUTO_AFTER_EACH_SAVE</option>
 			<option value="2">COM_CCK_VERSION_AUTO_AFTER_SAVE_IF</option>
 		</field>
-		<field name="version_auto_time" type="text" size="5" default="180" label="" class="inputbox input-mini" maxlength="8" description="" />
-		<field name="version_auto_unit" type="list" default="0" label="" description="" class="inputbox">
+		<field name="version_auto_time" type="text" size="5" default="180" label="" class="inputbox input-mini" maxlength="8" description="" showon="version_auto:2" />
+		<field name="version_auto_unit" type="list" default="0" label="" description="" class="inputbox" showon="version_auto:2">
 			<option value="0">COM_CCK_CONFIG_VERSION_UNIT_MINUTES</option>
 			<option value="1">COM_CCK_CONFIG_VERSION_UNIT_HOURS</option>
 			<option value="2">COM_CCK_CONFIG_VERSION_UNIT_DAYS</option>
@@ -84,8 +84,11 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="cckjsv1" type="cckjs" label="" description="" js_appendto="jform_version_auto=J(config_version_if_previous_one),#jform_version_auto_time,#jform_version_auto_unit,J(config_version_n_time_ago)"
-			   js_isvisiblewhen="div#jform_cckjsv1-more='jform_version_auto','2',false" js_format="html" hidden="true" />
+		<field name="version_remove" type="radio" default="1" label="COM_CCK_CONFIG_VERSION_AUTO_REMOVE" description="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="version_remove_offset" type="text" size="5" default="20" label="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_AFTER" class="inputbox input-mini" maxlength="8" description="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_AFTER_DESC" showon="version_remove:1" />
 	</fieldset>
 	
 	<fieldset name="fs_integration" label="COM_CCK_CONFIG_FIELDSET_INTEGRATION" description="COM_CCK_CONFIG_FIELDSET_INTEGRATION_DESC">
