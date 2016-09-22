@@ -83,7 +83,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
 					 .	 '</select></li>';
 				} else {
-					echo '<li><label>'.JText::_( 'COM_CCK_TYPE_ASSIGNMENTS' ).'</label><span class="variation_value">...</span></li>';
+					echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=1', 'storage_field'=>'admin_form' ) );
 				}
 				?>
 			</ul>

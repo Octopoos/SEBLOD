@@ -27,12 +27,13 @@ if ( $option == 'com_cck' && $view == 'form' ) {
 		$id			=	$translate_id;
 	}
 }
+$client			=	$preconfig['client'];
 $lang   		=	JFactory::getLanguage();
 $stage			=	-1;
 $user 			=	JCck::getUser();
 
 // Type
-$type			=	CCK_Form::getType( $preconfig['type'], $id );
+$type			=	CCK_Form::getType( $preconfig['type'] );
 if ( ! $type ) {
 	$config		=	array( 'action'=>$preconfig['action'], 'core'=>true, 'formId'=>$preconfig['formId'], 'javascript'=>'', 'submit'=>$preconfig['submit'], 'validation'=>array(), 'validation_options'=>array() );
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
@@ -40,7 +41,17 @@ if ( ! $type ) {
 $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 
 $options	=	new JRegistry;
-$options->loadString( $type->{'options_'.$preconfig['client']} );
+$options->loadString( $type->{'options_'.$client} );
+
+if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+	$preconfig['client']	=	'admin';
+	$more_options			=	$type->{'options_'.$preconfig['client']};
+
+	if ( $more_options != '' ) {
+		$more_options		=	json_decode( $more_options, true );
+	}
+	$options->loadArray( $more_options );
+}
 
 $author			=	0;
 $current		=	( $options->get( 'redirection' ) == 'current_full' ) ? JUri::getInstance()->toString() : JUri::current();
@@ -104,7 +115,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'asset'=>'com_content',
 				   'asset_id'=>0,
 				   'author'=>$author,
-				   'client'=>$preconfig['client'],
+				   'client'=>$client,
 				   'core'=>true,
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),

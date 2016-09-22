@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $app		=	JFactory::getApplication();
+$client		=	$preconfig['client'];
 $lang   	=	JFactory::getLanguage();
 $post		=	JRequest::get( 'post' );
 $session	=	JFactory::getSession();
@@ -38,6 +39,15 @@ if ( $app->isSite() && $hashed !== NULL && ( $hash != $hashed ) ) {
 
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
+}
+
+// Type
+$type		=	CCK_Form::getType( $preconfig['type'], 'store' );
+if ( ! $type ) {
+	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
+}
+if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+	$preconfig['client']	=	'admin';
 }
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
@@ -82,7 +92,7 @@ if ( $stages > 1 ) {
 	$stage	=	$preconfig['stage'];
 }
 $parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.JCckDatabase::escape( $preconfig['type'] ).'"' );
-$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $stage, '', true );
+$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $preconfig['client'], $stage, '', true );
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 

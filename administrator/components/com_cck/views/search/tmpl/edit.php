@@ -94,7 +94,7 @@ if ( $this->item->client == 'list' ) {
 					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
 					 .	 '</select></li>';
 				} else {
-					echo '<li><label>'.JText::_( 'COM_CCK_SEARCH_ASSIGNMENTS' ).'</label><span class="variation_value">...</span></li>';
+					echo '<li>&nbsp;</li>';
 				}
 				?>
 			</ul>

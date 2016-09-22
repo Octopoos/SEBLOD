@@ -16,7 +16,7 @@ class CCKModelForm extends JModelLegacy
 	// store
 	function store( $preconfig, $task = '' )
 	{
-		$client	=	'site';		// site or site_edit
+		$preconfig['client']	=	'site';
 		
 		jimport( 'cck.base.form.form' );
 		include_once JPATH_LIBRARIES_CCK.'/base/form/store_inc.php';
