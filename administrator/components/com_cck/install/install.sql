@@ -1598,6 +1598,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_versions` (
   `e_more5` longblob,
   `date_time` datetime NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
+  `featured` tinyint(3) NOT NULL DEFAULT '0',
   `note` varchar(255) NOT NULL,
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
