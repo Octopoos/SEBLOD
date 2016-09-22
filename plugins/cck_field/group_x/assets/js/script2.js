@@ -14,7 +14,11 @@
 
 			$("body").on('click', '.cck_button_add_'+name, function() {
 
-				elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
+				if ($(this).hasClass('external')) {
+					elem = root.children().last();
+				} else {
+					elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
+				}
 				length = ( elem.parent().children().length );
 
 				if (length < max_element) {
