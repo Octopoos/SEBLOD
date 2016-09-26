@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $app		=	JFactory::getApplication();
+$author		=	0;
 $client		=	$preconfig['client'];
 $lang   	=	JFactory::getLanguage();
 $post		=	JRequest::get( 'post' );
@@ -55,6 +56,10 @@ $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, fal
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
+
+if ( !$isNew ) {
+	$author	=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
+}
 $dispatcher	=	JDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
@@ -62,7 +67,7 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
-$config		=	array( 'author'=>0,
+$config		=	array( 'author'=>$author,
 					   'client'=>$client,
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 					   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
@@ -71,6 +76,7 @@ $config		=	array( 'author'=>0,
 					   'id'=>$preconfig['id'],
 					   'isNew'=>$isNew,
 					   'Itemid'=>$preconfig['itemId'],
+					   'location'=>$type->storage_location,
 					   'message'=>$preconfig['message'],
 					   'message_style'=>'',
 					   'options'=>'',
@@ -81,6 +87,7 @@ $config		=	array( 'author'=>0,
 					   'storages'=>array(),
 					   'task'=>$task,
 					   'type'=>$preconfig['type'],
+					   'type_id'=>(int)$type->id,
 					   'url'=>$preconfig['url'],
 					   'validate'=>''
 					);
