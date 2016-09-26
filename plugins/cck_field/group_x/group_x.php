@@ -292,10 +292,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			}
 			$store	.=	'<br />';
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
 		$field->text	=	$text;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	
