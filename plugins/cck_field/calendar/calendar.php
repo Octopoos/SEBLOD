@@ -59,7 +59,6 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 			// Transform the date string.
 			$value			=	$date->format( 'Y-m-d H:i:s', true, true );
-			$field->value	=	$value;
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
 			$value			=	( trim( $value ) == '' ) ? '' : ( ( $options2['storage_format'] == '0' ) ? strtotime ( $value ) : $value );		
