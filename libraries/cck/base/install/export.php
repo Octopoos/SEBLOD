@@ -822,7 +822,7 @@ class CCK_Export
 	// exportJoomla_Category
 	public static function exportJoomla_Category( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
 	{
-		$null	=	array( 'asset_id', 'parent_id', 'level', 'lft', 'rgt', 'created_time', 'modified_time', 'modified_user_id' );
+		$null	=	array( 'asset_id', 'parent_id', 'level', 'lft', 'rgt', 'created_time', 'created_user_id', 'modified_time', 'modified_user_id' );
 		foreach ( $null as $n ) {
 			if ( isset( $xml->{$elemtype}->{$n} ) ) {
 				$xml->{$elemtype}->{$n}	=	'';
