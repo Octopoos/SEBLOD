@@ -32,3 +32,4 @@ div.horizontal_gx { overflow:auto; }
 div.vertical_gx {float:left; overflow:auto; position:relative; width:100%; padding: 0; margin: 0;}
 div.vertical div.horizontal_gx div.cck_forms { float: left; padding:0 10px 10px 0; width: auto; }
 div.cck_cgx_form { float:left; }
+table .ui-sortable-helper{display: table;}

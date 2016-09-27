@@ -376,7 +376,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$css 			=	( $field->css ) ? ' '.$field->css : '';
 		
 		if ( $field->bool2 > 1 ) {
-			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>Ajouter</button>';
+			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>'."\n".JText::_( 'COM_CCK_ADD_NEW' ).'</button>';
 			$external_button 	=	'<div class="btn-toolbar">'.$external_button.'</div>';
 			if ( $field->bool2 == 2 || $field->bool2 == 4 ) {
 				$button_top		=	$external_button;
