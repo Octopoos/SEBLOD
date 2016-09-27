@@ -903,7 +903,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$app		=	JFactory::getApplication();
 					$isChild	=	false;
 
-					if ( $app->input->get( 'view' ) == 'article' ) {
+					if ( $item->query['view'] == 'article' ) {
 						$item2	=	$menu->getItem( $item->parent_id );
 
 						if ( is_object( $item2 ) && @$item2->query['option'] == 'com_cck' && @$item2->query['view'] == 'list' ) {
@@ -925,7 +925,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 			}
 		}
-
 		$option	=	( $option != '' ) ? 'option='.$option.'&' : '';
 		$link	=	'index.php?'.$option.'view=article'.$path;
 
