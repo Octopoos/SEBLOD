@@ -196,12 +196,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$listDir		=	'asc';
 
 				if ( !$loaded ) {
-					$app			=	JFactory::getApplication();
-					$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
-					$tableWrapper	=	$formId . ' table.table';
-					$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
-					JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
-					$loaded			= 	true;
+					if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
+						$app			=	JFactory::getApplication();
+						$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+						$tableWrapper	=	$formId . ' table.table';
+						$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
+						JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+						$loaded			= 	true;
+					}
 				}
 
 				$value 	= 	'<span class="sortable-handler">'
