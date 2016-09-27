@@ -292,7 +292,7 @@ class CCK_Import
 				$str2		=	$item->id.', "'.$name.'", ';
 				$attributes	=	$j->attributes();
 				
-				if ( (string)$attributes->link != '' ) {
+				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
 					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
 						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
 						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
