@@ -54,6 +54,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$field->value	=	'';
 			$field->text	=	'';
 		} else {
+			$field->value	=	$value;
 			$date			=	JFactory::getDate( $value, 'UTC' );
 			$date->setTimezone( $this->userTimeZone );
 
