@@ -24,3 +24,6 @@ if ( !$app->input->getBool( 'hidemainmenu' ) ) {
 		<?php echo $label; ?>
 	</button>
 </div>
+<div class="btn-group">
+	<span class="btn-group separator"></span>
+</div>
