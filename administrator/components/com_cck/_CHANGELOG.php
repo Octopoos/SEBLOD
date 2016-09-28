@@ -29,6 +29,7 @@ $ -> Language fix or change
 + Keep-alive behaviour forced on Admin/Site Form views.
 
 + Allow Options to be defined at Template level.
++ Load More (Infinite Pagination) support added on Blog template.
 
 + Above/Below locations added for "Add" button on Group X plug-in.
 + "->values" added (onCCK_FieldPrepareStore) on Field X and Group X plug-ins.
