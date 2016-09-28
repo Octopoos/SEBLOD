@@ -1,12 +1,12 @@
 <?php
 /**
- * @version 			SEBLOD 3.x Core ~ $Id: index.php alexandrelapoux $
- * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
- * @url				http://www.seblod.com
- * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
- * @license 			GNU General Public License version 2 or later; see _LICENSE.php
- **/
+* @version 			SEBLOD 3.x Core ~ $Id: index.php alexandrelapoux $
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				http://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
 defined( '_JEXEC' ) or die;
 
@@ -131,16 +131,14 @@ $css							.=	'#'.$cck->id.' div.cck-odd{border:'.$odd_border_size.'px '.$odd_bo
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->template.'/css/style.css' );
 
-$class = $cck->id_class.'cck-f100';
-
-$isMore			=	$cck->isLoadingMore();
+$class		=	$cck->id_class.'cck-f100';
+$isMore		=	$cck->isLoadingMore();
 if ( $cck->isGoingToLoadMore() ) {
-	$class		=	trim( $class.' '.'cck-loading-more' );
+	$class	=	trim( $class.' '.'cck-loading-more' );
 }
 
 // Set template
-if (!$isMore)
-{
+if ( !$isMore ) {
 	echo '<div id="'.$id.'" class="'.$class.' cck-pad-'.$item_margin.'">';
 }
 
@@ -474,10 +472,10 @@ foreach ( $items as $item ) {
 	$items_number_columns_intro++;
 	$items_number_columns_links++;
 };
-if (!$isMore)
-{
+if ( !$isMore ) {
 	echo '</div>';
 }
 
 $cck->addScriptDeclaration( $js );
 $cck->finalize();
+?>
