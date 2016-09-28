@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+JHtml::_( 'behavior.keepalive' );
+
 $app	=	JFactory::getApplication();
 $id		=	str_replace( ' ', '_', trim( $this->pageclass_sfx ) );
 $id		=	( $id ) ? 'id="'.$id.'" ' : '';

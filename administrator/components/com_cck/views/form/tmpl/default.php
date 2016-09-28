@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+JHtml::_( 'behavior.keepalive' );
+
 $app	=	JFactory::getApplication();
 Helper_Include::addScriptDeclaration( $this->config['javascript'] );
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
