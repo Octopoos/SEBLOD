@@ -22,6 +22,30 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.10.0 Upgrade Release [29-Sep-2016] -----------
+
++ Ability to use "Admin Form" on Front-end.
++ Automatic removal of oldest versions added.
++ Keep-alive behaviour forced on Admin/Site Form views.
+
++ Allow Options to be defined at Template level.
+
++ Above/Below locations added for "Add" button on Group X plug-in.
++ "->values" added (onCCK_FieldPrepareStore) on Field X and Group X plug-ins.
+
+^ Various SEBLOD.com links changed to HTTPs.
+
+# Google API load from modules issue fixed.
+# Merging process (for scripts) reworked.
+# Missing Group X icons (in Table orientation) added.
+# Missing $config properties added on "Store".
+  >> allow Permissions check on PrepareStore (Joomla! ACL pack)
+# One more fix applied to the router.
+# Parent (Content Type) Table entries are now removed "onContentAfterDelete".
+# Sortable JS not included anymore when disabled with restrictions.
+# Timezone issue fixed on Calendar plug-in (regression).
+# Various improvements or issues fixed.
+
 -------------------- 3.9.1 Upgrade Release [12-Sep-2016] -----------
 
 # Broken Conditional States fixed on Group when tmpl=raw. 
