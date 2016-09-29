@@ -40,7 +40,7 @@ $ -> Language fix or change
 # Merging process (for scripts) reworked.
 # Missing Group X icons (in Table orientation) added.
 # Missing $config properties added on "Store".
-  >> allow Permissions check on PrepareStore (Joomla! ACL pack)
+  >> allows Permissions check on PrepareStore (Joomla! ACL pack)
 # One more fix applied to the router.
 # Parent (Content Type) Table entries are now removed "onContentAfterDelete".
 # Sortable JS not included anymore when disabled with restrictions.
