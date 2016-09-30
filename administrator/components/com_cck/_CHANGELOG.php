@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.10.0 Upgrade Release [29-Sep-2016] -----------
+-------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
 
 + Ability to use "Admin Form" on Front-end.
 + Automatic removal of oldest versions added.
