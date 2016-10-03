@@ -197,7 +197,7 @@ $js		=	'
 							}
 						}
 					}
-					$(".add").live("click", function() {
+					$("#layout").on("click", ".add", function() {
 						var n = $(".conditional:last").attr("id").substr(3);
 						var elem = "cds"+ n;
 						var num = (parseInt(n)+1);
@@ -209,10 +209,10 @@ $js		=	'
 						$("#"+elem).after(data);
 						$("#"+elem2+" .del").css("visibility", "visible");
 					});
-					$(".del").live("click", function() {
+					$("#layout").on("click", ".del", function() {
 						$(this).parents().eq(4).remove();
 					});
-					$(".fill").live("click", function() {
+					$("#layout").on("click", ".fill", function() {
 						var id = $(this).parents().eq(5).attr("id");
 						var idx = $(this).attr("name").replace("condition", "");
 						var field = $("#"+id+"_conditions"+idx+"_trigger").val();
@@ -221,7 +221,7 @@ $js		=	'
 							$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
 						}
 					});
-					$(".state_kk").live("change", function() {
+					$("#layout").on("change", ".state_kk", function() {
 						var cur = $(this).val();
 						var id = $(this).parents().eq(6).attr("id");
 						var name = $(this).attr("name");
@@ -236,7 +236,7 @@ $js		=	'
 							}
 						}
 					});
-					$(".trigger_kk").live("change", function() {
+					$("#layout").on("change", ".trigger_kk", function() {
 						var cur = $(this).val();
 						if(cur) {
 							$(this).parent().next().next().slideDown("500");
@@ -249,18 +249,10 @@ $js		=	'
 			';
 Helper_Include::addDependencies( 'box', 'edit' );
 $doc->addScriptDeclaration( $js );
-?>
 
-<?php
-if ( JCck::on() ) {
-	$add	=	'add icon-plus';
-	$del	=	'del icon-minus';
-	$fill	=	'<span class="icon-menu-2"></span>';
-} else {
-	$add	=	'add';
-	$del	=	'icon-minus';
-	$fill	=	'&laquo;';
-}
+$add	=	'add icon-plus';
+$del	=	'del icon-minus';
+$fill	=	'<span class="icon-menu-2"></span>';
 
 for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	$condition		=	'cds'.$i;

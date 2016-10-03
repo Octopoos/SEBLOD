@@ -170,6 +170,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'type', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'type', $data['id'] );
+
+				if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+					Helper_Version::removeVersion( 'type', $data['id'] );
+				}
 			}
 		}
 		
@@ -349,6 +353,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	{
 		foreach ( $pks as $pk ) {
 			Helper_Version::createVersion( 'type', $pk, '', true );
+
+			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+				Helper_Version::removeVersion( 'type', $pk );
+			}
 		}
 		
 		return true;

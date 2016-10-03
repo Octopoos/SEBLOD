@@ -35,15 +35,13 @@ if ( $type == 'ordering' ) {
 	}
 	$value		=	$column.':'.( ( $order == $column ) ? ( ( $order_dir == 'asc' ) ? 'desc' : 'asc' ) : $options->get( 'order_dir', 'asc' ) );
 	
-	if ( JCck::on() ) {
-		JHtml::_( 'bootstrap.tooltip' );
-	}
+	JHtml::_( 'bootstrap.tooltip' );
 	
 	if ( $column == $order ) {
 		$legend	.=	'<i class="icon-arrow-'.( ( $order_dir == 'asc' ) ? 'up' : 'down' ).'-3"></i>';
 	}
 
-	$tooltip	=	JCck::on() ? JHtml::tooltipText( '', 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN' ) : '';
+	$tooltip	=	JHtml::tooltipText( '', 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN' );
 	$attr		=	'onclick="jQuery(\'#'.$name.'\').val(\''.$value.'\'); JCck.Core.submit(\'search\'); return false;" class="hasTooltip" title="'.$tooltip.'"';
 	$legend		=	'<a href="javascript:void(0);" '.$attr.'>'.$legend.'</a>';
 } elseif ( $type == 'selection' ) {

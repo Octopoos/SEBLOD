@@ -18,8 +18,14 @@ class Helper_Workshop
 	// displayField
 	public static function displayField( &$field, $type_field = '', $attr = array() )
 	{
+		static $hasMb = -1;
+
+		if ( $hasMb < 0 ) {
+			$hasMb	=	( function_exists( 'mb_convert_case' ) ) ? 1 : 0;
+		}
+		$name	=	( $hasMb ) ? mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ) : strtolower( $field->title );
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ).$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -266,7 +272,7 @@ class Helper_Workshop
 	}
 	
 	// getFieldsAv
-	public static function getFieldsAv( $element, $item, $and, $folder = '' )
+	public static function getFieldsAv( $element, $item, $and, $folder = '', $or = '' )
 	{
 		$excluded	=	self::getFields( $element, $item, '', true );
 		$select		=	'';
@@ -276,7 +282,10 @@ class Helper_Workshop
 			$where	.=	' AND '.$and;
 		}
 		if ( $element == 'type' && $item->storage_location != 'none' ) {
-			$where	.=	' AND ( a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'" )';
+			if ( $or != '' ) {
+				$or	=	' OR ('.$or.')';
+			}
+			$where	.=	' AND ( (a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'") '.$or.')';
 		} elseif ( $element == 'search' ) {
 			$select	=	', a.storage_table, a.storage_field';
 		}
@@ -307,7 +316,7 @@ class Helper_Workshop
 	{
 		$data					=	array();
 		$data['_']				=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
-										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>( JCck::on() ? '<span class="icon-menu-2"></span>' : '&laquo;' ) );
+										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>'<span class="icon-menu-2"></span>' );
 		
 		$data['computation']	=	true;
 		$data['conditional']	=	true;

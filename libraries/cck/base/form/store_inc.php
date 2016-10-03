@@ -11,6 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 $app		=	JFactory::getApplication();
+$author		=	0;
+$client		=	$preconfig['client'];
 $lang   	=	JFactory::getLanguage();
 $post		=	JRequest::get( 'post' );
 $session	=	JFactory::getSession();
@@ -39,12 +41,25 @@ if ( $app->isSite() && $hashed !== NULL && ( $hash != $hashed ) ) {
 	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
 }
+
+// Type
+$type		=	CCK_Form::getType( $preconfig['type'], 'store' );
+if ( ! $type ) {
+	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
+}
+if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+	$preconfig['client']	=	'admin';
+}
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
 
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
+
+if ( !$isNew ) {
+	$author	=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
+}
 $dispatcher	=	JDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
@@ -52,7 +67,7 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
-$config		=	array( 'author'=>0,
+$config		=	array( 'author'=>$author,
 					   'client'=>$client,
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 					   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
@@ -61,6 +76,7 @@ $config		=	array( 'author'=>0,
 					   'id'=>$preconfig['id'],
 					   'isNew'=>$isNew,
 					   'Itemid'=>$preconfig['itemId'],
+					   'location'=>$type->storage_location,
 					   'message'=>$preconfig['message'],
 					   'message_style'=>'',
 					   'options'=>'',
@@ -71,6 +87,7 @@ $config		=	array( 'author'=>0,
 					   'storages'=>array(),
 					   'task'=>$task,
 					   'type'=>$preconfig['type'],
+					   'type_id'=>(int)$type->id,
 					   'url'=>$preconfig['url'],
 					   'validate'=>''
 					);
@@ -82,7 +99,7 @@ if ( $stages > 1 ) {
 	$stage	=	$preconfig['stage'];
 }
 $parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.JCckDatabase::escape( $preconfig['type'] ).'"' );
-$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $client, $stage, '', true );
+$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $preconfig['client'], $stage, '', true );
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 
@@ -141,7 +158,15 @@ if ( count( $fields ) ) {
 			// More storages
 			$storages	=	JCckDev::fromJSON( $field->storages, 'object' );
 		}
+
+		// Was it the last one?
+		if ( $config['error'] == 2 ) {
+			break;
+		}
 	}
+}
+if ( $config['error'] == 2 ) {
+	$config['error']	=	false;
 }
 
 // Merge
@@ -211,7 +236,7 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }
@@ -224,7 +249,7 @@ if ( $config['validate'] ) {
 // Store
 $k	=	0;
 foreach ( $config['storages'] as $data ) {
-	if ( $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
+	if ( isset( $data['_'] ) && $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
 		$dispatcher->trigger( 'onCCK_Storage_LocationStore', array( $data['_']->location, $data, &$config, $id ) );
 		$k++;
 	}
@@ -233,7 +258,7 @@ if ( !$k ) {
 	$config['pk']	=	-1;
 }
 
-// Stop here if an error occured
+// Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
 }

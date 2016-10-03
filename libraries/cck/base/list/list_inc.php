@@ -111,7 +111,7 @@ $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 if ( $limitstart != -1 ) {
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
-			$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+			$this->state->set( 'limit', (int)$limitend );
 		}
 		$limitend	=	(int)$this->state->get( 'limit' );
 	}
@@ -304,7 +304,7 @@ foreach ( $fields['search'] as $field ) {
 	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
-	if ( $field->stage != 0 ) {
+	if ( (int)$field->stage > 0 ) {
 		$stages[$field->stage]	=	0;
 	}
 
@@ -439,8 +439,21 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
 					// Content
+					$return			=	'';
+					if ( @$preconfig['auto_redirect_vars'] != '' ) {
+						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+
+						if ( $return != '' ) {
+							$return		=	$preconfig['auto_redirect_vars'].'='.$return;
+						}
+					}
 					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
 					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
+
+					if ( $return != '' ) {
+						$return			=	( strpos( $redirect_url, '?' ) !== false ) ? '&'.$return : '?'.$return;
+						$redirect_url	.=	$return;
+					}
 					$app->redirect( $redirect_url );
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {

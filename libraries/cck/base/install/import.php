@@ -13,14 +13,11 @@ defined( '_JEXEC' ) or die;
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.utilities.simplexml' );
+
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-if ( JCck::on() ) {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
-} else {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/joomla/database/table/menutype.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-}
+JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
+JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
 // Import
@@ -295,7 +292,7 @@ class CCK_Import
 				$str2		=	$item->id.', "'.$name.'", ';
 				$attributes	=	$j->attributes();
 				
-				if ( (string)$attributes->link != '' ) {
+				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
 					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
 						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
 						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );

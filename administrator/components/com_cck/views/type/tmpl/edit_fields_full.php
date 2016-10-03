@@ -27,12 +27,7 @@ $data2      =   array(
 $from_view	=	( $this->item->master == 'content' ) ? ( ( $this->item->client == 'intro' ) ? 'CONTENT' : 'INTRO' ) : ( ( $this->item->client == 'admin' ) ? 'SITE_FORM' : 'ADMIN_FORM' );
 $clone		=	( $this->item->id ) ? JText::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', JText::_( 'COM_CCK_'.$from_view ) ) : '';
 $positions	=	array();
-
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">

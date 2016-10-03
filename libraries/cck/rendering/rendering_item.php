@@ -224,6 +224,18 @@ class CCK_Item
 		return $html;
 	}
 	
+	// retrieveValue
+	public function retrieveValue( $fieldname )
+	{
+		$field	=	$this->get( $fieldname );
+		
+		if ( !$field->display ) {
+			return '';
+		}
+		
+		return $field->value;
+	}
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Positions
 
 	// getPosition
@@ -434,13 +446,14 @@ class CCK_Item
 		if ( $attr != '' ) {
 			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
 				$matches	=	'';
-				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				$search		=	'#\$cck\->(get|retrieve)([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
 				preg_match_all( $search, $attr, $matches );
 
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[2] as $k=>$fieldname ) {
-						$target		=	$matches[1][$k];
-						$get		=	'get'.$target;
+				if ( count( $matches[2] ) ) {
+					foreach ( $matches[3] as $k=>$fieldname ) {
+						$target		=	$matches[2][$k];
+						$method		=	( $matches[1][$k] == 'retrieve' ) ? $matches[1][$k] : 'get';
+						$get		=	$method.$target;
 						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}

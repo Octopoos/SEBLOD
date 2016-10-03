@@ -33,13 +33,12 @@ class JCckBaseLegacyView extends JViewLegacy
 	// prepareSidebar
 	protected function prepareSidebar()
 	{
-		if ( JCck::on() ) {
-			$this->sidebar	=	JHtmlSidebar::render();
-			if ( strlen( $this->sidebar ) < 100 ) {
-				$sidebar    =   str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $this->sidebar );
-				if ( $sidebar == '<div id="sidebar"><div class="sidebar-nav"></div></div>' ) {
-					$this->sidebar	=	'';
-				}
+		$this->sidebar	=	JHtmlSidebar::render();
+
+		if ( strlen( $this->sidebar ) < 100 ) {
+			$sidebar    =   str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $this->sidebar );
+			if ( $sidebar == '<div id="sidebar"><div class="sidebar-nav"></div></div>' ) {
+				$this->sidebar	=	'';
 			}
 		}
 	}
@@ -49,11 +48,8 @@ class JCckBaseLegacyView extends JViewLegacy
 	{
 		$canDo	=	Helper_Admin::getActions();
 		
-		if ( JCck::on() ) {
-			JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
-		} else {
-			JToolBarHelper::title( '&nbsp;', 'seblod.png' );
-		}
+		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		
 		if ( $canDo->get( 'core.admin' ) ) {
 			JToolBarHelper::preferences( CCK_ADDON, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}
@@ -69,25 +65,14 @@ class JCckBaseLegacyView extends JViewLegacy
 	// prepareUI
 	protected function prepareUI()
 	{
-		if ( JCck::on() ) {
-			$this->css		=	array( 'items'=>'seblod-manager',
-									   'table'=>'table table-striped',
-									   'w33'=>'span4',
-									   'w50'=>'span6',
-									   'w66'=>'span8',
-									   'w100'=>'span12',
-									   'wrapper'=>'row-fluid'
-								);
-		} else {
-			$this->css		=	array( 'items'=>'seblod',
-									   'table'=>'adminlist',
-									   'w33'=>'width-30',
-									   'w50'=>'width-50 fltlft',
-									   'w66'=>'width-100',
-									   'w100'=>'width-100',
-									   'wrapper'=>'sebwrapper'
-								);
-		}
+		$this->css	=	array( 'items'=>'seblod-manager',
+							   'table'=>'table table-striped',
+							   'w33'=>'span4',
+							   'w50'=>'span6',
+							   'w66'=>'span8',
+							   'w100'=>'span12',
+							   'wrapper'=>'row-fluid'
+						);
 	}
 }
 ?>

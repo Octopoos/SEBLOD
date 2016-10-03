@@ -263,14 +263,7 @@ class com_cckInstallerScript
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
 		}
 		/* Todo: loop */
-		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
-			jimport( 'cck.base.cck_5_2' );
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/php5.2/libraries/cms/cck/cck.php';
-			if ( JFile::exists( $src ) ) {
-				JFile::copy( $src, JPATH_SITE.'/libraries/cms/cck/cck.php' );
-			}
-		}
-
+		
 		if ( $type == 'install' ) {
 			// Post Install Log
 			self::_postInstallMessage( 'install', $parent );

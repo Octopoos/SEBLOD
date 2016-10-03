@@ -10,59 +10,30 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	
-	// JCckDevAccordion
-	abstract class JCckDevAccordion
+// JCckDevAccordion
+abstract class JCckDevAccordion
+{
+	// end
+	public static function end()
 	{
-		// end
-		public static function end()
-		{
-			return JHtml::_( 'bootstrap.endSlide' )
-				 . JHtml::_( 'bootstrap.endAccordion' );
-		}
-		
-		// open
-		public static function open( $selector, $id, $text, $class = '' )
-		{
-			return JHtml::_( 'bootstrap.endSlide' )
-				 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id, $class );
-		}
-		
-		// start
-		public static function start( $selector, $id, $text, $params )
-		{
-			unset( $params['useCookie'] );
-			
-	        return JHtml::_( 'bootstrap.startAccordion', $selector, $params )
-	        	 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id );
-		}
+		return JHtml::_( 'bootstrap.endSlide' )
+			 . JHtml::_( 'bootstrap.endAccordion' );
 	}
-} else {
 	
-	// JCckDevAccordion (Joomla! 2.5 legacy)
-	abstract class JCckDevAccordion
+	// open
+	public static function open( $selector, $id, $text, $class = '' )
 	{
-		// end
-		public static function end()
-		{
-			return JHtml::_( 'sliders.end' );
-		}
+		return JHtml::_( 'bootstrap.endSlide' )
+			 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id, $class );
+	}
+	
+	// start
+	public static function start( $selector, $id, $text, $params )
+	{
+		unset( $params['useCookie'] );
 		
-		// open
-		public static function open( $selector, $id, $text )
-		{
-			return JHtml::_( 'sliders.panel', $text, $id );
-		}
-		
-		// start
-		public static function start( $selector, $id, $text, $params )
-		{
-			unset( $params['active'] );
-
-			return JHtml::_( 'sliders.start', $selector, $params )
-				 . JHtml::_( 'sliders.panel', $text, $id );
-		}
-	}	
+        return JHtml::_( 'bootstrap.startAccordion', $selector, $params )
+        	 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id );
+	}
 }
 ?>

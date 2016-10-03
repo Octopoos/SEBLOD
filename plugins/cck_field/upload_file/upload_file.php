@@ -329,7 +329,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$more	=	'';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
 			if ( isset( $config['id'] ) && $config['id'] ) {
-				$link	=	JUri::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
+				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'] );
 				$target	=	'';
 			} else {
 				$link	=	JUri::root().$value2;

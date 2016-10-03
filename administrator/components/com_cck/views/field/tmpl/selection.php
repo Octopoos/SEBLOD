@@ -279,7 +279,7 @@ $js		=	'
 						if ($("#'.$this->item->name.'").isMultiple()) {
 							JCck.Dev.always = true;
 						}
-						$("#toggle_selection").live("click", function() {
+						$("#toggle_selection").on("click", function() {
 							if (client=="search" && $("#alter_match_div").length && !JCck.Dev.always) {
 								$("#alter_match_div").toggleClass("hidden-important");
 							}
@@ -289,7 +289,7 @@ $js		=	'
 							}
 						});
 						if (client=="search") {
-							$(elem).live("change", function() {
+							$(elem).on("change", function() {
 								JCck.Dev.toggleField();
 							});
 						}

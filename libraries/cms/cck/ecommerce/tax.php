@@ -42,9 +42,19 @@ abstract class JCckEcommerceTax
 				$groups		=	explode( ',', $t->groups );
 				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
+					if ( isset( $items[$params['target_id']]->quantity ) && $items[$params['target_id']]->quantity ) {
+						$quantity	=	$items[$params['target_id']]->quantity;
+					} else {
+						$quantity	=	1;
+					}
 					switch ( $t->tax ) {
 						case 'plus':
-							$tax						=	$t->tax_amount;
+
+							$tax						=	(float)number_format( $t->tax_amount, 2 );
+
+							if ( $params['target'] == 'product' ) {
+								$tax					=	$tax * $quantity;
+							}
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
@@ -57,7 +67,7 @@ abstract class JCckEcommerceTax
 															);
 							break;
 						case 'percentage':
-							$tax						=	$total * $t->tax_amount / 100;
+							$tax						=	(float)number_format( $total * $t->tax_amount / 100, 2 );
 							$res						+=	$tax;
 							$total						+=	$tax;
 							$results['items'][$t->id]	=	array(
@@ -68,6 +78,7 @@ abstract class JCckEcommerceTax
 																'title'=>$t->title,
 																'type'=>$t->type
 															);
+
 							break;
 						case 'product_amount':
 							$tax						=	0;
@@ -78,12 +89,35 @@ abstract class JCckEcommerceTax
 								if ( !isset( $items[$params['target_id']] ) ) {
 									continue;
 								}
-								$tax					=	$items[$params['target_id']]->tax;
+								if ( empty( $items[$params['target_id']]->price ) ) {
+									continue;
+								}
+								$tax					=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+								$tax					=	$tax * $quantity;
 							} else {
 								if ( count( $items ) ) {
-									foreach ( $items as $item ) {
-										if ( isset( $item->tax ) && $item->tax != '' ) {
-											$tax		+=	(float)$item->tax;
+									if ( isset( $params['target_id'] ) && $params['target_id'] ) {
+										if ( empty( $items[$params['target_id']]->price ) ) {
+											continue;
+										}
+										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+										$tax			=	$tax * $quantity;
+									} else {
+										foreach ( $items as $item ) {
+											if ( empty( $item->price ) ) {
+												continue;
+											}
+											if ( isset( $item->tax ) && $item->tax != '' ) {
+												$amount	=	(float)number_format( $item->tax, 2 );
+
+												if ( isset( $item->quantity ) && $item->quantity ) {
+													$qty	=	$item->quantity;
+												} else {
+													$qty	=	1;
+												}
+												$amount		=	$amount * $qty;
+												$tax		+=	$amount;
+											}
 										}
 									}
 								}

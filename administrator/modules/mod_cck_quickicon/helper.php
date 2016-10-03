@@ -67,7 +67,7 @@ abstract class modCCKQuickIconHelper
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'http://www.seblod.com/products' ),
+											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
@@ -116,28 +116,8 @@ abstract class modCCKQuickIconHelper
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										)
 									);
-				if ( !JCck::on() ) {
-					self::$buttons[]	=	array(
-												'link'	=>	JRoute::_( 'index.php?option=com_cck&view=folders' ),
-												'icon'	=>	'icon-48-folders.png',
-												'image'	=>	'cck-application',
-												'label' =>	JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ),
-												'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ) ),
-												'access'=>	array( 'core.manage', 'com_cck' ),
-												'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
-											);
-					self::$buttons[]	=	array(
-												'link'	=>	JRoute::_( 'index.php?option=com_cck&view=sites' ),
-												'icon'	=>	'icon-48-sites.png',
-												'image'	=>	'cck-multisite',
-												'label' =>	JText::_( 'MOD_CCK_QUICKICON_SITE_MANAGER' ),
-												'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SITE_MANAGER' ) ),
-												'access'=>	array( 'core.manage', 'com_cck' ),
-												'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
-											);
-				}
 				self::$buttons[]	=	array(
-											'link'	=>	JRoute::_( 'http://www.seblod.com/products' ),
+											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',

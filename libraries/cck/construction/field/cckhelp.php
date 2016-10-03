@@ -27,7 +27,7 @@ class JFormFieldCCKhelp extends JFormField
 		$type		=	(string)$this->element['extension_type'];
 		$slug		=	(string)$this->element['extension_slug'];
 		
-		$link	=	'http://www.seblod.com/support/documentation/'.$slug.'?tmpl=component';
+		$link	=	'https://www.seblod.com/support/documentation/'.$slug.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="how-to-setup">'
 				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'

@@ -66,7 +66,7 @@ class Helper_Version
 		$version->e_core		=	JCckDev::toJSON( $table );
 		$version->e_version		=	$version_num;
 		$version->date_time		=	JFactory::getDate()->toSql();
-		$version->user_id		=	JFactory::getUser()->get( 'id' );
+		$version->user_id		=	JFactory::getUser()->id;
 		if ( $note ) {
 			$version->note		=	$note;
 		}
@@ -93,6 +93,16 @@ class Helper_Version
 		}
 		
 		return true;
+	}
+
+	// removeVersion
+	public static function removeVersion( $type, $pk )
+	{
+		$offset	=	JCck::getConfig_Param( 'version_remove_offset', 20 );
+		$where	=	'e_type = "'.$type.'" AND e_id = '.(int)$pk.' AND featured != 1';
+		$query	=	'DELETE FROM #__cck_core_versions WHERE '.$where.' AND id <= (SELECT id FROM (SELECT id FROM #__cck_core_versions WHERE '.$where.' ORDER BY id DESC LIMIT 1 OFFSET '.$offset.') AS max_id )';
+
+		return JCckDatabase::execute( $query );
 	}
 
 	// revert

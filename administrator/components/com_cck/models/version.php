@@ -91,6 +91,10 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		
 		if ( JCck::getConfig_Param( 'version_revert', 1 ) == 1 ) {
 			Helper_Version::createVersion( $type, $table->e_id, JText::sprintf( 'COM_CCK_VERSION_AUTO_BEFORE_REVERT', $table->e_version ) );
+
+			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+				Helper_Version::removeVersion( $type, $table->e_id );
+			}
 		}
 		
 		$row	=	JTable::getInstance( $type, 'CCK_Table' );

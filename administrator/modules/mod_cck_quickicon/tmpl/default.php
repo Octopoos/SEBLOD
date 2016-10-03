@@ -10,18 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	$html	=	JHtml::_( 'links.linksgroups', modCCKQuickIconHelper::groupButtons( $buttons ) );
-	if ( !empty( $html ) ) { ?>
+$html	=	JHtml::_( 'links.linksgroups', modCCKQuickIconHelper::groupButtons( $buttons ) );
+
+if ( !empty( $html ) ) { ?>
     <div class="sidebar-nav quick-icons">
         <?php echo $html; ?>
-    </div>
-<?php } } else { ?>
-    <div id="cpanel">
-    <?php
-    foreach ( $buttons as $button ) {
-        echo modCCKQuickIconHelper::button( $button );
-	}
-    ?>
     </div>
 <?php } ?>

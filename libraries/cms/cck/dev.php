@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 // JCckDev
 abstract class JCckDev
 {
-	public static $_urls		=	array();
+	public static $_urls	=	array();
 	
 	// addField
 	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
@@ -32,25 +32,12 @@ abstract class JCckDev
 		
 		// Make sure to have only one inclusion of special external scripts
 		if ( strpos( $url, 'http' ) !== false ) {
-			if ( strpos( $url, '//maps.googleapis.com/maps/api/js?' ) !== false ) {
-				if ( isset( self::$_urls['google_maps'] ) ) {
-					$cur		=	self::$_urls['google_maps'];
-					$vars2		=	JCckDevHelper::getUrlVars( $url );
-					if ( !$vars2->def( 'libraries' ) ) {
-						return;
-					}
-					$vars		=	JCckDevHelper::getUrlVars( $cur );
-					$libraries	=	array();
-					$libraries[$vars->get( 'libraries' )]	=	'';
-					$libraries[$vars2->get( 'libraries' )]	=	'';
-					$libraries	=	 array_keys( $libraries );
-					$url		=	str_replace( 'libraries='.$vars2->get( 'libraries' ), 'libraries='.implode( ',', $libraries ), $url );
-					unset( $app->cck_document['scripts'][$cur] );
-				}
-				self::$_urls['google_maps']	=	$url;
+			$url	=	self::getMergedScript( $url );
+			
+			if ( $url == '' ) {
+				return;
 			}
 		}
-		
 		$app->cck_document['scripts'][$url]['mime']			=	$type;
 		$app->cck_document['scripts'][$url]['defer']		=	$defer;
 		$app->cck_document['scripts'][$url]['async']		=	$async;
@@ -75,7 +62,7 @@ abstract class JCckDev
 		$doc	=	JFactory::getDocument();
 		
 		if ( $value == 'none' ) {
-			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).attr("disabled", "disabled"); $("#force_storage").val( "1" ); });';
+			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" ); });';
 		} else {
 			$js		=	'jQuery(document).ready(function($){ if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); } });';
 		}
@@ -83,6 +70,62 @@ abstract class JCckDev
 		echo '<script type="text/javascript">'.$js.'</script>';
 	}
 	
+	public static function getMergedScript( $url )
+	{
+		$app	=	JFactory::getApplication();
+		$base	=	'';
+		$index	=	'';
+		$pos	=	strpos( $url, '?' );
+
+		$base	=	substr( $url, 0, $pos );
+		$index	=	str_replace( array( 'http://', 'https://' ), '', $base );
+
+		if ( isset( self::$_urls[$index] ) ) {
+			$cur		=	self::$_urls[$index];
+			$cur_vars	=	JCckDevHelper::getUrlVars( $cur )->toArray();
+			$new_vars	=	JCckDevHelper::getUrlVars( $url )->toArray();
+			$vars		=	array();
+
+			if ( count( $cur_vars ) ) {
+				foreach ( $cur_vars as $k=>$v ) {
+					if ( isset( $new_vars[$k] ) ) {
+						$values	=	array();
+						
+						if ( $v != '' ) {
+							$values[]	=	$v;
+						}
+						$v2		=	$new_vars[$k];
+
+						if ( $v2 != '' && !in_array( $v2, $values ) ) {
+							$values[]	=	$v2;
+						}
+						$vars[]	=	$k.'='.implode( ',', $values );
+						unset( $new_vars[$k] );
+					} else {
+						$vars[]	=	$k.'='.$v;
+					}
+				}
+			}
+
+			if ( count( $new_vars ) ) {
+				foreach ( $new_vars as $k=>$v ) {
+					$vars[]	=	$k.'='.$v;
+				}
+			}
+			if ( count( $vars ) ) {
+				$url	=	$base.'?'.implode( '&', $vars );
+			} else {
+				$url	=	$base;
+			}
+
+			unset( $app->cck_document['scripts'][$cur] );
+		}
+
+		self::$_urls[$index]	=	$url;
+		
+		return $url;
+	}
+
 	// importPlugin
 	public static function importPlugin( $type, $plugins )
 	{
@@ -167,15 +210,12 @@ abstract class JCckDev
 					$c1 	=	'';
 					$class	=	'unpublish icon-flag';
 				}
-				$btn	=	( JCck::on() ) ? 'btn btn-micro ' : '';
-				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="'.$btn.'jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
+				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="btn btn-micro jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
 						.	'<input type="radio" id="bool80" name="bool8" value="0" '.$c0.' style="display:none;" />'
 						.	'<input type="radio" id="bool81" name="bool8" value="1" '.$c1. ' style="display:none;" />';
-				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");';
-				if ( JCck::on() ) {
-					$js2.=	'$("a#bool8 .hasTooltip").tooltip({});';
-				}
-				$js2	.=	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
+				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");'
+						.	'$("a#bool8 .hasTooltip").tooltip({});'
+						.	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
 						.	'$("#bool8 span").removeClass("unpublish").addClass("publish"); $("#bool81").prop("checked", true); $("#bool80").prop("checked", false); } else {'
 						.	'$("#bool8 span").removeClass("publish").addClass("unpublish"); $("#bool81").prop("checked", false); $("#bool80").prop("checked", true); } });';
 			}
@@ -325,7 +365,6 @@ abstract class JCckDev
 				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
 			}
 		}
-		Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 		
 		if ( $type == 'validation' ) {
 			return;
@@ -567,7 +606,7 @@ abstract class JCckDev
 		
 		$app->cck_markup_closed	=	true;
 		
-		$link	=	'http://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
+		$link	=	'https://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="clr"></div><div class="how-to-setup">'
 				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'

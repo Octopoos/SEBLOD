@@ -26,9 +26,7 @@ class CCKControllerTemplates extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'Template', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 }
 ?>

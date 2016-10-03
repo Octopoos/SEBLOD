@@ -24,7 +24,6 @@ $lang	=	JFactory::getLanguage();
 $lang->load( 'com_cck_default', JPATH_SITE );
 $lang->load( 'com_cck_core' );
 
-jimport( 'cck.development.development' ); // (deprecated)
 require_once JPATH_COMPONENT.'/helpers/helper_define.php';
 require_once JPATH_COMPONENT.'/helpers/helper_display.php';
 require_once JPATH_COMPONENT.'/helpers/helper_include.php';

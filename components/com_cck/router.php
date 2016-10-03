@@ -13,21 +13,6 @@ defined( '_JEXEC' ) or die;
 jimport( 'joomla.application.categories' );
 
 // CckRouter
-if ( !JCck::on() ) {
-	interface JComponentRouterInterface
-	{
-		public function preprocess($query);
-		public function build(&$query);
-		public function parse(&$segments);
-	}
-	abstract class JComponentRouterBase implements JComponentRouterInterface
-	{
-		public function preprocess($query)
-		{
-			return $query;
-		}
-	}
-}
 class CckRouter extends JComponentRouterBase
 {
 	// build
@@ -81,8 +66,11 @@ class CckRouter extends JComponentRouterBase
 			}
 		} else {
 			$params		=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-			JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+
+			if ( isset( $params['location'] ) && $params['location'] != '' && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {	
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+			}
 		}
 		
 		unset( $query['view'] );

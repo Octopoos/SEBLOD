@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-	$(".lock_img").live('click', function(){
+	$(document).on('click', ".lock_img", function(){
 		var $child = $(this).children();
 		var $next = $(this).next();
 		if ( $child.hasClass('linked') ){

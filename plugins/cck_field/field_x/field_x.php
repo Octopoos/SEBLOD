@@ -222,9 +222,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 			}
 			$store	.=	'<br />';	//end?
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	
@@ -307,7 +308,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var name = "'.$id.'";'
 				.		'var min_element = '.$params['min'].';'
 				.		'time	=	500;'
-				.		'$(".button-del-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-del-"+name, function() {'
 				.			'elem	=	$(this).parent().parent().parent().parent();'
 				.			'var n	=	elem.parent().children().length;'
 				.			'if (n > min_element) {'
@@ -334,7 +335,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var max_element = '.$params['max'].';'
 				.		'var new_elem = "'.$params['empty_html'].'";'
 				.		'content = new_elem;'
-				.		'$(".button-add-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-add-"+name, function() {'
 				.			'elem = $(this).parent().parent().parent().parent();'
 				.			'length = ( elem.parent().children().length );'
 				.			'if (length < max_element) {'

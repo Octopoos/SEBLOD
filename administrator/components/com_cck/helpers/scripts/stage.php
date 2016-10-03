@@ -12,7 +12,6 @@ defined( '_JEXEC' ) or die;
 
 $name	=	$this->item->id;
 Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );

@@ -96,57 +96,26 @@ abstract class JCckDevIntegration
 			}
 		}
 		
-		if ( count( $items ) && $html != '' ) {			
-			if ( JCck::on() ) {
-				$legacy	=	$options->get( 'add_alt' );
-				if ( $legacy == 1 ) {
-					$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_JOOMLA' ).'</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li><li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
-					$below	=	'';
-				} elseif ( $legacy == 2 ) {
-					$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
-					$below	=	'<li class="nav-header">Joomla!</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li>';
-				} else {
-					$above	=	'';
-					$below	=	'';
-				}
-				$html	=	'<ul class="dropdown-menu">'.$above.$html.$below.'</ul>';
-				$css	=	'.subhead .dropdown-menu {text-shadow: none;} #toolbar ul.dropdown-menu{margin-left:18px;} #toolbar ul.dropdown-menu li {font-size:12px;}';
-				$js		=	'
-							jQuery(document).ready(function($){
-								$("#'.$id.' > button").addClass("dropdown-toggle").attr("data-toggle","dropdown").attr("onclick","return;");
-								$("#'.$id.'").append("'.addslashes( $html ).'");
-							});
-							';
+		if ( count( $items ) && $html != '' ) {
+			$legacy	=	$options->get( 'add_alt' );
+			if ( $legacy == 1 ) {
+				$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_JOOMLA' ).'</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li><li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
+				$below	=	'';
+			} elseif ( $legacy == 2 ) {
+				$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
+				$below	=	'<li class="nav-header">Joomla!</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li>';
 			} else {
-				$css	=	'
-							ul.toolbar-tiplist {padding: 0px;}
-							ul.toolbar-tiplist li { list-style: none; margin-top: 3px; margin-bottom: 3px; padding: 5px;}
-							ul.toolbar-tiplist li:hover {background-color: #ffffff; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;}
-							';
-				$doc->addStyleDeclaration( $css );
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-qtip/css/jquery.qtip.css' );
-				JCck::loadjQuery();
-				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-qtip/js/jquery.qtip.min.js' );
-				
-				// Tooltip
-				$html		=	'<div><ul class="toolbar-tiplist">'.$html.'</ul></div>' . '<div class="clr"></div>';
-				$search		=	array( '.' , '<', '>', '"', '%', ';' );
-				$replace	=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
-				$html		=	preg_replace( "/(\r\n|\n|\r)/", " ", $html );
-				$html		=	str_replace( $search, $replace, $html );
-			
-				$js	=	'
+				$above	=	'';
+				$below	=	'';
+			}
+			$html	=	'<ul class="dropdown-menu">'.$above.$html.$below.'</ul>';
+			$css	=	'.subhead .dropdown-menu {text-shadow: none;} #toolbar ul.dropdown-menu{margin-left:18px;} #toolbar ul.dropdown-menu li {font-size:12px;}';
+			$js		=	'
 						jQuery(document).ready(function($){
-							$("#'.$id.' a").qtip({
-								prerender: true,
-								content: { text: "'.$html.'", title: { text: "'.$title.'" } },
-								hide: { event: "unfocus" },
-								style: { tip: true, classes: "ui-tooltip-grey ui-tooltip-rounded" },
-								position: { at: "bottom center", my: "top center" }
-							})
+							$("#'.$id.' > button").addClass("dropdown-toggle").attr("data-toggle","dropdown").attr("onclick","return;");
+							$("#'.$id.'").append("'.addslashes( $html ).'");
 						});
 						';
-			}
 			$doc->addStyleDeclaration( $css );
 			$doc->addScriptDeclaration( $js );
 		}
@@ -155,30 +124,9 @@ abstract class JCckDevIntegration
 	// addModalBox
 	public static function addModalBox( $layout = 'icon', $variables = '', $options = NULL )
 	{
-		if ( JCck::on() ) {
-			JCck::loadjQuery();
-			$layout	=	JPATH_ADMINISTRATOR.'/components/com_cck/views/form/tmpl/modal_'.$layout.'.php';
-			self::appendModal( $layout, 'collapseModal2', '#toolbar-new > button', array(), $variables, $options );
-		} else {
-			JCck::loadjQuery();
-			$doc	=	JFactory::getDocument();
-			$return	=	base64_encode( JUri::getInstance()->toString() );
-
-			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
-			$href	=	'index.php?option=com_cck&view=form&layout=select&tmpl=component&variables='.base64_encode( $variables ).'&return='.$return;
-			$js		=	'
-						jQuery(document).ready(function($){
-							var origin = $("#toolbar-new a").attr("onclick");
-							$("#toolbar-new a").attr("onclick","").attr("onclick2",origin).attr("href","'.$href.'");
-							$("#toolbar-new a").live("click", function(e) { e.preventDefault();
-								$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
-								return false;
-							});
-						});
-						';
-			$doc->addScriptDeclaration( $js );
-		}
+		JCck::loadjQuery();
+		$layout	=	JPATH_ADMINISTRATOR.'/components/com_cck/views/form/tmpl/modal_'.$layout.'.php';
+		self::appendModal( $layout, 'collapseModal2', '#toolbar-new > button', array(), $variables, $options );
 	}
 
 	// addWarning
@@ -186,15 +134,7 @@ abstract class JCckDevIntegration
 	{
 		$doc	=	JFactory::getDocument();
 		$text	=	JText::_( 'LIB_CCK_INTEGRATION_WARNING_COPY' );
-
-		if ( JCck::on() ) {
-			$js		=	'jQuery(document).ready(function(){ if(jQuery("#batch-category-id")) {jQuery("#batch-category-id").parent().after("'.addslashes( '<em>'.$text.'</em>' ).'"); }});';
-		} else {
-			$html	=	'<img id="cck_warning" class="hasTip2" title="'.htmlspecialchars( $text, ENT_COMPAT, 'UTF-8' ).'"'
-					.	' src="components/com_cck/assets/images/16/icon-16-notice.png" alt="Copy is not supported yet." />';
-			
-			$js		=	'jQuery(document).ready(function(){ if(jQuery("#batch-category-id")) {jQuery("#batch-category-id").after("'.addslashes( $html ).'"); var JTooltips = new Tips($$(\'.hasTip2\'), { maxTitleChars: 50, fixed: false}); }});';
-		}
+		$js		=	'jQuery(document).ready(function(){ if(jQuery("#batch-category-id")) {jQuery("#batch-category-id").parent().after("'.addslashes( '<em>'.$text.'</em>' ).'"); }});';
 		
 		JCck::loadjQuery();
 		$doc->addScriptDeclaration( $js );
@@ -362,78 +302,62 @@ abstract class JCckDevIntegration
 				}
 			}
 		}
-		if ( JCck::on() ) {
-			if ( $data['search_alt'] ) {
-				$search	=	$data['search_alt'];
-				preg_match_all( $search, $buffer, $matches2 );
-				if ( count( $matches2[0] ) ) {
-					if ( $multilanguage ) {
-						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-					}
-					foreach ( $matches2[0] as $k=>$m ) {
-						$pk			=	$matches[$idx2][$k];
-						$pre		=	'';
-						$row		=	$matches2[0][$k];
-						$search		=	'';
-						$t_add		=	'';
-						$t_edit		=	'';
-						if ( isset( $matches[$idx][$k] ) ) {
-							if ( $opt_edit_alt ) {
-								if ( isset( $list2[$pk] ) ) {
-									$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_LEGACY' ).')';
-									$pre		=	$matches[$idx][$k].$markup_end.$text.'</a></li>';
-								} else {
-									$link		=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$opt_default_type.'&id='.$pk.$data['replace_end'];
-									$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_SEBLOD' ).')';
-									$pre		=	'<a href="'.$link.'">'.$text.'</a></li>';
-								}
-							}
-							if ( $multilanguage ) {
-								if ( isset( $list[$pk] ) && $list[$pk]->key ) {
-									$cur	=	$list[$pk]->language;
-									$key	=	$list[$pk]->key;
-									$link	=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$list[$pk]->cck;
-									foreach ( $languages as $l=>$v ) {
-										if ( $cur != $l ) {
-											if ( isset( $list_assoc[$key][$l] ) ) {
-												$link2	=	$link.'&amp;id='.$list_assoc[$key][$l]->id.$data['replace_end'];
-												$t_edit	.=	'<li><a href="'.$link2.'&plop=1"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
-											} else {
-												$link2	=	$link.'&amp;translate='.$l.'&amp;translate_id='.$pk.$data['replace_end'];
-												$t_add	.=	'<li><a href="'.$link2.'"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
-											}
-										}
-									}
-									if ( $t_edit || $t_add ) {
-										$pre		.=	'<li class="divider"></li>';
-										if ( $t_edit ) {
-											$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE_EDIT' ).'</a></li>'.$t_edit;
-										}
-										if ( $t_add ) {
-											$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE' ).'</a></li>'.$t_add;
-										}
-									}
-								}
-							}
-							if ( $pre != '' ) {
-								$pre		.=	'<li class="divider"></li>';
-								$buffer		=	str_replace( $row, $pre.'<li>'.$row, $buffer );	
+		if ( $data['search_alt'] ) {
+			$search	=	$data['search_alt'];
+			preg_match_all( $search, $buffer, $matches2 );
+			if ( count( $matches2[0] ) ) {
+				if ( $multilanguage ) {
+					$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+				}
+				foreach ( $matches2[0] as $k=>$m ) {
+					$pk			=	$matches[$idx2][$k];
+					$pre		=	'';
+					$row		=	$matches2[0][$k];
+					$search		=	'';
+					$t_add		=	'';
+					$t_edit		=	'';
+					if ( isset( $matches[$idx][$k] ) ) {
+						if ( $opt_edit_alt ) {
+							if ( isset( $list2[$pk] ) ) {
+								$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_LEGACY' ).')';
+								$pre		=	$matches[$idx][$k].$markup_end.$text.'</a></li>';
+							} else {
+								$link		=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$opt_default_type.'&id='.$pk.$data['replace_end'];
+								$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_SEBLOD' ).')';
+								$pre		=	'<a href="'.$link.'">'.$text.'</a></li>';
 							}
 						}
-					}
-				}
-			}
-		} elseif ( $data['options']->get( 'edit_alt', 1 ) ) {
-			$search	=	'#<a href="index.php\?option=com_cck&amp;view=form(.*):(.*)([a-z\-0-9]*)\)(.*)</p>#sU';
-			preg_match_all( $search, $buffer, $matches2 );
-			
-			if ( count( $matches2[3] ) ) {
-				foreach ( $matches2[3] as $k=>$m ) {
-					if ( isset( $matches[$idx][$k] ) ) {
-						$search		=	': '.$matches2[3][$k].')';
-						$replace	=	': '.$items[$k].' style="color: #888888;">'.$m.'</a>)';
-						$matches0	=	str_replace( $search, $replace, $matches2[0][$k] );
-						$buffer		=	str_replace( $matches2[0][$k], $matches0, $buffer );
+						if ( $multilanguage ) {
+							if ( isset( $list[$pk] ) && $list[$pk]->key ) {
+								$cur	=	$list[$pk]->language;
+								$key	=	$list[$pk]->key;
+								$link	=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$list[$pk]->cck;
+								foreach ( $languages as $l=>$v ) {
+									if ( $cur != $l ) {
+										if ( isset( $list_assoc[$key][$l] ) ) {
+											$link2	=	$link.'&amp;id='.$list_assoc[$key][$l]->id.$data['replace_end'];
+											$t_edit	.=	'<li><a href="'.$link2.'&plop=1"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
+										} else {
+											$link2	=	$link.'&amp;translate='.$l.'&amp;translate_id='.$pk.$data['replace_end'];
+											$t_add	.=	'<li><a href="'.$link2.'"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
+										}
+									}
+								}
+								if ( $t_edit || $t_add ) {
+									$pre		.=	'<li class="divider"></li>';
+									if ( $t_edit ) {
+										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE_EDIT' ).'</a></li>'.$t_edit;
+									}
+									if ( $t_add ) {
+										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE' ).'</a></li>'.$t_add;
+									}
+								}
+							}
+						}
+						if ( $pre != '' ) {
+							$pre		.=	'<li class="divider"></li>';
+							$buffer		=	str_replace( $row, $pre.'<li>'.$row, $buffer );	
+						}
 					}
 				}
 			}

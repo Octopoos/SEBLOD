@@ -58,8 +58,8 @@ UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field' AND `ele
 UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field_typo' AND `element` IN ('joomla_jgrid');
 UPDATE `#__extensions` SET `enabled` = '1' WHERE `folder` = 'cck_field_restriction' AND `element` IN ('url_variable');
 
-ALTER IGNORE TABLE `#__cck_store_item_users` ADD `company` VARCHAR( 255 ) NOT NULL AFTER `birthplace`;
-ALTER IGNORE TABLE `#__cck_store_item_users` ADD `company_vat_id` VARCHAR( 255 ) NOT NULL AFTER  `company`;
+ALTER TABLE `#__cck_store_item_users` ADD `company` VARCHAR( 255 ) NOT NULL AFTER `birthplace`;
+ALTER TABLE `#__cck_store_item_users` ADD `company_vat_id` VARCHAR( 255 ) NOT NULL AFTER  `company`;
 
 INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_cck`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
 (543, 'User Company', 'user_company', 29, 'text', '', 1, 'Company', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company', '', '', '', 0, '0000-00-00 00:00:00'),

@@ -31,10 +31,8 @@ class CCKViewTemplates extends JCckBaseLegacyViewList
 	public function prepareToolbar()
 	{
 		Helper_Admin::addToolbar( $this->vName, $this->vTitle, $this->state->get( 'filter.folder' ) );
-
-		if ( JCck::on() ) {
-			JHtmlSidebar::setAction( 'index.php?option=com_cck&view=templates' );
-		}
+		
+		JHtmlSidebar::setAction( 'index.php?option=com_cck&view=templates' );
 	}
 }
 ?>

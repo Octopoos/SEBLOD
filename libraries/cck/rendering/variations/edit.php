@@ -44,7 +44,6 @@ $doc->addScriptDeclaration( $js );
 
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
 
-Helper_Include::addTooltip( 'label[title]', 'top left', 'bottom left' );
 JFactory::getLanguage()->load( 'files_var_cck_'.$this->item->name.'.sys', JPATH_SITE );
 JFactory::getLanguage()->load( 'files_var_cck_seb_css3.sys', JPATH_SITE );
 

@@ -26,12 +26,10 @@ if ( $this->js['filter'] ) {
 		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="document.getElementById(\'filter_search\').value=\'\';document.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
 		?>
 	</div>
-	<?php if ( JCck::on() ) { ?>
-		<!--
-		<div class="<?php echo $this->css['filter_search_list']; ?>">
-			<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
-			<?php echo $this->pagination->getLimitBox(); ?>
-		</div>
-		-->
-	<?php } ?>
+	<!--
+	<div class="<?php echo $this->css['filter_search_list']; ?>">
+		<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
+		<?php echo $this->pagination->getLimitBox(); ?>
+	</div>
+	-->
 </div>

@@ -23,12 +23,8 @@ $data2      =   array(
                                         'variation'=>array( '_' )
                                     )
                 );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
 include __DIR__.'/edit_fields_av.php';
 
 if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {

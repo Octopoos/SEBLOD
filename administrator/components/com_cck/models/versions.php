@@ -27,6 +27,7 @@ class CCKModelVersions extends JModelList
 				'e_more', 'b.e_more',
 				'date_time', 'a.date_time',
 				'user_id', 'a.user_id',
+				'featured', 'a.featured',
 				'note', 'a.note',
 				'title', 'b.title',
 				'name', 'b.name',
@@ -64,6 +65,7 @@ class CCKModelVersions extends JModelList
 				'a.e_more as e_more,' .
 				'a.date_time as date_time,' .
 				'a.user_id as user_id,' .
+				'a.featured as featured,' .
 				'a.note as note,' .
 				'b.title as title,' .
 				'b.name as name,' .

@@ -191,7 +191,7 @@ $cck->addStyleDeclaration( $css );
         }
     } ?>
     <?php // hidden
-    if ( $cck->countFields( 'modal' ) && JCck::on() ) {
+    if ( $cck->countFields( 'modal' ) ) {
         JHtml::_( 'bootstrap.modal', 'collapseModal' );
         ?>
         <div class="modal hide fade" id="collapseModal">

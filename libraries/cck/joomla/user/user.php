@@ -20,8 +20,7 @@ class CCKUser extends JUser
 	{
 		parent::__construct( $identifier );
 		
-		$this->_user				=	JFactory::getUser( $identifier );
-		$this->_user->cck_multisite	=	1;
+		$this->_user	=	JFactory::getUser( $identifier );
 	}
 	
 	// setAuthorisedViewLevels

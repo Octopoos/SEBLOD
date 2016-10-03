@@ -22,9 +22,6 @@ class CCKViewCck extends JCckBaseLegacyView
     // prepareSidebar
     protected function prepareSidebar()
     {
-        if ( !JCck::on() ) {
-            return;
-        }
         $buttons        =   array();
         if ( JCck::getUIX() == 'compact' ) {
             $core       =   array(
@@ -87,7 +84,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                 'access'=>array( 'core.manage', 'com_cck' ),
                                 'group' =>'COM_CCK_SEBLOD_STORE',
                                 'image' =>'download',
-                                'link'  =>JRoute::_( 'http://www.seblod.com/store/extensions?seb_item_category='.$v ),
+                                'link'  =>JRoute::_( 'https://www.seblod.com/store/extensions?seb_item_category='.$v ),
                                 'target'=>'_blank',
                                 'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
                             );
@@ -108,11 +105,8 @@ class CCKViewCck extends JCckBaseLegacyView
 		$bar	=	JToolBar::getInstance( 'toolbar' );
 		$canDo	=	Helper_Admin::getActions();
 		
-		if ( JCck::on() ) {
-			JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
-		} else {
-			JToolBarHelper::title( '&nbsp;', 'seblod.png' );
-		}
+		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		
 		if ( $canDo->get( 'core.admin' ) ) {
 			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
 // Plugin
@@ -246,8 +248,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -364,14 +366,32 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			return false;
 		}
 		if ( !$table->store() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			$error		=	true;
 
 			if ( $isNew ) {
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-			}
-			$config['error']	=	true;
+				$i		=	2;
+				$alias	=	$table->alias.'-'.$i;
+				$test	=	JTable::getInstance( 'category' );
+				
+				while ( $test->load( array( 'alias'=>$alias, 'parent_id'=>$table->parent_id ) ) ) {
+					$alias		=	$table->alias.'-'.$i++;
+				}
+				$table->alias	=	$alias;
 
-			return false;
+				if ( $table->store() ) {
+					$error		=	false;
+				}
+			}
+			if ( $error ) {
+				JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+
+				if ( $isNew ) {
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+				}
+				$config['error']	=	true;
+
+				return false;
+			}
 		}
 		
 		// Checkin
@@ -441,8 +461,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$data['parent_id']		=	$this->params->get( 'base_default-parent_id', 1 );
 				}
 			}
-			if ( ( $user->get( 'id' ) > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
-				$data[self::$author]	=	$user->get( 'id' );
+			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
+				$data[self::$author]	=	$user->id;
 			}
 		} else {
 			$data[self::$key]	=	$table->{self::$key};
@@ -662,12 +682,15 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// parseRoute
 	public static function parseRoute( &$vars, $segments, $n, $config )
 	{
+		$active			=	JFactory::getApplication()->getMenu()->getActive();
+		$id				=	0;
 		$join			=	'';
 		$where			=	'';
 		
 		$vars['option']	=	'com_content';
 		$vars['view']	=	self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )];
 
+		// Prepare the query
 		if ( $n == 2 ) {
 			if ( $config['doSEF'][0] == '3' ) {
 				$join				=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
@@ -682,34 +705,45 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$where			=	' AND b.alias = "'.$segments[0].'"';
 				}
 			}
-		} else {
-			if ( $config['doSEF'][0] == '2' && isset( $config['doSEF'][1] ) && $config['doSEF'][1] == '4' ) {
-				$active				=	JFactory::getApplication()->getMenu()->getActive();
-				if ( isset( $active->query['search'] ) && $active->query['search'] ) {
-					$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
-					if ( $cck ) {
-						$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
-						$where		=	( strpos( $cck, ',' ) !== false ) ? ' AND b.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND b.cck = "'.$cck.'"';
-					}
-				}
+		}
+
+		// Retrieve Content Type(s)
+		if ( isset( $active->query['search'] ) && $active->query['search'] ) {
+			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
+			
+			if ( $cck != '' ) {
+				$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
+				$where		=	( strpos( $cck, ',' ) !== false ) ? ' AND b.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND b.cck = "'.$cck.'"';
 			}
 		}
+
+		// Identity the PK
 		if ( self::$sef[$config['doSEF']] == 'full' ) {
 			$idArray				=	explode( ':', $segments[$n - 1], 2 );
-			$vars['id']				=	(int)$idArray[0];
+			$id						=	(int)$idArray[0];
+
+			if ( $where != '' ) {
+				$where				=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+			}
 		} else {
 			if ( is_numeric( $segments[$n - 1] ) ) {
-				$vars['id']			=	$segments[$n - 1];
+				$id					=	$segments[$n - 1];
+
+				if ( $where != '' ) {
+					$where			=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+				}
 			} else {
 				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-				$query				=	'SELECT a.id FROM '.self::$table.' AS a'
-									.	$join
-									.	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
-				$vars['id']			=	(int)JCckDatabaseCache::loadResult( $query );
-				if ( $vars['id'] == 0 ) {
-					return JError::raiseError( 404, JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ) );
-				}
+				$where				=	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
 			}
+		}
+		if ( $where != '' ) {
+			$vars['id']	=	(int)JCckDatabaseCache::loadResult( 'SELECT a.id FROM '.self::$table.' AS a'.$join.$where );
+		} else {
+			$vars['id']	=	$id;
+		}
+		if ( $vars['id'] == 0 ) {
+			return JError::raiseError( 404, JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ) );
 		}
 	}
 	
@@ -747,7 +781,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$app		=	JFactory::getApplication();
 					$isChild	=	false;
 
-					if ( $app->input->get( 'view' ) == self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
+					if ( $item->query['view'] == self::$routes[(int)self::_getStaticParam( 'routing_context', 0 )] ) {
 						$item2	=	$menu->getItem( $item->parent_id );
 
 						if ( is_object( $item2 ) && @$item2->query['option'] == 'com_cck' && @$item2->query['view'] == 'list' ) {
@@ -786,9 +820,23 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// access
-	public static function access( $pk )
+	public static function access( $pk, $checkAccess = true )
 	{
-		return JCckDatabaseCache::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.self::$key.' = '.$pk.' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).') AND '.self::$status.' = 1' );
+		$states	=	self::_getStaticParam( 'allowed_status', '1,2' );
+		$states	=	explode( ',', $states );
+		$states	=	ArrayHelper::toInteger( $states );
+		$states	=	( count( $states ) > 1 ) ? 'IN ('.implode( ',', $states ).')' : '= '.(int)$states[0];
+		$query	=	'SELECT '.self::$key
+				.	' FROM '.self::$table
+				.	' WHERE '.self::$key.' = '.(int)$pk
+				.	' AND '.self::$status.' '.$states
+				;
+
+		if ( $checkAccess ) {
+			$query	.=	' AND '.self::$access.' IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+		}
+		
+		return (int)JCckDatabaseCache::loadResult( $query );
 	}
 	
 	// authorise
@@ -857,7 +905,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		return $properties;
 	}
 
-	// _getStaticParam
+	// _getStaticParam (todo: need to be improved and moved)
 	protected static function _getStaticParam( $name, $default = '' )
 	{
 		static $params	=	array();

@@ -94,7 +94,6 @@ class CCKModelList extends JModelLegacy
 			$ids 		= 	array();
 			$location 	= 	null;
 			$user 		=	JCck::getUser();
-			$user_id	=	$user->get( 'id' );
 
 			foreach ( $pks as $i=>$pk ) {
 				$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$results[$pk]['type_id'] );
@@ -102,8 +101,8 @@ class CCKModelList extends JModelLegacy
 
 				// Check Permissions
 				if ( !( $canEdit && $canEditOwn
-					|| ( $canEdit && !$canEditOwn && ( $results[$pk]['author_id'] != $user_id ) )
-					|| ( $canEditOwn && ( $results[$pk]['author_id'] == $user_id ) ) ) ) {
+					|| ( $canEdit && !$canEditOwn && ( $results[$pk]['author_id'] != $user->id ) )
+					|| ( $canEditOwn && ( $results[$pk]['author_id'] == $user->id ) ) ) ) {
 					unset( $lft[$i] );
 					continue;
 				}

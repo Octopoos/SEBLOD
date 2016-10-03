@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
@@ -26,9 +28,7 @@ class CCKControllerTypes extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// duplicate
@@ -66,10 +66,9 @@ class CCKControllerTypes extends JControllerAdmin
 			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
-			
+			$cid	=	ArrayHelper::toInteger( $cid );
 			$model	=	$this->getModel();
+
 			if ( $model->version( $cid ) ) {
 				$msg	=	JText::sprintf( 'COM_CCK_SUCCESSFULLY_ARCHIVED', $n );
 				$type	=	'message';

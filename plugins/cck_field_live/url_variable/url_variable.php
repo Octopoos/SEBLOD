@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Plugin
 class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 {
@@ -66,10 +68,7 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 				} elseif ( $filter == 'integers' ) {
 					$live		=	(string)$app->input->getString( $variable, $default );
 					$live		=	explode( ',', $live );
-
-					jimport( 'joomla.utilities.arrayhelper' );
-					JArrayHelper::toInteger( $live );
-
+					$live		=	ArrayHelper::toInteger( $live );
 					$live		=	implode( ',', $live );
 				} else {
 					$request	=	'get'.ucfirst( $filter );

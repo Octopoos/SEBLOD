@@ -602,6 +602,18 @@ class CCK_Rendering
 		return $html;
 	}
 	
+	// retrieveValue
+	public function retrieveValue( $fieldname )
+	{
+		$field	=	$this->get( $fieldname );
+		
+		if ( !$field->display ) {
+			return '';
+		}
+		
+		return $field->value;
+	}
+	
 	// setComputationRules
 	public function setComputationRules( &$field )
 	{
@@ -978,13 +990,30 @@ class CCK_Rendering
 		return $content;
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Style
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Style & Template
 
 	// getStyleParam
 	public function getStyleParam( $param = '', $default = '' )
 	{		
 		if ( isset( $this->params[$param] ) ) {
 			return $this->params[$param];
+		} else {
+			return $default;
+		}
+	}
+
+	// getTemplateParam
+	public function getTemplateParam( $param = '', $default = '' )
+	{		
+		static $templates = array();
+
+		if ( !isset( $templates[$this->template] ) ) {
+			$templates[$this->template]	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_templates WHERE name = "'.$this->template.'"' );
+			$templates[$this->template]	=	( $templates[$this->template] != '' ) ? json_decode( $templates[$this->template], true ) : array();
+		}
+
+		if ( isset( $templates[$this->template][$param] ) ) {
+			return $templates[$this->template][$param];
 		} else {
 			return $default;
 		}
@@ -1010,13 +1039,14 @@ class CCK_Rendering
 		if ( $attr != '' ) {
 			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
 				$matches	=	'';
-				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				$search		=	'#\$cck\->(get|retrieve)([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
 				preg_match_all( $search, $attr, $matches );
 
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[2] as $k=>$fieldname ) {
-						$target		=	$matches[1][$k];
-						$get		=	'get'.$target;
+				if ( count( $matches[2] ) ) {
+					foreach ( $matches[3] as $k=>$fieldname ) {
+						$target		=	$matches[2][$k];
+						$method		=	( $matches[1][$k] == 'retrieve' ) ? $matches[1][$k] : 'get';
+						$get		=	$method.$target;
 						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}
