@@ -216,16 +216,20 @@ class CCKController extends JControllerLegacy
 						);
 
 		if ( $master == 'search' && @$field->storage_table != '' ) {
-			$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+			$tables	=	JCckDatabase::getTableList( true );
+			
+			if ( isset( $tables[$field->storage_table] ) ) {
+				$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
 
-            if ( isset( $columns[$field->storage_field] ) ) {
-                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
-                
-                if ( $pos !== false ) {
-                    $field->match_mode      =   'exact';
-                    $field->match_options   =   '{"var_type":"0"}';
-                }
-            }
+	            if ( isset( $columns[$field->storage_field] ) ) {
+	                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
+	                
+	                if ( $pos !== false ) {
+	                    $field->match_mode      =   'exact';
+	                    $field->match_options   =   '{"var_type":"0"}';
+	                }
+	            }
+	        }
 		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		

@@ -27,9 +27,13 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	} else {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
 		$location				=	$this->item->title;
+		$pos					=	strpos( $location, 'aka_' );
 		$prefix					=	JFactory::getConfig()->get( 'dbprefix' );
-		if ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
-			$properties				=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
+		
+		if ( $pos !== false && $pos == 0 ) {
+			$properties			=	array();
+		} elseif ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
+			$properties			=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
 		} else {
 			$properties			=	array( 'table' );
 			if ( $location != '' ) {
@@ -38,10 +42,16 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 			}
 		}
 		if ( isset( $properties['table'] ) && $properties['table'] != '' ) {
-			$columns			=	JCckDatabase::loadColumn( 'SHOW COLUMNS FROM '.$properties['table'] );
-			if ( count( $columns ) ) {
-				natsort( $columns );
-				$columns		=	array_combine( $columns, $columns );
+			$columns			=	array();
+			$tables				=	JCckDatabase::getTableList( true );
+
+			if ( isset( $tables[$properties['table']] ) ) {
+				$columns		=	JCckDatabase::loadColumn( 'SHOW COLUMNS FROM '.$properties['table'] );
+
+				if ( count( $columns ) ) {
+					natsort( $columns );
+					$columns		=	array_combine( $columns, $columns );
+				}
 			}
 			$columns			=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
 		} else {
