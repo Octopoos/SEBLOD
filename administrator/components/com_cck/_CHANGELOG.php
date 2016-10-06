@@ -22,6 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.10.1 Upgrade Release [xx-Oct-2016] -----------
+
++ Placeholder tables added for Free storage.
+  >> useful for AKA/Join queries (Search Join Plug-in)
+
+# Minor issues fixed.
+
 -------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
 
 + Ability to use "Admin Form" on Front-end.
