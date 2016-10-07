@@ -2,8 +2,8 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: _CHANGELOG.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
-* @editor			Octopoos - www.octopoos.com
+* @url				  http://www.seblod.com
+* @editor			  Octopoos - www.octopoos.com
 * @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
@@ -21,6 +21,31 @@ $ -> Language fix or change
 ^ -> Change
 - -> Removed
 ! -> Note
+
+-------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
+
++ Ability to use "Admin Form" on Front-end.
++ Automatic removal of oldest versions added.
++ Keep-alive behaviour forced on Admin/Site Form views.
+
++ Allow Options to be defined at Template level.
++ Load More (Infinite Pagination) support added on Blog template.
+
++ Above/Below locations added for "Add" button on Group X plug-in.
++ "->values" added (onCCK_FieldPrepareStore) on Field X and Group X plug-ins.
+
+^ Various SEBLOD.com links changed to HTTPs.
+
+# Google API load from modules issue fixed.
+# Merging process (for scripts) reworked.
+# Missing Group X icons (in Table orientation) added.
+# Missing $config properties added on "Store".
+  >> allows Permissions check on PrepareStore (Joomla! ACL pack)
+# One more fix applied to the router.
+# Parent (Content Type) Table entries are now removed "onContentAfterDelete".
+# Sortable JS not included anymore when disabled with restrictions.
+# Timezone issue fixed on Calendar plug-in (regression).
+# Various improvements or issues fixed.
 
 -------------------- 3.9.1 Upgrade Release [12-Sep-2016] -----------
 

@@ -15,7 +15,7 @@ README:
 
 1- What is this?
     * This is the SEBLOD Library { Framework } package for Joomla! 1.7
-    * SEBLOD's Official site: http://www.seblod.com
+    * SEBLOD's Official site: https://www.seblod.com
 
 2- What is SEBLOD?
     * SEBLOD is both a Content Construction Kit (CCK) & an Extension Development Kit (EDK/SDK)... for Joomla! 1.7
@@ -26,9 +26,9 @@ README:
     * Any Web markets (Blog, Community, Corporate, eCommerce, Extranet, Internet, Intranet, Portfolio, Social) are suitable.
     
 4- Where to start?
-	* Overview		=> http://www.seblod.com
-	* Download		=> http://www.seblod.com/download.html
-   	* Documentation => http://www.seblod.com/support/documentation.html
+	* Overview		=> https://www.seblod.com
+	* Download		=> https://www.seblod.com
+   	* Documentation => https://seblod.com/resources/manuals
 
 5- What you should know ?
 	* SEBLOD is going to revolutionize the way you make websites with Joomla! It's like using a "Joomla on Steroids" !

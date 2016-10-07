@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$config	=	JCckDev::init( array( '42', 'text' ), false, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+$config	=	JCckDev::init( array( '42', 'radio', 'text' ), false, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -34,12 +34,11 @@ Joomla.submitbutton = function(task)
         <ul class="spe spe_description">
 			<?php echo '<li><label>'.JText::_( 'COM_CCK_REVISION' ).'</label><span class="variation_value"><strong>'.$this->item->e_version.'</strong></span></li>'; ?>
         </ul>
-	</div>
-    
-	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php echo JCckDev::renderForm( 'core_note', $this->item->note, $config, array(), array(), 'w100' ); ?>
+        <ul class="spe spe_double">
+            <?php echo JCckDev::renderForm( 'core_note', $this->item->note, $config ); ?>
+        </ul>
+        <ul class="spe spe_type spe_latest">
+            <?php echo JCckDev::renderForm( 'core_featured', $this->item->featured, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'Featured=1||No=0', 'css'=>'btn-group btn-group-yesno' ) ); ?>
         </ul>
 	</div>
 </div>

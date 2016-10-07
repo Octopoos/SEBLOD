@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $action			=	'<span class="icon-loop"></span>';
-$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_REVERT_TO_THIS_VERSION' ).'"';
+$action_attr	=	' title="'.JText::_( 'COM_CCK_REVERT_TO_THIS_VERSION' ).'"';
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
@@ -69,7 +69,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$more			=	JCckDev::fromJSON( $item->e_more );
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='.$item->id );
 		if ( $canEdit ) {
-			$goBackToVersion	=	'<a href="javascript:void(0);" onclick="Joomla.submitbutton(\'versions.revert\',\'cb'.$i.'\');"'.$action_attr.'>'
+			$goBackToVersion	=	'<a href="javascript:void(0);" onclick="Joomla.submitbutton(\'versions.revert\',\'cb'.$i.'\');"'.' class="btn btn-micro'.( $item->featured ? ' btn-primary' : '' ).' hasTooltip"'.$action_attr.'>'
 								.	$action
 								.	'</a>';
 		} else {

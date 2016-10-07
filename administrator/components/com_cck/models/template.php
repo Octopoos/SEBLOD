@@ -117,6 +117,15 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 			}
 		}
 
+		// JSON
+		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
+			foreach ( $data['json'] as $k=>$v ) {
+				if ( is_array( $v ) ) {
+					$data[$k]	=	JCckDev::toJSON( $v );
+				}
+			}
+		}
+
 		return $data;
 	}
 	

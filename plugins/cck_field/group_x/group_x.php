@@ -292,10 +292,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			}
 			$store	.=	'<br />';
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
 		$field->text	=	$text;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	
@@ -366,12 +367,25 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 		}
 
-		$count		=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
-		$buttons 	= 	$field->bool2 || $field->bool3 || $field->bool4;
-		$html		=	'';
-		$empty		=	'';
-		$css 		=	( $field->css ) ? ' '.$field->css : '';
+		$count			=	$field->bool2 ? count( $field->form ) - 1 : count( $field->form );
+		$buttons 		= 	$field->bool2 || $field->bool3 || $field->bool4;
+		$button_top		=	'';
+		$button_bottom 	=	'';
+		$html			=	'';
+		$empty			=	'';
+		$css 			=	( $field->css ) ? ' '.$field->css : '';
 		
+		if ( $field->bool2 > 1 ) {
+			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>'."\n".JText::_( 'COM_CCK_ADD_NEW' ).'</button>';
+			$external_button 	=	'<div class="btn-toolbar">'.$external_button.'</div>';
+			if ( $field->bool2 == 2 || $field->bool2 == 4 ) {
+				$button_top		=	$external_button;
+			}
+			if ( $field->bool2 == 3 || $field->bool2 == 4 ) {
+				$button_bottom	=	$external_button;
+			}
+		}
+
 		if ( $count ) {
 			if ( $field->bool == 2 ) {
 				$head		=	'';
@@ -396,6 +410,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 				if ( $field->bool2 ) {
 					$empty		=	self::_getHtmlTable( $field, @$field->form[$i], 0, 0, $buttons, $config );
+					$html 		=	$button_top.$html.$button_bottom;
 				}
 
 			} else {
@@ -408,6 +423,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				$html		.=	'</div>';
 				if ( $field->bool2 ) {
 					$empty		=	self::_getHtml( $field, @$field->form[$i], 0, 0, $buttons, $config );
+					$html 		=	$button_top.$html.$button_bottom;
 				}
 			}
 		}
@@ -502,13 +518,13 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		if ( $buttons ) {
 			if ( $field->bool3 ) {
-				$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"></div>';
+				$html_div_buttons	.=	'<div class="cck_button cck_button_del_'.$field->name.' cck_button_del cck_button_first"><span class="icon-minus"></div>';
 			}
 			if ( $field->bool2 ) {
-				$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"></div>';
+				$html_div_buttons	.=	'<div class="cck_button cck_button_add_'.$field->name.' cck_button_add"><span class="icon-plus"></span></div>';
 			}
 			if ( $field->bool4 ) {
-				$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"></div>';
+				$html_div_buttons	.=	'<div class="cck_button cck_button_drag_'.$field->name.' cck_button_drag cck_button_last"><span class="icon-circle"></div>';
 			}
 		}
 		if ( $size_group == 1 ) {

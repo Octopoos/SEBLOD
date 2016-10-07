@@ -91,7 +91,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 				$value	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
 			}
 		}
-		$form	=	htmlspecialchars_decode( $value );
+		$form	=	$value;
 		
 		// Set
 		if ( ! $field->variation ) {

@@ -84,7 +84,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                 'access'=>array( 'core.manage', 'com_cck' ),
                                 'group' =>'COM_CCK_SEBLOD_STORE',
                                 'image' =>'download',
-                                'link'  =>JRoute::_( 'http://www.seblod.com/store/extensions?seb_item_category='.$v ),
+                                'link'  =>JRoute::_( 'https://www.seblod.com/store/extensions?seb_item_category='.$v ),
                                 'target'=>'_blank',
                                 'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
                             );

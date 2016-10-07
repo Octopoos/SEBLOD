@@ -354,7 +354,7 @@ class plgSystemCCK extends JPlugin
 							$style	=	'top: -2px; position: relative;';
 						} else {
 							$class	=	'';
-							$link	=	'http://www.seblod.com/store/extensions/634';
+							$link	=	'https://www.seblod.com/store/extensions/634';
 							$target	=	'_blank';
 							$style	=	'text-decoration:underline;';
 						}
@@ -589,7 +589,8 @@ class plgSystemCCK extends JPlugin
 			$head	=	$doc->getHeadData();
 
 			JCckToolbox::setHead( $head );
-		} elseif ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+		}
+		if ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
 			if ( count( $app->cck_app['Header'] ) ) {
 				foreach ( $app->cck_app['Header'] as $k=>$v ) {
 					$app->setHeader( $k, $v, true );
@@ -605,10 +606,15 @@ class plgSystemCCK extends JPlugin
 			JCckToolbox::process( 'onAfterRender' );
 		}
 		$app		=	JFactory::getApplication();
+		$doc		=	JFactory::getDocument();
 		$option		=	$app->input->get( 'option', '' );
 		$view		=	$app->input->get( 'view', '' );
 		$layout		=	$app->input->get( 'layout', '' );
 		
+		if ( ( $app->isAdmin() || ( $app->isSite() && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
+			JCckToolbox::setHeadAfterRender();
+		}
+
 		// site
 		if ( $app->isSite() ) {
 			if ( $this->multisite === true && $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {

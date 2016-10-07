@@ -26,9 +26,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		parent::__construct( $subject, $config );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
-
+	
 	// onCCK_FieldConstruct
 	public function onCCK_FieldConstruct( $type, &$data = array() )
 	{
@@ -37,9 +37,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
-
+	
 	// onCCK_FieldPrepareContent
 	public function onCCK_FieldPrepareContent( &$field, $value = '', &$config = array() )
 	{

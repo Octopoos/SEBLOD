@@ -222,9 +222,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 			}
 			$store	.=	'<br />';	//end?
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	

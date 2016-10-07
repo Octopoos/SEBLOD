@@ -67,7 +67,7 @@ abstract class modCCKQuickIconHelper
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'http://www.seblod.com/products' ),
+											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
@@ -117,7 +117,7 @@ abstract class modCCKQuickIconHelper
 										)
 									);
 				self::$buttons[]	=	array(
-											'link'	=>	JRoute::_( 'http://www.seblod.com/products' ),
+											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',

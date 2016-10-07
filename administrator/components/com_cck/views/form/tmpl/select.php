@@ -15,7 +15,7 @@ $app		=	JFactory::getApplication();
 $base		=	'index.php?option=com_cck&view=form';
 $layer		=	$app->input->getCmd( 'quicklayout', 'icon' );
 $lang		=	JFactory::getLanguage();
-$market		=	'http://www.seblod.com/download.html?tmpl=component';
+$market		=	'https://www.seblod.com/download.html?tmpl=component';
 $opts		=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 $quickadd	=	$app->input->getInt( 'quickadd', 0 );
 $type		=	'';

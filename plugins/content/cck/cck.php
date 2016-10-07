@@ -100,6 +100,7 @@ class plgContentCCK extends JPlugin
 		$properties		= 	array( 'custom' );
 		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 		$custom 		= 	$properties['custom'];
+		$parent			=	'';
 		$type			=	'';
 
 		// Core
@@ -185,6 +186,13 @@ class plgContentCCK extends JPlugin
 		
 		if ( in_array( $prefix.'cck_store_form_'.$type, $tables ) ) {
 			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$type, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+
+		if ( $parent != '' && in_array( $prefix.'cck_store_form_'.$parent, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$parent, 'id', $pk );
 			if ( $table->id ) {
 				$table->delete();
 			}

@@ -111,11 +111,15 @@ class CCK_Form
 	}
 	
 	// getType
-	public static function getType( $name, $id, $location = '' )
+	public static function getType( $name, $location = '' )
 	{		
-		// todo: API (move)
-		$query	=	'SELECT a.id, a.title, a.name, a.description, a.location, a.parent, a.storage_location, b.app as folder_app,'
-				.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets'
+		if ( $location != '' && $location == 'store' ) {
+			$select	=	'a.id, a.name, a.admin_form, a.storage_location';
+		} else {
+			$select	=	'a.id, a.title, a.name, a.description, a.admin_form, a.location, a.parent, a.storage_location, b.app as folder_app,'
+					.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets';
+		}
+		$query	=	'SELECT '.$select
 				.	' FROM #__cck_core_types AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
 				.	' WHERE a.name ="'.JCckDatabase::escape( (string)$name ).'" AND a.published = 1';
