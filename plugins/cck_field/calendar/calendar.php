@@ -55,12 +55,12 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$field->value	=	'';
 			$field->text	=	'';
 		} else {
+			$field->value	=	$value;
 			$date			=	JFactory::getDate( $value, 'UTC' );
 			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
 			$value			=	$date->format( 'Y-m-d H:i:s', true, true );
-			$field->value	=	$value;
 
 			$this->_setText($field, $value, $date);
 
