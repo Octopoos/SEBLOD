@@ -105,7 +105,7 @@ class CCK_Item
 			$this->css	=	'';
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$doc->addScriptDeclaration( '(function ($){$(document).ready(function(){'.$this->js.'});})(jQuery);' );
 			$this->js	=	'';
 		}
 		if ( $this->js2 != '' ) {
