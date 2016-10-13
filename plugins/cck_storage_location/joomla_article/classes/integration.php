@@ -74,8 +74,10 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
                         if($option == 'com_content'){
                                 $addLimit       =       true;
                                 $model          =       new ContentModelArticles();
-                                $limit          =       $model->getState('list.limit');
-                                $start          =       $model->getStart();
+				$items = $model->getItems();
+                                foreach($items as $i){
+                                        $pks[] = $i->id;
+                                }
                         }
                 }
 		
@@ -84,13 +86,15 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 						.	' LEFT JOIN #__associations AS b ON ( b.id = a.pk AND context = "com_content.item" )'
 						.	' LEFT JOIN #__content AS c ON c.id = a.pk'
 						.	' WHERE storage_location="joomla_article"';
+			$query          .=      count($pks) ? ' AND a.pk IN( '.implode(',',$pks).')' : '';
 			$query_assoc	=	'SELECT a.id, a.key, b.language FROM #__associations AS a LEFT JOIN #__content AS b ON ( b.id = a.id AND a.context = "com_content.item" )';
+			$query_assoc    .=      count($pks) ? ' WHERE a.id IN ( '.implode(',',$pks).')':'';
 			$list_assoc	=	JCckDatabase::loadObjectListArray( $query_assoc, 'key', 'language' );
 		} else {
 			$query		=	'SELECT pk, cck FROM #__cck_core WHERE storage_location="joomla_article"';
+			$query          .=      count($pks) ? ' AND pk IN( '.implode(',',$pks).')' : '';
 			$list_assoc	=	array();
 		}
-		$query          .=      $addLimit ? ' LIMIT '.$start.','.$limit : '';
 		$list	=	JCckDatabase::loadObjectList( $query, 'pk' );
 		$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list, $list_assoc );
 	}
