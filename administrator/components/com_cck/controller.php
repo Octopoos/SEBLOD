@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Controller
 class CCKController extends JControllerLegacy
 {
@@ -488,6 +490,31 @@ class CCKController extends JControllerLegacy
 		}
 	}
 	
+	// saveOrderAjax
+	public function saveOrderAjax()
+	{
+		$app	=	JFactory::getApplication();
+		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
+		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
+
+		// Sanitize the input
+		$pks	=	ArrayHelper::toInteger( $pks );
+		$order	=	ArrayHelper::toInteger( $order );
+
+		// Get the model
+		$model 	= 	$this->getModel( 'list' );
+
+		// Save the ordering
+		$return	= 	$model->saveOrder( $pks, $order );
+
+		if ( $return ) {
+			echo '1';
+		}
+
+		// Close the application
+		$app->close();
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
 	
 	// _setUIX
