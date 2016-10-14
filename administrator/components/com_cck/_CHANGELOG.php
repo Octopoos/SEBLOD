@@ -25,8 +25,12 @@ $ -> Language fix or change
 -------------------- 3.10.1 Upgrade Release [xx-Oct-2016] -----------
 
 + Placeholder tables added for Free storage.
-  >> useful for AKA/Join queries (Search Join Plug-in)
+  >> useful for AKA/Join queries (Search Join Plug-in).
 
++ JCck::isSite() method improved.
+  >> can identify if site is "master" or from aliases.
+
+# "has-value" class fixed Select Dynamic/Multiple.
 # Minor issues fixed.
 
 -------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
