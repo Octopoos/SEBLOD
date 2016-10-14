@@ -175,7 +175,8 @@ abstract class JCck
 					}
 				}
 			}
-			self::$_host				=	$host;
+			self::$_host	=	$host;
+
 			if ( isset( self::$_sites[$host] ) ) {
 				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
 			}
@@ -193,9 +194,17 @@ abstract class JCck
 	}
 	
 	// isSite
-	public static function isSite()
+	public static function isSite( $master = false )
 	{
-		return ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) ? true : false;
+		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
+			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+				return false;
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User
