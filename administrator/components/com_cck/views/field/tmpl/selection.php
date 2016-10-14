@@ -33,18 +33,22 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 		if ( $pos !== false && $pos == 0 ) {
 			$properties			=	array();
 		} elseif ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
-			$properties			=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
+			$properties			=	array( 'table'=>str_replace( '#__', $prefix, $location ) );
 		} else {
 			$properties			=	array( 'table' );
 			if ( $location != '' ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
 				$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$location, 'getStaticProperties', $properties );
+
+				if ( isset( $properties['table'] ) ) {
+					$properties['table']	=	str_replace( '#__', $prefix, $properties['table'] );
+				}
 			}
 		}
 		if ( isset( $properties['table'] ) && $properties['table'] != '' ) {
 			$columns			=	array();
 			$tables				=	JCckDatabase::getTableList( true );
-
+			
 			if ( isset( $tables[$properties['table']] ) ) {
 				$columns		=	JCckDatabase::loadColumn( 'SHOW COLUMNS FROM '.$properties['table'] );
 
