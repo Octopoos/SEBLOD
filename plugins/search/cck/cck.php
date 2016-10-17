@@ -79,7 +79,7 @@ class plgSearchCCK extends JPlugin
 					if ( !isset( $tables[$j->table] ) ) {
 						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>@$j->and, 'join_type'=>@$j->type, 'join_mode'=>@$j->mode, 'join_query'=>@$j->query );
 
-						if ( $j->aka != '' && $j->aka != $j->table ) {
+						if ( @$j->aka != '' && $j->aka != $j->table ) {
 							$tables[$j->table]['table']	=	$j->aka;
 						}
 					} elseif ( @$j->and != '' ) {
