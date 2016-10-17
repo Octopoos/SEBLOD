@@ -103,7 +103,7 @@ class com_cckInstallerScript
 		// WAITING FOR JOOMLA 1.7.x FIX
 
 		// -- Patch for websites started with SEBLOD 2.x 
-		if ( (float)$app->cck_core_version_old < 3.2 ) {
+		if ( version_compare( $app->cck_core_version_old, '3.2', '<' ) ) {
 			$db		=	JFactory::getDbo();
 			$db->setQuery( 'SELECT id FROM #__cck_core_fields WHERE id >= 500 AND id < 5000' );
 			$fields	=	$db->loadObjectList();
@@ -137,7 +137,8 @@ class com_cckInstallerScript
 		// -- End
 
 		// -- Patch for websites started between SEBLOD 3.6.0+ and 3.8.0-
-		if ( (float)$app->cck_core_version_old >= 3.6 && (float)$app->cck_core_version_old < 3.8 ) {
+		if ( version_compare( $app->cck_core_version_old, '3.6', '>=' )
+		  && version_compare( $app->cck_core_version_old, '3.8', '<' ) ) {
 			$db			=	JFactory::getDbo();
 			$db->setQuery( 'SELECT id, name FROM #__cck_core_fields WHERE id >= 533 AND id < 5000' );
 			$fields		=	$db->loadObjectList();
