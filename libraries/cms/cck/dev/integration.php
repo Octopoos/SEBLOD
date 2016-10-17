@@ -336,9 +336,9 @@ abstract class JCckDevIntegration
 									if ( $cur != $l ) {
 										if ( isset( $list_assoc[$key][$l] ) ) {
 											$link2	=	$link.'&amp;id='.$list_assoc[$key][$l]->id.$data['replace_end'];
-											$t_edit	.=	'<li><a href="'.$link2.'&plop=1"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
+											$t_edit	.=	'<li><a href="'.$link2.'"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
 										} else {
-											$link2	=	$link.'&amp;translate='.$l.'&amp;translate_id='.$pk.$data['replace_end'];
+											$link2	=	$link.'&amp;copyfrom_id='.$pk.'&amp;translate='.$l.$data['replace_end'];
 											$t_add	.=	'<li><a href="'.$link2.'"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
 										}
 									}

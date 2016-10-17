@@ -20,7 +20,7 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'bool4'=>1, 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_EDITION' ).'</label>'
-			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'storage_field'=>'form_edition' ) )
+			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'options'=>'No=0||Yes=1||Yes as copy=2', 'storage_field'=>'form_edition' ) )
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'defaultvalue'=>'', 'options'=>'1=1||2=2||3=3||4=4||5=5||Final=0', 'bool8'=>0, 'storage_field'=>'form_edition_stage' ) )
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'form_fieldname' ) );
