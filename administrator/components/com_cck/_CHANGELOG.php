@@ -24,14 +24,22 @@ $ -> Language fix or change
 
 -------------------- 3.10.1 Upgrade Release [xx-Oct-2016] -----------
 
++ "Edition as Copy" behaviour added on SEBLOD Form Link plug-in.
 + Placeholder tables added for Free storage.
   >> useful for AKA/Join queries (Search Join Plug-in).
 
-+ JCck::isSite() method improved.
++ Country List updated in install.sql to include Ukrainian translation.
++ "Dropdown Menu" behaviour added on JGrid Typography plug-in.
+
+! JCck::isSite() method improved.
   >> can identify if site is "master" or from aliases.
+! Object Plug-ins (exporter.php) updated for Exporter Add-on.
+
+^ "translate_id" variable renamed to "copyfrom_id".
 
 # "has-value" class fixed Select Dynamic/Multiple.
-# Minor issues fixed.
+# Missing back-end methods for reorder by drag-and-drop capability added.
+# Various improvements or issues fixed.
 
 -------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
 
