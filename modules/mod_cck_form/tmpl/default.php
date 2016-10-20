@@ -35,6 +35,7 @@ echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' 
 <input type="hidden" id="myid" name="id" value="0" />
 <input type="hidden" name="config[type]" value="<?php echo $preconfig['type']; ?>">
 <input type="hidden" name="config[url]" value="<?php echo $config['url']; ?>" />
+<input type="hidden" name="config[copyfrom_id]" value="0" />
 <input type="hidden" name="config[id]" value="0" />
 <input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />

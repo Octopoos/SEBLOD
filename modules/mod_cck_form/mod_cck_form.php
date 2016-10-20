@@ -50,7 +50,7 @@ $variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.form.form' );
 include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0' ) );
+JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0|0' ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
