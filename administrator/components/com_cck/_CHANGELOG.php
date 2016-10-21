@@ -30,6 +30,7 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include Ukrainian translation.
 + "Dropdown Menu" behaviour added on JGrid Typography plug-in.
++ "Match Occurences Offset" parameter added for "Each Word Exact" match mode.
 
 ! JCck::isSite() method improved.
   >> can identify if site is "master" or from aliases.
@@ -37,6 +38,7 @@ $ -> Language fix or change
 
 ^ "translate_id" variable renamed to "copyfrom_id".
 
+# Custom Attributes are now kept for List (Field) Variations.
 # "has-value" class fixed Select Dynamic/Multiple.
 # Missing back-end methods for reorder by drag-and-drop capability added.
 # Various improvements or issues fixed.
