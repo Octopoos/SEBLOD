@@ -83,28 +83,27 @@ abstract class JCckEcommerceRule
 					if ( !isset( $totals[$type][$r->target_type] ) ) {
 						continue;
 					} else {
-						if ( $totals[$type][$r->target_type] < (int)$r->min ) {
+						$min	=	(float)number_format( (float)$r->min, 2 );
+						$max	=	(float)number_format( (float)$r->max, 2 );
+						$value	=	(float)number_format( (float)$totals[$type][$r->target_type], 2 );
+
+						if ( $value < $min ) {
 							continue;
 						}
-						if ( (int)$r->max && $totals[$type][$r->target_type] > (int)$r->max ) {
+						if ( $max && ( $value > $max ) ) {
 							continue;
 						}
 					}
 				} else {
-					if ( $type != 'total' ) {
-						if ( $totals[$type]['_'] < (int)$r->min ) {
-							continue;
-						}
-						if ( (int)$r->max && $totals[$type]['_'] > (int)$r->max ) {
-							continue;
-						}
-					} else {
-						if ( $total2 < (int)$r->min ) {
-							continue;
-						}
-						if ( (int)$r->max && $total2 > (int)$r->max ) {
-							continue;
-						}
+					$min	=	(float)number_format( (float)$r->min, 2 );
+					$max	=	(float)number_format( (float)$r->max, 2 );
+					$value	=	(float)number_format( (float)$totals[$type]['_'], 2 );
+										
+					if ( $value < $min ) {
+						continue;
+					}
+					if ( $max && ( $value > $max ) ) {
+						continue;
 					}
 				}
 
