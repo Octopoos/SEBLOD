@@ -42,7 +42,7 @@ abstract class JCckEcommerceTax
 				$groups		=	explode( ',', $t->groups );
 				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
-					if ( isset( $items[$params['target_id']]->quantity ) && $items[$params['target_id']]->quantity ) {
+					if ( isset( $items[@$params['target_id']]->quantity ) && $items[$params['target_id']]->quantity ) {
 						$quantity	=	$items[$params['target_id']]->quantity;
 					} else {
 						$quantity	=	1;
