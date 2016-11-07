@@ -686,9 +686,9 @@ class JCckPluginField extends JPlugin
 		$value				=	@$field->typo;
 		$text				=	$data['typo'][$value]->text;
 		$to					=	( isset( $config['construction']['typo'][$field->type] ) ) ? 'typo-'.$field->type : 'typo';
-		$column2			=	self::_hiddenField($name.'_typo' , "ffp['.$name.'][typo]", $value, '')
+		$column2			=	'<input type="hidden" id="'.$name.'_typo" name="ffp['.$name.'][typo]" value="'.$value.'" />'
 			.	'<span class="text blue sp2se" data-id="'.$name.'_typo" data-to="'.$to.'">'.$text.'</span>'
-			.   self::_hiddenField($name.'_typo_options' , "ffp['.$name.'][typo_options]", ( @$field->typo_options != '' ) ?  $field->typo_options  : '' , '')
+			.   self::_hiddenField($name.'_typo_options' , "ffp[$name][typo_options]", ( @$field->typo_options != '' ) ?  $field->typo_options  : '' , '')
 			.	'<input type="hidden" id="'.$name.'_typo_label" name="ffp['.$name.'][typo_label]" value="'.@$field->typo_label.'" />'
 			.	' <span class="c_typo'.$hide.'" name="'.$name.'">+</span>';
 		$field->params[]	=	self::g_getParamsHtml( 2, $style, $column1, $column2 );
@@ -715,14 +715,14 @@ class JCckPluginField extends JPlugin
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
 		$value				=	( @$field->access ) ? (int)$field->access : 1;
 		$text				=	$data['access'][$value]->text;
-		$column1			=	self::_hiddenField('ffp'.$name.'_access' , "ffp['.$name.'][access]", $value, '')
+		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 			.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
 		$value				=	@$field->restriction;
 		$text				=	$data['restriction'][$value]->text;
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
 			.	'<span class="text blue sp2se" data-id="'.$name.'_restriction" data-to="'.$to.'">'.$text.'</span>'
-			.   self::_hiddenField($name."_restriction_options" , "ffp['.$name.'][restriction_options]", ( ( @$field->restriction_options != '' ) ? $field->restriction_options  : '' ), '')
+			.   self::_hiddenField($name."_restriction_options" , "ffp[$name][restriction_options]", ( ( @$field->restriction_options != '' ) ? $field->restriction_options  : '' ), '')
 			.	' <span class="c_res'.$hide.'" name="'.$name.'">+</span>';
 		$field->params[]	=	self::g_getParamsHtml( 4, $style, $column1, $column2 );
 	}
@@ -1242,6 +1242,4 @@ class JCckPluginField extends JPlugin
 		}
 	}
 
-
 }
-?>
