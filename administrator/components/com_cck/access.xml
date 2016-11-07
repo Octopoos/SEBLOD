@@ -10,6 +10,7 @@
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
 		<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 		<action name="core.addto.cart" title="COM_CCK_ACTION_ADD_TO_CART" description="COM_CCK_ACTION_ADD_TO_CART_DESC" />
+		<action name="core.admin.form" title="COM_CCK_ACTION_ADMIN_FORM_ACCESS" description="COM_CCK_ACTION_ADMIN_FORM_ACCESS_DESC" />
 		<action name="core.export" title="COM_CCK_ACTION_EXPORT" description="COM_CCK_ACTION_EXPORT_DESC" />
 		<action name="core.process" title="COM_CCK_ACTION_PROCESS" description="COM_CCK_ACTION_PROCESS_DESC" />
 	</section>
