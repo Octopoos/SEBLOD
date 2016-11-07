@@ -127,8 +127,10 @@ class plgCCK_Field42 extends JCckPluginField
 		
 		// Init
 		if ( count( $inherit ) ) {
+			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
+			$id		=	$field->name;
 			$name	=	$field->name;
 		}
 		
