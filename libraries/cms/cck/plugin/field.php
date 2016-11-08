@@ -1071,9 +1071,12 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 			}
 		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
+			$attributes		=	( isset( $field->attributesList ) && $field->attributesList != '' ) ? explode( '||', $field->attributesList ) : array();
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
-			$field->form	=	'';
-			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
+			$field->form	=	'';			
+			$options		=	( isset( $field->optionsList ) ) ? $field->optionsList : $field->options;
+			$options		=	( $options != '' ) ? explode( '||', $options ) : array();
+			
 			if ( count( $options ) ) {
 				static $loaded	=	array();
 				if ( !isset($loaded[$id] ) ) {
@@ -1100,14 +1103,15 @@ class JCckPluginField extends JPlugin
 					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
 				}
-				foreach ( $options as $opt ) {
-					$o		=	explode( '=', $opt );
-					$class	=	'';
+				foreach ( $options as $k=>$opt ) {
+					$attribute	=	@$attributes[$k];
+					$o			=	explode( '=', $opt );
+					$class		=	'';
 					if ( @$o[1] == $value ) {
 						$class		=	' class="active"';
 					} 
 					if ( $o[0] != '' ) {
-						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"'.$attribute.'><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
 					}
 				}
 				if ( $field->form != '' ) {
