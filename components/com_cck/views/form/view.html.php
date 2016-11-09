@@ -127,6 +127,8 @@ class CCKViewForm extends JViewLegacy
 			$this->description		=	@$type->description;
 		} elseif ( $this->show_form_desc ) {
 			$this->description		=	$params->get( 'form_desc', @$type->description );
+		} else {
+			$this->description		=	'';
 		}
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );
