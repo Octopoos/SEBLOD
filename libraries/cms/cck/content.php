@@ -324,7 +324,7 @@ class JCckContent
 	{
 		/* TODO: this is no good, and will need to move, but later! */
 		if ( $instance_name == 'base' ) {
-			if ( $this->_object == 'joomla_menu_item' ) {
+			if ( $this->_object == 'joomla_menu_item' || $this->_object == 'joomla_category' ) {
 				$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
 			}
 		}
