@@ -29,6 +29,14 @@ class JCckContentJoomla_Category extends JCckContent
 		return self::$instances[$key];
 	}
 
+	// preSave
+	public function preSave( $instance_name, $data )
+	{
+		if ( $instance_name == 'base' ) {
+			$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
+		}
+	}
+
 	// saveBase
 	public function saveBase()
 	{
