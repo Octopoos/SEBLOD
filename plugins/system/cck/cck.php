@@ -44,6 +44,8 @@ class plgSystemCCK extends JPlugin
 		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
 		$this->restapi		=	$this->_isRestApi();
 
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;

@@ -14,6 +14,14 @@ defined( '_JEXEC' ) or die;
 class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
+
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+		
+		JLoader::register( 'JCckContent'.static::$type, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+	}
 	
 	// access
 	public static function access( $pk, $checkAccess = true )
