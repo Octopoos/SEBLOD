@@ -46,6 +46,7 @@ $ -> Language fix or change
   >> use "$content = new JCckContent[OBJECT_NAME];" in order to create new Items from a specific Object.
   >> use "$content = JCckContent::getInstance(...); in order to load/update any kind of Item."
 ^ "translate_id" variable renamed to "copyfrom_id".
+^ Mobile Detect updated to 2.8.24.
 
 # "Admin Form" permission added at component-level.
 # Custom Attributes support added for List (Field) Variations.
