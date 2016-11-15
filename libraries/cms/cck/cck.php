@@ -193,6 +193,27 @@ abstract class JCck
 		return self::$_sites[self::$_host];
 	}
 	
+	// getSiteById
+	public static function getSiteById( $id )
+	{
+		static $sites	=	NULL;
+
+		if ( !is_array( $sites ) ) {
+			$sites		=	array();
+
+			if ( count( self::$_sites ) ) {
+				foreach ( self::$_sites as $k=>$v ) {
+					$sites[$v->id]	=	$v;
+				}
+			}
+		}
+		if ( !isset( $sites[$id] ) ) {
+			return null;
+		}
+
+		return $sites[$id];
+	}
+
 	// isSite
 	public static function isSite( $master = false )
 	{
