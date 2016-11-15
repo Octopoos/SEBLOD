@@ -11,6 +11,16 @@
 defined( '_JEXEC' ) or die;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php'; //todo: >> core_storage_location
+
+$items		=	JCckDatabase::loadObjectList( 'SELECT id, title FROM #__cck_core_sites WHERE published = 1' );
+$options	=	array();
+
+if ( count( $items ) ) {
+	foreach ( $items as $item ) {
+		$options[]	=	$item->title.'='.$item->id;
+	}
+}
+$options	=	implode( '||', $options );
 ?>
 
 <div class="seblod">
@@ -37,8 +47,10 @@ require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Rel', 'size'=>24, 'storage_field'=>'rel' ) );
 		echo JCckDev::renderForm( 'core_tmpl', '', $config );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'custom' ), array(), 'w100' );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0', 'storage_field'=>'path_type' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0||Resource as Fragment=2', 'storage_field'=>'path_type' ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Site', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>$options, 'bool8'=>false, 'storage_field'=>'site' ) );
         ?>
     </ul>
 </div>
@@ -53,5 +65,6 @@ jQuery(document).ready(function($) {
 	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');
 	$('#sortable_core_dev_texts').isVisibleWhen('itemid','-3');
 	$('#content_fieldname,#content_location,#blank_li').isVisibleWhen('content','2');
+	$('#site,#blank_li3').isVisibleWhen('path_type','1,2');
 });
 </script>
