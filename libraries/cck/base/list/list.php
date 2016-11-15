@@ -87,7 +87,6 @@ class CCK_List
 							'size',
 							'cols',
 							'rows',
-							'ordering',
 							'sorting',
 							'divider',
 							'bool',
@@ -147,7 +146,7 @@ class CCK_List
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client,'
+		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client, c.ordering,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_search_field AS c ON c.fieldid = a.id'
@@ -174,7 +173,8 @@ class CCK_List
 	// getFields_Items
 	public static function getFields_Items( $search_name, $client, $access )
 	{
-		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.ordering,'
+					.	' c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 					.	' FROM #__cck_core_search_field AS c'
 					.	' LEFT JOIN #__cck_core_searchs AS sc ON sc.id = c.searchid'
 					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'

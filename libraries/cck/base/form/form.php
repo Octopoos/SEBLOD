@@ -64,7 +64,7 @@ class CCK_Form
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	'SELECT DISTINCT a.*, c.client,'
+		$query	=	'SELECT DISTINCT a.*, c.client, c.ordering,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				. 	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
