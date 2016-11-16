@@ -17,14 +17,16 @@ if ( !JCck::on( '3.4' ) ) {
 }
 
 $app			=	JFactory::getApplication();
+$copyfrom_id	=	0;
 $data			=	'';
 $id				=	0;
-$translate_id	=	0;
+
 if ( $option == 'com_cck' && $view == 'form' ) {
+	$copyfrom_id	=	$app->input->getInt( 'copyfrom_id', 0 );
 	$id				=	$app->input->getInt( 'id', 0 );
-	$translate_id	=	$app->input->getInt( 'translate_id', 0 );
-	if ( $translate_id > 0 ) {
-		$id			=	$translate_id;
+	
+	if ( $copyfrom_id > 0 ) {
+		$id			=	$copyfrom_id;
 	}
 }
 $client			=	$preconfig['client'];
@@ -86,7 +88,7 @@ if ( $id > 0 ) {
 			}
 		}
 	}
-	if ( !$translate_id ) {
+	if ( !$copyfrom_id ) {
 		$author			=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 	}
 } else {
@@ -116,6 +118,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'asset_id'=>0,
 				   'author'=>$author,
 				   'client'=>$client,
+				   'copyfrom_id'=>$copyfrom_id,
 				   'core'=>true,
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
@@ -128,7 +131,6 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'pk'=>$id,
    				   'submit'=>$preconfig['submit'],
 				   'storages'=>array(),
-				   'translate_id'=>$translate_id,
 				   'type'=>$type->name,
 				   'type_id'=>$type->id,
 				   'url'=>( ( @$preconfig['url'] ) ? $preconfig['url'] : $current ),
@@ -361,10 +363,11 @@ if ( @$profiler ) {
 }
 $data	=	$doc->render( false, $rparams );
 
-if ( $translate_id > 0 ) {
+if ( $copyfrom_id > 0 ) {
 	$config['asset_id']	=	0;
 	$config['author']	=	0;
 	$config['custom']	=	'';
+	$config['id']		=	0;
 	$config['pk']		=	0;
 	$config['storages']	=	array();
 	$id					=	0;

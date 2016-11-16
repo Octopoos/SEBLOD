@@ -95,6 +95,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					*/
 				}
 				break;
+			case 'dropdown':
+				$class	=	$typo->get( 'class1', '' );
+				$class	=	$class ? ' '.$class : '';
+				$value	=	'<button data-toggle="dropdown" class="dropdown-toggle btn'.$class.'"><span class="caret"></span></button>'
+						.	'<ul class="dropdown-menu">'
+						.	'<li>'
+						.	( ( isset( $field->html ) && $field->html ) ? $field->html : $value )
+						.	'</li>'
+						.	'</ul>';
+				break;
 			case 'featured':
 				static $loadedF = 0;
 				if ( !$loadedF ) {

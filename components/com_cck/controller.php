@@ -342,7 +342,17 @@ class CCKController extends JControllerLegacy
 				$output	=	1;
 			}
 			if ( $output > 0 ) {
-				$this->setRedirect( $link, JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
+				if ( isset( $config['message'] ) && $config['message'] != '' ) {
+					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
+				} else {
+					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+				}
+				if ( isset( $config['message_style'] ) && $config['message_style'] != '' ) {
+					$msgType	=	$config['message_style'];
+				} else {
+					$msgType	=	'message';
+				}
+				$this->setRedirect( $link, $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
@@ -613,15 +623,16 @@ class CCKController extends JControllerLegacy
 	// _getPreconfig
 	protected function _getPreconfig()
 	{
-		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+		$data	=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
 
-		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : (int)$data['id'];
-		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : (int)$data['itemId'];
-		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
-		$data['tmpl']		=	( !isset( $data['tmpl'] ) ) ? '' : $data['tmpl'];
-		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
-		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
-		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];
+		$data['copyfrom_id']	=	( !isset( $data['copyfrom_id'] ) ) ? 0 : (int)$data['copyfrom_id'];
+		$data['id']				=	( !isset( $data['id'] ) ) ? 0 : (int)$data['id'];
+		$data['itemId']			=	( !isset( $data['itemId'] ) ) ? 0 : (int)$data['itemId'];
+		$data['message']		=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['tmpl']			=	( !isset( $data['tmpl'] ) ) ? '' : $data['tmpl'];
+		$data['type']			=	( !isset( $data['type'] ) ) ? '' : $data['type'];
+		$data['unique']			=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
+		$data['url']			=	( !isset( $data['url'] ) ) ? '' : $data['url'];
 		
 		return $data;
 	}

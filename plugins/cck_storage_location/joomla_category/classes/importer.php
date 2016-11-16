@@ -17,7 +17,7 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 {
 	protected static $columns_excluded	=	array();
 
-	// getColumnsToExport
+	// getColumnsToImport
 	public static function getColumnsToImport()
 	{
 		$table		=	self::_getTable();

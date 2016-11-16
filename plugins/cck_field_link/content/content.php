@@ -43,6 +43,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$itemId		=	( $sef ) ? $link->get( 'itemid', '' ) : '';
 		$content	=	$link->get( 'content', '' );
 		$custom		=	$link->get( 'custom', '' );
+		$path_type	=	(int)$link->get( 'path_type', 0 );
 		
 		// Prepare
 		if ( !$itemId ) {
@@ -129,8 +130,30 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				JFactory::getDocument()->addScriptDeclaration( $js );
 			}
 		}
-		if ( $link->get( 'path_type', 0 ) ) {
-			$field->link	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$field->link;
+		if ( $path_type ) {
+			if ( $site_id = $link->get( 'site', '' ) ) {
+				$base		=	'';
+				$site		=	JCck::getSiteById( $site_id );
+				
+				if ( is_object( $site ) && $site->name != '' ) {
+					$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+				}
+			} else {
+				$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
+			}
+			if ( $path_type == 2 ) {
+				$field->link	=	$base.$field->link;
+				$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
+
+				if ( $segment == '/' ) {
+					$segment	=	'';
+				}
+				$base			.=	$segment.'/';
+				$field->link	=	str_replace( $base, '', $field->link );
+				$field->link	=	$base.'#'.$field->link;
+			} else {
+				$field->link	=	$base.$field->link;
+			}
 		}
 		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
 		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );

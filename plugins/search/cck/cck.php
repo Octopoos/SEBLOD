@@ -78,6 +78,10 @@ class plgSearchCCK extends JPlugin
 				if ( $j->table ) {
 					if ( !isset( $tables[$j->table] ) ) {
 						$tables[$j->table]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>@$j->and, 'join_type'=>@$j->type, 'join_mode'=>@$j->mode, 'join_query'=>@$j->query );
+
+						if ( @$j->aka != '' && $j->aka != $j->table ) {
+							$tables[$j->table]['table']	=	$j->aka;
+						}
 					} elseif ( @$j->and != '' ) {
 						$tables[$j->table.'@'.md5( $j->and )]	=	array( '_'=>'t'.$t++, 'fields'=>array(), 'key'=>$j->column, 'join'=>2, 'join_key'=>$j->column2, 'join_table'=>$j->table2, 'join_and'=>$j->and, 'join_type'=>@$j->type, 'join_mode'=>@$j->mode, 'join_query'=>@$j->query );
 					}
@@ -461,7 +465,7 @@ class plgSearchCCK extends JPlugin
 	{
 		foreach ( $tables as $tk=>$tv ) {
 			$j	=	( isset( $tv['join'] ) ) ? $tv['join'] : 1;
-			if ( $tv['_'] != 't0' && $j == $join ) {
+			if ( isset( $tv['_'] ) && $tv['_'] != 't0' && $j == $join ) {
 				if ( ! $config['location'] && $tv['_'] == 't1' ) {
 					$config['location']	=	$tv['location'];
 					$inherit['table']	=	$tk;
@@ -481,6 +485,8 @@ class plgSearchCCK extends JPlugin
 					if ( $join_and != '' && strpos( $tk, '@' ) !== false ) {
 						$tk_table	=	explode( '@', $tk );
 						$tk			=	$tk_table[0];
+					} elseif ( isset( $tv['table'] ) && $tv['table'] ) {
+						$tk			=	$tv['table'];
 					}
 					if ( $tk != '' ) {
 						if ( $join_mode ) {

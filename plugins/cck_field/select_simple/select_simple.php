@@ -141,7 +141,9 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		} else {
 			$optionsSorted	=	$options;
 		}
-		$opts	=	array();
+		$attributes	=	array();
+		$opts		=	array();
+		$options	=	array();
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
 				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
@@ -151,10 +153,12 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 				foreach ( $attribs as $k=>$a ) {
 					$attr['attr']	.=	' '.$a.'=""';
 				}
-				$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
+				$attributes[]	=	$attr['attr'];
+				$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
 			} else {
-				$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
+				$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 			}
+			$options[]			=	$field->selectlabel.'=';
 		}
 		$optgroup	=	0;
 		
@@ -185,10 +189,12 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 									foreach ( $attribs as $k=>$a ) {
 										$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 									}
+									$attributes[]	=	$attr['attr'];
 									$opts[]			=	JHtml::_( 'select.option', $opt[1], $opt[0], $attr );
 								} else {
 									$opts[]			=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
 								}
+								$options[]			=	$opt[0].'='.$opt[1];
 							}
 						} else {
 							if ( $val == 'endgroup' && $optgroup == 1 ) {
@@ -204,10 +210,12 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 									foreach ( $attribs as $k=>$a ) {
 										$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 									}
+									$attributes[]	=	$attr['attr'];
 									$opts[]			=	JHtml::_( 'select.option', $val, $text, $attr );
 								} else {
 									$opts[]			=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
 								}
+								$options[]			=	$text.'='.$val;
 							}
 						}
 					}
@@ -244,10 +252,12 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 								foreach ( $attribs as $k=>$a ) {
 									$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 								}
+								$attributes[]	=	$attr['attr'];
 								$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
 							} else {
 								$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );
 							}
+							$options[]			=	$o->text.'='.$o->val;
 						}
 					}
 				}
@@ -284,6 +294,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 			if ( $config['doTranslation'] ) {
 				$config['doTranslation']=	$field->bool8;
 			}
+			$field->attributesList		=	( count( $attributes ) ) ? implode( '||', $attributes ) : '';
+			$field->optionsList			=	( count( $options ) ) ? implode( '||', $options ) : '';
 			$field->text				=	parent::g_getOptionText( $value, $field->options, '', $config );
 			$config['doTranslation']	=	$doTranslation;
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );

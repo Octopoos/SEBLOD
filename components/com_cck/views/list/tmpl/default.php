@@ -216,3 +216,24 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 })(jQuery);
 </script>
 <?php } ?>
+<?php if ( $this->load_resource ) {
+	$url	=	JRoute::_( 'index.php?Itemid='.$app->input->getInt( 'Itemid', 0 ) );
+	
+	if ( $url == '/' ) {
+		$url	=	'';
+	}
+	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$url;
+?>
+<script type="text/javascript">
+(function ($){
+	JCck.Core.loadfragment = JCck.Core.getModal(<?php echo $this->json_resource ? $this->json_resource : '{}'; ?>);
+	$(document).ready(function() {
+		var fragment = window.location.hash;
+		if (fragment != "") {
+			fragment = fragment.substring(1);
+			JCck.Core.loadfragment.loadRemote("<?php echo $url; ?>/"+fragment+"<?php echo ( $this->tmpl_resource ? '?tmpl='.$this->tmpl_resource : '' )?>");
+		}
+	});
+})(jQuery);
+</script>
+<?php } ?>

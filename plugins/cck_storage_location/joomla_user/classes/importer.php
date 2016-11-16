@@ -17,7 +17,7 @@ class plgCCK_Storage_LocationJoomla_User_Importer extends plgCCK_Storage_Locatio
 {
 	protected static $columns_excluded	=	array( 'isRoot', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
 
-	// getColumnsToExport
+	// getColumnsToImport
 	public static function getColumnsToImport()
 	{
 		$table		=	self::_getTable();

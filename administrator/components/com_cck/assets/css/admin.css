@@ -186,6 +186,7 @@ body.contentpane.component div.toggle-selection a{color:#3b99fc;}
 .sly-wrapper .pages{margin-bottom: 0;}
 
 .mini-desc{color:#3b99fc; font-size: 11px; font-style: italic;}
+input.mini.input-xlarge{position:relative; top:2px; max-width: inherit!important; text-align: center;}
 body.com_cck div#status{box-shadow:none;}
 
 div.seblod ul.adminformlist .input-append .btn{margin-top: 5px; margin-left: -5px;}

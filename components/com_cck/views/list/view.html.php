@@ -191,6 +191,12 @@ class CCKViewList extends JViewLegacy
 			$this->callback_pagination	=	'';
 		}
 		
+		$this->load_resource			=	$options->get( 'load_resource', 0 );
+		if ( $this->load_resource ) {
+			$this->json_resource		=	$options->get( 'json_resource', '{}' );
+			$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
+		}
+
 		// Force Titles to be hidden
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$params->set( 'show_page_heading', 0 );

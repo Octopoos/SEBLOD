@@ -19,3 +19,6 @@ Get Involved?
 ======
 Anyone that want to help & get involved in the development of SEBLOD should use the "Master" branch, and Pull Request only to the "Master" branch.
 And, please give us a star to help the project, as well. Thanks ! :)
+
+- <a href="https://github.com/Octopoos/SEBLOD/wiki/How-to-contribute%3F">How to contribute?</a>
+- <a href="https://github.com/Octopoos/SEBLOD/wiki/How-to-help%3F">How to help?</a>

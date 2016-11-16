@@ -45,6 +45,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <div>
     <input type="hidden" id="task" name="task" value="" />
     <input type="hidden" id="myid" name="id" value="<?php echo @$this->item->id; ?>" />
+    <input type="hidden" name="extension" value="<?php echo $this->item->extension; ?>" />
     <?php
     echo JHtml::_( 'form.token' );
 	?>

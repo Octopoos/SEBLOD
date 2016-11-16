@@ -74,8 +74,13 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		}
 		if ( $config['client'] == 'admin' && ! $config['pk'] && !$value ) {
 			$value	=	array( 2 );
-		} elseif ( $value && is_string( $value ) && strpos( $value, ',' ) !== false ) {
-			$value	=	explode( ',', $value );
+		} elseif ( $value && is_string( $value ) ) {
+			if ( strpos( $value, '[' ) !== false && $value[0] == '[' ) {
+				$value	=	substr( $value, 1, -1 );
+			}
+			if ( strpos( $value, ',' ) !== false ) {
+				$value	=	explode( ',', $value );
+			}
 		} elseif ( is_null( $value ) ) {
 			$value	=	$field->defaultvalue;
 		}

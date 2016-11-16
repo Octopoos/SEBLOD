@@ -137,11 +137,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( $table == self::$table ) {
 			$storage			=	self::_getTable( $pk );
 			$config['asset']	=	'com_content';
-			if ( $config['translate_id'] ) {
+			if ( $config['copyfrom_id'] ) {
 				$empty						=	array( self::$key, 'alias', 'created', 'created_by', 'hits', 'modified', 'modified_by', 'version' );
 				$config['language']			=	JFactory::getApplication()->input->get( 'translate' );
 				$config['translate']		=	$storage->language;
-				$config['translated_id']	=	$config['translate_id'].':'.$storage->alias;
+				$config['copiedfrom_id']	=	$config['copyfrom_id'].':'.$storage->alias;
 				foreach ( $empty as $k ) {
 					$storage->$k	=	'';
 				}

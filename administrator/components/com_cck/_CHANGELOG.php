@@ -22,6 +22,39 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.11.0 Upgrade Release [xx-Nov-2016] -----------
+
++ "Edition as Copy" behaviour added on SEBLOD Form Link plug-in.
++ Placeholder tables added for Free storage.
+  >> useful for AKA/Join queries (Search Join Plug-in).
+
++ Country List updated in install.sql to include Ukrainian translation.
++ "Dropdown Menu" behaviour added on JGrid Typography plug-in.
++ "Match Occurences Offset" parameter added for "Each Word Exact" match mode.
+
+! JCck::isSite() method improved.
+  >> can identify if site is "master" or from aliases.
+! Object Plug-ins (exporter.php) updated for Exporter Add-on.
+
+^ JCckContent class updated.
+  >> "getInstanceBase" method added.
+  >> "save" method refactored.
+^ JCckContent classes added on each Object plug-in.
+  >> use "$content = new JCckContentJoomla_Article;" in order to create of new Articles.
+  >> use "$content = new JCckContentJoomla_Category;" in order to create new Categories.
+  >> use "$content = new JCckContentJoomla_User;" in order to create new Users.
+  >> use "$content = new JCckContent[OBJECT_NAME];" in order to create new Items from a specific Object.
+  >> use "$content = JCckContent::getInstance(...); in order to load/update any kind of Item."
+^ "translate_id" variable renamed to "copyfrom_id".
+^ Mobile Detect updated to 2.8.24.
+
+# "Admin Form" permission added at component-level.
+# Custom Attributes support added for List (Field) Variations.
+# "has-value" class fixed Select Dynamic/Multiple.
+# Missing back-end methods for reorder by drag-and-drop capability added.
+# Translation issue (static options) fixed on Select Dynamic plug-in.
+# Various improvements or issues fixed.
+
 -------------------- 3.10.0 Upgrade Release [30-Sep-2016] -----------
 
 + Ability to use "Admin Form" on Front-end.

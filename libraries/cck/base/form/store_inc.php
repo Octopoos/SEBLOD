@@ -20,7 +20,7 @@ $user		=	JFactory::getUser();
 $unique		=	( $preconfig['unique'] ) ? $preconfig['unique'] : 'seblod_form';
 $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
-$hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'] );
+$hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
@@ -69,6 +69,7 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 $storages	=	array();
 $config		=	array( 'author'=>$author,
 					   'client'=>$client,
+					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 					   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
 					   'error'=>false,
@@ -141,8 +142,10 @@ if ( count( $fields ) ) {
 		}
 		$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
 
-		if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
-			$toBeChecked	=	true;
+		if ( !$config['copyfrom_id'] ) {
+			if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
+				$toBeChecked	=	true;
+			}
 		}
 		if ( $toBeChecked && !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
 			$hash		=	JApplication::getHash( $value );

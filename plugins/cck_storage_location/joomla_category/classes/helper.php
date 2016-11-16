@@ -55,8 +55,8 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 					$form->setValue( $tag, $name, $association_id );
 				}
 			}
-			if ( $config['translate_id'] && isset( $config['translate'] ) ) {
-				$form->setValue( $config['translate'], $name, $config['translate_id'] );
+			if ( $config['copyfrom_id'] && isset( $config['translate'] ) ) {
+				$form->setValue( $config['translate'], $name, $config['copyfrom_id'] );
 			}
 		}
 		

@@ -97,6 +97,17 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         </ul>
     </div>
     <div class="seblod">
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_RESOURCE_AS_FRAGMENT' ); ?></div>
+        <ul class="adminformlist adminformlist-2cols">
+            <?php
+            echo JCckDev::renderForm( 'core_bool', @$options['load_resource'], $config, array( 'defaultvalue'=>'0', 'label'=>'Enable Loading', 'storage_field'=>'options[load_resource]' ) );
+            echo JCckDev::renderBlank( '<input type="hidden" id="blank_li7" value="" />' );
+            echo JCckDev::renderForm( 'core_dev_select', @$options['tmpl_resource'], $config, array( 'defaultvalue'=>'', 'label'=>'Tmpl', 'selectlabel'=>'None', 'options'=>'Component=component||Raw=raw', 'storage_field'=>'options[tmpl_resource]' ) );
+            echo JCckDev::renderForm( 'core_dev_textarea', @$options['json_resource'], $config, array( 'label'=>'Parameters', 'cols'=>80, 'rows'=>1, 'storage_field'=>'options[json_resource]' ), array(), 'w100' );
+            ?>
+        </ul>
+    </div>
+    <div class="seblod">
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php

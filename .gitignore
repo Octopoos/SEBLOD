@@ -505,6 +505,7 @@
 /administrator/language/en-GB/index.html
 /administrator/language/overrides/*
 /administrator/language/index.html
+/administrator/logs/*
 /administrator/manifests/files/*
 /administrator/manifests/libraries/fof.xml
 /administrator/manifests/libraries/idna_convert.xml
@@ -896,6 +897,7 @@
 /language/overrides/*
 /language/index.html
 /libraries/cms/application/*
+/libraries/cms/authentication/*
 /libraries/cms/captcha/*
 /libraries/cms/class/*
 /libraries/cms/component/*

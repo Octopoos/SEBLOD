@@ -278,7 +278,7 @@ class plgContentCCK extends JPlugin
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		if ( $client == 'intro' && $this->cache ) {
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -288,7 +288,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -303,7 +303,7 @@ class plgContentCCK extends JPlugin
 			} else {
 				$w_type	=	'sc.name = "'.$contentType.'"';	
 			}
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -317,7 +317,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'

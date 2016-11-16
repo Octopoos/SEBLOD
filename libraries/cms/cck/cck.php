@@ -175,7 +175,8 @@ abstract class JCck
 					}
 				}
 			}
-			self::$_host				=	$host;
+			self::$_host	=	$host;
+
 			if ( isset( self::$_sites[$host] ) ) {
 				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
 			}
@@ -192,10 +193,39 @@ abstract class JCck
 		return self::$_sites[self::$_host];
 	}
 	
-	// isSite
-	public static function isSite()
+	// getSiteById
+	public static function getSiteById( $id )
 	{
-		return ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) ? true : false;
+		static $sites	=	NULL;
+
+		if ( !is_array( $sites ) ) {
+			$sites		=	array();
+
+			if ( count( self::$_sites ) ) {
+				foreach ( self::$_sites as $k=>$v ) {
+					$sites[$v->id]	=	$v;
+				}
+			}
+		}
+		if ( !isset( $sites[$id] ) ) {
+			return null;
+		}
+
+		return $sites[$id];
+	}
+
+	// isSite
+	public static function isSite( $master = false )
+	{
+		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
+			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+				return false;
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User

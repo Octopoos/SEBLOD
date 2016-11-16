@@ -44,6 +44,8 @@ class plgSystemCCK extends JPlugin
 		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
 		$this->restapi		=	$this->_isRestApi();
 
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
@@ -446,10 +448,16 @@ class plgSystemCCK extends JPlugin
 					$this->offline_buffer	=	$doc->render( false, $params );
 				} elseif ( $this->site_cfg->get( 'set_template_style', false ) ) {
 					$menu	=	$app->getMenu();
+					
 					if ( is_object( $menu ) ) {
-						$style	=	$menu->getActive()->template_style_id;
-						if ( $style ) {
-							$this->_setTemplateStyle( $style );
+						$active	=	$menu->getActive();
+						
+						if ( is_object( $active ) ) {
+							$style	=	$active->template_style_id;
+							
+							if ( $style ) {
+								$this->_setTemplateStyle( $style );
+							}
 						}
 					}
 				}

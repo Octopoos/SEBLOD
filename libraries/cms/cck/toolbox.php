@@ -136,7 +136,16 @@ abstract class JCckToolbox
 						if ( $replace != '' ) {
 							$body	=	str_replace( $replace, $html, $body );
 						} else {
-							$body	=	str_replace( '</head>', $html.'</head>', $body );
+							$cck_js	=	'<script src="/media/cck/js/cck.core-3';
+
+							if ( strpos( $body, $cck_js ) !== false ) {
+								$search		=	$cck_js;
+								$replace	=	$html."\n\t".$cck_js;
+							} else {
+								$search		=	'</head>';
+								$replace	=	$html.'</head>';
+							}
+							$body	=	str_replace( $search, $replace, $body );
 						}
 						$i++;
 

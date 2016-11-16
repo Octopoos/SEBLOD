@@ -96,8 +96,9 @@ class CCKViewForm extends JViewLegacy
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
+		
 		if ( isset( $config['id'] ) ) {
-			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
+			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'].'|'.$config['copyfrom_id'] ) );
 		}
 		
 		// Set
@@ -126,6 +127,8 @@ class CCKViewForm extends JViewLegacy
 			$this->description		=	@$type->description;
 		} elseif ( $this->show_form_desc ) {
 			$this->description		=	$params->get( 'form_desc', @$type->description );
+		} else {
+			$this->description		=	'';
 		}
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );

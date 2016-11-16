@@ -37,9 +37,20 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	{
 		$app			=	JFactory::getApplication();
 		$custom			=	$link->get( 'custom', '' );
+		$edit			=	(int)$link->get( 'form_edition', 1 );
 		$form			=	$link->get( 'form', '' );
-		$edit			=	$link->get( 'form_edition', 1 );
-		$edit			=	( !$form && $edit ) ? '&id='.$config['pk'] : '';
+
+		if ( !$form ) {
+			if ( (int)$edit == 1 ) {
+				$edit	=	'&id='.$config['pk'];
+			} elseif ( $edit == 2 ) {
+				$edit	=	'&copyfrom_id='.$config['pk'];
+			} else {
+				$edit	=	'';
+			}
+		} else {
+			$edit		=	'';
+		}
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
