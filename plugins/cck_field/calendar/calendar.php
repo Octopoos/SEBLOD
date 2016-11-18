@@ -155,7 +155,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
 
-		$field->value	=	$Jdate; //$value;
+		$field->value	=	$Jdate;
 
 		// Return
 		if ( $return === true ) {
@@ -201,7 +201,6 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		// Set
-		//$field->match_value	=	$field->match_value ? $field->match_value : ',';
 		$field->value		=	$value;
 
 
