@@ -214,23 +214,25 @@
   //   Note that no real action is taken, if the archive does not exist it is not
   //   created. Use create() for that.
   // --------------------------------------------------------------------------------
-  function PclZip($p_zipname)
+  
+  // __construct
+  public function __construct($p_zipname)
   {
+     // ----- Tests the zlib
+     if (!function_exists('gzopen'))
+     {
+       die('Abort '.basename(__FILE__).' : Missing zlib extensions');
+     }
 
-    // ----- Tests the zlib
-    if (!function_exists('gzopen'))
-    {
-      die('Abort '.basename(__FILE__).' : Missing zlib extensions');
-    }
+     // ----- Set the attributes
+     $this->zipname = $p_zipname;
+     $this->zip_fd = 0;
+     $this->magic_quotes_status = -1;
 
-    // ----- Set the attributes
-    $this->zipname = $p_zipname;
-    $this->zip_fd = 0;
-    $this->magic_quotes_status = -1;
-
-    // ----- Return
-    return;
+     // ----- Return
+     return;
   }
+  
   // --------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------
