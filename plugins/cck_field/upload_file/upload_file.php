@@ -279,10 +279,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 
 		$class				=	'inputbox file'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$attr_input_text	=	'class="inputbox text" size="'.$field->size.'"';
+		$collection			=	'';
 		
 		if ( strpos( $name, '[]' ) !== false ) { //FieldX
-			$nameH	=	substr( $name, 0, -2 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -2 );
+			$collection 	=	$nameH;
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false ); 
 			}
@@ -294,8 +296,9 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more3	=	self::_addFormText( $id.'_title', $nameH.'_title[]', $attr_input_text, $title_label, $file_title, 'upload_file' );
 			}
 		} elseif ( $name[(strlen($name) - 1 )] == ']' ) { //GroupX
-			$nameH	=	substr( $name, 0, -1 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -1 );
+			$collection 	=	substr( $name, 0, strpos( $name, '[' ) );
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false );
 			}
@@ -331,10 +334,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
-			$more	=	'';
+			$more	=	( $collection ) ? '&collection='.$collection.'&xi='.$xk : '';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
 			if ( isset( $config['id'] ) && $config['id'] ) {
-				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'] );
+				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.$field->name.'&id='.$config['id'] );
 				$target	=	'';
 			} else {
 				$link	=	JUri::root().$value2;
