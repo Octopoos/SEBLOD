@@ -38,7 +38,9 @@ $ -> Language fix or change
 
 ! JCck::isSite() method improved.
   >> can identify if site is "master" or from aliases.
-! Object Plug-ins (exporter.php) updated for Exporter Add-on.
+! JCckTable doesn't have support for Assets (and issues are now prevented).
+! JCckTable shouldn't be used with tables having an Object plug-in.
+! Object plug-ins (exporter.php) updated for Exporter Add-on.
 
 ^ JCckContent class updated.
   >> "getInstanceBase" method added.
