@@ -17,6 +17,8 @@ class JCckTable extends JTable
 	function __construct( $table, $key, &$db )
 	{
 		parent::__construct( $table, $key, $db );
+
+		$this->_trackAssets = false;
 	}
 	
 	// getInstance
