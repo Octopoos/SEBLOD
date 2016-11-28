@@ -48,7 +48,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		
 		$rule		=	'
 					"'.$name.'":{
-						"url": "'.JUri::base().'index.php?option=com_cck&task=ajax&format=raw&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php",
+						"url": "'.JCckDevHelper::getAbsoluteAjaxUrl( 'task=ajax&format=raw&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
 						"extraData": "avTable='.str_replace( '#__', '', $validation->table ).'&avColumn='.$validation->column.$extra.'",
 						'.$extraData2.'
 						"alertText": "'.$prefix.$alert.'",

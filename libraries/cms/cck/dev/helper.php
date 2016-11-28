@@ -73,6 +73,24 @@ abstract class JCckDevHelper
 	{
 		return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) );
 	}
+
+	// getAbsoluteAjaxUrl
+	public static function getAbsoluteAjaxUrl( $query )
+	{
+		if ( $query[0] == '?' || $query[0] == '&' ) {
+			$query	=	substr( $query, 1 );
+		}
+
+		$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
+
+		if ( $itemId > 0 ) {
+			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).'/?'.$query;
+		} elseif ( $itemId == -1 ) {
+			return JUri::base().'component/cck/?'.$query;
+		} else {
+			return JUri::base().'index.php?option=com_cck&'.$query;
+		}
+	}
 	
 	// getBranch
 	public static function getBranch( $table, $pk )

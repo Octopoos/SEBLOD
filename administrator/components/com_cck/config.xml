@@ -188,6 +188,10 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="sef_root" type="sql" default="0" label="COM_CCK_CONFIG_SEF_ROOT" description="COM_CCK_CONFIG_SEF_ROOT_DESC" query="SELECT id, title FROM #__menu WHERE published=1 AND client_id=0 AND link LIKE 'index.php?option=com_cck&amp;%' ORDER BY title" key_field="id" value_field="title" class="inputbox">
+			<option value="0">JOPTION_USE_DEFAULT</option>
+			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
