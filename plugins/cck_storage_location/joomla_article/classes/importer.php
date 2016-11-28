@@ -90,11 +90,29 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			JPluginHelper::importPlugin( 'content' );
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
-				$config['error']	=	true;
-				$config['log']		=	'cancelled';
-				$config['pk']		=	$pk;
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-				return false;
+				$error		=	true;
+
+				if ( $isNew ) {
+					$i		=	2;
+					$alias	=	$table->alias.'-'.$i;
+					$test	=	JTable::getInstance( 'content' );
+					
+					while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
+						$alias		=	$table->alias.'-'.$i++;
+					}
+					$table->alias	=	$alias;
+
+					if ( $table->store() ) {
+						$error		=	false;
+					}
+				}
+				if ( $error ) {
+					$config['error']	=	true;
+					$config['log']		=	'cancelled';
+					$config['pk']		=	$pk;
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+					return false;
+				}
 			}
 			$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 			
