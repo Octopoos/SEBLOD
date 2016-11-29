@@ -111,7 +111,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					JHtml::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
 					$loadedF	=	1;
 				}
-				$value		=	JHtml::_( 'contentadministrator.featured', $field->value, $pks[$pk], false /*$canChange*/ );
+				$value		=	$field->value;
+
+				if ( is_numeric( $value ) ) {
+					$value	=	( (int)$value > 0 ) ? 1 : 0;
+				} elseif ( is_array( $value ) ) {
+					$value	=	( count( $value ) > 0 ) ? 1 : 0;
+				} else {
+					$value	=	( $value == '' ) ? 0 : 1;
+				}
+				$value		=	JHtml::_( 'contentadministrator.featured', $value, $pks[$pk], false /*$canChange*/ );
 
 				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
 					$class	.=	' disabled';
