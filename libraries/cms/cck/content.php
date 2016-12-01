@@ -416,7 +416,7 @@ class JCckContent
 	}
 	
 	// preSave
-	public function preSave( $instance_name, $data )
+	public function preSave( $instance_name, &$data )
 	{
 	}
 	
