@@ -37,6 +37,13 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
+		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
+		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+			$field->value	=	'';
+
+			return;
+		}
+
 		// Prepare
 		if ( $field->defaultvalue ) {
 			$mode	=	$field->bool ? 'module' : 'position';
@@ -64,6 +71,14 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		// Init
 		$form		=	'';
 		$value		=	'';
+
+		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
+		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+			$field->form	=	$form;
+			$field->value	=	$value;
+
+			return;
+		}
 
 		// Prepare
 		if ( $field->defaultvalue ) {
