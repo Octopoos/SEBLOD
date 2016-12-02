@@ -34,19 +34,23 @@ $ -> Language fix or change
   >> useful for AKA/Join queries (Search Join Plug-in).
 
 + Country List updated in install.sql to include Ukrainian translation.
++ History/Log support added for templates.
+
 + "Site" parameter added on Content Link plug-in.
 
 ! JCck::isSite() method improved.
   >> can identify if site is "master" or from aliases.
-! JCckTable doesn't have support for Assets (and issues are now prevented).
-! JCckTable shouldn't be used with tables having an Object plug-in.
+! JCckTable doesn't have support for Assets (and issues are now prevented!).
+! JCckTable shouldn't be used with tables having an Object plug-in >> use JCckContent.
 ! Object plug-ins (exporter.php) updated for Exporter Add-on.
+! Object plug-ins (importer.php) updated for Importer Add-on.
+  >> suffix forced for existing/identical "alias" for new items.
 
 ^ JCckContent class updated.
   >> "getInstanceBase" method added.
   >> "save" method refactored.
 ^ JCckContent classes added on each Object plug-in.
-  >> use "$content = new JCckContentJoomla_Article;" in order to create of new Articles.
+  >> use "$content = new JCckContentJoomla_Article;" in order to create new Articles.
   >> use "$content = new JCckContentJoomla_Category;" in order to create new Categories.
   >> use "$content = new JCckContentJoomla_User;" in order to create new Users.
   >> use "$content = new JCckContent[OBJECT_NAME];" in order to create new Items from a specific Object.
