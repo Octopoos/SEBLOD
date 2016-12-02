@@ -15,22 +15,6 @@ JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/cate
 // JCckContent
 class JCckContentJoomla_Category extends JCckContent
 {
-	// getInstance
-	public static function getInstance( $identifier = '', $data = true )
-	{
-		if ( !$identifier ) {
-			return new JCckContentJoomla_Category;
-		}
-
-		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
-		if ( !isset( self::$instances[$key] ) ) {
-			$instance	=	new JCckContentJoomla_Category( $identifier );
-			self::$instances[$key]	=	$instance;
-		}
-
-		return self::$instances[$key];
-	}
-
 	// preSave
 	public function preSave( $instance_name, &$data )
 	{
