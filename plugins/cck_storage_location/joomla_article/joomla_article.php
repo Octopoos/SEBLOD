@@ -740,7 +740,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$idx	=	md5( $sef.'|'.$itemId.'|'.$lang_tag );
 		
 		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
-			return JRoute::_( $storage[self::$table]->_route[$idx] );
+			return JRoute::_( $storage[self::$table]->_route[$idx], false );
 		}
 
 		if ( $sef ) {

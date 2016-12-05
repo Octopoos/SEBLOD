@@ -404,7 +404,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route );
+			return JRoute::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -433,7 +433,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return JRoute::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute

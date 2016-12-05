@@ -149,7 +149,7 @@ class CCK_Form
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url ) : $url;
+			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}
