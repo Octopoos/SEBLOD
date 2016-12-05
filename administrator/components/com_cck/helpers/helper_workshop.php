@@ -198,7 +198,7 @@ class Helper_Workshop
 	}
 	
 	// getDefaultStyle
-	public static function getDefaultStyle( $template )
+	public static function getDefaultStyle( $template = '' )
 	{
 		static $styles	=	array();
 		
