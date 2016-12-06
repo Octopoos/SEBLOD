@@ -13,9 +13,11 @@ defined( '_JEXEC' ) or die;
 // getOptions
 function getOptions( $string )
 {
-	$options	=	'';
+	$options	=	array();
+
 	if ( $string ) {
 		$string	=	explode( '||', $string );
+		
 		foreach ( $string as $str ) {
 			if ( $str != '' ) {
 				$s				=	explode( '=', $str );
