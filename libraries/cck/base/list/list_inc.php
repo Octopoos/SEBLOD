@@ -145,6 +145,7 @@ $ordering		=	( @$preconfig['ordering'] != '' ) ? $preconfig['ordering'] : $optio
 $active			=	array();
 $active[0]		=	'cck';
 $areas['active']=	$active;
+
 if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
 	$post		=	( $method ) ? JRequest::get( 'post' ) : JRequest::get( 'get' );
 }
@@ -236,6 +237,7 @@ if ( $context != '' ) {
 		}
 	}
 }
+
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
@@ -246,6 +248,16 @@ if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 }
 if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
 	$options->set( 'limit', $preconfig['limit'] );
+}
+
+// isPersistent
+$context		=	$search->name;
+$isPersistent	=	(int)$options->get( 'persistent_query', '0' );
+
+if ( isset( $this ) && ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) ) {
+	$isPersistent	=	true;
+} else {
+	$isPersistent	=	false;
 }
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search
@@ -285,6 +297,11 @@ foreach ( $fields['search'] as $field ) {
 	// Value
 	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
+		
+		// Set Persistent Values
+		if ( $isPersistent ) {
+			$app->setUserState( $context.'.filter.'.$name, $value );
+		}
 	} else {
 		if ( isset( $lives[$name] ) ) {
 			$value		=	$lives[$name];
@@ -294,6 +311,11 @@ foreach ( $fields['search'] as $field ) {
 			} else {
 				$value	=	$field->live_value;
 			}
+		}
+
+		// Get Persistent Values
+		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
+			$value	=	$app->getUserState( $context.'.filter.'.$name, $value );
 		}
 	}
 	

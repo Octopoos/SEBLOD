@@ -32,8 +32,9 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 			echo JCckDev::renderForm( $cck['core_pagination'], @$options['pagination'], $config );
 			echo JCckDev::renderForm( $cck['core_debug'], @$options['debug'], $config );
 			echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-			echo JCckDev::renderForm( $cck['core_prepare_content'], @$options['prepare_content'], $config );
+			echo JCckDev::renderForm( 'core_dev_select', @$options['persistent_query'], $config, array( 'label'=>'Persistent Search', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=optgroup||Yes for Everyone=1||Registered=2', 'storage_field'=>'options[persistent_query]' ) );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->sef_route, $config, array( 'label'=>'SEF Helper', 'storage_field'=>'sef_route' ) );
+            echo JCckDev::renderForm( $cck['core_prepare_content'], @$options['prepare_content'], $config );
             ?>
         </ul>
 	</div>
