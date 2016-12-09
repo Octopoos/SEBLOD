@@ -45,14 +45,22 @@ $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 $options	=	new JRegistry;
 $options->loadString( $type->{'options_'.$client} );
 
-if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
-	$preconfig['client']	=	'admin';
-	$more_options			=	$type->{'options_'.$preconfig['client']};
+if ( $id > 0 ) {
+	$isNew	=	0;
+} else {
+	$isNew	=	1;
+}
 
-	if ( $more_options != '' ) {
-		$more_options		=	json_decode( $more_options, true );
+if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
+		$preconfig['client']	=	'admin';
+		$more_options			=	$type->{'options_'.$preconfig['client']};
+
+		if ( $more_options != '' ) {
+			$more_options		=	json_decode( $more_options, true );
+		}
+		$options->loadArray( $more_options );
 	}
-	$options->loadArray( $more_options );
 }
 
 $author			=	0;
@@ -64,8 +72,7 @@ $no_action		=	$options->get( 'action_no_access' );
 $stages			=	$options->get( 'stages', 1 );
 $stage			=	-1;
 
-if ( $id > 0 ) {
-	$isNew				=	0;
+if ( !$isNew ) {
 	$canAccess			=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
 	//if ( $user->id && !$user->guest ) {
 		$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
@@ -92,7 +99,6 @@ if ( $id > 0 ) {
 		$author			=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 	}
 } else {
-	$isNew				=	1;
 	if ( $type->location && (( $app->isAdmin() && $type->location != 'admin' ) || ( $app->isSite() && $type->location != 'site' )) ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
 	}
