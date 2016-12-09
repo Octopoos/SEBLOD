@@ -150,6 +150,13 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( self::$type != $field->type ) {
 			return;
 		}
+
+		// default to authorised
+		if (!isset($field->authorised))
+		{
+			$field->authorised = 1;
+		}
+
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 
