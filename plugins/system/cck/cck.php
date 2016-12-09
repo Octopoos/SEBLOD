@@ -242,6 +242,7 @@ class plgSystemCCK extends JPlugin
 					}
 				}
 			}
+			$nogroups	=	str_replace( ',,',',', $nogroups );
 			
 			// Viewlevels
 			$authlevels	=	$user->getAuthorisedViewLevels();
