@@ -183,12 +183,23 @@ class CCKViewList extends JViewLegacy
 		$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', 1 ) );
 		$this->show_pagination			=	$params->get( 'show_pagination' );
 		$this->class_pagination			=	$params->get( 'class_pagination', 'pagination' );
+		$this->label_pagination			=	$options->get( 'label_pagination', '' );
 		if ( $this->show_pagination == '' ) {
 			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
 			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
 			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
+
+			if ( $this->label_pagination != '' ) {
+				if ( $config['doTranslation'] ) {
+					$this->label_pagination	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
+				}
+			}
+			if ( $this->label_pagination == '' ) {
+				$this->label_pagination	=	JText::_( 'COM_CCK_LOAD_MORE' );
+			}
 		} else {
 			$this->callback_pagination	=	'';
+			$this->label_pagination		=	'';
 		}
 		
 		$this->load_resource			=	$options->get( 'load_resource', 0 );
