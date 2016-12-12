@@ -474,19 +474,36 @@ abstract class JCckDevHelper
 	// sortObjectsByProperty
 	public static function sortObjectsByProperty( &$array, $property )
 	{
-		usort( $array, self::_sortCallback( $property ) );
+		if ( count( $array ) ) {
+			foreach ( $array as $k=>$v ) {
+				$v->_index	=	$k;
+			}
+		}
+
+		$array	=	self::_sortHelper( $array, $property, '_index' );
 	}
 
-	// _sortCallback
-	protected static function _sortCallback( $key )
+	// _sortHelper
+	protected static function _sortHelper()
 	{
-		return function ( $a, $b ) use ( $key ) {
-			if ( $a->$key == $b->$key ) {
-				return 0;
+		$args	=	func_get_args();
+		$array	=	array_splice( $args, 0, 1 ); 
+		$array	=	$array[0];
+		
+		usort( $array, function( $a, $b ) use( $args ) {
+			$i		=	0;
+			$count	=	count( $args );
+			$diff	=	0;
+			
+			while ( $diff == 0 && $i < $count ) { 
+				$diff	=	strcmp( $a->{$args[$i]}, $b->{$args[$i]} );
+				$i++;
 			}
 
-			return ( $a->$key < $b->$key ) ? -1 : 1;
-		};
+			return $diff;
+		});
+
+		return $array;
 	}
 }
 ?>
