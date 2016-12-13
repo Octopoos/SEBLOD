@@ -378,13 +378,14 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 							}
 							$attributes[]	=	$attr['attr'];
 							$opts[]			=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );
+							$options[]		=	$o->$opt_name.'='.$o->$opt_value;
 						}
 					} else {
 						foreach ( $items as $o ) {
 							$opts[]			=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, 'value', 'text' );
+							$options[]		=	$o->$opt_name.'='.$o->$opt_value;
 						}
 					}
-					$options[]				=	$o->$opt_name.'='.$o->$opt_value;
 				}
 			}
 			
