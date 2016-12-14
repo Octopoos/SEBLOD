@@ -253,6 +253,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
+		if ( $table->extension == '' ) {
+			$table->extension	=	'com_content';
+		}
+		JFactory::getApplication()->input->set( 'extension', $table->extension );
 		
 		// Process
 		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );

@@ -128,7 +128,7 @@ if ( !$this->raw_rendering ) { ?>
     	}
 		if ( $this->show_pagination > -1 ) {
 			if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) {
-				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'</a></li></ul>';
+				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.$this->label_pagination.'</a></li></ul>';
 			} else {
 				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
 			}

@@ -470,5 +470,40 @@ abstract class JCckDevHelper
 			$vars	=	substr( $vars, 0, -1 );
 		}
 	}
+
+	// sortObjectsByProperty
+	public static function sortObjectsByProperty( &$array, $property )
+	{
+		if ( count( $array ) ) {
+			foreach ( $array as $k=>$v ) {
+				$v->_index	=	$k;
+			}
+		}
+
+		$array	=	self::_sortHelper( $array, $property, '_index' );
+	}
+
+	// _sortHelper
+	protected static function _sortHelper()
+	{
+		$args	=	func_get_args();
+		$array	=	array_splice( $args, 0, 1 ); 
+		$array	=	$array[0];
+		
+		usort( $array, function( $a, $b ) use( $args ) {
+			$i		=	0;
+			$count	=	count( $args );
+			$diff	=	0;
+			
+			while ( $diff == 0 && $i < $count ) { 
+				$diff	=	strcmp( $a->{$args[$i]}, $b->{$args[$i]} );
+				$i++;
+			}
+
+			return $diff;
+		});
+
+		return $array;
+	}
 }
 ?>
