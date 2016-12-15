@@ -476,7 +476,7 @@ abstract class JCckDevHelper
 	{
 		if ( count( $array ) ) {
 			foreach ( $array as $k=>$v ) {
-				$v->_index	=	$k;
+				$v->_index	=	str_pad( $k, 3, '0' , STR_PAD_LEFT );
 			}
 		}
 
