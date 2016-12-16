@@ -1229,14 +1229,14 @@ Temporary Items
 /administrator/components/com_cck_toolbox/*
 /administrator/language/en-GB/en-GB.com_cck_toolbox.ini
 /administrator/language/en-GB/en-GB.com_cck_toolbox.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_code_processing.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_code_processing.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_processing.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_processing.sys.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_processing.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_processing.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.sys.ini
 /components/com_cck_toolbox/*
@@ -1248,7 +1248,7 @@ Temporary Items
 /language/fr-FR/fr-FR.mod_cck_processing.sys.ini
 /media/cck_toolbox/*
 /modules/mod_cck_processing/*
-/plugins/cck_field/code_processing/*
+/plugins/cck_field/cck_processing/*
 /plugins/cck_field_live/cck_processing/*
 /plugins/system/cck_toolbox/*
 /plugins/user/cck_toolbox/*
