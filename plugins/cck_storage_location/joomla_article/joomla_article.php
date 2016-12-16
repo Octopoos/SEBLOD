@@ -97,7 +97,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$config['author']						=	$config['storages'][self::$table]->{self::$author};
 			}
 		}
-		if ( $config['doSEF'] && isset( $row->readmore_link ) ) {
+		if ( isset( $config['doSEF'] ) && $config['doSEF'] && isset( $row->readmore_link ) ) {
 			$row->readmore_link	=	self::getRouteByStorage( $config['storages'], $config['doSEF'], $config['Itemid'], $config );
 		}
 	}
