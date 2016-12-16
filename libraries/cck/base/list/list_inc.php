@@ -261,7 +261,7 @@ if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
 }
 
 // isPersistent
-$context		=	$search->name;
+$context		=	'com_cck.'.$search->name;
 $isPersistent	=	(int)$options->get( 'persistent_query', '0' );
 
 if ( isset( $this ) && ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) ) {
@@ -280,6 +280,8 @@ if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
 $preconfig['client']	=	'list';
 $error					=	'';
 $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$params->get( 'order_by', '' ) );
+$session				=	JFactory::getSession();
+$registry				=	$session->get( 'registry' );
 $stages					=	array();
 
 // Process
@@ -325,7 +327,9 @@ foreach ( $fields['search'] as $field ) {
 
 		// Get Persistent Values
 		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
-			$value	=	$app->getUserState( $context.'.filter.'.$name, $value );
+			if ( $registry->exists( $context.'.filter.'.$name ) ) {
+				$value	=	$app->getUserState( $context.'.filter.'.$name, '' );
+			}
 		}
 	}
 	
