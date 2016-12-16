@@ -45,7 +45,7 @@ if ( $type == 'ordering' ) {
 	$attr		=	'onclick="jQuery(\'#'.$name.'\').val(\''.$value.'\'); JCck.Core.submit(\'search\'); return false;" class="hasTooltip" title="'.$tooltip.'"';
 	$legend		=	'<a href="javascript:void(0);" '.$attr.'>'.$legend.'</a>';
 } elseif ( $type == 'selection' ) {
-	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);">';	
+	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);" data-cck-remove-before-search="" />';
 }
 
 // Set

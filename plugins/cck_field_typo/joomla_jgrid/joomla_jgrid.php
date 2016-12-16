@@ -159,8 +159,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$inherit['id']		.=	$identifier_name;
 				
 				if ( $typo->get( 'trigger' ) ) {
-					$field->attributes	.=	'onchange="if(!document.getElementById(\'cb'.($i - 1).'\').checked){document.getElementById(\'cb'.($i - 1).'\').checked=true; Joomla.isChecked(document.getElementById(\'cb'.($i - 1).'\').checked, document.getElementById(\''.( @$config['formId'] ? $config['formId'] : 'seblod_form' ).'\'));}"';
-				}				
+					$field->attributes	.=	' onchange="if(!document.getElementById(\'cb'.($i - 1).'\').checked){document.getElementById(\'cb'.($i - 1).'\').checked=true; Joomla.isChecked(document.getElementById(\'cb'.($i - 1).'\').checked, document.getElementById(\''.( @$config['formId'] ? $config['formId'] : 'seblod_form' ).'\'));}"';
+				}
+				$field->attributes	.=	' data-cck-remove-before-search=""';
 				$field->css			=	trim( $field->css.' '.$class );
 				$field->label2		=	( $field->label != '' ) ? $field->label : 'clear';
 				
@@ -192,6 +193,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$formId	=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 				}
 				$value		=	JHtml::_( 'grid.id', $pks[$pk], $value );
+				$value		=	str_replace( ' />', ' data-cck-remove-before-search="" />', $value );
 				if ( $typo->get( 'trigger' ) ) {
 					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"', $value );
 				} else {					
@@ -227,7 +229,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				$value 	= 	'<span class="sortable-handler">'
 						.	'<i class="icon-menu"></i>'
-						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" />'
+						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
 						.	'</span>';
 				break;
 			case 'state':

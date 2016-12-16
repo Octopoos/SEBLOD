@@ -63,7 +63,7 @@ if ( $this->show_form ) {
 if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
-<input type="hidden" name="boxchecked" id="boxchecked" value="0" />
+<input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
 <?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
 <input type="hidden" name="option" value="com_cck" />
 <input type="hidden" name="view" value="list" />

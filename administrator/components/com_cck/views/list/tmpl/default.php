@@ -94,7 +94,7 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 </div>
 <div class="clr"></div>
 <div>
-	<input type="hidden" name="boxchecked" value="0" />
+	<input type="hidden" name="boxchecked" value="0" data-cck-remove-before-search="" />
 	<input type="hidden" id="option" name="option" value="com_cck" />
 	<input type="hidden" id="view" name="view" value="list" />
 	<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" />
