@@ -103,12 +103,21 @@ if ( ! $count ) {
 }
 
 // Init
+$hasAjax	=	false;
 $limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
-$hasAjax	=	false;
+$isAltered	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 
+if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
+	if ( $app->input->get( 'end', '' ) != '' ) {
+		$limitend	=	(int)$app->input->getInt( 'end', '' );
+	}
+}
 if ( $limitstart != -1 ) {
+	if ( $limitstart > 0 && !(int)$app->input->getInt( 'start' ) ) {
+		$isAltered	=	true;
+	}
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
 			$this->state->set( 'limit', (int)$limitend );
@@ -152,6 +161,7 @@ if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
 						   'core'=>true,
+						   'doPagination'=>true,
 						   'doQuery'=>true,
 						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
@@ -392,8 +402,12 @@ if ( $preconfig['task'] == 'search' ) {
 
 	// Total
 	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
+		if ( $isAltered ) {
+			$config['total']	=	( $config['total'] > $limitstart ) ? $config['total'] - $limitstart : 0;
+		}
+
 		$limitstart			=	-1;
-		$limitend			=	0;
+		$limitend			=	0;	
 		$total				=	$config['total'];
 	} else {
 		$config['total']	=	$total;
@@ -401,8 +415,10 @@ if ( $preconfig['task'] == 'search' ) {
 	$total_items			=	$total;
 
 	// Pagination
-	if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
-		$items	=	array_splice( $items, $limitstart, $limitend );
+	if ( $config['doPagination'] ) {
+		if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
+			$items	=	array_splice( $items, $limitstart, $limitend );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List

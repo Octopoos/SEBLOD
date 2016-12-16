@@ -442,6 +442,10 @@ class plgSearchCCK extends JPlugin
 		unset( $fields );
 		unset( $fields_order );
 		unset( $tables );
+
+		if ( isset( $config['total'] ) ) {
+			$config['doPagination']	=	false;
+		}
 		
 		return $results;
 	}
