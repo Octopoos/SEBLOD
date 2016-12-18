@@ -59,6 +59,8 @@ $ -> Language fix or change
 ^ Plug-ins translations updated.
 ^ "translate_id" variable renamed to "copyfrom_id".
 
+- Limit of characters removed in dropdowns (Integration).
+
 # "Admin Form" permission added at component-level.
 # Custom Attributes support added for List (Field) Variations.
 # "has-value" class fixed Select Dynamic/Multiple.
@@ -95,7 +97,7 @@ $ -> Language fix or change
 
 -------------------- 3.9.1 Upgrade Release [12-Sep-2016] -----------
 
-# Broken Conditional States fixed on Group when tmpl=raw. 
+# Broken Conditional States fixed on Group when tmpl=raw.
 # Download task updated on back-end.
 # Markup fixed on Group plug-in.
 # Minor issues fixed on back-end.
@@ -194,7 +196,7 @@ $ -> Language fix or change
 
 + "Integers" mode added in URL Variable Live plug-in.
 
-# Back-end UI Drag and Drop responsiveness fixed (regression since SEBLOD 3.8.2). 
+# Back-end UI Drag and Drop responsiveness fixed (regression since SEBLOD 3.8.2).
 # Email Validation plug-in altered for new TLDs
 # "JForm User" issues fixed.
 # One more fix to clearForm().
@@ -775,7 +777,7 @@ $ -> Language fix or change
 + "Status" parameter added to Link plug-ins.
 
 - "Author" Field plug-in removed, but available on SEBLOD.com
-^ "border: 1px solid #dddddd !important;" removed on .inputbox  
+^ "border: 1px solid #dddddd !important;" removed on .inputbox
 ^ "border: 1px solid #888888 !important;" removed on .inputbox:focus
 
 # Auto Redirection (content) issue fixed for Joomla! User/Group Object plug-ins.
@@ -785,7 +787,7 @@ $ -> Language fix or change
 # CSS issues fixed on Colorbox styles.
 # Issue on + "Quick Icons" module fixed.
 # Padding updated fo "div.cck_page_desc" >> "div.cck_page_desc{padding:0;}"
-# Pagination issue (default values applied when values were empty) fixed. 
+# Pagination issue (default values applied when values were empty) fixed.
 # Useless CSS lines removed.
 # Various minor issues fixed.
 
@@ -859,7 +861,7 @@ $ -> Language fix or change
 
 -------------------- 3.1.5 Upgrade Release [05-Aug-2013] -------------
 
-# Autocomplete issue (Chromium) fixed. >> autocomplete="off" added on the form itself.	
+# Autocomplete issue (Chromium) fixed. >> autocomplete="off" added on the form itself.
 # "cck-clrfix" added (div class="cck_page") on Form/List component views.
 # Tags issues fixed + updates for Joomla 3.1.5	[storage must be: standard|..|tags]
 
@@ -877,7 +879,7 @@ $ -> Language fix or change
 # Calendar consistency issue (admin/site form vs search form) fixed.
 # Line Height issues (Label vs Value) fixed.
 # Missing html/link/text (prepareContent) added on "JForm Menuitem" plug-in.
-# Missing floating widths (.cck-w33f, .cck-w16f, ..) added in cck.responsive.css 
+# Missing floating widths (.cck-w33f, .cck-w16f, ..) added in cck.responsive.css
 # Quotes now escaped (confirm box) on Delete Link.
 # Remaining "form div { margin: 0em 0 0em 0 !important; }" (in cck.search.css) removed.
 # Single quote issue fixed on Ajax Availability Validation plug-in.
@@ -1209,7 +1211,7 @@ $ -> Language fix or change
 ^ JS files refactored (jquery-dev.js, jquery-more.js, jquery-noconflict.js).
 ^ jquery.cookie.min.js renamed to jquery.biscuit.min.js (true story! ;).
 
-# Bad Ordering, "Created By", "Publish Up" fixed (submission). 
+# Bad Ordering, "Created By", "Publish Up" fixed (submission).
 # Check In fixed (edition).
 # "Upload File", "Upload Image" issues fixed.
 # Various improvements or issues fixed.
@@ -1263,7 +1265,7 @@ $ -> Language fix or change
 + ACL improved on Form (Content Type) => inherited from Folders.
 + Batch process (Folder) added.
 + Duplicate process added on Content/Search Type.
-+ Field Markup (override) process added. 
++ Field Markup (override) process added.
 + Interface improved + "Indigo Dye" style added + Tooltip selection added.
 + "Match Collection" added on Search Type => Search into Field X & Group X.
 + Max submission (in Parent, per User, per Group) added on Form (Content Type).
@@ -1324,7 +1326,7 @@ $ -> Language fix or change
 	+	Choose between Compact or Full view.
     +	Select the Style you prefer.
 + jQuery powered (for everyone's pleasure!).
-+ New scripts (JS => Lightbox, Tooltip, Validation..) added. 
++ New scripts (JS => Lightbox, Tooltip, Validation..) added.
 + Template Style instance (for Content/Search Type) automation added.
 
 -------- OVERVIEW --------
@@ -1451,7 +1453,7 @@ $ "com_cckjseblod_more" language loaded.
 
 + Copy and Rename Prefix added on Batch Process (Fields).
 + CSV Import improved (FieldX & Readmore process added).
-    
+
 + FieldX improved (Draggable).
 + Free Query added on Select Dynamic.
 + Save style variation added on Alias Custom.
@@ -1577,7 +1579,7 @@ $ "com_cckjseblod_more" language loaded.
 + Hide Icon Edit parameter back on Configuration & process improved.
 
 + Remove value Icon added on Field X. (Available on Default Form Template)
-^ Add value Link (on label) replaced by a Icon on Field X. 
+^ Add value Link (on label) replaced by a Icon on Field X.
 # FieldX compatibility improved (Folder/Upload Simple/Upload Image)
 
 # Improvements & Some Bugs fixed on Pack Export/Import
@@ -1667,7 +1669,7 @@ Upload Image with Automatic Thumbs Creation, and much more...
 + "Advanced Content" template added.
 + "Default Content" template added.
 ^ "Default Submission" renamed to "Default Form" on Templates
-+ "Simple Form" template added. 
++ "Simple Form" template added.
 
 + Content Fields creation/edition added on Content Types
 + Emails Fields assignment added on Content Types
