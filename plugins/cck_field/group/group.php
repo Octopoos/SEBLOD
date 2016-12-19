@@ -81,7 +81,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$table				=	$f->storage_table;
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
 						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 					}
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					//					
