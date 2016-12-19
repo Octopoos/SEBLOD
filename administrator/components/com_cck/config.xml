@@ -6,7 +6,7 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="autosave_interval" type="text" size="8" default="2" label="COM_CCK_CONFIG_AUTOSAVE_INTERVAL" description="COM_CCK_CONFIG_AUTOSAVE_INTERVAL_DESC" class="inputbox" />
+		<field name="autosave_interval" type="text" size="8" default="2" label="COM_CCK_CONFIG_AUTOSAVE_INTERVAL" description="COM_CCK_CONFIG_AUTOSAVE_INTERVAL_DESC" class="inputbox" showon="autosave:1" />
 		<field name="computation_format" type="list" default="0" label="COM_CCK_CONFIG_COMPUTATION_FORMAT" description="COM_CCK_CONFIG_COMPUTATION_FORMAT_DESC" class="inputbox">
 			<option value="0">COM_CCK_USE_JTEXT_SL</option>
 			<option value="1,234,567.89">COM_CCK_NUMBER_FORMAT_COMMA_DOT</option>
@@ -28,15 +28,15 @@
 			<option value="1">COM_CCK_CONFIG_OPTION_SERVER_PHP</option>
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
 		</field>
-		<field name="validation_position" type="cck" construction="core_validation_position" default="topRight" label="COM_CCK_CONFIG_VALIDATION_POSITION" description="COM_CCK_CONFIG_VALIDATION_POSITION_DESC" class="inputbox" cck_selectlabel="" />
-		<field name="validation_prefix" type="text" size="8" default="* " label="COM_CCK_CONFIG_VALIDATION_PREFIX" description="COM_CCK_CONFIG_VALIDATION_PREFIX_DESC" class="inputbox" />
-		<field name="validation_scroll" type="radio" default="1" label="COM_CCK_CONFIG_VALIDATION_SCROLL" description="COM_CCK_CONFIG_VALIDATION_SCROLL_DESC" class="btn-group btn-group-yesno">
+		<field name="validation_position" type="cck" construction="core_validation_position" default="topRight" label="COM_CCK_CONFIG_VALIDATION_POSITION" description="COM_CCK_CONFIG_VALIDATION_POSITION_DESC" class="inputbox" cck_selectlabel="" showon="validation:1,2,3" />
+		<field name="validation_prefix" type="text" size="8" default="* " label="COM_CCK_CONFIG_VALIDATION_PREFIX" description="COM_CCK_CONFIG_VALIDATION_PREFIX_DESC" class="inputbox" showon="validation:1,2,3" />
+		<field name="validation_scroll" type="radio" default="1" label="COM_CCK_CONFIG_VALIDATION_SCROLL" description="COM_CCK_CONFIG_VALIDATION_SCROLL_DESC" class="btn-group btn-group-yesno" showon="validation:1,2,3">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="validation_background_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR"
-			description="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR_DESC" class="inputbox" />
-		<field name="validation_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_COLOR" description="COM_CCK_CONFIG_VALIDATION_COLOR_DESC" class="inputbox" />
+			description="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR_DESC" class="inputbox" showon="validation:1,2,3" />
+		<field name="validation_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_COLOR" description="COM_CCK_CONFIG_VALIDATION_COLOR_DESC" class="inputbox" showon="validation:1,2,3" />
 		<field name="COM_CCK_CONFIG_LEGEND_LIST" type="spacer" hr="false" />
 		<field name="pagination" type="cck" construction="core_pagination" default="25" label="COM_CCK_CONFIG_PAGINATION" description="COM_CCK_CONFIG_PAGINATION_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="prepare_content" type="radio" default="1" label="COM_CCK_CONFIG_PREPARE_CONTENT" description="COM_CCK_CONFIG_PREPARE_CONTENT_DESC" class="btn-group btn-group-yesno">
@@ -143,20 +143,20 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="multisite_login" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_LOGIN" description="COM_CCK_CONFIG_MULTISITE_LOGIN_DESC" class="btn-group btn-group-yesno">
+		<field name="multisite_login" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_LOGIN" description="COM_CCK_CONFIG_MULTISITE_LOGIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno">
+		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox">
+		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox" showon="multisite:1">
 			<option value="0">COM_CCK_INHERITED</option>
 			<option value="1">COM_CCK_OWNED</option>
 		</field>
 		<field name="multisite_options" type="cckpicker" cck_storage_field_prefix="json[options][" default="" label="COM_CCK_CONFIG_MULTISITE_OPTIONS"
-			   description="COM_CCK_CONFIG_MULTISITE_OPTIONS_DESC" class="inputbox" />
+			   description="COM_CCK_CONFIG_MULTISITE_OPTIONS_DESC" class="inputbox" showon="multisite:1" />
 	</fieldset>
 
 	<fieldset name="fs_permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">

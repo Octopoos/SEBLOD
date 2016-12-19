@@ -52,12 +52,12 @@
 					<option value="3">MOD_CCK_LIST_CONFIG_SHOW_MORE_ONLY_IF_MORE_RESULTS</option>
 				</field>
 				<field name="show_link_more" type="menuitem" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK" default="" class="inputbox"
-					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_DESC">
+					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_DESC" showon="show_more:1,2,3">
 					<option value="">JNONE</option>
 				</field>
-				<field name="link_more_class" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS_DESC" class="inputbox" />
-				<field name="link_more_text" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT_DESC" class="inputbox" />
-				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" />
+				<field name="link_more_class" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS_DESC" class="inputbox" showon="show_more:1,2,3" />
+				<field name="link_more_text" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT_DESC" class="inputbox" showon="show_more:1,2,3" />
+				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" showon="show_more:1,2,3" />
 				<field name="" label="" type="spacer" hr="false" />
 				<field name="limit2" type="text" default="5" label="MOD_CCK_LIST_CONFIG_LIMIT2" description="MOD_CCK_LIST_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
 				<field name="limitstart" type="text" default="" label="MOD_CCK_LIST_CONFIG_LIMITSTART" description="MOD_CCK_LIST_CONFIG_LIMITSTART_DESC" size="8" class="inputbox" />
