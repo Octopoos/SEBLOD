@@ -61,7 +61,8 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$alt_fieldname	= 	$typo->get( 'image_alt_fieldname', '' );
 
 		if ( is_array( $field->value ) ) {
-			$typo	=	self::_addImages( $field, $thumb_array, $options );
+			$fieldId    = isset($config['id']) ? $config['id'] : null;
+			$typo	    = self::_addImages( $field, $thumb_array, $options, $fieldId );
 		} else {
 			$typo	=	self::_addImage( $field, $thumb_array, $options );
 		}
@@ -156,14 +157,15 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImages
-	protected static function _addImages( &$field, $params, $options )
+	protected static function _addImages( &$field, $params, $options, $fieldId )
 	{
 		// Prepare
 		$value	=	$field->value;
 		$typo	=	'';
 		
 		foreach ( $field->value as $value_img ) {
-			$typo	.=	self::_addImage( $value_img, $params, $options );
+			$value_img->id 	.= $fieldId;
+			$typo		.=	self::_addImage( $value_img, $params, $options );
 		}
 		
 		return $typo;
