@@ -28,12 +28,37 @@ abstract class JCckEcommerceTax
 
 		if ( count( $taxes ) ) {
 			foreach ( $taxes as $t ) {
+				$content_types	=	array();
+
 				if ( isset( $params['target'] ) && $params['target'] ) {
 					if ( $params['target'] == 'order' && $t->target == 0 ) {
 						// OK
+
+						if ( isset( $t->target_type ) && $t->target_type ) {
+							$product_def	=	JCckEcommerce::getProductDefinition( $t->target_type );
+							$content_types	=	explode( '||', $product_def->content_type );
+						}
 					} elseif ( $params['target'] == 'product' && $t->target == 1 ) {
 						// OK
 					} elseif ( $params['target'] == 'shipping' && $t->target == 3 ) {
+						if ( isset( $t->target_type ) && $t->target_type ) {
+							$continue					=	true;
+							$product_def				=	JCckEcommerce::getProductDefinition( $t->target_type );
+							$content_types				=	explode( '||', $product_def->content_type );
+							
+							if ( count( $content_types ) ) {
+								foreach ( $content_types as $content_type ) {
+									if ( isset( $params['content_types'][$content_type] ) ) {
+										$continue		=	false;
+										break;
+									}
+								}
+							}
+							if ( $continue ) {
+								continue;
+							}
+							// OK
+						}
 						// OK
 					} else {
 						continue;
@@ -106,6 +131,24 @@ abstract class JCckEcommerceTax
 										foreach ( $items as $item ) {
 											if ( empty( $item->price ) ) {
 												continue;
+											}
+											if ( isset( $t->target_type ) && $t->target_type != '' ) {
+												$continue	=	false;
+
+												if ( count( $content_types ) ) {
+													$continue	=	true;
+
+													foreach ( $content_types as $content_type ) {
+														if ( $content_type == $item->type ) {
+															$continue	=	false;
+															break;
+														}
+													}
+												}
+
+												if ( $continue ) {
+													continue;
+												}
 											}
 											if ( isset( $item->tax ) && $item->tax != '' ) {
 												$amount	=	(float)number_format( $item->tax, 2 );

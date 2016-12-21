@@ -440,7 +440,7 @@ abstract class JCckEcommerce
 
 		$zones[]	=	0;
 		
-		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.groups, a.target'
+		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.target_type, a.groups, a.target'
 					.	' FROM #__cck_more_ecommerce_taxes AS a'
 					.	' LEFT JOIN #__cck_more_ecommerce_zone_tax AS b ON b.tax_id = a.id'
 					.	' WHERE a.published = 1'
