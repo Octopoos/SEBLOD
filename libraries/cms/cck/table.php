@@ -10,8 +10,54 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( JCck::on( '3.7' ) ) {
+	class JCckTablePlaceholder extends JTable
+	{
+		// getFields
+		public function getFields( $reload = false )
+		{
+			$name			=	$this->_tbl;
+			static $cache	=	array();
+			
+			if ( ! isset( $cache[$name] ) ) {
+				$fields	=	$this->_db->getTableColumns( $name, false );
+				if ( empty( $fields ) ) {
+					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$this->setError( $e );
+					return false;
+				}
+				$cache[$name]	=	$fields;
+			}
+			
+			return $cache[$name];
+		}
+	}
+} else {
+	class JCckTablePlaceholder extends JTable
+	{
+		// getFields
+		public function getFields()
+		{
+			$name			=	$this->_tbl;
+			static $cache	=	array();
+			
+			if ( ! isset( $cache[$name] ) ) {
+				$fields	=	$this->_db->getTableColumns( $name, false );
+				if ( empty( $fields ) ) {
+					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$this->setError( $e );
+					return false;
+				}
+				$cache[$name]	=	$fields;
+			}
+			
+			return $cache[$name];
+		}
+	}
+}
+
 // JCckTable
-class JCckTable extends JTable
+class JCckTable extends JCckTablePlaceholder
 {
 	// __construct
 	function __construct( $table, $key, &$db )
@@ -34,25 +80,6 @@ class JCckTable extends JTable
 		}
 		
 		return $instance;
-	}
-	
-	// getFields
-	public function getFields()
-	{
-		$name			=	$this->_tbl;
-		static $cache	=	array();
-		
-		if ( ! isset( $cache[$name] ) ) {
-			$fields	=	$this->_db->getTableColumns( $name, false );
-			if ( empty( $fields ) ) {
-				$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
-				$this->setError( $e );
-				return false;
-			}
-			$cache[$name]	=	$fields;
-		}
-		
-		return $cache[$name];
 	}
 	
 	// load
