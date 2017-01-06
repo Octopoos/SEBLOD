@@ -55,7 +55,7 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 		echo '<div class="'.$this->class_pagination.'">' . $this->pagination->getPagesLinks() . '</div>';
 	}
 	if ( @$this->search->content > 0 ) {
-		echo '<div class="seblod">'.$this->data.'</div>';
+		echo '<div class="seblod cck_page_items">'.$this->data.'</div>';
 	} else {
 		echo $this->loadTemplate( 'items' );
 	}
