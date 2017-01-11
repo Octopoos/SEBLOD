@@ -63,7 +63,7 @@ class CCK_Install
 			$config['isApp']		=	true;
 			$config['isUpgrade']	=	$extension->isUpgrade;
 		}
-		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>'', 'fields'=>array(), 'styles'=>array() );
+		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>array(), 'fields'=>array(), 'styles'=>array() );
 		$data['elements']	=	array( 'folder'=>'folders', 'field'=>'fields', 'type'=>'types', 'search'=>'searchs', 'template'=>'templates', 'template_style'=>'template_styles', 'category'=>'categories' );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['folders2']	=	JCckDatabase::loadObjectList( 'SELECT id, path FROM #__cck_core_folders WHERE lft', 'path' );
