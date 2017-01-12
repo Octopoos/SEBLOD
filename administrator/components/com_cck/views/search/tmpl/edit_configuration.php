@@ -43,7 +43,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <ul class="adminformlist adminformlist-2cols">
 			<?php
             echo JCckDev::renderForm( $cck['core_auto_redirection'], @$options['auto_redirect'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_AUTO_REDIRECTION', 'storage_field'=>'options[auto_redirect]' ) );
-            echo JCckDev::renderForm( $cck['core_ordering'], @$options['ordering'], $config, array( 'label'=>'CONFIG_ORDERING', 'selectlabel'=>'Inherited', 'storage_field'=>'options[ordering]' ) );
+            echo JCckDev::renderForm( $cck['core_ordering'], @$options['ordering'], $config, array( 'label'=>'CONFIG_ORDERING', 'selectlabel'=>'', 'storage_field'=>'options[ordering]' ) );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_list_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_TITLE', 'storage_field'=>'options[show_list_title]' ) );
             echo '<li><label>'.JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ).'</label>'
              .	 JCckDev::getForm( $cck['core_tag_title'], @$options['tag_list_title'], $config, array( 'storage_field'=>'options[tag_list_title]' ) )
