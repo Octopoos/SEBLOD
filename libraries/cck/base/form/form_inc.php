@@ -324,7 +324,7 @@ foreach ( $fields as $field ) {
 // Merge
 if ( count( $config['fields'] ) ) {
 	foreach ( $config['fields'] as $k=>$v ) {
-		if ( $v->restriction != 'unset' ) {
+		if ( isset( $v->restriction ) &&  $v->restriction != 'unset' ) {
 			$fields[$k]	=	$v;
 		}
 	}

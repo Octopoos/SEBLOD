@@ -150,7 +150,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$inherit					=	array();
 					$clone						=	clone $f;
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
-					$form[$f_name]				=	$results[0];
+					$form[$f_name]				=	@$results[0];
 					@$form[$f_name]->name		=	$f->name;
 					$config['fields'][$f->name]	=	$form[$f_name];
 				}
