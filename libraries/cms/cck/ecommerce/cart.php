@@ -126,6 +126,12 @@ abstract class JCckEcommerceCart
 		return $cache[$definition];
 	}
 
+	// countUserCarts
+	public static function countUserCarts( $definition )
+	{
+		return (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_more_ecommerce_carts AS a WHERE a.'.JCck::getUser()->where_clause. ' AND a.type = "'.$definition.'"' );
+	}
+
 	// hasQuantity
 	public static function hasQuantity( $type )
 	{
