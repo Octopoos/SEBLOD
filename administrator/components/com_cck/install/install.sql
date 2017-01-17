@@ -1002,6 +1002,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `context` varchar(20) NOT NULL,
   `aliases` varchar(512) NOT NULL,
   `guest` int(11) NOT NULL,
   `guest_only_group` int(11) NOT NULL,
