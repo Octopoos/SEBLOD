@@ -54,6 +54,9 @@ div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist text
 .input-xsmall {
   width: 60px!important;
 }
+.input-xxsmall {
+  width: 40px!important;
+}
 div.seblod .adminformlist input.input-small { 
 	width: 150px;
 }
@@ -394,6 +397,8 @@ ul.spe span.variation_value{line-height: 24px;}
 ul.adminformlist span.state{margin-top:8px;}
 ul.adminformlist a > span.state{margin-top:0;}
 .loading{position:absolute; right:50px; top:63px;}
+ul.spe_folder li.tweak-site label{width:50px;}
+ul.spe_folder li.tweak-site .variation_value{margin-left:5px; margin-right:5px; position:relative; top:-3px;}
 body:not(.admin):not(.component) ul.spe_description a:link,
 body:not(.admin):not(.component) ul.spe_description a:visited,
 body:not(.admin):not(.component) ul.spe_third a:link,
