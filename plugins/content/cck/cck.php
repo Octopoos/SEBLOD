@@ -244,6 +244,10 @@ class plgContentCCK extends JPlugin
 						.	' WHERE a.id = "'.(string)$matches[1].'"'
 						;
 		$cck			=	JCckDatabase::loadObject( $query );
+
+		if ( !is_object( $cck ) ) {
+			return;
+		}
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
 		
