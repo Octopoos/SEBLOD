@@ -171,7 +171,7 @@ class plgCCK_FieldLink extends JCckPluginField
 		}
 
 		if ( $field->bool4 == 1 ) {
-			$form	.=	self::_addSelect( $id.'_target', JText::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'storage_field' => $nameTarget ) );
+			$form	.=	self::_addSelect( $id.'_target', JText::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'client'=>$config['client'], 'doTranslation'=>1, 'doValidation'=>2 ), array( 'storage_field'=>$nameTarget ) );
 		}
 
 		if ( $field->bool5 == 1 && $config['pk'] && @$value['link'] != '' ) {
@@ -292,7 +292,7 @@ class plgCCK_FieldLink extends JCckPluginField
 	}
 
 	// _addSelect
-	protected static function _addSelect( $id, $label, $suffix, $field, $value, $array = array() )
+	protected static function _addSelect( $id, $label, $suffix, $field, $value, $config, $array = array() )
 	{
 		$form	=	'<div class="cck_forms cck_link_'.$suffix.'">';
 		$form	.=	'<div class="cck_label cck_label_link_'.$suffix.'"><label for="'.$id.'" >'.$label.'</label></div>';
