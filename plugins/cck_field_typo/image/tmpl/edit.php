@@ -31,7 +31,7 @@ JCckDev::initScript( 'typo', $this->item );
 																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10', 'storage_field'=>'thumb_2x' ) );
 		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Display as Default 3x', 'defaultvalue'=>'', 'selectlabel'=>'None',
 																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10', 'storage_field'=>'thumb_3x' ) );
-		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Modal Box', 'defaultvalue'=>'value',
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Modal Box', 'defaultvalue'=>'none',
 																   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10||None=none', 
 																   'storage_field'=>'image' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'
