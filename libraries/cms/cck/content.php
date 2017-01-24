@@ -252,6 +252,12 @@ class JCckContent
 		return $this->_table;
 	}
 
+	// getType
+	public function getType()
+	{
+		return $this->_type;
+	}
+
 	// load
 	public function load( $identifier, $data = true )
 	{
