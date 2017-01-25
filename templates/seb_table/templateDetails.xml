@@ -78,6 +78,7 @@
 					<option value="">TPL_SEB_TABLE_TABLE_LAYOUT_AUTO</option>
 					<option value="calculated">TPL_SEB_TABLE_TABLE_LAYOUT_CALCULATED</option>
 					<option value="fixed">TPL_SEB_TABLE_TABLE_LAYOUT_FIXED</option>
+					<option value="responsive">TPL_SEB_TABLE_TABLE_LAYOUT_RESPONSIVE</option>
 				</field>
 				<field name="class_table_tr_odd" type="cck" construction="core_class_table_tr_odd" default="" label="TPL_SEB_TABLE_CLASS_TR_ODD" description="" class="inputbox" />
 				<field name="table_columns" type="list" default="0" label="TPL_SEB_TABLE_TABLE_EMPTY_COLUMNS" description="" class="inputbox">

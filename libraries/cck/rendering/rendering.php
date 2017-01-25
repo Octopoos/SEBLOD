@@ -925,7 +925,9 @@ class CCK_Rendering
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				if ( !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
+					$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				}
 			}
 			if ( is_object( $options ) ) {
 				if ( strpos( $position, '_line' ) !== false ) {
