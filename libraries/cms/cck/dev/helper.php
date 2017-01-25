@@ -69,26 +69,29 @@ abstract class JCckDevHelper
 	}
 	
 	// getAbsoluteUrl
-	public static function getAbsoluteUrl( $itemId )
+	public static function getAbsoluteUrl( $itemId = '', $query = '' )
 	{
-		return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) );
-	}
-
-	// getAbsoluteAjaxUrl
-	public static function getAbsoluteAjaxUrl( $query )
-	{
-		if ( $query[0] == '?' || $query[0] == '&' ) {
-			$query	=	substr( $query, 1 );
+		if ( $query != '' ) {
+			if ( $query[0] == '?' || $query[0] == '&' ) {
+				$query	=	substr( $query, 1 );
+			}
 		}
+		$glue	=	( $query != '' ) ? '/?' : '';
+		
+		if ( $itemId == '' || $itemId == 'auto' ) {
+			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
 
-		$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
+			if ( $itemId > 0 ) {
+				return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
+			} elseif ( $itemId == -1 ) {
+				return JUri::base().'component/cck'.$glue.$query;
+			} else {
+				$glue	=	( $query != '' ) ? '&' : '';
 
-		if ( $itemId > 0 ) {
-			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).'/?'.$query;
-		} elseif ( $itemId == -1 ) {
-			return JUri::base().'component/cck/?'.$query;
+				return JUri::base().'index.php?option=com_cck'.$glue.$query;
+			}
 		} else {
-			return JUri::base().'index.php?option=com_cck&'.$query;
+			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
 		}
 	}
 	
