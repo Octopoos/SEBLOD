@@ -10,9 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
-$column		=	'';
-if ( $options->get( 'order_by' ) ) {
+$column	=	'';
+$target	=	(int)$options->get( 'order_by', '' );
+
+if ( $target == 1 ) {
 	$column	=	$options->get( 'order_by_fieldname' );
+} elseif ( $target == 2 ) {
+	$fields	=	$cck->getFields( $position, '', false );
+	$items	=	$cck->getItems();
+	$item	=	current( $items );
+
+	if ( count( $fields ) > 1 ) {
+		foreach ( $fields as $field_name ) {
+			if ( $item->getState( $field_name ) ) {
+				$column	=	$field_name;
+
+				break;
+			}
+		}
+	}
 }
 if ( $column == '' ) {
 	$fields	=	$cck->getFields( $position, '', false );
