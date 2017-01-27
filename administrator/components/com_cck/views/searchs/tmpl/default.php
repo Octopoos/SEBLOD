@@ -120,16 +120,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->searchTemplate.')';
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
-                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
+                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->listTemplate.')';
-                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
+                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->itemTemplate.')';
-                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
+                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center">
 				<div class="btn-group">
 				<?php
@@ -178,6 +178,7 @@ Helper_Display::quickCopyright();
 $js	=	'
 		(function ($){
 			JCck.Dev = {
+				count:'.count( $this->items ).',
 				status:0,
 				addNew: function(skip) {
 					var tpl_s = "'.$template_name.'";
@@ -238,6 +239,25 @@ $js	=	'
 					$("#tpl_list").val($(this).attr("data-name"));
 				});
 				JCck.Dev.addScroll();
+
+				$(document).keypress(function(e) {
+					if (!$(":input:focus").length) {
+						e.preventDefault();
+						
+						if (e.which == 64) {
+							if ( $("#filter_search").val() != "" ) {
+								$("#filter_search").select();
+							} else {
+								$("#filter_search").focus();
+							}
+						} else if (JCck.Dev.count == 1 && e.which >= 49 && e.which <= 52) {
+							var n = e.which - 48;
+							if ($(\'[data-edit-trigger="\'+n+\'"]\').length) {
+								document.location.href=$(\'[data-edit-trigger="\'+n+\'"]\').attr("href");
+							}
+						}
+					}
+				});
 			});
 		})(jQuery);
 		';
