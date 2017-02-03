@@ -1838,7 +1838,7 @@
     
     // ----- Get 'memory_limit' configuration value
     $v_memory_limit = ini_get('memory_limit');
-    $v_memory_limit = trim($v_memory_limit);
+    $v_memory_limit = (int)trim($v_memory_limit);
     $last = strtolower(substr($v_memory_limit, -1));
  
     if($last == 'g')
