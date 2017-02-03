@@ -67,6 +67,10 @@ class JCckInstallerScriptComponent
 			}
 		}
 		
+		if ( !( is_object( $this->cck ) && isset( $this->cck->element ) && $this->cck->element != '' ) ) {
+			return;
+		}
+
 		$lang		=	JFactory::getLanguage();
 		$title		=	(string)$this->cck->element;
 		$lang->load( $title );
