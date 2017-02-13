@@ -468,7 +468,6 @@ class plgContentCCK extends JPlugin
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 				if ( $fieldName ) {
 					$Pt	=	$field->storage_table;
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
