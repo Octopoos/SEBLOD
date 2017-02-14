@@ -105,12 +105,18 @@ class CCKViewForm extends JViewLegacy
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
 		}
-		if ( $params->get( 'display_form_title', '' ) == '1' ) {
-			$this->title				=	$params->get( 'title_form_title', '' );
+		if ( $params->get( 'display_form_title', '' ) == '2' ) {
+			$this->title			=	'';
+
+			if ( is_object( $type ) ) {
+				$this->title		=	Jtext::_( 'APP_CCK_FORM_'.$type->name.'_TITLE_'.( $this->isNew ? 'ADD' : 'EDIT' ) );
+			}
+		} elseif ( $params->get( 'display_form_title', '' ) == '1' ) {
+			$this->title			=	$params->get( 'title_form_title', '' );
 		} elseif ( $params->get( 'display_form_title', '' ) == '0' ) {
-			$this->title				=		$menu->title;
+			$this->title			=		$menu->title;
 		} else {
-			$this->title				=		@$type->title;
+			$this->title			=	( isset( $type->title ) ) ? $type->title : '';
 		}
 		$this->show_form_title		=	$params->get( 'show_form_title' );
 		if ( $this->show_form_title == '' ) {
