@@ -257,6 +257,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 						$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
 					}
 				}
+				if ( $sql == '' ) {
+					$sql	=	$target.' IN (0)';
+				}
 				break;
 			case 'num_higher':
 				$sql	=	$target.' >= '.JCckDatabase::quote( $value );
