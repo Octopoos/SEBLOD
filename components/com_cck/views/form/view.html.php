@@ -121,11 +121,11 @@ class CCKViewForm extends JViewLegacy
 		$this->show_form_title		=	$params->get( 'show_form_title' );
 		if ( $this->show_form_title == '' ) {
 			$this->show_form_title	=	$options->get( 'show_form_title', '1' );
-			$this->tag_form_title	=	$options->get( 'tag_form_title', 'h2' );
-			$this->class_form_title	=	$options->get( 'class_form_title' );
+			$this->tag_form_title	=	$options->get( 'tag_form_title', 'h1' );
+			$this->class_form_title	=	$options->get( 'class_form_title', JCck::getConfig_Param( 'title_class', '' ) );
 		} elseif ( $this->show_form_title ) {
-			$this->tag_form_title	=	$params->get( 'tag_form_title', 'h2' );
-			$this->class_form_title	=	$params->get( 'class_form_title' );
+			$this->tag_form_title	=	$params->get( 'tag_form_title', 'h1' );
+			$this->class_form_title	=	$params->get( 'class_form_title', JCck::getConfig_Param( 'title_class', '' ) );
 		}
 		$this->show_form_desc		=	$params->get( 'show_form_desc' );
 		if ( $this->show_form_desc == '' ) {

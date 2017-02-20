@@ -121,18 +121,24 @@ class CCKViewList extends JViewLegacy
 		$this->show_list_title			=	$params->get( 'show_list_title' );
 		if ( $this->show_list_title == '' ) {
 			$this->show_list_title		=	$options->get( 'show_list_title', '1' );
-			$this->tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
-			$this->class_list_title		=	$options->get( 'class_list_title' );
+			$this->tag_list_title		=	$options->get( 'tag_list_title', 'h1' );
+			$this->class_list_title		=	$options->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
 		} elseif ( $this->show_list_title ) {
-			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
-			$this->class_list_title		=	$params->get( 'class_list_title' );
+			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h1' );
+			$this->class_list_title		=	$params->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
 		}
-		if ( $params->get( 'display_list_title', '' ) == '1' ) {
+		if ( $params->get( 'display_list_title', '' ) == '2' ) {
+			$this->title				=	'';
+
+			if ( is_object( $search ) ) {
+				$this->title			=	Jtext::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+			}
+		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
 			$this->title				=	$params->get( 'title_list_title', '' );
 		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
 			$this->title				=		$menu->title;
 		} else {
-			$this->title				=		@$search->title;
+			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 		}
 
 		$this->show_list_desc			=	$params->get( 'show_list_desc' );

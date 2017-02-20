@@ -199,6 +199,7 @@
 			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
+		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box_css" type="folderlist" directory="media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
