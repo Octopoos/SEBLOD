@@ -77,11 +77,11 @@ class Helper_Include
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/cck.validation-3.11.0.min.js" type="text/javascript"></script>';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css' );
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.11.0.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
