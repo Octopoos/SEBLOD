@@ -95,14 +95,14 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 <div class="clr"></div>
 <div>
 	<input type="hidden" name="boxchecked" value="0" data-cck-remove-before-search="" />
-	<input type="hidden" id="option" name="option" value="com_cck" />
-	<input type="hidden" id="view" name="view" value="list" />
-	<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" />
-	<input type="hidden" id="task" name="task" value="search" />
+	<input type="hidden" id="option" name="option" value="com_cck" data-cck-keep-for-search="" />
+	<input type="hidden" id="view" name="view" value="list" data-cck-keep-for-search="" />
+	<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" data-cck-keep-for-search="" />
+	<input type="hidden" id="task" name="task" value="search" data-cck-keep-for-search="" />
 	<?php
 	$tmpl	=	$app->input->get( 'tmpl', '' );
 	if ( $tmpl ) { ?>
-	<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" />
+	<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" data-cck-keep-for-search="" />
 	<?php } ?>
 </div>
 </form>

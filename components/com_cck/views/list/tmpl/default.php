@@ -65,17 +65,17 @@ if ( !$this->raw_rendering ) { ?>
 <?php } ?>
 <input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
 <?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
-<input type="hidden" name="option" value="com_cck" />
-<input type="hidden" name="view" value="list" />
+<input type="hidden" name="option" value="com_cck" data-cck-keep-for-search="" />
+<input type="hidden" name="view" value="list" data-cck-keep-for-search="" />
 <?php if ( $this->home === false ) { ?>
-<input type="hidden" name="Itemid" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="Itemid" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" data-cck-keep-for-search="" />
 <?php } }
 $tmpl	=	$app->input->get( 'tmpl', '' );
 if ( $tmpl ) { ?>
-<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" />
+<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" data-cck-keep-for-search="" />
 <?php } ?>
-<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" />
-<input type="hidden" name="task" value="search" />
+<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" data-cck-keep-for-search="" />
+<input type="hidden" name="task" value="search" data-cck-keep-for-search="" />
 <?php if ( !$this->raw_rendering ) { ?>
 </div>
 <?php } }
