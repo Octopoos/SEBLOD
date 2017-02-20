@@ -2,10 +2,7 @@
 
 /.htaccess
 /administrator/cache/*
-/administrator/components/com_admin/*
 /administrator/components/com_ajax/*
-/.htaccess
-/administrator/cache/*
 /administrator/components/com_admin/*
 /administrator/components/com_banners/*
 /administrator/components/com_cache/*
