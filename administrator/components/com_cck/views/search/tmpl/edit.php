@@ -24,7 +24,7 @@ if ( $lang->hasKey( $key ) == 1 ) {
 }
 JHtml::_( 'bootstrap.tooltip' );
 $sidebar_inner	=	288;
-$sidebar_top	=	85;
+$sidebar_top	=	93;
 
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 

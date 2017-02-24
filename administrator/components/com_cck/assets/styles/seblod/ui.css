@@ -14,7 +14,6 @@ div.seblod .inputbutton:hover {background-color: #ffffdd;}
 table.adminlist tbody tr.row0:hover td, table.adminlist tbody tr.row1:hover td {background-color: #ffffdd!important;}
 /*cpanel*/
 div.pane-slider #cpanel div.icon a {-moz-border-radius: 2px 2px 2px 2px!important;-webkit-border-radius: 2px 2px 2px 2px!important;border-radius:2px!important;border-color:#dedede!important;}
-div.pane-slider #cpanel div.icon a:hover, #cpanel div.icon a:focus, #cpanel div.icon a:active {-webkit-border-bottom-left-radius: 50% 20px!important;;-moz-border-radius-bottomleft!important;:50% 20px;border-bottom-left-radius:50% 20px!important;}
 /*submenu*/
 .lavaLampNoImage li.back {background-color:#ffffff; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;}
 /*button*/
@@ -49,4 +48,4 @@ body.com_cck_packager div.seblod,
 body.com_cck_toolbox div.seblod,
 body.com_cck_updater div.seblod,
 body.com_cck_webservices div.seblod,
-body.contentpane.component div.seblod{-webkit-border-radius:4px; -moz-border-radius:4px; border-radius:4px;}
+body.contentpane.component div.seblod{-webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}

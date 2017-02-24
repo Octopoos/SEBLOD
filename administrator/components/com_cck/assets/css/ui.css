@@ -354,8 +354,11 @@ fieldset.adminform {
 ul.adminformlist li div.button2-left {
 	margin-top: 6px;
 }
+#ajaxMessage {
+	margin:3px 0px 0px 10px;
+}
 #ajaxMessage span {
-	color: #146295;
+	color: #fff;
 }
 #ajaxMessage img {
 	padding: 2px 2px 0px 0px;
