@@ -36,18 +36,18 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <?php if ( $tmpl ) { ?>
-    <div id="ajaxToolbar" class="span12" style="padding-bottom: 10px;">
+    <div id="ajaxToolbar" class="span12">
         <div style="float: left;" id="ajaxMessage"></div>
-        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax" style="float: right; margin-right: 10px;"><i class="icon-cancel"></i>
+        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><span class="icon-unpublish"></span>
 			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
         </a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new" style="float: right; margin-right: 10px;"><i class="icon-save-new"></i>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><span class="icon-save-new"></span>
 			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
 		</a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save" style="float: right; margin-right: 10px;"><i class="icon-save"></i>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><span class="icon-save"></span>
 			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
 		</a>
-		<a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply" style="float: right; margin-right: 10px;"><i class="icon-apply"></i>
+		<a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><span class="icon-apply"></span>
 			<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
 		</a>
     </div>
