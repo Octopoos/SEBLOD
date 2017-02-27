@@ -707,7 +707,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	{
 		jimport( 'joomla.filesystem.folder' );
 		
-		include dirname(__FILE__).'/includes/afterstore.php';
+		include __DIR__.'/includes/afterstore.php';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
