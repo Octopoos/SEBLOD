@@ -108,10 +108,18 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			if ( isset( $options2['button_link'] ) && $options2['button_link'] ) {
 				$field1		=	(object)array( 'link'=>$options2['button_link'], 'link_options'=>$options2['button_link_options'],
 											   'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $value ), 'value'=>'' );
+
 				JCckPluginLink::g_setLink( $field1, $config );
 				JCckPluginLink::g_setHtml( $field1, 'text' );
+
 				if ( isset( $field1->link_onclick ) && $field1->link_onclick ) {
-					$onclick	=	$field1->link_onclick;
+					if($options2['button_link']=="content_delete"){
+                        $onclick = $field1->link_onclick;
+                        $onclick.="else{document.location.href='".$field1->link."'}";
+                    }else {
+                        $onclick = $field1->link_onclick;
+                    }
+
 				} elseif ( $field1->link ) {
 					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
 				}
