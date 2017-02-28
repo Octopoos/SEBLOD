@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,31 +14,37 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommercePromotion
 {
 	// apply
-	public static function apply( $type, &$total, $params = array() )
+	public static function apply( $type, &$total, $items, $params = array() )
 	{
-		
 		$user		=	JCck::getUser();
-		$my_groups	=	$user->getAuthorisedGroups();
+		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
 		
 		$currency	=	JCckEcommerce::getCurrency();
-		$discount	=	'';
 		$promotions	=	JCckEcommerce::getPromotions( $type );
+		$res		=	0;
+		$results	=	array( 'items'=>array() );
+		$text		=	'';
 		
 		if ( count( $promotions ) ) {
 			foreach ( $promotions as $p ) {
 				if ( isset( $params['target'] ) && $params['target'] ) {
-					if ( $params['target'] == 'order' && $p->target == 0 ) {
+					if ( $params['target'] == 'order2' && $p->target == 0 ) {
 						// OK
-					} elseif ( $params['target'] == 'product' ) {
-						if ( $p->target == 1 ) {
+					} elseif ( $params['target'] == 'order' && $p->target == -1 ) {
+						// OK
+					} elseif ( ( $params['target'] == 'product' && $p->target == 1 )
+						    || ( $params['target'] == 'product2' && $p->target == 2 ) ) {
+						if ( $p->target_products == 0 ) {
 							// OK
-						} elseif ( $p->target == 2 ) {
+						} elseif ( $p->target_products == 2 ) {
 							$products	=	self::getTargets( $p->id );
+
 							if ( !isset( $products[$params['target_id']] ) ) {
 								continue;
 							}
-						} elseif ( $p->target == -2 ) {
+						} elseif ( $p->target_products == -2 ) {
 							$products	=	self::getTargets( $p->id );
+							
 							if ( isset( $products[$params['target_id']] ) ) {
 								continue;
 							}
@@ -49,35 +55,120 @@ abstract class JCckEcommercePromotion
 						continue;
 					}
 				}
+				if ( $p->target_attributes != '' ) {
+					$attribute	=	false;
+					
+					if ( isset( $items[$params['target_id']] ) ) {
+						$attributes	=	json_decode( $p->target_attributes );
+
+						if ( is_object( $attributes ) ) {						
+							$target	=	$attributes->trigger;
+
+							if ( $target && isset( $items[$params['target_id']]->$target ) ) {
+								if ( $attributes->match == 'isFilled' ) {
+									if ( $items[$params['target_id']]->$target != '' ) {
+										$attribute	=	true;
+									}
+								} elseif ( $attributes->match == 'isEmpty' ) {
+									if ( $items[$params['target_id']]->$target == '' ) {
+										$attribute	=	true;
+									}
+								} elseif ( $attributes->match == 'isEqual' ) {
+									if ( $items[$params['target_id']]->$target == $attributes->values ) {
+										$attribute	=	true;
+									}
+								}
+							}
+						}				
+					}
+					if ( !$attribute ) {
+						continue;
+					}
+				}
 				if ( $p->type == 'coupon' ) {
 					if ( $p->code && ( $p->code != @$params['code'] ) ) {
 						continue;
 					}
 				}
 				$groups		=	explode( ',', $p->groups );
+				
 				if ( count( array_intersect( $my_groups, $groups ) ) > 0 ) {
 					switch ( $p->discount ) {
 						case 'free':
-							$discount	=	'FREE';
-							$total		=	0;
+							$promotion					=	0;
+							$res						=	$promotion;
+							$text						=	JText::_( 'COM_CCK_FREE' );
+							$total						=	$promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>'',
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
 						case 'minus':
-							$discount	=	'- '.$currency->lft.$p->discount_amount.$currency->right;
-							$total		-=	$p->discount_amount;
+							$promotion					=	$p->discount_amount * -1;
+							$res						+=	$promotion;
+							$text						=	'- '.JCckEcommerceCurrency::format( $p->discount_amount );
+							$total						+=	$promotion;
+							$total						=	( $total < 0 ) ? 0 : $total;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
 						case 'percentage':
-							$discount	=	'- '.$p->discount_amount.' %';
-							$total		=	$total - ( $total * $p->discount_amount / 100 );
+							$promotion					=	$total * $p->discount_amount / 100;
+							$res						=	$promotion;
+							$text						=	'- '.$p->discount_amount.' %';
+							$total						=	$total - $promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 							break;
+						case 'set':
+							$promotion					=	$total - $p->discount_amount;
+							$res						=	$promotion;
+							$text						=	'"'.JCckEcommerceCurrency::format( $p->discount_amount ).'"';
+							$total						=	$total - $promotion;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
 						default:
 							break;
 					}
-					
 				}
 			}
 		}
-		
-		return $discount;
+
+		if ( $res ) {
+			$results['text']	=	$text;
+			$results['total']	=	(float)$res;
+			
+			return (object)$results;
+		}
+
+		return null;
 	}
 
 	// count

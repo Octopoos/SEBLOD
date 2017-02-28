@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,48 +14,62 @@ defined( '_JEXEC' ) or die;
 class plgSystemCCK extends JPlugin
 {
 	protected $content_objects	=	array();
+	protected $multisite		=	null;
+	protected $restapi			=	null;
+	protected $site				=	null;
+	protected $site_cfg			=	null;
 	
-	// plgSystemCCK
-	function plgSystemCCK( &$subject, $config )
+	// __construct
+	public function __construct( &$subject, $config )
 	{
+		parent::__construct( $subject, $config );
+
 		$app	=	JFactory::getApplication();
+
 		if ( $app->isAdmin() ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
+
 			if ( file_exists( JPATH_SITE.'/plugins/cck_storage_location/joomla_user_note/joomla_user_note.php' ) ) {
 				$this->content_objects['joomla_user_note']	=	1;
 			}
 		}
 		jimport( 'joomla.filesystem.file' );
-		jimport( 'cck.base.cck' ); // deprecated
 		
 		// Content
 		jimport( 'cck.content.article' );
-		//jimport( 'cck.content.category' );
+		// jimport( 'cck.content.category' );
 		jimport( 'cck.content.content' );
 		jimport( 'cck.content.user' );
 		
-		// Development
-		jimport( 'cck.development.database' ); // deprecated
-		
-		$this->multisite	=	JCck::_setMultisite();
+		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
+		$this->restapi		=	$this->_isRestApi();
+
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
+			
 			if ( JCck::isSite() ) {
 				$this->site	=	JCck::getSite();
 				$this->site_cfg->loadString( $this->site->configuration );
+				
 				if ( $app->isSite() && $this->site ) {
 					// --- Redirect to Homepage
 					$homepage	=	$this->site_cfg->get( 'homepage', 0 );
+					
 					if ( $homepage > 0 ) {
 						$current	=	JUri::current( true );
 						$len		=	strlen( $current );
+						
 						if ( $current[$len - 1] == '/' ) {
 							$current	=	substr( $current, 0, -1 );
 						}
 						$current	=	str_replace( array( 'http://', 'https://' ), '', $current );
+						
 						if ( $current == $this->site->host ) {
 							$redirect_url	=	JRoute::_( 'index.php?Itemid='.$homepage );
+							
 							if ( $redirect_url != JUri::root(true).'/' ) {
 								JFactory::getApplication()->redirect( $redirect_url );	
 							}
@@ -63,23 +77,54 @@ class plgSystemCCK extends JPlugin
 					}
 					// ---
 					$tag	=	$this->site_cfg->get( 'language' );
+					
 					if ( $tag ) {
-						JFactory::getConfig()->set( 'language', $tag );
-						JFactory::getLanguage()->setLanguage( $tag );
+						$forced	=	false;
+						$path	=	JUri::getInstance()->getPath();
+						$length	=	strlen( $path );
+
+						if ( $path[$length - 1 ] != '/' ) {
+							$path	.=	'/';
+						}
+						if ( $path[0] != '/' ) {
+							$path	=	'/'.$path;
+						}
+						if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
+							foreach ( $this->site->exclusions as $excl ) {
+								$length	=	strlen( $excl );
+
+								if ( $excl[$length - 1 ] != '/' ) {
+									$excl	.=	'/';
+								}
+								if ( $excl[0] != '/' ) {
+									$excl	=	'/'.$excl;
+								}
+								$pos	=	strpos( $path, $excl );
+
+								if ( $pos !== false && $pos == 0 ) {
+									$forced	=	true;
+									break;
+								}
+							}
+						}
+						if ( $forced == true ) {
+							$tag	=	JFactory::getLanguage()->getDefault();
+						}
+						$this->_setLanguage( $tag );
 					}
 				}
 			}
 		}
-		parent::__construct( $subject, $config );
 	}
-	
+
 	// buildRule
 	public function buildRule( &$router, &$uri )
 	{
 		$Itemid	=	$uri->getVar( 'Itemid' );
+
 		if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
 			$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
-			if ( isset( $item->query['view'] ) && $item->query['view'] == 'list' ) {
+			if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
 				$urlvars	=	$item->params->get( 'urlvars' );
 				if ( $urlvars ) {
 					$vars		=	explode( '&', $urlvars );
@@ -108,6 +153,25 @@ class plgSystemCCK extends JPlugin
 	public function onAfterInitialise()
 	{
 		$app	=	JFactory::getApplication();
+
+		if ( $this->restapi ) {
+			$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
+			$path		=	JUri::getInstance()->getPath();
+			$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
+
+			if ( $segment != '' ) {
+				if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
+					$format	=	substr( $segment, $pos + 1 );
+
+					if ( $format[0] == 'w' ) {
+						$format	=	substr( $format, 1 );
+					}
+				}
+			}
+			
+			$app->input->set( 'format', $format );
+		}
+
 		if ( $app->isSite() ) {
 			$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
 			$router->attachBuildRule( array( $this, 'buildRule' ) );
@@ -118,43 +182,67 @@ class plgSystemCCK extends JPlugin
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
 			JCckToolbox::process( 'onAfterInitialise' );
 		}
-		
 		if ( $this->multisite !== true ) {
 			return;
 		}
 		$user	=	JFactory::getUser();
 		
-		if ( $user->get( 'id' ) > 0 && @$user->guest != 1 ) {
+		if ( $user->id > 0 && is_object( $this->site ) && $user->id != $this->site->guest ) {
 			if ( $app->isSite() ) {
 				$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
+				
 				$style	=	$this->site_cfg->get( 'template_style', '' );
+				
 				if ( $style != '' ) {
 					$this->site_cfg->set( 'set_template_style', true );
 					$this->_setTemplateStyle( $style );
 				}
 			}
 			
-			if ( isset( $user->cck_multisite ) ) {
+			if ( ! $this->site ) {
+				JFactory::getSession()->set( 'user', JFactory::getUser( $user->id ) );
 				return;
 			}
 			
-			if ( ! $this->site ) {
-				JFactory::getSession()->set( 'user', JFactory::getUser( $user->get( 'id' ) ) );
-				return;
+			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
+				if ( !$user->authorise( 'core.admin' ) ) {
+					$groups		=	explode( ',', $this->site->groups );
+					$hasGroups	=	0;
+
+					if ( count( $groups ) ) {
+						foreach ( $groups as $group_id ) {
+							if ( isset( $user->groups[$group_id] ) ) {
+								$hasGroups++;
+							}
+						}
+						
+						if ( !$hasGroups ) {
+							$options	=	array( 'clientid'=>0 );
+							$result		=	$app->logout( $user->id, $options );
+
+							if ( !( $result instanceof Exception ) ) {
+								$app->redirect( '/' );
+							}
+						}
+					}
+				}
 			}
 			
 			// Groups
 			$authgroups	=	$user->getAuthorisedGroups();
 			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
 			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
-			
 			$multisite	=	false;
-			foreach ( $user->groups as $g ) {
-				if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
-					$multisite	=	true;
-					break;
+			
+			if ( count( $user->groups ) ) {
+				foreach ( $user->groups as $g ) {
+					if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
+						$multisite	=	true;
+						break;
+					}
 				}
 			}
+			$nogroups	=	str_replace( ',,',',', $nogroups );
 			
 			// Viewlevels
 			$authlevels	=	$user->getAuthorisedViewLevels();
@@ -162,9 +250,20 @@ class plgSystemCCK extends JPlugin
 			$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
 
 			if ( $multisite ) {
-				$viewlevels	=	array_diff( $authlevels, $nolevels );
+				if ( count( $nolevels) ) {
+					foreach ( $nolevels as $k=>$v ) {
+						$nolevels[$k]	=	(int)$v;
+					}
+				}
+				$viewlevels		=	array_diff( $authlevels, $nolevels );
+				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
+				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
+
+				if ( count( $otherlevels ) ) {
+					$viewlevels	=	array_merge( $viewlevels, $otherlevels );
+				}
 			} else {
-				$viewlevels	=	$authlevels;
+				$viewlevels		=	$authlevels;
 			}
 			
 			if ( $app->isAdmin() && $this->site->guest_only_viewlevel > 0 ) {
@@ -173,9 +272,15 @@ class plgSystemCCK extends JPlugin
 			
 			if( ( count( array_diff( $authlevels, $viewlevels ) ) ) || ( count( array_diff( $viewlevels, $authlevels ) ) ) ) {
 				jimport( 'cck.joomla.user.user' );
-				$shadow	=	new CCKUser( $user->get( 'id' ) );
-				$shadow->setAuthorisedViewLevels( $viewlevels );
-				$shadow->makeHimLive();
+				$userShadow		=	new CCKUser( $user->id );
+				$userShadow->setAuthorisedViewLevels( $viewlevels );
+				$userShadow->makeHimLive();
+			}
+
+			if ( JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$user->id ) );
+				$menuShadow->makeHimLive();
 			}
 		} else {
 			if ( $app->isAdmin() ) {
@@ -187,13 +292,23 @@ class plgSystemCCK extends JPlugin
 			if ( ! $this->site ) {
 				return;
 			}
-			
+			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
+				return;
+			}
 			$user			=	new JUser( $this->site->guest );
 			$user->guest	=	1;
+
 			$session->set( 'user', $user );
 			
+			if ( JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
+				$menuShadow->makeHimLive();
+			}
 			$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
+
 			$style	=	$this->site_cfg->get( 'template_style', '' );
+
 			if ( $style != '' ) {
 				$this->site_cfg->set( 'set_template_style', true );
 				$this->_setTemplateStyle( $style );
@@ -216,11 +331,6 @@ class plgSystemCCK extends JPlugin
 		
 		if ( $app->isAdmin() ) {			
 			switch ( $option ) {
-				case 'com_cck':
-					if ( !JCck::on() && $view == 'sites' ) {
-						JCckDevIntegration::addDropdown( $view );
-					}
-					break;
 				case 'com_config':
 					$com	=	$app->input->get( 'component', '' );
 					if ( $com == 'com_cck' || $com == 'com_cck_builder'
@@ -236,6 +346,25 @@ class plgSystemCCK extends JPlugin
 										   || $com == 'com_cck_webservices' ) {
 						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
 						JCck::loadjQuery( true, true, true );
+					}
+					break;
+				case 'com_installer':
+					if ( $view == 'update' ) {
+						if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_updater" AND enabled = 1' ) > 0 ) {
+							$class	=	'btn btn-primary btn-small';
+							$link	=	JRoute::_( 'index.php?option=com_cck_updater' );
+							$target	=	'_self';
+							$style	=	'top: -2px; position: relative;';
+						} else {
+							$class	=	'';
+							$link	=	'https://www.seblod.com/store/extensions/634';
+							$target	=	'_blank';
+							$style	=	'text-decoration:underline;';
+						}
+						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_CORE' ), 'notice' );
+						JFactory::getApplication()->enqueueMessage( JText::sprintf( 'LIB_CCK_INSTALLER_UPDATE_WARNING_MORE', $link, $target, $class, $style ), 'notice' );
+					} elseif ( $view == 'manage' ) {
+						$doc->addStyleDeclaration( 'span[data-original-title="SEBLOD (App Builder & CCK)"]{font-weight:bold;}');
 					}
 					break;
 				case 'com_menus':
@@ -257,7 +386,7 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 				default:
-					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"' );
+					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.JCckDatabase::escape( $option ).'"' );
 					$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout, 'id'=>$id );
 					if ( count( $locations ) ) {
 						foreach ( $locations as $location ) {
@@ -274,7 +403,7 @@ class plgSystemCCK extends JPlugin
 					break;
 			}
 		} elseif ( $app->isSite() ) {
-			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && JCck::on() && isset( $doc->_links ) && count( $doc->_links ) ) {
+			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && isset( $doc->_links ) && count( $doc->_links ) ) {
 				foreach ( $doc->_links as $k=>$link ) {
 					if ( $link['relation'] == 'canonical' ) {
 						unset( $doc->_links[$k] );
@@ -287,6 +416,7 @@ class plgSystemCCK extends JPlugin
 			$user	=	JFactory::getUser();
 			
 			if ( $this->multisite === true ) {
+				$config		=	JFactory::getConfig();
 				$site_title	=	$this->site_cfg->get( 'sitename', '' );
 				$site_pages	=	$this->site_cfg->get( 'sitename_pagetitles', 0 );
 				$site_desc	=	$this->site_cfg->get( 'metadesc', '' );
@@ -299,10 +429,10 @@ class plgSystemCCK extends JPlugin
 					$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
 					$doc->setTitle( $title );
 				}
-				if ( $site_desc && ( !$meta_desc || $meta_desc == $app->getCfg( 'MetaDesc' ) ) ) {
+				if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
 					$doc->setMetaData( 'description', $site_desc );
 				}
-				if ( $site_keys && ( !$meta_keys || $meta_keys == $app->getCfg( 'MetaKeys' ) ) ) {
+				if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
 					$doc->setMetaData( 'keywords', $site_keys );
 				}
 				if ( $this->site_cfg->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {
@@ -312,14 +442,23 @@ class plgSystemCCK extends JPlugin
 										   'params'=>$template->params,
 										   'template'=>$template->template
 									);
+					if ( JCck::on( '3.6') ) {
+						$params['params']	=	new JRegistry( $params['params'] );
+					}
 					$doc->parse( $params );
 					$this->offline_buffer	=	$doc->render( false, $params );
 				} elseif ( $this->site_cfg->get( 'set_template_style', false ) ) {
 					$menu	=	$app->getMenu();
+					
 					if ( is_object( $menu ) ) {
-						$style	=	$menu->getActive()->template_style_id;
-						if ( $style ) {
-							$this->_setTemplateStyle( $style );
+						$active	=	$menu->getActive();
+						
+						if ( is_object( $active ) ) {
+							$style	=	$active->template_style_id;
+							
+							if ( $style ) {
+								$this->_setTemplateStyle( $style );
+							}
 						}
 					}
 				}
@@ -333,16 +472,37 @@ class plgSystemCCK extends JPlugin
 				if ( $options->get( 'registration', 1 ) ) {
 					if ( $view == 'profile' ) {
 						$user	=	JFactory::getUser();
-						$userid	=	$user->get( 'id' );
-						if ( !$userid ) {
+
+						if ( !$user->id ) {
 							return;
 						}
 						if ( $layout == 'edit' ) {
-							$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_user" AND pk='.(int)$userid );
+							$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_user" AND pk='.(int)$user->id );
 							if ( !$type ) {
 								return;
 							}
-							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$userid.'&Itemid='.$itemId;
+							$itemId2	=	$options->get( 'profile_itemid', 0 );
+							$return		=	$app->input->getBase64( 'return', '' );
+
+							if ( $return == '' ) {
+								$return	=	base64_encode( $app->input->server->getString( 'HTTP_REFERER', '' ) );
+							}
+							$return		=	$return ? '&return='.$return : '';
+
+							if ( $itemId2 ) {
+								$item		=	$app->getMenu()->getItem( $itemId2 );
+								$urlvars	=	'';
+								if ( is_object( $item ) ) {
+									$urlvars	=	$item->params->get( 'urlvars' );
+
+									if ( $urlvars != '' ) {
+										$urlvars	=	'&'.$urlvars;
+									}
+								}
+								$url		=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$user->id.'&Itemid='.$itemId2.$urlvars.$return );
+							} else {
+								$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$user->id.'&Itemid='.$itemId.$return;
+							}							
 						} else {
 							require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.php';
 							$sef		=	0;
@@ -362,32 +522,45 @@ class plgSystemCCK extends JPlugin
 									}
 								}
 							}
-							$url	=	plgCCK_Storage_LocationJoomla_User::getRoute( $userid, $sef, $itemId );
+							$url	=	plgCCK_Storage_LocationJoomla_User::getRoute( $user->id, $sef, $itemId );
 						}
 						if ( $url != '' ) {
 							$app->redirect( $url );
 						}
 					} elseif ( $view == 'registration' ) {
-						$type	=	$options->get( 'default_type', 'user' );
-						if ( !$type ) {
-							return;
+						$itemId2	=	(int)$options->get( 'registration_itemid', 0 );
+
+						if ( $itemId2 ) {
+							$url	=	JRoute::_( 'index.php?Itemid='.$itemId2 );
+						} else {
+							$type	=	$options->get( 'default_type', 'user' );
+							
+							if ( !$type ) {
+								return;
+							}
+							$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&Itemid='.$itemId;
 						}
-						$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&Itemid='.$itemId;
 						$app->redirect( $url );
 					}
 				}
 			}
 			
 			if ( $option == 'com_content' && $view == 'form' && $layout == 'edit' ) {
-				$itemId	=	$app->input->getInt( 'Itemid', 0 );
 				$aid	=	$app->input->getInt( 'a_id', 0 );
 				$return	=	$app->input->getBase64( 'return' );
 				if ( !$aid ) {
 					return;
 				}
-				$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
-				if ( !$type ) {
-					return;
+				$bridgeType	=	JCckDatabase::loadObject( 'SELECT cck, pk FROM #__cck_core WHERE storage_location IN ("joomla_user","joomla_user_group") AND pkb='.(int)$aid );
+				
+				if ( is_object( $bridgeType ) && $bridgeType->cck ) {
+					$type	=	$bridgeType->cck;
+					$aid	=	(int)$bridgeType->pk;
+				} else {
+					$type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location="joomla_article" AND pk='.(int)$aid );
+					if ( !$type ) {
+						return;
+					}
 				}
 				$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$aid.'&Itemid='.$itemId.'&return='.$return;
 				$app->redirect( $url );
@@ -401,10 +574,10 @@ class plgSystemCCK extends JPlugin
 				if ( is_array( $custom ) && count( $custom ) ) {
 					$css_def	=	implode( '-', $custom );
 					$css_def	=	( $css_def == 'base-spacing-writing' ) ? 'all' : $css_def;
-					$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
+					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
 				}
 			} elseif ( $css_def ) {
-				$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
+				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/definitions/'.$css_def.'.css' );
 			}
 			if ( $css != '' ) {
 				$doc->addStyleDeclaration( $css );
@@ -430,6 +603,13 @@ class plgSystemCCK extends JPlugin
 
 			JCckToolbox::setHead( $head );
 		}
+		if ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+			if ( count( $app->cck_app['Header'] ) ) {
+				foreach ( $app->cck_app['Header'] as $k=>$v ) {
+					$app->setHeader( $k, $v, true );
+				}
+			}
+		}
 	}
 
 	// onAfterRender
@@ -439,100 +619,120 @@ class plgSystemCCK extends JPlugin
 			JCckToolbox::process( 'onAfterRender' );
 		}
 		$app		=	JFactory::getApplication();
+		$doc		=	JFactory::getDocument();
 		$option		=	$app->input->get( 'option', '' );
 		$view		=	$app->input->get( 'view', '' );
 		$layout		=	$app->input->get( 'layout', '' );
 		
+		if ( ( $app->isAdmin() || ( $app->isSite() && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
+			JCckToolbox::setHeadAfterRender();
+		}
+
 		// site
 		if ( $app->isSite() ) {
 			if ( $this->multisite === true && $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
-				$uri		=	JFactory::getURI();
+				$uri		=	JUri::getInstance();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-				JResponse::setHeader( 'Status', '503 Service Temporarily Unavailable', 'true' );
-				JResponse::setBody( $this->offline_buffer );
+				if ( !isset( $app->cck_app['Header']['Status'] ) ) {
+					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+				}
+				$app->setBody( $this->offline_buffer );
 			}
 			return;
 		}
 		
 		// admin
-		if ( $app->isAdmin() && JFactory::getDocument()->getType() == 'html' ) {
-			
-			$buffer	=	JResponse::getBody();
-			$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
-			
-			switch ( $option ) {
-				case 'com_cck':
-				case 'com_cck_builder':
-				case 'com_cck_developer':
-				case 'com_cck_ecommerce':
-				case 'com_cck_exporter':
-				case 'com_cck_importer':
-				case 'com_cck_manager':
-				case 'com_cck_multilingual':
-				case 'com_cck_packager':
-				case 'com_cck_toolbox':
-				case 'com_cck_updater':
-				case 'com_cck_webservices':
-					$buffer	=	$this->_setBasics( $buffer, $option, $view );
-					break;
-				case 'com_postinstall':
-					$eid	=	$app->input->get( 'eid', 0 );
-					$eid2	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
-					if ( $eid && $eid == $eid2 ) {
-						$buffer	=	str_replace( 'com_cck', 'SEBLOD', $buffer );
-						$buffer	=	str_replace( 'option=SEBLOD', 'option=com_cck', $buffer );	
-					}
-					break;
-				case 'com_templates':
-					if ( $view == 'templates' || $layout == 'edit' ) {
+		if ( $app->isAdmin() ) {
+			$buffer		=	'';
+			$type		=	JFactory::getDocument()->getType();
+
+			if ( $type == 'html' ) {
+				$buffer	=	$app->getBody();
+				$buffer	=	str_replace( 'icon-cck-', 'myicon-cck-', $buffer );
+				
+				switch ( $option ) {
+					case 'com_cck':
+					case 'com_cck_builder':
+					case 'com_cck_developer':
+					case 'com_cck_ecommerce':
+					case 'com_cck_exporter':
+					case 'com_cck_importer':
+					case 'com_cck_manager':
+					case 'com_cck_multilingual':
+					case 'com_cck_packager':
+					case 'com_cck_toolbox':
+					case 'com_cck_updater':
+					case 'com_cck_webservices':
+						$buffer	=	$this->_setBasics( $buffer, $option, $view );
 						break;
-					}
-					$search		=	'#administrator/index.php\?option=com_templates&amp;task=style.edit&amp;id=(.*)">(.*)</a>#sU';
-					$list		=	JCckDatabase::loadObjectList( 'SELECT a.id, b.name FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.name != ""', 'id' );
-					preg_match_all( $search, $buffer, $matches );
-					if ( count( $matches[1] ) ) {
-						$i		=	0;
-						$style	=	'height:14px; color:#ffffff; background-color:#0088CC; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
-						foreach ( $matches[1] as $match ) {
-							if ( isset( $list[$match] ) ) {
-								$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';
-								$buffer		=	str_replace( $matches[0][$i], $replace, $buffer );
-							}
-							$i++;
+					case 'com_postinstall':
+						$eid	=	$app->input->get( 'eid', 0 );
+						$eid2	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
+						if ( $eid && $eid == $eid2 ) {
+							$buffer	=	str_replace( 'com_cck', 'SEBLOD', $buffer );
+							$buffer	=	str_replace( 'option=SEBLOD', 'option=com_cck', $buffer );	
 						}
-					}
-					break;
-				default:
-					$and		=	( $view ) ? ' AND ( a.view = "'.$view.'" OR a.view = "" )' : '';
-					$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"'.$and );
-					$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout );
-					if ( count( $locations ) ) {
-						foreach ( $locations as $location ) {
-							$path	=	JPATH_SITE.'/plugins/cck_storage_location/'.$location->name.'/classes/integration.php';
-							if ( is_file( $path ) ) {
-								$data	=	array( 'doIntegration'=>false,
-												   'multilanguage'=>0,
-												   'options'=>new JRegistry( $location->options ),
-												   'replace_end'=>'"',
-												   'return_option'=>substr( $option, 4 ),
-												   'return_view'=>$view,
-												   'return'=>'',
-												   'search'=>'',
-												   'search_alt'=>''
-											);
-								require_once $path;
-								JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location->name.'_Integration', 'onCCK_Storage_LocationAfterRender', array( &$buffer, &$data, $uri ) );
-								if ( $data['doIntegration'] ) {
-									$list	=	JCckDatabase::loadObjectList( 'SELECT pk, cck FROM #__cck_core WHERE storage_location="'.$location->name.'"', 'pk' );
-									$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list );
+						break;
+					case 'com_templates':
+						if ( $view == 'templates' || $layout == 'edit' ) {
+							break;
+						}
+						$search		=	'#administrator/index.php\?option=com_templates&amp;task=style.edit&amp;id=(.*)">(.*)</a>#sU';
+						$list		=	JCckDatabase::loadObjectList( 'SELECT a.id, b.name FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.name != ""', 'id' );
+						preg_match_all( $search, $buffer, $matches );
+						if ( count( $matches[1] ) ) {
+							$i		=	0;
+							$style	=	'height:14px; color:#ffffff; background-color:#3b99fc; margin:0px 12px 0px 12px; padding:2px 8px 2px 8px; font-size:10px; font-weight:bold;';
+							foreach ( $matches[1] as $match ) {
+								if ( isset( $list[$match] ) ) {
+									$replace	=	$matches[0][$i] . '<span style="'.$style.'">SEBLOD</span>Do NOT set as Default Template !';
+									$buffer		=	str_replace( $matches[0][$i], $replace, $buffer );
+								}
+								$i++;
+							}
+						}
+						break;
+					default:
+						$and		=	( $view ) ? ' AND ( a.view = "'.$view.'" OR a.view = "" )' : '';
+						$locations	=	JCckDatabase::loadObjectList( 'SELECT a.name, a.options FROM #__cck_core_objects AS a WHERE a.component = "'.$option.'"'.$and );
+						$uri		=	array( 'option'=>$option, 'view'=>$view, 'layout'=>$layout );
+						if ( count( $locations ) ) {
+							foreach ( $locations as $location ) {
+								$path	=	JPATH_SITE.'/plugins/cck_storage_location/'.$location->name.'/classes/integration.php';
+								if ( is_file( $path ) ) {
+									$data	=	array( 'doIntegration'=>false,
+													   'multilanguage'=>0,
+													   'options'=>new JRegistry( $location->options ),
+													   'replace_end'=>'"',
+													   'return_option'=>substr( $option, 4 ),
+													   'return_view'=>$view,
+													   'return'=>'',
+													   'search'=>'',
+													   'search_alt'=>''
+												);
+									require_once $path;
+									JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location->name.'_Integration', 'onCCK_Storage_LocationAfterRender', array( &$buffer, &$data, $uri ) );
+									if ( $data['doIntegration'] ) {
+										$list	=	JCckDatabase::loadObjectList( 'SELECT pk, cck FROM #__cck_core WHERE storage_location="'.$location->name.'"', 'pk' );
+										$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list );
+									}
 								}
 							}
 						}
+						break;
+				}
+				$app->setBody( $buffer );
+			} elseif ( $option == 'com_cck' && $type == 'raw' ) {
+				if ( $layout == 'edit3' || $layout == 'edit4' ) {
+					$buffer	=	$app->getBody();
+					$buffer	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $buffer );
+					
+					if ( $buffer != '' ) {
+						$app->setBody( $buffer );
 					}
-					break;
+				}
 			}
-			JResponse::setBody( $buffer );
 			
 			return;
 		}
@@ -543,16 +743,75 @@ class plgSystemCCK extends JPlugin
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onContentPrepareForm';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}
 			}
 		}
+	}
+
+	// onExtensionAfterSave
+	public function onExtensionAfterSave( $context, $table, $flag )
+	{
+		if ( $context != 'com_config.component' ) {
+			return;
+		}
+
+		if ( !( is_object( $table ) && $table->type == 'component' && $table->element == 'com_cck_updater' ) ) {
+			return;
+		}
+
+		$params	=	new JRegistry;
+		$params->loadString( $table->params );
+
+		if ( $proxy = (int)$params->get( 'proxy', '0' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+						
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "update.seblod.com", "'.$proxy.'") WHERE location LIKE "%update.seblod.com%" AND location != "http://update.seblod.com/pkg_cck.xml"' );
+		} elseif ( !$proxy && $params->get( 'proxy_domain' ) ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck_updater/helpers/helper_admin.php';
+
+			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
+
+			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "'.$proxy.'", "update.seblod.com") WHERE location LIKE "%'.$proxy.'%"' );
+		}
+	}
+
+	// _isRestApi
+	protected function _isRestApi()
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+		 	return false;
+		} else {
+			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
+													. ' FROM #__menu WHERE'
+													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1',
+													'path' );
+			$path	=	JUri::getInstance()->getPath();
+			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+
+			if ( count( $apis ) ) {
+				foreach ( $apis as $api ) {
+					$api	=	$prefix.'/'.$api->path;
+					$pos	=	strpos( $path, $api );
+
+					if ( $pos !== false && $pos == 0 ) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;	
 	}
 
 	// _reSubmenu
@@ -579,25 +838,6 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 		
-		if ( !JCck::on() ) {
-			if ( $option == 'com_cck' ) {
-				if ( $view == 'types' ) {
-					$replace	=	'<a href="index.php?option=com_cck&view=versions&filter_e_type=type&e_id=0">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				} elseif( $view == 'searchs' ) {
-					$replace	=	'<a href="index.php?option=com_cck&view=versions&filter_e_type=search&e_id=0">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				} elseif( $view == 'versions' ) {
-					$replace	=	'<a href="#" class="active">'.JText::_( 'COM_CCK_VERSIONS' ).'</a>';
-					$buffer		=	$this->_reSubmenu( $buffer, '#<ul id="submenu">(.*)</ul>#sU', $replace );
-				}
-			}
-			
-			$search		=	'<ul id="submenu">';
-			$replace	=	'<ul class="lavaLampNoImage" id="submenu">';
-			$buffer		=	str_replace( $search, $replace, $buffer );
-		}
-		
 		return $buffer;
 	}
 	
@@ -607,12 +847,11 @@ class plgSystemCCK extends JPlugin
 		if ( !$id ) {
 			return;
 		}
-		$app		=	JFactory::getApplication();
-		$menu		=	JMenu::getInstance( 'site' );
-		$home		=	$menu->getDefault();
-		$my			=	$menu->getItem( $id );
-		
-		$path		=	substr( JURI::getInstance()->getPath(), 1 );
+		$app	=	JFactory::getApplication();
+		$menu	=	JMenu::getInstance( 'site' );
+		$home	=	$menu->getDefault();
+		$my		=	$menu->getItem( $id );
+		$path	=	substr( JUri::getInstance()->getPath(), 1 );
 		
 		// todo: need to be improved!
 		if ( !( !$path || $path == 'index.php/'.@$my->alias || $path == @$my->alias.'.html' ) ) {
@@ -630,6 +869,19 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 	
+	// _setLanguage
+	protected function _setLanguage( $tag )
+	{
+		$app	=	JFactory::getApplication();
+		$lang	=	JLanguage::getInstance( $tag );
+		
+		$app->loadLanguage( $lang );
+		JFactory::$language	=	$app->getLanguage();
+
+		JFactory::getConfig()->set( 'language', $tag );
+		JFactory::getLanguage()->setLanguage( $tag );
+	}
+
 	// _setTemplateStyle
 	protected function _setTemplateStyle( $style )
 	{

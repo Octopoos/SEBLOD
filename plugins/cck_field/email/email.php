@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -118,15 +118,14 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Init
 		if ( count( $inherit ) ) {
-			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )		?	$inherit['name'] 		:	$field->name;
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' )	? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
 		}
-		$app		=	JFactory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$siteName	=	$app->getCfg('sitename');
+		$siteName	=	JFactory::getConfig()->get( 'sitename' );
 		$valid		=	0;
-		$send		=	isset( $options2['send'] ) ? $options2['send'] : 0;
+		$send		=	( isset( $options2['send'] ) && $field->state != 'disabled' ) ? $options2['send'] : 0;
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
 		$isNew		=	( $config['pk'] ) ? 0 : 1;
 		$sender		=	0;
@@ -153,21 +152,21 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
 		$new_message	=	( strlen( $options2['message_field'] ) > 0 ) ? $options2['message_field'] : '';
 
-		$dest		=	array();
-		$from		=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
-		$from_param	=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
-		$from_name	=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
+		$dest				=	array();
+		$from				=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
+		$from_param			=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
+		$from_name			=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
 		$from_name_param	=	( isset( $options2['from_name_param'] ) ) ? $options2['from_name_param'] : '';
-		$cc			=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
-		$cc_param	=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
-		$bcc		=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
-		$bcc_param	=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
-		$moredest	=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
-		$send_attach	=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
-		$moreattach		=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
+		$cc					=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
+		$cc_param			=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
+		$bcc				=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
+		$bcc_param			=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
+		$moredest			=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
+		$send_attach		=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
+		$moreattach			=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
 		
 		// Prepare
-		if ( $options2['to'] != '' ) {
+		if ( isset( $options2['to'] ) && $options2['to'] != '' ) {
 			$to		=	self::_split( $options2['to'] );
 			$dest	=	array_merge( $dest, $to );
 			$valid	=	1;
@@ -175,7 +174,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		if ( $moredest ) {
 			$valid	=	1;
 		}
-		if ( $options2['to_admin'] != '' ) {
+		if ( isset( $options2['to_admin'] ) && $options2['to_admin'] != '' ) {
 			$to_admin	=	( count( $options2['to_admin'] ) ) ? implode( ',', $options2['to_admin'] ) : $options2['to_admin'];
 			if ( strpos( $to_admin, ',' ) !== false ) {
 				$recips = explode( ',', $to_admin );
@@ -284,11 +283,10 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 		}
 		$n	=	count( array_filter( $dest ) );
-		if ( $n ) {
-			$app	= JFactory::getApplication();
-	
-			$cfg_MailFrom	=	$app->getCfg( 'mailfrom' );
-			$cfg_FromName	=	$app->getCfg( 'fromname' );
+		if ( $n ) {	
+			$config2		=	JFactory::getConfig();
+			$cfg_MailFrom	=	$config2->get( 'mailfrom' );
+			$cfg_FromName	=	$config2->get( 'fromname' );
 			if ( $cfg_MailFrom != '' && $cfg_FromName != '') {
 				$mailFrom	=	$cfg_MailFrom;
 				$fromName	=	$cfg_FromName;
@@ -300,8 +298,8 @@ class plgCCK_FieldEmail extends JCckPluginField
 			
 			$subject	=	str_replace( '[id]', $config['id'], $subject );
 			$subject	=	str_replace( '[pk]', $config['pk'], $subject );
-			$subject	=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $subject );
-			$subject	=	str_replace( '[siteurl]', JURI::base(), $subject );
+			$subject	=	str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
+			$subject	=	str_replace( '[siteurl]', JUri::base(), $subject );
 			
 			// J(translate) for subject
 			if ( $subject != '' && strpos( $subject, 'J(' ) !== false ) {
@@ -315,13 +313,8 @@ class plgCCK_FieldEmail extends JCckPluginField
 				}
 			}
 			
-			$body		=	str_replace( '[id]', $config['id'], $body );
-			$body		=	str_replace( '[pk]', $config['pk'], $body );
-			$body		=	str_replace( '[sitename]', $app->getCfg( 'sitename' ), $body );
-			$body		=	str_replace( '[siteurl]', JURI::base(), $body );
-
 			if ( isset( $config['registration_activation'] ) ) {
-				$body		=	str_replace( '[activation]', JURI::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
+				$body		=	str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
 				$body		=	str_replace( '[username]', $fields['username']->value, $body );
 				$subject	=	str_replace( '[username]', $fields['username']->value, $subject );
 			}
@@ -371,7 +364,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
 				preg_match_all( $search, $body, $matches );
 				if ( count( $matches[1] ) ) {
-					for ( $i = 0, $n = count( $matches ); $i <= $n; $i++ ) {
+					for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ ) {
 						$attr	=	strtolower( $matches[1][$i] );
 						$match	=	$matches[2][$i];
 						if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' ){
@@ -394,7 +387,24 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-	
+			
+			$body		=	str_replace( '[id]', $config['id'], $body );
+			$body		=	str_replace( '[pk]', $config['pk'], $body );
+			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
+			$body		=	str_replace( '[siteurl]', JUri::base(), $body );
+
+			if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
+				$user			=	JCck::getUser();
+				$matches		=	'';
+				$search			=	'#\$user\->([a-zA-Z0-9_]*)#';
+				preg_match_all( $search, $body, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $k=>$v ) {
+						$body	=	str_replace( $matches[0][$k], $user->$v, $body );
+					}
+				}
+			}
+
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
 				$matches	=	NULL;
@@ -459,6 +469,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$cc		=	NULL;
 					break;
 			}
+			if ( ( is_string( $cc ) && empty( $cc ) ) || is_array( $cc ) && empty( $cc[0] ) ) {
+				$cc	=	array();
+			}
 			$bcc	=	$process['bcc'];
 			switch ( $bcc ) {
 				case 3:
@@ -470,6 +483,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 				default:
 					$bcc	=	NULL;
 					break;
+			}
+			if ( ( is_string( $bcc ) && empty( $bcc ) ) || is_array( $bcc ) && empty( $bcc[0] ) ) {
+				$bcc	=	array();
 			}
 			$send_attach	=	$process['send_attach'];
 			if ( $send_attach != 1 && strlen( $process['send_attach'] ) > 1 ){
@@ -488,9 +504,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			$replyTo		=	NULL;
-			$replyToName	=	NULL;
-
 			if ( $process['format'] == '0' ) {
 				$format		=	false;
 				$body		=	strip_tags( $body );
@@ -500,7 +513,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
-			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach, $replyTo, $replyToName );
+			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach );
 		}
 	}
 	
@@ -509,6 +522,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 	// _split
 	protected static function _split( $string )
 	{
+		$string		=	str_replace( array( ' ', "\r" ), '', $string );
 		if ( strpos( $string, ',' ) !== false ) {
 			$tab	=	explode( ',', $string );
 		} else if ( strpos( $string, ';' ) !== false ) {

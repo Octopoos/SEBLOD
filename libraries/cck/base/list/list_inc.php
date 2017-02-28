@@ -4,13 +4,15 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.framework' );
+if ( !JCck::on( '3.4' ) ) {
+	JHtml::_( 'behavior.framework' );
+}
 
 $app			=	JFactory::getApplication();
 $data			=	'';
@@ -21,6 +23,7 @@ $items			=	array();
 $lang   		=	JFactory::getLanguage();
 $path			=	JPATH_SITE.'/templates';
 $total			=	0;
+$total_items	=	0;
 $user 			=	JCck::getUser();
 $user->gid		=	25; // Todo:: ACL
 
@@ -40,10 +43,12 @@ if ( ! $search ) {
 	$app->enqueueMessage( 'Oops! Search Type not found.. ; (', 'error' ); return;
 }
 $lang->load( 'pkg_app_cck_'.$search->folder_app, JPATH_SITE, null, false, false );
+
+$no_action					=	'';
 $options					=	new JRegistry;
 $options->loadString( $search->options );
 $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['show_form'] : (int)$options->get( 'show_form', 1 );
-$preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? $preconfig['show_list'] : 1;
+$preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfig['show_list'] : (int)$options->get( 'show_list', 1 );
 $preconfig['auto_redirect']	=	( $preconfig['auto_redirect'] != '' ) ? $preconfig['auto_redirect'] : $options->get( 'auto_redirect', 0 );
 
 // ACL
@@ -53,6 +58,7 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
 						   'javascript'=>'',
+						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
 						   'validation'=>array(),
@@ -66,9 +72,9 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 }
 
 // Fields
-$fields						=	CCK_List::getFields( $search->name, $preconfig['client'], '', true, true );
-$fields_order				=	CCK_List::getFields( $search->name, 'order', '', true, true );
-$count						=	count( $fields );
+$fields						=	CCK_List::getFields( $search->name, array( $preconfig['client'], 'order' ), '', true, true );
+
+$count						=	count( $fields['search'] );
 $doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
 $doDebug					=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
 $options->set( 'debug', $doDebug );
@@ -82,21 +88,42 @@ if ( ! $count ) {
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
 						   'javascript'=>'',
+						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);
-	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
+
+	if ( !( $preconfig['task'] == 'no' && !$preconfig['show_form'] ) ) {
+		$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' );
+	}
+
+	return;
 }
 
-// INIT
-$limitend	=	(int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
-if ( $limitstart != -1 ) {
-	if ( $limitend != -1 ) {
-		$this->state->set( 'limit', $app->getUserStateFromRequest( $limitend, 'limit', $limitend, 'UINT' ) );
+// Init
+$hasAjax	=	false;
+$limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
+$isAltered	=	false;
+$isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
+
+if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
+	if ( $app->input->get( 'end', '' ) != '' ) {
+		$limitend	=	(int)$app->input->getInt( 'end', '' );
 	}
-	$limitend	=	(int)$this->state->get( 'limit' );
+}
+if ( $limitstart != -1 ) {
+	if ( $limitstart > 0 && !(int)$app->input->getInt( 'start' ) ) {
+		$isAltered	=	true;
+	}
+	if ( isset( $this ) ) {
+		if ( $limitend != -1 ) {
+			$this->state->set( 'limit', (int)$limitend );
+		}
+		$limitend	=	(int)$this->state->get( 'limit' );
+	}
 }
 
 if ( !isset( $lives ) ) {
@@ -108,6 +135,8 @@ if ( !isset( $lives ) ) {
 			$lives[$l[0]]	=	$l[1];
 		}
 	}
+} elseif ( count( $lives ) && $isInfinite ) {
+	// todo: force lives
 }
 $variation	=	explode( '||', $variation );
 $variations	=	array();
@@ -125,18 +154,21 @@ $ordering		=	( @$preconfig['ordering'] != '' ) ? $preconfig['ordering'] : $optio
 $active			=	array();
 $active[0]		=	'cck';
 $areas['active']=	$active;
+
 if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
 	$post		=	( $method ) ? JRequest::get( 'post' ) : JRequest::get( 'get' );
 }
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
 						   'core'=>true,
+						   'doPagination'=>true,
 						   'doQuery'=>true,
 						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 						   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
 						   'formId'=>$preconfig['formId'],
 						   'Itemid'=>$itemId,
+						   'limitend'=>0,
 						   'location'=>'',
 						   'pk'=>$id,
 						   'submit'=>$preconfig['submit'],
@@ -147,13 +179,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);
-if ( isset( $preconfig['idx'] ) ) {
-	$config['idx']	=	$preconfig['idx'];
-	if ( !isset( $app->cck_idx ) ) {
-		$app->cck_idx	=	array();	
-	}
-	$app->cck_idx[]	=	$preconfig['idx'];
-}
+
 jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
@@ -163,6 +189,11 @@ $dispatcher	=	JDispatcher::getInstance();
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
 if ( $preconfig['show_form'] ) {
+	
+	if ( JCck::on( '3.4' ) ) {
+		JHtml::_( 'behavior.core' );
+	}
+
 	// Template
 	$P				=	'template_'.$preconfig['client'];
 	$templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
@@ -187,6 +218,58 @@ if ( $preconfig['show_form'] ) {
 	}
 }
 
+// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
+
+$context	=	$app->input->getString( 'context' );
+
+if ( $context != '' ) {
+	$context	=	str_replace( "'", '"', $context );
+	$context	=	json_decode( $context );
+	$vars		=	array(
+						'Itemid'=>'',
+						'view'=>array( 'form', 'list', 'article', 'category' )
+					);
+	foreach ( $vars as $key=>$val ) {
+
+		if ( isset( $context->$key ) ) {
+			$v	=	$context->$key;
+
+			if ( is_array( $val ) ) {
+				if ( !in_array( $v, $val ) ) {
+					continue;
+				}
+			} elseif ( $val != '' ) {
+				if ( $v != $val ) {
+					continue;
+				}
+			}
+			$app->input->set( $key, $v );
+		}
+	}
+}
+
+if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
+	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
+
+	if ( is_object( $menu ) && isset( $menu->params ) ) {
+		$preconfig['limit']		=	$menu->params->get( 'limit' );
+		$preconfig['search2']	=	$menu->params->get( 'search2' );
+	}
+}
+if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
+	$options->set( 'limit', $preconfig['limit'] );
+}
+
+// isPersistent
+$context		=	'com_cck.'.$search->name;
+$isPersistent	=	(int)$options->get( 'persistent_query', '0' );
+
+if ( isset( $this ) && ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) ) {
+	$isPersistent	=	true;
+} else {
+	$isPersistent	=	false;
+}
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search
 
 // Validation
@@ -197,10 +280,12 @@ if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
 $preconfig['client']	=	'list';
 $error					=	'';
 $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$params->get( 'order_by', '' ) );
+$session				=	JFactory::getSession();
+$registry				=	$session->get( 'registry' );
 $stages					=	array();
 
 // Process
-foreach ( $fields as $field ) {
+foreach ( $fields['search'] as $field ) {
 	$name	=	$field->name;
 	$value	=	'';
 	
@@ -215,10 +300,20 @@ foreach ( $fields as $field ) {
 		$field->variation_override	=	NULL;
 	}
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
-		
+
+	if ( $field->variation == 'form_filter_ajax' || $field->variation == 'list_filter_ajax' ) {
+		$hasAjax	=	true;
+		$isInfinite	=	true;
+	}
+
 	// Value
-	if ( ( !$field->variation || $field->variation == 'form_filter' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
+	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
+		
+		// Set Persistent Values
+		if ( $isPersistent ) {
+			$app->setUserState( $context.'.filter.'.$name, $value );
+		}
 	} else {
 		if ( isset( $lives[$name] ) ) {
 			$value		=	$lives[$name];
@@ -229,13 +324,23 @@ foreach ( $fields as $field ) {
 				$value	=	$field->live_value;
 			}
 		}
+
+		// Get Persistent Values
+		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
+			if ( $registry->exists( $context.'.filter.'.$name ) ) {
+				$value	=	$app->getUserState( $context.'.filter.'.$name, '' );
+			}
+		}
 	}
 	
 	// Prepare
+	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
+		$field->variation	=	'hidden';
+	}
 	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
-	if ( $field->stage != 0 ) {
+	if ( (int)$field->stage > 0 ) {
 		$stages[$field->stage]	=	0;
 	}
 
@@ -246,12 +351,18 @@ foreach ( $fields as $field ) {
 }
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
+
 if ( isset( $doc ) ) {
-	$doc->fields		=	$fields;
+	$doc->fields		=	$fields['search'];
 }
 $config['limitstart']	=	$limitstart;
 $config['limitend']		=	$limitend;
 $config['doSelect']		=	$search->content ? false : true;
+
+if ( $doDebug ) {
+	$profiler	=	JProfiler::getInstance();
+}
+
 if ( $search->storage_location ) {
 	$config['type_object']	=	$search->storage_location;
 }
@@ -262,7 +373,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $error ) {
 				// Search
 				$current['stage']	=	$stage;
-				$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
+				$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 				if ( ! $items && $stages[$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
 					$error			=	1;
 					break;
@@ -273,18 +384,9 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	if ( ! $error ) {
 		$current['stage']	=	0;
-		$items				=	CCK_List::getList( $ordering, $areas, $fields, $fields_order, $config, $current, $options, $user );
+		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 	}
 	$total					=	count( $items );
-	
-	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
-		$limitstart			=	-1;
-		$limitend			=	0;
-		$total				=	$config['total'];
-	} else {
-		$config['total']	=	$total;
-	}
-	$total_items			=	$total;
 	
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
@@ -302,20 +404,55 @@ if ( $preconfig['task'] == 'search' ) {
 		$config['pks']	=	$pks;
 	}
 
+	// Total
+	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
+		if ( $isAltered ) {
+			$config['total']	=	( $config['total'] > $limitstart ) ? $config['total'] - $limitstart : 0;
+		}
+
+		$limitstart			=	-1;
+		$limitend			=	0;	
+		$total				=	$config['total'];
+	} else {
+		$config['total']	=	$total;
+	}
+	$total_items			=	$total;
+
 	// Pagination
-	if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
-		$items	=	array_splice( $items, $limitstart, $limitend );
+	if ( $config['doPagination'] ) {
+		if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
+			$items	=	array_splice( $items, $limitstart, $limitend );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List
-	if ( $doDebug ) {
-		$profiler	=	JProfiler::getInstance();
-	}
+
 	if ( $preconfig['show_list'] ) {
+		$config['infinite']		=	$isInfinite;
+		$target					=	'search';
+		if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
+			$target				=	'search2';
+			$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
+			$options2			=	new JRegistry;
+			$options2->loadString( $search2->options );
+
+			if ( $options2->get( 'sef' ) != '' ) {
+				$config['doSEF']	=	$options2->get( 'sef' );
+			}
+			$search->content		=	$search2->content;
+		}
 		if ( $total ) {
+			if ( isset( $preconfig['idx'] ) ) {
+				$config['idx']	=	$preconfig['idx'];
+				if ( !isset( $app->cck_idx ) ) {
+					$app->cck_idx	=	array( 0=>false );
+				}
+				$app->cck_idx[]	=	$preconfig['idx'];
+			}
+			
 			// Limit2 + Random
-			if( $preconfig['limit2'] > 0 ) {
-				$total	=	( $preconfig['limit2'] > $total ) ? $total : $preconfig['limit2'];
+			if ( $preconfig['limit2'] > 0 ) {
+				$total		=	( $preconfig['limit2'] > $total ) ? $total : $preconfig['limit2'];
 				if ( $preconfig['ordering2'] == 'random' || $preconfig['ordering2'] == 'random_shuffle' ) {
 					// Random
 					$rand_keys	=	array_rand( $items, $total );
@@ -332,6 +469,8 @@ if ( $preconfig['task'] == 'search' ) {
 					// Cut
 					$items	=	array_splice( $items, 0, $total );
 				}
+			} else {
+				$total	=	count( $items ); // todo: change above??
 			}
 			// Suffle
 			if ( $preconfig['ordering2'] == 'shuffle' || $preconfig['ordering2'] == 'random_shuffle' ) {
@@ -341,14 +480,36 @@ if ( $preconfig['task'] == 'search' ) {
 			// Redirect
 			if ( $total == 1 ) {
 				if ( $preconfig['auto_redirect'] == 1 ) {
-					$sef			=	( $app->getCfg( 'sef' ) ) ? $config['doSEF'] : 0;
-					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0], $sef, $config['Itemid'] ) );
+					// Content
+					$return			=	'';
+					if ( @$preconfig['auto_redirect_vars'] != '' ) {
+						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+
+						if ( $return != '' ) {
+							$return		=	$preconfig['auto_redirect_vars'].'='.$return;
+						}
+					}
+					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
+					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
+
+					if ( $return != '' ) {
+						$return			=	( strpos( $redirect_url, '?' ) !== false ) ? '&'.$return : '?'.$return;
+						$redirect_url	.=	$return;
+					}
 					$app->redirect( $redirect_url );
 					return;
 				} elseif ( $preconfig['auto_redirect'] == 2 ) {
-					$uri			=	$_SERVER["HTTP_REFERER"];
-					$return			=	base64_encode( $uri );
-					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].'&return='.$return );
+					// Form
+					$return			=	'';
+					if ( @$preconfig['auto_redirect_vars'] != '' ) {
+						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+
+						if ( $return != '' ) {
+							$return		=	'&'.$preconfig['auto_redirect_vars'].'='.$return;
+						}
+					}
+					$return			.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
+					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return );
 					$app->redirect( $redirect_url );
 					return;
 				}
@@ -360,18 +521,18 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options );
+				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				$isCached	=	' [Cache=ON]';
 			} else {
-				if ( $search->content > 0 ) {
-					$data	=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
+				if ( ${$target}->content > 0 ) {
+					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
 		} else {
 			$isCached	=	'';
-			$no_message	=	$options->get( 'message', '' );
 			$no_action	=	$options->get( 'action', '' );
+			$no_message	=	$options->get( 'message', '' );
 			$no_style	=	$options->get( 'message_style', 'message' );
 			
 			if ( ! $no_message ) {
@@ -388,37 +549,53 @@ if ( $preconfig['task'] == 'search' ) {
 					$app->enqueueMessage( $no_message, $no_style );
 				}
 			}
-			if ( $no_action ) {
-				if ( $no_action == 'auto_redirect' ) {
-					if ( isset( $fields['cck'] ) && !$fields['cck']->live && $fields['cck']->live_value ) {
-						$uri			=	$_SERVER["HTTP_REFERER"];
-						$return			=	base64_encode( $uri );
-						$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
-						$app->redirect( $redirect_url );
-					}
-					return;
-				} elseif ( $no_action == 'file' ) {
-					$templateStyle	=	CCK_List::getTemplateStyle( $search->template_list, array( 'rendering_css_core'=>$search->stylesheets ) );
-					$file1			=	JPATH_SITE.'/templates/'.$templateStyle->name.'/includes/'.$search->name.'/no_result.php';
-					$file2			=	JPATH_SITE.'/templates/'.$templateStyle->name.'/includes/no_result.php';
-					
-					if ( file_exists( $file1 ) ) {
-						$file	=	$file1;
-					} elseif ( file_exists( $file2 ) ) {
-						$file	=	$file2;
-					} else {
-						$file	=	'';
-					}
-					if ( $file && is_file( $file ) ) {
-						ob_start();
-						include $file;
-						$data	=	ob_get_clean();
-					}
-				} else {
-					$data		=	CCK_List::render( $items, $search, $path, $preconfig['client'], $preconfig['itemId'], $options, $config );
-				}
-			}
+			
 		}
+	}
+} else {
+	$no_action	=	$options->get( 'action_no_search', '' );
+}
+if ( $no_action ) {
+	$config['infinite']		=	$isInfinite;
+	$target					=	'search';
+	if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
+		$target				=	'search2';
+		$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
+		$options2			=	new JRegistry;
+		$options2->loadString( $search2->options );
+
+		if ( $options2->get( 'sef' ) != '' ) {
+			$config['doSEF']	=	$options2->get( 'sef' );
+		}
+		$search->content		=	$search2->content;
+	}
+
+	if ( $no_action == 'auto_redirect' ) {
+		if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
+			$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
+			$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
+			$app->redirect( $redirect_url );
+		}
+		return;
+	} elseif ( $no_action == 'file' ) {
+		$templateStyle2	=	CCK_List::getTemplateStyle( ${$target}->template_list, array( 'rendering_css_core'=>${$target}->stylesheets ) );
+		$file1			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/'.${$target}->name.'/no_result.php';
+		$file2			=	JPATH_SITE.'/templates/'.$templateStyle2->name.'/includes/no_result.php';
+		
+		if ( file_exists( $file1 ) ) {
+			$file	=	$file1;
+		} elseif ( file_exists( $file2 ) ) {
+			$file	=	$file2;
+		} else {
+			$file	=	'';
+		}
+		if ( $file && is_file( $file ) ) {
+			ob_start();
+			include $file;
+			$data	=	ob_get_clean();
+		}
+	} else {
+		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 	}
 	if ( $doDebug ) {
 		echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
@@ -430,13 +607,13 @@ if ( $preconfig['show_form'] > 0 ) {
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
 		foreach ( $config['process']['beforeRenderForm'] as $process ) {
 			if ( $process->type ) {
-				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
+				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields['search'], &$config['storages'], &$config ) );
 			}
 		}
 	}
 	
-	$doc->fields	=	&$fields;
-	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JURI::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+	$doc->fields	=	&$fields['search'];
+	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
 }

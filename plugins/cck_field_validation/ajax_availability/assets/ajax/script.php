@@ -4,22 +4,23 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 // Init
-$app	=	JFactory::getApplication();
-$res	=	array( 0=>$app->input->get( 'fieldId', '' ) );
-$value	=	$app->input->getString( 'fieldValue', '' );
-$value	=	str_replace( array( '%26lt;', '%26gt;', '%27' ), array( '<', '>', "'" ), $value );
-$and	=	'';
-$column	=	$app->input->getString( 'avColumn', '' );
-$key	=	$app->input->getString( 'avKey', '' );
-$where	=	$app->input->getString( 'avWhere', '' );
-$table	=	$app->input->getString( 'avTable', '' );
+$app		=	JFactory::getApplication();
+$res		=	array( 0=>$app->input->get( 'fieldId', '' ) );
+$value		=	$app->input->getString( 'fieldValue', '' );
+$value		=	str_replace( array( '%26lt;', '%26gt;', '%27' ), array( '<', '>', "'" ), $value );
+$and		=	'';
+$column		=	$app->input->get( 'avColumn', '' );
+$invert		=	(int)$app->input->getInt( 'avInvert', '' );
+$key		=	$app->input->get( 'avKey', '' );
+$where		=	$app->input->getString( 'avWhere', '' );
+$table		=	$app->input->get( 'avTable', '' );
 
 // Process
 if ( $where ) {
@@ -39,11 +40,14 @@ if ( $key ) {
 	$pk		=	$app->input->getInt( 'avPk', 0 );
 	$pv		=	$app->input->getString( 'avPv', '' );
 	$pv		=	str_replace( array( '%26lt;', '%26gt;', '%27' ), array( '<', '>', "'" ), $pv );
-	$count	=	(int)JCckDatabase::loadResult( 'SELECT '.$key.' FROM #__'.$table.' WHERE '.$column.' = "'.JCckDatabase::escape( $value ).'"'.$and );
+	$count	=	(int)JCckDatabase::loadResult( 'SELECT '.JCckDatabase::quoteName( $key ).' FROM '.JCckDatabase::quoteName( '#__'.$table ).' WHERE '.JCckDatabase::quoteName( $column ).' = "'.JCckDatabase::escape( $value ).'"'.$and );
 	$res[1]	=	( $count > 0 && $count != $pk ) ? false : true;
 } else {
-	$count	=	(int)JCckDatabase::loadResult( 'SELECT COUNT('.$column.') FROM #__'.$table.' WHERE '.$column.' = "'.JCckDatabase::escape( $value ).'"'.$and );
+	$count	=	(int)JCckDatabase::loadResult( 'SELECT COUNT('.$column.') FROM '.JCckDatabase::quoteName( '#__'.$table ).' WHERE '.JCckDatabase::quoteName( $column ).' = "'.JCckDatabase::escape( $value ).'"'.$and );
 	$res[1]	=	( $count > 0 ) ? false : true;
+}
+if ( $invert ) {
+	$res[1]	=	( $res[1] ) ? false : true;
 }
 
 // Set

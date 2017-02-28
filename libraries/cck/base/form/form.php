@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,9 +14,12 @@ defined( '_JEXEC' ) or die;
 class CCK_Form
 {
 	// applyTypeOptions
-	public static function applyTypeOptions( &$config )
+	public static function applyTypeOptions( &$config, $client = '' )
 	{
-		$options	=	JCckDatabase::loadResult( 'SELECT options_'.$config['client'].' FROM #__cck_core_types WHERE name ="'.(string)$config['type'].'"' );
+		if ( $client == '' ) {
+			$client	=	$config['client'];
+		}
+		$options	=	JCckDatabase::loadResult( 'SELECT options_'.$client.' FROM #__cck_core_types WHERE name ="'.(string)$config['type'].'"' );
 		$options	=	JCckDev::fromJSON( $options );
 		if ( isset( $options['message'] ) && $options['message'] != '' ) {
 			$config['message']	=	$options['message'];
@@ -33,11 +36,22 @@ class CCK_Form
 	// getFields
 	public static function getFields( $type, $client, $stage, $excluded, $idx, $cck = false )
 	{
+		if ( is_array( $type ) ) {
+			$parent	=	( isset( $type[1] ) ) ? $type[1] : '';
+			$type	=	$type[0];
+		} else {
+			$parent	=	'';
+		}
+
 		// Client
 		if ( $client == 'all' )  {
-			$where 	=	' WHERE b.name = "'.$type.'"';
+			$where 	=	' WHERE b.name = "'.JCckDatabase::escape( $type ).'"';
 		} else {
-			$where 	=	' WHERE b.name = "'.$type.'" AND c.client = "'.$client.'"';
+			if ( $parent != '' ) {
+				$where 	=	' WHERE (b.name = "'.JCckDatabase::escape( $type ).'" OR b.name = "'.$parent.'") AND c.client = "'.$client.'"';
+			} else {
+				$where 	=	' WHERE b.name = "'.JCckDatabase::escape( $type ).'" AND c.client = "'.$client.'"';
+			}
 		}
 		if ( $stage > -1 ) {
 			$where 	.=	' AND c.stage = '.(int)$stage;
@@ -46,22 +60,27 @@ class CCK_Form
 		if ( $excluded != '' ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
 		}
-		//$where	.=	' AND c.variation != "none"';
+		// $where	.=	' AND c.variation != "none"';
 		
 		// Access
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	'SELECT DISTINCT a.*, c.client,'
+		$query	=	'SELECT DISTINCT a.*, c.client, c.ordering,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				. 	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
 				. 	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
 				. 	$where
-				.	' ORDER BY c.ordering ASC'
+				.	' ORDER BY'
 				;
-		$fields	=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
+		if ( $parent != '' ) {
+			$query	.=	' c.typeid ASC,';
+		}
+		$query		.=	' c.ordering ASC';
+		
+		$fields		=	( $idx ) ? JCckDatabase::loadObjectList( $query, 'name' ) : JCckDatabase::loadObjectList( $query ); //#
 		
 		if ( ! count( $fields ) ) {
 			$fields	=	array();
@@ -95,14 +114,18 @@ class CCK_Form
 	}
 	
 	// getType
-	public static function getType( $name, $id, $location = '' )
+	public static function getType( $name, $location = '' )
 	{		
-		// todo: API (move)
-		$query	=	'SELECT a.id, a.title, a.name, a.description, a.location, a.storage_location, b.app as folder_app,'
-				.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets'
+		if ( $location != '' && $location == 'store' ) {
+			$select	=	'a.id, a.name, a.admin_form, a.storage_location';
+		} else {
+			$select	=	'a.id, a.title, a.name, a.description, a.admin_form, a.location, a.parent, a.storage_location, b.app as folder_app,'
+					.	' a.options_admin, a.options_site, a.options_content, a.options_intro, a.template_admin, a.template_site, a.template_content, a.template_intro, a.stylesheets';
+		}
+		$query	=	'SELECT '.$select
 				.	' FROM #__cck_core_types AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
-				.	' WHERE a.name ="'.(string)$name.'" AND a.published = 1';
+				.	' WHERE a.name ="'.JCckDatabase::escape( (string)$name ).'" AND a.published = 1';
 		
 		return JCckDatabase::loadObject( $query );
 	}
@@ -111,8 +134,7 @@ class CCK_Form
 	public static function redirect( $action, $url, $message = '', $type = 'error', &$config )
 	{
 		$app				=	JFactory::getApplication();
-		$config['error']	=	true;
-		
+		$config['error']	=	true;		
 		
 		if ( ! $message ) {
 			$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
@@ -130,7 +152,7 @@ class CCK_Form
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url ) : $url;
+			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}

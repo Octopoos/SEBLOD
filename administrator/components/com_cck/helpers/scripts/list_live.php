@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,9 +13,11 @@ defined( '_JEXEC' ) or die;
 // getOptions
 function getOptions( $string )
 {
-	$options	=	'';
+	$options	=	array();
+
 	if ( $string ) {
 		$string	=	explode( '||', $string );
+		
 		foreach ( $string as $str ) {
 			if ( $str != '' ) {
 				$s				=	explode( '=', $str );
@@ -50,15 +52,22 @@ $values			=	getOptions( $live );
 $variations		=	getOptions( $variat );
 
 // Variations
-$opts			=	array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_INHERITED' ).' -' ),
-						   JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
-						   JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-						   JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-						   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-						   JHtml::_( 'select.option', 'form', JText::_( 'COM_CCK_DEFAULT' ) ),
-						   JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-						   JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED' ) ),
-						   JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
+$search			=	'<span class="icon-key"></span>';
+$replace		=	' (*)';
+$opts			=	array(
+						JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_INHERITED' ).' -' ),
+						JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+						JHtml::_( 'select.option', 'hidden', str_replace( $search, $replace, JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ) ),
+						JHtml::_( 'select.option', 'hidden_anonymous', str_replace( $search, $replace, JText::_( 'COM_CCK_HIDDEN_ANONYMOUS_AND_SECURED' ) ) ),
+						JHtml::_( 'select.option', 'value', str_replace( $search, $replace, JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ) ),
+						JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
+						JHtml::_( 'select.option', 'form', JText::_( 'COM_CCK_DEFAULT' ) ),
+						JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
+						JHtml::_( 'select.option', 'disabled', str_replace( $search, $replace, JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ) ),
+						JHtml::_( 'select.option', '</OPTGROUP>', '' ),
+						JHtml::_( 'select.option', '<OPTGROUP>', str_replace( $search, $replace, JText::_( 'COM_CCK_STAR_IS_SECURED' ) ) ),
+						JHtml::_( 'select.option', '</OPTGROUP>', '' )
+					);
 
 // Process
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
@@ -70,7 +79,7 @@ if ( count( $fields ) ) {
 			$value		=	( isset( $values[$field->name] ) ) ? htmlspecialchars( $values[$field->name] ) : '';
 			$variat		=	( isset( $variations[$field->name] ) ) ? $variations[$field->name] : '';
 			$variat		=	( $variat == 'none' ) ? $variat = 'hidden' : $variat;	// TODO: FIX TO REMOVE AFTER GA
-			$variation	=	Jhtml::_( 'select.genericlist', $opts, 'variation_'.$field->name, 'size="1" class="inputbox variation_values" onchange="CCK_setOptions(\'variation\');"', 'value', 'text', $variat );
+			$variation	=	Jhtml::_( 'select.genericlist', $opts, 'variation_'.$field->name, 'class="inputbox variation_values" onchange="CCK_setOptions(\'variation\');"', 'value', 'text', $variat );
 			$html		.=	'<label style="padding-left: 10px;">'.$field->title.'</label>'
 						.	'<input class="live_values inputbox" type="text" id="live_'.$field->name.'" name="live_'.$field->name.'" value="'.$value.'" onchange="CCK_setOptions(\'live\');" />'
 						.	$variation

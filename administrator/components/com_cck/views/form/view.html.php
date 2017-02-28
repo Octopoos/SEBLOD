@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,14 +19,21 @@ class CCKViewForm extends JViewLegacy
 		$app	=	JFactory::getApplication();
 		
 		if ( $this->getlayout() != 'select' ) {
+			$layout					=	$app->input->get( 'tmpl' );
+			$uniqId					=	'';
+
+			if ( $layout == 'component' || $layout == 'raw' ) {
+				$uniqId				=	'_'.$layout;
+			}
+
 			$preconfig				=	array();
 			$preconfig['action']	=	'';
 			$preconfig['client']	=	'admin';
-			$preconfig['formId']	=	'seblod_form';
-			$preconfig['submit']	=	'JCck.Core.submit';
+			$preconfig['formId']	=	'seblod_form'.$uniqId;
+			$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 			$preconfig['task']		=	$app->input->get( 'task', '' );
 			$preconfig['type']		=	$app->input->get( 'type', '' );
-			$preconfig['url']		=	JFactory::getURI()->toString();
+			$preconfig['url']		=	JUri::getInstance()->toString();
 			
 			JCck::loadjQuery();
 			Helper_Include::addStyleSheets( false );
@@ -61,11 +68,12 @@ class CCKViewForm extends JViewLegacy
 		jimport( 'cck.base.form.form' );
 		include_once JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
 		if ( isset( $config['id'] ) ) {
-			JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
+			JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'].'|'.$config['copyfrom_id'] ) );
 		}
 		
 		$this->config	=	&$config;
 		$this->data		=	&$data;
+		$this->form_id	=	$preconfig['formId'];
 		$this->id		=	&$id;
 		$this->isNew	=	&$isNew;
 		$this->params	=	&$params;
@@ -95,7 +103,7 @@ class CCKViewForm extends JViewLegacy
 				$key	=	'COM_CCK_TITLE_FORM_ADD_'.str_replace( ' ', '_', $title );
 				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_ADD' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'form.png' );
+			JToolBarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CANCEL', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		} else {
 			$key	=	'APP_CCK_FORM_'.$name.'_TITLE_EDIT';
@@ -105,7 +113,7 @@ class CCKViewForm extends JViewLegacy
 				$key	=	'COM_CCK_TITLE_FORM_EDIT_'.str_replace( ' ', '_', $title );
 				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_EDIT' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'form.png' );
+			JToolBarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CLOSE', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		}
 		$bar->prependButton( 'CckLink', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', 'javascript:JCck.Core.submit(\'form.save2new\');' );

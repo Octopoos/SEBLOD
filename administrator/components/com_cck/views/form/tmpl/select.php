@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,7 +15,7 @@ $app		=	JFactory::getApplication();
 $base		=	'index.php?option=com_cck&view=form';
 $layer		=	$app->input->getCmd( 'quicklayout', 'icon' );
 $lang		=	JFactory::getLanguage();
-$market		=	'http://www.seblod.com/download.html?tmpl=component';
+$market		=	'https://www.seblod.com/download.html?tmpl=component';
 $opts		=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 $quickadd	=	$app->input->getInt( 'quickadd', 0 );
 $type		=	'';
@@ -56,9 +56,8 @@ if ( $legacy == 1 ) {
 // Set
 JCck::loadjQuery();
 Helper_Include::addStyleSheets( true );
-if ( JCck::on() ) {
-	JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/cpanel.css', array(), false );
-}
+
+JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/cpanel.css', array(), false );
 
 $doc	=	JFactory::getDocument();
 $js		=	'jQuery(document).ready(function($){ $("#standard-content").attr("onclick","parent."+parent.jQuery("#toolbar-new a").attr("onclick2")); });';

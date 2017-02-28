@@ -4,27 +4,28 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$location	=	$this->state->get( 'filter.location' );
-$search		=	$this->state->get( 'filter.search' );
-$canOrder	=	0;
-$saveOrder	=	0;
-$title2		=	JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' );
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	'<span class="icon-eye"></span>';
+$action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"';
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$location		=	$this->state->get( 'filter.location' );
+$search			=	$this->state->get( 'filter.search' );
+$canOrder		=	0;
+$saveOrder		=	0;
+$top			=	'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
 										 'core_type_filter', 'core_folder_filter', 'core_state_filter', 'core_folder' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -94,8 +95,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
             	<?php if ( $item->id != 33 ) { ?>
-					<a class="cbox" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-fields.png" border="0" alt="" title="<?php echo $title2 ?>" /></a></td>
+					<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+						<?php echo $action; ?>
+					</a>
                 <?php } ?>
+            </td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
 					<?php
@@ -131,26 +135,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</td>
             <td class="center hidden-phone small">
 				<?php
-				$storage	=	( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .' / '. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
-                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format" title="'.$storage.'">'.( $item->storage ).'</span>';
+				$storage	=	'<strong>'.( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .'</strong><br />'. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
+                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage ).'</span>';
 				?>
             </td>
             <td class="center hidden-phone small"><?php echo JText::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>
             <?php if ( $location == 'folder_id' ) { ?>
-				<td class="order">
+				<td class="center order">
 					<?php if ( $canChange ) {
-							if ( $saveOrder ) {
-								if ( $listDir == 'asc' ) { ?>
-								<span><?php echo $this->pagination->orderUpIcon( $i, ( @$this->items[$i-1]->folder == $item->folder), 'fields.orderup', 'JLIB_HTML_MOVE_UP', $ordering ); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon( $i, $this->pagination->total,
-																				 ( @$this->items[$i+1]->folder == $item->folder), 'fields.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering ); ?></span>
-							<?php } elseif ( $listDir == 'desc' ) { ?>
-								<span><?php echo $this->pagination->orderUpIcon( $i, ( @$this->items[$i-1]->folder == $item->folder), 'fields.orderdown', 'JLIB_HTML_MOVE_UP', $ordering ); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon( $i, $this->pagination->total,
-																				 ( @$this->items[$i+1]->folder == $item->folder), 'fields.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering ); ?></span>
-							<?php }
-							} $disabled	=	$saveOrder ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled; ?> class="text-area-order input-mini" />
+						$disabled	=	$saveOrder ?  '' : 'disabled="disabled"'; ?>
+						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering; ?>" <?php echo $disabled; ?> class="text-area-order input-mini" style="text-align:center; width:30px;" />
 					<?php } else {
 						echo $item->ordering;
 					} ?>
@@ -187,33 +181,34 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			Joomla.orderTable = function()
+			{
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			}
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-})(jQuery);
-</script>

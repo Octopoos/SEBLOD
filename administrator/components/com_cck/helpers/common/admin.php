@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,25 +14,34 @@ defined( '_JEXEC' ) or die;
 class CommonHelper_Admin
 {
 	// addFolderClass
-	public static function addFolderClass( &$css, $id, $color, $colorchar, $width = '20' )
+	public static function addFolderClass( &$css, $id, $color, $colorchar, $width = '25' )
 	{
 		if ( ! isset( $css[$id] ) ) {
 			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
 			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
-			$css[$id]	=	'.folderColor'.$id.' { width: '.$width.'px; height: 14px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
-						.	'vertical-align: middle; border: none; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; text-align:center; margin-left:auto; margin-right:auto; } ';
+			$css[$id]	=	'.folderColor'.$id.' {width: '.$width.'px; height: 18px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
+						.	'vertical-align: middle; border: none; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius:20px; text-align:center; margin-left:auto; margin-right:auto; font-size:12px;}'
+						.	'.folderColor'.$id.' > strong{position:relative; top:1px;}';
 		}
 	}
 	
 	// addIcon
-	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left' )
+	public static function addIcon( $base, $link, $image, $text, $size = 48, $align = 'left', $div = '' )
 	{
+		$font	=	true;
+
+		if ( is_array( $image ) ) {
+			$image	=	( $font !== false ) ? $image[1] : $image[0];
+		}
+		if ( $div == '' ) {
+			$div	=	'3';
+		}
 		if ( $size == 48 ) {
 			$class	=	'icon icon-rounded';
-			$class2	=	'wrapper-icon span3';
+			$class2	=	'wrapper-icon span'.$div;
 		} else {
 			$class	=	'icon icon-rounded icon_small icon_small_'.$align;
-			$class2	=	'wrapper-icon half span3';
+			$class2	=	'wrapper-icon half span'.$div;
 		}
 		$target	=	( strpos( $link, 'http://' ) !== false ) ? '_blank' : '_self';
 		if ( $text == 'spacer' ) {
@@ -47,7 +56,15 @@ class CommonHelper_Admin
             <div class="<?php echo $class2; ?>">
                 <div class="<?php echo $class; ?>">
                     <a href="<?php echo $link; ?>" target="<?php echo $target; ?>">
-                        <?php echo JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+                        <?php
+                        if ( strpos( $image, 'icon-cck-' ) !== false ) {
+                        	echo '<span class="'.$image.'"></span>';
+                        } else {
+							$img	=	JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+
+							echo str_replace( '<img ', '<img width="'.$size.'" height="'.$size.'" ', $img );
+                        }
+                        ?>
                         <span><?php echo $text; ?></span>
 					</a>
                 </div>
@@ -64,39 +81,20 @@ class CommonHelper_Admin
 	// addSubmenuEntries
 	public static function addSubmenuEntries( $option, $vName, $items, $addons = array() )
 	{
-		if ( JCck::on() ) {
-			$root	=	CCK_LABEL;
-			$user	=	JFactory::getUser();
-			JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												constant( '_C'.$item['val'].'_LINK' ),
-												$active );
-					}
-				}
-			}
-		} else {
-			$root	=	'<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-star.png" border="0" alt=" " width="12" height="12" />';
-			$user	=	JFactory::getUser();
-			JSubMenuHelper::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JSubMenuHelper::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JSubMenuHelper::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												  constant( '_C'.$item['val'].'_LINK' ),
-												  $vName == constant( '_C'.$item['val'].'_NAME' ) );
-					}
+		$root	=	CCK_LABEL;
+		$user	=	JFactory::getUser();
+		JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
+		
+		if ( count( $items) ) {
+			foreach ( $items as $item ) {
+				if ( isset( $item['link'] ) ) {
+					JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
+				} else {
+					$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
+					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
+					JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
+											constant( '_C'.$item['val'].'_LINK' ),
+											$active );
 				}
 			}
 		}
@@ -133,9 +131,6 @@ class CommonHelper_Admin
 	// addToolbarHistoryButton
 	public static function addToolbarHistoryButton( $extension = 'com_cck' )
 	{
-		if ( !JCck::on() ) {
-			return;
-		}
 		$pk	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$extension.'"' );
 		
 		if ( $pk > 0 ) {
@@ -239,7 +234,7 @@ class CommonHelper_Admin
 						. ' GROUP BY s.id ORDER BY s.title'
 						;
 		} else {
-			if ( $component == 'com_cck' && $element ) {
+			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
 			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
@@ -272,7 +267,15 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		$options[]	=	JHtml::_( 'select.option', 'title', JText::_( 'COM_CCK_TITLE' ) );
-		$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		if ( $option == 'com_cck_ecommerce' ) {
+			if ( $view == 'zones' ) {
+				$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+			} elseif ( $view == 'orders' ) {
+				$options[]	=	JHtml::_( 'select.option', 'number', JText::_( 'COM_CCK_INVOICE' ) );
+			}
+		} else {
+			$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+		}
 		if ( $option == 'com_cck' && $view == 'fields' ) {
 			$options[]	=	JHtml::_( 'select.option', 'label', JText::_( 'COM_CCK_LABEL' ) );	
 		}
@@ -294,12 +297,18 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
-			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' ) {
+			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' || $view == 'subscriptions' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_name', JText::_( 'COM_CCK_USER_NAME' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'user_username', JText::_( 'COM_CCK_USER_USERNAME' ) );
+				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			}
+		} elseif ( $option == 'com_cck_toolbox' ) {
+			if ( $view == 'processings' ) {
+				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_APP_FOLDERS' ) );
+				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_APP_FOLDER_ID' ) );
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		}
@@ -346,7 +355,15 @@ class CommonHelper_Admin
 			$plugin->text								=	JText::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
 			$params										=	JCckDev::fromJSON( $plugin->params );
 			$group										=	JText::_( $params['group'] );
-			$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+
+			if ( $prefix.$folder == 'cck_field_link'
+			  || $prefix.$folder == 'cck_field_live'
+			  || $prefix.$folder == 'cck_field_restriction'
+			  || $prefix.$folder == 'cck_field_typo' ) {
+				$groups[$group][$plugin->value]				=	$plugin;
+			} else {
+				$groups[$group][$group.'_'.$plugin->text]	=	$plugin;
+			}
 		}
 		if ( ! isset( $groups ) ) {
 			return $options;

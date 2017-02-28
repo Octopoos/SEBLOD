@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,6 +46,7 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 	public static function onCCK_Storage_LocationAfterRender( &$buffer, &$data, $uri = array() )
 	{
 		$app		=	JFactory::getApplication();
+		$class		=	( JCck::on( '3.5' ) ) ? ' class="hasTooltip"' : '';
 		$ext		=	$app->input->get( 'extension', '' );
 		$exclude	=	$data['options']->get( 'exclude', '' );
 		$extensions	=	explode( ',', str_replace( ' ', '', $exclude ) );
@@ -57,7 +58,7 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 		$data['doIntegration']	=	true;
 		$data['replace_end']	=	'&amp;extension='.$ext.'"';
 		$data['return_view']	=	'categories';
-		$data['search']			=	'#<a href="(.*)index.php\?option=com_categories&amp;task=category.edit&amp;id=([0-9]*)&amp;extension='.$ext.'"#';
+		$data['search']			=	'#<a'.$class.' href="(.*)index.php\?option=com_categories&amp;task=category.edit&amp;id=([0-9]*)&amp;extension='.$ext.'"#';
 	}
 }
 ?>

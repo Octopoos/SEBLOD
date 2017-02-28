@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -18,7 +18,7 @@ class CCKControllerFolder extends JControllerForm
 	protected $text_prefix	=	'COM_CCK';
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelFolder &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 		Helper_Folder::rebuildTree( 2, 1 );

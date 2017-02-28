@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,12 +37,13 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	{
 		$app		=	JFactory::getApplication();
 		$sef		=	$link->get( 'sef', $config['doSEF'] );
-		if ( !JFactory::getApplication()->getCfg( 'sef' ) ) {
+		if ( !JFactory::getConfig()->get( 'sef' ) ) {
 			$sef	=	0;
 		}
 		$itemId		=	( $sef ) ? $link->get( 'itemid', '' ) : '';
 		$content	=	$link->get( 'content', '' );
 		$custom		=	$link->get( 'custom', '' );
+		$path_type	=	(int)$link->get( 'path_type', 0 );
 		
 		// Prepare
 		if ( !$itemId ) {
@@ -56,16 +57,26 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			}
 		}
 		$lang_tag			=	$link->get( 'language', '' );
+		$link_attr			=	$link->get( 'attributes', '' );
 		$link_class			=	$link->get( 'class', '' );
 		$link_rel			=	$link->get( 'rel', '' );
 		$link_target		=	$link->get( 'target', '' );
 		$tmpl				=	$link->get( 'tmpl', '' );
-		$tmpl				=	$tmpl ? 'tmpl='.$tmpl : '';
+		$tmpl				=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
+		$tmpl				=	( $tmpl ) ? 'tmpl='.$tmpl : '';
 		$vars				=	$tmpl;
 		
-		if ( $content == '2' && $sef ) {
+		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'itemId'=>$itemId, 'location'=>$link->get( 'content_location', $config['location'] ), 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
+			
+			if ( $content == '2' ) {
+				$location	=	$link->get( 'content_location' );
+				$pk			=	0;
+			} else {
+				$location	=	$config['location'];
+				$pk			=	$config['pk'];
+			}
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
 		}
 		$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
 		
@@ -78,8 +89,10 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			} else {
 				//
 			}
-		} else {
+		} elseif ( $content != '2' ) {
 			$field->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+		} else {
+			$field->link		=	'';
 		}
 		if ( $field->link ) {
 			if ( $vars ) {
@@ -91,14 +104,62 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		}
 		if ( $app->isAdmin() ) {
 			$field->link	=	str_replace( '/administrator', '', $field->link );
+
+			$link_attr		=	' data-cck-route="'.base64_encode( $field->link ).'"';
+
+			static $loaded	=	0;
+
+			if ( !$loaded ) {
+				$loaded	=	1;
+				$js		=	'(function ($){
+								$(document).ready(function() {
+									
+									$("a[data-cck-route]").each(function(i) {
+										var $el = $(this);
+										$.ajax({
+											cache: false,
+											data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
+											type: "GET",
+											url: "'.JUri::root().'index.php?option=com_cck&task=route&format=raw",
+											beforeSend:function(){},
+											success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
+										});
+									});
+								});
+							})(jQuery);';
+				JFactory::getDocument()->addScriptDeclaration( $js );
+			}
 		}
-		if ( $link->get( 'path_type', 0 ) ) {
-			$field->link	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$field->link;
+		if ( $path_type ) {
+			if ( $site_id = $link->get( 'site', '' ) ) {
+				$base		=	'';
+				$site		=	JCck::getSiteById( $site_id );
+				
+				if ( is_object( $site ) && $site->name != '' ) {
+					$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+				}
+			} else {
+				$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
+			}
+			if ( $path_type == 2 ) {
+				$field->link	=	$base.$field->link;
+				$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
+
+				if ( $segment == '/' ) {
+					$segment	=	'';
+				}
+				$base			.=	$segment.'/';
+				$field->link	=	str_replace( $base, '', $field->link );
+				$field->link	=	$base.'#'.$field->link;
+			} else {
+				$field->link	=	$base.$field->link;
+			}
 		}
-		$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
-		$field->link_rel	=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
-		$field->link_state	=	$link->get( 'state', 1 );
-		$field->link_target	=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
+		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
+		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
+		$field->link_state		=	$link->get( 'state', 1 );
+		$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
@@ -106,31 +167,81 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
+		$itemId		=	@$process['itemId'];
 		$name		=	$process['name'];
 		$fieldname	=	$process['fieldname'];
 		$location	=	$process['location'];
-		$pk			=	isset( $fields[$fieldname] ) ? (int)$fields[$fieldname]->value : 0;
+		if ( isset( $process['pk'] ) && $process['pk'] ) {
+			$pk		=	$process['pk'];
+		} else {
+			$pk		=	isset( $fields[$fieldname] ) ? (int)$fields[$fieldname]->value : 0;
+		}
 
 		if ( !$pk ) {
-			if ( count( $process['matches'][1] ) ) {
+			if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
 				parent::g_setCustomVars( $process, $fields, $name );
 			}
 			return;
 		}
 
-		$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $process['itemId'], $config ) );
+		if ( $itemId == '-2' ) {
+			$itemId				=	JFactory::getApplication()->input->getInt( 'Itemid' );
+			$fieldname2			=	$process['fieldname2'];
+			if ( isset( $fields[$fieldname2] ) ) {
+				$itemId			=	(int)$fields[$fieldname2]->value;
+			}
+		} elseif ( $itemId == '-3' ) {
+			$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
+			$itemIds	=	$process['fieldnames'];
+			$items		=	explode( '||', $itemIds );
+			if ( count( $items ) ) {
+				foreach ( $items as $item ) {
+					if ( $item != '' ) {
+						$parts	=	explode( '=', $item );
+						if ( $parts[1] ) {
+							$checks		=	json_decode( $parts[0], true );
+							$count		=	count( $checks );
+							$found		=	0;
+							if ( $count ) {
+								foreach ( $checks as $k=>$v ) {
+									if ( isset( $fields[$k] ) && $fields[$k]->value == $v ) {
+										$found++;
+									}
+								}
+							}
+							if ( $found == $count ) {
+								$itemId	=	$parts[1];
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
 		$target					=	 $fields[$name]->typo_target;
+
+		if ( isset( $fields[$name]->typo_mode ) && $fields[$name]->typo_mode ) {
+			$target	=	'typo';
+		}
 		if ( $fields[$name]->link ) {
 			if ( $process['vars'] ) {
 				$fields[$name]->link	.=	( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['vars'] : '?'.$process['vars'];
 			}
 			if ( $process['custom'] ) {
+				$process['custom']		=	parent::g_getCustomVars( self::$type, $fields[$name], $process['custom'], $config );
 				$fields[$name]->link	.=	( $process['custom'][0] == '#' ) ? $process['custom'] : ( ( strpos( $fields[$name]->link, '?' ) !== false ) ? '&'.$process['custom'] : '?'.$process['custom'] );
 			}
 			JCckPluginLink::g_setHtml( $fields[$name], $target );
 		}
 		if ( $fields[$name]->typo ) {
-			$fields[$name]->typo		=	str_replace( $fields[$name]->$target, $fields[$name]->html, $fields[$name]->typo );
+			$html						=	( isset( $fields[$name]->html ) ) ? $fields[$name]->html : '';
+			if ( strpos( $fields[$name]->typo, $fields[$name]->$target ) === false ) {
+				$fields[$name]->typo	=	$html;
+			} else {
+				$fields[$name]->typo	=	str_replace( $fields[$name]->$target, $html, $fields[$name]->typo );
+			}
 		}
 		if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
 			parent::g_setCustomVars( $process, $fields, $name );

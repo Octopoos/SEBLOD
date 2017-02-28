@@ -4,12 +4,14 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
+$action			=	'<span class="icon-pencil-2"></span>';
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ).'"';
 $uix			=	JCck::getUIX();
 $css			=	array();
 $doc			=	JFactory::getDocument();
@@ -19,8 +21,7 @@ $label			=	strtolower( JText::_( 'COM_CCK_FIELDS' ) );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
-$title2			=	JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' );
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
@@ -59,7 +60,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_SITE_FORM' ); ?></th>
 			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_INTRO' ); ?></th>
 			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_CONTENT' ); ?></th>
-			<th width="10%" class="center nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>			
 	</thead>
@@ -87,7 +88,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
             	<?php if ( $item->published && $item->adminFields && $item->location != 'site' && $item->storage_location != 'none' && $canCreateItem ) { ?>
-					<a target="_self" href="<?php echo $link2; ?>"><img class="img-action" src="components/<?php echo CCK_COM; ?>/assets/images/24/icon-24-forms.png" border="0" alt="" title="<?php echo $title2 ?>" /></a>
+					<a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+						<?php echo $action; ?>
+					</a>
                 <?php } ?>
 			</td>
 			<td>
@@ -124,22 +127,30 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->adminFields.' '.$label.' / '.$item->adminTemplate;
-                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=admin" title="'.$client.'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->adminTemplate.')';
+                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=admin" title="'.htmlspecialchars( $client ).'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->siteFields.' '.$label.' / '.$item->siteTemplate;
-                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=site" title="'.$client.'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->siteTemplate.')';
+                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=site" title="'.htmlspecialchars( $client ).'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->introFields.' '.$label.' / '.$item->introTemplate;
-                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=intro" title="'.$client.'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->introTemplate.')';
+                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=intro" title="'.htmlspecialchars( $client ).'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	$item->contentFields.' '.$label.' / '.$item->contentTemplate;
-                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="edit-view" href="'.$link.'&client=content" title="'.$client.'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->contentTemplate.')';
+                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
-				<?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?>
-			</td>
-			<td width="3%" class="center hidden-phone">
-				<?php echo ( $item->versions ) ? '<a href="'.$linkVersion.'"><img class="img-action" src="components/'.CCK_COM.'/assets/images/16/icon-16-version.png" border="0" alt="" /></a>' : ''; ?>
+				<div class="btn-group">
+				<?php
+				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
+
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'types.version' );
+
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
+				}
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				?>
+				</div>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
@@ -150,7 +161,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<tfoot>
 		<tr height="40px;">
 	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
-			<td class="center" colspan="11" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td class="center" colspan="10" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>
@@ -171,44 +182,66 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				count:'.count( $this->items ).',
+				addNew: function(id) {
+					var tpl_a = "'. $template_name .'";
+					var tpl_s = "'. $template_name .'";
+					var tpl_c = "'. $template_name .'";
+					var tpl_i = "'. $template_name .'";
+					var url = "index.php?option=com_cck&task=type.add&skeleton_id="+id+"&tpl_a="+tpl_a+"&tpl_s="+tpl_s+"&tpl_c="+tpl_c+"&tpl_i="+tpl_i;
+					window.location.href = url;
+					return false;
+				}
+			}
+			Joomla.orderTable = function()
+			{
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			}
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+			$(document).ready(function() {
+				$(document).keypress(function(e) {
+					if (!$(":input:focus").length) {
+						e.preventDefault();
+
+						if (e.which == 64) {
+							if ( $("#filter_search").val() != "" ) {
+								$("#filter_search").select();
+							} else {
+								$("#filter_search").focus();
+							}
+						} else if (JCck.Dev.count == 1 && e.which >= 49 && e.which <= 52) {
+							var n = e.which - 48;
+							if ($(\'[data-edit-trigger="\'+n+\'"]\').length) {
+								document.location.href=$(\'[data-edit-trigger="\'+n+\'"]\').attr("href");
+							}
+						}
+					}
+				});
+			});
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	JCck.Dev = {
-		addNew: function(id) {
-			var tpl_a = "<?php echo $template_name; ?>";
-			var tpl_s = "<?php echo $template_name; ?>";
-			var tpl_c = "<?php echo $template_name; ?>";
-			var tpl_i = "<?php echo $template_name; ?>";
-			var url = "index.php?option=com_cck&task=type.add&skeleton_id="+id+"&tpl_a="+tpl_a+"&tpl_s="+tpl_s+"&tpl_c="+tpl_c+"&tpl_i="+tpl_i;
-			window.location.href = url;
-			return false;
-		}
-	}
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-})(jQuery);
-</script>

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,9 +26,7 @@ class CCKControllerVariations extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'Variation', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 }
 ?>

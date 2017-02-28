@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -51,7 +51,6 @@ $class	=	'cck-pos-'.$position.' '.$variation.' '.$orientation;
 $cck->addCSS( $css );
 $cck->setHeight( $height, $id );
 ?>
-
 <div id="<?php echo $id; ?>" class="<?php echo $class .' '. $cck->id.'-deepest'; ?>">
 	<?php if ( $legend != '' ) { ?>
 	    <div class="legend top <?php echo $options->get( 'legend_align', 'left' ); ?>"><?php echo JText::_( $legend ); ?></div>

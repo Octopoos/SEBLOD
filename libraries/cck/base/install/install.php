@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -63,7 +63,7 @@ class CCK_Install
 			$config['isApp']		=	true;
 			$config['isUpgrade']	=	$extension->isUpgrade;
 		}
-		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>'', 'fields'=>array(), 'styles'=>array() );
+		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>array(), 'fields'=>array(), 'styles'=>array() );
 		$data['elements']	=	array( 'folder'=>'folders', 'field'=>'fields', 'type'=>'types', 'search'=>'searchs', 'template'=>'templates', 'template_style'=>'template_styles', 'category'=>'categories' );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['folders2']	=	JCckDatabase::loadObjectList( 'SELECT id, path FROM #__cck_core_folders WHERE lft', 'path' );
@@ -103,7 +103,10 @@ class CCK_Install
 			
 		}
 
-		// Sql
+		// Processings
+		CCK_Import::importProcessings( $data );
+
+		// SQL
 		CCK_Import::importSQL( $root.'/sql' );
 		
 		// Tables

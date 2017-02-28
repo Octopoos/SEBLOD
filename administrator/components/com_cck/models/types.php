@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -116,8 +116,17 @@ class CCKModelTypes extends JModelList
 		} else {
 			$folderId	=	$this->getState( 'filter.folder' );
 			$published	=	$this->getState( 'filter.state' );
-			$location	=	$this->getState( 'filter.location' );
-			$search		=	$this->getState( 'filter.search' );
+
+			if ( ( $folder = $app->input->getInt( 'folder_id', 0 ) ) > 0 ) {
+				$location	=	'folder_id';
+				$search		=	$folder;
+				
+				$this->setState( 'filter.location', $location );
+				$this->setState( 'filter.search', $search );
+			} else {
+				$location	=	$this->getState( 'filter.location' );
+				$search		=	$this->getState( 'filter.search' );
+			}
 		}
 		
 		// Filder Folder
@@ -150,6 +159,7 @@ class CCKModelTypes extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Search
 		if ( ! empty( $search ) ) {
@@ -212,31 +222,6 @@ class CCKModelTypes extends JModelList
 	{
 		return JTable::getInstance( $type, $prefix, $config );
 	}
-	
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
-	}
 
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
@@ -269,7 +254,7 @@ class CCKModelTypes extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'title', 'asc' );
+		parent::populateState( 'a.title', 'asc' );
 	}
 }
 ?>

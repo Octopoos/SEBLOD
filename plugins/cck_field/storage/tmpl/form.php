@@ -4,18 +4,17 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
 if ( $config['tmpl'] == 'ajax' ) {
 	$js	=	'';
 } else {
 	$js	=	'
-				$("#toggle_more2").live("click", function() {
+				$("#adminForm").on("click", "#toggle_more2", function() {
 					if ($("#toggle_more2").hasClass("open")){ 	
 						$("#toggle_more2").removeClass("open").addClass("closed");
 					} else {
@@ -23,52 +22,85 @@ if ( $config['tmpl'] == 'ajax' ) {
 					}
 					$("#storage_more").slideToggle();
 				});
-				$("#storage").live("change", function() { var v = $("#storage").val(); JCck.Dev.toggleTranslation();
-					if ( v == "dev" ) { $("#storage_more, .storage_more").show(); $("#storage_location, #storage_table, #storage_alter").hide().attr("disabled", "disabled"); $("#storage_field").removeAttr("disabled").show(); $("#storage_field_pick").show(); $("#storage_field").val(""); } else { $("#storage_more, .storage_more").hide(); if ( v == "none" ) { $("#storage_location, #storage_table, #storage_alter").hide().attr("disabled", "disabled"); $("#storage_field").hide().attr("disabled", "disabled"); $("#storage_field_pick").hide(); } else { var custom = $("#storage_location").find("option:selected").attr("data-custom"); $("#storage_location, #storage_field, #storage_alter").removeAttr("disabled").show(); $("#storage_field_pick").show(); if (v == "standard") { if (custom && custom == $("#storage_field").val()){$("#storage_field").val("");}} else if (v == "custom" && !$("#storage_field").val()) {$("#storage_field").val(custom);} if ( $("#storage_location").val() == "free" ) { $("#storage_table").attr("disabled", "").show(); } } }
+				$("#adminForm").on("change", "#storage", function() { var v = $("#storage").val(); JCck.Dev.toggleTranslation();
+					if ( v == "dev" ) {
+						$("#storage_more, .storage_more").show(); $("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").prop("disabled", false).show(); $("#storage_field_pick").show(); $("#storage_field").val("");
+					} else {
+						$("#storage_more, .storage_more").hide();
+						if ( v == "none" ) {
+							$("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").hide().prop("disabled", true); $("#storage_field_pick").hide(); $(".object-params").hide(); $(".object-params select").prop("disabled",true);
+						} else {
+							var custom = $("#storage_location").find("option:selected").attr("data-custom"); $("#storage_location, #storage_field, #storage_alter").prop("disabled", false).show(); $("#storage_field_pick").show();
+							if (v == "standard") { if (custom && custom == $("#storage_field").val()){$("#storage_field").val("");}} else if (v == "custom" && !$("#storage_field").val()) {$("#storage_field").val(custom);}
+							var sl = $("#storage_location").val(); $("#op-"+sl).show();
+							if (sl == "free") { $("#storage_table").prop("disabled", false).show(); } else { $("#op-"+sl+" select").prop("disabled",false); }
+						}
+					}
 				});
-				$("#storage_location").live("change", function() {
+				$("#adminForm").on("change", "#storage_location", function() {
 					var v = $("#storage_location").val();
 					if ( v == "free" ) {
-						$("#storage_table").removeAttr("disabled").show();
+						$("#storage_table").prop("disabled", false).show();
 					} else {
-						$("#storage_table").hide().attr("disabled", "disabled");
+						$("#storage_table").hide().prop("disabled", true);
 					}
 					if ($("#storage").val() == "custom") {
 						var custom = $("#storage_location").find("option:selected").attr("data-custom");
 						$("#storage_field").val(custom);
 					}
-					$(".object-params").hide();
-					$("#op-"+v).show();
+					$(".object-params").hide(); $(".object-params select").prop("disabled",true);
+					$("#op-"+v).show(); $("#op-"+v+" select").prop("disabled",false);
 				});
-				$("#storage_alter").live("change", function() {
+				$("#adminForm").on("change", "#storage_alter", function() {
 					$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").toggle();
 				});
-				$("#storage_field_pick").live("click", function() {
+				$("#adminForm").on("click", "#storage_field_pick", function() {
 					var field = ( $("#storage").val() == "dev" ) ? "dev_map" : "content_map";
 					var location = $("#storage_location").val();
+					var map = "map";
+					if (location==null) {
+						location = "free";
+					}
 					if (location=="free") {
 						location = $("#storage_table").val();	
+					} else {
+						if (field == "content_map") {
+							if ($("#op-"+location).length) {
+								var $targt_el = $("#op-"+location).find("#storage_cck");
+								if ($targt_el.length && $targt_el.val()) {
+									location = "__cck_store_form_"+$targt_el.val();
+								}
+							}
+						}
 					}
-					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name=map&type=storage_field&id="+field;
-					$.fn.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
+					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name="+map+"&type=storage_field&id="+field;
+					$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
 				});
 			'
 			;
 }
-if ( JCck::on() ) {
-	$js	.=	'jQuery(".hasTooltip").tooltip({});';
-}
+$js		.=	'jQuery(".hasTooltip").tooltip({});';
 $js		=	'
 			jQuery(document).ready(function($){
 				JCck.Dev.toggleTranslation();
 				if ($("#storage").val() == "dev") {
-					$("#storage_location, #storage_alter").hide().attr("disabled", "disabled");
+					$("#storage_location, #storage_alter").hide().prop("disabled", true);
 				} else if ($("#storage").val() == "none") {
-					$("#storage_location, #storage_field, #storage_alter").hide().attr("disabled", "disabled");
+					$("#storage_location, #storage_field, #storage_alter").hide().prop("disabled", true);
 					$("#storage_field_pick").hide();
 				}
-				if ($("#storage_location").val() != "free") {
-					$("#storage_table").hide();
+				var storage_location = $("#storage_location").val();
+				if ($("#storage").val() == "none"){
+					$(".storage-cck-more").prop("disabled", true); $(".storage-cck-more").parent().hide();
+				}
+				if ($("#jform_id").val()==0){
+					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
+						$(".storage-cck-more").parent().remove();
+					} else {
+						$(".storage-cck-core").remove();
+					}
+				} else {
+					$(".storage-cck-more").parent().remove();
 				}
 				$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").hide();
 
@@ -76,7 +108,7 @@ $js		=	'
 				$("#toggle_more2").css({"top":h});
 				
 				if (parent.jQuery("input:radio[name=\'linkage\']:checked") && !$("#myid").val()) {
-					if (parent.jQuery("input:radio[name=\'linkage\']:checked").val() == 1 && parent.jQuery("#name").val()) {
+					if (parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0 && parent.jQuery("#name").val()) {
 						var t = parent.jQuery("#name").val();
 						$("#storage_cck").val(t);
 						//
@@ -91,8 +123,12 @@ $js		=	'
 				if ($("#jform_id").val()==0){
 					if (parent.jQuery("#storage_location")){
 						var storage_location = parent.jQuery("#storage_location").val();
+						if (storage_location == "none") {
+							storage_location = "free";
+						}
 						$("#storage_location").val(storage_location);
 						if (storage_location == "free") {
+							$("#storage_table").parent().show();
 							$("#storage_table").show();
 						}
 						if ($("#storage").val() == "custom") {
@@ -100,14 +136,20 @@ $js		=	'
 							$("#storage_field").val(custom);
 						}
 					}
+				} else {
+					if (storage_location != "free") {
+						$("#storage_table").hide();
+					}
+				}
+				if ($("#storage").val() != "none") {
+					$("#op-"+storage_location).show(); $("#op-"+storage_location+" select").prop("disabled",false);
 				}
 				'.$js.'
 			});
 			'
 			;
 
-$app	=	JFactory::getApplication();
-$prefix	=	$app->getCfg( 'dbprefix' );
+$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
 } else {
@@ -127,7 +169,8 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
 				$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
 			}
 			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
-			echo '<span id="storage_field_pick" name="storage_field_pick">&laquo;</span>';
+			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
+			echo '<span id="storage_field_pick" name="storage_field_pick"><span class="icon-menu-2"></span></span>';
 			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );
 			echo JCckDev::getForm( $cck['core_storage_alter_table'], '', $config, array( 'attributes'=>'style="width:45px;"' ) );

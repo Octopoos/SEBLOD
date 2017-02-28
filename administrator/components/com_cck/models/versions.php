@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,6 +27,7 @@ class CCKModelVersions extends JModelList
 				'e_more', 'b.e_more',
 				'date_time', 'a.date_time',
 				'user_id', 'a.user_id',
+				'featured', 'a.featured',
 				'note', 'a.note',
 				'title', 'b.title',
 				'name', 'b.name',
@@ -64,6 +65,7 @@ class CCKModelVersions extends JModelList
 				'a.e_more as e_more,' .
 				'a.date_time as date_time,' .
 				'a.user_id as user_id,' .
+				'a.featured as featured,' .
 				'a.note as note,' .
 				'b.title as title,' .
 				'b.name as name,' .
@@ -90,6 +92,9 @@ class CCKModelVersions extends JModelList
 		// Where
 		$query->where( 'a.e_type = "'.(string)$type.'"' );
 		
+		// Force State
+		$query->where( 'a.published != -44' );
+
 		// Filter Search
 		$location	=	$this->getState( 'filter.location' );
 		$search		=	$this->getState( 'filter.search' );
@@ -130,31 +135,6 @@ class CCKModelVersions extends JModelList
 	public function getTable( $type = 'Version', $prefix = CCK_TABLE, $config = array() )
 	{
 		return JTable::getInstance( $type, $prefix, $config );
-	}
-
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
 	}
 
 	// populateState

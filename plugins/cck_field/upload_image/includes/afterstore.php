@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -91,7 +91,7 @@ if ( JFile::upload( $tmp_name, $location ) ) {
 		$width_name		=	'thumb'.$i.'_width';
 		$height_name	=	'thumb'.$i.'_height';
 
-		if ( $i == 0 && $src_w == $options[$width_name] && $src_h == $optixons[$height_name] ) {
+		if ( $i == 0 && $src_w == $options[$width_name] && $src_h == $options[$height_name] ) {
 			continue;
 		}
 		if ( trim( $options[$format_name] ) ) {

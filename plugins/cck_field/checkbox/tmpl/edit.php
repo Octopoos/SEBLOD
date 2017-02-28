@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,8 +27,9 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
          .   '</li>';
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		echo JCckDev::renderForm( 'core_separator', $this->item->divider, $config );
-		
-		echo JCckDev::renderHelp( 'field', '2693-checkbox.html' );
+        echo JCckDev::renderForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Check All Toggle', 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=optgroup||Above=1||Below=2', 'storage_field'=>'bool7' ) );
+        
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-checkbox-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

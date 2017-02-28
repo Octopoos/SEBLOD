@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -72,36 +72,40 @@ if ( $mode == 1 || $mode == 2 ) {
 		$menu->addSeparator();
 	}
 	$empty	=	 false;
-	$menu->addChild( new JMenuNode( 'SEBLOD.com', 'http://www.seblod.com/', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Changelog', 'http://www.seblod.com/changelogs', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Terminology', 'http://www.seblod.com/terminology', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'SEBLOD.com', 'https://www.seblod.com/', 'cck', false, '_blank' ), true );
+	$menu->addChild( new JMenuNode( 'About', 'https://www.seblod.com/about', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Changelog', 'https://www.seblod.com/changelogs', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Demo', 'https://demo.seblod.com', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'FAQs', 'https://www.seblod.com/faq', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Features', 'https://www.seblod.com/features', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'GitHub', 'https://github.com/Octopoos/SEBLOD', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Terminology', 'https://www.seblod.com/terminology', '', false, '_blank' ) );
 	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_COMMUNITY' ), 'http://www.seblod.com/community', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Blog', 'http://www.seblod.com/community/blog', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Events', 'http://www.seblod.com/community/events', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Forums', 'http://www.seblod.com/community/forums', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Showcase', 'http://www.seblod.com/community/showcase', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Social Hub', 'http://www.seblod.com/community/social-hub', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Testimonials', 'http://www.seblod.com/community/testimonials', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Users', 'http://www.seblod.com/community/users', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_COMMUNITY' ), 'https://www.seblod.com/community', 'cck', false, '_blank' ), true );
+	$menu->addChild( new JMenuNode( 'Blog', 'https://www.seblod.com/community/blog', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Events', 'https://www.seblod.com/community/events', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Forums', 'https://www.seblod.com/community/forums', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Showcase', 'https://www.seblod.com/community/showcase', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Social Hub', 'https://www.seblod.com/community/social-hub', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Testimonials', 'https://www.seblod.com/community/testimonials', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Users', 'https://www.seblod.com/community/users', '', false, '_blank' ) );
 	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_SERVICES' ), 'http://www.seblod.com/enterprise', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Support', 'http://www.seblod.com/enterprise/support', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_RESOURCES' ), 'https://www.seblod.com/resources', 'cck', false, '_blank' ), true );
+	$menu->addChild( new JMenuNode( 'Books', 'https://www.seblod.com/resources/books', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Extensions', 'https://www.seblod.com/resources/extensions', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Manuals', 'https://www.seblod.com/resources/manuals', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Marketing', 'https://www.seblod.com/resources/marketing', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Tutorials', 'https://www.seblod.com/resources/tutorials', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Videos', 'https://www.seblod.com/resources/videos', '', false, '_blank' ) );
 	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_PRODUCTS' ), 'http://www.seblod.com/products', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'Editor\'s Picks', 'http://www.seblod.com/products/editors-picks', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'New', 'http://www.seblod.com/products/new', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Popular', 'http://www.seblod.com/products/popular', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Top', 'http://www.seblod.com/products/top', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'VIP', 'http://www.seblod.com/products/vip', '', false, '_blank' ) );
-	$menu->getParent();
-	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_RESOURCES' ), 'http://www.seblod.com/resources', 'cck', false, '_blank' ), true );
-	$menu->addChild( new JMenuNode( 'FAQs', 'http://www.seblod.com/resources/faq', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Manuals', 'http://www.seblod.com/resources/manuals', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Marketing', 'http://www.seblod.com/resources/marketing', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Tracker', 'http://www.seblod.com/resources/tracker', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Tutorials', 'http://www.seblod.com/resources/tutorials', '', false, '_blank' ) );
-	$menu->addChild( new JMenuNode( 'Videos', 'http://www.seblod.com/resources/videos', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- ' . JText::_( 'MOD_CCK_MENU_SEBLOD_COM_PRODUCTS' ), 'https://www.seblod.com/store', 'cck', false, '_blank' ), true );
+	$menu->addChild( new JMenuNode( 'Clubs', 'https://www.seblod.com/store/clubs', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Extensions', 'https://www.seblod.com/store/extensions', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Add-ons', 'https://www.seblod.com/store/extensions?seb_item_category=16', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Applications', 'https://www.seblod.com/store/extensions/applications', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Plug-ins', 'https://www.seblod.com/store/extensions?seb_item_category=19,20,21,22,23,24,25,112', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( '- Templates', 'https://www.seblod.com/store/extensions?seb_item_category=27', '', false, '_blank' ) );
+	$menu->addChild( new JMenuNode( 'Services', 'https://www.seblod.com/store/services', '', false, '_blank' ) );
 	$menu->getParent();
 } elseif ( $mode == 3 ) {
 	if ( $user->authorise( 'core.manage', 'com_cck_ecommerce' ) ) {
@@ -131,23 +135,19 @@ if ( $mode == 1 || $mode == 2 ) {
 		foreach ( $items as $item ) {
 			if ( $user->authorise( 'core.create', 'com_cck.form.'.$item->id ) ) {
 				$empty	=	 false;
-				$text	=	JText::_( $item->text );
-				$text	=	( strlen( $text ) > 30 ) ? substr( $text, 0, 30 ) . '..' : $text;
-				$menu->addChild( new JMenuNode( $text, $link.$item->name ) );
+				$menu->addChild( new JMenuNode( JText::_( $item->text ), $link.$item->name ) );
 			}
 		}
 	}
 } elseif ( $mode == 5 ) {
-	$groups	= implode( ',', $user->getAuthorisedViewLevels() );
+	$groups	=	implode( ',', $user->getAuthorisedViewLevels() );
 	$items	=	JCckDatabase::loadObjectList( 'SELECT a.id, a.name, a.title as text FROM #__cck_core_searchs AS a'
 											. ' WHERE a.published = 1 AND a.location != "none" AND a.location != "site" AND a.access IN ('.$groups.') ORDER BY text' );
 	$link	=	'index.php?option=com_cck&view=list&search=';
 	if ( count( $items ) ) {
 		foreach ( $items as $item ) {
 			$empty	=	 false;
-			$text	=	JText::_( $item->text );
-			$text	=	( strlen( $text ) > 30 ) ? substr( $text, 0, 30 ) . '..' : $text;
-			$menu->addChild( new JMenuNode( $text, $link.$item->name ) );
+			$menu->addChild( new JMenuNode( JText::_( $item->text ), $link.$item->name ) );
 		}
 	}
 	if ( $options['inline'] ) {

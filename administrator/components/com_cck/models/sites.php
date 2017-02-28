@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,13 +46,20 @@ class CCKModelSites extends JModelList
 			
 			foreach ( $items as $item ) {
 				$viewlevels		=	( $item->guest_only_viewlevel ) ? $item->guest_only_viewlevel.','.$item->viewlevels : $item->viewlevels;
-				$query			=	'SELECT COUNT(a.id) FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pk WHERE a.storage_location = "joomla_article" AND b.access IN ('.$viewlevels.');';				
-				$item->articles	=	JCckDatabase::loadResult( $query );
-				
-				
 				$groups			=	( $item->guest_only_group ) ? $item->guest_only_group.','.$item->groups : $item->groups;
-				$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$groups.');';
-				$item->users	=	JCckDatabase::loadResult( $query );
+
+				if ( $viewlevels ) {
+					$query			=	'SELECT COUNT(a.id) FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pk WHERE a.storage_location = "joomla_article" AND b.access IN ('.$viewlevels.');';				
+					$item->articles	=	JCckDatabase::loadResult( $query );
+				} else {
+					$item->articles	=	0;
+				}
+				if ( $groups ) {
+					$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$groups.');';
+					$item->users	=	JCckDatabase::loadResult( $query );
+				} else {
+					$item->users	=	0;
+				}
 			}
 		}
 		
@@ -96,6 +103,7 @@ class CCKModelSites extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Search
 		$location	=	$this->getState( 'filter.location' );
@@ -139,31 +147,6 @@ class CCKModelSites extends JModelList
 		return JTable::getInstance( $type, $prefix, $config );
 	}
 
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
-	}
-
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
@@ -183,7 +166,7 @@ class CCKModelSites extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'title', 'asc' );
+		parent::populateState( 'a.title', 'asc' );
 	}
 }
 ?>

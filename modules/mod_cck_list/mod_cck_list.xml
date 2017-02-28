@@ -4,11 +4,11 @@
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2013 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>
-	<version>3.0.0</version>
+	<version>3.10.7</version>
 	
 	<files>
 		<folder>tmpl</folder>
@@ -40,6 +40,10 @@
 				<field name="list_desc" type="cck" construction="core_description" default="" label="Edit Description" description="..." class="inputbox" cck_selectlabel="Edit"
 					   js_appendto="jform_params_show_list_desc=a.wysiwyg_editor_box"
 					   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" />
+				<field name="tag_list_desc" type="list" default="div" label="COM_CCK_CONFIG_DESCRIPTION_TAG" description="COM_CCK_CONFIG_DESCRIPTION_TAG_DESC" class="inputbox">
+					<option value="div">div</option>
+					<option value="p">p</option>
+				</field>
 				<field name="show_more" type="list" label="MOD_CCK_LIST_CONFIG_SHOW_MORE" default="1" class="inputbox"
 					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_DESC">
 					<option value="0">JNO</option>
@@ -48,20 +52,20 @@
 					<option value="3">MOD_CCK_LIST_CONFIG_SHOW_MORE_ONLY_IF_MORE_RESULTS</option>
 				</field>
 				<field name="show_link_more" type="menuitem" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK" default="" class="inputbox"
-					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_DESC">
+					   description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_DESC" showon="show_more:1,2,3">
 					<option value="">JNONE</option>
 				</field>
-				<field name="link_more_class" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS_DESC" class="inputbox" />
-				<field name="link_more_text" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT_DESC" class="inputbox" />
-				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" />
+				<field name="link_more_class" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_CLASS_DESC" class="inputbox" showon="show_more:1,2,3" />
+				<field name="link_more_text" type="text" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_TEXT_DESC" class="inputbox" showon="show_more:1,2,3" />
+				<field name="link_more_variables" type="textarea" rows="3" label="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES" description="MOD_CCK_LIST_CONFIG_SHOW_MORE_LINK_VARIABLES_DESC" class="inputbox" showon="show_more:1,2,3" />
 				<field name="" label="" type="spacer" hr="false" />
 				<field name="limit2" type="text" default="5" label="MOD_CCK_LIST_CONFIG_LIMIT2" description="MOD_CCK_LIST_CONFIG_LIMIT2_DESC" size="8" class="inputbox" />
+				<field name="limitstart" type="text" default="" label="MOD_CCK_LIST_CONFIG_LIMITSTART" description="MOD_CCK_LIST_CONFIG_LIMITSTART_DESC" size="8" class="inputbox" />
 				<field name="ordering" type="cck" construction="core_ordering2" cck_selectlabel="Use Global" label="MOD_CCK_LIST_CONFIG_ORDERING" default=""
 					   description="MOD_CCK_LIST_CONFIG_ORDERING_DESC" class="inputbox" />
 				<field name="order_by" type="cck" construction="core_order_by" default="" label="" description="" class="inputbox" 
 					   js_appendto="jform_params_ordering=#jform_params_order_by" js_isvisiblewhen="div#jform_params_order_by-more='jform_params_ordering','-1',false" js_format="html" hidden="true" />
-				<field
-					name="ordering2" type="list" label="MOD_CCK_LIST_CONFIG_ORDERING2" default="" description="MOD_CCK_LIST_CONFIG_ORDERING2_DESC" class="inputbox">
+				<field name="ordering2" type="list" label="COM_CCK_CONFIG_ORDERING2" default="" description="COM_CCK_CONFIG_ORDERING2_DESC" class="inputbox">
 					<option value="">MOD_CCK_LIST_CONFIG_OPTION_NONE</option>
 					<option	value="random">MOD_CCK_LIST_CONFIG_OPTION_RANDOM</option>
 					<option	value="shuffle">MOD_CCK_LIST_CONFIG_OPTION_SHUFFLE</option>
@@ -83,6 +87,8 @@
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>
 				</field>
+				<field name="search2" type="cck" construction="core_search_type" label="MOD_CCK_LIST_SEARCH_ALT" description="MOD_CCK_LIST_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
+				<field name="limit" type="text" default="0" label="LIB_CCK_LIMIT" description="LIB_CCK_LIMIT_DESC" size="8" class="inputbox" />
 				<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 					<option value="0">JNO</option>
 					<option	value="1">JYES</option>

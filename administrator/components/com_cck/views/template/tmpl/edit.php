@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -41,30 +41,17 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_featured'], $this->item->featured, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'Featured=1||No=0', 'css'=>'btn-group btn-group-yesno' ) ); ?>
         </ul>
 	</div>
-    
-    <?php if ( !$this->isNew ) { ?>
-        <div class="seblod">
-            <div class="legend top left"><?php echo JText::_( 'COM_CCK_SOURCES' ); ?></div>
-            <div id="cck_tree" class="cck_tree" style="padding-left:22px; width: 240px; float: left;">
-	            <?php echo $this->item->tree; ?>
-            </div>
-            <div style="float: left;">
-	            <?php
-				if ( count( $this->item->files ) ) {
-					$html	=	'<table class="adminlist mediamanager cck_radius2 table table-striped table-bordered">';
-					foreach ( $this->item->files as $k => $f ) {
-						$html	.=	'<tr class="row'.( $k % 2 ).'">'
-								.	'<td>'.$f.'</td>'
-								.	'<td class="hidden-phone">'.'/'.'templates'.'/'.$this->item->name.'/'.$f.'</td>'
-								.	'</tr>';
-					}
-					$html	.=	'</table>';
-					echo $html;
-				}
-				?>
-            </div>
-        </div>
-    <?php } ?>
+
+    <div id="layer" style="text-align: center;">
+        <?php
+        JFactory::getLanguage()->load( 'tpl_'.$this->item->name, JPATH_SITE, null, false, true );
+        
+        $layer  =   JPATH_SITE.'/templates/'.$this->item->name.'/tmpl/edit.php';
+        if ( is_file( $layer ) ) {
+            include_once $layer;
+        }
+        ?>
+    </div>
 </div>
 
 <div class="clr"></div>
@@ -91,7 +78,7 @@ Helper_Display::quickCopyright();
     }
     Joomla.submitbutton = function(task) {
         if (task == "template.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
+            JCck.submitForm(task, document.getElementById('adminForm'));
         }
     }
     $(document).ready(function() {

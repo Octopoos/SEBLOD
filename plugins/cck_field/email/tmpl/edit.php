@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,7 +42,7 @@ $to_admin	=	( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2['to
         echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['format'], $config, array( 'label'=>'Format', 'defaultvalue'=>'1', 'selectlabel'=>'', 'options'=>'HTML=1||HTML as Plain Text=2||Plain Text=0', 'storage_field'=>'json[options2][format]' ) );
 		
-		echo JCckDev::renderHelp( 'field', '3023-email.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-email-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

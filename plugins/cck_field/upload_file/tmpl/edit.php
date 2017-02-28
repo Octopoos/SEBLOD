@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -35,13 +35,14 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 JCckDev::getForm( 'core_options_max_size', @$options2['max_size'], $config )
 		 .	 JCckDev::getForm( 'core_options_size_unit', @$options2['size_unit'], $config )
 		 .	 '</li>';
+		echo JCckDev::renderForm( 'core_dev_select', @$options2['forbidden_extensions'], $config, array( 'label'=>'Forbidden Extensions', 'selectlabel'=>'Inherited', 'options'=>'None=0||Whitelist=1', 'storage_field'=>'json[options2][forbidden_extensions]' ) );
+		echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
 		echo JCckDev::renderForm( 'core_options_preview', @$options2['preview'], $config );
 		echo JCckDev::renderForm( 'core_options_delete_box', @$options2['delete_box'], $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_SHOW_CUSTOM_PATH' ).'</label>'
 		 .	 JCckDev::getForm( 'core_bool', @$options2['custom_path'], $config, array( 'defaultvalue'=>'0', 'options'=>'Hide=0||Show=1', 'storage_field'=>'json[options2][custom_path]' ) )
 		 .	 JCckDev::getForm( 'core_options_path', @$options2['path_label'], $config, array( 'defaultvalue'=>'Path', 'size'=>18, 'storage_field'=>'json[options2][path_label]' ) )
 		 .	 '</li>';
-		echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
 		echo JCckDev::renderForm( 'core_options_multivalue_mode', @$options2['multivalue_mode'], $config, array( 'label'=>'MULTIVALUE_MODE' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_SHOW_TITLE' ).'</label>'
 		 .	 JCckDev::getForm( 'core_bool', @$options2['title_file'], $config, array( 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1', 'storage_field'=>'json[options2][title_file]' ) )
@@ -49,7 +50,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 '</li>';
 		// core_options_path_box (useless)
 		
-		echo JCckDev::renderHelp( 'field', '2557-upload-file.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-upload-file-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

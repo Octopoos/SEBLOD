@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -65,6 +65,40 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$field->value	=	$content;
 	}
 	
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		if ( $value == '' ) {
+			return;
+		}
+
+		$name		=	$field->name;
+		$dispatcher	=	JDispatcher::getInstance();
+		$f			=	self::_getChild( $field, $config );
+		$xn			=	$value;
+		$content	=	array();
+		if ( $xn > 0 && is_object( $f ) ) {
+			for ( $xi = 0; $xi < $xn; $xi++ ) {
+				$f_value			=	'';
+				$inherit			=	array( 'parent' => $field->name, 'xi' => $xi );
+				$content[$xi]		=	clone $f;
+				//
+				$table				=	$f->storage_table;
+				if ( $table && ! isset( $config['storages'][$table] ) ) {
+					$config['storages'][$table]	=	'';
+					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+				}
+				$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+				//
+				$dispatcher->trigger( 'onCCK_FieldDelete', array( &$content[$xi], $f_value, &$config ) );
+			}
+		}
+	}
+	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -89,6 +123,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		// Prepare
 		$f		=	self::_getChild( $field, $config );
 		$xn		=	( $value ) ? ( ( is_array( $value ) ? count( $value ) : $value ) ) : $field->rows;
+		$xn		=	max( $field->minlength, $xn );
 		$form	=	array();
 		if ( $xn > 0 && is_object( $f ) ) {
 			for ( $xi = 0; $xi < $xn; $xi++ ) {
@@ -187,9 +222,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 			}
 			$store	.=	'<br />';	//end?
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	
@@ -223,10 +259,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 		if ( $count ) {
 			$html	.=	'<div id="sortable_'.$field->name.'" class="adminformlist">';
 			for ( $i = 0; $i < $count - 1; $i++ ) {
-				$html	.=	self::_formHTML( $field, $field->form[$i], $i );
+				$html	.=	self::_getHtml( $field, $field->form[$i], $i );
 			}
 			$html	.=	'</div>';
-			$empty	=	self::_formHTML( $field, $field->form[$i], 0 );
+			$empty	=	self::_getHtml( $field, $field->form[$i], 0 );
 		}
 		self::_addScripts( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
 												'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty ), $config );
@@ -239,6 +275,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 	// _addScriptDeclaration
 	protected static function _addScripts( $id, $params = array(), &$config = array() )
 	{
+		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 		
 		$search					=	array( '.' , '<', '>', '"', '%', ';' );
@@ -246,7 +283,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$params['empty_html']	=	preg_replace( "/(\r\n|\n|\r)/", " ", $params['empty_html'] );
 		$params['empty_html']	=	str_replace( $search, $replace, $params['empty_html'] );
 		
-		$css_s	=	self::$path.'assets/css/style.css';
+		$css_s	=	self::$path.'assets/css/style2.css';
 		$js		=	'jQuery(document).ready(function($) {';
 		if ( $params['drag'] ) {
 			$js	.=	'$("#sortable_'.$id.'").sortable({'
@@ -271,7 +308,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var name = "'.$id.'";'
 				.		'var min_element = '.$params['min'].';'
 				.		'time	=	500;'
-				.		'$(".button-del-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-del-"+name, function() {'
 				.			'elem	=	$(this).parent().parent().parent().parent();'
 				.			'var n	=	elem.parent().children().length;'
 				.			'if (n > min_element) {'
@@ -298,7 +335,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var max_element = '.$params['max'].';'
 				.		'var new_elem = "'.$params['empty_html'].'";'
 				.		'content = new_elem;'
-				.		'$(".button-add-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-add-"+name, function() {'
 				.			'elem = $(this).parent().parent().parent().parent();'
 				.			'length = ( elem.parent().children().length );'
 				.			'if (length < max_element) {'
@@ -318,6 +355,9 @@ class plgCCK_FieldField_X extends JCckPluginField
 		if ( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
 			echo '<script type="text/javascript">'.$js.'</script>';
+		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
+			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			JCck::loadjQuery();
 			JCck::loadjQueryUI();
@@ -326,8 +366,8 @@ class plgCCK_FieldField_X extends JCckPluginField
 		}
 	}
 
-	// _formHTML
-	protected static function _formHTML( $field, $elem, $i )
+	// _getHtml
+	protected static function _getHtml( $field, $elem, $i )
 	{
 		$html	=	'<div>';
 		$html	.=	'<div id="collection-group-wrap-'.$field->name.'__'.$i.'" class="collection-group-wrap">';
@@ -337,17 +377,17 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$html	.=	'<div id="collection-group-button-'.$field->name.'__'.$i.'" class="collection-group-button">';
 		if ( $field->bool3 ) {
 			$html	.=	'<div class="button-del">'
-					.		'<img id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.'" src="'.self::$path.'assets/images/del-default.gif" alt="Del"/>'
+					.		'<span id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.' icon-minus"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool2 ) {
 			$html	.=	'<div class="button-add">'
-					.		'<img id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.'" src="'.self::$path.'assets/images/add-default.gif" alt="Add"/> '
+					.		'<span id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.' icon-plus"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool4 ) {
 			$html	.=	'<div class="button-drag">'
-					.		'<img id="button_drag'.'" src="'.self::$path.'assets/images/drag-default.gif" alt="Drag"/>'
+					.		'<span id="button_drag'.'" class="icon-circle"></span>'
 					.	'</div> ';
 		}
 		$html	.=	'</div>';

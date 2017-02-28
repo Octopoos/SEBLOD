@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -43,16 +43,18 @@ class CCKModelFolders extends JModelList
 	public function getItems()
 	{
 		if ( $items = parent::getItems() ) {
-			$templates	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_templates AS a GROUP BY a.folder', 'folder' );
-			$types		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_types AS a GROUP BY a.folder', 'folder' );
-			$fields		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_fields AS a GROUP BY a.folder', 'folder' );
-			$searchs	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_searchs AS a GROUP BY a.folder', 'folder' );
+			$templates		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_templates AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$types			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_types AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$fields			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_fields AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$searchs		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_searchs AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			$processings	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_processings AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
 			
 			foreach ( $items as $item ) {
-				$item->templates_nb	=	@$templates[$item->id]->num ? $templates[$item->id]->num : 0;
-				$item->types_nb		=	@$types[$item->id]->num ? $types[$item->id]->num : 0;
-				$item->fields_nb	=	@$fields[$item->id]->num ? $fields[$item->id]->num : 0;
-				$item->searchs_nb	=	@$searchs[$item->id]->num ? $searchs[$item->id]->num : 0;
+				$item->templates_nb		=	@$templates[$item->id]->num ? $templates[$item->id]->num : 0;
+				$item->types_nb			=	@$types[$item->id]->num ? $types[$item->id]->num : 0;
+				$item->fields_nb		=	@$fields[$item->id]->num ? $fields[$item->id]->num : 0;
+				$item->searchs_nb		=	@$searchs[$item->id]->num ? $searchs[$item->id]->num : 0;
+				$item->processings_nb	=	@$processings[$item->id]->num ? $processings[$item->id]->num : 0;
 			}
 		}
 		
@@ -113,6 +115,7 @@ class CCKModelFolders extends JModelList
 		if ( is_numeric( $published ) && $published >= 0 ) {
 			$query->where( 'a.published = '.(int)$published );
 		}
+		$query->where( 'a.published != -44' );
 		
 		// Filter Depth
 		$depth	=	$this->getState( 'filter.depth' );
@@ -163,31 +166,6 @@ class CCKModelFolders extends JModelList
 		return JTable::getInstance( $type, $prefix, $config );
 	}
 
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
-	}
-
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
@@ -216,7 +194,7 @@ class CCKModelFolders extends JModelList
 		$params		=	JComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
-		parent::populateState( 'lft', 'asc' );
+		parent::populateState( 'a.lft', 'asc' );
 	}
 }
 ?>

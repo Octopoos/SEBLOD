@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -22,17 +22,14 @@ if ( $this->item->master == 'content' ) {
 }
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 ?>
-
 <div class="layers" id="layer_fields" <?php echo ( $this->item->layer == 'fields' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_fields_'.$this->uix.'.php'; ?></div>
 <div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_configuration.php'; ?></div>
 <div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_template.php'; ?></div>
-
 <script type="text/javascript">
-JCck.Dev.setSidebar();
+JCck.DevHelper.setSidebar();
 (function ($){
-$("#pos-1 input:radio[name='positions']").attr("checked", "checked");
+$("#pos-1 input:radio[name='positions']").prop("checked", true);
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}
-if ($("#jform_id").val()>0) {JCck.Dev.trash = $("#sortable2 li:not(.f-"+$("#folder").val()+")").hide().detach(); $("#sortable2 li").show();}else{JCck.Dev.trash = "";}
 $("#options_tag_form_title").isVisibleWhen('options_show_form_title','1');
 $("#options_validation_background_color").isDisabledWhen('options_validation_position','inline');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}

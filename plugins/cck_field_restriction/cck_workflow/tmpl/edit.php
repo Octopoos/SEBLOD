@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,6 +19,8 @@ JCckDev::initScript( 'restriction', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_location2', '', $config, array( 'label'=>'Location' ) );
 		echo JCckDev::renderForm( 'core_action2', '', $config );
+		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Author', 'selectlabel'=>'Any Author', 'options'=>'Current=1||Someone Else=-1', 'required'=>'', 'storage_field'=>'author' ) );
         ?>
     </ul>
 </div>

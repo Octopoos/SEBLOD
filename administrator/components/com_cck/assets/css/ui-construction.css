@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /* ui-construction */
@@ -29,13 +29,14 @@ div.seb-wrapper.compact ul.more_pos{padding: 0; display:none;}
 div.seb-wrapper.compact ul.more_pos li.position div.pane, ul.more_pos li.position input.selector{display: none;}
 div.seb-wrapper.compact ul.more_pos li{list-style: none outside none;margin: 1px;padding: 8px;position: relative;width: auto; width: 112px; float: left; text-transform:lowercase;}
 div.seb-wrapper.compact ul.more_pos li{border: 1px solid #dedede ; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
-div.seb-wrapper.compact ul.more_pos li{background-color: #00416a; color: #fff; font-weight: bold;}
+div.seb-wrapper.compact ul.more_pos li{background-color: #16396f; color: #fff; font-weight: bold;}
 div.seb-wrapper.compact ul.more_pos li span.title{font-size:9px!important;}
 div.seb-wrapper.compact span.toggle{color:#146295; font-size:0.95em; font-weight:bold; text-transform:uppercase; float:right; cursor:pointer; padding-top:3px;}
 
 /* ui-construction  (sidebar) */
 .seblod-wrapper{position: relative;width: 100%;overflow: hidden;}
-#seblod-sidebar{right: 0px;width: 30%; position:relative;}
+#seblod-main > div.seblod{margin-right:0 !important;}
+#seblod-sidebar{right: 0px;width: 32%; position:relative; margin-left:10px !important;}
 div.seb-wrapper #seblod-sidebar{top: 0px; position:absolute;}
 .active{position: absolute;}
 .passive{float: left;}
@@ -53,10 +54,12 @@ div.off div#seblod-sideblock div.seblod-toolbar {margin-left: 4px;}
 .seblod-toolbar a:link, .seblod-toolbar a:visited{margin-bottom:20px;}
 .seblod-toolbar a:link.last, .seblod-toolbar a:visited.last{margin-bottom:3px;}
 .seblod-toolbar{width:20px; float:left;}
+.seblod-toolbar{}
 a:link.icons, a:visited.icons{ background-repeat:no-repeat;cursor: pointer;height: 20px; width: 20px;}
 
 /* ui-construction (sortable) */
-ul.sortable{padding: 0;}
+ul.sortable{padding: 0; margin:0 0 9px 0;}
+#layer_fields{position:relative;}
 #sortable1{overflow:auto;}
 #sortable2{float: left;width: 100%;padding: 0px 0px 0px 15px; margin:0;}
 #seblod-sidebar select { margin-bottom: 3px; }
@@ -65,8 +68,8 @@ ul.sortable li{list-style: none outside none;margin-bottom: 3px;margin-top: 3px;
 ul.sortable li.panel_slider {}
 ul.sortable input, ul.sortable select{width:auto;height:auto;margin:0;}
 ul.sortable span, ul.sortable input, ul.sortable select{font-size:11px;}
-li span.title{cursor: pointer;font-weight: bold;padding: 10px;position: relative;}
-li.position span.title{text-transform:uppercase;}
+li span.title{cursor: pointer;font-weight: bold;padding: 10px;}
+li.position span.title{text-transform:uppercase; padding:4px; cursor: default;}
 li.position span.capitalize{text-transform:none!important;}
 ul.sortable li span.subtitle{cursor: pointer;font-weight: bold;padding: 10px;position: relative;}
 ul.sortable li.drop-highlight{height: 1em;}
@@ -78,36 +81,55 @@ ul.sortable_header{padding: 0;position:relative; margin:0;}
 ul.sortable_header li{list-style: none;padding: 0px 8px 3px 8px;position:relative;width: auto;}
 ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 300;font-size:11px;}
 ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 301;
--webkit-border-top-left-radius: 5px;-webkit-border-top-right-radius: 5px;-moz-border-radius-topleft: 5px;-moz-border-radius-topright: 5px;border-top-left-radius:5px;border-top-right-radius:5px;}
+-webkit-border-top-left-radius: 2px;-webkit-border-top-right-radius: 2px;-moz-border-radius-topleft: 2px;-moz-border-radius-topright: 2px;border-top-left-radius:2px;border-top-right-radius:2px;}
 ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200px;z-index: 900;}
 #linkage{display:block; height:24px; width:22px; z-index: 99;}
 #linkage_wrap{position:absolute; top:13px; right:15px; z-index: 99;}
-ul.sortable li div.pane span.text {font-size: 10px; line-height:22px;}
+ul.sortable li div.pane span.text {font-size: 10px;}
 ul.sortable li div.pane .hidden{display:inline-block;}
+div.colc .icon-menu-2{position: relative; left:-22px; font-size:12px;}
+div.colc .sp2se{margin-left:0; }
+div.colc .se2sp{display:inline-block;}
+div.colc .sp2se::-moz-selection {background: none;}
+div.colc .sp2se::selection {background: none;}
+div.colc span.text::-moz-selection {background: none;}
+div.colc span.text::selection {background: none;}
+div.colc::-moz-selection {background: none;}
+div.colc::selection {background: none;}
+
+.flexenter {
+    display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex;
+    -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center;
+    -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center;
+    -webkit-flex-wrap: wrap; -ms-flex-wrap: wrap; flex-wrap: wrap;
+    width: auto !important; margin: auto;
+}
+.flexenter > .input-medium {width: 40%; margin: 0 1px;}
+div.seblod div.legend.flexenter .inputbox{font-size: 11px;}
 
 #minwidth-body .colorpicker{display:none;}
-div.subtabs{color:#00416a; font-size:0.95em;}
+div.subtabs{color:#16396f; font-size:0.95em;}
 div.subtabs div{float:left; position:relative;}
 div.full fieldset#client div.subtabs{width: 320px;}
 div.compact fieldset#client div.subtabs{width: 160px;}
 fieldset#layer div.subtabs{width: 240px;}
-div.full #subtab1 {width:90px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:55px; height:3px; top:10px;}
+div.full #subtab1 {width:90px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:55px; height:3px; top:10px;}
 div.full #subtab2 {width:80px; top: 6px;}
-div.full #subtab3 {width:90px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
-div.compact #subtab1 {width:25px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:27px; height:3px; top:10px;}
+div.full #subtab3 {width:90px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
+div.compact #subtab1 {width:25px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:27px; height:3px; top:10px;}
 div.compact #subtab2 {width:80px; top: 6px;}
-div.compact #subtab3 {width:25px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
-div #subtab4 {width:50px; border-bottom: 1px solid #00416a; border-left: 1px solid #00416a; margin-left:50px; height:3px; top:10px;}
+div.compact #subtab3 {width:25px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
+div #subtab4 {width:50px; border-bottom: 1px solid #16396f; border-left: 1px solid #16396f; margin-left:50px; height:3px; top:10px;}
 div #subtab5 {width:80px; top: 6px;}
-div #subtab6 {width:50px; border-bottom: 1px solid #00416a; border-right: 1px solid #00416a; height:3px; top:10px;}
+div #subtab6 {width:50px; border-bottom: 1px solid #16396f; border-right: 1px solid #16396f; height:3px; top:10px;}
 
 div.pagetitle span.subtitle{color:#999999;}
 div.textdesc{float:left;line-height:34px;}
 
 .c_acc_ck,.c_link_ck,.c_live_ck,.c_typo_ck,.c_res_ck{max-width:180px!important;}
-a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#EB8207;}
+a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#3b99fc; margin-top: 8px;}
 
 body.com_cck ul.sortable_header li div.pane{right: 24px;}
-body.com_cck ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200px;z-index: 99;}
+body.com_cck ul.sortable li div.pane div.colc{padding-top: 0;position: relative;width: 200px;z-index: 99;}
 body.com_cck ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 97;font-size:11px;  top:-15px;}
 body.com_cck ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 98;

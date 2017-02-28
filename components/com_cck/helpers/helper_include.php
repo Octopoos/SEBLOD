@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -53,28 +53,35 @@ class Helper_Include
 			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
 			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
 			if ( $color != '' ) {
-				if ( $position == 'inline' ) {
+				if ( $position == 'inline' && $id != '_' ) {
 					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
 				} else {
 					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
 				}
 			}
 			if ( $position != 'inline' && $bgcolor != '' ) {
-				$doc->addStyleDeclaration( '.formError .formErrorContent, .formError .formErrorArrow div{background: '.$bgcolor.'}' );
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
 			}
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
 		} else {
 			$options	=	'{}';
 		}
-		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.JURI::root( true ).'/media/cck/css/cck.validation.css" type="text/css" />';
-			echo '<script src="'.JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
-			$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.validation.css' );
-			$doc->addScript( JURI::root( true ).'/media/cck/js/cck.validation-3.2.0.min.js' );
+			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}

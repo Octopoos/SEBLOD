@@ -6,13 +6,15 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="autosave_interval" type="text" size="8" default="2" label="COM_CCK_CONFIG_AUTOSAVE_INTERVAL" description="COM_CCK_CONFIG_AUTOSAVE_INTERVAL_DESC" class="inputbox" />
+		<field name="autosave_interval" type="text" size="8" default="2" label="COM_CCK_CONFIG_AUTOSAVE_INTERVAL" description="COM_CCK_CONFIG_AUTOSAVE_INTERVAL_DESC" class="inputbox" showon="autosave:1" />
 		<field name="computation_format" type="list" default="0" label="COM_CCK_CONFIG_COMPUTATION_FORMAT" description="COM_CCK_CONFIG_COMPUTATION_FORMAT_DESC" class="inputbox">
 			<option value="0">COM_CCK_USE_JTEXT_SL</option>
 			<option value="1,234,567.89">COM_CCK_NUMBER_FORMAT_COMMA_DOT</option>
 			<option value="1 234 567.89">COM_CCK_NUMBER_FORMAT_SPACE_DOT</option>
 			<option value="1 234 567,89">COM_CCK_NUMBER_FORMAT_SPACE_COMMA</option>
 			<option value="1.234.567,89">COM_CCK_NUMBER_FORMAT_DOT_COMMA</option>
+			<option value="1234567.89">COM_CCK_NUMBER_FORMAT_NOTHING_DOT</option>
+			<option value="1234567,89">COM_CCK_NUMBER_FORMAT_NOTHING_COMMA</option>
 		</field>
 		<field name="computation_format_out" type="radio" default="0" label="COM_CCK_CONFIG_COMPUTATION_FORMAT_OUT" description="COM_CCK_CONFIG_COMPUTATION_FORMAT_OUT_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
@@ -28,15 +30,15 @@
 			<option value="1">COM_CCK_CONFIG_OPTION_SERVER_PHP</option>
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
 		</field>
-		<field name="validation_position" type="cck" construction="core_validation_position" default="topRight" label="COM_CCK_CONFIG_VALIDATION_POSITION" description="COM_CCK_CONFIG_VALIDATION_POSITION_DESC" class="inputbox" cck_selectlabel="" />
-		<field name="validation_prefix" type="text" size="8" default="* " label="COM_CCK_CONFIG_VALIDATION_PREFIX" description="COM_CCK_CONFIG_VALIDATION_PREFIX_DESC" class="inputbox" />
-		<field name="validation_scroll" type="radio" default="1" label="COM_CCK_CONFIG_VALIDATION_SCROLL" description="COM_CCK_CONFIG_VALIDATION_SCROLL_DESC" class="btn-group btn-group-yesno">
+		<field name="validation_position" type="cck" construction="core_validation_position" default="topRight" label="COM_CCK_CONFIG_VALIDATION_POSITION" description="COM_CCK_CONFIG_VALIDATION_POSITION_DESC" class="inputbox" cck_selectlabel="" showon="validation:1,2,3" />
+		<field name="validation_prefix" type="text" size="8" default="* " label="COM_CCK_CONFIG_VALIDATION_PREFIX" description="COM_CCK_CONFIG_VALIDATION_PREFIX_DESC" class="inputbox" showon="validation:1,2,3" />
+		<field name="validation_scroll" type="radio" default="1" label="COM_CCK_CONFIG_VALIDATION_SCROLL" description="COM_CCK_CONFIG_VALIDATION_SCROLL_DESC" class="btn-group btn-group-yesno" showon="validation:1,2,3">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="validation_background_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR"
-			description="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR_DESC" class="inputbox" />
-		<field name="validation_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_COLOR" description="COM_CCK_CONFIG_VALIDATION_COLOR_DESC" class="inputbox" />
+			description="COM_CCK_CONFIG_VALIDATION_BACKGROUND_COLOR_DESC" class="inputbox" showon="validation:1,2,3" />
+		<field name="validation_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_COLOR" description="COM_CCK_CONFIG_VALIDATION_COLOR_DESC" class="inputbox" showon="validation:1,2,3" />
 		<field name="COM_CCK_CONFIG_LEGEND_LIST" type="spacer" hr="false" />
 		<field name="pagination" type="cck" construction="core_pagination" default="25" label="COM_CCK_CONFIG_PAGINATION" description="COM_CCK_CONFIG_PAGINATION_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="prepare_content" type="radio" default="1" label="COM_CCK_CONFIG_PREPARE_CONTENT" description="COM_CCK_CONFIG_PREPARE_CONTENT_DESC" class="btn-group btn-group-yesno">
@@ -58,10 +60,19 @@
 		<field name="COM_CCK_CONFIG_LEGEND_CONSTRUCTION" type="spacer" hr="false" />
 		<field name="development_prefix" type="text" size="8" default="" label="COM_CCK_CONFIG_DEV_PREFIX" class="inputbox" maxlength="3" description="COM_CCK_CONFIG_DEV_PREFIX_DESC" />
 		<field name="development_attr" type="text" size="8" default="6" label="COM_CCK_CONFIG_DEV_ATTR" class="inputbox" maxlength="2" description="COM_CCK_CONFIG_DEV_ATTR_DESC" />
+		<field name="development_overlay" type="radio" default="1" label="COM_CCK_CONFIG_DEV_LOADING_OVERLAY" description="COM_CCK_CONFIG_DEV_LOADING_OVERLAY_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_DEVELOPMENT" type="spacer" hr="false" />
 		<field name="storage_dev" type="radio" default="0" label="COM_CCK_CONFIG_DEV_STORAGE" description="COM_CCK_CONFIG_DEV_STORAGE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
+		</field>
+		<field name="COM_CCK_CONFIG_LEGEND_UNINSTALL" type="spacer" hr="false" />
+		<field name="uninstall_sql" type="list" default="0" label="COM_CCK_CONFIG_UNINSTALL_SQL" description="" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_UNINSTALL_SQL_BACKUP_TABLES</option>
+			<option value="1">COM_CCK_CONFIG_UNINSTALL_SQL_DROP_TABLES</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_VERSIONS" type="spacer" hr="false" />
 		<field name="version_auto" type="list" default="2" label="COM_CCK_CONFIG_VERSION_AUTO" description="COM_CCK_CONFIG_VERSION_AUTO_DESC" class="inputbox">
@@ -69,8 +80,8 @@
 			<option value="1">COM_CCK_VERSION_AUTO_AFTER_EACH_SAVE</option>
 			<option value="2">COM_CCK_VERSION_AUTO_AFTER_SAVE_IF</option>
 		</field>
-		<field name="version_auto_time" type="text" size="5" default="180" label="" class="inputbox input-mini" maxlength="8" description="" />
-		<field name="version_auto_unit" type="list" default="0" label="" description="" class="inputbox">
+		<field name="version_auto_time" type="text" size="5" default="180" label="" class="inputbox input-mini" maxlength="8" description="" showon="version_auto:2" />
+		<field name="version_auto_unit" type="list" default="0" label="" description="" class="inputbox" showon="version_auto:2">
 			<option value="0">COM_CCK_CONFIG_VERSION_UNIT_MINUTES</option>
 			<option value="1">COM_CCK_CONFIG_VERSION_UNIT_HOURS</option>
 			<option value="2">COM_CCK_CONFIG_VERSION_UNIT_DAYS</option>
@@ -79,8 +90,11 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="cckjsv1" type="cckjs" label="" description="" js_appendto="jform_version_auto=J(config_version_if_previous_one),#jform_version_auto_time,#jform_version_auto_unit,J(config_version_n_time_ago)"
-			   js_isvisiblewhen="div#jform_cckjsv1-more='jform_version_auto','2',false" js_format="html" hidden="true" />
+		<field name="version_remove" type="radio" default="1" label="COM_CCK_CONFIG_VERSION_AUTO_REMOVE" description="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="version_remove_offset" type="text" size="5" default="20" label="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_AFTER" class="inputbox input-mini" maxlength="8" description="COM_CCK_CONFIG_VERSION_AUTO_REMOVE_AFTER_DESC" showon="version_remove:1" />
 	</fieldset>
 	
 	<fieldset name="fs_integration" label="COM_CCK_CONFIG_FIELDSET_INTEGRATION" description="COM_CCK_CONFIG_FIELDSET_INTEGRATION_DESC">
@@ -90,6 +104,7 @@
 	<fieldset name="fs_language" label="COM_CCK_CONFIG_FIELDSET_LANGUAGE" description="COM_CCK_CONFIG_FIELDSET_LANGUAGE_DESC">
 		<field name="language_jtext" type="radio" default="0" label="COM_CCK_CONFIG_LANGUAGE_JTEXT" description="COM_CCK_CONFIG_LANGUAGE_JTEXT_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
+			<option value="2">COM_CCK_YES_BUT_ENGLISH</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_TRANSLATIONS" type="spacer" hr="false" />
@@ -118,6 +133,12 @@
 		<field name="media_preset2_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
 		<field name="media_preset3_extensions" type="text" size="86" default="" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESET3" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESETS_DESC" class="inputbox input-xlarge" />
 		<field name="media_preset3_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
+		<field name="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_LEGEND" type="spacer" hr="false" />
+		<field name="media_content_forbidden_extensions" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_DESC" class="btn-group btn-group-yesno">
+			<option value="0">None</option>
+			<option value="1">COM_CCK_WHITELIST</option>
+		</field>
+		<field name="media_content_forbidden_extensions_whitelist" type="text" size="98" default="php" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST_DESC" class="inputbox input-xlarge" />
 		<field name="cckjsm1" type="cckjs" label="" description="" js_appendto="jform_media_preset1_extensions=#jform_media_preset1_extensions_label" js_format="html" hidden="true" />
 		<field name="cckjsm2" type="cckjs" label="" description="" js_appendto="jform_media_preset2_extensions=#jform_media_preset2_extensions_label" js_format="html" hidden="true" />
 		<field name="cckjsm3" type="cckjs" label="" description="" js_appendto="jform_media_preset3_extensions=#jform_media_preset3_extensions_label" js_format="html" hidden="true" />
@@ -128,12 +149,20 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox">
+		<field name="multisite_login" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_LOGIN" description="COM_CCK_CONFIG_MULTISITE_LOGIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="multisite_integration" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_INTEGRATION" description="COM_CCK_CONFIG_MULTISITE_INTEGRATION_DESC" class="inputbox" showon="multisite:1">
 			<option value="0">COM_CCK_INHERITED</option>
 			<option value="1">COM_CCK_OWNED</option>
 		</field>
 		<field name="multisite_options" type="cckpicker" cck_storage_field_prefix="json[options][" default="" label="COM_CCK_CONFIG_MULTISITE_OPTIONS"
-			   description="COM_CCK_CONFIG_MULTISITE_OPTIONS_DESC" class="inputbox" />
+			   description="COM_CCK_CONFIG_MULTISITE_OPTIONS_DESC" class="inputbox" showon="multisite:1" />
 	</fieldset>
 
 	<fieldset name="fs_permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
@@ -143,11 +172,17 @@
 	<fieldset name="fs_site" label="COM_CCK_CONFIG_FIELDSET_SITE" description="COM_CCK_CONFIG_FIELDSET_SITE_DESC">
 		<field name="debug" type="list" default="0" label="COM_CCK_CONFIG_DEBUG" description="COM_CCK_CONFIG_DEBUG_DESC" class="inputbox chzn-color">
 			<option value="1">COM_CCK_YES_FOR_EVERYONE</option>
+			<option value="-1">COM_CCK_YES_LIPSUM_FOR_EVERYONE</option>
 			<option value="2">COM_CCK_YES_FOR_SUPER_ADMIN</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="hide_edit_icon" type="radio" default="0" label="COM_CCK_CONFIG_HIDE_EDIT_ICON" description="COM_CCK_CONFIG_HIDE_EDIT_ICON_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="optimize_memory" type="list" default="0" label="COM_CCK_CONFIG_OPTIMIZE_MEMORY" description="COM_CCK_CONFIG_OPTIMIZE_MEMORY_DESC" class="inputbox chzn-color chzn-color-permissive">
+			<option value="1">COM_CCK_LOWEST_LEVEL</option>
+			<option value="3">COM_CCK_HIGHEST_LEVEL</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="responsive" type="radio" default="0" label="COM_CCK_CONFIG_RESPONSIVE" description="COM_CCK_CONFIG_RESPONSIVE_DESC" class="btn-group btn-group-yesno">
@@ -159,8 +194,15 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="sef_root" type="sql" default="0" label="COM_CCK_CONFIG_SEF_ROOT" description="COM_CCK_CONFIG_SEF_ROOT_DESC" query="SELECT id, title FROM #__menu WHERE published=1 AND client_id=0 AND link LIKE 'index.php?option=com_cck&amp;%' ORDER BY title" key_field="id" value_field="title" class="inputbox">
+			<option value="0">JOPTION_USE_DEFAULT</option>
+			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
-		<field name="site_modal_box_css" type="folderlist" directory="/media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
+		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
+		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
+		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
+		<field name="site_modal_box_css" type="folderlist" directory="media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
 			   label="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS" description="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS_DESC" class="inputbox" />
 		<field name="site_css_def" type="cck" construction="core_css_definitions" default="" label="COM_CCK_CONFIG_CSS_DEFINITIONS" description="COM_CCK_CONFIG_CSS_DEFINITIONS_DESC" class="inputbox" />
 		<field name="site_css_def_custom" type="cck" construction="core_css_definitions_custom" default="" label="" description="" class="inputbox"
@@ -168,6 +210,8 @@
 		<field name="css_core" type="cck" construction="core_css_core" default="1" label="COM_CCK_CONFIG_STYLESHEETS" description="COM_CCK_CONFIG_STYLESHEETS_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
+		<field name="initial_version" type="hidden" default="" />
 		<field name="uix" type="hidden" default="" />
+		<field name="utf8_conversion" type="hidden" default="" />
 	</fieldset>
 </config>

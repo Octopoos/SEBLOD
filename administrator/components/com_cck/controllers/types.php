@@ -4,11 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -26,9 +28,7 @@ class CCKControllerTypes extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// duplicate
@@ -66,10 +66,9 @@ class CCKControllerTypes extends JControllerAdmin
 			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
-			
+			$cid	=	ArrayHelper::toInteger( $cid );
 			$model	=	$this->getModel();
+
 			if ( $model->version( $cid ) ) {
 				$msg	=	JText::sprintf( 'COM_CCK_SUCCESSFULLY_ARCHIVED', $n );
 				$type	=	'message';

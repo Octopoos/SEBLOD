@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -53,16 +53,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             ?>
         </ul>
 		<?php if ( !$this->isNew ) { ?>
-			<img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+            <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
 		<?php } ?>
 	</div>
 
     <div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_SITE_ALIASES' ); ?></div>
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_URLS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
             $aliases    =   JCckDev::fromSTRING( $this->item->aliases );
-            echo '<li>'.JCckDev::getForm( 'core_options', $aliases, $config, array( 'storage_field'=>'aliases' ) ).'</li>';
+            $exclusions =   JCckDev::fromSTRING( @$cfg['exclusions'] );
+            echo JCckDev::renderForm( 'core_options', $aliases, $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) );
+            echo JCckDev::renderForm( 'core_options', $exclusions, $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ) );
             ?>
         </ul>
     </div>
@@ -161,7 +163,7 @@ Helper_Display::quickCopyright();
     }
     Joomla.submitbutton = function(task) {
         if (task == "site.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
+            JCck.submitForm(task, document.getElementById('adminForm'));
         }
     }
     $(document).ready(function() {
@@ -169,11 +171,11 @@ Helper_Display::quickCopyright();
         $("#toggle_acl").click(function(){
             $("#acl").slideToggle();
         });
-        $("span.value-picker").live("click", function() {
+        $("span.value-picker").on("click", function() {
             var field = $(this).attr("name");
             var cur = "none";
             var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title=dev&name="+field+"&type=json_options_"+field+"&id="+cur;
-            $.fn.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+            $.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
         });
     });
 })(jQuery);

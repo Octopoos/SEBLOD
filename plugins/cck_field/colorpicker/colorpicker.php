@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -158,7 +158,7 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 		$js		=	'
 					jQuery(document).ready(function($){
 						if ($("#'.$id.'").val() != "#ffffff") { $("#'.$id.'").css({"border-color":$("#'.$id.'").val()}); }
-						$("#'.$id.'").live("keyup", function() {
+						$(document).on("keyup", "#'.$id.'", function() {
 							$("#'.$id.'").css({"border-color":$("#'.$id.'").val()});
 						});
 						$("#'.$id.'").ColorPicker({

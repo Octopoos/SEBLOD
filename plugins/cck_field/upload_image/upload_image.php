@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -36,6 +36,76 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
+			$data['match_mode']	=	array(
+										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_AUTO' ) )
+									);
+
+			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
+		} else {
+			$data['match_mode']									=	$config['construction']['match_mode'][self::$type];
+		}
+		
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		$value_json		=	JCckDev::fromJSON( $value );
+		if ( $value == '' || isset( $value_json['image_location'] ) && $value_json['image_location'] == '' ) {
+			return;
+		}
+
+		// Init
+		$value_json		=	JCckDev::fromJSON( $value );
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		if ( is_array( $value_json ) && !empty( $value_json ) ) {
+			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		} else {
+			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( $value, '/' ), 1 );
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+
+		// Process
+		if ( $value != '' && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
+
+			if ( $options2['path_content'] ) {
+				jimport( 'joomla.filesystem.folder' );
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
+					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+						return true;
+					}
+				}
+			} else {
+				JFile::delete( JPATH_SITE.'/'.$value );
+				
+				for ( $i = 1; $i <= 10; $i++ ) {
+					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -62,6 +132,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
+		}
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
 		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
@@ -90,6 +163,29 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$field->typo_target	=	'html';
 	}
 	
+	// onCCK_FieldPrepareDownload
+	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepare
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+
+		// Path Folder
+		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
+		$file		=	'';
+		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
+			$file	.=	$f_opt2['path'];
+			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
+			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
+		}
+		$file		.=	$field->value;
+		
+		$field->filename	=	$file;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
@@ -109,14 +205,19 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$name	=	$field->name;
 			$xk		=	'';
 		}
-		
+
+		// Clear Value for assets
+		if ( isset( $config['copyfrom_id'] ) && $config['copyfrom_id'] ) {
+			$value	=	'';
+		}
+
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-		
+
 		// Prepare
 		$options2		=	JCckDev::fromJSON( $field->options2 );
 		if ( $config['doTranslation'] ) {
@@ -161,7 +262,18 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
-			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions' );
+			$default	=	array(
+								'archive'=>'7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP',
+								'audio'=>'flac,mp3,ogg,wma,wav,FLAC,MP3,OGG,WMA,WAV',
+								'document'=>'csv,doc,docx,pdf,pps,ppsx,ppt,pptx,txt,xls,xlsx,CSV,DOC,DOCX,PDF,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX',
+								'image'=>'bmp,gif,jpg,jpeg,png,tif,tiff,BMP,GIF,JPEG,JPG,PNG,TIF,TIFF',
+								'video'=>'flv,mov,mp4,mpg,mpeg,swf,wmv,FLV,MOV,MP4,MPG,MPEG,SWF,WMV',
+								'common'=>'bmp,csv,doc,docx,gif,jpg,pdf,png,pps,ppsx,ppt,pptx,txt,xls,xlsx,zip,BMP,CSV,DOC,DOCX,GIF,JPG,PDF,PNG,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX,ZIP',
+								'preset1'=>'',
+								'preset2'=>'',
+								'preset3'=>''
+							);
+			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions', $default[$legal_ext] );
 			if ( !$legal_ext ) {
 				$legal_ext	=	$options2['legal_extensions'];
 			}
@@ -193,7 +305,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete['.$xk.']" value="1" />';				
 			}
 		} elseif ( $name[(strlen($name) - 1 )] == ']' ) { //GroupX
@@ -210,7 +322,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$id.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$id.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$id.'_delete" name="'.$nameH.'_delete]" value="1" />';
 			}
 		} else { //Default
@@ -226,7 +338,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, self::$type );
 			}
 			if ( $options2['delete_box'] && $value['image_location'] && $value['image_location'] != $field->defaultvalue ) {
-				$onchange	=	' onchange="$(\''.$name.'_delete\').checked=true;"';
+				$onchange	=	' onchange="jQuery(\'#'.$name.'_delete\').prop(\'checked\',true);"';
 				$chkbox		=	'<input class="inputbox" type="checkbox" id="'.$name.'_delete" name="'.$name.'_delete" value="1" />';
 			}
 		}
@@ -237,7 +349,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['custom_path']	=	@$options2['custom_path'];
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
 		}
 		
 		if ( $options2['form_preview'] != -1 && $value['image_location'] ) {
@@ -249,21 +361,21 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				if ( $options2['form_preview'] == 2 ) {
 					$width		=	( $options2['image_width'] ) ? 'width="'.$options2['image_width'].'"' : '';
 					$height		=	( $options2['image_height'] ) ? 'height="'.$options2['image_height'].'"' : '';
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JURI::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'" '.$width.' '.$height.'>
-										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JURI::root().$value['image_location'].'" />
+					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'" '.$width.' '.$height.'>
+										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
 									</a>';
 				} else {
 					$thumb_location	=	str_replace( $title,'_thumb'.( $options2['form_preview'] - 2 ).'/'.$title,$value['image_location'] );
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JURI::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
-										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JURI::root().$thumb_location.'" />
+					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
 									</a>';
 				}
 			} elseif ( $options2['form_preview'] == 1 ) {
-				$preview	=	'<a id="colorBox'.$field->id.'" href="'.JURI::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
-									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JURI::root().'media/cck/images/16/icon-16-preview.png" />
+				$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().'media/cck/images/16/icon-16-preview.png" />
 								</a>';
 			} else {
-				$preview	=	'<a class="cck_preview" id="colorBox'.$field->id.'" href="'.JURI::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">'.$title_image.'</a>';
+				$preview	=	'<a class="cck_preview" id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">'.$title_image.'</a>';
 			}
 			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
 		} else {
@@ -294,6 +406,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+
+		// Prepape
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+
+		if ( @$options2['storage_format'] ) {
+			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+		}
+		
+		$field->data	=	JUri::root().$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -313,7 +442,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		
 		// Set
 		$field->form		=	$form;
-		$field->match_mode	=	'not_empty';
+		
+		if ( $field->match_mode != 'none' ) {
+			if ( $value != '' ) {
+				$field->match_mode	=	'not_empty';
+			} else {
+				$field->match_mode	=	'';
+			}
+		}
 		$field->type		=	'checkbox';
 		$field->value		=	$value;
 		
@@ -333,6 +469,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Init
 		$app		=	JFactory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
+
 		if ( count( $inherit ) ) {
 			$name		=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 			$xk			=	( isset( $inherit['xk'] ) ) ? $inherit['xk'] : -1;
@@ -344,6 +481,11 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$imageTitle	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_title'] 	: @$config['post'][$name.'_title'];
 			$imageDesc	=	( isset( $inherit['post'] ) )	? @$inherit['post'][$name.'_description'] 	: @$config['post'][$name.'_description'];
 			$imageCustomDir	=	( isset( $inherit['post'] ) ) ? @$inherit['post'][$name.'_path'] : @$config['post'][$name.'_path'];
+
+			if ( isset( $field->error ) && $field->error === true ) {
+				$field->error = false;
+			}
+
 		} else {
 			$name		=	$field->name;
 			$xk			=	-1;

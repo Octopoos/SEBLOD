@@ -25,6 +25,8 @@
 // $Id: pclzip.lib.php 2 2011-02-24 03:47:20Z Saba $
 // --------------------------------------------------------------------------------
 
+  defined( '_JEXEC' ) or die;
+  
   // ----- Constants
   if (!defined('PCLZIP_READ_BLOCK_SIZE')) {
     define( 'PCLZIP_READ_BLOCK_SIZE', 2048 );
@@ -212,23 +214,25 @@
   //   Note that no real action is taken, if the archive does not exist it is not
   //   created. Use create() for that.
   // --------------------------------------------------------------------------------
-  function PclZip($p_zipname)
+  
+  // __construct
+  public function __construct($p_zipname)
   {
+     // ----- Tests the zlib
+     if (!function_exists('gzopen'))
+     {
+       die('Abort '.basename(__FILE__).' : Missing zlib extensions');
+     }
 
-    // ----- Tests the zlib
-    if (!function_exists('gzopen'))
-    {
-      die('Abort '.basename(__FILE__).' : Missing zlib extensions');
-    }
+     // ----- Set the attributes
+     $this->zipname = $p_zipname;
+     $this->zip_fd = 0;
+     $this->magic_quotes_status = -1;
 
-    // ----- Set the attributes
-    $this->zipname = $p_zipname;
-    $this->zip_fd = 0;
-    $this->magic_quotes_status = -1;
-
-    // ----- Return
-    return;
+     // ----- Return
+     return;
   }
+  
   // --------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------
@@ -1834,7 +1838,7 @@
     
     // ----- Get 'memory_limit' configuration value
     $v_memory_limit = ini_get('memory_limit');
-    $v_memory_limit = trim($v_memory_limit);
+    $v_memory_limit = (int)trim($v_memory_limit);
     $last = strtolower(substr($v_memory_limit, -1));
  
     if($last == 'g')

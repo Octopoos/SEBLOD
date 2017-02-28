@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -38,40 +38,49 @@ class CCKViewType extends JViewLegacy
 				$this->prepareDisplay();
 				$this->prepareDisplay_Ajax();
 				break;
+			case 'edit3':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( true );
+				break;
+			case 'edit4':
+				$this->prepareDisplay();
+				$this->prepareDisplay_Ajax2( false );
+				break;
 			default:
 				break;
 		}
 		
-		if ( JCck::on() ) {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'132px',
-								   'w30'=>'span4',
-								   'w70'=>'span8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>'$(".hasTooltip").tooltip({});'
-							);
-		} else {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'105px',
-								   'w30'=>'width-30',
-								   'w70'=>'width-70 fltlft',
-								   'wrapper'=>'sebwrapper',
-								   'wrapper2'=>'seb-wrapper workshop',
-								   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>''
-							);
-		}
+		$this->css	=	array( '_'=>'',
+							   'panel_height'=>'132px',
+							   'w30'=>'span4',
+							   'w70'=>'span8',
+							   'wrapper'=>'container',
+							   'wrapper2'=>'row-fluid',
+							   'wrapper_tmpl'=>'span'
+						);
+		$this->js	=	array( '_'=>'',
+							   'tooltip'=>'$(".hasTooltip").tooltip({});'
+						);
 		$this->uix	=	JCck::getUIX();
 		
+		$this->completeUI();
+
 		parent::display( $tpl );
 	}
 	
+	// completeUI
+	function completeUI()
+	{
+		$title	=	'COM_CCK_CONTENT_TYPE';
+
+		if ( JFactory::getLanguage()->hasKey( $title.'2' ) ) {
+			$title	=	$title.'2';
+		}
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( $title );
+
+		$this->document->setTitle( $title );
+	}
+
 	// prepareDelete
 	function prepareDelete()
 	{		
@@ -104,8 +113,9 @@ class CCKViewType extends JViewLegacy
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
-			$featured			=	$this->state->get( 'skeleton_id', 0 );
-			if ( $featured == 11 ) {
+			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
+			$this->item->access	=	3;
+			if ( $featured == 11 ) { // TODO: dynamic mapping
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {
 				$this->item->storage_location	=	'joomla_user';

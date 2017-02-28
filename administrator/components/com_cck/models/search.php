@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -71,10 +71,9 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( $skip	=	(string)$app->getUserState( CCK_COM.'.add.search.skip' ) ) {
 				$this->setState( 'skip', $skip );
 			}
-		} else {
-			if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
-				$this->setState( 'client', $client );
-			}
+		}
+		if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
+			$this->setState( 'client', $client );
 		}
 		
 		$this->setState( 'search.id', $pk );
@@ -151,6 +150,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'search', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'search', $data['id'] );
+
+				if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+					Helper_Version::removeVersion( 'search', $data['id'] );
+				}
 			}
 		}
 		if ( $client == 'list' ) {
@@ -212,6 +215,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			$item->params				=	'{}';
 			$item->type					=	'component';
 			
+			$item->access				=	$data['access'];
 			$item->client_id			=	0;
 			$item->home					=	0;
 			$item->language				=	'*';
@@ -342,6 +346,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	{
 		foreach ( $pks as $pk ) {
 			Helper_Version::createVersion( 'search', $pk, '', true );
+
+			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+				Helper_Version::removeVersion( 'search', $pk );
+			}
 		}
 		
 		return true;

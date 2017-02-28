@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -18,6 +18,7 @@ abstract class JCckEcommerce
 	
 	public static $currency		=	NULL;
 	public static $promotions	=	NULL;
+	public static $rules		=	NULL;
 	public static $taxes		=	NULL;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
@@ -61,6 +62,12 @@ abstract class JCckEcommerce
 		return ( self::getConfig_Param( 'uix', '' ) == 'nano' ) ? 'compact' : 'full';
 	}
 
+	// isOffline
+	public static function isOffline()
+	{
+		return ( ( self::getConfig_Param( 'offline' ) == 1 || ( self::getConfig_Param( 'offline' ) == 2 && !JFactory::getUser()->authorise( 'core.admin' ) ) ) ) ? true : false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Cart
 	
 	// getCart
@@ -69,7 +76,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$id] ) ) {
-			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.$id );
+			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.(int)$id );
 		}
 		
 		return $cache[$id];
@@ -81,10 +88,39 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, multicart, multistore, ordering, quantity, request_code, request_payment, request_payment_table, request_payment_field, request_shipping, request_shipping_field'
-															. ' FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.$name.'"' );
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, formula, multicart, multistore, ordering, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_shipping, request_shipping_field, request_state_id'
+															. ' FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 			if ( strpos( $definitions[$name]->request_payment_field, '$' ) !== false ) {
 				$definitions[$name]->request_payment_field	=	str_replace( '$', strtolower( JCckEcommerce::getCurrency()->code ), $definitions[$name]->request_payment_field );
+			}
+			if ( $definitions[$name]->request_payment_field_live != '' ) {
+				JPluginHelper::importPlugin( 'cck_field_live' );
+
+				$config			=	array();
+				$dispatcher		=	JDispatcher::getInstance();
+				$field			=	(object)array(
+										'live'=>$definitions[$name]->request_payment_field_live,
+										'live_options'=>$definitions[$name]->request_payment_field_live_options,
+									);
+				$suffix			=	'';
+				
+				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+
+				if ( $suffix != '' ) {
+					if ( $definitions[$name]->request_payment_field != '' ) {
+						$definitions[$name]->request_payment_field	.=	'_'.$suffix;
+					} else {
+						$definitions[$name]->request_payment_field	=	$suffix;
+					}
+				}
+			}
+			$definitions[$name]->request_state	=	0;
+			
+			if ( $definitions[$name]->formula != '' ) {
+				$definitions[$name]->formula		=	JCckEcommerceCart::prepareFormula( $definitions[$name]->formula );
+			}
+			if ( $definitions[$name]->request_state_id ) {
+				$definitions[$name]->request_state	=	JCckDatabase::loadResult( 'SELECT value FROM #__cck_more_ecommerce_order_states WHERE id = '.(int)$definitions[$name]->request_state_id );
 			}
 		}
 		
@@ -136,6 +172,30 @@ abstract class JCckEcommerce
 		return $currency;
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Orders
+
+	// getOrderByPayKey
+	public static function getOrderByPayKey( $pay_key, $isCached = true )
+	{
+		static $cache	=	array();
+		
+		if ( !isset( $cache[$pay_key] ) ) {
+			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.info_billing'
+															. ' FROM #__cck_more_ecommerce_orders AS a'
+															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
+															. ' WHERE a.pay_key = "'.$pay_key.'"' );
+			if ( !$isCached ) {
+				$temp	=	$cache[$pay_key];
+				
+				unset( $cache[$pay_key] );
+
+				return $temp;
+			}
+		}
+
+		return $cache[$pay_key];
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Payments
 
 	// getGateway
@@ -144,7 +204,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$type] ) ) {
-			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options'
+			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options, token'
 																. ' FROM #__cck_more_ecommerce_gateways WHERE type = "'.$type.'"' );
 			$cache[$type]->options	=	new JRegistry( $cache[$type]->options );
 		}
@@ -154,15 +214,73 @@ abstract class JCckEcommerce
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Products
 
-	// getTotal
-	public static function getTotal( $items, $target = 'price' )
+	// getCartDefinition
+	public static function getProductDefinition( $name )
 	{
-		$total	=	0;
+		static $definitions	=	array();
+		
+		if ( !isset( $definitions[$name] ) ) {
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, type, content_type, quantity, request_stock_field, request_weight_field, attribute, attributes'
+															. ' FROM #__cck_more_ecommerce_product_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 
+			if ( $definitions[$name]->attributes == '' ) {
+				$definitions[$name]->attributes	=	array();
+			} else {
+				$definitions[$name]->attributes	=	explode( '||', $definitions[$name]->attributes );
+				$definitions[$name]->attributes	=	array_flip( $definitions[$name]->attributes );
+			}
+		}
+		
+		return $definitions[$name];
+	}
+
+	// getTotal
+	public static function getTotal( $items, $cart_type, $params = array() )
+	{
+		$apply_promotions	=	false;
+		$apply_taxes		=	false;
+		$cart_definition	=	self::getCartDefinition( $cart_type );
+		$total				=	0;
+		
+		if ( isset( $params['apply_promotions'] ) ) {
+			$apply_promotions	=	$params['apply_promotions'];
+
+			unset( $params['apply_promotions'] );
+		}
+		if ( isset( $params['apply_taxes'] ) ) {
+			$apply_taxes		=	$params['apply_taxes'];
+
+			unset( $params['apply_taxes'] );
+		}
+		$params['target']	=	'product';
+		
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$qty	=	$item->quantity;
-				$total	+=	$item->price * $qty;
+				$options				=	$params;
+				$options['target_id']	=	$item->product_id;
+				$price					=	$item->price;
+
+				// Taxes
+				if ( $apply_taxes ) {
+					JCckEcommerceTax::apply( '', $price, $items, $options );
+				}
+				
+				// Formula
+				if ( !empty( $cart_definition->formula ) ) {
+					$item->price	=	$price;
+					$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
+				}
+				
+				// Promotions
+				if ( $apply_promotions ) {
+					JCckEcommercePromotion::apply( '', $price, $items, $options );
+
+					$options['target']	=	'product2';
+					JCckEcommercePromotion::apply( '', $price, $items, $options );
+				}
+				
+				// Quantity /* Alter Price */
+				$total	+=	$price * $item->quantity;
 			}
 		}
 		
@@ -201,7 +319,7 @@ abstract class JCckEcommerce
 		$null	=	$db->getNullDate();
 		$now	=	JFactory::getDate()->toSql();
 
-		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target'
+		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products'
 														.  ' FROM #__cck_more_ecommerce_promotions AS a'
 														.  ' WHERE a.published = 1'
 														.  ' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
@@ -227,6 +345,51 @@ abstract class JCckEcommerce
 		return $cache[$type];
 	}
 
+	// getShippingRules
+	public static function getShippingRules( $type = '', $zones = array() )
+	{
+		if ( !self::$rules ) {
+			self::$rules	=	self::_setShippingRules( $zones );
+		}
+		
+		if ( $type ) {
+			return ( isset( self::$rules[$type] ) ) ? self::$rules[$type] : array();
+		} else {
+			$rules	=	array();
+			if ( count( self::$rules ) ) {
+				foreach ( self::$rules as $k=>$p ) {
+					foreach ( $p as $v ) {
+						$rules[]	=	$v;
+					}
+				}
+			}
+
+			return $rules;
+		}
+	}
+	
+	// _setTaxes
+	protected static function _setShippingRules( $zones )
+	{
+		$db			=	JFactory::getDbo();
+		$null		=	$db->getNullDate();
+		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
+
+		$zones[]	=	0;
+		
+		$query		=	'SELECT a.id, a.title, a.type, a.cost, a.cost_amount, a.target_products, a.min, a.max, a.mode, a.target_type'
+					.	' FROM #__cck_more_ecommerce_shipping_rules AS a'
+					.	' LEFT JOIN #__cck_more_ecommerce_zone_rule AS b ON b.rule_id = a.id'
+					.	' WHERE a.published = 1'
+					.	' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
+					.	' AND (a.publish_down = '.JCckDatabase::quote( $null ).' OR '.'a.publish_down >= '.JCckDatabase::quote( $now ).')'
+					.	' AND b.zone_id IN ('.implode( ',', $zones ).')'
+					.	' ORDER BY a.title';
+		$rules		=	JCckDatabase::loadObjectListArray( $query, 'type' );
+
+		return $rules;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stores
 
 	// getStore
@@ -236,7 +399,7 @@ abstract class JCckEcommerce
 		
 		if ( !isset( $cache[$id] ) ) {
 			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, home, parent_id, parent_fee, parent_amount, options'
-															. ' FROM #__cck_more_ecommerce_stores WHERE id = '.$id );
+															. ' FROM #__cck_more_ecommerce_stores WHERE id = '.(int)$id );
 			$cache[$id]->options	=	new JRegistry( $cache[$id]->options );
 		}
 		
@@ -273,21 +436,20 @@ abstract class JCckEcommerce
 	{
 		$db			=	JFactory::getDbo();
 		$null		=	$db->getNullDate();
-		$now		=	JFactory::getDate()->toSql();
+		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
 
-		if ( !count( $zones ) ) {
-			$zones	=	array( 0=>0 );
-		}
-		$query		=	'SELECT a.title, a.type, a.tax, a.tax_amount, a.groups, a.target'
+		$zones[]	=	0;
+		
+		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.target_type, a.groups, a.target'
 					.	' FROM #__cck_more_ecommerce_taxes AS a'
 					.	' LEFT JOIN #__cck_more_ecommerce_zone_tax AS b ON b.tax_id = a.id'
-					.  ' WHERE a.published = 1'
-					.  ' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
-					.  ' AND (a.publish_down = '.JCckDatabase::quote( $null ).' OR '.'a.publish_down >= '.JCckDatabase::quote( $now ).')'
-					.  ' AND b.zone_id IN ('.implode( ',', $zones ).')'
+					.	' WHERE a.published = 1'
+					.	' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
+					.	' AND (a.publish_down = '.JCckDatabase::quote( $null ).' OR '.'a.publish_down >= '.JCckDatabase::quote( $now ).')'
+					.	' AND b.zone_id IN ('.implode( ',', $zones ).')'
 					.	' ORDER BY a.title';
 		$taxes		=	JCckDatabase::loadObjectListArray( $query, 'type' );
-
+		
 		return $taxes;
 	}
 
@@ -302,8 +464,36 @@ abstract class JCckEcommerce
 		if ( !( isset( $user->country ) && $user->country != '' ) ) {
 			return $zones;
 		}
-		$zones	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_more_ecommerce_zones WHERE published = 1 AND countries LIKE "%||'.$user->country.'||%" ORDER BY CHARACTER_LENGTH(countries) ASC' );
+		$where	=	'countries = "'.$user->country.'" OR countries LIKE "'.$user->country.'||%" OR countries LIKE "%||'.$user->country.'" OR countries LIKE "%||'.$user->country.'||%"';
+		$items	=	JCckDatabaseCache::loadObjectList( 'SELECT id, profile FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
 
+		if ( count( $items ) ) {
+			foreach ( $items as $item ) {
+				$isValid	=	true;
+
+				if ( $item->profile ) {
+					$profile	=	json_decode( $item->profile );
+
+					if ( is_object( $profile ) ) {
+						$target	=	$profile->trigger;
+
+						if ( $profile->match == 'isFilled' ) {
+							if ( $user->$target == '' ) {
+								$isValid	=	false;
+							}
+						} elseif ( $profile->match == 'isEmpty' ) {
+							if ( $user->$target != '' ) {
+								$isValid	=	false;
+							}
+						}
+					}
+				}
+
+				if ( $isValid ) {
+					$zones[]	=	$item->id;
+				}
+			}
+		}
 		return $zones;
 	}
 }

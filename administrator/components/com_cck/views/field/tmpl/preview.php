@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,9 +23,9 @@ if ( $field->type == 'checkbox' || $field->type == 'radio' ) {
 
 // Set
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JURI::root( true ).'/media/cck/css/cck.admin.css' );
+$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
 $doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}' );
-$doc->addScriptDeclaration( 'jQuery(document).ready(function($){ $("#titlebox").html("'.JText::_( 'COM_CCK_PREVIEW' ).'"); $("#submitBox,#resetBox").hide(); });' );
+$doc->addScriptDeclaration( 'jQuery(document).ready(function($){ $("#submitBox,#resetBox").hide(); });' );
 Helper_Include::addDependencies( 'box', 'edit' );
 ?>
 

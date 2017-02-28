@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -113,6 +113,15 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 			} else {
 				if ( !JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core_templates WHERE featured = 1 AND id != '.(int)$data['id'] ) ) {
 					$data['featured']	=	1;
+				}
+			}
+		}
+
+		// JSON
+		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
+			foreach ( $data['json'] as $k=>$v ) {
+				if ( is_array( $v ) ) {
+					$data[$k]	=	JCckDev::toJSON( $v );
 				}
 			}
 		}

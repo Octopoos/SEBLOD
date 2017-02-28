@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,12 +15,38 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_ca
 // Class
 class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_LocationJoomla_Category
 {
+	protected static $columns_excluded	=	array();
+
+	// getColumnsToImport
+	public static function getColumnsToImport()
+	{
+		$table		=	self::_getTable();
+		$columns	=	$table->getProperties();
+		
+		foreach ( self::$columns_excluded as $column ) {
+			if ( array_key_exists( $column, $columns ) ) {
+				unset( $columns[$column] );
+			}
+		}
+
+		return array_keys( $columns );
+	}
+
 	// onCCK_Storage_LocationImport
 	public static function onCCK_Storage_LocationImport( $data, &$config = array(), $pk = 0 )
 	{
 		if ( !$config['pk'] ) {
 			// Init
-			$pk		=	( isset( $data[self::$key] ) && $data[self::$key] > 0 ) ? $data[self::$key] : 0;
+			if ( !$pk ) {
+				if ( isset( $config['key'] ) && $config['key'] ) {
+					if ( isset( $data[$config['key']] ) && $data[$config['key']] != '' ) {
+						$pk		=	(int)JCckDatabase::loadResult( 'SELECT '.self::$key.' FROM '.self::$table.' WHERE '.$config['key'].' = "'.$data[$config['key']].'"' );
+					}
+					$pk		=	( $pk > 0 ) ? $pk : 0;
+				} else {
+					$pk		=	( isset( $data[self::$key] ) && (int)$data[self::$key] > 0 ) ? (int)$data[self::$key] : 0;
+				}
+			}
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
@@ -42,7 +68,9 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			self::_initTable( $table, $data, $config, true );
 			
 			// Prepare
-			$table->bind( $data );
+			if ( !empty( $data ) ) {
+				$table->bind( $data );
+			}
 			if ( $isNew && !isset( $data['rules'] ) ) {
 				$data['rules']	=	array( 'core.create'=>array(), 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array(), 'core.edit.own'=>array() );
 			}
@@ -64,11 +92,29 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			JPluginHelper::importPlugin( 'content' );
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
-				$config['error']	=	true;
-				$config['log']		=	'cancelled';
-				$config['pk']		=	$pk;
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-				return false;
+				$error		=	true;
+
+				if ( $isNew ) {
+					$i		=	2;
+					$alias	=	$table->alias.'-'.$i;
+					$test	=	JTable::getInstance( 'category' );
+					
+					while ( $test->load( array( 'alias'=>$alias, 'parent_id'=>$table->parent_id ) ) ) {
+						$alias		=	$table->alias.'-'.$i++;
+					}
+					$table->alias	=	$alias;
+
+					if ( $table->store() ) {
+						$error		=	false;
+					}
+				}
+				if ( $error ) {
+					$config['error']	=	true;
+					$config['log']		=	'cancelled';
+					$config['pk']		=	$pk;
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+					return false;
+				}
 			}
 			$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 			
@@ -84,8 +130,9 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			}
 			
 			if ( !$config['pk'] ) {
-				$config['pk']	=	$table->{self::$key};
+				$config['pk']	=	(int)$table->{self::$key};
 			}
+			$config['isNew']	=	(int)$isNew;
 			$config['author']	=	$table->{self::$author};
 			$config['parent']	=	$table->{self::$parent};
 		}
@@ -96,7 +143,7 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 	}
 	
 	// onCCK_Storage_LocationAfterImport
-	public static function onCCK_Storage_LocationAfterImport( $fields, &$config = array() )
+	public static function onCCK_Storage_LocationAfterImports( $fields, &$config = array() )
 	{
 	}
 }

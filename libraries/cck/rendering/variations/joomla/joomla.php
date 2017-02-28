@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,7 +26,6 @@ $class	=	$variation.' '.$orientation;
 $cck->addCSS( '/* Variation: '.$variation.' on '.$id.' */' ."\n" . $css  );
 $cck->setHeight( $height, $id, $cck->id.'-deepest' );
 ?>
-
 <fieldset id="<?php echo $id; ?>" class="adminform <?php echo $class; ?>">    
 	<?php if ( $legend != '' ) { ?>
 	    <legend><?php echo JText::_( $legend ); ?></legend>

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -56,16 +56,10 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 	// _authorise
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
-		$app		=	JFactory::getApplication();
 		$action		=	$restriction->get( 'action', '' );
+		$author		=	$restriction->get( 'author', '' );
 		$location	=	$restriction->get( 'location', '' );
-
-		if ( $location ) {
-			if ( !$app->{'is'.$location}() ) {
-				$field->display	=	0;
-				return false;
-			}
-		}
+		$type		=	$restriction->get('form', '');
 		
 		if ( $action ) {
 			if ( ( $action == 'add' && !$config['isNew'] )
@@ -74,7 +68,31 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 				return false;
 			}
 		}
+
+		if ( $author ) {
+			$user	=	JFactory::getUser();
+			
+			if ( ( $author  == '1' && $config['author'] != $user->id )
+			  || ( $author  == '-1' && $config['author'] == $user->id ) ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
 		
+		if ( $type ) {
+			if ( $type != $config['type'] ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
+
+		if ( $location ) {
+			if ( !JFactory::getApplication()->{'is'.$location}() ) {
+				$field->display	=	0;
+				return false;
+			}
+		}
+
 		return true;
 	}
 }

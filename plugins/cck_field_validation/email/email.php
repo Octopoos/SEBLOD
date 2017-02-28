@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_ValidationEmail extends JCckPluginValidation
 {
 	protected static $type	=	'email';
-	protected static $regex	=	'/^([A-Za-z0-9_\-\.\'])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,6})$/';
+	protected static $regex	=	'/^([A-Za-z0-9_\-\.\'])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,10})$/';
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 

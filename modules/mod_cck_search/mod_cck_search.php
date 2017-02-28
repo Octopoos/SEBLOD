@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,12 +23,13 @@ $app	=	JFactory::getApplication();
 $form	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
+$itemId	=	(string)$params->get( 'menu_item', '' );
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
+if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
 }
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JURI::root( true ).'/media/cck' );
+if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+	define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
 }
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
@@ -48,9 +49,16 @@ $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
-$action_vars		=	( $params->get( 'menu_item', '' ) ) ? '&Itemid='.$params->get( 'menu_item', '' ) : '';
+$action_url		=	'';
+$action_vars	=	'';
+
+if ( $itemId == '-1' ) {
+	$action_url		=	JUri::getInstance()->toString( array( 'path' ) );
+} elseif ( $itemId ) {
+	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
+}
 $live				=	urldecode( $params->get( 'live' ) );
-$target			=	$params->get( 'menu_item_search', 0 );
+$target				=	$params->get( 'menu_item_search', 0 );
 $variation			=	$params->get( 'variation' );
 $limitstart			=	-1;
 
@@ -64,6 +72,7 @@ if ( !is_object( @$options ) ) {
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
 $show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+$tag_desc			=	$params->get( 'tag_list_desc', 'div' );
 if ( $show_list_title == '' ) {
 	$show_list_title	=	$options->get( 'show_list_title', '1' );
 	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
@@ -99,7 +108,7 @@ if ( $description != '' ) {
 	}
 }
 if ( $target ) {
-	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $itemId ) );
+	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $params->get( 'menu_item', $itemId ) ) );
 	if ( isset( $target->query['option'] ) && $target->query['option'] == 'com_cck'
 	  && isset( $target->query['view'] ) && $target->query['view'] == 'list'
 	  && isset( $target->query['search'] ) && $target->query['search'] ) {

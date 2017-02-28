@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,13 +25,13 @@ class JFormFieldCCKexport extends JFormField
 		if ( $type == 'languages' ) {
 			$lang	=	JFactory::getLanguage()->getTag();			
 			$url	=	'index.php?option=com_cck&task=export'.$extension.'&lang_tag=en-GB';
-			$text	=	self::_getHTML( 'en-GB', $url, ' btn-small' );
+			$text	=	self::_getHtml( 'en-GB', $url, ' btn-small' );
 			
 			if ( $lang != 'en-GB' ) {
 				$text	.=	'&nbsp;&nbsp;<span style="font-weight: normal;">or</span>&nbsp;&nbsp;';
 				$tag	=	'&lang_tag='.$lang;
 				$url	=	'index.php?option=com_cck&task=export'.$extension.$tag;
-				$text	.=	self::_getHTML( $lang, $url, ' btn-small' );
+				$text	.=	self::_getHtml( $lang, $url, ' btn-small' );
 			}
 		} else {
 			$lang	=	JFactory::getLanguage();
@@ -39,27 +39,19 @@ class JFormFieldCCKexport extends JFormField
 			$id		=	$app->input->getInt( 'extension_id', 0 );
 			$id		=	'&extension_id='.$id;
 			$url	=	'index.php?option=com_cck&task=export'.$extension.$id;
-			$text	=	self::_getHTML( JText::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
-		}
-		if ( !JCck::on() ) {
-			$text	=	'<div style="float: left; padding-top: 7px; font-weight: bold;">'.$text.'</div>';
+			$text	=	self::_getHtml( JText::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
 		}
 		
 		return $text;
 	}
 	
-	// _getHTML
-	protected function _getHTML( $text, $url, $class = '' )
+	// _getHtml
+	protected function _getHtml( $text, $url, $class = '' )
 	{
-		if ( JCck::on() ) {
-			$html	=	'<a href="'.$url.'" class="btn'.$class.'">'
-					.	'<span class="icon-download"></span>'
-					.	"\n".$text
-					.	'</a>';
-
-		} else {
-			$html	=	'<a href="'.$url.'">'.$text.' &dArr;</a>';
-		}
+		$html	=	'<a href="'.$url.'" class="btn'.$class.'">'
+				.	'<span class="icon-download"></span>'
+				.	"\n".$text
+				.	'</a>';
 
 		return $html;
 	}

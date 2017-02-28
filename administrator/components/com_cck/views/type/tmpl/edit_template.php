@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,6 @@ if ( is_object( $this->style ) ) {
 	$this->style->params	=	JCckDev::fromJSON( $this->style->params );
 }
 ?>
-
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
@@ -33,7 +32,7 @@ if ( is_object( $this->style ) ) {
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Class', 'size'=>'16', 'storage_field'=>'params[rendering_css_class]' ) );
-			echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_custom_attributes'], $config, array( 'label'=>'Custom Attributes', 'size'=>'32', 'storage_field'=>'params[rendering_custom_attributes]' ) );
+			echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_custom_attributes'], $config, array( 'label'=>'Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_custom_attributes]' ), array(), 'w100' );
             ?>
         </ul>
 	</div>

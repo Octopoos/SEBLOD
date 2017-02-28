@@ -4,11 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 // Plugin
 class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
@@ -63,6 +65,11 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 				$filter		=	$options->get( 'type', 'string' );
 				if ( $filter == 'array' ) {
 					$live		=	$app->input->get( $variable, $default, 'array' );
+				} elseif ( $filter == 'integers' ) {
+					$live		=	(string)$app->input->getString( $variable, $default );
+					$live		=	explode( ',', $live );
+					$live		=	ArrayHelper::toInteger( $live );
+					$live		=	implode( ',', $live );
 				} else {
 					$request	=	'get'.ucfirst( $filter );
 					$live		=	(string)$app->input->$request( $variable, $default );

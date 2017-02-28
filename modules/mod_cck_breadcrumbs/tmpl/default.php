@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 ?>
-
 <div class="cck_module_breadcrumbs<?php echo $class_sfx; ?>">
 <?php
 $show_last	=	$params->get( 'showLast', 1 );

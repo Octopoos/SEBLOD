@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,8 +37,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
 			<?php
-            echo JCckDev::renderForm( 'core_featured', $this->item->home, $config, array( 'label'=>'App Root', 'options'=>'No=0||Yes App Root=1', 'storage_field'=>'home' ), array(), 'w100' );
-            echo JCckDev::renderForm( 'core_featured', $this->item->featured, $config, array(), array(), 'w100' );
+            $attr   =   ( $this->item->id == 1 || $this->item->id == 2 ) ? 'disabled="disabled"' : '';
+
+            echo JCckDev::renderForm( 'core_featured', $this->item->home, $config, array( 'label'=>'App Root', 'options'=>'No=0||Yes App Root=1', 'storage_field'=>'home', 'attributes'=>$attr ), array(), 'w100' );
+            echo JCckDev::renderForm( 'core_featured', $this->item->featured, $config, array( 'attributes'=>$attr ), array(), 'w100' );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->icon_path, $config, array( 'label'=>'Icon', 'size'=>64, 'storage_field'=>'icon_path' ), array(), 'w100' );
             echo JCckDev::renderForm( 'core_elements', $this->item->elements, $config, array( 'bool'=>1 ) );
             echo JCckDev::renderForm( 'core_color', $this->item->color, $config );
@@ -46,7 +48,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             echo JCckDev::renderForm( 'core_colorchar', $this->item->colorchar, $config );
             ?>
         </ul>
-		<img id="toggle_acl" src="components/com_cck/assets/images/24/icon-24-acl.png" border="0" alt="" style="float: right; margin: 9px 9px 0px 0px; cursor: pointer;" />
+        <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
 	</div>
     
 	<div class="seblod" id="acl" style="display: none;">
@@ -80,7 +82,7 @@ Helper_Display::quickCopyright();
     }
     Joomla.submitbutton = function(task) {
         if (task == "folder.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
+            JCck.submitForm(task, document.getElementById('adminForm'));
         }
     }
     $(document).ready(function() {

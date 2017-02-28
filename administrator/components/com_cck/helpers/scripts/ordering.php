@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,7 +15,6 @@ $lang   =	JFactory::getLanguage();
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
@@ -60,30 +59,32 @@ $js		=	'
 					$("#match_mode").val(parent.jQuery("#'.$name.'_match_mode").val());
 					var encoded = parent.jQuery("#'.$name.'_match_options").val();
 					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-					$.each(data, function(k, v) {
-						var elem = "match_options_"+k;
-						if($("#"+elem).length) {
-							$("#"+elem).myVal(v);
-						} else {
-							if(elem == "match_options_by_field_values") {
-								if ($("#match_options_by_field").val() == "1") {
-									var temp = v.split("||");
-									var len = temp.length;
-									var len2 = $("#sortable_core_dev_texts").children().length;
-									for(i = len2; i < len2; i++) {
-										$("#sortable_core_dev_texts div:eq(0)").remove();
-									}
-									for(i = 0; i < len; i++) {
-										if ( !$("[name=\"match_options\[by_field_values\]\[\]\"]:eq("+i+")").length ) {
-											$("#sortable_core_dev_texts>div:eq("+(i-1)+") .button-add-core_dev_texts").click();
+					if (data) {
+						$.each(data, function(k, v) {
+							var elem = "match_options_"+k;
+							if($("#"+elem).length) {
+								$("#"+elem).myVal(v);
+							} else {
+								if(elem == "match_options_by_field_values") {
+									if ($("#match_options_by_field").val() == "1") {
+										var temp = v.split("||");
+										var len = temp.length;
+										var len2 = $("#sortable_core_dev_texts").children().length;
+										for(i = len2; i < len2; i++) {
+											$("#sortable_core_dev_texts div:eq(0)").remove();
 										}
-										$("[name=\"match_options\[by_field_values\]\[\]\"]:eq("+i+")").myVal(temp[i]);
+										for(i = 0; i < len; i++) {
+											if ( !$("[name=\"match_options\[by_field_values\]\[\]\"]:eq("+i+")").length ) {
+												$("#sortable_core_dev_texts>div:eq("+(i-1)+") .button-add-core_dev_texts").click();
+											}
+											$("[name=\"match_options\[by_field_values\]\[\]\"]:eq("+i+")").myVal(temp[i]);
+										}
 									}
-								}
 
+								}
 							}
-						}
-					});
+						});
+					}
 					$("#match_options_var_type").isVisibleWhen("match_mode","ASC,DESC");
 					$("#match_options_by_field").isVisibleWhen("match_mode","FIELD");
 					$("#sortable_core_dev_texts").isVisibleWhen("match_options_by_field","1");

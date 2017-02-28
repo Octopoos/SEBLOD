@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,8 +44,8 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	{
 		$app	=	JFactory::getApplication();
 		$html	=	$typo->get( 'html', '' );
-		
-		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
+
+		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*html*' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
 			$html		=	parent::g_hasLink( $field, $typo, $html );
 		}
 		if ( $html != '' ) {
@@ -54,17 +54,19 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $target ) {
-					if ( is_array( $field->$target ) ) {
-						$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
-					} else {
-						$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+					if ( isset( $field->$target ) ) {
+						if ( is_array( $field->$target ) ) {
+							$html	=	str_replace( '*'.$target.'*', ( ( isset( $field->{$target}[0] ) ) ? $field->{$target}[0] : '' ), $html );
+						} else {
+							$html	=	str_replace( '*'.$target.'*', $field->$target, $html );
+						}	
 					}
 				}
 			}
 		}
 		if ( $html != '' && strpos( $html, '$cck->get' ) !== false ) {
 			$matches	=	'';
-			$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+			$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,\[\]]*)\' ?\)(;)?#';
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ) );
@@ -78,7 +80,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				foreach ( $matches[1] as $k=>$v ) {
 					$variable	=	$matches[2][$k];
 					if ( $v == 'Current' ) {
-						$request	=	( $variable == 'true' ) ? JURI::getInstance()->toString() : JURI::current();
+						$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
 						$html		=	str_replace( $matches[0][$k], $request, $html );						
 					} else {
 						$request	=	'get'.$v;
@@ -111,13 +113,35 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 		if ( count( $process['matches'][1] ) ) {
 			foreach ( $process['matches'][1] as $k=>$v ) {
 				$fieldname		=	$process['matches'][2][$k];
+				$idx			=	'';
+				$search			=	'';
 				$target			=	strtolower( $v );
 				$value			=	'';
+				
 				if ( strpos( $fieldname, ',' ) !== false ) {
 					$fieldname	=	explode( ',', $fieldname );
+
 					if ( count( $fieldname ) == 3 ) {
-						if ( $fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]] ) {
-							$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->{$target};
+						if ( $fieldname[1] == '[x]' ) {
+							static $x	= array();
+
+							$idx		=	$config['id'].'_'.$fieldname[0].'_'.$fieldname[2];
+
+							if ( !isset( $x[$idx] ) ) {
+								$x[$idx]	=	0;
+							}
+							$fieldname[1]	=	$x[$idx];
+							$search			=	str_replace( array( "'", '$', ',', '>', '(', ')', '[', ']', '-' ), array( "\'", '\$', '\,', '\>', '\(', '\)', '\[', '\]', '-' ), $process['matches'][0][$k] );
+
+							if ( $fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]] ) {
+								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->{$target};
+							}
+							$fields[$fieldname[0]]->value[$fieldname[1]][$name]->typo	=	str_replace( $process['matches'][0][$k], $value, $fields[$fieldname[0]]->value[$fieldname[1]][$name]->typo );
+							$x[$idx]++;
+						} else {
+							if ( $fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]] ) {
+								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->{$target};
+							}
 						}
 					} else {
 						if ( $fields[$fieldname[0]]->value[$fieldname[1]] ) {
@@ -134,7 +158,11 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 						$value					=	$fields[$fieldname]->{$target};
 					}
 				}
-				$fields[$name]->typo	=	str_replace( $process['matches'][0][$k], $value, $fields[$name]->typo );
+				if ( $idx != '' && $search != '' ) {
+					$fields[$fieldname[0]]->typo	=	preg_replace( '/'.$search.'/', $value, $fields[$fieldname[0]]->typo, 1 );
+				} else {
+					$fields[$name]->typo			=	str_replace( $process['matches'][0][$k], $value, $fields[$name]->typo );
+				}
 			}
 		}
 	}

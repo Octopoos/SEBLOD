@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,7 +15,6 @@ $lang   =	JFactory::getLanguage();
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 
 $doc	=	JFactory::getDocument();
 $doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
@@ -26,6 +25,7 @@ $js		=	'
 					reset: function() {
 						parent.jQuery("#'.$name.'_match_collection").val("");
 						parent.jQuery("#'.$name.'_match_value").val("");
+						parent.jQuery("#'.$name.'_match_options").val("");
 						this.close();
 					},
 					submit: function() {
@@ -53,13 +53,18 @@ $js		=	'
 					$("#match_mode").val(parent.jQuery("#'.$name.'_match_mode").val());
 					var encoded = parent.jQuery("#'.$name.'_match_options").val();
 					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";
-					$.each(data, function(k, v) {
-						var elem = "match_options_"+k;
-						$("#"+elem).myVal(v);
-					});
+					if (data) {
+						$.each(data, function(k, v) {
+							var elem = "match_options_"+k;
+							$("#"+elem).myVal(v);
+						});
+					}
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
-					$("#match_options_var_type").isVisibleWhen("match_mode","any_exact");
-					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact");
+					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
+					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");
+					$("#match_options_var_count").isVisibleWhen("match_mode","each_exact");
+					$("#match_options_var_count_offset").isVisibleWhen("match_options_var_count","1");
+					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact,not_any_exact");
 					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
 			})(jQuery);
@@ -80,7 +85,7 @@ if ( count( $opts ) ) {
 	$options		=	array_merge( $options, $opts );
 }
 $options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'size="1" class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
+$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
 ?>
 
 <div class="seblod">
@@ -92,6 +97,9 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
 		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Mode', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Simple=0||Multiple=1', 'storage_field'=>'match_options[var_mode]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Count', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'None=||Equal=0||Minus=1', 'storage_field'=>'match_options[var_count]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Comparison Count Offset', 'size'=>'8', 'storage_field'=>'match_options[var_count_offset]', 'css'=>'match_options' ) );
 
 		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Latitude Field', 'storage_field'=>'match_options[fieldname1]', 'css'=>'match_options' ) );

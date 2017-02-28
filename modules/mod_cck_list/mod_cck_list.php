@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,11 +23,11 @@ $app	=	JFactory::getApplication();
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
+if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
 }
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JURI::root( true ).'/media/cck' );
+if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+	define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
 }
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
@@ -39,17 +39,25 @@ $preconfig['client']		=	'search';
 $preconfig['formId']		=	$formId;
 $preconfig['submit']		=	'JCck.Core.submit_'.$uniqId;
 $preconfig['search']		=	$params->get( 'search', '' );
+$preconfig['search2']		=	$params->get( 'search2', '' );
 $preconfig['itemId']		=	'';
 $preconfig['task']			=	'search';
-$preconfig['show_form']		=	1;
+$preconfig['show_form']		=	'0';
 $preconfig['auto_redirect']	=	0;
+$preconfig['limit']			=	$params->get( 'limit', 0 );
 $preconfig['limit2']		=	$params->get( 'limit2', 5 );
 $preconfig['ordering']		=	$params->get( 'ordering', '' );
 $preconfig['ordering2']		=	$params->get( 'ordering2', '' );
 
+$limitstart	=	(int)$params->get( 'limitstart', '' );
+$limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : -1;
+
+if ( $limitstart == -1 && (int)$preconfig['limit2'] > 0 ) {
+	$limitstart	=	0;
+}
 $live		=	urldecode( $params->get( 'live' ) );
+$pagination	=	-2;
 $variation	=	$params->get( 'variation' );
-$limitstart	=	-1;
 
 jimport( 'cck.base.list.list' );
 include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
@@ -61,6 +69,7 @@ if ( !is_object( @$options ) ) {
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
 $show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+$tag_desc			=	$params->get( 'tag_list_desc', 'div' );
 if ( $show_list_title == '' ) {
 	$show_list_title	=	$options->get( 'show_list_title', '1' );
 	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
@@ -121,7 +130,6 @@ if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && 
 		}
 	}
 }
-
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';

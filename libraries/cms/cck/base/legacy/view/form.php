@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,9 +25,10 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 		} elseif ( $this->getLayout() == 'edit' || $this->getLayout() == 'edit2' || $this->getLayout() == 'process' ) {
 			$this->prepareDisplay();
 		}
-		
+
 		$this->prepareToolbar();
 		$this->prepareUI();
+		$this->completeUI();
 		
 		parent::display( $tpl );
 	}
@@ -43,24 +44,23 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	{
 	}
 	
+	// completeUI
+	public function completeUI()
+	{
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( 'COM_CCK_'.$this->vName );
+		
+		$this->document->setTitle( $title );
+	}
+
 	// prepareUI
 	public function prepareUI()
 	{
-		if ( JCck::on() ) {
-			$this->css		=	array( 'w30'=>'span4',
-									   'w70'=>'span8',
-									   'wrapper'=>'container',
-									   'wrapper2'=>'row-fluid',
-									   'wrapper_tmpl'=>'span'
-								);
-		} else {
-			$this->css		=	array( 'w30'=>'width-30',
-									   'w70'=>'width-70 fltlft',
-									   'wrapper'=>'sebwrapper',
-									   'wrapper2'=>'seb-wrapper',
-									   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-								);
-		}
+		$this->css		=	array( 'w30'=>'span4',
+								   'w70'=>'span8',
+								   'wrapper'=>'container',
+								   'wrapper2'=>'row-fluid',
+								   'wrapper_tmpl'=>'span12'
+							);
 	}
 	
 	// prepareToolbar

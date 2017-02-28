@@ -4,19 +4,67 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
+if ( JCck::on( '3.7' ) ) {
+	class JCckTablePlaceholder extends JTable
+	{
+		// getFields
+		public function getFields( $reload = false )
+		{
+			$name			=	$this->_tbl;
+			static $cache	=	array();
+			
+			if ( ! isset( $cache[$name] ) ) {
+				$fields	=	$this->_db->getTableColumns( $name, false );
+				if ( empty( $fields ) ) {
+					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$this->setError( $e );
+					return false;
+				}
+				$cache[$name]	=	$fields;
+			}
+			
+			return $cache[$name];
+		}
+	}
+} else {
+	class JCckTablePlaceholder extends JTable
+	{
+		// getFields
+		public function getFields()
+		{
+			$name			=	$this->_tbl;
+			static $cache	=	array();
+			
+			if ( ! isset( $cache[$name] ) ) {
+				$fields	=	$this->_db->getTableColumns( $name, false );
+				if ( empty( $fields ) ) {
+					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$this->setError( $e );
+					return false;
+				}
+				$cache[$name]	=	$fields;
+			}
+			
+			return $cache[$name];
+		}
+	}
+}
+
 // JCckTable
-class JCckTable extends JTable
+class JCckTable extends JCckTablePlaceholder
 {
 	// __construct
 	function __construct( $table, $key, &$db )
 	{
 		parent::__construct( $table, $key, $db );
+
+		$this->_trackAssets = false;
 	}
 	
 	// getInstance
@@ -32,25 +80,6 @@ class JCckTable extends JTable
 		}
 		
 		return $instance;
-	}
-	
-	// getFields
-	public function getFields()
-	{
-		$name			=	$this->_tbl;
-		static $cache	=	array();
-		
-		if ( ! isset( $cache[$name] ) ) {
-			$fields	=	$this->_db->getTableColumns( $name, false );
-			if ( empty( $fields ) ) {
-				$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
-				$this->setError( $e );
-				return false;
-			}
-			$cache[$name]	=	$fields;
-		}
-		
-		return $cache[$name];
 	}
 	
 	// load

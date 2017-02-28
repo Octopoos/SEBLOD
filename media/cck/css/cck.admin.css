@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /*ADMIN ONLY*/
@@ -28,7 +28,7 @@ div.vertical div.cck_forms{float:left;padding-bottom:10px;width:100%;}
 div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
 div.cck_forms.cck_admin div.cck_label{float:left;line-height:25px;width:145px;}
 div.cck_forms.cck_admin div.cck_form a.cck_preview,div.cck_forms.cck_admin div.cck_form span.cck_preview{float:left;line-height:25px;width:145px;}
-div.cck_forms.cck_admin div.cck_form{float:left;width:auto;}
+div.cck_forms.cck_admin div.cck_form{float: none;width:auto;}
 div.cck_forms.cck_admin div.cck_desc{clear:both;width:auto;}
 div.cck_forms.cck_admin div.cck_desc p{ margin:8px 0px 0px 0px;}
 div.vertical div.cck_forms.cck_admin div.cck_label { width: 145px; text-align: left; padding: 0px 0px 0px 0px; }
@@ -60,7 +60,7 @@ div.cck_forms.cck_admin div.cck_form.cck_form_radio label{clear:none;display:tab
 div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset.radios.btn-group label{line-height:120%;padding-right:14px;}
 
 /*ADMIN GENERIQUE WYSIWYG*/
-div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%;}
 div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,
@@ -85,6 +85,7 @@ div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview{padd
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview span{line-height:26px;}
 
 /*ADMIN GENERIQUE JFORM USER GROUP*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups{float:left;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul{padding:0;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}
@@ -111,6 +112,16 @@ div.cck_forms.cck_admin div.cck_form.cck_form_upload_image span.linkage {top:5px
 
 /*SITE GENERIQUE LINK */
 div.cck_forms.cck_admin div.cck_form.cck_form_link div.cck_forms{clear:both;}
+
+/*SITE GENERIQUE JOIN_X*/
+div.cck_forms.cck_admin div.cck_form.cck_form_join_x{width: 100%;}
+div.cck_form_join_x .btn .caret{margin-top: 7px;}
+div.cck_form_join_x div.btn-group.cck-fr.open .dropdown-menu{left:initial; right:0;}
+
+.modal-body .seblod.first.container-fluid{margin-bottom: 10px; padding:0;}
+div.cck-line-body .btn-toolbar{margin-top: 0;}
+.btn-primary .icon-edit:before{color:#fff;}
+.btn.disabled .icon-publish:before{color:#333;}
 
 /* UI */
 div.vertical, div.horizontal {
@@ -390,4 +401,9 @@ div.horizontal .adminformlist li a:visited.cck_preview{
 	float: left;
 	margin-left: 8px;
 	line-height: 32px;
+}
+
+.btn [class^="icon-"],
+.btn [class*=" icon-"] {
+	margin-right:0;
 }

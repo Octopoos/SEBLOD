@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,12 +24,12 @@ if ( $css ) {
 	$doc->addStyleDeclaration( $css );
 }
 if ( $elem ) {
-	$doc->addScript( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-	$doc->addStyleSheet( JURI::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+	$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+	$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 	$js	=	'
 			jQuery(document).ready(function($){
-				$("'.$elem.'").live("click", function(e) { e.preventDefault();
-					$.fn.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
+				$("'.$elem.'").on("click", function(e) { e.preventDefault();
+					$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:850,innerHeight:430,scrolling:true,overlayClose:false,fixed:true});
 					return false;
 				});
 			});

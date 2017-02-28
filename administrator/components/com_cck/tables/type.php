@@ -4,36 +4,14 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	// TableAdapter
-	class CCK_TableTypeAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( JTable $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-} else {
-	// TableAdapter
-	class CCK_TableTypeAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-}
-
 // Table
-class CCK_TableType extends CCK_TableTypeAdapter
+class CCK_TableType extends JTable
 {
 	// __construct
 	function __construct( &$db )
@@ -46,6 +24,12 @@ class CCK_TableType extends CCK_TableTypeAdapter
 	{
 		$k	=	$this->_tbl_key;
 		return 'com_cck.form.'.(int)$this->$k;
+	}
+
+	// _getAssetParentId
+	protected function _getAssetParentId( JTable $table = null, $id = null )
+	{
+		return $this->_getAssetParentId2( $table, $id );
 	}
 
 	// _getAssetTitle
@@ -76,19 +60,33 @@ class CCK_TableType extends CCK_TableTypeAdapter
 	// check
 	public function check()
 	{
-		$this->title	=	trim( $this->title );
+		$date	=	JFactory::getDate();
+		$user	=	JFactory::getUser();
+
+		$this->title			=	trim( $this->title );
 		if ( empty( $this->title ) ) {
 			return false;
 		}
-		if( empty( $this->name ) ) {
-			$this->name	=	$this->title;
-			$this->name =	JCckDev::toSafeSTRING( $this->name );
-			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
-				$datenow	=	JFactory::getDate();
-				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );
+		if ( empty( $this->name ) ) {
+			$this->name			=	$this->title;
+			$this->name 		=	JCckDev::toSafeSTRING( $this->name );
+			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {				
+				$this->name 	=	$date->format( 'Y_m_d_H_i_s' );
 			}
 		}
-		
+
+		if ( $this->id ) {
+			$this->modified_date		=	$date->toSql();
+			$this->modified_user_id		=	$user->id;
+		} else {
+			if ( !(int)$this->created_date ) {
+				$this->created_date		=	$date->toSql();
+			}
+			if ( empty( $this->created_user_id ) ) {
+				$this->created_user_id	=	$user->id;
+			}
+		}
+
 		return true;
 	}
 	
@@ -102,7 +100,7 @@ class CCK_TableType extends CCK_TableTypeAdapter
 				$style	=	JCckDatabase::loadObject( 'SELECT a.id, a.template FROM #__template_styles AS a'
 													.	' WHERE a.template IN ( SELECT b.template FROM #__template_styles as b WHERE b.id = '.(int)$this->$Pf.' )'
 													.	' ORDER BY a.id' );
-				if ( $style->id != $this->$Pf ) {
+				if ( is_object( $style ) && $style->id != $this->$Pf ) {
 					JCckDatabase::execute( 'DELETE a.* FROM #__template_styles AS a WHERE a.id='.(int)$this->$Pf );
 				}
 			}
@@ -111,6 +109,10 @@ class CCK_TableType extends CCK_TableTypeAdapter
 							.	' FROM #__cck_core_type_field AS a'
 							.	' LEFT JOIN #__cck_core_type_position AS b ON b.typeid = a.typeid'
 							.	' WHERE a.typeid='.(int)$this->id );
+			
+			JCckDatabase::execute( 'DELETE IGNORE a.*'
+							.	' FROM #__cck_core AS a'
+							.	' WHERE a.storage_location="cck_type" AND a.pk="'.(int)$this->id.'"' );
 		}
 		
 		return parent::delete();

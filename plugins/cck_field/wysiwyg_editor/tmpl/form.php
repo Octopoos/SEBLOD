@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -73,6 +73,7 @@ $buttons	=	array( 'pagebreak', 'readmore' );
 $editor		=	JFactory::getEditor( @$this->item->type ? $this->item->type : null );
 $params		=	explode( '||', $this->item->params );
 $width		=	( $params[0] ) ? $params[0] : '100%';
+$width		=	urldecode( $width );
 $height		=	( $params[1] ) ? $params[1] : '280';
 $asset		=	( $params[2] ) ? $params[2] : '';
 ?>

@@ -4,13 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$clear	=	"this.form.getElementById('filter_folder').value='';this.form.getElementById('filter_state').value='1';";
+$clear	=	"document.getElementById('filter_folder').value='';document.getElementById('filter_state').value='1';";
 if ( $this->js['filter'] ) {
 	$doc->addScriptDeclaration( $this->js['filter'] );
 }
@@ -30,23 +30,21 @@ if ( $listDir == 'asc' ) {
 		echo JCckDev::getForm( $cck['core_filter_input'], $this->escape( $this->state->get( 'filter.search' ) ), $config, array( 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_ITEMS_SEARCH_FILTER' ).'" style="text-align:center;"' ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_go'], '', $config, array( 'css'=>$this->css['filter_search_button'] ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_search'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="'.$clear.'this.form.submit();"' ), array( 'after'=>"\n" ) );
-		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="this.form.getElementById(\'filter_search\').value=\'\';this.form.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
+		echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="document.getElementById(\'filter_search\').value=\'\';document.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
 		?>
 	</div>
-	<?php if ( JCck::on() ) { ?>
-		<div class="<?php echo $this->css['filter_search_list']; ?>">
-			<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
-			<select name="sortTable" id="sortTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
-				<option value=""><?php echo JText::_( 'JGLOBAL_SORT_BY' );?></option>
-				<?php echo JHtml::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
-			</select>
-			<select name="directionTable" id="directionTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
-				<option value="asc"<?php echo $selected_asc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
-				<option value="desc"<?php echo $selected_desc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
-			</select>
-			<?php echo $this->pagination->getLimitBox(); ?>
-		</div>
-	<?php } ?>
+	<div class="<?php echo $this->css['filter_search_list']; ?>">
+		<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
+		<select name="sortTable" id="sortTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
+			<option value=""><?php echo JText::_( 'JGLOBAL_SORT_BY' );?></option>
+			<?php echo JHtml::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
+		</select>
+		<select name="directionTable" id="directionTable" class="inputbox select input-medium" onchange="Joomla.orderTable()">
+			<option value="asc"<?php echo $selected_asc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
+			<option value="desc"<?php echo $selected_desc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
+		</select>
+		<?php echo $this->pagination->getLimitBox(); ?>
+	</div>
 	<div class="<?php echo $this->css['filter_select']; ?>">
         <?php
         echo $this->html['filter_select_header'];

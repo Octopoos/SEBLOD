@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,7 +24,7 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
 		echo JCckDev::renderForm( 'core_selectlabel', $this->item->selectlabel, $config );
 		echo JCckDev::renderForm( 'core_options', $options, $config );
 		
-		echo JCckDev::renderHelp( 'field', '3019-select-simple.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-select-simple-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

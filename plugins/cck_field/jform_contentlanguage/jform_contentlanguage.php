@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -60,7 +60,7 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$app	=	JFactory::getApplication();
-		$auto	=	( @$config['translate_id'] && isset( $config['language'] ) && $config['language'] ) ? $config['language'] : '';
+		$auto	=	( isset( $config['copyfrom_id'] ) && $config['copyfrom_id'] && isset( $config['language'] ) && $config['language'] ) ? $config['language'] : '';
 		if ( $auto ) {
 			$value		=	$auto;
 		} else {

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,6 +21,13 @@ class CCKViewList extends JViewLegacy
 	public function display( $tpl = NULL )
 	{
 		$app						=	JFactory::getApplication();
+		$layout						=	$app->input->get( 'tmpl' );
+		$uniqId						=	'';
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$uniqId					=	'_'.$layout;
+		}
+
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
@@ -28,8 +35,8 @@ class CCKViewList extends JViewLegacy
 		$preconfig['itemId']		=	0;
 		$preconfig['task']			=	$app->input->get( 'task', 'search' );
 		$preconfig['doPagination']	=	1;
-		$preconfig['formId']		=	'adminForm';
-		$preconfig['submit']		=	'JCck.Core.submit';
+		$preconfig['formId']		=	'seblod_form'.$uniqId;
+		$preconfig['submit']		=	'JCck.Core.submit'.$uniqId;
 		
 		JCck::loadjQuery();
 		$this->prepareDisplay( $preconfig );
@@ -60,7 +67,7 @@ class CCKViewList extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
-		$pagination					=	$this->getModel()->_getPagination( $total );
+		$pagination					=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
 		if ( !is_object( @$options ) ) {
@@ -82,6 +89,7 @@ class CCKViewList extends JViewLegacy
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form					=	&$form;
+		$this->form_id				=	$preconfig['formId'];
 		$this->items				=	&$items;
 		$this->pagination			=	&$pagination;
 		$this->params				=	&$params;
@@ -103,7 +111,7 @@ class CCKViewList extends JViewLegacy
 		require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
-		JToolBarHelper::title( $title, 'component' );
+		JToolBarHelper::title( $title, 'stack' );
 		
 		if ( !( is_object( $search ) && $search->id ) ) {
 			return;
@@ -119,7 +127,7 @@ class CCKViewList extends JViewLegacy
 				$creation	=	false;
 			}
 			if ( $canCreate && $creation ) {
-				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( JFactory::getURI() );
+				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( JUri::getInstance()->toString() );
 				$bar->prependButton( 'CckLink', 'new', JText::_( 'JTOOLBAR_NEW' ), $link, '_self' );
 			}
 		}

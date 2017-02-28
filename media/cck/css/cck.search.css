@@ -3,7 +3,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 **/
 
 /*SITE ONLY*/
@@ -31,6 +31,13 @@ div.cck_forms button.inputbox:focus {
     margin: 0 !important;
 	padding: 4px 6px !important;
     background: none repeat scroll 0 0 #ffffff !important;
+}
+
+div.cck_forms table.table input.inputbox,
+div.cck_forms table.table textarea.inputbox,
+div.cck_forms table.table select.inputbox,
+div.cck_forms table.table button.inputbox {
+    float: none !important;
 }
 
 /*SITE DIV.CLEAR*/

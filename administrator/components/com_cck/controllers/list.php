@@ -4,11 +4,13 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -26,9 +28,7 @@ class CCKControllerList extends JControllerAdmin
 	// getModel
 	public function getModel( $name = 'List', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
 	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// delete
@@ -39,9 +39,7 @@ class CCKControllerList extends JControllerAdmin
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
-		
-		jimport('joomla.utilities.arrayhelper');
-		JArrayHelper::toInteger( $cid );
+		$cid	=	ArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
 			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); // todo: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb );
@@ -67,9 +65,7 @@ class CCKControllerList extends JControllerAdmin
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport('joomla.utilities.arrayhelper');
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
@@ -101,9 +97,7 @@ class CCKControllerList extends JControllerAdmin
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport('joomla.utilities.arrayhelper');
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
@@ -112,7 +106,17 @@ class CCKControllerList extends JControllerAdmin
 		
 		if ( $file = $model->prepareProcess( $params, $task_id, $ids ) ) {
 			if ( $output > 0 ) {
-				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
+				if ( isset( $config['message'] ) && $config['message'] != '' ) {
+					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
+				} else {
+					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+				}
+				if ( isset( $config['message_style'] ) && $config['message_style'] != '' ) {
+					$msgType	=	$config['message_style'];
+				} else {
+					$msgType	=	'message';
+				}
+				$this->setRedirect( $this->_getReturnPage(), $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
@@ -135,7 +139,7 @@ class CCKControllerList extends JControllerAdmin
 		$return	=	$app->input->getBase64( 'return' );
 		
 		if ( empty( $return ) || !JUri::isInternal( base64_decode( $return ) ) ) {
-			return ( $base == true ) ? JURI::base() : 'index.php?option=com_cck';
+			return ( $base == true ) ? JUri::base() : 'index.php?option=com_cck';
 		} else {
 			return base64_decode( $return );
 		}

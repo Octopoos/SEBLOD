@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,19 +27,44 @@ class CCKControllerForm extends JControllerForm
 		$this->registerTask( 'save2view', 'save' );
 	}
 	
-	// save
-	public function save( $key = null, $urlVar = null )
+	// saveAjax
+	public function saveAjax()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		$config		=	$this->save( null, null, true );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@(int)$config['id'],
+							'isNew'=>@$config['isNew'],
+							'pk'=>$config['pk']
+						);
+		
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
+	}
+
+	// save
+	public function save( $key = null, $urlVar = null, $isAjax = false )
+	{
+		if ( $isAjax !== true ) {
+			JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		$app		=	JFactory::getApplication();
 		$model		=	$this->getModel( 'form' );
-		$preconfig	=	$app->input->post->get( 'config', array(), 'array' );
+		$preconfig	=	$this->_getPreconfig();
 		$task		=	$this->getTask();
 		
 		$config		=	$model->store( $preconfig );
 		$id			=	$config['pk'];
 		
+		// Return Now for Ajax..
+		if ( $isAjax ) {
+			return $config;
+		}
+
 		if ( $config['validate'] == 'retry' ) {
 			parent::display();
 			return true;
@@ -55,7 +80,7 @@ class CCKControllerForm extends JControllerForm
 				return;
 			}
 			if ( $config['message_style'] ) {
-				if ( isset( $config['message'] ) ) {
+				if ( isset( $config['message'] ) && $config['message'] ) {
 					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
 				} else {
 					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
@@ -107,6 +132,22 @@ class CCKControllerForm extends JControllerForm
 		$this->setRedirect( htmlspecialchars_decode( $link ) );
 	}
 	
+	// _getPreconfig
+	protected function _getPreconfig()
+	{
+		$data	=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+
+		$data['copyfrom_id']	=	( !isset( $data['copyfrom_id'] ) ) ? 0 : $data['copyfrom_id'];
+		$data['id']				=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
+		$data['itemId']			=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['message']		=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['type']			=	( !isset( $data['type'] ) ) ? '' : $data['type'];
+		$data['unique']			=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
+		$data['url']			=	( !isset( $data['url'] ) ) ? '' : $data['url'];
+
+		return $data;
+	}
+
 	// _getRedirectQuery
 	protected function _getRedirectQuery( $full = false )
 	{

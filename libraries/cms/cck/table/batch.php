@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -72,6 +72,32 @@ class JCckTableBatch extends JObject
 		}
 	}
 	
+	// bindArray
+	public function bindArray( $data )
+	{
+		if ( count( $data ) ) {
+			$k	=	key( $data );
+			if ( is_string( $k ) ) {
+				foreach ( $data[$k] as $v ) {
+					$row				=	new stdClass;
+					$row->$k			=	$v;
+					$this->_tbl_rows[]	=	$row;
+				}
+			} else {
+				foreach ( $data as $key=>$val ) {
+					if ( count( $val ) ) {
+						$row		=	new stdClass;
+						foreach ( $val as $k=>$v ) {
+							$row->$k	=	$v;
+							
+						}
+						$this->_tbl_rows[]	=	$row;
+					}
+				}
+			}
+		}
+	}
+
 	// check
 	public function check( $force = array(), $ignore = array(), $init = array() )
 	{
@@ -94,7 +120,7 @@ class JCckTableBatch extends JObject
 				}
 				foreach ( $this->getProperties() as $k=>$v ) {
 					if ( !in_array($k, $ignore ) ) {
-						if ( isset( $row->$k ) ) {
+						if ( property_exists( $row, $k ) ) {
 							$str2	.=	'"'.$this->_db->escape( $row->$k ).'", ';
 						}
 					}
@@ -112,7 +138,7 @@ class JCckTableBatch extends JObject
 		
 		$this->_tbl_rows_sql	=	$str;
 	}
-	
+
 	// delete
 	public function delete( $where_clause )
 	{
@@ -139,8 +165,14 @@ class JCckTableBatch extends JObject
 		}
 	}
 	
+	// dump
+	public function dump()
+	{
+		dump( $this->_tbl_rows );
+	}
+
 	// load
-	public function load( $where_clause, $alter = array() )
+	public function load( $where_clause, $key = NULL )
 	{
 		$str	=	'';
 		$where	=	'';
@@ -149,16 +181,50 @@ class JCckTableBatch extends JObject
 				foreach ( $where_clause as $k=>$v ) {
 					$where	.=	' AND '.$k . ' = "'.$v.'"';
 				}
-				$where	=	substr( $where, 5 );
+				$where		=	substr( $where, 5 );
 			}
 		} else {
-			$where	=	$where_clause;
+			$where			=	$where_clause;
 		}
 		
-		$query	=	'SELECT * FROM '.$this->_tbl.' WHERE '.$where;
-		$this->_tbl_rows	=	JCckDatabase::loadObjectList( $query );
+		$query				=	'SELECT * FROM '.$this->_tbl.' WHERE '.$where;
+		$this->_tbl_rows	=	JCckDatabase::loadObjectList( $query, $key );
 	}
 	
+	// mergeArray
+	public function mergeArray( $data )
+	{
+		if ( count( $this->_tbl_rows ) ) {
+			foreach ( $this->_tbl_rows as $key=>$val ) {
+				if ( isset( $data[$key] ) ) {
+					if ( count( $data[$key] ) ) {
+						foreach ( $data[$key] as $k=>$v ) {
+							if ( isset( $val->$k ) ) {
+								$val->$k	=	$v;
+							}
+						}
+					}
+					unset( $data[$key] );
+				} else {
+					unset( $this->_tbl_rows[$key] );
+				}
+			}
+		}
+		if ( count( $data ) ) {
+			foreach ( $data as $key=>$val ) {
+				$obj	=	JCckTable::getInstance( $this->_tbl );
+				if ( count( $val ) ) {
+					foreach ( $val as $k=>$v ) {
+						if ( property_exists( $obj, $k ) ) {
+							$obj->$k	=	$v;
+						}
+					}
+				}
+				$this->_tbl_rows[$key]	=	$obj;
+			}
+		}
+	}
+
 	// save
 	public function save( $rows = array(), $force = array(), $ignore = array(), $init = array() )
 	{
@@ -167,6 +233,20 @@ class JCckTableBatch extends JObject
 		$this->store();
 	}
 	
+	// sort
+	public function sort( $keys )
+	{
+		if ( count( $keys ) ) {
+			$rows	=	array();
+			foreach ( $keys as $key ) {
+				if ( isset( $this->_tbl_rows[$key] ) ) {
+					$rows[]	=	$this->_tbl_rows[$key];
+				}
+			}
+			$this->bind( $rows );
+		}
+	}
+
 	// store
 	public function store()
 	{

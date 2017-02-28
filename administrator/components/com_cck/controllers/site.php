@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -33,11 +33,11 @@ class CCKControllerSite extends JControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelSite &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		
-		if ( $recordId == 10 || $recordId == 500 ) {
+		if ( $recordId == 10 || $recordId == 500 || $recordId == 501 ) {
 			$db					=	JFactory::getDbo();
 			$params				=	JCckDatabase::loadResult( 'SELECT params FROM #__extensions WHERE element = "com_cck"' );
 			$config				=	JCckDev::fromJSON( $params, 'object' );

@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,7 +42,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		 .	 '</li>';
 		echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Text Input', 'defaultvalue'=>'0', 'options'=>'Enabled=1||Readonly=0' ) );
 
-		echo JCckDev::renderHelp( 'field', '2516-calendar.html' );
+		echo JCckDev::renderHelp( 'field', 'seblod-2-x-calendar-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value' => 'DATETIME' ) );
         ?>
@@ -53,8 +53,8 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 jQuery(document).ready(function($) {
 	$('#json_options2_time_pos').isVisibleWhen('json_options2_time','12,24',false);
 	$('#json_options2_default_hour').isVisibleWhen('json_options2_time','0');
-	$('#json_options2_storage_format').live('change', function() {
-		if ($j(this).val() == 1)  {
+	$('#json_options2_storage_format').on('change', function() {
+		if ($(this).val() == 1)  {
 			/*
 			$('#storage_alter_type').val('TIMESTAMP');
 			if($('#storage_alter_type').val()!='') {

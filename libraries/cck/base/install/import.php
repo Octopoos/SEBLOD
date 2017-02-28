@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,14 +13,11 @@ defined( '_JEXEC' ) or die;
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.utilities.simplexml' );
+
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-if ( JCck::on() ) {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
-} else {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/joomla/database/table/menutype.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-}
+JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
+JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
 // Import
@@ -290,9 +287,18 @@ class CCK_Import
 					$name	=	'';
 				}
 			}
+			
 			if ( $name ) {
 				$str2		=	$item->id.', "'.$name.'", ';
 				$attributes	=	$j->attributes();
+				
+				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
+					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
+						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
+						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
+					}
+				}
+				
 				foreach ( $data['tables_columns'][$table] as $key=>$val ) {
 					if ( isset( $attributes[$key] ) ) {
 						$str2	.=	'"'.$db->escape( (string)$attributes[$key] ).'", ';
@@ -374,6 +380,9 @@ class CCK_Import
 
 		if ( $table->type == 'component' ) {
 			$table->component_id	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table->component_id.'"' );
+		}
+		if ( $table->level > 1 ) {
+			$table->parent_id		=	JCckDatabase::loadResult( 'SELECT id FROM #__menu WHERE alias = "'.$table->parent_id.'"' );
 		}
 		$table->setLocation( $table->parent_id, 'last-child' );
 
@@ -487,6 +496,63 @@ class CCK_Import
 		$table->store();
 	}
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+	
+	// importProcessings
+	public static function importProcessings( $data )
+	{
+		$path			=	$data['root'].'/processings';
+		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings WHERE published != -44', 'scriptfile', 'type' );
+
+		if ( file_exists( $path ) ) {
+			$files	=	JFolder::files( $path, '\.xml$' );
+			if ( count( $files ) ) {
+				foreach ( $files as $file ) {
+					$xml	=	JCckDev::fromXML( $path.'/'.$file );
+					if ( !$xml || (string)$xml->attributes()->type != 'processings' ) {
+						break;
+					}
+					$name		=	(string)$xml->processing->name;
+					$scriptfile	=	(string)$xml->processing->scriptfile;
+					$state		=	(string)$xml->processing->published;
+					$type		=	(string)$xml->processing->type;
+
+					if ( $name && $scriptfile && $type != '' ) {
+						if ( isset( $processings[$scriptfile] ) ) {
+							if ( isset( $processings[$scriptfile][$type] ) ) {
+								continue;
+							} else {
+								$state		=	0;
+							}
+						}
+						$table				=	JCckTable::getInstance( '#__cck_more_processings' );
+						$table->name		=	$name;
+						$table->title		=	(string)$xml->processing->title;
+						
+						// Folder			
+						$idx	=	(string)$xml->processing->folder;
+						if ( isset( $data['folders2'][$idx] ) ) {
+							$table->folder	=	$data['folders2'][$idx]->id;
+						} elseif ( isset( $data['folders'][$idx] ) ) {
+							$table->folder	=	$data['folders'][$idx]->id;
+						} else {
+							$table->folder	=	7;
+						}
+						
+						$table->type		=	$type;
+						$table->description	=	(string)$xml->processing->description;
+						$table->options		=	(string)$xml->processing->options;
+						$table->ordering	=	(string)$xml->processing->ordering;
+						$table->published	=	$state;
+						$table->scriptfile	=	$scriptfile;
+						
+						$table->store();
+					}
+				}
+			}
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SQL
 	
 	// importSQL
@@ -608,7 +674,7 @@ class CCK_Import
 						}
 						
 						$sql_query	=	( $sql_query ) ? substr( $sql_query, 0, -1 ) : '';
-						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=MyISAM DEFAULT CHARSET=utf8;' );
+						JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$name.' (' . $sql_query . ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
 					}
 				}
 			}

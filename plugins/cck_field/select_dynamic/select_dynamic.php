@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -29,8 +29,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		// Add Database Process
 		if ( $data['bool2'] == 0 ) {
-			$app 	= 	JFactory::getApplication();
-			$ext	=	$app->getCfg( 'dbprefix' );
+			$ext	=	JFactory::getConfig()->get( 'dbprefix' );
 
 			if ( isset( $data['json']['options2']['table'] ) ) {
 				$data['json']['options2']['table']	=	str_replace( $ext, '#__', $data['json']['options2']['table'] );
@@ -40,25 +39,46 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
-	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-		
-		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data );
-	}
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
+			$data['variation']['hidden_auto']	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) );
+			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
+	}
+	
 	// onCCK_FieldConstruct_SearchSearch
-	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array() )
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['variation'][]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
-		$data['variation'][]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-		
-		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data );
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_AUTO' ) );
+			$data['variation']['hidden_auto']	=	JHtml::_( 'select.option', 'hidden_auto', JText::_( 'COM_CCK_HIDDEN' ) );
+			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
+			$data['variation']['list']			=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
+			$data['variation']['list_filter']	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
+			/*
+			$data['variation']['list_filter_ajax']	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+			*/
+			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['205']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['206']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
-
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -75,19 +95,33 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$lang_code	=	'';
 		$value2		=	'';
 
+		// Prepare
+		if ( $field->bool3 ) {
+			$divider	=	( $field->divider != '' ) ? $field->divider : ',';
+		}
+
+		$optgroups			=	false;
+		$options			=	self::_getStaticOption( $field, $field->options, $config, $optgroups );
+		$options_1			=	array();
+
+		if ( count( $options ) ) {
+			foreach ( $options as $o ) {
+				if ( !( $o->value == '<OPTGROUP>' || $o->value == '</OPTGROUP>' ) ) {
+					$options_1[]	=	$o->text.'='.$o->value;
+				}
+			}
+		}
+		$options_1			=	( count( $options_1 ) ) ? implode( '||', $options_1 ).'||' : '';
+
 		/* tmp */
 		$jtext						=	$config['doTranslation'];
 		$config['doTranslation']	=	0;
 		/* tmp */
 
-		// Prepare
 		self::_languageDetection( $lang_code, $value2, $options2 );
-		if ( $field->bool3 ) {
-			$divider	=	( $field->divider != '' ) ? $field->divider : ',';
-		}
 		$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code, true );
-		$field->options		=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
-		
+		$field->options		=	$options_1.$options_2;
+
 		// Set
 		$field->text		=	parent::g_getOptionText( $value, $field->options, $divider, $config );
 		$field->value		=	$value;
@@ -98,6 +132,18 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		/* tmp */
 	}
 	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->text;
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -136,13 +182,18 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		// Prepare
 		if ( parent::g_isStaticVariation( $field, $field->variation, true ) ) {
+			if ( is_array( $value ) ) {
+				$value		=	implode( $divider, $value );
+			}
 			$form			=	'';
 			$field->text	=	'';
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
 			$attr		=	array( 'option.attr'=>'data-cck' );
+			$attributes	=	array();
 			$auto		=	1;
 			$items		=	array();
+			$options	=	array();
 			$opts		=	array();
 			if ( $field->location ) {
 				$attribs	=	explode( '||', $field->location );
@@ -160,11 +211,16 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					foreach ( $attribs as $k=>$a ) {
 						$attr['attr']	.=	' '.$a.'=""';
 					}
-					$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
+					$attributes[]	=	$attr['attr'];
+					$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
 				} else {
-					$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
+					$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 				}
-				$auto++;
+				$options[]			=	$field->selectlabel.'=';
+
+				if ( $field->required ) {
+					$auto++;
+				}
 			}
 			$count2			=	JCck::getConfig_Param( 'development_attr', 6 );
 			$opt_attr		=	'';
@@ -172,10 +228,36 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$optgroups		=	false;
 
-			if ( $field->bool4 == 1 ) {
+			if ( $field->bool4 == 1 || $field->bool4 == 3 ) {
 				$results	=	self::_getStaticOption( $field, $field->options, $config, $optgroups );
-				foreach ( $results as $result ) {
-					$opts[]	=	$result;
+				$static		=	count( $results );
+
+				if ( $field->bool4 == 3 ) {
+					if ( $static > 0 ) {
+						$current	=	0;
+						$half		=	(int)( $static / 2 );
+						$half		=	( $static % 2 ) ? $half+1 : $half;
+						
+						for ( $current = 0; $current < $half; $current++ ) {
+							if ( !( $results[$current]->value == '<OPTGROUP>' || $results[$current]->value == '</OPTGROUP>' ) ) {
+								if ( $attrib ) {
+									$attributes[]	=	''; // TODO: all attr
+								}
+								$options[]	=	$results[$current]->text.'='.$results[$current]->value;
+							}
+							$opts[]		=	$results[$current];
+						}	
+					}
+				} else {
+					foreach ( $results as $result ) {
+						if ( !( $result->value == '<OPTGROUP>' || $result->value == '</OPTGROUP>' ) ) {
+							if ( $attrib ) {
+								$attributes[]	=	''; // TODO: all attr
+							}
+							$options[]	=	$result->text.'='.$result->value;
+						}
+						$opts[]		=	$result;
+					}
 				}
 			}
 			
@@ -261,12 +343,20 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
 								$ka				=	'attr'.( $k + 1 );
-								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
+								if ( isset( $o->{$ka} ) ) {
+									$va			=	$o->{$ka};
+								} else {
+									$ka			=	( isset( $options2['attr'.( $k + 1 )] ) ) ? $options2['attr'.( $k + 1 )] : '';
+									$va			=	( $ka != '' && isset( $o->{$ka} ) ) ? $o->{$ka} : '';
+								}
+								$attr['attr']	.=	' '.$a.'="'.$va.'"';
 							}
-							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
+							$attributes[]	=	$attr['attr'];
+							$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
 						} else {
-							$opts[]		=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );	
+							$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );	
 						}
+						$options[]			=	$o->text.'='.$o->value;
 					}
 					if ( $group ) {
 						$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
@@ -277,13 +367,23 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 							$attr['attr']	=	'';
 							foreach ( $attribs as $k=>$a ) {
 								$ka				=	'attr'.( $k + 1 );
-								$attr['attr']	.=	' '.$a.'="'.( isset( $o->{$ka} ) ? $o->{$ka} : '' ).'"';
+
+								if ( isset( $o->{$ka} ) ) {
+									$va			=	$o->{$ka};
+								} else {
+									$ka			=	( isset( $options2['attr'.( $k + 1 )] ) ) ? $options2['attr'.( $k + 1 )] : '';
+									$va			=	( $ka != '' && isset( $o->{$ka} ) ) ? $o->{$ka} : '';
+								}
+								$attr['attr']	.=	' '.$a.'="'.$va.'"';
 							}
-							$opts[]		=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );
+							$attributes[]	=	$attr['attr'];
+							$opts[]			=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );
+							$options[]		=	$o->$opt_name.'='.$o->$opt_value;
 						}
 					} else {
 						foreach ( $items as $o ) {
-							$opts[]		=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, 'value', 'text' );
+							$opts[]			=	JHtml::_( 'select.option', $o->$opt_value, $o->$opt_name, 'value', 'text' );
+							$options[]		=	$o->$opt_name.'='.$o->$opt_value;
 						}
 					}
 				}
@@ -292,25 +392,56 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			if ( $optgroups !== false ) {
 				$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
 			}
-			if ( $field->bool4 == 2 ) {
-				$results	=	self::_getStaticOption( $field, $field->options, $config );
-				foreach ( $results as $result ) {
-					$opts[]	=	$result;
+			if ( $field->bool4 == 2 || $field->bool4 == 3 ) {
+				if ( $field->bool4 == 3 ) {
+					if ( $static > 1 && isset( $current ) && isset( $half ) && isset( $static ) && isset( $results ) ) {
+						for ( ; $current < $static; $current++ ) {
+							if ( !( $results[$current]->value == '<OPTGROUP>' || $results[$current]->value == '</OPTGROUP>' ) ) {
+								if ( $attrib ) {
+									$attributes[]	=	''; // TODO: all attr
+								}
+								$options[]	=	$results[$current]->text.'='.$results[$current]->value;
+							}
+							$opts[]		=	$results[$current];
+						}
+					}
+				} else {
+					$results	=	self::_getStaticOption( $field, $field->options, $config );
+
+					foreach ( $results as $result ) {
+						if ( !( $result->value == '<OPTGROUP>' || $result->value == '</OPTGROUP>' ) ) {
+							if ( $attrib ) {
+								$attributes[]	=	''; // TODO: all attr
+							}
+							$options[]	=	$result->text.'='.$result->value;
+						}
+						$opts[]		=	$result;
+					}
 				}
 			}
 			
 			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+			
+			if ( ( is_string( $value ) && $value != '' ) || ( is_array( $value ) && count( $value ) && $value[0] != '' ) ) {
+				$class	.=	' has-value';
+			}
 			$multi	=	( @$field->bool3 ) ? ' multiple="multiple"' : '';
 			$size	=	( !@$field->bool3 ) ? '1' : ( ( @$field->rows ) ? $field->rows : count( $opts ) );
+			$size	=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
 			
-			$attr	=	'class="'.$class.'" size="'.$size.'"'.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
+			$attr	=	'class="'.$class.'"'.$size.$multi . ( $field->attributes ? ' '.$field->attributes : '' );
 			$count	=	count( $opts );
 			$form	=	'';
+
 			if ( $field->variation == 'hidden_auto' ) {
 				if ( $auto == $count && is_object( $opts[$auto - 1] ) ) {
 					$count				=	0;
 					$field->variation	=	'hidden';
-					$value				=	$opts[$auto - 1]->value;	
+					$value				=	$opts[$auto - 1]->value;
+
+					if ( !$field->live ) {
+						JCckDevHelper::secureField( $field, $value );
+					}
 				} else {
 					$field->variation	=	'';
 				}
@@ -337,12 +468,10 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					parent::g_addScriptDeclaration( $field->script );
 				}
 			} else {
-				$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code );
-				if ( $field->bool4 ) {
-					$field->text	=	parent::g_getOptionText( $value, ( ( $field->options ) ? $field->options.'||'.$options_2 : $options_2 ), $divider, $config );
-				} else {
-					$field->text	=	parent::g_getOptionText( $value, $options_2, $divider, $config );
-				}
+				$field->attributesList	=	( count( $attributes ) ) ? implode( '||', $attributes ) : '';
+				$field->optionsList		=	( count( $options ) ) ? implode( '||', $options ) : '';
+				$field->text			=	parent::g_getOptionText( $value, $field->optionsList, $divider, $config );
+
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
 			}
 
@@ -416,15 +545,29 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			}
 		}
 
+		$optgroups		=	false;
+		$options		=	self::_getStaticOption( $field, $field->options, $config, $optgroups );
+		$options_1		=	array();
+
+		if ( count( $options ) ) {
+			foreach ( $options as $o ) {
+				if ( !( $o->value == '<OPTGROUP>' || $o->value == '</OPTGROUP>' ) ) {
+					$options_1[]	=	$o->text.'='.$o->value;
+				}
+			}
+		}
+		$options_1		=	( count( $options_1 ) ) ? implode( '||', $options_1 ).'||' : '';
+
 		/* tmp */
 		$jtext						=	$config['doTranslation'];
 		$config['doTranslation']	=	0;
 		/* tmp */
 
+		$lang_code		=	'';
 		$options2		=	JCckDev::fromJSON( $field->options2 );
 		self::_languageDetection( $lang_code, $value2, $options2 );
 		$options_2		=	self::_getOptionsList( $options2, $field->bool2, $lang_code );
-		$field->options	=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
+		$field->options	=	$options_1.$options_2;
 		
 		// Validate
 		$text	=	parent::g_getOptionText( $value, $field->options, $divider, $config );
@@ -569,7 +712,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			// Language Detection
 			$opt_query	=	str_replace( '[lang]', $lang_code, $opt_query );
 			$opt_query	=	JCckDevHelper::replaceLive( $opt_query );
-			
 			$lists		=	( $static ) ? JCckDatabaseCache::loadObjectList( $opt_query ) : JCckDatabase::loadObjectList( $opt_query );
 			if ( count( $lists ) ) {
 				foreach ( $lists as $list ) {

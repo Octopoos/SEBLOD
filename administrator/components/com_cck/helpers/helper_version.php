@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -48,7 +48,7 @@ class Helper_Version
 		
 		// Core
 		if ( isset( $table->asset_id ) ) {
-			$table->rules		=	JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.$table->asset_id );
+			$table->rules		=	JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$table->asset_id );
 		}
 		$version_num			=	$table->version;
 		if ( $update !== false ) {
@@ -66,7 +66,7 @@ class Helper_Version
 		$version->e_core		=	JCckDev::toJSON( $table );
 		$version->e_version		=	$version_num;
 		$version->date_time		=	JFactory::getDate()->toSql();
-		$version->user_id		=	JFactory::getUser()->get( 'id' );
+		$version->user_id		=	JFactory::getUser()->id;
 		if ( $note ) {
 			$version->note		=	$note;
 		}
@@ -95,6 +95,16 @@ class Helper_Version
 		return true;
 	}
 
+	// removeVersion
+	public static function removeVersion( $type, $pk )
+	{
+		$offset	=	JCck::getConfig_Param( 'version_remove_offset', 20 );
+		$where	=	'e_type = "'.$type.'" AND e_id = '.(int)$pk.' AND featured != 1';
+		$query	=	'DELETE FROM #__cck_core_versions WHERE '.$where.' AND id <= (SELECT id FROM (SELECT id FROM #__cck_core_versions WHERE '.$where.' ORDER BY id DESC LIMIT 1 OFFSET '.$offset.') AS max_id )';
+
+		return JCckDatabase::execute( $query );
+	}
+
 	// revert
 	public static function revert( $type, $pk, $version = 0 )
 	{
@@ -111,7 +121,7 @@ class Helper_Version
 		$core	=	JCckDev::fromJSON( $table->e_core );
 		
 		if ( isset( $row->asset_id ) && $row->asset_id && isset( $core['rules'] ) ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.$row->asset_id );
+			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.(int)$row->asset_id );
 		}
 		
 		// More

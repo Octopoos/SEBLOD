@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2013 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,8 +15,9 @@ jimport( 'joomla.filesystem.file' );
 // JCckDevImage
 class JCckDevImage
 {
-	protected $_height 		=	0;
+	protected $_exif 		=	array();
 	protected $_extension 	=	'';
+	protected $_height 		=	0;
 	protected $_pathinfo 	=	NULL;
 	protected $_quality_jpg	=	90;
 	protected $_quality_png	=	3;
@@ -32,6 +33,12 @@ class JCckDevImage
 		
 		$this->_pathinfo 	=	pathinfo( $path );
 		$this->_extension	=	strtolower( $this->_pathinfo['extension'] );
+
+		if ( in_array( $this->_extension, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
+			if ( function_exists( 'exif_read_data' ) ) {
+				$this->_exif 	=	@exif_read_data( $path, 0, true );
+			}
+		}
 		
 		$this->_resource 	= 	$this->_createResource( $this->_extension, $path );
 		list( $this->_width, $this->_height )	=	getimagesize( $path );
@@ -66,19 +73,16 @@ class JCckDevImage
 		
 		$path 			=	$this->_pathinfo['dirname'];
 		$resImage 		= 	$this->_resource;
-
-		// Calcul Thumb Size
-		$values = $this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
-		list( $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight ) = $values;
+		$info			=	$this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
 
 		// Add transparence for PNG
-		$thumbImage	=	imageCreateTrueColor( $thumbWidth, $thumbHeight );
+		$thumbImage	=	imageCreateTrueColor( $info['thumbWidth'], $info['thumbHeight'] );
 		if ( $this->_extension == 'png' ) {
 			imagealphablending( $thumbImage, false );
 		}
 
 		// Generate thumb ressource
-		imagecopyresampled( $thumbImage, $resImage, $thumbX, $thumbY, $newX, $newY, $thumbWidth, $thumbHeight, $newWidth, $newHeight );
+		imagecopyresampled( $thumbImage, $resImage, $info['thumbX'], $info['thumbY'], $info['newX'], $info['newY'], $info['thumbWidth'], $info['thumbHeight'], $info['newWidth'], $info['newHeight'] );
 
 		// Set Folder
 		// $file_path ='';
@@ -95,6 +99,32 @@ class JCckDevImage
 		return true;
 	}
 
+	// rotate
+	public function rotate( $degrees = 0 )
+	{
+		if ( !$degrees && isset( $this->_exif['IFD0']['Orientation'] ) ) {
+			switch ( $this->_exif['IFD0']['Orientation'] ) {
+				case 8:
+					$degrees	=	90;
+					break;
+				case 3:
+					$degrees	=	180;
+					break;
+				case 6:
+					$degrees	=	-90;
+					break;
+				default:
+					$degrees	=	0;
+					break;
+			}
+		}
+
+		if ( $degrees ) {
+			$rotate	=	imagerotate( $this->_resource, $degrees, 0 );
+			$this->_generateThumb( $this->_extension, $rotate, $this->_pathinfo['dirname'].'/'.$this->_pathinfo['basename'] );
+		}
+	}
+	
 	// _createResource
 	protected function _createResource( $ext, $path )
 	{
@@ -266,16 +296,15 @@ class JCckDevImage
 				break;
 		}
 
-		$values 	= 	array();
-		$values[] 	=	$thumbX;
-		$values[] 	=	$thumbY;
-		$values[] 	=	$newX;
-		$values[] 	=	$newY;
-		$values[] 	=	$thumbWidth;
-		$values[] 	=	$thumbHeight;
-		$values[] 	=	$src_w;
-		$values[] 	=	$src_h;
-
-		return $values;
+		return 	array(
+					'thumbX'=>$thumbX,
+					'thumbY'=>$thumbY,
+					'newX'=>$newX,
+					'newY'=>$newY,
+					'thumbWidth'=>$thumbWidth,
+					'thumbHeight'=>$thumbHeight,
+					'newWidth'=>$src_w,
+					'newHeight'=>$src_h,
+				);
 	}
 }
