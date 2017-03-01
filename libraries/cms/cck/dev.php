@@ -554,7 +554,7 @@ abstract class JCckDev
 		}
 		$label				=	'';
 		if ( $field->label ) {
-			$label			=	'<label>'.$field->label.$tag.'</label>';
+			$label			=	'<label title="'.$field->description.'">'.$field->label.$tag.'</label>';
 		}
 		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
 		
