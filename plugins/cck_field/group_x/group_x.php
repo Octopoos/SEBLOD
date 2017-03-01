@@ -433,7 +433,34 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			self::_addScript( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
 												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty ) );
 		}
-				
+		
+		//Patch for modal  - reinitiate modal, rebind the Add script //By Vic
+		//if($field->form[0]->type=="jform_media"){ //is form a media ?
+		if (strpos($html, 'a class="modal') !== false) {  // this is a "bit brutal" to detect form but acceptable for fieldx and groupx in one shot
+			$js="
+			function reinitModal() {
+			    SqueezeBox.initialize({});
+			    SqueezeBox.assign(jQuery('a.modal').get(), {
+					parse: 'rel'
+				});
+				bindReinit();
+			}
+			function bindReinit(){
+				jQuery('span.icon-plus').click(function(){
+					
+					setTimeout(function () {
+					  reinitModal()
+					}, 100);
+				});
+			}
+			jQuery(document).ready(function($) {
+				bindReinit();
+			});
+			";
+			$doc	=	JFactory::getDocument();
+			$doc->addScriptDeclaration( $js );
+		};
+		//End Patch
 		return $html;
 	}
 	
