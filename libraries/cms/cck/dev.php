@@ -57,17 +57,28 @@ abstract class JCckDev
 	}
 
 	// forceStorage
-	public static function forceStorage( $value = 'none' )
+	public static function forceStorage( $value = 'none', $allowed = '' )
 	{
 		$doc	=	JFactory::getDocument();
+		$js		=	'';
 		
 		if ( $value == 'none' ) {
-			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" ); });';
+			if ( $allowed == '' ) {
+				$allowed = false;
+			}
 		} else {
-			$js		=	'jQuery(document).ready(function($){ if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); } });';
+			if ( $allowed == '' ) {
+				$allowed = true;
+			}
+		}
+
+		if ( !$allowed ) {
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+		} else {
+			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
 		
-		echo '<script type="text/javascript">'.$js.'</script>';
+		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
 	public static function getMergedScript( $url )
