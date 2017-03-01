@@ -278,7 +278,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				bindReinit();
 			}
 			function bindReinit(){
-				jQuery('.button-add-list_media').click(function(){
+				jQuery('span.icon-plus').click(function(){
 					
 					setTimeout(function () {
 					  reinitModal()
