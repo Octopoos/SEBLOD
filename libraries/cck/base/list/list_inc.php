@@ -103,12 +103,21 @@ if ( ! $count ) {
 }
 
 // Init
+$hasAjax	=	false;
 $limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
-$hasAjax	=	false;
+$isAltered	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 
+if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
+	if ( $app->input->get( 'end', '' ) != '' ) {
+		$limitend	=	(int)$app->input->getInt( 'end', '' );
+	}
+}
 if ( $limitstart != -1 ) {
+	if ( $limitstart > 0 && !(int)$app->input->getInt( 'start' ) ) {
+		$isAltered	=	true;
+	}
 	if ( isset( $this ) ) {
 		if ( $limitend != -1 ) {
 			$this->state->set( 'limit', (int)$limitend );
@@ -145,12 +154,14 @@ $ordering		=	( @$preconfig['ordering'] != '' ) ? $preconfig['ordering'] : $optio
 $active			=	array();
 $active[0]		=	'cck';
 $areas['active']=	$active;
+
 if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
 	$post		=	( $method ) ? JRequest::get( 'post' ) : JRequest::get( 'get' );
 }
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
 						   'core'=>true,
+						   'doPagination'=>true,
 						   'doQuery'=>true,
 						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
 						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
@@ -236,6 +247,7 @@ if ( $context != '' ) {
 		}
 	}
 }
+
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
@@ -248,6 +260,16 @@ if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
 	$options->set( 'limit', $preconfig['limit'] );
 }
 
+// isPersistent
+$context		=	'com_cck.'.$search->name;
+$isPersistent	=	(int)$options->get( 'persistent_query', '0' );
+
+if ( isset( $this ) && ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) ) {
+	$isPersistent	=	true;
+} else {
+	$isPersistent	=	false;
+}
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search
 
 // Validation
@@ -258,6 +280,8 @@ if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
 $preconfig['client']	=	'list';
 $error					=	'';
 $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$params->get( 'order_by', '' ) );
+$session				=	JFactory::getSession();
+$registry				=	$session->get( 'registry' );
 $stages					=	array();
 
 // Process
@@ -285,6 +309,11 @@ foreach ( $fields['search'] as $field ) {
 	// Value
 	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
 		$value	=	$post[$name];
+		
+		// Set Persistent Values
+		if ( $isPersistent ) {
+			$app->setUserState( $context.'.filter.'.$name, $value );
+		}
 	} else {
 		if ( isset( $lives[$name] ) ) {
 			$value		=	$lives[$name];
@@ -293,6 +322,13 @@ foreach ( $fields['search'] as $field ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 			} else {
 				$value	=	$field->live_value;
+			}
+		}
+
+		// Get Persistent Values
+		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
+			if ( $registry->exists( $context.'.filter.'.$name ) ) {
+				$value	=	$app->getUserState( $context.'.filter.'.$name, '' );
 			}
 		}
 	}
@@ -370,8 +406,12 @@ if ( $preconfig['task'] == 'search' ) {
 
 	// Total
 	if ( isset( $config['total'] ) && $config['total'] > 0 ) {
+		if ( $isAltered ) {
+			$config['total']	=	( $config['total'] > $limitstart ) ? $config['total'] - $limitstart : 0;
+		}
+
 		$limitstart			=	-1;
-		$limitend			=	0;
+		$limitend			=	0;	
 		$total				=	$config['total'];
 	} else {
 		$config['total']	=	$total;
@@ -379,8 +419,10 @@ if ( $preconfig['task'] == 'search' ) {
 	$total_items			=	$total;
 
 	// Pagination
-	if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
-		$items	=	array_splice( $items, $limitstart, $limitend );
+	if ( $config['doPagination'] ) {
+		if ( $limitstart != -1 && $limitend > 0 && !( $preconfig['limit2'] > 0 ) ) {
+			$items	=	array_splice( $items, $limitstart, $limitend );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List

@@ -244,6 +244,10 @@ class plgContentCCK extends JPlugin
 						.	' WHERE a.id = "'.(string)$matches[1].'"'
 						;
 		$cck			=	JCckDatabase::loadObject( $query );
+
+		if ( !is_object( $cck ) ) {
+			return;
+		}
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
 		
@@ -464,7 +468,6 @@ class plgContentCCK extends JPlugin
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 				if ( $fieldName ) {
 					$Pt	=	$field->storage_table;
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -515,6 +518,8 @@ class plgContentCCK extends JPlugin
 		
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
 			foreach ( $config['process']['beforeRenderContent'] as $process ) {
 				if ( $process->type ) {
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );

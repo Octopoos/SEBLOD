@@ -14,9 +14,12 @@ defined( '_JEXEC' ) or die;
 class CCK_Form
 {
 	// applyTypeOptions
-	public static function applyTypeOptions( &$config )
+	public static function applyTypeOptions( &$config, $client = '' )
 	{
-		$options	=	JCckDatabase::loadResult( 'SELECT options_'.$config['client'].' FROM #__cck_core_types WHERE name ="'.(string)$config['type'].'"' );
+		if ( $client == '' ) {
+			$client	=	$config['client'];
+		}
+		$options	=	JCckDatabase::loadResult( 'SELECT options_'.$client.' FROM #__cck_core_types WHERE name ="'.(string)$config['type'].'"' );
 		$options	=	JCckDev::fromJSON( $options );
 		if ( isset( $options['message'] ) && $options['message'] != '' ) {
 			$config['message']	=	$options['message'];
@@ -149,7 +152,7 @@ class CCK_Form
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url ) : $url;
+			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}

@@ -242,6 +242,7 @@ class plgSystemCCK extends JPlugin
 					}
 				}
 			}
+			$nogroups	=	str_replace( ',,',',', $nogroups );
 			
 			// Viewlevels
 			$authlevels	=	$user->getAuthorisedViewLevels();
@@ -482,6 +483,10 @@ class plgSystemCCK extends JPlugin
 							}
 							$itemId2	=	$options->get( 'profile_itemid', 0 );
 							$return		=	$app->input->getBase64( 'return', '' );
+
+							if ( $return == '' ) {
+								$return	=	base64_encode( $app->input->server->getString( 'HTTP_REFERER', '' ) );
+							}
 							$return		=	$return ? '&return='.$return : '';
 
 							if ( $itemId2 ) {

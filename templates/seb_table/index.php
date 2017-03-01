@@ -21,17 +21,24 @@ $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
 $table_width	=	0;
 $isFixed		=	( $table_layout == 'fixed' ) ? 1 : ( ( $table_layout == 'calculated' ) ? 2 : 0 );
+$isResponsive	=	( $table_layout == 'responsive' ) ? 1 : 0;
 $class_body		=	'';
 $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' ) );
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
+$class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
 $class_row0		=	trim( $cck->getStyleParam( 'class_table_tr_even', 'cat-list-row%i' ) );
 $class_row0		=	$class_row0 ? ' class="'.str_replace( '%i', '0', $class_row0 ).'"' : '';
 $class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i' ) );
 $class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
+$translate		=	JCck::getConfig_Param( 'language_jtext', 0 );
 
-$doc	=	JFactory::getDocument();
+$doc			=	JFactory::getDocument();
 $doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
+
+if ( $translate ) {
+	$lang	=	JFactory::getLanguage();
+}
 
 // Set
 $isMore			=	$cck->isLoadingMore();
@@ -66,17 +73,44 @@ if ( !$isMore ) {
 	foreach ( $positions as $name=>$position ) {
 		$class					=	$position->css;
 		$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
-		
+		$attr['label'][$name]	=	'';
+
 		$head[$name]			=	array( 'count'=>$count, 'fields'=>0, 'html'=>'', 'items'=>array() );
-		$legend					=	( $position->legend ) ? $position->legend : ( ( $position->legend2 ) ? $position->legend2 : '' );
+		$legend					=	'';
 		$width					=	$cck->w( $name );
-		
+
+		if ( $position->legend ) {
+			$legend						=	trim( $position->legend );
+			$legend2					=	$legend;
+
+			if ( $legend != '' && !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
+				if ( $translate ) {
+					$key				=	'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) );
+					
+					if ( $lang->hasKey( $key ) ) {
+						$legend			=	JText::_( $key );
+					}
+				}
+				if ( $isResponsive ) {
+					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+				}
+			}
+		} else {
+			if ( $position->legend2 ) {
+				$legend					=	trim( $position->legend2 );
+				$legend2				=	$legend;
+				if ( $isResponsive ) {
+					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+				}
+			}
+		}
+
 		if ( $legend || $width ) {
 			if ( $legend ) {
 				$thead	=	true;
 			}
 			if ( $position->variation != '' ) {
-				$var		=	$cck->renderVariation( $position->variation, $legend, '', $position->variation_options, $name );
+				$var		=	$cck->renderVariation( $position->variation, $legend2, '', $position->variation_options, $name );
 				$matches	=	array();
 				preg_match( '#<th class="([a-zA-Z0-9\-\ _]*)"(.*)>#U', $var, $matches );
 				if ( isset( $matches[1] ) && $matches[1] != '' ) {
@@ -131,7 +165,7 @@ if ( !$isMore ) {
 						$head[$name]['count']--;
 					}
 				}
-				$body[$i]['cols'][$name]	=	'<td'.$attr['class'][$name].$width.'>'.$col.'</td>';
+				$body[$i]['cols'][$name]	=	'<td'.$attr['class'][$name].$attr['label'][$name].$width.'>'.$col.'</td>';
 			}
 			$body[$i]['html2']	=	'</tr>';
 			$i++;

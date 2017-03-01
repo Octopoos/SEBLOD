@@ -442,6 +442,10 @@ class plgSearchCCK extends JPlugin
 		unset( $fields );
 		unset( $fields_order );
 		unset( $tables );
+
+		if ( isset( $config['total'] ) ) {
+			$config['doPagination']	=	false;
+		}
 		
 		return $results;
 	}
@@ -514,7 +518,7 @@ class plgSearchCCK extends JPlugin
 				if ( $current['order_by'] ) {
 					$query->order( $current['order_by'] );
 				}
-			} else {
+			} elseif ( $ordering != 'none' ) {
 				if ( @$config['location'] ) {
 					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
 					if ( $ordering ) {
@@ -593,6 +597,12 @@ class plgSearchCCK extends JPlugin
 						$query->order( $ordering );
 					}
 				}
+			}
+		}
+		if ( isset( $config['query_parts']['order_by'] ) ) {
+			if ( ( is_string( $config['query_parts']['order_by'] ) && $config['query_parts']['order_by'] != '' )
+				|| count( $config['query_parts']['order_by'] ) ) {
+				$query->order( $config['query_parts']['order_by'] );
 			}
 		}
 	}

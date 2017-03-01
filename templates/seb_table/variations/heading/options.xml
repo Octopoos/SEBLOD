@@ -11,8 +11,9 @@
 			<option value="">COM_CCK_SELECT_SL</option>
 		</field>
 		<field name="order_by" type="list" default="asc" label="VAR_SEB_TABLE_HEADING_ORDER_BY" description="VAR_SEB_TABLE_HEADING_ORDER_BY_DESC" class="inputbox">
-			<option value="">COM_CCK_INHERITED</option>
-			<option value="1">COM_CCK_CUSTOM</option>
+			<option value="">VAR_SEB_TABLE_HEADING_ORDER_BY_AUTO</option>
+			<option value="2">VAR_SEB_TABLE_HEADING_ORDER_BY_AUTO_WITH_RESTRICTION</option>
+			<option value="1">VAR_SEB_TABLE_HEADING_ORDER_BY_CUSTOM</option>
 		</field>
 		<field name="order_by_fieldname" type="text" label="VAR_SEB_TABLE_HEADING_ORDER_BY_FIELDNAME" description="VAR_SEB_TABLE_HEADING_ORDER_BY_FIELDNAME_DESC" class="inputbox" />
 		<field name="order_dir" type="list" default="asc" label="VAR_SEB_TABLE_HEADING_ORDER_DIR" description="VAR_SEB_TABLE_HEADING_ORDER_DIR_DESC" class="inputbox">

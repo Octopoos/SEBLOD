@@ -17,7 +17,7 @@ $isImage	=	( JFile::getExt( $this->file ) == 'png' || JFile::getExt( $this->file
 $doc		=	JFactory::getDocument();
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php' ) ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo JRoute::_( 'index.php' ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div id="titlebox" style="float:left; color:#eb8207; font-size:0.90em; font-weight:bold; text-transform:uppercase;"></div>
 <div id="toolbarBox" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">

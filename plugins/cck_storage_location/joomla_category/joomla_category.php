@@ -253,6 +253,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
+		if ( $table->extension == '' ) {
+			$table->extension	=	'com_content';
+		}
+		JFactory::getApplication()->input->set( 'extension', $table->extension );
 		
 		// Process
 		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );
@@ -634,7 +638,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
 		}
 		
-		return JRoute::_( $route );
+		return JRoute::_( $route, false );
 	}
 	
 	// getRouteByStorage
@@ -643,7 +647,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$idx	=	md5( $sef.'|'.$itemId.'|'.$lang_tag );
 
 		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
-			return JRoute::_( $storage[self::$table]->_route[$idx] );
+			return JRoute::_( $storage[self::$table]->_route[$idx], false );
 		}
 		
 		if ( $sef ) {
@@ -676,7 +680,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$storage[self::$table]->_route[$idx]	=	ContentHelperRoute::getCategoryRoute( $storage[self::$table]->id );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route[$idx] );
+		return JRoute::_( $storage[self::$table]->_route[$idx], false );
 	}
 
 	// parseRoute

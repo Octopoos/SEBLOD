@@ -13,10 +13,6 @@ defined( '_JEXEC' ) or die;
 $app	=	JFactory::getApplication();
 $uix	=	JCck::getUIX();
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
-
-if ( $app->input->get( 'debug', 0 ) == 1 ) {
-	include_once JPATH_COMPONENT.'/helpers/scripts/_debug.php';
-}
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option ); ?>" method="post" id="adminForm" name="adminForm">

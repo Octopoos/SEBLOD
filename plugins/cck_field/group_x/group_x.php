@@ -201,7 +201,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						}
 						$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi, $field ) );
 					}
-					$inherit					=	array( 'id' => $name.'_'.$xi.'_'.$f_name, 'name' => $name.'['.$xi.']['.$f_name.']' );
+					$inherit					=	array( 'id' => $name.'_'.$xi.'_'.$f_name, 'name' => $name.'['.$xi.']['.$f_name.']', 'xk'=>$xi );
 					$clone						=	clone $f;
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
 					$form[$xi][$f_name]			=	$results[0];
@@ -212,7 +212,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		if ( $field->bool2 ) {
 			foreach ( $fields as $f ) {		// Empty
 				$f_name						=	$f->name;
-				$inherit					=	array( 'id' => $name.'_'.'0'.'_'.$f_name, 'name' => $name.'['.'0'.']['.$f_name.']', 'empty' => true );
+				$inherit					=	array( 'id' => $name.'_'.'0'.'_'.$f_name, 'name' => $name.'['.'0'.']['.$f_name.']', 'xk' => '0', 'empty' => true );
 				$clone						=	clone $f;
 				$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, '', &$config, $inherit, true ) );
 				$form[$xi][$f_name]			=	$results[0];

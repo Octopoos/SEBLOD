@@ -182,6 +182,8 @@ for ( $i = 0; $i < $count; $i++ ) {
 		
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+			
 			foreach ( $config['process']['beforeRenderContent'] as $process ) {
 				if ( $process->type ) {
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
@@ -305,6 +307,8 @@ for ( $i = 0; $i < $count; $i++ ) {
 		
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
 			foreach ( $config['process']['beforeRenderContent'] as $process ) {
 				if ( $process->type ) {
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );

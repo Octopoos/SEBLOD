@@ -43,6 +43,10 @@ class JCckContent
 	public static function getInstance( $identifier = '', $data = true )
 	{
 		if ( !$identifier ) {
+			if ( ( $classname = get_called_class() ) != 'JCckContent' ) {
+				return new $classname;
+			}
+
 			return new JCckContent;
 		}
 		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
@@ -56,9 +60,13 @@ class JCckContent
 					$object	=	$identifier[0];
 				}
 			} else {
-				$object	=	'';
+				$object	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+
+				if ( !$object ) {
+					$object	=	'';
+				}
 			}
-			if ( $object && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$identifier[0].'/classes/content.php' ) ) {
+			if ( $object && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php' ) ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php';
 				
 				$classname	=	'JCckContent'.$object;
@@ -244,6 +252,12 @@ class JCckContent
 		return $this->_table;
 	}
 
+	// getType
+	public function getType()
+	{
+		return $this->_type;
+	}
+
 	// load
 	public function load( $identifier, $data = true )
 	{
@@ -416,7 +430,7 @@ class JCckContent
 	}
 	
 	// preSave
-	public function preSave( $instance_name, $data )
+	public function preSave( $instance_name, &$data )
 	{
 	}
 	

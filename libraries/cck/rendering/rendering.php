@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.0.0.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.10.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';
@@ -352,6 +352,16 @@ class CCK_Rendering
 					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
 					$sepD		=	',';
 					$sepT		=	'.';
+				} elseif ( $format == '1234567.89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|.\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9.\-]/g, "")';
+					$sepD		=	',';
+					$sepT		=	'';
+				} elseif ( $format == '1234567,89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|,\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
+					$sepD		=	',';
+					$sepT		=	'';
 				}
 				$formatNumber	=	JCck::getConfig_Param( 'computation_format_out', 0 ) ? 'formatNumber:1, ' : '';
 				$doc->addScriptDeclaration( 'jQuery.Calculation.setDefaults({ '.$formatNumber.'sepDecimals:"'.$sepD.'", sepThousands:"'.$sepT.'", reNumbers:'.$search.', cleanseNumber:function (v){ return '.$replace.'; } });' );
@@ -915,7 +925,9 @@ class CCK_Rendering
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				if ( !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
+					$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				}
 			}
 			if ( is_object( $options ) ) {
 				if ( strpos( $position, '_line' ) !== false ) {

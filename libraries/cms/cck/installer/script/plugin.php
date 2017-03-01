@@ -110,7 +110,7 @@ class JCckInstallerScriptPlugin
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
 			$pk		=	$db->loadResult();

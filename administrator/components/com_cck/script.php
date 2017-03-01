@@ -293,7 +293,7 @@ class com_cckInstallerScript
 		}
 		$db		=	JFactory::getDbo();
 		$title	=	'com_cck';
-		$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "'.$title.'"';
+		$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$title.'"';
 
 		$db->setQuery( $query );
 		$pk		=	$db->loadResult();

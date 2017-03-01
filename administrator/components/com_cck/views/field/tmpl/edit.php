@@ -134,7 +134,7 @@ Helper_Display::quickCopyright();
 <script type="text/javascript">
 (function ($){
 	JCck.Dev = {
-		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ) ?>",
+		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
 		name:"field",
 		transliteration:<?php echo $transliterate; ?>,
 		ajaxLayer: function(view, layout, elem, mydata) {
