@@ -95,7 +95,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$field->defaultvalue   = $defaultValueDate->toSql();
 		}
 
-		$value		=	( !empty(trim( $value )) ) ? trim( $value ) : trim( $field->defaultvalue );
+		$value = trim($value);
+		$value		=	!empty($value) ? $value  : trim( $field->defaultvalue );
 
 
 		if ( empty($value) || $value == '0000-00-00 00:00:00' )
