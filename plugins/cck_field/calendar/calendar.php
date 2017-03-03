@@ -206,23 +206,27 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 
-		$this->setLocale();
-
-		$date = null;
-		$options2	=	JCckDev::fromJSON( $field->options2 );
-
 		$name	=	$field->name;
 		$valueHidden	=	@$config['post'][$name.'_hidden'];
 		$datasource 	=	@$config['post'][$name.'_datasource'];
 
+		if ($datasource == "computed")
+		{
+			$value = $valueHidden;
+		}
+
+		$date = null;
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+
 		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) )
 		{
 			// Return an SQL formatted datetime string in UTC.
+			$locale = $this->setLocale();
 
 			// If data was created by script we have in fixed format, else we need to parse string
 			if ($datasource == "computed")
 			{
-				$date = JDate::createFromFormat('Y-m-d H:i:s', $valueHidden, $this->userTimeZone);
+				$date = JDate::createFromFormat('Y-m-d H:i:s', $value, $this->userTimeZone);
 			}
 			else
 			{
@@ -294,6 +298,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value	=	trim( $value[$xk] );
 		}
 
+		if ($datasource == "computed")
+		{
+			$value = $valueHidden;
+		}
+
 		$date = null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
@@ -305,7 +314,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			// If data was created by script we have in fixed format, else we need to parse string
 			if ($datasource == "computed")
 			{
-				$date = JDate::createFromFormat('Y-m-d H:i:s', $valueHidden, $this->userTimeZone);
+				$date = JDate::createFromFormat('Y-m-d H:i:s', $value, $this->userTimeZone);
 			}
 			else
 			{
