@@ -504,9 +504,9 @@ body.contentpane.component div.seblod label.toggle_attr{color:#3b99fc;font-size:
 body.contentpane.component div.seblod.conditional label.toggle_attr{clear:right;}
 
 body.com_cck div.seblod input.inputbox.mini2,
-body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 18px 5px 0;}
+body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 15px 8px 0;}
 body.com_cck div.seblod input.inputbox.mini2.middle,
-body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 19px 5px 2px;}
+body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 19px 8px 2px;}
 
 ul.spe.spe_latest li{width:70px; margin-top: 15px;}
 ul.spe.spe_description .btn{width:76px;}
