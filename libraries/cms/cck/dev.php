@@ -191,6 +191,7 @@ abstract class JCckDev
 		$js		=	'';
 		$js2	=	'';
 		$js3	=	'';
+
 		if ( $type == 'field' ) {
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
@@ -242,13 +243,14 @@ abstract class JCckDev
 						$keys	=	array();
 						$js3	=	'var disp = ($("#toggle_attr").prop("checked") !== false) ? \'style="display: block"\' : "";';
 						$n		=	0;
+						$nb		=	count( $options['customAttr'] );
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
-							$attribs	.=	'<div class="attr">'
+							$attribs	.=	'<div class="clr"></div><div class="attr">'
 										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-										.	' class="inputbox mini" size="10" />'
+										.	' class="inputbox mini" size="10" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$customAttr ) ).'" />'
 										.	'</div>';
 							$keys[]		=	$customAttr;
-							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+(++cur)+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
+							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
 						}
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
@@ -299,7 +301,7 @@ abstract class JCckDev
 											if (values[k]) {for(i=0; i<len; i++) {if (values[k][keys[i]] !== undefined) {val[i] = values[k][keys[i]];}}}
 										} else {
 											if (values[k]) {
-												for(i=0;i<len2;i++){if (values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
+												for(i=0;i<len2;i++){if (values[k].attr !== undefined && values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
 											}
 										}
 										$(this).parent().append(\''.$attribs.'\');
@@ -332,8 +334,11 @@ abstract class JCckDev
 										var attr = "input:text[name=\'json\[options2\]\[options\]\[0\]\[direction\]\']";
 										if ($(attr).length) { $(attr).remove(); }
 									} isNew = 0;
-								});
 								';
+					if ( !$elem->options ) {
+						$js2	.=	'if ($("#sortable_core_options").children().length == 2 && $("#collection-group-wrap-core_options__0").length) { $("#collection-group-wrap-core_options__0").parent().remove(); }';
+					}
+					$js2	.=	'});';
 					if ( !$elem->options ) {
 						// $js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
 					}
