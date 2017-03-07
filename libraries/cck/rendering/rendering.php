@@ -171,7 +171,7 @@ class CCK_Rendering
 		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->positions	=	$me->positions;
 		$this->positions2	=	array();
 		$this->positions_m	=	$me->positions_more;

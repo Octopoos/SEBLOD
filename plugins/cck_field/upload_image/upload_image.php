@@ -709,7 +709,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		include dirname(__FILE__).'/includes/afterstore.php';
+		include __DIR__.'/includes/afterstore.php';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script

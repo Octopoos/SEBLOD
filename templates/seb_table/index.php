@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // -- Initialize
-require_once dirname(__FILE__).'/config.php';
+require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
