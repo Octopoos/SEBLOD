@@ -136,7 +136,7 @@ abstract class JCckToolbox
 						if ( $replace != '' ) {
 							$body	=	str_replace( $replace, $html, $body );
 						} else {
-							$cck_js	=	'<script src="/media/cck/js/cck.core-3';
+							$cck_js	=	'<script src="'.JUri::base( true ).'/media/cck/js/cck.core-3';
 
 							if ( strpos( $body, $cck_js ) !== false ) {
 								$search		=	$cck_js;
