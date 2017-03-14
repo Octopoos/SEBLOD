@@ -117,7 +117,7 @@ abstract class JCckEcommerceCart
 			$items	=	modCCKeCommerceCartHelper::getItems( $user, $definition );
 
 			if ( is_array( $items ) ) {
-				$cache[$definition]	=	count( $items );
+				$cache[$definition]	=	(int)count( $items, COUNT_RECURSIVE ) - (int)count( $items );
 			} else {
 				$cache[$definition]	=	0;
 			}

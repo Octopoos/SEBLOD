@@ -57,29 +57,45 @@ abstract class JCckEcommercePromotion
 				}
 				if ( $p->target_attributes != '' ) {
 					$attribute	=	false;
-					
-					if ( isset( $items[$params['target_id']] ) ) {
-						$attributes	=	json_decode( $p->target_attributes );
 
-						if ( is_object( $attributes ) ) {						
-							$target	=	$attributes->trigger;
+					if ( isset( $params['target_id'] ) && $params['target_id'] ) {
+						if ( isset( $items[$params['target_id']] ) ) {
+							$attributes	=	json_decode( $p->target_attributes );
 
-							if ( $target && isset( $items[$params['target_id']]->$target ) ) {
-								if ( $attributes->match == 'isFilled' ) {
-									if ( $items[$params['target_id']]->$target != '' ) {
-										$attribute	=	true;
+							if ( is_object( $attributes ) ) {			
+								$target	=	$attributes->trigger;
+
+								if ( $target ) {
+									if ( !is_array( $items[$params['target_id']] ) ) {
+										$item_list  =   array( '_'=>$items[$params['target_id']] );
+									} else {
+										$item_list	=	$items[$params['target_id']];
 									}
-								} elseif ( $attributes->match == 'isEmpty' ) {
-									if ( $items[$params['target_id']]->$target == '' ) {
-										$attribute	=	true;
-									}
-								} elseif ( $attributes->match == 'isEqual' ) {
-									if ( $items[$params['target_id']]->$target == $attributes->values ) {
-										$attribute	=	true;
+									if ( count( $item_list ) ) {
+										foreach ( $item_list as $item ) {
+											if ( isset( $item->$target ) ) {
+												if ( $attributes->match == 'isFilled' ) {
+													if ( $item->$target != '' ) {
+														$attribute	=	true;
+														break;
+													}
+												} elseif ( $attributes->match == 'isEmpty' ) {
+													if ( $item->$target == '' ) {
+														$attribute	=	true;
+														break;
+													}
+												} elseif ( $attributes->match == 'isEqual' ) {
+													if ( $item->$target == $attributes->values ) {
+														$attribute	=	true;
+														break;
+													}
+												}
+											}
+										}
 									}
 								}
 							}
-						}				
+						}
 					}
 					if ( !$attribute ) {
 						continue;

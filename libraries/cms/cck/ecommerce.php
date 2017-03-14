@@ -255,32 +255,39 @@ abstract class JCckEcommerce
 		$params['target']	=	'product';
 		
 		if ( count( $items ) ) {
-			foreach ( $items as $item ) {
-				$options				=	$params;
-				$options['target_id']	=	$item->product_id;
-				$price					=	$item->price;
+			foreach ( $items as $item_list ) {
+				if ( !is_array( $item_list ) ) {
+					$item_list	=	array( '_'=>$item_list );
+				}
+				if ( count( $item_list ) ) {
+					foreach ( $item_list as $item ) {  
+						$options				=	$params;
+						$options['target_id']	=	$item->product_id;
+						$price					=	$item->price;
 
-				// Taxes
-				if ( $apply_taxes ) {
-					JCckEcommerceTax::apply( '', $price, $items, $options );
-				}
-				
-				// Formula
-				if ( !empty( $cart_definition->formula ) ) {
-					$item->price	=	$price;
-					$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
-				}
-				
-				// Promotions
-				if ( $apply_promotions ) {
-					JCckEcommercePromotion::apply( '', $price, $items, $options );
+						// Taxes
+						if ( $apply_taxes ) {
+							JCckEcommerceTax::apply( '', $price, $items, $options );
+						}
+						
+						// Formula
+						if ( !empty( $cart_definition->formula ) ) {
+							$item->price	=	$price;
+							$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
+						}
+						
+						// Promotions
+						if ( $apply_promotions ) {
+							JCckEcommercePromotion::apply( '', $price, $items, $options );
 
-					$options['target']	=	'product2';
-					JCckEcommercePromotion::apply( '', $price, $items, $options );
+							$options['target']	=	'product2';
+							JCckEcommercePromotion::apply( '', $price, $items, $options );
+						}
+						
+						// Quantity /* Alter Price */
+						$total	+=	$price * $item->quantity;
+					}
 				}
-				
-				// Quantity /* Alter Price */
-				$total	+=	$price * $item->quantity;
 			}
 		}
 		
