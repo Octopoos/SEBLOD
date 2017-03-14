@@ -131,16 +131,23 @@ class CCK_Form
 	}
 	
 	// redirect
-	public static function redirect( $action, $url, $message = '', $type = 'error', &$config )
+	public static function redirect( $action, $url, $message, $type, &$config, $debug = 0 )
 	{
 		$app				=	JFactory::getApplication();
 		$config['error']	=	true;		
 		
 		if ( ! $message ) {
-			$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+			if ( $debug ) {
+				$message	=	JText::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
+			} else {
+				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+			}
 		} else {
 			if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
 				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
+			}
+			if ( $debug ) {
+				$message	.=	' '.$config['type'].'@'.$config['formId'];
 			}
 		}
 		if ( $type ) {
