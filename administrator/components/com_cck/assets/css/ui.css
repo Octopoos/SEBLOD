@@ -357,7 +357,7 @@ ul.adminformlist li div.button2-left {
 #ajaxToolbar,
 #toolbarBox{padding-bottom: 10px;}
 #ajaxToolbar > a.btn-success,
-#toolbarBox > a.btn-success{min-width:100px;}
+#toolbarBox > a.btn-success{min-width:100px; line-height:23px;}
 #ajaxToolbar > a,
 #toolbarBox > a{float: right; margin-right: 10px; padding-top:0px; padding-bottom:0px; line-height:22px;}
 #ajaxToolbar a:not(.btn-success) [class^="icon-"],
