@@ -21,6 +21,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $bridge_object	=	'';
 	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
@@ -416,41 +417,6 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	public static function getId( $config )
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND storage_table="'.(string)$config['base']->table.'" AND pk='.(int)$config['pk'] );
-	}
-	
-	// getStaticProperties
-	public static function getStaticProperties( $properties )
-	{
-		static $autorized	=	array(
-									'access'=>'',
-									'author'=>'',
-									'child_object'=>'',
-									'created_at'=>'',
-									'context'=>'',
-									'contexts'=>'',
-									'custom'=>'',
-									'key'=>'',
-									'modified_at'=>'',
-									'ordering'=>'',
-									'parent'=>'',
-									'parent_object'=>'',
-									/*'routes'=>'',*/
-									'status'=>'',
-									'table'=>'',
-									'table_object'=>'',
-									'to_route'=>''
-								);
-		
-		if ( count( $properties ) ) {
-			foreach ( $properties as $i=>$p ) {
-				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
-				}
-				unset( $properties[$i] );
-			}
-		}
-		
-		return $properties;
 	}
 }
 ?>

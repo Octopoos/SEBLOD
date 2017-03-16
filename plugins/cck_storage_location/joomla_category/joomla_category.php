@@ -25,6 +25,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'created_user_id';
 	protected static $author_object	=	'joomla_user';
+	protected static $bridge_object	=	'';
 	protected static $child_object	=	'joomla_article';
 	protected static $created_at	=	'created_time';
 	protected static $custom		=	'description';
