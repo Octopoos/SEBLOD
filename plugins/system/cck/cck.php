@@ -120,22 +120,51 @@ class plgSystemCCK extends JPlugin
 	// buildRule
 	public function buildRule( &$router, &$uri )
 	{
-		$Itemid	=	$uri->getVar( 'Itemid' );
+		if ( JCck::isSite() ) {
+			$context	=	JCck::getSite()->context;
 
-		if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
-			$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
-			if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
-				$urlvars	=	$item->params->get( 'urlvars' );
-				if ( $urlvars ) {
-					$vars		=	explode( '&', $urlvars );
-					if ( count( $vars ) ) {
-						foreach ( $vars as $var ) {
-							$v	=	explode( '=', $var );
-							if ( $v[0] && $v[1] ) {
-								$uri->setVar( $v[0], $v[1] );
+			if ( $context != '' ) {
+				$uri->setPath( $uri->getPath() . '/' . $context . '/' );
+			}
+		}
+
+		if ( JFactory::getApplication()->isSite() ) {
+			$Itemid	=	$uri->getVar( 'Itemid' );
+
+			if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
+				$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
+				if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
+					$urlvars	=	$item->params->get( 'urlvars' );
+					if ( $urlvars ) {
+						$vars		=	explode( '&', $urlvars );
+						if ( count( $vars ) ) {
+							foreach ( $vars as $var ) {
+								$v	=	explode( '=', $var );
+								if ( $v[0] && $v[1] ) {
+									$uri->setVar( $v[0], $v[1] );
+								}
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+
+	// parseRule
+	public function parseRule( &$router, &$uri )
+	{
+		if ( JCck::isSite() ) {
+			$context	=	JCck::getSite()->context;
+
+			if ( $context != '' ) {
+				$path	=	$uri->getPath();
+				$pos	=	strpos( $path, $context );
+
+				if ( $pos !== false && $pos == 0 ) {
+					$path	=	substr( $path, strlen( $context ) + 1 );
+
+					$uri->setPath( $path );
 				}
 			}
 		}
@@ -172,10 +201,12 @@ class plgSystemCCK extends JPlugin
 			$app->input->set( 'format', $format );
 		}
 
-		if ( $app->isSite() ) {
-			$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
-			$router->attachBuildRule( array( $this, 'buildRule' ) );
-		} elseif ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
+		$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
+
+		$router->attachBuildRule( array( $this, 'buildRule' ), JRouter::PROCESS_DURING );
+		$router->attachParseRule( array( $this, 'parseRule' ), JRouter::PROCESS_DURING );
+
+		if ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
 			JFactory::getLanguage()->load( 'com_cck_core' );
 		}
 		
@@ -186,8 +217,14 @@ class plgSystemCCK extends JPlugin
 			return;
 		}
 		$user	=	JFactory::getUser();
-		
-		if ( $user->id > 0 && is_object( $this->site ) && $user->id != $this->site->guest ) {
+
+		if ( JCck::getMultisiteInfo( 'hasContext' ) ) {
+			$guests	=	JCck::getMultisiteInfo('guests');
+			$isUser	=	!isset( $guests[(string)$user->id] );
+		} else {
+			$isUser	=	$user->id != $this->site->guest;
+		}
+		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
 			if ( $app->isSite() ) {
 				$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
 				
