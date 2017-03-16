@@ -323,12 +323,14 @@ class plgSystemCCK extends JPlugin
 			if ( $app->isAdmin() ) {
 				return;
 			}
-			$session	=	JFactory::getSession();
-			$session->set( 'user', JFactory::getUser( 0 ) );
 			
 			if ( ! $this->site ) {
 				return;
 			}
+
+			$session	=	JFactory::getSession();
+			$session->set( 'user', JFactory::getUser( 0 ) );
+
 			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
 				return;
 			}
