@@ -40,4 +40,6 @@
 			</fieldset>
 		</fields>
 	</config>
+	
+	<!--<cck_integration />-->
 </extension>
