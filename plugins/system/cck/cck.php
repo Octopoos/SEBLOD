@@ -551,11 +551,12 @@ class plgSystemCCK extends JPlugin
 									$search	=	substr( $search, 0, strpos( $search, '&' ) );
 									$search	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.$search.'"' );
 									if ( $search != '' ) {
-										$search	=	new JRegistry( $search );
-										$sef	=	$search->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
-										if ( $sef ) {
-											$itemId	=	$itemId2;
-										}
+										$search = '{}';
+									}
+									$search	=	new JRegistry( $search );
+									$sef	=	$search->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
+									if ( $sef ) {
+										$itemId	=	$itemId2;
 									}
 								}
 							}
