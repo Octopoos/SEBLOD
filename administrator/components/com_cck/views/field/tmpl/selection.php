@@ -268,7 +268,7 @@ $js		=	'
 					var w = $("#toolbarBox").width()+69;
 					var h = $("#layout").height()+62;
 					if (w > 300 || h > 200) {
-						w = (w > 300) ? w+20 : w;
+						w = (w > 300) ? w+42 : w;
 						parent.jQuery.colorbox.resize({innerWidth:w, innerHeight:h});
 					}
 					if (client=="search") {
