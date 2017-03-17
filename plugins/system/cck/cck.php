@@ -726,7 +726,7 @@ class plgSystemCCK extends JPlugin
 							$i		=	0;
 							foreach ( $matches[1] as $match ) {
 								if ( isset( $list[$match] ) ) {
-									$replace	=	$matches[0][$i] . ' <span class="label label-info hasTooltip" title="'.JText::_( 'COM_CCK_DO_NOT_SET_AS_DEFAULT_TEMPLATE' ).'">'.JText::_( 'COM_CCK' ).'</span>';
+									$replace	=	$matches[0][$i] . ' <span class="label label-info hasTooltip" title="'.JText::_( 'COM_CCK_DO_NOT_SET_AS_DEFAULT_TEMPLATE' ).'"><span class="icon-info"></span>'.JText::_( 'COM_CCK' ).'</span>';
 									$buffer		=	str_replace( $matches[0][$i], $replace, $buffer );
 								}
 								$i++;
