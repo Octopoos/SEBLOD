@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state', 'core_client_type',
 										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
@@ -25,17 +24,17 @@ if ( $lang->hasKey( $key ) == 1 ) {
 }
 JHtml::_( 'bootstrap.tooltip' );
 $sidebar_inner	=	288;
-$sidebar_top	=	85;
+$sidebar_top	=	93;
 
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
+<div id="seblod-app-builder" class="clearfix">
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper'].' '.$this->uix; ?>">
 	<div class="seblod first">
     	<div>
-            <div id="loading" class="loading"></div>
             <ul class="spe spe_title">
                 <?php
                 echo JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config );        
@@ -83,7 +82,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
 					 .	 '</select></li>';
 				} else {
-					echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=1', 'storage_field'=>'admin_form' ) );
+					echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=optgroup||Administrator or Allowed Groups Always=1||Administrator or Allowed Groups Edit=2', 'storage_field'=>'admin_form' ) );
 				}
 				?>
 			</ul>
@@ -123,6 +122,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	?>
 </div>
 </form>
+</div><div id="seblod-loading"<?php echo (int)JCck::getConfig_Param( 'development_overlay', '1' ) ? '' : ' class="disabled"'; ?>></div>
 
 <?php
 Helper_Display::quickCopyright();
@@ -143,7 +143,6 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,
 		skip:"",
-		spinner:'<img align="center" src="<?php echo $ajax_load; ?>" alt="" />',
 		transliteration:<?php echo $transliterate; ?>,
 		trash:"",
 		uix:"<?php echo $this->uix; ?>"
@@ -157,5 +156,16 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			}
 		}
 	}
+	$(document).ready(function(){
+		var outerDiv = $("#seblod-app-builder");
+		
+		$("#seblod-loading:not(.disabled)")
+			.css("top", outerDiv.position().top - $(window).scrollTop())
+			.css("left", "0")
+			.css("width", "100%")
+			.css("height", "100%")
+			.css("display", "block")
+			.css("margin-top", "-10px");
+	});
 })(jQuery);
 </script>

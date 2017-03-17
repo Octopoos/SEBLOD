@@ -13,22 +13,6 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentJoomla_Article extends JCckContent
 {
-	// getInstance
-	public static function getInstance( $identifier = '', $data = true )
-	{
-		if ( !$identifier ) {
-			return new JCckContentJoomla_Article;
-		}
-
-		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
-		if ( !isset( self::$instances[$key] ) ) {
-			$instance	=	new JCckContentJoomla_Article( $identifier );
-			self::$instances[$key]	=	$instance;
-		}
-
-		return self::$instances[$key];
-	}
-
 	// saveBase
 	public function saveBase()
 	{

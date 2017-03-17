@@ -34,6 +34,43 @@ class JCckPluginLocation extends JPlugin
 	{
 		return true;
 	}
+
+	// getStaticProperties
+	public static function getStaticProperties( $properties )
+	{
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'author_object'=>'',
+									'bridge_object'=>'',
+									'child_object'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									'parent_object'=>'',
+									'routes'=>'',
+									'status'=>'',
+									'table'=>'',
+									'table_object'=>'',
+									'to_route'=>''
+								);
+		
+		if ( count( $properties ) ) {
+			foreach ( $properties as $i=>$p ) {
+				if ( isset( $autorized[$p] ) ) {
+					$properties[$p]	=	static::${$p};
+				}
+				unset( $properties[$i] );
+			}
+		}
+		
+		return $properties;
+	}
 	
 	// onCCK_Storage_LocationSaveOrder
 	public static function onCCK_Storage_LocationSaveOrder( $pks = array(), $order = array() )

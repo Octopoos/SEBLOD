@@ -24,7 +24,7 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
         echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>'Field Optional', 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) );
-		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'Numeric=0||Text=1' ) );
+		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'defaultvalue'=>'1', 'options'=>'Numeric=0||Text=1' ) );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

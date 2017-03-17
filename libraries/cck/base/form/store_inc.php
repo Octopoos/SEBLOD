@@ -48,7 +48,9 @@ if ( ! $type ) {
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
 if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
-	$preconfig['client']	=	'admin';
+	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
+		$preconfig['client']	=	'admin';
+	}
 }
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
@@ -92,7 +94,13 @@ $config		=	array( 'author'=>$author,
 					   'url'=>$preconfig['url'],
 					   'validate'=>''
 					);
-CCK_Form::applyTypeOptions( $config );
+CCK_Form::applyTypeOptions( $config, $preconfig['client'] );
+
+if ( $preconfig['client'] ) {
+	if ( !isset( $config['options']['redirection'] ) ) {
+		$config['options']['redirection']	=	'';
+	}
+}
 
 $stage		=	-1;
 $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stages'] : 1;
@@ -189,12 +197,14 @@ if ( $stages > 1 && $stage ) {
 		$stage++;
 	}
 	if ( $stage <= $stages ) {
-		$config['message']			=	'';
-		$config['message_style']	=	0;
-		$config['stage']			=	$stage;
+		if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
+			$config['message']			=	'';
+			$config['message_style']	=	0;
+		}
 		// if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
 		$config['url']				=	'';
 		// }
+		$config['stage']			=	$stage;
 	} elseif ( $stage == $stages ) {
 		$config['stage']			=	0;
 	}

@@ -192,13 +192,13 @@ class plgContentCCKInstallerScript
 			
 			$searchs	=	array(
 								'11'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
 									  ),
 								'15'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
 									  ),
 								'18'=>array(
-										'list'=>(int)$style3
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - user_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
 									  )
 							);
 
@@ -313,7 +313,8 @@ class plgContentCCKInstallerScript
 									72=>'3.6.0', 73=>'3.6.1', 74=>'3.6.2', 75=>'3.6.3', 76=>'3.6.4', 77=>'3.6.5',
 									78=>'3.7.0', 79=>'3.7.1', 80=>'3.7.2', 81=>'3.7.3', 82=>'3.7.4', 83=>'3.7.5', 84=>'3.7.6', 85=>'3.7.7',
 									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5',
-									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2', 95=>'3.10.0', 96=>'3.10.1', 97=>'3.10.2' );
+									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2', 95=>'3.10.0', 96=>'3.10.1', 97=>'3.10.2', 98=>'3.10.3', 99=>'3.10.4', 100=>'3.10.5', 101=>'3.10.6', 102=>'3.10.7', 103=>'3.10.8', 104=>'3.10.9',
+									105=>'3.11.0', 106=>'3.11.1' );
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
 			$i			=	array_search( $old, $versions );

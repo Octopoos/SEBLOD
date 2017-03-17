@@ -365,7 +365,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			if ( isset( $config[$target] ) && $config[$target] != '' ) {
 				$name					=	$process['name'];
 				$search					=	'onclick="';
-				$replace				=	$search.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config[$target].'">\');' );
+				$replace				=	$search.'if (document.'.$config['formId'].'.boxchecked.value==0){'.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="ids" value="'.$config[$target].'">\');' ).'}';
 				$fields[$name]->form	=	str_replace( $search, $replace, $fields[$name]->form );
 			}
 		}

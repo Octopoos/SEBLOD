@@ -23,6 +23,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $bridge_object	=	'joomla_article';
 	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
@@ -404,7 +405,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route );
+			return JRoute::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -433,7 +434,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return JRoute::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute
@@ -466,42 +467,6 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function getId( $config )
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
-	
-	// getStaticProperties
-	public static function getStaticProperties( $properties )
-	{
-		static $autorized	=	array(
-									'access'=>'',
-									'author'=>'',
-									'author_object'=>'',
-									'child_object'=>'',
-									'created_at'=>'',
-									'context'=>'',
-									'contexts'=>'',
-									'custom'=>'',
-									'key'=>'',
-									'modified_at'=>'',
-									'ordering'=>'',
-									'parent'=>'',
-									'parent_object'=>'',
-									/*'routes'=>'',*/
-									'status'=>'',
-									'table'=>'',
-									'table_object'=>'',
-									'to_route'=>''
-								);
-		
-		if ( count( $properties ) ) {
-			foreach ( $properties as $i=>$p ) {
-				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
-				}
-				unset( $properties[$i] );
-			}
-		}
-		
-		return $properties;
 	}
 }
 ?>

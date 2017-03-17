@@ -10,30 +10,24 @@
 
 defined( '_JEXEC' ) or die;
 
+JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+
 // JCckContent
 class JCckContentJoomla_Category extends JCckContent
 {
-	// getInstance
-	public static function getInstance( $identifier = '', $data = true )
-	{
-		if ( !$identifier ) {
-			return new JCckContentJoomla_Category;
-		}
-
-		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
-		if ( !isset( self::$instances[$key] ) ) {
-			$instance	=	new JCckContentJoomla_Category( $identifier );
-			self::$instances[$key]	=	$instance;
-		}
-
-		return self::$instances[$key];
-	}
-
 	// preSave
-	public function preSave( $instance_name, $data )
+	public function preSave( $instance_name, &$data )
 	{
 		if ( $instance_name == 'base' ) {
-			$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
+			if ( !( isset( $data['extension'] ) && $data['extension'] != '' ) ) {
+				$data['extension']	=	'com_content';
+			}
+			if ( !isset( $data['parent_id'] ) ) {
+				$data['parent_id']	=	( $this->getPk() ) ? $this->{'_instance_'.$instance_name}->parent_id : 1;
+			}
+			if ( !$this->getPk() || ( $data['parent_id'] != $this->{'_instance_'.$instance_name}->parent_id ) ) {
+				$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
+			}
 		}
 	}
 
@@ -62,6 +56,14 @@ class JCckContentJoomla_Category extends JCckContent
 		}
 
 		return $status;
+	}
+	
+	// postSave
+	public function postSave( $instance_name, $data )
+	{
+		if ( $instance_name == 'base' ) {
+			$this->{'_instance_'.$instance_name}->rebuildPath( $this->getPk() );
+		}
 	}
 }
 ?>

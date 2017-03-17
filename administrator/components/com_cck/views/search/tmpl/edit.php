@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_search', 'core_folder', 'core_description', 'core_state', 'core_client_search',
 										 'core_layer', 'core_storage_location2', 'core_location2', 'core_alias', 'core_access' ) );
@@ -25,7 +24,7 @@ if ( $lang->hasKey( $key ) == 1 ) {
 }
 JHtml::_( 'bootstrap.tooltip' );
 $sidebar_inner	=	288;
-$sidebar_top	=	85;
+$sidebar_top	=	93;
 
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
@@ -41,12 +40,12 @@ if ( $this->item->client == 'list' ) {
 }
 ?>
 
+<div id="seblod-app-builder" class="clearfix">
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?> full">
 	<div class="seblod first">
     	<div>
-            <div id="loading" class="loading"></div>
             <ul class="spe spe_title">
                 <?php
                 echo JCckDev::renderForm( $cck['core_title_search'], $this->item->title, $config );        
@@ -130,6 +129,7 @@ if ( $this->item->client == 'list' ) {
 	?>
 </div>
 </form>
+</div><div id="seblod-loading"<?php echo (int)JCck::getConfig_Param( 'development_overlay', '1' ) ? '' : ' class="disabled"'; ?>></div>
 
 <?php
 Helper_Display::quickCopyright();
@@ -150,7 +150,6 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,
 		skip:"&skip=<?php echo $this->item->skip; ?>",
-		spinner:'<img align="center" src="<?php echo $ajax_load; ?>" alt="" />',
 		transliteration:<?php echo $transliterate; ?>,
 		trash:"",
 		uix:"<?php echo $this->uix; ?>"
@@ -164,8 +163,17 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			}
 		}
 	}
-	$(document).ready(function() {
+	$(document).ready(function(){
 		$("#toolbar-save-new button").prop("disabled",true);
+		var outerDiv = $("#seblod-app-builder");
+		
+		$("#seblod-loading:not(.disabled)")
+			.css("top", outerDiv.position().top - $(window).scrollTop())
+			.css("left", "0")
+			.css("width", "100%")
+			.css("height", "100%")
+			.css("display", "block")
+			.css("margin-top", "-10px");
 	});
 })(jQuery);
 </script>

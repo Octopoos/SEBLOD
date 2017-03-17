@@ -55,7 +55,7 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 		echo '<div class="'.$this->class_pagination.'">' . $this->pagination->getPagesLinks() . '</div>';
 	}
 	if ( @$this->search->content > 0 ) {
-		echo '<div class="seblod">'.$this->data.'</div>';
+		echo '<div class="seblod cck_page_items">'.$this->data.'</div>';
 	} else {
 		echo $this->loadTemplate( 'items' );
 	}
@@ -75,13 +75,18 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 		} else {
 			$pages_total	=	0;
 		}
-		if ( $this->show_pagination > -1 && $pages_total > 1 ) {
+		
+		if ( $this->show_pagination > -1 ) {
 			echo '<div class="seblod '.$this->class_pagination.'">';
 
-			$pages	=	str_replace( 'document.adminForm.limitstart', 'document.'.$this->config['formId'].'.limitstart', $this->pagination->getListFooter() );
-			$pages	=	str_replace( 'Joomla.submitform()', 'Joomla.submitform(\'\',document.getElementById(\''.$this->config['formId'].'\'))', $pages );
-			
-			echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $pages );
+			if ( $pages_total > 1 ) {
+				$pages	=	str_replace( 'document.adminForm.limitstart', 'document.'.$this->config['formId'].'.limitstart', $this->pagination->getListFooter() );
+				$pages	=	str_replace( 'Joomla.submitform()', 'Joomla.submitform(\'\',document.getElementById(\''.$this->config['formId'].'\'))', $pages );
+				
+				echo str_replace( '<div class="pagination pagination-toolbar">', '<div class="pagination pagination-toolbar">'.$item_number, $pages );
+			} else {
+				echo $item_number;
+			}
 			echo '</div>';
 		}
 	}
@@ -89,15 +94,15 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 </div>
 <div class="clr"></div>
 <div>
-	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" id="option" name="option" value="com_cck" />
-	<input type="hidden" id="view" name="view" value="list" />
-	<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" />
-	<input type="hidden" id="task" name="task" value="search" />
+	<input type="hidden" name="boxchecked" value="0" data-cck-remove-before-search="" />
+	<input type="hidden" id="option" name="option" value="com_cck" data-cck-keep-for-search="" />
+	<input type="hidden" id="view" name="view" value="list" data-cck-keep-for-search="" />
+	<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" data-cck-keep-for-search="" />
+	<input type="hidden" id="task" name="task" value="search" data-cck-keep-for-search="" />
 	<?php
 	$tmpl	=	$app->input->get( 'tmpl', '' );
 	if ( $tmpl ) { ?>
-	<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" />
+	<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" data-cck-keep-for-search="" />
 	<?php } ?>
 </div>
 </form>

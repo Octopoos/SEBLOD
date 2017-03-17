@@ -45,6 +45,8 @@ class CCKModelSites extends JModelList
 			$group_map	=	JCckDatabase::loadObjectList( 'SELECT a.group_id, COUNT( DISTINCT a.user_id ) AS num FROM #__user_usergroup_map AS a GROUP BY a.group_id', 'group_id' );
 			
 			foreach ( $items as $item ) {
+				$item->name		=	str_replace( '@', '/', $item->name );
+
 				$viewlevels		=	( $item->guest_only_viewlevel ) ? $item->guest_only_viewlevel.','.$item->viewlevels : $item->viewlevels;
 				$groups			=	( $item->guest_only_group ) ? $item->guest_only_group.','.$item->groups : $item->groups;
 

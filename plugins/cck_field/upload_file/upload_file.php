@@ -271,7 +271,18 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
-			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions' );
+			$default	=	array(
+								'archive'=>'7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP',
+								'audio'=>'flac,mp3,ogg,wma,wav,FLAC,MP3,OGG,WMA,WAV',
+								'document'=>'csv,doc,docx,pdf,pps,ppsx,ppt,pptx,txt,xls,xlsx,CSV,DOC,DOCX,PDF,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX',
+								'image'=>'bmp,gif,jpg,jpeg,png,tif,tiff,BMP,GIF,JPEG,JPG,PNG,TIF,TIFF',
+								'video'=>'flv,mov,mp4,mpg,mpeg,swf,wmv,FLV,MOV,MP4,MPG,MPEG,SWF,WMV',
+								'common'=>'bmp,csv,doc,docx,gif,jpg,pdf,png,pps,ppsx,ppt,pptx,txt,xls,xlsx,zip,BMP,CSV,DOC,DOCX,GIF,JPG,PDF,PNG,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX,ZIP',
+								'preset1'=>'',
+								'preset2'=>'',
+								'preset3'=>''
+							);
+			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions', $default[$legal_ext] );
 			if ( !$legal_ext ) {
 				$legal_ext	=	$options2['legal_extensions'];
 			}
@@ -279,10 +290,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 
 		$class				=	'inputbox file'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$attr_input_text	=	'class="inputbox text" size="'.$field->size.'"';
+		$collection			=	'';
 		
 		if ( strpos( $name, '[]' ) !== false ) { //FieldX
-			$nameH	=	substr( $name, 0, -2 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -2 );
+			$collection 	=	$nameH;
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false ); 
 			}
@@ -294,8 +307,9 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more3	=	self::_addFormText( $id.'_title', $nameH.'_title[]', $attr_input_text, $title_label, $file_title, 'upload_file' );
 			}
 		} elseif ( $name[(strlen($name) - 1 )] == ']' ) { //GroupX
-			$nameH	=	substr( $name, 0, -1 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -1 );
+			$collection 	=	substr( $name, 0, strpos( $name, '[' ) );
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false );
 			}
@@ -331,10 +345,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
-			$more	=	'';
+			$more	=	( $collection ) ? '&collection='.$collection.'&xi='.$xk : '';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
 			if ( isset( $config['id'] ) && $config['id'] ) {
-				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'] );
+				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.$field->name.'&id='.$config['id'] );
 				$target	=	'';
 			} else {
 				$link	=	JUri::root().$value2;
@@ -693,7 +707,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	{
 		jimport( 'joomla.filesystem.folder' );
 		
-		include dirname(__FILE__).'/includes/afterstore.php';
+		include __DIR__.'/includes/afterstore.php';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script

@@ -16,7 +16,7 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.p
 class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_LocationJoomla_User
 {
 	protected static $columns_excluded	=	array( 'isRoot', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
-	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
+	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper', 'otpKey', 'otep' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -62,8 +62,8 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 					if ( $field->storage_table == '' ) {
 						continue;
 					}
-					if ( !isset( $storages[$field->storage_table] ) ) {
-						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
 					}
 				}
 				if ( $config['component'] == 'com_cck_exporter' ) {

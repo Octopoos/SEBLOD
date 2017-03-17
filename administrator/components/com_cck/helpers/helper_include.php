@@ -44,7 +44,7 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQueryUI();
 				}
 				if ( $tmpl == 'component' ) {
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.10.0.min.js' );
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.11.0.min.js' );
 				}
 				break;
 			case 'type':
@@ -52,9 +52,19 @@ class Helper_Include extends CommonHelper_Include
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.10.0.min.js' );
+					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.11.0.min.js' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
+					$doc->addStyleDeclaration(
+						'#seblod-loading:not(.disabled) {
+							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 15%/66px 66px no-repeat;
+							position: fixed;
+							opacity: 0.8;
+							-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);
+							filter: alpha(opacity = 80);
+							overflow: hidden;
+							z-index:100;
+						}' );
 				}
 				Helper_Include::addColorbox_Live( '930', '550', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
@@ -174,7 +184,9 @@ class Helper_Include extends CommonHelper_Include
 	{
 		$doc	=	JFactory::getDocument();
 		$delay	=	(float)$interval * 60000;
-		
+
+		JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
+
 		$js	=	'
 				(function ($){
 					JCck.Dev = {
@@ -195,7 +207,7 @@ class Helper_Include extends CommonHelper_Include
 											}
 											$("#id").val(id);
 										}
-										$("#ajaxMessage").html("").html("<span>Successfuly saved! "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
+										$("#ajaxMessage").html("").html("<span>"+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
 										.hide()
 										.fadeIn(2000, function() {
 											if ( parent.jQuery.colorbox ) {

@@ -26,7 +26,7 @@ abstract class JCckEcommerceRule
 		$cost		=	'';
 		$rules		=	JCckEcommerce::getShippingRules( $type, $my_zones );
 		$total2		=	(int)$total;
-
+		
 		if ( count( $rules ) ) {
 			foreach ( $rules as $r ) {
 				if ( isset( $r->target_type ) && $r->target_type ) {
@@ -79,6 +79,7 @@ abstract class JCckEcommerceRule
 						}
 					}
 				}
+
 				if ( $r->mode ) {
 					if ( !isset( $totals[$type][$r->target_type] ) ) {
 						continue;

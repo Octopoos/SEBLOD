@@ -20,7 +20,7 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_Field_LivePrepareForm
-	public function onCCK_Field_LivePrepareForm( &$field, &$value = '', &$config = array() )
+	public function onCCK_Field_LivePrepareForm( &$field, &$value = '', &$config = array(), $inherit = array() )
 	{
 		if ( self::$type != $field->live ) {
 			return;

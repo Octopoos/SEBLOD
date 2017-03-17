@@ -63,19 +63,19 @@ if ( $this->show_form ) {
 if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
-<input type="hidden" name="boxchecked" id="boxchecked" value="0" />
+<input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
 <?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
-<input type="hidden" name="option" value="com_cck" />
-<input type="hidden" name="view" value="list" />
+<input type="hidden" name="option" value="com_cck" data-cck-keep-for-search="" />
+<input type="hidden" name="view" value="list" data-cck-keep-for-search="" />
 <?php if ( $this->home === false ) { ?>
-<input type="hidden" name="Itemid" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="Itemid" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" data-cck-keep-for-search="" />
 <?php } }
 $tmpl	=	$app->input->get( 'tmpl', '' );
 if ( $tmpl ) { ?>
-<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" />
+<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" data-cck-keep-for-search="" />
 <?php } ?>
-<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" />
-<input type="hidden" name="task" value="search" />
+<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" data-cck-keep-for-search="" />
+<input type="hidden" name="task" value="search" data-cck-keep-for-search="" />
 <?php if ( !$this->raw_rendering ) { ?>
 </div>
 <?php } }
@@ -128,7 +128,7 @@ if ( !$this->raw_rendering ) { ?>
     	}
 		if ( $this->show_pagination > -1 ) {
 			if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) {
-				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'</a></li></ul>';
+				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.$this->label_pagination.'</a></li></ul>';
 			} else {
 				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
 			}
@@ -212,6 +212,27 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$(this).attr("data-start",start);
 			JCck.Core.loadmore("&start="+start,stop);
 		})<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
+	});
+})(jQuery);
+</script>
+<?php } ?>
+<?php if ( $this->load_resource ) {
+	$url	=	JRoute::_( 'index.php?Itemid='.$app->input->getInt( 'Itemid', 0 ) );
+	
+	if ( $url == '/' ) {
+		$url	=	'';
+	}
+	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$url;
+?>
+<script type="text/javascript">
+(function ($){
+	JCck.Core.loadfragment = JCck.Core.getModal(<?php echo $this->json_resource ? $this->json_resource : '{}'; ?>);
+	$(document).ready(function() {
+		var fragment = window.location.hash;
+		if (fragment != "") {
+			fragment = fragment.substring(1);
+			JCck.Core.loadfragment.loadRemote("<?php echo $url; ?>/"+fragment+"<?php echo ( $this->tmpl_resource ? '?tmpl='.$this->tmpl_resource : '' )?>");
+		}
 	});
 })(jQuery);
 </script>

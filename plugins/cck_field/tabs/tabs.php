@@ -87,7 +87,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set
@@ -118,7 +118,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set

@@ -125,6 +125,8 @@ class CCKViewType extends JViewLegacy
 
 			if ( count( $names ) ) {
 				$names			=	'"'.implode( '","', $names ).'"';
+			} else {
+				$names			=	'';
 			}
 			$this->fieldsAv		=	Helper_Workshop::getFieldsAv( 'type', $this->item, '', 'a.folder = '.(int)$folder, ( $names != '' ? 'a.name IN ('.$names.')' : '' ) );
 		} else {

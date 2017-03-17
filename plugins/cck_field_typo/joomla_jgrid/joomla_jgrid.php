@@ -111,7 +111,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					JHtml::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
 					$loadedF	=	1;
 				}
-				$value		=	JHtml::_( 'contentadministrator.featured', $field->value, $pks[$pk], false /*$canChange*/ );
+				$value		=	$field->value;
+
+				if ( is_numeric( $value ) ) {
+					$value	=	( (int)$value > 0 ) ? 1 : 0;
+				} elseif ( is_array( $value ) ) {
+					$value	=	( count( $value ) > 0 ) ? 1 : 0;
+				} else {
+					$value	=	( $value == '' ) ? 0 : 1;
+				}
+				$value		=	JHtml::_( 'contentadministrator.featured', $value, $pks[$pk], false /*$canChange*/ );
 
 				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
 					$class	.=	' disabled';
@@ -150,8 +159,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$inherit['id']		.=	$identifier_name;
 				
 				if ( $typo->get( 'trigger' ) ) {
-					$field->attributes	.=	'onchange="if(!document.getElementById(\'cb'.($i - 1).'\').checked){document.getElementById(\'cb'.($i - 1).'\').checked=true; Joomla.isChecked(document.getElementById(\'cb'.($i - 1).'\').checked, document.getElementById(\''.( @$config['formId'] ? $config['formId'] : 'seblod_form' ).'\'));}"';
-				}				
+					$field->attributes	.=	' onchange="if(!document.getElementById(\'cb'.($i - 1).'\').checked){document.getElementById(\'cb'.($i - 1).'\').checked=true; Joomla.isChecked(document.getElementById(\'cb'.($i - 1).'\').checked, document.getElementById(\''.( @$config['formId'] ? $config['formId'] : 'seblod_form' ).'\'));}"';
+				}
+				$field->attributes	.=	' data-cck-remove-before-search=""';
 				$field->css			=	trim( $field->css.' '.$class );
 				$field->label2		=	( $field->label != '' ) ? $field->label : 'clear';
 				
@@ -183,6 +193,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$formId	=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 				}
 				$value		=	JHtml::_( 'grid.id', $pks[$pk], $value );
+				$value		=	str_replace( ' />', ' data-cck-remove-before-search="" />', $value );
 				if ( $typo->get( 'trigger' ) ) {
 					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"', $value );
 				} else {					
@@ -218,15 +229,22 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				$value 	= 	'<span class="sortable-handler">'
 						.	'<i class="icon-menu"></i>'
-						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" />'
+						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
 						.	'</span>';
 				break;
 			case 'state':
-				$value		=	JHtml::_( 'jgrid.published', $field->value, $pks[$pk], '', false /*$canChange*/, 'cb', '' /*$item->publish_up*/, '' /*$item->publish_down*/ );
-				
-				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-					$class	.=	' disabled';
-					$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+				$field_name_up		=	$typo->get( 'state_up', '' );
+				$field_name_down	=	$typo->get( 'state_down', '' );
+
+				if ( $field_name_up || $field_name_down ) {
+					parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'value'=>$field->value, 'class'=>$class, 'pk'=>$pks[$pk], 'fieldname_up'=>$field_name_up, 'fieldname_down'=>$field_name_down ) );
+				} else {
+					$value		=	JHtml::_( 'jgrid.published', $field->value, $pks[$pk], '', false /*$canChange*/, 'cb', '', '' );
+					
+					if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+						$class	.=	' disabled';
+						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					}
 				}
 				break;
 			default:
@@ -243,6 +261,31 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['pks'][$pk] : 0;
 		} else {
 			return ( isset( self::$increment[$identifier] ) ) ? self::$increment[$identifier]['i'] : 0;
+		}
+	}
+
+	// onCCK_Field_TypoBeforeRenderContent
+	public static function onCCK_Field_TypoBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$class				=	$process['class'];
+		$name				=	$process['name'];
+		$field_name_up		=	$process['fieldname_up'];
+		$field_name_down	=	$process['fieldname_down'];
+
+		$state_up			=	( $field_name_up != '' && isset( $fields[$field_name_up] ) ) ? $fields[$field_name_up]->value : '';
+		$state_up			=	( $state_up == '' ) ? '0000-00-00 00:00:00' : $state_up;
+		$state_down			=	( $field_name_down != '' && isset( $fields[$field_name_down] ) ) ? $fields[$field_name_down]->value : '';
+		$state_down			=	( $state_down == '' ) ? '0000-00-00 00:00:00' : $state_down;
+
+		if ( $name ) {
+			$value			=	JHtml::_( 'jgrid.published', $process['value'], $process['pk'], '', false /*$canChange*/, 'cb', $state_up, $state_down );
+			
+			if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+				$class		.=	' disabled';
+				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+			}
+
+			$fields[$name]->typo	=	$value;
 		}
 	}
 }

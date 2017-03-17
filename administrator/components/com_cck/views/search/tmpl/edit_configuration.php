@@ -32,8 +32,9 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 			echo JCckDev::renderForm( $cck['core_pagination'], @$options['pagination'], $config );
 			echo JCckDev::renderForm( $cck['core_debug'], @$options['debug'], $config );
 			echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-			echo JCckDev::renderForm( $cck['core_prepare_content'], @$options['prepare_content'], $config );
+			echo JCckDev::renderForm( 'core_dev_select', @$options['persistent_query'], $config, array( 'label'=>'Persistent Search', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=optgroup||Yes for Everyone=1||Registered=2', 'storage_field'=>'options[persistent_query]' ) );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->sef_route, $config, array( 'label'=>'SEF Helper', 'storage_field'=>'sef_route' ) );
+            echo JCckDev::renderForm( $cck['core_prepare_content'], @$options['prepare_content'], $config );
             ?>
         </ul>
 	</div>
@@ -42,7 +43,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <ul class="adminformlist adminformlist-2cols">
 			<?php
             echo JCckDev::renderForm( $cck['core_auto_redirection'], @$options['auto_redirect'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_AUTO_REDIRECTION', 'storage_field'=>'options[auto_redirect]' ) );
-            echo JCckDev::renderForm( $cck['core_ordering'], @$options['ordering'], $config, array( 'label'=>'CONFIG_ORDERING', 'selectlabel'=>'Inherited', 'storage_field'=>'options[ordering]' ) );
+            echo JCckDev::renderForm( $cck['core_ordering'], @$options['ordering'], $config, array( 'label'=>'CONFIG_ORDERING', 'selectlabel'=>'', 'storage_field'=>'options[ordering]' ) );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_list_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_TITLE', 'storage_field'=>'options[show_list_title]' ) );
             echo '<li><label>'.JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ).'</label>'
              .	 JCckDev::getForm( $cck['core_tag_title'], @$options['tag_list_title'], $config, array( 'storage_field'=>'options[tag_list_title]' ) )
@@ -60,7 +61,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
             echo JCckDev::renderForm( $cck['core_show_pagination'], @$options['show_pagination'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_PAGINATION', 'storage_field'=>'options[show_pagination]' ) );
             echo JCckDev::renderForm( $cck['core_class_pagination'], @$options['class_pagination'], $config, array( 'label'=>'CONFIG_PAGINATION_CLASS', 'size'=>16, 'storage_field'=>'options[class_pagination]' ) );
-            echo JCckDev::renderBlank( '<input type="hidden" id="blank_li6" value="" />' );
+            echo JCckDev::renderForm( 'core_dev_text', @$options['label_pagination'], $config, array( 'label'=>'Config Pagination Label', 'size'=>32, 'storage_field'=>'options[label_pagination]' ) );
             echo JCckDev::renderForm( 'core_dev_text', @$options['callback_pagination'], $config, array( 'label'=>'Config Pagination Callback', 'storage_field'=>'options[callback_pagination]' ) );
             ?>
         </ul>
@@ -93,6 +94,17 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             <?php
             echo JCckDev::renderBlank();
             echo JCckDev::renderForm( 'core_action', @$options['action_no_search'], $config, array( 'storage_field'=>'options[action_no_search]' ) );
+            ?>
+        </ul>
+    </div>
+    <div class="seblod">
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_RESOURCE_AS_FRAGMENT_LEGEND' ); ?></div>
+        <ul class="adminformlist adminformlist-2cols">
+            <?php
+            echo JCckDev::renderForm( 'core_bool', @$options['load_resource'], $config, array( 'defaultvalue'=>'0', 'label'=>'Enable Loading', 'storage_field'=>'options[load_resource]' ) );
+            echo JCckDev::renderBlank( '<input type="hidden" id="blank_li7" value="" />' );
+            echo JCckDev::renderForm( 'core_dev_select', @$options['tmpl_resource'], $config, array( 'defaultvalue'=>'', 'label'=>'Tmpl', 'selectlabel'=>'None', 'options'=>'Component=component||Raw=raw', 'storage_field'=>'options[tmpl_resource]' ) );
+            echo JCckDev::renderForm( 'core_dev_textarea', @$options['json_resource'], $config, array( 'label'=>'Parameters', 'cols'=>80, 'rows'=>1, 'storage_field'=>'options[json_resource]' ), array(), 'w100' );
             ?>
         </ul>
     </div>

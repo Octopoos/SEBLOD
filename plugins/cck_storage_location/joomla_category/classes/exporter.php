@@ -62,8 +62,8 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 					if ( $field->storage_table == '' ) {
 						continue;
 					}
-					if ( !isset( $storages[$field->storage_table] ) ) {
-						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
 					}
 				}
 				if ( $config['component'] == 'com_cck_exporter' ) {

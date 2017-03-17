@@ -198,7 +198,7 @@ class Helper_Workshop
 	}
 	
 	// getDefaultStyle
-	public static function getDefaultStyle( $template )
+	public static function getDefaultStyle( $template = '' )
 	{
 		static $styles	=	array();
 		
@@ -648,8 +648,8 @@ class Helper_Workshop
 					}
 					if ( $toggle ) {
 						$pos				=	(string)$position;
-						$key				=	'TPL_'.$style->template.'_POSITION_'.$pos;
-						$label				=	( $lang->hasKey( $key ) ) ? JText::_( 'TPL_'.$style->template.'_POSITION_'.$pos ) : $pos;
+						$key				=	'TPL_'.strtoupper( $style->template ).'_POSITION_'.strtoupper( str_replace( '-', '_', $pos ) );
+						$label				=	( $lang->hasKey( $key ) ) ? JText::_( $key ) : $pos;
 						$style->positions[]	= 	JHtml::_( 'select.option', $pos, $label );
 					}
 				}

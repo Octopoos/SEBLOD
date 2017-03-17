@@ -25,6 +25,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'created_by';
 	protected static $author_object	=	'joomla_user';
+	protected static $bridge_object	=	'';
 	protected static $child_object	=	'';
 	protected static $created_at	=	'created';
 	protected static $custom		=	'introtext';
@@ -97,7 +98,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$config['author']						=	$config['storages'][self::$table]->{self::$author};
 			}
 		}
-		if ( $config['doSEF'] && isset( $row->readmore_link ) ) {
+		if ( isset( $config['doSEF'] ) && $config['doSEF'] && isset( $row->readmore_link ) ) {
 			$row->readmore_link	=	self::getRouteByStorage( $config['storages'], $config['doSEF'], $config['Itemid'], $config );
 		}
 	}
@@ -731,7 +732,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$route		=	ContentHelperRoute::getArticleRoute( $item->slug, $item->catid, $item->language );
 		}
 		
-		return JRoute::_( $route );
+		return JRoute::_( $route, false );
 	}
 	
 	// getRouteByStorage
@@ -740,7 +741,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$idx	=	md5( $sef.'|'.$itemId.'|'.$lang_tag );
 		
 		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
-			return JRoute::_( $storage[self::$table]->_route[$idx] );
+			return JRoute::_( $storage[self::$table]->_route[$idx], false );
 		}
 
 		if ( $sef ) {
@@ -797,7 +798,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$storage[self::$table]->_route[$idx]	=	ContentHelperRoute::getArticleRoute( $storage[self::$table]->slug, $storage[self::$table]->catid, $storage[self::$table]->language );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route[$idx] );
+		return JRoute::_( $storage[self::$table]->_route[$idx], false );
 	}
 
 	// parseRoute
@@ -991,42 +992,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	public static function getId( $config )
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
-	
-	// getStaticProperties
-	public static function getStaticProperties( $properties )
-	{
-		static $autorized	=	array(
-									'access'=>'',
-									'author'=>'',
-									'author_object'=>'',
-									'child_object'=>'',
-									'created_at'=>'',
-									'context'=>'',
-									'contexts'=>'',
-									'custom'=>'',
-									'key'=>'',
-									'modified_at'=>'',
-									'ordering'=>'',
-									'parent'=>'',
-									'parent_object'=>'',
-									'routes'=>'',
-									'status'=>'',
-									'table'=>'',
-									'table_object'=>'',
-									'to_route'=>''
-								);
-		
-		if ( count( $properties ) ) {
-			foreach ( $properties as $i=>$p ) {
-				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
-				}
-				unset( $properties[$i] );
-			}
-		}
-		
-		return $properties;
 	}
 
 	// _getStaticParam (todo: need to be improved and moved)

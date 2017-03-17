@@ -62,8 +62,8 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 					if ( $field->storage_table == '' ) {
 						continue;
 					}
-					if ( !isset( $storages[$field->storage_table] ) ) {
-						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
 					}
 					if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
 					  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {

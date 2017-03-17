@@ -1004,13 +1004,14 @@ class JCckPluginField extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_addProcess
-	public static function g_addProcess( $event, $type, &$config, $params )
+	public static function g_addProcess( $event, $type, &$config, $params, $priority = 3 )
 	{
 		if ( $event && $type ) {
 			$process						=	new stdClass;
 			$process->group					=	self::$construction;
 			$process->type					=	$type;
 			$process->params				=	$params;
+			$process->priority				=	$priority;
 			$config['process'][$event][]	=	$process;
 		}
 	}

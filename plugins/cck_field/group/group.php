@@ -81,9 +81,9 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$table				=	$f->storage_table;
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
 						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 					}
-					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					//					
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
 					
@@ -150,7 +150,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$inherit					=	array();
 					$clone						=	clone $f;
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
-					$form[$f_name]				=	$results[0];
+					$form[$f_name]				=	@$results[0];
 					@$form[$f_name]->name		=	$f->name;
 					$config['fields'][$f->name]	=	$form[$f_name];
 				}

@@ -185,7 +185,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 
 		$js	=	'$("#'.$id.'").keyup(function() {
-					if ( $(this).attr("maxlength") != "undefinded" ) {
+					if ( $(this).attr("maxlength") != "undefined" ) {
 							$("#chars-'.$id.' span").html($(this).attr("maxlength")-$(this).val().length);
 					}
 				}).trigger("keyup");';
