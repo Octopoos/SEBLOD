@@ -67,6 +67,7 @@ jQuery(document).ready(function($) {
 	$('#json_options2_task_auto').isVisibleWhen('json_options2_task','export,process');
 	$('#json_options2_task_id_export').isVisibleWhen('json_options2_task','export');
 	$('#json_options2_task_id_process').isVisibleWhen('json_options2_task','process');
+	$('#json_options2_custom,#json_options2_itemid').isVisibleWhen('json_options2_task','save2redirect');
 	$('#json_options2_alt_link_text, #blank_li2').isVisibleWhen('bool2','2');
 	$("div#layer").on("click", "span.c_link", function() {
 		var type = $("#json_options2_alt_link").val();
