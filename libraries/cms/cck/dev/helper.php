@@ -474,6 +474,19 @@ abstract class JCckDevHelper
 		}
 	}
 
+	// setLanguage
+	public static function setLanguage( $tag )
+	{
+		$app	=	JFactory::getApplication();
+		$lang	=	JLanguage::getInstance( $tag );
+		
+		$app->loadLanguage( $lang );
+		JFactory::$language	=	$app->getLanguage();
+		
+		JFactory::getConfig()->set( 'language', $tag );
+		JFactory::getLanguage()->setLanguage( $tag );
+	}
+
 	// sortObjectsByProperty
 	public static function sortObjectsByProperty( &$array, $property )
 	{
