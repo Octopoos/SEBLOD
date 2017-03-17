@@ -33,21 +33,33 @@ class CCKController extends JControllerLegacy
 	// display
 	public function display( $cachable = false, $urlparams = false )
 	{
-		$cachable = true;
+		$cachable	=	true;
 
-		$vName = $this->input->getCmd('view', 'form');
-
-		// disable caching on forms and in search&list where search is performed
-		if ($vName == "form" || $this->input->getMethod() == 'POST' || ($this->input->getCmd('cck', null) && $this->task == 'search'))
-		{
-			$cachable = false;
+		// Disable caching on Forms and in Search & List where search is performed
+		if ( $this->input->getCmd( 'view', 'form' ) == "form" || $this->input->getMethod() == 'POST' ) {
+			$cachable	=	false;
+		} elseif ( $this->task == 'search' ) {
+			if ( JUri::getInstance()->getQuery() != '' ) {
+				$cachable = false;
+			}
 		}
 
-		$safeurlparams = array('catid' => 'INT', 'task' => 'CMD', 'type' => 'STRING', 'search' => 'STRING',
-			'boxchecked' => 'INT', 'lang' => 'CMD', 'Itemid' => 'INT');
+		if ( $cachable ) {
+			$safeurlparams	=	array(
+									'boxchecked' => 'INT',
+									'id' => 'INT',
+									'Itemid' => 'INT',
+									'lang' => 'CMD',
+									'return' => 'BASE64',
+									'search' => 'STRING',
+									'task' => 'CMD',
+									'type' => 'STRING'
+								);
+		} else {
+			$safeurlparams	=	false;
+		}
 
-		parent::display($cachable, $safeurlparams);
-
+		parent::display( $cachable, $safeurlparams );
 	}
 	
 	// ajax
@@ -178,6 +190,7 @@ class CCKController extends JControllerLegacy
 								'pk'=>$core->pk,
 								'pkb'=>0,
 								'store_id'=>$core->store_id,
+								'storages'=>array(),
 								'task'=>'download',
 								'type'=>$core->type,
 								'type_id'=>$core->type_id,
@@ -187,7 +200,7 @@ class CCKController extends JControllerLegacy
 			$field->value	=	$core->value;
 			$pk				=	$core->pk;
 			$value			=	'';
-
+			
 			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
@@ -207,6 +220,64 @@ class CCKController extends JControllerLegacy
 				$field->restriction			=	$restricted;
 				$field->restriction_options	=	$clients[$client]->restriction_options;
 				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+				
+				if ( $allowed ) {
+					require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+					$name		=	$field->name;
+					$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
+					$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
+					
+					if ( count( $fields ) ) {
+						foreach ( $fields as $field2 ) {
+							$value2	=	'';
+
+							if ( $field2->name ) {
+								$Pt	=	$field2->storage_table;
+								if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+									$config['storages'][$Pt]	=	'';
+									$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+								}
+								
+								$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+								if ( is_string( $value2 ) ) {
+									$value2		=	trim( $value2 );
+								}
+								
+								$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+
+								// Was it the last one?
+								// if ( $config['error'] ) {
+									// break;
+								// }
+							}
+						}
+					}
+					
+					// Merge
+					if ( count( $config['fields'] ) ) {
+						foreach ( $config['fields'] as $k=>$v ) {
+							if ( $v->restriction != 'unset' ) {
+								$fields[$k]	=	$v;
+							}
+						}
+						$config['fields']	=	NULL;
+						unset( $config['fields'] );
+					}
+
+					if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+						JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+						foreach ( $config['process']['beforeRenderContent'] as $process ) {
+							if ( $process->type ) {
+								JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
+							}
+						}
+					}
+
+					$allowed	=	(bool)$fields[$name]->state;
+				}
+
 				if ( $allowed !== true ) {
 					$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 					return;
@@ -281,7 +352,7 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_EXPORTED' ), 'message' );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -327,6 +398,41 @@ class CCKController extends JControllerLegacy
 		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
 	}
 
+	// processAjax
+	public function processAjax()
+	{
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
+			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$config		=	array();
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
+		$ids		=	ArrayHelper::toInteger( $ids );
+		
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
+		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
+
+		$config		=	array();
+		$model->process( $params, $task_id, $ids, $config );
+		
+		$return		=	array(
+							'error'=>0,
+							'id'=>@$config['id'],
+							'isNew'=>1,
+							'pk'=>$config['pk']
+						);
+
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
+	}
+
 	// process
 	public function process()
 	{
@@ -369,11 +475,25 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $link, $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $link, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
+	}
+
+	// route
+	public function route()
+	{
+		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
+		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
+		
+		if ( $url != '' ) {
+			if ( $url[0] == '/' ) {
+				$url	=	substr( $url, 1 );
+			}
+		}
+		echo JRoute::_( $url );
 	}
 
 	// saveAjax
@@ -392,20 +512,6 @@ class CCKController extends JControllerLegacy
 		}
 		
 		echo json_encode( $return );
-	}
-
-	// route
-	public function route()
-	{
-		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
-		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
-		
-		if ( $url != '' ) {
-			if ( $url[0] == '/' ) {
-				$url	=	substr( $url, 1 );
-			}
-		}
-		echo JRoute::_( $url );
 	}
 
 	// save	
@@ -486,6 +592,7 @@ class CCKController extends JControllerLegacy
 		$link		=	$this->_getReturnPage( false );
 		$redirect	=	( isset( $config['options']['redirection'] ) ) ? $config['options']['redirection'] : '';
 		$return		=	'';
+
 		if ( $task == 'apply' || $task == 'save2copy' ) {
 			$link		=	'';
 			$redirect	=	'form_edition';
@@ -500,7 +607,12 @@ class CCKController extends JControllerLegacy
 		} elseif ( $task == 'save2redirect' ) {
 			$link		=	'';
 			$redirect	=	'';
+		} elseif ( $task == 'save' ) {
+			if ( !$link ) {
+				/* Inherited */
+			}
 		}
+
 		if ( !$link ) {
 			switch ( $redirect ) {
 				case 'content':
