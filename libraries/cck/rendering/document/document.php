@@ -9,7 +9,7 @@
 defined('JPATH_PLATFORM') or die;
 
 //Register the renderer class with the loader
-JLoader::register( 'CCK_DocumentRenderer', dirname(__FILE__).'/renderer.php' );
+JLoader::register( 'CCK_DocumentRenderer', __DIR__.'/renderer.php' );
 jimport('joomla.filter.filteroutput');
 
 // CCK_Document
@@ -75,7 +75,7 @@ class CCK_Document extends JObject
 
 		if (empty($instances[$signature])) {
 			$type	= preg_replace('/[^A-Z0-9_\.-]/i', '', $type);
-			$path	= dirname(__FILE__) . '/' . $type . '/' . $type.'.php';
+			$path	= __DIR__ . '/' . $type . '/' . $type.'.php';
 			$ntype	= null;
 
 			// Check if the document type exists
@@ -88,7 +88,7 @@ class CCK_Document extends JObject
 			// Determine the path and class
 			$class = 'CCK_Document'.$type;
 			if (!class_exists($class)) {
-				$path	= dirname(__FILE__) . '/' . $type . '/' . $type.'.php';
+				$path	= __DIR__ . '/' . $type . '/' . $type.'.php';
 				if (file_exists($path)) {
 					require_once $path;
 				}
@@ -171,7 +171,7 @@ class CCK_Document extends JObject
 		$class	= 'CCK_DocumentRenderer'.$type;
 
 		if (!class_exists($class)) {
-			$path = dirname(__FILE__) . '/' . $this->_type . '/renderer/' . $type.'.php';
+			$path = __DIR__ . '/' . $this->_type . '/renderer/' . $type.'.php';
 
 			if (file_exists($path)) {
 				require_once $path;

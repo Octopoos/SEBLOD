@@ -26,22 +26,48 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 										);
 	} else {
 		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
-		$location				=	$this->item->title;
+		$pos					=	strpos( $this->item->title, '__' );
 		$prefix					=	JFactory::getConfig()->get( 'dbprefix' );
-		if ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
-			$properties				=	array( 'table'=>str_replace( $prefix, '#__', $location ) );
+
+		if ( $pos !== false && $pos == 0 ) {
+			$properties			=	array( 'table'=>str_replace( '#__', $prefix, '#'.$this->item->title ) );
 		} else {
-			$properties			=	array( 'table' );
-			if ( $location != '' ) {
-				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
-				$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$location, 'getStaticProperties', $properties );
+			$location			=	$this->item->title;
+			$pos				=	strpos( $location, 'aka_' );
+			
+			if ( $pos !== false && $pos == 0 ) {
+				$properties			=	array();
+			} elseif ( strpos( $location, '#__' ) !== false || strpos( $location, $prefix ) !== false ) {
+				$properties			=	array( 'table'=>str_replace( '#__', $prefix, $location ) );
+			} else {
+				$properties			=	array( 'table' );
+				if ( $location != '' ) {
+					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
+					$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$location, 'getStaticProperties', $properties );
+
+					if ( isset( $properties['table'] ) ) {
+						$properties['table']	=	str_replace( '#__', $prefix, $properties['table'] );
+					}
+				}
 			}
 		}
+
 		if ( isset( $properties['table'] ) && $properties['table'] != '' ) {
-			$columns			=	JCckDatabase::loadColumn( 'SHOW COLUMNS FROM '.$properties['table'] );
-			if ( count( $columns ) ) {
-				natsort( $columns );
-				$columns		=	array_combine( $columns, $columns );
+			$columns			=	array();
+			$tables				=	JCckDatabase::getTableList( true );
+			
+			if ( isset( $tables[$properties['table']] ) ) {
+				$target			=	$properties['table'];
+
+				if ( $this->item->name != '' && $this->item->name != 'map' ) {
+					$target		=	$this->item->name;
+				}
+				$columns		=	JCckDatabase::loadColumn( 'SHOW COLUMNS FROM '.$target );
+
+				if ( count( $columns ) ) {
+					natsort( $columns );
+					$columns		=	array_combine( $columns, $columns );
+				}
 			}
 			$columns			=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
 		} else {

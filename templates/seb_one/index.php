@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // -- Initialize
-require_once dirname(__FILE__).'/config.php';
+require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
@@ -193,8 +193,11 @@ $cck->addStyleDeclaration( $css );
     <?php // hidden
     if ( $cck->countFields( 'modal' ) ) {
         JHtml::_( 'bootstrap.modal', 'collapseModal' );
+        
+        $class = $cck->getPosition( 'modal' )->css;
+        $class = ( $class ) ? ' ' . $class : '';
         ?>
-        <div class="modal hide fade" id="collapseModal">
+        <div class="modal hide fade<?php echo $class; ?>" id="collapseModal">
             <?php echo $cck->renderPosition( 'modal' ); ?>
         </div>
     <?php } ?>

@@ -43,6 +43,7 @@ echo $this->data;
     <input type="hidden" name="return_o" value="<?php echo $app->input->get( 'return_o', '' ); ?>" />
     <input type="hidden" name="return_v" value="<?php echo $app->input->get( 'return_v', '' ); ?>" />
     <input type="hidden" name="return_extension" value="<?php echo $app->input->get( 'extension', '' ); ?>" />
+    <input type="hidden" name="config[copyfrom_id]" value="<?php echo @$this->config['copyfrom_id']; ?>" />
     <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
     <input type="hidden" name="config[unique]" value="" />
 	<?php echo JHtml::_( 'form.token' ); ?>

@@ -121,18 +121,24 @@ class CCKViewList extends JViewLegacy
 		$this->show_list_title			=	$params->get( 'show_list_title' );
 		if ( $this->show_list_title == '' ) {
 			$this->show_list_title		=	$options->get( 'show_list_title', '1' );
-			$this->tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
-			$this->class_list_title		=	$options->get( 'class_list_title' );
+			$this->tag_list_title		=	$options->get( 'tag_list_title', 'h1' );
+			$this->class_list_title		=	$options->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
 		} elseif ( $this->show_list_title ) {
-			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h2' );
-			$this->class_list_title		=	$params->get( 'class_list_title' );
+			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h1' );
+			$this->class_list_title		=	$params->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
 		}
-		if ( $params->get( 'display_list_title', '' ) == '1' ) {
+		if ( $params->get( 'display_list_title', '' ) == '2' ) {
+			$this->title				=	'';
+
+			if ( is_object( $search ) ) {
+				$this->title			=	JText::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+			}
+		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
 			$this->title				=	$params->get( 'title_list_title', '' );
 		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
 			$this->title				=		$menu->title;
 		} else {
-			$this->title				=		@$search->title;
+			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 		}
 
 		$this->show_list_desc			=	$params->get( 'show_list_desc' );
@@ -183,14 +189,31 @@ class CCKViewList extends JViewLegacy
 		$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', 1 ) );
 		$this->show_pagination			=	$params->get( 'show_pagination' );
 		$this->class_pagination			=	$params->get( 'class_pagination', 'pagination' );
+		$this->label_pagination			=	$options->get( 'label_pagination', '' );
 		if ( $this->show_pagination == '' ) {
 			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
 			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
 			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
+
+			if ( $this->label_pagination != '' ) {
+				if ( $config['doTranslation'] ) {
+					$this->label_pagination	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
+				}
+			}
+			if ( $this->label_pagination == '' ) {
+				$this->label_pagination	=	JText::_( 'COM_CCK_LOAD_MORE' );
+			}
 		} else {
 			$this->callback_pagination	=	'';
+			$this->label_pagination		=	'';
 		}
 		
+		$this->load_resource			=	$options->get( 'load_resource', 0 );
+		if ( $this->load_resource ) {
+			$this->json_resource		=	$options->get( 'json_resource', '{}' );
+			$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
+		}
+
 		// Force Titles to be hidden
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			$params->set( 'show_page_heading', 0 );

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Controller
 class CCKController extends JControllerLegacy
 {
@@ -133,10 +135,18 @@ class CCKController extends JControllerLegacy
 		// --
 
 		if ( $fields && $client && $type_id ) {
-			$query	=	'UPDATE #__cck_core_type_field'
-					.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
-					.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
-			JCckDatabase::execute( $query );
+			if ( $client == 'list' ) {
+				$client	=	'intro';
+				/*
+				TODO
+				*/
+				return;
+			} else {
+				$query	=	'UPDATE #__cck_core_type_field'
+						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
+				JCckDatabase::execute( $query );
+			}
 		}
 
 		if ( is_object( $table2 ) ) {
@@ -199,6 +209,7 @@ class CCKController extends JControllerLegacy
 		$lang->load( 'plg_cck_field_'.$field->type );
 		
 		$style		=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
+		$prefix		=	JFactory::getDbo()->getPrefix();
 		$data		=	Helper_Workshop::getParams( $element, $master, $client );
 		$data2      =   array(
 							'construction'=>array(
@@ -216,16 +227,20 @@ class CCKController extends JControllerLegacy
 						);
 
 		if ( $master == 'search' && @$field->storage_table != '' ) {
-			$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
+			$tables	=	JCckDatabase::getTableList( true );
+			
+			if ( isset( $tables[str_replace( '#__', $prefix, $field->storage_table )] ) ) {
+				$columns	=	JCckDatabase::loadObjectList( 'SHOW COLUMNS FROM `'.$field->storage_table.'`', 'Field' );
 
-            if ( isset( $columns[$field->storage_field] ) ) {
-                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
-                
-                if ( $pos !== false ) {
-                    $field->match_mode      =   'exact';
-                    $field->match_options   =   '{"var_type":"0"}';
-                }
-            }
+	            if ( isset( $columns[$field->storage_field] ) ) {
+	                $pos    =   strpos( $columns[$field->storage_field]->Type, 'int(' );
+	                
+	                if ( $pos !== false ) {
+	                    $field->match_mode      =   'exact';
+	                    $field->match_options   =   '{"var_type":"0"}';
+	                }
+	            }
+	        }
 		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
@@ -475,6 +490,31 @@ class CCKController extends JControllerLegacy
 		}
 	}
 	
+	// saveOrderAjax
+	public function saveOrderAjax()
+	{
+		$app	=	JFactory::getApplication();
+		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
+		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
+
+		// Sanitize the input
+		$pks	=	ArrayHelper::toInteger( $pks );
+		$order	=	ArrayHelper::toInteger( $order );
+
+		// Get the model
+		$model 	= 	$this->getModel( 'list' );
+
+		// Save the ordering
+		$return	= 	$model->saveOrder( $pks, $order );
+
+		if ( $return ) {
+			echo '1';
+		}
+
+		// Close the application
+		$app->close();
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
 	
 	// _setUIX

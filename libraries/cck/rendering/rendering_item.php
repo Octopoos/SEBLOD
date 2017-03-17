@@ -40,7 +40,7 @@ class CCK_Item
 		$this->id			=	'cck'.$pk;
 		$this->mode			=	'content';
 		$this->path 		= 	JPATH_SITE.'/templates/'.$template;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->template		=	$template;
 		$this->theme		=	JFactory::getApplication()->getTemplate();
 		$this->type			=	$type;
@@ -105,7 +105,7 @@ class CCK_Item
 			$this->css	=	'';
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$doc->addScriptDeclaration( '(function ($){$(document).ready(function(){'.$this->js.'});})(jQuery);' );
 			$this->js	=	'';
 		}
 		if ( $this->js2 != '' ) {

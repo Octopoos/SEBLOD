@@ -27,6 +27,8 @@ class JCckContent
 	protected $_instance_more		=	'';
 	protected $_instance_more2		=	'';
 	
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
+
 	// __construct
 	public function __construct( $identifier = '', $data = true )
 	{
@@ -41,18 +43,49 @@ class JCckContent
 	public static function getInstance( $identifier = '', $data = true )
 	{
 		if ( !$identifier ) {
+			if ( ( $classname = get_called_class() ) != 'JCckContent' ) {
+				return new $classname;
+			}
+
 			return new JCckContent;
 		}
-
 		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
+
 		if ( !isset( self::$instances[$key] ) ) {
-			$instance	=	new JCckContent( $identifier );
-			self::$instances[$key]	=	$instance;
+			$classname	=	'JCckContent';
+			$object		=	'';
+
+			if ( is_array( $identifier ) ) {
+				if ( isset( $identifier[0] ) && $identifier[0] != '' ) {
+					$object	=	$identifier[0];
+				}
+			} else {
+				$object	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+
+				if ( !$object ) {
+					$object	=	'';
+				}
+			}
+			if ( $object && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php' ) ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php';
+				
+				$classname	=	'JCckContent'.$object;
+			}
+
+			self::$instances[$key]	=	new $classname( $identifier );
 		}
 
 		return self::$instances[$key];
 	}
 	
+	// getInstanceBase
+	protected function getInstanceBase()
+	{
+		return JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Init
+
 	// create
 	public function create( $cck, $data_content, $data_more = null, $data_more2 = null )
 	{
@@ -66,10 +99,14 @@ class JCckContent
 			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			$this->_columns		=	$this->_getProperties();
 			$this->_table		=	$this->_columns['table'];
+			
+			if ( !$this->_object ) {
+				return;
+			}
 		}
 		
-		$this->_instance_base	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
-		
+		$this->_instance_base	=	$this->getInstanceBase();
+
 		$author_id 		=	0; // TODO: Get default author id
 		$parent_id		=	0; // TODO: Get default parent_id
 		
@@ -215,6 +252,12 @@ class JCckContent
 		return $this->_table;
 	}
 
+	// getType
+	public function getType()
+	{
+		return $this->_type;
+	}
+
 	// load
 	public function load( $identifier, $data = true )
 	{
@@ -225,7 +268,7 @@ class JCckContent
 		if ( is_array( $identifier ) ) {
 			$this->_object			=	$identifier[0];
 			$this->_columns			=	$this->_getProperties();
-			$this->_instance_base	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+			$this->_instance_base	=	$this->getInstanceBase();
 			
 			if( !isset( $identifier[1] ) ) {
 				return;
@@ -236,7 +279,7 @@ class JCckContent
 			$core					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
 			$this->_object			=	$core->storage_location;
 			$this->_columns			=	$this->_getProperties();
-			$this->_instance_base	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+			$this->_instance_base	=	$this->getInstanceBase();
 		}
 		if ( !( @$core->id && @$core->pk ) ) {
 			return false;
@@ -307,98 +350,6 @@ class JCckContent
 		}
 	}
 
-	// bind
-	public function bind( $instance_name, $data )
-	{
-		return $this->{'_instance_'.$instance_name}->bind( $data );
-	}
-	
-	// store
-	public function store( $instance_name )
-	{
-		return $this->{'_instance_'.$instance_name}->store();
-	}
-	
-	// save
-	public function save( $instance_name, $data )
-	{
-		/* TODO: this is no good, and will need to move, but later! */
-		if ( $instance_name == 'base' ) {
-			if ( $this->_object == 'joomla_menu_item' ) {
-				$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
-			}
-		}
-		/* TODO: this is no good, and will need to move, but later! */
-
-		$status	=	$this->{'_instance_'.$instance_name}->bind( $data );
-		$status	=	$this->{'_instance_'.$instance_name}->check();
-		
-		/* TODO: this is no good, and will need to move, but later! */
-		if ( $instance_name == 'base' ) {
-			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
-				$this->{'_instance_'.$instance_name}->language	=	'*';
-			}
-			$status			=	$this->{'_instance_'.$instance_name}->store();
-
-			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
-				$i			=	2;
-				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
-				$property	=	$this->_columns['parent'];
-				$test		=	JTable::getInstance( 'content' );
-				
-				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
-					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
-				}
-				$this->{'_instance_'.$instance_name}->alias	=	$alias;
-
-				$status		=	$this->{'_instance_'.$instance_name}->store();
-
-				/* TODO: publish_up */
-			}
-		} else {
-			$status			=	$this->{'_instance_'.$instance_name}->store();
-		}
-		/* TODO: this is no good, and will need to move, but later! */
-
-		if ( $status ) {
-			switch( $instance_name ) {
-				case 'base':
-					$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
-					
-					if ( $this->_instance_core->id ) {
-						$data_core	=	array();
-
-						if ( $this->_columns['author'] == $this->_columns['key'] ) {
-							$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
-						} elseif ( isset( $data[$this->_columns['author']] ) ) {
-							$data_core['author_id']	=	$data[$this->_columns['author']];
-						}
-						if ( isset( $data[$this->_columns['parent']] ) ) {
-							$data_core['parent_id']	=	$data[$this->_columns['parent']];
-						}
-						if ( count( $data_core ) ) {
-							$this->save( 'core', $data_core );
-						}
-					}
-					break;
-				case 'core':
-					$this->_id	=	$this->{'_instance_'.$instance_name}->id;
-					
-					if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
-						$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
-					}
-					$this->store( 'base' );
-					break;
-				case 'more':
-				case 'more2':
-				default:
-					break;
-			}
-		}
-		
-		return $status;
-	}
-
 	// set
 	public function set( $instance_name, $property, $value )
 	{
@@ -425,6 +376,117 @@ class JCckContent
 
 		$this->_instance_core->store();
 	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Store
+
+	// bind
+	public function bind( $instance_name, $data )
+	{
+		return $this->{'_instance_'.$instance_name}->bind( $data );
+	}
+
+	// check
+	public function check( $instance_name )
+	{
+		return $this->{'_instance_'.$instance_name}->check();
+	}
+
+	// postSave
+	public function postSave( $instance_name, $data )
+	{
+		switch( $instance_name ) {
+			case 'base':
+				$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
+				
+				if ( $this->_instance_core->id ) {
+					$data_core	=	array();
+
+					if ( $this->_columns['author'] == $this->_columns['key'] ) {
+						$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
+					} elseif ( isset( $data[$this->_columns['author']] ) ) {
+						$data_core['author_id']	=	$data[$this->_columns['author']];
+					}
+					if ( isset( $data[$this->_columns['parent']] ) ) {
+						$data_core['parent_id']	=	$data[$this->_columns['parent']];
+					}
+					if ( count( $data_core ) ) {
+						$this->save( 'core', $data_core );
+					}
+				}
+				break;
+			case 'core':
+				$this->_id	=	$this->{'_instance_'.$instance_name}->id;
+				
+				if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
+					$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+				}
+				$this->store( 'base' );
+				break;
+			case 'more':
+			case 'more2':
+			default:
+				break;
+		}
+	}
+	
+	// preSave
+	public function preSave( $instance_name, &$data )
+	{
+	}
+	
+	// save
+	public function save( $instance_name, $data = array() )
+	{
+		$this->preSave( $instance_name, $data );
+
+		$status		=	$this->bind( $instance_name, $data );
+		$status		=	$this->check( $instance_name );
+
+		if ( get_class( $this ) == 'JCckContent' ) {
+			$status	=	$this->_saveLegacy( $instance_name, $data );
+		} else {
+			$method	=	'save'.ucfirst( $instance_name );
+			$status	=	$this->$method();
+		}
+
+		if ( $status ) {
+			$this->postSave( $instance_name, $data );
+		}
+		
+		return $status;
+	}
+
+	// saveBase
+	public function saveBase()
+	{
+		return $this->store( 'base' );
+	}
+
+	// saveCore
+	public function saveCore()
+	{
+		return $this->store( 'core' );
+	}
+
+	// saveMore
+	public function saveMore()
+	{
+		return $this->store( 'more' );
+	}
+
+	// saveMore2
+	public function saveMore2()
+	{
+		return $this->store( 'more2' );
+	}
+
+	// store
+	public function store( $instance_name )
+	{
+		return $this->{'_instance_'.$instance_name}->store();
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Others
 	
 	// _getProperties
 	protected function _getProperties()
@@ -438,6 +500,39 @@ class JCckContent
 		}
 		
 		return $properties;
+	}
+
+	// _saveLegacy (deprecated)
+	protected function _saveLegacy( $instance_name, $data )
+	{
+		/* TODO: this is no good, and will need to move, but later! */
+		if ( $instance_name == 'base' ) {
+			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
+				$this->{'_instance_'.$instance_name}->language	=	'*';
+			}
+			$status			=	$this->store( $instance_name );
+
+			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
+				$i			=	2;
+				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
+				$property	=	$this->_columns['parent'];
+				$test		=	JTable::getInstance( 'content' );
+				
+				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
+					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
+				}
+				$this->{'_instance_'.$instance_name}->alias	=	$alias;
+
+				$status		=	$this->store( $instance_name );
+
+				/* TODO: publish_up */
+			}
+		} else {
+			$status			=	$this->store( $instance_name );
+		}
+		/* TODO: this is no good, and will need to move, but later! */
+
+		return $status;
 	}
 }
 ?>

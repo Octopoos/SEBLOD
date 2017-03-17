@@ -151,7 +151,11 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		}
 		
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$size	=	( @$field->rows ) ? $field->rows : count( $opts );		
+		$size	=	( @$field->rows ) ? $field->rows : count( $opts );
+		
+		if ( count( $value ) && $value[0] != '' ) {
+			$class	.=	' has-value';
+		}
 		$attr	=	'class="'.$class.'" size="'.$size.'" multiple="multiple"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {

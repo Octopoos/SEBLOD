@@ -20,6 +20,7 @@ JCckDev::initScript( 'typo', $this->item );
 		echo JCckDev::renderForm( 'core_jgrid_type', '', $config );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'btn btn-micro hasTooltip', 'size'=>24, 'storage_field'=>'class' ) );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Start', 'defaultvalue'=>'1', 'options'=>'0=0||1=1', 'storage_field'=>'start' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'', 'size'=>24, 'storage_field'=>'class1' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'input-small', 'size'=>24, 'storage_field'=>'class2' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_IDENTIFIER' ).'</label>'
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'id', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'identifier' ) )
@@ -32,6 +33,9 @@ JCckDev::initScript( 'typo', $this->item );
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Trigger Change', 'defaultvalue'=>'0', 'storage_field'=>'trigger' ) );
 
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Down Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_down' ) );
+
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Always=-2', 'storage_field'=>'typo_label' ) );
 		echo JCckDev::renderBlank();
@@ -43,11 +47,13 @@ JCckDev::initScript( 'typo', $this->item );
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#class').isVisibleWhen('type','activation,block,featured,state');
+	$('#class1').isVisibleWhen('type','dropdown');
 	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden');
 	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,increment');
 	$('#identifier_suffix').isDisabledWhen('type','increment');
 	$('#blank_li').isVisibleWhen('type','increment');
 	$('#start').isVisibleWhen('type','increment');
 	$('#trigger').isVisibleWhen('type','form,selection');
+	$('#state_up,#state_down').isVisibleWhen('type','state');
 });
 </script>

@@ -19,7 +19,7 @@ $options	=	implode( '||', $options );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_FIELDS' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
 		<?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Core Table', 'selectlabel'=>'', 'options'=>'All Fields=0||No Fields=-1||Only Selected Fields=1', 'storage_field'=>'columns[core]' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Core Table', 'selectlabel'=>'', 'options'=>'All Fields=0||No Fields or from List=-1||Only Selected Fields=1', 'storage_field'=>'columns[core]' ) );
 		echo '<li><label></label>'
 		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'', 'selectlabel'=>'', 'type'=>'select_multiple', 'options'=>$options, 'bool8'=>0, 'size'=>0, 'storage_field'=>'columns[core_selected]' ) )
 		 .	 '</li>';

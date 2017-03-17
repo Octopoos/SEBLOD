@@ -58,7 +58,7 @@ class JCckInstallerScriptComponent
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
 			$pk		=	$db->loadResult();
@@ -67,6 +67,10 @@ class JCckInstallerScriptComponent
 			}
 		}
 		
+		if ( !( is_object( $this->cck ) && isset( $this->cck->element ) && $this->cck->element != '' ) ) {
+			return;
+		}
+
 		$lang		=	JFactory::getLanguage();
 		$title		=	(string)$this->cck->element;
 		$lang->load( $title );

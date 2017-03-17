@@ -14,17 +14,36 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommercePayment
 {
 	// getGateway
-	public static function getGateway()
+	public static function getGateway( $name = '' )
+	{
+		$user	=	JFactory::getUser();
+		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
+		$and	=	'';
+
+		if ( $name != '' ) {
+			$and	=	' AND type = '.JFactory::getDbo()->quote( $name );
+		}
+		$name	=	JCckDatabase::loadResult( 'SELECT type'
+											. ' FROM #__cck_more_ecommerce_gateways'
+											. ' WHERE published = 1 AND access IN ('.$access.')'
+											. $and
+											. ' ORDER BY id DESC' );
+		
+		return $name;
+	}
+
+	// getGateways
+	public static function getGateways()
 	{
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 
-		$name	=	JCckDatabase::loadResult( 'SELECT type'
+		$items	=	JCckDatabase::loadObjectList( 'SELECT title, type'
 											. ' FROM #__cck_more_ecommerce_gateways'
 											. ' WHERE published = 1 AND access IN ('.$access.')'
-											. ' ORDER BY id DESC' );
+											. ' ORDER BY title ASC' );
 		
-		return $name;
+		return $items;
 	}
 
 	// getListenUrl

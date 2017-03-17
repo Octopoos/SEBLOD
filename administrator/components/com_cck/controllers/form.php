@@ -135,14 +135,15 @@ class CCKControllerForm extends JControllerForm
 	// _getPreconfig
 	protected function _getPreconfig()
 	{
-		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+		$data	=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
 
-		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
-		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
-		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
-		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
-		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
-		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];
+		$data['copyfrom_id']	=	( !isset( $data['copyfrom_id'] ) ) ? 0 : $data['copyfrom_id'];
+		$data['id']				=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
+		$data['itemId']			=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['message']		=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['type']			=	( !isset( $data['type'] ) ) ? '' : $data['type'];
+		$data['unique']			=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
+		$data['url']			=	( !isset( $data['url'] ) ) ? '' : $data['url'];
 
 		return $data;
 	}

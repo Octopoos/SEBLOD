@@ -80,6 +80,10 @@ class plgContentCCK extends JPlugin
 	// onContentAfterDelete
 	public function onContentAfterDelete( $context, $data )
 	{
+		if ( empty( $context ) ) {
+			return false;
+		}
+
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
@@ -97,10 +101,12 @@ class plgContentCCK extends JPlugin
 		$base 		= 	str_replace( '#__', '', $data->getTableName() );
 		
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-		$properties		= 	array( 'custom' );
+		$properties		= 	array( 'bridge_object', 'custom' );
 		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+		$bridge_object 	= 	$properties['bridge_object'];
 		$custom 		= 	$properties['custom'];
 		$parent			=	'';
+		$pkb			=	0;
 		$type			=	'';
 
 		// Core
@@ -114,13 +120,15 @@ class plgContentCCK extends JPlugin
 
 			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $id );
 			$type	=	$table->cck;
+			$pkb	=	(int)$table->pkb;
 		} else {
 			$table	=	JCckTable::getInstance( '#__cck_core' );
 			if ( $table->load( array( 'pk'=>$pk, 'storage_location'=>$object ) ) ) {
 				$type	=	$table->cck;
+				$pkb	=	(int)$table->pkb;
 			}
 		}
-		
+
 		if ( $table->pk > 0 ) {
 			// -- Leave nothing behind
 			if ( $type != '' ) {
@@ -158,6 +166,22 @@ class plgContentCCK extends JPlugin
 			// -- Leave nothing behind
 
 			$table->delete();
+
+			if ( $pkb > 0 ) {
+				if ( $bridge_object == 'joomla_category' ) {
+					JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+
+					$bridge	=	JTable::getInstance( 'category' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				} elseif ( $bridge_object == 'joomla_article' ) {
+					JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+
+					$bridge	=	JTable::getInstance( 'content' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				}
+			}
 		}
 
 		// Processing
@@ -244,6 +268,10 @@ class plgContentCCK extends JPlugin
 						.	' WHERE a.id = "'.(string)$matches[1].'"'
 						;
 		$cck			=	JCckDatabase::loadObject( $query );
+
+		if ( !is_object( $cck ) ) {
+			return;
+		}
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
 		
@@ -278,7 +306,7 @@ class plgContentCCK extends JPlugin
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		if ( $client == 'intro' && $this->cache ) {
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -288,7 +316,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -303,7 +331,7 @@ class plgContentCCK extends JPlugin
 			} else {
 				$w_type	=	'sc.name = "'.$contentType.'"';	
 			}
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -317,7 +345,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -464,7 +492,6 @@ class plgContentCCK extends JPlugin
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 				if ( $fieldName ) {
 					$Pt	=	$field->storage_table;
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -515,6 +542,8 @@ class plgContentCCK extends JPlugin
 		
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
 			foreach ( $config['process']['beforeRenderContent'] as $process ) {
 				if ( $process->type ) {
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );

@@ -10,9 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
-$column		=	'';
-if ( $options->get( 'order_by' ) ) {
+$column	=	'';
+$target	=	(int)$options->get( 'order_by', '' );
+
+if ( $target == 1 ) {
 	$column	=	$options->get( 'order_by_fieldname' );
+} elseif ( $target == 2 ) {
+	$fields	=	$cck->getFields( $position, '', false );
+	$items	=	$cck->getItems();
+	$item	=	current( $items );
+
+	if ( count( $fields ) > 1 ) {
+		foreach ( $fields as $field_name ) {
+			if ( $item->getState( $field_name ) ) {
+				$column	=	$field_name;
+
+				break;
+			}
+		}
+	}
 }
 if ( $column == '' ) {
 	$fields	=	$cck->getFields( $position, '', false );
@@ -45,7 +61,7 @@ if ( $type == 'ordering' ) {
 	$attr		=	'onclick="jQuery(\'#'.$name.'\').val(\''.$value.'\'); JCck.Core.submit(\'search\'); return false;" class="hasTooltip" title="'.$tooltip.'"';
 	$legend		=	'<a href="javascript:void(0);" '.$attr.'>'.$legend.'</a>';
 } elseif ( $type == 'selection' ) {
-	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);">';	
+	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);" data-cck-remove-before-search="" />';
 }
 
 // Set

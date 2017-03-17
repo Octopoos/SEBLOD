@@ -16,7 +16,7 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.p
 class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_LocationJoomla_User
 {
 	protected static $columns_excluded	=	array( 'isRoot', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
-	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper' );
+	protected static $columns_ignored	=	array( 'isRoot', 'id', 'password', 'password_clear', 'usertype', 'guest', 'aid', 'userHelper', 'otpKey', 'otep' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -58,11 +58,13 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 		
 		if ( count( $config['fields2'] ) ) {
 			foreach ( $config['fields2'] as $k=>$field ) {
-				if ( $field->storage_table == '' ) {
-					continue;
-				}
-				if ( !isset( $storages[$field->storage_table] ) ) {
-					$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
+				if ( $field->storage != 'none' ) {
+					if ( $field->storage_table == '' ) {
+						continue;
+					}
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
+					}
 				}
 				if ( $config['component'] == 'com_cck_exporter' ) {
 					$key		=	$field->name;
@@ -148,15 +150,17 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 				// More
 				if ( count( $config['fields2'] ) ) {
 					foreach ( $config['fields2'] as $name=>$field ) {
-						if ( $field->storage_table == '' ) {
-							continue;
+						if ( $field->storage != 'none' ) {
+							if ( $field->storage_table == '' ) {
+								continue;
+							}
+						}
+						if ( $config['component'] == 'com_cck_exporter' ) {
+							$key		=	$field->name;
+						} else {
+							$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
 						}
 						if ( $field->storage == 'standard' ) {
-							if ( $config['component'] == 'com_cck_exporter' ) {
-								$key		=	$field->name;
-							} else {
-								$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
-							}
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
@@ -166,13 +170,8 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$fields[$key]	=	$val;
 							}
-						} else {
+						} elseif ( $field->storage != 'none' ) {
 							$name			=	$field->storage_field2 ? $field->storage_field2 : $name;
-							if ( $config['component'] == 'com_cck_exporter' ) {
-								$key		=	$field->name;
-							} else {
-								$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
-							}
 							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
 								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array();	// TODO
 							}
@@ -185,6 +184,8 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$fields[$key]	=	$val;
 							}
+						} else {
+							$fields[$key]		=	'';
 						}
 					}
 				}
@@ -193,6 +194,33 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 				$fields['groups']	=	implode( ',', $fields['groups'] );
 				// ---
 				
+				// BeforeImport
+				$event	=	'onCckPreBeforeExport';
+				if ( isset( $config['processing'][$event] ) ) {
+					foreach ( $config['processing'][$event] as $p ) {
+						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+							$options	=	new JRegistry( $p->options );
+
+							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
+						}
+					}
+				}
+
+				/*
+				TODO: beforeExport
+				*/
+
+				$event	=	'onCckPostBeforeExport';
+				if ( isset( $config['processing'][$event] ) ) {
+					foreach ( $config['processing'][$event] as $p ) {
+						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+							$options	=	new JRegistry( $p->options );
+
+							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
+						}
+					}
+				}
+
 				// Export
 				if ( $config['ftp'] == '1' ) {
 					$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";

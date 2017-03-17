@@ -2,10 +2,7 @@
 
 /.htaccess
 /administrator/cache/*
-/administrator/components/com_admin/*
 /administrator/components/com_ajax/*
-/.htaccess
-/administrator/cache/*
 /administrator/components/com_admin/*
 /administrator/components/com_banners/*
 /administrator/components/com_cache/*
@@ -505,6 +502,7 @@
 /administrator/language/en-GB/index.html
 /administrator/language/overrides/*
 /administrator/language/index.html
+/administrator/logs/*
 /administrator/manifests/files/*
 /administrator/manifests/libraries/fof.xml
 /administrator/manifests/libraries/idna_convert.xml
@@ -896,6 +894,7 @@
 /language/overrides/*
 /language/index.html
 /libraries/cms/application/*
+/libraries/cms/authentication/*
 /libraries/cms/captcha/*
 /libraries/cms/class/*
 /libraries/cms/component/*
@@ -1227,14 +1226,14 @@ Temporary Items
 /administrator/components/com_cck_toolbox/*
 /administrator/language/en-GB/en-GB.com_cck_toolbox.ini
 /administrator/language/en-GB/en-GB.com_cck_toolbox.sys.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_code_processing.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_code_processing.sys.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_processing.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_processing.sys.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.ini
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_processing.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.ini
 /administrator/language/fr-FR/fr-FR.com_cck_toolbox.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_code_processing.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_processing.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_processing.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_processing.sys.ini
 /components/com_cck_toolbox/*
@@ -1246,7 +1245,7 @@ Temporary Items
 /language/fr-FR/fr-FR.mod_cck_processing.sys.ini
 /media/cck_toolbox/*
 /modules/mod_cck_processing/*
-/plugins/cck_field/code_processing/*
+/plugins/cck_field/cck_processing/*
 /plugins/cck_field_live/cck_processing/*
 /plugins/system/cck_toolbox/*
 /plugins/user/cck_toolbox/*
@@ -1329,6 +1328,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_recaptcha.sys.ini
 /plugins/cck_field/captcha_recaptcha/*
 
+######## SEBLOD Plug-ins >> Field >> Captcha VisualCaptcha
+
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_visualcaptcha.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_captcha_visualcaptcha.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_visualcaptcha.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_captcha_visualcaptcha.sys.ini
+/plugins/cck_field/captcha_visualcaptcha/*
+
 ######## SEBLOD Plug-ins >> Field >> Checkbox Dynamic
 
 /administrator/language/en-GB/en-GB.plg_cck_field_checkbox_dynamic.ini
@@ -1380,6 +1387,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_div_clear.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_div_clear.sys.ini
 /plugins/cck_field/div_clear/*
+
+######## SEBLOD Plug-ins >> Field >> File
+
+/administrator/language/en-GB/en-GB.plg_cck_field_file.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_file.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_file.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_file.sys.ini
+/plugins/cck_field/file/*
 
 ######## SEBLOD Plug-ins >> Field >> Folder
 
@@ -1555,6 +1570,14 @@ Temporary Items
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_order.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.sys.ini
+/plugins/cck_field/cck_ecommerce_payment_gateway/*
+
+######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Payment Gateway
+
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_payment_gateway.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
 /plugins/cck_field/cck_ecommerce_order/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Price
@@ -1845,6 +1868,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_ecommerce_cart_product.sys.ini
 /plugins/cck_field_live/cck_ecommerce_cart_product/*
 
+######## SEBLOD Plug-ins >> Live >> SEBLOD eCommerce Subscription
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_ecommerce_subscription.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_cck_ecommerce_subscription.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_ecommerce_subscription.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_cck_ecommerce_subscription.sys.ini
+/plugins/cck_field_live/cck_ecommerce_subscription/*
+
 ######## SEBLOD Plug-ins >> Live >> SEBLOD Site
 
 /administrator/language/en-GB/en-GB.plg_cck_field_live_cck_site.ini
@@ -1908,6 +1939,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.sys.ini
 /plugins/cck_storage_location/joomla_user_note/*
+
+######## SEBLOD Plug-ins >> Object >> Joomla! Viewlevel
+
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_viewlevel.ini
+/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_viewlevel.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_viewlevel.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_viewlevel.sys.ini
+/plugins/cck_storage_location/joomla_viewlevel/*
 
 ######## SEBLOD Plug-ins >> Object >> SEBLOD eCommerce Cart
 
@@ -2000,6 +2039,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_geoip.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_geoip.sys.ini
 /plugins/cck_field_restriction/geoip/*
+
+######## SEBLOD Plug-ins >> Restriction >> Increment
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_increment.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_increment.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.sys.ini
+/plugins/cck_field_restriction/increment/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 

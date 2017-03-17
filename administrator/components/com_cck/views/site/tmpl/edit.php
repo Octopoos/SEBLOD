@@ -16,6 +16,9 @@ $cck	=	JCckDev::preload( array( 'core_title_site', 'core_name_site', 'core_descr
 									 'core_site_metadesc', 'core_site_metakeys', 'core_site_homepage', 'core_site_offline', 'core_site_language', 'core_site_template_style',
 									 'core_guest', 'core_guest_only_group', 'core_guest_only_viewlevel', 'core_groups', 'core_viewlevels' ) );
 $hasOpts  =   false;
+if ( ( $pos = strpos( $this->item->name, '@' ) ) !== false ) {
+    $this->item->name   =   substr( $this->item->name, 0, $pos );
+}
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -27,7 +30,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_title_site'], $this->item->title, $config ); ?>
         </ul>
         <ul class="spe spe_folder">
-            <?php echo JCckDev::renderForm( $cck['core_name_site'], $this->item->name, $config ); ?>
+            <li class="tweak-site"><label><?php echo JText::_( 'COM_CCK_URL' ); ?><span class="star"> *</span></label>
+            <?php
+            echo JCckDev::getForm( $cck['core_name_site'], $this->item->name, $config, array(), array('after'=>'<span class="variation_value">/</span>' ) );
+            echo JCckDev::getForm( 'core_dev_text', $this->item->context, $config, array( 'css'=>'input-xxsmall', 'storage_field'=>'context' ) );
+            ?>
+            </li>
         </ul>
         <ul class="spe spe_state spe_third">
             <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>

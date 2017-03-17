@@ -20,7 +20,7 @@ $user		=	JFactory::getUser();
 $unique		=	( $preconfig['unique'] ) ? $preconfig['unique'] : 'seblod_form';
 $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
-$hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'] );
+$hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
@@ -48,7 +48,9 @@ if ( ! $type ) {
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
 if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
-	$preconfig['client']	=	'admin';
+	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
+		$preconfig['client']	=	'admin';
+	}
 }
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
@@ -69,6 +71,7 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 $storages	=	array();
 $config		=	array( 'author'=>$author,
 					   'client'=>$client,
+					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 					   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
 					   'error'=>false,
@@ -91,7 +94,13 @@ $config		=	array( 'author'=>$author,
 					   'url'=>$preconfig['url'],
 					   'validate'=>''
 					);
-CCK_Form::applyTypeOptions( $config );
+CCK_Form::applyTypeOptions( $config, $preconfig['client'] );
+
+if ( $preconfig['client'] ) {
+	if ( !isset( $config['options']['redirection'] ) ) {
+		$config['options']['redirection']	=	'';
+	}
+}
 
 $stage		=	-1;
 $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stages'] : 1;
@@ -141,8 +150,10 @@ if ( count( $fields ) ) {
 		}
 		$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
 
-		if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
-			$toBeChecked	=	true;
+		if ( !$config['copyfrom_id'] ) {
+			if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
+				$toBeChecked	=	true;
+			}
 		}
 		if ( $toBeChecked && !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
 			$hash		=	JApplication::getHash( $value );
@@ -186,12 +197,14 @@ if ( $stages > 1 && $stage ) {
 		$stage++;
 	}
 	if ( $stage <= $stages ) {
-		$config['message']			=	'';
-		$config['message_style']	=	0;
-		$config['stage']			=	$stage;
+		if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
+			$config['message']			=	'';
+			$config['message_style']	=	0;
+		}
 		// if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
 		$config['url']				=	'';
 		// }
+		$config['stage']			=	$stage;
 	} elseif ( $stage == $stages ) {
 		$config['stage']			=	0;
 	}

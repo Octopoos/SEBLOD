@@ -16,7 +16,7 @@ $config		=	JCckDev::init( array(), true );
 $isImage	=	( JFile::getExt( $this->file ) == 'png' || JFile::getExt( $this->file ) == 'jpg' ) ? 1 : 0;
 $doc		=	JFactory::getDocument();
 ?>
-<form action="<?php echo JRoute::_( 'index.php' ) ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo JRoute::_( 'index.php' ); ?>" method="post" id="adminForm" name="adminForm">
 <div id="toolbarBox" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
     <div style="float: left; padding-right: 8px;" id="messageBox"></div>
 	<?php if ( $isImage == 1 ) { ?>

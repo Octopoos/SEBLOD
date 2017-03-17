@@ -9,10 +9,10 @@
 /*toggle*/
 div.seblod fieldset.toggle{background-color:#FFFFFF;}
 fieldset.toggle label.selected{background: none repeat scroll 0 0 #16396f;color: #ffffff; border-color:#16396f;}
-fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid;color: #cccccc;text-decoration: line-through; cursor: default!important;}
-fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#dedede; border-style: solid; color: #16396f;}
+fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#ccc; border-style: solid;color: #cccccc;text-decoration: line-through; cursor: default!important;}
+fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0px; border-color:#ccc; border-style: solid; color: #16396f;}
 fieldset.toggle label:hover{background-color: #16396f;color: #ffffff; border-color:#16396f;}
-fieldset.toggle label.first{border-left: 1px solid #dedede !important; -webkit-border-top-left-radius:2px; -webkit-border-bottom-left-radius:2px; -moz-border-radius-topleft:2px; -moz-border-radius-bottomleft:2px; border-top-left-radius:2px; border-bottom-left-radius:2px;}
+fieldset.toggle label.first{border-left: 1px solid #ccc !important; -webkit-border-top-left-radius:2px; -webkit-border-bottom-left-radius:2px; -moz-border-radius-topleft:2px; -moz-border-radius-bottomleft:2px; border-top-left-radius:2px; border-bottom-left-radius:2px;}
 fieldset.toggle label.first.selected,fieldset.toggle label:hover.first{border-left: 1px solid #16396f !important;}
 fieldset.toggle label.last{-webkit-border-top-right-radius:2px; -webkit-border-bottom-right-radius:2px; -moz-border-radius-topright:2px; -moz-border-radius-bottomright:2px; border-top-right-radius:2px; border-bottom-right-radius:2px;}
 

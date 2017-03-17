@@ -29,25 +29,27 @@ if ( $lang->hasKey( $key ) == 1 ) {
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), $tmpl );
 
 JHtml::_( 'bootstrap.tooltip' );
+
+JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <?php if ( $tmpl ) { ?>
-    <div id="ajaxToolbar" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
-        <div style="float: left; padding-right: 8px;" id="ajaxMessage"></div>
-        <a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><i class="icon-apply"></i>
-			<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
-		</a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><i class="icon-save"></i>
-			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
-		</a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><i class="icon-save-new"></i>
-			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
-		</a>
-        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><i class="icon-cancel"></i>
+    <div id="ajaxToolbar" class="span12">
+        <div style="float: left;" id="ajaxMessage"></div>
+        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><span class="icon-unpublish"></span>
 			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
         </a>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><span class="icon-save-new"></span>
+			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
+		</a>
+        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><span class="icon-save"></span>
+			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
+		</a>
+		<a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><span class="icon-apply"></span>
+			<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
+		</a>
     </div>
 <?php } ?>
 
@@ -134,7 +136,7 @@ Helper_Display::quickCopyright();
 <script type="text/javascript">
 (function ($){
 	JCck.Dev = {
-		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ) ?>",
+		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
 		name:"field",
 		transliteration:<?php echo $transliterate; ?>,
 		ajaxLayer: function(view, layout, elem, mydata) {
@@ -193,7 +195,7 @@ Helper_Display::quickCopyright();
 										$('#ajaxMessage').html('');
 										window.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
 									} else {
-										$('#ajaxMessage').html('<span>Successfuly saved!</span>').hide().fadeIn(150, function() {
+										$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
 											if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }
 										});
 									}
@@ -204,7 +206,7 @@ Helper_Display::quickCopyright();
 								$('#ajaxMessage').html('');
 								window.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
 							} else {
-								$('#ajaxMessage').html('<span>Successfuly saved!</span>').hide().fadeIn(150, function() {
+								$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
 									if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }
 								});
 							}

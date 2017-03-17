@@ -96,29 +96,36 @@ class CCKViewForm extends JViewLegacy
 		jimport( 'cck.base.form.form' );
 		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
+		
 		if ( isset( $config['id'] ) ) {
-			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
+			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'].'|'.$config['copyfrom_id'] ) );
 		}
 		
 		// Set
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
 		}
-		if ( $params->get( 'display_form_title', '' ) == '1' ) {
-			$this->title				=	$params->get( 'title_form_title', '' );
+		if ( $params->get( 'display_form_title', '' ) == '2' ) {
+			$this->title			=	'';
+
+			if ( is_object( $type ) ) {
+				$this->title		=	JText::_( 'APP_CCK_FORM_'.$type->name.'_TITLE_'.( ( isset( $config['isNew'] ) && $config['isNew'] ) ? 'ADD' : 'EDIT' ) );
+			}
+		} elseif ( $params->get( 'display_form_title', '' ) == '1' ) {
+			$this->title			=	$params->get( 'title_form_title', '' );
 		} elseif ( $params->get( 'display_form_title', '' ) == '0' ) {
-			$this->title				=		$menu->title;
+			$this->title			=		$menu->title;
 		} else {
-			$this->title				=		@$type->title;
+			$this->title			=	( isset( $type->title ) ) ? $type->title : '';
 		}
 		$this->show_form_title		=	$params->get( 'show_form_title' );
 		if ( $this->show_form_title == '' ) {
 			$this->show_form_title	=	$options->get( 'show_form_title', '1' );
-			$this->tag_form_title	=	$options->get( 'tag_form_title', 'h2' );
-			$this->class_form_title	=	$options->get( 'class_form_title' );
+			$this->tag_form_title	=	$options->get( 'tag_form_title', 'h1' );
+			$this->class_form_title	=	$options->get( 'class_form_title', JCck::getConfig_Param( 'title_class', '' ) );
 		} elseif ( $this->show_form_title ) {
-			$this->tag_form_title	=	$params->get( 'tag_form_title', 'h2' );
-			$this->class_form_title	=	$params->get( 'class_form_title' );
+			$this->tag_form_title	=	$params->get( 'tag_form_title', 'h1' );
+			$this->class_form_title	=	$params->get( 'class_form_title', JCck::getConfig_Param( 'title_class', '' ) );
 		}
 		$this->show_form_desc		=	$params->get( 'show_form_desc' );
 		if ( $this->show_form_desc == '' ) {
@@ -126,6 +133,8 @@ class CCKViewForm extends JViewLegacy
 			$this->description		=	@$type->description;
 		} elseif ( $this->show_form_desc ) {
 			$this->description		=	$params->get( 'form_desc', @$type->description );
+		} else {
+			$this->description		=	'';
 		}
 		if ( $this->description != '' ) {
 			$this->description		=	str_replace( '[note]', $menu->note, $this->description );

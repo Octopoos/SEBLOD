@@ -35,6 +35,7 @@ $triggerstates_list		=	array( JHtml::_( 'select.option', 'isEqual', JText::_( 'C
 								   JHtml::_( 'select.option', 'isEmpty', JText::_( 'COM_CCK_STATE_IS_EMPTY' ) ),
 								   JHtml::_( 'select.option', 'isChanged', JText::_( 'COM_CCK_STATE_IS_CHANGED' ) ),
 								   JHtml::_( 'select.option', 'isPressed', JText::_( 'COM_CCK_STATE_IS_PRESSED' ) ),
+								   JHtml::_( 'select.option', 'isSubmitted', JText::_( 'COM_CCK_STATE_IS_SUBMITTED' ) ),
 								   JHtml::_( 'select.option', 'callFunction', JText::_( 'COM_CCK_STATE_CALL_FUNCTION' ) ) );
 $triggerstates_list2	=	array_merge( array( JHtml::_( 'select.option', '', '...' ) ), $triggerstates_list );
 
@@ -150,7 +151,7 @@ $js		=	'
 						if (n == 1) {var d = data;	data = []; data[0] = d;}
 						if (n==0) {
 							$("#"+"cds0_states2").parent().parent().slideUp();
-							for(i=5; i>1; i--) { $("#"+"cds0_conditions"+i).parent().slideUp(); }
+							for(i=8; i>1; i--) { $("#"+"cds0_conditions"+i).parent().slideUp(); }
 						} else {
 							for(i=0; i<n; i++) {
 								if (data[i]) {
@@ -165,14 +166,14 @@ $js		=	'
 											}
 											$("#"+"cds"+i+"_states"+c+"_value").val(data[i]["states"][c].value);
 										}
-										for (n2++; n2<3; n2++) { $("#"+"cds"+i+"_states"+n2).parent().parent().slideUp("500"); }
+										for (n2++; n2<6; n2++) { $("#"+"cds"+i+"_states"+n2).parent().parent().slideUp("500"); }
 										var n2 = data[i]["conditions"].length;
 										for (c=0; c<n2; c++) {
 											$("#"+"cds"+i+"_conditions"+c).val(data[i]["conditions"][c].type);
 											$("#"+"cds"+i+"_conditions"+c+"_trigger").val(data[i]["conditions"][c].trigger);
 											$("#"+"cds"+i+"_conditions"+c+"_value").val(data[i]["conditions"][c].value);
 										}
-										for (n2++; n2<5; n2++) { $("#"+"cds"+i+"_conditions"+n2).parent().slideUp("500"); }
+										for (n2++; n2<8; n2++) { $("#"+"cds"+i+"_conditions"+n2).parent().slideUp("500"); }
 									} else {
 										$.each(data[i], function(key, val) {
 											var c = 0;
@@ -189,8 +190,8 @@ $js		=	'
 												});
 												c++;
 											});
-											for (c++; c<3; c++) { $("#"+"cds"+i+"_states"+c).parent().parent().slideUp("500"); }
-											for (c = 2; c<5; c++) { $("#"+"cds"+i+"_conditions"+c).parent().slideUp("500"); }
+											for (c++; c<6; c++) { $("#"+"cds"+i+"_states"+c).parent().parent().slideUp("500"); }
+											for (c = 2; c<8; c++) { $("#"+"cds"+i+"_conditions"+c).parent().slideUp("500"); }
 										});
 									}
 								}
@@ -275,40 +276,61 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	
 	$t_rule			=	JHtml::_( 'select.genericlist', $rules, 'rule', 'class="inputbox blue"', 'value', 'text', 'and', $condition.'_rule' );
 	
-	$t_value0		=	JHtml::_( 'select.genericlist', $triggerstates_list, 'conditions0', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', 
+	$t_value0		=	JHtml::_( 'select.genericlist', $triggerstates_list, 'conditions0', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', 
 						'isEqual', $condition.'_conditions0' )
 					.	'<input type="text" id="'.$condition.'_conditions0_value" name="value" value="" class="inputbox input-mini triggers0" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition0">'.$fill.'</span>';
 	$t_trigger0		=	JHtml::_( 'select.genericlist', $options, 'trigger', 'class="inputbox input-medium blue triggers0" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions0_trigger' );
 	
-	$t_value1		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions1', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
+	$t_value1		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions1', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions1' )
 					.	'<input type="text" id="'.$condition.'_conditions1_value" name="value" value="" class="inputbox input-mini triggers1" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition1">'.$fill.'</span>';
 	$t_trigger1		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers1 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions1_trigger' );
 	
-	$t_value2		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions2', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
+	$t_value2		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions2', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions2' )
 					.	'<input type="text" id="'.$condition.'_conditions2_value" name="value" value="" class="inputbox input-mini triggers2" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition2">'.$fill.'</span>';
 	$t_trigger2		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers2 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions2_trigger' );
 	
-	$t_value3		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions3', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
+	$t_value3		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions3', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions3' )
 					.	'<input type="text" id="'.$condition.'_conditions3_value" name="value" value="" class="inputbox input-mini triggers3" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition3">'.$fill.'</span>';
 	$t_trigger3		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers3 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions3_trigger' );
 						
-	$t_value4		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions4', 'class="inputbox blue triggers0" style="max-width:92px;"', 'value', 'text', '',
+	$t_value4		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions4', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions4' )
 					.	'<input type="text" id="'.$condition.'_conditions4_value" name="value" value="" class="inputbox input-mini triggers4" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition4">'.$fill.'</span>';
-	$t_trigger4		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers4" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger4		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers4 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions4_trigger' );
+
+	$t_value5		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions5', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+						$condition.'_conditions5' )
+					.	'<input type="text" id="'.$condition.'_conditions5_value" name="value" value="" class="inputbox input-mini triggers5" size="8" />'
+					.	'&nbsp;<span class="fill" name="condition5">'.$fill.'</span>';
+	$t_trigger5		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers5 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+						$condition.'_conditions5_trigger' );
+
+	$t_value6		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions6', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+						$condition.'_conditions6' )
+					.	'<input type="text" id="'.$condition.'_conditions6_value" name="value" value="" class="inputbox input-mini triggers6" size="8" />'
+					.	'&nbsp;<span class="fill" name="condition6">'.$fill.'</span>';
+	$t_trigger6		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers6 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+						$condition.'_conditions6_trigger' );
+
+	$t_value7		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions7', 'class="inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+						$condition.'_conditions7' )
+					.	'<input type="text" id="'.$condition.'_conditions7_value" name="value" value="" class="inputbox input-mini triggers7" size="8" />'
+					.	'&nbsp;<span class="fill" name="condition7">'.$fill.'</span>';
+	$t_trigger7		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="inputbox input-medium blue triggers7" style="max-width:150px;"', 'value', 'text', '',
+						$condition.'_conditions7_trigger' );
 	
 	$remove		=	( $i > 0 ) ? '<span class="'.$del.'"></span>' : '<span class="'.$del.'" style="visibility: hidden;"></span>';
 
@@ -337,6 +359,9 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger2.$t_value2.'</div>'
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger3.$t_value3.'</div>'
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger4.$t_value4.'</div>'
+	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger5.$t_value5.'</div>'
+	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger6.$t_value6.'</div>'
+	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger7.$t_value7.'</div>'
 	 .	 '</td>'
 	 .	 '</tr>'
 	 .	 '<tr class="row2 half"><td colspan="4" align="left">'.$remove.'</td></tr>'

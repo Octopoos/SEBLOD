@@ -117,13 +117,19 @@ abstract class JCckEcommerceCart
 			$items	=	modCCKeCommerceCartHelper::getItems( $user, $definition );
 
 			if ( is_array( $items ) ) {
-				$cache[$definition]	=	count( $items );
+				$cache[$definition]	=	(int)count( $items, COUNT_RECURSIVE ) - (int)count( $items );
 			} else {
 				$cache[$definition]	=	0;
 			}
 		}
 		
 		return $cache[$definition];
+	}
+
+	// countUserCarts
+	public static function countUserCarts( $definition )
+	{
+		return (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_more_ecommerce_carts AS a WHERE a.'.JCck::getUser()->where_clause. ' AND a.type = "'.$definition.'"' );
 	}
 
 	// hasQuantity

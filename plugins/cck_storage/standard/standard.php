@@ -34,6 +34,15 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		}
 	}
 	
+	// onCCK_StoragePrepareContent_Xi
+	public function onCCK_StoragePrepareContent_Xi( &$field, &$value, &$storage, $x = '', $xi = 0 )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		self::onCCK_StoragePrepareForm( $field, $value, $storage );
+	}
+
 	// onCCK_StoragePrepareDelete
 	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage, $config = array() )
 	{
@@ -196,8 +205,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 						$sql	=	'((' . implode( ') AND (', $fragments ) . '))';
 					}
 					if ( $var_count != '' ) {
-						if ( (int)$var_count == 0 ) {
+						if ( (int)$var_count == 0 || (int)$var_count == 1 ) {
 							$idx	=	'diff_'.$field->name;
+							$offset	=	( $field->match_options && (int)$var_count == 1 ) ? $field->match_options->get( 'var_count_offset', '' ) : '';
 
 							if ( !isset( $config['query_parts'] ) ) {
 								$config['query_parts']	=	array();
@@ -209,7 +219,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 								$config['query_parts']['having']	=	array();
 							}
 							$config['query_parts']['select'][]		=	'LENGTH('.$target.') - LENGTH(REPLACE('.$target.',"'.$separator.'","")) AS '.$idx;
-							$config['query_parts']['having'][]		=	$idx.' = '.( $count - 1 );
+							$config['query_parts']['having'][]		=	$idx.' = '.( $count - 1 + (int)$offset );
 						}
 					}
 				}
@@ -246,6 +256,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					if ( count( $values ) ) {
 						$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
 					}
+				}
+				if ( $sql == '' ) {
+					$sql	=	$target.' IN (0)';
 				}
 				break;
 			case 'num_higher':

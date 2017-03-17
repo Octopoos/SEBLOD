@@ -68,7 +68,7 @@ class CCKViewForm extends JViewLegacy
 		jimport( 'cck.base.form.form' );
 		include_once JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
 		if ( isset( $config['id'] ) ) {
-			JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
+			JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'].'|'.$config['copyfrom_id'] ) );
 		}
 		
 		$this->config	=	&$config;

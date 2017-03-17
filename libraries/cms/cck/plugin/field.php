@@ -152,7 +152,7 @@ class JCckPluginField extends JPlugin
 		if ( isset( $data['selectlabel'] ) && $data['selectlabel'] == '' ) {
 			$data['selectlabel']	=	' ';
 		}
-		
+
 		// JSON
 		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
 			foreach ( $data['json'] as $k=>$v ) {
@@ -236,47 +236,51 @@ class JCckPluginField extends JPlugin
 			if ( $data['alterTable'] ) {
 				$data['storage_alter_type']	=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
 				$alter						=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
-				if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
-					if ( $data['storage_table'] && $data['storage_field'] ) {
-						$columns	=	$db->getTableColumns( $data['storage_table'] );
-						if ( !isset( $columns[$data['storage_field']] ) ) {
-							if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+				$pos						=	strpos( $data['storage_table'], 'aka_table' );
+				
+				if ( !( $pos !== false && $pos == 0 ) ) {
+					if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
+						if ( $data['storage_table'] && $data['storage_field'] ) {
+							$columns	=	$db->getTableColumns( $data['storage_table'] );
+							if ( !isset( $columns[$data['storage_field']] ) ) {
+								if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								} else {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}							
 							} else {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-							}							
-						} else {
-							JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-						}
-					}
-				} else {
-					if ( $data['storage_table'] && $data['storage_field'] ) {
-						if ( ( $data['type'] == 'jform_rules' && $data['storage_field'] == 'rules' ) ||
-							 ( $data['storage_table'] == @$data['core_table'] && in_array( $data['storage_field'], $data['core_columns'] ) ) ) {
-							unset( $data['core_table'] );
-							unset( $data['core_columns'] );
-							return;
-						}
-						$columns	=	$db->getTableColumns( $data['storage_table'] );
-						if ( !isset( $columns[$data['storage_field']] ) ) {
-							$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-							if ( $data['storage_cck'] != '' ) {
-								// #__cck_store_form_
-								$table	=	'#__cck_store_form_'.$data['storage_cck'];
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
-							} else {
-								// #__cck_store_item_
-								$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
-							}
-							$columns2	=	$db->getTableColumns( $table );
-							if ( !isset( $columns2[$data['storage_field']] ) ) {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-							}
-							$data['storage_table']	=	$table;
-						} else {
-							if ( $alter ) {
 								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+							}
+						}
+					} else {
+						if ( $data['storage_table'] && $data['storage_field'] ) {
+							if ( ( $data['type'] == 'jform_rules' && $data['storage_field'] == 'rules' ) ||
+								 ( $data['storage_table'] == @$data['core_table'] && in_array( $data['storage_field'], $data['core_columns'] ) ) ) {
+								unset( $data['core_table'] );
+								unset( $data['core_columns'] );
+								return;
+							}
+							$columns	=	$db->getTableColumns( $data['storage_table'] );
+							if ( !isset( $columns[$data['storage_field']] ) ) {
+								$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+								if ( $data['storage_cck'] != '' ) {
+									// #__cck_store_form_
+									$table	=	'#__cck_store_form_'.$data['storage_cck'];
+									JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								} else {
+									// #__cck_store_item_
+									$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
+									JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								}
+								$columns2	=	$db->getTableColumns( $table );
+								if ( !isset( $columns2[$data['storage_field']] ) ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}
+								$data['storage_table']	=	$table;
+							} else {
+								if ( $alter ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}
 							}
 						}
 					}
@@ -1000,13 +1004,14 @@ class JCckPluginField extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_addProcess
-	public static function g_addProcess( $event, $type, &$config, $params )
+	public static function g_addProcess( $event, $type, &$config, $params, $priority = 3 )
 	{
 		if ( $event && $type ) {
 			$process						=	new stdClass;
 			$process->group					=	self::$construction;
 			$process->type					=	$type;
 			$process->params				=	$params;
+			$process->priority				=	$priority;
 			$config['process'][$event][]	=	$process;
 		}
 	}
@@ -1067,9 +1072,12 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
 			}
 		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
+			$attributes		=	( isset( $field->attributesList ) && $field->attributesList != '' ) ? explode( '||', $field->attributesList ) : array();
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
-			$field->form	=	'';
-			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
+			$field->form	=	'';			
+			$options		=	( isset( $field->optionsList ) ) ? $field->optionsList : $field->options;
+			$options		=	( $options != '' ) ? explode( '||', $options ) : array();
+			
 			if ( count( $options ) ) {
 				static $loaded	=	array();
 				if ( !isset($loaded[$id] ) ) {
@@ -1096,14 +1104,15 @@ class JCckPluginField extends JPlugin
 					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
 				}
-				foreach ( $options as $opt ) {
-					$o		=	explode( '=', $opt );
-					$class	=	'';
+				foreach ( $options as $k=>$opt ) {
+					$attribute	=	@$attributes[$k];
+					$o			=	explode( '=', $opt );
+					$class		=	'';
 					if ( @$o[1] == $value ) {
 						$class		=	' class="active"';
 					} 
 					if ( $o[0] != '' ) {
-						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"'.$attribute.'><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
 					}
 				}
 				if ( $field->form != '' ) {

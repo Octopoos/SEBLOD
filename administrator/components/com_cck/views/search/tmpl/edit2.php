@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$config		=	JCckDev::init( array(), true, array( 'item'=>$this->item ) );
+$config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'tmpl' => 'ajax' ) );
 $cck		=	JCckDev::preload( array( 'core_pagination', 'core_cache', 'core_cache2', 'core_dev_text', 'core_limit', 'core_sef',
 										 'core_prepare_content', 'core_debug', 'core_auto_redirection', 'core_ordering',
 										 'core_tag_title', 'core_class_title', 'core_show_hide2', 'core_action_no_access', 'core_redirection_url_no_access', 'core_label_total',
@@ -30,9 +30,9 @@ if ( $this->item->client == 'list' ) {
 	}
 }
 ?>
-<div class="layers" id="layer_fields" <?php echo ( $this->item->layer == 'fields' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_fields_'.$this->uix.'.php'; ?></div>
-<div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_configuration.php'; ?></div>
-<div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once dirname(__FILE__).'/edit_template.php'; ?></div>
+<div class="layers" id="layer_fields" <?php echo ( $this->item->layer == 'fields' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_fields_'.$this->uix.'.php'; ?></div>
+<div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_configuration.php'; ?></div>
+<div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_template.php'; ?></div>
 <script type="text/javascript">
 JCck.DevHelper.setSidebar();
 (function ($){
@@ -41,7 +41,8 @@ var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jf
 var block_item = <?php echo $block_item; ?>;
 if (block_item) {$("#client5_label").addClass("disabled"); $("#client5").prop("disabled", true);} else {$("#client5_label").removeClass("disabled"); $("#client5").prop("disabled", false);}
 $("#options_tag_list_title").isVisibleWhen('options_show_list_title','1',true,'visibility'); $("#options_label_items_number").isVisibleWhen('options_show_items_number','1');
-$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#blank_li6").isVisibleWhen('options_show_pagination','2,8');
+$("#options_cache_per_user").isVisibleWhen('options_cache','1,2',false); $("#options_callback_pagination,#options_label_pagination").isVisibleWhen('options_show_pagination','2,8');
+$("#options_tmpl_resource,#options_json_resource").isVisibleWhen('options_load_resource','1'); $("#blank_li7").isVisibleWhen('options_load_resource','0');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }
 <?php echo $this->js['tooltip']; ?>

@@ -72,7 +72,7 @@ $doc->addScriptDeclaration( $js );
 		echo '<div class="legend top left">'.$legend.'</div>';
 	}
 	if ( count( $items ) ) {
-		$layer	=	dirname(__FILE__).'/select_'.$layer.'.php';
+		$layer	=	__DIR__.'/select_'.$layer.'.php';
 		if ( is_file( $layer ) ) {
 			include_once $layer;
 		}

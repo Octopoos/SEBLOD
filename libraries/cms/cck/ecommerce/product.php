@@ -13,6 +13,12 @@ defined( '_JEXEC' ) or die;
 // JCckEcommerceProduct
 abstract class JCckEcommerceProduct
 {
+	// getAttributes
+	public static function getAttributes()
+	{
+		return JCckDatabase::loadColumn( 'SELECT storage_field FROM #__cck_core_fields WHERE type = "cck_ecommerce_attribute" AND published = 1' );
+	}
+
 	// getDefinition (retrieve the primary definition of a Content Type)
 	public static function getDefinition( $type )
 	{
@@ -40,6 +46,8 @@ abstract class JCckEcommerceProduct
 		}
 		if ( !( isset( $definitions[$type] ) && $definitions[$type] ) ) {
 			return (object)array(
+							'attribute'=>0,
+							'attributes'=>array(),
 							'name'=>'',
 							'quantity'=>'',
 							'request_stock_field'=>'',

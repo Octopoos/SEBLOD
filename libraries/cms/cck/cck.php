@@ -13,13 +13,14 @@ defined( '_JEXEC' ) or die;
 // JCck
 abstract class JCck
 {
-	public static $_me			=	'cck';
-	public static $_config		=	NULL;
-	public static $_user		=	NULL;
+	public static $_me				=	'cck';
+	public static $_config			=	NULL;
+	public static $_user			=	NULL;
 	
-	protected static $_host		=	NULL;
-	protected static $_site		=	NULL;
-	protected static $_sites	=	array();
+	protected static $_host			=	NULL;
+	protected static $_site			=	NULL;
+	protected static $_sites		=	array();
+	protected static $_sites_info	=	array();
 	
 	public static function callFunc( $class, $method, &$args = NULL, $ref = false )
 	{
@@ -128,17 +129,23 @@ abstract class JCck
 			$alias			=	'';
 			$host			=	JUri::getInstance()->getHost();
 			$path			=	JUri::getInstance()->getPath();
+			$path_base		=	$path;
+			
 			$host2			=	'';
 			if ( $path ) {
-				$path	=	substr( $path, 1 );
-				$path	=	substr( $path, 0, strpos( $path, '/' ) );
+				$path		=	substr( $path, 1 );
+				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
-				
+				$context	=	'';
+				$hasContext	=	false;
+
+				self::$_sites_info['guests']	=	array();
+
 				foreach ( self::$_sites as $s ) {
 					$s->exclusions	=	array();
 					$json			=	json_decode( $s->configuration, true );
@@ -146,7 +153,20 @@ abstract class JCck
 					if ( isset( $json['exclusions'] ) && $json['exclusions'] != '' ) {
 						$s->exclusions	=	explode( '||', $json['exclusions'] );
 					}
+
+					if ( $s->context != '' ) {
+						$hasContext	=	true;
+						$pos		=	strpos( $path_base, '/'.$s->context );
+
+						if ( $pos !== false & $pos == 0 ) {
+							$context	=	$s->context;
+						}
+					}
+
+					self::$_sites_info['guests'][$s->guest]	=	'';
 				}
+				self::$_sites_info['hasContext']	=	$hasContext;
+				
 				foreach ( self::$_sites as $s ) {
 					if ( $s->aliases != '' ) {
 						$aliases	=	explode( '||', $s->aliases );
@@ -175,7 +195,12 @@ abstract class JCck
 					}
 				}
 			}
-			self::$_host				=	$host;
+
+			if ( $context != '' ) {
+				$host	.=	'@'.$context;
+			}
+			self::$_host	=	$host;
+
 			if ( isset( self::$_sites[$host] ) ) {
 				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
 			}
@@ -186,16 +211,59 @@ abstract class JCck
 		}
 	}
 	
+	// getMultisiteInfo
+	public static function getMultisiteInfo( $property = '' )
+	{
+		if ( $property == '' ) {
+			return self::$_sites_info;
+		}
+
+		if ( !isset( self::$_sites_info[$property] ) ) {
+			return null;
+		}
+
+		return self::$_sites_info[$property];
+	}
+
 	// getSite
 	public static function getSite()
 	{
 		return self::$_sites[self::$_host];
 	}
 	
-	// isSite
-	public static function isSite()
+	// getSiteById
+	public static function getSiteById( $id )
 	{
-		return ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) ? true : false;
+		static $sites	=	NULL;
+
+		if ( !is_array( $sites ) ) {
+			$sites		=	array();
+
+			if ( count( self::$_sites ) ) {
+				foreach ( self::$_sites as $k=>$v ) {
+					$sites[$v->id]	=	$v;
+				}
+			}
+		}
+		if ( !isset( $sites[$id] ) ) {
+			return null;
+		}
+
+		return $sites[$id];
+	}
+
+	// isSite
+	public static function isSite( $master = false )
+	{
+		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
+			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+				return false;
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User
@@ -325,8 +393,10 @@ abstract class JCck
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.9.0.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.11.0.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
+			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
+			
 			$app->cck_jquery_more	=	true;
 		}
 	}
