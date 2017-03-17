@@ -25,7 +25,7 @@ class modCckMenuHelper
 				$items['comp'.$cur]	=	$params->get( 'component'.$cur );
 			}
 		}
-		
+
 		// Custom
 		for ( $i = 1; $i <= 10; $i++ ) {
 			$cur	=	str_pad( $i, 2, '0' , STR_PAD_LEFT );
@@ -45,7 +45,7 @@ class modCckMenuHelper
 		$label	=	$menutitle;
 		$menu	=	new JAdminCSSCCKMenu();
 		$uix	=	JCck::getUIX();
-		
+
 		if ( $mode == 1 || $mode == 2 ) {
 			if ( $uix == 'compact' ) {
 				$menu->addChild( new JCCKMenuNode( $label, 'index.php?option=com_cck' ), true );
@@ -154,8 +154,7 @@ class modCckMenuHelper
 				$user	=	JFactory::getUser();
 				foreach ( $items as $item ) {
 					if ( $user->authorise( 'core.create', 'com_cck.form.'.$item->id ) ) {
-						$text	=	( strlen( $item->text ) > 30 ) ? substr( $item->text, 0, 30 ) . '..' : $item->text;
-						$menu->addChild( new JCCKMenuNode( JText::_( $text ), $link.$item->value, 'newarticle' ) );
+						$menu->addChild( new JCCKMenuNode( JText::_( $item->text ), $link.$item->value, 'newarticle' ) );
 					}
 				}
 			}
@@ -169,8 +168,7 @@ class modCckMenuHelper
 				$link	=	'index.php?option=com_cck&view=list&search=';
 				$user	=	JFactory::getUser();
 				foreach ( $items as $item ) {
-					$text	=	( strlen( $item->text ) > 30 ) ? substr( $item->text, 0, 30 ) . '..' : $item->text;
-					$menu->addChild( new JCCKMenuNode( JText::_( $text ), $link.$item->value, 'component' ) );
+					$menu->addChild( new JCCKMenuNode( JText::_( $item->text ), $link.$item->value, 'component' ) );
 				}
 			}
 		} elseif ( $mode == 6 )	{
@@ -210,7 +208,7 @@ class modCckMenuHelper
 			}
 		}
 		$menu->getParent();
-		
+
 		// TK added menutitle to menuname
 		$menu->renderMenu( 'cck_menu_jseblod'.$moduleid, '' );
 	}
@@ -226,7 +224,7 @@ class modCckMenuHelper
 			$class	=	'';
 		}
 		$menu->addChild( new JCCKMenuNode( $menutitle, NULL, 'disabled' ) );
-		
+
 		// TK added menutitle and cck_menu class
 		$menu->renderMenu( 'cck_menu_jseblod'.$moduleid, 'cck_menu disabled' );
 	}
