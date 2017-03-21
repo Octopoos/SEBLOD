@@ -219,7 +219,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date = null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) )
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) && !empty($value) )
 		{
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
@@ -307,7 +307,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date = null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) )
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) && !empty($value) )
 		{
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
