@@ -28,7 +28,7 @@
 				   label="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION_DESC" class="inputbox" />
 			<field name="form_desc" type="cck" construction="core_description" default="" label="" description="..." class="inputbox" cck_selectlabel="Edit"
 				   js_appendto="jform_params_show_form_desc=a.wysiwyg_editor_box"
-				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc','1,2',false" js_format="html" hidden="true" />
+				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc','1,2',false" js_format="html" hidden="true" filter="raw" />
 		</fieldset>
 		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
 			<field name="live" type="cckhidden" label="" description="" />

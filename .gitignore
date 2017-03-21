@@ -1570,6 +1570,14 @@ Temporary Items
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_order.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.sys.ini
+/plugins/cck_field/cck_ecommerce_payment_gateway/*
+
+######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Payment Gateway
+
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_payment_gateway.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
 /plugins/cck_field/cck_ecommerce_order/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Price

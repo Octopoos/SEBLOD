@@ -22,22 +22,22 @@ abstract class JCckDevIntegration
 		if ( is_null( $options ) ) {
 			$options	=	new JRegistry;
 		}
-		
+
 		if ( $view == 'form' ) {
 			$id		=	'toolbar-new';
 			$items	=	self::getForms();
 			$link	=	'index.php?option=com_cck&view=form';
 			$title	=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
-			$user	=	JFactory::getUser();			
+			$user	=	JFactory::getUser();
 			$var	=	'&type=';
 			foreach ( $items as $item ) {
 				if ( $user->authorise( 'core.create', 'com_cck.form.'.$item->id ) ) {
 					$key	=	'APP_CCK_FORM_'.$item->name;
-					$lang->load( 'pkg_app_cck_'.$item->folder_app, JPATH_SITE, null, false, false );			
+					$lang->load( 'pkg_app_cck_'.$item->folder_app, JPATH_SITE, null, false, false );
 					if ( $lang->hasKey( $key ) == 1 ) {
 						$text	=	JText::_( $key );
 					} else {
-						$text	=	( strlen( $item->title ) > 30 ) ? substr( $item->title, 0, 30 ) . '..' : $item->title;
+						$text	=	$item->title;
 					}
 					$html	.=	'<li><a href="'.$link.$var.$item->name.$variables.'">' . $text . '</a></li>';
 				}
@@ -62,7 +62,7 @@ abstract class JCckDevIntegration
 					$title	=	JText::_( 'COM_CCK_TIP_NEW_TYPE' );
 					break;
 				case 'fields':
-					$items	=	JCckDatabase::loadObjectList( 'SELECT name as text, element as value FROM #__extensions WHERE folder = "cck_field" AND enabled = 1 ANd element != "storage" ORDER BY text' );	
+					$items	=	JCckDatabase::loadObjectList( 'SELECT name as text, element as value FROM #__extensions WHERE folder = "cck_field" AND enabled = 1 ANd element != "storage" ORDER BY text' );
 					$link	=	'index.php?option=com_cck&task=field.add';
 					$var	=	'&ajax_type=';
 					$title	=	JText::_( 'COM_CCK_TIP_NEW_FIELD' );
@@ -91,11 +91,10 @@ abstract class JCckDevIntegration
 					break;
 			}
 			foreach ( $items as $item ) {
-				$text	=	( strlen( $item->text ) > 30 ) ? substr( $item->text, 0, 30 ) . '..' : $item->text;
-				$html	.=	'<li><a href="'.$link.$var.$item->value.$variables.'">' . $text . '</a></li>';
+				$html	.=	'<li><a href="'.$link.$var.$item->value.$variables.'">' . $item->text . '</a></li>';
 			}
 		}
-		
+
 		if ( count( $items ) && $html != '' ) {
 			$legacy	=	$options->get( 'add_alt' );
 			if ( $legacy == 1 ) {
@@ -120,7 +119,7 @@ abstract class JCckDevIntegration
 			$doc->addScriptDeclaration( $js );
 		}
 	}
-	
+
 	// addModalBox
 	public static function addModalBox( $layout = 'icon', $variables = '', $options = NULL )
 	{
@@ -135,7 +134,7 @@ abstract class JCckDevIntegration
 		$doc	=	JFactory::getDocument();
 		$text	=	JText::_( 'LIB_CCK_INTEGRATION_WARNING_COPY' );
 		$js		=	'jQuery(document).ready(function(){ if(jQuery("#batch-category-id")) {jQuery("#batch-category-id").parent().after("'.addslashes( '<em>'.$text.'</em>' ).'"); }});';
-		
+
 		JCck::loadjQuery();
 		$doc->addScriptDeclaration( $js );
 	}
@@ -176,7 +175,7 @@ abstract class JCckDevIntegration
 		} else {
 			$option	=	'';
 		}
-		
+
 		$in			=	'';
 		$where		=	'';
 		if ( $option ) {
@@ -197,7 +196,7 @@ abstract class JCckDevIntegration
 				}
 			}
 		}
-		
+
 		if ( $in )  {
 			$type	=	substr( $in, 1, -2 );
 			$in		.=	'""';
@@ -208,7 +207,7 @@ abstract class JCckDevIntegration
 			} else {
 				$call		=	'loadObjectList';
 				$index		=	NULL;
-				$order_by	=	' ORDER BY title';				
+				$order_by	=	' ORDER BY title';
 			}
 			$items	=	JCckDatabase::$call( 'SELECT a.id, a.title, a.name, a.description, b.id as folder_id, b.title as folder, b.app as folder_app, b.icon_path as folder_icon'
 											.' FROM #__cck_core_types AS a'
@@ -216,7 +215,7 @@ abstract class JCckDevIntegration
 											.' WHERE a.published = 1 AND a.location != "none" AND a.location != "site"'
 											.' AND a.storage_location IN ('.$in.')'.$order_by, $index );
 		}
-		
+
 		return $items;
 	}
 
@@ -232,7 +231,7 @@ abstract class JCckDevIntegration
 		if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$id ) ) {
 			return;
 		}
-		
+
 		$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.$more;
 		JFactory::getApplication()->redirect( $url );
 	}
@@ -248,7 +247,7 @@ abstract class JCckDevIntegration
 		$items			=	array();
 		$list2			=	array();
 		$multilanguage	=	0;
-		
+
 		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			$multilanguage	=	( isset( $data['multilanguage'] ) && $data['multilanguage'] ) ? 1 : 0;
 		}
@@ -275,9 +274,9 @@ abstract class JCckDevIntegration
 					$type		=	( $type ) ? '&type='.$type : '&type='.$opt_default_type;
 					$search		=	$matches[$idx][$k];
 					$list2[$m]	=	array( 'link'=>'index.php?option=com_cck&amp;view=form'.$return.$type.'&id='.$m.$data['replace_end'] );
-					$replace=	'<a'.$class.' href="'.$list2[$m]['link'];	
+					$replace=	'<a'.$class.' href="'.$list2[$m]['link'];
 					if ( $isComplete ) {
-						$replace	.=	' '.$matches[$idx3][$k].'>';	
+						$replace	.=	' '.$matches[$idx3][$k].'>';
 					}
 					$buffer		=	str_replace( $search, $replace, $buffer );
 					$items[$i]	=	$matches[$idx][$k];
@@ -293,7 +292,7 @@ abstract class JCckDevIntegration
 						$list2[$m]	=	array( 'link'=>'index.php?option=com_cck&amp;view=form'.$return.$type.'&id='.$m.$data['replace_end'] );
 						$replace	=	'<a'.$class.' href="'.$list2[$m]['link'];
 						if ( $isComplete ) {
-							$replace	.=	' '.$matches[$idx3][$k].'>';	
+							$replace	.=	' '.$matches[$idx3][$k].'>';
 						}
 						$buffer		=	str_replace( $search, $replace, $buffer );
 						$items[$i]	=	$matches[$idx][$k];
@@ -356,13 +355,13 @@ abstract class JCckDevIntegration
 						}
 						if ( $pre != '' ) {
 							$pre		.=	'<li class="divider"></li>';
-							$buffer		=	str_replace( $row, $pre.'<li>'.$row, $buffer );	
+							$buffer		=	str_replace( $row, $pre.'<li>'.$row, $buffer );
 						}
 					}
 				}
 			}
 		}
-		
+
 		return $buffer;
 	}
 }

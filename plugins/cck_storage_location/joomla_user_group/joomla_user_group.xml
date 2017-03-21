@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.10.7</version>
+	<version>3.10.8</version>
 	
 	<scriptfile>install/script.php</scriptfile>
 	
@@ -58,7 +58,7 @@
 					<option value="0">LIB_CCK_STORAGE_LOCATION_BRIDGE_TITLE_OPTION_AUTO</option>
 					<option value="1">LIB_CCK_STORAGE_LOCATION_BRIDGE_TITLE_OPTION_CUSTOM</option>
 				</field>
-				<field name="bridge_default_title" type="text" default="#user_group_title#" label="" size="32" description="" class="inputbox" />
+				<field name="bridge_default_title" type="text" default="#user_group_title#" label="" size="32" description="" class="inputbox" showon="bridge_default_title_mode:1" />
 				<field name="bridge_ordering" type="list" default="1" label="LIB_CCK_STORAGE_LOCATION_ORDERING" description="LIB_CCK_STORAGE_LOCATION_ORDERING_DESC" class="inputbox">
 					<option value="0">LIB_CCK_STORAGE_LOCATION_OPTION_DEFAULT</option>
 					<option value="1">LIB_CCK_STORAGE_LOCATION_OPTION_LAST</option>
@@ -70,8 +70,6 @@
 					<option value="1">JSHOW</option>
 					<option value="0">JHIDE</option>
 				</field>
-				<field name="cckjs" type="cckjs" label="" description="" js_appendto="jform_params_bridge_default_title_mode=#jform_params_bridge_default_title"
-					   js_isvisiblewhen="#jform_params_bridge_default_title='jform_params_bridge_default_title_mode','1'" js_format="html" hidden="true" />
 			</fieldset>
 			
 			<fieldset name="advanced">

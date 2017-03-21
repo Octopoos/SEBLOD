@@ -213,13 +213,6 @@ class com_cckInstallerScript
 	// preflight
 	function preflight( $type, $parent )
 	{
-		$version	=	new JVersion;
-		
-		if ( version_compare( $version->getShortVersion(), '2.5.0', 'lt' ) ) {
-			Jerror::raiseWarning( null, 'This package IS NOT meant to be used on Joomla! 1.7. You should upgrade your site with Joomla 2.5 first, and then install it again !' );
-			return false;
-		}
-		
 		$app		=	JFactory::getApplication();
 		$lang		=	JFactory::getLanguage();
 		

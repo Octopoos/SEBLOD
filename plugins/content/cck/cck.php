@@ -80,6 +80,10 @@ class plgContentCCK extends JPlugin
 	// onContentAfterDelete
 	public function onContentAfterDelete( $context, $data )
 	{
+		if ( empty( $context ) ) {
+			return false;
+		}
+
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
@@ -97,10 +101,12 @@ class plgContentCCK extends JPlugin
 		$base 		= 	str_replace( '#__', '', $data->getTableName() );
 		
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-		$properties		= 	array( 'custom' );
+		$properties		= 	array( 'bridge_object', 'custom' );
 		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+		$bridge_object 	= 	$properties['bridge_object'];
 		$custom 		= 	$properties['custom'];
 		$parent			=	'';
+		$pkb			=	0;
 		$type			=	'';
 
 		// Core
@@ -114,13 +120,15 @@ class plgContentCCK extends JPlugin
 
 			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $id );
 			$type	=	$table->cck;
+			$pkb	=	(int)$table->pkb;
 		} else {
 			$table	=	JCckTable::getInstance( '#__cck_core' );
 			if ( $table->load( array( 'pk'=>$pk, 'storage_location'=>$object ) ) ) {
 				$type	=	$table->cck;
+				$pkb	=	(int)$table->pkb;
 			}
 		}
-		
+
 		if ( $table->pk > 0 ) {
 			// -- Leave nothing behind
 			if ( $type != '' ) {
@@ -158,6 +166,22 @@ class plgContentCCK extends JPlugin
 			// -- Leave nothing behind
 
 			$table->delete();
+
+			if ( $pkb > 0 ) {
+				if ( $bridge_object == 'joomla_category' ) {
+					JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+
+					$bridge	=	JTable::getInstance( 'category' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				} elseif ( $bridge_object == 'joomla_article' ) {
+					JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+
+					$bridge	=	JTable::getInstance( 'content' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				}
+			}
 		}
 
 		// Processing

@@ -51,6 +51,10 @@ $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['
 $preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfig['show_list'] : (int)$options->get( 'show_list', 1 );
 $preconfig['auto_redirect']	=	( $preconfig['auto_redirect'] != '' ) ? $preconfig['auto_redirect'] : $options->get( 'auto_redirect', 0 );
 
+$doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
+$doDebug					=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
+$options->set( 'debug', $doDebug );
+
 // ACL
 if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 	$config			=	array( 'action'=>$preconfig['action'],
@@ -61,6 +65,7 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
+						   'type'=>$search->name,
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);
@@ -68,16 +73,13 @@ if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 	$no_redirect	=	$options->get( 'redirection_url_no_access', 'index.php?option=com_users&view=login' );
 	$no_style		=	$options->get( 'message_style_no_access', 'error' );
 	$no_action		=	$options->get( 'action_no_access', 'redirection' );
-	CCK_List::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+	CCK_List::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 }
 
 // Fields
 $fields						=	CCK_List::getFields( $search->name, array( $preconfig['client'], 'order' ), '', true, true );
 
 $count						=	count( $fields['search'] );
-$doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
-$doDebug					=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
-$options->set( 'debug', $doDebug );
 $excluded_stages			=	explode( ',', $options->get( 'stages_optional', '' ) );
 if ( $doDebug ) {
 	jimport( 'joomla.error.profiler' );
@@ -91,6 +93,7 @@ if ( ! $count ) {
 						   'limitend'=>0,
 						   'location'=>'',
 						   'submit'=>$preconfig['submit'],
+						   'type'=>$search->name,
 						   'validation'=>array(),
 						   'validation_options'=>array()
 						);

@@ -354,12 +354,30 @@ fieldset.adminform {
 ul.adminformlist li div.button2-left {
 	margin-top: 6px;
 }
-#ajaxMessage span {
-	color: #146295;
+#ajaxToolbar,
+#toolbarBox{padding-bottom: 10px;}
+#ajaxToolbar > a.btn-success,
+#toolbarBox > a.btn-success{min-width:100px; line-height:23px;}
+#ajaxToolbar > a,
+#toolbarBox > a{float: right; margin-right: 10px; padding-top:0px; padding-bottom:0px; line-height:22px;}
+#ajaxToolbar a:not(.btn-success) [class^="icon-"],
+#ajaxToolbar a:not(.btn-success) [class*=" icon-"],
+#toolbarBox a:not(.btn-success) [class^="icon-"],
+#toolbarBox a:not(.btn-success) [class*=" icon-"] {
+	background-color: #e6e6e6;
+	border-radius: 3px 0 0 3px;
+	border-right: 1px solid #b3b3b3;
+	height: auto;
+	line-height: inherit;
+	margin: 0 6px 0 -10px;
+	opacity: 1;
+	text-shadow: none;
+	width: 28px;
+	z-index: -1;
 }
-#ajaxMessage img {
-	padding: 2px 2px 0px 0px;
-}
+#ajaxMessage {margin:3px 0px 0px 10px;}
+#ajaxMessage span {color: #fff;}
+#ajaxMessage img {padding: 2px 2px 0px 0px;}
 .sebwrapper{width:917px; margin:0 auto;}
 div.full div.togglebar{position:relative; left: 91px; padding-top: 14px; float:left;}
 body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important; padding: 0;}
@@ -486,9 +504,9 @@ body.contentpane.component div.seblod label.toggle_attr{color:#3b99fc;font-size:
 body.contentpane.component div.seblod.conditional label.toggle_attr{clear:right;}
 
 body.com_cck div.seblod input.inputbox.mini2,
-body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 18px 5px 0;}
+body.contentpane.component div.seblod input.inputbox.mini2{padding:2px;margin:0 15px 8px 0;}
 body.com_cck div.seblod input.inputbox.mini2.middle,
-body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 19px 5px 2px;}
+body.contentpane.component div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 19px 8px 2px;}
 
 ul.spe.spe_latest li{width:70px; margin-top: 15px;}
 ul.spe.spe_description .btn{width:76px;}
@@ -496,6 +514,7 @@ ul.spe_name.adminformlist li{width:29em;}
 ul.spe_type.spe_latest li{width:28em;}
 ul.spe fieldset.btn-group > label{float:none; display:inline-block; line-height:18px}
 ul.spe fieldset.btn-group > label{width:auto; min-width:25px;}
+ul.spe fieldset.btn-group-yesno label:last-of-type{margin-left:-1px;}
 ul.spe_state.spe_third li {width: 140px;}
 body.contentpane.component ul.spe_title li,
 body.contentpane.component ul.spe_name li{width:28em;}

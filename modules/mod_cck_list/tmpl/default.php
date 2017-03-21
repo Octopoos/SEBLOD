@@ -38,7 +38,7 @@ if ( $show_list_desc == 1 && $description != '' ) {
 if ( $search->content > 0 ) {
 	echo ( $raw_rendering ) ? $data : '<div>'.$data.'</div>';
 } else {
-	include dirname(__FILE__).'/default_items.php';
+	include __DIR__.'/default_items.php';
 }
 ?>
 <?php if ( $show_more_link ) { ?>

@@ -98,7 +98,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         </ul>
     </div>
     <div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_RESOURCE_AS_FRAGMENT' ); ?></div>
+        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_RESOURCE_AS_FRAGMENT_LEGEND' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
             echo JCckDev::renderForm( 'core_bool', @$options['load_resource'], $config, array( 'defaultvalue'=>'0', 'label'=>'Enable Loading', 'storage_field'=>'options[load_resource]' ) );

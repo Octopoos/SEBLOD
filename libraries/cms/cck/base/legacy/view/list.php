@@ -73,7 +73,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	public function prepareUI()
 	{
 		$this->css		=	array( 'batch'=>'modal modal-small hide fade',
-								   'filter'=>'btn-toolbar',
+								   'filter'=>'',
 								   'filter_search'=>'filter-search btn-group pull-left hidden-phone input-append',
 								   'filter_search_button'=>'tip hasTooltip',
 								   'filter_search_buttons'=>'btn-group pull-left hidden-phone',

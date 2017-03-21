@@ -40,11 +40,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<?php
     if ( $uix == 'compact' ) {
-		include_once dirname(__FILE__).'/default_compact.php';
+		include_once __DIR__.'/default_compact.php';
 	} else {
 	?>
 	<table class="<?php echo $this->css['table']; ?>">
@@ -168,7 +168,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</table>
     <?php } ?>
 </div>
-<?php include_once dirname(__FILE__).'/default_batch.php'; ?>
+<?php include_once __DIR__.'/default_batch.php'; ?>
 <div class="clr"></div>
 <div>
 	<input type="hidden" name="task" value="" />

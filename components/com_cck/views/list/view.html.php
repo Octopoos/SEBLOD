@@ -131,7 +131,7 @@ class CCKViewList extends JViewLegacy
 			$this->title				=	'';
 
 			if ( is_object( $search ) ) {
-				$this->title			=	Jtext::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+				$this->title			=	JText::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
 			}
 		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
 			$this->title				=	$params->get( 'title_list_title', '' );

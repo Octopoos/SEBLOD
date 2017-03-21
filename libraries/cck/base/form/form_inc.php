@@ -37,7 +37,16 @@ $user 			=	JCck::getUser();
 // Type
 $type			=	CCK_Form::getType( $preconfig['type'] );
 if ( ! $type ) {
-	$config		=	array( 'action'=>$preconfig['action'], 'core'=>true, 'formId'=>$preconfig['formId'], 'javascript'=>'', 'submit'=>$preconfig['submit'], 'validation'=>array(), 'validation_options'=>array() );
+	$config		=	array(
+						'action'=>$preconfig['action'],
+						'core'=>true,
+						'formId'=>$preconfig['formId'],
+						'javascript'=>'',
+						'submit'=>$preconfig['submit'],
+						'type'=>'',
+						'validation'=>array(),
+						'validation_options'=>array()
+					);
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
 $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
@@ -65,6 +74,8 @@ if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form',
 
 $author			=	0;
 $current		=	( $options->get( 'redirection' ) == 'current_full' ) ? JUri::getInstance()->toString() : JUri::current();
+$doDebug		=	(int)JCck::getConfig_Param( 'debug', 0 );
+$doDebug		=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
 $no_message		=	$options->get( 'message_no_access' );
 $no_redirect	=	$options->get( 'redirection_url_no_access', 'index.php?option=com_users&view=login' );
 $no_style		=	$options->get( 'message_style_no_access', 'error' );
@@ -100,7 +111,7 @@ if ( !$isNew ) {
 	}
 } else {
 	if ( $type->location && (( $app->isAdmin() && $type->location != 'admin' ) || ( $app->isSite() && $type->location != 'site' )) ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 	$actionACL			=	'create';
 	$canAccess			=	$user->authorise( 'core.create', 'com_cck.form.'.$type->id );
@@ -148,15 +159,15 @@ $config	=	array( 'action'=>$preconfig['action'],
 // ACL
 if ( ! $canAccess ) {
 	if ( $isNew ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 	if ( ! ( $canEditOwn || $canEditOwnContent ) ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 }
 if ( $type->storage_location == 'joomla_user' && $isNew ) {
 	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 }
 
@@ -275,11 +286,11 @@ foreach ( $fields as $field ) {
 					// ACL
 					if ( $canEditOwn && ! $canAccess ) {
 						if ( ( $user->id != $config['author'] ) && !$canEditOwnContent ) {
-							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 						}
 					} elseif ( ! $canEditOwn && $canAccess ) {
 						if ( $user->id == $config['author'] ) {
-							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 						}
 					}
 				}
@@ -341,7 +352,7 @@ if ( !$canAccess && $canEditOwn && !$config['author'] ) {
 		$config['author']	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.id = '.(int)$config['id'] );
 	}
 	if ( ( !$config['author'] || ( $config['author'] != $user->id ) ) && !$canEditOwnContent ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 }
 

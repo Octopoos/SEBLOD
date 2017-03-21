@@ -184,7 +184,9 @@ class Helper_Include extends CommonHelper_Include
 	{
 		$doc	=	JFactory::getDocument();
 		$delay	=	(float)$interval * 60000;
-		
+
+		JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
+
 		$js	=	'
 				(function ($){
 					JCck.Dev = {
@@ -205,7 +207,7 @@ class Helper_Include extends CommonHelper_Include
 											}
 											$("#id").val(id);
 										}
-										$("#ajaxMessage").html("").html("<span>Successfuly saved! "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
+										$("#ajaxMessage").html("").html("<span>"+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"</span>")
 										.hide()
 										.fadeIn(2000, function() {
 											if ( parent.jQuery.colorbox ) {

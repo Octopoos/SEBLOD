@@ -33,7 +33,33 @@ class CCKController extends JControllerLegacy
 	// display
 	public function display( $cachable = false, $urlparams = false )
 	{
-		parent::display( true );
+		$cachable	=	true;
+
+		// Disable caching on Forms and in Search & List where search is performed
+		if ( $this->input->getCmd( 'view', 'form' ) == "form" || $this->input->getMethod() == 'POST' ) {
+			$cachable	=	false;
+		} elseif ( $this->task == 'search' ) {
+			if ( JUri::getInstance()->getQuery() != '' ) {
+				$cachable = false;
+			}
+		}
+
+		if ( $cachable ) {
+			$safeurlparams	=	array(
+									'boxchecked' => 'INT',
+									'id' => 'INT',
+									'Itemid' => 'INT',
+									'lang' => 'CMD',
+									'return' => 'BASE64',
+									'search' => 'STRING',
+									'task' => 'CMD',
+									'type' => 'STRING'
+								);
+		} else {
+			$safeurlparams	=	false;
+		}
+
+		parent::display( $cachable, $safeurlparams );
 	}
 	
 	// ajax
@@ -362,6 +388,20 @@ class CCKController extends JControllerLegacy
 		}
 	}
 
+	// route
+	public function route()
+	{
+		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
+		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
+		
+		if ( $url != '' ) {
+			if ( $url[0] == '/' ) {
+				$url	=	substr( $url, 1 );
+			}
+		}
+		echo JRoute::_( $url );
+	}
+
 	// saveAjax
 	public function saveAjax()
 	{
@@ -378,20 +418,6 @@ class CCKController extends JControllerLegacy
 		}
 		
 		echo json_encode( $return );
-	}
-
-	// route
-	public function route()
-	{
-		$url	=	JFactory::getApplication()->input->getBase64( 'link', '' );
-		$url	=	htmlspecialchars_decode( base64_decode( $url ) );
-		
-		if ( $url != '' ) {
-			if ( $url[0] == '/' ) {
-				$url	=	substr( $url, 1 );
-			}
-		}
-		echo JRoute::_( $url );
 	}
 
 	// save	
@@ -571,12 +597,6 @@ class CCKController extends JControllerLegacy
 		} else {
 			$this->setRedirect( htmlspecialchars_decode( $link ) );
 		}
-	}
-	
-	// search
-	public function search()
-	{
-		parent::display( true );
 	}
 
 	// saveOrderAjax
