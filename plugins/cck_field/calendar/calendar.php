@@ -206,9 +206,10 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 
+		$input = JFactory::getApplication()->input;
 		$name	=	$field->name;
-		$valueHidden	=	@$config['post'][$name.'_hidden'];
-		$datasource 	=	@$config['post'][$name.'_datasource'];
+		$valueHidden	=	$input->getString($name.'_hidden');
+		$datasource 	=	$input->getString($name.'_datasource');
 
 		if ($datasource == "computed")
 		{
@@ -218,7 +219,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date = null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) )
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) )
 		{
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
@@ -306,7 +307,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date = null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) && ( intval( $value ) > 0 ) )
+		if ( ( trim($value) != '0000-00-00 00:00:00' ) )
 		{
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
