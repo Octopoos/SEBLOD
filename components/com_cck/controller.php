@@ -498,6 +498,7 @@ class CCKController extends JControllerLegacy
 		$link		=	$this->_getReturnPage( false );
 		$redirect	=	( isset( $config['options']['redirection'] ) ) ? $config['options']['redirection'] : '';
 		$return		=	'';
+
 		if ( $task == 'apply' || $task == 'save2copy' ) {
 			$link		=	'';
 			$redirect	=	'form_edition';
@@ -512,7 +513,12 @@ class CCKController extends JControllerLegacy
 		} elseif ( $task == 'save2redirect' ) {
 			$link		=	'';
 			$redirect	=	'';
+		} elseif ( $task == 'save' ) {
+			if ( !$link ) {
+				/* Inherited */
+			}
 		}
+
 		if ( !$link ) {
 			switch ( $redirect ) {
 				case 'content':
