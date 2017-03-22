@@ -293,7 +293,7 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_EXPORTED' ), 'message' );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -381,7 +381,7 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $link, $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $link, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
