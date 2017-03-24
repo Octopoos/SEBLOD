@@ -84,9 +84,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( $cck['core_stages'], @$options['stages'], $config, array( 'label'=>'Count' ) );
-			echo '<li><label>'.JText::_( 'COM_CCK_NAVIGATION' ).'</label><span class="variation_value">...</span></li>';
 			echo JCckDev::renderBlank();
-			echo '<li><label>'.JText::_( 'COM_CCK_PROGRESS_BAR' ).'</label><span class="variation_value">...</span></li>';
             ?>
         </ul>
 	</div>
