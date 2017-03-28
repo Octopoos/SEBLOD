@@ -92,8 +92,10 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_SEARCH' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-            echo JCckDev::renderBlank();
+            echo JCckDev::renderForm( 'core_message_style', @$options['message_style_no_search'], $config, array( 'defaultvalue'=>'0', 'storage_field'=>'options[message_style_no_search]' ) );
             echo JCckDev::renderForm( 'core_action', @$options['action_no_search'], $config, array( 'storage_field'=>'options[action_no_search]' ) );
+            echo JCckDev::renderForm( 'core_message', @$options['message_no_search'], $config, array( 'storage_field'=>'options[message_no_search]' ) );
+            echo JCckDev::renderBlank();            
             ?>
         </ul>
     </div>

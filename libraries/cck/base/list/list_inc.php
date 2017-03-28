@@ -552,11 +552,27 @@ if ( $preconfig['task'] == 'search' ) {
 					$app->enqueueMessage( $no_message, $no_style );
 				}
 			}
-			
 		}
 	}
 } else {
 	$no_action	=	$options->get( 'action_no_search', '' );
+	$no_message	=	$options->get( 'message_no_search', '' );
+	$no_style	=	$options->get( 'message_style_no_search', '0' );
+
+	if ( ! $no_message ) {
+		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
+	} else {
+		if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
+		}
+	}
+	if ( $no_style ) {
+		if ( $no_style == '-1' ) {
+			$data	=	$no_message;
+		} else {
+			$app->enqueueMessage( $no_message, $no_style );
+		}
+	}
 }
 if ( $no_action ) {
 	$config['infinite']		=	$isInfinite;
