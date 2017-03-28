@@ -21,6 +21,8 @@ $js		=	'
 							editor = "jce";
 						} else if (window.tinyMCE) {
 							editor = "tiny";
+						} else if (window.CodeMirror) {
+							editor = "codemirror"
 						} else {
 							editor = null;
 						}
@@ -48,6 +50,8 @@ $js		=	'
 									content = tinyMCE.get(elem).getContent();
 								}
 								break;
+							case "codemirror":
+								content = Joomla.editors.instances[elem].getValue(); break;
 							default:
 								if (document.getElementById(elem)) {
 									content = document.getElementById(elem).value;
