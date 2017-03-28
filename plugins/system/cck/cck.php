@@ -223,7 +223,11 @@ class plgSystemCCK extends JPlugin
 			$guests	=	JCck::getMultisiteInfo('guests');
 			$isUser	=	!isset( $guests[(string)$user->id] );
 		} else {
-			$isUser	=	$user->id != $this->site->guest;
+			if ( !is_object( $this->site ) ) {
+				$isUser	=	false;
+			} else {
+				$isUser	=	$user->id != $this->site->guest;
+			}
 		}
 		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
 			if ( $app->isSite() ) {
