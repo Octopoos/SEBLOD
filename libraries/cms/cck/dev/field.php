@@ -65,6 +65,12 @@ abstract class JCckDevField
 		$dispatcher	=	JDispatcher::getInstance();
 		$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
+		if ( $field->required ) {
+			if ( trim( $field->label ) == '' ) {
+				$field->required	=	'';
+			}
+		}
+
 		$field->form	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 		
 		return $field;
