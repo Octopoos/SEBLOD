@@ -113,7 +113,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		}
 		foreach ( $clients as $i=>$client ) {
 			$name				=	'e_more'.$i;
-			$this->_revert_more( $type, $client, $table->e_id, $table->{$name} );
+			$this->_revert_more( $type, $client, $table->e_id, $table->{$name}, $core );
 		}
 
 		// Override
@@ -131,7 +131,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 	}
 	
 	// _revert_more
-	public function _revert_more( $type, $client, $pk, $json )
+	public function _revert_more( $type, $client, $pk, $json, $core = null )
 	{
 		$data	=	json_decode( $json );
 		
@@ -142,6 +142,13 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		$table	=	JCckTableBatch::getInstance( '#__cck_core_'.$type.'_position' );
 		$table->delete( $type.'id = '.$pk.' AND client = "'.$client.'"' );
 		$table->save( $data->positions );
+
+		if ( isset( $data->template_style ) && is_object( $data->template_style ) && is_array( $core ) ) {
+			$target	=	'template_'.$client;
+			if ( isset( $core[$target] ) && $core[$target] ) {
+				JCckDatabase::execute( 'UPDATE #__template_styles SET params = "'.JCckDatabase::escape( json_encode( $data->template_style ) ).'" WHERE id = '.(int)$core[$target] );
+			}
+		}
 	}
 }
 ?>
