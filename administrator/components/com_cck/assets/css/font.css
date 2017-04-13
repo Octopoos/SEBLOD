@@ -25,6 +25,20 @@
 .page-title [class*="myicon-cck-"] {
 	margin-right: 10px;
 }
+
+#toolbar [class*="myicon-cck-"] {
+	background-color: #e6e6e6;
+	border-radius: 3px 0 0 3px;
+	border-right: 1px solid #b3b3b3;
+	height: auto;
+	line-height: inherit;
+	margin: 0 6px 0 -10px;
+	opacity: 1;
+	text-shadow: none;
+	width: 28px;
+	z-index: -1;
+}
+
 div.sidebar-nav.quick-icons [class*="myicon-cck-"] {
 	margin-right: 9px;
 }
