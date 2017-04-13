@@ -188,7 +188,7 @@ $js	=	'
 					var skip = skip || "";
 					var featured = $("#featured").val();
 					var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
-					window.location.href = url;
+					document.location.href = url;
 					return false;
 				},
 				addScroll: function() {

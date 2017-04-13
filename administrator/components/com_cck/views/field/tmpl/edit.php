@@ -193,7 +193,7 @@ Helper_Display::quickCopyright();
 									}
 									if (task=="field.save2new") {
 										$('#ajaxMessage').html('');
-										window.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
+										document.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
 									} else {
 										$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
 											if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }
@@ -204,7 +204,7 @@ Helper_Display::quickCopyright();
 						} else {
 							if (task=="field.save2new") {
 								$('#ajaxMessage').html('');
-								window.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
+								document.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
 							} else {
 								$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
 									if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }

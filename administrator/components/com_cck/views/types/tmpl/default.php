@@ -193,7 +193,7 @@ $js	=	'
 					var tpl_c = "'. $template_name .'";
 					var tpl_i = "'. $template_name .'";
 					var url = "index.php?option=com_cck&task=type.add&skeleton_id="+id+"&tpl_a="+tpl_a+"&tpl_s="+tpl_s+"&tpl_c="+tpl_c+"&tpl_i="+tpl_i;
-					window.location.href = url;
+					document.location.href = url;
 					return false;
 				}
 			}

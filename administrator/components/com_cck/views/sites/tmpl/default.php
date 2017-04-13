@@ -135,7 +135,7 @@ $js	=	'
 				addNew: function() {
 					var grp = $("#site_grp").val();
 					var url = "index.php?option=com_cck&task=site.add&type="+grp;
-					window.location.href = url;
+					document.location.href = url;
 					return false;
 				},
 				addScroll: function() {
