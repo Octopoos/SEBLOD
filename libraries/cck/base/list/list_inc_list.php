@@ -11,8 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 // Template
-$idx			=	( isset( $config['idx'] ) ) ? $config['idx'] : '_';
-$isInfinite		=	$config['infinite'];
+$idx			=	( isset( $config_list['idx'] ) ) ? $config_list['idx'] : '_';
+$isInfinite		=	$config_list['infinite'];
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
 if ( ! $templateStyle ) {

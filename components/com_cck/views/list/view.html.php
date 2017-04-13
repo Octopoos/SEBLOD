@@ -219,15 +219,25 @@ class CCKViewList extends JViewLegacy
 			$params->set( 'show_page_heading', 0 );
 			$this->show_list_title	=	false;
 		}
+
+		if ( isset( $pagination->pagesTotal ) ) {
+			$this->pages_total	=	$pagination->pagesTotal;
+		} elseif ( isset( $pagination->{'pages.total'} ) ) {
+			$this->pages_total	=	$pagination->{'pages.total'};
+		} else {
+			$this->pages_total	=	0;
+		}
 		
 		$this->config					=	&$config;
 		$this->data						=	&$data;
 		$this->filter_ajax				=	( isset( $hasAjax ) && $hasAjax ) ? true : false;
 		$this->form						=	&$form;
 		$this->form_id					=	$preconfig['formId'];
+		$this->form_wrapper				=	$config['formWrapper'];
 		$this->home						=	&$home;
 		$this->items					=	&$items;
 		$this->limitend					=	$config['limitend'];
+		$this->load_ajax				=	( $this->filter_ajax || ( $this->pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ) ? true : false;
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;

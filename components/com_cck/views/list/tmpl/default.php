@@ -52,101 +52,39 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 if ( $this->show_form ) {
-	echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+	if ( $this->show_form == 1 ) {
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+
+		if ( $this->raw_rendering ) {
+			echo $this->form.$this->loadTemplate( 'hidden' );
+		} else {
+			echo '<div class="cck_page_search'.$this->pageclass_sfx.' cck-clrfix">'.$this->form.$this->loadTemplate( 'hidden' ).'</div><div class="clr"></div>';
+		}
+		if ( !$this->form_wrapper ) {
+			echo '</form>';
+		}
+	} elseif ( $this->show_form == 2 && $this->form_wrapper ) {
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+	}
 }
-if ( $this->show_form == 1 ) {
-	echo ( $this->raw_rendering ) ? $this->form : '<div class="cck_page_search'.$this->pageclass_sfx.' cck-clrfix">' . $this->form . '</div><div class="clr"></div>';
-}
-?>
-<?php
+
+echo $this->loadTemplate( 'list' );
+
 if ( $this->show_form ) {
-if ( !$this->raw_rendering ) { ?>
-<div>
-<?php } ?>
-<input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
-<?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
-<input type="hidden" name="option" value="com_cck" data-cck-keep-for-search="" />
-<input type="hidden" name="view" value="list" data-cck-keep-for-search="" />
-<?php if ( $this->home === false ) { ?>
-<input type="hidden" name="Itemid" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" data-cck-keep-for-search="" />
-<?php } }
-$tmpl	=	$app->input->get( 'tmpl', '' );
-if ( $tmpl ) { ?>
-<input type="hidden" name="tmpl" value="<?php echo $tmpl; ?>" data-cck-keep-for-search="" />
-<?php } ?>
-<input type="hidden" name="search" value="<?php echo $this->search->name; ?>" data-cck-keep-for-search="" />
-<input type="hidden" name="task" value="search" data-cck-keep-for-search="" />
-<?php if ( !$this->raw_rendering ) { ?>
-</div>
-<?php } }
-if ( !$this->raw_rendering ) { ?>
-<div class="cck_page_list<?php echo $this->pageclass_sfx; ?> cck-clrfix" id="system">
-<?php } ?>
-	<?php
-	if ( isset( $this->pagination->pagesTotal ) ) {
-		$pages_total	=	$this->pagination->pagesTotal;
-	} elseif ( isset( $this->pagination->{'pages.total'} ) ) {
-		$pages_total	=	$this->pagination->{'pages.total'};
-	} else {
-		$pages_total	=	0;
-	}
-	$hasAjax			=	( $this->filter_ajax || ( $pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ) ? true : false;
-	$pagination_replace	=	'';
-	if ( $this->show_pagination > -2 && $pages_total > 1 ) {
-		$url			=	JUri::getInstance()->toString().'&';
-		if ( strpos( $url, '=&' ) !== false ) {
-			$vars		=	JUri::getInstance()->getQuery( true );
-			if ( count( $vars ) ) {
-				foreach ( $vars as $k=>$v ) {
-					if ( $v == '' ) {
-						$pagination_replace	.=	$k.'=&';
-					}
-				}
-			}
+	if ( $this->show_form == 2 ) {
+		if ( !$this->form_wrapper ) {
+			echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 		}
-	}
-	if ( $this->show_items_number ) {
-		$label	=	$this->label_items_number;
-		if ( $this->config['doTranslation'] ) {
-			$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ) ) );
+		if ( $this->raw_rendering ) { 
+			echo $this->form.$this->loadTemplate( 'hidden' );
+		} else {
+			echo '<div class="clr"></div><div class="cck_page_search'.$this->pageclass_sfx.'">'.$this->form.$this->loadTemplate( 'hidden' ).'</div>';
 		}
-		echo '<div class="'.$this->class_items_number.'"><span>' . $this->total .'</span> '. $label . '</div>';
+
+		echo '</form>';
+	} elseif ( $this->show_form == 1 && $this->form_wrapper ) {
+		echo '</form>';
 	}
-	if ( ( $this->show_pagination == -1 || $this->show_pagination == 1 ) && $pages_total > 1 ) {
-		echo '<div class="'.$this->class_pagination.'">' . ( ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks() ) . '</div>';
-	}
-	if ( @$this->search->content > 0 ) {
-		echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_items">'.$this->data.'</div>';
-	} else {
-		echo $this->loadTemplate( 'items' );
-	}
-	if ( ( $this->show_pages_number || $this->show_pagination > -1 ) && $pages_total > 1 ) {
-	    echo '<div class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
-		$pagesCounter	=	$this->pagination->getPagesCounter();
-    	if ( $this->show_pages_number && $pagesCounter ) {
-	        echo '<p class="counter">' . $pagesCounter . '</p>';
-    	}
-		if ( $this->show_pagination > -1 ) {
-			if ( $this->show_pagination == 2 || $this->show_pagination == 8 ) {
-				echo '<ul class="pagination-list"><li><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><a id="seblod_form_load_more" href="javascript:void(0);" data-start="0" data-step="'.$this->limitend.'" data-end="'.$this->total.'">'.$this->label_pagination.'</a></li></ul>';
-			} else {
-				echo ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks();
-			}
-		}
-	    echo '</div>';
-	}
-    ?>
-<?php if ( !$this->raw_rendering ) { ?>
-</div>
-<?php } ?>
-<?php
-if ( $this->show_form == 2 ) {
-	echo ( $this->raw_rendering ) ? $this->form : '<div class="clr"></div><div class="cck_page_search'.$this->pageclass_sfx.'">' . $this->form . '</div>';
-}
-if ( $this->show_form ) {
-?>
-</form>
-<?php
 }
 if ( $this->show_list_desc == 2 && $this->description != '' ) {
 	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
@@ -155,8 +93,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
 <?php } ?>
-
-<?php if ( $hasAjax ) {
+<?php if ( $this->load_ajax ) {
 $context	=	'&context={\'Itemid\':'.$app->input->getInt( 'Itemid', 0 ).',\'view\':\'list\'}';
 $pre		=	'';
 $url		=	JUri::current();
