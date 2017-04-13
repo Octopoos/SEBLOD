@@ -304,7 +304,7 @@ abstract class JCck
 		return self::$_user;
 	}
 	
-	// getUser
+	// getUser_Value
 	public static function getUser_Value( $name, $default = '' )
 	{
 		if ( ! self::$_user ) {
@@ -312,35 +312,6 @@ abstract class JCck
 		}
 				
 		return ( @self::$_user->$name != '' ) ? @self::$_user->$name : $default;
-	}
-	
-	// setUser_Preference
-	public static function setUser_Preference( $name, $value )
-	{
-		if ( ! self::$_user ) {
-			self::_setUser();
-		}
-		
-		$name	=	'preferences_'.$name;
-		return self::$_user->$name	=	$value;
-	}
-	
-	// setUser_Preferences
-	public static function setUser_Preferences( $preferences )
-	{
-		if ( !$preferences ) {
-			return;
-		}
-		
-		$registry		=	new JRegistry;
-		$registry->loadString( $preferences );				
-		$preferences	=	$registry->toArray();
-		if ( count( $preferences ) ) {
-			foreach ( $preferences as $k => $v ) {
-				$k					=	'preferences_'.$k;
-				self::$_user->$k	=	$v;
-			}
-		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
@@ -426,27 +397,6 @@ abstract class JCck
 			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			$app->cck_modal_box	=	true;
 		}
-	}
-	
-	// googleAnalytics
-	public static function googleAnalytics( $url, $account )
-	{
-		$doc	=	JFactory::getDocument();
-		$js	=	"
-				var _gaq = _gaq || [];
-				_gaq.push(['_setAccount', '".$account."']);
-				_gaq.push(['_setDomainName', 'none']);
-				_gaq.push(['_setAllowLinker', true]);
-				_gaq.push(['_trackPageview', '".$url."']);
-				
-				(function() {
-					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-				})();
-				";
-				
-		$doc->addScriptDeclaration( $js );
 	}
 }
 ?>
