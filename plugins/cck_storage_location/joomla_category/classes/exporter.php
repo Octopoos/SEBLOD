@@ -75,10 +75,13 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 			}
 		}
 		$fields	=	array_keys( $fields );
-		if ( $config['ftp'] == '1' ) {
-			$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
-		} else {
-			fputcsv( $config['handle'], $fields, $config['separator'] );
+
+		if ( $config['isNew'] ) {
+			if ( $config['ftp'] == '1' ) {
+				$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+			} else {
+				fputcsv( $config['handle'], $fields, $config['separator'] );
+			}
 		}
 		
 		// Set
