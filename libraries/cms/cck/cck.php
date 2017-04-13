@@ -137,7 +137,7 @@ abstract class JCck
 				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;

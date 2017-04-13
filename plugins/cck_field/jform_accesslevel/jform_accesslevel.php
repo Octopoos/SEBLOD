@@ -74,11 +74,13 @@ class plgCCK_FieldJForm_AccessLevel extends JCckPluginField
 		}
 		
 		// Prepare
-		if ( JCck::isSite() === true && !$config['pk'] && ( $config['client'] == 'admin' || $config['client'] == 'site' ) && $value != '' ) {
-			$levels	=	JCck::getSite()->viewlevels;
-			$levels	=	explode( ',', $levels );
-			sort( $levels );
-			$value	=	$levels[0];
+		if ( JCck::isSite() === true && !$config['pk'] && ( $config['client'] == 'admin' || $config['client'] == 'site' ) && ( $value == '' || $value == '1' ) ) {
+			if ( !( $value = JCck::getSite()->public_viewlevel ) ) {
+				$levels	=	JCck::getSite()->viewlevels;
+				$levels	=	explode( ',', $levels );
+				sort( $levels );
+				$value	=	$levels[0];
+			}
 		}
 		$opt	=	'';
 		if ( trim( $field->selectlabel ) ) {
