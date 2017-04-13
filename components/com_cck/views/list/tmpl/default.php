@@ -102,7 +102,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	$pre	=	'#seblod_form_raw ';
 	
 	if ( $app->input->get( 'search' ) != '' ) {
-		$url	=	JUri::root().'index.php?option=com_cck&view=list&search='.$app->input->get( 'search' );
+		$url	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$app->input->get( 'search' ) );
 	}
 }
 ?>
@@ -159,7 +159,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	if ( $url == '/' ) {
 		$url	=	'';
 	}
-	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$url;
+	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host', 'port' ) ).$url;
 ?>
 <script type="text/javascript">
 (function ($){
