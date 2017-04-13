@@ -36,12 +36,12 @@ if ( is_object( $this->style ) ) {
             </ul>
         </div>
 		<div class="seblod">
-			<div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_ROOT' ); ?></div>
+			<div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_GLOBAL' ); ?></div>
 	        <ul class="adminformlist adminformlist-2cols">
 	            <?php
-				echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Class', 'size'=>'16', 'storage_field'=>'params[rendering_css_class]' ) );
+				echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_item_attributes'], $config, array( 'label'=>'Item Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_item_attributes]' ), array(), 'w100' );
+				echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Root Class', 'size'=>'16', 'storage_field'=>'params[rendering_css_class]' ) );
 				echo JCckDev::renderBlank();
-				echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_item_attributes'], $config, array( 'label'=>'Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_item_attributes]' ), array(), 'w100' );
 	            ?>
 	        </ul>
         </div>
