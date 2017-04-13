@@ -362,7 +362,7 @@ class CCK_List
 						'location'=>$config['location'],
 					);
 		
-		include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list.php';
+		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
 		
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );

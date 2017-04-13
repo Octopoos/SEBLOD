@@ -94,7 +94,7 @@ class CCKViewForm extends JViewLegacy
 
 		// Prepare
 		jimport( 'cck.base.form.form' );
-		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
+		include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
 		if ( isset( $config['id'] ) ) {

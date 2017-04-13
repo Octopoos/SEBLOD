@@ -25,12 +25,6 @@ $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(string)$params->get( 'menu_item', '' );
 
-if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
-}
-if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
-}
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
 require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
@@ -63,7 +57,7 @@ $variation			=	$params->get( 'variation' );
 $limitstart			=	-1;
 
 jimport( 'cck.base.list.list' );
-include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
+include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
 // Set
 if ( !is_object( @$options ) ) {

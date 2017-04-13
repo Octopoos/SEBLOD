@@ -55,8 +55,9 @@ $states_list	=	array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_(
 
 // Set
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$root	=	JUri::root( true );
+$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
 			(function ($){
 				JCck.Dev = {

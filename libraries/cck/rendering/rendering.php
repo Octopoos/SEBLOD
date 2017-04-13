@@ -185,9 +185,9 @@ class CCK_Rendering
 
 		// Nested Lists.. yeah!
 		if ( isset( $me->list[$idx] ) ) {
-			$this->list			=	$me->list[$idx];
+			$this->list		=	$me->list[$idx];
 		} elseif ( isset( $me->list ) ) {
-			$this->list			=	$me->list;
+			$this->list		=	$me->list;
 		}
 
 		// Additional parameters (renderItem)
@@ -238,17 +238,17 @@ class CCK_Rendering
 			$css	=	$css * -1;
 		}
 		if ( $base ) {
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.css' );
+			$doc->addStyleSheet( $this->base.'/media/cck/css/cck.css' );
 			if ( $this->responsive ) {
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.responsive.css' );
+				$doc->addStyleSheet( $this->base.'/media/cck/css/cck.responsive.css' );
 			}
 		}
 		if ( $css == 1 || ( $css == 2 && $this->mode == 'content' ) || ( $css == 3 && $this->mode == 'form' ) ) {
 			if ( $this->client != 'list' ) {
 				if ( $this->isFile( $this->path.'/css/'.$this->client.'.css' ) ) {
-					$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->name. '/css/'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/templates/'.$this->name. '/css/'.$this->client.'.css' );
 				} else {
-					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/media/cck/css/cck.'.$this->client.'.css' );
 				}
 			}
 		}
@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.10.0.min.js' );
+			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.10.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';

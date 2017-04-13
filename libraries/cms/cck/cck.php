@@ -371,29 +371,30 @@ abstract class JCck
 	{
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-		
+		$root	=	JUri::root( true );
+
 		JHtml::_( 'bootstrap.framework' );
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
-				$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
+				$doc->addScript( $root.'/media/cck/js/cck.dev-3.7.0.min.js' );
+				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					foreach ( $dev as $v ) {
-						echo '<script src="'.JUri::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+						echo '<script src="'.$root.'/media/cck/js/'.$v.'" type="text/javascript"></script>';
 					}
 				} else {			
 					foreach ( $dev as $v ) {
-						$doc->addScript( JUri::root( true ).'/media/cck/js/'.$v );
+						$doc->addScript( $root.'/media/cck/js/'.$v );
 					}
 				}
 				$app->cck_jquery_dev	=	true;
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.11.0.min.js' );
+			$doc->addScript( $root.'/media/cck/js/cck.core-3.11.3.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			
@@ -416,11 +417,13 @@ abstract class JCck
 	public static function loadModalBox()
 	{
 		$app	=	JFactory::getApplication();
+		$root	=	JUri::root( true );
+
 		if ( !( isset( $app->cck_modal_box ) && $app->cck_modal_box === true ) ) {
 			$style	=	$app->isAdmin() ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
 			$doc	=	JFactory::getDocument();
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
-			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
+			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			$app->cck_modal_box	=	true;
 		}
 	}

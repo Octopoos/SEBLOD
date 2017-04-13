@@ -291,7 +291,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			
 			$params						=	new JRegistry;	// todo : remove+inherit?
 			$params->set( 'order_by', '' );
-			require_once JPATH_SITE.'/components/com_cck/helpers/helper_define.php';
+			
 			require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 			
 			// Prepare

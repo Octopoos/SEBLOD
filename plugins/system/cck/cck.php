@@ -25,6 +25,19 @@ class plgSystemCCK extends JPlugin
 		parent::__construct( $subject, $config );
 
 		$app	=	JFactory::getApplication();
+		$root	=	JUri::root( true );
+
+		// Deprecated :: start
+		if ( ! defined( 'JROOT_CCK' ) ) {
+			define( 'JROOT_CCK', $root );
+		}
+		if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+			define( 'JROOT_MEDIA_CCK', $root.'/media/cck' );
+		}
+		if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+			define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
+		}
+		// Deprecated :: end
 
 		if ( $app->isAdmin() ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );

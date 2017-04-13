@@ -13,7 +13,6 @@ defined( '_JEXEC' ) or die;
 $lang	=	JFactory::getLanguage();
 $lang->load( 'com_cck_default', JPATH_SITE );
 
-require_once JPATH_COMPONENT.'/helpers/helper_define.php';
 require_once JPATH_COMPONENT.'/helpers/helper_include.php';
 
 $controller	=	JControllerLegacy::getInstance( 'CCK' );

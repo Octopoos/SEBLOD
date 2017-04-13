@@ -230,6 +230,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 	{
 		$doc	=	JFactory::getDocument();
 		$height	=	( isset( $params['height'] ) && $params['height'] ) ? $params['height'] + 140 : '420';
+		$root	=	JUri::root( true );
 		
 		$doc->addStyleSheet( self::$path.'assets/css/cck_wysiwyg_editor.css' );
 		
@@ -242,11 +243,11 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 
 					if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
-						$doc->addScript( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+						$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 
 						$js	=	'$(document).ready(function() {'.$js.'});';
 					}
-					$doc->addStyleSheet( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
+					$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				} elseif ( $params['inherited'] == true ) {
 					JCck::loadModalBox();

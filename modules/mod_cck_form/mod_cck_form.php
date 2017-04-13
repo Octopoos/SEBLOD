@@ -24,12 +24,6 @@ $data	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
-}
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JUri::root( true ).'/media/cck' );
-}
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
 require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
@@ -49,7 +43,7 @@ $live		=	urldecode( $params->get( 'live' ) );
 $variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.form.form' );
-include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
+include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0|0' ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );

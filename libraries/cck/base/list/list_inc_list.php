@@ -86,7 +86,7 @@ if ( $go_for_item || $go_for_both ) {
 	$docI			=	CCK_Document::getInstance( 'html' );
 	$rparamsI		=	array( 'template' => $tmplI, 'file' => 'index.php', 'directory' => $path_rootI );
 	
-	include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list_items.php';
+	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 	
 	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>JUri::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
 	$doc->i_infos			=	$infos;
@@ -104,7 +104,7 @@ if ( $go_for_item || $go_for_both ) {
 	$positions		=	array();
 	$positions_p	=	CCK_List::getPositions( $search->id, $client );
 	
-	include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list_items.php';
+	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 }
 
 // Finalize
