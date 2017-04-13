@@ -18,7 +18,6 @@ if ( !$app->input->getBool( 'hidemainmenu' ) ) {
 	<ul id="menu<?php echo $module->id; ?>" class="nav">
         <li class="cck-quickadd">
             <a href="<?php echo $href; ?>" data-toggle="modal" data-target="#collapseModal3">
-            	<!--<i class="icon-plus"></i>-->
             	<?php echo $label; ?>
             </a>
         </li>

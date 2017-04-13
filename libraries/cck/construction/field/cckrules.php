@@ -235,13 +235,13 @@ class JFormFieldCCKRules extends JFormField
 											JText::_('JLIB_RULES_NOT_ALLOWED').'</span>';
 							}
 							else {
-								$html[] = '<span class="label"><i class="icon-lock icon-white"></i>'.
+								$html[] = '<span class="label"><span class="icon-lock icon-white"></span>'.
 											JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED').'</span>';
 							}
 						}
 					}
 					elseif (!empty($component)) {
-						$html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i>'.
+						$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
 									JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 					}
 					else {
@@ -253,11 +253,11 @@ class JFormFieldCCKRules extends JFormField
 						}
 						elseif ($inheritedRule === false) {
 							// Other actions cannot be changed.
-							$html[] = '<span class="label label-important"><i class="icon-lock icon-white"></i>'.
+							$html[] = '<span class="label label-important"><span class="icon-lock icon-white"></span>'.
 										JText::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT').'</span>';
 						}
 						else {
-							$html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i>'.
+							$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
 										JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 						}
 					}

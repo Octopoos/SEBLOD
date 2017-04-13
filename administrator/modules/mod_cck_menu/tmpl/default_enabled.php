@@ -178,7 +178,7 @@ if ( count( $items ) ) {
 	foreach ( $items as $key=>$item ) {
 		$link	=	explode( '||', $item );
 		$target	=	'';
-		$text	=	( strpos( $link[0], 'icon-' ) !== false ) ? '<i class="'.$link[0].'"></i>' : JText::_( $link[0] );
+		$text	=	( strpos( $link[0], 'icon-' ) !== false ) ? '<span class="'.$link[0].'"></span>' : JText::_( $link[0] );
 		if ( $link[1] == 'root' ) {
 			$link[1]	=	JUri::root();
 			$target		=	'_blank';

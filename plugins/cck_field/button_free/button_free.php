@@ -292,7 +292,7 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				}
 				$field->form	=	'';
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
-				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.' href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
+				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.'><span class="'.$icon.'"></span> '.$value.'</button>';
 				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, @$options2['icon'] );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );

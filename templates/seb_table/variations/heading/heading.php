@@ -54,7 +54,7 @@ if ( $type == 'ordering' ) {
 	JHtml::_( 'bootstrap.tooltip' );
 	
 	if ( $column == $order ) {
-		$legend	.=	'<i class="icon-arrow-'.( ( $order_dir == 'asc' ) ? 'up' : 'down' ).'-3"></i>';
+		$legend	.=	'<span class="icon-arrow-'.( ( $order_dir == 'asc' ) ? 'up' : 'down' ).'-3"></span>';
 	}
 
 	$tooltip	=	JHtml::tooltipText( '', 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN' );

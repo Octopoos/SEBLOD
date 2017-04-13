@@ -228,7 +228,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				}
 
 				$value 	= 	'<span class="sortable-handler">'
-						.	'<i class="icon-menu"></i>'
+						.	'<span class="icon-menu"></span>'
 						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
 						.	'</span>';
 				break;
