@@ -19,8 +19,7 @@ div.cck_forms select.inputbox,
 div.cck_forms button.inputbox {
     float: left !important;
     margin: 0 !important;
-	padding: 4px 6px !important;
-    background: none repeat scroll 0 0 #fff !important;
+    padding: 4px 6px !important;
 }
 
 div.cck_forms input.inputbox:focus,
@@ -29,8 +28,7 @@ div.cck_forms select.inputbox:focus,
 div.cck_forms button.inputbox:focus {
     float: left !important;
     margin: 0 !important;
-	padding: 4px 6px !important;
-    background: none repeat scroll 0 0 #ffffff !important;
+    padding: 4px 6px !important;
 }
 
 /*SITE DIV.CLEAR*/
