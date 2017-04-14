@@ -10,10 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-use Jenssegers\Date\Date;
-
-include_once 'classes/vendor/autoload.php';
-
 // Plugin
 class plgCCK_FieldCalendar extends JCckPluginField
 {
@@ -231,11 +227,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			}
 			else
 			{
-				$langue = JFactory::getLanguage();
-				$tag = $this->_getTag_Lang($langue);
-				Date::setLocale($tag);
-
-				$date = Date::createFromFormat($options2['format'], $value, $this->userTimeZone);
+				$date = JDate::createFromFormat($options2['format'], $value, $this->userTimeZone);
 			}
 
 			if ($date == false)
@@ -319,11 +311,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			}
 			else
 			{
-				$langue = JFactory::getLanguage();
-				$tag = $this->_getTag_Lang($langue);
-				Date::setLocale($tag);
 
-				$date = Date::createFromFormat($options2['format'], $value, $this->userTimeZone);
+				$date = JDate::createFromFormat($options2['format'], $value, $this->userTimeZone);
 			}
 
 			if ($date == false)
