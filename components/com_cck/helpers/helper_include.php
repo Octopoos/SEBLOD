@@ -21,19 +21,6 @@ class Helper_Include
 		}
 	}
 	
-	// addColorbox (deprecated: use JCck::loadModalBox();)
-	public static function addColorbox( $width = '900', $height = '550' )
-	{
-		$doc	=	JFactory::getDocument();
-		$root	=	JUri::root( true );
-
-		$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
-		$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-		
-		$js		=	'jQuery(document).ready(function($){ $(".cbox").colorbox({iframe:true, innerWidth:'.$width.', innerHeight:'.$height.'}); });';
-		$doc->addScriptDeclaration( $js );
-	}
-	
 	// addValidation
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
