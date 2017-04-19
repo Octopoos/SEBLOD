@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: computation.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,8 +14,9 @@ Helper_Include::addDependencies( 'box', 'edit' );
 
 $config	=	JCckDev::init( array( 'select_simple', 'text', 'textarea' ), true, array() );
 $doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$root	=	JUri::root( true );
+$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $event	=	str_replace( array( "\r", "\n", "\t" ), '', JCckDev::getForm( 'core_computation_event', '', $config, array( 'attributes'=>'style="width:60px; padding:5px 2px;  text-transform:lowercase;"' ) ) );
 $event	=	str_replace( 'events_', 'events__0', $event );
 $event	=	''; // next time..

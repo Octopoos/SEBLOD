@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -348,22 +348,25 @@ class CCK_List
 	}
 	
 	// render
-	public static function render( $items, $search, $path, $client, $itemId, $options, $config )
+	public static function render( $items, $search, $path, $client, $itemId, $options, &$config_list )
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$data	=	'';
 		$list	=	array(
-						'doSEF'=>$config['doSEF'],
-						'formId'=>$config['formId'],
-						'isCore'=>$config['doQuery'],
+						'doSEF'=>$config_list['doSEF'],
+						'formId'=>$config_list['formId'],
+						'isCore'=>$config_list['doQuery'],
 						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
-						'location'=>$config['location'],
+						'location'=>$config_list['location'],
 					);
 		
-		include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list.php';
-		
+		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
+
+		if ( $config['formWrapper'] ) {
+			$config_list['formWrapper']	=	$config['formWrapper'];
+		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );
 			$data	=	JHtml::_( 'content.prepare', $data );

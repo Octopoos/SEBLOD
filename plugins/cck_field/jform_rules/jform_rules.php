@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -205,6 +205,7 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 	{
 		$doc	=	JFactory::getDocument();
 		$height	=	'440';
+		$root	=	JUri::root( true );
 		
 		if ( !$inline ) {
 			if ( empty( $config['client'] ) ) {
@@ -212,11 +213,11 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 
 				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
-					$doc->addScript( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+					$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 
 					$js	=	'$(document).ready(function() {'.$js.'});';
 				}
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
+				$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} elseif ( $params['inherited'] == true ) {
 				JCck::loadModalBox();

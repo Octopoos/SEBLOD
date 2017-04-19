@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -70,7 +70,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEditOwn		=	'';
 		
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
-		$link2			=	JRoute::_( JUri::root().'index.php?option='.$this->option.'&view=list&search='.$item->name );
+		$link2			=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$item->name, 'root' );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 		$linkVersion	=	JRoute::_( 'index.php?option='.$this->option.'&view=versions&filter_e_type=search&e_id='.$item->id );
@@ -188,7 +188,7 @@ $js	=	'
 					var skip = skip || "";
 					var featured = $("#featured").val();
 					var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
-					window.location.href = url;
+					document.location.href = url;
 					return false;
 				},
 				addScroll: function() {

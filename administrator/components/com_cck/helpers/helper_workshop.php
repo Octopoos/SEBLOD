@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_workshop.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -143,8 +143,7 @@ class Helper_Workshop
 	{	
 		$bar		=	'';
 		$last		=	( $clone ) ? '' : ' last';
-		$root		=	JROOT_MEDIA_CCK;
-				
+		
 		$bar		.=	'<a class="hasTooltip cbox qtip_cck icons icon-add" title="'.JText::_( 'COM_CCK_ADD_FIELD' ).'" href="index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text"></a>'
 					.	'<a class="hasTooltip first qtip_cck icons icon-up" title="'.JText::_( 'COM_CCK_FIELDS_MOVE_UP' ).'" href="javascript: JCck.DevHelper.moveTop();"></a>';
 		if ( $uix == 'full' ) {

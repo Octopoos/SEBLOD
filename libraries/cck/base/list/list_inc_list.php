@@ -2,17 +2,17 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list_inc_list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 // Template
-$idx			=	( isset( $config['idx'] ) ) ? $config['idx'] : '_';
-$isInfinite		=	$config['infinite'];
+$idx			=	( isset( $config_list['idx'] ) ) ? $config_list['idx'] : '_';
+$isInfinite		=	$config_list['infinite'];
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
 if ( ! $templateStyle ) {
@@ -86,7 +86,7 @@ if ( $go_for_item || $go_for_both ) {
 	$docI			=	CCK_Document::getInstance( 'html' );
 	$rparamsI		=	array( 'template' => $tmplI, 'file' => 'index.php', 'directory' => $path_rootI );
 	
-	include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list_items.php';
+	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 	
 	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>JUri::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
 	$doc->i_infos			=	$infos;
@@ -104,7 +104,7 @@ if ( $go_for_item || $go_for_both ) {
 	$positions		=	array();
 	$positions_p	=	CCK_List::getPositions( $search->id, $client );
 	
-	include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list_items.php';
+	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 }
 
 // Finalize

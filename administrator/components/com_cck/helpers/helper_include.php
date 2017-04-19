@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_include.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -20,6 +20,7 @@ class Helper_Include extends CommonHelper_Include
 	{
 		$doc		=	JFactory::getDocument();
 		$script		=	( $tmpl == 'ajax' ) ? false : true;
+		$root		=	JUri::root( true );
 		
 		Helper_Include::addStyleSheets( true );
 		
@@ -44,7 +45,7 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQueryUI();
 				}
 				if ( $tmpl == 'component' ) {
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.11.0.min.js' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.11.0.min.js' );
 				}
 				break;
 			case 'type':
@@ -52,9 +53,9 @@ class Helper_Include extends CommonHelper_Include
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/cck.backend-3.11.0.min.js' );
-					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
-					$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.11.0.min.js' );
+					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
+					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
 							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 15%/66px 66px no-repeat;
@@ -64,7 +65,8 @@ class Helper_Include extends CommonHelper_Include
 							filter: alpha(opacity = 80);
 							overflow: hidden;
 							z-index:100;
-						}' );
+						}
+						#toolbar-eye-open{float:right;}' );
 				}
 				Helper_Include::addColorbox_Live( '930', '550', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
@@ -103,8 +105,8 @@ class Helper_Include extends CommonHelper_Include
 					Helper_Include::addColorbox( '850', '430', true, 'cbox_button', ', scrolling:false' );
 				}
 				if ( $view == 'searchs' || $view == 'sites' ) {
-					$doc->addStyleSheet( JROOT_MEDIA_CCK.'/css/jquery.sly.css' );
-					$doc->addScript( JROOT_MEDIA_CCK.'/js/jquery.sly.min.js' );
+					$doc->addStyleSheet( $root.'/media/cck/css/jquery.sly.css' );
+					$doc->addScript( $root.'/media/cck/js/jquery.sly.min.js' );
 				}
 				if ( $view == 'sessions' ) {
 					$doc->addStyleDeclaration( '#system-message-container.j-toggle-main.span10{width: 100%;}' );
@@ -114,7 +116,7 @@ class Helper_Include extends CommonHelper_Include
 				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				break;
 			case 'cck':
-				$doc->addStyleSheet( JROOT_CCK.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
+				$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
 				JCck::loadjQuery();
 				Helper_Include::addColorbox( '930', '430', true, 'cbox_button' );
 				break;
@@ -137,10 +139,11 @@ class Helper_Include extends CommonHelper_Include
 	public static function addColorbox( $width = '900', $height = '550', $script = true, $class = 'cbox', $options = '' )
 	{
 		$doc	=	JFactory::getDocument();
-		
+		$root	=	JUri::root( true );
+
 		if ( $script === true ) {
-			$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 		}
 		
 		$js		=	'jQuery(document).ready(function($){ $(".'.$class.'").colorbox({iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'}); });';
@@ -151,10 +154,11 @@ class Helper_Include extends CommonHelper_Include
 	public static function addColorbox_Live( $width = '900', $height = '550', $script = true, $class = 'cbox', $options = '' )
 	{
 		$doc	=	JFactory::getDocument();
+		$root	=	JUri::root( true );
 		
 		if ( $script === true ) {
-			$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-			$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			
 			$js	=	'$(document).on("click",".'.$class.'", function(e) { e.preventDefault();
 						$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
@@ -170,10 +174,11 @@ class Helper_Include extends CommonHelper_Include
 	public static function addColorpicker( $script = true )
 	{
 		$doc	=	JFactory::getDocument();
+		$root	=	JUri::root( true );
 		
 		if ( $script === true ) {
-			$doc->addStyleSheet( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
-			$doc->addScript( JUri::root( true ).'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
+			$doc->addStyleSheet( $root.'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
+			$doc->addScript( $root.'/plugins/cck_field/colorpicker/assets/js/colorpicker.js' );
 		}
 	}
 	

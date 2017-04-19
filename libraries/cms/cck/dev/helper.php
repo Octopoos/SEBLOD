@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -69,7 +69,7 @@ abstract class JCckDevHelper
 	}
 	
 	// getAbsoluteUrl
-	public static function getAbsoluteUrl( $itemId = '', $query = '' )
+	public static function getAbsoluteUrl( $itemId = '', $query = '', $method = 'base' )
 	{
 		if ( $query != '' ) {
 			if ( $query[0] == '?' || $query[0] == '&' ) {
@@ -81,14 +81,14 @@ abstract class JCckDevHelper
 		if ( $itemId == '' || $itemId == 'auto' ) {
 			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
 
-			if ( $itemId > 0 ) {
+			if ( $itemId > 0 && JFactory::getApplication()->isSite() ) {
 				return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
 			} elseif ( $itemId == -1 ) {
-				return JUri::base().'component/cck'.$glue.$query;
+				return JUri::root().'component/cck'.$glue.$query;
 			} else {
 				$glue	=	( $query != '' ) ? '&' : '';
 
-				return JUri::base().'index.php?option=com_cck'.$glue.$query;
+				return JUri::$method().'index.php?option=com_cck'.$glue.$query;
 			}
 		} else {
 			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;

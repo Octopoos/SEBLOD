@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_define.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -35,11 +35,8 @@ define( '_C6_NAME',				'versions' );
 define( '_C7_NAME',				'variations' );
 define( '_C8_NAME',				'sessions' );
 
-//define( '_C0_TEXT',			'COM_CCK_APP_FOLDER' );
 define( '_C1_TEXT',				'COM_CCK_TEMPLATE' );
-//define( '_C2_TEXT',			'CONTENT_TYPE' );
 define( '_C3_TEXT',				'COM_CCK_FIELD' );
-//define( '_C4_TEXT',			'SEARCH_TYPE' );
 define( '_C5_TEXT',				'COM_CCK_SITE' );
 define( '_C6_TEXT',				'COM_CCK_VERSION' );
 define( '_C7_TEXT',				'COM_CCK_VARIATION' );
@@ -55,11 +52,6 @@ define( '_C5_LINK',				CCK_LINK.'&view='._C5_NAME );
 define( '_C6_LINK',				CCK_LINK.'&view='._C6_NAME );
 define( '_C7_LINK',				CCK_LINK.'&view='._C7_NAME );
 define( '_C8_LINK',				CCK_LINK.'&view='._C8_NAME );
-
-$root	=	JUri::root( true );
-define( 'JROOT_CCK',			$root );
-define( 'JROOT_MEDIA_CCK',		$root.'/media/cck' );
-define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
 
 define( '_NBSP', 				str_repeat( '&nbsp;', 3 ) );
 define( '_NBSP2', 				str_repeat( '&nbsp;', 5 ) );

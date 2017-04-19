@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -299,7 +299,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				if ( !$task_auto ) {
 					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$onclick.'}';
 				}
-				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'" href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
+				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'"><span class="'.$icon.'"></span> '.$value.'</button>';
 				
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'button'=>array( 'html'=>$html, 'icon'=>@$options2['icon'] ), 'pre_task'=>$pre_task, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
 			} else {

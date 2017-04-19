@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: controller.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -190,6 +190,7 @@ class CCKController extends JControllerLegacy
 								'pk'=>$core->pk,
 								'pkb'=>0,
 								'store_id'=>$core->store_id,
+								'storages'=>array(),
 								'task'=>'download',
 								'type'=>$core->type,
 								'type_id'=>$core->type_id,
@@ -199,7 +200,7 @@ class CCKController extends JControllerLegacy
 			$field->value	=	$core->value;
 			$pk				=	$core->pk;
 			$value			=	'';
-
+			
 			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 			
 			// Access
@@ -219,6 +220,64 @@ class CCKController extends JControllerLegacy
 				$field->restriction			=	$restricted;
 				$field->restriction_options	=	$clients[$client]->restriction_options;
 				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+				
+				if ( $allowed ) {
+					require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+					$name		=	$field->name;
+					$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
+					$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
+					
+					if ( count( $fields ) ) {
+						foreach ( $fields as $field2 ) {
+							$value2	=	'';
+
+							if ( $field2->name ) {
+								$Pt	=	$field2->storage_table;
+								if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+									$config['storages'][$Pt]	=	'';
+									$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+								}
+								
+								$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+								if ( is_string( $value2 ) ) {
+									$value2		=	trim( $value2 );
+								}
+								
+								$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+
+								// Was it the last one?
+								// if ( $config['error'] ) {
+									// break;
+								// }
+							}
+						}
+					}
+					
+					// Merge
+					if ( count( $config['fields'] ) ) {
+						foreach ( $config['fields'] as $k=>$v ) {
+							if ( $v->restriction != 'unset' ) {
+								$fields[$k]	=	$v;
+							}
+						}
+						$config['fields']	=	NULL;
+						unset( $config['fields'] );
+					}
+
+					if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+						JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+						foreach ( $config['process']['beforeRenderContent'] as $process ) {
+							if ( $process->type ) {
+								JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
+							}
+						}
+					}
+
+					$allowed	=	(bool)$fields[$name]->state;
+				}
+
 				if ( $allowed !== true ) {
 					$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 					return;
@@ -293,7 +352,7 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_EXPORTED' ), 'message' );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -381,7 +440,7 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( $link, $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
-				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
 			$this->setRedirect( $link, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -498,6 +557,7 @@ class CCKController extends JControllerLegacy
 		$link		=	$this->_getReturnPage( false );
 		$redirect	=	( isset( $config['options']['redirection'] ) ) ? $config['options']['redirection'] : '';
 		$return		=	'';
+
 		if ( $task == 'apply' || $task == 'save2copy' ) {
 			$link		=	'';
 			$redirect	=	'form_edition';
@@ -512,7 +572,12 @@ class CCKController extends JControllerLegacy
 		} elseif ( $task == 'save2redirect' ) {
 			$link		=	'';
 			$redirect	=	'';
+		} elseif ( $task == 'save' ) {
+			if ( !$link ) {
+				/* Inherited */
+			}
 		}
+
 		if ( !$link ) {
 			switch ( $redirect ) {
 				case 'content':

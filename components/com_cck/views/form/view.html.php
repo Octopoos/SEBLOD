@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -94,7 +94,7 @@ class CCKViewForm extends JViewLegacy
 
 		// Prepare
 		jimport( 'cck.base.form.form' );
-		include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
+		include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
 		if ( isset( $config['id'] ) ) {

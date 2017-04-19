@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -21,6 +21,8 @@ $js		=	'
 							editor = "jce";
 						} else if (window.tinyMCE) {
 							editor = "tiny";
+						} else if (window.CodeMirror) {
+							editor = "codemirror"
 						} else {
 							editor = null;
 						}
@@ -48,6 +50,8 @@ $js		=	'
 									content = tinyMCE.get(elem).getContent();
 								}
 								break;
+							case "codemirror":
+								content = Joomla.editors.instances[elem].getValue(); break;
 							default:
 								if (document.getElementById(elem)) {
 									content = document.getElementById(elem).value;

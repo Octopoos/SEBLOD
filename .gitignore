@@ -1747,6 +1747,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_joomla_print.sys.ini
 /plugins/cck_field_link/joomla_print/*
 
+######## SEBLOD Plug-ins >> Link >> Map (JS)
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_seb_map_js.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_seb_map_js.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_seb_map_js.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_seb_map_js.sys.ini
+/plugins/cck_field_link/seb_map_js/*
+
 ######## SEBLOD Plug-ins >> Link >> SEBLOD eCommerce Add to Cart
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_cck_ecommerce_add_to_cart.ini

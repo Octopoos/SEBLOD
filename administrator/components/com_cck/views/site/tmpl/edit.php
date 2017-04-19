@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,7 @@ $config	=	JCckDev::init( array( '42', 'checkbox', 'field_x', 'jform_menuitem', '
 						   true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck	=	JCckDev::preload( array( 'core_title_site', 'core_name_site', 'core_description', 'core_state', 'core_site_name', 'core_site_pagetitles',
 									 'core_site_metadesc', 'core_site_metakeys', 'core_site_homepage', 'core_site_offline', 'core_site_language', 'core_site_template_style',
-									 'core_guest', 'core_guest_only_group', 'core_guest_only_viewlevel', 'core_groups', 'core_viewlevels' ) );
+									 'core_guest', 'core_guest_only_group', 'core_guest_only_viewlevel', 'core_public_viewlevel', 'core_groups', 'core_viewlevels' ) );
 $hasOpts  =   false;
 if ( ( $pos = strpos( $this->item->name, '@' ) ) !== false ) {
     $this->item->name   =   substr( $this->item->name, 0, $pos );
@@ -127,7 +127,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <ul class="adminformlist adminformlist-2cols">
                 <?php
                 echo JCckDev::renderForm( $cck['core_guest'], $this->item->guest, $config );
-				echo JCckDev::renderBlank();
 				if ( strpos( $this->item->viewlevels, ',' ) !== false ) {
                     if ( $this->item->guest_only_group != '' ) {
                         $this->item->groups     .=  ','.$this->item->guest_only_group;
@@ -135,9 +134,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                     if ( $this->item->guest_only_viewlevel != '' ) {
                         $this->item->viewlevels .=  ','.$this->item->guest_only_viewlevel;
                     }
-					echo JCckDev::renderForm( $cck['core_guest_only_group'], $this->item->guest_only_group, $config );
 					echo JCckDev::renderForm( $cck['core_guest_only_viewlevel'], $this->item->guest_only_viewlevel, $config );
+                    echo JCckDev::renderForm( $cck['core_guest_only_group'], $this->item->guest_only_group, $config );
 				}
+                echo JCckDev::renderForm( $cck['core_public_viewlevel'], $this->item->public_viewlevel, $config );
                 echo JCckDev::renderForm( $cck['core_groups'], $this->item->groups, $config );
                 echo JCckDev::renderForm( $cck['core_viewlevels'], $this->item->viewlevels, $config );
                 ?>

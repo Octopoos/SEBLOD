@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list_inc_list_items.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -80,6 +80,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'error'=>0,
 							'fields'=>array(),
 							'formId'=>$list['formId'],
+							'formWrapper'=>false,
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$list['itemId'],
@@ -203,6 +204,7 @@ for ( $i = 0; $i < $count; $i++ ) {
 							'error'=>0,
 							'fields'=>array(),
 							'formId'=>$list['formId'],
+							'formWrapper'=>false,
 							'id'=>$items[$i]->pid,
 							'ids'=>$ids,
 							'Itemid'=>$list['itemId'],

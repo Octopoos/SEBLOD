@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: validation.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -12,15 +12,14 @@ defined( '_JEXEC' ) or die;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
+$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
+$doc		=	JFactory::getDocument();
 $id			=	$this->item->id;
 $name		=	$this->item->name;
 $lang   	=	JFactory::getLanguage();
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-// Helper_Include::addDependencies( 'box', 'edit' );
-
-$doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$root		=	JUri::root( true );
+$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
 			(function ($){
 				JCck.Dev = {

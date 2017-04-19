@@ -4,12 +4,12 @@
 	<author>Octopoos</author>
 	<packagename>cck</packagename>
 	<packager>Octopoos</packager>
-	<packagerurl>http://www.seblod.com</packagerurl>
-	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
+	<packagerurl>https://www.seblod.com</packagerurl>
+	<copyright>Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.10.8</version>
+	<version>3.10.9</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	

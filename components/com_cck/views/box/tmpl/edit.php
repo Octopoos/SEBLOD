@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -20,17 +20,17 @@ $doc		=	JFactory::getDocument();
 <div id="toolbarBox" style="float: right; text-align: right; padding-right: 8px; padding-bottom: 8px; font-weight: bold;">
     <div style="float: left; padding-right: 8px;" id="messageBox"></div>
 	<?php if ( $isImage == 1 ) { ?>
-        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
+        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><span class="icon-cancel"></span>
 			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
 		</a>
     <?php } else { ?>
-        <a href="javascript:void(0);" id="submitBox" class="btn btn-small" onclick="JCck.Dev.submit();"><i class="icon-save"></i>
+        <a href="javascript:void(0);" id="submitBox" class="btn btn-small" onclick="JCck.Dev.submit();"><span class="icon-save"></span>
 			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
 		</a>
-        <a href="javascript:void(0);" id="resetBox" class="btn btn-small" onclick="JCck.Dev.reset();"><i class="icon-refresh"></i>
+        <a href="javascript:void(0);" id="resetBox" class="btn btn-small" onclick="JCck.Dev.reset();"><span class="icon-refresh"></span>
 			<?php echo JText::_( 'COM_CCK_RESET' ); ?>
 		</a>
-        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><i class="icon-cancel"></i>
+        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><span class="icon-cancel"></span>
 			<?php echo JText::_( 'COM_CCK_CANCEL' ); ?>
 		</a>
     <?php } ?>

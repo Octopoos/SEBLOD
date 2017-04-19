@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: include.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -90,6 +90,7 @@ class CommonHelper_Include
 		if ( empty( $rules ) ) {
 			$rules	=	'';
 		}
+		$root	=	JUri::root( true );
 		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
 		
 		if ( is_object( $options ) ) {
@@ -118,8 +119,8 @@ class CommonHelper_Include
 			$options	=	'{}';
 		}
 		
-		$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css' );
-		$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js' );
+		$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
+		$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );
 		
 		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
 		$doc->addScriptDeclaration( $js );

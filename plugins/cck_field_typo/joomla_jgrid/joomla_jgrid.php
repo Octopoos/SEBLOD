@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -94,6 +94,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$value	=	str_replace( '\'users.unblock\'', '\'update.unblock\', document.getElementById(\''.$formId.'\')', $value );
 					*/
 				}
+
+				$config['formWrapper']	=	true;
 				break;
 			case 'dropdown':
 				$class	=	$typo->get( 'class1', '' );
@@ -126,6 +128,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$class	.=	' disabled';
 					$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 				}
+
+				$config['formWrapper']	=	true;
 				break;
 			case 'form':
 			case 'form_disabled':
@@ -173,6 +177,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				$field->form		=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$value				=	$field->form;
+
+				$config['formWrapper']	=	true;
 				break;
 			case 'increment':
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
@@ -199,6 +205,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {					
 					$value	=	str_replace( 'this.checked', 'this.checked, document.getElementById(\''.$formId.'\')', $value );
 				}
+
+				$config['formWrapper']	=	true;
 				break;
 			case 'selection_label':
 				$value		=	'<label for="cb'.$pks[$pk].'">'.$value.'</label>';
@@ -228,9 +236,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				}
 
 				$value 	= 	'<span class="sortable-handler">'
-						.	'<i class="icon-menu"></i>'
+						.	'<span class="icon-menu"></span>'
 						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
 						.	'</span>';
+
+				$config['formWrapper']	=	true;
 				break;
 			case 'state':
 				$field_name_up		=	$typo->get( 'state_up', '' );
@@ -246,6 +256,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 					}
 				}
+
+				$config['formWrapper']	=	true;
 				break;
 			default:
 				break;

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cck.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,6 +25,19 @@ class plgSystemCCK extends JPlugin
 		parent::__construct( $subject, $config );
 
 		$app	=	JFactory::getApplication();
+		$root	=	JUri::root( true );
+
+		// Deprecated :: start
+		if ( ! defined( 'JROOT_CCK' ) ) {
+			define( 'JROOT_CCK', $root );
+		}
+		if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+			define( 'JROOT_MEDIA_CCK', $root.'/media/cck' );
+		}
+		if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+			define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
+		}
+		// Deprecated :: end
 
 		if ( $app->isAdmin() ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
@@ -223,7 +236,11 @@ class plgSystemCCK extends JPlugin
 			$guests	=	JCck::getMultisiteInfo('guests');
 			$isUser	=	!isset( $guests[(string)$user->id] );
 		} else {
-			$isUser	=	$user->id != $this->site->guest;
+			if ( !is_object( $this->site ) ) {
+				$isUser	=	false;
+			} else {
+				$isUser	=	$user->id != $this->site->guest;
+			}
 		}
 		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
 			if ( $app->isSite() ) {

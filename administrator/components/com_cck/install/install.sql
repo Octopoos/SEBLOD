@@ -657,7 +657,8 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (613, 'Freetext Modal Header', 'freetext_modal_header', 3, 'freetext', '', 1, 'clear', '', 3, '', '', '<button class="close" type="button" data-dismiss="modal">×</button>\r\n<h3>J(Process)</h3>', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'none', '', '', '', 'freetext_modal_header', '', '', '', 0, '0000-00-00 00:00:00'),
 (614, 'FreeText Download', 'freetext_download', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'Download', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'download', '', '', '', 0, '0000-00-00 00:00:00'),
 (615, 'FreeText Read More', 'freetext_read_more', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'Read More', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'read_more', '', '', '', 0, '0000-00-00 00:00:00'),
-(616, 'FreeText View More', 'freetext_view_more', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'View More', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'view_more', '', '', '', 0, '0000-00-00 00:00:00');
+(616, 'FreeText View More', 'freetext_view_more', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'View More', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'view_more', '', '', '', 0, '0000-00-00 00:00:00'),
+(617, 'Core Public (Viewlevel)', 'core_public_viewlevel', 3, 'select_dynamic', '', 0, 'Public Viewing Access Level', 'Select a Viewing Access Level', 3, '', '', '', '', '{"query":"","table":"#__viewlevels","name":"title","where":"","value":"id","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'public_viewlevel', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -978,7 +979,7 @@ INSERT IGNORE INTO `#__cck_core_search_position` (`searchid`, `position`, `clien
 (8, 'mainbody', 'item', '', '', '', '', '', ''),
 (8, 'mainbody', 'search', '', '', '', '', '', ''),
 (11, 'clear', 'search', '', '', '', '', '', ''),
-(11, 'column-a', 'list', '<span class="icon-menu-2"></span>', '', '{"type":"ordering","ordering":"art_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center nowrap'),
+(11, 'column-a', 'list', '<span class="icon-menu-2"></span>', 'heading', '{"type":"ordering","ordering":"art_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center nowrap'),
 (11, 'column-b', 'list', '#', 'heading', '{"type":"selection","ordering":"","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center'),
 (11, 'column-c', 'list', 'Article', 'heading', '{"type":"ordering","ordering":"art_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '', '', 'left'),
 (11, 'column-i', 'list', '', 'heading', '{"type":"ordering","ordering":"art_order_by","order_by":"","order_by_fieldname":"","order_dir":"desc","display":"0","display_trigger":""}', '15%', '', 'center'),
@@ -990,7 +991,7 @@ INSERT IGNORE INTO `#__cck_core_search_position` (`searchid`, `position`, `clien
 (11, 'hidden', 'search', '', '', '', '', '', ''),
 (11, 'mainbody', 'search', '', '', '', '', '', ''),
 (15, 'clear', 'search', '', '', '', '', '', ''),
-(15, 'column-a', 'list', '<span class="icon-menu-2"></span>', '', '{"type":"ordering","ordering":"cat_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center nowrap'),
+(15, 'column-a', 'list', '<span class="icon-menu-2"></span>', 'heading', '{"type":"ordering","ordering":"cat_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center nowrap'),
 (15, 'column-b', 'list', '#', 'heading', '{"type":"selection","ordering":"","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '1%', '', 'center'),
 (15, 'column-c', 'list', 'Category', 'heading', '{"type":"ordering","ordering":"cat_order_by","order_by":"","order_by_fieldname":"","order_dir":"asc","display":"0","display_trigger":""}', '', '', 'left'),
 (15, 'column-i', 'list', '', 'heading', '{"type":"ordering","ordering":"cat_order_by","order_by":"","order_by_fieldname":"","order_dir":"desc","display":"0","display_trigger":""}', '15%', '', 'center'),
@@ -1025,6 +1026,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `guest_only_group` int(11) NOT NULL,
   `guest_only_viewlevel` int(11) NOT NULL,
   `groups` varchar(255) NOT NULL,
+  `public_viewlevel` int(11) NOT NULL,
   `viewlevels` varchar(255) NOT NULL,
   `configuration` varchar(1024) NOT NULL,
   `options` varchar(2048) NOT NULL,

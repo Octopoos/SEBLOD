@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_include.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,9 +25,10 @@ class Helper_Include
 	public static function addColorbox( $width = '900', $height = '550' )
 	{
 		$doc	=	JFactory::getDocument();
-		
-		$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-		$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+		$root	=	JUri::root( true );
+
+		$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+		$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 		
 		$js		=	'jQuery(document).ready(function($){ $(".cbox").colorbox({iframe:true, innerWidth:'.$width.', innerHeight:'.$height.'}); });';
 		$doc->addScriptDeclaration( $js );
@@ -45,6 +46,7 @@ class Helper_Include
 		if ( empty( $rules ) ) {
 			$rules	=	'';
 		}
+		$root	=	JUri::root( true );
 		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
 		
 		if ( is_object( $options ) ) {
@@ -76,12 +78,12 @@ class Helper_Include
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.validation-3.9.0.css' );
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.validation-3.11.1.min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}

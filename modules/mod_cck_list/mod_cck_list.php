@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: mod_cck_list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,12 +23,6 @@ $app	=	JFactory::getApplication();
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 
-if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
-}
-if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
-}
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
 require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
@@ -60,7 +54,7 @@ $pagination	=	-2;
 $variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.list.list' );
-include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
+include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
 // Set
 if ( !is_object( @$options ) ) {

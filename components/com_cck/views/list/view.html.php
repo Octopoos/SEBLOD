@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -110,7 +110,7 @@ class CCKViewList extends JViewLegacy
 		
 		// Prepare
 		jimport( 'cck.base.list.list' );
-		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
+		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 		$pagination	=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
@@ -219,15 +219,25 @@ class CCKViewList extends JViewLegacy
 			$params->set( 'show_page_heading', 0 );
 			$this->show_list_title	=	false;
 		}
+
+		if ( isset( $pagination->pagesTotal ) ) {
+			$this->pages_total	=	$pagination->pagesTotal;
+		} elseif ( isset( $pagination->{'pages.total'} ) ) {
+			$this->pages_total	=	$pagination->{'pages.total'};
+		} else {
+			$this->pages_total	=	0;
+		}
 		
 		$this->config					=	&$config;
 		$this->data						=	&$data;
 		$this->filter_ajax				=	( isset( $hasAjax ) && $hasAjax ) ? true : false;
 		$this->form						=	&$form;
 		$this->form_id					=	$preconfig['formId'];
+		$this->form_wrapper				=	$config['formWrapper'];
 		$this->home						=	&$home;
 		$this->items					=	&$items;
 		$this->limitend					=	$config['limitend'];
+		$this->load_ajax				=	( $this->filter_ajax || ( $this->pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ) ? true : false;
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;

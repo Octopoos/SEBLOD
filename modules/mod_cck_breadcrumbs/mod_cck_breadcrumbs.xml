@@ -3,12 +3,12 @@
 	<name>mod_cck_breadcrumbs</name>
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
-	<authorUrl>http://www.seblod.com</authorUrl>
+	<authorUrl>https://www.seblod.com</authorUrl>
 	<copyright>Copyright (C) 2005 - 2012 Open Source Matters.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2012</creationDate>
 	<description>LIB_CCK_EXTENSION_DESCRIPTION</description>	
-	<version>3.10.8</version>
+	<version>3.10.9</version>
 	
 	<files>
 		<folder>tmpl</folder>

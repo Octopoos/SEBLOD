@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list_inc.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -170,6 +170,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 						   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
 						   'formId'=>$preconfig['formId'],
+						   'formWrapper'=>false,
 						   'Itemid'=>$itemId,
 						   'limitend'=>0,
 						   'location'=>'',
@@ -552,11 +553,27 @@ if ( $preconfig['task'] == 'search' ) {
 					$app->enqueueMessage( $no_message, $no_style );
 				}
 			}
-			
 		}
 	}
 } else {
 	$no_action	=	$options->get( 'action_no_search', '' );
+	$no_message	=	$options->get( 'message_no_search', '' );
+	$no_style	=	$options->get( 'message_style_no_search', '0' );
+
+	if ( ! $no_message ) {
+		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
+	} else {
+		if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
+		}
+	}
+	if ( $no_style ) {
+		if ( $no_style == '-1' ) {
+			$data	=	$no_message;
+		} else {
+			$app->enqueueMessage( $no_message, $no_style );
+		}
+	}
 }
 if ( $no_action ) {
 	$config['infinite']		=	$isInfinite;
