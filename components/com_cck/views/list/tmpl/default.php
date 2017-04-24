@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
-	Helper_Include::addValidation( $this->config['validation'], $this->config['validation_options'] );
+	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'] );
 	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'")); }';
 } else {
 	$js	=	'JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'"));';

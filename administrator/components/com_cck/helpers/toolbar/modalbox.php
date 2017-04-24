@@ -19,7 +19,6 @@ class JButtonCckModalBox extends JButton
 	public function fetchButton( $type = 'CckModalBox', $name = '', $text = '', $url = '', $width = 820, $height = 400, $top = 0, $left = 0 )
 	{
 		JCck::loadjQuery();
-		// Helper_Include::addColorbox( $width, $height, true, 'cbox_button', ', scrolling:false' );
 		
 		$class	=	$this->fetchIconClass( $name );
 		$class2	=	( $name == 'apply' || $name == 'new' ) ? 'btn btn-small btn-success' : 'btn btn-small';
