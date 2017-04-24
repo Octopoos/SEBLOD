@@ -40,9 +40,11 @@ div.vertical div.clear{clear:none;}
 div.horizontal div.clear{clear:both;}
 
 /*ADMIN GENERIQUE CALENDAR*/
-div.cck_forms.cck_admin div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_admin div.cck_form.cck_form_calendar input.inputbox,
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_calendar input.inputbox{float:left;}
 div.cck_forms.cck_admin div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
-div.cck_forms.cck_admin div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+div.cck_forms.cck_admin div.cck_form.cck_form_calendar.input-append input,
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_calendar .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*ADMIN GENERIQUE CHECKBOX*/
 div.cck_forms.cck_admin div.cck_form.cck_form_checkbox fieldset,
@@ -76,7 +78,7 @@ div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_form
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:0px!important;margin-top:12px!important;padding:1px;}
 
 /*ADMIN GENERIQUE JFORM USER*/
-div.cck_forms.cck_admin div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_user div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}
 
 /*ADMIN GENERIQUE JFORM MEDIA*/
@@ -406,4 +408,8 @@ div.horizontal .adminformlist li a:visited.cck_preview{
 .btn [class^="icon-"],
 .btn [class*=" icon-"] {
 	margin-right:0;
+}
+.input-append .add-on, .input-append .btn, .input-append .btn-group { 
+    z-index: 2;
+    position: relative;
 }

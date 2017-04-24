@@ -89,9 +89,11 @@ div.cck_forms.cck_search div.cck_form span.variation_value{line-height:1.2em;}
 div.cck_forms.cck_search div.cck_desc .hasPopover{padding:3px 0 0 5px;}
 
 /*SITE GENERIQUE CALENDAR*/
-div.cck_forms.cck_search div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_search div.cck_form.cck_form_calendar input.inputbox,
+div.cck_forms.cck_search div.cck_form.cck_form_jform_calendar input.inputbox{float:left;}
 div.cck_forms.cck_search div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
-div.cck_forms.cck_search div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+div.cck_forms.cck_search div.cck_form.cck_form_calendar.input-append input,
+div.cck_forms.cck_search div.cck_form.cck_form_jform_calendar .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE CHECKBOX*/
 div.cck_forms.cck_search div.cck_form.cck_form_checkbox fieldset,
@@ -119,9 +121,14 @@ div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor div.cck_wysiwyg_ed
 div.cck_forms.cck_search div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
 
 /*SITE GENERIQUE JFORM USER*/
-div.cck_forms.cck_search div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+div.cck_forms.cck_search div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE JFORM USER GROUP*/
 div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul{ padding:0;}
 div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul li{list-style: none outside none;}
 div.cck_forms.cck_search div.cck_form.cck_form_jform_usergroups ul li input{float: left; margin: 1px 10px 10px 0;}
+
+.input-append .add-on, .input-append .btn, .input-append .btn-group { 
+    z-index: 2;
+    position: relative;
+}
