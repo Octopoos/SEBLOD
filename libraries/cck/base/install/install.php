@@ -192,14 +192,15 @@ class CCK_Install
 				$seblod	=	$db->loadObject();
 				
 				if ( $seblod->id > 0 ) {
+					$table->title		=	'com_'.$addon['name'];
 					$table->alias		=	$addon['title'];
-					$table->path		=	'SEBLOD 3.x/'.$addon['title'];
+					$table->path		=	'SEBLOD/'.$addon['title'];
 					$table->level		=	2;
 					$table->parent_id	=	$seblod->id;
 					$table->check();
 					$table->store();
 					$table->rebuild( $seblod->id, $seblod->lft, $seblod->level, $seblod->path );
-					$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon['title'].'", path = "SEBLOD 3.x/'.$addon['title'].'" WHERE id = '.(int)$table->id );
+					$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon['title'].'", path = "SEBLOD/'.$addon['title'].'" WHERE id = '.(int)$table->id );
 					$db->execute();
 				}
 			}

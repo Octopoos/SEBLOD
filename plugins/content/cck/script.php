@@ -84,8 +84,9 @@ class plgContentCCKInstallerScript
 		$db->execute();
 		
 		// Rename Menu Item
-		$db->setQuery( 'UPDATE #__menu SET alias = "SEBLOD 3.x", path="SEBLOD 3.x" WHERE link = "index.php?option=com_cck"' );
+		$db->setQuery( 'UPDATE #__menu SET title = "com_cck", alias = "SEBLOD", path="SEBLOD" WHERE link = "index.php?option=com_cck"' );
 		$db->execute();
+
 		// Re-build menu
 		$query	=	'SELECT id, level, lft, path FROM #__menu WHERE link = "index.php?option=com_cck"';
 		$db->setQuery( $query );
@@ -532,7 +533,7 @@ class plgContentCCKInstallerScript
 		$name	=	str_replace( 'com_cck_', '', $addon->element );
 		$table	=	JTable::getInstance( 'menu' );
 		
-		$data	=	array( 'menutype'=>'main', 'title'=>'SEBLOD '.$addon->title, 'alias'=>$addon->title, 'path'=>'SEBLOD 3.x/'.$addon->title,
+		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element, 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
 						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>0, 'parent_id'=>$parent->id,
 						   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
 		
@@ -540,9 +541,11 @@ class plgContentCCKInstallerScript
 		$table->bind( $data );
 		$table->check();
 		$table->alias	=	$addon->title;
-		$table->path	=	'SEBLOD 3.x/'.$addon->title;
+		$table->path	=	'SEBLOD/'.$addon->title;
 		$table->store();
 		$table->rebuildPath( $table->id );
+		$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon->title.'", path = "SEBLOD/'.$addon->title.'" WHERE id = '.(int)$table->id );
+		$db->execute();
 	}
 
 	// _convertTablesToUtf8mb4
