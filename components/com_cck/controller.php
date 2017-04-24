@@ -196,7 +196,7 @@ class CCKController extends JControllerLegacy
 								'type_id'=>$core->type_id,
 								'xi'=>$xi
 							);
-			$dispatcher		=	JDispatcher::getInstance();
+			$dispatcher		=	JEventDispatcher::getInstance();
 			$field->value	=	$core->value;
 			$pk				=	$core->pk;
 			$value			=	'';

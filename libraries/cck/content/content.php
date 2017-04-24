@@ -106,14 +106,13 @@ class CCK_Content
 			$params	=	new JObject;
 		}
 		
-		JPluginHelper::importPlugin( 'content' );		
-		$dispatcher	=	JDispatcher::getInstance();
+		JPluginHelper::importPlugin( 'content' );
 		
 		$row->text	=	'';
 		if ( isset( $row->$name ) ) {
 			$row->text	=	$row->$name;
 		}
-		$results	=	$dispatcher->trigger( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
+		$results	=	JEventDispatcher::getInstance()->trigger( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
 		
 		return $row->text;
 	}

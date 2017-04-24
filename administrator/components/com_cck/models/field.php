@@ -113,7 +113,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$dispatcher->trigger( 'onCCK_Storage_LocationConstruct', array( @$data['storage_location'], &$data ) );
 		$dispatcher->trigger( 'onCCK_FieldConstruct', array( $data['type'], &$data ) );
 		

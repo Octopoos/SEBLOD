@@ -51,7 +51,7 @@ class plgSearchCCK extends JPlugin
 
 		$app			=	JFactory::getApplication();
 		$db				=	JFactory::getDbo();
-		$dispatcher		=	JDispatcher::getInstance();
+		$dispatcher		=	JEventDispatcher::getInstance();
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doLimit		=	false;

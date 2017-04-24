@@ -138,7 +138,6 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !isset( $config['doValidation'] ) ) {
 					$config['doValidation']	=	0;
 				}
-				$dispatcher			=	JDispatcher::getInstance();
 				$hasIdentifier		=	$typo->get( 'use_identifier', '1' );
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
@@ -174,7 +173,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} elseif ( $type == 'form_hidden' ) {
 					$field->variation	=	'hidden';
 				}
-				$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
+				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				$field->form		=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$value				=	$field->form;
 

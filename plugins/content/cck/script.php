@@ -229,9 +229,13 @@ class plgContentCCKInstallerScript
 			}
 
 			// Add Categories
+			JPluginHelper::importPlugin( 'content' );
+			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+			
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
-			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+			$dispatcher	=	JEventDispatcher::getInstance();
+			
 			foreach ( $categories as $category ) {
 				$table	=	JTable::getInstance( 'category' );
 				$table->access	=	2;
@@ -244,12 +248,11 @@ class plgContentCCKInstallerScript
 				$table->path		.=	$table->alias;
 				$table->language	=	'*';
 				$table->store();
-				$dispatcher	=	JDispatcher::getInstance();
-				JPluginHelper::importPlugin( 'content' );
+				
 				$dispatcher->trigger( 'onContentBeforeSave', array( '', &$table, true ) );
 				$table->store();
 				$dispatcher->trigger( 'onContentAfterSave', array( '', &$table, true ) );
-				//
+				
 				$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
 				$db->setQuery( $query );
 				$plugin			=	$db->loadObject();

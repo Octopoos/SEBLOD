@@ -105,7 +105,7 @@ class plgUserCCK extends JPlugin
 									'storages'=>array(),
 									'type'=>$table->cck
 								);
-				$dispatcher	=	JDispatcher::getInstance();
+				$dispatcher	=	JEventDispatcher::getInstance();
 				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
 				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
 				if ( count( $fields ) ) {

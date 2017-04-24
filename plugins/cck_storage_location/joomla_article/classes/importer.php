@@ -86,8 +86,8 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			$dispatcher	=	JDispatcher::getInstance();
 			JPluginHelper::importPlugin( 'content' );
+			$dispatcher	=	JEventDispatcher::getInstance();
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
 				$error		=	true;

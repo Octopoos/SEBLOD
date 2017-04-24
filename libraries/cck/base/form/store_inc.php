@@ -62,7 +62,7 @@ JPluginHelper::importPlugin( 'cck_storage_location' );
 if ( !$isNew ) {
 	$author	=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 }
-$dispatcher	=	JDispatcher::getInstance();
+$dispatcher	=	JEventDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {

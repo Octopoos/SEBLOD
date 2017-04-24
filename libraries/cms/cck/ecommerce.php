@@ -97,14 +97,13 @@ abstract class JCckEcommerce
 				JPluginHelper::importPlugin( 'cck_field_live' );
 
 				$config			=	array();
-				$dispatcher		=	JDispatcher::getInstance();
 				$field			=	(object)array(
 										'live'=>$definitions[$name]->request_payment_field_live,
 										'live_options'=>$definitions[$name]->request_payment_field_live_options,
 									);
 				$suffix			=	'';
 				
-				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+				JEventDispatcher::getInstance()->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
 				if ( $suffix != '' ) {
 					if ( $definitions[$name]->request_payment_field != '' ) {

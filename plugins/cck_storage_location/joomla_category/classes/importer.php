@@ -88,8 +88,8 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			$dispatcher	=	JDispatcher::getInstance();
 			JPluginHelper::importPlugin( 'content' );
+			$dispatcher	=	JEventDispatcher::getInstance();
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
 				$error		=	true;

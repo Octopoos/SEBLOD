@@ -76,7 +76,6 @@ abstract class JCckWebservice
 								'response_format'=>''
 							);
 		$config			=	array();
-		$dispatcher		=	JDispatcher::getInstance();
 		
 		// Override
 		if ( count( $data ) ) {
@@ -91,7 +90,7 @@ abstract class JCckWebservice
 		}
 		
 		JPluginHelper::importPlugin( 'cck_webservice' );
-		$dispatcher->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+		JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
 		if ( isset( $webservice->response ) ) {
 			$response	=	$webservice->response;

@@ -165,11 +165,10 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 		
 		// Init
-		$dispatcher		=	JDispatcher::getInstance();
 		$field->type	=	'text';
 
 		// Prepare
-		$results		=	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
+		$results		=	JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
 		if ( is_array( $results ) && !empty( $results[0] ) ) {
 			$field		=	$results[0];
 		}
