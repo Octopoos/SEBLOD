@@ -79,51 +79,10 @@ class CommonHelper_Include
 	{
 	}
 	
-	// addValidation
+	// addValidation (deprecated)
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
-		
-		if ( !$id ) {
-			$id	=	'seblod_form';
-		}
-		if ( empty( $rules ) ) {
-			$rules	=	'';
-		}
-		$root	=	JUri::root( true );
-		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
-		
-		if ( is_object( $options ) ) {
-			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
-			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
-			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
-			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
-			if ( $color != '' ) {
-				if ( $position == 'inline' ) {
-					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
-				} else {
-					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
-				}
-			}
-			if ( $position != 'inline' && $bgcolor != '' ) {
-				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
-				if ( $position == 'topLeft' || $position == 'topRight' ) {
-					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
-				} else {
-					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
-				}
-				$doc->addStyleDeclaration( $css );
-			}
-			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
-		} else {
-			$options	=	'{}';
-		}
-		
-		$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
-		$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );
-		
-		$js	=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'}); $("#'.$id.'").validationEngine('.$options.'); });';
-		$doc->addScriptDeclaration( $js );
+		JCckDev::addValidation( $rules, $options, $id, $config );
 	}
 }
 ?>

@@ -32,7 +32,7 @@ if ( $show_list_desc == 1 && $description != '' ) {
 	echo $description;
 }
 if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
-	Helper_Include::addValidation( $config['validation'], $config['validation_options'], $formId );
+	JCckDev::addValidation( $config['validation'], $config['validation_options'], $formId );
 	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { JCck.Core.submitForm("search", document.getElementById("'.$formId.'")); }';
 } else {
 	$js	=	'JCck.Core.submitForm("search", document.getElementById("'.$formId.'"));';

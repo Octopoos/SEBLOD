@@ -27,7 +27,6 @@ $itemId	=	(string)$params->get( 'menu_item', '' );
 
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
-require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 
 $preconfig					=	array();
 $preconfig['action']		=	'';

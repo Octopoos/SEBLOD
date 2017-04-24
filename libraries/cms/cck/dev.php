@@ -56,6 +56,60 @@ abstract class JCckDev
 		$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
 	}
 
+	// addValidation
+	public static function addValidation( $rules, $options, $id = '', &$config = array() )
+	{
+		$app	=	JFactory::getApplication();
+		$doc	=	JFactory::getDocument();
+		
+		if ( !$id ) {
+			$id	=	'seblod_form';
+		}
+		if ( empty( $rules ) ) {
+			$rules	=	'';
+		}
+		$root	=	JUri::root( true );
+		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
+		
+		if ( is_object( $options ) ) {
+			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
+			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
+			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
+			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
+			if ( $color != '' ) {
+				if ( $position == 'inline' && $id != '_' ) {
+					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
+				} else {
+					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
+				}
+			}
+			if ( $position != 'inline' && $bgcolor != '' ) {
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
+			}
+			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
+		} else {
+			$options	=	'{}';
+		}
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
+		
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );
+			$doc->addScriptDeclaration( $js );
+		}
+	}
+
 	// forceStorage
 	public static function forceStorage( $value = 'none', $allowed = '' )
 	{
@@ -502,11 +556,7 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
-		if ( !class_exists( 'Helper_Include' ) ) {
-			require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php';
-		}
-		
-		Helper_Include::addValidation( $config['validation'], $config['validation_options'], $id );
+		self::addValidation( $config['validation'], $config['validation_options'], $id );
 		
 		if ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 			JFactory::getDocument()->addScriptDeclaration( 'var cck_dev = '.json_encode( $config['fields'] ).';' );

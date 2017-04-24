@@ -32,12 +32,6 @@ class JCckPluginFieldAdapter
 			return '';
 		}
 
-		/*
-		$config	=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'tmpl'=>'ajax' ) );
-
-		Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
-		*/
-
 		JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 
 		$config	=	array(

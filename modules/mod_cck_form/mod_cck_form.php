@@ -26,7 +26,6 @@ $formId	=	'seblod_form_'.$uniqId;
 
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
-require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 
 $option					=	$app->input->get( 'option', '' );
 $view					=	'';
