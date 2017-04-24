@@ -24,13 +24,13 @@ abstract class JCckDatabase
 			if ( $text[0] == "'" && $text[$len - 1] == "'" ) {
 				$t	=	substr( $text, 1, - 1 );
 
-				if ( is_numeric( $t ) || strlen( $t ) == 0 ) {
+				if ( is_numeric( $t ) ) {
 					return "'".(string)$t."'";
 				}
 			}
 		}
 
-		return '0';
+		return JCckDatabase::quote( uniqid() );
 	}
 	
 	// convertUtf8mb4QueryToUtf8
