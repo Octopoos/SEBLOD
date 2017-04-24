@@ -658,7 +658,8 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (614, 'FreeText Download', 'freetext_download', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'Download', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'download', '', '', '', 0, '0000-00-00 00:00:00'),
 (615, 'FreeText Read More', 'freetext_read_more', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'Read More', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'read_more', '', '', '', 0, '0000-00-00 00:00:00'),
 (616, 'FreeText View More', 'freetext_view_more', 3, 'freetext', '', 1, 'clear', '', 3, '', '', 'View More', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'view_more', '', '', '', 0, '0000-00-00 00:00:00'),
-(617, 'Core Public (Viewlevel)', 'core_public_viewlevel', 3, 'select_dynamic', '', 0, 'Public Viewing Access Level', 'Select a Viewing Access Level', 3, '', '', '', '', '{"query":"","table":"#__viewlevels","name":"title","where":"","value":"id","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'public_viewlevel', '', '', '', 0, '0000-00-00 00:00:00');
+(617, 'Core Public (Viewlevel)', 'core_public_viewlevel', 3, 'select_dynamic', '', 0, 'Public Viewing Access Level', 'Select a Viewing Access Level', 3, '', '', '', '', '{"query":"","table":"#__viewlevels","name":"title","where":"","value":"id","orderby":"title","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","attr6":""}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'public_viewlevel', '', '', '', 0, '0000-00-00 00:00:00'),
+(618, 'Tab2 Profile (Panel)', 'tab2_profile', 3, 'tabs', '', 1, 'Profile', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'tab2_profile', '', '', 'tab2_profile', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -1026,7 +1027,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `guest_only_group` int(11) NOT NULL,
   `guest_only_viewlevel` int(11) NOT NULL,
   `groups` varchar(255) NOT NULL,
-  `public_viewlevel` int(11) NOT NULL,
+  `public_viewlevel` int(11) NOT NULL DEFAULT '0',
   `viewlevels` varchar(255) NOT NULL,
   `configuration` varchar(1024) NOT NULL,
   `options` varchar(2048) NOT NULL,
