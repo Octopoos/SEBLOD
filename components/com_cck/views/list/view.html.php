@@ -241,6 +241,7 @@ class CCKViewList extends JViewLegacy
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;
 		$this->search					=	&$search;
+		$this->tag_desc					=	$params->get( 'tag_list_desc', 'div' );
 		$this->total					=	&$total_items;
 	}
 }

@@ -48,8 +48,21 @@ if ( $this->show_list_title ) {
 	$class		=	$class ? ' class="'.$class.'"' : '';
 	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
+if ( $this->show_list_desc && $this->description != '' ) {
+	$description	=	JHtml::_( 'content.prepare', $this->description );
+	
+	if ( !( $this->tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
+		$this->tag_desc	=	'div';
+	}
+	if ( !$this->raw_rendering ) {
+		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
+	}
+	if ( $this->tag_desc == 'div' ) {
+		$description	.=	'<div class="clr"></div>';
+	}
+}
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
-	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo $description;
 }
 if ( $this->show_form ) {
 	if ( $this->show_form == 1 ) {
@@ -87,7 +100,7 @@ if ( $this->show_form ) {
 	}
 }
 if ( $this->show_list_desc == 2 && $this->description != '' ) {
-	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo $description;
 }
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
