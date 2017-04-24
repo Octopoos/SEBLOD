@@ -266,7 +266,7 @@ $js		=	'
 					var fieldtype = "'.$field->type.'";
 					var elem = "#'.$this->item->name.'";
 					var w = $("#toolbarBox").width()+69;
-					var h = $("#layout").height()+62;
+					var h = $("#layout").height()+54;
 					if (w > 300 || h > 200) {
 						w = (w > 300) ? w+42 : w;
 						parent.jQuery.colorbox.resize({innerWidth:w, innerHeight:h});
@@ -301,6 +301,7 @@ $js		=	'
 						$(elem+" input").val(v2);
 					}
 					if (toggle=="1") {
+						JCck.Dev.resize(32);
 						$("div.toggle-selection").html(\'<a href="#" id="toggle_selection">Toggle</a>\');
 						if ($("#'.$this->item->name.'").isMultiple()) {
 							JCck.Dev.always = true;
@@ -309,7 +310,7 @@ $js		=	'
 							if (client=="search" && $("#alter_match_div").length && !JCck.Dev.always) {
 								$("#alter_match_div").toggleClass("hidden-important");
 							}
-							$(elem).toggleMultiple(0);
+							$(elem).toggleMultiple(12);
 							if (client=="search" && $("#alter_match_div").length) {
 								JCck.Dev.toggleField();
 							}
