@@ -286,6 +286,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
+			
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
@@ -296,7 +298,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 			}
 			$field->attributesList		=	( count( $attributes ) ) ? implode( '||', $attributes ) : '';
 			$field->optionsList			=	( count( $options ) ) ? implode( '||', $options ) : '';
-			$field->text				=	parent::g_getOptionText( $value, $field->options, '', $config );
+			$field->text				=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
 			$config['doTranslation']	=	$doTranslation;
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
 		}
@@ -320,7 +322,6 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		
 		// Set
 		$field->match_value	=	$field->match_value ? $field->match_value : ',';
-		$field->value		=	$value;
 		
 		// Return
 		if ( $return === true ) {

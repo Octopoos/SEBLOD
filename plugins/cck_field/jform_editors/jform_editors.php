@@ -44,7 +44,7 @@ class plgCCK_FieldJForm_Editors extends JCckPluginField
 	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
-	{		
+	{
 		if ( self::$type != $field->type ) {
 			return;
 		}
@@ -156,7 +156,7 @@ class plgCCK_FieldJForm_Editors extends JCckPluginField
 	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
-	{		
+	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 	

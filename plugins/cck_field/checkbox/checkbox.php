@@ -249,6 +249,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			$field->text	=	parent::g_getOptionText( $value, $field->options, $divider, $config );
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
@@ -295,9 +297,6 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		// Prepare
 		$field->divider	=	$divider;
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-		
-		// Set
-		$field->value	=	$value;
 		
 		// Return
 		if ( $return === true ) {

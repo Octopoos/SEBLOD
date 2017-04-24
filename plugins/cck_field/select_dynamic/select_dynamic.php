@@ -419,7 +419,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					}
 				}
 			}
-			
 			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
 			
 			if ( ( is_string( $value ) && $value != '' ) || ( is_array( $value ) && count( $value ) && $value[0] != '' ) ) {
@@ -463,7 +462,10 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 
 			// Set
 			if ( ! $field->variation ) {
-				$field->form	=	$form;
+				$field->form			=	$form;
+				$field->optionsList		=	( count( $options ) ) ? implode( '||', $options ) : '';
+				$field->text			=	parent::g_getOptionText( $value, $field->optionsList, $divider, $config );
+
 				if ( $field->script ) {
 					parent::g_addScriptDeclaration( $field->script );
 				}
@@ -507,10 +509,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$field->match_value	=	$field->match_value ? $field->match_value : ',';
 		}
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-		
-		// Set
-		$field->value	=	$value;
-		
+
 		// Return
 		if ( $return === true ) {
 			return $field;
