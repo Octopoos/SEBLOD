@@ -428,7 +428,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$table->load( $pk );
 			if ( $table->id ) {
 				if ( $join ) { // todo:join
-					$join					=	JCckDatabase::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->parent_id );	//@
+					$join						=	JCckDatabaseCache::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->parent_id );	//@
 					if ( is_object( $join ) && isset( $join->title ) ) {
 						$table->parent_title	=	$join->title;
 						$table->parent_alias	=	$join->alias;
@@ -439,7 +439,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				}
 				if ( JCck::on( '3.1' ) ) {
 					$table->tags	=	new JHelperTags;
+
+					// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
 					$table->tags->getTagIds( $table->id, 'com_content.category' );	// todo: dynamic context per extension
+					// }
 				}
 			}
 		}
