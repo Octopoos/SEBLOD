@@ -27,6 +27,7 @@ table.table td.nowrap{white-space: nowrap;}
 
 table.responsive{border-collapse:collapse;padding:0;width:100%;}
 table.responsive tr{padding:0;}
+table.responsive td .btn-group .btn .caret {margin-bottom: 0;}
 
 @media screen and (max-width: 767px) {
 table.responsive thead,table.responsive tfoot{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;}
@@ -34,4 +35,22 @@ table.responsive tr{padding:0;margin:16px 0;border:1px solid #ccc;border-top:non
 table.responsive td,table.table.responsive td.left,table.table.responsive td.center,table.responsive td .cck-clrfix{display:block;text-align:right;}
 table.responsive td:before{content:attr(data-label);float:left;}
 table.responsive td .btn{width:100%;box-sizing:border-box;}
+table.responsive td .btn-group {
+	width: 100%;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-direction: row;
+	    flex-direction: row;
+	-ms-flex-wrap: nowrap;
+	    flex-wrap: nowrap;
+	-ms-flex-line-pack: normal;
+	    align-content: normal;
+	-ms-flex-align: normal;
+	    align-items: normal;
+	-ms-flex-item-align: normal;
+	    align-self: normal;
+	-ms-flex-preferred-size: auto;
+	    flex-basis: auto;
+}
+table.responsive td .btn-group .btn {width: 100%;}
 }
