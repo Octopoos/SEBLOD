@@ -108,7 +108,8 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 .toggle_more.open{background-position:0 -10px;}
 
 #featured_session{position:relative; top:10px; cursor:pointer;}
-body.com_cck #cboxLoadedContent{margin-bottom:0;}
+body.com_cck #cboxLoadedContent,
+body.component #cboxLoadedContent{margin-bottom:0;}
 body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session{top:0;}
 .featured_sessions_del{float:right; position:relative; top:-2px; cursor:pointer;}
 .dropdown-menu.featured-sessions {width:100%;}
