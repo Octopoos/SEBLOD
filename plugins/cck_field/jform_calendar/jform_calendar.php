@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				http://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -53,6 +53,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
 		// Init
+		$options2	=	JCckDev::fromJSON( $field->options2 );
 		if ( count( $inherit ) ) {
 			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
@@ -71,7 +72,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-		
+
 		// Prepare
 		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$xml	=	'
@@ -81,6 +82,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 							name="'.$name.'"
 							id="'.$id.'"
 							label="'.htmlspecialchars( $field->label ).'"
+							showtime="'.( isset( $options2['time'] ) && $options2['time'] ? 'true' : 'false' ).'"
+							todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
+							weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
 							translateformat="true"
 							filter="user_utc"
 							class="'.$class.'"
