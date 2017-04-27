@@ -52,8 +52,12 @@ abstract class JCckDev
 			$app->cck_document	=	array();
 		}
 		$app->cck_document['styleSheets'][$url]['mime']		=	$type;
-		$app->cck_document['styleSheets'][$url]['media']	=	$media;
-		$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		if ( is_string( $media ) ) {
+			$app->cck_document['styleSheets'][$url]['media']	=	$media;
+		}
+		if ( count( $attribs) ) {
+			$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		}
 	}
 
 	// addValidation
