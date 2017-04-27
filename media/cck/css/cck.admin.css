@@ -128,6 +128,7 @@ div.cck-line-body .btn-toolbar{margin-top: 0;}
 
 /* UI */
 div.vertical, div.horizontal {
+	display: table;
 	padding-bottom: 15px;
 	padding-left: 15px;
 	padding-right: 15px;
