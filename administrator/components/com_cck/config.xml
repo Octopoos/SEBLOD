@@ -60,6 +60,9 @@
 		<field name="COM_CCK_CONFIG_LEGEND_CONSTRUCTION" type="spacer" hr="false" />
 		<field name="development_prefix" type="text" size="8" default="" label="COM_CCK_CONFIG_DEV_PREFIX" class="inputbox" maxlength="3" description="COM_CCK_CONFIG_DEV_PREFIX_DESC" />
 		<field name="development_attr" type="text" size="8" default="6" label="COM_CCK_CONFIG_DEV_ATTR" class="inputbox" maxlength="2" description="COM_CCK_CONFIG_DEV_ATTR_DESC" />
+		<field name="development_group" type="usergrouplist" default="" label="COM_CCK_CONFIG_DEV_GROUP" class="inputbox" maxlength="2" description="COM_CCK_CONFIG_DEV_GROUP_DESC">
+			<option value="">JNONE</option>
+		</field>
 		<field name="development_overlay" type="radio" default="1" label="COM_CCK_CONFIG_DEV_LOADING_OVERLAY" description="COM_CCK_CONFIG_DEV_LOADING_OVERLAY_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>

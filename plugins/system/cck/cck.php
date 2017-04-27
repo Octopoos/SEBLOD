@@ -220,8 +220,24 @@ class plgSystemCCK extends JPlugin
 		$router->attachBuildRule( array( $this, 'buildRule' ), JRouter::PROCESS_DURING );
 		$router->attachParseRule( array( $this, 'parseRule' ), JRouter::PROCESS_DURING );
 
-		if ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
-			JFactory::getLanguage()->load( 'com_cck_core' );
+		if ( $app->isAdmin() ) {
+			if ( $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
+				JFactory::getLanguage()->load( 'com_cck_core' );
+			}
+			$group	=	(int)JCck::getConfig_Param( 'development_group' );
+			if ( $group && $app->input->get( 'option' ) == 'com_cck'
+			  && $app->input->get( 'view' ) != 'form' && $app->input->get( 'view' ) != 'list' ) {
+				if ( ( $user_id = (int)JFactory::getUser()->id ) > 0 ) {
+					jimport( 'cck.joomla.user.user' );
+					$userShadow		=	new CCKUser( $user_id );
+
+					$auth_groups	=	$userShadow->getAuthorisedGroups();
+					$auth_groups[]	=	$group;
+
+					$userShadow->setAuthorisedGroups( $auth_groups );
+					$userShadow->makeHimLive();
+				}
+			}
 		}
 
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
