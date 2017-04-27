@@ -25,6 +25,9 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 		if ( self::$type != $type ) {
 			return;
 		}
+		if ( $data['storage'] != 'dev' ) {
+			$data['bool']	=	'1';
+		}
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
@@ -203,11 +206,10 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 	// _addScript
 	protected static function _addScripts( $inline, $params = array(), &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
-		$height	=	'440';
-		$root	=	JUri::root( true );
-		
 		if ( !$inline ) {
+			$doc	=	JFactory::getDocument();
+			$root	=	JUri::root( true );
+
 			if ( empty( $config['client'] ) ) {
 				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
 					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
@@ -222,12 +224,12 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 			} elseif ( $params['inherited'] == true ) {
 				JCck::loadModalBox();
 				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
-					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:440, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 				$js	=	'$(document).ready(function() {'.$js.'});';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} else {
 				JCck::loadModalBox();
-				$js	=	'jQuery(document).ready(function($){ $(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
+				$js	=	'jQuery(document).ready(function($){ $(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:440, scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
 				$doc->addScriptDeclaration( $js );
 			}
 		}
