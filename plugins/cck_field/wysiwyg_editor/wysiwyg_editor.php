@@ -24,6 +24,9 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		if ( self::$type != $type ) {
 			return;
 		}
+		if ( $data['storage'] != 'dev' ) {
+			$data['bool']	=	'1';
+		}
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
@@ -95,7 +98,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$value		=	$config['storages'][$properties['table']]->$custom;
 			}
 		}
-		
+
 		if ( !$user->id && $this->params->get( 'guest_access', 0 ) == 0 ) {
 			$form	=	'';
 		} else {
@@ -108,9 +111,11 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 			}
 			if ( $field->bool ) {
 				// Default
-				$buttons		=	array( 'pagebreak', 'readmore' );
+				$buttons		=	( $field->bool4 ) ? array( 'pagebreak', 'readmore' ) : false;
 				$editor			=	JFactory::getEditor( @$options2['editor'] ? $options2['editor'] : null );
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
+
+				JFactory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
 			} else {
 				// Modal Box
 				if ( trim( $field->selectlabel ) ) {
@@ -124,16 +129,17 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				
 				$e_type					=	( @$options2['editor'] != '' ) ? '&type='.$options2['editor'] : '';
 				$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
-										.	'&id='.$id.'&name='.$name.$e_type.'&params='.urlencode( urlencode( $width ) ).'||'.$height.'||'.$asset;
+										.	'&id='.$id.'&name='.$name.$e_type.'&params='.urlencode( urlencode( $width ) ).'||'.$height.'||'.$asset.'||'.$field->bool4;
 				
 				$app					=	JFactory::getApplication();
 				$class					=	'wysiwyg_editor_box variation_href';
+
 				$component				=	$app->input->get( 'option' );
 				if ( ( $component == 'com_cck' && $app->input->get( 'view' ) != 'form' )
 					|| $component == 'com_cck_ecommerce' || $component == 'com_cck_toolbox' || $component == 'com_cck_webservices' ) { // todo: remove later
 					$class				.=	' btn';
 				}
-				$class					=	'class="'.$class.'" ';
+				$class					=	'class="'.trim( $class ).'" ';
 				$attr					=	$class;
 				$form					=	'<textarea style="display: none;" id="'.$id.'" name="'.$name.'">'.$value.'</textarea>';
 				$form					.=	'<a href="'.$link.'" '.$attr.'>'.$buttonlabel.'</a>';
@@ -144,6 +150,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+
 			self::_addScripts( $field->bool, array( 'height'=>@$height, 'inherited'=>$inherited ), $config );
 		} else {
 			$hidden	=	'<textarea class="inputbox" style="display: none;" id="'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
@@ -228,18 +235,17 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 	protected static function _addScripts( $inline, $params = array(), &$config = array() )
 	{
 		$doc	=	JFactory::getDocument();
-		$height	=	( isset( $params['height'] ) && $params['height'] ) ? $params['height'] + 140 : '420';
-		$root	=	JUri::root( true );
 		
 		$doc->addStyleSheet( self::$path.'assets/css/cck_wysiwyg_editor.css' );
 		
 		if ( !$inline ) {
 			static $loaded	=	0;
+			$root			=	JUri::root( true );
 
 			if ( !$loaded ) {
 				if ( empty( $config['client'] ) ) {
 					$js	=	' $(document).on("click", ".wysiwyg_editor_box", function(e) { e.preventDefault();'
-						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 
 					if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
 						$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
@@ -251,12 +257,12 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				} elseif ( $params['inherited'] == true ) {
 					JCck::loadModalBox();
 					$js	=	' $(document).on("click", ".wysiwyg_editor_box", function(e) { e.preventDefault();'
-						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+						.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 					$js	=	'$(document).ready(function() {'.$js.'});';
 					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				} else {
 					JCck::loadModalBox();
-					$js	=	'jQuery(document).ready(function($){ $(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:false, overlayClose:false, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
+					$js	=	'jQuery(document).ready(function($){ $(".wysiwyg_editor_box").colorbox({iframe:true, innerWidth:820, innerHeight:420, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
 					$doc->addScriptDeclaration( $js );
 				}
 				$loaded		=	1;

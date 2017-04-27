@@ -73,13 +73,16 @@ $js		=	'
 $doc->addScriptDeclaration( $js );
 
 $value		=	'';
-$buttons	=	array( 'pagebreak', 'readmore' );
 $editor		=	JFactory::getEditor( @$this->item->type ? $this->item->type : null );
 $params		=	explode( '||', $this->item->params );
-$width		=	( $params[0] ) ? $params[0] : '100%';
+$width		=	( @$params[0] ) ? $params[0] : '100%';
 $width		=	urldecode( $width );
-$height		=	( $params[1] ) ? $params[1] : '280';
-$asset		=	( $params[2] ) ? $params[2] : '';
+$height		=	( @$params[1] ) ? $params[1] : '280';
+$asset		=	( @$params[2] ) ? $params[2] : '';
+$toolbar	=	( @$params[3] ) ? $params[3] : 0;
+$buttons	=	( $toolbar ) ? array( 'pagebreak', 'readmore' ) : false;
+
+$doc->addStyleDeclaration('#'.$this->item->id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
 ?>
 
 <div class="seblod">
