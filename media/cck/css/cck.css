@@ -15,10 +15,10 @@ div.cck-line-body,
 div.cck-line-header,
 div.cck-line-top,
 div.cck-line-bottom,
-div.cck-line-footer{float:left;overflow:hidden;position:relative; width:100%;}
-div.cck-line-left{float:left;left:-50%;overflow:hidden;position:relative;}
-div.cck-line-right{float:left;overflow:hidden;position:relative;}
-div.cck-f100{overflow:hidden; position:relative; width:100%;}
+div.cck-line-footer{float:left;position:relative; width:100%;}
+div.cck-line-left{float:left;left:-50%;position:relative;}
+div.cck-line-right{float:left;position:relative;}
+div.cck-f100{position:relative; width:100%;}
 div.cck-f200{width:200%; float:left;}	
 div.cck-m50{float:left;left:50%;position:relative;width:50%;}
 div.cck-m100{left:-100%;position:relative;}

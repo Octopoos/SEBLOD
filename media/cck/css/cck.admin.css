@@ -131,7 +131,6 @@ div.vertical, div.horizontal {
 	padding-left: 15px;
 	padding-right: 15px;
 	padding-top: 15px;
-	overflow: hidden;
 	position: relative;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
