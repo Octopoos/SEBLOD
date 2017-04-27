@@ -17,6 +17,16 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 	protected static $type2		=	'calendar';
 	protected static $friendly	=	1;
 	protected static $path;
+
+	protected $userTimeZone		=	null;
+
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		$this->userTimeZone	=	new DateTimeZone( JFactory::getUser()->getParam( 'timezone', JFactory::getConfig()->get( 'offset' ) ) );
+
+		parent::__construct( $subject, $config );
+	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -40,7 +50,22 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Set
-		$field->value	=	$value;
+		$value	=	trim( $value );
+		if ( $value == '' || $value == '0000-00-00 00:00:00' ) {
+			$field->value	=	'';
+			$field->text	=	'';
+		} else {
+			$field->value	=	$value;
+			$date			=	JFactory::getDate( $value, 'UTC' );
+			$date->setTimezone( $this->userTimeZone );
+
+			// Transform the date string.
+			$format			=	'Y-m-d H:i:s';
+			$value			=	$date->format( $format, true, true );
+			$value			=	( trim( $value ) == '' ) ? '' : $value;
+			$field->text	=	( $value == '' ) ? '' : $date->format( $format, true, true );
+		}
+		$field->typo_target	=	'text';
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -117,7 +142,15 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		if ( self::$type != $field->type ) {
 			return;
 		}
-		
+		$value	=	trim( $value );
+
+		if ( $value != '' && $value != '0000-00-00 00:00:00' ) {
+			$date			=	JFactory::getDate( $value, $this->userTimeZone );
+			$timezone		=	new DateTimeZone( 'UTC' );
+			$date->setTimezone( $timezone );
+			$value	=	$date->toSql();
+		}
+
 		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 		
