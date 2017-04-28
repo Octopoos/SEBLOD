@@ -47,6 +47,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 		}
 		
 		// Prepare
+		$link_attr		=	'';
 		$link_class		=	$link->get( 'class', '' );
 		$link_rel		=	$link->get( 'rel', '' );
 		$link_target	=	$link->get( 'target', '' );
@@ -55,6 +56,17 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 		$tmpl			=	( $tmpl ) ? '&tmpl='.$tmpl : '';
 		$vars			=	'&task=search'.$tmpl;
 		
+		if ( $link_target == 'modal' ) {
+			if ( strpos( $link_attr, 'data-cck-modal' ) === false ) {
+				$modal_json	=	$link->get( 'target_params', '' );
+
+				if ( $modal_json != '' ) {
+					$modal_json	=	'=\''.$modal_json.'\'';
+				}
+				$link_attr	=	trim( $link_attr.' data-cck-modal'.$modal_json );				
+			}
+		}
+
 		// Set
 		if ( isset( $field->values ) ) {
 			foreach ( $field->values as $f ) {
@@ -70,7 +82,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				$f->link_class	=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
 				$f->link_rel	=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
 				$f->link_state	=	$link->get( 'state', 1 );
-				$f->link_target	=	$link_target ? $link_target : ( isset( $f->link_target ) ? $f->link_target : '' );
+				$f->link_target	=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $f->link_target ) ? $f->link_target : '' );
 			}
 			$field->link		=	'#';	//todo
 		} elseif ( is_array( $field->value ) ) {
@@ -87,7 +99,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				$f->link_class	=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
 				$f->link_rel	=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
 				$f->link_state	=	$link->get( 'state', 1 );
-				$f->link_target	=	$link_target ? $link_target : ( isset( $f->link_target ) ? $f->link_target : '' );
+				$f->link_target	=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $f->link_target ) ? $f->link_target : '' );
 			}
 			$field->link		=	'#';	//todo
 		} else {
@@ -101,10 +113,12 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 			if ( $custom ) {
 				$field->link	.=	$separator.$custom;
 			}
-			$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
-			$field->link_rel	=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
-			$field->link_state	=	$link->get( 'state', 1 );
-			$field->link_target	=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+
+			$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
+			$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
+			$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
+			$field->link_state		=	$link->get( 'state', 1 );
+			$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
 		}
 	}
 }

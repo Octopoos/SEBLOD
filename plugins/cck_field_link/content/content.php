@@ -66,6 +66,17 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$tmpl				=	( $tmpl ) ? 'tmpl='.$tmpl : '';
 		$vars				=	$tmpl;
 		
+		if ( $link_target == 'modal' ) {
+			if ( strpos( $link_attr, 'data-cck-modal' ) === false ) {
+				$modal_json	=	$link->get( 'target_params', '' );
+
+				if ( $modal_json != '' ) {
+					$modal_json	=	'=\''.$modal_json.'\'';
+				}
+				$link_attr	=	trim( $link_attr.' data-cck-modal'.$modal_json );				
+			}
+		}
+
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
 			
@@ -159,7 +170,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
 		$field->link_state		=	$link->get( 'state', 1 );
-		$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+		$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
