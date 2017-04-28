@@ -131,7 +131,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 											cache: false,
 											data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
 											type: "GET",
-											url: "'.JUri::root().'index.php?option=com_cck&task=route&format=raw",
+											url: "'. JCckDevHelper::getAbsoluteUrl( 'auto', 'task=route&format=raw', 'root' ) .'",
 											beforeSend:function(){},
 											success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
 										});
@@ -302,8 +302,6 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			
 			$params						=	new JRegistry;	// todo : remove+inherit?
 			$params->set( 'order_by', '' );
-			
-			require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 			
 			// Prepare
 			jimport( 'cck.base.list.list' );
