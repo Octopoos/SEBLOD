@@ -59,12 +59,12 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 
 		$value_json		=	JCckDev::fromJSON( $value );
 		if ( $value == '' || isset( $value_json['image_location'] ) && $value_json['image_location'] == '' ) {
-			return;
+            return true;
 		}
 
 		// Init
@@ -112,7 +112,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	public function onCCK_FieldPrepareContent( &$field, $value = '', &$config = array() )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
@@ -167,7 +167,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 
 		// Prepare
@@ -190,7 +190,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
@@ -463,7 +463,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 		
 		// Init
@@ -667,7 +667,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		if ( isset( $field->error ) && $field->error === true ) {
-			return;
+            return true;
 		}
 		$imageTitle =	( $imageTitle ) ? addcslashes( $imageTitle, '"' ) : '';
 		$imageDesc	=	( $imageDesc ) ? addcslashes( $imageDesc, '"' ) : '';
