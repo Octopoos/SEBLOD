@@ -70,11 +70,11 @@ class JCckInstallerScriptApp
 	function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !( property_exists( $this, 'template_placeholder' ) && $this->template_placeholder != '' ) ) {
-			return;
+            return true;
 		}
 
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
-			return;
+            return true;
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();

@@ -54,7 +54,7 @@ class JCckInstallerScriptComponent
 	function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
-			return;
+            return true;
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
@@ -68,7 +68,7 @@ class JCckInstallerScriptComponent
 		}
 		
 		if ( !( is_object( $this->cck ) && isset( $this->cck->element ) && $this->cck->element != '' ) ) {
-			return;
+            return true;
 		}
 
 		$lang		=	JFactory::getLanguage();

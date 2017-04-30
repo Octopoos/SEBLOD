@@ -185,7 +185,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
 	{
 		if ( self::$type != $type ) {
-			return;
+            return true;
 		}
 		
 		if ( ! @$config['storages'][self::$table]['_']->pk ) {
