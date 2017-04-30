@@ -46,7 +46,7 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );

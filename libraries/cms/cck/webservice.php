@@ -68,7 +68,7 @@ abstract class JCckWebservice
 													. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 													. ' WHERE a.name = "'.$name.'"' );
 		if ( !is_object( $webservice ) ) {
-            return true;
+			return;
 		}
 		$allowed		=	array(
 								'request'=>'',

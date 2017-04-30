@@ -80,7 +80,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{		
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
@@ -184,7 +184,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		
 		// Prepare
@@ -204,7 +204,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		
 		// Init

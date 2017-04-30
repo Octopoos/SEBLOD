@@ -59,12 +59,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
 	{
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 
 		$value_json			=	JCckDev::fromJSON( $value );
 		if ( $value == '' || isset( $value_json['file_location'] ) && $value_json['file_location'] == '' ) {
-            return true;
+			return;
 		}
 		
 		// Init
@@ -395,7 +395,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		parent::g_onCCK_FieldPrepareSearch( $field, $config );
 		
@@ -431,7 +431,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-            return true;
+			return;
 		}
 		
 		// Init
@@ -662,7 +662,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		if ( isset( $field->error ) && $field->error === true ) {
-            return true;
+			return;
 		}
 		$item_custom_title	=	addcslashes( $item_custom_title, '"' );
 		

@@ -323,7 +323,7 @@ class CCK_List
 	public static function getTemplateStyle( $id, $params = array() )
 	{
 		if ( ! $id ) {
-            return true;
+			return;
 		}
 		static $cache	=	array();
 		

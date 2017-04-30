@@ -288,7 +288,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
 			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
-            return true;
+			return;
 		}
 		
 		// Process
@@ -308,11 +308,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
 	{
 		if ( self::$type != $type ) {
-            return true;
+			return;
 		}
 		
 		if ( isset( $config['primary'] ) && $config['primary'] != self::$type ) {
-            return true;
+			return;
 		}
 		if ( ! @$config['storages'][self::$table]['_']->pk ) {
 			self::_core( $config['storages'][self::$table], $config, $pk );

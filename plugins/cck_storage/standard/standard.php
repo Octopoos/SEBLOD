@@ -355,7 +355,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				}
 				break;
 			case 'none':
-                return true;
+				return;
 				break;
 			default:
 				$sql	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $value, true ).'%', false );

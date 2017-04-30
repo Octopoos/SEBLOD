@@ -77,7 +77,7 @@ class CCK_Rendering
 		$property	=	strtolower( substr( $method, 3 ) );
 		
 		if ( empty( $prefix ) ) {
-            return true;
+			return;
 		}
 		
         if ( $prefix == 'get' ) {
@@ -484,7 +484,7 @@ class CCK_Rendering
 	public function getLabel( $fieldname = '', $html = false, $suffix = '' )
 	{
 		if ( ! isset ( $this->me[$fieldname] ) ) {
-            return true;
+			return;
 		}
 		
 		$label	=	trim( $this->me[$fieldname]->label );
@@ -781,8 +781,8 @@ class CCK_Rendering
 			include $pos;
 			return ob_get_clean();
 		}
-
-        return true;
+		
+		return;
 	}
 	
 	// renderPosition
