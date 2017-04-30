@@ -90,7 +90,7 @@ class JCckContent
 	public function create( $cck, $data_content, $data_more = null, $data_more2 = null )
 	{
 		if ( $this->_id ) {
-			return;
+            return true;
 		}
 		
 		$this->_type	=	$cck;
@@ -101,7 +101,7 @@ class JCckContent
 			$this->_table		=	$this->_columns['table'];
 			
 			if ( !$this->_object ) {
-				return;
+                return true;
 			}
 		}
 		
@@ -271,7 +271,7 @@ class JCckContent
 			$this->_instance_base	=	$this->getInstanceBase();
 			
 			if( !isset( $identifier[1] ) ) {
-				return;
+                return true;
 			}
 			
 			$core					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE storage_location = "'.(string)$identifier[0].'" AND pk = '.(int)$identifier[1] );
@@ -292,7 +292,7 @@ class JCckContent
 		$this->_instance_base->load( $this->_pk );
 		
 		if ( !$this->_columns['table'] ) {
-			return;
+            return true;
 		}
 		
 		$this->_table		=	$this->_columns['table'];

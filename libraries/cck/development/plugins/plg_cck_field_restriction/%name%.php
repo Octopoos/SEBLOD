@@ -21,7 +21,7 @@ class plgCCK_Field_Restriction%class% extends JCckPluginRestriction
 	public static function onCCK_Field_RestrictionPrepareContent( &$field, &$config )
 	{
 		if ( self::$type != $field->restriction ) {
-			return;
+            return true;
 		}
 		
 		$restriction	=	parent::g_getRestriction( $field->restriction_options );
@@ -33,7 +33,7 @@ class plgCCK_Field_Restriction%class% extends JCckPluginRestriction
 	public static function onCCK_Field_RestrictionPrepareForm( &$field, &$config )
 	{
 		if ( self::$type != $field->restriction ) {
-			return;
+            return true;
 		}
 		
 		$restriction	=	parent::g_getRestriction( $field->restriction_options );
@@ -45,7 +45,7 @@ class plgCCK_Field_Restriction%class% extends JCckPluginRestriction
 	public static function onCCK_Field_RestrictionPrepareStore( &$field, &$config )
 	{
 		if ( self::$type != $field->restriction ) {
-			return;
+            return true;
 		}
 		
 		$restriction	=	parent::g_getRestriction( $field->restriction_options );

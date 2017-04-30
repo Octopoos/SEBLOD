@@ -33,7 +33,7 @@ class JCckField
         $property	=	strtolower( substr( $method, 3 ) );
 		
 		if ( empty( $prefix ) ) {
-			return;
+            return true;
 		}
 		
         if ( $prefix == 'get' ) {
@@ -45,7 +45,7 @@ class JCckField
 	public static function getInstance( $name = '', $config = array( 'doTranslation'=>1, 'doValidation'=>2, 'mode'=>'content' ) )
 	{
 		if ( !$name ) {
-			return;
+            return true;
 		}
 		
 		if ( empty( self::$instances[$name] ) ) {

@@ -55,7 +55,7 @@ class JFormFieldCckPicker extends JFormField
 
 		$field		=	JCckDevField::getObject( $name );
 		if ( ! $field ) {
-			return;
+            return true;
 		}
 		$storage_field			=	$field->storage_field;
 		$field->storage_field	=	$this->name;
@@ -120,8 +120,8 @@ class JFormFieldCckPicker extends JFormField
 		if ( $css ) {
 			$doc->addStyleDeclaration( $css );
 		}
-		
-		return;
+
+        return true;
 	}
 }
 ?>
