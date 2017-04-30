@@ -125,10 +125,7 @@ div.cck-line-body .btn-toolbar{margin-top: 0;}
 
 /* UI */
 div.vertical, div.horizontal {
-	padding-bottom: 15px;
-	padding-left: 15px;
-	padding-right: 15px;
-	padding-top: 15px;
+	padding: 15px;
 	overflow: hidden;
 	position: relative;
 	-webkit-border-radius: 5px;
@@ -171,11 +168,10 @@ div.horizontal .adminformlist select,
 div.horizontal .adminformlist button { 
 	float: left;
 	margin-bottom: 5px;
-	margin-left: 0px;
+	margin-left: 0;
 	margin-right: 5px;
 	margin-top: 5px;
 	width: auto;
-	/*font-size: 11px;*/
 }
 
 
@@ -274,8 +270,8 @@ div.seblod .adminformlist label{
 	display: block;
 	float: left;
 	margin-bottom: 5px;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	margin-top: 5px;
 	line-height: 23px;
 	height:30px;
