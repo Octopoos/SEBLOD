@@ -1567,6 +1567,7 @@
           // ereg() is deprecated starting with PHP 5.3. Move PCLZIP_OPT_BY_EREG
           // to PCLZIP_OPT_BY_PREG
           $p_options_list[$i] = PCLZIP_OPT_BY_PREG;
+          break;
         case PCLZIP_OPT_BY_PREG :
         //case PCLZIP_OPT_CRYPT :
           // ----- Check the number of parameters
