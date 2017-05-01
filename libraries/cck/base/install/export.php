@@ -100,7 +100,7 @@ class CCK_Export
 
 					// Copyright
 					if ( $copyright ) {
-						$buffer		=	JFile::read( $path );
+						$buffer		=	file_get_contents( $path );
 						$ext		=	JFile::getExt( $path );
 						$replace	=	'Copyright (C) 2009 - '.(string)$copyright.' SEBLOD.';
 
@@ -184,7 +184,7 @@ class CCK_Export
 				if ( !JFile::exists( $path ) ) {
 					continue;
 				}
-				$data	=	JFile::read( $path );
+				$data	=	file_get_contents( $path );
 				$ext	=	JFile::getExt( $path );
 				$names	=	'';
 				if ( $ext == 'xml' ) {

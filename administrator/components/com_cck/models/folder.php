@@ -297,7 +297,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			JFile::copy( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $path.'/pkg_script.php' );
 		} else {
 			JFile::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
-			$buffer					=	JFile::read( $path.'/pkg_script.php' );
+			$buffer					=	file_get_contents( $path.'/pkg_script.php' );
 			$buffer					=	str_replace( '%class%', $filename, $buffer );
 			JFile::write( $path.'/pkg_script.php', $buffer );
 			if ( $copyright ) {

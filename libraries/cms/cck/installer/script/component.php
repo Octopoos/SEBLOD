@@ -89,7 +89,7 @@ class JCckInstallerScriptComponent
 				$version	=	new JCckVersion;
 				$version	=	$version->getShortVersion();
 			} else {
-				$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+				$version	=	file_get_contents( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
 			}
 		}
 		
