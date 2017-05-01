@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // Init
 $app		=	JFactory::getApplication();
 $base		=	'index.php?option=com_cck&view=form';
@@ -41,13 +43,13 @@ if ( $quickadd ) {
 
 if ( $legacy == 1 ) {
 	$legend		=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND',
-									'<a id="standard-content" href="javascript:void(0);" style="color:#808080">'.JString::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>',
-									'<span style="color:#808080">'.JString::strtolower( JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' ) ).'</span>' );
+									'<a id="standard-content" href="javascript:void(0);" style="color:#808080">'.StringHelper::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>',
+									'<span style="color:#808080">'.StringHelper::strtolower( JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' ) ).'</span>' );
 	$legend2	=	'';
 } elseif ( $legacy == 2 ) {
 	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
 	$legend2	=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND2',
-									'<a id="standard-content" href="javascript:void(0);" style="color:#808080">'.JString::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
+									'<a id="standard-content" href="javascript:void(0);" style="color:#808080">'.StringHelper::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
 } else {
 	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
 	$legend2	=	'';
