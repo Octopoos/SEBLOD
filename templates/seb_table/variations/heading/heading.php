@@ -81,4 +81,3 @@ $width	=	$cck->w( $position );
 $width	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
 
 echo '<th'.$class.$width.'>'.$legend.'</th>';
-?>

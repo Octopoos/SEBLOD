@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Storage_LocationJoomla_UserInstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

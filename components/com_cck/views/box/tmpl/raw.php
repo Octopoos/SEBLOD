@@ -16,4 +16,3 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 if ( is_file( JPATH_SITE.'/'.$this->file ) ) {
 	include_once JPATH_SITE.'/'.$this->file;
 }
-?>

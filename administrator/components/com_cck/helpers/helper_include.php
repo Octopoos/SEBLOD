@@ -230,4 +230,3 @@ class Helper_Include extends CommonHelper_Include
 		$doc->addScriptDeclaration( $js );
 	}
 }
-?>

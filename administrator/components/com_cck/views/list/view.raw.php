@@ -76,4 +76,3 @@ class CCKViewList extends JViewLegacy
 		$this->setLayout( 'raw' );
 	}
 }
-?>

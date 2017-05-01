@@ -233,4 +233,3 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		return	preg_replace( '/\\n\\r/i', '', $text );
 	}
 }
-?>

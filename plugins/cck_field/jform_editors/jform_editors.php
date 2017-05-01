@@ -168,4 +168,3 @@ class plgCCK_FieldJForm_Editors extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

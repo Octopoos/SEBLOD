@@ -44,4 +44,3 @@ class CCK_TableTemplate extends JTable
 		return parent::delete();
 	}
 }
-?>

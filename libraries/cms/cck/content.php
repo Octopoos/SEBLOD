@@ -535,4 +535,3 @@ class JCckContent
 		return $status;
 	}
 }
-?>

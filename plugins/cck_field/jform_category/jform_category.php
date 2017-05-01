@@ -253,4 +253,3 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

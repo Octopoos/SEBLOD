@@ -123,4 +123,3 @@ class plgCCK_FieldStorage extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

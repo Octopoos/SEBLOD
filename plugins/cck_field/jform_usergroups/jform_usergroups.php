@@ -230,4 +230,3 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

@@ -23,4 +23,3 @@ class plgCCK_Storage_Location%class%_Importer extends plgCCK_Storage_Location%cl
 		return true;
 	}
 }
-?>

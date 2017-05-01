@@ -114,4 +114,3 @@ class Helper_Version
 		return JCckDatabase::execute( $query );
 	}
 }
-?>

@@ -41,4 +41,3 @@ class CCKUser extends JUser
 		JFactory::getSession()->set( 'user', $this->_user );
 	}
 }
-?>

@@ -11,4 +11,3 @@
 defined( '_JEXEC' ) or die;
 
 echo trim( str_replace( array( '<!-- Begin: SEBLOD 3.x Document -->', '<!-- End: SEBLOD 3.x Document -->' ), '', $this->data ) );
-?>

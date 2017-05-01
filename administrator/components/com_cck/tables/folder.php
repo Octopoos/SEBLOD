@@ -128,4 +128,3 @@ class CCK_TableFolder extends CCK_TableFolderAdapter
 		}
 	}
 }
-?>

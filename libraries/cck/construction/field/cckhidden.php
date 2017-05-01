@@ -25,4 +25,3 @@ class JFormFieldCCKhidden extends JFormField
 		return $html;
 	}
 }
-?>

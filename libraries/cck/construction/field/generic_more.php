@@ -107,4 +107,3 @@ class plgCCK_FieldGeneric_More
 		return $values;
 	}
 }
-?>

@@ -38,4 +38,3 @@ class plgCCK_Field_Live%class% extends JCckPluginLive
 		$value	=	$live;
 	}
 }
-?>

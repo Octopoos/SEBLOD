@@ -174,4 +174,3 @@ class plgCCK_FieldJForm_ComponentLayout extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

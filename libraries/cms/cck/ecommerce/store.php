@@ -29,4 +29,3 @@ abstract class JCckEcommerceStore
 		return $cache[$store_id];
 	}
 }
-?>

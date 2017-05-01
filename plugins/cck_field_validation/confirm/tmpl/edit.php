@@ -11,4 +11,3 @@
 defined( '_JEXEC' ) or die;
 
 echo JCckDev::renderForm( 'core_validation_field', '', $config );
-?>

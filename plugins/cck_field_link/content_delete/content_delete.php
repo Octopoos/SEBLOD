@@ -98,4 +98,3 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$field->link_title	=	$link_title ? ( $link_title == '2' ? $link_title2 : ( isset( $field->link_title ) ? $field->link_title : '' ) ) : '';
 	}
 }
-?>

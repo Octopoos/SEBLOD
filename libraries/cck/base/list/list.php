@@ -409,4 +409,3 @@ class CCK_List
 		}
 	}
 }
-?>

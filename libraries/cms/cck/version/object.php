@@ -31,4 +31,3 @@ class JCckVersionObject
 		return $this->RELEASE . '.' . $this->DEV_LEVEL;
 	}
 }
-?>

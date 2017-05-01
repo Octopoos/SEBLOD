@@ -26,4 +26,3 @@ abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
 			. '</li>';
 	}
 }
-?>

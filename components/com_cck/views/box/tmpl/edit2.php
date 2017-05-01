@@ -16,4 +16,3 @@ if ( $this->function ) {
 } else {
 	$this->onceFile( 'include' );
 }
-?>

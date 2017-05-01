@@ -206,4 +206,3 @@ abstract class JCckEcommercePromotion
 		return $cache[$id];
 	}
 }
-?>

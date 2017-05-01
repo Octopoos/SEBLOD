@@ -20,4 +20,3 @@ $lang->load( 'plg_cck_field_'.$type, JPATH_ADMINISTRATOR, null, false, true );
 if ( is_file( $layer ) ) {
 	include_once $layer;
 }
-?>

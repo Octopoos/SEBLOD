@@ -54,4 +54,3 @@ class plgCCK_FieldButton_Free_App extends plgCCK_FieldGeneric_App
 	{
 	}
 }
-?>

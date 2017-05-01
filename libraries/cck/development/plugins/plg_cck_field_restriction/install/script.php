@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_Restriction%class%InstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

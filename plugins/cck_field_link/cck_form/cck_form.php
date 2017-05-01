@@ -246,4 +246,3 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		}
 	}
 }
-?>

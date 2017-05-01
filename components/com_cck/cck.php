@@ -18,4 +18,3 @@ require_once JPATH_COMPONENT.'/helpers/helper_include.php';
 $controller	=	JControllerLegacy::getInstance( 'CCK' );
 $controller->execute( JFactory::getApplication()->input->get( 'task' ) );
 $controller->redirect();
-?>

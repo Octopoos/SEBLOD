@@ -24,4 +24,3 @@ abstract class JCckEcommerceCurrency
 		return $currency->lft.$amount.$currency->rgt;
 	}
 }
-?>

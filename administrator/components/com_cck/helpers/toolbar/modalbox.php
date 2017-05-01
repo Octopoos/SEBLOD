@@ -55,4 +55,3 @@ class JButtonCckModalBox extends JButton
 class JToolbarButtonCckModalBox extends JButtonCckModalBox
 {
 }
-?>

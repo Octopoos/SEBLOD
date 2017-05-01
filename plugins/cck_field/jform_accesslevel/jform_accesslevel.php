@@ -196,4 +196,3 @@ class plgCCK_FieldJForm_AccessLevel extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

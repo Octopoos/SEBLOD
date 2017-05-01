@@ -18,4 +18,3 @@ JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck
 class CCKControllerFormRaw extends CCKControllerForm
 {
 }
-?>

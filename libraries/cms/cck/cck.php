@@ -399,4 +399,3 @@ abstract class JCck
 		}
 	}
 }
-?>

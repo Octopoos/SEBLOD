@@ -192,4 +192,3 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

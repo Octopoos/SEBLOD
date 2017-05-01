@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_FieldJForm_GroupParentInstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

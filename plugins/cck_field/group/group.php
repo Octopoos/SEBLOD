@@ -449,4 +449,3 @@ class plgCCK_FieldGroup extends JCckPluginField
 		return $fields;
 	}
 }
-?>

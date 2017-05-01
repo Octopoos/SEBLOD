@@ -43,4 +43,3 @@ class JToolbarButtonCckSeparator extends JButtonCckSeparator
 		return $class ? '<'.$this->tag.' class="'.$class.'"></'.$this->tag.'>' : '';
 	}
 }
-?>

@@ -45,4 +45,3 @@ class plgCCK_Field_Link%class% extends JCckPluginLink
 	{
 	}
 }
-?>

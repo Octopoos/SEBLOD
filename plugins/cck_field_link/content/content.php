@@ -304,4 +304,3 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		return $items[$goto];
 	}
 }
-?>

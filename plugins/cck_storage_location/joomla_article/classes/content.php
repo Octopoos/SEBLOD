@@ -40,4 +40,3 @@ class JCckContentJoomla_Article extends JCckContent
 		return $status;
 	}
 }
-?>

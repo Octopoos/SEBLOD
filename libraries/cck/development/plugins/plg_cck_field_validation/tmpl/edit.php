@@ -11,4 +11,3 @@
 defined( '_JEXEC' ) or die;
 
 // JCckDev::initScript( 'validation', $this->item );
-?>

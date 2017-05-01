@@ -11,4 +11,3 @@
 defined( '_JEXEC' ) or die;
 
 echo trim( $this->data );
-?>

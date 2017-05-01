@@ -132,4 +132,3 @@ class JCckPluginValidation extends JPlugin
 		return $validation;
 	}
 }
-?>

@@ -176,4 +176,3 @@ class JCCKMenuNode extends JNode
 		$this->target	=	$target;
 	}
 }
-?>

@@ -29,4 +29,3 @@ class CCKControllerVariations extends JControllerAdmin
 		return parent::getModel( $name, $prefix, $config );
 	}
 }
-?>

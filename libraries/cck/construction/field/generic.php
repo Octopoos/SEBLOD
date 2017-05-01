@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_FieldGeneric extends JCckPluginField
 {
 }
-?>

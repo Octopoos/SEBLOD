@@ -16,4 +16,3 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 class plgCCK_Storage_LocationJoomla_Article_Toolbox extends plgCCK_Storage_LocationJoomla_Article
 {
 }
-?>

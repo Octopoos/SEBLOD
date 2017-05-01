@@ -111,4 +111,3 @@ if ( $go_for_item || $go_for_both ) {
 $infos			=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'content', $search->name, 'list', $positions, $positions_p, $infos );
 $data			=	$doc->render( false, $rparams );
-?>

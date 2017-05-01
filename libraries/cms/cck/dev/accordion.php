@@ -36,4 +36,3 @@ abstract class JCckDevAccordion
         	 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id );
 	}
 }
-?>

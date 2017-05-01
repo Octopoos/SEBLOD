@@ -169,4 +169,3 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		return CCK_Export::zip( $path, $path_zip );
 	}
 }
-?>

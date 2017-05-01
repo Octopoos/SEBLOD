@@ -491,4 +491,3 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

@@ -174,4 +174,3 @@ class plgCCK_Field%class% extends JCckPluginField
 	
 	//
 }
-?>

@@ -54,4 +54,3 @@ class JCckBaseLegacyModelAdmin extends JModelAdmin
 	{
 	}
 }
-?>

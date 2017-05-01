@@ -35,4 +35,3 @@ class CCKViewTemplates extends JCckBaseLegacyViewList
 		JHtmlSidebar::setAction( 'index.php?option=com_cck&view=templates' );
 	}
 }
-?>

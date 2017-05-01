@@ -42,4 +42,3 @@ class CCKViewVersions extends JCckBaseLegacyViewList
 		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-'.$type2, JText::_( 'COM_CCK_'.$type.'S' ), JRoute::_( 'index.php?option=com_cck&view='.$this->e_type.'s' ), '_self' );
 	}
 }
-?>

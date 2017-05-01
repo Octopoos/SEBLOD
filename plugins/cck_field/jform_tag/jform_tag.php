@@ -275,4 +275,3 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

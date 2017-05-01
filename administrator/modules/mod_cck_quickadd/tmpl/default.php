@@ -37,4 +37,3 @@ if ( $elem ) {
 				';
 	$doc->addScriptDeclaration( $js );
 }
-?>

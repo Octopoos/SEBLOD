@@ -1258,4 +1258,3 @@ class CCK_Export
 		return $core;
 	}
 }
-?>

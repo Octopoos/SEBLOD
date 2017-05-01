@@ -65,4 +65,3 @@ class CCKControllerSessions extends JControllerAdmin
 		$this->setRedirect( JRoute::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
 	}
 }
-?>

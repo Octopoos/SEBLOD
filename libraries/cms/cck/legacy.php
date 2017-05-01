@@ -88,4 +88,3 @@ abstract class JCckLegacy extends JCck
 		$doc->addScriptDeclaration( $js );
 	}
 }
-?>

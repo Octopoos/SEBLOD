@@ -1221,4 +1221,3 @@ class CCK_Rendering
 		}
 	}
 }
-?>

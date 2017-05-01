@@ -53,4 +53,3 @@ class plgCCK_Storage_LocationJoomla_User_Group_Integration extends plgCCK_Storag
 		$data['search']			=	'#<a href="(.*)index.php\?option=com_users&amp;task=group.edit&amp;id=([0-9]*)"#';
 	}
 }
-?>

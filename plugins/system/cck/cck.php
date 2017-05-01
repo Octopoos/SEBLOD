@@ -935,4 +935,3 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 }
-?>

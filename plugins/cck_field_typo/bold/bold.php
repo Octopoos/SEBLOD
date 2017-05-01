@@ -41,4 +41,3 @@ class plgCCK_Field_TypoBold extends JCckPluginTypo
 		return '<strong>'.$value.'</strong>';
 	}
 }
-?>

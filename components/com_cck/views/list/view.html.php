@@ -244,4 +244,3 @@ class CCKViewList extends JViewLegacy
 		$this->total					=	&$total_items;
 	}
 }
-?>

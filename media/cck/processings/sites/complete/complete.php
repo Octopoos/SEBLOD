@@ -273,4 +273,3 @@ if ( is_array( $item->viewlevels ) ) {
 	$item->public_viewlevel	=	$item->viewlevels[0];
 	$item->viewlevels		=	implode( ',', $item->viewlevels );
 }
-?>

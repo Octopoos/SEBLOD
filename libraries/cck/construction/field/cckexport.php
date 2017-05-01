@@ -56,4 +56,3 @@ class JFormFieldCCKexport extends JFormField
 		return $html;
 	}
 }
-?>

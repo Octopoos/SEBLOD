@@ -41,4 +41,3 @@ if ( count( $items ) && $location ) {
 } else {
 	echo $data;
 }
-?>

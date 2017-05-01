@@ -209,4 +209,3 @@ class CCK_Install
 		}
 	}
 }
-?>

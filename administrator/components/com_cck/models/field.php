@@ -157,4 +157,3 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		return true;
 	}
 }
-?>

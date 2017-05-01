@@ -167,4 +167,3 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 		}
 	}
 }
-?>

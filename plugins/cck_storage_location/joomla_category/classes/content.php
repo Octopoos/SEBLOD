@@ -66,4 +66,3 @@ class JCckContentJoomla_Category extends JCckContent
 		}
 	}
 }
-?>

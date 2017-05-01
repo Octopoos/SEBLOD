@@ -62,4 +62,3 @@ class CCKControllerSession extends JControllerForm
 		return $append;
 	}
 }
-?>

@@ -247,4 +247,3 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		return str_replace( self::_format( $name, JCckDatabase::escape( $value_old ) ), self::_format( $name, JCckDatabase::escape( $value ) ), $string );
 	}
 }
-?>

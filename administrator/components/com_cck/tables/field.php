@@ -59,4 +59,3 @@ class CCK_TableField extends JTable
 		return parent::delete();
 	}
 }
-?>

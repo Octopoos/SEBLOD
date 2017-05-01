@@ -142,4 +142,3 @@ if ( $doSave ) {
 	}
 	JCckPluginLocation::g_onCCK_Storage_LocationUpdate( $config['pk'], $table, $field, $search, $replace );
 }
-?>

@@ -23,4 +23,3 @@ if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
 if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
 	define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
 }
-?>

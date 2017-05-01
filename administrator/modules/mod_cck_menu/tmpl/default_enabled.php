@@ -189,4 +189,3 @@ if ( count( $items ) ) {
 if ( !$empty && $root ) {
 	$menu->getParent();
 }
-?>

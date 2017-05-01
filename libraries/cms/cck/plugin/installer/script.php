@@ -16,4 +16,3 @@ jimport( 'cck.base.install.install' );
 class JCckPluginInstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

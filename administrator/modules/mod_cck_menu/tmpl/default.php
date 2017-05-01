@@ -16,4 +16,3 @@ $class	=	( $enabled ) ? 'nav '.$dir : 'nav disabled '.$dir;
 require JModuleHelper::getLayoutPath( 'mod_cck_menu', $enabled ? 'default_enabled' : 'default_disabled' );
 
 $menu->renderMenu( 'menu', $class );
-?>

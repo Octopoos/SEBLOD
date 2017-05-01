@@ -149,4 +149,3 @@ class plgCCK_FieldPassword extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

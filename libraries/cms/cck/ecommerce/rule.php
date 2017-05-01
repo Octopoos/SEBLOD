@@ -162,4 +162,3 @@ abstract class JCckEcommerceRule
 		return $cache[$id];
 	}
 }
-?>

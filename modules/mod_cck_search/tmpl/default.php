@@ -66,4 +66,3 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 if ( $show_list_desc == 2 && $description != '' ) {
 	echo $description;
 }
-?>

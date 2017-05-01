@@ -138,4 +138,3 @@ class JFormFieldCCKjs extends JFormField
 		return;
 	}
 }
-?>

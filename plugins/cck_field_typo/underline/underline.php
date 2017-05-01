@@ -41,4 +41,3 @@ class plgCCK_Field_TypoUnderline extends JCckPluginTypo
 		return '<span style="text-decoration: underline;">'.$value.'</span>';
 	}
 }
-?>

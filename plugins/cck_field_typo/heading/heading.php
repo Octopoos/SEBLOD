@@ -56,4 +56,3 @@ class plgCCK_Field_TypoHeading extends JCckPluginTypo
 		return '<h'.$rank.$class.$anchor.$custom.'>'.$value.'</h'.$rank.'>';
 	}
 }
-?>

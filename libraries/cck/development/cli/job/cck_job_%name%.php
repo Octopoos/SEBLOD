@@ -21,4 +21,3 @@ class CckJobCli_%name% extends CckJobCli
 }
 
 JApplicationCli::getInstance( 'CckJobCli_%name%' )->execute();
-?>

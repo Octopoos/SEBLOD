@@ -134,4 +134,3 @@ class modCCKBreadCrumbsHelper
 		return $_separator;
 	}
 }
-?>

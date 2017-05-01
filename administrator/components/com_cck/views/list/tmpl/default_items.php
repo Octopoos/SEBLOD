@@ -41,4 +41,3 @@ if ( count( $this->items ) && $location ) {
 } else {
 	echo $this->data;
 }
-?>

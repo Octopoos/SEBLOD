@@ -16,4 +16,3 @@ $buttons	=	modCCKQuickIconHelper::getButtons();
 JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/font.css', array(), false );
 
 require JModuleHelper::getLayoutPath( 'mod_cck_quickicon', $params->get( 'layout', 'default' ) );
-?>

@@ -265,4 +265,3 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 	}
 }
-?>

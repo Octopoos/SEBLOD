@@ -231,4 +231,3 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 	}
 }
-?>

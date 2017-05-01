@@ -77,4 +77,3 @@ abstract class JCckDatabaseCache extends JCckDatabase
 		return $cache[$idx];
 	}
 }
-?>

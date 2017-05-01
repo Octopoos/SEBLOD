@@ -87,4 +87,3 @@ class plgCCK_Field_LinkCck_Form_App extends plgCCK_FieldGeneric_App
 		}
 	}
 }
-?>

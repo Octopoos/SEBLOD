@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class pkg_%class%InstallerScript extends JCckInstallerScriptApp
 {
 }
-?>

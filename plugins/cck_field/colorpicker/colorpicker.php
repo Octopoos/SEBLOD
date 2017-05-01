@@ -186,4 +186,3 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

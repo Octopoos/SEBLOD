@@ -173,4 +173,3 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

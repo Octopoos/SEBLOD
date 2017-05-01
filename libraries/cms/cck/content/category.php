@@ -47,4 +47,3 @@ abstract class JCckContentCategory
 		return $row;
 	}
 }
-?>

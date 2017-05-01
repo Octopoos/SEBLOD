@@ -344,4 +344,3 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

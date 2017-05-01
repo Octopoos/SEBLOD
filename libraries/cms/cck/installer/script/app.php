@@ -124,4 +124,3 @@ class JCckInstallerScriptApp
 		return true;
 	}
 }
-?>

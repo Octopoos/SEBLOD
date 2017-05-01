@@ -126,4 +126,3 @@ class CommonHelper_Include
 		$doc->addScriptDeclaration( $js );
 	}
 }
-?>

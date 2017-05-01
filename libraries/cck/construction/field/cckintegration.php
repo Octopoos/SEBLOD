@@ -288,4 +288,3 @@ class JFormFieldCckIntegration extends JFormField
 		return implode( "\n", $html );
 	}
 }
-?>

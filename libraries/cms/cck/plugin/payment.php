@@ -92,4 +92,3 @@ class JCckPluginPayment extends JPlugin
 		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 }
-?>

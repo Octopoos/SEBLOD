@@ -167,4 +167,3 @@ class plgCCK_FieldJForm_Timezone extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

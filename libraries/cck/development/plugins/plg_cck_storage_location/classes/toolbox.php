@@ -16,4 +16,3 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/%name%/%name%.php';
 class plgCCK_Storage_Location%class%_Toolbox extends plgCCK_Storage_Location%class%
 {
 }
-?>

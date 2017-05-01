@@ -40,4 +40,3 @@ if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {
         }
     }
 }
-?>

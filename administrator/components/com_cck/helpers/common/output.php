@@ -78,4 +78,3 @@ class CommonHelper_Output
 		return false;
 	}
 }
-?>

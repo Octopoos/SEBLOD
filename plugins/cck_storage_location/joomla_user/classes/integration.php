@@ -53,4 +53,3 @@ class plgCCK_Storage_LocationJoomla_User_Integration extends plgCCK_Storage_Loca
 		$data['search']			=	'#<a href="(.*)index.php\?option=com_users&amp;task=user.edit&amp;id=([0-9]*)"#';
 	}
 }
-?>

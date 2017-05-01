@@ -21,4 +21,3 @@ abstract class JCckEcommerceShipping
 		return $name; /* JFactory::getApplication()->input->post->get( 'seb_order_method' ); */
 	}
 }
-?>

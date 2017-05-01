@@ -63,4 +63,3 @@ class plgCCK_Field_Restriction%class% extends JCckPluginRestriction
 		return true;
 	}
 }
-?>

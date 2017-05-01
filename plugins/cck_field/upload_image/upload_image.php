@@ -843,4 +843,3 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		return $bool;
 	}
 }
-?>

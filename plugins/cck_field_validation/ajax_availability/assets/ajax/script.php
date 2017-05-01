@@ -52,4 +52,3 @@ if ( $invert ) {
 
 // Set
 echo json_encode( $res );
-?>

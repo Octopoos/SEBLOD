@@ -41,4 +41,3 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 		Helper_Admin::addToolbarEdit( $this->vName, _C8_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>0, 'checked_out'=>'' ) );
 	}
 }
-?>

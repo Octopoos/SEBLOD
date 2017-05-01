@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_Typo%class%InstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

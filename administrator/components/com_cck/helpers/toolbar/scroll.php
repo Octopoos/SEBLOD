@@ -47,4 +47,3 @@ class JButtonCckScroll extends JButton
 class JToolbarButtonCckScroll extends JButtonCckScroll
 {
 }
-?>

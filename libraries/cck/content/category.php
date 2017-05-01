@@ -28,4 +28,3 @@ class CCK_Category
 		return $row;
 	}
 }
-?>

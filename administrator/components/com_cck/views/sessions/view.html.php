@@ -51,4 +51,3 @@ class CCKViewSessions extends JCckBaseLegacyViewList
 		$this->sidebar = '';
 	}
 }
-?>

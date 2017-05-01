@@ -1225,4 +1225,3 @@ class JCckPluginField extends JPlugin
 		}
 	}
 }
-?>

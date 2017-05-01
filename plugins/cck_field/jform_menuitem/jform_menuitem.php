@@ -226,4 +226,3 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

@@ -25,4 +25,3 @@ class JCckCryptFormatBase64 extends JCckCryptFormat
 		return base64_encode( $string );
 	}
 }
-?>

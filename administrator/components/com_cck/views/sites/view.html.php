@@ -26,4 +26,3 @@ class CCKViewSites extends JCckBaseLegacyViewList
 				);
 	}
 }
-?>

@@ -175,4 +175,3 @@ class plgUserCCK extends JPlugin
 		}
 	}
 }
-?>

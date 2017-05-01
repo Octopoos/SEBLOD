@@ -314,4 +314,3 @@ class plgCCK_FieldLink extends JCckPluginField
 		return $form;
 	}
 }
-?>

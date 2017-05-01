@@ -534,4 +534,3 @@ class plgCCK_FieldEmail extends JCckPluginField
 		return $tab;
 	}
 }
-?>

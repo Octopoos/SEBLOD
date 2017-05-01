@@ -75,4 +75,3 @@ class CCKModelSession extends JCckBaseLegacyModelAdmin
 		return $data;
 	}
 }
-?>

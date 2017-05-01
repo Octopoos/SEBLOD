@@ -32,4 +32,5 @@ $class			=	$class ? ' class="'.$class.'"' : '';
 </div>
 <?php if ( $plg_params->get( 'item_separator', 1 ) ) { ?>
 <hr />
-<?php } ?>
+<?php
+}

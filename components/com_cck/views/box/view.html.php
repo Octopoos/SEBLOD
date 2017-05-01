@@ -52,4 +52,3 @@ class CCKViewBox extends JViewLegacy
 		}	
 	}
 }
-?>
