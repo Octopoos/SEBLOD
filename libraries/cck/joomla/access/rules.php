@@ -59,6 +59,8 @@ class CCKRules extends JAccessRules
 				$this->mergeAction($action, $identities);
 			}
 		}
+
+        return true;
 	}
 
 	/**

@@ -103,6 +103,8 @@ class CCK_Rendering
 				}
 			}
 		}
+
+        return true;
 	}
 	
 	// __get
@@ -110,6 +112,8 @@ class CCK_Rendering
 		if ( isset( $this->$property ) ) {
 			return $this->$property;
 		}
+
+        return true;
     }
 	
 	// doDebug
@@ -252,6 +256,8 @@ class CCK_Rendering
 				}
 			}
 		}
+
+        return true;
 	}
 	
 	// initRendering

@@ -120,6 +120,8 @@ class CCKViewSearch extends JViewLegacy
 		$this->item->template	=	( isset( $this->style->template ) ) ? $this->style->template : '';
 		
 		Helper_Admin::addToolbarEdit( $this->vName, 'COM_CCK_'._C4_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ), array( 'template' => $this->item->template ) );
+
+        return true;
 	}
 	
 	// prepareDisplay_Ajax

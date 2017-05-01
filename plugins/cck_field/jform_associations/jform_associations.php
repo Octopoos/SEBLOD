@@ -100,6 +100,8 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -116,6 +118,8 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore
@@ -140,7 +144,7 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 			return $value;
 		}
 		$field->value	=	$value;
-		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+		return parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render

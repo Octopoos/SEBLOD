@@ -134,6 +134,8 @@ class CCKViewType extends JViewLegacy
 		$this->insidebox		=	Helper_Admin::addInsidebox( $this->isNew );
 
 		Helper_Admin::addToolbarEdit( $this->vName, 'COM_CCK_'._C2_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ), array( 'template' => $this->style->template ) );
+
+        return true;
 	}
 }
 ?>

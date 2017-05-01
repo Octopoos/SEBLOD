@@ -74,6 +74,8 @@ class CCKControllerField extends CCK_ControllerForm
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.add.field.ajax_state', $app->input->getInt( 'ajax_state' ) );
 		$app->setUserState( CCK_COM.'.edit.field.ajax_type', $app->input->getString( 'ajax_type', '' ) );
+
+        return true;
 	}
 	
 	// edit
@@ -89,6 +91,8 @@ class CCKControllerField extends CCK_ControllerForm
 		
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.edit.field.ajax_type', $app->input->getString( 'ajax_type', '' ) );
+
+        return true;
 	}
 	
 	// cancel

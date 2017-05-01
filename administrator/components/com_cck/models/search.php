@@ -339,6 +339,8 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			// Positions			
 			$string	=	$this->_table_no_key_batch( 'where', 'searchid = '.(int)$pk, '#__cck_core_search_position', 'searchid', $table->id );
 		}
+
+        return true;
 	}
 	
 	// version

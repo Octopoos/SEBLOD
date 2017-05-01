@@ -346,6 +346,8 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			// Positions			
 			$string	=	$this->_table_no_key_batch( 'where', 'typeid = '.(int)$pk, '#__cck_core_type_position', 'typeid', $table->id );		
 		}
+
+		return true;
 	}
 	
 	// version

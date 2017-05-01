@@ -306,6 +306,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -326,6 +328,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore
@@ -359,7 +363,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		}
 		$field->text	=	$text;	//todo: move up
 		$field->value	=	$value;	//todo: move up
-		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+		return parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render

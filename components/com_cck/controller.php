@@ -395,7 +395,7 @@ class CCKController extends JControllerLegacy
 			return JUri::root();
 		}
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
-		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
+		return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
 	}
 
 	// process
@@ -662,6 +662,8 @@ class CCKController extends JControllerLegacy
 		} else {
 			$this->setRedirect( htmlspecialchars_decode( $link ) );
 		}
+
+        return true;
 	}
 
 	// saveOrderAjax

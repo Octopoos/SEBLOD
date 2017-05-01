@@ -79,6 +79,8 @@ class CCKControllerSearch extends CCK_ControllerForm
 		$app->setUserState( CCK_COM.'.add.search.tpl_list', $app->input->getString( 'tpl_l', '' ) );
 		$app->setUserState( CCK_COM.'.add.search.tpl_item', $app->input->getString( 'tpl_i', '' ) );
 		$app->setUserState( CCK_COM.'.add.search.skip', $app->input->getString( 'skip', '' ) );
+
+        return true;
 	}
 	
 	// edit
@@ -94,6 +96,8 @@ class CCKControllerSearch extends CCK_ControllerForm
 		
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.edit.search.client', $app->input->getString( 'client', '' ) );
+
+        return true;
 	}
 	
 	// postSaveHook

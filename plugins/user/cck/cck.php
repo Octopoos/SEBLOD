@@ -173,6 +173,8 @@ class plgUserCCK extends JPlugin
 				$table->delete();
 			}
 		}
+
+        return true;
 	}
 }
 ?>

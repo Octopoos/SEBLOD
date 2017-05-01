@@ -39,6 +39,8 @@ class JCckField
         if ( $prefix == 'get' ) {
 			return ( $property ) ? $this->_params->$property : $this->_params;
         }
+
+        return true;
     }
 	
 	// getInstance
@@ -84,6 +86,8 @@ class JCckField
 		if ( isset( $this->_params->type ) ) {
 			return JCck::callFunc_Array( 'plgCCK_Field'.$this->_params->type, 'onCCK_FieldRender'.$this->_config['mode'], array( $this->_params, &$this->_config ) );
 		}
+
+        return true;
 	}
 }
 ?>

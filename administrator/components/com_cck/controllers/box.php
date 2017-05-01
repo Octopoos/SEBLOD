@@ -44,6 +44,8 @@ class CCKControllerBox extends JControllerForm
 		$app->setUserState( CCK_COM.'.add.box.bx.name', $app->input->get( 'name', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.type', $app->input->getString( 'type', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.params', $app->input->getString( 'params', '' ) );
+
+		return true;
 	}
 }
 ?>
