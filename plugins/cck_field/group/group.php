@@ -67,7 +67,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		$xn			=	1;
 		$content	=	array();
@@ -127,7 +127,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		// Prepare
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		$xn			=	( $value ) ? $value : $field->rows;
 		$form		=	array();
@@ -186,7 +186,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		// Init
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$data		=	$config['post'];
 		$value		=	'';
 		

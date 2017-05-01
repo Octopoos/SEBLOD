@@ -188,7 +188,7 @@ jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
-$dispatcher	=	JDispatcher::getInstance();
+$dispatcher	=	JEventDispatcher::getInstance();
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 

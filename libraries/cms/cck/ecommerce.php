@@ -97,7 +97,7 @@ abstract class JCckEcommerce
 				JPluginHelper::importPlugin( 'cck_field_live' );
 
 				$config			=	array();
-				$dispatcher		=	JDispatcher::getInstance();
+				$dispatcher		=	JEventDispatcher::getInstance();
 				$field			=	(object)array(
 										'live'=>$definitions[$name]->request_payment_field_live,
 										'live_options'=>$definitions[$name]->request_payment_field_live_options,

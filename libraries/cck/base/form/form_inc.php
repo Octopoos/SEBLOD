@@ -238,7 +238,7 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
-$dispatcher	=	JDispatcher::getInstance();
+$dispatcher	=	JEventDispatcher::getInstance();
 
 // Validation
 if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {

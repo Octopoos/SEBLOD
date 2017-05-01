@@ -76,7 +76,7 @@ abstract class JCckWebservice
 								'response_format'=>''
 							);
 		$config			=	array();
-		$dispatcher		=	JDispatcher::getInstance();
+		$dispatcher		=	JEventDispatcher::getInstance();
 		
 		// Override
 		if ( count( $data ) ) {

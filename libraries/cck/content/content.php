@@ -107,7 +107,7 @@ class CCK_Content
 		}
 		
 		JPluginHelper::importPlugin( 'content' );		
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		$row->text	=	'';
 		if ( isset( $row->$name ) ) {

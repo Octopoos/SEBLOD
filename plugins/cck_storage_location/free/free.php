@@ -175,7 +175,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		$item		=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
 		if ( !is_object( $item ) ) {

@@ -241,7 +241,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$table		=	self::_getTable( $pk );	
 		
 		if ( !$table ) {
@@ -321,7 +321,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		self::_completeTable( $table, $data, $config );
 		
 		// Store
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		JPluginHelper::importPlugin( 'user' );
 		$dispatcher->trigger( 'onUserBeforeSaveGroup', array( self::$context, &$table, $isNew ) );
 		if ( !$table->store() ) {

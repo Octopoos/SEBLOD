@@ -244,7 +244,7 @@ class plgContentCCKInstallerScript
 				$table->path		.=	$table->alias;
 				$table->language	=	'*';
 				$table->store();
-				$dispatcher	=	JDispatcher::getInstance();
+				$dispatcher	=	JEventDispatcher::getInstance();
 				JPluginHelper::importPlugin( 'content' );
 				$dispatcher->trigger( 'onContentBeforeSave', array( '', &$table, true ) );
 				$table->store();
