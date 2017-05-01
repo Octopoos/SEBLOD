@@ -51,6 +51,8 @@ class CCK_Document extends JObject
 	public function __construct($options = array())
 	{
 		parent::__construct();
+
+        return true;
 	}
 
 	/**
@@ -120,6 +122,8 @@ class CCK_Document extends JObject
 	public function setType($type)
 	{
 		$this->_type = $type;
+
+        return true;
 	}
 
 	/**
@@ -212,6 +216,8 @@ class CCK_Document extends JObject
 	public function render($cache = false, $params = array())
 	{
 		$this->id++;
+
+        return true;
 	}
 	
 	// finalize

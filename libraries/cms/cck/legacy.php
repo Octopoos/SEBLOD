@@ -22,6 +22,8 @@ abstract class JCckLegacy extends JCck
 		
 		jimport( 'cck.content.user' );
 		self::$_user	=	CCK_User::getUser( $userid, $profile, $preferences );
+
+        return self::$_user;
 	}
 	
 	// getUser

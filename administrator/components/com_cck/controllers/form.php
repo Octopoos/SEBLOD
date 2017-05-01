@@ -118,6 +118,8 @@ class CCKControllerForm extends JControllerForm
 		}
 		
 		$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
+
+        return true;
 	}
 	
 	// cancel

@@ -30,6 +30,8 @@ class CCKControllerSite extends JControllerForm
 		
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.edit.site.type', $app->input->getString( 'type', '' ) );
+
+        return true;
 	}
 	
 	// postSaveHook

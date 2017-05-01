@@ -206,6 +206,8 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 				return $options['root'].$field->value;
 			}		
 		}
+
+        return true;
 	}
 
 	// _availableValue
@@ -224,6 +226,8 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 				}
 			}
 		}
+
+        return true;
 	}
 }
 ?>

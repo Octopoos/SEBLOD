@@ -108,6 +108,8 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -124,6 +126,8 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore

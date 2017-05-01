@@ -130,6 +130,8 @@ class plgCCK_FieldTabs extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -146,6 +148,8 @@ class plgCCK_FieldTabs extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore

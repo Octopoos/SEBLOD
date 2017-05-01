@@ -77,6 +77,8 @@ class CCK_Item
 				}
 			}
         }
+
+        return true;
     }
 	
 	// __get
@@ -84,6 +86,8 @@ class CCK_Item
 		if ( isset( $this->$property ) ) {
 			return $this->$property;
 		}
+
+        return true;
     }
 
 	// initialize

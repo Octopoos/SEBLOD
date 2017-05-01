@@ -449,6 +449,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			self::_setAssociations( $table, $data, $isNew, $config );
 		}
+
+        return true;
 	}
 	
 	// _getTable
@@ -625,6 +627,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				return false;
 			}
 		}
+
+        return true;
 	}
 
 	// _setFeatured

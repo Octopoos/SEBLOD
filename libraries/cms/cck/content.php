@@ -348,6 +348,8 @@ class JCckContent
 					.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
 			$this->_properties	=	JCckDatabase::loadObject( $query );
 		}
+
+        return true;
 	}
 
 	// set

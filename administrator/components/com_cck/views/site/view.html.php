@@ -39,6 +39,8 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 		$this->item->options	=	( $this->item->options ) ? JCckDev::fromJSON( $this->item->options ) : array();
 
 		Helper_Admin::addToolbarEdit( $this->vName, _C5_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>0, 'checked_out'=>$this->item->checked_out ) );
+
+        return true;
 	}
 }
 ?>

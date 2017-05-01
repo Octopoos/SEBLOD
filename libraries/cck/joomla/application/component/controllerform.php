@@ -34,6 +34,8 @@ class CCK_ControllerForm extends JControllerForm
 		} else {
 			return parent::save( $key, $urlVar );
 		}
+
+        return true;
 	}
 	
 	/**

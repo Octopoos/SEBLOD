@@ -276,6 +276,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -303,6 +305,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore
@@ -343,7 +347,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		$field->text	=	$text;
 		$field->value	=	$value;
-		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+		return parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render

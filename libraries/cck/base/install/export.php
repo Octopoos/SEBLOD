@@ -211,6 +211,8 @@ class CCK_Export
 				}
 			}
 		}
+
+        return true;
 	}
 	
 	// exportFields

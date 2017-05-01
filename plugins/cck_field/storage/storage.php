@@ -87,6 +87,8 @@ class plgCCK_FieldStorage extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch

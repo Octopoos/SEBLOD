@@ -23,5 +23,6 @@ class CCK_DocumentRendererModules extends CCK_DocumentRenderer
 	 */
 	public function render($position, $params = array(), $content = null)
 	{
+        return true;
 	}
 }

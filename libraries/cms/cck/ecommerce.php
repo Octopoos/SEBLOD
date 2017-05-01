@@ -33,7 +33,7 @@ abstract class JCckEcommerce
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
 		
-		self::$_config	=&	$config;
+		return self::$_config	=&	$config;
 	}
 	
 	// getConfig
