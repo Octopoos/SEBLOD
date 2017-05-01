@@ -39,7 +39,7 @@ class plgSystemCCK extends JPlugin
 		}
 		// Deprecated :: end
 
-		if ( $app->isAdmin() ) {
+		if ( $app->isClient('administrator') ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
 
 			if ( file_exists( JPATH_SITE.'/plugins/cck_storage_location/joomla_user_note/joomla_user_note.php' ) ) {
@@ -67,7 +67,7 @@ class plgSystemCCK extends JPlugin
 				$this->site	=	JCck::getSite();
 				$this->site_cfg->loadString( $this->site->configuration );
 
-				if ( $app->isSite() && $this->site ) {
+				if ( $app->isClient('site') && $this->site ) {
 					// --- Redirect to Homepage
 					$homepage	=	$this->site_cfg->get( 'homepage', 0 );
 
@@ -142,7 +142,7 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 
-		if ( JFactory::getApplication()->isSite() ) {
+		if ( JFactory::getApplication()->isClient('site') ) {
 			$Itemid	=	$uri->getVar( 'Itemid' );
 
 			if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
@@ -220,7 +220,7 @@ class plgSystemCCK extends JPlugin
 		$router->attachBuildRule( array( $this, 'buildRule' ), JRouter::PROCESS_DURING );
 		$router->attachParseRule( array( $this, 'parseRule' ), JRouter::PROCESS_DURING );
 
-		if ( $app->isAdmin() && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
+		if ( $app->isClient('administrator') && $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
 			JFactory::getLanguage()->load( 'com_cck_core' );
 		}
 
@@ -243,7 +243,7 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
-			if ( $app->isSite() ) {
+			if ( $app->isClient('site') ) {
 				$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
 
 				$style	=	$this->site_cfg->get( 'template_style', '' );
@@ -321,7 +321,7 @@ class plgSystemCCK extends JPlugin
 				$viewlevels		=	$authlevels;
 			}
 
-			if ( $app->isAdmin() && $this->site->guest_only_viewlevel > 0 ) {
+			if ( $app->isClient('administrator') && $this->site->guest_only_viewlevel > 0 ) {
 				$viewlevels[]	=	$this->site->guest_only_viewlevel;
 			}
 
@@ -338,7 +338,7 @@ class plgSystemCCK extends JPlugin
 				$menuShadow->makeHimLive();
 			}
 		} else {
-			if ( $app->isAdmin() ) {
+			if ( $app->isClient('administrator') ) {
 				return;
 			}
       
@@ -386,7 +386,7 @@ class plgSystemCCK extends JPlugin
 		$view		=	$app->input->get( 'view', '' );
 		$layout		=	$app->input->get( 'layout', '' );
 
-		if ( $app->isAdmin() ) {
+		if ( $app->isClient('administrator') ) {
 			switch ( $option ) {
 				case 'com_config':
 					$com	=	$app->input->get( 'component', '' );
@@ -459,7 +459,7 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
-		} elseif ( $app->isSite() ) {
+		} elseif ( $app->isClient('site') ) {
 			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && isset( $doc->_links ) && count( $doc->_links ) ) {
 				foreach ( $doc->_links as $k=>$link ) {
 					if ( $link['relation'] == 'canonical' ) {
@@ -656,12 +656,12 @@ class plgSystemCCK extends JPlugin
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
 
-		if ( ( $app->isAdmin() || ( $app->isSite() && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
+		if ( ( $app->isClient('administrator') || ( $app->isClient('site') && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
 			$head	=	$doc->getHeadData();
 
 			JCckToolbox::setHead( $head );
 		}
-		if ( $app->isSite() && isset( $app->cck_app['Header'] ) ) {
+		if ( $app->isClient('site') && isset( $app->cck_app['Header'] ) ) {
 			if ( count( $app->cck_app['Header'] ) ) {
 				foreach ( $app->cck_app['Header'] as $k=>$v ) {
 					$app->setHeader( $k, $v, true );
@@ -682,12 +682,12 @@ class plgSystemCCK extends JPlugin
 		$view		=	$app->input->get( 'view', '' );
 		$layout		=	$app->input->get( 'layout', '' );
 
-		if ( ( $app->isAdmin() || ( $app->isSite() && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
+		if ( ( $app->isClient('administrator') || ( $app->isClient('site') && JCckToolbox::getConfig()->def( 'KO' ) ) ) && $doc->getType() == 'html' ) {
 			JCckToolbox::setHeadAfterRender();
 		}
 
 		// site
-		if ( $app->isSite() ) {
+		if ( $app->isClient('site') ) {
 			if ( $this->multisite === true && $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
 				$uri		=	JUri::getInstance();
 				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
@@ -701,7 +701,7 @@ class plgSystemCCK extends JPlugin
 		}
 
 		// admin
-		if ( $app->isAdmin() ) {
+		if ( $app->isClient('administrator') ) {
 			$buffer		=	'';
 			$type		=	JFactory::getDocument()->getType();
 
