@@ -404,7 +404,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		}
 		
 		$config['author']	=	$table->id;
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		return parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
 	}
 	
 	// _getTable
@@ -613,6 +613,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				}
 			}
 		}
+
+        return true;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF

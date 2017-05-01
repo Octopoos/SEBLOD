@@ -36,6 +36,8 @@ abstract class JCckWebservice
 		}
 		
 		self::$_config	=&	$config;
+
+		return self::$_config;
 	}
 	
 	// getConfig

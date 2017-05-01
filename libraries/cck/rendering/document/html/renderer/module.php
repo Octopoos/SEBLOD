@@ -24,5 +24,6 @@ class CCK_DocumentRendererModule extends CCK_DocumentRenderer
 	 */
 	public function render($module, $attribs = array(), $content = null)
 	{
+        return true;
 	}
 }

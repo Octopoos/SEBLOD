@@ -160,6 +160,8 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 				}
 			}
 		}
+
+        return true;
 	}
 }
 ?>

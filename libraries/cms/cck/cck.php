@@ -74,7 +74,7 @@ abstract class JCck
 			}
 		}
 		
-		self::$_config	=&	$config;
+		return self::$_config	=&	$config;
 	}
 	
 	// getConfig

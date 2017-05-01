@@ -77,6 +77,8 @@ class CCKControllerType extends CCK_ControllerForm
 		$app->setUserState( CCK_COM.'.add.type.tpl_site', $app->input->getString( 'tpl_s', '' ) );
 		$app->setUserState( CCK_COM.'.add.type.tpl_content', $app->input->getString( 'tpl_c', '' ) );
 		$app->setUserState( CCK_COM.'.add.type.tpl_intro', $app->input->getString( 'tpl_i', '' ) );
+
+        return true;
 	}
 	
 	// edit
@@ -92,6 +94,8 @@ class CCKControllerType extends CCK_ControllerForm
 		
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.edit.type.client', $app->input->getString( 'client', '' ) );
+
+        return true;
 	}
 	
 	// postSaveHook

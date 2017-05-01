@@ -417,6 +417,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( JCckDevHelper::hasLanguageAssociations() ) {
 			self::_setAssociations( $table, $data, $isNew, $config );
 		}
+
+        return true;
 	}
 	
 	// _getTable
@@ -543,6 +545,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				return false;
 			}
 		}
+
+        return true;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
@@ -750,6 +754,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( $vars['id'] == 0 ) {
 			return JError::raiseError( 404, JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ) );
 		}
+
+        return true;
 	}
 	
 	// setRoutes

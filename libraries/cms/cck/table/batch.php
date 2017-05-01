@@ -163,6 +163,8 @@ class JCckTableBatch extends JObject
 		if ( ! $this->_db->execute() ) {
 			return false;
 		}
+
+        return true;
 	}
 	
 	// dump
@@ -259,6 +261,8 @@ class JCckTableBatch extends JObject
 		if ( ! $this->_db->execute() ) {
 			return false;
 		}
+
+        return true;
 	}
 }
 ?>

@@ -51,6 +51,7 @@ class CCK_DocumentRenderer extends JObject
 	 */
 	public function render($name, $params = null, $content = null)
 	{
+        return true;
 	}
 
 	/**

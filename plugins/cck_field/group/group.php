@@ -176,6 +176,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore

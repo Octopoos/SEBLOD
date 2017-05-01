@@ -126,6 +126,8 @@ class CCK_TableFolder extends CCK_TableFolderAdapter
 				return parent::delete();
 			}
 		}
+
+        return true;
 	}
 }
 ?>

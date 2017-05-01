@@ -245,6 +245,8 @@ class plgContentCCK extends JPlugin
 		}
 		
 		$this->_prepare( $context, $article, $params, $limitstart );
+
+        return true;
 	}
 	
 	// _prepare

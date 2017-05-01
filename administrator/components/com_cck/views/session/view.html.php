@@ -39,6 +39,8 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		
 		Helper_Admin::addToolbarEdit( $this->vName, _C8_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>0, 'checked_out'=>'' ) );
+
+        return true;
 	}
 }
 ?>

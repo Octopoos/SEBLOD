@@ -111,6 +111,8 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore

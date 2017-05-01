@@ -39,6 +39,8 @@ class CCKViewField extends JCckBaseLegacyViewForm
 		$this->insidebox		=	Helper_Admin::addInsidebox( $this->isNew );
 		
 		Helper_Admin::addToolbarEdit( $this->vName, _C3_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ) );
+
+        return true;
 	}
 }
 ?>

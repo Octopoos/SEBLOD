@@ -24,5 +24,6 @@ class CCK_DocumentRendererMessage extends CCK_DocumentRenderer
 	 */
 	public function render($name, $params = array (), $content = null)
 	{
+        return true;
 	}
 }

@@ -62,6 +62,8 @@ class JCckDevImage
         		return $this->$target;
         	}
 		}
+
+        return true;
 	}
 
 	// createThumb

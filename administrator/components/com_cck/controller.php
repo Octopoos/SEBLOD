@@ -268,7 +268,7 @@ class CCKController extends JControllerLegacy
 		if ( $return !== false ) {
 			return JCckDev::toJSON( $json );
 		}
-		echo JCckDev::toJSON( $json );
+		return JCckDev::toJSON( $json );
 	}
 	
 	// ajax_session

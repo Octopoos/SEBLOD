@@ -26,6 +26,7 @@ class CCK_DocumentRendererHead extends CCK_DocumentRenderer
 	 */
 	public function render($head, $params = array(), $content = null)
 	{
+        return true;
 	}
 
 	/**
@@ -39,5 +40,6 @@ class CCK_DocumentRendererHead extends CCK_DocumentRenderer
 	 */
 	public function fetchHead(&$document)
 	{
+        return true;
 	}
 }

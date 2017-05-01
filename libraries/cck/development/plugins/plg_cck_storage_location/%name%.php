@@ -239,8 +239,8 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		
 		$config['author']	=	$table->{self::$author}; // TODO
 		$config['parent']	=	$table->{self::$parent}; // TODO
-		
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
+
+        return parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable

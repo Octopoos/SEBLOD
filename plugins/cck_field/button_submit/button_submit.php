@@ -312,6 +312,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -328,6 +330,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore

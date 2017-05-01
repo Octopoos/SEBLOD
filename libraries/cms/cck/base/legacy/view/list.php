@@ -36,7 +36,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		$this->prepareUI();
 		$this->completeUI();
 		
-		parent::display( $tpl );
+		return parent::display( $tpl );
 	}
 
 	// getSortFields

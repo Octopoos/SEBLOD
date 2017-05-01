@@ -404,6 +404,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareResource
@@ -457,6 +459,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore
@@ -687,7 +691,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			return $value;
 		}
 		$field->value	=	$value;
-		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+		return parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render
@@ -814,6 +818,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				return false;
 			}
 		}
+
+        return true;
 	}
 
 	// _checkPath

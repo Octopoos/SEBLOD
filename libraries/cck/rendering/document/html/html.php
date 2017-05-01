@@ -312,6 +312,8 @@ class CCK_DocumentHTML extends CCK_Document
 
 			$this->_template_tags = $template_tags_first + $template_tags_last;
 		}
+
+        return true;
 	}
 
 	/**

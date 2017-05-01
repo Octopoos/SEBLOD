@@ -155,6 +155,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareResource
@@ -257,6 +259,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+
+        return true;
 	}
 	
 	// onCCK_FieldPrepareStore
@@ -297,7 +301,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 		
 		$field->value	=	$value;
-		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
+		return parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Render

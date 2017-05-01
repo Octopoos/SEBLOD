@@ -342,7 +342,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		}
 		
 		$config['author']	=	JFactory::getUser()->id;
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		return parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
 	}
 	
 	// _getTable
