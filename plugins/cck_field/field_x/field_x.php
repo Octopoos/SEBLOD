@@ -39,7 +39,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		
 		$name		=	$field->name;
 		
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -77,7 +77,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		}
 
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -117,7 +117,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	$field->name;
 		}
 		//if ( $config['pk'] ) {
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 		//}
 		
 		// Prepare
@@ -195,7 +195,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$value		=	( isset( $config['post'][$name.'_hidden'] ) ) ? $config['post'][$name.'_hidden'] : $value;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Prepare
 		$store	=	'';

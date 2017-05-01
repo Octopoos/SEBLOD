@@ -85,7 +85,7 @@ abstract class JCckEcommerceProduct
 					JPluginHelper::importPlugin( 'cck_field_live' );
 					
 					$config			=	array();
-					$dispatcher		=	JDispatcher::getInstance();
+					$dispatcher		=	JEventDispatcher::getInstance();
 					$keys			=	array( 'payment', 'tax' );
 					
 					foreach ( $definitions as $name=>$product_def ) {

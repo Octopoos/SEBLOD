@@ -35,7 +35,7 @@ if ( file_exists( JPATH_SITE.'/templates/'.$tpl['home'].'/html/tpl_'.$templateSt
 // List
 jimport( 'cck.rendering.document.document' );
 $doc			=	CCK_Document::getInstance( 'html' );
-$dispatcher		=	JDispatcher::getInstance();
+$dispatcher		=	JEventDispatcher::getInstance();
 $rparams		=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $path_root );
 
 $go_for_item	=	0;

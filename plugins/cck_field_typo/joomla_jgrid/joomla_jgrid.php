@@ -138,7 +138,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !isset( $config['doValidation'] ) ) {
 					$config['doValidation']	=	0;
 				}
-				$dispatcher			=	JDispatcher::getInstance();
+				$dispatcher			=	JEventDispatcher::getInstance();
 				$hasIdentifier		=	$typo->get( 'use_identifier', '1' );
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
 				$identifier_name	=	$typo->get( 'identifier_name', '' );

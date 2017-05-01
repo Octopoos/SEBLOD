@@ -330,7 +330,7 @@ class JCckPluginLocation extends JPlugin
 			
 			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 			$bridge		=	JTable::getInstance( 'category' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -444,7 +444,7 @@ class JCckPluginLocation extends JPlugin
 			
 			JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
 			$bridge		=	JTable::getInstance( 'content' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );

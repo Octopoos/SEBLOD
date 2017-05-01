@@ -191,7 +191,7 @@ class CCK_List
 		JPluginHelper::importPlugin( 'search', 'cck' );
 		$doCache	=	$options->get( 'cache' );
 		$doDebug	=	$options->get( 'debug' );
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Debug
 		if ( $doDebug ) {

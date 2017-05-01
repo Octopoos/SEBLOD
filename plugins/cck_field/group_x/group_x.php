@@ -54,7 +54,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config, false );
 
 		// TODO: call storage plugin.
@@ -99,7 +99,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		// TODO: call storage plugin.
 		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
@@ -163,7 +163,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		
 		// Prepare
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		if ( $value ) {
 			// TODO: call storage plugin.
@@ -257,7 +257,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		} else {
 			$name	=	$field->name;
 		}
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Prepare
 		$store	=	'';

@@ -165,7 +165,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 		
 		// Init
-		$dispatcher		=	JDispatcher::getInstance();
+		$dispatcher		=	JEventDispatcher::getInstance();
 		$field->type	=	'text';
 
 		// Prepare
