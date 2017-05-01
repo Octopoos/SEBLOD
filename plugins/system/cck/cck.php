@@ -72,7 +72,7 @@ class plgSystemCCK extends JPlugin
 					$homepage	=	$this->site_cfg->get( 'homepage', 0 );
 
 					if ( $homepage > 0 ) {
-						$current	=	JUri::current( true );
+						$current	=	JUri::current();
 						$len		=	strlen( $current );
 
 						if ( $current[$len - 1] == '/' ) {
