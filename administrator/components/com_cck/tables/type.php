@@ -118,4 +118,3 @@ class CCK_TableType extends JTable
 		return parent::delete();
 	}
 }
-?>

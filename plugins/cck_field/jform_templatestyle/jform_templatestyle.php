@@ -169,4 +169,3 @@ class plgCCK_FieldJForm_TemplateStyle extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

@@ -237,4 +237,3 @@ abstract class CCK_TableSiteHelper
 		return $table;
 	}
 }
-?>

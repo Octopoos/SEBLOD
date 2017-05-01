@@ -119,4 +119,3 @@ class CCKModelList extends JModelLegacy
 		return false;
 	}
 }
-?>

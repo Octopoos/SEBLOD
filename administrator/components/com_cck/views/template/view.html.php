@@ -83,4 +83,3 @@ class CCKViewTemplate extends JCckBaseLegacyViewForm
 		return $tree;
 	}
 }
-?>

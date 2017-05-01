@@ -74,4 +74,3 @@ class JCckPluginTypo extends JPlugin
 		}
 	}
 }
-?>

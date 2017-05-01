@@ -434,4 +434,3 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		return true;
 	}
 }
-?>

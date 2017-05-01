@@ -157,4 +157,3 @@ class plgCCK_FieldJForm_Media extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

@@ -36,4 +36,3 @@ class plgCCK_Field_ValidationUrl extends JCckPluginValidation
 		parent::g_onCCK_Field_ValidationPrepareStore( $name, $value, $config, self::$type, 'regex', self::$regex );
 	}
 }
-?>

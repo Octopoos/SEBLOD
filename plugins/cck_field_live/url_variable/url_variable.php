@@ -84,4 +84,3 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 		$value	=	( $ignore_null && !$live ) ? '' : ( is_array( $live ) ? $live : (string)$live );
 	}
 }
-?>

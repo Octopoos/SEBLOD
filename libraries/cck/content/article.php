@@ -129,4 +129,3 @@ class CCK_Article
 		return true;
 	}
 }
-?>

@@ -545,4 +545,3 @@ class CCKController extends JControllerLegacy
 		$user	=	JCck::getUser( 0, false, true );
 	}
 }
-?>

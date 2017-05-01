@@ -599,4 +599,3 @@ class JCckPluginLocation extends JPlugin
 		}
 	}
 }
-?>

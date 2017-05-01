@@ -171,4 +171,3 @@ class CCKModelSites extends JModelList
 		parent::populateState( 'a.title', 'asc' );
 	}
 }
-?>

@@ -55,4 +55,3 @@ class CckJobCli extends JApplicationCli
 		JCckToolbox::run( $this->_cleanName() );
 	}
 }
-?>

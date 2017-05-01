@@ -81,4 +81,3 @@ class CCKControllerFolders extends JControllerAdmin
 		$this->setRedirect( _C0_LINK, $msg, $type );
 	}
 }
-?>

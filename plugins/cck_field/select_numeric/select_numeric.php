@@ -230,4 +230,3 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

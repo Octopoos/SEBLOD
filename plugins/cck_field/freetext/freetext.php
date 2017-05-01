@@ -156,4 +156,3 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		return  preg_replace( '/\<br(\s*)?\/?\>/i', "\n", $text );
 	}
 }
-?>

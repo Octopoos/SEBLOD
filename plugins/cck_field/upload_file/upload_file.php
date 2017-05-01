@@ -801,4 +801,3 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		return $bool;
 	}
 }
-?>

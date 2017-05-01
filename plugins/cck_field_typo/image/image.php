@@ -226,4 +226,3 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		}
 	}
 }
-?>

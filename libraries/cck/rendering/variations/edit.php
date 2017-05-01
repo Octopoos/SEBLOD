@@ -57,4 +57,3 @@ if ( ! file_exists( $path ) ) {
 $xml		=	JPath::clean( $path );
 
 Helper_Workshop::getTemplateParams( $xml, '//form' );
-?>

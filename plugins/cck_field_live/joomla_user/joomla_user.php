@@ -92,4 +92,3 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 		$value	=	(string)$live;
 	}
 }
-?>

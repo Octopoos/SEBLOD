@@ -49,4 +49,3 @@ if ( $search->content > 0 ) {
 if ( $show_list_desc == 2 && $description != '' ) {
 	echo $description;
 }
-?>

@@ -35,4 +35,3 @@ class CCKMenu extends JMenu
 		}
 	}
 }
-?>

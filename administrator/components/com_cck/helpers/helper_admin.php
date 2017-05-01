@@ -246,4 +246,3 @@ class Helper_Admin extends CommonHelper_Admin
 		return $name;
 	}
 }
-?>

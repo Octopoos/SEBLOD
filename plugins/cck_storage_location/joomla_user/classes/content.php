@@ -39,4 +39,3 @@ class JCckContentJoomla_User extends JCckContent
 		}
 	}
 }
-?>

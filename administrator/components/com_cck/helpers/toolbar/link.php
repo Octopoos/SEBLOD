@@ -75,4 +75,3 @@ class JToolbarButtonCckLink extends JButtonCckLink
 		return 'onclick="'.str_replace( 'javascript:', '', $url ).'"';
 	}
 }
-?>

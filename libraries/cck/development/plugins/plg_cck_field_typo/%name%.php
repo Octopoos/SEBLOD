@@ -48,4 +48,3 @@ class plgCCK_Field_Typo%class% extends JCckPluginTypo
 	{
 	}
 }
-?>

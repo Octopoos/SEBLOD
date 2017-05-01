@@ -55,4 +55,3 @@ define( '_C8_LINK',				CCK_LINK.'&view='._C8_NAME );
 
 define( '_NBSP', 				str_repeat( '&nbsp;', 3 ) );
 define( '_NBSP2', 				str_repeat( '&nbsp;', 5 ) );
-?>

@@ -36,4 +36,3 @@ class JCckCryptFormatHexadecimal extends JCckCryptFormat
 		return bin2hex( $string );
 	}
 }
-?>

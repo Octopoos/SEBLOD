@@ -187,4 +187,3 @@ class CCK_User
 		return true;
 	}
 }
-?>

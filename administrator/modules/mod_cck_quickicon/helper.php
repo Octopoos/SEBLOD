@@ -144,4 +144,3 @@ abstract class modCCKQuickIconHelper
 		return $groupedButtons;
 	}
 }
-?>

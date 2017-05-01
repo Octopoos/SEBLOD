@@ -22,4 +22,3 @@ if ( ! file_exists( $path_lib ) ) {
 }
 
 require_once $path_lib;
-?>

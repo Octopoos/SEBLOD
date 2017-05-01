@@ -96,4 +96,3 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		return true;
 	}
 }
-?>

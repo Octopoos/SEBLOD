@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_ValidationLetter_Number_OnlyInstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

@@ -133,4 +133,3 @@ class CCKViewList extends JViewLegacy
 		}
 	}
 }
-?>

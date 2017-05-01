@@ -197,4 +197,3 @@ class CCKModelFolders extends JModelList
 		parent::populateState( 'a.lft', 'asc' );
 	}
 }
-?>

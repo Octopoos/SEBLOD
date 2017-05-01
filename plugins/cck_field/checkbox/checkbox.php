@@ -368,4 +368,3 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

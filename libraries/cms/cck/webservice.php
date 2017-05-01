@@ -115,4 +115,3 @@ abstract class JCckWebservice
 		return $cache[$name];
 	}
 }
-?>

@@ -28,4 +28,3 @@ class plgCCK_Field_TypoClear extends JCckPluginTypo
 		$field->typo	=	'';
 	}
 }
-?>

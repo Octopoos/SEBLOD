@@ -194,4 +194,3 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		}
 	}
 }
-?>

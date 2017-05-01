@@ -121,4 +121,3 @@ class CCKViewForm extends JViewLegacy
 		$bar->prependButton( 'CckLink', 'apply', 'JTOOLBAR_APPLY', 'javascript:JCck.Core.submit(\'form.apply\');' );
 	}
 }
-?>

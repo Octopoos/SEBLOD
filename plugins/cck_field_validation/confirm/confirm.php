@@ -85,4 +85,3 @@ class plgCCK_Field_ValidationConfirm extends JCckPluginValidation
 		}
 	}
 }
-?>

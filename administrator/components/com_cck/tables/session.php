@@ -25,4 +25,3 @@ class CCK_TableSession extends JTable
 		return parent::delete();
 	}
 }
-?>

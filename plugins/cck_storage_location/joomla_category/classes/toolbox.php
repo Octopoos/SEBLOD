@@ -16,4 +16,3 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_ca
 class plgCCK_Storage_LocationJoomla_Category_Toolbox extends plgCCK_Storage_LocationJoomla_Category
 {
 }
-?>

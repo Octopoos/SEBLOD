@@ -12,4 +12,3 @@ defined( '_JEXEC' ) or die;
 
 // "No Access" Page.
 echo JText::_( 'COM_CCK_NO_ACCESS' );
-?>

@@ -218,4 +218,3 @@ class CCKViewSearch extends JViewLegacy
 		return $name;
 	}
 }
-?>

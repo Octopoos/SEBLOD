@@ -145,4 +145,3 @@ class CCKControllerList extends JControllerAdmin
 		}
 	}
 }
-?>

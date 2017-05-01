@@ -115,4 +115,3 @@ class CCKViewCck extends JCckBaseLegacyView
 		// Helper_Admin::addToolbarSupportButton();
 	}
 }
-?>

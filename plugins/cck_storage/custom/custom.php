@@ -418,4 +418,3 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 		return str_replace( self::_format( $name, $value_old ), self::_format( $name, $value ), $string );
 	}
 }
-?>

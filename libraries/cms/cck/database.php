@@ -198,4 +198,3 @@ abstract class JCckDatabase
 		return JFactory::getDbo()->quoteName( $name, $as );
 	}
 }
-?>

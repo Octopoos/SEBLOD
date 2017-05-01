@@ -224,4 +224,3 @@ class CCKViewType extends JViewLegacy
 		return $name;
 	}
 }
-?>

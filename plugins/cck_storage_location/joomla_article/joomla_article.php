@@ -1008,4 +1008,3 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		return $params[$name];
 	}
 }
-?>

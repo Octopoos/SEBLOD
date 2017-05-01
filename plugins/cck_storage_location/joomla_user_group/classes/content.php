@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class JCckContentJoomla_User_Group extends JCckContent
 {
 }
-?>

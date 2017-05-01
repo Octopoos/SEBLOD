@@ -628,4 +628,3 @@ class plgSearchCCK extends JPlugin
 		}
 	}
 }
-?>

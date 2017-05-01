@@ -12,4 +12,3 @@ defined( '_JEXEC' ) or die;
 
 // "No Result" Page.
 echo $no_message;	// echo JText::_( 'COM_CCK_NO_RESULT' );
-?>

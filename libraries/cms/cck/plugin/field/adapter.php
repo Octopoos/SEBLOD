@@ -79,4 +79,3 @@ class JCckPluginFieldAdapter
 		return $paths[$path];
 	}
 }
-?>

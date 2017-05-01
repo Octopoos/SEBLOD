@@ -138,4 +138,3 @@ class CCKModelSessions extends JModelList
 		parent::populateState( 'a.title', 'asc' );
 	}
 }
-?>

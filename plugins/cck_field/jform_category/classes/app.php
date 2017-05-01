@@ -105,4 +105,3 @@ class plgCCK_FieldJForm_Category_App extends plgCCK_FieldGeneric_App
 		return implode( $glue, $value );
 	}
 }
-?>

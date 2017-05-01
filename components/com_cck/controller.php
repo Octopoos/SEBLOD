@@ -740,4 +740,3 @@ class CCKController extends JControllerLegacy
 		}
 	}
 }
-?>

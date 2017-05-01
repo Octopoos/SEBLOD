@@ -184,4 +184,3 @@ class JFormFieldCCK extends JFormField
 		return;
 	}
 }
-?>

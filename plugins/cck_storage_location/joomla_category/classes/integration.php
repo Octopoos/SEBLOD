@@ -61,4 +61,3 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 		$data['search']			=	'#<a'.$class.' href="(.*)index.php\?option=com_categories&amp;task=category.edit&amp;id=([0-9]*)&amp;extension='.$ext.'"#';
 	}
 }
-?>

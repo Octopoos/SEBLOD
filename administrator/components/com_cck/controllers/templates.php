@@ -29,4 +29,3 @@ class CCKControllerTemplates extends JControllerAdmin
 		return parent::getModel( $name, $prefix, $config );
 	}
 }
-?>

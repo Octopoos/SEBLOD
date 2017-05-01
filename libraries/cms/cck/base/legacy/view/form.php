@@ -68,4 +68,3 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	{
 	}
 }
-?>

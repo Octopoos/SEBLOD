@@ -116,4 +116,3 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		}
 	}
 }
-?>

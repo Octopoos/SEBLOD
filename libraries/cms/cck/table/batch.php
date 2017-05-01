@@ -261,4 +261,3 @@ class JCckTableBatch extends JObject
 		}
 	}
 }
-?>

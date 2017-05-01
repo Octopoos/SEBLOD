@@ -733,4 +733,3 @@ class plgContentCCKInstallerScript
 		$db->execute();
 	}
 }
-?>

@@ -192,4 +192,3 @@ class plgCCK_FieldDiv extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

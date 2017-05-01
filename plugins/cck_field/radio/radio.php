@@ -299,4 +299,3 @@ class plgCCK_FieldRadio extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

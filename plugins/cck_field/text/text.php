@@ -206,4 +206,3 @@ class plgCCK_FieldText extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

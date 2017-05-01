@@ -36,4 +36,3 @@ class JFormFieldCCKhelp extends JFormField
 		return $help;
 	}
 }
-?>

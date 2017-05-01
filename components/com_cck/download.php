@@ -94,4 +94,3 @@ if ( file_exists( $path ) ) {
 	readfile( $path );
 	exit();
 }
-?>

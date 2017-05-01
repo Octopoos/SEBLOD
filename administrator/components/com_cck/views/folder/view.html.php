@@ -45,4 +45,3 @@ class CCKViewFolder extends JCckBaseLegacyViewForm
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}
 }
-?>

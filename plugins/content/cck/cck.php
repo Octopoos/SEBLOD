@@ -572,4 +572,3 @@ class plgContentCCK extends JPlugin
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
 	}
 }
-?>

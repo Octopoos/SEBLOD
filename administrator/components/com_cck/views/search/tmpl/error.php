@@ -13,4 +13,3 @@ defined( '_JEXEC' ) or die;
 $app	=	JFactory::getApplication();
 $error	=	JText::_( $app->input->get( 'error', '...' ) ) .'<br />'. '<strong>Oops!</strong> Try to close the page & re-open it properly.';
 echo JText::sprintf( $error, $this->item->id );
-?>

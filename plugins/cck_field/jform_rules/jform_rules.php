@@ -233,4 +233,3 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 		}
 	}
 }
-?>

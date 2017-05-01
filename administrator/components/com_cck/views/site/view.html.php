@@ -41,4 +41,3 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 		Helper_Admin::addToolbarEdit( $this->vName, _C5_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>0, 'checked_out'=>$this->item->checked_out ) );
 	}
 }
-?>

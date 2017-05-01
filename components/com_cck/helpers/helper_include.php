@@ -88,4 +88,3 @@ class Helper_Include
 		}
 	}
 }
-?>

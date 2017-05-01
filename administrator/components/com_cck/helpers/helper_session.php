@@ -27,4 +27,3 @@ class Helper_Session
 		$lang->load( $extension.'.sys', JPATH_ADMINISTRATOR, $lang->getTag(), true );
 	}
 }
-?>

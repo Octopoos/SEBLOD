@@ -327,4 +327,3 @@ class com_cckInstallerScript
 		return true;
 	}
 }
-?>

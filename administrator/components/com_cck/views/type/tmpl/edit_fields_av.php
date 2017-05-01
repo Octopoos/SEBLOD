@@ -22,4 +22,3 @@ if ( count( $this->fieldsAv ) ) {
         Helper_Workshop::displayField( $field, $type_field, $attr );
     }
 }
-?>

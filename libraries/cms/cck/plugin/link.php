@@ -279,4 +279,3 @@ class JCckPluginLink extends JPlugin
 		}
 	}
 }
-?>

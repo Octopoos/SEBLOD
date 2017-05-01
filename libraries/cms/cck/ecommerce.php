@@ -504,4 +504,3 @@ abstract class JCckEcommerce
 		return $zones;
 	}
 }
-?>

@@ -185,4 +185,3 @@ abstract class JCckEcommerceCart
 		return $parts;
 	}
 }
-?>

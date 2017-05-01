@@ -81,4 +81,3 @@ class CCKControllerSearchs extends JControllerAdmin
 		$this->setRedirect( _C4_LINK, $msg, $type );
 	}
 }
-?>

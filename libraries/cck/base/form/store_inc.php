@@ -304,4 +304,3 @@ if ( isset( $processing[$event] ) ) {
 		}
 	}
 }
-?>

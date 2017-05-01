@@ -108,4 +108,3 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 		}
 	}
 }
-?>

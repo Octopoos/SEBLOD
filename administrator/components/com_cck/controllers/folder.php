@@ -52,6 +52,5 @@ class CCKControllerFolder extends JControllerForm
 		} else {
 			$this->setRedirect( _C0_LINK, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
-	}	
+	}
 }
-?>

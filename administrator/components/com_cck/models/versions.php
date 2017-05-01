@@ -162,4 +162,3 @@ class CCKModelVersions extends JModelList
 		parent::populateState( 'b.title', 'asc' );
 	}
 }
-?>

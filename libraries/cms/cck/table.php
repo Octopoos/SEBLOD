@@ -105,4 +105,3 @@ class JCckTable extends JCckTablePlaceholder
 		$this->store();
 	}
 }
-?>

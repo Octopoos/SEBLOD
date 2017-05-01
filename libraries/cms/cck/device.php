@@ -16,4 +16,3 @@ JLoader::register( 'Mobile_Detect', JPATH_PLATFORM.'/cck/misc/Mobile_Detect.php'
 class JCckDevice extends Mobile_Detect
 {
 }
-?>

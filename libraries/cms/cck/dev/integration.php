@@ -365,4 +365,3 @@ abstract class JCckDevIntegration
 		return $buffer;
 	}
 }
-?>

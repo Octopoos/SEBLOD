@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Field_TypoJoomla_JgridInstallerScript extends JCckInstallerScriptPlugin
 {
 }
-?>

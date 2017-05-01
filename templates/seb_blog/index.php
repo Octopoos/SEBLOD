@@ -478,4 +478,3 @@ if ( !$isMore ) {
 
 $cck->addScriptDeclaration( $js );
 $cck->finalize();
-?>

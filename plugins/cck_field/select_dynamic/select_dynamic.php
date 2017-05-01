@@ -755,4 +755,3 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

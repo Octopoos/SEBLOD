@@ -206,4 +206,3 @@ class CCKModelTemplates extends JModelList
 		return $items;
 	}
 }
-?>

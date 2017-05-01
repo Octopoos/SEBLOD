@@ -14,4 +14,3 @@ defined( '_JEXEC' ) or die;
 class CCKViewCck extends JViewLegacy
 {
 }
-?>

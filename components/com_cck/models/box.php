@@ -52,4 +52,3 @@ class CCKModelBox extends JModelItem
 		}
 	}
 }
-?>

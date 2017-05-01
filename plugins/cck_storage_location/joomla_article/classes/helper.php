@@ -64,4 +64,3 @@ class plgCCK_Storage_LocationJoomla_Article_Helper extends plgCCK_Storage_Locati
 		return $form;
 	}
 }
-?>

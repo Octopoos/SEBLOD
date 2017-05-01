@@ -172,4 +172,3 @@ class plgCCK_FieldJForm_GroupParent extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

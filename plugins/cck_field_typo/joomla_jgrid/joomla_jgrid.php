@@ -301,4 +301,3 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 		}
 	}
 }
-?>

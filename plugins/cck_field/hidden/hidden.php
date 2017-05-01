@@ -144,4 +144,3 @@ class plgCCK_FieldHidden extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

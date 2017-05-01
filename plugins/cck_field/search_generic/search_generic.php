@@ -198,4 +198,3 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 		return $fields;
 	}
 }
-?>

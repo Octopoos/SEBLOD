@@ -157,4 +157,3 @@ class CCKViewForm extends JViewLegacy
 		$this->unique				=	&$unique;
 	}
 }
-?>

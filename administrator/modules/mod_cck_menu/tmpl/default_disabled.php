@@ -12,4 +12,3 @@ defined( '_JEXEC' ) or die;
 
 // Root
 $menu->addChild( new JMenuNode( $root, NULL, 'disabled' ), true );
-?>

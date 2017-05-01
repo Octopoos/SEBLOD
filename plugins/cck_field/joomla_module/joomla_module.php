@@ -135,4 +135,3 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

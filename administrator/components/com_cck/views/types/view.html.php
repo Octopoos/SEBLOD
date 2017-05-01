@@ -44,4 +44,3 @@ class CCKViewTypes extends JCckBaseLegacyViewList
 		Helper_Admin::addToolbar( $this->vName, 'COM_CCK_'.$this->vTitle, $this->state->get( 'filter.folder' ) );
 	}
 }
-?>

@@ -70,4 +70,3 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		return $form;
 	}
 }
-?>

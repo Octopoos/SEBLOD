@@ -176,4 +176,3 @@ class plgCCK_Field42 extends JCckPluginField
 		return @${$return};
 	}
 }
-?>

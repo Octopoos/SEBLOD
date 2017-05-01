@@ -131,4 +131,3 @@ class CCKModelCCK extends JModelLegacy
 		return CCK_Export::zip( $path, $path_zip );
 	}
 }
-?>

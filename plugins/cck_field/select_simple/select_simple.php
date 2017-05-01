@@ -390,4 +390,3 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

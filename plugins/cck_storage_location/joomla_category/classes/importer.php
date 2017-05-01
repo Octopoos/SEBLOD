@@ -147,4 +147,3 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 	{
 	}
 }
-?>

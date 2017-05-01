@@ -25,4 +25,3 @@ class CCK_TableVersion extends JTable
 		return parent::delete();
 	}
 }
-?>

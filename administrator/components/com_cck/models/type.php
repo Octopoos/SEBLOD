@@ -413,4 +413,3 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		return 1;
 	}
 }
-?>

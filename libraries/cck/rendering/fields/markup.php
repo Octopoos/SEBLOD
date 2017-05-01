@@ -29,4 +29,3 @@ function cckMarkup( $cck, $html, $field, $options )
 	
 	return $html;
 }
-?>

@@ -157,4 +157,3 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 }
-?>

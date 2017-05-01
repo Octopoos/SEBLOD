@@ -82,4 +82,3 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 		$buffer	=	JCckDevIntegration::rewriteBuffer( $buffer, $data, $list, $list_assoc );
 	}
 }
-?>

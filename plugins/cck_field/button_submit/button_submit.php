@@ -377,4 +377,3 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 	}
 }
-?>

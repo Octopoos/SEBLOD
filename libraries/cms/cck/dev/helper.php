@@ -522,4 +522,3 @@ abstract class JCckDevHelper
 		return $array;
 	}
 }
-?>

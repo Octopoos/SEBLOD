@@ -19,4 +19,3 @@ $separator_class	=	$params->get( 'separator_class', 'separator' );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_breadcrumbs', $params->get( 'layout', 'default' ) );
-?>

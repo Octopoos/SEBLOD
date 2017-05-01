@@ -62,4 +62,3 @@ class CCK_TableSearch extends JTable
 		return parent::delete();
 	}
 }
-?>

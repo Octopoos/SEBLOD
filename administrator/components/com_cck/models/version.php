@@ -151,4 +151,3 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		}
 	}
 }
-?>

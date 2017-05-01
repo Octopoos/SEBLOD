@@ -19,4 +19,3 @@ final class JCckVersion extends JCckVersionObject
 
 	public $DEV_STATUS = '';
 }
-?>

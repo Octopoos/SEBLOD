@@ -249,4 +249,3 @@ class Helper_Folder
 		return ( $json != '' ) ? '{'.$json.'}' : $default;
 	}
 }
-?>

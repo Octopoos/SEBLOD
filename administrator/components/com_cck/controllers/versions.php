@@ -96,4 +96,3 @@ class CCKControllerVersions extends JControllerAdmin
 		$this->setRedirect( $link, $msg, $type );
 	}
 }
-?>

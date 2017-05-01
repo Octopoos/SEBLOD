@@ -180,4 +180,3 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		return $date;
 	}
 }
-?>

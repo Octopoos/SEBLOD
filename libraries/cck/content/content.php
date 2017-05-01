@@ -168,4 +168,3 @@ class CCK_Content
 		return $res;
 	}
 }
-?>

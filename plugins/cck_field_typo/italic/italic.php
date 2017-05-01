@@ -41,4 +41,3 @@ class plgCCK_Field_TypoItalic extends JCckPluginTypo
 		return '<em>'.$value.'</em>';
 	}
 }
-?>

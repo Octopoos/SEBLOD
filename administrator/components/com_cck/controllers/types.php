@@ -81,4 +81,3 @@ class CCKControllerTypes extends JControllerAdmin
 		$this->setRedirect( _C2_LINK, $msg, $type );
 	}
 }
-?>

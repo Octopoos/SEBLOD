@@ -21,4 +21,3 @@ class plgCCK_Storage_Location%class%_Exporter extends plgCCK_Storage_Location%cl
 		// TODO
 	}
 }
-?>

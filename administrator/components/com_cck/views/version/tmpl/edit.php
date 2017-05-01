@@ -56,4 +56,3 @@ Joomla.submitbutton = function(task)
 
 <?php
 Helper_Display::quickCopyright();
-?>

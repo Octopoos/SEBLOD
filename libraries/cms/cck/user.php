@@ -88,4 +88,3 @@ abstract class JCckUser
 		return $user;
 	}
 }
-?>

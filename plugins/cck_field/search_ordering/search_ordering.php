@@ -359,4 +359,3 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>

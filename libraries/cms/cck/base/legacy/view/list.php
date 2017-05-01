@@ -101,4 +101,3 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		Helper_Admin::addToolbar( $this->vName, $this->vTitle );
 	}
 }
-?>

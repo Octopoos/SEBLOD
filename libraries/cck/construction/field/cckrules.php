@@ -313,4 +313,3 @@ class JFormFieldCCKRules extends JFormField
 		return $options;
 	}
 }
-?>

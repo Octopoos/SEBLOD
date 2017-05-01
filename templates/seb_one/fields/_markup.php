@@ -46,4 +46,3 @@ function cckMarkup_seb_one( $cck, $html, $field, $options )
 	
 	return $html;
 }
-?>

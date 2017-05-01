@@ -229,4 +229,3 @@ class modCckMenuHelper
 		$menu->renderMenu( 'cck_menu_jseblod'.$moduleid, 'cck_menu disabled' );
 	}
 }
-?>

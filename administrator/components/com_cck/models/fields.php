@@ -196,4 +196,3 @@ class CCKModelFields extends JModelList
 		parent::populateState( 'a.title', 'asc' );
 	}
 }
-?>

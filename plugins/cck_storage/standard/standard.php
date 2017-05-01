@@ -419,4 +419,3 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		return $value;
 	}
 }
-?>

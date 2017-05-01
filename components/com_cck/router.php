@@ -199,4 +199,3 @@ function CckParseRoute( $segments )
 
 	return $router->parse( $segments );
 }
-?>

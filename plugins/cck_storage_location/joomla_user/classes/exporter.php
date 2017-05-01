@@ -235,4 +235,3 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 		}
 	}
 }
-?>

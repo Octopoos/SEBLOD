@@ -36,4 +36,3 @@ class CCKControllerVersion extends JControllerForm
 		return $append;
 	}
 }
-?>

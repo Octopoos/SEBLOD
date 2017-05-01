@@ -92,4 +92,3 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 		}
 	}
 }
-?>

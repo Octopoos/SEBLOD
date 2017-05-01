@@ -681,4 +681,3 @@ class CCK_Import
 		}
 	}
 }
-?>

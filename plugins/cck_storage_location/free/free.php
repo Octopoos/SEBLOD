@@ -419,4 +419,3 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND storage_table="'.(string)$config['base']->table.'" AND pk='.(int)$config['pk'] );
 	}
 }
-?>

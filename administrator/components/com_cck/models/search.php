@@ -396,4 +396,3 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		return $str;
 	}
 }
-?>

@@ -250,4 +250,3 @@ class plgCCK_FieldTabs extends JCckPluginField
 		$fields[$name]->$target	=	$html;
 	}
 }
-?>

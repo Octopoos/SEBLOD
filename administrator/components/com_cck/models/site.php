@@ -277,4 +277,3 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		return substr( $str, 1 );
 	}
 }
-?>

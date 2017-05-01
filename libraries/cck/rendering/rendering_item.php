@@ -496,4 +496,3 @@ class CCK_Item
 		}
 	}
 }
-?>

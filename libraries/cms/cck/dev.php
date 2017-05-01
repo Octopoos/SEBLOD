@@ -786,4 +786,3 @@ abstract class JCckDev
 		return $xml;
 	}
 }
-?>

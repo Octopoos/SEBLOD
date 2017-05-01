@@ -217,4 +217,3 @@ abstract class JCckEcommerceTax
 		return null;
 	}
 }
-?>
