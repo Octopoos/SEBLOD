@@ -43,7 +43,7 @@ if ( $this->item->alt ) {
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#search_fieldname').isVisibleWhen('search_field','1');
 });

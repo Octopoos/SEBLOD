@@ -337,8 +337,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/jscal2.css'.'" type="text/css" />';
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/border-radius.css'.'" type="text/css" />';
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/theme/'.$params['theme'].'/'.$params['theme'].'.css'.'" type="text/css" />';
-			echo '<script src="'.self::$path.'assets/js/jscal2.js'.'" type="text/javascript"></script>';
-			echo '<script src="'.self::$path.$path.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/jscal2.js'.'"></script>';
+			echo '<script src="'.self::$path.$path.'"></script>';
 		} else {
 			$doc->addStyleSheet( self::$path.'assets/css/jscal2.css' );
 			$doc->addStyleSheet( self::$path.'assets/css/border-radius.css' );
@@ -352,7 +352,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	protected static function _addScript( $id, $params = array() )
 	{
 		$js	=	'
-				<script type="text/javascript">
+				<script>
 					var cal = Calendar.setup({';
 		if ( $params['type'] == 'form' ) {
 			$id1	=	$id;

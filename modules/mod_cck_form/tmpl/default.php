@@ -20,7 +20,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] !
 	$js	=	'if (jQuery("#'.$formId.'").isStillReady() === true) { jQuery("#'.$formId.' input[name=\'config[unique]\']").val("'.$formId.'"); JCck.Core.submitForm("save", document.getElementById("'.$formId.'")); }';
 }
 ?>
-<script type="text/javascript">
+<script>
 <?php echo $config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php

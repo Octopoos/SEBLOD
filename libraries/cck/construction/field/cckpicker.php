@@ -112,7 +112,7 @@ class JFormFieldCckPicker extends JFormField
 			$js	=	'jQuery(document).ready(function($){'.$js.'});';
 			
 			if ( $format == 'raw' ) {
-				return '<script type="text/javascript">'.$js.'</script>';
+				return '<script>'.$js.'</script>';
 			} else {
 				$doc->addScriptDeclaration( $js );
 			}

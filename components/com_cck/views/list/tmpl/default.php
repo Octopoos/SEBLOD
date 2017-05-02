@@ -106,7 +106,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	}
 }
 ?>
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Core.loadmore = function(more,stop,search) {
 		var elem = "<?php echo $pre; ?>.cck-loading-more";
@@ -161,7 +161,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	}
 	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host', 'port' ) ).$url;
 ?>
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Core.loadfragment = JCck.Core.getModal(<?php echo $this->json_resource ? $this->json_resource : '{}'; ?>);
 	$(document).ready(function() {

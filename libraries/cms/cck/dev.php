@@ -78,7 +78,7 @@ abstract class JCckDev
 			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
 		
-		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
+		echo '<script>jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
 	public static function getMergedScript( $url )
@@ -359,7 +359,7 @@ abstract class JCckDev
 				echo '<style type="text/css">'.$css.'</style>';
 			}
 			if ( $js || $js2 ) {
-				echo '<script type="text/javascript">'.'jQuery(document).ready(function($){'.$js.$js2.'});'.$js3.'</script>';
+				echo '<script>'.'jQuery(document).ready(function($){'.$js.$js2.'});'.$js3.'</script>';
 			}
 			
 			return;

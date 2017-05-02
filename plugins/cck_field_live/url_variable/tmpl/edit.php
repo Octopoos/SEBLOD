@@ -31,7 +31,7 @@ defined( '_JEXEC' ) or die;
 JCckDev::initScript( 'live', $this->item );
 ?>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#sortable_core_dev_texts, #return').isVisibleWhen('multiple','1');
 	$('#variable,#default_value,#crypt').isVisibleWhen('multiple','0');

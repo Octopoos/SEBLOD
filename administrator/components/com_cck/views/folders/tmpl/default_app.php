@@ -79,7 +79,7 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 	</div>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {	
 	$(".app-download").on("click", function() {
 		var id = $(this).attr("data-id");

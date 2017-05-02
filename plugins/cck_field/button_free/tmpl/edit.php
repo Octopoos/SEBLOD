@@ -62,7 +62,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_icon').isVisibleWhen('bool6','1,2,3',false);
 	$('#bool3').isVisibleWhen('bool2','1,2');

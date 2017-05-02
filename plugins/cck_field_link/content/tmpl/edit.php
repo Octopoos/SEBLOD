@@ -59,7 +59,7 @@ $options	=	implode( '||', $options );
 JCckDev::initScript( 'link', $this->item );
 ?>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#itemid').isDisabledWhen('sef','0');
 	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');

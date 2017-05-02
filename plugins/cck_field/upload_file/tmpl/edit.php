@@ -57,7 +57,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_legal_extensions').isVisibleWhen('json_options2_media_extensions','custom',false);
 	$('#json_options2_title_file').isVisibleWhen('json_options2_multivalue_mode','1');

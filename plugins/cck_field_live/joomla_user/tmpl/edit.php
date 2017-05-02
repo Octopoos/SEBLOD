@@ -25,7 +25,7 @@ JCckDev::initScript( 'live', $this->item );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#excluded').isVisibleWhen('property','access,groups');
 });

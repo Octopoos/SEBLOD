@@ -26,7 +26,7 @@ $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.sebl
 JFactory::getDocument()->addStyleDeclaration( $css );
 ?>
 
-<script type="text/javascript">
+<script>
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 Joomla.submitbutton = function(task, cid)
 {

@@ -49,7 +49,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_time_pos').isVisibleWhen('json_options2_time','12,24',false);
 	$('#json_options2_default_hour').isVisibleWhen('json_options2_time','0');

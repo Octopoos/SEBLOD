@@ -39,7 +39,7 @@ JCckDev::initScript( 'link', $this->item );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#title_custom').isVisibleWhen('title','2',false);
 	$('#redirection_url,#blank_li').isVisibleWhen('redirection','url');

@@ -69,7 +69,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 Helper_Display::quickCopyright();
 ?>
 
-<script type="text/javascript">
+<script>
 (function ($){
     JCck.Dev = {
         submit: function(task) {

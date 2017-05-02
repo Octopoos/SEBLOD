@@ -25,7 +25,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 <div class="layers" id="layer_fields" <?php echo ( $this->item->layer == 'fields' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_fields_'.$this->uix.'.php'; ?></div>
 <div class="layers" id="layer_configuration" <?php echo ( $this->item->layer == 'configuration' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_configuration.php'; ?></div>
 <div class="layers" id="layer_template" <?php echo ( $this->item->layer == 'template' ) ? '' : 'style="display: none;"'; ?>><?php include_once __DIR__.'/edit_template.php'; ?></div>
-<script type="text/javascript">
+<script>
 JCck.DevHelper.setSidebar();
 (function ($){
 $("#pos-1 input:radio[name='positions']").prop("checked", true);

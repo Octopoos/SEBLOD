@@ -28,7 +28,7 @@ JCckDev::initScript( 'restriction', $this->item );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#values').isVisibleWhen('match','isEqual',false);
 });

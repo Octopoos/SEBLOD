@@ -30,7 +30,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#rows').isVisibleWhen('bool3','1');
 });

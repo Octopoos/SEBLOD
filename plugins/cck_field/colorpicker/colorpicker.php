@@ -172,7 +172,7 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 					';
 		
 		if ( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) {
-			echo '<script type="text/javascript">'.$js.'</script>';
+			echo '<script>'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( $s_css );
 			$doc->addScript( $s_js );

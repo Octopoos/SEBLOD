@@ -133,7 +133,7 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 Helper_Display::quickCopyright();
 ?>
 
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Dev = {
 		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",

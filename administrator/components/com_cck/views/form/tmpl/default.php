@@ -22,7 +22,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validati
 }
 ?>
 
-<script type="text/javascript">
+<script>
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 

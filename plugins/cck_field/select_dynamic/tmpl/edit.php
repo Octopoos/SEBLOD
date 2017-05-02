@@ -73,7 +73,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 	</ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_query').isVisibleWhen('bool2','1');
 	$('#json_options2_table, #json_options2_name, #json_options2_value, #json_options2_where, #json_options2_orderby, #json_options2_limit, #blank_li').isVisibleWhen('bool2','0');

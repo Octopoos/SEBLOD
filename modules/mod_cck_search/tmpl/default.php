@@ -38,7 +38,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] !
 	$js	=	'JCck.Core.submitForm("search", document.getElementById("'.$formId.'"));';
 }
 ?>
-<script type="text/javascript">
+<script>
 <?php echo $config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php

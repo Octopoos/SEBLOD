@@ -354,10 +354,10 @@ class plgCCK_FieldField_X extends JCckPluginField
 		
 		if ( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
-			echo '<script type="text/javascript">'.$js.'</script>';
+			echo '<script>'.$js.'</script>';
 		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
-			echo '<script type="text/javascript">'.$js.'</script>';
+			echo '<script>'.$js.'</script>';
 		} else {
 			JCck::loadjQuery();
 			JCck::loadjQueryUI();

@@ -455,7 +455,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		JCck::loadjQueryUI();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script src="'.self::$path.'assets/js/script2.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script2.js'.'"></script>';
 		} else {
 			$doc->addScript( self::$path.'assets/js/script2.js' );
 		}
@@ -498,7 +498,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$js	.=	'});';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script type="text/javascript">'.$js.'</script>';
+			echo '<script>'.$js.'</script>';
 		} else {
 			$doc ->addScriptDeclaration( $js );
 		}
@@ -616,7 +616,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		if ( $js ) {
 			if ( $js_format == 'raw' ) {
-				$html	.=	'<script type="text/javascript">(function ($){'.$js.'})(jQuery);</script>';
+				$html	.=	'<script>(function ($){'.$js.'})(jQuery);</script>';
 			} else {
 				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 			}
@@ -766,7 +766,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		
 		if ( $js ) {
 			if ( $js_format == 'raw' ) {
-				$html	.=	'<script type="text/javascript">(function ($){'.$js.'})(jQuery);</script>';
+				$html	.=	'<script>(function ($){'.$js.'})(jQuery);</script>';
 			} else {
 				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 			}

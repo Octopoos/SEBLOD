@@ -49,7 +49,7 @@ $to_admin	=	( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2['to
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_from_param').isVisibleWhen('json_options2_from','1,3',true,'visibility');
 	$('#json_options2_from_name_param').isVisibleWhen('json_options2_from_name','1,3',true,'visibility');

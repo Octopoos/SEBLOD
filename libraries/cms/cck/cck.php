@@ -354,7 +354,7 @@ abstract class JCck
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					foreach ( $dev as $v ) {
-						echo '<script src="'.$root.'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+						echo '<script src="'.$root.'/media/cck/js/'.$v.'"></script>';
 					}
 				} else {			
 					foreach ( $dev as $v ) {

@@ -36,7 +36,7 @@ defined( '_JEXEC' ) or die;
 	</ul>
 </div>
 
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Dev.applyConditionalStates = function() {
 		$('#options_key_fieldname').isVisibleWhen('options_key','-1');
