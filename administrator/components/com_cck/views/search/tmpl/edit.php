@@ -138,7 +138,7 @@ JText::script( 'COM_CCK_REQUIRED' );
 JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 ?>
 
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Dev = {
 		block_item:<?php echo $block_item; ?>,

@@ -34,7 +34,7 @@ $options	=	JCckDev::fromSTRING( $this->item->options );
 	</ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
     $('#bool2').isVisibleWhen('bool','1',false);
 });

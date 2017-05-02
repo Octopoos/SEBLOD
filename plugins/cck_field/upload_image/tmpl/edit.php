@@ -91,7 +91,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#json_options2_legal_extensions').isVisibleWhen('json_options2_media_extensions','custom',false);
 	$('#json_options2_image_width').isVisibleWhen('json_options2_image_process','addcolor,crop,crop_dynamic,maxfit,shrink,stretch,stretch_dynamic,shrink_dynamic',true,'visibility');

@@ -54,7 +54,7 @@ JCckDev::initScript( 'typo', $this->item );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#thumb_width_custom').isVisibleWhen('thumb_custom','1',false);
 	$('#image_width_custom').isVisibleWhen('image_custom','1,2,3',false);

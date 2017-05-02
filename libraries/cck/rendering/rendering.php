@@ -401,7 +401,7 @@ class CCK_Rendering
 			$js		=	'(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);';
 
 			if ( $tmpl == 'raw' ) {
-				echo '<script type="text/javascript">'.$js.'</script>';
+				echo '<script>'.$js.'</script>';
 			} else {
 				$doc->addScriptDeclaration( $js );
 			}			
@@ -410,7 +410,7 @@ class CCK_Rendering
 			$js		=	'(function ($){$(window).load(function(){'.$this->js2.'});})(jQuery);';
 
 			if ( $tmpl == 'raw' ) {
-				echo '<script type="text/javascript">'.$js.'</script>';
+				echo '<script>'.$js.'</script>';
 			} else {
 				$doc->addScriptDeclaration( $js );
 			}

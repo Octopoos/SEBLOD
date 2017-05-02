@@ -41,7 +41,7 @@ if ( JCck::on( '3.1' ) ) {
 																	'active'=>$active,
 																	'title' => $text
 																) );
-	        	$html				.=	 '<script type="text/javascript">'.$js.'</script>';
+	        	$html				.=	 '<script>'.$js.'</script>';
 	        }
 
 			return $html;
@@ -63,7 +63,7 @@ if ( JCck::on( '3.1' ) ) {
 																) );
 
 	        	$js					.=	JLayoutHelper::render( 'libraries.cms.html.bootstrap.starttabsetscript', array( 'selector' => $selector ) );;
-	        	$html				.=	 '<script type="text/javascript">'.$js.'</script>';
+	        	$html				.=	 '<script>'.$js.'</script>';
 	        }
 
 	        return $html;

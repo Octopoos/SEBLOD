@@ -91,7 +91,7 @@ if ( count( $fields ) ) {
 echo $html;
 ?>
 
-<script type="text/javascript">
+<script>
 function CCK_setOptions(type) {
 	var elem = jQuery("#jform_params_"+type);
 	var len = type.length + 1;

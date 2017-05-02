@@ -79,8 +79,8 @@ class Helper_Include
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
-			echo '<script type="text/javascript">'.$js.'</script>';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.1.min.js"></script>';
+			echo '<script>'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
 			$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );

@@ -32,7 +32,7 @@ $formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date F
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('ul li:first label, ul li:nth-child(4) label').css('width','115px');
 	$('#format_custom').isVisibleWhen('format','-1');

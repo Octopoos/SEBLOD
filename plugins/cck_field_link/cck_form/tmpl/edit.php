@@ -47,7 +47,7 @@ JCckDev::initScript( 'link', $this->item );
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#form_edition,#blank_li').isVisibleWhen('form','');
 	$('#form_fieldname').isVisibleWhen('form','-2');

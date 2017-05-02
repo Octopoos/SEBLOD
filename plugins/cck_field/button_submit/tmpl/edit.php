@@ -58,7 +58,7 @@ if ( isset( $options2['task'] ) ) {
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#bool6').isVisibleWhen('bool','1');
 	$('#blank_li3').isVisibleWhen('bool','0');

@@ -91,7 +91,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 </div>
 <div class="clr" id="seblod-cleaner"></div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($){
 	$("div#scroll").slideToggle();
 	$(document).on("click", "#more_positions", function() {

@@ -14,7 +14,7 @@ $config	=	JCckDev::init( array( '42', 'radio', 'text' ), false, array( 'item'=>$
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<script type="text/javascript">
+<script>
 Joomla.submitbutton = function(task)
 {
 	JCck.submitForm(task, document.getElementById('adminForm'));

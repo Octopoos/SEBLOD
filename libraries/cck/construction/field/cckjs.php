@@ -129,7 +129,7 @@ class JFormFieldCCKjs extends JFormField
 			$js	=	'jQuery(document).ready(function($){'.$js.' '.$js2.' '.$js3.'});';
 			
 			if ( $format == 'raw' ) {
-				return '<script type="text/javascript">'.$js.'</script>';
+				return '<script>'.$js.'</script>';
 			} else {
 				$doc->addScriptDeclaration( $js );
 			}

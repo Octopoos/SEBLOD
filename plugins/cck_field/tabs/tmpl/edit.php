@@ -33,7 +33,7 @@ JCckDev::forceStorage();
     </ul>
 </div>
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
     $('#defaultvalue').isVisibleWhen('bool','0',false);
     $('#bool2,#bool3').isVisibleWhen('bool','0');

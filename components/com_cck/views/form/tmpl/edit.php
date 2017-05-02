@@ -44,7 +44,7 @@ if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validati
 	$js	=	'if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); }';
 }
 ?>
-<script type="text/javascript">
+<script>
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php

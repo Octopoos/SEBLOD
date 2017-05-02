@@ -44,7 +44,7 @@ JCckDev::initScript( 'typo', $this->item );
 </div>
 
 
-<script type="text/javascript">
+<script>
 jQuery(document).ready(function($) {
 	$('#class').isVisibleWhen('type','activation,block,featured,state');
 	$('#class1').isVisibleWhen('type','dropdown');

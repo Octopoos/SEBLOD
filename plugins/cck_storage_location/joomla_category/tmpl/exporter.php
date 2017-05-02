@@ -27,7 +27,7 @@ $options	=	implode( '||', $options );
 	</ul>
 </div>
 
-<script type="text/javascript">
+<script>
 (function ($){
 	JCck.Dev.applyConditionalStates = function() {
 		$('#columns_core_selected').isVisibleWhen('columns_core','1');

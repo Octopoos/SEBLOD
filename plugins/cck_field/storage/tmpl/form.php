@@ -199,7 +199,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
     <div id="toggle_more2" class="toggle_more closed" <?php echo ( $value != 'dev' ) ? '' : 'style="display: none;"'?>></div>
 </div>
 
-<script type="text/javascript">
+<script>
 <?php echo $js; ?>
 </script>
 
