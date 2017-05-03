@@ -359,6 +359,44 @@ class CCKController extends JControllerLegacy
 		}
 	}
 	
+	// exportAjax
+	public function exportAjax()
+	{
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
+			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$config		=	array(
+							'uniqid'=>$app->input->get( 'uniqid', '' )
+						);
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
+		$ids		=	ArrayHelper::toInteger( $ids );
+		
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
+		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
+
+		$file = $model->export( $params, $task_id, $ids, $config );
+		$file	=	JCckDevHelper::getRelativePath( $file, false );
+		
+		if ( $file ) {
+			$error			=	0;
+			$output_path	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file );
+		} else {
+			$error			=	1;
+			$output_path	=	'';
+		}
+		$return		=	array(
+							'error'=>$error,
+							'output_path'=>$output_path
+						);
+		
+		echo json_encode( $return );
+	}
+
 	// getRoute
 	public function getRoute()
 	{
@@ -396,6 +434,41 @@ class CCKController extends JControllerLegacy
 		}
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
 		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
+	}
+
+	// processAjax
+	public function processAjax()
+	{
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
+			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$config		=	array();
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
+		$ids		=	ArrayHelper::toInteger( $ids );
+		
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
+		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
+
+		$config		=	array();
+		$model->process( $params, $task_id, $ids, $config );
+		
+		$return		=	array(
+							'error'=>0,
+							'id'=>@$config['id'],
+							'isNew'=>1,
+							'pk'=>@$config['pk']
+						);
+
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
 	}
 
 	// process

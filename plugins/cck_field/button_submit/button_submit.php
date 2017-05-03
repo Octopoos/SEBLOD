@@ -27,7 +27,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 		if ( isset( $data['json']['options2']['task'] ) ) {
 			$data['json']['options2']['task_id']		=	'';
-			$task										=	$data['json']['options2']['task'];
+			$task										=	str_replace( '_ajax', '', $data['json']['options2']['task'] );
 			if ( $task == 'export' || $task == 'process' ) {
 				$data['json']['options2']['task_id']	=	$data['json']['options2']['task_id_'.$task];
 				unset( $data['json']['options2']['task_id_export'] );
@@ -191,6 +191,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
+
 		if ( JFactory::getApplication()->isAdmin() ) {
 			$task	=	( $config['client'] == 'admin' ) ? 'form.'.$task : 'list.'.$task;
 		}
@@ -207,7 +208,17 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
 		} else {
-			if ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
+			if ( $task == 'export_ajax' ) {
+				$click		=	'';
+				$pre_task	=	'';
+				$config['doQuery2']	=	true;
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
+			} elseif ( $task == 'process_ajax' ) {
+				$click		=	'';
+				$pre_task	=	'';
+				$config['doQuery2']	=	true;
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
+			} elseif ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
 				$click	=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
 				if ( $field->variation != 'toolbar_button' ) {
 					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
@@ -359,8 +370,84 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	{
 		$process['task']	=	str_replace( array( 'form.', 'list.' ), '', $process['task'] );
 		
+		if ( $process['task'] == 'export_ajax' || $process['task'] == 'process_ajax' ) {
+			$name	=	$process['name'];
+			$target	=	( isset( $config['ids2'] ) && $config['ids2'] != '' ) ? 'ids2' : 'ids';
+
+			if ( !$fields[$name]->state ) {
+				return;
+			}
+			if ( isset( $config[$target] ) && $config[$target] != '' ) {
+				$params	=	JComponentHelper::getParams( 'com_cck_exporter' );
+				$step	=	(int)$params->get( 'mode_ajax_count', 25 );
+				$js 	=	'
+							(function ($){
+								JCck.Core.SubmitButton = {
+									batch:[],
+									items:['.$config[$target].'],
+									step:'.(int)$step.',
+									total:'.( substr_count( $config[$target], ',' ) + 1 ).',
+									uniqid:"'.uniqid().'",
+									width:0,
+									ajaxLoopRequest: function(el) {
+										var values = JCck.Core.SubmitButton.batch.splice(0, JCck.Core.SubmitButton.step).join("&cid[]=");
+										var end = ( JCck.Core.SubmitButton.batch.length > 0 ) ? 0 : 1;
+										$.ajax({
+											cache: false,
+											data: "cid[]="+values+"&tid='.(int)$process['task_id'].'&search='.$config['type'].'&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniqid,
+											url:  "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task='.str_replace( '_ajax', 'Ajax', $process['task'] ).'&format=raw' ).'",
+											complete: function(jqXHR) {
+												var w = parseInt($(el+" .bar")[0].style.width);
+												$(el+" .bar").css("width",parseInt(w+JCck.Core.SubmitButton.width)+"%");
+												if (JCck.Core.SubmitButton.batch.length) {
+													JCck.Core.SubmitButton.ajaxLoopRequest(el);
+												} else {
+													$(el+" .bar").css("width","100%");
+													var resp = JSON.parse(jqXHR.responseText);
+
+													if (typeof resp == "object") {
+														if ( resp.output_path !== undefined ) {
+															document.location.href = resp.output_path;
+														} else {
+															document.location.reload();
+														}
+													}
+												}
+											}
+										});
+									}
+								}
+								$(document).ready(function() {
+									$("#'.$process['id'].'").on("click", function() {
+										var el = "#"+$(this).attr("id");
+										var w = parseFloat($(this)[0].getBoundingClientRect().width);
+										var h = $(this).css("height");
+
+										$(this).prop("disabled",true).addClass("btn-progress").css("width", w).css("height", h).css("padding", 0);
+										$(this).html(\'<div class="progress"><div class="bar" style="width:0%;"></div></div>\');
+										$(el+" > div").css("height", "100%").css("margin", "0").css("padding", "0");
+
+										JCck.Core.SubmitButton.batch = [];
+
+										if (document.'.$config['formId'].'.boxchecked.value!=0) {	
+											$(\'input:checkbox[name="cid[]"]:checked\').each(function(i) {
+												JCck.Core.SubmitButton.batch[i] = $(this).val();
+											});
+										} else {
+											JCck.Core.SubmitButton.batch = JCck.Core.SubmitButton.items;
+										}
+										JCck.Core.SubmitButton.total = JCck.Core.SubmitButton.batch.length;
+										JCck.Core.SubmitButton.width = parseInt(JCck.Core.SubmitButton.step/JCck.Core.SubmitButton.total*100);
+										JCck.Core.SubmitButton.ajaxLoopRequest(el);
+									});
+								});
+							})(jQuery);
+							';
+				JFactory::getDocument()->addScriptDeclaration( $js );
+			}
+		}
 		if ( $process['task_auto'] && ( $process['task'] == 'export' || $process['task'] == 'process' ) ) {
-			$target			=		( isset( $config['ids2'] ) && $config['ids2'] != '' ) ? 'ids2' : 'ids';
+			$target	=	( isset( $config['ids2'] ) && $config['ids2'] != '' ) ? 'ids2' : 'ids';
 			
 			if ( isset( $config[$target] ) && $config[$target] != '' ) {
 				$name					=	$process['name'];
