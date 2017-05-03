@@ -612,7 +612,7 @@ class CCKController extends JControllerLegacy
 					if ( $config['stage'] > 0 ) {
 						$link	.=	'&stage='.$config['stage'];
 					}
-					$link	=	JRoute::_( $link );
+					$link	=	$this->_getRoute( $link );
 				}
 				if ( $link != '' ) {
 					if ( $msg != '' ) {
@@ -690,7 +690,7 @@ class CCKController extends JControllerLegacy
 					if ( $return != '' ) {
 						$link	.=	'&return='.$return;
 					}
-					$link	=	JRoute::_( $link );
+					$link	=	$this->_getRoute( $link );
 					break;
 				case 'form_edition':
 					$link	=	'index.php?option=com_cck&view=form&layout=edit&type='.$config['type'].'&id='.$id;
@@ -700,10 +700,10 @@ class CCKController extends JControllerLegacy
 					if ( $return != '' ) {
 						$link	.=	'&return='.$return;
 					}
-					$link	=	JRoute::_( $link );
+					$link	=	$this->_getRoute( $link );
 					break;
 				case 'url':
-					$link	=	JRoute::_( $config['options']['redirection_url'] );
+					$link	=	$this->_getRoute( $config['options']['redirection_url'] );
 					break;
 				default:
 					$link	=	( $config['url'] ) ? $config['url'] : JUri::root();
@@ -811,6 +811,46 @@ class CCKController extends JControllerLegacy
 		} else {
 			return urldecode( base64_decode( $return ) );
 		}
+	}
+
+	// _getRoute
+	protected function _getRoute( $link )
+	{
+		$route	=	JRoute::_( $link );
+
+		if ( JCck::isSite() ) {
+			if ( !(int)JCck::getConfig_Param( 'multisite_context', '1' ) ) {
+				$site	=	JCck::getSite();
+
+				if ( $site->context != '' ) {
+					$exclusions	=	JCck::getSite()->exclusions;
+
+					if ( isset( $site->exclusions ) && count( $site->exclusions ) ) {
+						foreach ( $site->exclusions as $excl ) {
+							$length	=	strlen( $excl );
+
+							if ( $excl[$length - 1 ] != '/' ) {
+								$excl	.=	'/';
+							}
+							if ( $excl[0] != '/' ) {
+								$excl	=	'/'.$excl;
+							}
+							if ( $site->context != '' ) {
+								// $excl	=	'/' . $site->context . $excl;
+							}
+							$pos	=	strpos( $route, $excl );
+
+							if ( $pos !== false && $pos == 0 ) {
+								$route	=	'/' . $site->context . $route;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $route;
 	}
 }
 ?>

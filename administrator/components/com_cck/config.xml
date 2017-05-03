@@ -156,6 +156,10 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="multisite_context" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_CONTEXT" description="COM_CCK_CONFIG_MULTISITE_CONTEXT_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>

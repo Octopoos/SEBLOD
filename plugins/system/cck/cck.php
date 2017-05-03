@@ -14,10 +14,15 @@ defined( '_JEXEC' ) or die;
 class plgSystemCCK extends JPlugin
 {
 	protected $content_objects	=	array();
+	protected $current_lang		=	null;
+	protected $default_lang		=	null;
+	protected $filter_lang		=	false;
 	protected $multisite		=	null;
 	protected $restapi			=	null;
 	protected $site				=	null;
 	protected $site_cfg			=	null;
+	protected $site_context		=	null;
+	protected $site_exclusion	=	false;
 
 	// __construct
 	public function __construct( &$subject, $config )
@@ -58,14 +63,17 @@ class plgSystemCCK extends JPlugin
 		$this->restapi		=	$this->_isRestApi();
 
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-
+		
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
 			$this->site_cfg	=	new JRegistry;
 
 			if ( JCck::isSite() ) {
-				$this->site	=	JCck::getSite();
+				$this->default_lang =	JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' );
+				$this->filter_lang	=	JPluginHelper::isEnabled( 'system', 'languagefilter' );
+				$this->site			=	JCck::getSite();
 				$this->site_cfg->loadString( $this->site->configuration );
+				$this->site_context	=	(int)JCck::getConfig_Param( 'multisite_context', '1' );
 
 				if ( $app->isSite() && $this->site ) {
 					// --- Redirect to Homepage
@@ -112,10 +120,14 @@ class plgSystemCCK extends JPlugin
 								if ( $excl[0] != '/' ) {
 									$excl	=	'/'.$excl;
 								}
+								if ( $this->site->context != '' ) {
+									$excl	=	'/' . $this->site->context . $excl;
+								}
 								$pos	=	strpos( $path, $excl );
 
 								if ( $pos !== false && $pos == 0 ) {
-									$forced	=	true;
+									$forced					=	true;
+									$this->site_exclusion	=	true;
 									break;
 								}
 							}
@@ -123,8 +135,10 @@ class plgSystemCCK extends JPlugin
 						if ( $forced == true ) {
 							$tag	=	JFactory::getLanguage()->getDefault();
 						}
-						
+
 						JCckDevHelper::setLanguage( $tag );
+
+						$this->current_lang	=	JFactory::getLanguage()->getTag();
 					}
 				}
 			}
@@ -135,10 +149,14 @@ class plgSystemCCK extends JPlugin
 	public function buildRule( &$router, &$uri )
 	{
 		if ( JCck::isSite() ) {
-			$context	=	JCck::getSite()->context;
+			if ( $this->site_context ) {
+				$context	=	JCck::getSite()->context;
 
-			if ( $context != '' ) {
-				$uri->setPath( $uri->getPath() . '/' . $context . '/' );
+				if ( $context != '' ) {
+					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
+						$uri->setPath( $uri->getPath() . '/' . $context . '/' );
+					}
+				}
 			}
 		}
 
@@ -169,16 +187,19 @@ class plgSystemCCK extends JPlugin
 	public function parseRule( &$router, &$uri )
 	{
 		if ( JCck::isSite() ) {
-			$context	=	JCck::getSite()->context;
+			if ( $this->site_context || ( !$this->site_context && $this->site_exclusion ) ) {
+				$context	=	JCck::getSite()->context;
 
-			if ( $context != '' ) {
-				$path	=	$uri->getPath();
-				$pos	=	strpos( $path, $context );
+				if ( $context != '' ) {
+					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
+						$path	=	$uri->getPath();
+						$pos	=	strpos( $path, $context );
 
-				if ( $pos !== false && $pos == 0 ) {
-					$path	=	substr( $path, strlen( $context ) + 1 );
-
-					$uri->setPath( $path );
+						if ( $pos !== false && $pos == 0 ) {
+							$path	=	substr( $path, strlen( $context ) + 1 );
+							$uri->setPath( $path );
+						}
+					}
 				}
 			}
 		}
@@ -704,14 +725,36 @@ class plgSystemCCK extends JPlugin
 
 		// site
 		if ( $app->isSite() ) {
-			if ( $this->multisite === true && $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
-				$uri		=	JUri::getInstance();
-				$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
+			if ( $this->multisite === true ) {
+				if ( $this->site ) {
+					if ( !$this->site_context ) {
+						$context	=	JCck::getSite()->context;
 
-				if ( !isset( $app->cck_app['Header']['Status'] ) ) {
-					$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+						if ( $context != '' ) {
+							$buffer		=	$app->getBody();
+
+							foreach ( $this->site->exclusions as $excl ) {
+								$buffer	=	str_replace( 'href="'.$excl.'/', 'href="'.'/'.$context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'href="'.$excl.'"', 'href="'.'/'.$context.$excl.'"', $buffer );
+								$buffer	=	str_replace( 'document.location.href=\''.$excl.'/', 'document.location.href=\'/'.$context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'document.location.href=\''.$excl.'\'', 'document.location.href=\'/'.$context.$excl.'\'', $buffer );
+								$buffer	=	str_replace( 'action="'.$excl.'/', 'action="'.'/'.$context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'action="'.$excl.'"', 'action="'.'/'.$context.$excl.'"', $buffer );
+							}
+
+							$app->setBody( $buffer );
+						}
+					}
 				}
-				$app->setBody( $this->offline_buffer );
+				if ( $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
+					$uri		=	JUri::getInstance();
+					$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
+
+					if ( !isset( $app->cck_app['Header']['Status'] ) ) {
+						$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+					}
+					$app->setBody( $this->offline_buffer );
+				}
 			}
 			return;
 		}

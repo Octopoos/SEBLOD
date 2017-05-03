@@ -86,9 +86,14 @@ abstract class JCckDevHelper
 			} elseif ( $itemId == -1 ) {
 				return JUri::root().'component/cck'.$glue.$query;
 			} else {
-				$glue	=	( $query != '' ) ? '&' : '';
+				$context	=	'';
+				$glue		=	( $query != '' ) ? '&' : '';
 
-				return JUri::$method().'index.php?option=com_cck'.$glue.$query;
+				if ( JCck::isSite() ) {
+					$context	=	JCck::getSite()->context.'/';
+				}
+
+				return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;
 			}
 		} else {
 			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
