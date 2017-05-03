@@ -72,7 +72,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             $aliases    =   JCckDev::fromSTRING( $this->item->aliases );
             $exclusions =   JCckDev::fromSTRING( @$cfg['exclusions'] );
             echo JCckDev::renderForm( 'core_options', $aliases, $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) );
-            echo JCckDev::renderForm( 'core_options', $exclusions, $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ) );
+            echo JCckDev::renderForm( 'core_options', $exclusions, $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ), array( 'after'=>'<div style="float:left;">'.JText::_( 'COM_CCK_SITE_EXCLUSIONS_DESC' ).'</div>' ) );
             ?>
         </ul>
     </div>
