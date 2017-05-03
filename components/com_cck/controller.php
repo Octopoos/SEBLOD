@@ -213,7 +213,6 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
 			}
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
 			
 			if ( $restricted ) {
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
@@ -283,9 +282,9 @@ class CCKController extends JControllerLegacy
 					return;
 				}
 			}
-			
+			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
 			$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
-			$file	=	$field->filename;
+			$file		=	$field->filename;
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
