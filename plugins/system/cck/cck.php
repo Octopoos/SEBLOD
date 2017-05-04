@@ -97,49 +97,49 @@ class plgSystemCCK extends JPlugin
 						}
 					}
 					// ---
-					$tag	=	$this->site_cfg->get( 'language' );
+					$forced	=	false;
+					$path	=	JUri::getInstance()->getPath();
+					$length	=	strlen( $path );
 
-					if ( $tag ) {
-						$forced	=	false;
-						$path	=	JUri::getInstance()->getPath();
-						$length	=	strlen( $path );
+					if ( $path[$length - 1 ] != '/' ) {
+						$path	.=	'/';
+					}
+					if ( $path[0] != '/' ) {
+						$path	=	'/'.$path;
+					}
+					if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
+						foreach ( $this->site->exclusions as $excl ) {
+							$length	=	strlen( $excl );
 
-						if ( $path[$length - 1 ] != '/' ) {
-							$path	.=	'/';
-						}
-						if ( $path[0] != '/' ) {
-							$path	=	'/'.$path;
-						}
-						if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
-							foreach ( $this->site->exclusions as $excl ) {
-								$length	=	strlen( $excl );
+							if ( $excl[$length - 1 ] != '/' ) {
+								$excl	.=	'/';
+							}
+							if ( $excl[0] != '/' ) {
+								$excl	=	'/'.$excl;
+							}
+							if ( $this->site->context != '' ) {
+								$excl	=	'/' . $this->site->context . $excl;
+							}
+							$pos	=	strpos( $path, $excl );
 
-								if ( $excl[$length - 1 ] != '/' ) {
-									$excl	.=	'/';
-								}
-								if ( $excl[0] != '/' ) {
-									$excl	=	'/'.$excl;
-								}
-								if ( $this->site->context != '' ) {
-									$excl	=	'/' . $this->site->context . $excl;
-								}
-								$pos	=	strpos( $path, $excl );
-
-								if ( $pos !== false && $pos == 0 ) {
-									$forced					=	true;
-									$this->site_exclusion	=	true;
-									break;
-								}
+							if ( $pos !== false && $pos == 0 ) {
+								$forced					=	true;
+								$this->site_exclusion	=	true;
+								break;
 							}
 						}
-						if ( $forced == true ) {
-							$tag	=	JFactory::getLanguage()->getDefault();
-						}
-
-						JCckDevHelper::setLanguage( $tag );
-
-						$this->current_lang	=	JFactory::getLanguage()->getTag();
 					}
+					if ( $forced == true ) {
+						$tag	=	JFactory::getLanguage()->getDefault();
+					} else {
+						$tag	=	$this->site_cfg->get( 'language' );
+					}
+
+					if ( $tag ) {
+						JCckDevHelper::setLanguage( $tag );
+					}
+
+					$this->current_lang	=	JFactory::getLanguage()->getTag();
 				}
 			}
 		}
