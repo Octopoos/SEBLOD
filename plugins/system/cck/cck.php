@@ -313,7 +313,7 @@ class plgSystemCCK extends JPlugin
 							$result		=	$app->logout( $user->id, $options );
 
 							if ( !( $result instanceof Exception ) ) {
-								$app->redirect( '/' );
+								$app->redirect( JUri::getInstance()->getPath() );
 							}
 						}
 					}
