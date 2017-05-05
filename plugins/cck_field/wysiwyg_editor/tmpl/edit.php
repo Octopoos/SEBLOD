@@ -24,7 +24,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo '<li><label>'.JText::_( 'COM_CCK_WIDTH_HEIGHT' ).'</label>'
 		 .	 JCckDev::getForm( 'core_options_width', @$options2['width'], $config, array( 'defaultvalue'=>'100%' ) )
 		 .	 '<span class="variation_value" style="margin-right: 5px;">x</span>'
-		 .	 JCckDev::getForm( 'core_options_height', @$options2['height'], $config, array( 'defaultvalue'=>'280' ) )
+		 .	 JCckDev::getForm( 'core_options_height', @$options2['height'], $config, array( 'defaultvalue'=>'167', 'attributes'=>'placeholder="280"' ) )
 		 .	 '<span class="variation_value">px</span></li>';
 		echo JCckDev::renderForm( 'core_place', $this->item->bool, $config, array( 'label'=>'DISPLAY_MODE' ) );
 		echo JCckDev::renderForm( 'core_selectlabel', $this->item->selectlabel, $config );
