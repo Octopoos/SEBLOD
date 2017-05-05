@@ -209,8 +209,12 @@
 		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
+		<field name="site_modal_box" type="list" default="0" label="COM_CCK_CONFIG_SITE_MODAL_BOX" description="COM_CCK_CONFIG_SITE_MODAL_BOX_DESC" class="inputbox chzn-color" >
+			<option value="0">COM_CCK_MODAL_BOX_COLORBOX</option>
+			<option value="1">COM_CCK_MODAL_BOX_JCCKMODAL</option>
+		</field>
 		<field name="site_modal_box_css" type="folderlist" directory="media/cck/scripts/jquery-colorbox/styles" hide_none="1" hide_default="0" default="style0" exclude="style0"
-			   label="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS" description="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS_DESC" class="inputbox" />
+			   label="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS" description="COM_CCK_CONFIG_SITE_MODAL_BOX_CSS_DESC" class="inputbox" showon="site_modal_box:0" />
 		<field name="site_css_def" type="cck" construction="core_css_definitions" default="" label="COM_CCK_CONFIG_CSS_DEFINITIONS" description="COM_CCK_CONFIG_CSS_DEFINITIONS_DESC" class="inputbox" />
 		<field name="site_css_def_custom" type="cck" construction="core_css_definitions_custom" default="" label="" description="" class="inputbox"
 			   js_appendto="jform_site_css_def=#jform_site_css_def_custom" js_isvisiblewhen="div#jform_site_css_def_custom-more='jform_site_css_def','custom',false" js_format="html" hidden="true" />
