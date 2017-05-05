@@ -13,19 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContent
 {
-	protected static $instances		=	array();
-	protected $_id					=	'';
-	protected $_pk					=	'';
-	protected $_type				=	'';
-	protected $_table 				=	NULL;
-	protected $_properties			=	NULL;
-	protected $_object				=	NULL;
-	protected $_columns				=	array();
+	protected static $instances			=	array();
+	protected $_id						=	'';
+	protected $_pk						=	'';
+	protected $_type					=	'';
+	protected $_type_parent				=	'';
+	protected $_table 					=	NULL;
+	protected $_data					=	NULL;
+	protected $_object					=	NULL;
+	protected $_columns					=	array();
 	
-	protected $_instance_base		=	'';
-	protected $_instance_core		=	'';
-	protected $_instance_more		=	'';
-	protected $_instance_more2		=	'';
+	protected $_instance_base			=	NULL;
+	protected $_instance_core			=	NULL;
+	protected $_instance_more			=	NULL;
+	protected $_instance_more_parent	=	NULL;
+	protected $_instance_more2			=	NULL;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -96,8 +98,11 @@ class JCckContent
 		$this->_type	=	$cck;
 		
 		if ( empty( $this->_object ) || empty( $this->_table ) ) {
-			$this->_object		=	JCckDatabaseCache::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
-			$this->_columns		=	$this->_getProperties();
+			$content_type		=	JCckDatabaseCache::loadObject( 'SELECT storage_location, parent FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			
+			$this->_object		=	$content_type->storage_location;
+			$this->_type_parent	=	$content_type->parent;
+			$this->_columns		=	$this->_getColumnsAliases();
 			$this->_table		=	$this->_columns['table'];
 			
 			if ( !$this->_object ) {
@@ -150,7 +155,27 @@ class JCckContent
 		}
 		
 		// More
-		if ( is_array( $data_more ) && count( $data_more ) ) {
+		if ( $this->_type_parent && ( isset( $data_more[$this->_type] ) || isset( $data_more[$this->_type_parent] ) ) ) {
+			if ( isset( $data_more[$this->_type] ) && count( $data_more[$this->_type] ) ) {
+				$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+				$this->_instance_more->load( $this->_pk, true );
+				unset( $data_more[$this->_type]['id'] );
+				
+				if ( !( $this->save( 'more', $data_more[$this->_type] ) ) ) {
+					return false;
+				}
+			}
+
+			if ( isset( $data_more[$this->_type_parent] ) && count( $data_more[$this->_type_parent] ) ) {
+				$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
+				$this->_instance_more_parent->load( $this->_pk, true );
+				unset( $data_more[$this->_type_parent]['id'] );
+				
+				if ( !( $this->save( 'more_parent', $data_more[$this->_type_parent] ) ) ) {
+					return false;
+				}
+			}
+		} elseif ( is_array( $data_more ) && count( $data_more ) ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk, true );
 			unset( $data_more['id'] );
@@ -159,6 +184,7 @@ class JCckContent
 				return false;
 			}
 		}
+
 		if ( is_array( $data_more2 ) && count( $data_more2 ) ) {
 			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ) );
 			$this->_instance_more2->load( $this->_pk, true );
@@ -214,26 +240,38 @@ class JCckContent
 	public function dump()
 	{
 		if ( $this->_instance_base ) {
-			dump( $this->_instance_base );
+			dump( $this->_instance_base, 'base' );
 		}
 		if ( $this->_instance_core ) {
-			dump( $this->_instance_core );
+			dump( $this->_instance_core, 'core' );
 		}
 		if ( $this->_instance_more ) {
-			dump( $this->_instance_more );
+			dump( $this->_instance_more, 'more' );
+		}
+		if ( $this->_instance_more_parent ) {
+			dump( $this->_instance_more_parent, 'more_parent' );
+		}
+		if ( $this->_instance_more2 ) {
+			dump( $this->_instance_more2, 'more2' );
 		}
 	}
 
 	// get
 	public function get( $name, $default = '' )
 	{
-		if ( isset( $this->_properties->$name ) ) {
-			return $this->_properties->$name;
+		if ( isset( $this->_data->$name ) ) {
+			return $this->_data->$name;
 		}
 
 		return $default;
 	}
 	
+	// getData
+	public function getData()
+	{
+		return $this->_data;
+	}
+
 	// getId
 	public function getId()
 	{
@@ -261,24 +299,30 @@ class JCckContent
 	// load
 	public function load( $identifier, $data = true )
 	{
-		$this->_type	=	'';
-		$this->_pk		=	'';
-		$this->_id		=	'';
-			
+		$this->_type		=	'';
+		$this->_type_parent	=	'';
+		$this->_pk			=	'';
+		$this->_id			=	'';
+		
+		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.parent AS parent'
+				.	' FROM #__cck_core AS a'
+				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
+
 		if ( is_array( $identifier ) ) {
 			$this->_object			=	$identifier[0];
-			$this->_columns			=	$this->_getProperties();
+			$this->_columns			=	$this->_getColumnsAliases();
 			$this->_instance_base	=	$this->getInstanceBase();
 			
 			if( !isset( $identifier[1] ) ) {
 				return;
 			}
-			
-			$core					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE storage_location = "'.(string)$identifier[0].'" AND pk = '.(int)$identifier[1] );
+
+			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'" AND a.pk = '.(int)$identifier[1] );
 		} else {
-			$core					=	JCckDatabase::loadObject( 'SELECT id, cck, pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+			$core					=	JCckDatabase::loadObject( $query.' WHERE a.id = '.(int)$identifier );
+
 			$this->_object			=	$core->storage_location;
-			$this->_columns			=	$this->_getProperties();
+			$this->_columns			=	$this->_getColumnsAliases();
 			$this->_instance_base	=	$this->getInstanceBase();
 		}
 		if ( !( @$core->id && @$core->pk ) ) {
@@ -286,6 +330,7 @@ class JCckContent
 		}
 		
 		$this->_type				=	$core->cck;
+		$this->_type_parent			=	$core->parent;
 		$this->_pk					=	$core->pk;
 		$this->_id					=	$core->id;
 		$this->_instance_core->load( $this->_id );
@@ -298,13 +343,20 @@ class JCckContent
 		$this->_table		=	$this->_columns['table'];
 		$suffixMore2		=	str_replace( '#__', '', $this->_table );
 		
+		$db_prefix			=	JFactory::getConfig()->get( 'dbprefix' );
 		$tables				=	JCckDatabaseCache::getTableList( true );
-		$hasMore			=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_form_'.$this->_type] );
-		$hasMore2			=	isset( $tables[JFactory::getConfig()->get( 'dbprefix' ).'cck_store_item_'.$suffixMore2] );
+
+		$hasMore			=	isset( $tables[$db_prefix.'cck_store_form_'.$this->_type] );
+		$hasMoreParent		=	$this->_type_parent ? isset( $tables[$db_prefix.'cck_store_form_'.$this->_type_parent] ) : false;
+		$hasMore2			=	isset( $tables[$db_prefix.'cck_store_item_'.$suffixMore2] );
 		
 		if ( $hasMore ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
+		}
+		if ( $hasMoreParent ) {
+			$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
+			$this->_instance_more_parent->load( $this->_pk );
 		}
 		if ( $hasMore2 ) {
 			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.$suffixMore2 );
@@ -318,35 +370,39 @@ class JCckContent
 				$select			.=	', b.*';
 				$join			.=	' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key'];
 			}
-			if ( $hasMore2 ) {
+			if ( $hasMoreParent ) {
 				$select			.=	', c.*';
-				$join			.=	' LEFT JOIN #__cck_store_item_'.$suffixMore2.' AS c ON c.id = a.'.$this->_columns['key'];
+				$join			.=	' LEFT JOIN #__cck_store_form_'.$this->_type_parent.' AS c ON c.id = a.'.$this->_columns['key'];
+			}
+			if ( $hasMore2 ) {
+				$select			.=	', d.*';
+				$join			.=	' LEFT JOIN #__cck_store_item_'.$suffixMore2.' AS d ON d.id = a.'.$this->_columns['key'];
 			}
 			$query				=	'SELECT a.*'.$select
 								.	' FROM '.$this->_table.' AS a'
 								.	$join
 								.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
-			$this->_properties	=	JCckDatabase::loadObject( $query );
+			$this->_data		=	JCckDatabase::loadObject( $query );
 		} elseif ( is_array( $data ) ) {
 			if ( isset( $data[$this->_table] ) ) {
-				$select	=	implode( ',', $data[$this->_table] );
+				$select		=	implode( ',', $data[$this->_table] );
 				unset( $data[$this->_table] );
 			} else {
-				$select	=	'*';
+				$select		=	'*';
 			}
-			$b	=	'a';
-			$i	=	98;
+			$b				=	'a';
+			$i				=	98;
 			foreach ( $data as $k=>$v ) {
-				$a		=	chr($i);
-				$select	.=	', '.$a.'.'.implode( ', '.$a.'.', $v );
-				$join	.=	' LEFT JOIN '.$k.' AS '.$a.' ON '.$a.'.id = '.$b.'.'.$this->_columns['key'];
-				$b		=	$a;
+				$a			=	chr($i);
+				$select		.=	', '.$a.'.'.implode( ', '.$a.'.', $v );
+				$join		.=	' LEFT JOIN '.$k.' AS '.$a.' ON '.$a.'.id = '.$b.'.'.$this->_columns['key'];
+				$b			=	$a;
 				$i++;
 			}
-			$query	=	'SELECT a.'.$select.' FROM '.$this->_table.' AS a'
-					.	$join
-					.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
-			$this->_properties	=	JCckDatabase::loadObject( $query );
+			$query			=	'SELECT a.'.$select.' FROM '.$this->_table.' AS a'
+							.	$join
+							.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
+			$this->_data	=	JCckDatabase::loadObject( $query );
 		}
 	}
 
@@ -361,10 +417,15 @@ class JCckContent
 	{
 		$this->_instance_core->cck	=	$cck;
 		$this->_type				=	$cck;
-
+		
 		if ( $reload ) {
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
+			
+			if ( $this->_type_parent ) {
+				$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
+				$this->_instance_more_parent->load( $this->_pk );
+			}
 		}
 	}
 
@@ -474,6 +535,12 @@ class JCckContent
 		return $this->store( 'more' );
 	}
 
+	// saveMore_Parent
+	public function saveMore_Parent()
+	{
+		return $this->store( 'more_parent' );
+	}
+
 	// saveMore2
 	public function saveMore2()
 	{
@@ -488,8 +555,8 @@ class JCckContent
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Others
 	
-	// _getProperties
-	protected function _getProperties()
+	// _getColumnsAliases
+	protected function _getColumnsAliases()
 	{	
 		$values		=	array( 'author', 'custom', 'key', 'parent', 'table', 'table_object' );
 		$properties	=	array();
