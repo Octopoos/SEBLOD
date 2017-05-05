@@ -461,6 +461,9 @@ class plgSystemCCK extends JPlugin
 						$doc->addStyleDeclaration( 'span[data-original-title="SEBLOD (App Builder & CCK)"]{font-weight:bold;}');
 					}
 					break;
+				case 'com_joomlaupdate':
+					JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_JOOMLA' ), 'notice' );
+					break;
 				case 'com_menus':
 					if ( $layout || $view == 'item' ) {
 						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
