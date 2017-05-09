@@ -229,7 +229,7 @@ class plgContentCCK extends JPlugin
 	public function onContentBeforeDisplay( $context, &$article, &$params, $limitstart = 0 )
 	{
 		if ( JCck::getConfig_Param( 'hide_edit_icon', 0 ) ) {
-			if ( isset( $article->params ) ) {
+			if ( isset( $article->params ) && is_object( $article->params ) ) {
 				$article->params->set( 'access-edit', false );
 			}
 		}
