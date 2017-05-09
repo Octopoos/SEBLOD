@@ -515,6 +515,18 @@ class plgContentCCKInstallerScript
 				JCckDatabase::doQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $com_cck->params->toString() ).'" WHERE type = "component" AND element = "com_cck"' );
 			}
 			
+			if ( $i2 < 105 ) {
+				$config		=	JFactory::getConfig();
+				$tmp_path	=	$config->get( 'tmp_path' );
+
+				if ( is_file( JPATH_SITE.'/components/com_cck/models/box.php' ) ) {
+					JFile::delete( JPATH_SITE.'/components/com_cck/models/box.php', $tmp_path.'/box.php' );
+				}
+				if ( is_dir( JPATH_SITE.'/components/com_cck/views/box' ) ) {
+					JFolder::delete( JPATH_SITE.'/components/com_cck/views/box', $tmp_path.'/box' );
+				}
+			}
+
 			// Convert Tables To Utf8mb4
 			self::_convertTablesToUtf8mb4();
 
