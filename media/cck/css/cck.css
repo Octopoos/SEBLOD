@@ -69,3 +69,5 @@ div.cck_page_desc{padding:0; margin:15px 0px; text-align:justify;}
 #modal-cck .modal-navigation > a.prev {left:-60px;}
 #modal-cck .modal-navigation > a.next {right:-60px;}
 #modal-cck .modal-navigation > a.hidden {display: none;}
+
+#modal-cck.modal-image {height: auto; width: auto; margin:0; -ms-transform: translate(-50%,0); transform: translate(-50%,0);}
