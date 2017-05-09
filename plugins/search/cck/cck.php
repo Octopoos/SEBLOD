@@ -429,14 +429,14 @@ class plgSearchCCK extends JPlugin
 				$query1	=	(string)$query;
 			}
 			if ( $query2 ) {
-				$query2	.=	'<br />';
+				$query2	.=	'<br>';
 			}
 			if ( isset( $query3 ) ) {
-				$query2	.=	$query3.'<br />';
+				$query2	.=	$query3.'<br>';
 			}
 			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'HAVING', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />HAVING', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
-							  $query1.'<br />'.$query2 ).'<br />';
+							  array( '<br>SELECT', '<br>FROM', '<br>LEFT JOIN', '<br>RIGHT JOIN', '<br>INNER JOIN', '<br>WHERE', '<br>&nbsp;&nbsp;AND', '<br>HAVING', '<br>ORDER BY', '<br>GROUP BY', '<br>LIMIT', '<br>UNION', '<br>) AS Count' ),
+							  $query1.'<br>'.$query2 ).'<br>';
 		}
 		
 		unset( $fields );

@@ -100,12 +100,12 @@ class pkg_cckInstallerScript
 			$text	=	JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_DROP' );
 		} else {
 			$badge	=	'success';
-			$info	=	'<br />'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO2' );
+			$info	=	'<br>'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO2' );
 			$text	=	JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_BACKUP' );
 		}
 		echo '<p>'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL' ).'<span class="label label-'.$badge.'">'.$text.'</span></p>';
 		echo '<p>'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO' ).$info.'</p>';
-		echo '<br />';
+		echo '<br>';
 	}
 }
 ?>

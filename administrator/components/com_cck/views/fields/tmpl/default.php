@@ -128,14 +128,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                     $folder_parent	=	'';
                 } else {
                     $linkFolderTree	=	JRoute::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder_parent );
-                    $folder_parent	=	'<br /><a class="folder-parent small" href="'.$linkFolderTree.'">'.$item->folder_parent_title.'</a>';
+                    $folder_parent	=	'<br><a class="folder-parent small" href="'.$linkFolderTree.'">'.$item->folder_parent_title.'</a>';
                 }
 				echo ( $canEditFolder ) ? '<a href="'.$linkFolder.'">' . $this->escape( $item->folder_title ) . '</a>' . $folder_parent : '<span>' . $this->escape( $item->folder_title ) . '</span>' . $folder_parent;
                 ?>
 			</td>
             <td class="center hidden-phone small">
 				<?php
-				$storage	=	'<strong>'.( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .'</strong><br />'. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
+				$storage	=	'<strong>'.( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .'</strong><br>'. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
                 echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage ).'</span>';
 				?>
             </td>

@@ -28,7 +28,7 @@ defined( '_JEXEC' ) or die;
         <div class="wrapper-icon">
             <div class="icon">
                 <a href="<?php echo $link; ?>" target="_parent">
-                    <?php echo JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) ); ?>
+                    <?php echo JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br>', ' ', $text ) ) ); ?>
                     <span><?php echo $text; ?></span>
 				</a>
             </div>

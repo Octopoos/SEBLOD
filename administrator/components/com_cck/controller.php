@@ -355,8 +355,8 @@ class CCKController extends JControllerLegacy
 			
 			if ( $paths != '' ) {
 				$allowed	=	false;
-				$paths		=	strtr( $paths, array( "\r\n"=>'<br />', "\r"=>'<br />', "\n"=>'<br />' ) );
-				$paths		=	explode( '<br />', $paths );
+				$paths		=	strtr( $paths, array( "\r\n"=>'<br>', "\r"=>'<br>', "\n"=>'<br>' ) );
+				$paths		=	explode( '<br>', $paths );
 
 				if ( count( $paths ) ) {
 					$paths[]	=	'tmp/';

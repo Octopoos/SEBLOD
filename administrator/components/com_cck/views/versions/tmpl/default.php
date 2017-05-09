@@ -96,10 +96,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				</div>
 			</td>
 			<td width="4%" class="center">
-				<strong><?php echo JText::_( 'COM_CCK_REVISION_SHORT' ) .'<br />'. $item->e_version; ?></strong>
+				<strong><?php echo JText::_( 'COM_CCK_REVISION_SHORT' ) .'<br>'. $item->e_version; ?></strong>
 			</td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'date', $item->date_time, JText::_( 'DATE_FORMAT_LC4' ).' H:i' ).( ( $item->user_id > 0 ) ? '<br />'.$item->created_by : '' ); ?></td>
-			<td class="center hidden-phone"><?php echo '<span>'.$item->e_title.'</span>' .'<br />'. $item->e_name; ?></td>
+			<td class="center hidden-phone"><?php echo JHtml::_( 'date', $item->date_time, JText::_( 'DATE_FORMAT_LC4' ).' H:i' ).( ( $item->user_id > 0 ) ? '<br>'.$item->created_by : '' ); ?></td>
+			<td class="center hidden-phone"><?php echo '<span>'.$item->e_title.'</span>' .'<br>'. $item->e_name; ?></td>
             <td class="center hidden-phone"><?php echo @$more['fields'][1] ? @$more['fields'][1] : '-'; ?></td>
             <td class="center hidden-phone"><?php echo @$more['fields'][2] ? @$more['fields'][2] : '-'; ?></td>
             <td class="center hidden-phone"><?php echo @$more['fields'][3] ? @$more['fields'][3] : '-'; ?></td>

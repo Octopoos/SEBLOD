@@ -204,7 +204,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	// _bn2br
 	protected static function _bn2br( $text )
 	{
-		return  preg_replace( '/\\n/i', "<br />", $text );
+		return  preg_replace( '/\\n/i', "<br>", $text );
 	}
 
 	// _p2nl
@@ -224,7 +224,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	protected static function _bn2br_in_p( $text )
 	{
 		$text	=	'<p>'.$text.'</p>';
-		return  preg_replace( '/\\n/i', "<br />", $text );
+		return  preg_replace( '/\\n/i', "<br>", $text );
 	}
 
 	// _bn2clear

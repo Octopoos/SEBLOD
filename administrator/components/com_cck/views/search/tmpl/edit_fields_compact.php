@@ -77,7 +77,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
 			<?php
 			if ( count( $this->fieldsAv ) ) {
-                echo '<div class="legend top center">'.$this->lists['af_t'].$this->lists['af_a'].'<br />'.$this->lists['af_c'].$this->lists['af_f'].'</div>';
+                echo '<div class="legend top center">'.$this->lists['af_t'].$this->lists['af_a'].'<br>'.$this->lists['af_c'].$this->lists['af_f'].'</div>';
                 echo '<div id="scroll"><ul class="sortable connected" id="sortable2" myid="2">';
                 $style	=	array( '1'=>' hide', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );
                 foreach ( $this->fieldsAv as $field ) {

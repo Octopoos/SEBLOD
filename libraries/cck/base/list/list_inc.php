@@ -618,7 +618,7 @@ if ( $no_action ) {
 		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 	}
 	if ( $doDebug ) {
-		echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
+		echo $profiler->mark( 'afterRender'.$isCached ).'<br><br>';
 	}
 }
 

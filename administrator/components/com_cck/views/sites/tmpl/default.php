@@ -93,7 +93,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					?>
 				</div>
 			</td>
-			<td class="center hidden-phone small"><?php echo $item->name.( ( $item->aliases ) ? '<br />'.str_replace( '||', '<br />', $item->aliases ) : '' ); ?></td>
+			<td class="center hidden-phone small"><?php echo $item->name.( ( $item->aliases ) ? '<br>'.str_replace( '||', '<br>', $item->aliases ) : '' ); ?></td>
 			<td class="center hidden-phone"><span><?php echo $item->articles; ?></span></td>
 			<td class="center hidden-phone"><span><?php echo $item->users; ?></span></td>
             <td class="center hidden-phone">-</td>

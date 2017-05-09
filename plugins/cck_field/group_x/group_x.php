@@ -264,9 +264,9 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$text	=	'';
 		$xi		=	0;
 		if ( count( $value ) ) {
-			$store	=	'<br />';
+			$store	=	'<br>';
 			foreach ( $value as $key=>$val ) {
-				$store	.=	'<br />::cck_'.$name.'::'.$field->extended.'::/cck_'.$name.'::';
+				$store	.=	'<br>::cck_'.$name.'::'.$field->extended.'::/cck_'.$name.'::';
 				$text	.=	'- '.$field->label.' '.$xi.': <ul style="line-height:10px;">';
 				$fields	=	self::_getChildren( $field, $config );
 				if ( count( $fields ) ) {
@@ -281,16 +281,16 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$inherit			=	array( 'xk' => $key, 'xi' => $xi, 'parent' => $name, 'array_x' => 1, 'post' => $val );
 						$results			=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $f_value, &$config, $inherit, true ) );
 						$v					=	@$results[0];
-						$store				.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
+						$store				.=	'<br>::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$text				.=	'<li style="line-height:10px;">'.$f_label.' : '.$v.'</li>';
 						// todo: add childs (secondary) storages.. not primary!
 					}
 				}
-				$store	.=	'<br />::cckend_'.$name.'::::/cckend_'.$name.'::';
+				$store	.=	'<br>::cckend_'.$name.'::::/cckend_'.$name.'::';
 				$text	.=	'</ul>';
 				$xi++;
 			}
-			$store	.=	'<br />';
+			$store	.=	'<br>';
 		}
 		$field->values	=	$value;
 		$value			=	$xi;

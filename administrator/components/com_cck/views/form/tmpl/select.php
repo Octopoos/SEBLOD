@@ -78,7 +78,7 @@ $doc->addScriptDeclaration( $js );
 		}
 	}
 	if ( $legend2 ) {
-		echo '<div class="clr"></div><br /><div class="legend bottom left">'.$legend2.'</div>';
+		echo '<div class="clr"></div><br><div class="legend bottom left">'.$legend2.'</div>';
 	}
     ?>
 	<div class="clr"></div>
