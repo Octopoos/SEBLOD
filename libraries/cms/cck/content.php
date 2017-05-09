@@ -422,10 +422,10 @@ class JCckContent
 			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk );
 			
-			if ( $this->_type_parent ) {
-				$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
-				$this->_instance_more_parent->load( $this->_pk );
-			}
+			// if ( $this->_type_parent ) {
+				// $this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
+				// $this->_instance_more_parent->load( $this->_pk );
+			// }
 		}
 	}
 
