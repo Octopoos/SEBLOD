@@ -59,6 +59,7 @@ class CCKControllerForm extends JControllerForm
 		
 		$config		=	$model->store( $preconfig );
 		$id			=	$config['pk'];
+		$link		=	'';
 		
 		// Return Now for Ajax..
 		if ( $isAjax ) {
