@@ -21,7 +21,7 @@ defined( '_JEXEC' ) or die;
 			<th class="center">
 				<?php
                 echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'title', $listDir, $listOrder );
-				echo JHtml::_( 'grid.sort', '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />', 'a.lft', $listDir, $listOrder );				
+				echo JHtml::_( 'grid.sort', '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />', 'a.lft', $listDir, $listOrder );
 				?>
 			</th>
 			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_COLOR', 'color', $listDir, $listOrder ); ?></th>
@@ -29,7 +29,7 @@ defined( '_JEXEC' ) or die;
 			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_FEATURED', 'featured', $listDir, $listOrder ); ?></th>
 			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'id', $listDir, $listOrder ); ?></th>
-		</tr>	
+		</tr>
 	</thead>
     <tbody>
 	<?php
@@ -47,7 +47,7 @@ defined( '_JEXEC' ) or die;
 		$linkField		=	JRoute::_( 'index.php?option='.$this->option.'&view='._C3_NAME.'&folder_id='.$item->id );
 		$linkSearch		=	JRoute::_( 'index.php?option='.$this->option.'&view='._C4_NAME.'&folder_id='.$item->id );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
-		
+
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
@@ -89,7 +89,7 @@ defined( '_JEXEC' ) or die;
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->types_nb ) ? '<a href="'.$linkType.'" style="text-decoration: none;">'
 											   . '<img src="components/'.CCK_COM.'/assets/images/24/icon-24-'._C2_NAME.'.png" alt="" />'
-											   . ' <span class="elements-count">' . $item->types_nb.' '.JText::_( 'COM_CCK_FORMS' ). '</b></span>'
+											   . '<span class="elements-count"><strong>'.$item->types_nb.' '.JText::_( 'COM_CCK_FORMS' ).'</strong></span>'
 											   . '</a>' : '-'; ?>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickJGrid( 'featured', $item->featured, $i, false ); ?></td>
