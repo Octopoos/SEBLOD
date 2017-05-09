@@ -112,6 +112,7 @@ class CCKControllerForm extends JControllerForm
 					$link	=	str_replace( '/administrator/', '/', $link );
 					break;
 				}
+                break;
 			default:
 				$link	=	$this->_getRedirectQuery( true );
 				break;

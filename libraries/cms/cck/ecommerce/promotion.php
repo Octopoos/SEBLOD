@@ -170,6 +170,7 @@ abstract class JCckEcommercePromotion
 																'title'=>$p->title,
 																'type'=>$p->type
 															);
+                            break;
 						default:
 							break;
 					}
