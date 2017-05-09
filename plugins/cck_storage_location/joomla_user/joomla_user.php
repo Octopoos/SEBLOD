@@ -289,7 +289,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
-		if ( !$table->delete( $pk ) ) {
+		if ( !$table->delete() ) {
 			return false;
 		}
 		$dispatcher->trigger( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
