@@ -32,7 +32,7 @@ text-decoration:none !important; cursor: default; background-repeat:no-repeat; b
 /* subcck_menu styling */
 #subcck_menu {list-style: none; padding: 0; margin: 0;}
 #subcck_menu li {float: left; padding: 0; margin: 0;}
-#subcck_menu li a, #subcck_menu span.nolink {cursor: pointer; padding: 0px 15px; border-right: 1px solid #ccc; font-weight: bold; color: #0B55C4; line-height: 12px; height: 12px;}
+#subcck_menu li a, #subcck_menu span.nolink {cursor: pointer; padding: 0 15px; border-right: 1px solid #ccc; font-weight: bold; color: #0B55C4; line-height: 12px; height: 12px;}
 #subcck_menu span.nolink {color: #999;}
 #subcck_menu a.active, #subcck_menu span.nolink.active {color: #000; text-decoration: underline;}
 
