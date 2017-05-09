@@ -145,10 +145,16 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		} elseif ( $params['image'] == 'none' ) {
 			$typo	=	$img;
 		} else {
-			$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $options ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
+			if ( (int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+				$typo	=	'<a href="'.self::_availableValue( $field, $params['image'], $options ).'" title="'.$field->image_alt.'" data-cck-modal=\'{"mode":"image","body":false,"header":false}\'>'.$img.'</a>';
+			} else {
+				$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $options ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
+			}
 		}
 		if ( $params['image'] != 'none' ) {
-			self::_addScripts( array( 'id'=>$field->id ), $params );
+			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+				self::_addScripts( array( 'id'=>$field->id ), $params );
+			}
 		}
 		$field->html	=	$img;
 		

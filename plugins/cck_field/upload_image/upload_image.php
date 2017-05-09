@@ -352,8 +352,15 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
 		}
 		
+		$params['image_colorbox']	=	'0';
+
 		if ( $options2['form_preview'] != -1 && $value['image_location'] ) {
-			$params['image_colorbox']	=	'1';
+			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+				$attr_preview				=	'id="colorBox'.$field->id.'" rel="colorBox'.$field->id.'"';
+				$params['image_colorbox']	=	'1';
+			} else {
+				$attr_preview				=	'data-cck-modal=\'{"mode":"image","body":false,"header":false}\'';
+			}
 			$title_image	=	self::_getTitle( $image_title, $title );
 			$desc_image		=	self::_getAlt( $image_desc, $image_title, $title );
 			$title_colorbox	=	$desc_image;
@@ -361,25 +368,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				if ( $options2['form_preview'] == 2 ) {
 					$width		=	( $options2['image_width'] ) ? 'width="'.$options2['image_width'].'"' : '';
 					$height		=	( $options2['image_height'] ) ? 'height="'.$options2['image_height'].'"' : '';
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'" '.$width.' '.$height.'>
+					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'" '.$width.' '.$height.'>
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
 									</a>';
 				} else {
 					$thumb_location	=	str_replace( $title,'_thumb'.( $options2['form_preview'] - 2 ).'/'.$title,$value['image_location'] );
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
 									</a>';
 				}
 			} elseif ( $options2['form_preview'] == 1 ) {
-				$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+				$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().'media/cck/images/16/icon-16-preview.png" />
 								</a>';
 			} else {
-				$preview	=	'<a class="cck_preview" id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">'.$title_image.'</a>';
+				$preview	=	'<a class="cck_preview" href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">'.$title_image.'</a>';
 			}
 			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
-		} else {
-			$params['image_colorbox']	=	'0';
 		}
 		$form	=	$form.$form_more.$lock.$form_more3.$form_more2.$form_more4.$preview;
 
