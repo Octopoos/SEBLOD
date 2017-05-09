@@ -65,7 +65,7 @@ class JCckDevImage
 	}
 
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat, $quality = 100 )
+	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat)
 	{
 		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
 			return false;
@@ -94,7 +94,7 @@ class JCckDevImage
 		}
 		
 		// Create image
-		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation, $quality );
+		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation);
 
 		return true;
 	}
