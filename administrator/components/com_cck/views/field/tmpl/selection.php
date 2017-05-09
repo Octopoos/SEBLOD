@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 // Prepare
 if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	if ( $this->item->id == 'dev_map' ) {
-		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br />'.JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
+		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br>'.JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
 		$columns				=	array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -',
 										   'bool'=>'bool',
 										   'bool2'=>'bool2',

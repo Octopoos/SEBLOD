@@ -65,7 +65,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
     <div class="<?php echo $this->css['w30'].' '.$bar; ?> active" id="seblod-sidebar">
         <div class="seblod" id="seblod-sideblock">
             <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'type', $this->item->master, $this->item->client, $this->uix, $clone ); ?></div>
-            <div class="legend top flexenter"><?php echo $this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a']; ?></div>
+            <div class="legend top flexenter"><?php echo $this->lists['af_f'].$this->lists['af_c'].'<br>'.$this->lists['af_t'].$this->lists['af_a']; ?></div>
             <div id="scroll">
             	<ul class="sortable connected" id="sortable2" myid="2">
                     <?php include __DIR__.'/edit_fields_av.php'; ?>

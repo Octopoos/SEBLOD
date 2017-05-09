@@ -371,9 +371,9 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 }
 ?>
 <div class="seblod inverted">
-	<?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC' ); ?><br /><br />
+	<?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC' ); ?><br><br>
 	<span class="star">&sup1; </span><span class="star2"><?php echo JText::_( 'COM_CCK_JQUERY_SELECTOR' ); ?></span><?php echo ' '.JText::_( 'COM_CCK_JQUERY_SELECTOR_DESC' ); ?>
-    <br /><br />
+    <br><br>
     <span class="star">&sup2; </span><span class="star2"><?php echo JText::_( 'COM_CCK_STATE_AUTOREVERT' ); ?></span><?php echo ' '.JText::_( 'COM_CCK_STATE_AUTOREVERT_DESC' ); ?>
-	<br /><br /><?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC2' ); ?>
+	<br><br><?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC2' ); ?>
 </div>

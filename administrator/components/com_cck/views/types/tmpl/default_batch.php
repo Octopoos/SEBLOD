@@ -76,7 +76,7 @@ defined( '_JEXEC' ) or die;
                     <div class="icon">
                         <a href="javascript:void(0);" onclick="JCck.Dev.addNew('<?php echo $item->id; ?>');">
                             <?php
-                            $img    =   JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+                            $img    =   JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br>', ' ', $text ) ) );
 
                             echo str_replace( '<img ', '<img width="32" height="32" ', $img );
                             ?>

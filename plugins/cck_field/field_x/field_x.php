@@ -202,7 +202,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$xk		=	0;
 		$xi		=	0;
 		if ( count( $value ) ) {
-			$store		=	'<br />';	//begin?
+			$store		=	'<br>';	//begin?
 			$f			=	self::_getChild( $field, $config );
 			$f_name		=	$f->name;
 			$f->state	=	'';	//todo;
@@ -213,14 +213,14 @@ class plgCCK_FieldField_X extends JCckPluginField
 					$v			=	$results[0];
 					
 					if ( $v != '' ) {
-						$store	.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
+						$store	.=	'<br>::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$xi++;
 					}
 					// todo: add childs (secondary) storages.. not primary!
 				//}
 				$xk++;
 			}
-			$store	.=	'<br />';	//end?
+			$store	.=	'<br>';	//end?
 		}
 		$field->values	=	$value;
 		$value			=	$xi;

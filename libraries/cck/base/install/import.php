@@ -444,7 +444,7 @@ class CCK_Import
 		if ( @$core->pk > 0 ) {
 			$table->id	=	$core->pk;
 		}
-		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	//todo
+		$table->description	=	'::cck::'.$id.'::/cck::<br>::description::::/description::';	//todo
 		$table->parent_id	=	( $data['root_category'] > 0 ) ? $data['root_category'] : 1;
 		
 		$rules	=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );

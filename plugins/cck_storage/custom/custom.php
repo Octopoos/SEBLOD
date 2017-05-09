@@ -344,7 +344,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	public static function onCCK_StoragePrepareStore( &$field, $value, &$config = array() )
 	{
 		// Prepare
-		$store	=	'<br />'.'::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::';
+		$store	=	'<br>'.'::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::';
 		
 		// Set
 		parent::g_onCCK_StoragePrepareStore( $field, $store, $config );
@@ -354,7 +354,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	public static function onCCK_StoragePrepareStore_X( &$field, $value, $value2, &$config = array() )
 	{
 		// Prepare
-		$store	=	'<br />::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::'
+		$store	=	'<br>::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::'
 				.	$value2;
 		
 		// Set
@@ -370,7 +370,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	public static function onCCK_StoragePrepareImport( $field, $value, &$config = array() )
 	{
 		// Prepare
-		$store	=	'<br />'.'::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::';
+		$store	=	'<br>'.'::'.$field->storage_field2.'::'.$value.'::'.'/'.$field->storage_field2.'::';
 		
 		// Set
 		parent::g_onCCK_StoragePrepareStore( $field, $store, $config );

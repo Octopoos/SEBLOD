@@ -215,9 +215,9 @@ class CCK_List
 		// Debug
 		if ( $doDebug ) {
 			$count		=	( isset( $config['total'] ) && $config['total'] ) ? $config['total'] : count( $list );
-			echo $profiler->mark( 'afterSearch'.$isCached ).' = '.$count.' '.( $count > 1 ? 'results' : 'result' ).'.<br />';
+			echo $profiler->mark( 'afterSearch'.$isCached ).' = '.$count.' '.( $count > 1 ? 'results' : 'result' ).'.<br>';
 			if ( isset( $current['stage'] ) && (int)$current['stage'] > 0 ) {
-				echo '<br />';
+				echo '<br>';
 			}
 		}
 		

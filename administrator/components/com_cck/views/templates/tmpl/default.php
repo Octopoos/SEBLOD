@@ -107,7 +107,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                     $folder_parent	=	'';
                 } else {
                     $linkFolderTree	=	JRoute::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder_parent );
-                    $folder_parent	=	'<br /><a class="folder-parent small" href="'.$linkFolderTree.'">'.$item->folder_parent_title.'</a>';
+                    $folder_parent	=	'<br><a class="folder-parent small" href="'.$linkFolderTree.'">'.$item->folder_parent_title.'</a>';
                 }
 				echo ( $canEditFolder ) ? '<a href="'.$linkFolder.'">' . $this->escape( $item->folder_title ) . '</a>' . $folder_parent
 										: '<span>' . $this->escape( $item->folder_title ) . '</span>' . $folder_parent;
@@ -147,7 +147,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					$count		=	count( $variations );
 					$variations	=	( $count > 0 ) ? JText::_( 'COM_CCK_VARIATIONS' ).': '.$count : '-';
 				}
-				echo $overrides.'<br />'.$positions.'<br />'.$variations;
+				echo $overrides.'<br>'.$positions.'<br>'.$variations;
 				?>
 			</td>
 			<td class="center">

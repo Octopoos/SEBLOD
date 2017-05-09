@@ -60,7 +60,7 @@ class CommonHelper_Admin
                         if ( strpos( $image, 'icon-cck-' ) !== false ) {
                         	echo '<span class="'.$image.'"></span>';
                         } else {
-							$img	=	JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+							$img	=	JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br>', ' ', $text ) ) );
 
 							echo str_replace( '<img ', '<img width="'.$size.'" height="'.$size.'" ', $img );
                         }

@@ -53,7 +53,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-types.png',
 											'image'	=>	'cck-form',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
@@ -62,7 +62,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-folders.png',
 											'image'	=>	'cck-application',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
@@ -72,7 +72,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_SEBLOD_MARKET'
 										)
@@ -84,7 +84,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-types.png',
 											'image'	=>	'cck-form',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 											),
@@ -93,7 +93,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-fields.png',
 											'image'	=>	'cck-plugin',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
@@ -102,7 +102,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-searchs.png',
 											'image'	=>	'cck-search',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
@@ -111,7 +111,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-templates.png',
 											'image'	=>	'cck-template',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										)
@@ -122,7 +122,7 @@ abstract class modCCKQuickIconHelper
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
 											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
+											'text' 	=>	str_replace( '<br>', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_SEBLOD_MARKET'
 										);

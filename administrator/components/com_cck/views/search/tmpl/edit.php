@@ -145,7 +145,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		count:7,
 		insidebox:'<?php echo $this->insidebox; ?>',
 		name:"search",
-		prompt_group:"<?php echo str_replace( '<br />', '\n', JText::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
+		prompt_group:"<?php echo str_replace( '<br>', '\n', JText::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
 		root:"<?php echo JUri::root(); ?>",
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,

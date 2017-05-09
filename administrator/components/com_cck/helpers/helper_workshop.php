@@ -185,8 +185,8 @@ class Helper_Workshop
 			}
 		}
 		if ( $master != 'order' ) {
-			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="<b>'.JText::_( 'COM_CCK_POSITIONS' ).':</b><br />'
-					.	JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'<br />'
+			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="<b>'.JText::_( 'COM_CCK_POSITIONS' ).':</b><br>'
+					.	JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'<br>'
 					.	JText::_( 'COM_CCK_WIDTH' ).' + '.JText::_( 'COM_CCK_HEIGHT' ).'" href="javascript:void(0);">&bull;</a>';
 		}
 		if ( $clone ) {

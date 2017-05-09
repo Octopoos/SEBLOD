@@ -310,11 +310,11 @@ class CCK_Rendering
 		if ( $this->getStyleParam( 'debug', 0 ) ) {
 			$this->debug	=	true;
 			if ( @$this->profiler ) {
-				$this->profiler_log	=	'<br />'.$this->profiler_log.'<br />';
+				$this->profiler_log	=	'<br>'.$this->profiler_log.'<br>';
 			} else {
 				jimport( 'joomla.error.profiler' );
 				$this->profiler		=	new JProfiler();
-				$this->profiler_log	=	'<br />';
+				$this->profiler_log	=	'<br>';
 			}
 		}
 		

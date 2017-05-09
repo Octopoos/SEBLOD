@@ -66,7 +66,7 @@ $doc->addStyleDeclaration( 'div.modal-footer button.pull-left{position:relative;
 		            <div class="icon">
 		                <a href="<?php echo $link; ?>" target="_parent">
 		                    <?php
-		                    $img	=	JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+		                    $img	=	JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br>', ' ', $text ) ) );
 		                    
 							echo str_replace( '<img ', '<img width="32" height="32" ', $img );
 		                    ?>
