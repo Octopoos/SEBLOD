@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cck.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -80,6 +80,10 @@ class plgContentCCK extends JPlugin
 	// onContentAfterDelete
 	public function onContentAfterDelete( $context, $data )
 	{
+		if ( empty( $context ) ) {
+			return false;
+		}
+
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
@@ -97,10 +101,12 @@ class plgContentCCK extends JPlugin
 		$base 		= 	str_replace( '#__', '', $data->getTableName() );
 		
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-		$properties		= 	array( 'custom' );
+		$properties		= 	array( 'bridge_object', 'custom' );
 		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+		$bridge_object 	= 	$properties['bridge_object'];
 		$custom 		= 	$properties['custom'];
 		$parent			=	'';
+		$pkb			=	0;
 		$type			=	'';
 
 		// Core
@@ -114,13 +120,15 @@ class plgContentCCK extends JPlugin
 
 			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $id );
 			$type	=	$table->cck;
+			$pkb	=	(int)$table->pkb;
 		} else {
 			$table	=	JCckTable::getInstance( '#__cck_core' );
 			if ( $table->load( array( 'pk'=>$pk, 'storage_location'=>$object ) ) ) {
 				$type	=	$table->cck;
+				$pkb	=	(int)$table->pkb;
 			}
 		}
-		
+
 		if ( $table->pk > 0 ) {
 			// -- Leave nothing behind
 			if ( $type != '' ) {
@@ -135,7 +143,7 @@ class plgContentCCK extends JPlugin
 									'storages'=>array(),
 									'type'=>$table->cck
 								);
-				$dispatcher	=	JDispatcher::getInstance();
+				$dispatcher	=	JEventDispatcher::getInstance();
 				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
 				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
 				if ( count( $fields ) ) {
@@ -158,6 +166,22 @@ class plgContentCCK extends JPlugin
 			// -- Leave nothing behind
 
 			$table->delete();
+
+			if ( $pkb > 0 ) {
+				if ( $bridge_object == 'joomla_category' ) {
+					JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+
+					$bridge	=	JTable::getInstance( 'category' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				} elseif ( $bridge_object == 'joomla_article' ) {
+					JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+
+					$bridge	=	JTable::getInstance( 'content' );
+					$bridge->load( $pkb );
+					$bridge->delete( $pkb );
+				}
+			}
 		}
 
 		// Processing
@@ -205,7 +229,7 @@ class plgContentCCK extends JPlugin
 	public function onContentBeforeDisplay( $context, &$article, &$params, $limitstart = 0 )
 	{
 		if ( JCck::getConfig_Param( 'hide_edit_icon', 0 ) ) {
-			if ( isset( $article->params ) ) {
+			if ( isset( $article->params ) && is_object( $article->params ) ) {
 				$article->params->set( 'access-edit', false );
 			}
 		}
@@ -244,6 +268,10 @@ class plgContentCCK extends JPlugin
 						.	' WHERE a.id = "'.(string)$matches[1].'"'
 						;
 		$cck			=	JCckDatabase::loadObject( $query );
+
+		if ( !is_object( $cck ) ) {
+			return;
+		}
 		$contentType	=	(string)$cck->cck;
 		$parent_type	=	(string)$cck->parent;
 		
@@ -278,7 +306,7 @@ class plgContentCCK extends JPlugin
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		if ( $client == 'intro' && $this->cache ) {
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -288,7 +316,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabaseCache::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -303,7 +331,7 @@ class plgContentCCK extends JPlugin
 			} else {
 				$w_type	=	'sc.name = "'.$contentType.'"';	
 			}
-			$query		=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+			$query		=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -317,7 +345,7 @@ class plgContentCCK extends JPlugin
 			$fields		=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 			if ( ! count( $fields ) && $client == 'intro' ) {
 				$client	=	'content';
-				$query	=	'SELECT cc.*, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+				$query	=	'SELECT cc.*, c.ordering, c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 						.	' FROM #__cck_core_type_field AS c'
 						.	' LEFT JOIN #__cck_core_types AS sc ON sc.id = c.typeid'
 						.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -404,7 +432,7 @@ class plgContentCCK extends JPlugin
 	protected function _render( $context, &$article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$user		=	JFactory::getUser();
 		$params		=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
 		
@@ -464,7 +492,6 @@ class plgContentCCK extends JPlugin
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 				if ( $fieldName ) {
 					$Pt	=	$field->storage_table;
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -515,6 +542,8 @@ class plgContentCCK extends JPlugin
 		
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
 			foreach ( $config['process']['beforeRenderContent'] as $process ) {
 				if ( $process->type ) {
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -54,7 +54,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config, false );
 
 		// TODO: call storage plugin.
@@ -99,7 +99,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		// TODO: call storage plugin.
 		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
@@ -163,7 +163,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		
 		// Prepare
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		if ( $value ) {
 			// TODO: call storage plugin.
@@ -201,7 +201,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						}
 						$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi, $field ) );
 					}
-					$inherit					=	array( 'id' => $name.'_'.$xi.'_'.$f_name, 'name' => $name.'['.$xi.']['.$f_name.']' );
+					$inherit					=	array( 'id' => $name.'_'.$xi.'_'.$f_name, 'name' => $name.'['.$xi.']['.$f_name.']', 'xk'=>$xi );
 					$clone						=	clone $f;
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
 					$form[$xi][$f_name]			=	$results[0];
@@ -212,7 +212,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		if ( $field->bool2 ) {
 			foreach ( $fields as $f ) {		// Empty
 				$f_name						=	$f->name;
-				$inherit					=	array( 'id' => $name.'_'.'0'.'_'.$f_name, 'name' => $name.'['.'0'.']['.$f_name.']', 'empty' => true );
+				$inherit					=	array( 'id' => $name.'_'.'0'.'_'.$f_name, 'name' => $name.'['.'0'.']['.$f_name.']', 'xk' => '0', 'empty' => true );
 				$clone						=	clone $f;
 				$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, '', &$config, $inherit, true ) );
 				$form[$xi][$f_name]			=	$results[0];
@@ -257,7 +257,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		} else {
 			$name	=	$field->name;
 		}
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Prepare
 		$store	=	'';

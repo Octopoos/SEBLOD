@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: ecommerce.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -97,14 +97,13 @@ abstract class JCckEcommerce
 				JPluginHelper::importPlugin( 'cck_field_live' );
 
 				$config			=	array();
-				$dispatcher		=	JDispatcher::getInstance();
 				$field			=	(object)array(
 										'live'=>$definitions[$name]->request_payment_field_live,
 										'live_options'=>$definitions[$name]->request_payment_field_live_options,
 									);
 				$suffix			=	'';
 				
-				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+				JEventDispatcher::getInstance()->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
 				if ( $suffix != '' ) {
 					if ( $definitions[$name]->request_payment_field != '' ) {
@@ -255,32 +254,39 @@ abstract class JCckEcommerce
 		$params['target']	=	'product';
 		
 		if ( count( $items ) ) {
-			foreach ( $items as $item ) {
-				$options				=	$params;
-				$options['target_id']	=	$item->product_id;
-				$price					=	$item->price;
+			foreach ( $items as $item_list ) {
+				if ( !is_array( $item_list ) ) {
+					$item_list	=	array( '_'=>$item_list );
+				}
+				if ( count( $item_list ) ) {
+					foreach ( $item_list as $item ) {  
+						$options				=	$params;
+						$options['target_id']	=	$item->product_id;
+						$price					=	$item->price;
 
-				// Taxes
-				if ( $apply_taxes ) {
-					JCckEcommerceTax::apply( '', $price, $items, $options );
-				}
-				
-				// Formula
-				if ( !empty( $cart_definition->formula ) ) {
-					$item->price	=	$price;
-					$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
-				}
-				
-				// Promotions
-				if ( $apply_promotions ) {
-					JCckEcommercePromotion::apply( '', $price, $items, $options );
+						// Taxes
+						if ( $apply_taxes ) {
+							JCckEcommerceTax::apply( '', $price, $items, $options );
+						}
+						
+						// Formula
+						if ( !empty( $cart_definition->formula ) ) {
+							$item->price	=	$price;
+							$price			=	JCckEcommerceCart::computeItem( $item, $cart_definition->formula );
+						}
+						
+						// Promotions
+						if ( $apply_promotions ) {
+							JCckEcommercePromotion::apply( '', $price, $items, $options );
 
-					$options['target']	=	'product2';
-					JCckEcommercePromotion::apply( '', $price, $items, $options );
+							$options['target']	=	'product2';
+							JCckEcommercePromotion::apply( '', $price, $items, $options );
+						}
+						
+						// Quantity /* Alter Price */
+						$total	+=	$price * $item->quantity;
+					}
 				}
-				
-				// Quantity /* Alter Price */
-				$total	+=	$price * $item->quantity;
 			}
 		}
 		
@@ -440,7 +446,7 @@ abstract class JCckEcommerce
 
 		$zones[]	=	0;
 		
-		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.groups, a.target'
+		$query		=	'SELECT a.id, a.title, a.type, a.tax, a.tax_amount, a.target_type, a.groups, a.target'
 					.	' FROM #__cck_more_ecommerce_taxes AS a'
 					.	' LEFT JOIN #__cck_more_ecommerce_zone_tax AS b ON b.tax_id = a.id'
 					.	' WHERE a.published = 1'

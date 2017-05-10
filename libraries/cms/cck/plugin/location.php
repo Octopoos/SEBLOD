@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: location.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,6 +14,14 @@ defined( '_JEXEC' ) or die;
 class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
+
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+		
+		JLoader::register( 'JCckContent'.static::$type, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+	}
 	
 	// access
 	public static function access( $pk, $checkAccess = true )
@@ -25,6 +33,43 @@ class JCckPluginLocation extends JPlugin
 	public static function authorise( $rule, $pk )
 	{
 		return true;
+	}
+
+	// getStaticProperties
+	public static function getStaticProperties( $properties )
+	{
+		static $autorized	=	array(
+									'access'=>'',
+									'author'=>'',
+									'author_object'=>'',
+									'bridge_object'=>'',
+									'child_object'=>'',
+									'created_at'=>'',
+									'context'=>'',
+									'contexts'=>'',
+									'custom'=>'',
+									'key'=>'',
+									'modified_at'=>'',
+									'ordering'=>'',
+									'parent'=>'',
+									'parent_object'=>'',
+									'routes'=>'',
+									'status'=>'',
+									'table'=>'',
+									'table_object'=>'',
+									'to_route'=>''
+								);
+		
+		if ( count( $properties ) ) {
+			foreach ( $properties as $i=>$p ) {
+				if ( isset( $autorized[$p] ) ) {
+					$properties[$p]	=	static::${$p};
+				}
+				unset( $properties[$i] );
+			}
+		}
+		
+		return $properties;
 	}
 	
 	// onCCK_Storage_LocationSaveOrder
@@ -285,7 +330,7 @@ class JCckPluginLocation extends JPlugin
 			
 			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 			$bridge		=	JTable::getInstance( 'category' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -399,7 +444,7 @@ class JCckPluginLocation extends JPlugin
 			
 			JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
 			$bridge		=	JTable::getInstance( 'content' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );

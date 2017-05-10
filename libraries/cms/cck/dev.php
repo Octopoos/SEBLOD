@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: dev.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -52,22 +52,91 @@ abstract class JCckDev
 			$app->cck_document	=	array();
 		}
 		$app->cck_document['styleSheets'][$url]['mime']		=	$type;
-		$app->cck_document['styleSheets'][$url]['media']	=	$media;
-		$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		if ( is_string( $media ) ) {
+			$app->cck_document['styleSheets'][$url]['media']	=	$media;
+		}
+		if ( count( $attribs) ) {
+			$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		}
+	}
+
+	// addValidation
+	public static function addValidation( $rules, $options, $id = '', &$config = array() )
+	{
+		$app	=	JFactory::getApplication();
+		$doc	=	JFactory::getDocument();
+		
+		if ( !$id ) {
+			$id	=	'seblod_form';
+		}
+		if ( empty( $rules ) ) {
+			$rules	=	'';
+		}
+		$root	=	JUri::root( true );
+		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
+		
+		if ( is_object( $options ) ) {
+			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
+			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
+			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
+			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
+			if ( $color != '' ) {
+				if ( $position == 'inline' && $id != '_' ) {
+					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
+				} else {
+					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
+				}
+			}
+			if ( $position != 'inline' && $bgcolor != '' ) {
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
+			}
+			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
+		} else {
+			$options	=	'{}';
+		}
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
+		
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.1.min.js" type="text/javascript"></script>';
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.1.min.js' );
+			$doc->addScriptDeclaration( $js );
+		}
 	}
 
 	// forceStorage
-	public static function forceStorage( $value = 'none' )
+	public static function forceStorage( $value = 'none', $allowed = '' )
 	{
 		$doc	=	JFactory::getDocument();
+		$js		=	'';
 		
 		if ( $value == 'none' ) {
-			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" ); });';
+			if ( $allowed == '' ) {
+				$allowed = false;
+			}
 		} else {
-			$js		=	'jQuery(document).ready(function($){ if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); } });';
+			if ( $allowed == '' ) {
+				$allowed = true;
+			}
+		}
+
+		if ( !$allowed ) {
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+		} else {
+			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
 		
-		echo '<script type="text/javascript">'.$js.'</script>';
+		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
 	public static function getMergedScript( $url )
@@ -180,6 +249,7 @@ abstract class JCckDev
 		$js		=	'';
 		$js2	=	'';
 		$js3	=	'';
+
 		if ( $type == 'field' ) {
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
@@ -231,13 +301,14 @@ abstract class JCckDev
 						$keys	=	array();
 						$js3	=	'var disp = ($("#toggle_attr").prop("checked") !== false) ? \'style="display: block"\' : "";';
 						$n		=	0;
+						$nb		=	count( $options['customAttr'] );
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
-							$attribs	.=	'<div class="attr">'
+							$attribs	.=	'<div class="clr"></div><div class="attr">'
 										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-										.	' class="inputbox mini" size="10" />'
+										.	' class="inputbox mini" size="10" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$customAttr ) ).'" />'
 										.	'</div>';
 							$keys[]		=	$customAttr;
-							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+(++cur)+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
+							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
 						}
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
@@ -288,7 +359,7 @@ abstract class JCckDev
 											if (values[k]) {for(i=0; i<len; i++) {if (values[k][keys[i]] !== undefined) {val[i] = values[k][keys[i]];}}}
 										} else {
 											if (values[k]) {
-												for(i=0;i<len2;i++){if (values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
+												for(i=0;i<len2;i++){if (values[k].attr !== undefined && values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
 											}
 										}
 										$(this).parent().append(\''.$attribs.'\');
@@ -321,8 +392,11 @@ abstract class JCckDev
 										var attr = "input:text[name=\'json\[options2\]\[options\]\[0\]\[direction\]\']";
 										if ($(attr).length) { $(attr).remove(); }
 									} isNew = 0;
-								});
 								';
+					if ( !$elem->options ) {
+						$js2	.=	'if ($("#sortable_core_options").children().length == 2 && $("#collection-group-wrap-core_options__0").length) { $("#collection-group-wrap-core_options__0").parent().remove(); }';
+					}
+					$js2	.=	'});';
 					if ( !$elem->options ) {
 						// $js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
 					}
@@ -486,11 +560,7 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
-		if ( !class_exists( 'Helper_Include' ) ) {
-			require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php';
-		}
-		
-		Helper_Include::addValidation( $config['validation'], $config['validation_options'], $id );
+		self::addValidation( $config['validation'], $config['validation_options'], $id );
 		
 		if ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 			JFactory::getDocument()->addScriptDeclaration( 'var cck_dev = '.json_encode( $config['fields'] ).';' );

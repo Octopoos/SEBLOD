@@ -1,9 +1,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 **/
 
 /* Cpanel */
@@ -13,6 +13,7 @@ div.cpanel.box{width:640px;margin-top:8px;}
 div.cpanel.full{width:540px; height:195px;}
 div.cpanel.compact{width:540px; height:124px;}
 div.seblod.cpanel_news,div.seblod-less.cpanel_news{margin-left:auto!important;margin-right:auto!important;position:relative;}
+div.seblod.cpanel_news.hero-unit{background-color: #fff; padding-top:20px; padding-bottom:20px; text-align: center;}
 div.cpanel_news.full{width:568px;}
 div.seblod-less.cpanel_news.full{width:600px;}
 div.cpanel_news.compact{width:350px;}
@@ -28,6 +29,9 @@ div.cpanel_news div.alert{color:#08c;}
 div.pane-slider.content ul.inline > li{float:left; margin:0 5px;}
 
 /* Admin */
+a.btn:hover,a.btn:focus{color: #333;}
+a.btn.btn-success:hover,a.btn.btn-success:focus,
+a.btn.btn-primary:hover,a.btn.btn-primary:focus{color: #fff;}
 .bg-dark div.seblod, .bg-dark div.first {margin: 8px !important;}
 div.width-25 {width:25%;}
 div.limit select {margin-top:0 !important; margin-bottom:0 !important; margin-left:3px;}
@@ -39,6 +43,7 @@ table.adminlist div.title-left {float: left;}
 table.adminlist div.title-right {float: right; padding-top:10px; padding-right:14px;}
 table.adminlist tr td span {font-size: 1.1em;}
 input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius:3px;}
+.seblod-manager.first{margin-bottom:20px;}
 .seblod-manager input[type="checkbox"]{margin:0;}
 .seblod-manager .table,.cck_page_list .table{margin-bottom:0;}
 .seblod-manager td .btn-group.open .dropdown-toggle {box-shadow: none;}
@@ -103,6 +108,8 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 .toggle_more.open{background-position:0 -10px;}
 
 #featured_session{position:relative; top:10px; cursor:pointer;}
+body.com_cck #cboxLoadedContent,
+body.component #cboxLoadedContent{margin-bottom:0;}
 body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session{top:0;}
 .featured_sessions_del{float:right; position:relative; top:-2px; cursor:pointer;}
 .dropdown-menu.featured-sessions {width:100%;}
@@ -119,6 +126,8 @@ body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session
 .dropdown-menu.featured-sessions .featured_sessions_del:hover {color: #fff;}
 .dropdown-menu.featured-sessions li span.featured_sessions_del.icon-delete:before {font-size: 12px;}
 
+div.seblod.preview .inputbox{margin-bottom:0;}
+div.seblod.preview #alter_match.inputbox{margin-top:9px;}
 div.seblod.preview div.cck_forms.cck_admin div.cck_desc{padding-bottom:8px; color:#eb8207;}
 .max-width-200{max-width:200px;}
 .max-width-190{max-width:190px;}
@@ -148,8 +157,6 @@ div.filter-select select, div.filter-search select, div.filter-search input, div
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
 div.filter-search.pull-left div.chzn-container{padding-right:0px; margin-right:6px;}
-div.filter-search.pull-left div.chzn-container > a,
-div.pull-right div.chzn-container > a{height:26px; line-height: 26px;}
 div.btn-toolbar div.chzn-container{padding-right:0px; margin-right:6px;}
 div.btn-toolbar div#limit_chzn{padding-right:0;}
 body.contentpane.component div.seblod span.publish.icon-flag,
@@ -176,6 +183,12 @@ body.contentpane.component span#storage_field_pick {top:10px;}
 
 body.contentpane.component div.seblod.preview div.cck_forms.cck_admin div.cck_desc{color:#3b99fc;}
 body.contentpane.component div.toggle-selection a{color:#3b99fc;}
+
+.btn-group.input-append > .btn:not(:last-child) {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
 
 .sly-wrapper .sly { height: 145px; }
 .sly-wrapper .sly ul { height: 100%; }

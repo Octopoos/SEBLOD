@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cckrules.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -235,13 +235,13 @@ class JFormFieldCCKRules extends JFormField
 											JText::_('JLIB_RULES_NOT_ALLOWED').'</span>';
 							}
 							else {
-								$html[] = '<span class="label"><i class="icon-lock icon-white"></i>'.
+								$html[] = '<span class="label"><span class="icon-lock icon-white"></span>'.
 											JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED').'</span>';
 							}
 						}
 					}
 					elseif (!empty($component)) {
-						$html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i>'.
+						$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
 									JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 					}
 					else {
@@ -253,11 +253,11 @@ class JFormFieldCCKRules extends JFormField
 						}
 						elseif ($inheritedRule === false) {
 							// Other actions cannot be changed.
-							$html[] = '<span class="label label-important"><i class="icon-lock icon-white"></i>'.
+							$html[] = '<span class="label label-important"><span class="icon-lock icon-white"></span>'.
 										JText::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT').'</span>';
 						}
 						else {
-							$html[] = '<span class="label label-success"><i class="icon-lock icon-white"></i>'.
+							$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
 										JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 						}
 					}

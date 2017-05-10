@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: standard.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -34,6 +34,15 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		}
 	}
 	
+	// onCCK_StoragePrepareContent_Xi
+	public function onCCK_StoragePrepareContent_Xi( &$field, &$value, &$storage, $x = '', $xi = 0 )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		self::onCCK_StoragePrepareForm( $field, $value, $storage );
+	}
+
 	// onCCK_StoragePrepareDelete
 	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage, $config = array() )
 	{
@@ -247,6 +256,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					if ( count( $values ) ) {
 						$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
 					}
+				}
+				if ( $sql == '' ) {
+					$sql	=	$target.' IN (0)';
 				}
 				break;
 			case 'num_higher':

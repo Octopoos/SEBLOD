@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: rule.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,7 +26,7 @@ abstract class JCckEcommerceRule
 		$cost		=	'';
 		$rules		=	JCckEcommerce::getShippingRules( $type, $my_zones );
 		$total2		=	(int)$total;
-
+		
 		if ( count( $rules ) ) {
 			foreach ( $rules as $r ) {
 				if ( isset( $r->target_type ) && $r->target_type ) {
@@ -79,6 +79,7 @@ abstract class JCckEcommerceRule
 						}
 					}
 				}
+
 				if ( $r->mode ) {
 					if ( !isset( $totals[$type][$r->target_type] ) ) {
 						continue;

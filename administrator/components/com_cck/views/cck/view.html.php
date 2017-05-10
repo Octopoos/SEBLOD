@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,6 +44,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                                         . ' AND b.enabled = 1'
                                                         . ' ORDER BY a.title ASC' );
         $groupedButtons =   array();
+        $lang           =   JFactory::getLanguage();
         $more           =   array(
                                 'ADDON'=>16,
                                 'PLUGIN_FIELD'=>19,
@@ -70,13 +71,15 @@ class CCKViewCck extends JCckBaseLegacyView
                             );
         }
         foreach ( $components as $k=>$v ) {
+            $lang->load( $v->element.'.sys' );
+            
             $buttons[]  =   array(
                                 'access'=>array( 'core.manage', $v->element ),
                                 'group' =>'COM_CCK_SEBLOD_MORE',
                                 'image' =>'cck-addon',
                                 'link'  =>JRoute::_( $v->link ),
                                 'target'=>'_self',
-                                'text'  =>$v->title
+                                'text'  =>JText::_( $v->element )
                             );
         }
         foreach ( $more as $k=>$v ) {

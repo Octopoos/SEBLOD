@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: adapter_yoo.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @project-url		http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -31,12 +31,6 @@ class JCckPluginFieldAdapter
 		if ( $this->type == '' ) {
 			return '';
 		}
-
-		/*
-		$config	=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'tmpl'=>'ajax' ) );
-
-		Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
-		*/
 
 		JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js' ) );
 

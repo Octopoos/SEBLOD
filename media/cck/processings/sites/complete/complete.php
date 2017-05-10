@@ -131,15 +131,15 @@ if ( $mode == 1 ) {
 }
 
 // Guest Viewlevel
-$usergroups			=	$item->groups;
+$usergroups		=	$item->groups;
 if ( $guest_only ) {
 	$item->guest_only_group		=	$guest_group;
-	$usergroups[]					=	$guest_group;
-	$guest_viewlevel				=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
-	$usergroups						=	$item->groups;
+	$usergroups[]				=	$guest_group;
+	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
+	$usergroups					=	$item->groups;
 	$item->guest_only_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. 'Guest Only', array( 0 => $guest_group ), $next_level );
 } else {
-	$guest_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
+	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
 }
 
 // Viewlevels
@@ -270,6 +270,7 @@ if ( is_array( $item->groups ) ) {
 	$item->groups		=	implode( ',', $item->groups );
 }
 if ( is_array( $item->viewlevels ) ) {
-	$item->viewlevels	=	implode( ',', $item->viewlevels );
+	$item->public_viewlevel	=	$item->viewlevels[0];
+	$item->viewlevels		=	implode( ',', $item->viewlevels );
 }
 ?>

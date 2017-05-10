@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: database.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,13 +24,13 @@ abstract class JCckDatabase
 			if ( $text[0] == "'" && $text[$len - 1] == "'" ) {
 				$t	=	substr( $text, 1, - 1 );
 
-				if ( is_numeric( $t ) || strlen( $t ) == 0 ) {
+				if ( is_numeric( $t ) ) {
 					return "'".(string)$t."'";
 				}
 			}
 		}
 
-		return '0';
+		return JCckDatabase::quote( uniqid() );
 	}
 	
 	// convertUtf8mb4QueryToUtf8

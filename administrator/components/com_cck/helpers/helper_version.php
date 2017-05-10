@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_version.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -70,18 +70,27 @@ class Helper_Version
 		if ( $note ) {
 			$version->note		=	$note;
 		}
-		
+
 		// More
 		$clients	=	( $type == 'search' ) ? array( 1=>'search', 2=>'filter', 3=>'list', 4=>'item', 5=>'order' ) : array( 1=>'admin', 2=>'site', 3=>'intro', 4=>'content' );
 		$count		=	0;
 		$e_more		=	array();
 		foreach ( $clients as $i=>$client ) {
-			$name				=	'e_more'.$i;
 			$fields				=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_'.$type.'_field WHERE '.$type.'id = '.$pk.' AND client ="'.$client.'" ORDER BY ordering' );
 			$positions			=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_'.$type.'_position WHERE '.$type.'id = '.$pk.' AND client ="'.$client.'"' );
-			$data				=	array( 'fields'=>$fields, 'positions'=>$positions );
-			
+			$style				=	'';
+
+			if ( isset( $table->{'template_'.$client} ) && $table->{'template_'.$client} ) {
+				$style			=	JCckDatabase::loadResult( 'SELECT params FROM #__template_styles WHERE id = '.(int)$table->{'template_'.$client}.' AND title NOT LIKE "%- Default"' );
+			}
+			if ( $style != '' ) {
+				$style			=	json_decode( $style );
+			}
+
+			$data				=	array( 'fields'=>$fields, 'positions'=>$positions, 'template_style'=>$style );
 			$e_more[$i]			=	(string)( count( $fields ) );
+			$name				=	'e_more'.$i;
+			
 			$version->{$name}	=	JCckDev::toJSON( $data );
 		}
 		$version->e_more	=	JCckDev::toJSON( array( 'fields'=>$e_more ) );
@@ -103,58 +112,6 @@ class Helper_Version
 		$query	=	'DELETE FROM #__cck_core_versions WHERE '.$where.' AND id <= (SELECT id FROM (SELECT id FROM #__cck_core_versions WHERE '.$where.' ORDER BY id DESC LIMIT 1 OFFSET '.$offset.') AS max_id )';
 
 		return JCckDatabase::execute( $query );
-	}
-
-	// revert
-	public static function revert( $type, $pk, $version = 0 )
-	{
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/version.php';
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/'.$type.'.php';
-
-		$db		=	JFactory::getDbo();
-		$pkv	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_versions WHERE e_type ="'.$type.'" AND e_version = '.$version.' AND e_id = '.$pk );
-		$table	=	JTable::getInstance( 'Version', 'CCK_Table' );
-		$table->load( $pkv );
-		
-		$row	=	JTable::getInstance( ucfirst( $type ), 'CCK_Table' );
-		$row->load( $pk );
-		$core	=	JCckDev::fromJSON( $table->e_core );
-		
-		if ( isset( $row->asset_id ) && $row->asset_id && isset( $core['rules'] ) ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $core['rules'] ).'" WHERE id = '.(int)$row->asset_id );
-		}
-		
-		// More
-		if ( $type == 'search' ) {
-			$clients	=	array( 1=>'search', 2=>'filter', 3=>'list', 4=>'item', 5=>'order' );
-		} else {
-			$clients	=	array( 1=>'admin', 2=>'site', 3=>'intro', 4=>'content' );			
-		}
-		foreach ( $clients as $i=>$client ) {
-			$name				=	'e_more'.$i;
-			self::revert_more( $type, $client, $pk, $table->{$name} );
-		}
-		// --
-		if ( $row->version && ( $row->version != $table->e_version ) ) {
-			$core['version']	=	++$row->version;
-		}
-		$row->bind( $core );
-		$row->check();
-		$row->store();
-	}
-
-	// revert_more
-	public static function revert_more( $type, $client, $pk, $json )
-	{
-		$data	=	json_decode( $json );
-
-		$table	=	JCckTableBatch::getInstance( '#__cck_core_'.$type.'_field' );
-		$table->delete( $type.'id = '.$pk.' AND client = "'.$client.'"' );
-		$table->save( $data->fields, array(), array(), array( 'markup'=>'', 'restriction'=>'', 'restriction_options'=>'' ) );
-		
-		$table	=	JCckTableBatch::getInstance( '#__cck_core_'.$type.'_position' );
-		$table->delete( $type.'id = '.$pk.' AND client = "'.$client.'"' );
-		$table->save( $data->positions );
 	}
 }
 ?>

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -73,7 +73,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	public function prepareUI()
 	{
 		$this->css		=	array( 'batch'=>'modal modal-small hide fade',
-								   'filter'=>'btn-toolbar',
+								   'filter'=>'',
 								   'filter_search'=>'filter-search btn-group pull-left hidden-phone input-append',
 								   'filter_search_button'=>'tip hasTooltip',
 								   'filter_search_buttons'=>'btn-group pull-left hidden-phone',

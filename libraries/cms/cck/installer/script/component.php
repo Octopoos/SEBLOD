@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -58,7 +58,7 @@ class JCckInstallerScriptComponent
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
 			$pk		=	$db->loadResult();
@@ -67,6 +67,10 @@ class JCckInstallerScriptComponent
 			}
 		}
 		
+		if ( !( is_object( $this->cck ) && isset( $this->cck->element ) && $this->cck->element != '' ) ) {
+			return;
+		}
+
 		$lang		=	JFactory::getLanguage();
 		$title		=	(string)$this->cck->element;
 		$lang->load( $title );

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: rendering.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -171,7 +171,7 @@ class CCK_Rendering
 		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->positions	=	$me->positions;
 		$this->positions2	=	array();
 		$this->positions_m	=	$me->positions_more;
@@ -185,9 +185,9 @@ class CCK_Rendering
 
 		// Nested Lists.. yeah!
 		if ( isset( $me->list[$idx] ) ) {
-			$this->list			=	$me->list[$idx];
+			$this->list		=	$me->list[$idx];
 		} elseif ( isset( $me->list ) ) {
-			$this->list			=	$me->list;
+			$this->list		=	$me->list;
 		}
 
 		// Additional parameters (renderItem)
@@ -238,17 +238,17 @@ class CCK_Rendering
 			$css	=	$css * -1;
 		}
 		if ( $base ) {
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.css' );
+			$doc->addStyleSheet( $this->base.'/media/cck/css/cck.css' );
 			if ( $this->responsive ) {
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.responsive.css' );
+				$doc->addStyleSheet( $this->base.'/media/cck/css/cck.responsive.css' );
 			}
 		}
 		if ( $css == 1 || ( $css == 2 && $this->mode == 'content' ) || ( $css == 3 && $this->mode == 'form' ) ) {
 			if ( $this->client != 'list' ) {
 				if ( $this->isFile( $this->path.'/css/'.$this->client.'.css' ) ) {
-					$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->name. '/css/'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/templates/'.$this->name. '/css/'.$this->client.'.css' );
 				} else {
-					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/media/cck/css/cck.'.$this->client.'.css' );
 				}
 			}
 		}
@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.0.0.min.js' );
+			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.10.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';
@@ -352,6 +352,16 @@ class CCK_Rendering
 					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
 					$sepD		=	',';
 					$sepT		=	'.';
+				} elseif ( $format == '1234567.89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|.\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9.\-]/g, "")';
+					$sepD		=	',';
+					$sepT		=	'';
+				} elseif ( $format == '1234567,89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|,\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
+					$sepD		=	',';
+					$sepT		=	'';
 				}
 				$formatNumber	=	JCck::getConfig_Param( 'computation_format_out', 0 ) ? 'formatNumber:1, ' : '';
 				$doc->addScriptDeclaration( 'jQuery.Calculation.setDefaults({ '.$formatNumber.'sepDecimals:"'.$sepD.'", sepThousands:"'.$sepT.'", reNumbers:'.$search.', cleanseNumber:function (v){ return '.$replace.'; } });' );
@@ -915,7 +925,9 @@ class CCK_Rendering
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				if ( !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
+					$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				}
 			}
 			if ( is_object( $options ) ) {
 				if ( strpos( $position, '_line' ) !== false ) {

@@ -214,23 +214,25 @@
   //   Note that no real action is taken, if the archive does not exist it is not
   //   created. Use create() for that.
   // --------------------------------------------------------------------------------
-  function PclZip($p_zipname)
+  
+  // __construct
+  public function __construct($p_zipname)
   {
+     // ----- Tests the zlib
+     if (!function_exists('gzopen'))
+     {
+       die('Abort '.basename(__FILE__).' : Missing zlib extensions');
+     }
 
-    // ----- Tests the zlib
-    if (!function_exists('gzopen'))
-    {
-      die('Abort '.basename(__FILE__).' : Missing zlib extensions');
-    }
+     // ----- Set the attributes
+     $this->zipname = $p_zipname;
+     $this->zip_fd = 0;
+     $this->magic_quotes_status = -1;
 
-    // ----- Set the attributes
-    $this->zipname = $p_zipname;
-    $this->zip_fd = 0;
-    $this->magic_quotes_status = -1;
-
-    // ----- Return
-    return;
+     // ----- Return
+     return;
   }
+  
   // --------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------
@@ -1565,6 +1567,7 @@
           // ereg() is deprecated starting with PHP 5.3. Move PCLZIP_OPT_BY_EREG
           // to PCLZIP_OPT_BY_PREG
           $p_options_list[$i] = PCLZIP_OPT_BY_PREG;
+          break;
         case PCLZIP_OPT_BY_PREG :
         //case PCLZIP_OPT_CRYPT :
           // ----- Check the number of parameters
@@ -1836,7 +1839,7 @@
     
     // ----- Get 'memory_limit' configuration value
     $v_memory_limit = ini_get('memory_limit');
-    $v_memory_limit = trim($v_memory_limit);
+    $v_memory_limit = (int)trim($v_memory_limit);
     $last = strtolower(substr($v_memory_limit, -1));
  
     if($last == 'g')

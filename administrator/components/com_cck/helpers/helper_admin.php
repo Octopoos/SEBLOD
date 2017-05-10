@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper_admin.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -95,7 +95,7 @@ class Helper_Admin extends CommonHelper_Admin
 					JHtml::_( 'bootstrap.modal', 'collapseModal' );
 					$label	=	JText::_( 'JTOOLBAR_NEW' );
 					$html	=	'<button data-toggle="modal" data-target="#collapseModal2" class="btn btn-small btn-success">'
-							.	'<i class="icon-new" title="'.$label.'"></i> '.$label.'</button>';
+							.	'<span class="icon-new" title="'.$label.'"></span> '.$label.'</button>';
 					$bar->appendButton( 'Custom', $html, 'new' );
 				} else {
 					JToolBarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
@@ -130,7 +130,7 @@ class Helper_Admin extends CommonHelper_Admin
 				JHtml::_( 'bootstrap.modal', 'collapseModal' );
 				$label	=	JText::_( 'JTOOLBAR_BATCH' );
 				$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
-						.	'<i class="icon-checkbox-partial" title="'.$label.'"></i> '.$label.'</button>';
+						.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 				$bar->appendButton( 'Custom', $html, 'batch' );
 			}
 		}
@@ -141,7 +141,7 @@ class Helper_Admin extends CommonHelper_Admin
 			JHtml::_( 'bootstrap.modal', 'collapseModal' );
 			$label	=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
 			$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
-					.	'<i class="icon-checkbox-partial" title="'.$label.'"></i> '.$label.'</button>';
+					.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 			$bar->appendButton( 'Custom', $html, 'batch' );
 		} elseif ( $vName == 'site' ) {
 			//JToolBarHelper::custom( 'sites.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_VISITS' ), true );

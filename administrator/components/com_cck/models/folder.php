@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: folder.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -294,15 +294,17 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			if ( $copyright ) {
 				CCK_Export::update( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $copyright );
 			}
-		} // todo: else
-		$script						=	$xml->addChild( 'scriptfile', 'pkg_script.php' );
-		JFile::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
-		$buffer						=	JFile::read( $path.'/pkg_script.php' );
-		$buffer						=	str_replace( '%class%', $filename, $buffer );
-		JFile::write( $path.'/pkg_script.php', $buffer );
-		if ( $copyright ) {
-			CCK_Export::update( $path.'/pkg_script.php', $copyright );
+			JFile::copy( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $path.'/pkg_script.php' );
+		} else {
+			JFile::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
+			$buffer					=	JFile::read( $path.'/pkg_script.php' );
+			$buffer					=	str_replace( '%class%', $filename, $buffer );
+			JFile::write( $path.'/pkg_script.php', $buffer );
+			if ( $copyright ) {
+				CCK_Export::update( $path.'/pkg_script.php', $copyright );
+			}
 		}
+		$script						=	$xml->addChild( 'scriptfile', 'pkg_script.php' );
 
 		// Extensions
 		$files						=	$xml->addChild( 'files' );

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cck.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -51,7 +51,7 @@ class plgSearchCCK extends JPlugin
 
 		$app			=	JFactory::getApplication();
 		$db				=	JFactory::getDbo();
-		$dispatcher		=	JDispatcher::getInstance();
+		$dispatcher		=	JEventDispatcher::getInstance();
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doLimit		=	false;
@@ -442,6 +442,10 @@ class plgSearchCCK extends JPlugin
 		unset( $fields );
 		unset( $fields_order );
 		unset( $tables );
+
+		if ( isset( $config['total'] ) ) {
+			$config['doPagination']	=	false;
+		}
 		
 		return $results;
 	}
@@ -514,7 +518,7 @@ class plgSearchCCK extends JPlugin
 				if ( $current['order_by'] ) {
 					$query->order( $current['order_by'] );
 				}
-			} else {
+			} elseif ( $ordering != 'none' ) {
 				if ( @$config['location'] ) {
 					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
 					if ( $ordering ) {
@@ -593,6 +597,12 @@ class plgSearchCCK extends JPlugin
 						$query->order( $ordering );
 					}
 				}
+			}
+		}
+		if ( isset( $config['query_parts']['order_by'] ) ) {
+			if ( ( is_string( $config['query_parts']['order_by'] ) && $config['query_parts']['order_by'] != '' )
+				|| count( $config['query_parts']['order_by'] ) ) {
+				$query->order( $config['query_parts']['order_by'] );
 			}
 		}
 	}

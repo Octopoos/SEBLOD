@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -62,8 +62,8 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 					if ( $field->storage_table == '' ) {
 						continue;
 					}
-					if ( !isset( $storages[$field->storage_table] ) ) {
-						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
 					}
 					if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
 					  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {
@@ -79,16 +79,19 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 			}
 		}
 		$fields	=	array_keys( $fields );
-		if ( $config['ftp'] == '1' ) {
-			$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
-		} else {
-			fputcsv( $config['handle'], $fields, $config['separator'] );
+
+		if ( $config['isNew'] ) {
+			if ( $config['ftp'] == '1' ) {
+				$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+			} else {
+				fputcsv( $config['handle'], $fields, $config['separator'] );
+			}
 		}
 		
 		// Set
 		if ( $config['prepare_output'] ) {
 			JPluginHelper::importPlugin( 'cck_field' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {

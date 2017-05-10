@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: rendering_item.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -40,7 +40,7 @@ class CCK_Item
 		$this->id			=	'cck'.$pk;
 		$this->mode			=	'content';
 		$this->path 		= 	JPATH_SITE.'/templates/'.$template;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->template		=	$template;
 		$this->theme		=	JFactory::getApplication()->getTemplate();
 		$this->type			=	$type;

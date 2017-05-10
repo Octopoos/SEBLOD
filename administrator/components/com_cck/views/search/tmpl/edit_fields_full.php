@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit_fields_full.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -57,7 +57,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 					if ( $this->positions_nb ) {
 						foreach ( $this->positions as $pos ) {
 							if ( isset( $this->fields[$pos->name] ) ) {
-								$this->setPosition( $pos->name );
+								$this->setPosition( $pos->name, @$pos->title );
 								foreach ( $this->fields[$pos->name] as $field ) {
 									$type_field		=	'';
 									if ( isset( $this->type_fields[$field->id] ) ) {
@@ -67,11 +67,11 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 									Helper_Workshop::displayField( $field, $type_field, $attr );
 								}
 							} else {
-								$positions[]	=	$pos->name;
+								$positions[] =   array( 'name'=>$pos->name, 'title'=>$pos->title );
 							}
 						}
 						foreach ( $positions as $pos ) {
-							$this->setPosition( $pos );
+							$this->setPosition( $pos['name'], $pos['title'] );
 						}
 						Helper_Workshop::displayPositionEnd( $this->positions_nb );
 					} else {

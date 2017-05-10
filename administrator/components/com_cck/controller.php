@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: controller.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -407,7 +407,7 @@ class CCKController extends JControllerLegacy
 								'type_id'=>$core->type_id,
 								'xi'=>$xi
 							);
-			$dispatcher		=	JDispatcher::getInstance();
+			$dispatcher		=	JEventDispatcher::getInstance();
 			$field->value	=	$core->value;
 			$pk				=	$core->pk;
 			$value			=	'';

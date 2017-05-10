@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: image.php lionelratel $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -65,7 +65,7 @@ class JCckDevImage
 	}
 
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat, $quality = 100 )
+	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat)
 	{
 		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
 			return false;
@@ -94,7 +94,7 @@ class JCckDevImage
 		}
 		
 		// Create image
-		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation, $quality );
+		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation);
 
 		return true;
 	}

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default_enabled.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -178,7 +178,7 @@ if ( count( $items ) ) {
 	foreach ( $items as $key=>$item ) {
 		$link	=	explode( '||', $item );
 		$target	=	'';
-		$text	=	( strpos( $link[0], 'icon-' ) !== false ) ? '<i class="'.$link[0].'"></i>' : JText::_( $link[0] );
+		$text	=	( strpos( $link[0], 'icon-' ) !== false ) ? '<span class="'.$link[0].'"></span>' : JText::_( $link[0] );
 		if ( $link[1] == 'root' ) {
 			$link[1]	=	JUri::root();
 			$target		=	'_blank';

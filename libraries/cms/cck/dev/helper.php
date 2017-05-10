@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: helper.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -69,9 +69,35 @@ abstract class JCckDevHelper
 	}
 	
 	// getAbsoluteUrl
-	public static function getAbsoluteUrl( $itemId )
+	public static function getAbsoluteUrl( $itemId = '', $query = '', $method = 'base' )
 	{
-		return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) );
+		if ( $query != '' ) {
+			if ( $query[0] == '?' || $query[0] == '&' ) {
+				$query	=	substr( $query, 1 );
+			}
+		}
+		$glue	=	( $query != '' ) ? '/?' : '';
+		
+		if ( $itemId == '' || $itemId == 'auto' ) {
+			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
+
+			if ( $itemId > 0 && JFactory::getApplication()->isSite() ) {
+				return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
+			} elseif ( $itemId == -1 ) {
+				return JUri::root().'component/cck'.$glue.$query;
+			} else {
+				$context	=	'';
+				$glue		=	( $query != '' ) ? '&' : '';
+
+				if ( JCck::isSite() ) {
+					$context	=	JCck::getSite()->context.'/';
+				}
+
+				return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;
+			}
+		} else {
+			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
+		}
 	}
 	
 	// getBranch
@@ -451,6 +477,54 @@ abstract class JCckDevHelper
 		if ( $format == 'kvp_string' && $vars != '' ) {
 			$vars	=	substr( $vars, 0, -1 );
 		}
+	}
+
+	// setLanguage
+	public static function setLanguage( $tag )
+	{
+		$app	=	JFactory::getApplication();
+		$lang	=	JLanguage::getInstance( $tag );
+		
+		$app->loadLanguage( $lang );
+		JFactory::$language	=	$app->getLanguage();
+		
+		JFactory::getConfig()->set( 'language', $tag );
+		JFactory::getLanguage()->setLanguage( $tag );
+	}
+
+	// sortObjectsByProperty
+	public static function sortObjectsByProperty( &$array, $property )
+	{
+		if ( count( $array ) ) {
+			foreach ( $array as $k=>$v ) {
+				$v->_index	=	str_pad( $k, 3, '0' , STR_PAD_LEFT );
+			}
+		}
+
+		$array	=	self::_sortHelper( $array, $property, '_index' );
+	}
+
+	// _sortHelper
+	protected static function _sortHelper()
+	{
+		$args	=	func_get_args();
+		$array	=	array_splice( $args, 0, 1 ); 
+		$array	=	$array[0];
+		
+		usort( $array, function( $a, $b ) use( $args ) {
+			$i		=	0;
+			$count	=	count( $args );
+			$diff	=	0;
+			
+			while ( $diff == 0 && $i < $count ) { 
+				$diff	=	strcmp( $a->{$args[$i]}, $b->{$args[$i]} );
+				$i++;
+			}
+
+			return $diff;
+		});
+
+		return $array;
 	}
 }
 ?>

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -57,13 +57,23 @@ if ( $config['tmpl'] == 'ajax' ) {
 				$("#adminForm").on("click", "#storage_field_pick", function() {
 					var field = ( $("#storage").val() == "dev" ) ? "dev_map" : "content_map";
 					var location = $("#storage_location").val();
+					var map = "map";
 					if (location==null) {
 						location = "free";
 					}
 					if (location=="free") {
 						location = $("#storage_table").val();	
+					} else {
+						if (field == "content_map") {
+							if ($("#op-"+location).length) {
+								var $targt_el = $("#op-"+location).find("#storage_cck");
+								if ($targt_el.length && $targt_el.val()) {
+									location = "__cck_store_form_"+$targt_el.val();
+								}
+							}
+						}
 					}
-					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name=map&type=storage_field&id="+field;
+					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name="+map+"&type=storage_field&id="+field;
 					$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
 				});
 			'

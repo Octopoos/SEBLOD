@@ -2,19 +2,21 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
+JLoader::register( 'JFormFieldCckCategory', JPATH_PLATFORM.'/cck/joomla/form/field/category.php' );
+
 // Plugin
 class plgCCK_FieldJForm_Category extends JCckPluginField
 {
 	protected static $type			=	'jform_category';
-	protected static $type2			=	'category';
+	protected static $type2			=	'cckcategory';
 	protected static $convertible	=	1;
 	protected static $friendly		=	1;
 	protected static $path;
@@ -145,9 +147,9 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 								class="'.$class.'"'.$size.'
 							>'.$opt.'</field>
 						</form>
-					';
-			
+					';			
 			$form	=	JForm::getInstance( $id, $xml );
+
 			if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
 				if ( $config['pk'] ) {
 					$form->setFieldAttribute( $name, 'action', 'core.edit' );
@@ -156,19 +158,44 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 					$form->setFieldAttribute( $name, 'action', 'core.create' );
 				}
 			}
-			$form	=	$form->getInput( $name, '', $value );
+			$form_field		=	$form->getField( $name );
+			$form_opts		=	$form_field->getOptionList();
+			$form			=	$form->getInput( $name, '', $value );
+			$field->options	=	'';
+
 			if ( $field->attributes ) {
 				$form	=	str_replace( '<select', '<select '.$field->attributes, $form );
+			}
+			if ( $form_opts ) {
+				$options	=	array();
+
+				foreach ( $form_opts as $opt ) {
+					$options[]	=	$opt->text.'='.$opt->value;
+				}
+
+				$field->options	=	( count( $options ) ) ? implode( '||', $options ) : '';
 			}
 			
 			// Set
 			if ( ! $field->variation ) {
 				$field->form	=	$form;
+				
+				if ( $field->options != '' ) {
+					$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
+				} else {
+					$field->text	=	JCckDatabase::loadResult( 'SELECT title FROM #__categories WHERE id = '.(int)$value );
+				}
+
 				if ( $field->script ) {
 					parent::g_addScriptDeclaration( $field->script );
 				}
 			} else {
-				$field->text	=	JCckDatabase::loadResult( 'SELECT title FROM #__categories WHERE id = '.(int)$value );
+				if ( $field->options != '' ) {
+					$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
+				} else {
+					$field->text	=	JCckDatabase::loadResult( 'SELECT title FROM #__categories WHERE id = '.(int)$value );
+				}
+
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
 			}
 		}
@@ -192,7 +219,6 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		
 		// Set
 		$field->match_value	=	$field->match_value ? $field->match_value : ',';
-		$field->value		=	$value;
 		
 		// Return
 		if ( $return === true ) {

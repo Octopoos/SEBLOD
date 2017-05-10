@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,8 +16,10 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $task_id	=	array( 'export'=>'', 'process'=>'' );
 
 if ( isset( $options2['task'] ) ) {
-	if ( $options2['task'] == 'export' || $options2['task'] == 'process' ) {
-		$task_id[$options2['task']]	=	$options2['task_id'];
+	$options2_task	=	str_replace( '_ajax', '', $options2['task'] );
+
+	if ( $options2_task == 'export' || $options2_task == 'process' ) {
+		$task_id[$options2_task]	=	$options2['task_id'];
 	}
 }
 ?>
@@ -64,9 +66,10 @@ jQuery(document).ready(function($) {
 	$('#blank_li3').isVisibleWhen('bool','0');
 	$('#json_options2_icon').isVisibleWhen('bool6','1,2,3',false);
 	$('#bool3').isVisibleWhen('bool2','1,2');
-	$('#json_options2_task_auto').isVisibleWhen('json_options2_task','export,process');
-	$('#json_options2_task_id_export').isVisibleWhen('json_options2_task','export');
-	$('#json_options2_task_id_process').isVisibleWhen('json_options2_task','process');
+	$('#json_options2_task_auto').isVisibleWhen('json_options2_task','export,export_ajax,process,process_ajax');
+	$('#json_options2_task_id_export').isVisibleWhen('json_options2_task','export,export_ajax');
+	$('#json_options2_task_id_process').isVisibleWhen('json_options2_task','process,process_ajax');
+	$('#json_options2_custom,#json_options2_itemid').isVisibleWhen('json_options2_task','save2redirect');
 	$('#json_options2_alt_link_text, #blank_li2').isVisibleWhen('bool2','2');
 	$("div#layer").on("click", "span.c_link", function() {
 		var type = $("#json_options2_alt_link").val();

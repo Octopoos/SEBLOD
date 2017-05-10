@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: content.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -106,14 +106,13 @@ class CCK_Content
 			$params	=	new JObject;
 		}
 		
-		JPluginHelper::importPlugin( 'content' );		
-		$dispatcher	=	JDispatcher::getInstance();
+		JPluginHelper::importPlugin( 'content' );
 		
 		$row->text	=	'';
 		if ( isset( $row->$name ) ) {
 			$row->text	=	$row->$name;
 		}
-		$results	=	$dispatcher->trigger( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
+		$results	=	JEventDispatcher::getInstance()->trigger( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
 		
 		return $row->text;
 	}

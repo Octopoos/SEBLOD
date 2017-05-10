@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: joomla_category.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,6 +25,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'created_user_id';
 	protected static $author_object	=	'joomla_user';
+	protected static $bridge_object	=	'';
 	protected static $child_object	=	'joomla_article';
 	protected static $created_at	=	'created_time';
 	protected static $custom		=	'description';
@@ -236,7 +237,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$table		=	self::_getTable( $pk );	
 		
 		if ( !$table ) {
@@ -253,6 +254,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
+		if ( $table->extension == '' ) {
+			$table->extension	=	'com_content';
+		}
+		JFactory::getApplication()->input->set( 'extension', $table->extension );
 		
 		// Process
 		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );
@@ -357,8 +362,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		self::_completeTable( $table, $data, $config );
 		
 		// Store
-		$dispatcher	=	JDispatcher::getInstance();
 		JPluginHelper::importPlugin( 'content' );
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 		if ( $isNew === true && parent::g_isMax( $table->{self::$author}, $table->{self::$parent}, $config ) ) {
 			$config['error']	=	true;
@@ -423,7 +428,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$table->load( $pk );
 			if ( $table->id ) {
 				if ( $join ) { // todo:join
-					$join					=	JCckDatabase::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->parent_id );	//@
+					$join						=	JCckDatabaseCache::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->parent_id );	//@
 					if ( is_object( $join ) && isset( $join->title ) ) {
 						$table->parent_title	=	$join->title;
 						$table->parent_alias	=	$join->alias;
@@ -434,7 +439,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				}
 				if ( JCck::on( '3.1' ) ) {
 					$table->tags	=	new JHelperTags;
+
+					// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
 					$table->tags->getTagIds( $table->id, 'com_content.category' );	// todo: dynamic context per extension
+					// }
 				}
 			}
 		}
@@ -634,7 +642,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
 		}
 		
-		return JRoute::_( $route );
+		return JRoute::_( $route, false );
 	}
 	
 	// getRouteByStorage
@@ -643,7 +651,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$idx	=	md5( $sef.'|'.$itemId.'|'.$lang_tag );
 
 		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
-			return JRoute::_( $storage[self::$table]->_route[$idx] );
+			return JRoute::_( $storage[self::$table]->_route[$idx], false );
 		}
 		
 		if ( $sef ) {
@@ -676,7 +684,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$storage[self::$table]->_route[$idx]	=	ContentHelperRoute::getCategoryRoute( $storage[self::$table]->id );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route[$idx] );
+		return JRoute::_( $storage[self::$table]->_route[$idx], false );
 	}
 
 	// parseRoute

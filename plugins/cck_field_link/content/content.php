@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -43,6 +43,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$itemId		=	( $sef ) ? $link->get( 'itemid', '' ) : '';
 		$content	=	$link->get( 'content', '' );
 		$custom		=	$link->get( 'custom', '' );
+		$path_type	=	(int)$link->get( 'path_type', 0 );
 		
 		// Prepare
 		if ( !$itemId ) {
@@ -65,6 +66,17 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$tmpl				=	( $tmpl ) ? 'tmpl='.$tmpl : '';
 		$vars				=	$tmpl;
 		
+		if ( $link_target == 'modal' ) {
+			if ( strpos( $link_attr, 'data-cck-modal' ) === false ) {
+				$modal_json	=	$link->get( 'target_params', '' );
+
+				if ( $modal_json != '' ) {
+					$modal_json	=	'=\''.$modal_json.'\'';
+				}
+				$link_attr	=	trim( $link_attr.' data-cck-modal'.$modal_json );				
+			}
+		}
+
 		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
 			
@@ -119,7 +131,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 											cache: false,
 											data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
 											type: "GET",
-											url: "'.JUri::root().'index.php?option=com_cck&task=route&format=raw",
+											url: "'. JCckDevHelper::getAbsoluteUrl( 'auto', 'task=route&format=raw', 'root' ) .'",
 											beforeSend:function(){},
 											success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
 										});
@@ -129,14 +141,36 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				JFactory::getDocument()->addScriptDeclaration( $js );
 			}
 		}
-		if ( $link->get( 'path_type', 0 ) ) {
-			$field->link	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$field->link;
+		if ( $path_type ) {
+			if ( $site_id = $link->get( 'site', '' ) ) {
+				$base		=	'';
+				$site		=	JCck::getSiteById( $site_id );
+				
+				if ( is_object( $site ) && $site->name != '' ) {
+					$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+				}
+			} else {
+				$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
+			}
+			if ( $path_type == 2 ) {
+				$field->link	=	$base.$field->link;
+				$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
+
+				if ( $segment == '/' ) {
+					$segment	=	'';
+				}
+				$base			.=	$segment.'/';
+				$field->link	=	str_replace( $base, '', $field->link );
+				$field->link	=	$base.'#'.$field->link;
+			} else {
+				$field->link	=	$base.$field->link;
+			}
 		}
 		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
 		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
 		$field->link_state		=	$link->get( 'state', 1 );
-		$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+		$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
@@ -268,8 +302,6 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			
 			$params						=	new JRegistry;	// todo : remove+inherit?
 			$params->set( 'order_by', '' );
-			require_once JPATH_SITE.'/components/com_cck/helpers/helper_define.php';
-			require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 			
 			// Prepare
 			jimport( 'cck.base.list.list' );

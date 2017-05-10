@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -87,7 +87,6 @@ class CCK_List
 							'size',
 							'cols',
 							'rows',
-							'ordering',
 							'sorting',
 							'divider',
 							'bool',
@@ -147,7 +146,7 @@ class CCK_List
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
-		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client,'
+		$query	=	' SELECT '.self::getFieldColumns_asString( 'a' ).', c.client, c.ordering,'
 				.	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_search_field AS c ON c.fieldid = a.id'
@@ -174,7 +173,8 @@ class CCK_List
 	// getFields_Items
 	public static function getFields_Items( $search_name, $client, $access )
 	{
-		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.ordering,'
+					.	' c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 					.	' FROM #__cck_core_search_field AS c'
 					.	' LEFT JOIN #__cck_core_searchs AS sc ON sc.id = c.searchid'
 					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -191,7 +191,7 @@ class CCK_List
 		JPluginHelper::importPlugin( 'search', 'cck' );
 		$doCache	=	$options->get( 'cache' );
 		$doDebug	=	$options->get( 'debug' );
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Debug
 		if ( $doDebug ) {
@@ -348,22 +348,25 @@ class CCK_List
 	}
 	
 	// render
-	public static function render( $items, $search, $path, $client, $itemId, $options, $config )
+	public static function render( $items, $search, $path, $client, $itemId, $options, &$config_list )
 	{
 		$app	=	JFactory::getApplication();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$data	=	'';
 		$list	=	array(
-						'doSEF'=>$config['doSEF'],
-						'formId'=>$config['formId'],
-						'isCore'=>$config['doQuery'],
+						'doSEF'=>$config_list['doSEF'],
+						'formId'=>$config_list['formId'],
+						'isCore'=>$config_list['doQuery'],
 						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
-						'location'=>$config['location'],
+						'location'=>$config_list['location'],
 					);
 		
-		include JPATH_LIBRARIES_CCK.'/base/list/list_inc_list.php';
-		
+		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
+
+		if ( $config['formWrapper'] ) {
+			$config_list['formWrapper']	=	$config['formWrapper'];
+		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );
 			$data	=	JHtml::_( 'content.prepare', $data );
@@ -373,16 +376,23 @@ class CCK_List
 	}
 
 	// redirect
-	public static function redirect( $action, $url, $message = '', $type = 'error', &$config )
+	public static function redirect( $action, $url, $message, $type, &$config, $debug = 0 )
 	{
 		$app				=	JFactory::getApplication();
-		$config['error']	=	true;		
-		
+		$config['error']	=	true;
+
 		if ( ! $message ) {
-			$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+			if ( $debug ) {
+				$message	=	JText::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
+			} else {
+				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+			}
 		} else {
 			if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
 				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
+			}
+			if ( $debug ) {
+				$message	.=	' '.$config['type'].'@'.$config['formId'];
 			}
 		}
 		if ( $type ) {
@@ -394,7 +404,7 @@ class CCK_List
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url ) : $url;
+			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}

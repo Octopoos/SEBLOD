@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -86,15 +86,33 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			$dispatcher	=	JDispatcher::getInstance();
 			JPluginHelper::importPlugin( 'content' );
+			$dispatcher	=	JEventDispatcher::getInstance();
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
-				$config['error']	=	true;
-				$config['log']		=	'cancelled';
-				$config['pk']		=	$pk;
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-				return false;
+				$error		=	true;
+
+				if ( $isNew ) {
+					$i		=	2;
+					$alias	=	$table->alias.'-'.$i;
+					$test	=	JTable::getInstance( 'content' );
+					
+					while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
+						$alias		=	$table->alias.'-'.$i++;
+					}
+					$table->alias	=	$alias;
+
+					if ( $table->store() ) {
+						$error		=	false;
+					}
+				}
+				if ( $error ) {
+					$config['error']	=	true;
+					$config['log']		=	'cancelled';
+					$config['pk']		=	$pk;
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+					return false;
+				}
 			}
 			$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 			
