@@ -24,6 +24,10 @@ $ -> Language fix or change
 
 -------------------- 3.11.0 Upgrade Release [10-May-2017] -----------
 
+* Security Release:
+  >> Making sure unauthorized values (plug-ins with "options") are properly filtered.
+  >> Unauthorized values wrongly forced to "0" in some use cases.
+
 + "Edition as Copy" behaviour added on SEBLOD Form Link plug-in.
 + "Fragment as Resource" capability added.
   >> opens a Content view in Modal Box from any List.
