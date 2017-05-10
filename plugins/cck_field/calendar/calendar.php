@@ -76,8 +76,6 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 
-
-
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 
@@ -93,32 +91,31 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		// take care of default now, today etc. offsets
-		if (!empty($field->defaultvalue))
-		{
+		if ( !empty( $field->defaultvalue ) ) {
 			$defaultValueDate      = JFactory::getDate( $field->defaultvalue, $this->userTimeZone );
 			$field->defaultvalue   = $defaultValueDate->toSql();
 		}
 
-		$value = trim($value);
-		$value		=	!empty($value) ? $value  : trim( $field->defaultvalue );
+		$value	=	trim( $value );
+		$value	=	!empty( $value ) ? $value  : trim( $field->defaultvalue );
 
 
-		if ( empty($value) || $value == '0000-00-00 00:00:00' )
-		{
+		if ( empty( $value ) || $value == '0000-00-00 00:00:00' ) {
 			$Jdate		=	'';
 			$value		=	'';
 			$storedDate	=	'';
-		}
-		else
-		{
+		} else {
 			$date		=	JFactory::getDate( $value, 'UTC' );
-			$date->setTimezone( $this->userTimeZone );
+
+			if ( $config['client'] != '' ) {
+				$date->setTimezone( $this->userTimeZone );
+			}
 
 			// Transform the date string.
-			$Jdate	=	$date->format( 'Y-m-d H:i:s', true, true );
+			$Jdate						=	$date->format( 'Y-m-d H:i:s', true, true );
 			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$storedDate	=	$date->format( 'Ymd', true, true );
-			$value		=	$date->format( @$options2['format'], true, true );
+			$storedDate					=	$date->format( 'Ymd', true, true );
+			$value						=	$date->format( @$options2['format'], true, true );
 		}
 
 		$default_hour	=	@$options2['default_hour'];
@@ -130,6 +127,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 
@@ -140,16 +138,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$form		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
 
 		// Prepare
-		if (strpos($name, '[]') !== false)
-		{ //FieldX
+		if (strpos($name, '[]') !== false) { //FieldX
 			$nameH = substr($name, 0, -2);
-		}
-		elseif ($name[(strlen($name) - 1)] == ']')
-		{ //GroupX
+		} elseif ($name[(strlen($name) - 1)] == ']') { //GroupX
 			$nameH = substr($name, 0, -1);
-		}
-		else
-		{ //Default
+		} else { //Default
 			$nameH = $name;
 		}
 
@@ -171,9 +164,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			}
 
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
-		}
-		else
-		{
+		} else {
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
 
@@ -202,59 +193,46 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			return;
 		}
 
-		$input = JFactory::getApplication()->input;
-		$name	=	$field->name;
-		$valueHidden	=	$input->getString($name.'_hidden');
-		$datasource 	=	$input->getString($name.'_datasource');
+		$input			=	JFactory::getApplication()->input;
+		$name			=	$field->name;
+		$valueHidden	=	$input->getString( $name.'_hidden' );
+		$datasource 	=	$input->getString( $name.'_datasource' );
 
-		if ($datasource == "computed")
-		{
+		if ( $datasource == "computed" ) {
 			$value = $valueHidden;
 		}
 
-		$date = null;
+		$date		=	null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) && !empty($value) )
-		{
+		if ( ( trim( $value ) != '0000-00-00 00:00:00' ) && !empty( $value ) ) {
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
 
 			// If data was created by script we have in fixed format, else we need to parse string
-			if ($datasource == "computed")
-			{
-				$date = JDate::createFromFormat('Y-m-d H:i:s', $value, $this->userTimeZone);
-			}
-			else
-			{
-				$date = JDate::createFromFormat($options2['format'], $value, $this->userTimeZone);
+			if ( $datasource == "computed" ) {
+				$date	=	JDate::createFromFormat( 'Y-m-d H:i:s', $value, $this->userTimeZone );
+			} else {
+				$date	=	JDate::createFromFormat( $options2['format'], $value, $this->userTimeZone );
 			}
 
-			if ($date == false)
-			{
-				throw new OutOfBoundsException('You either used wrong format or locale set by language file is not supported on your server - ' .$locale);
-			}
-			else
-			{
-				$value = $date->format('Y-m-d H:i:s');
+			if ( $date == false ) {
+				throw new OutOfBoundsException( 'You either used wrong format or locale set by language file is not supported on your server - ' .$locale );
+			} else {
+				$value	=	$date->format( 'Y-m-d H:i:s' );
 			}
 
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
 
-			if ( $options2['storage_format'] == '0' )
-			{
+			if ( $options2['storage_format'] == '0' ) {
 				$value	=	$date->toSql();
-			}
-			else
-			{
+			} else {
 				$value	=	$date->toUnix();
 			}
 		}
 
 		// Set
-		$field->value		=	$value;
-
-
+		$field->value	=	$value;
 
 		// Prepare
 		$this->onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
@@ -274,15 +252,15 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		// Init
 		if ( count( $inherit ) ) {
-			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
-			$xk		=	( isset( $inherit['xk'] ) ) ? $inherit['xk'] : -1;
+			$name			=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
+			$xk				=	( isset( $inherit['xk'] ) ) ? $inherit['xk'] : -1;
 			$valueHidden	=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_hidden'] : @$config['post'][$name.'_hidden'];
-			$datasource	=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_datasource'] : @$config['post'][$name.'_datasource'];
+			$datasource		=	( isset( $inherit['post'] ) ) ? $inherit['post'][$name.'_datasource'] : @$config['post'][$name.'_datasource'];
 		}
 		else
 		{
-			$name	=	$field->name;
-			$xk		=	-1;
+			$name			=	$field->name;
+			$xk				=	-1;
 			$valueHidden	=	@$config['post'][$name.'_hidden'];
 			$datasource 	=	@$config['post'][$name.'_datasource'];
 		}
@@ -291,55 +269,43 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$value	=	trim( $value[$xk] );
 		}
 
-		if ($datasource == "computed")
-		{
-			$value = $valueHidden;
+		if ( $datasource == "computed" ) {
+			$value	=	$valueHidden;
 		}
 
-		$date = null;
+		// Validate
+		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
+
+		$date		=	null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim($value) != '0000-00-00 00:00:00' ) && !empty($value) )
-		{
+		if ( ( trim( $value ) != '0000-00-00 00:00:00' ) && !empty( $value ) ) {
 			// Return an SQL formatted datetime string in UTC.
-			$locale = $this->setLocale();
+			$locale	=	$this->setLocale();
 
 			// If data was created by script we have in fixed format, else we need to parse string
-			if ($datasource == "computed")
-			{
-				$date = JDate::createFromFormat('Y-m-d H:i:s', $value, $this->userTimeZone);
-			}
-			else
-			{
-
-				$date = JDate::createFromFormat($options2['format'], $value, $this->userTimeZone);
+			if ( $datasource == "computed" ) {
+				$date	=	JDate::createFromFormat( 'Y-m-d H:i:s', $value, $this->userTimeZone );
+			} else {
+				$date	=	JDate::createFromFormat( $options2['format'], $value, $this->userTimeZone );
 			}
 
-			if ($date == false)
-			{
-				throw new OutOfBoundsException('You either used wrong format or locale set by language file is not supported on your server - ' .$locale);
-			}
-			else
-			{
-				$value = $date->format('Y-m-d H:i:s');
+			if ( $date == false ) {
+				throw new OutOfBoundsException( 'You either used wrong format or locale set by language file is not supported on your server - ' .$locale );
+			} else {
+				$value	=	$date->format( 'Y-m-d H:i:s' );
 			}
 
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
 
-			if ( $options2['storage_format'] == '0' )
-			{
+			if ( $options2['storage_format'] == '0' ) {
 				$value	=	$date->toSql();
-			}
-			else
-			{
+			} else {
 				$value	=	$date->toUnix();
 			}
 		}
 
 		$this->_setText( $field, $value, $date );
-
-		// Validate
-		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
 		// Set or Return
 		if ( $return === true ) {
@@ -543,11 +509,10 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 	private function setLocale()
 	{
-		// LAme Joomla - let's actually use locale from the lang file
-		$locale = JFactory::getLanguage()->getLocale();
-		$localeset = setlocale(LC_TIME, $locale);
+		// Let's actually use locale from the lang file
+		$locale		=	JFactory::getLanguage()->getLocale();
+		$localeset	=	setlocale( LC_TIME, $locale );
 
 		return $localeset;
-
 	}
 }
