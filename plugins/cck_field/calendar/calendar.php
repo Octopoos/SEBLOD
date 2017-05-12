@@ -1,12 +1,12 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core
-* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				https://www.seblod.com
-* @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
-* @license 			GNU General Public License version 2 or later; see _LICENSE.php
-**/
+ * @version 			SEBLOD 3.x Core
+ * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+ * @url				https://www.seblod.com
+ * @editor			Octopoos - www.octopoos.com
+ * @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
+ * @license 			GNU General Public License version 2 or later; see _LICENSE.php
+ **/
 
 defined( '_JEXEC' ) or die;
 
@@ -90,14 +90,17 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 
-		// take care of default now, today etc. offsets
-		if ( !empty( $field->defaultvalue ) ) {
-			$defaultValueDate      = JFactory::getDate( $field->defaultvalue, $this->userTimeZone );
-			$field->defaultvalue   = $defaultValueDate->toSql();
+		$value	=	trim( $value );
+
+		if ( !empty($value) && (isset($config['isNew']) && $config['isNew'] == 1 ) ) {
+			// If this is a new item non-empty value comes from live, process it to take care of today, now, offsets
+			$value = JFactory::getDate( $value, $this->userTimeZone )->toSql();
 		}
 
-		$value	=	trim( $value );
-		$value	=	!empty( $value ) ? $value  : trim( $field->defaultvalue );
+		// If value is still empty try with default, process it to take care of today, now, offsets
+		if ( empty($value) && !empty( trim($field->defaultvalue) ) ) {
+			$value	=  JFactory::getDate( trim($field->defaultvalue), $this->userTimeZone )->toSql();
+		}
 
 
 		if ( empty( $value ) || $value == '0000-00-00 00:00:00' ) {
@@ -196,6 +199,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$input			=	JFactory::getApplication()->input;
 		$name			=	$field->name;
 		$valueHidden	=	$input->getString( $name.'_hidden' );
+		$valueReal	    =	$input->getString( $name );
 		$datasource 	=	$input->getString( $name.'_datasource' );
 
 		if ( $datasource == "computed" ) {
@@ -205,7 +209,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date		=	null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim( $value ) != '0000-00-00 00:00:00' ) && !empty( $value ) ) {
+		if ( ( trim( $valueReal ) != '0000-00-00 00:00:00' ) && !empty( $valueReal ) ) {
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
 
@@ -229,6 +233,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			} else {
 				$value	=	$date->toUnix();
 			}
+		}
+		else
+		{
+			// Value comes from live, set new to 1 so that it will be processed in onCCK_FieldPrepareForm
+			$config['isNew'] = 1;
 		}
 
 		// Set
