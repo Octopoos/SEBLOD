@@ -1,12 +1,12 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core
-* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				https://www.seblod.com
-* @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
-* @license 			GNU General Public License version 2 or later; see _LICENSE.php
-**/
+ * @version 			SEBLOD 3.x Core
+ * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+ * @url				https://www.seblod.com
+ * @editor			Octopoos - www.octopoos.com
+ * @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
+ * @license 			GNU General Public License version 2 or later; see _LICENSE.php
+ **/
 
 defined( '_JEXEC' ) or die;
 
@@ -90,20 +90,25 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 
-		// take care of default now, today etc. offsets
-		if ( !empty( $field->defaultvalue ) ) {
-			$defaultValueDate      = JFactory::getDate( $field->defaultvalue, $this->userTimeZone );
-			$field->defaultvalue   = $defaultValueDate->toSql();
+		$value	=	trim( $value );
+
+		if ( !empty($value) && (isset($config['isNew']) && $config['isNew'] == 1 ) ) {
+			// If this is a new item non-empty value comes from live, process it to take care of today, now, offsets
+			$value = JFactory::getDate( $value, 'UTC' )->toSql();
+			$field->value	=	$value;
 		}
 
-		$value	=	trim( $value );
-		$value	=	!empty( $value ) ? $value  : trim( $field->defaultvalue );
+		// If value is still empty try with default, process it to take care of today, now, offsets
+		if ( empty($value) && !empty( trim($field->defaultvalue) ) ) {
+			$value	=  JFactory::getDate( trim($field->defaultvalue), 'UTC' )->toSql();
+			$field->value	=	$value;
+		}
 
 
 		if ( empty( $value ) || $value == '0000-00-00 00:00:00' ) {
-			$Jdate		=	'';
-			$value		=	'';
-			$storedDate	=	'';
+			$hiddenValue		=	'';
+			$displayValue		=	'';
+			$scriptDate         =	'';
 		} else {
 			$date		=	JFactory::getDate( $value, 'UTC' );
 
@@ -112,10 +117,10 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			}
 
 			// Transform the date string.
-			$Jdate						=	$date->format( 'Y-m-d H:i:s', true, true );
-			$options2['storage_format']	=	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
-			$storedDate					=	$date->format( 'Ymd', true, true );
-			$value						=	$date->format( @$options2['format'], true, true );
+			$hiddenValue						=	$date->format( 'Y-m-d H:i:s', true, true );
+			$options2['storage_format']         =	( isset( $options2['storage_format'] ) ) ? $options2['storage_format'] : '0';
+			$scriptDate				            =	$date->format( 'Ymd', true, true );
+			$displayValue   					=	$date->format( @$options2['format'], true, true );
 		}
 
 		$default_hour	=	@$options2['default_hour'];
@@ -135,7 +140,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$maxlen		=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$readonly	=	( $field->bool2 ) ? '' : ' readonly="readonly"';
 		$attr		=	'class="'.$class.'" size="'.$field->size.'"'.$readonly.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+		$form		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$displayValue.'" '.$attr.' />';
 
 		// Prepare
 		if (strpos($name, '[]') !== false) { //FieldX
@@ -146,14 +151,14 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$nameH = $name;
 		}
 
-		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden" value="'.$Jdate.'" />';
+		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden" value="'.$hiddenValue.'" />';
 		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_datasource" name="'.$nameH.'_datasource" value="computed" />';
 
 		// Set
 		if ( ! $field->variation ) {
 			$form			.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
 			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
-			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'storedDate' => $storedDate,
+			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'scriptDate' => $scriptDate,
 			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
 			$field->form			=	$form;
 
@@ -165,10 +170,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
 		} else {
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $displayValue, $form, $id, $name, '<input', '', '', $config );
 		}
 
-		$field->value	=	$Jdate;
 
 		// Return
 		if ( $return === true ) {
@@ -196,6 +200,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$input			=	JFactory::getApplication()->input;
 		$name			=	$field->name;
 		$valueHidden	=	$input->getString( $name.'_hidden' );
+		$valueReal	    =	$input->getString( $name );
 		$datasource 	=	$input->getString( $name.'_datasource' );
 
 		if ( $datasource == "computed" ) {
@@ -205,7 +210,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date		=	null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( ( trim( $value ) != '0000-00-00 00:00:00' ) && !empty( $value ) ) {
+		// $value comes in user timezone, needs to be transformed. If $valueReal is empty value is NOW or similar
+		if ( ( trim( $valueReal ) != '0000-00-00 00:00:00' ) && !empty( $valueReal ) ) {
 			// Return an SQL formatted datetime string in UTC.
 			$locale = $this->setLocale();
 
@@ -224,11 +230,19 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
 
+			// pass value as UTC to prepareForm
+			$date->setTimezone(new DateTimeZone('UTC'));
+
 			if ( $options2['storage_format'] == '0' ) {
 				$value	=	$date->toSql();
 			} else {
 				$value	=	$date->toUnix();
 			}
+		}
+		else
+		{
+			// Value comes from live, set new to 1 so that it will be processed by onCCK_FieldPrepareForm
+			$config['isNew'] = 1;
 		}
 
 		// Set
@@ -279,6 +293,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$date		=	null;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
+		// $value is posted in user timezone, transform it to UTC
 		if ( ( trim( $value ) != '0000-00-00 00:00:00' ) && !empty( $value ) ) {
 			// Return an SQL formatted datetime string in UTC.
 			$locale	=	$this->setLocale();
@@ -298,6 +313,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 			$date	=	JFactory::getDate( $value, $this->userTimeZone );
 
+			// transform value to UTC
+			$date->setTimezone(new DateTimeZone('UTC'));
+
 			if ( $options2['storage_format'] == '0' ) {
 				$value	=	$date->toSql();
 			} else {
@@ -313,6 +331,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 
@@ -389,9 +408,9 @@ class plgCCK_FieldCalendar extends JCckPluginField
 				? 'true'
 				: 'false') . ',
 				timePos		: "' . $params['timePos'] . '",';
-		if ($params['storedDate'] != '')
+		if ($params['scriptDate'] != '')
 		{
-			$js .= 'date	: ' . $params['storedDate'] . ',';
+			$js .= 'date	: ' . $params['scriptDate'] . ',';
 		}
 		$js .= '	showTime	: ' . ($params['time']
 				? $params['time']
