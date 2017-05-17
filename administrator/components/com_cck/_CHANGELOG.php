@@ -26,6 +26,7 @@ $ -> Language fix or change
 
 # Live/Default value fixed on Calendar plug-in.
 # Timezone issue fixed on Calendar plug-in.
+# Timezone issue fixed on "JForm Calendar" plug-in.
 
 -------------------- 3.11.0 Upgrade Release [10-May-2017] -----------
 
