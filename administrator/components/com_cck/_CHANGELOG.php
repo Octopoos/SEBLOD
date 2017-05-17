@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.11.1 Upgrade Release [17-May-2017] -----------
+
+# Live/Default value fixed on Calendar plug-in.
+# Timezone issue fixed on Calendar plug-in.
+
 -------------------- 3.11.0 Upgrade Release [10-May-2017] -----------
 
 * Security Release:
