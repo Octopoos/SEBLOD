@@ -32,7 +32,10 @@
 	<config>
 		<fields name="params" addfieldpath="/libraries/cck/construction/field">
 			<fieldset name="basic">
-				<field name="" type="spacer" hr="false" />
+				<field name="export_prepare_output" type="radio" default="" label="LIB_CCK_FIELD_EXPORT_PREPARE_OUTPUT" description="LIB_CCK_FIELD_EXPORT_PREPARE_OUTPUT_DESC" class="btn-group">
+					<option value="">JGLOBAL_INHERIT</option>
+					<option value="0">JNEVER</option>
+				</field>
 			</fieldset>
 			
 			<fieldset name="advanced">

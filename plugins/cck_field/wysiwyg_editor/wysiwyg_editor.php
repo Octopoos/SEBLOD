@@ -51,10 +51,14 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		if ( static::$type != $field->type ) {
 			return;
 		}
-		
-		self::onCCK_FieldPrepareContent( $field, $value, $config );
-		
-		$field->output	=	strip_tags( $field->value );
+
+		if ( $this->params->get( 'export_prepare_output', '' ) == 0 ) {
+			$field->output	=	$value;
+		} else {
+			self::onCCK_FieldPrepareContent( $field, $value, $config );
+				
+			$field->output	=	strip_tags( $field->value );	
+		}
 	}
 
 	// onCCK_FieldPrepareForm

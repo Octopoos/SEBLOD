@@ -52,9 +52,13 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			return;
 		}
 		
-		self::onCCK_FieldPrepareContent( $field, $value, $config );
-		
-		$field->output	=	strip_tags( $field->value );
+		if ( $this->params->get( 'export_prepare_output', '' ) == 0 ) {
+			$field->output	=	$value;
+		} else {
+			self::onCCK_FieldPrepareContent( $field, $value, $config );
+			
+			$field->output	=	strip_tags( $field->value );
+		}
 	}
 
 	// onCCK_FieldPrepareForm
