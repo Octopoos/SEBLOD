@@ -2,8 +2,9 @@
 
 /.htaccess
 /administrator/cache/*
-/administrator/components/com_ajax/*
 /administrator/components/com_admin/*
+/administrator/components/com_ajax/*
+/administrator/components/com_associations/*
 /administrator/components/com_banners/*
 /administrator/components/com_cache/*
 /administrator/components/com_categories/*
@@ -13,6 +14,7 @@
 /administrator/components/com_content/*
 /administrator/components/com_contenthistory/*
 /administrator/components/com_cpanel/*
+/administrator/components/com_fields/*
 /administrator/components/com_finder/*
 /administrator/components/com_installer/*
 /administrator/components/com_joomlaupdate/*
@@ -44,6 +46,8 @@
 /administrator/language/en-GB/en-GB.com_admin.sys.ini
 /administrator/language/en-GB/en-GB.com_ajax.ini
 /administrator/language/en-GB/en-GB.com_ajax.sys.ini
+/administrator/language/en-GB/en-GB.com_associations.ini
+/administrator/language/en-GB/en-GB.com_associations.sys.ini
 /administrator/language/en-GB/en-GB.com_banners.ini
 /administrator/language/en-GB/en-GB.com_banners.sys.ini
 /administrator/language/en-GB/en-GB.com_cache.ini
@@ -62,6 +66,8 @@
 /administrator/language/en-GB/en-GB.com_contenthistory.sys.ini
 /administrator/language/en-GB/en-GB.com_cpanel.ini
 /administrator/language/en-GB/en-GB.com_cpanel.sys.ini
+/administrator/language/en-GB/en-GB.com_fields.ini
+/administrator/language/en-GB/en-GB.com_fields.sys.ini
 /administrator/language/en-GB/en-GB.com_finder.ini
 /administrator/language/en-GB/en-GB.com_finder.sys.ini
 /administrator/language/en-GB/en-GB.com_installer.ini
@@ -154,6 +160,8 @@
 /administrator/language/en-GB/en-GB.plg_content_contact.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.sys.ini
+/administrator/language/en-GB/en-GB.plg_content_fields.ini
+/administrator/language/en-GB/en-GB.plg_content_fields.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_finder.ini
 /administrator/language/en-GB/en-GB.plg_content_finder.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
@@ -178,8 +186,14 @@
 /administrator/language/en-GB/en-GB.plg_editors_tinymce.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_contact.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_contact.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_fields.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_fields.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_image.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_menu.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_menu.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_module.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_module.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.ini
@@ -188,6 +202,7 @@
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.sys.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.sys.ini
+/administrator/language/en-GB/en-GB.plg_fields_*.ini
 /administrator/language/en-GB/en-GB.plg_finder_categories.ini
 /administrator/language/en-GB/en-GB.plg_finder_categories.sys.ini
 /administrator/language/en-GB/en-GB.plg_finder_contacts.ini
@@ -214,6 +229,8 @@
 /administrator/language/en-GB/en-GB.plg_quickicon_joomlaupdate.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
+/administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.ini
+/administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_contacts.ini
@@ -230,6 +247,8 @@
 /administrator/language/en-GB/en-GB.plg_system_cache.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_debug.ini
 /administrator/language/en-GB/en-GB.plg_system_debug.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_fields.ini
+/administrator/language/en-GB/en-GB.plg_system_fields.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_highlight.ini
 /administrator/language/en-GB/en-GB.plg_system_highlight.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_languagecode.ini
@@ -275,6 +294,8 @@
 /administrator/language/fr-FR/fr-FR.com_admin.sys.ini
 /administrator/language/fr-FR/fr-FR.com_ajax.ini
 /administrator/language/fr-FR/fr-FR.com_ajax.sys.ini
+/administrator/language/fr-FR/fr-FR.com_associations.ini
+/administrator/language/fr-FR/fr-FR.com_associations.sys.ini
 /administrator/language/fr-FR/fr-FR.com_banners.ini
 /administrator/language/fr-FR/fr-FR.com_banners.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cache.ini
@@ -293,6 +314,8 @@
 /administrator/language/fr-FR/fr-FR.com_contenthistory.sys.ini
 /administrator/language/fr-FR/fr-FR.com_cpanel.ini
 /administrator/language/fr-FR/fr-FR.com_cpanel.sys.ini
+/administrator/language/fr-FR/fr-FR.com_fields.ini
+/administrator/language/fr-FR/fr-FR.com_fields.sys.ini
 /administrator/language/fr-FR/fr-FR.com_finder.ini
 /administrator/language/fr-FR/fr-FR.com_finder.sys.ini
 /administrator/language/fr-FR/fr-FR.com_installer.ini
@@ -385,6 +408,8 @@
 /administrator/language/fr-FR/fr-FR.plg_content_contact.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_content_emailcloak.ini
 /administrator/language/fr-FR/fr-FR.plg_content_emailcloak.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_content_fields.ini
+/administrator/language/fr-FR/fr-FR.plg_content_fields.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_content_finder.ini
 /administrator/language/fr-FR/fr-FR.plg_content_finder.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_content_geshi.ini
@@ -407,16 +432,23 @@
 /administrator/language/fr-FR/fr-FR.plg_editors_tinymce.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_article.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_article.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_contact.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_contact.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_fields.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_fields.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_image.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_module.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_menu.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_menu.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_readmore.ini
 /administrator/language/fr-FR/fr-FR.plg_editors-xtd_readmore.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_extension_joomla.ini
 /administrator/language/fr-FR/fr-FR.plg_extension_joomla.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_fields_*.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_categories.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_categories.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_finder_contacts.ini
@@ -441,6 +473,8 @@
 /administrator/language/fr-FR/fr-FR.plg_quickicon_extensionupdate.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_quickicon_joomlaupdate.ini
 /administrator/language/fr-FR/fr-FR.plg_quickicon_joomlaupdate.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_quickicon_phpversioncheck.ini
+/administrator/language/fr-FR/fr-FR.plg_quickicon_phpversioncheck.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_search_categories.ini
 /administrator/language/fr-FR/fr-FR.plg_search_categories.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_search_contacts.ini
@@ -457,6 +491,8 @@
 /administrator/language/fr-FR/fr-FR.plg_system_cache.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_system_debug.ini
 /administrator/language/fr-FR/fr-FR.plg_system_debug.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_system_fields.ini
+/administrator/language/fr-FR/fr-FR.plg_system_fields.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_system_highlight.ini
 /administrator/language/fr-FR/fr-FR.plg_system_highlight.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_system_languagecode.ini
@@ -605,6 +641,8 @@
 /components/com_contact/*
 /components/com_content/*
 /components/com_contenthistory/*
+/components/com_fields/*
+/components/com_menus/*
 /administrator/templates/system/*
 /administrator/templates/index.html
 /administrator/index.php
@@ -884,6 +922,7 @@
 /layouts/libraries/cms/html/*
 /layouts/libraries/cms/index.html
 /layouts/libraries/index.html
+/layouts/plugins/editors/tinymce/*
 /layouts/plugins/user/profile/*
 /layouts/index.html
 /language/en-GB/en-GB.tpl_beez5.ini
@@ -948,10 +987,16 @@
 /media/cck/processings/ecommerce/*
 /media/cck/processings/users/*
 /media/cms/*
+/media/com_associations/*
 /media/com_banners/*
+/media/com_contact/*
+/media/com_content/*
 /media/com_contenthistory/*
+/media/com_fields/*
 /media/com_finder/*
 /media/com_joomlaupdate/*
+/media/com_menus/*
+/media/com_modules/*
 /media/com_wrapper/*
 /media/contacts/*
 /media/editors/*
@@ -1008,6 +1053,7 @@
 /plugins/content/contact/*
 /plugins/content/emailcloak/*
 /plugins/content/example/*
+/plugins/content/fields/*
 /plugins/content/finder/*
 /plugins/content/geshi/*
 /plugins/content/joomla/*
@@ -1021,7 +1067,10 @@
 /plugins/editors/tinymce/*
 /plugins/editors/index.html
 /plugins/editors-xtd/article/*
+/plugins/editors-xtd/contact/*
+/plugins/editors-xtd/fields/*
 /plugins/editors-xtd/image/*
+/plugins/editors-xtd/menu/*
 /plugins/editors-xtd/module/*
 /plugins/editors-xtd/pagebreak/*
 /plugins/editors-xtd/readmore/*
@@ -1029,6 +1078,7 @@
 /plugins/extension/example/*
 /plugins/extension/joomla/*
 /plugins/extension/index.html
+/plugins/fields/*
 /plugins/finder/index.html
 /plugins/finder/categories/*
 /plugins/finder/contacts/*
@@ -1042,6 +1092,7 @@
 /plugins/installer/webinstaller/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
+/plugins/quickicon/phpversioncheck/*
 /plugins/quickicon/index.html
 /plugins/finder/weblinks/*
 /plugins/quickicon/extensionupdate/*
@@ -1055,6 +1106,7 @@
 /plugins/search/index.html
 /plugins/system/cache/*
 /plugins/system/debug/*
+/plugins/system/fields/*
 /plugins/system/highlight/*
 /plugins/system/languagecode/*
 /plugins/system/languagefilter/*
