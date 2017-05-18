@@ -79,6 +79,27 @@ class plgUserCCK extends JPlugin
 		}
 	}
 	
+	// onUserLogin
+	public function onUserLogin( $user, $options = array() )
+	{
+		// Processing
+		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onUserLogin';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+	}
+	
 	// _delete
 	protected function _delete( $pk, $location, $base, $event = '' )
 	{
