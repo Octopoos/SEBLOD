@@ -1320,6 +1320,7 @@ Temporary Items
 /components/com_cck_webservices/*
 /language/en-GB/en-GB.com_cck_webservices.ini
 /language/fr-FR/fr-FR.com_cck_webservices.ini
+/media/cck_webservices/*
 
 ######## SEBLOD Add-ons >> Updater
 
