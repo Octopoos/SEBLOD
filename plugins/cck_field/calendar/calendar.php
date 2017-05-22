@@ -394,14 +394,11 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$js = '<script type="text/javascript">
 		var cal = Calendar.setup({';
 
-		if ($params['type'] == 'form')
-		{
+		if ( $params['type'] == 'form' ) {
 			$id1 = $id;
 			$js .= 'trigger	: "' . $id . '-trigger",';
 			$js .= 'inputField	: "' . $id . '",';
-		}
-		else
-		{
+		} else {
 			$id1 = $id . '_hidden';
 			$js .= 'trigger	: "' . $id . '_hidden-trigger",';
 			$js .= 'inputField	: "' . $id . '_hidden",';
@@ -412,18 +409,16 @@ class plgCCK_FieldCalendar extends JCckPluginField
 				? 'true'
 				: 'false') . ',
 				timePos		: "' . $params['timePos'] . '",';
-		if ($params['scriptDate'] != '')
-		{
+		if ( $params['scriptDate'] != '' ) {
 			$js .= 'date	: ' . $params['scriptDate'] . ',';
 		}
 		$js .= '	showTime	: ' . ($params['time']
 				? $params['time']
 				: 'false');
-		if ($params['dates'] != '0')
-		{
+		if ( $params['dates'] != '0' ) {
 			$js .= ',';
 		}
-		$js .= self::_availableDates(array('dates' => $params['dates']));
+		$js .= self::_availableDates( array( 'dates' => $params['dates'] ) );
 		$js .= ',	onSelect	: function(cal) { 
 								var sel_date = this.selection.get();
 								var hours	=	cal.getHours();
@@ -432,7 +427,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 								sel_date.setHours(hours);
 								sel_date.setMinutes(minutes);';
 
-		$js .= ($params['time'] == '0')
+		$js .= ( $params['time'] == '0' )
 			? 'var Jdate = Calendar.printDate(sel_date, "%Y-%m-%d ' . $params['default_hour'] . ':' . $params['default_min'] . ':' . $params['default_sec'] . '");'
 			: 'var Jdate = Calendar.printDate(sel_date, "%Y-%m-%d %H:%M:00");';
 
@@ -444,8 +439,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$js .= 'this.hide();  }';
 		$js .= '});';
 
-		if ($params['input_text'])
-		{
+		if ( $params['input_text'] ) {
 			$js .= 'jQuery(document).ready(function($){ $(document).on("change", "#' . $id1 . '", function() {
 			  jQuery("#' . $id . '_datasource").val("manual");
 			}); });';
