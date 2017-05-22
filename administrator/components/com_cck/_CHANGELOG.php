@@ -28,6 +28,7 @@ $ -> Language fix or change
 + "Prepare Output" parameter added on Textarea, Wysiwyg Editor plug-ins.
 
 # "/api..." URLs fixed.
+# Calendar issues fixed (regression since SEBLOD 3.11.0).
 # "Guest Only - [SITE]" group now assigned to "Guest" Access Level.
 
 -------------------- 3.11.1 Upgrade Release [17-May-2017] -----------
