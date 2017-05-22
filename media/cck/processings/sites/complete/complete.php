@@ -48,8 +48,12 @@ $parent_id		=	$guest_group;
 $usergroups[]	=	$guest_group;
 
 if ( $guest_only ) {
-	$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, $guest_group )
-								  : CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, 1 );
+	if ( $mode ) {
+		$guest_group	=	CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, $guest_group );
+		CCK_TableSiteHelper::updateViewLevel( 5, $guest_group );
+	} else {
+		$guest_group	=	CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, 1 );
+	}
 }
 
 // Guest User
@@ -69,7 +73,7 @@ foreach ( $groups as $i=>$g ) {
 		$parent_id		=	CCK_TableSiteHelper::addUserGroup( $group->title .' - '. $sitetitle, $parent_id );
 		$usergroups[]	=	$parent_id;
 		if ( $special == 0 ) {
-			CCK_TableSiteHelper::updateViewLevel( 2, $parent_id );					
+			CCK_TableSiteHelper::updateViewLevel( 2, $parent_id );
 			$special++;
 		}
 		if ( ( $g == 6 || $g == 7 ) && $special == 1 ) {
