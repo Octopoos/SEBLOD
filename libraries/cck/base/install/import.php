@@ -564,7 +564,7 @@ class CCK_Import
 			foreach ( $files as $file ) {
 				$path	=	$src.'/'.$file;
 				if ( JFile::exists( $path ) ) {
-					$query	=	JFile::read( $path );
+					$query	=	file_get_contents( $path );
 					$db->setQuery( $query );
 					$db->queryBatch();
 				}
