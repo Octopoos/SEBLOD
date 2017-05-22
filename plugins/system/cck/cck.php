@@ -913,14 +913,14 @@ class plgSystemCCK extends JPlugin
 		} else {
 			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
 													. ' FROM #__menu WHERE'
-													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1',
-													'path' );
+													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
 			$path	=	JUri::getInstance()->getPath();
 			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
 			if ( count( $apis ) ) {
 				foreach ( $apis as $api ) {
-					$api	=	$prefix.'/'.$api->path;
+					$api	=	$prefix.'/'.$api->path.'/';
+
 					$pos	=	strpos( $path, $api );
 
 					if ( $pos !== false && $pos == 0 ) {
