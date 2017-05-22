@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.11.2 Upgrade Release [22-May-2017] -----------
+
++ "onUserLogin" event support added.
++ "Prepare Output" parameter added on Textarea, Wysiwyg Editor plug-ins.
+
+# "/api..." URLs fixed.
+# "Guest Only - [SITE]" group now assigned to "Guest" Access Level.
+
 -------------------- 3.11.1 Upgrade Release [17-May-2017] -----------
 
 # Live/Default value fixed on Calendar plug-in.
