@@ -144,15 +144,18 @@ class plgCCK_FieldCalendar extends JCckPluginField
 
 		// Prepare
 		if (strpos($name, '[]') !== false) { //FieldX
-			$nameH = substr($name, 0, -2);
+			$nameSearched = substr($name, 0, -2);
 		} elseif ($name[(strlen($name) - 1)] == ']') { //GroupX
-			$nameH = substr($name, 0, -1);
+			$nameSearched = substr($name, 0, -1);
 		} else { //Default
-			$nameH = $name;
+			$nameSearched = $name;
 		}
 
-		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden" value="'.$hiddenValue.'" />';
-		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_datasource" name="'.$nameH.'_datasource" value="computed" />';
+		$nameH = str_replace($nameSearched, $nameSearched.'_hidden', $name);
+		$nameS = str_replace($nameSearched, $nameSearched.'_datasource', $name);
+
+		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'" value="'.$hiddenValue.'" />';
+		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_datasource" name="'.$nameS.'" value="computed" />';
 
 		// Set
 		if ( ! $field->variation ) {
@@ -171,6 +174,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
 		} else {
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $displayValue, $form, $id, $name, '<input', '', '', $config );
+			$field-> form .= $form;
 		}
 
 
@@ -389,20 +393,20 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	{
 		$js = '<script type="text/javascript">
 		var cal = Calendar.setup({';
+
 		if ($params['type'] == 'form')
 		{
 			$id1 = $id;
-			$id2 = $id . '_hidden';
 			$js .= 'trigger	: "' . $id . '-trigger",';
 			$js .= 'inputField	: "' . $id . '",';
 		}
 		else
 		{
 			$id1 = $id . '_hidden';
-			$id2 = $id;
 			$js .= 'trigger	: "' . $id . '_hidden-trigger",';
 			$js .= 'inputField	: "' . $id . '_hidden",';
 		}
+
 		$js .= 'dateFormat	: "' . $params['dateFormat'] . '",
 				weekNumbers	: ' . ($params['weekNumbers']
 				? 'true'
@@ -427,23 +431,26 @@ class plgCCK_FieldCalendar extends JCckPluginField
 								var sel_date = Calendar.intToDate(sel_date);
 								sel_date.setHours(hours);
 								sel_date.setMinutes(minutes);';
+
 		$js .= ($params['time'] == '0')
 			? 'var Jdate = Calendar.printDate(sel_date, "%Y-%m-%d ' . $params['default_hour'] . ':' . $params['default_min'] . ':' . $params['default_sec'] . '");'
 			: 'var Jdate = Calendar.printDate(sel_date, "%Y-%m-%d %H:%M:00");';
+
 		$js .= ($params['type'] == 'form')
 			? 'jQuery("#' . $id . '_hidden").val(Jdate);'
 			: 'jQuery("#' . $id . '").val(Jdate) ;';
-		//$js .= 'this.hide(); jQuery("#' . $id . '").trigger("change"); }';
+
 		$js .= 'jQuery("#' . $id . '_datasource").val("computed"); ';
 		$js .= 'this.hide();  }';
 		$js .= '});';
+
 		if ($params['input_text'])
 		{
-			//$js .= 'jQuery(document).ready(function($){ $(document).on("change", "#' . $id1 . '", function() { $("#' . $id2 . '").val($("#' . $id1 . '").val()); }); });';
 			$js .= 'jQuery(document).ready(function($){ $(document).on("change", "#' . $id1 . '", function() {
 			  jQuery("#' . $id . '_datasource").val("manual");
 			}); });';
 		}
+
 		$js .= '</script>
 				';
 
