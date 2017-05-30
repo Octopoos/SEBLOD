@@ -378,8 +378,8 @@ class CCKController extends JControllerLegacy
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
 
-		$file = $model->export( $params, $task_id, $ids, $config );
-		$file	=	JCckDevHelper::getRelativePath( $file, false );
+		$file 		=	$model->export( $params, $task_id, $ids, $config );
+		$file		=	JCckDevHelper::getRelativePath( $file, false );
 		
 		if ( $file ) {
 			$error			=	0;

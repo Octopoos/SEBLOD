@@ -121,7 +121,7 @@ if ( $limitstart != -1 ) {
 	if ( $limitstart > 0 && !(int)$app->input->getInt( 'start' ) ) {
 		$isAltered	=	true;
 	}
-	if ( isset( $this ) ) {
+	if ( isset( $this ) && isset( $this->state ) && is_object( $this->state ) ) {
 		if ( $limitend != -1 ) {
 			$this->state->set( 'limit', (int)$limitend );
 		}
@@ -283,7 +283,7 @@ if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
 }
 $preconfig['client']	=	'list';
 $error					=	'';
-$current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$params->get( 'order_by', '' ) );
+$current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$order_by );
 $session				=	JFactory::getSession();
 $registry				=	$session->get( 'registry' );
 $stages					=	array();
