@@ -92,14 +92,14 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		} else {			
 			// Prepare
 			if ( $years != 0 ) {
-				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
-				$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
+				$text_years		=	mb_strtolower( JText::_( 'COM_CCK_YEARS' ) );
+				$text_year		=	mb_strtolower( JText::_( 'COM_CCK_YEAR' ) );
 
 				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
 				$interval		=	JText::sprintf( $state, $interval );
 			} elseif ( $months != 0 ) {
-				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
-				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
+				$text_months	=	mb_strtolower( JText::_( 'COM_CCK_MONTHS' ) );
+				$text_month		=	mb_strtolower( JText::_( 'COM_CCK_MONTH' ) );
 
 				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
 				$interval		=	JText::sprintf( $state, $interval );
@@ -119,8 +119,8 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 						$minutes		=	$interval->format( '%i' );
 						if ( $unit == 2 ) {
 							$minutes		+=	( $hours * 60 );
-							$text_minutes	=	strtolower( JText::_( 'COM_CCK_MINUTES' ) );
-							$text_minute	=	strtolower( JText::_( 'COM_CCK_MINUTE' ) );
+							$text_minutes	=	mb_strtolower( JText::_( 'COM_CCK_MINUTES' ) );
+							$text_minute	=	mb_strtolower( JText::_( 'COM_CCK_MINUTE' ) );
 
 							if ( $minutes == 0 ) {
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
@@ -132,8 +132,8 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 							}
 						}
 						if ( $unit == 1 ) {
-							$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
-							$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
+							$text_hours		=	mb_strtolower( JText::_( 'COM_CCK_HOURS' ) );
+							$text_hour		=	mb_strtolower( JText::_( 'COM_CCK_HOUR' ) );
 
 							if ( $hours == 0 ) {
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
