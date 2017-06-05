@@ -84,6 +84,18 @@ abstract class JCckDatabase
 		return true;
 	}
 	
+	// getTableColumns
+	public static function getTableColumns( $table, $flip = false )
+	{
+		return $flip ? array_flip( array_keys( JFactory::getDbo()->getTableColumns( $table ) ) ) : array_keys( JFactory::getDbo()->getTableColumns( $table ) );
+	}
+
+	// getTableFullColumns
+	public static function getTableFullColumns( $table )
+	{
+		return JFactory::getDbo()->getTableColumns( $table, false );
+	}
+
 	// getTableCreate
 	public static function getTableCreate( $tables )
 	{
