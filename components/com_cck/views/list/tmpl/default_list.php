@@ -32,7 +32,16 @@ if ( !$this->raw_rendering ) { ?>
 	if ( $this->show_items_number ) {
 		$label	=	$this->label_items_number;
 		if ( $this->config['doTranslation'] ) {
-			$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ) ) );
+			$label	=	'COM_CCK_' . str_replace( ' ', '_', trim( $label ) );
+
+			if ( $this->total == 1 && JFactory::getLanguage()->hasKey( $label.'_1' ) ) {
+				$label	.=	'_1';
+			}
+			$label	=	JText::_( $label );
+		} elseif ( $this->total == 1 ) {
+			if ( JFactory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
+				$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
+			}			
 		}
 		echo '<div class="'.$this->class_items_number.'"><span>' . $this->total .'</span> '. $label . '</div>';
 	}
