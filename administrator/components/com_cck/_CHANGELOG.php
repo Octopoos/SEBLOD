@@ -24,6 +24,9 @@ $ -> Language fix or change
 
 -------------------- 3.11.3 Upgrade Release [xx-Jun-2017] -----------
 
++ Alternative Language constant "..._1" for unique search result added.
+
+# Trigger "change" issue fixed on Calendar (regression since SEBLOD 3.11.0).
 # Various minor issues fixed.
 
 -------------------- 3.11.2 Upgrade Release [22-May-2017] -----------
