@@ -436,7 +436,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			: 'jQuery("#' . $id . '").val(Jdate) ;';
 
 		$js .= 'jQuery("#' . $id . '_datasource").val("computed"); ';
-		$js .= 'this.hide();  }';
+		$js .= 'this.hide(); jQuery("#'.$id.'").trigger("change"); }';
 		$js .= '});';
 
 		if ( $params['input_text'] ) {
