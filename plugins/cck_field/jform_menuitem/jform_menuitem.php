@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // Plugin
 class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 {
@@ -105,7 +107,7 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 			$group	=	false;
 			foreach ( $options as $i=>$val ) {
 				if ( trim( $val ) != '' ) {
-					if ( JString::strpos( $val, '=' ) !== false ) {
+					if ( StringHelper::strpos( $val, '=' ) !== false ) {
 						$o		=	explode( '=', $val );
 					} else {
 						$o		=	array( 0=>$val, 1=>$val );	

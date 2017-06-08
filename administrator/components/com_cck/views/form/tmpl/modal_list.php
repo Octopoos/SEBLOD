@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 $app		=	JFactory::getApplication();
 $base		=	'index.php?option=com_cck&view=form';
 $doc		=	JFactory::getDocument();
@@ -33,7 +35,7 @@ if ( $legacy == 1 ) {
 	$legend2	=	'';
 } elseif ( $legacy == 2 ) {
 	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
-	$legend2	=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND2', '<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.JString::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
+	$legend2	=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND2', '<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.StringHelper::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
 } else {
 	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
 	$legend2	=	'';

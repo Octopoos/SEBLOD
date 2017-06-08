@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // Plugin
 class plgCCK_FieldSelect_Multiple extends JCckPluginField
 {
@@ -129,7 +131,7 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 			foreach ( $optionsSorted as $i=>$val ) {
 				if ( trim( $val ) != '' ) {
 					$text	=	$val;
-					if ( JString::strpos( $val, '=' ) !== false ) {
+					if ( StringHelper::strpos( $val, '=' ) !== false ) {
 						$opt	=	explode( '=', $val );
 						$text	=	$opt[0];
 						$val	=	$opt[1];
