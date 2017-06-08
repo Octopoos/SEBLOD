@@ -65,7 +65,7 @@ div.cck_forms.cck_site div.cck_value.cck_value_wysiwyg_editor p,
 div.cck_forms.cck_site div.cck_value
 {line-height:1.2em;}
 
-div.cck_forms.cck_site div.cck_label label{margin-bottom: 0px;}
+div.cck_forms.cck_site div.cck_label label{margin-bottom: 0;}
 
 div.cck_forms.cck_site div.cck_form span[class^="icon-"],
 div.cck_forms.cck_site div.cck_form span[class*=" icon-"] 
@@ -77,8 +77,8 @@ div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
 div.cck_forms.cck_site div.cck_label{float:left;width:145px;}
 div.cck_forms.cck_site div.cck_form{float:left;width:auto;}
 div.cck_forms.cck_site div.cck_desc{clear:both;width:auto;}
-div.cck_forms.cck_site div.cck_desc p{margin:8px 0px 0px 0px;}
-div.vertical div.cck_forms.cck_site div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
+div.cck_forms.cck_site div.cck_desc p{margin:8px 0 0 0;}
+div.vertical div.cck_forms.cck_site div.cck_label {width: 145px; text-align: left; padding: 0;}
 div.cck_forms.cck_site div.cck_form span.variation_value{line-height:1.2em;}
 div.cck_forms.cck_site div.cck_desc .hasPopover{padding:3px 0 0 5px;}
 
@@ -114,7 +114,7 @@ div.cck_forms.cck_site div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_bo
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:hover.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box,
-div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE FIELD X*/
 div.cck_forms.cck_site div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
@@ -139,12 +139,12 @@ div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul {padding: 0!importan
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul li {list-style:none;}
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:link.jform_rules_box,
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:visited.jform_rules_box,
-div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE JOOMLA ROUTE*/
 div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:link.joomla_route_box,
 div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:visited.joomla_route_box,
-div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE CAPTCHA MATH*/
 div.cck_forms.cck_site div.cck_form.cck_form_captcha_math span.variation_value{ float:left; padding-right:5px;}
@@ -216,7 +216,7 @@ fieldset div.cck_forms.cck_site ul.adminformlist fieldset{
  
 /* TEMPORARY.. until a proper group markup */
 ul.adminformlist, ul.adminformlist li {margin:0; padding:0; width:auto; list-style:none;}
-div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0px 5px 0px; line-height:23px; height:30px;}
+div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0; line-height:23px; height:30px;}
 
 .btn [class^="icon-"],
 .btn [class*=" icon-"] {
