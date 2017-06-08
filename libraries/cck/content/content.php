@@ -100,7 +100,7 @@ class CCK_Content
 	public static function prepare( &$row = null, $name = 'description', $params = null )
 	{
 		if ( $row === null ) {
-			return;
+            return true;
 		}
 		if ( $params === null ) {
 			$params	=	new JObject;

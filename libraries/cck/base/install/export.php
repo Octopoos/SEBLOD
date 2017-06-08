@@ -88,7 +88,7 @@ class CCK_Export
 		} elseif ( is_file( $path ) ) {
 			$paths	=	array( 0=>$path );
 		} else {
-			return;
+            return true;
 		}
 
 		if ( count( $paths ) ) {
@@ -167,7 +167,7 @@ class CCK_Export
 		require_once JPATH_COMPONENT.'/helpers/pclzip/pclzip.lib.php';
 		$zip	=	new PclZip( $path_zip );
 		if ( $zip->create( $path, PCLZIP_OPT_REMOVE_PATH, $path ) == 0 ) {
-			return;
+            return true;
 		}
 		JFolder::delete( $path );
 		

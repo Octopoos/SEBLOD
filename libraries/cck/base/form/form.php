@@ -93,7 +93,7 @@ class CCK_Form
 	public static function getTemplateStyle( $id, $params = array() )
 	{
 		if ( ! $id ) {
-			return;
+            return true;
 		}
 		$query			=	'SELECT a.id, a.template as name, a.params FROM #__template_styles AS a'
 						.	' LEFT JOIN #__cck_core_templates AS b ON b.name = a.template'

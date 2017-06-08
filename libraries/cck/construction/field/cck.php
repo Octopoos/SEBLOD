@@ -32,7 +32,7 @@ class JFormFieldCCK extends JFormField
 		$selectlabel	=	isset( $this->element['cck_selectlabel'] ) ? (string)$this->element['cck_selectlabel'] : 'undefined';
 		
 		if ( ! $name ) {
-			return;
+            return true;
 		}
 		
 		$format			=	(string)$this->element['js_format'];
@@ -58,7 +58,7 @@ class JFormFieldCCK extends JFormField
 		
 		$field					=	JCckDevField::getObject( $name );
 		if ( ! $field ) {
-			return;
+            return true;
 		}
 		$storage_field			=	$field->storage_field;
 		$field->storage_field	=	$this->name;
@@ -180,8 +180,8 @@ class JFormFieldCCK extends JFormField
 				$doc->addScriptDeclaration( $js );
 			}
 		}
-		
-		return;
+
+        return true;
 	}
 }
 ?>
