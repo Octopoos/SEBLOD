@@ -140,7 +140,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$maxlen		=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$readonly	=	( $field->bool2 ) ? '' : ' readonly="readonly"';
 		$attr		=	'class="'.$class.'" size="'.$field->size.'"'.$readonly.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$displayValue.'" '.$attr.' />';
+		$visibleForm		=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$displayValue.'" '.$attr.' />';
 
 		// Prepare
 		if (strpos($name, '[]') !== false) { //FieldX
@@ -154,16 +154,10 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		$nameH = str_replace($nameSearched, $nameSearched.'_hidden', $name);
 		$nameS = str_replace($nameSearched, $nameSearched.'_datasource', $name);
 
-		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'" value="'.$hiddenValue.'" />';
-		$form	.=	'<input class="inputbox" type="hidden" id="'.$id.'_datasource" name="'.$nameS.'" value="computed" />';
+		$hiddenForm	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'" value="'.$hiddenValue.'" />';
+		$hiddenForm	.=	'<input class="inputbox" type="hidden" id="'.$id.'_datasource" name="'.$nameS.'" value="computed" />';
 
-		// Set
-		if ( ! $field->variation ) {
-			$form			.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
-			$form			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
-			                                                     'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'scriptDate' => $scriptDate,
-			                                                     'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
-			$field->form			=	$form;
+		if (  !in_array($field->variation,array('value', 'disabled')) ) {
 
 			if ( isset( $field->markup_class ) ) {
 				$field->markup_class	.=	' input-append';
@@ -171,10 +165,19 @@ class plgCCK_FieldCalendar extends JCckPluginField
 				$field->markup_class	=	' input-append';
 			}
 
-			self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
+			$visibleForm			.=	'<button class="btn btn-default" id="'.$id.'-trigger"><span class="icon-calendar"></span></button>';
+			$visibleForm			.=	self::_addScript( $id, array( 'dateFormat' => $format_jscal2, 'time' => @$options2['time'],
+			                                                            'weekNumbers' => @$options2['week_numbers'], 'timePos' => @$options2['time_pos'], 'dates' => @$options2['dates'], 'scriptDate' => $scriptDate,
+			                                                            'default_hour' => $default_hour, 'default_min' => $default_min, 'default_sec' => $default_sec, 'type' => 'form', 'input_text'=>$field->bool2 ) );
+		}
+
+		self::_addScripts( array( 'theme'=>@$options2['theme'] ) );
+
+		// Set
+		if ( ! $field->variation ) {
+			$field->form			=	$visibleForm . $hiddenForm;
 		} else {
-			parent::g_getDisplayVariation( $field, $field->variation, $value, $displayValue, $form, $id, $name, '<input', '', '', $config );
-			$field-> form .= $form;
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $displayValue, $visibleForm, $id, $name, '<input', '', $hiddenForm, $config );
 		}
 
 
