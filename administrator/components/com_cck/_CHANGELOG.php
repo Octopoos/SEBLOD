@@ -22,11 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.11.3 Upgrade Release [xx-Jun-2017] -----------
+-------------------- 3.11.3 Upgrade Release [09-Jun-2017] -----------
 
 + Alternative Language constant "..._1" for unique search result added.
 
+! Various cleaning performed.
+
+# Missing "Debug" fixed on Lists.
 # Trigger "change" issue fixed on Calendar (regression since SEBLOD 3.11.0).
+# Variations fixed on Calendar within Group X (regression since SEBLOD 3.11.2).
 # Various minor issues fixed.
 
 -------------------- 3.11.2 Upgrade Release [22-May-2017] -----------
