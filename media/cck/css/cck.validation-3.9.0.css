@@ -12,12 +12,12 @@
 
 .formError .formErrorContent {
 	width: 100%; background: #242424; position:relative; color: #fff; min-width: 120px; font-family: tahoma; font-size: 11px;
-	padding: 4px 10px 4px 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; text-align:left;
+	padding: 4px 10px 4px 10px; border-radius: 4px; text-align:left;
 }
 
 .formError.inline .formErrorContent {
 	display: inline-block; background: none; color: #ff0000; border: none; box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
-	-o-box-shadow: none; padding: 6px 0px 0px 6px; border-radius: 0; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0;}
+	-o-box-shadow: none; padding: 6px 0px 0px 6px; border-radius: 0;}
 
 .greenPopup .formErrorContent {background: #33be40;}
 
