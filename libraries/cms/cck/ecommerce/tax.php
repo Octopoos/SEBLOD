@@ -78,7 +78,9 @@ abstract class JCckEcommerceTax
 								$qty	=	0;
 								if ( count( $items[$params['target_id']] ) ) {
 									foreach ( $items[$params['target_id']] as $item ) {
-										$qty	+=	(int)$item->quantity;
+										if ( isset( $item->quantity ) ) {
+											$qty	+=	(int)$item->quantity;
+										}
 									}
 								}
 								if ( (int)$qty >= 1 ) {
