@@ -63,7 +63,7 @@ div.cck_forms.cck_admin div.cck_form.cck_form_radio label{clear:none;display:tab
 div.cck_forms.cck_admin div.cck_form.cck_form_radio fieldset.radios.btn-group label{line-height:120%;padding-right:14px;}
 
 /*ADMIN GENERIQUE WYSIWYG*/
-div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%; float:left;}
 div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,

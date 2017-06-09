@@ -110,7 +110,7 @@ div.cck_forms.cck_search div.cck_form.cck_form_radio input{float:left;margin: 5p
 div.cck_forms.cck_search div.cck_form.cck_form_radio label{clear:none;display:table;float:left;line-height:190%;margin:0;padding-right:20px;}
 
 /*SITE GENERIQUE WYSIWYG*/
-div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;text-align:center;padding: 0 0 10px 0; background:none; width:100%; float:left;}
 div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor div.cck_wysiwyg_editor_box{ background: #EEEEEE;border: 1px solid #CCCCCC;border-radius: 3px 3px 3px 3px;line-height: 25px;width: 100px;}
 div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
 div.cck_forms.cck_search div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box{text-decoration:none; color:#146295; display:block;}
