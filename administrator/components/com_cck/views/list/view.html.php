@@ -56,6 +56,7 @@ class CCKViewList extends JViewLegacy
 		
 		$limitstart					=	$this->state->get( 'limitstart' );
 		$live						=	'';
+		$order_by					=	'';
 		$variation					=	'';
 
 		$preconfig['show_form']		=	'';
