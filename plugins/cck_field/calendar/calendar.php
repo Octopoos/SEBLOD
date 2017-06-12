@@ -99,7 +99,8 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 		// If value is still empty try with default, process it to take care of today, now, offsets
-		if ( empty($value) && !empty( trim($field->defaultvalue) ) ) {
+		$field->defaultvalue	=	trim( $field->defaultvalue );
+		if ( empty($value) && !empty( $field->defaultvalue ) ) {
 			$value	=  JFactory::getDate( trim($field->defaultvalue), 'UTC' )->toSql();
 			$field->value	=	$value;
 		}
