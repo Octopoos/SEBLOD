@@ -112,6 +112,10 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				JCckPluginLink::g_setHtml( $field1, 'text' );
 				if ( isset( $field1->link_onclick ) && $field1->link_onclick ) {
 					$onclick	=	$field1->link_onclick;
+					
+					if ( $field1->link && strpos( $field1->link, 'javascript:' ) === false ) {
+						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
+					}
 				} elseif ( $field1->link ) {
 					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
 				}
@@ -211,6 +215,10 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				JCckPluginLink::g_setHtml( $field1, 'text' );
 				if ( isset( $field1->link_onclick ) && $field1->link_onclick ) {
 					$onclick	=	$field1->link_onclick;
+					
+					if ( $field1->link && strpos( $field1->link, 'javascript:' ) === false ) {
+						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
+					}				
 				} elseif ( $field1->link ) {
 					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
 				} else {
