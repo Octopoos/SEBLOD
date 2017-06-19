@@ -32,6 +32,7 @@ $ -> Language fix or change
 
 # Calendar fixed for PHP 5.4
 # Delete link issue fixed on Free Button field plug-in.
+# Delete support added Batch/List (i.e Search Form).
 # Missing "return" added on "Export", "Process" tasks from Submit Button plug-in.
 # Various improvements or issues fixed.
 
