@@ -180,7 +180,20 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				$f->link_rel		=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
 				$f->link_state		=	$link->get( 'state', 1 );
 				$f->link_target		=	$link_target ? $link_target : ( isset( $f->link_target ) ? $f->link_target : '' );
-				$f->link_title		=	$link_title ? ( $link_title == '2' ? $link_title2 : ( isset( $f->link_title ) ? $f->link_title : '' ) ) : '';
+				$f->link_title		=	'';
+
+				if ( $link_title ) {
+					if ( $link_title == '2' ) {
+						$f->link_title	=	$link_title2;
+					} elseif ( $link_title == '3' ) {
+						$f->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+					}
+					if ( !isset( $f->link_title ) ) {
+						$f->link_title	=	'';
+					}
+				} else {
+					$f->link_title		=	'';
+				}
 			}
 			$field->link		=	'#';	//todo
 		} else {
@@ -203,7 +216,19 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
 			$field->link_state		=	$link->get( 'state', 1 );
 			$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
-			$field->link_title		=	$link_title ? ( $link_title == '2' ? $link_title2 : ( isset( $field->link_title ) ? $field->link_title : '' ) ) : '';
+
+			if ( $link_title ) {
+				if ( $link_title == '2' ) {
+					$field->link_title	=	$link_title2;
+				} elseif ( $link_title == '3' ) {
+					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+				}
+				if ( !isset( $field->link_title ) ) {
+					$field->link_title	=	'';
+				}
+			} else {
+				$field->link_title		=	'';
+			}
 		}
 	}
 

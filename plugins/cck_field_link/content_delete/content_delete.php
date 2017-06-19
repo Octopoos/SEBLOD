@@ -95,7 +95,19 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 			$field->link_onclick	=	'if(!confirm(\''.addslashes( JText::_( 'COM_CCK_CONFIRM_DELETE' ) ).'\')){return false;}';
 		}
 		$field->link_state	=	$link->get( 'state', 1 );
-		$field->link_title	=	$link_title ? ( $link_title == '2' ? $link_title2 : ( isset( $field->link_title ) ? $field->link_title : '' ) ) : '';
+		
+		if ( $link_title ) {
+			if ( $link_title == '2' ) {
+				$field->link_title	=	$link_title2;
+			} elseif ( $link_title == '3' ) {
+				$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+			}
+			if ( !isset( $field->link_title ) ) {
+				$field->link_title	=	'';
+			}
+		} else {
+			$field->link_title		=	'';
+		}
 	}
 }
 ?>
