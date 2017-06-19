@@ -219,7 +219,10 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$config['doQuery2']	=	true;
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
 			} elseif ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
-				$click	=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
+				$uri		=	JUri::getInstance()->toString();
+				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( $uri ).'">\');' );
+
+				$click		=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
 				if ( $field->variation != 'toolbar_button' ) {
 					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
 				}
