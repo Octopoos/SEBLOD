@@ -37,7 +37,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 	{
 		$app			=	JFactory::getApplication();
 		$form			=	$config['type'];
-		$id				=	$config['id'];
+		$id				=	( isset( $config['id'] ) ) ? $config['id'] : 0;
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
 		$return			=	'';
@@ -66,9 +66,6 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 			}
 			$return		=	base64_encode( $uri );
 		}
-		if ( $return ) {
-			$return		=	'&return='.$return;
-		}
 
 		// Check
 		$user 			=	JCck::getUser();
@@ -88,11 +85,22 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$link_title		=	$link->get( 'title', '' );
 		$link_title2	=	$link->get( 'title_custom', '' );
 		
-		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.$return;
+		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.( $return ? '&return='.$return : '' );
 		$field->link		=	JRoute::_( $field->link );
 		$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		if ( $link->get( 'confirm', 1 ) ) {
 			$field->link_onclick	=	'if(!confirm(\''.addslashes( JText::_( 'COM_CCK_CONFIRM_DELETE' ) ).'\')){return false;}';
+		}
+		if ( $config['client'] == 'search' ) {
+			$field->link	=	'';
+
+			if ( isset( $field->link_onclick ) ) {
+				$field->link_onclick	.=	'else{'.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.$return.'">\');' )
+										.	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));}';
+			} else {
+				$field->link_onclick	=	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));';
+			}
+			$field->link_onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$field->link_onclick.'}';
 		}
 		$field->link_state	=	$link->get( 'state', 1 );
 		
