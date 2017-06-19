@@ -149,12 +149,6 @@ for ( $i = 0; $i < $count; $i++ ) {
 					$field->typo	=	'';
 				}
 				
-				// Optimize Memory
-				if ( $optimize ) {
-					foreach ( $properties as $property ) {
-						unset( $field->$property );
-					}
-				}
 				$fieldsI[$fieldName]			=	$field;
 
 				if ( $i == 0 ) {
@@ -191,6 +185,24 @@ for ( $i = 0; $i < $count; $i++ ) {
 				}
 			}
 		}
+
+		// Optimize
+		if ( $optimize == 11 ) {
+			foreach ( $fieldsI as $k=>$v ) {
+				if ( isset( $v->state ) && !$v->state ) {
+					unset( $fieldsI[$k] );
+				}
+			}
+		} elseif ( $optimize ) {
+			foreach ( $fieldsI as $k=>$v ) {
+				if ( $optimize ) {
+					foreach ( $properties as $property ) {
+						unset( $v->$property );
+					}
+				}
+			}	
+		}
+		
 		$item->$target_f	=	$fieldsI;
 	}
 	

@@ -187,11 +187,7 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="optimize_memory" type="list" default="0" label="COM_CCK_CONFIG_OPTIMIZE_MEMORY" description="COM_CCK_CONFIG_OPTIMIZE_MEMORY_DESC" class="inputbox chzn-color chzn-color-permissive">
-			<option value="1">COM_CCK_LOWEST_LEVEL</option>
-			<option value="3">COM_CCK_HIGHEST_LEVEL</option>
-			<option value="0">JNO</option>
-		</field>
+		<field name="optimize_memory" type="cck" construction="core_optimize_memory" default="0" label="COM_CCK_CONFIG_OPTIMIZE_MEMORY" description="COM_CCK_CONFIG_OPTIMIZE_MEMORY_DESC" class="inputbox" />
 		<field name="responsive" type="radio" default="0" label="COM_CCK_CONFIG_RESPONSIVE" description="COM_CCK_CONFIG_RESPONSIVE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>

@@ -241,7 +241,7 @@ class CCK_List
 	// getPropertyColumns_asString
 	public static function getPropertyColumns_asString( $level )
 	{
-		if ( !$level ) {
+		if ( !$level || $level > 10 ) {
 			return array(); /* ALL */
 		}
 
