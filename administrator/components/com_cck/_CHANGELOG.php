@@ -22,6 +22,19 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.11.4 Upgrade Release [xx-Jun-2017] -----------
+
++ "Optimize (Memory)" process reworked (for both post/pre PHP 7).
+
++ Multiple items supported in "Dropdown Menu" behaviour (JGrid).
++ Links supported in "Featured", "Status" behaviours (JGrid).
++ Translated Title added on "Delete", "SEBLOD Form" link plug-ins.
+
+# Calendar fixed for PHP 5.4
+# Delete link issue fixed on Free Button field plug-in.
+# Missing "return" added on "Export", "Process" tasks from Submit Button plug-in.
+# Various improvements or issues fixed.
+
 -------------------- 3.11.3 Upgrade Release [09-Jun-2017] -----------
 
 + Alternative Language constant "..._1" for unique search result added.

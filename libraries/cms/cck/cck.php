@@ -370,7 +370,7 @@ abstract class JCck
 			if ( JCck::isSite() ) {
 				$context	=	'/'.JCck::getSite()->context;
 			}
-			$doc->addScript( $root.'/media/cck/js/cck.core-3.11.3.min.js' );
+			$doc->addScript( $root.'/media/cck/js/cck.core-3.11.4.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			
