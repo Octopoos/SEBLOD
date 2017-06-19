@@ -364,7 +364,7 @@ class CCK_List
 		
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
 
-		if ( $config['formWrapper'] ) {
+		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
 			$config_list['formWrapper']	=	$config['formWrapper'];
 		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
