@@ -155,9 +155,14 @@ class plgContentCCKInstallerScript
 				$query	=	'SELECT id FROM #__modules WHERE module="'.$module['name'].'"';
 				$db->setQuery( $query );
 				$mid	=	$db->loadResult();
-				$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$mid.', 0)';
-				$db->setQuery( $query );
-				$db->execute();
+				
+				try {
+					$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$mid.', 0)';
+					$db->setQuery( $query );
+					$db->execute();
+				} catch ( Exception $e ) {
+					// Do nothing
+				}
 			}
 				
 			// Publish Plugins
