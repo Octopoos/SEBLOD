@@ -372,7 +372,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -480,7 +480,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -576,7 +576,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -714,7 +714,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	$data['access'][$value]->text;
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
