@@ -314,14 +314,20 @@ class plgCCK_FieldGroup extends JCckPluginField
 
 				if ( $elem->markup == 'none' ) {
 					if ( $elem->label != '' ) {
-						$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						$suffix	=	'';
+						if ( $elem->label != '&nbsp;' ) {
+							$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						}
 						$html	.=	'<label for="'.$elem->name.'">'.$elem->label.$suffix.'</label>';
 					}
 				} else {
 					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
 					
 					if ( $elem->label != '' ) {
-						$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						$suffix	=	'';
+						if ( $elem->label != '&nbsp;' ) {
+							$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						}
 						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.$suffix.'</label></div>';
 					}
 					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';

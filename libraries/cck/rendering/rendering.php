@@ -495,7 +495,9 @@ class CCK_Rendering
 			$label	=	'<label>'.$label.'</label>';
 		} else {
 			if ( $suffix ) {
-				$label	.=	'<span class="star"> '.$suffix.'</span>';
+				if ( $label != '&nbsp;' ) {
+					$label	.=	'<span class="star"> '.$suffix.'</span>';
+				}
 			}
 			if ( $label ) {
 				$label	=	'<label for="'.$this->me[$fieldname]->name.'">'.$label.'</label>';
