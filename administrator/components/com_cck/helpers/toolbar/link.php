@@ -67,7 +67,7 @@ class JButtonCckLink extends JButton
 class JToolbarButtonCckLink extends JButtonCckLink
 {
 	protected $tag		=	'button';
-	protected $tag2		=	'i';
+	protected $tag2		=	'span';
 	
 	// _getCommand
 	protected function _getCommand( $url )
