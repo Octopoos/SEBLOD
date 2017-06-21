@@ -500,6 +500,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// _setAssociations
 	protected function _setAssociations( $table, $data, $isNew, $config )
 	{
+		if ( !( isset( $data['associations'] ) && is_array( $data['associations'] ) ) ) {
+			return;
+		}
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 

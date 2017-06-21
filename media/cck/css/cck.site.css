@@ -125,6 +125,11 @@ div.cck_forms.cck_site div.cck_form.cck_form_field_x span input[type="checkbox"]
 div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.button2-left a{margin-top:1px!important; margin-left:4px!important;}
 div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.media-preview span{margin-left:4px; line-height:26px;}
 
+/*SITE GENERIQUE JFORM ASSOCIATIONS*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .control-label{float:left; width:145px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .control-label label{line-height: 30px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .controls{float:left;}
+
 /*SITE GENERIQUE JFORM USER*/
 div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 

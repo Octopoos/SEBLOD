@@ -78,6 +78,9 @@ div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_labe
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_form {clear:none;}
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:0px!important;margin-top:12px!important;padding:1px;}
 
+/*ADMIN GENERIQUE JFORM ASSOCIATIONS*/
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_associations .control-label{float:left; width:145px;}
+
 /*ADMIN GENERIQUE JFORM USER*/
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_user div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}

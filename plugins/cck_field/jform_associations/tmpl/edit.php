@@ -15,7 +15,8 @@ defined( '_JEXEC' ) or die;
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-        //
+        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
+        echo JCckDev::renderBlank();
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
