@@ -26,6 +26,7 @@ $ -> Language fix or change
 
 + "Optimize (Memory)" process reworked (for both post/pre PHP 7).
 
++ "Clear" Access Level added (on Fields) from Content/Search Types UI.
 + Multiple items supported in "Dropdown Menu" behaviour (JGrid).
 + Links supported in "Featured", "Status" behaviours (JGrid).
 + Translated Title added on "Delete", "SEBLOD Form" link plug-ins.
