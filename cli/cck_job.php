@@ -40,6 +40,8 @@ require_once JPATH_LIBRARIES.'/joomla/string/string.php';
 // Load the configuration
 require_once JPATH_CONFIGURATION.'/configuration.php';
 
+JPluginHelper::importPlugin( 'cck_storage_location' );
+
 // Cli
 class CckJobCli extends JApplicationCli
 {
