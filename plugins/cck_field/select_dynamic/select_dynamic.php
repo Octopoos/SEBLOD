@@ -641,6 +641,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 							if ( $optgroup == 1 ) {
 								$results[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
 							}
+							if ( $field->bool8 && trim( $opt[0] ) ) {
+								$opt[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
+							}
 							$results[]		=	JHtml::_( 'select.option', '<OPTGROUP>', $opt[0] );
 							$optgroup	=	1;
 							$latest		=	1;
