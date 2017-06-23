@@ -34,7 +34,9 @@ $ -> Language fix or change
 # Calendar fixed for PHP 5.4
 # Delete link issue fixed on Free Button field plug-in.
 # Delete support added Batch/List (i.e Search Form).
+# Missing translation fixed for optgroups on Static Options of Dynamic Select plug-in.
 # Missing "return" added on "Export", "Process" tasks from Submit Button plug-in.
+# Object Plug-ins now loaded from CLI.
 # Various improvements or issues fixed.
 
 -------------------- 3.11.3 Upgrade Release [09-Jun-2017] -----------
