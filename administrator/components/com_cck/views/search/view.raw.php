@@ -84,8 +84,7 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->item->cck_type	=	$this->state->get( 'content_type', '' );

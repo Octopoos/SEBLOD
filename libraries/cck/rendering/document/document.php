@@ -93,7 +93,7 @@ class CCK_Document extends JObject
 					require_once $path;
 				}
 				else {
-					JError::raiseError(500, JText::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'));
+					throw new RuntimeException(JText::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'), 500);
 				}
 			}
 
@@ -177,7 +177,7 @@ class CCK_Document extends JObject
 				require_once $path;
 			}
 			else {
-				JError::raiseError(500, JText::_('Unable to load renderer class'));
+				throw new RuntimeException('Unable to load renderer class', 500);
 			}
 		}
 

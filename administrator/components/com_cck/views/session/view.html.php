@@ -32,8 +32,7 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
