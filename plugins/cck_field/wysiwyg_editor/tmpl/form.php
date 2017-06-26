@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+JHtml::_( 'behavior.core' );
+
 $doc	=	JFactory::getDocument();
 $js		=	'
 			(function ($){
