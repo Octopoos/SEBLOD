@@ -231,9 +231,8 @@ abstract class JCckDevIntegration
 		if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$id ) ) {
 			return;
 		}
-
-		$url	=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.$more;
-		JFactory::getApplication()->redirect( $url );
+		
+		JFactory::getApplication()->redirect( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.$more );
 	}
 
 	// rewriteBuffer
