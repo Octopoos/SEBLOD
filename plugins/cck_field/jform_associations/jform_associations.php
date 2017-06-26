@@ -69,10 +69,10 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		}
 		
 		// Prepare
-		$assoc	=	JCckDevHelper::hasLanguageAssociations();
 		$form	=	'';
-		
-		if ( $assoc && $config['pk'] ) {
+
+		if ( JCckDevHelper::hasLanguageAssociations() && $config['pk']
+		&& ( !$config['copyfrom_id'] || ( $config['copyfrom_id'] && JFactory::getApplication()->input->get( 'translate' ) ) ) ) {
 			if ( isset( $config['base']->location ) && $config['base']->location ) {
 				$location	=	$config['base']->location;
 			} else {

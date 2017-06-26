@@ -315,6 +315,7 @@ abstract class JCckDevIntegration
 					$search		=	'';
 					$t_add		=	'';
 					$t_edit		=	'';
+					
 					if ( isset( $matches[$idx][$k] ) ) {
 						if ( $opt_edit_alt ) {
 							if ( isset( $list2[$pk] ) ) {
@@ -327,13 +328,13 @@ abstract class JCckDevIntegration
 							}
 						}
 						if ( $multilanguage ) {
-							if ( isset( $list[$pk] ) && $list[$pk]->key ) {
+							if ( isset( $list[$pk] ) ) {
 								$cur	=	$list[$pk]->language;
 								$key	=	$list[$pk]->key;
 								$link	=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$list[$pk]->cck;
 								foreach ( $languages as $l=>$v ) {
 									if ( $cur != $l ) {
-										if ( isset( $list_assoc[$key][$l] ) ) {
+										if ( $key && isset( $list_assoc[$key][$l] ) ) {
 											$link2	=	$link.'&amp;id='.$list_assoc[$key][$l]->id.$data['replace_end'];
 											$t_edit	.=	'<li><a href="'.$link2.'"><span class="icon-arrow-right-3"> '.$l.'</a></li>';
 										} else {
