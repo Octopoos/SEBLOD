@@ -24,8 +24,8 @@ div.seblod.first.cpanel_news{margin-top:0 !important;}
 div.seblod.first.cpanel_news .legend,
 div.seblod.first.cpanel_news ul.adminformlist{margin:0;}
 div#cckOptions, div.accordion-group{margin-bottom:10px;}
-div.cpanel_news div.alert a.close, div.cpanel_news div.alert a.close span{color:#08c; width: 20px; height: 20px; line-height: 22px; text-shadow:none; opacity: 1; font-weight: normal;}
-div.cpanel_news div.alert{color:#08c;}
+div.cpanel_news div.alert.alert-info a.close, div.cpanel_news div.alert a.close span{color:#08c; width: 20px; height: 20px; line-height: 22px; text-shadow:none; opacity: 1; font-weight: normal;}
+div.cpanel_news div.alert.alert-info{color:#08c;}
 div.pane-slider.content ul.inline > li{float:left; margin:0 5px;}
 
 /* Admin */
