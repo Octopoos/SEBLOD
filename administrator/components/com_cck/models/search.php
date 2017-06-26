@@ -334,10 +334,11 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			
 			// Fields
 			$query	=	'SELECT a.*, b.storage_table FROM #__cck_core_search_field AS a LEFT JOIN #__cck_core_fields AS b ON b.id = a.fieldid WHERE a.searchid = '.(int)$pk;
-			$string	=	$this->_table_no_key_batch( 'query', $query, '#__cck_core_search_field', 'searchid', $table->id, array( 'storage_table' ) );
+			
+			$this->_table_no_key_batch( 'query', $query, '#__cck_core_search_field', 'searchid', $table->id, array( 'storage_table' ) );
 			
 			// Positions			
-			$string	=	$this->_table_no_key_batch( 'where', 'searchid = '.(int)$pk, '#__cck_core_search_position', 'searchid', $table->id );
+			$this->_table_no_key_batch( 'where', 'searchid = '.(int)$pk, '#__cck_core_search_position', 'searchid', $table->id );
 		}
 	}
 	
@@ -391,9 +392,8 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		if ( $str != '' ) {
 			$str	=	substr( trim( $str ), 0, -1 );
 		}
-		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 		
-		return $str;
+		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 	}
 }
 ?>

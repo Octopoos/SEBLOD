@@ -341,10 +341,11 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			
 			// Fields
 			$query	=	'SELECT a.*, b.storage_table FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_fields AS b ON b.id = a.fieldid WHERE a.typeid = '.(int)$pk;
-			$string	=	$this->_table_no_key_batch( 'query', $query, '#__cck_core_type_field', 'typeid', $table->id, array( 'storage_table' ), '_check_storage' );
+			
+			$this->_table_no_key_batch( 'query', $query, '#__cck_core_type_field', 'typeid', $table->id, array( 'storage_table' ), '_check_storage' );
 			
 			// Positions			
-			$string	=	$this->_table_no_key_batch( 'where', 'typeid = '.(int)$pk, '#__cck_core_type_position', 'typeid', $table->id );		
+			$this->_table_no_key_batch( 'where', 'typeid = '.(int)$pk, '#__cck_core_type_position', 'typeid', $table->id );		
 		}
 	}
 	
@@ -398,9 +399,8 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		if ( $str != '' ) {
 			$str	=	substr( trim( $str ), 0, -1 );
 		}
-		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 		
-		return $str;
+		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 	}
 	
 	// _check_storage
