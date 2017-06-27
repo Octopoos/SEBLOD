@@ -34,11 +34,11 @@ if ( !$this->raw_rendering ) { ?>
 		if ( $this->config['doTranslation'] ) {
 			$label	=	'COM_CCK_' . str_replace( ' ', '_', trim( $label ) );
 
-			if ( $this->total == 1 && JFactory::getLanguage()->hasKey( $label.'_1' ) ) {
+			if ( ( $this->total == 0 || $this->total == 1 ) && JFactory::getLanguage()->hasKey( $label.'_1' ) ) {
 				$label	.=	'_1';
 			}
 			$label	=	JText::_( $label );
-		} elseif ( $this->total == 1 ) {
+		} elseif ( $this->total == 0 || $this->total == 1 ) {
 			if ( JFactory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
 				$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
 			}			
