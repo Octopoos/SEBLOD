@@ -330,7 +330,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_RADIUS_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;
 			case 'none':
-				return;
+                return true;
 				break;
 			default:
 				$sql		=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).'.*'.$TZ.'"';

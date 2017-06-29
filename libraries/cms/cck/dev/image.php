@@ -52,7 +52,7 @@ class JCckDevImage
 		$property	=	strtolower( substr( $method, 3 ) );
 		
 		if ( empty( $prefix ) ) {
-			return;
+            return true;
 		}
 		
         if ( $prefix == 'get' ) {

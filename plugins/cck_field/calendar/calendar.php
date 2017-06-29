@@ -73,7 +73,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 
 		self::$path	=	parent::g_getPath( self::$type.'/' );
@@ -202,7 +202,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 
 		$input			=	JFactory::getApplication()->input;
@@ -269,7 +269,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 	public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 
 		// Init

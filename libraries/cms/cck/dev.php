@@ -637,7 +637,7 @@ abstract class JCckDev
 		$app	=	JFactory::getApplication();
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
-			return;
+            return true;
 		}
 
 		return '<li><label>'.$label.'</label>'.$html.'</li>';
@@ -647,14 +647,14 @@ abstract class JCckDev
 	public static function renderHelp( $type, $url = '' )
 	{
 		if ( !$url ) {
-			return;
+            return true;
 		}
 		
 		$app	=	JFactory::getApplication();
 		$raw	=	false;
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
-			return;
+            return true;
 		}
 
 		switch ( $type ) {
@@ -691,7 +691,7 @@ abstract class JCckDev
 		$app	=	JFactory::getApplication();
 		
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
-			return;
+            return true;
 		}
 
 		if ( $tooltip != '' ) {
@@ -711,7 +711,7 @@ abstract class JCckDev
 		$app	=	JFactory::getApplication();
 		
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
-			return;
+            return true;
 		}
 
 		if ( isset( $app->cck_markup_closed ) && $app->cck_markup_closed === true ) {

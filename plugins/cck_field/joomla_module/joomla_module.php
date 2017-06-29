@@ -101,7 +101,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
 		if ( self::$type != $field->type ) {
-			return;
+            return true;
 		}
 		
 		// Prepare

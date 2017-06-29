@@ -21,7 +21,7 @@ abstract class JCckDevField
 		if ( ! is_object( $field ) ) {
 			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name = "'.$field.'"' ); //#
 			if ( ! $field ) {
-				return;
+                return true;
 			}
 		}
 		$field->required_alert		=	'';
@@ -93,7 +93,7 @@ abstract class JCckDevField
 		if ( ! is_object( $field ) ) {
 			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name = "'.$field.'"' ); //#
 			if ( ! $field ) {
-				return;
+                return true;
 			}
 		}
 		$field->required_alert		=	'';
@@ -163,7 +163,7 @@ abstract class JCckDevField
 		if ( ! is_object( $field ) ) {
 			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name = "'.$field.'"' ); //#
 			if ( ! $field ) {
-				return;
+                return true;
 			}
 		}
 		

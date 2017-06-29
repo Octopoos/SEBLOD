@@ -83,7 +83,7 @@ class JCckPluginLocation extends JPlugin
 		$conditions		=	array();
 		
 		if ( empty( $pks ) ) {
-			return;
+            return true;
 		}
 
 		foreach ( $pks as $i=>$pk ) {
