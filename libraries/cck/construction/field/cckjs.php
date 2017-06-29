@@ -134,8 +134,8 @@ class JFormFieldCCKjs extends JFormField
 				$doc->addScriptDeclaration( $js );
 			}
 		}
-		
-		return;
+
+        return true;
 	}
 }
 ?>

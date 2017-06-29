@@ -70,7 +70,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	protected static function _getTimeAgo( $value, $unit, $limit, $alt_format )
 	{
 		if ( @!mktime( $value ) ) {
-			return;
+            return true;
 		}
 		
 		// Init
