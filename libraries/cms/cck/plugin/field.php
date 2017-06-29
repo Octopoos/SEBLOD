@@ -1044,10 +1044,10 @@ class JCckPluginField extends JPlugin
 		
 		if ( $variation == 'value' ) {
 			$attr			=	$field->attributes ? ' '.$field->attributes : '';
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : self::_hiddenField($id , $name, $value, $class, $attr);
 			$field->form	=	$base . '<span id="_'.$id.'" class="variation_value">'.$text.'</span>';
 		} elseif ( $variation == 'disabled' ) {
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="_'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : self::_hiddenField($id , $name, $value, $class);
 			$field->form	=	$base;
 			if ( $html ) {
 				$field->form	.=	str_replace( $html, $html.' disabled="disabled"', $form );
@@ -1073,11 +1073,10 @@ class JCckPluginField extends JPlugin
 			}
 		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
 			$attributes		=	( isset( $field->attributesList ) && $field->attributesList != '' ) ? explode( '||', $field->attributesList ) : array();
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
-			$field->form	=	'';			
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : self::_hiddenField($id , $name, $value, $class);
+			$field->form	=	'';
 			$options		=	( isset( $field->optionsList ) ) ? $field->optionsList : $field->options;
 			$options		=	( $options != '' ) ? explode( '||', $options ) : array();
-			
 			if ( count( $options ) ) {
 				static $loaded	=	array();
 				if ( !isset($loaded[$id] ) ) {
@@ -1123,13 +1122,13 @@ class JCckPluginField extends JPlugin
 			}
 			$field->form	.=	$base;
 		} elseif ( $variation == 'clear' ) {
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : self::_hiddenField($id , $name, $value, $class);
 			$field->form	=	$base;
 			$field->display =	0;
 		} else {
 			$attr_id		=	( $variation == 'hidden_anonymous' ) ? '' : 'id="'.$id.'" ';
 			$attr			=	$field->attributes ? ' '.$field->attributes : '';
-			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" '.$attr_id.'name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
+			$base			=	( $hidden != '' ) ? trim( $hidden ) : self::_hiddenField($attr_id , $name, $value, $class, $attr);
 			$field->form	=	$base;
 			if ( $field->display ) {
 				$field->display =	1;
@@ -1138,7 +1137,33 @@ class JCckPluginField extends JPlugin
 		
 		$field->form	.=	$more;
 	}
-	
+
+	protected static function _hiddenField($id , $name, $value, $class, $attr = '')
+	{
+		$hidden = '';
+		$id = empty($id) ? '' : ' id="' . $id . '"';
+		$class = empty($class) ? '' : ' class="' . $class . '"';
+
+		if (!is_array($value))
+		{
+			$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+
+			$hidden .= '<input type="hidden"'.$id.' name="' .$name. '" value="'. $value. '"' .$class. ' ' .$attr. ' />';
+		}
+		else
+		{
+
+			foreach ($value AS $key=>$val)
+			{
+				$hidden .= self::_hiddenField(!empty($id) ? $id.'['. $key .']' : '', $name . '['. $key .']', $val, $class, $attr);
+			}
+
+		}
+
+		return $hidden;
+	}
+
+
 	// g_getOptionText
 	public static function g_getOptionText( &$value, $options, $separator = '', $config = array() )
 	{
@@ -1225,4 +1250,3 @@ class JCckPluginField extends JPlugin
 		}
 	}
 }
-?>
