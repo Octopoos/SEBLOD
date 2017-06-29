@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+$desc	=	'';
+
 // Prepare
 if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	if ( $this->item->id == 'dev_map' ) {
@@ -77,6 +79,24 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	$field						=	new stdClass;
 	$field->type				=	'select_simple';
 	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
+} elseif ( $this->item->id == 'object_property' ) {
+	$columns					=	array();
+	$field						=	new stdClass;
+	$field->type				=	'select_simple';
+
+	if ( $this->item->name == 'joomla_user' ) {
+		$columns				=	JCckDatabase::getTableColumns( '#__users' );
+		$columns				=	array_merge( $columns, JCckDatabase::getTableColumns( '#__cck_store_item_users' ) );
+
+		if ( count( $columns ) ) {
+			natsort( $columns );
+			$columns			=	array_combine( $columns, $columns );
+			unset( $columns['cck'], $columns['otep'], $columns['otpKey'] );
+		}
+	}
+	
+	$columns					=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
+	$form						=	JHtml::_( 'select.genericlist', $columns, $this->item->name, 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', $this->item->name );
 } else {
 	$desc						=	'';
 	$field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
