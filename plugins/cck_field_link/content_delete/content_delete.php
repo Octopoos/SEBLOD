@@ -54,7 +54,15 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 			}
 			$return		=	base64_encode( $url );
 		} elseif ( $config['client'] == 'content' ) {
-			$return		=	base64_encode( JRoute::_( 'index.php?Itemid='.$itemId ) );
+			$menu		=	JFactory::getApplication()->getMenu(); /* JMenu::getInstance( 'site' ); */
+			$item		=	$menu->getItem( $itemId );
+
+			if ( $item->query['view'] == 'article' ) {
+				$return	=	'';
+			} else {
+				$return	=	JRoute::_( 'index.php?Itemid='.$itemId );
+				$return	=	base64_encode( JUri::base().( ( $return[0] == '/' ) ? substr( $return, 1 ) : $return ) );
+			}
 		} else {
 			$return2	=	$link->get( 'redirection_custom', '' );
 			if ( $return2 != '' ) {
