@@ -87,7 +87,7 @@ ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200p
 #linkage_wrap{position:absolute; top:13px; right:15px; z-index: 99;}
 ul.sortable li div.pane span.text {font-size: 10px;}
 ul.sortable li div.pane .hidden{display:inline-block;}
-div.colc .icon-menu-2{position: relative; left:-22px; font-size:12px;}
+div.colc .icon-menu-2{position: absolute; left:-20px; top:-11px; font-size:13px;}
 div.colc .sp2se{margin-left:0; }
 div.colc .se2sp{display:inline-block;}
 div.colc .sp2se::-moz-selection {background: none;}

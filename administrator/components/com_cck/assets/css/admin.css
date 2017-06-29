@@ -60,7 +60,7 @@ th.caret-fix > a:first-child > span{float:left; position:relative; left:3px;}
 .switch span.unlinked {background-image: url("../images/24/icon-24-unlock.png");}
 
 .switch span.linkage.icon-lock{left: -2px; margin: 5px 0 0 6px; font-size: 18px; color:#3b99fc; background-image:none;}
-.switch span.linkage.unlinked.icon-lock:before{content: "\e267"; color:#eb8207;}
+.switch span.linkage.unlinked.icon-lock:before{content: "\e267"; color:#3b99fc;}
 
 .cck_radius2 {-webkit-border-radius: 2px!important; -moz-border-radius: 2px!important; border-radius: 2px!important;}
 #permissions-sliders ul#rules li h3 {-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
@@ -79,9 +79,11 @@ div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:n
 div.preview > div > div.cck_admin.cck_jform_usergroups{text-align: left;}
 
 input#storage_field{padding-right: 15px; margin-right:0px;}
-span#storage_field_pick{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
-span#storage_field_pick > .icon-menu-2{font-size:13px; font-weight: normal; margin-right:0;}
-span.value-picker{color: #eb8207; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
+span#storage_field_pick{color: #3b99fc; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
+span#storage_field_pick > .icon-menu-2,
+span.value-picker > .icon-menu-2{font-size:14px; font-weight: normal; margin-right:0;}
+span.value-picker{color: #3b99fc; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
+body.contentpane.component span.value-picker{left:-22px; top:10px;}
 
 table.adminlist td div.title-left{padding-left: 9px;}
 table.adminlist .folder-parent{font-size:0.95em!important;}
