@@ -194,6 +194,39 @@ abstract class JCckEcommercePromotion
 		return count( JCckEcommerce::getPromotions( $type ) );
 	}
 
+	// getCurrentCoupon
+	public static function getCurrentCoupon( $strict = false )
+	{
+		$coupon	=	JFactory::getApplication()->input->getString( 'coupon', '' );
+
+		if ( $coupon == '' && !$strict ) {
+			$user		=	JCck::getUser();
+			require_once JPATH_SITE.'/modules/mod_cck_ecommerce_cart/helper.php';
+			$cart_id	=	modCCKeCommerceCartHelper::getActive( $user, 'cart' );
+			$cart		=	JCckEcommerce::getCart( (int)$cart_id );
+			$order_id	=	$cart->order_id;
+			
+			if ( $order_id ) {
+				$order	=	JCckDatabaseCache::loadObject( 'SELECT info_promotions FROM #__cck_more_ecommerce_orders AS a WHERE a.id = '.(int)$order_id );
+				
+				if ( is_object( $order ) && $order->info_promotions ) {
+					$order_promotions	=	json_decode( $order->info_promotions );
+
+					if ( count( $order_promotions ) ) {
+						foreach ( $order_promotions as $k=>$v ) {
+							if ( isset( $v->type, $v->code ) && $v->type == 'coupon' ) {
+								$coupon		=	$v->code;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $coupon;
+	}
+
 	// getTargets
 	public static function getTargets( $id )
 	{

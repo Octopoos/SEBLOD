@@ -76,7 +76,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$id] ) ) {
-			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.(int)$id );
+			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, type, order_id, permanent, state FROM #__cck_more_ecommerce_carts WHERE id = '.(int)$id );
 		}
 		
 		return $cache[$id];
