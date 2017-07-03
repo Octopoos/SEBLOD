@@ -89,6 +89,7 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
+		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
 		$style						=	Helper_Workshop::getDefaultStyle();
 		
 		$table						=	JTable::getInstance( 'type', 'CCK_Table' );
@@ -101,7 +102,7 @@ class CCKController extends JControllerLegacy
 		$table->published			=	1;
 		$table->indexed				=	'intro';
 		$table->storage_location	=	'none';
-
+		
 		$rules	=	array( 'core.create'=>array(),
 						   'core.create.max.parent'=>array( '8'=>"0" ),
 						   'core.create.max.parent.author'=>array( '8'=>"0" ),
@@ -113,6 +114,11 @@ class CCKController extends JControllerLegacy
 		$rules	=	new JAccessRules( $rules );
 		$table->setRules( $rules );
 		$table->check();
+		
+		if ( $prefix ) {
+			$table->name			=	$prefix.'_'.$table->name;
+		}
+		
 		$table->store();
 		// --
 
