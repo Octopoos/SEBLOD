@@ -96,9 +96,10 @@ class plgContentCCK extends JPlugin
 			return true;
 		}
 		
-		$tableKey	=	$data->getKeyName();
-		$pk			= 	$data->$tableKey;
-		$base 		= 	str_replace( '#__', '', $data->getTableName() );
+		$table_key	=	$data->getKeyName();
+		$table_name	=	$data->getTableName();
+		$pk			= 	$data->$table_key;
+		$base 		= 	str_replace( '#__', '', $table_name );
 		
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
 		$properties		= 	array( 'bridge_object', 'custom' );
@@ -146,6 +147,7 @@ class plgContentCCK extends JPlugin
 				$dispatcher	=	JEventDispatcher::getInstance();
 				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
 				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				
 				if ( count( $fields ) ) {
 					foreach ( $fields as $field ) {
 						$Pt		=	$field->storage_table;
@@ -156,7 +158,11 @@ class plgContentCCK extends JPlugin
 						if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 							$config['storages'][$Pt]	=	'';
 							
-							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );
+							if ( $Pt == $table_name ) {
+								$config['storages'][$Pt]	=	$data;
+							} else {
+								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
+							}
 						}
 						$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
 						$dispatcher->trigger( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
