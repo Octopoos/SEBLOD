@@ -501,7 +501,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _completeTable
 	protected function _completeTable( &$table, &$data, &$config )
 	{
-		if ( $table->state == 1 && intval( $table->publish_up ) == 0 ) {
+		if ( $table->state == 1 && (int)$table->publish_up == 0 ) {
 			$table->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		}
 		if ( ! $table->{self::$key} ) {
@@ -823,10 +823,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			if ( $config['doSEF'][0] == '5' ) {
 				$join				.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
 									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
-				$where				=	' AND d.alias="'.(string)$segments[0].'"';
+				$where				=	' AND d.alias = '.JCckDatabase::quote( (string)$segments[0] );
 			} elseif ( $config['doSEF'][0] == '3' ) {
 				$join				=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
-				$where				=	' AND b.cck = "'.(string)$segments[0].'"';
+				$where				=	' AND b.cck = '.JCckDatabase::quote( (string)$segments[0] );
 			} else {
 				$join				=	' LEFT JOIN #__categories AS b on b.id = a.catid';
 				if ( $config['doSEF'] == '1'  ) {
@@ -834,14 +834,14 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$vars['catid']	=	$segments[0];
 				} else {
 					$segments[0]	=	str_replace( ':', '-', $segments[0] );
-					$where			=	' AND b.alias = "'.$segments[0].'"';
+					$where			=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
 				}
 			}
 		}
 		
 		// Retrieve Content Type(s)
 		if ( isset( $active->query['search'] ) && $active->query['search'] ) {
-			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
+			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $active->query['search'] ) );
 			
 			if ( $cck != '' ) {
 				$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
@@ -866,7 +866,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 			} else {
 				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-				$where				=	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
+				$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 			}
 		}
 		if ( $where != '' ) {

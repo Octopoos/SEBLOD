@@ -705,7 +705,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( $n == 2 ) {
 			if ( $config['doSEF'][0] == '3' ) {
 				$join				=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
-				$where				=	' AND b.cck = "'.(string)$segments[0].'"';
+				$where				=	' AND b.cck = '.JCckDatabase::quote( (string)$segments[0] );
 			} else {
 				$join				=	' LEFT JOIN #__categories AS b on b.id = a.parent_id';
 				if ( $config['doSEF'] == '1'  ) {
@@ -713,14 +713,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$vars['catid']	=	$segments[0];
 				} else {
 					$segments[0]	=	str_replace( ':', '-', $segments[0] );
-					$where			=	' AND b.alias = "'.$segments[0].'"';
+					$where			=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
 				}
 			}
 		}
 
 		// Retrieve Content Type(s)
 		if ( isset( $active->query['search'] ) && $active->query['search'] ) {
-			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = "'.$active->query['search'].'"' );
+			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $active->query['search'] ) );
 			
 			if ( $cck != '' ) {
 				$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
@@ -745,7 +745,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				}
 			} else {
 				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-				$where				=	' WHERE a.alias = "'.$segments[$n - 1].'"'.$where;
+				$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 			}
 		}
 		if ( $where != '' ) {
@@ -754,7 +754,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$vars['id']	=	$id;
 		}
 		if ( $vars['id'] == 0 ) {
-			return JError::raiseError( 404, JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ) );
+			throw new Exception( JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ), 404 );
 		}
 	}
 	
