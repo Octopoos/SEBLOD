@@ -231,13 +231,8 @@ class com_cckInstallerScript
 
 			if ( count( $items ) ) {
 				foreach ( $items as $item ) {
-					$db->setQuery( 'SELECT count(id) FROM #__menu WHERE lft = '.(int)$item->rgt );
-					$exist	=	$db->loadResult();
-
-					if ( $exist ) {
-						$db->setQuery( 'UPDATE #__menu SET parent_id = 1 AND level = 1 AND lft = 0 AND rgt = 0 WHERE id = '.(int)$item->id. ' AND client_id = 1' );
-						$db->execute();
-					}
+					$db->setQuery( 'UPDATE #__menu SET parent_id = 1 AND level = 1 AND lft = 0 AND rgt = 0 WHERE id = '.(int)$item->id. ' AND client_id = 1' );
+					$db->execute();
 				}
 			}
 
