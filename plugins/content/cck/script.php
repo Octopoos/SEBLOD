@@ -112,11 +112,8 @@ class plgContentCCKInstallerScript
 							);
 				foreach ( $addons as $addon ) {
 					$addon->title	=	$titles[$addon->element];
-					self::_addAddon( $addon, $seblod );
+					self::_addAddon( $addon, $seblod, $type );
 				}
-				$query		=	'UPDATE #__menu SET alias = CONCAT(UCASE(LEFT(alias,1)),SUBSTRING(alias,2)) WHERE link LIKE "index.php?option=com_cck_%" AND parent_id = '.(int)$seblod->id;
-				$db->setQuery( $query );
-				$db->execute();
 			}
 		}	
 		
@@ -545,14 +542,20 @@ class plgContentCCKInstallerScript
 	}
 	
 	// _addAddon
-	protected function _addAddon( $addon, $parent )
+	protected function _addAddon( $addon, $parent, $type )
 	{
 		$db		=	JFactory::getDbo();
 		$name	=	str_replace( 'com_cck_', '', $addon->element );
-		$table	=	JTable::getInstance( 'menu' );
+
+		// -- Dirty workaround cleanup
+		if ( $type == 'update' && version_compare( JFactory::getApplication()->cck_core_version_old, '3.11.4', '<' ) && $name != '' ) {
+			$db->setQuery( 'DELETE FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND parent_id IN (0,1)' );
+			$db->execute();
+		}
 		
+		$table	=	JTable::getInstance( 'menu' );
 		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element, 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
-						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>0, 'parent_id'=>$parent->id,
+						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
 						   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
 		
 		$table->setLocation( $data['parent_id'], 'last-child' );
@@ -562,7 +565,7 @@ class plgContentCCKInstallerScript
 		$table->path	=	'SEBLOD/'.$addon->title;
 		$table->store();
 		$table->rebuildPath( $table->id );
-		$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon->title.'", path = "SEBLOD/'.$addon->title.'" WHERE id = '.(int)$table->id );
+		$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon->title.'", path = "SEBLOD/'.$addon->title.'" WHERE id = '.(int)$table->id. ' AND client_id = 1' );
 		$db->execute();
 	}
 

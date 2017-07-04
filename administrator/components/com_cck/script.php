@@ -218,7 +218,33 @@ class com_cckInstallerScript
 		
 		$app->cck_core				=	true;
 		$app->cck_core_version_old	=	self::_getVersion();
-		
+
+		// -- Dirty workaround (for websites with corrupted Menu Tree) cleaned on postflight
+		if ( $type == 'update' && version_compare( $app->cck_core_version_old, '3.11.4', '<' ) ) {
+			$db			=	JFactory::getDbo();
+			$query		=	'SELECT b.id, b.lft, b.rgt'
+						.	' FROM #__menu AS a'
+						.	' LEFT JOIN #__menu AS b ON b.parent_id = a.id'
+						.	' WHERE a.link = "index.php?option=com_cck" AND a.client_id = 1';
+			$db->setQuery( $query );
+			$items		=	$db->loadObjectList();
+
+			if ( count( $items ) ) {
+				foreach ( $items as $item ) {
+					$db->setQuery( 'SELECT count(id) FROM #__menu WHERE lft = '.(int)$item->rgt );
+					$exist	=	$db->loadResult();
+
+					if ( $exist ) {
+						$db->setQuery( 'UPDATE #__menu SET parent_id = 1 AND level = 1 AND lft = 0 AND rgt = 0 WHERE id = '.(int)$item->id. ' AND client_id = 1' );
+						$db->execute();
+					}
+				}
+			}
+
+			$db->setQuery( 'UPDATE #__menu SET rgt = lft WHERE link = "index.php?option=com_cck" AND client_id = 1' );
+			$db->execute();
+		}
+
 		set_time_limit( 0 );
 	}
 	
