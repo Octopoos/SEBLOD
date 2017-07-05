@@ -174,6 +174,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$value	=	trim( $value );
+		
+		// Validate
+		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
 		if ( $value != '' && $value != '0000-00-00 00:00:00' ) {
 			$date			=	JFactory::getDate( $value, $this->userTimeZone );
@@ -181,9 +184,6 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$date->setTimezone( $timezone );
 			$value	=	$date->toSql();
 		}
-
-		// Validate
-		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		
 		// Set or Return
 		if ( $return === true ) {
