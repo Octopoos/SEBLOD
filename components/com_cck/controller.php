@@ -28,6 +28,7 @@ class CCKController extends JControllerLegacy
 		$this->registerTask( 'save2redirect', 'save' );
 		$this->registerTask( 'save2skip', 'save' );
 		$this->registerTask( 'save2view', 'save' );
+		$this->registerTask( 'save4later', 'save' );
 	}
 
 	// display
@@ -566,7 +567,11 @@ class CCKController extends JControllerLegacy
 		$config		=	$model->store( $preconfig, $task );
 		$id			=	$config['pk'];
 		$itemId		=	$preconfig['itemId'];
-
+		
+		if ( $task == 'save4later' ) {
+			$task	=	'save';
+		}
+		
 		// Return Now for Ajax..
 		if ( $isAjax ) {
 			return $config;
