@@ -65,13 +65,13 @@ class JCckDevImage
 	}
 
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat)
+	public function createThumb( $dest, $tnumber, $twidth, $theight, $tformat)
 	{
 		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
 			return false;
 		}
 		
-		$path 			=	$this->_pathinfo['dirname'];
+		$path 			=	( $dest != '' ) ? $dest : $this->_pathinfo['dirname'];
 		$resImage 		= 	$this->_resource;
 		$info			=	$this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
 
