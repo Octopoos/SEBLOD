@@ -19,6 +19,10 @@ class JCckContentJoomla_Article extends JCckContent
 		if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
 			$this->_instance_base->language	=	'*';
 		}
+		if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
+			$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		}
+
 		$status			=	$this->store( 'base' );
 
 		if ( !$this->_pk && !$status ) {
@@ -33,8 +37,6 @@ class JCckContentJoomla_Article extends JCckContent
 			$this->_instance_base->alias	=	$alias;
 
 			$status		=	$this->store( 'base' );
-
-			/* TODO: publish_up */
 		}
 
 		return $status;
