@@ -381,12 +381,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				return;
 			}
 			if ( isset( $config[$target] ) && $config[$target] != '' ) {
+				JText::script( 'COM_CCK_COMPLETED' );
+
 				$params	=	JComponentHelper::getParams( 'com_cck_exporter' );
 				$step	=	(int)$params->get( 'mode_ajax_count', 25 );
 				$js 	=	'
 							(function ($){
 								JCck.Core.SubmitButton = {
 									batch:[],
+									css:"",
 									items:['.$config[$target].'],
 									step:'.(int)$step.',
 									total:'.( substr_count( $config[$target], ',' ) + 1 ).',
@@ -410,6 +413,10 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 													if (typeof resp == "object") {
 														if ( resp.output_path !== undefined ) {
+															window.setTimeout(function(){
+																$(el+" .bar").css("font-size","inherit").css("padding",JCck.Core.SubmitButton.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
+															},500);
+															
 															document.location.href = resp.output_path;
 														} else {
 															document.location.reload();
@@ -426,6 +433,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										var w = parseFloat($(this)[0].getBoundingClientRect().width);
 										var h = $(this).css("height");
 
+										JCck.Core.SubmitButton.css = $(this).css("padding");
 										$(this).prop("disabled",true).addClass("btn-progress").css("width", w).css("height", h).css("padding", 0);
 										$(this).html(\'<div class="progress"><div class="bar" style="width:0%;"></div></div>\');
 										$(el+" > div").css("height", "100%").css("margin", "0").css("padding", "0");
