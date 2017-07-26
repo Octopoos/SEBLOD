@@ -46,11 +46,14 @@ $options	=	implode( '||', $options );
 		echo JCckDev::renderForm( 'core_options_target', '', $config, array( 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'Target Blank=_blank||Target Self=_self||Target Parent=_parent||Target Top=_top||Advanced=optgroup||Modal Box=modal', 'storage_field'=>'target' ) );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Parameters', 'cols'=>80, 'rows'=>1, 'storage_field'=>'target_params' ), array(), 'w100' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Rel', 'size'=>24, 'storage_field'=>'rel' ) );
+		echo '<li><label>'.JText::_( 'COM_CCK_TITLE' ).'</label>'
+			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'None', 'options'=>'Custom Text=2||Translated Text=3', 'storage_field'=>'title' ) )
+			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Title', 'size'=>16, 'css'=>'input-medium', 'storage_field'=>'title_custom' ) )
+			. '</li>';
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
 		echo JCckDev::renderForm( 'core_tmpl', '', $config );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'custom' ), array(), 'w100' );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0||Resource as Fragment=2', 'storage_field'=>'path_type' ) );
-		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Site', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>$options, 'bool8'=>false, 'storage_field'=>'site' ) );
         ?>
     </ul>
@@ -66,7 +69,8 @@ jQuery(document).ready(function($) {
 	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');
 	$('#sortable_core_dev_texts').isVisibleWhen('itemid','-3');
 	$('#content_fieldname,#content_location,#blank_li').isVisibleWhen('content','2');
-	$('#site,#blank_li3').isVisibleWhen('path_type','1,2');
+	$('#title_custom').isVisibleWhen('title','2,3',false);
+	$('#site').isVisibleWhen('path_type','1,2');
 	$('#target_params').isVisibleWhen('target','modal');
 });
 </script>
