@@ -31,7 +31,17 @@ class plgCCK_FieldFreeText extends JCckPluginField
 			$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
 		}
 	}
-	
+
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		$data['live']		=	NULL;
+		$data['match_mode']	=	NULL;
+		$data['validation']	=	NULL;
+
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
