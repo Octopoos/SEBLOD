@@ -80,7 +80,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {
 					$value		=	$field->value;
 					$self		=	$user->id == $pk;
-					$title		=	( $value == 1 ) ? 'COM_CCK_DISABLED' : 'COM_CCK_ENABLED';
+					$title		=	( $value == 1 ) ? 'COM_CCK_BLOCKED' : 'COM_CCK_ENABLED';
 					$value		=	JHtml::_( 'jgrid.state', JHtmlUsers::blockStates(), $value, $pks[$pk], 'users.', false /*!$self*/ );
 					$value		=	str_replace( 'title=""', 'title="'.JText::_( $title ).'"', $value );
 
@@ -250,7 +250,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$config['formWrapper']	=	true;
 				break;
 			case 'state':
-				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$field->value, 'class'=>$class, 'pk'=>$pks[$pk], 'fieldname_up'=>$typo->get( 'state_up', '' ), 'fieldname_down'=>$typo->get( 'state_down', '' ) ) );
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$field->value, 'class'=>$class, 'pk'=>$pks[$pk], 'title'=>$typo->get( 'state_title', '' ), 'fieldname_up'=>$typo->get( 'state_up', '' ), 'fieldname_down'=>$typo->get( 'state_down', '' ) ) );
 
 				$config['formWrapper']	=	true;
 				break;
@@ -306,8 +306,12 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !$hasLink ) {
 					$class	.=	' disabled';
 				}
-				if ( isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
+				if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
 					$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
+				} elseif ( $process['title'] === '0' ) {
+					$output	=	JCckField::getInstance( $name );
+					$output->loadValue( $process['value'] );
+					$value	=	preg_replace( '#title=".*"#U', 'title="'.$output->getText().'"', $value );
 				}
 				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
 			}

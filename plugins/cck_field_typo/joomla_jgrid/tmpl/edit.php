@@ -33,8 +33,9 @@ JCckDev::initScript( 'typo', $this->item );
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Trigger Change', 'defaultvalue'=>'0', 'storage_field'=>'trigger' ) );
 
-		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up' ) );
-		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Down Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_down' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up', 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_FIELD_NAME' ).'"' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Status Title Tooltip', 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'Self=0', 'storage_field'=>'state_title' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Down Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_down', 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_FIELD_NAME' ).'"' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Always=-2', 'storage_field'=>'typo_label' ) );
@@ -42,7 +43,6 @@ JCckDev::initScript( 'typo', $this->item );
         ?>
     </ul>
 </div>
-
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -54,6 +54,6 @@ jQuery(document).ready(function($) {
 	$('#blank_li').isVisibleWhen('type','increment');
 	$('#start').isVisibleWhen('type','increment');
 	$('#trigger').isVisibleWhen('type','form,selection');
-	$('#state_up,#state_down').isVisibleWhen('type','state');
+	$('#state_up,#state_down,#state_title').isVisibleWhen('type','state');
 });
 </script>
