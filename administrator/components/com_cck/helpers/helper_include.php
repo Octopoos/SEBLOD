@@ -93,6 +93,7 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQuery();
 				}
 				JHtml::_( 'bootstrap.tooltip' );
+				JHtml::_( 'behavior.multiselect' );
 				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				
 				Helper_Include::addSmoothScrool();
