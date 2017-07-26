@@ -334,18 +334,19 @@ class JCckPluginLocation extends JPlugin
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
-				$bridge->description		=	'';
-				$isNew				=	false;
+				$bridge->description	=	'';
+				$isNew					=	false;
 			} else {
-				$bridge->access				=	'';
-				$bridge->published			=	'';
-				$bridge->created_user_id	=	$config['author'];
+				$bridge->access			=	'';
+				$bridge->published		=	'';
 				self::g_initTable( $bridge, $params, false, 'bridge_' );
 				if ( ! isset( $config['storages']['#__categories']['parent_id'] ) ) {
 					$config['storages']['#__categories']['parent_id']	=	$params['bridge_default-parent_id'];
 				}
-				$isNew				=	true;
+				$isNew					=	true;
 			}
+			$bridge->created_user_id	=	$config['author'];
+
 			if ( $bridge->parent_id != $config['storages']['#__categories']['parent_id'] || $config['storages']['#__categories']['id'] == 0 ) {
 				$bridge->setLocation( $config['storages']['#__categories']['parent_id'], 'last-child' );
 			}
@@ -453,11 +454,11 @@ class JCckPluginLocation extends JPlugin
 			} else {
 				$bridge->access		=	'';
 				$bridge->state		=	'';
-				$bridge->created_by	=	$config['author'];
 				self::g_initTable( $bridge, $params, false, 'bridge_' );
 				$isNew				=	true;
 			}
-			
+			$bridge->created_by		=	$config['author'];
+
 			if ( isset( $config['storages']['#__content'] ) ) {
 				$bridge->bind( $config['storages']['#__content'] );
 			}
