@@ -622,10 +622,10 @@ class Helper_Workshop
 						if ( isset( $position->attributes()->toggle_value ) ) {
 							$value	=	(string)$position->attributes()->toggle_value;
 							if ( strpos( $value, ',' ) !== false ) {
-								$values	=	explode( ',', $value );
-								if ( count( $values ) ) {
+								$parts	=	explode( ',', $value );
+								if ( count( $parts ) ) {
 									$toggle2	=	false;
-									foreach ( $values as $v ) {
+									foreach ( $parts as $v ) {
 										if ( $val == $v ) {
 											$toggle2	=	true;
 										}
