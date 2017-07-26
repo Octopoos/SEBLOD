@@ -93,8 +93,10 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			// canEditOwnContent
 			jimport( 'cck.joomla.access.access' );
 			$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$config['type_id'] );
+
 			if ( $canEditOwnContent ) {
-				$field2	=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
+				$parts	=	explode( '@', $canEditOwnContent );
+				$field2	=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
 				$canEditOwnContent		=	false;
 				if ( is_object( $field2 ) && $field2->storage == 'standard' ) {
 					$pks				=	( isset( $config['pks'] ) ) ? $config['pks'] : $config['pk'];
@@ -108,8 +110,14 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 								$values[]	=	$p->map;
 							}
 						}
-						$values			=	( count( $values ) ) ? implode( ',', $values ) : '0';
-						$cache[$index]	=	JCckDatabase::loadObjectList( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk IN ( '.$values.' )', 'pk' );
+						if ( count( $values ) ) {
+							$values			=	array_diff( $values, array( '' ) );
+							$values			=	implode( ',', $values );
+						} else {
+							$values			=	'0';
+						}
+						
+						$cache[$index]	=	JCckDatabase::loadObjectList( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk IN ( '.$values.' )', 'pk' );
 					}
 					if ( isset( $cache[$index.'_pks'][$config['pk']] )
 						&& isset( $cache[$index][$cache[$index.'_pks'][$config['pk']]->map] )   
@@ -180,7 +188,6 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				$f->link_rel		=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
 				$f->link_state		=	$link->get( 'state', 1 );
 				$f->link_target		=	$link_target ? $link_target : ( isset( $f->link_target ) ? $f->link_target : '' );
-				$f->link_title		=	'';
 
 				if ( $link_title ) {
 					if ( $link_title == '2' ) {

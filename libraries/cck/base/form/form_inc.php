@@ -94,12 +94,14 @@ if ( !$isNew ) {
 	// canEditOwnContent
 	jimport( 'cck.joomla.access.access' );
 	$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$type->id );
+
 	if ( $canEditOwnContent ) {
-		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
+		$parts				=	explode( '@', $canEditOwnContent );
+		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
 		$canEditOwnContent	=	false;
 		if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
 			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$id );
-			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.(int)$related_content_id );
+			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
 
 			if ( $related_content->author_id == $user->id ) {
 				$canEditOwnContent	=	true;
