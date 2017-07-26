@@ -289,6 +289,7 @@ class CCKController extends JControllerLegacy
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
+		
 		if ( is_file( $path ) && $file ) {
 			$size	=	filesize( $path ); 
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
@@ -731,7 +732,15 @@ class CCKController extends JControllerLegacy
 					$link			.=	$hash;
 				}
 			} else {
-				$link			.=	$char.'thanks='.$preconfig['type'].$hash;
+				if ( strpos( $link, '?thanks=' ) === false && strpos( $link, '&thanks=' ) === false ) {
+					$link			.=	$char.'thanks='.$preconfig['type'];
+				} else {
+					$vars			=	JCckDevHelper::getUrlVars( $link );
+					$thanks			=	$vars->get( 'thanks', '' );
+					$link			=	str_replace( '?thanks='.$thanks, '?thanks='.$preconfig['type'], $link );
+					$link			=	str_replace( '&thanks='.$thanks, '&thanks='.$preconfig['type'], $link );
+				}
+				$link				.=	$hash;
 			}
 		}
 		if ( $msg != '' ) {
