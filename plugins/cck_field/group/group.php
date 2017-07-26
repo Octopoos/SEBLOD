@@ -57,14 +57,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
-		/*
-		if ( !$field->state ) {
+		if ( !$field->state ) { /* TODO: Support for "onBeforeRender" restrictions may be implemented later. */
 			$field->value	=	'';
 			return;
 		}
-		// TODO: SEBLOD 3.7 while checking for all Restriction plug-in behaviors..
-		*/
-
+	
 		// Prepare
 		$name		=	$field->name;
 		$dispatcher	=	JEventDispatcher::getInstance();
@@ -116,6 +113,12 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
+
+		if ( !$field->state ) { /* TODO: Support for "onBeforeRender" restrictions may be implemented later. */
+			$field->form	=	'';
+			$field->value	=	'';
+			return;
+		}
 		
 		// Init
 		if ( count( $inherit ) ) {
@@ -196,6 +199,16 @@ class plgCCK_FieldGroup extends JCckPluginField
 			foreach ( $fields as $f ) {
 				$name		=	$f->name;
 				$f->state	=	'';
+				
+				// Restriction
+				if ( isset( $f->restriction ) && $f->restriction ) {
+					$f->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$f->restriction, 'onCCK_Field_RestrictionPrepareStore', array( &$f, &$config ) );
+					
+					if ( !$f->authorised ) {
+						continue;
+					}
+				}
+
 				if ( ( $f->variation == 'hidden' || $f->variation == 'disabled' || $f->variation == 'value' ) && ! $f->live && $f->live_value != '' ) {
 					$val	=	$f->live_value;
 				} else {
