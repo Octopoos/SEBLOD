@@ -27,7 +27,7 @@ $color			=	( @$options['image_color'] != '' ) ? $options['image_color'] : '#ffff
 $permissions		=	( isset( $options['folder_permissions'] ) && $options['folder_permissions'] ) ? octdec( $options['folder_permissions'] ) : 0755;
 
 if ( !(bool) ini_get( 'file_uploads' ) ) {
-	JError::raiseWarning( 'SOME_ERROR_CODE', JText::_( 'WARNINSTALLFILE' ) );
+	JError::raiseWarning( '', JText::_( 'WARNINSTALLFILE' ) );
 }
 
 $doSave			=	0;
