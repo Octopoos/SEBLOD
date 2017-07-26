@@ -125,6 +125,22 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 		} else {
 			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 		}
+		if ( $field->children ) {
+			$i			=	0;
+			$akas		=	array();
+			$options2	=	json_decode( $field->options2, true );
+			
+			foreach ( $field->children as $child ) {
+				$child->aka	=	( isset( $options2['options'][$i]['aka'] ) && $options2['options'][$i]['aka'] ) ? $options2['options'][$i]['aka'] : '';
+
+				if ( $child->aka !='' ) {
+					$akas[$child->aka]	=	true;
+				}
+				$i++;
+			}
+
+			$field->children_akas	=	$akas;
+		}
 		
 		// Set
 		$field->type				=	self::$type;
@@ -187,7 +203,7 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 		
 		$query	= 	'SELECT a.name, a.type, a.options, a.options2, a.bool, a.bool2, a.bool3, a.storage, a.storage_location, a.storage_table, a.storage_field, a.storage_field2'
 				.	' FROM #__cck_core_fields AS a'
-				.	' WHERE a.name IN ('.$names.')'
+				.	' WHERE a.name IN ('.$names.') ORDER BY FIELD(name, '.$names.')'
 				;
 		$fields	=	JCckDatabase::loadObjectList( $query, 'name' );
 		

@@ -137,46 +137,98 @@ class plgSearchCCK extends JPlugin
 				
 				// Sql
 				if ( $field->type == 'search_generic' ) {
+					$sql	=	'';
+
 					if ( count( $field->children ) ) {
-						$sql		=	'(';
-						$k			=	0;
-						foreach ( $field->children as $child ) {
-							if ( $k > 0 ) {
-								$sql	.=	' OR ';
+						$hasAka		=	false;
+						$sqls		=	array();
+						
+						if ( count( $field->children_akas ) ) {
+							if ( strpos( $value, ' ' ) !== false ) {
+								$values	=	explode( ' ', $value );
+							} else {
+								$values	=	array( 0=>$value );
 							}
-							$child->match_mode		=	$field->match_mode;
-							$child->match_options	=	$field->match_options;
-							$child->match_value		=	$field->match_value;
-							if ( $child->storage && $child->storage != 'none' ) {
-								$Pf		=	$child->storage_field;
-								$Pt		=	$child->storage_table;
-								// -
-								if ( $Pt && !isset( $tables[$Pt] ) ) {
-									$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
-									$t++;
-								}
-								$tables[$Pt]['location']	=	$child->storage_location;
-								// -
-								$name	=	$child->storage_field2 ? $child->storage_field2 : $child->name;
-								if ( $Pt != '' ) {
-									$target	=	$tables[$Pt]['_'].'.'.$Pf;
-									$tables[$Pt]['fields'][$Pf]	=	( $Pt == '#__cck_core' ) ? $value : $name;
-								}
-								if ( JCck::callFunc( 'plgCCK_Field'.$child->type, 'isFriendly' ) ) {
-									if ( isset( $fields[$child->name] ) ) {
-										$value2	=	JCck::callFunc_Array( 'plgCCK_Field'.$child->type, 'getValueFromOptions', array( $fields[$child->name], $value, $config ) );
-									} else {
-										$value2	=	JCck::callFunc_Array( 'plgCCK_Field'.$child->type, 'getValueFromOptions', array( $child, $value, $config ) );
+
+
+							if ( count( $values ) ) {
+								foreach ( $values as $key=>$v ) {
+									$values[$key]	=	array( 'aka'=>false, 'sql'=>'', 'str'=>$v );
+
+									foreach ( $field->children_akas as $aka=>$val ) {
+										$pos	=	strpos( $values[$key]['str'], $aka.':' );
+										
+										if ( $pos !== false && $pos == 0 ) {
+											$hasAka	=	true;
+
+											$values[$key]['aka']	=	$aka;
+											$values[$key]['str']	=	substr( $values[$key]['str'], strlen( $aka ) + 1 );
+										}
 									}
-								} else {
-									$value2		=	$value;
 								}
-								require_once JPATH_PLUGINS.'/cck_storage/'.$child->storage.'/'.$child->storage.'.php';
-								$sql	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, $fields, &$config ) );
 							}
-							$k++;
 						}
-						$sql	.=	')';
+						if ( !$hasAka ) {
+							$values	=	array( 0=>array( 'aka'=>false, 'sql'=>'', 'str'=>$value ) );
+						}
+						foreach ( $values as $v ) {
+							$k		=	0;
+
+							foreach ( $field->children as $child ) {
+								if ( $hasAka ) {
+									if ( $v['aka'] && $v['aka'] != $child->aka ) {
+										continue;
+									} else {
+										$value	=	$v['str'];
+									}
+								}
+								if ( $k > 0 ) {
+									$v['sql']	.=	' OR ';
+								}
+
+								$child->match_mode		=	$field->match_mode;
+								$child->match_options	=	$field->match_options;
+								$child->match_value		=	$field->match_value;
+								if ( $child->storage && $child->storage != 'none' ) {
+									$Pf		=	$child->storage_field;
+									$Pt		=	$child->storage_table;
+									// -
+									if ( $Pt && !isset( $tables[$Pt] ) ) {
+										$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+										$t++;
+									}
+									$tables[$Pt]['location']	=	$child->storage_location;
+									// -
+									$name	=	$child->storage_field2 ? $child->storage_field2 : $child->name;
+									if ( $Pt != '' ) {
+										$target	=	$tables[$Pt]['_'].'.'.$Pf;
+										$tables[$Pt]['fields'][$Pf]	=	( $Pt == '#__cck_core' ) ? $value : $name;
+									}
+									if ( JCck::callFunc( 'plgCCK_Field'.$child->type, 'isFriendly' ) ) {
+										if ( isset( $fields[$child->name] ) ) {
+											$value2	=	JCck::callFunc_Array( 'plgCCK_Field'.$child->type, 'getValueFromOptions', array( $fields[$child->name], $value, $config ) );
+										} else {
+											$value2	=	JCck::callFunc_Array( 'plgCCK_Field'.$child->type, 'getValueFromOptions', array( $child, $value, $config ) );
+										}
+									} else {
+										$value2		=	$value;
+									}
+									require_once JPATH_PLUGINS.'/cck_storage/'.$child->storage.'/'.$child->storage.'.php';
+									$v['sql']	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, $fields, &$config ) );
+									$k++;
+								}
+							}
+							if ( $v['sql'] != '' ) {
+								$sqls[]	=	'('.$v['sql'].')';
+							}
+						}
+						if ( $count2 = count( $sqls ) ) {
+							$sql	=	implode( ' AND ', $sqls );
+
+							if ( $count2 > 1 ) {
+								$sql	=	'('.$sql.')';
+							}
+						}
 					}
 				} elseif ( $field->type == 'search_ordering' ) {
 					$sql	=	'';
