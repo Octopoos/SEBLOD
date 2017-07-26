@@ -62,6 +62,10 @@ if ( $type == 'ordering' ) {
 	$legend		=	'<a href="javascript:void(0);" '.$attr.'>'.$legend.'</a>';
 } elseif ( $type == 'selection' ) {
 	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);" data-cck-remove-before-search="" />';
+
+	if ( $options->get( 'selection_label', 0 ) ) {
+		$legend	.=	'<label></label>';
+	}
 }
 
 // Set

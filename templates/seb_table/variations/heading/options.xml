@@ -6,6 +6,10 @@
 			<option value="">VAR_SEB_TABLE_HEADING_LABEL</option>
 			<option value="ordering">VAR_SEB_TABLE_HEADING_ORDERING</option>
 		</field>
+		<field name="selection_label" type="list" default="0" label="VAR_SEB_TABLE_HEADING_SELECTION_LABEL" description="VAR_SEB_TABLE_HEADING_SELECTION_LABEL_DESC" class="inputbox">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="ordering" type="sql" default="" label="VAR_SEB_TABLE_HEADING_SEARCH_ORDERING" description="VAR_SEB_TABLE_HEADING_SEARCH_ORDERING_DESC"
 			   key_field="name" value_field="title" class="inputbox" query="SELECT name, title FROM #__cck_core_fields WHERE type = 'search_ordering' AND published = 1 ORDER BY title ASC">
 			<option value="">COM_CCK_SELECT_SL</option>
@@ -22,6 +26,8 @@
 		</field>
 		<field name="cckjs" type="cckjs" label="" description="" js_appendto=""
 				js_isvisiblewhen="#ordering,#order_by,#order_by_fieldname,#order_dir='type','ordering',true" js_format="html" hidden="true" />
+		<field name="cckjs2" type="cckjs" label="" description="" js_appendto=""
+				js_isvisiblewhen="#selection_label='type','selection',true" js_format="html" hidden="true" />
 	</fieldset>
 
 	<fieldset name="position_display" label="VAR_SEB_TABLE_HEADING_LEGEND_POSITION">
