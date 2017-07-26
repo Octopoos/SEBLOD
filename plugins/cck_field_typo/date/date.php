@@ -42,9 +42,17 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
 		$format		=	$typo->get( 'format', 'Y-m-d' );
+		$language	=	$typo->get( 'language', '' );
 		$timezone	=	(int)$typo->get( 'timezone', '1' );
 		$value		=	trim( $field->value );
 		
+		if ( $language ) {
+			$tag	=	JFactory::getLanguage()->getTag();
+
+			if ( $tag != $language ) {
+				JCckDevHelper::setLanguage( $language );
+			}
+		}
 		if ( $format == -2 ) {
 			$typo		=	self::_getTimeAgo( $value, $typo->get( 'unit', '' ), $typo->get( 'alt_format', '' ), $typo->get( 'format2', 'Y-m-d' ) );
 		} else {
@@ -61,6 +69,9 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 			$value		=	self::_getValueWithFormatStorage( $value, @$options2['storage_format'] );
 			$date_eng	=	$format ? date(  $format, $value ) : $value;
 			$typo		=	self::_getDateByLang( $format, $value, $date_eng );
+		}
+		if ( $language ) {
+			JCckDevHelper::setLanguage( $tag );
 		}
 	
 		return $typo;

@@ -28,6 +28,7 @@ $formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date F
 								  'options'=>$formats ) );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Unit', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Day=0||Hour=1||Minute=2', 'storage_field'=>'unit' ) );
 		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Apply Time Zone', 'defaultvalue'=>'1', 'storage_field'=>'timezone' ) );
+		echo JCckDev::renderForm( 'core_languages', '', $config, array( 'label'=>'Language', 'selectlabel'=>'Inherited', 'storage_field'=>'language' ) );
         ?>
     </ul>
 </div>
