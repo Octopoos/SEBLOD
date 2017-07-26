@@ -11,6 +11,9 @@
 defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'fieldPicker'=>true ) );
+JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true,
+                                                  'customAttr'=>array( 'aka' ), 'customAttrLabel'=>JText::_( 'COM_CCK_AKA_AS_TARGET' ),
+                                                  'fieldPicker'=>true ) );
 JCckDev::forceStorage();
 $options	=	JCckDev::fromSTRING( $this->item->options );
 ?>
