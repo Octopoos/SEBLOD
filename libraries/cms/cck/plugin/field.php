@@ -68,19 +68,20 @@ class JCckPluginField extends JPlugin
 			return $value;
 		}
 		if ( count( $opts ) ) {
+			$length	=	strlen( $value );
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
+
 				if ( $config['doTranslation'] && trim( $o[0] ) ) {
 					$o[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o[0] ) ) );
 				}
-				// if ( strcasecmp( $o[0], $value ) == 0 ) {
-				if ( stristr( $o[0], $value ) !== false ) {
+				if ( stristr( $o[0], $value ) !== false && strlen( $o[0] ) == $length ) {
 					return ( isset( $o[1] ) ) ? $o[1] : $o[0];
 					break;
 				}
 			}
 		}
-		
+
 		return $value;
 	}
 	
