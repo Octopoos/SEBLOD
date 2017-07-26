@@ -261,10 +261,11 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 
-		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) { // todo: move below
-			JCckToolbox::process( 'onAfterInitialise' );
-		}
 		if ( $this->multisite !== true ) {
+			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+				JCckToolbox::process( 'onAfterInitialise' );
+			}
+
 			return;
 		}
 		$user	=	JFactory::getUser();
@@ -293,6 +294,10 @@ class plgSystemCCK extends JPlugin
 
 			if ( ! $this->site ) {
 				JFactory::getSession()->set( 'user', JFactory::getUser( $user->id ) );
+
+				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+					JCckToolbox::process( 'onAfterInitialise' );
+				}
 				return;
 			}
 
@@ -378,8 +383,11 @@ class plgSystemCCK extends JPlugin
 			if ( $app->isAdmin() ) {
 				return;
 			}
-      
+
 			if ( ! $this->site ) {
+				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+					JCckToolbox::process( 'onAfterInitialise' );
+				}
 				return;
 			}
 
@@ -387,8 +395,12 @@ class plgSystemCCK extends JPlugin
 			$session->set( 'user', JFactory::getUser( 0 ) );
 
 			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
+				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+					JCckToolbox::process( 'onAfterInitialise' );
+				}
 				return;
 			}
+
 			$user			=	new JUser( $this->site->guest );
 			$user->guest	=	1;
 
@@ -407,6 +419,10 @@ class plgSystemCCK extends JPlugin
 				$this->site_cfg->set( 'set_template_style', true );
 				$this->_setTemplateStyle( $style );
 			}
+		}
+
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterInitialise' );
 		}
 	}
 
