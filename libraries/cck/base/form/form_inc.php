@@ -358,9 +358,11 @@ if ( !$canAccess && $canEditOwn && !$config['author'] ) {
 
 // BeforeRender
 if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
+	JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderForm'], 'priority' );
+	
 	foreach ( $config['process']['beforeRenderForm'] as $process ) {
 		if ( $process->type ) {
-			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
+			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
 		}
 	}
 }
