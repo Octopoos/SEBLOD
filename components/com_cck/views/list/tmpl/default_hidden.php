@@ -11,6 +11,32 @@
 defined( '_JEXEC' ) or die;
 
 $app	=	JFactory::getApplication();
+$doc	=	JFactory::getDocument();
+
+$js		=	'
+			(function ($){
+				MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+				var observer = new MutationObserver(function(mutations) {
+				  mutations.forEach(function(mutation) {
+				    if (mutation.attributeName == "value") {
+				    	if ($("[data-cck-boxchecked]").length) {
+				    		$("[data-cck-boxchecked]").each(function() {
+								if ($("#boxchecked").val()>0) {
+									$(this).text($("#boxchecked").val()).addClass("selection");
+								} else {
+									$(this).text($(this).attr("data-cck-boxchecked")).removeClass("selection");
+								}
+							});
+				    	}
+				    }
+				  });
+				});
+				$(document).ready(function() {
+					observer.observe(document.querySelector("#boxchecked"), {attributes:true});
+				});
+			})(jQuery);
+			';
+$doc->addScriptDeclaration( $js );
 ?>
 <input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
 <?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
