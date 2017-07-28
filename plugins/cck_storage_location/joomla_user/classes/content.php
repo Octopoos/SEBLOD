@@ -41,11 +41,21 @@ class JCckContentJoomla_User extends JCckContent
 		return $this->_instance_base->delete();
 	}
 
+	// saveBase
+	protected function saveBase()
+	{
+		return $this->_instance_base->save();
+	}
+
 	// store
 	public function store( $instance_name )
 	{
+		if ( !$this->can( 'save' ) ) {
+			return false;
+		}
+
 		if ( $instance_name == 'base' ) {
-			return $this->{'_instance_'.$instance_name}->save();
+			return $this->_instance_base->save();
 		} else {
 			return $this->{'_instance_'.$instance_name}->store();
 		}
