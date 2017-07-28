@@ -10,34 +10,40 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-
 // JCckContent
 class JCckContentJoomla_Category extends JCckContent
 {
+	// initialize
+	protected function initialize()
+	{
+		JPluginHelper::importPlugin( 'content' );
+
+		JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+	}
+
 	// preSave
-	public function preSave( $instance_name, &$data )
+	protected function preSave( $instance_name, &$data )
 	{
 		if ( $instance_name == 'base' ) {
 			if ( !( isset( $data['extension'] ) && $data['extension'] != '' ) ) {
 				$data['extension']	=	'com_content';
 			}
 			if ( !isset( $data['parent_id'] ) ) {
-				$data['parent_id']	=	( $this->getPk() ) ? $this->{'_instance_'.$instance_name}->parent_id : 1;
+				$data['parent_id']	=	( $this->getPk() ) ? $this->_instance_base->parent_id : 1;
 			}
-			if ( !$this->getPk() || ( $data['parent_id'] != $this->{'_instance_'.$instance_name}->parent_id ) ) {
-				$this->{'_instance_'.$instance_name}->setLocation( $data['parent_id'], 'last-child' );
+			if ( !$this->getPk() || ( $data['parent_id'] != $this->_instance_base->parent_id ) ) {
+				$this->_instance_base->setLocation( $data['parent_id'], 'last-child' );
 			}
 		}
 	}
 
 	// saveBase
-	public function saveBase()
+	protected function saveBase()
 	{
 		if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
 			$this->_instance_base->language	=	'*';
 		}
-		$status			=	$this->store( 'base' );
+		$status			=	$this->_instance_base->store();
 
 		if ( !$this->_pk && !$status ) {
 			$i			=	2;
@@ -50,7 +56,7 @@ class JCckContentJoomla_Category extends JCckContent
 			}
 			$this->_instance_base->alias	=	$alias;
 
-			$status		=	$this->store( 'base' );
+			$status		=	$this->_instance_base->store();
 
 			/* TODO: publish_up */
 		}
@@ -59,10 +65,10 @@ class JCckContentJoomla_Category extends JCckContent
 	}
 	
 	// postSave
-	public function postSave( $instance_name, $data )
+	protected function postSave( $instance_name, $data )
 	{
 		if ( $instance_name == 'base' ) {
-			$this->{'_instance_'.$instance_name}->rebuildPath( $this->getPk() );
+			$this->_instance_base->rebuildPath( $this->getPk() );
 		}
 	}
 }

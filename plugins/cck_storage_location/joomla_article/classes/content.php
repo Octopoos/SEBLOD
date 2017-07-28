@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class JCckContentJoomla_Article extends JCckContent
 {
 	// saveBase
-	public function saveBase()
+	protected function saveBase()
 	{
 		if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
 			$this->_instance_base->language	=	'*';
@@ -23,7 +23,7 @@ class JCckContentJoomla_Article extends JCckContent
 			$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		}
 
-		$status			=	$this->store( 'base' );
+		$status			=	$this->_instance_base->store();
 
 		if ( !$this->_pk && !$status ) {
 			$i			=	2;
@@ -36,7 +36,7 @@ class JCckContentJoomla_Article extends JCckContent
 			}
 			$this->_instance_base->alias	=	$alias;
 
-			$status		=	$this->store( 'base' );
+			$status		=	$this->_instance_base->store();
 		}
 
 		return $status;

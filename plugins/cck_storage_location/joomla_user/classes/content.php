@@ -19,6 +19,12 @@ class JCckContentJoomla_User extends JCckContent
 		return JUser::getInstance();
 	}
 
+	// initialize
+	protected function initialize()
+	{
+		JPluginHelper::importPlugin( 'user' );
+	}
+
 	// check
 	public function check( $instance_name )
 	{
@@ -29,6 +35,12 @@ class JCckContentJoomla_User extends JCckContent
 		}
 	}
 
+	// remove
+	public function remove()
+	{
+		return $this->_instance_base->delete();
+	}
+
 	// store
 	public function store( $instance_name )
 	{
@@ -37,6 +49,18 @@ class JCckContentJoomla_User extends JCckContent
 		} else {
 			return $this->{'_instance_'.$instance_name}->store();
 		}
+	}
+
+	// triggerDelete
+	public function triggerDelete( $event )
+	{
+		if ( $event == 'beforeDelete' ) {
+			return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_instance_base->getProperties() ) );
+		} elseif ( $event == 'afterDelete' ) {
+			return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_instance_base->getProperties(), true, $this->_instance_base->getError() ) );
+		}
+
+		return true;
 	}
 }
 ?>
