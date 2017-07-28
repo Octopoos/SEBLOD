@@ -163,21 +163,46 @@ abstract class JCckToolbox
 	// run
 	public static function run( $name )
 	{
-		$processings	=	JCckDatabase::loadObjectList( 'SELECT a.type, a.scriptfile, a.options'
-														. ' FROM #__cck_more_processings AS a'
-														. ' LEFT JOIN #__cck_more_job_processing AS b ON b.processing_id = a.id'
-														. ' LEFT JOIN #__cck_more_jobs AS c ON c.id = b.job_id'
-														. ' WHERE c.name = "'.$name.'" AND c.published = 1 AND a.published = 1'
-														. ' ORDER BY b.id' );
+		$job			=	JCckDatabase::loadObject( 'SELECT id, run_as FROM #__cck_more_jobs WHERE name = "'.$name.'" AND published = 1' );
 
-		if ( count( $processings ) ) {
-			foreach ( $processings as $p ) {
-				if ( is_object( $p ) && is_file( JPATH_SITE.$p->scriptfile ) ) {
-					$options	=	new JRegistry( $p->options );
+		if ( !is_object( $job ) ) {
+			return;
+		}
+		if ( !$job->run_as ) {
+			$job->run_as	=	(int)JCck::getConfig_Param( 'integration_user_default_author' );
+		}
 
-					include_once JPATH_SITE.$p->scriptfile;
+		if ( $job->run_as ) {
+			$previous	=	JFactory::getUser()->id;
+
+			JFactory::getSession()->set( 'user', JFactory::getUser( $job->run_as ) );
+			JCck::getUser( array( $job->run_as, true ) );
+		}
+
+		try {
+			$processings	=	JCckDatabase::loadObjectList( 'SELECT a.type, a.scriptfile, a.options'
+															. ' FROM #__cck_more_processings AS a'
+															. ' LEFT JOIN #__cck_more_job_processing AS b ON b.processing_id = a.id'
+															. ' LEFT JOIN #__cck_more_jobs AS c ON c.id = b.job_id'
+															. ' WHERE c.name = "'.$name.'" AND c.published = 1 AND a.published = 1'
+															. ' ORDER BY b.id' );
+
+			if ( count( $processings ) ) {
+				foreach ( $processings as $p ) {
+					if ( is_object( $p ) && is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+
+						include_once JPATH_SITE.$p->scriptfile;
+					}
 				}
 			}
+		} catch ( Exception $e ) {
+			// Do Nothing
+		}
+
+		if ( $job->run_as ) {
+			JFactory::getSession()->set( 'user', $previous );
+			JCck::getUser( array( $previous, true ) );
 		}
 	}
 
