@@ -57,6 +57,7 @@ abstract class JCck
 			$app			=	JFactory::getApplication();
 			$isConfigView	=	( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) );
 		} catch ( Exception $e ) {
+			// Do Nothing
 		}
 		
 		$config			=	new stdClass;
