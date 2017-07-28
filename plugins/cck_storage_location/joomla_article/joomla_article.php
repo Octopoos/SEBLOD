@@ -924,7 +924,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		$null	=	$db->getNullDate();
 
-		$states	=	self::_getStaticParam( 'allowed_status', '1,2' );
+		$states	=	self::getStaticParams()->get( 'allowed_status', '1,2' );
 		$states	=	explode( ',', $states );
 		$states	=	ArrayHelper::toInteger( $states );
 		$states	=	( count( $states ) > 1 ) ? 'IN ('.implode( ',', $states ).')' : '= '.(int)$states[0];
@@ -965,20 +965,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	public static function getId( $config )
 	{
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
-
-	// _getStaticParam (todo: need to be improved and moved)
-	protected static function _getStaticParam( $name, $default = '' )
-	{
-		static $params	=	array();
-
-		if ( !isset( $params[$name] ) ) {
-			$plg			=	JPluginHelper::getPlugin( 'cck_storage_location', 'joomla_article' );
-			$plg_params		=	new JRegistry( $plg->params );
-			$params[$name]	=	$plg_params->get( $name, $default );
-		}
-
-		return $params[$name];
 	}
 }
 ?>

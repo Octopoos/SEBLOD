@@ -265,7 +265,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Protected
 	
 	// _core
-	protected function _core( $data, &$config = array(), $pk = 0, $params = array() )
+	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		if ( ! $config['id'] ) {
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
@@ -312,7 +312,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		}
 		
 		$config['author']	=	JFactory::getUser()->id;
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable

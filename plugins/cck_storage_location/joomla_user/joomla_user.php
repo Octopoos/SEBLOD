@@ -288,7 +288,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Protected
 	
 	// _core
-	protected function _core( $data, &$config = array(), $pk = 0, $params = array() )
+	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		$app			=	JFactory::getApplication();
 		$parameters		=	JComponentHelper::getParams( 'com_users' );
@@ -332,7 +332,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			}
 			
 			if ( $isNew ) {
-				self::_sendMails( $table, $activation, $params['auto_email'], $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
+				self::_sendMails( $table, $activation, self::getStaticParams()->get( 'auto_email', 1 ), $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
 			}
 			
 			self::$pk	=	$table->{self::$key};
@@ -374,7 +374,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		}
 		
 		$config['author']	=	$table->id;
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable

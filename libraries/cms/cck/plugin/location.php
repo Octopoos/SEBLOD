@@ -35,6 +35,19 @@ class JCckPluginLocation extends JPlugin
 		return true;
 	}
 
+	// getStaticParams
+	public static function getStaticParams()
+	{
+		static $params	=	null;
+		
+		if ( !is_object( $params ) ) {
+			$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', static::$type );
+			$params		=	new JRegistry( $plg->params );
+		}
+		
+		return $params;
+	}
+
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
 	{
@@ -222,7 +235,7 @@ class JCckPluginLocation extends JPlugin
 	}
 
 	// g_onCCK_Storage_LocationStore
-	public static function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config, $params = array() )
+	public static function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config )
 	{		
 		if ( ! $pk ) {
 			return;
@@ -235,17 +248,21 @@ class JCckPluginLocation extends JPlugin
 
 		// Core
 		if ( !$already ) {
-			if ( isset( $params['bridge'] ) && $params['bridge'] ) {
-				if ( !isset( $params['bridge_default_title'] ) ) {
-					$params['bridge_default_title']			=	'';
-				}
-				if ( !isset( $params['bridge_default_title_mode'] ) ) {
-					$params['bridge_default_title_mode']	=	0;
-				}
-				if ( $params['bridge'] == 1 ) {
-					self::g_doBridge( 'joomla_article', $pk, $location, $config, $params );
-				} elseif ( $params['bridge'] == 2 ) {
-					self::g_doBridge( 'joomla_category', $pk, $location, $config, $params );
+			if ( static::$bridge_object != '' ) {
+				$params		=	static::getStaticParams()->toArray();
+
+				if ( isset( $params['bridge'] ) && $params['bridge'] ) {
+					if ( !isset( $params['bridge_default_title'] ) ) {
+						$params['bridge_default_title']			=	'';
+					}
+					if ( !isset( $params['bridge_default_title_mode'] ) ) {
+						$params['bridge_default_title_mode']	=	0;
+					}
+					if ( $params['bridge'] == 1 ) {
+						self::g_doBridge( 'joomla_article', $pk, $location, $config, $params );
+					} elseif ( $params['bridge'] == 2 ) {
+						self::g_doBridge( 'joomla_category', $pk, $location, $config, $params );
+					}
 				}
 			} else {
 				$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
