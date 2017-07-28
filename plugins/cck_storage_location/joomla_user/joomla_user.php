@@ -37,6 +37,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'onUserAfterDelete',
+											'afterSave'=>'',
+											'beforeDelete'=>'onUserBeforeDelete',
+											'beforeSave'=>''
+										);
 	protected static $ordering		=	array( 'alpha'=>'name ASC' );
 	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
@@ -84,24 +90,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				$config['storages'][self::$table]->password2	=	'';
 				$config['author']								=	$config['storages'][self::$table]->id;
 			}
-		}
-	}
-	
-	// onCCK_Storage_LocationPrepareDelete
-	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
-	{
-		if ( self::$type != $field->storage_location ) {
-			return;
-		}
-		
-		// Init
-		$table	=	$field->storage_table;
-		
-		// Set
-		if ( $table == self::$table ) {
-			$storage	=	self::_getTable( $pk );
-		} else {
-			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
 		}
 	}
 
@@ -295,24 +283,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$dispatcher->trigger( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
 		
 		return true;
-	}
-	
-	// onCCK_Storage_LocationStore
-	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
-	{
-		if ( self::$type != $type ) {
-			return;
-		}
-		
-		if ( ! @$config['storages'][self::$table]['_']->pk ) {
-			self::_core( $config['storages'][self::$table], $config, $pk, $this->params->toArray() );
-			$config['storages'][self::$table]['_']->pk	=	self::$pk;
-		}
-		if ( $data['_']->table != self::$table ) {
-			parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $this->params->toArray() );
-		}
-		
-		return self::$pk;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Protected
