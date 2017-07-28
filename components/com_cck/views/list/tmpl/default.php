@@ -166,7 +166,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 })(jQuery);
 </script>
 <?php } ?>
-<?php if ( $this->load_resource ) {
+<?php if ( $this->load_resource && $this->total ) {
 	$url	=	JRoute::_( 'index.php?Itemid='.$app->input->getInt( 'Itemid', 0 ) );
 	
 	if ( $url == '/' ) {
