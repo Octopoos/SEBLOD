@@ -48,6 +48,7 @@ class JCckPluginLocation extends JPlugin
 									'context'=>'',
 									'contexts'=>'',
 									'custom'=>'',
+									'events'=>'',
 									'key'=>'',
 									'modified_at'=>'',
 									'ordering'=>'',
@@ -71,7 +72,25 @@ class JCckPluginLocation extends JPlugin
 		
 		return $properties;
 	}
-	
+
+	// onCCK_Storage_LocationPrepareDelete
+	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
+	{
+		if ( static::$type != $field->storage_location ) {
+			return;
+		}
+		
+		// Init
+		$table	=	$field->storage_table;
+		
+		// Set
+		if ( $table == static::$table ) {
+			$storage	=	static::_getTable( $pk );
+		} else {
+			$storage	=	static::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
+		}
+	}
+
 	// onCCK_Storage_LocationSaveOrder
 	public static function onCCK_Storage_LocationSaveOrder( $pks = array(), $order = array() )
 	{
@@ -133,6 +152,31 @@ class JCckPluginLocation extends JPlugin
 		return true;
 	}
 
+	// onCCK_Storage_LocationStore
+	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
+	{
+		if ( static::$type != $type ) {
+			return;
+		}
+		
+		if ( isset( $config['primary'] ) && $config['primary'] != static::$type ) {
+			return;
+		}
+		if ( ! @$config['storages'][static::$table]['_']->pk ) {
+			if ( isset( $config['storages'][static::$table] )
+			  && $config['storages'][static::$table]['_']->table == static::$table && isset( $config['storages'][static::$table][static::$key] ) ) {
+				unset( $config['storages'][static::$table][static::$key] );
+			}
+			static::_core( $config['storages'][static::$table], $config, $pk );
+			$config['storages'][static::$table]['_']->pk	=	static::$pk;
+		}
+		if ( $data['_']->table != static::$table ) {
+			static::g_onCCK_Storage_LocationStore( $data, static::$table, static::$pk, $config );
+		}
+		
+		return static::$pk;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// g_onCCK_Storage_LocationPrepareContent
@@ -172,13 +216,13 @@ class JCckPluginLocation extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Store
 	
 	// g_onCCK_Storage_LocationRollback
-	public function g_onCCK_Storage_LocationRollback( $pk )
+	public static function g_onCCK_Storage_LocationRollback( $pk )
 	{
 		JCckDatabase::execute( 'DELETE FROM #__cck_core WHERE id = '.(int)$pk );
 	}
 
 	// g_onCCK_Storage_LocationStore
-	public function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config, $params = array() )
+	public static function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config, $params = array() )
 	{		
 		if ( ! $pk ) {
 			return;
