@@ -250,19 +250,18 @@ class JCckPluginLocation extends JPlugin
 		if ( !$already ) {
 			if ( static::$bridge_object != '' ) {
 				$params		=	static::getStaticParams()->toArray();
-
-				if ( isset( $params['bridge'] ) && $params['bridge'] ) {
-					if ( !isset( $params['bridge_default_title'] ) ) {
-						$params['bridge_default_title']			=	'';
-					}
-					if ( !isset( $params['bridge_default_title_mode'] ) ) {
-						$params['bridge_default_title_mode']	=	0;
-					}
-					if ( $params['bridge'] == 1 ) {
-						self::g_doBridge( 'joomla_article', $pk, $location, $config, $params );
-					} elseif ( $params['bridge'] == 2 ) {
-						self::g_doBridge( 'joomla_category', $pk, $location, $config, $params );
-					}
+			}
+			if ( isset( $params['bridge'] ) && $params['bridge'] ) {
+				if ( !isset( $params['bridge_default_title'] ) ) {
+					$params['bridge_default_title']			=	'';
+				}
+				if ( !isset( $params['bridge_default_title_mode'] ) ) {
+					$params['bridge_default_title_mode']	=	0;
+				}
+				if ( $params['bridge'] == 1 ) {
+					self::g_doBridge( 'joomla_article', $pk, $location, $config, $params );
+				} elseif ( $params['bridge'] == 2 ) {
+					self::g_doBridge( 'joomla_category', $pk, $location, $config, $params );
 				}
 			} else {
 				$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
