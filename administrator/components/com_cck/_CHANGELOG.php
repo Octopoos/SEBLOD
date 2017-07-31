@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.12.1 Upgrade Release [31-Jul-2017] -----------
+
+# Regression (objects with bridge capability) fixed.
+
 -------------------- 3.12.0 Upgrade Release [28-Jul-2017] -----------
 
 * Security Release:
