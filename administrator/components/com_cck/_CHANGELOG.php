@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.12.2 Upgrade Release [31-Jul-2017] -----------
+
+# "data-cck-boxchecked" JS issue fixed.
+
 -------------------- 3.12.1 Upgrade Release [31-Jul-2017] -----------
 
 # Regression (objects with bridge capability) fixed.
