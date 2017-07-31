@@ -32,7 +32,9 @@ $js		=	'
 				  });
 				});
 				$(document).ready(function() {
-					observer.observe(document.querySelector("#boxchecked"), {attributes:true});
+					if ($("#boxchecked").length) {
+						observer.observe(document.querySelector("#boxchecked"), {attributes:true});
+					}
 				});
 			})(jQuery);
 			';
