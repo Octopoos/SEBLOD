@@ -528,6 +528,40 @@ class plgSystemCCK extends JPlugin
 			$itemId	=	$app->input->getInt( 'Itemid', 0 );
 			$user	=	JFactory::getUser();
 
+			// Redirect from tmpl=raw to #!
+			if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+				$item	=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
+
+				if ( isset( $item->query['option'], $item->query['view'], $item->query['search'] )
+				  && $item->query['option'] == 'com_cck' && $item->query['view'] == 'list' ) {
+					$ref	=	$app->input->server->getString( 'HTTP_REFERER', '' );
+					$uri	=	JUri::getInstance();
+
+					if ( $ref == '' || strpos( $ref, '://'.$uri->getHost() ) === false ) {
+						if ( $item->query['search'] ) {
+							$search	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.$item->query['search'].'"' );
+							$search	=	new JRegistry( $search );
+
+							if ( (int)$search->get( 'load_resource', 0 ) ) {
+								$base		=	$uri->toString( array( 'scheme', 'host', 'port' ) );
+								$url		=	$uri->getPath();
+								$path		=	JRoute::_( 'index.php?Itemid='.$itemId );
+
+								if ( $path == '/' ) {
+									$path	=	'';
+								}
+
+								$base		.=	$path.'/';
+								$url		=	str_replace( $path.'/', '', $url );
+								$url		=	$base.'#'.$url;
+								
+								$app->redirect( $url );
+							}
+						}
+					}
+				}
+			}
+
 			if ( $this->multisite === true ) {
 				$config		=	JFactory::getConfig();
 				$site_title	=	$this->site_cfg->get( 'sitename', '' );
