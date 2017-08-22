@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS `#__cck_core` (
   `pkb` int(10) unsigned NOT NULL,
   `storage_location` varchar(50) NOT NULL,
   `storage_table` varchar(100) NOT NULL,
-  `author_id` int(11) NOT NULL,
+  `author_id` int(10) unsigned NOT NULL,
   `parent_id` int(10) unsigned NOT NULL,
-  `store_id` int(11) NOT NULL,
+  `store_id` int(10) unsigned NOT NULL,
   `date_time` datetime NOT NULL,
   `app` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1021,16 +1021,16 @@ INSERT IGNORE INTO `#__cck_core_search_position` (`searchid`, `position`, `clien
 
 
 CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
   `context` varchar(20) NOT NULL,
   `aliases` varchar(512) NOT NULL,
-  `guest` int(11) NOT NULL,
-  `guest_only_group` int(11) NOT NULL,
-  `guest_only_viewlevel` int(11) NOT NULL,
+  `guest` int(10) unsigned NOT NULL,
+  `guest_only_group` int(10) unsigned NOT NULL,
+  `guest_only_viewlevel` int(10) unsigned NOT NULL,
   `groups` varchar(255) NOT NULL,
-  `public_viewlevel` int(11) NOT NULL DEFAULT '0',
+  `public_viewlevel` int(10) unsigned NOT NULL DEFAULT '0',
   `viewlevels` varchar(255) NOT NULL,
   `configuration` varchar(1024) NOT NULL,
   `options` varchar(2048) NOT NULL,
@@ -1645,7 +1645,7 @@ INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e
 
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
-  `id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
   `cck` varchar(50) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
