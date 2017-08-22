@@ -321,7 +321,9 @@ class plgContentCCKInstallerScript
 									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5',
 									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2', 95=>'3.10.0', 96=>'3.10.1', 97=>'3.10.2', 98=>'3.10.3', 99=>'3.10.4', 100=>'3.10.5', 101=>'3.10.6', 102=>'3.10.7', 103=>'3.10.8', 104=>'3.10.9',
 									105=>'3.11.0', 106=>'3.11.1', 107=>'3.11.2', 108=>'3.11.3', 109=>'3.11.4',
-									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3', 114=>'3.12.4' );
+									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3',
+									115=>'3.13.0'
+							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
 			$i			=	array_search( $old, $versions );
@@ -554,7 +556,7 @@ class plgContentCCKInstallerScript
 		}
 		
 		$table	=	JTable::getInstance( 'menu' );
-		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element, 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
+		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element.'_title', 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
 						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
 						   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
 		

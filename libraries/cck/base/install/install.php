@@ -195,7 +195,7 @@ class CCK_Install
 					$data	=	array(
 									'alias'=>ucfirst( $addon['title'] ),
 									'parent_id'=>$seblod_id,
-									'title'=>'com_'.$addon['name']
+									'title'=>'com_'.$addon['name'].'_title'
 								);
 
 					$table->setLocation( $seblod_id, 'last-child' );
