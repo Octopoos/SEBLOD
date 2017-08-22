@@ -37,10 +37,10 @@ class Helper_Admin extends CommonHelper_Admin
 							   array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_' ) );
 		} else {
 			$items	=	array( array( 'name'=>$folder, 'link'=>_C0_LINK, 'active'=>( $vName == _C0_NAME ) ),
-							   array( 'val'=>'2', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C2_NAME || ( $vName == _C6_NAME && $vName2 == 'type' ) ) ),
-							   array( 'val'=>'3', 'pre'=>'-&nbsp;', 'key'=>'' ),
-							   array( 'val'=>'4', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
-							   array( 'val'=>'1', 'pre'=>'-&nbsp;', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
+							   array( 'val'=>'2', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C2_NAME || ( $vName == _C6_NAME && $vName2 == 'type' ) ) ),
+							   array( 'val'=>'3', 'pre'=>'&bull;&nbsp;', 'key'=>'' ),
+							   array( 'val'=>'4', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
+							   array( 'val'=>'1', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
 							   array( 'val'=>'5', 'pre'=>'', 'key'=>'' ) );
 		}
 		if ( $vName == 'cck' ) {

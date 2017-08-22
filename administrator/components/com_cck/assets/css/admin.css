@@ -31,7 +31,8 @@ div.pane-slider.content ul.inline > li{float:left; margin:0 5px;}
 /* Admin */
 a.btn:hover,a.btn:focus{color: #333;}
 a.btn.btn-success:hover,a.btn.btn-success:focus,
-a.btn.btn-primary:hover,a.btn.btn-primary:focus{color: #fff;}
+a.btn.btn-primary:hover,a.btn.btn-primary:focus,
+a.btn.btn-danger:hover,a.btn.btn-danger:focus{color: #fff;}
 .bg-dark div.seblod, .bg-dark div.first {margin: 8px !important;}
 div.width-25 {width:25%;}
 div.limit select {margin-top:0 !important; margin-bottom:0 !important; margin-left:3px;}

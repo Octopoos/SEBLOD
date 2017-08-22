@@ -30,10 +30,10 @@ class CCKViewCck extends JCckBaseLegacyView
         } else {
             $core       =   array(
                                 array( 'val'=>'0', 'pre'=>'', 'key'=>'COM_CCK_', 'img'=>'cck-application' ),
-                                array( 'val'=>'2', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-form' ),
-                                array( 'val'=>'3', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-plugin' ),
-                                array( 'val'=>'4', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-search' ),
-                                array( 'val'=>'1', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-template' ),
+                                array( 'val'=>'2', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-form' ),
+                                array( 'val'=>'3', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'img'=>'cck-plugin' ),
+                                array( 'val'=>'4', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-search' ),
+                                array( 'val'=>'1', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'img'=>'cck-template' ),
                                 array( 'val'=>'5', 'pre'=>'', 'key'=>'', 'img'=>'cck-multisite' )
                             );
         }
