@@ -16,6 +16,7 @@
 		
 		<filename module="mod_cck_menu">mod_cck_menu.php</filename>
 		<filename>cck_menu.php</filename>
+		<filename>cck_menu_legacy.php</filename>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>
 	</files>

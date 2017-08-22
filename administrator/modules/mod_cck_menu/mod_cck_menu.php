@@ -21,14 +21,22 @@ $roots	=	array( 0=>'',
 if ( !class_exists( 'modCckMenuHelper' ) ) {
 	require __DIR__ . '/helper.php';
 }
-if ( !class_exists( 'JAdminCssMenu' ) ) {
-	require JPATH_ADMINISTRATOR . '/modules/mod_menu/menu.php';
+
+if ( JCck::on( '3.8' ) ) {
+	require JPATH_ADMINISTRATOR . '/modules/mod_cck_menu/cck_menu_legacy.php';
+
+	$menu		=	new JAdminCssCckLegacyMenu;
+} else {
+	if ( !class_exists( 'JAdminCssMenu' ) ) {
+		require JPATH_ADMINISTRATOR . '/modules/mod_menu/menu.php';
+	}
+	
+	$menu		=	new JAdminCSSMenu;
 }
 
 $app		=	JFactory::getApplication();
 $doc		=	JFactory::getDocument();
 $lang		=	JFactory::getLanguage();
-$menu		=	new JAdminCSSMenu;
 $user		=	JFactory::getUser();
 
 $alignment	=	$params->get( 'alignment', '' );
