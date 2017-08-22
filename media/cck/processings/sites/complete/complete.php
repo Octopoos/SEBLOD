@@ -39,7 +39,7 @@ if ( isset( $item->groups ) && $item->groups != '' ) {
 	unset( $item->groups );
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-require_once JPATH_LIBRARIES.'/joomla/user/user.php';
+JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 
 // Guest Group
 $guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 )

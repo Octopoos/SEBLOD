@@ -87,10 +87,6 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
-		if ( is_file( JPATH_LIBRARIES.'/joomla/html/html/category.php' ) ) {
-			require_once JPATH_LIBRARIES.'/joomla/html/html/category.php';
-		}
-		
 		// Init
 		if ( count( $inherit ) ) {
 			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
