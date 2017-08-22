@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<menu
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="urn:joomla.org"
+	xsi:schemaLocation="urn:joomla.org menu.xsd">
+	<menuitem
+		title="LIB_CCK_MENU_PRESET_CCK_APPS"
+		type="heading"
+		>
+		<!--
+		Todo:
+		$groups	=	implode( ',', $user->getAuthorisedViewLevels() );
+		a.access IN ('.$groups.')
+		-->
+		<menuitem
+			type="separator"
+			title="LIB_CCK_MENU_PRESET_CCK_APPS"
+			hidden="false"
+			sql_select="a.id, a.name, a.title"
+			sql_from="#__cck_core_searchs AS a"
+			sql_where="a.published = 1 AND a.location != 'none' AND a.location != 'site'"
+			sql_order="a.title ASC">
+			<menuitem
+				title="{sql:title}"
+				type="component"
+				element="{sql:element}"
+				link="index.php?option=com_cck&amp;view=list&amp;search={sql:name}"
+				class="class:menu">
+			</menuitem>
+		</menuitem>
+	</menuitem>
+</menu>

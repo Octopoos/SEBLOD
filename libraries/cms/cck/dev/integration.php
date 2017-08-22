@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Menu\MenuHelper;
+
 // JCckDevIntegration
 abstract class JCckDevIntegration
 {
@@ -117,6 +119,27 @@ abstract class JCckDevIntegration
 						';
 			$doc->addStyleDeclaration( $css );
 			$doc->addScriptDeclaration( $js );
+		}
+	}
+
+	// addMenuPresets
+	public static function addMenuPresets()
+	{
+		if ( !JCck::on( '3.8' ) ) {
+			return;
+		}
+
+		jimport( 'joomla.filesystem.file' );
+		jimport( 'joomla.filesystem.folder' );
+
+		$presets	=	JFolder::files( JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu', '\.xml$' );
+
+		if ( count( $presets ) ) {
+			foreach ( $presets as $preset ) {
+				$preset	=	substr( $preset, 0, -4 );				
+				
+				MenuHelper::addPreset( $preset, 'LIB_CCK_MENUS_PRESET_'.strtoupper( $preset ), JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu/'.$preset.'.xml' );
+			}
 		}
 	}
 

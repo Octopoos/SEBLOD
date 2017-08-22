@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<menu
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="urn:joomla.org"
+	xsi:schemaLocation="urn:joomla.org menu.xsd">
+	<menuitem
+		title="LIB_CCK_MENU_PRESET_CCK_ADDONS"
+		type="heading"
+		>
+		<!--
+		Todo:
+		$user->authorise( 'core.manage', $item->element ) ??
+		-->
+		<menuitem
+			type="separator"
+			title="LIB_CCK_MENU_PRESET_CCK_ADDONS"
+			hidden="false"
+			sql_select="a.element, b.title"
+			sql_from="#__extensions AS a"
+			sql_where="a.type = 'component' AND a.element LIKE 'com_cck\_%'"
+			sql_leftjoin="#__menu AS b on b.component_id = a.extension_id"
+			sql_order="b.title ASC">
+			<menuitem
+				title="{sql:title}"
+				type="component"
+				element="{sql:element}"
+				link="index.php?option={sql:element}"
+				class="class:menu"
+			/>
+		</menuitem>
+	</menuitem>
+</menu>
