@@ -50,30 +50,9 @@ abstract class JCck
 		if ( self::$_config ) {
 			return self::$_config;
 		}
-		$isConfigView	=	false;
-		
-		// Protect JFactory::getApplication for CLI
-		try {
-			$app			=	JFactory::getApplication();
-			$isConfigView	=	( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) );
-		} catch ( Exception $e ) {
-			// Do Nothing
-		}
 		
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
-
-		// Tweak Language: JText
-		$translate		=	(int)$config->params->get( 'language_jtext', 0 );
-		if ( $translate == 2 ) {
-			if ( !$isConfigView ) {
-				if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
-					$config->params->set( 'language_jtext', 0 );
-				} else {
-					$config->params->set( 'language_jtext', 1 );
-				}
-			}
-		}
 		
 		self::$_config	=&	$config;
 	}
@@ -94,7 +73,38 @@ abstract class JCck
 		if ( ! self::$_config ) {
 			self::_setConfig();
 		}
-		
+	
+		// Tweak Language: JText
+		if ( $name == 'language_jtext' ) {
+			static $tweaked	=	0;
+			
+			if ( !$tweaked ) {
+				$isConfigView	=	false;
+				
+				// Protect JFactory::getApplication for CLI
+				try {
+					$app			=	JFactory::getApplication();
+					$isConfigView	=	( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) );
+				} catch ( Exception $e ) {
+					// Do Nothing
+				}
+				
+				$translate		=	(int)self::$_config->params->get( 'language_jtext', 0 );
+				
+				if ( $translate == 2 ) {
+					if ( !$isConfigView ) {
+						if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+							self::$_config->params->set( 'language_jtext', 0 );
+						} else {
+							self::$_config->params->set( 'language_jtext', 1 );
+						}
+					}
+				}
+				
+				$tweaked++;
+			}
+		}
+
 		return self::$_config->params->get( $name, $default );
 	}
 	
