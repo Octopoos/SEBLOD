@@ -154,7 +154,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			} else {
 				$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
 			}
-			if ( $path_type == 2 ) {
+			if ( $path_type == 2 || $path_type == 3 ) {
 				$field->link	=	$base.$field->link;
 				$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
 
@@ -163,7 +163,11 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				}
 				$base			.=	$segment.'/';
 				$field->link	=	str_replace( $base, '', $field->link );
-				$field->link	=	$base.'#'.$field->link;
+				$field->link	=	'#'.$field->link;
+
+				if ( $path_type == 2 ) {
+					$field->link	=	$base.$field->link;
+				}
 			} else {
 				$field->link	=	$base.$field->link;
 			}

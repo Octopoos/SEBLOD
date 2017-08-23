@@ -53,7 +53,7 @@ $options	=	implode( '||', $options );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
 		echo JCckDev::renderForm( 'core_tmpl', '', $config );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'custom' ), array(), 'w100' );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0||Resource as Fragment=2', 'storage_field'=>'path_type' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0||Resource as Fragment=optgroup||Absolute Resource=2||Only Fragment=3', 'storage_field'=>'path_type' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Site', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>$options, 'bool8'=>false, 'storage_field'=>'site' ) );
         ?>
     </ul>
