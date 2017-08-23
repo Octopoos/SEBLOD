@@ -337,12 +337,13 @@ abstract class JCck
 		
 		$doc	=	JFactory::getDocument();
 		if ( $key == 'cck.ecommerce' ) { // todo: explode & dispatch
-			$version	=	'1.0.0';
+			$version	=	'2.25.0';
 			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php' ) ) {
 				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
 				$version	=	new JCckEcommerceVersion;
+				$version	=	$version->getApiVersion();
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version.'.min.js' );
 		}
 		
 		$loaded[$key]	=	true;
@@ -381,7 +382,7 @@ abstract class JCck
 			if ( JCck::isSite() && JCck::getSite()->context ) {
 				$context	=	'/'.JCck::getSite()->context;
 			}
-			$doc->addScript( $root.'/media/cck/js/cck.core-3.12.0.min.js' );
+			$doc->addScript( $root.'/media/cck/js/cck.core-3.13.0.min.js' );
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			

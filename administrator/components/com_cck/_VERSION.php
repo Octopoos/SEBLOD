@@ -18,5 +18,13 @@ final class JCckVersion extends JCckVersionObject
 	public $DEV_LEVEL = '3';
 
 	public $DEV_STATUS = '';
+
+	public $API_VERSION = array( 'v3'=>'3.13.0' );
+	
+	// getApiVersion
+	public function getApiVersion( $version = 'v3' )
+	{
+		return ( isset( $this->API_VERSION[$version] ) ) ? $this->API_VERSION[$version] : '3.12.0';
+	}
 }
 ?>
