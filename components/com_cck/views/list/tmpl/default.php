@@ -181,7 +181,9 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 		var fragment = window.location.hash;
 		if (fragment != "") {
 			fragment = fragment.substring(1);
-			JCck.Core.loadfragment.loadUrl("<?php echo $url; ?>/"+fragment+"<?php echo ( $this->tmpl_resource ? '?tmpl='.$this->tmpl_resource : '' )?>");
+			setTimeout(function() {
+				JCck.Core.loadfragment.loadUrl("<?php echo $url; ?>/"+fragment+"<?php echo ( $this->tmpl_resource ? '?tmpl='.$this->tmpl_resource : '' )?>");
+			}, 1);
 		}
 	});
 })(jQuery);
