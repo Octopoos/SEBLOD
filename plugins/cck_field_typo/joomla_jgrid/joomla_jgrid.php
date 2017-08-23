@@ -331,10 +331,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !$hasLink ) {
 					$class	.=	' disabled';
 				}
-				if ( isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
+				if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
 					$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
 				}
-				$value	=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" title#U', 'class="'.$class.'" title', $value );
 			}
 			$fields[$name]->typo	=	$value;
 		} elseif ( $type == 'dropdown' ) {
