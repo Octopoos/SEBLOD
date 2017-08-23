@@ -357,7 +357,12 @@ class CCK_Item
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				$legend	=	trim( $legend );
+				$key	=	'COM_CCK_' . str_replace( ' ', '_', $legend );
+
+				if ( JFactory::getLanguage()->hasKey( $key ) ) {
+					$legend	=	JText::_( $key );
+				}
 			}
 			if ( is_object( $options ) ) {
 				$orientation			=	$options->get( 'field_orientation', 'vertical' );
