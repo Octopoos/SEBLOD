@@ -318,25 +318,29 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 			$fields[$name]->typo	=	$value;
 		} elseif ( $type == 'featured' ) {
-			$class		=	$process['class'];
-			$value		=	JHtml::_( 'contentadministrator.featured', $process['value'], $process['pk'], false /*$canChange*/ );
-
-			if ( $fields[$name]->link ) {
-				$hasLink		=	true;
-				$value			=	str_replace( '<a ', '<a href="'.$fields[$name]->link.'"', $value );
+			if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html/contentadministrator.php' ) ) {
+				$fields[$name]->typo	=	$fields[$name]->text ? $fields[$name]->text : $process['value'];
 			} else {
-				$hasLink		=	false;
-			}
-			if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
-				if ( !$hasLink ) {
-					$class	.=	' disabled';
+				$class		=	$process['class'];
+				$value		=	JHtml::_( 'contentadministrator.featured', $process['value'], $process['pk'], false /*$canChange*/ );
+
+				if ( $fields[$name]->link ) {
+					$hasLink		=	true;
+					$value			=	str_replace( '<a ', '<a href="'.$fields[$name]->link.'"', $value );
+				} else {
+					$hasLink		=	false;
 				}
-				if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
-					$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
+				if ( !( $class == '' || $class == 'btn btn-micro hasTooltip' ) ) {
+					if ( !$hasLink ) {
+						$class	.=	' disabled';
+					}
+					if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
+						$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
+					}
+					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" title#U', 'class="'.$class.'" title', $value );
 				}
-				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" title#U', 'class="'.$class.'" title', $value );
+				$fields[$name]->typo	=	$value;
 			}
-			$fields[$name]->typo	=	$value;
 		} elseif ( $type == 'dropdown' ) {
 			$target	=	$process['target'];
 

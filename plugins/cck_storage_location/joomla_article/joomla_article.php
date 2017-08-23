@@ -603,7 +603,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _setFeatured
 	protected function _setFeatured( $table, $isNew )
 	{
-		require_once JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php';
+		JLoader::register( 'ContentTableFeatured', JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php' );
+
+		if ( !class_exists( 'ContentTableFeatured' ) ) {
+			return;
+		}
+		
 		$featured	=	JTable::getInstance( 'Featured', 'ContentTable' );
 		
 		if ( $isNew ) {
