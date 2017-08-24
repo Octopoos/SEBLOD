@@ -22,6 +22,27 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.13.0 Upgrade Release [xx-Aug-2017] -----------
+
+! Joomla! 3.8 ready.
+  >> other minor fixes may be needed for final 3.8 release.
+
++ Menu Presets added for "mod_menu"
+  >> SEBLOD, SEBLOD Add-ons, SEBLOD Apps, SEBLOD Ecommerce
++ Native redirections added for Lists using "Fragment as Resource" capability.
+  >> from tmpl=raw to #fragment
+
++ "Only Fragment" paths mode added on Content Link plug-in.
+
+^ Various INT(11) updated to UNSIGNED INT(10).
+
+! SEBLOD Admin Menu module (mod_cck_menu) deprecated, use "mod_menu";
+
+# "Featured" behaviour (JGrid) fixed.
+# "Fragment as Resource" fixed on Safari (macOS).
+# JText not applied on Multilingual ("Yes but English") fixed (regression).
+# Various improvements or issues fixed.
+
 -------------------- 3.12.2 Upgrade Release [31-Jul-2017] -----------
 
 # "data-cck-boxchecked" JS issue fixed.
