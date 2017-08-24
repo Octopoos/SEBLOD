@@ -10,4 +10,4 @@ ALTER TABLE `#__cck_core_sites` CHANGE `public_viewlevel` `public_viewlevel` INT
 
 ALTER TABLE `#__cck_more_jobs` CHANGE `run_as` `run_as` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 
-ALTER TABLE `#__cck_store_item_users` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `#__cck_store_item_users` CHANGE `id` `id` INT(10) UNSIGNED NOT NULL;
