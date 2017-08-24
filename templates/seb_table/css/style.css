@@ -7,7 +7,6 @@
 **/
 
 table.table,table.zebra{width:100%;}
-table.table th,table.zebra th{text-align:center;}
 table.table td.center{text-align:center;}
 table.table th.left,table.zebra th.left,
 table.table td.left,table.zebra td.left{text-align:left;}
