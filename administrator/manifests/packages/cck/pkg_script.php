@@ -41,43 +41,49 @@ class pkg_cckInstallerScript
 	// postflight
 	function postflight( $type, $parent )
 	{
-		if ( $type == 'install' && JCck::on( '3.8' ) ) {
-			$db			=	JFactory::getDbo();
-			$query		=	$db->getQuery( true );
+		if ( JCck::on( '3.8' ) ) {
+			if ( $type == 'install' || $type == 'update' && version_compare( JCck::getConfig_Param( 'initial_version', '3' ), '3.13.0', '>=' ) ) {
+				$db			=	JFactory::getDbo();
+				$query		=	$db->getQuery( true );
 
-			$query->select( $db->quoteName( array( 'extension_id' ) ) )
-				  ->from( $db->quoteName( '#__extensions' ) )
-				  ->where( $db->quoteName( 'type' ) . ' = ' . $db->quote( 'module' ) )
-				  ->where( $db->quoteName( 'element' ) . ' = ' . $db->quote( 'mod_cck_menu' ) );
-			$db->setQuery( $query );
-			$module_id	=	$db->loadResult();
-			
-			$installer  =   JInstaller::getInstance();
-			
-			$module     =   JTable::getInstance( 'Extension' );
-			$module->load( $module_id );
-			
-			if ( $module->type == 'module' && $installer->uninstall( $module->type, $module_id ) ) {
-				$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+				$query->select( $db->quoteName( array( 'extension_id' ) ) )
+					  ->from( $db->quoteName( '#__extensions' ) )
+					  ->where( $db->quoteName( 'type' ) . ' = ' . $db->quote( 'module' ) )
+					  ->where( $db->quoteName( 'element' ) . ' = ' . $db->quote( 'mod_cck_menu' ) );
+				$db->setQuery( $query );
+				$module_id	=	$db->loadResult();
 				
-				if ( $new_module->save( array(
-											'access'=>3,
-											'client_id'=>1,
-											'language'=>'*',
-											'module'=>'mod_menu',
-											'ordering'=>2,
-											'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
-											'position'=>'menu',
-											'published'=>1,
-											'showtitle'=>0,
-											'title'=>'Admin Menu - SEBLOD'
-										   ) ) ) {
-					try {
-						$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
-						$db->setQuery( $query );
-						$db->execute();
-					} catch ( Exception $e ) {
-						// Do nothing
+				$installer  =   JInstaller::getInstance();
+				
+				$module     =   JTable::getInstance( 'Extension' );
+				$module->load( $module_id );
+				
+				if ( $module->type == 'module' ) {
+					$installer->uninstall( $module->type, $module_id );
+
+					if ( $type == 'install' ) {
+						$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+					
+						if ( $new_module->save( array(
+													'access'=>3,
+													'client_id'=>1,
+													'language'=>'*',
+													'module'=>'mod_menu',
+													'ordering'=>2,
+													'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
+													'position'=>'menu',
+													'published'=>1,
+													'showtitle'=>0,
+													'title'=>'Admin Menu - SEBLOD'
+												   ) ) ) {
+							try {
+								$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
+								$db->setQuery( $query );
+								$db->execute();
+							} catch ( Exception $e ) {
+								// Do nothing
+							}
+						}
 					}
 				}
 			}
