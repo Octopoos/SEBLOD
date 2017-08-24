@@ -579,7 +579,7 @@ abstract class JCckDev
 	public static function getEmpty( $properties )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$field	=	JTable::getInstance( 'field', 'CCK_Table' );
+		$field	=	JTable::getInstance( 'Field', 'CCK_Table' );
 		
 		if ( is_array( $properties ) ) {
 			foreach ( $properties as $k => $v ) {

@@ -127,7 +127,7 @@ abstract class CCK_TableSiteHelper
 		$data['parent_id']	=	$parent_id;
 		$data['title']		=	$title;
 		
-		$table				=	JTable::getInstance( 'usergroup' );
+		$table				=	JTable::getInstance( 'Usergroup' );
 		$table->bind( $data );
 		$table->store();
 		
@@ -137,7 +137,7 @@ abstract class CCK_TableSiteHelper
 	// addViewLevel
 	public static function addViewLevel( $title, $groups = array(), &$next = 0 )
 	{
-		$table			=	JTable::getInstance( 'viewlevel' );
+		$table			=	JTable::getInstance( 'Viewlevel' );
 		$table->title	=	$title;
 		
 		if ( count( $groups ) ) {
@@ -161,7 +161,7 @@ abstract class CCK_TableSiteHelper
 	// getRootAsset
 	public static function getRootAsset()
 	{
-		$table	=	JTable::getInstance( 'asset' );
+		$table	=	JTable::getInstance( 'Asset' );
 		$table->load( 1 );
 		
 		$rules				=	new JAccessRules( $table->rules );
@@ -229,7 +229,7 @@ abstract class CCK_TableSiteHelper
 	// updateViewLevel
 	public static function updateViewLevel( $id, $group_id )
 	{
-		$table			=	JTable::getInstance( 'viewlevel' );
+		$table			=	JTable::getInstance( 'Viewlevel' );
 		$table->load( $id );
 		$table->rules	=	str_replace( ']', ','.$group_id.']', $table->rules );
 		$table->store();

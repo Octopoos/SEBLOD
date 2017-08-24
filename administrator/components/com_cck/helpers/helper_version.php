@@ -43,7 +43,7 @@ class Helper_Version
 	// createVersion
 	public static function createVersion( $type, $pk, $note = '', $update = false )
 	{
-		$table	=	JTable::getInstance( $type, 'CCK_Table' );
+		$table	=	JTable::getInstance( ucfirst( $type ), 'CCK_Table' );
 		$table->load( $pk );
 		
 		// Core
@@ -58,7 +58,7 @@ class Helper_Version
 		}
 
 		// Version
-		$version				=	JTable::getInstance( 'version', 'CCK_Table' );
+		$version				=	JTable::getInstance( 'Version', 'CCK_Table' );
 		$version->e_id			=	$table->id;
 		$version->e_title		=	$table->title;
 		$version->e_name		=	$table->name;

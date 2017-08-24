@@ -177,13 +177,13 @@ class plgContentCCK extends JPlugin
 				if ( $bridge_object == 'joomla_category' ) {
 					JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
-					$bridge	=	JTable::getInstance( 'category' );
+					$bridge	=	JTable::getInstance( 'Category' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );
 				} elseif ( $bridge_object == 'joomla_article' ) {
 					JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
 
-					$bridge	=	JTable::getInstance( 'content' );
+					$bridge	=	JTable::getInstance( 'Content' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );
 				}

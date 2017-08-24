@@ -49,7 +49,7 @@ class JCckContentJoomla_Category extends JCckContent
 			$i			=	2;
 			$alias		=	$this->_instance_base->alias.'-'.$i;
 			$property	=	$this->_columns['parent'];
-			$test		=	JTable::getInstance( 'category' );
+			$test		=	JTable::getInstance( 'Category' );
 			
 			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->{$property} ) ) ) {
 				$alias	=	$this->_instance_base->alias.'-'.$i++;

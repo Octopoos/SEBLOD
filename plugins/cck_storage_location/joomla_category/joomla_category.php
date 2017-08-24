@@ -349,7 +349,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			if ( $isNew ) {
 				$i		=	2;
 				$alias	=	$table->alias.'-'.$i;
-				$test	=	JTable::getInstance( 'category' );
+				$test	=	JTable::getInstance( 'Category' );
 				
 				while ( $test->load( array( 'alias'=>$alias, 'parent_id'=>$table->parent_id ) ) ) {
 					$alias		=	$table->alias.'-'.$i++;
@@ -395,7 +395,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0, $join = false )
 	{
-		$table	=	JTable::getInstance( 'category' );
+		$table	=	JTable::getInstance( 'Category' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );

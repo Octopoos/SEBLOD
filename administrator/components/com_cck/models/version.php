@@ -97,7 +97,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 			}
 		}
 		
-		$row	=	JTable::getInstance( $type, 'CCK_Table' );
+		$row	=	JTable::getInstance( ucfirst( $type ), 'CCK_Table' );
 		$row->load( $table->e_id );
 		$core	=	JCckDev::fromJSON( $table->e_core );
 		

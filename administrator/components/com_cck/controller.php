@@ -92,7 +92,7 @@ class CCKController extends JControllerLegacy
 		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
 		$style						=	Helper_Workshop::getDefaultStyle();
 		
-		$table						=	JTable::getInstance( 'type', 'CCK_Table' );
+		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
 		$table->title				=	$title;
         $table->folder				=	$folder;
 		$table->template_admin		=	$style->id;
@@ -124,7 +124,7 @@ class CCKController extends JControllerLegacy
 
 		// -- Field
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$table2						=	JTable::getInstance( 'field', 'CCK_Table' );
+		$table2						=	JTable::getInstance( 'Field', 'CCK_Table' );
 		$table2->title				=	$title;
 		$table2->name				=	$table->name;
 		$table2->folder				=	$folder;

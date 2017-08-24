@@ -372,7 +372,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			if ( $isNew ) {
 				$i		=	2;
 				$alias	=	$table->alias.'-'.$i;
-				$test	=	JTable::getInstance( 'content' );
+				$test	=	JTable::getInstance( 'Content' );
 				
 				while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
 					$alias		=	$table->alias.'-'.$i++;
@@ -421,7 +421,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0, $join = false )
 	{
-		$table	=	JTable::getInstance( 'content' );
+		$table	=	JTable::getInstance( 'Content' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );

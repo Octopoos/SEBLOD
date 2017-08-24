@@ -78,7 +78,7 @@ class plgCCK_FieldJForm_Category_App extends plgCCK_FieldGeneric_App
 		$value	=	array();
 		
 		foreach ( $values as $v ) {
-			$table	=	JTable::getInstance( 'category' );
+			$table	=	JTable::getInstance( 'Category' );
 			if ( $v > 0 ) {
 				$table->load( $v );
 			}

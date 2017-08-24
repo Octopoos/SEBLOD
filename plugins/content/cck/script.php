@@ -240,7 +240,7 @@ class plgContentCCKInstallerScript
 			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			foreach ( $categories as $category ) {
-				$table	=	JTable::getInstance( 'category' );
+				$table	=	JTable::getInstance( 'Category' );
 				$table->access	=	2;
 				$table->setLocation( 1, 'last-child' );	
 				$table->bind( $category );
@@ -389,7 +389,7 @@ class plgContentCCKInstallerScript
 				}
 				if ( JCckDatabase::doQuery( 'INSERT IGNORE #__cck_core_folders (id) VALUES (29)' ) ) {
 					require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/tables/folder.php';
-					$folder			=	JTable::getInstance( 'folder', 'CCK_Table' );
+					$folder			=	JTable::getInstance( 'Folder', 'CCK_Table' );
 					$folder->load( 29 );
 					$folder_data	=	array( 'parent_id'=>13, 'path'=>'joomla/user/profile', 'title'=>'Profile', 'name'=>'profile', 'color'=>'#0090d1',
 											   'introchar'=>'U.', 'colorchar'=>'#ffffff', 'elements'=>'field', 'featured'=>0, 'published'=>1 );
@@ -458,7 +458,7 @@ class plgContentCCKInstallerScript
 				}
 			}
 			if ( $i2 < 25 ) {
-				$table	=	JTable::getInstance( 'asset' );
+				$table	=	JTable::getInstance( 'Asset' );
 				$table->loadByName( 'com_cck' );
 				if ( $table->rules ) {
 					$rules	=	(array)json_decode( $table->rules );
@@ -555,7 +555,7 @@ class plgContentCCKInstallerScript
 			$db->execute();
 		}
 		
-		$table	=	JTable::getInstance( 'menu' );
+		$table	=	JTable::getInstance( 'Menu' );
 		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element.'_title', 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
 						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
 						   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );

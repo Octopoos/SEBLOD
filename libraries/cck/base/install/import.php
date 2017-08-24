@@ -33,11 +33,11 @@ class CCK_Import
 				return;
 			}
 			if ( $type == 'joomla_menu' ) {
-				$item	=	JTable::getInstance( 'menutype' );
+				$item	=	JTable::getInstance( 'MenuType' );
 			} elseif ( $type == 'joomla_menuitem' ) {
-				$item	=	JTable::getInstance( 'menu' );
+				$item	=	JTable::getInstance( 'Menu' );
 			} elseif ( $type == 'joomla_category' ) {
-				$item	=	JTable::getInstance( 'category' );
+				$item	=	JTable::getInstance( 'Category' );
 			} else {
 				return;
 			}
@@ -80,7 +80,7 @@ class CCK_Import
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
 			return;
 		}
-		$item	=	JTable::getInstance( 'Table'.$elemtype, 'CCK_' );
+		$item	=	JTable::getInstance( ucfirst( $elemtype ), 'CCK_Table' );
 		$root	=	$xml->{$elemtype};
 		
 		foreach ( $item as $k => $v ) {
@@ -424,7 +424,7 @@ class CCK_Import
 	// beforeImportCategory
 	public static function beforeImportCategory( $elemtype, &$data )
 	{
-		return JTable::getInstance( 'category' );
+		return JTable::getInstance( 'Category' );
 	}
 	
 	// afterImportCategory

@@ -802,7 +802,7 @@ class CCK_Export
 	// exportMenu
 	public static function exportMenus( $menu_id, &$data, $extensions )
 	{
-		$table	=	JTable::getInstance( 'menutype' );
+		$table	=	JTable::getInstance( 'MenuType' );
 		$table->load( $menu_id );
 
 		self::exportContent( 'joomla_menu', $table, $data, $extensions, 0 );
@@ -810,7 +810,7 @@ class CCK_Export
 		$items	=	JCckDatabase::loadObjectList( 'SELECT id FROM #__menu WHERE menutype = "'.$table->menutype.'"' );
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$t	=	JTable::getInstance( 'menu' );
+				$t	=	JTable::getInstance( 'Menu' );
 				$t->load( $item->id );
 				self::exportContent( 'joomla_menuitem', $t, $data, $extensions, 0 );
 			}
@@ -990,7 +990,7 @@ class CCK_Export
 	{
 		$pk	=	( @$app->name ) ? JCckDatabase::loadResult( 'SELECT pk FROM #__cck_core WHERE app = "'.$app->name.'"' ) : 0;
 		
-		$table	=	JTable::getInstance( 'category' );
+		$table	=	JTable::getInstance( 'Category' );
 		if ( $pk > 0 ) {
 			$table->load( $pk );
 		} else {

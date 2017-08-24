@@ -65,7 +65,7 @@ $root			=	CCK_TableSiteHelper::getRootAsset();
 $rules			=	array();
 
 foreach ( $groups as $i=>$g ) {
-	$group		=	JTable::getInstance( 'usergroup' );
+	$group		=	JTable::getInstance( 'Usergroup' );
 	$group->load( $g );
 	
 	// Usergroup

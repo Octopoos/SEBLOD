@@ -151,7 +151,7 @@ class plgUserCCK extends JPlugin
 			$table->delete();
 
 			if ( $pkb > 0 ) {
-				$table	=	JTable::getInstance( 'content' );
+				$table	=	JTable::getInstance( 'Content' );
 				$table->delete( $pkb );
 			}
 		}

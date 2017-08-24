@@ -439,7 +439,7 @@ class CommonHelper_Admin
 	{
 		$db		=	JFactory::getDbo();
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/'.$options['table'].'.php';
-		$table	=	JTable::getInstance( $options['table'], 'CCK_Table' );
+		$table	=	JTable::getInstance( ucfirst( $options['table'] ), 'CCK_Table' );
 		
 		foreach ( $pks as $pk ) {
 			$table->load( $pk );

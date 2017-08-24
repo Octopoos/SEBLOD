@@ -22,7 +22,7 @@ class modCCKBreadCrumbsHelper
 
 		if ( $pathway_mode == 2 ) {
 			$Itemid		=	$app->input->getInt( 'Itemid', 0 );
-			$pathway	=	JTable::getInstance( 'menu' );
+			$pathway	=	JTable::getInstance( 'Menu' );
 			$items		=	$pathway->getPath( $Itemid );
 			$count 		=	count( $items );
 			

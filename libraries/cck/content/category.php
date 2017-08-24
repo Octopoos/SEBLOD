@@ -21,7 +21,7 @@ class CCK_Category
 		$row	=	'';
 		
 		if ( $id ) {
-			$row	=	JTable::getInstance( 'category' );
+			$row	=	JTable::getInstance( 'Category' );
 			$row->load( $id );
 		}
 		

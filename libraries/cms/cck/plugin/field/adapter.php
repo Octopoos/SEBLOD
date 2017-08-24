@@ -21,7 +21,7 @@ class JCckPluginFieldAdapter
 	public function __construct( $item, $type = '', $config = array() )
 	{
 		$this->config	=	$config;
-		$this->item		=	( is_null( $item ) ) ? JTable::getInstance( 'field', 'CCK_Table' ) : $item;
+		$this->item		=	( is_null( $item ) ) ? JTable::getInstance( 'Field', 'CCK_Table' ) : $item;
 		$this->type		=	( is_object( $item ) && $item->type ) ? $item->type : $type;
 	}
 

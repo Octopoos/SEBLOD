@@ -54,7 +54,7 @@ class pkg_cckInstallerScript
 			
 			$installer  =   JInstaller::getInstance();
 			
-			$module     =   JTable::getInstance( 'extension' );
+			$module     =   JTable::getInstance( 'Extension' );
 			$module->load( $module_id );
 			
 			if ( $module->type == 'module' && $installer->uninstall( $module->type, $module_id ) ) {

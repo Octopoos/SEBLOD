@@ -773,7 +773,7 @@ class JCckContent
 				$i			=	2;
 				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
 				$property	=	$this->_columns['parent'];
-				$test		=	JTable::getInstance( 'content' );
+				$test		=	JTable::getInstance( 'Content' );
 				
 				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
 					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;

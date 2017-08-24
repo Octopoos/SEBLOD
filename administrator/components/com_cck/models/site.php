@@ -177,7 +177,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		$root			=	CCK_TableSiteHelper::getRootAsset();
 		$rules			=	array();
 		foreach ( $groups as $k => $g ) {
-			$group		=	JTable::getInstance( 'usergroup' );
+			$group		=	JTable::getInstance( 'Usergroup' );
 			$group->load( $g );
 			
 			if ( $mode == 1 ) {

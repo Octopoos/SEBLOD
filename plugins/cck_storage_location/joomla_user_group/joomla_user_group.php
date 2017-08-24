@@ -318,7 +318,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JTable::getInstance( 'usergroup' );
+		$table	=	JTable::getInstance( 'Usergroup' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );

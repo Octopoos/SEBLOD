@@ -95,7 +95,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 				if ( $isNew ) {
 					$i		=	2;
 					$alias	=	$table->alias.'-'.$i;
-					$test	=	JTable::getInstance( 'content' );
+					$test	=	JTable::getInstance( 'Content' );
 					
 					while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
 						$alias		=	$table->alias.'-'.$i++;

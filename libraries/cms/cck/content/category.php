@@ -27,7 +27,7 @@ abstract class JCckContentCategory
 			return self::$_items[$index];
 		}
 		
-		$row	=	JTable::getInstance( 'category' );
+		$row	=	JTable::getInstance( 'Category' );
 		$row->load( $id );
 		
 		if ( !$content_type ) {

@@ -389,7 +389,7 @@ class JCckPluginLocation extends JPlugin
 			$core->load( $config['id'] );
 			
 			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-			$bridge		=	JTable::getInstance( 'category' );
+			$bridge		=	JTable::getInstance( 'Category' );
 			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
@@ -452,7 +452,7 @@ class JCckPluginLocation extends JPlugin
 			$bridge->check();
 			$bridge->extension		=	'com_content';
 			if ( $bridge->parent_id > 1 ) {
-				$bridgeParent		=	JTable::getInstance( 'category' );
+				$bridgeParent		=	JTable::getInstance( 'Category' );
 				$bridgeParent->load( $bridge->parent_id );
 				$bridge->path		=	$bridgeParent->path.'/';
 			} else {
@@ -466,7 +466,7 @@ class JCckPluginLocation extends JPlugin
 			$dispatcher->trigger( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
-					$test	=	JTable::getInstance( 'category' );
+					$test	=	JTable::getInstance( 'Category' );
 					for ( $i = 2; $i < 69; $i++ ) {
 						$alias	=	$bridge->alias.'-'.$i;
 						if ( !$test->load( array( 'alias'=>$alias, 'parent_id'=>$bridge->parent_id, 'extension'=>$bridge->extension ) ) ) {
@@ -504,7 +504,7 @@ class JCckPluginLocation extends JPlugin
 			$core->load( $config['id'] );
 			
 			JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
-			$bridge		=	JTable::getInstance( 'content' );
+			$bridge		=	JTable::getInstance( 'Content' );
 			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			if ( $core->pkb > 0 ) {
@@ -579,7 +579,7 @@ class JCckPluginLocation extends JPlugin
 			$dispatcher->trigger( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
-					$test	=	JTable::getInstance( 'content' );
+					$test	=	JTable::getInstance( 'Content' );
 					for ( $i = 2; $i < 69; $i++ ) {
 						$alias	=	$bridge->alias.'-'.$i;
 						if ( !$test->load( array( 'alias'=>$alias, 'catid'=>$bridge->catid ) ) ) {

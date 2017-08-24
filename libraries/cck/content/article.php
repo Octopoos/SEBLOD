@@ -21,7 +21,7 @@ class CCK_Article
 		$row	=	'';
 		
 		if ( $id ) {
-			$row	=	JTable::getInstance( 'content' );
+			$row	=	JTable::getInstance( 'Content' );
 			$row->load( $id );
 		}
 		
