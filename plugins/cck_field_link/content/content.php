@@ -115,7 +115,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				$field->link	.=	( $custom[0] == '#' ) ? $custom : ( ( strpos( $field->link, '?' ) !== false ) ? '&'.$custom : '?'.$custom );
 			}
 		}
-		if ( $app->isAdmin() ) {
+		if ( $app->isClient( 'administrator' ) ) {
 			$field->link	=	str_replace( '/administrator', '', $field->link );
 
 			$link_attr		=	' data-cck-route="'.base64_encode( $field->link ).'"';

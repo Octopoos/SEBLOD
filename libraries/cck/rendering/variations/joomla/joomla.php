@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // Prepare Style
-if ( $app->isSite() ) {
+if ( $app->isClient( 'site' ) ) {
 	$border_size	=	'1';
 	$border_style	=	'solid';
 	$border_color	=	'#dddddd';	

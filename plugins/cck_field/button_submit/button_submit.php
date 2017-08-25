@@ -192,7 +192,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
 
-		if ( JFactory::getApplication()->isAdmin() ) {
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
 			$task	=	( $config['client'] == 'admin' ) ? 'form.'.$task : 'list.'.$task;
 		}
 		if ( $task_id ) {

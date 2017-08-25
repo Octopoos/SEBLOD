@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // Init
-if ( $app->isAdmin() ) {
+if ( $app->isClient( 'administrator' ) ) {
 	$background_color	=	'#ffffff';
 	$position_padding	=	'15px';
 } else {
@@ -21,7 +21,7 @@ if ( $app->isAdmin() ) {
 
 // Prepare Style
 if ( $hasOptions ) {
-	if ( $app->isAdmin() ) {
+	if ( $app->isClient( 'administrator' ) ) {
 		$background_color	=	$options->get( 'background_color', $background_color );
 		$background_color	=	( $background_color == 'none' ) ? '#ffffff' : $background_color;
 		$position_padding	=	$options->get( 'position_padding', $position_padding );

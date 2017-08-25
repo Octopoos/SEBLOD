@@ -865,7 +865,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		static $itemIds	=	array();
 
 		if ( $isAdmin == -1 ) {
-			$isAdmin	=	JFactory::getApplication()->isAdmin();
+			$isAdmin	=	JFactory::getApplication()->isClient( 'administrator' );
 		}
 		
 		if ( $itemId && !$isAdmin && $sef != '10' ) {

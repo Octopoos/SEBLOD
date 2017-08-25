@@ -165,7 +165,7 @@ class CCK_Rendering
 		$this->template		=	$me->template;
 		$this->type			=	$me->cck_type;
 		$this->type_infos	=	NULL;
-		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
+		$this->location		=	( $app->isClient( 'administrator' ) ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
 		$this->infinite		=	$me->infinite;
@@ -205,7 +205,7 @@ class CCK_Rendering
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
-			if ( $app->isAdmin() ) {
+			if ( $app->isClient( 'administrator' ) ) {
 				$this->params['variation_default']	=	'seb_css3b';
 			} else {
 				$this->params['variation_default']	=	JCck::getConfig_Param( ( $this->mode == 'form' ? 'site_variation_form' : 'site_variation' ), 'seb_css3' );

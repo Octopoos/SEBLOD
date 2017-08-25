@@ -30,7 +30,7 @@ if ( $task == 'save2copy' ) {
 	$isNew				=	1;
 	$preconfig['id']	=	0;
 }
-if ( $app->isSite() && $hashed !== NULL && ( $hash != $hashed ) ) {
+if ( $app->isClient( 'site' ) && $hashed !== NULL && ( $hash != $hashed ) ) {
 	$config	=	array(
 					'pk'=>0,
 					'options'=>'',
@@ -47,7 +47,7 @@ $type		=	CCK_Form::getType( $preconfig['type'], 'store' );
 if ( ! $type ) {
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
-if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
 	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
 		$preconfig['client']	=	'admin';
 	}

@@ -408,7 +408,7 @@ abstract class JCck
 		$root	=	JUri::root( true );
 
 		if ( !( isset( $app->cck_modal_box ) && $app->cck_modal_box === true ) ) {
-			$style	=	$app->isAdmin() ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
+			$style	=	$app->isClient( 'administrator' ) ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
 			$doc	=	JFactory::getDocument();
 			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
 			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );

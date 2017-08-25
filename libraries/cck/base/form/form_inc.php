@@ -60,7 +60,7 @@ if ( $id > 0 ) {
 	$isNew	=	1;
 }
 
-if ( $type->admin_form && $app->isSite() && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
 	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
 		$preconfig['client']	=	'admin';
 		$more_options			=	$type->{'options_'.$preconfig['client']};
@@ -112,7 +112,7 @@ if ( !$isNew ) {
 		$author			=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 	}
 } else {
-	if ( $type->location && (( $app->isAdmin() && $type->location != 'admin' ) || ( $app->isSite() && $type->location != 'site' )) ) {
+	if ( $type->location && (( $app->isClient( 'administrator' ) && $type->location != 'admin' ) || ( $app->isClient( 'site' ) && $type->location != 'site' )) ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 	$actionACL			=	'create';
@@ -414,7 +414,7 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 }
 
 // Versions
-if ( $app->isAdmin() && JCck::on( '3.2' ) ) {
+if ( $app->isClient( 'administrator' ) && JCck::on( '3.2' ) ) {
 	if ( @$config['base']->location == 'joomla_article' ) { // TODO: getContext / params from any object
 		$object_params	=	JComponentHelper::getParams( 'com_content' );
 

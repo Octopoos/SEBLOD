@@ -81,7 +81,7 @@ abstract class JCckDevHelper
 		if ( $itemId == '' || $itemId == 'auto' ) {
 			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
 
-			if ( $itemId > 0 && JFactory::getApplication()->isSite() ) {
+			if ( $itemId > 0 && JFactory::getApplication()->isClient( 'site' ) ) {
 				return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
 			} elseif ( $itemId == -1 ) {
 				return JUri::root().'component/cck'.$glue.$query;
@@ -440,7 +440,7 @@ abstract class JCckDevHelper
 				$vars	=	'';
 			}
 		}
-		if ( $app->isSite() && JCck::isSite() ) {
+		if ( $app->isClient( 'site' ) && JCck::isSite() ) {
 			$site			=	JCck::getSite();
 			$site_options	=	( is_object( $site ) ) ? new JRegistry( $site->options ) : new JRegistry;
 		} else {

@@ -298,7 +298,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 		}
 				
-		if ( $app->isSite() ) {	// Site
+		if ( $app->isClient( 'site' ) ) {	// Site
 			// Init
 			$table	=	self::_getTable_fromSite( $pk );
 			$isNew	=	( $pk > 0 ) ? false : true;

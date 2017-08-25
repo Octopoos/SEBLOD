@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 // Init
 $doc		=	JFactory::getDocument();
 $reset		=	0;
-$client		=	JFactory::getApplication()->isSite() ? 'site' : 'admin';
+$client		=	JFactory::getApplication()->isClient( 'site' ) ? 'site' : 'admin';
 $params		=	explode( '||', $this->item->params );
 $component	=	$params[0];
 $section	=	$params[1];
