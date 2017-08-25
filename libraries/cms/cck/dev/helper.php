@@ -89,7 +89,7 @@ abstract class JCckDevHelper
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
 
-				if ( JCck::isSite() ) {
+				if ( JCck::isSite() && JCck::getSite()->context ) {
 					$context	=	JCck::getSite()->context.'/';
 				}
 
