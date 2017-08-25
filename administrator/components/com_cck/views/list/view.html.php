@@ -83,7 +83,7 @@ class CCKViewList extends JViewLegacy
 		$this->label_items_number	=	$options->get( 'label_items_number', 'Results' );
 		$this->class_items_number	=	$options->get( 'class_items_number', 'total' );
 		$this->show_pages_number	=	$options->get( 'show_pages_number', 1 );
-		$this->show_pagination		=	$options->get( 'show_pagination', 0 );
+		$this->show_pagination		=	(int)$options->get( 'show_pagination', 0 );
 		$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
 		$this->pageclass_sfx		=	'';
 		
