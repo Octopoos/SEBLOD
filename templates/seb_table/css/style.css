@@ -22,7 +22,7 @@ table.fixed{table-layout: fixed;}
 table.table td.nowrap{white-space: nowrap;}
 
 .scroll-x > div {overflow-x: auto;overflow-y: hidden;}
-.scroll-y > div {overflow-y: hidden;overflow-y: auto;}
+.scroll-y > div {overflow-x: hidden;overflow-y: auto;}
 
 table.responsive{border-collapse:collapse;padding:0;width:100%;}
 table.responsive tr{padding:0;}
