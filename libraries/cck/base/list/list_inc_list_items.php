@@ -154,7 +154,6 @@ for ( $i = 0; $i < $count; $i++ ) {
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions[$pos][]			=	$field->name;
-					$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
 				}
 
 				// Was it the last one?
@@ -175,6 +174,23 @@ for ( $i = 0; $i < $count; $i++ ) {
 			unset( $config['fields'] );
 		}
 		
+		// Todo: ->legend2 may be deprecated (from here) in a near future... in order to move at template level.
+		if ( $i == 0 ) {
+			foreach ( $positions as $p_key=>$p_fields ) {
+				$legend2	=	'';
+
+				foreach ( $p_fields as $p_field ) {
+					if ( $fieldsI[$p_field]->display ) {
+						$legend2	=	( $legend2 != '' && $fieldsI[$p_field]->label ) ? $legend2 .' / '. $fieldsI[$p_field]->label : $fieldsI[$p_field]->label;
+					}
+				}
+
+				if ( isset( $positions_p[$p_key] ) ) {
+					$positions_p[$p_key]->legend2	=	$legend2;
+				}
+			}
+		}
+
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
 			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
@@ -296,9 +312,6 @@ for ( $i = 0; $i < $count; $i++ ) {
 				if ( $i == 0 ) {
 					$pos						=	$field->position;
 					$positions2[$pos][]			=	$field->name;
-					if ( isset( $positions_p[$pos] ) ) {
-						$positions_p[$pos]->legend2	=	( @$positions_p[$pos]->legend2 != '' && $field->label ) ? $positions_p[$pos]->legend2 .' / '. $field->label : $field->label;
-					}
 				}
 
 				// Was it the last one?
@@ -319,6 +332,23 @@ for ( $i = 0; $i < $count; $i++ ) {
 			unset( $config['fields'] );
 		}
 		
+		// Todo: ->legend2 may be deprecated (from here) in a near future... in order to move at template level.
+		if ( $i == 0 ) {
+			foreach ( $positions2 as $p_key=>$p_fields ) {
+				$legend2	=	'';
+
+				foreach ( $p_fields as $p_field ) {
+					if ( $fieldsI[$p_field]->display ) {
+						$legend2	=	( $legend2 != '' && $fieldsI[$p_field]->label ) ? $legend2 .' / '. $fieldsI[$p_field]->label : $fieldsI[$p_field]->label;
+					}
+				}
+
+				if ( isset( $positions_p[$p_key] ) ) {
+					$positions_p[$p_key]->legend2	=	$legend2;
+				}
+			}
+		}
+
 		// BeforeRender
 		if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
 			JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
