@@ -58,7 +58,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
              .	 JCckDev::getForm( $cck['core_label_total'], @$options['label_items_number'], $config, array( 'storage_field'=>'options[label_items_number]' ) )
              .	 JCckDev::getForm( $cck['core_class_total'], @$options['class_items_number'], $config, array( 'size'=>16, 'storage_field'=>'options[class_items_number]' ) )
              .	 '</li>';
-            echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
+            echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>'0', 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
             echo JCckDev::renderForm( $cck['core_show_pagination'], @$options['show_pagination'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_PAGINATION', 'storage_field'=>'options[show_pagination]' ) );
             echo JCckDev::renderForm( $cck['core_class_pagination'], @$options['class_pagination'], $config, array( 'label'=>'CONFIG_PAGINATION_CLASS', 'size'=>16, 'storage_field'=>'options[class_pagination]' ) );
             echo JCckDev::renderForm( 'core_dev_text', @$options['label_pagination'], $config, array( 'label'=>'Config Pagination Label', 'size'=>32, 'storage_field'=>'options[label_pagination]' ) );
