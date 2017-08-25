@@ -40,6 +40,7 @@ $ -> Language fix or change
 
 # "Featured" behaviour (JGrid) fixed.
 # "Fragment as Resource" fixed on Safari (macOS).
+# "From Name" fixed on Email Field plug-in.
 # JText not applied on Multilingual ("Yes but English") fixed (regression).
 # Various improvements or issues fixed.
 
