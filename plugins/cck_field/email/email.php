@@ -431,8 +431,10 @@ class plgCCK_FieldEmail extends JCckPluginField
 				}
 				$body	=	( strpos( $body, '[fields]' ) !== false ) ? str_replace( '[fields]', $bodyF, $body ) : $body.substr( $bodyF, 0, -12 );
 			}
-	
+
+			$cc		=	$process['cc'];
 			$from	=	$process['from'];
+
 			switch ( $from ) {
 				case 3:
 					$from		=	$fields[$process['from_param']]->value;
@@ -445,8 +447,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$from		=	$mailFrom;
 					break;
 			}
-			$fromName	=	$process['from_name'];
-			switch ( $fromName ) {
+			switch ( $process['from_name'] ) {
 				case 3:
 					$fromName		=	$fields[$process['from_name_param']]->value;
 					break;
@@ -457,7 +458,6 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$fromName		=	$fromName;
 					break;
 			}
-			$cc	=	$process['cc'];
 			switch ( $cc ) {
 				case 3:
 					$cc		=	self::_split( $fields[$process['cc_param']]->value );
