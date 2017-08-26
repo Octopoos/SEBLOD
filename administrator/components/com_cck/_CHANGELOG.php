@@ -36,6 +36,10 @@ $ -> Language fix or change
 
 ^ Various INT(11) updated to UNSIGNED INT(10).
 
+! "data-cck-modal-hash" on any HTML element (Content View)
+  >> to change the #fragment of the URL
+! "data-cck-modal-title" on any HTML element (Content View)
+  >> to set the title of the modal
 ! SEBLOD Admin Menu module (mod_cck_menu) deprecated, use "mod_menu";
 
 # "Featured" behaviour (JGrid) fixed.
