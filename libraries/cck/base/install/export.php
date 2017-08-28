@@ -917,7 +917,7 @@ class CCK_Export
 			if ( $data['processings'][$k]->type != '0' ) {
 				$suffix	=	'_'.strtolower( $data['processings'][$k]->type );
 			}
-			$filename	=	JFile::getName( $data['processings'][$k]->scriptfile );
+			$filename	=	basename( $data['processings'][$k]->scriptfile );
 			$filename	=	substr( $filename, 0, strrpos( $filename, '.' ) );
 			
 			if ( $filename && $name && strpos( $data['processings'][$k]->scriptfile, $filename.'/'.$filename.'.php' ) !== false ) {
