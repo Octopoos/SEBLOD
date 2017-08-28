@@ -547,8 +547,6 @@ class CCKController extends JControllerLegacy
 		if ( $view == 'form' || $view == 'list' || ( $view == 'cck' && $layout == 'welcome' ) ) {
 			return;
 		}
-		
-		$user	=	JCck::getUser( 0, false, true );
 	}
 }
 ?>
