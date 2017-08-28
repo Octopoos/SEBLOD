@@ -22,7 +22,7 @@ class JCckContentJoomla_User extends JCckContent
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'user' );
+		JPluginHelper::importPlugin( 'user', 'cck' );
 	}
 
 	// check
