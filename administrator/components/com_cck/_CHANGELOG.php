@@ -35,6 +35,7 @@ $ -> Language fix or change
 + "Only Fragment" paths mode added on Content Link plug-in.
 
 ^ Various INT(11) updated to UNSIGNED INT(10).
+^ Mobile Detect updated to 2.8.26.
 
 ! "data-cck-modal-hash" on any HTML element (Content View)
   >> to change the #fragment of the URL
