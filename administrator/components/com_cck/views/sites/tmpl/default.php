@@ -178,6 +178,9 @@ $js	=	'
 				Joomla.submitform(task);
 			}
 			$(document).ready(function() {
+				$("#collapseModal2").on("hidden", function () {
+					$("#toolbar-new > button").blur();
+				});
 				$(document).keypress(function(e) {
 					if (!$(":input:focus").length) {
 						e.preventDefault();
@@ -188,6 +191,8 @@ $js	=	'
 							} else {
 								$("#filter_search").focus();
 							}
+						} else if (e.which == 110) {
+							$("#toolbar-new > button").click();
 						}
 					}
 				});

@@ -217,6 +217,8 @@ $js	=	'
 							} else {
 								$("#filter_search").focus();
 							}
+						} else if (e.which == 110) {
+							$("#toolbar-new > button").click();
 						}
 					}
 				});
