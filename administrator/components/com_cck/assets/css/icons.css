@@ -27,4 +27,5 @@
 .icon-48-versions {background-image: url(../../assets/images/48/icon-48-versions.png);}
 
 div.copyright {color:#000; text-align:center; font-size:90%; margin-top:10px;}
+div.copyright a:link, div.copyright a:hover, div.copyright a:visited{color: #3b99fc;}
 #toolbar-folder .icon-folder:before {color: #f89406;}

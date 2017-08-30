@@ -407,11 +407,12 @@ ul.spe_type li{width:28em; margin-top:15px;}
 ul.spe_type label, ul.spe_name.adminformlist label, ul.spe_type.adminformlist label{width:100px;}
 ul.spe_second li{width:40em;}
 ul.spe_second label{width:100px;}
-ul.spe_third li{width:20em;}
-ul.spe_third label{width:80px;}
-ul.spe_sixth li{width:20em; margin-top:15px;}
-ul.spe_sixth label{width:80px;}
+ul.spe_third li{width:21em;}
+ul.spe_third label{width:90px;}
+ul.spe_sixth li{width:21em; margin-top:15px;}
+ul.spe_sixth label{width:90px;}
 ul.spe span.variation_value{line-height: 24px;}
+#more ul.spe_folder label, #more ul.spe_type label{width:110px;}
 ul.adminformlist span.state{margin-top:8px;}
 ul.adminformlist a > span.state{margin-top:0;}
 .loading{position:absolute; right:50px; top:63px;}
