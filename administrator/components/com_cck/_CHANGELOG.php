@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.13.0 Upgrade Release [xx-Aug-2017] -----------
+-------------------- 3.13.0 Upgrade Release [30-Aug-2017] -----------
 
 ! Joomla! 3.8 ready.
   >> other minor fixes may be needed for final 3.8 release.
@@ -32,8 +32,15 @@ $ -> Language fix or change
 + Native redirections added for Lists using "Fragment as Resource" capability.
   >> from tmpl=raw to #fragment
 
++ Keyboard Shortcut added in Content/Search Types UI to close/cancel with (q).
++ Keyboard Shortcuts added to add a new Content/Search Type or Field/Site/Template with (n).
 + "Only Fragment" paths mode added on Content Link plug-in.
 
++ "addToGroup", "removeFromGroup" methods added on JCckContentJoomla_User class.
+  >> use JCckContent->call( 'addToGroup', 00 );
+  >> use JCckContent->call( 'removeFromGroup', 00 );
+
+^ Back-end UI improved: Fields' Storage.
 ^ Various INT(11) updated to UNSIGNED INT(10).
 
 ! "data-cck-modal-hash" on any HTML element (Content View)
@@ -42,10 +49,14 @@ $ -> Language fix or change
   >> to set the title of the modal
 ! SEBLOD Admin Menu module (mod_cck_menu) deprecated, use "mod_menu";
 
+- #__cck_core_preferences removed from install.sql
+
 # "Featured" behaviour (JGrid) fixed.
 # "Fragment as Resource" fixed on Safari (macOS).
 # "From Name" fixed on Email Field plug-in.
+# initialize() fixed in JCckContentJoomla_User for CRONs.
 # JText not applied on Multilingual ("Yes but English") fixed (regression).
+# Missing "return" added on "Export", "Process" tasks from Submit Button plug-in.
 # Various improvements or issues fixed.
 
 -------------------- 3.12.2 Upgrade Release [31-Jul-2017] -----------
