@@ -150,10 +150,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 
 		if ( $form != '' ) {
+			$uri	=	JUri::getInstance()->toString();
 			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$form_id.'" name="'.$form_id.'">'
 					.	$form
 					.	'<input type="hidden" name="task" value="'.$task.'" />'
 					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
+					.	'<input type="hidden" name="return" value="'.base64_encode( $uri ).'">'
 					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
 					.	JHtml::_( 'form.token' )
 					.	'</form>';
