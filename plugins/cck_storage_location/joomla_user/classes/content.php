@@ -72,5 +72,33 @@ class JCckContentJoomla_User extends JCckContent
 
 		return true;
 	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
+
+	protected function _addToGroup( $group_id )
+	{
+		if ( !$this->_pk ) {
+			return false;
+		}
+
+		if ( JCck::getUser()->id == $this->_pk ) {
+			return JUserHelper::addUserToGroup( $this->_pk, $group_id );
+		} else {
+			return JCckDatabase::execute( 'INSERT IGNORE INTO #__user_usergroup_map VALUES ('.(int)$this->_pk.', '.(int)$group_id.')' );
+		}
+	}
+
+	protected function _removeFromGroup( $group_id )
+	{
+		if ( !$this->_pk ) {
+			return false;
+		}
+
+		if ( JCck::getUser()->id == $this->_pk ) {
+			return JUserHelper::removeFromGroup( $this->_pk, $group_id );
+		} else {
+			return JCckDatabase::execute( 'DELETE FROM #__user_usergroup_map WHERE user_id = '.(int)$this->_pk.' AND group_id = '. (int)$group_id );
+		}
+	}
 }
 ?>
