@@ -35,5 +35,6 @@ $("#options_validation_background_color").isDisabledWhen('options_validation_pos
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }
 <?php echo $this->js['tooltip']; ?>
+<?php if ($this->item->locked == 0) { ?>$("#linkage").click();<?php } ?>
 })(jQuery);
 </script>

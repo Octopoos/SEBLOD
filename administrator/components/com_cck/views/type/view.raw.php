@@ -86,13 +86,14 @@ class CCKViewType extends JViewLegacy
 			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
-		if ( @$this->item->id > 0 ) {
+		if ( isset( $this->item->id ) && $this->item->id > 0 ) {
 			$this->isNew		=	0;
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
 			$name				=	$this->item->name;
 		} else {
 			$this->isNew		=	1;
+			$this->item->locked	=	1;
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';

@@ -101,7 +101,7 @@ class CCKViewType extends JViewLegacy
 			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
-		if ( @$this->item->id > 0 ) {
+		if ( isset( $this->item->id ) && $this->item->id > 0 ) {
 			$this->isNew		=	0;
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
@@ -109,12 +109,15 @@ class CCKViewType extends JViewLegacy
 			$app->setUserState( CCK_COM.'.edit.type.client', NULL );
 		} else {
 			$this->isNew		=	1;
+			$this->item->locked	=	1;
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
 			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
 			$this->item->access	=	3;
-			if ( $featured == 11 ) { // TODO: dynamic mapping
+			if ( $featured == 10 ) { // TODO: dynamic mapping
+				$this->item->storage_location	=	'joomla_article';
+			} elseif ( $featured == 11 ) {
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {
 				$this->item->storage_location	=	'joomla_user';

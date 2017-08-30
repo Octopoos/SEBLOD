@@ -82,6 +82,7 @@ if ( $config['tmpl'] == 'ajax' ) {
 $js		.=	'jQuery(".hasTooltip").tooltip({});';
 $js		=	'
 			jQuery(document).ready(function($){
+				'.$js.'
 				JCck.Dev.toggleTranslation();
 				if ($("#storage").val() == "dev") {
 					$("#storage_location, #storage_alter").hide().prop("disabled", true);
@@ -94,24 +95,35 @@ $js		=	'
 					$(".storage-cck-more").prop("disabled", true); $(".storage-cck-more").parent().hide();
 				}
 				if ($("#jform_id").val()==0){
-					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
-						$(".storage-cck-more").parent().remove();
+					if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "search") {
+						$(".storage-desc.content-type").remove();
+						$(".storage-cck-core").remove();
+					} else if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
+						$(".storage-desc.search-type").remove();
+						if (parent.jQuery("#storage_location").val()!="none" && parent.jQuery("#location").val()=="none") {
+							$(".storage-cck-core").remove();
+						} else {
+							$(".storage-cck-more").parent().remove();	
+						}
 					} else {
+						$(".storage-desc").remove();
 						$(".storage-cck-core").remove();
 					}
 				} else {
 					$(".storage-cck-more").parent().remove();
+					$(".storage-desc").remove();
 				}
 				$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").hide();
 
 				var h = $("#toggle_more2").parent().height() + 12;
 				$("#toggle_more2").css({"top":h});
 				
-				if (parent.jQuery("input:radio[name=\'linkage\']:checked") && !$("#myid").val()) {
-					if (parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0 && parent.jQuery("#name").val()) {
-						var t = parent.jQuery("#name").val();
-						$("#storage_cck").val(t);
-						//
+				if (!$("#myid").val()) {
+					if (!parent.jQuery("#element").length || (parent.jQuery("#element").length && parent.jQuery("#name").val())) {
+						if (parent.jQuery("#element").length && parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0) {
+							var t = parent.jQuery("#name").val();
+							$("#storage_cck").val(t);
+						}
 						if ($("#storage").val() == "custom" && !$("#storage_field").val()) {
 							if ( $("#force_storage").val() == "0" ) {
 								$("#storage").val( "standard" );
@@ -124,10 +136,11 @@ $js		=	'
 					if (parent.jQuery("#storage_location")){
 						var storage_location = parent.jQuery("#storage_location").val();
 						if (storage_location == "none") {
+							$("#storage").val("none").trigger("change");
 							storage_location = "free";
 						}
 						$("#storage_location").val(storage_location);
-						if (storage_location == "free") {
+						if (storage_location == "free" && $("#storage").val() != "none") {
 							$("#storage_table").parent().show();
 							$("#storage_table").show();
 						}
@@ -144,7 +157,6 @@ $js		=	'
 				if ($("#storage").val() != "none") {
 					$("#op-"+storage_location).show(); $("#op-"+storage_location+" select").prop("disabled",false);
 				}
-				'.$js.'
 			});
 			'
 			;
@@ -192,7 +204,7 @@ $cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'c
         ?>
         <?php
         if ( $linked ) {
-            echo '<li class="w100 switch"><label></label><span class="variation_value linked notice">'.JText::_( 'COM_CCK_FIELD_IS_LINKED' ).' <strong>'.$linked.'</strong></span></li>';
+            echo '<li class="w100 switch"><label></label><span class="variation_value linked notice"><span class="icon-lock"></span>'.JText::_( 'COM_CCK_FIELD_IS_LINKED' ).' <strong>'.$linked.'</strong></span></li>';
         }
         ?>
     </ul>

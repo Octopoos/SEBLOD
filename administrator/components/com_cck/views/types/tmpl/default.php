@@ -87,7 +87,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
-            	<?php if ( $item->published && $item->adminFields && $item->location != 'site' && $item->storage_location != 'none' && $canCreateItem ) { ?>
+            	<?php if ( $item->published && $item->adminFields && $item->location != 'site' && $item->location != 'none' && $canCreateItem ) { ?>
 					<a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
 						<?php echo $action; ?>
 					</a>
