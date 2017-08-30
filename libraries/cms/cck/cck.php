@@ -138,6 +138,7 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
+			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
