@@ -103,7 +103,125 @@ class JCckContent
 		JPluginHelper::importPlugin( 'content' );
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Init
+	// setOptions
+	public function setOptions( $options )
+	{
+		$this->_options	=	new Registry( $options );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Can
+
+	// can
+	public function can( $task )
+	{
+		if ( !$this->_options->get( 'check_permissions', 1 ) ) {
+			return true;
+		}
+
+		$task	=	ucfirst( $task );
+		$method	=	'can'.$task;
+
+		return $this->$method();
+	}
+
+	// canDelete
+	public function canDelete()
+	{
+		$author_id	=	-1;
+
+		if ( $this->_columns['author'] ) {
+			if ( !$this->_instance_base ) {
+				//
+			}
+			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
+		}
+
+		$user			=	JFactory::getUser();
+		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$this->_type_id );
+		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$this->_type_id );
+
+		if ( ( !$canDelete && !$canDeleteOwn ) ||
+			 ( !$canDelete && $canDeleteOwn && $author_id != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $author_id == $user->id ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// canSave
+	public function canSave()
+	{
+		$author_id	=	-1;
+
+		if ( $this->_columns['author'] ) {
+			if ( !$this->_instance_base ) {
+				//
+			}
+			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
+		}
+
+		$user		=	JFactory::getUser();
+		$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$this->_type_id );
+		$canEditOwn	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$this->_type_id );
+
+		if ( !( $canEdit && $canEditOwn
+			|| ( $canEdit && !$canEditOwn && ( $author_id != $user->id ) )
+			|| ( $canEditOwn && ( $author_id == $user->id ) ) ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
+
+	// delete
+	public function delete()
+	{
+		if ( $this->_object == '' ) {
+			return false;
+		}
+		if ( !( $this->_id && $this->_pk ) ) {
+			return false;
+		}
+		if ( !$this->can( 'delete' ) ) {
+			return false;
+		}
+		
+		$result	=	$this->trigger( 'delete', 'before' );
+
+		if ( is_array( $result ) && in_array( false, $result, true ) ) {
+			return false;
+		}
+
+		if ( !$this->remove() ) {
+			return false;
+		}
+
+		$this->trigger( 'delete', 'after' );
+
+		return true;
+	}
+
+	// remove
+	public function remove()
+	{
+		return $this->_instance_base->delete( $this->_pk );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Do
+
+	// call
+	public function call()
+	{
+		$args	=	func_get_args();
+		$task	=	'_'.array_shift( $args );
+		
+		if ( method_exists( get_called_class(), $task ) ) {
+			call_user_func_array( array( $this, $task ), $args );
+		}
+	}
 
 	// create
 	public function create( $cck, $data_content, $data_more = null, $data_more2 = null )
@@ -253,69 +371,6 @@ class JCckContent
 		return $this->_pk;
 	}
 
-	// dump
-	public function dump()
-	{
-		if ( !function_exists( 'dump' ) ) {
-			return;
-		}
-		if ( $this->_instance_base ) {
-			dump( $this->_instance_base, 'base' );
-		}
-		if ( $this->_instance_core ) {
-			dump( $this->_instance_core, 'core' );
-		}
-		if ( $this->_instance_more ) {
-			dump( $this->_instance_more, 'more' );
-		}
-		if ( $this->_instance_more_parent ) {
-			dump( $this->_instance_more_parent, 'more_parent' );
-		}
-		if ( $this->_instance_more2 ) {
-			dump( $this->_instance_more2, 'more2' );
-		}
-	}
-
-	// get
-	public function get( $name, $default = '' )
-	{
-		if ( isset( $this->_data->$name ) ) {
-			return $this->_data->$name;
-		}
-
-		return $default;
-	}
-	
-	// getData
-	public function getData()
-	{
-		return $this->_data;
-	}
-
-	// getId
-	public function getId()
-	{
-		return $this->_id;
-	}
-
-	// getPk
-	public function getPk()
-	{
-		return $this->_pk;
-	}
-	
-	// getTable
-	public function getTable()
-	{
-		return $this->_table;
-	}
-
-	// getType
-	public function getType()
-	{
-		return $this->_type;
-	}
-
 	// load
 	public function load( $identifier, $data = true )
 	{
@@ -428,143 +483,46 @@ class JCckContent
 		}
 	}
 
-	// set
-	public function set( $instance_name, $property, $value )
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
+
+	// get
+	public function get( $name, $default = '' )
 	{
-		$this->{'_instance_'.$instance_name}->$property	=	$value;
+		if ( isset( $this->_data->$name ) ) {
+			return $this->_data->$name;
+		}
+
+		return $default;
+	}
+	
+	// getData
+	public function getData()
+	{
+		return $this->_data;
 	}
 
-	// setOptions
-	public function setOptions( $options )
+	// getId
+	public function getId()
 	{
-		$this->_options	=	new Registry( $options );
+		return $this->_id;
 	}
 
-	// setType
-	public function setType( $cck, $reload = true )
+	// getPk
+	public function getPk()
 	{
-		$this->_instance_core->cck	=	$cck;
-		$this->_type				=	$cck;
-		
-		if ( $reload ) {
-			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-			$this->_instance_more->load( $this->_pk );
-			
-			// if ( $this->_type_parent ) {
-				// $this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
-				// $this->_instance_more_parent->load( $this->_pk );
-			// }
-		}
+		return $this->_pk;
+	}
+	
+	// getTable
+	public function getTable()
+	{
+		return $this->_table;
 	}
 
-	// updateType
-	public function updateType( $cck )
+	// getType
+	public function getType()
 	{
-		$this->_instance_core->cck	=	$cck;
-		$this->_type				=	$cck;
-
-		$this->_instance_core->store();
-	}
-
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Can
-
-	// can
-	public function can( $task )
-	{
-		if ( !$this->_options->get( 'check_permissions', 1 ) ) {
-			return true;
-		}
-
-		$task	=	ucfirst( $task );
-		$method	=	'can'.$task;
-
-		return $this->$method();
-	}
-
-	// canDelete
-	public function canDelete()
-	{
-		$author_id	=	-1;
-
-		if ( $this->_columns['author'] ) {
-			if ( !$this->_instance_base ) {
-				//
-			}
-			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
-		}
-
-		$user			=	JFactory::getUser();
-		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$this->_type_id );
-		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$this->_type_id );
-
-		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $author_id != $user->id ) ||
-			 ( $canDelete && !$canDeleteOwn && $author_id == $user->id ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// canSave
-	public function canSave()
-	{
-		$author_id	=	-1;
-
-		if ( $this->_columns['author'] ) {
-			if ( !$this->_instance_base ) {
-				//
-			}
-			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
-		}
-
-		$user		=	JFactory::getUser();
-		$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$this->_type_id );
-		$canEditOwn	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$this->_type_id );
-
-		if ( !( $canEdit && $canEditOwn
-			|| ( $canEdit && !$canEditOwn && ( $author_id != $user->id ) )
-			|| ( $canEditOwn && ( $author_id == $user->id ) ) ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
-
-	// delete
-	public function delete()
-	{
-		if ( $this->_object == '' ) {
-			return false;
-		}
-		if ( !( $this->_id && $this->_pk ) ) {
-			return false;
-		}
-		if ( !$this->can( 'delete' ) ) {
-			return false;
-		}
-		
-		$result	=	$this->trigger( 'delete', 'before' );
-
-		if ( is_array( $result ) && in_array( false, $result, true ) ) {
-			return false;
-		}
-
-		if ( !$this->remove() ) {
-			return false;
-		}
-
-		$this->trigger( 'delete', 'after' );
-
-		return true;
-	}
-
-	// remove
-	public function remove()
-	{
-		return $this->_instance_base->delete( $this->_pk );
+		return $this->_type;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
@@ -690,6 +648,29 @@ class JCckContent
 		return $this->_instance_more2->store();
 	}
 
+	// set
+	public function set( $instance_name, $property, $value )
+	{
+		$this->{'_instance_'.$instance_name}->$property	=	$value;
+	}
+
+	// setType
+	public function setType( $cck, $reload = true )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+		
+		if ( $reload ) {
+			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
+			$this->_instance_more->load( $this->_pk );
+			
+			// if ( $this->_type_parent ) {
+				// $this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
+				// $this->_instance_more_parent->load( $this->_pk );
+			// }
+		}
+	}
+
 	// store
 	public function store( $instance_name )
 	{
@@ -698,6 +679,15 @@ class JCckContent
 		}
 
 		return $this->{'_instance_'.$instance_name}->store();
+	}
+
+	// updateType
+	public function updateType( $cck )
+	{
+		$this->_instance_core->cck	=	$cck;
+		$this->_type				=	$cck;
+
+		$this->_instance_core->store();
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
@@ -734,8 +724,31 @@ class JCckContent
 		return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base, $this->_is_new ) );
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Others
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Various
 	
+	// dump
+	public function dump()
+	{
+		if ( !function_exists( 'dump' ) ) {
+			return;
+		}
+		if ( $this->_instance_base ) {
+			dump( $this->_instance_base, 'base' );
+		}
+		if ( $this->_instance_core ) {
+			dump( $this->_instance_core, 'core' );
+		}
+		if ( $this->_instance_more ) {
+			dump( $this->_instance_more, 'more' );
+		}
+		if ( $this->_instance_more_parent ) {
+			dump( $this->_instance_more_parent, 'more_parent' );
+		}
+		if ( $this->_instance_more2 ) {
+			dump( $this->_instance_more2, 'more2' );
+		}
+	}
+
 	// _getColumnsAliases
 	protected function _getColumnsAliases()
 	{	
