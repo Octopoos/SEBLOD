@@ -100,6 +100,7 @@ class CCKController extends JControllerLegacy
 		$table->template_content	=	$style->id;
 		$table->template_intro		=	$style->id;
 		$table->published			=	1;
+		$table->access				=	3;
 		$table->indexed				=	'intro';
 		$table->location			=	'none';
 		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
