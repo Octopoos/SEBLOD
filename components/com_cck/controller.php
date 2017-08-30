@@ -317,6 +317,8 @@ class CCKController extends JControllerLegacy
 							}
 						}
 						$this->_download_hits( $id, $fieldname, $collection, $xi );
+
+						JCckDatabase::execute( 'UPDATE #__cck_core SET download_hits = download_hits+1 WHERE id = '.(int)$config['id'] );
 					}
 					set_time_limit( 0 );
 					@ob_end_clean();
