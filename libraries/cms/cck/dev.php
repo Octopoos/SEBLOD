@@ -720,11 +720,18 @@ abstract class JCckDev
 		} else {
 			$close	=	'</ul></div>';
 		}
+
+		$note	=	'';
+
+		if ( $legend == JText::_( 'COM_CCK_STORAGE' ) ) {
+			$note	=	'<span class="storage-desc content-type">'.JText::_( 'COM_CCK_STORAGE_CONTENT_TYPE_FIELD_DESC' ).'</span>'
+					.	'<span class="storage-desc search-type">'.JText::_( 'COM_CCK_STORAGE_SEARCH_TYPE_FIELD_DESC' ).'</span>';
+		}
 		if ( $tooltip ) {
 			$legend	=	'<span class="hasTooltip qtip_cck" title="'.$tooltip.'">'.$legend.'<span class="star"> &sup'.$tag.';</span></span>';
 		}
 		
-		return $close.'<div class="seblod"><div class="legend top left">'.$legend.'</div><ul class="adminformlist adminformlist'.$options['class_sfx'].'">';
+		return $close.'<div class="seblod"><div class="legend top left">'.$legend.$note.'</div><ul class="adminformlist adminformlist'.$options['class_sfx'].'">';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variables Manipulation
