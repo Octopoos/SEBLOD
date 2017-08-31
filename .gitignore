@@ -938,6 +938,7 @@
 /libraries/cms/component/*
 /libraries/cms/editor/*
 /libraries/cms/error/*
+/libraries/cms/extension/*
 /libraries/cms/form/*
 /libraries/cms/help/*
 /libraries/cms/helper/*
@@ -1824,6 +1825,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_ecommerce_go_to_checkout.sys.ini
 /plugins/cck_field_link/cck_ecommerce_go_to_checkout/*
 
+######## SEBLOD Plug-ins >> Link >> SEBLOD eCommerce Reorder
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_ecommerce_reorder.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_ecommerce_reorder.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_ecommerce_reorder.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_ecommerce_reorder.sys.ini
+/plugins/cck_field_link/cck_ecommerce_reorder/*
+
 ######## SEBLOD Plug-ins >> Link >> SEBLOD Route
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_cck_route.ini
@@ -1960,6 +1969,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.sys.ini
 /plugins/cck_field_live/url/*
+
+######## SEBLOD Plug-ins >> Live >> X
+
+/administrator/language/en-GB/en-GB.plg_cck_field_live_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_live_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_live_x.sys.ini
+/plugins/cck_field_live/x/*
 
 ######## SEBLOD Plug-ins >> Object >> Joomla! Menu Item
 
