@@ -161,13 +161,33 @@ class JCckContent
 			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
 		}
 
-		$user		=	JFactory::getUser();
-		$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$this->_type_id );
-		$canEditOwn	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$this->_type_id );
+		$user				=	JFactory::getUser();
+		$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$this->_type_id );
+		$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$this->_type_id );
+		$canEditOwnContent	=	'';
+
+		jimport( 'cck.joomla.access.access' );
+		$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$this->_type_id );
+
+		if ( $canEditOwnContent ) {
+			$parts				=	explode( '@', $canEditOwnContent );
+			$remote_field		=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
+			$canEditOwnContent	=	false;
+
+			if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
+				$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$this->getPk() );
+				$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
+
+				if ( $related_content->author_id == $user->id ) {
+					$canEditOwnContent	=	true;
+				}
+			}
+		}
 
 		if ( !( $canEdit && $canEditOwn
 			|| ( $canEdit && !$canEditOwn && ( $author_id != $user->id ) )
-			|| ( $canEditOwn && ( $author_id == $user->id ) ) ) ) {
+			|| ( $canEditOwn && ( $author_id == $user->id ) )
+			|| ( $canEditOwnContent ) ) ) {
 			return false;
 		}
 
