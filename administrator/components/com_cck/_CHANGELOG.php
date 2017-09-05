@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.13.1 Upgrade Release [xx-Sept-2017] ----------
+
++ Add "raw.php" file in admin/site default templates (install and update).
+
+# Include inline scripts on JForm Calendar when tmpl=raw.
+
 -------------------- 3.13.0 Upgrade Release [30-Aug-2017] -----------
 
 ! Joomla! 3.8 ready.
