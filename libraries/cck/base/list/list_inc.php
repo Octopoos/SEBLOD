@@ -283,7 +283,7 @@ if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
 }
 $preconfig['client']	=	'list';
 $error					=	'';
-$current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>$order_by );
+$current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>@$order_by );
 $session				=	JFactory::getSession();
 $registry				=	$session->get( 'registry' );
 $stages					=	array();
