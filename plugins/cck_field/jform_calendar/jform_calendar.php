@@ -250,11 +250,12 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 
 		$loaded	=	1;
+		$root	=	JUri::root( true );
 
-		echo '<link rel="stylesheet" href="/media/system/css/fields/calendar.css" type="text/css" />';
-		echo '<script src="/media/system/js/fields/calendar-locales/en.js" type="text/javascript"></script>';
-		echo '<script src="/media/system/js/fields/calendar-locales/date/gregorian/date-helper.js" type="text/javascript"></script>';
-		echo '<script src="/media/system/js/fields/calendar.js" type="text/javascript"></script>';
+		echo '<link rel="stylesheet" href="'.$root.'/media/system/css/fields/calendar.css" type="text/css" />';
+		echo '<script src="'.$root.'/media/system/js/fields/calendar-locales/en.js" type="text/javascript"></script>';
+		echo '<script src="'.$root.'/media/system/js/fields/calendar-locales/date/gregorian/date-helper.js" type="text/javascript"></script>';
+		echo '<script src="'.$root.'/media/system/js/fields/calendar.js" type="text/javascript"></script>';
 	}
 
 	// isFriendly
