@@ -119,6 +119,13 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$form	=	JForm::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		
+		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
+			$form	.=	self::_addScript();
+
+			self::_addScripts();
+		}
+
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
@@ -209,6 +216,47 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
+	// _addScript
+	protected static function _addScript()
+	{
+		static $loaded	=	0;
+		if ( $loaded ) {
+			return;
+		}
+
+		$js		=	'
+					!(function(window, document){
+						"use strict";
+							var elements, i;
+
+							elements = document.querySelectorAll(".field-calendar.raw");
+
+							for (i = 0; i < elements.length; i++) {
+								JoomlaCalendar.init(elements[i]);
+							}
+						})(window, document);
+					';
+		$loaded	=	1;
+
+		return '<script>'.$js.'</script>';
+	}
+
+	// _addScripts
+	protected static function _addScripts()
+	{
+		static $loaded	=	0;
+		if ( $loaded ) {
+			return;
+		}
+
+		$loaded	=	1;
+
+		echo '<link rel="stylesheet" href="/media/system/css/fields/calendar.css" type="text/css" />';
+		echo '<script src="/media/system/js/fields/calendar-locales/en.js" type="text/javascript"></script>';
+		echo '<script src="/media/system/js/fields/calendar-locales/date/gregorian/date-helper.js" type="text/javascript"></script>';
+		echo '<script src="/media/system/js/fields/calendar.js" type="text/javascript"></script>';
+	}
+
 	// isFriendly
 	public static function isFriendly()
 	{
