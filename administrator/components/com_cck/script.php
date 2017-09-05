@@ -273,6 +273,26 @@ class com_cckInstallerScript
 			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
 			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
 		}
+
+		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
+		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
+		if ( !JFile::exists( $dest ) ) {
+			JFile::copy( $src, $dest );
+		}
+		$query	=	$db->getQuery( true );
+		$query->select( $db->quoteName( array( 'template' ) ) )
+			  ->from( $db->quoteName( '#__template_styles' ) )
+			  ->where( $db->quoteName( 'client_id' ) . ' = 0' )
+			  ->where( $db->quoteName( 'home' ) . ' = 1' );
+		$db->setQuery( $query );
+		
+		if ( $site_template = $db->loadResult() ) {
+			$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
+			if ( !JFile::exists( $dest ) ) {
+				JFile::copy( $src, $dest );
+			}
+		}
+
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
