@@ -26,6 +26,7 @@ $ -> Language fix or change
 
 + Add "raw.php" file in admin/site default templates (install and update).
 
+# "Edit Own (Related Content)" support added to JCckContent.
 # Include inline scripts on JForm Calendar when tmpl=raw.
 
 -------------------- 3.13.0 Upgrade Release [30-Aug-2017] -----------
