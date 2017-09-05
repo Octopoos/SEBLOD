@@ -375,5 +375,6 @@ for ( $i = 0; $i < $count; $i++ ) {
 	$doc->list[$idx][$PK]->pkb		=	$items[$i]->pkb;
 	$doc->list[$idx][$PK]->cck		=	$items[$i]->cck;
 	$doc->list[$idx][$PK]->location	=	$items[$i]->loc;
+	$doc->list[$idx][$PK]->author	=	$items[$i]->author;
 }
 ?>
