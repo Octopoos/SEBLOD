@@ -99,23 +99,25 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 
 		// Prepare
-		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$xml	=	'
-					<form>
-						<field
-							type="'.self::$type2.'"
-							name="'.$name.'"
-							id="'.$id.'"
-							label="'.htmlspecialchars( $field->label ).'"
-							showtime="'.( isset( $options2['time'] ) && $options2['time'] ? 'true' : 'false' ).'"
-							todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
-							weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
-							translateformat="true"
-							filter="user_utc"
-							class="'.$class.'"
-						/>
-					</form>
-				';
+		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
+		$xml		=	'
+						<form>
+							<field
+								type="'.self::$type2.'"
+								name="'.$name.'"
+								id="'.$id.'"
+								label="'.htmlspecialchars( $field->label ).'"
+								showtime="'.( isset( $options2['time'] ) && $options2['time'] ? 'true' : 'false' ).'"
+								todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
+								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
+								translateformat="true"
+								filter="user_utc"
+								class="'.$class.'"
+								'.$readonly.'
+							/>
+						</form>
+					';
 		$form	=	JForm::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		
