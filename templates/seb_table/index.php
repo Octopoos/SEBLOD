@@ -96,7 +96,7 @@ if ( !$isMore ) {
 				}
 			}
 		} else {
-			if ( $position->legend2 ) {
+			if ( isset( $position->legend2 ) && $position->legend2 ) {
 				$legend					=	trim( $position->legend2 );
 				$legend2				=	$legend;
 				if ( $isResponsive ) {
