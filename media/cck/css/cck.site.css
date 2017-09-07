@@ -88,7 +88,8 @@ div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar input.inputbox{float
 div.cck_forms.cck_site div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
 div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar .input-append{margin-bottom: 0;}
 div.cck_forms.cck_site div.cck_form.cck_form_calendar.input-append input,
-div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar .input-append input,
+div.cck_forms.cck_site div.cck_form.cck_form_group_x > .table .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE CHECKBOX*/
 div.cck_forms.cck_site div.cck_form.cck_form_checkbox fieldset,
