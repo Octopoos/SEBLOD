@@ -219,7 +219,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				@$form[$xi][$f_name]->name	=	$f->name;
 			}
 		}
-		
+
 		// Set
 		if ( $field->script ) {
 			parent::g_addScriptDeclaration( $field->script );
@@ -374,6 +374,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$html			=	'';
 		$empty			=	'';
 		$css 			=	( $field->css ) ? ' '.$field->css : '';
+		$rId			=	$config['rendering_id'];
 		
 		if ( $field->bool2 > 1 ) {
 			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>'."\n".JText::_( 'COM_CCK_ADD_NEW' ).'</button>';
@@ -405,7 +406,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 					$html	.=	self::_getHtmlTable( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
 				$head		=	'<thead>'.$head.'</thead>';
-				$html		=	'<tbody id="cck1_sortable_'.$field->name.'" >'.$html.'</tbody>';
+				$html		=	'<tbody id="'.$rId.'_sortable_'.$field->name.'" >'.$html.'</tbody>';
 				$html		=	'<table border="0" cellpadding="0" cellspacing="0" class="table'.$css.'">'.$head.$html.$foot.'</table>';
 
 				if ( $field->bool2 ) {
@@ -416,7 +417,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			} else {
 				$orientation=	( $field->bool == 1 ) ? 'vertical_gx' : 'horizontal_gx';
 				$width		=	'';			
-				$html		.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.$css.' '.$width.'">';
+				$html		.=	'<div id="'.$rId.'_sortable_'.$field->name.'" class="'.$orientation.$css.' '.$width.'">';
 				for ( $i = 0; $i < $count; $i++ ) {
 					$html	.=	self::_getHtml( $field, $field->form[$i], $i, $count, $buttons, $config );
 				}
@@ -431,7 +432,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		if ( $field->bool2 || $field->bool3 || $field->bool4 ) {
 			self::_addScripts();
 			self::_addScript( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
-												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty ) );
+												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty, 'rId'=>$rId ) );
 		}
 				
 		return $html;
@@ -452,12 +453,13 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$loaded	=	1;
 		
 		JCck::loadjQuery();
-		JCck::loadjQueryUI();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script src="'.self::$path.'assets/js/script2.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script3.js'.'" type="text/javascript"></script>';
 		} else {
-			$doc->addScript( self::$path.'assets/js/script2.js' );
+			JCck::loadjQueryUI();
+			$doc->addScript( self::$path.'assets/js/script3.js' );
 		}
 	}
 	
@@ -468,19 +470,20 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$doc		=	JFactory::getDocument();
 		$search		=	array( '.', '<', '>', '"', '%', ';' );
 		$replace	=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
+		$rId		=	$params['rId'];
 		
 		$params['empty_html']	=	preg_replace( "/(\r\n|\n|\r)/", " ", $params['empty_html'] );
 		$params['empty_html']	=	str_replace( $search, $replace, $params['empty_html'] );
 		
 		$js		=	'jQuery(document).ready(function($) {';
 		if ( $params['del'] ) {
-			$js	.=	'JCck.GroupX.remove("'.$id.'",'.$params['min'].');';
+			$js	.=	'JCck.GroupX.remove("'.$id.'",'.$params['min'].',"'.$rId.'");';
 		}
 		if ( $params['add'] ) {
-			$js	.=	'JCck.GroupX.add("'.$id.'",'.$params['max'].',"'.$params['empty_html'].'");';
+			$js	.=	'JCck.GroupX.add("'.$id.'",'.$params['max'].',"'.$params['empty_html'].'","'.$rId.'");';
 		}
 		if ($params['drag']) {
-			$js	.=	'$("#cck1_sortable_'.$id.'").sortable({'
+			$js	.=	'$("#'.$rId.'_sortable_'.$id.'").sortable({'
 						.	'axis	: "y",'
 						.	'handle	: ".cck_button_drag_'.$id.'",'
 						.	'scroll	: true,'

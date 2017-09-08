@@ -6,9 +6,9 @@
 
 (function ($){
 	JCck.GroupX = {
-		add: function(name,max_element,new_elem) {
+		add: function(name,max_element,new_elem,rid) {
 			var ind_elem, length, position, Child,
-				root = $('#cck1_sortable_'+name),
+				root = $('#'+rid+'_sortable_'+name),
 				tmp = ( root.children().length ),
 				options = {color:"#d5eeff"};
 
@@ -17,7 +17,7 @@
 				if ($(this).hasClass('external')) {
 					elem = root.children().last();
 				} else {
-					elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
+					elem = $(this).closest('[id^="'+rid+'_forms_'+name+'"]');
 				}
 				length = ( elem.parent().children().length );
 
@@ -30,12 +30,12 @@
 							Child	=	root.children(":first");
 							set_group_as_no_last(Child);							
 							elem.after( update_empty_group(new_elem,ind_elem,name) );
-							$('#cck1r_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );						
+							$('#'+rid+'_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );						
 							if ( length	==	1 ) {
 								set_group_as_no_last(elem);
 								set_group_as_last(elem.next());
 							} else {
-								update_group_position ( elem.next().next(), 'add', name );
+								update_group_position ( elem.next().next(), 'add', name, rid );
 							}
 							break;
 						case 'last':	
@@ -43,37 +43,37 @@
 							set_group_as_no_last(Child);
 							elem.after( update_empty_group(new_elem,ind_elem,name) );
 							set_group_as_last(elem.next());
-							$('#cck1r_button_'+name+'_'+tmp).show( 'highlight', options, 1000 );	
+							$('#'+rid+'_button_'+name+'_'+tmp).show( 'highlight', options, 1000 );	
 							break;
 						case 'middle':	
 							elem.after(update_empty_group(new_elem,ind_elem,name));
-							$('#cck1r_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );
-							update_group_position ( elem.next().next(), 'add', name );
+							$('#'+rid+'_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );
+							update_group_position ( elem.next().next(), 'add', name, rid );
 							break;
 					}
 				}
 			});
 		},
-		remove: function(name,min_element) {
+		remove: function(name,min_element,rid) {
 			var elem, position, Child;
 			$("body").on('click', '.cck_button_del_'+name, function() {
-				elem = $(this).closest('[id^="cck1r_forms_'+name+'"]');
+				elem = $(this).closest('[id^="'+rid+'_forms_'+name+'"]');
 				var n	=	elem.parent().children().length;
 				if (n > min_element) {
 					position	=	position_in_gx( elem );
 					ind_elem	=	ind_group($(this).parent().parent());
 					if ( position != 'last' ) {
-						update_group_position ( elem.next(), 'del', name );
+						update_group_position ( elem.next(), 'del', name, rid );
 					}
 					elem.toggle();
 					elem.remove();
 					switch ( position ) {
 						case 'first':
-							Child	=	$("#cck1_sortable_"+name).children(":first");
+							Child	=	$("#"+rid+"_sortable_"+name).children(":first");
 							set_group_as_first(Child);
 							break;
 						case 'last':
-							Child	=	$("#cck1_sortable_"+name).children(":last");
+							Child	=	$("#"+rid+"_sortable_"+name).children(":last");
 							set_group_as_last(Child);
 							break;
 						case 'middle':
@@ -141,7 +141,7 @@
 		return html;
 	}
 
-	function update_group_i( group_i, op_type, name) {
+	function update_group_i( group_i, op_type, name, rid) {
 		var num_group = ind_group(group_i)+'',
 			length_ind = num_group.length,
 			new_ind_group;
@@ -150,18 +150,18 @@
 			case 'add' : new_ind_group = num_group + 1; break;
 			case 'del' : new_ind_group = num_group - 1; break;
 		}
-		group_i.attr('id','cck1r_forms_'+name+'_'+new_ind_group);
+		group_i.attr('id',rid+'_forms_'+name+'_'+new_ind_group);
 
 		var buttons = group_i.find(".cck_cgx_button");
-		buttons.attr('id','cck1r_button_'+name+'_'+new_ind_group);
+		buttons.attr('id',rid+'button_'+name+'_'+new_ind_group);
 
 		var forms = group_i.find(".cck_cgx_form");
 		if (forms.length > 1) {
 			forms.each(function( index ) {
-				$(this).attr('id','cck1r_form_'+name+'_'+new_ind_group+'_'+index);
+				$(this).attr('id',rid+'_form_'+name+'_'+new_ind_group+'_'+index);
 			});	
 		} else {
-			forms.attr('id','cck1r_form_'+name+'_'+new_ind_group);
+			forms.attr('id',rid+'_form_'+name+'_'+new_ind_group);
 		}
 
 		var newattr;
@@ -176,16 +176,16 @@
 		});
 	}
 
-	function update_group_position( group_start, op_type, name ) {
+	function update_group_position( group_start, op_type, name, rid ) {
 		var group_end	=	group_start.parent().children(":last"),
 			group_i		=	group_start,
 			end = false;
 		while ( ! end ) {			
 			if ( group_i.attr('id') ==  group_end.attr('id') ) {
-				update_group_i (group_i, op_type, name);
+				update_group_i (group_i, op_type, name, rid);
 				end = true;
 			} else {
-				update_group_i (group_i, op_type, name);
+				update_group_i (group_i, op_type, name, rid);
 				group_i	=	group_i.next();
 			}
 		}
