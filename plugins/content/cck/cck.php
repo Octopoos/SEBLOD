@@ -398,6 +398,10 @@ class plgContentCCK extends JPlugin
 		$tpl['path']		=	$tpl['root'].'/'.$tpl['folder'];
 		if ( ! $tpl['folder'] || ! file_exists( $tpl['path'].'/index.php' ) ) {
 			$article->$property		=	str_replace( $article->$property, 'Template Style does not exist. Open the Content Type & save it again. (Intro + Content views)', $article->$property );
+
+			if ( JCck::on( '3.8' ) && isset( $article->introtext ) ) {
+				$article->introtext	=	'';
+			}
 			return;
 		}
 		
@@ -576,6 +580,10 @@ class plgContentCCK extends JPlugin
 		
 		$data					=	$doc->render( false, $params );
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
+		
+		if ( JCck::on( '3.8' ) && isset( $article->introtext ) ) {
+			$article->introtext	=	'';
+		}
 	}
 }
 ?>
