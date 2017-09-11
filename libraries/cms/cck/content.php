@@ -545,6 +545,12 @@ class JCckContent
 		return $this->_type;
 	}
 
+	// isNew
+	protected function isNew()
+	{
+		return $this->_is_new;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
 
 	// bind
