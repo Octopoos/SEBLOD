@@ -16,6 +16,7 @@ $type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,3,6,7 */
 $groups			=	explode( ',', $type );
 $groups			=	ArrayHelper::toInteger( $groups );
 $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
+$levels			=	array();
 $sitetitle		=	$item->title;
 $sitename		=	$item->name;
 $sitemail		=	JFactory::getConfig()->get( 'mailfrom' );
