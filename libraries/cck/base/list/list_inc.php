@@ -506,10 +506,16 @@ if ( $preconfig['task'] == 'search' ) {
 					// Form
 					$return			=	'';
 					if ( @$preconfig['auto_redirect_vars'] != '' ) {
-						$return		=	$app->input->getString( $preconfig['auto_redirect_vars'], '' );
+						$variables	=	explode( ',', $preconfig['auto_redirect_vars'] );
+						
+						foreach ( $variables as $variable ) {
+							if ( $variable != '' ) {
+								$result	=	$app->input->getString( $variable, '' );
 
-						if ( $return != '' ) {
-							$return		=	'&'.$preconfig['auto_redirect_vars'].'='.$return;
+								if ( $result != '' ) {
+									$return		.=	'&'.$variable.'='.$result;
+								}
+							}
 						}
 					}
 					$return			.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
