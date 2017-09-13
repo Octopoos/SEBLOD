@@ -198,5 +198,41 @@ abstract class JCckDevField
 			$field->{$fieldname.'2'}	=	$field->$fieldname;
 		}
 	}
+
+	// updateValue
+	public static function updateValue( $context, $name, $value, &$fields = array(), &$config = array() )
+	{
+		$event	=	'';
+		$pk		=	0;
+
+		if ( is_array( $context ) ) {
+			$event	=	$context[0];
+			$pk		=	$context[1];
+		} elseif ( is_numeric( $context ) ) {
+			$pk		=	$context;
+		} else {
+			$event	=	$context;
+		}
+
+		if ( isset( $fields[$name] ) ) {
+			$fields[$name]->value	=	$value;
+
+			$query	=	'SELECT storage, storage_table, storage_field'
+					.	' FROM #__cck_core_fields'
+					.	' WHERE name = "'.$name.'"'
+					;
+			$field	=	JCckDatabase::loadObject( $query );
+
+			if ( is_object( $field ) && $field->storage == 'standard' && $field->storage_table && $field->storage_field ) {
+				if ( isset( $config['storages'] ) ) {
+					$config['storages'][$field->storage_table][$field->storage_field]	=	$value;
+				}
+
+				if ( $event == 'afterStore' && $pk ) {
+					JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.$value.'" WHERE id = '.(int)$pk );
+				}
+			}
+		}
+	}
 }
 ?>
