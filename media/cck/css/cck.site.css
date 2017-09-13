@@ -133,7 +133,7 @@ div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .control-label l
 div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .controls{float:left;}
 
 /*SITE GENERIQUE JFORM USER*/
-div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input:not(:last-child){font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE JFORM USER GROUP*/
 div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul{ padding:0;}
