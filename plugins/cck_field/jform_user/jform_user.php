@@ -96,18 +96,20 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<select', '', '', $config );
 		} else {
 			$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
-			$xml	=	'
-						<form>
-							<field
-								type="'.self::$type2.'"
-								name="'.$name.'"
-								id="'.$id.'"
-								label="'.htmlspecialchars( $field->label ).'"
-								class="'.$class.'"
-								size="18"
-							/>
-						</form>
-					';
+			$readonly	=	( $field->variation == 'disabled' ) ? 'readonly="true"' : '';
+			$xml		=	'
+							<form>
+								<field
+									type="'.self::$type2.'"
+									name="'.$name.'"
+									id="'.$id.'"
+									label="'.htmlspecialchars( $field->label ).'"
+									class="'.$class.'"
+									size="18"
+									'.$readonly.'
+								/>
+							</form>
+						';
 			$form	=	JForm::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
 
