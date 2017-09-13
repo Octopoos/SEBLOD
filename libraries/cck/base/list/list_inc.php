@@ -513,7 +513,7 @@ if ( $preconfig['task'] == 'search' ) {
 						}
 					}
 					$return			.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
-					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return );
+					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return, false );
 					$app->redirect( $redirect_url );
 					return;
 				}
