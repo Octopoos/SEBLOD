@@ -21,8 +21,10 @@ $js		=	'
 				    if (mutation.attributeName == "value") {
 				    	if ($("[data-cck-boxchecked]").length) {
 				    		$("[data-cck-boxchecked]").each(function() {
-								if ($("#boxchecked").val()>0) {
-									$(this).text($("#boxchecked").val()).addClass("selection");
+				    			if ($("#boxchecked").val()==1) {
+									$(this).text($("#boxchecked").val()+($(this).attr("data-cck-boxchecked-single") !== undefined ? $(this).attr("data-cck-boxchecked-single") : "")).addClass("selection");
+								} else if ($("#boxchecked").val()>0) {
+									$(this).text($("#boxchecked").val()+($(this).attr("data-cck-boxchecked-multiple") !== undefined ? $(this).attr("data-cck-boxchecked-multiple") : "")).addClass("selection");
 								} else {
 									$(this).text($(this).attr("data-cck-boxchecked")).removeClass("selection");
 								}
