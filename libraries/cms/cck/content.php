@@ -16,12 +16,14 @@ use Joomla\Registry\Registry;
 class JCckContent
 {
 	protected static $instances			=	array();
+	protected static $instances_map		=	array();
 
 	protected $_dispatcher				=	null;
 	protected $_options					=	null;
 
 	protected $_columns					=	array();
 	protected $_data					=	null;
+	protected $_data_map				=	array();
 	protected $_id						=	'';
 	protected $_instance_base			=	null;
 	protected $_instance_core			=	null;
@@ -39,7 +41,7 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
 	// __construct
-	public function __construct( $identifier = '', $data = true )
+	public function __construct( $identifier = '' )
 	{
 		$this->_dispatcher		=	JEventDispatcher::getInstance();
 		$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
@@ -48,12 +50,12 @@ class JCckContent
 		$this->initialize();
 		
 		if ( $identifier ) {
-			$this->load( $identifier, $data );
+			$this->load( $identifier );
 		}
 	}
 	
 	// getInstance
-	public static function getInstance( $identifier = '', $data = true )
+	public static function getInstance( $identifier = '' )
 	{
 		if ( !$identifier ) {
 			if ( ( $classname = get_called_class() ) != 'JCckContent' ) {
@@ -62,27 +64,40 @@ class JCckContent
 
 			return new JCckContent;
 		}
-		$key	=	( is_array( $identifier ) ) ? implode( '_', $identifier ) : $identifier;
+
+		if ( is_array( $identifier ) ) {
+			$key	=	implode( '_', $identifier );
+		} else {
+			$key	=	$identifier;
+
+			if ( isset( self::$instances_map[$key] ) ) {
+				$key	=	self::$instances_map[$key];
+			}
+		}
 
 		if ( !isset( self::$instances[$key] ) ) {
 			$classname	=	'JCckContent';
 			$object		=	'';
 
 			if ( is_array( $identifier ) ) {
-				if ( isset( $identifier[0] ) && $identifier[0] != '' ) {
+				if ( isset( $identifier[0] ) ) {
 					$object	=	$identifier[0];
 				}
 			} else {
-				$object	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+				$core	=	JCckDatabase::loadObject( 'SELECT pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
 
-				if ( !$object ) {
-					$object	=	'';
+				if ( is_object( $core ) && $core->pk ) {
+					self::$instances_map[$key]	=	$core->storage_location.'_'.$core->pk;
+					$key						=	$core->storage_location.'_'.$core->pk;
+					$object						=	$core->storage_location;
 				}
 			}
-			if ( $object && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php' ) ) {
+			if ( $object != '' && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php' ) ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/classes/content.php';
 				
-				$classname	=	'JCckContent'.$object;
+				$classname		=	'JCckContent'.$object;
+			} else {
+				return false;
 			}
 
 			self::$instances[$key]	=	new $classname( $identifier );
@@ -90,17 +105,114 @@ class JCckContent
 
 		return self::$instances[$key];
 	}
-	
-	// getInstanceBase
-	protected function getInstanceBase()
-	{
-		return JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
-	}
 
 	// initialize
 	protected function initialize()
 	{
 		JPluginHelper::importPlugin( 'content' );
+	}
+
+	// reloadInstance
+	public static function reloadInstance( $identifier = array() )
+	{
+		if ( !is_array( $identifier ) ) {
+			$identifier	=	JCckDatabase::loadObject( 'SELECT pk, storage_location FROM #__cck_core WHERE id = '.(int)$identifier );
+
+			if ( !is_object( $identifier ) ) {
+				return false;
+			}
+
+			$identifier	=	array( 0=>$identifier->storage_location, 1=>$identifier->pk );
+		}
+
+		$identifier	=	implode( '_', $identifier );
+
+		if ( isset( self::$instances[$identifier] ) && self::$instances[$identifier]->_pk ) {
+			if ( self::$instances[$identifier]->_instance_base ) {
+				self::$instances[$identifier]->_instance_base->load( self::$instances[$identifier]->_pk );
+			}
+			if ( self::$instances[$identifier]->_instance_core ) {
+				self::$instances[$identifier]->_instance_core->load( self::$instances[$identifier]->_pk );
+			}
+			if ( self::$instances[$identifier]->_instance_more ) {
+				self::$instances[$identifier]->_instance_more->load( self::$instances[$identifier]->_pk );
+			}
+			if ( self::$instances[$identifier]->_instance_more_parent ) {
+				self::$instances[$identifier]->_instance_more_parent->load( self::$instances[$identifier]->_pk );
+			}
+			if ( self::$instances[$identifier]->_instance_more2 ) {
+				self::$instances[$identifier]->_instance_more2->load( self::$instances[$identifier]->_pk );
+			}
+		}
+	}
+
+	// setInstance
+	protected function setInstance( $instance_name, $load = false )
+	{
+		$method	=	'setInstance'.ucwords( $instance_name, '_' );
+
+		if ( $this->$method() ) {
+			if ( $load && $this->_pk ) {
+				$this->{'_instance_'.$instance_name}->load( $this->_pk );
+			}
+		}
+	}
+
+	// setInstanceBase
+	protected function setInstanceBase()
+	{
+		$this->_instance_base	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+		$this->_setDataMap( 'base' );
+
+		return true;
+	}
+
+	// setInstanceMore
+	protected function setInstanceMore()
+	{
+		$table	=	'cck_store_form_'.$this->_type;
+
+		if ( !$this->hasTable( $table ) ) {
+			return false;
+		}
+
+		$this->_instance_more	=	JCckTable::getInstance( '#__'.$table );
+		$this->_setDataMap( 'more' );
+
+		return true;
+	}
+
+	// setInstanceMore_Parent
+	protected function setInstanceMore_Parent()
+	{
+		if ( !$this->_type_parent ) {
+			return false;
+		}
+		$table	=	'cck_store_form_'.$this->_type_parent;
+
+		if ( !$this->hasTable( $table ) ) {
+			return false;
+		}
+
+		$this->_instance_more_parent	=	JCckTable::getInstance( '#__'.$table );
+		// $this->_setDataMap( 'more_parent' );
+
+		return true;
+	}
+
+	// setInstanceMore2
+	protected function setInstanceMore2()
+	{
+		$table	=	'cck_store_item_'.str_replace( '#__', '', $this->_table );
+
+		if ( !$this->hasTable( $table ) ) {
+			return false;
+		}
+
+		$this->_instance_more2	=	JCckTable::getInstance( '#__'.$table );
+		$this->_setDataMap( 'more2' );
+
+		return true;
 	}
 
 	// setOptions
@@ -118,8 +230,7 @@ class JCckContent
 			return true;
 		}
 
-		$task	=	ucfirst( $task );
-		$method	=	'can'.$task;
+		$method	=	'can'.ucfirst( $task );
 
 		return $this->$method();
 	}
@@ -247,7 +358,7 @@ class JCckContent
 	public function create( $cck, $data_content, $data_more = null, $data_more2 = null )
 	{
 		if ( $this->_id ) {
-			return;
+			return false;
 		}
 		
 		$this->_type	=	$cck;
@@ -258,13 +369,15 @@ class JCckContent
 			if ( $this->_options->get( 'check_permissions', 1 ) ) {
 				if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$content_type->id ) ) {
 					$this->_type	=	'';
-					return;
+
+					return false;
 				}
 			}
 
 			if ( !$content_type->storage_location ) {
 				$this->_type	=	'';
-				return;
+
+				return false;
 			}
 
 			$this->_object		=	$content_type->storage_location;
@@ -278,16 +391,17 @@ class JCckContent
 			if ( $this->_options->get( 'check_permissions', 1 ) ) {
 				if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
 					$this->_type	=	'';
-					return;
+
+					return false;
 				}
 			}
 		}
 		
-		$this->_instance_base	=	$this->getInstanceBase();
+		$this->setInstance( 'base' );
 		$this->_is_new			=	true;
 
-		$author_id 		=	0; // TODO: Get default author id
-		$parent_id		=	0; // TODO: Get default parent_id
+		$author_id 				=	0; /* TODO: get default author id */
+		$parent_id				=	0; /* TODO: get default parent_id */
 		
 		// Base
 		if ( !( $this->save( 'base', $data_content ) ) ) {
@@ -332,10 +446,13 @@ class JCckContent
 			return false;
 		}
 		
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
+
 		// More
 		if ( $this->_type_parent && ( isset( $data_more[$this->_type] ) || isset( $data_more[$this->_type_parent] ) ) ) {
 			if ( isset( $data_more[$this->_type] ) && count( $data_more[$this->_type] ) ) {
-				$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 				$this->_instance_more->load( $this->_pk, true );
 				unset( $data_more[$this->_type]['id'] );
 				
@@ -347,7 +464,6 @@ class JCckContent
 			}
 
 			if ( isset( $data_more[$this->_type_parent] ) && count( $data_more[$this->_type_parent] ) ) {
-				$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
 				$this->_instance_more_parent->load( $this->_pk, true );
 				unset( $data_more[$this->_type_parent]['id'] );
 				
@@ -358,7 +474,6 @@ class JCckContent
 				}
 			}
 		} elseif ( is_array( $data_more ) && count( $data_more ) ) {
-			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
 			$this->_instance_more->load( $this->_pk, true );
 			unset( $data_more['id'] );
 			
@@ -370,7 +485,6 @@ class JCckContent
 		}
 
 		if ( is_array( $data_more2 ) && count( $data_more2 ) ) {
-			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ) );
 			$this->_instance_more2->load( $this->_pk, true );
 
 			if ( !isset( $data_more2['cck'] ) ) {
@@ -387,138 +501,138 @@ class JCckContent
 		
 		$this->_is_new	=	false;
 
-		//TODO : Load instance info
-		return $this->_pk;
+		// Keep it for later
+		self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
+		self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
+		
+		return $this->_pk; /* TODO: load instance info */
 	}
 
 	// load
-	public function load( $identifier, $data = true )
+	public function load( $identifier )
 	{
+		$this->_id			=	'';
+		$this->_pk			=	'';
 		$this->_type		=	'';
 		$this->_type_id		=	'';
 		$this->_type_parent	=	'';
-		$this->_pk			=	'';
-		$this->_id			=	'';
 		
 		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent'
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
 
 		if ( is_array( $identifier ) ) {
-			$this->_object			=	$identifier[0];
-			$this->_columns			=	$this->_getColumnsAliases();
-			$this->_instance_base	=	$this->getInstanceBase();
-			
 			if( !isset( $identifier[1] ) ) {
-				return;
+				return false;
 			}
 
 			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'" AND a.pk = '.(int)$identifier[1] );
+
+			$this->_object			=	$identifier[0];
 		} else {
 			$core					=	JCckDatabase::loadObject( $query.' WHERE a.id = '.(int)$identifier );
 
 			$this->_object			=	$core->storage_location;
-			$this->_columns			=	$this->_getColumnsAliases();
-			$this->_instance_base	=	$this->getInstanceBase();
 		}
 		if ( !( @$core->id && @$core->pk ) ) {
 			return false;
 		}
-		
+
+		$this->_columns				=	$this->_getColumnsAliases();
+
+		if ( !$this->_columns['table'] ) {
+			return false;
+		}
+
+		$this->_id					=	$core->id;
+		$this->_pk					=	$core->pk;
+		$this->_table				=	$this->_columns['table'];
 		$this->_type				=	$core->cck;
 		$this->_type_id				=	$core->type_id;
 		$this->_type_parent			=	$core->parent;
-		$this->_pk					=	$core->pk;
-		$this->_id					=	$core->id;
-		$this->_instance_core->load( $this->_id );
-		$this->_instance_base->load( $this->_pk );
-		
-		if ( !$this->_columns['table'] ) {
-			return;
-		}
-		
-		$this->_table		=	$this->_columns['table'];
-		$suffixMore2		=	str_replace( '#__', '', $this->_table );
-		
-		$db_prefix			=	JFactory::getConfig()->get( 'dbprefix' );
-		$tables				=	JCckDatabaseCache::getTableList( true );
 
-		$hasMore			=	isset( $tables[$db_prefix.'cck_store_form_'.$this->_type] );
-		$hasMoreParent		=	$this->_type_parent ? isset( $tables[$db_prefix.'cck_store_form_'.$this->_type_parent] ) : false;
-		$hasMore2			=	isset( $tables[$db_prefix.'cck_store_item_'.$suffixMore2] );
-		
-		if ( $hasMore ) {
-			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-			$this->_instance_more->load( $this->_pk );
-		}
-		if ( $hasMoreParent ) {
-			$this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
-			$this->_instance_more_parent->load( $this->_pk );
-		}
-		if ( $hasMore2 ) {
-			$this->_instance_more2	=	JCckTable::getInstance( '#__cck_store_item_'.$suffixMore2 );
-			$this->_instance_more2->load( $this->_pk );
+		if ( !$this->_instance_core->load( $this->_id ) ) {
+			return false;
 		}
 
-		if ( $data === true ) {
-			$select				=	'';
-			$join				=	'';
-			if ( $hasMore ) {
-				$select			.=	', b.*';
-				$join			.=	' LEFT JOIN #__cck_store_form_'.$this->_type.' AS b ON b.id = a.'.$this->_columns['key'];
-			}
-			if ( $hasMoreParent ) {
-				$select			.=	', c.*';
-				$join			.=	' LEFT JOIN #__cck_store_form_'.$this->_type_parent.' AS c ON c.id = a.'.$this->_columns['key'];
-			}
-			if ( $hasMore2 ) {
-				$select			.=	', d.*';
-				$join			.=	' LEFT JOIN #__cck_store_item_'.$suffixMore2.' AS d ON d.id = a.'.$this->_columns['key'];
-			}
-			$query				=	'SELECT a.*'.$select
-								.	' FROM '.$this->_table.' AS a'
-								.	$join
-								.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
-			$this->_data		=	JCckDatabase::loadObject( $query );
-		} elseif ( is_array( $data ) ) {
-			if ( isset( $data[$this->_table] ) ) {
-				$select		=	implode( ',', $data[$this->_table] );
-				unset( $data[$this->_table] );
-			} else {
-				$select		=	'*';
-			}
-			$b				=	'a';
-			$i				=	98;
-			foreach ( $data as $k=>$v ) {
-				$a			=	chr($i);
-				$select		.=	', '.$a.'.'.implode( ', '.$a.'.', $v );
-				$join		.=	' LEFT JOIN '.$k.' AS '.$a.' ON '.$a.'.id = '.$b.'.'.$this->_columns['key'];
-				$b			=	$a;
-				$i++;
-			}
-			$query			=	'SELECT a.'.$select.' FROM '.$this->_table.' AS a'
-							.	$join
-							.	' WHERE a.'.$this->_columns['key'].' = '.(int)$this->_pk;
-			$this->_data	=	JCckDatabase::loadObject( $query );
+		$this->setInstance( 'base', true );
+		$this->setInstance( 'more', true );
+		$this->setInstance( 'more_parent', true );
+		$this->setInstance( 'more2', true );
+
+		if ( !isset( self::$instances_map[$this->_id] ) ) {
+			self::$instances_map[$this->_id]	=	$this->_object.'_'.$this->_pk;
 		}
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
 
 	// get
-	public function get( $name, $default = '' )
+	public function get( $instance_name, $property = '', $default = '' )
 	{
-		if ( isset( $this->_data->$name ) ) {
-			return $this->_data->$name;
+		static $keys	=	array(
+								'base'=>'',
+								'core'=>'',
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>'',
+							);
+
+		if ( isset( $keys[$instance_name] ) ) {
+			return $this->{'_instance_'.$instance_name}->get( $property, $default );
+		} else {
+			// Deprecated: get( $property, $default = '' )
+			$default	=	$property;
+			$property	=	$instance_name;
+
+			if ( !isset( $this->_data ) ) {
+				$this->getData();
+			}
+
+			if ( isset( $this->_data[$property] ) ) {
+				return $this->_data[$property];
+			}
+
+			return $default;
+		}
+	}
+
+	// getData
+	public function getData( $instance_name = '' )
+	{
+		if ( $instance_name ) {
+			$data	=	$this->{'_instance_'.$instance_name}->getProperties();
+
+			unset( $data['id'], $data['cck'] );
+
+			return $data;
+		} elseif ( !isset( $this->_data ) ) {
+			$this->_data	=	array();
+			static $keys	=	array(
+									'base'=>'',
+									'more'=>'',
+									'more_parent'=>'',
+									'more2'=>'',
+								);
+			
+			foreach ( $keys as $key=>$v ) {
+				if ( is_object( $this->{'_instance_'.$key} ) ) {
+					$data	=	$this->{'_instance_'.$key}->getProperties();
+
+					unset( $data['id'], $data['cck'] );
+
+					$this->_data	=	array_merge( $this->_data, $data );
+				}
+			}
 		}
 
-		return $default;
-	}
-	
-	// getData
-	public function getData()
-	{
 		return $this->_data;
+	}
+
+	// getDataObject
+	public function getDataObject( $instance_name = '' )
+	{
+		return (object)$this->getData( $instance_name );
 	}
 
 	// getId
@@ -533,6 +647,16 @@ class JCckContent
 		return $this->_pk;
 	}
 	
+	// getProperty
+	public function getProperty( $property, $default = '' )
+	{
+		if ( isset( $this->_data_map[$property] ) ) {
+			return $this->{'_instance_'.$this->_data_map[$property]}->get( $property, $default );
+		}
+
+		return $default;
+	}
+
 	// getTable
 	public function getTable()
 	{
@@ -543,6 +667,19 @@ class JCckContent
 	public function getType()
 	{
 		return $this->_type;
+	}
+
+	// hasTable
+	protected function hasTable( $table )
+	{
+		$db_prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+		$tables		=	JCckDatabaseCache::getTableList( true );
+
+		if ( !isset( $tables[$db_prefix.$table] ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	// isNew
@@ -680,6 +817,14 @@ class JCckContent
 		$this->{'_instance_'.$instance_name}->$property	=	$value;
 	}
 
+	// getProperty
+	public function setProperty( $property, $value )
+	{
+		if ( isset( $this->_data_map[$property] ) ) {
+			$this->{'_instance_'.$this->_data_map[$property]}->$property	=	$value;	
+		}
+	}
+
 	// setType
 	public function setType( $cck, $reload = true )
 	{
@@ -798,10 +943,17 @@ class JCckContent
 		return $properties;
 	}
 
+	// _setDataMap
+	protected function _setDataMap( $instance_name, $force = false )
+	{
+		$fields				=	array_keys( $this->{'_instance_'.$instance_name}->getFields() );		
+		unset( $fields['id'], $fields['cck'] );
+		$this->_data_map	=	array_merge( $this->_data_map, array_fill_keys( $fields, $instance_name ) );
+	}
+
 	// _saveLegacy (deprecated)
 	protected function _saveLegacy( $instance_name, $data )
 	{
-		/* TODO: this is no good, and will need to move, but later! */
 		if ( $instance_name == 'base' ) {
 			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
 				$this->{'_instance_'.$instance_name}->language	=	'*';
@@ -826,7 +978,6 @@ class JCckContent
 		} else {
 			$status			=	$this->store( $instance_name );
 		}
-		/* TODO: this is no good, and will need to move, but later! */
 
 		return $status;
 	}
