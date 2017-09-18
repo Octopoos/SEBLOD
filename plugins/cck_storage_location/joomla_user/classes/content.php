@@ -13,10 +13,16 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentJoomla_User extends JCckContent
 {
-	// getInstanceBase
-	protected function getInstanceBase()
+	// setInstanceBase
+	protected function setInstanceBase()
 	{
-		return JUser::getInstance();
+		$this->_instance_base	=	JUser::getInstance();
+
+		$fields					=	 array_keys( $this->_instance_base->getTable()->getFields() );
+		unset( $fields['id'], $fields['cck'] );
+		$this->_data_map		=	array_merge( $this->_data_map, array_fill_keys( $fields, 'base' ) );
+
+		return true;
 	}
 
 	// initialize
