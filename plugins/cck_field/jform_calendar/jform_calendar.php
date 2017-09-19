@@ -86,9 +86,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$value		=	( $value != '' ) ? $value : $field->defaultvalue;
-		$value		=	( $value != ' ' ) ? $value : '';
-		// $value		=	htmlspecialchars( $value );
+		$value		=	$value != '' ? $value : $field->defaultvalue;
+		$value		=	trim( $value );
+		$value		=	(int)$value == 0 ? '' : $value;
 		
 		// Validate
 		$validate	=	'';
