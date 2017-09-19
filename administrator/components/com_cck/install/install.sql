@@ -1093,6 +1093,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `location` varchar(50) NOT NULL,
   `locked` tinyint(3) NOT NULL DEFAULT '1',
   `parent` varchar(50) NOT NULL,
+  `permissions` varchar(255) NOT NULL,
   `storage_location` varchar(50) NOT NULL,
   `stylesheets` varchar(5) NOT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
