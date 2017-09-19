@@ -91,6 +91,8 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
+				$config['pk']	=	0;
+
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
 					continue;
@@ -193,6 +195,8 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 					}
 				}
 				
+				$config['pk']	=	$item->pk;
+
 				// BeforeImport
 				$event	=	'onCckPreBeforeExport';
 				if ( isset( $config['processing'][$event] ) ) {

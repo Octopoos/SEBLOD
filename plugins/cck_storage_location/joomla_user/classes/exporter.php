@@ -91,6 +91,8 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
+				$config['pk']	=	0;
+
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
 					continue;
@@ -196,6 +198,8 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 				// --- 
 				$fields['groups']	=	implode( ',', $fields['groups'] );
 				// ---
+				
+				$config['pk']	=	$item->pk;
 				
 				// BeforeImport
 				$event	=	'onCckPreBeforeExport';
