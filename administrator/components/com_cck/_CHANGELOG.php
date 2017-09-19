@@ -37,7 +37,7 @@ $ -> Language fix or change
 ^ JCckContent class updated.
   >> "Edit Own (Related Content)" permission support added.
   >> "getData" method refactored, use "$content->getDataObject()" for previous behaviour.
-  >> "getProperty", "setProperty" method added.
+  >> "getProperty", "setProperty", "updateProperty" methods added.
   >> "get" method refactored, use "$content->get( [instance_name], [property], [default_value] );" or "$content->getProperty( [property], [default_value] );".
   >> "__construct", "getInstance", "load" methods' arguments changed: "$data = true" removed.
 
