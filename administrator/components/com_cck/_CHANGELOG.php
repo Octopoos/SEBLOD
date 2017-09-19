@@ -22,12 +22,32 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.13.1 Upgrade Release [xx-Sept-2017] ----------
+-------------------- 3.14.0 Upgrade Release [19-Sept-2017] ----------
 
 + Add "raw.php" file in admin/site default templates (install and update).
++ "Edit Property" permission added.
 
-# "Edit Own (Related Content)" support added to JCckContent.
++ "data-cck-boxchecked-multiple" attribute implemented for item selection.
++ "data-cck-boxchecked-single" attribute implemented for item selection.
+
++ "Auto Redirection (Vars)" now handles multiple variables.
++ Links support added in "Activation", "Block" behaviours (JGrid).
++ Support for multiple Ajax tasks added in Submit Button plug-in.
+
+^ JCckContent class updated.
+  >> "Edit Own (Related Content)" permission support added.
+  >> "getData" method refactored, use "$content->getDataObject()" for previous behaviour.
+  >> "getProperty", "setProperty" method added.
+  >> "get" method refactored, use "$content->get( [instance_name], [property], [default_value] );" or "$content->getProperty( [property], [default_value] );".
+  >> "__construct", "getInstance", "load" methods' arguments changed: "$data = true" removed.
+
+! JCckContentArticle class deprecated, use JCckContentJoomla_Article class.
+! JCckContentCategory class deprecated, use JCckContentJoomla_Category class.
+
+# "Disabled" Variation fixed on JForm Calendar, JForm User plug-ins.
 # Include inline scripts on JForm Calendar when tmpl=raw.
+# Include inline scripts on Field/Group X when tmpl=raw.
+# Various improvements or issues fixed.
 
 -------------------- 3.13.0 Upgrade Release [30-Aug-2017] -----------
 
