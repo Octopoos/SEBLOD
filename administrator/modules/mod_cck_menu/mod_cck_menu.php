@@ -23,7 +23,7 @@ if ( !class_exists( 'modCckMenuHelper' ) ) {
 }
 
 if ( JCck::on( '3.8' ) ) {
-	require JPATH_ADMINISTRATOR . '/modules/mod_cck_menu/cck_menu_legacy.php';
+	require_once JPATH_ADMINISTRATOR . '/modules/mod_cck_menu/cck_menu_legacy.php';
 
 	$menu		=	new JAdminCssCckLegacyMenu;
 } else {
