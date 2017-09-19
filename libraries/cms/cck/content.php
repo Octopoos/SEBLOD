@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core ~ $Id: content.php oliviernolbert $
+* @version 			SEBLOD 3.x Core ~ $Id: content.php oliviernolbert / sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
@@ -37,6 +37,7 @@ class JCckContent
 	protected $_type					=	'';
 	protected $_type_id					=	'';
 	protected $_type_parent				=	'';
+	protected $_type_permissions		=	'';
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -224,7 +225,7 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Can
 
 	// can
-	public function can( $task )
+	public function can( $task, $target = '' )
 	{
 		if ( !$this->_options->get( 'check_permissions', 1 ) ) {
 			return true;
@@ -232,7 +233,7 @@ class JCckContent
 
 		$method	=	'can'.ucfirst( $task );
 
-		return $this->$method();
+		return ( $task == 'update' ) ? $this->$method( $target ) : $this->$method();
 	}
 
 	// canDelete
@@ -305,6 +306,33 @@ class JCckContent
 		return true;
 	}
 
+	// canUpdate
+	public function canUpdate( $property )
+	{
+		if ( !$property ) {
+			return false;
+		}
+
+		static $types = array();
+
+		if ( !isset( $types[$this->_type] ) ) {
+			if ( $this->_type_permissions == '' ) {
+				$this->_type_permissions	=	'{}';
+			}
+			$types[$this->_type]	=	json_decode( $this->_type_permissions, true );
+		}
+		if ( !isset( $types[$this->_type][$property] ) ) {
+			return false;
+		}
+		$property	=	$types[$this->_type][$property];
+		
+		if ( !JFactory::getUser()->authorise( 'core.edit.'.$property, 'com_cck.form.'.$this->_type_id ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
 
 	// delete
@@ -364,7 +392,7 @@ class JCckContent
 		$this->_type	=	$cck;
 		
 		if ( empty( $this->_object ) || empty( $this->_table ) ) {
-			$content_type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			$content_type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			
 			if ( $this->_options->get( 'check_permissions', 1 ) ) {
 				if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$content_type->id ) ) {
@@ -380,11 +408,12 @@ class JCckContent
 				return false;
 			}
 
-			$this->_object		=	$content_type->storage_location;
-			$this->_type_id		=	$content_type->id;
-			$this->_type_parent	=	$content_type->parent;
-			$this->_columns		=	$this->_getColumnsAliases();
-			$this->_table		=	$this->_columns['table'];
+			$this->_columns				=	$this->_getColumnsAliases();
+			$this->_object				=	$content_type->storage_location;
+			$this->_table				=	$this->_columns['table'];
+			$this->_type_id				=	$content_type->id;
+			$this->_type_parent			=	$content_type->parent;
+			$this->_type_permissions	=	$content_type->permissions;
 		} else {
 			$this->_type_id		=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 
@@ -517,7 +546,7 @@ class JCckContent
 		$this->_type_id		=	'';
 		$this->_type_parent	=	'';
 		
-		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent'
+		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
 
@@ -550,6 +579,7 @@ class JCckContent
 		$this->_type				=	$core->cck;
 		$this->_type_id				=	$core->type_id;
 		$this->_type_parent			=	$core->parent;
+		$this->_type_permissions	=	$core->permissions;
 
 		if ( !$this->_instance_core->load( $this->_id ) ) {
 			return false;
@@ -651,7 +681,7 @@ class JCckContent
 	public function getProperty( $property, $default = '' )
 	{
 		if ( isset( $this->_data_map[$property] ) ) {
-			return $this->{'_instance_'.$this->_data_map[$property]}->get( $property, $default );
+			return $this->get( $this->_data_map[$property], $property, $default );
 		}
 
 		return $default;
@@ -821,7 +851,7 @@ class JCckContent
 	public function setProperty( $property, $value )
 	{
 		if ( isset( $this->_data_map[$property] ) ) {
-			$this->{'_instance_'.$this->_data_map[$property]}->$property	=	$value;	
+			$this->set( $this->_data_map[$property], $property, $value );
 		}
 	}
 
@@ -848,8 +878,45 @@ class JCckContent
 		if ( !$this->can( 'save' ) ) {
 			return false;
 		}
-
+		
 		return $this->{'_instance_'.$instance_name}->store();
+	}
+
+	// update
+	public function update( $instance_name, $property, $value )
+	{
+		if ( !$this->can( 'update', $property ) ) {
+			return false;
+		}
+
+		$check_permissions	=	$this->_options->get( 'check_permissions', 1 );
+		$pre_update			=	$this->{'_instance_'.$instance_name}->$property;
+
+		if ( $check_permissions ) {
+			$this->_options->set( 'check_permissions', 0 );
+		}
+		
+		$this->{'_instance_'.$instance_name}->$property	=	$value;
+
+		if ( !( $result = $this->store( $instance_name ) ) ) {
+			$this->{'_instance_'.$instance_name}->$property	=	$pre_update;
+		}
+
+		if ( $check_permissions ) {
+			$this->_options->set( 'check_permissions', $check_permissions );
+		}
+
+		return $result;
+	}
+
+	// updateProperty
+	public function updateProperty( $property, $value )
+	{
+		if ( isset( $this->_data_map[$property] ) ) {
+			return $this->update( $this->_data_map[$property], $property, $value );
+		}
+
+		return false;
 	}
 
 	// updateType
