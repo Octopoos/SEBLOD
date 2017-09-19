@@ -100,7 +100,8 @@ class CCKViewForm extends JViewLegacy
 		if ( isset( $config['id'] ) ) {
 			JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'].'|'.$config['copyfrom_id'] ) );
 		}
-		
+		JFactory::getSession()->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+
 		// Set
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;

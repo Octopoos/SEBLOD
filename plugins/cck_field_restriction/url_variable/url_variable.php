@@ -49,13 +49,8 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		}
 		
 		$restriction	=	parent::g_getRestriction( $field->restriction_options );
-		$trigger		=	$restriction->get( 'trigger' );
-
-		if ( $trigger == 'Itemid' || $trigger == 'tmpl' ) {
-			return self::_authorise( $restriction, $field, $config );
-		} else {
-			return true;
-		}
+		
+		return self::_authorise( $restriction, $field, $config );
 	}
 	
 	// _authorise
@@ -70,6 +65,12 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		$condition_values	=	$restriction->get( 'values' );
 
 		$variable			=	JFactory::getApplication()->input->get( $condition_field, null, null );
+
+		if ( $config['client'] == 'site' /* || $config['client'] == 'admin' */ ) {
+			if ( !isset( $config['context'][$condition_field] ) ) {
+				$config['context'][$condition_field]	=	(string)$variable;
+			}
+		}
 
 		if ( $condition_match == 'isFilled' ) {
 			if ( is_array( $variable ) ) {

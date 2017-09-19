@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 $app		=	JFactory::getApplication();
 $author		=	0;
 $client		=	$preconfig['client'];
+$context	=	'';
 $lang   	=	JFactory::getLanguage();
 $post		=	JRequest::get( 'post' );
 $session	=	JFactory::getSession();
@@ -22,6 +23,7 @@ $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
 $hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
+
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
 }
@@ -119,6 +121,36 @@ if ( isset( $preconfig['tmpl'] ) && $preconfig['tmpl'] != '' ) {
 	$app->input->set( 'tmpl', $preconfig['tmpl'] );
 }
 
+$context	=	$session->get( 'cck_hash_'.$unique.'_context' );
+
+if ( $context ) {
+	$context	=	json_decode( $context, true );
+	$excluded	=	array(
+						'cid'=>'',
+						'copyfrom_id'=>'',
+						'id'=>'',
+						'limit'=>'',
+						'option'=>''
+						'pk'=>'',
+						'return'=>'',
+						'search'=>'',
+						'skip'=>'',
+						'stage'=>'',
+						'task'=>'',
+						'tid'=>'',
+						'type'=>'',
+						'view'=>''
+					);
+	foreach ( $context as $k=>$v ) {
+		if ( isset( $excluded[$k] ) ) {
+			continue;
+		}
+		$app->input->set( $k, $v );
+	}
+}
+
+$session->clear( 'cck_hash_'.$unique.'_context' );
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Store
 
 if ( count( $fields ) ) {
@@ -134,7 +166,6 @@ if ( count( $fields ) ) {
 				continue;
 			}
 		}
-
 		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled' || $field->variation == 'value' ) && !$field->live && $field->live_value != '' ) {
 			$value	=	$field->live_value;
 		} else {
@@ -274,6 +305,9 @@ if ( !$k ) {
 // Stop here if an error occurred
 if ( $config['error'] !== false ) {
 	return $config;
+}
+if ( (int)$config['pk'] > 0 ) {
+	JCckContent::reloadInstance( array( $config['location'], (int)$config['pk'] ) );
 }
 
 // AfterStore
