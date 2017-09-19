@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-// JCckContentArticle
+// JCckContentArticle: deprecated
 abstract class JCckContentArticle
 {
 	public static $_items	=	array();
