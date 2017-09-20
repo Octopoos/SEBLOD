@@ -39,17 +39,24 @@ class modCCKBreadCrumbsHelper
 				} elseif ( $items[$i]->type == 'separator' || $items[$i]->type == 'heading' ) {
 					$item_id		=	0;	
 				} else {
-					$item_id		=	$items[$i]->id;	
+					$item_id		=	$items[$i]->id;
 				}
 				if ( $item_id ) {
 					$link			=	JRoute::_( 'index.php?Itemid='.$item_id );
+
 					if ( strpos( $link, '?Itemid=' ) !== false ) {
 						unset( $list[$j] );
 					} else {
-						$list[$j++]->link	=	$link;
+						$list[$j]->id			=	$item_id;
+						$list[$j]->link			=	$link;
+						$list[$j]->link_nosef	=	$items[$i]->link;
+						$j++;
 					}
 				} else {
-					$list[$j++]->link	=	'';
+					$list[$j]->id			=	0;
+					$list[$j]->link			=	'';
+					$list[$j]->link_nosef	=	'';
+					$j++;
 				}
 			}
 			$count		=	count( $list );
@@ -76,8 +83,10 @@ class modCCKBreadCrumbsHelper
 			$j			=	substr_count( $base, '/' );
 			
 			for ( $i = 0; $i < $count; $i++ ) {
-				$items[$i]->name	=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
-				$items[$i]->link	=	JRoute::_( $items[$i]->link );
+				$items[$i]->name		=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
+				$items[$i]->link_nosef	=	$items[$i]->link;
+				$items[$i]->link		=	JRoute::_( $items[$i]->link );
+
 				if ( ( ( strpos( $items[$i]->link, $base.'component/' ) === false ) && substr_count( $items[$i]->link, '/' ) == $j )
 					 || !$items[$i]->link ) {
 					$list[]	=	$items[$i];
@@ -90,11 +99,13 @@ class modCCKBreadCrumbsHelper
 			$count 		=	count( $items );
 
 			for ( $i = 0; $i < $count; $i++ ) {
-				$list[$i]		=	new stdClass;
-				$list[$i]->name	=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
-				$list[$i]->link	=	JRoute::_( $items[$i]->link );
-				$parts			=	explode( 'Itemid=', $items[$i]->link );
-				$list[$i]->id	=	( isset( $parts[1] ) ) ? $parts[1] : 0;
+				$list[$i]				=	new stdClass;
+				$list[$i]->name			=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
+				$list[$i]->link			=	JRoute::_( $items[$i]->link );
+				$list[$i]->link_nosef	=	$items[$i]->link;
+
+				$parts					=	explode( 'Itemid=', $items[$i]->link );
+				$list[$i]->id			=	( isset( $parts[1] ) ) ? $parts[1] : 0;
 			}
 		}
 
@@ -107,9 +118,12 @@ class modCCKBreadCrumbsHelper
 		$app	=	JFactory::getApplication();
 		
 		if ( $params->get( 'showHome', 1 ) ) {
-			$item		=	new stdClass;
-			$item->name	=	htmlspecialchars( $params->get( 'homeText', JText::_( 'MOD_CCK_BREADCRUMBS_HOME' ) ) );
-			$item->link	=	JRoute::_( 'index.php?Itemid='.$app->getMenu()->getDefault()->id );
+			$item				=	new stdClass;
+			$item->id			=	$app->getMenu()->getDefault()->id;
+			$item->link			=	JRoute::_( 'index.php?Itemid='.$app->getMenu()->getDefault()->id );
+			$item->link_nosef	=	'index.php?Itemid='.$app->getMenu()->getDefault()->id;
+			$item->name			=	htmlspecialchars( $params->get( 'homeText', JText::_( 'MOD_CCK_BREADCRUMBS_HOME' ) ) );
+			
 			array_unshift( $items, $item );
 		}
 		
