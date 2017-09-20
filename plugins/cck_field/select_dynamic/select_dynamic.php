@@ -736,6 +736,11 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$lang_code	=	'';
 		$value2		=	'';
 		
+		/* tmp */
+		$jtext						=	$config['doTranslation'];
+		$config['doTranslation']	=	0;
+		/* tmp */
+
 		// Prepare
 		self::_languageDetection( $lang_code, $value2, $options2 );
 		if ( $field->bool3 ) {
@@ -743,8 +748,14 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		}
 		$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code );
 		$field->options		=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
-		
-		return parent::getValueFromOptions( $field, $value, $config );
+
+		$result	=	parent::getValueFromOptions( $field, $value, $config );
+
+		/* tmp */
+		$config['doTranslation']	=	$jtext;
+		/* tmp */
+
+		return $result;
 	}
 	
 	// isConvertible
