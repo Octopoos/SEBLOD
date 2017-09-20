@@ -27,6 +27,7 @@ $ -> Language fix or change
 + JText support added on Date Typo plug-in.
 
 # create() method fixed on JCckContent class (regression since SEBLOD 3.14.0).
+# Dynamic Select lookup fixed within Generic Search field on Multilingual site.
 
 -------------------- 3.14.0 Upgrade Release [19-Sept-2017] ----------
 
