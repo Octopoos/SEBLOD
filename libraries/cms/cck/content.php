@@ -394,6 +394,9 @@ class JCckContent
 		if ( empty( $this->_object ) || empty( $this->_table ) ) {
 			$content_type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			
+			if ( !is_object( $content_type ) ) {
+				return false;
+			}
 			if ( $this->_options->get( 'check_permissions', 1 ) ) {
 				if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$content_type->id ) ) {
 					$this->_type	=	'';
@@ -402,14 +405,15 @@ class JCckContent
 				}
 			}
 
-			if ( !$content_type->storage_location ) {
+			$this->_object		=	$content_type->storage_location;
+
+			if ( !$this->_object ) {
 				$this->_type	=	'';
 
 				return false;
 			}
 
 			$this->_columns				=	$this->_getColumnsAliases();
-			$this->_object				=	$content_type->storage_location;
 			$this->_table				=	$this->_columns['table'];
 			$this->_type_id				=	$content_type->id;
 			$this->_type_parent			=	$content_type->parent;
