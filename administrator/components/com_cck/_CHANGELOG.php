@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.14.1 Upgrade Release [20-Sept-2017] ----------
+
++ JText support added on Date Typo plug-in.
+
+# create() method fixed on JCckContent class (regression since SEBLOD 3.14.0).
+
 -------------------- 3.14.0 Upgrade Release [19-Sept-2017] ----------
 
 + Add "raw.php" file in admin/site default templates (install and update).
