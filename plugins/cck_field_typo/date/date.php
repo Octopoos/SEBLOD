@@ -61,6 +61,9 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 			if ( $format == -1 ) {
 				$format	=	trim( $typo->get( 'format_custom', @$options2['format'] ) );
 			}
+			if ( strpos( $format, 'COM_CCK_' ) !== false || strpos( $format, 'DATE_FORMAT_' ) !== false ) {
+				$format	=	JText::_( $format );
+			}
 			if ( $timezone ) {
 				if ( !( isset( $options2['storage_format'] ) && $options2['storage_format'] ) ) {
 					$value	=	JHtml::_( 'date', $value, 'Y-m-d H:i:s' );
