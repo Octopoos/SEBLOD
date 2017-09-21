@@ -19,7 +19,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	protected static $convertible	=	1;
 	protected static $friendly		=	1;
 	protected static $path;
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// onCCK_FieldConstruct
@@ -152,6 +152,13 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( self::$type != $field->type ) {
 			return;
 		}
+
+		// default to authorised
+		if (!isset($field->authorised))
+		{
+			$field->authorised = 1;
+		}
+
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
@@ -204,6 +211,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				$attribs	=	array();
 				$attrib		=	0;
 			}
+
 			if ( trim( $field->selectlabel ) ) {
 				if ( $config['doTranslation'] ) {
 					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
@@ -229,6 +237,8 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$opt_attrs		=	array();
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$optgroups		=	false;
+
+			$static	= null;
 
 			if ( $field->bool4 == 1 || $field->bool4 == 3 ) {
 				$results	=	self::_getStaticOption( $field, $field->options, $config, $optgroups );
@@ -262,8 +272,12 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					}
 				}
 			}
-			
-			if ( $field->bool2 == 0 ) {
+
+			$items      = array();
+			$lang_code		=	'';
+
+			if ( $field->bool2 == 0 && $field->authorised)
+			{
 				$opt_table			=	isset( $options2['table'] ) ? ' FROM '.$options2['table'] : '';
 				$opt_name			=	isset( $options2['name'] ) ? $options2['name'] : '';
 				$opt_value			=	isset( $options2['value'] ) ? $options2['value'] : '';
@@ -279,7 +293,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				
 				// Language Detection
 				$count2				=	count( $opt_attrs );
-				$lang_code			=	'';
 				self::_languageDetection( $lang_code, $value, $options2 );
 				$opt_value			=	str_replace( '[lang]', $lang_code, $opt_value );
 				$opt_name			=	str_replace( '[lang]', $lang_code, $opt_name );	
@@ -309,10 +322,13 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						$items		=	JCckDatabase::loadObjectList( $query );
 					}
 				}
-			} else {
+
+			}
+			else if ($field->authorised)
+			{
 				if ( @$options2['query'] != '' ) {
 					// Language Detection
-					$lang_code		=	'';
+
 					self::_languageDetection( $lang_code, $value, $options2 );
 					$query			=	str_replace( '[lang]', $lang_code, $options2['query'] );
 					$query			=	JCckDevHelper::replaceLive( $query );
@@ -330,6 +346,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				$opt_value	=	'value';
 				$opt_group	=	'optgroup';
 			}
+
 			if ( count( $items ) ) {
 				if ( $opt_group ) {
 					$group	=	'';
@@ -743,9 +760,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 
 		// Prepare
 		self::_languageDetection( $lang_code, $value2, $options2 );
-		if ( $field->bool3 ) {
-			$divider	=	( $field->divider != '' ) ? $field->divider : ',';
-		}
+
 		$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code );
 		$field->options		=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
 
@@ -770,4 +785,3 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		return self::$friendly;
 	}
 }
-?>
