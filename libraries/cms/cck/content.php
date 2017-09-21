@@ -66,6 +66,9 @@ class JCckContent
 			return new JCckContent;
 		}
 
+		if ( !is_array( $identifier ) && ( $classname = substr( strtolower( get_called_class() ), 11 ) ) != '' ) {
+			$identifier		=	array( 0=>$classname, 1=>$identifier );
+		}
 		if ( is_array( $identifier ) ) {
 			$key	=	implode( '_', $identifier );
 		} else {
@@ -89,6 +92,7 @@ class JCckContent
 
 				if ( is_object( $core ) && $core->pk ) {
 					self::$instances_map[$key]	=	$core->storage_location.'_'.$core->pk;
+					$identifier					=	array( 0=>$core->storage_location, 1=>$core->pk );
 					$key						=	$core->storage_location.'_'.$core->pk;
 					$object						=	$core->storage_location;
 				}
@@ -554,6 +558,9 @@ class JCckContent
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
 
+		if ( !is_array( $identifier ) && ( $classname = substr( strtolower( get_called_class() ), 11 ) ) != '' ) {
+			$identifier		=	array( 0=>$classname, 1=>$identifier );
+		}
 		if ( is_array( $identifier ) ) {
 			if( !isset( $identifier[1] ) ) {
 				return false;
