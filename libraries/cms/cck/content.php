@@ -672,13 +672,13 @@ class JCckContent
 	// getId
 	public function getId()
 	{
-		return $this->_id;
+		return (int)$this->_id;
 	}
 
 	// getPk
 	public function getPk()
 	{
-		return $this->_pk;
+		return (int)$this->_pk;
 	}
 	
 	// getProperty
