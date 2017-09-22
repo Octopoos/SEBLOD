@@ -726,14 +726,14 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		return $options;
 	}
-	
-	// getValueFromOptions
-	public static function getValueFromOptions( $field, $value, $config = array() )
+
+	// _getOptionsListProperty
+	protected static function _getOptionsListProperty( $property, $field, $value, $config = array() )
 	{
-		// Init
-		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$divider	=	'';
 		$lang_code	=	'';
+		$method		=	'get'.ucfirst( $property).'FromOptions';
+		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$value2		=	'';
 		
 		/* tmp */
@@ -743,19 +743,32 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 
 		// Prepare
 		self::_languageDetection( $lang_code, $value2, $options2 );
+		
 		if ( $field->bool3 ) {
 			$divider	=	( $field->divider != '' ) ? $field->divider : ',';
 		}
+		
 		$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code );
 		$field->options		=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
-
-		$result	=	parent::getValueFromOptions( $field, $value, $config );
+		$result				=	parent::$method( $field, $value, $config );
 
 		/* tmp */
 		$config['doTranslation']	=	$jtext;
 		/* tmp */
 
 		return $result;
+	}
+	
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config = array() )
+	{
+		return self::_getOptionsListProperty( 'text', $field, $value, $config );
+	}
+	
+	// getValueFromOptions
+	public static function getValueFromOptions( $field, $value, $config = array() )
+	{
+		return self::_getOptionsListProperty( 'value', $field, $value, $config );
 	}
 	
 	// isConvertible

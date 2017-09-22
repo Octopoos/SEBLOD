@@ -59,6 +59,14 @@ class JCckPluginField extends JPlugin
 		$field->data	=	$value;
 	}
 
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config )
+	{
+		$v	=	$value;
+
+		return self::g_getOptionText( $v, $field->options, $field->divider, $config );
+	}
+
 	// getValueFromOptions
 	public static function getValueFromOptions( $field, $value, $config = array() )
 	{
