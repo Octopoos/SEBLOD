@@ -214,12 +214,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$click		=	'';
 				$pre_task	=	'';
 				$config['doQuery2']	=	true;
-				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id, 'fieldnames'=>$field->options ) );
 			} elseif ( $task == 'process_ajax' ) {
 				$click		=	'';
 				$pre_task	=	'';
 				$config['doQuery2']	=	true;
-				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id, 'fieldnames'=>$field->options ) );
 			} elseif ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
 				$uri		=	JUri::getInstance()->toString();
 				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( $uri ).'">\');' );
@@ -384,8 +384,13 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			}
 			if ( isset( $config[$target] ) && $config[$target] != '' ) {
 				static $loaded	=	0;
+				$fieldnames		=	array();
 				$step			=	1;
 				$vars			=	'';
+
+				if ( $process['fieldnames'] ) {
+					$fieldnames	=	explode( '||', $process['fieldnames'] );
+				}
 
 				JText::script( 'COM_CCK_COMPLETED' );
 
@@ -395,7 +400,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				} elseif ( $process['task'] == 'process_ajax' ) {
 					$step	=	(int)JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 );
 				}
-				
+
 				if ( !$loaded ) {
 					$js 	=	'
 								(function ($){
@@ -404,6 +409,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										css:"",
 										formId:"'.$config['formId'].'",
 										instances: [],
+										kvp: "",
 										uniq_id:"'.uniqid().'",
 										width:0,
 										ajaxLoopRequest: function(el) {
@@ -411,7 +417,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											var end = ( JCck.Core.SubmitButton.batch.length > 0 ) ? 0 : 1;
 											$.ajax({
 												cache: false,
-												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id,
+												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
 												url:  JCck.Core.SubmitButton.instances[el].url,
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
@@ -459,6 +465,20 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											}
 											JCck.Core.SubmitButton.instances[el].total = JCck.Core.SubmitButton.batch.length;
 											JCck.Core.SubmitButton.width = parseInt(JCck.Core.SubmitButton.instances[el].step/JCck.Core.SubmitButton.instances[el].total*100);
+
+											JCck.Core.SubmitButton.kvp = "";
+											$.each(JCck.Core.SubmitButton.instances[el].fields, function(k,v) {
+  												JCck.Core.SubmitButton.kvp	+=	"&"+v+"="+$("#"+v).myVal();
+  											});
+										},
+										isValid: function()
+										{
+											if (typeof jQuery.fn.validationEngine === "function") {
+												if ($("#"+JCck.Core.SubmitButton.formId).length && $("#"+JCck.Core.SubmitButton.formId).validationEngine("validate") === false) {
+													return false;
+												}
+											}
+											return true;
 										}
 									}
 								})(jQuery);
@@ -476,7 +496,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 							(function ($){
 								$(document).ready(function() {
 									$("#'.$process['id'].'").on("click", function() {'.$js.'
+										if (!JCck.Core.SubmitButton.isValid()) { return false; }
 										var data = {
+											"fields":'.json_encode( $fieldnames ).',
 											"items":['.$config[$target].'],
 											"step":'.(int)$step.',
 											"task_id":'.(int)$process['task_id'].',

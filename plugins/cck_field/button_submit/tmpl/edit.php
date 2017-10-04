@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'fieldPicker'=>true ) );
 JCckDev::forceStorage();
 
+$options	=	JCckDev::fromSTRING( $this->item->options );
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $task_id	=	array( 'export'=>'', 'process'=>'' );
 
@@ -54,6 +56,9 @@ if ( isset( $options2['task'] ) ) {
 		echo JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'label'=>'Redirection', 'selectlabel'=>'None', 'storage_field'=>'json[options2][itemid]' ) );
 		echo JCckDev::renderForm( 'core_dev_textarea', @$options2['custom'], $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][custom]' ), array(), 'w100' );
 		
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li4" value="" />' );
+		echo JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) );
+
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>
@@ -71,6 +76,7 @@ jQuery(document).ready(function($) {
 	$('#json_options2_task_id_process').isVisibleWhen('json_options2_task','process,process_ajax');
 	$('#json_options2_custom,#json_options2_itemid').isVisibleWhen('json_options2_task','save2redirect');
 	$('#json_options2_alt_link_text, #blank_li2').isVisibleWhen('bool2','2');
+	$('#core_options, #blank_li4').isVisibleWhen('json_options2_task','process_ajax');
 	$("div#layer").on("click", "span.c_link", function() {
 		var type = $("#json_options2_alt_link").val();
 		if (type) {
