@@ -42,7 +42,7 @@ class JCckContentJoomla_User extends JCckContent
 	}
 
 	// remove
-	public function remove()
+	protected function remove()
 	{
 		return $this->_instance_base->delete();
 	}
