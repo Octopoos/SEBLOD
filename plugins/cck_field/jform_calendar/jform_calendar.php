@@ -67,6 +67,20 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		$field->typo_target	=	'text';
 	}
+
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		if ( (int)$value > 0 ) {
+			$field->output	=	$value;
+		} else {
+			$field->output	=	'';
+		}
+	}
 	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
