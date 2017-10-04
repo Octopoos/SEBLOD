@@ -63,6 +63,18 @@ class JCckContentJoomla_Category extends JCckContent
 
 		return $status;
 	}
+
+	// triggerSave
+	public function triggerSave( $event )
+	{
+		$result	=	$this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base, $this->_is_new ) );
+
+		if ( $event == 'afterSave' ) {
+			unset( $this->_instance_base->catid );
+		}
+
+		return $result;
+	}
 	
 	// postSave
 	protected function postSave( $instance_name, $data )
