@@ -22,6 +22,27 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.15.0 Upgrade Release [4-Oct-2017] ------------
+
+^ JCckContent class updated, and greatly improved! :)
+  >> "__construct" methods' arguments changed: "$identifier" removed, use getInstance or new+load (cf 3.11.0 changelog)
+  >> $identifier is now "pk" when the object is already known instead of the unique seblod id.
+  >> Method Chaining capabilities added, use ->setOptions( array( 'chain_methods'=>0 ) ) for previous behaviour of create/load.
+  >> "batch", "batchResults" methods added.
+  >> "clear" method added.
+  >> "find", "getResults" methods added.
+  >> missing permissions check added to "addToGroup", "removeFromGroup" on JCckContentJoomla_User class.
+  >> "remove" method declaration has changed (from public to protected)!, use delete.
+
++ Support for Table name (or Aka) added on Search query parts >> Search Join plug-in required.
++ "Translated Text" mode added for Title on Form & List Menu Items.
++ Variables can be sent alongside Processing AJAX task.
+
+- Temporary fixes for Joomla! 3.8 removed.
+
+# "Default/Static" Live value fixed for fields within Group.
+# Various improvements or issues fixed.
+
 -------------------- 3.14.1 Upgrade Release [20-Sept-2017] ----------
 
 + JText support added on Date Typo plug-in.
