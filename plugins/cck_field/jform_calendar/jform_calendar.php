@@ -51,7 +51,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		
 		// Set
 		$value	=	trim( $value );
-		if ( $value == '' || $value == '0000-00-00 00:00:00' ) {
+		if ( (int)$value == 0 ) {
 			$field->value	=	'';
 			$field->text	=	'';
 		} else {
@@ -167,7 +167,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		$value	=	trim( $value );
 
-		if ( $value != '' && $value != '0000-00-00 00:00:00' ) {
+		if ( (int)$value > 0 ) {
 			$date			=	JFactory::getDate( $value, $this->userTimeZone );
 			$timezone		=	new DateTimeZone( 'UTC' );
 			$date->setTimezone( $timezone );
@@ -201,7 +201,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
-		if ( $value != '' && $value != '0000-00-00 00:00:00' ) {
+		if ( (int)$value > 0 ) {
 			$date			=	JFactory::getDate( $value, $this->userTimeZone );
 			$timezone		=	new DateTimeZone( 'UTC' );
 			$date->setTimezone( $timezone );
