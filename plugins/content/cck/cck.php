@@ -580,10 +580,6 @@ class plgContentCCK extends JPlugin
 		
 		$data					=	$doc->render( false, $params );
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
-		
-		if ( JCck::on( '3.8' ) && isset( $article->introtext ) ) {
-			$article->introtext	=	'';
-		}
 	}
 }
 ?>
