@@ -131,26 +131,12 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			$width	=	' width="'.$params['thumb_width'].'"';
 			$height	=	' height="'.$params['thumb_height'].'"';
 		}
-		if ( JCck::on( '3.8' ) ) { // Dirty hack to fix what's Joomla! 3.8 breaks..
-			$keep_it			=	$options['root'];
-			$options['root']	=	'';
-		}
 		if ( $params['thumb_2x'] ) {
 			$srcset	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options ).' 2x';
-			if ( JCck::on( '3.8' ) && $srcset[0] == '/' ) { // Dirty hack to fix what's Joomla! 3.8 breaks..
-				$srcset	=	substr( $srcset, 1 );
-			}
 			if ( $params['thumb_3x'] ) {
-				$temp	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options ).' 3x';
-				if ( JCck::on( '3.8' ) && $temp[0] == '/' ) { // Dirty hack to fix what's Joomla! 3.8 breaks..
-					$temp	=	substr( $temp, 1 );
-				}
-				$srcset	.=	', '.$temp;
+				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options ).' 3x';
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
-		}
-		if ( JCck::on( '3.8' ) ) { // Dirty hack to fix what's Joomla! 3.8 breaks..
-			$options['root']	=	$keep_it;
 		}
 		$img		=	'<img '.$title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $options ).'"'.$srcset.$class.$attr.$width.$height.' />';
 
