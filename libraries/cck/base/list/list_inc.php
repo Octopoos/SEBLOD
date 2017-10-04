@@ -18,6 +18,7 @@ $app			=	JFactory::getApplication();
 $data			=	'';
 $form			=	'';
 $id				=	0;	// $app->input->getInt( 'id', 0 ); Not even sure why it was there.. any regression?
+$isCached		=	'';
 $itemId			=	( $preconfig['itemId'] == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $preconfig['itemId'];
 $items			=	array();
 $lang   		=	JFactory::getLanguage();
@@ -540,7 +541,6 @@ if ( $preconfig['task'] == 'search' ) {
 				$isCached	=	' [Cache=OFF]';
 			}
 		} else {
-			$isCached	=	'';
 			$no_action	=	$options->get( 'action', '' );
 			$no_message	=	$options->get( 'message', '' );
 			$no_style	=	$options->get( 'message_style', 'message' );
@@ -624,7 +624,7 @@ if ( $no_action ) {
 		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 	}
 }
-if ( $doDebug ) {
+if ( $doDebug && ( $preconfig['task'] == 'search' || $no_action ) ) {
 	echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
 }
 
