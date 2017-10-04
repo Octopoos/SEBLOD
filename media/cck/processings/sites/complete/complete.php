@@ -24,12 +24,24 @@ $sitemail		=	substr( $sitemail, strpos( $sitemail, '@' ) );
 
 $existing_users	=	array();
 $next_level		=	0;
+$parent			=	null;
 $usergroups		=	array();
 $users			=	array();
 $users_author	=	array();
 $users_bridge	=	array();
 $users_force	=	array();
 $users_more		=	array();
+
+if ( $item->parent_id ) {
+	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, groups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
+
+	if ( is_object( $parent ) ) {
+		$parent->groups		=	explode( ',', $parent->groups );
+		$parent->groups[]	=	0;
+
+		array_shift( $parent->groups );
+	}
+}
 
 if ( isset( $item->groups ) && $item->groups != '' ) {
 	$item->groups		=	json_decode( $item->groups, true );
@@ -58,7 +70,12 @@ if ( $guest_only ) {
 }
 
 // Guest User
-$item->guest	=	CCK_TableSiteHelper::addUser( '', $sitetitle, $sitemail, array( 0=>$guest_group ) );
+$guest_groups	=	array( 0=>$guest_group );
+
+if ( is_object( $parent ) && $parent->guest_only_group ) {
+	$guest_groups[1]	=	$parent->guest_only_group;
+}
+$item->guest	=	CCK_TableSiteHelper::addUser( '', $sitetitle, $sitemail, $guest_groups );
 
 // Groups
 $special		=	0;
@@ -186,11 +203,18 @@ $plg_params	=	$plg_params->toArray();
 if ( isset( $plg_params['bridge_default-access'] ) ) {
 	$plg_params['bridge_default-access']	=	$guest_viewlevel;
 }
+
 foreach ( $users as $k=>$u ) {
 	array_pop( $usergroups );
 
 	$id			=	0;
 	$u->groups	=	$usergroups;
+
+	if ( is_object( $parent ) && $parent->groups ) {
+		array_pop( $parent->groups );
+
+		$u->groups	=	array_merge( $u->groups, $parent->groups );
+	}
 
 	// Force Password
 	if ( isset( $users_force[$k] ) && $users_force[$k] ) {
