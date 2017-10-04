@@ -78,7 +78,7 @@ class plgContentCCK extends JPlugin
 	}
 
 	// onContentAfterDelete
-	public function onContentAfterDelete( $context, $data )
+	public function onContentAfterDelete( $context, $item )
 	{
 		if ( empty( $context ) ) {
 			return false;
@@ -96,9 +96,9 @@ class plgContentCCK extends JPlugin
 			return true;
 		}
 		
-		$table_key	=	$data->getKeyName();
-		$table_name	=	$data->getTableName();
-		$pk			= 	$data->$table_key;
+		$table_key	=	$item->getKeyName();
+		$table_name	=	$item->getTableName();
+		$pk			= 	$item->$table_key;
 		$base 		= 	str_replace( '#__', '', $table_name );
 		
 		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
@@ -112,7 +112,7 @@ class plgContentCCK extends JPlugin
 
 		// Core
 		if ( $custom ) {
-			preg_match( '#::cck::(\d+)::/cck::#U', $data->$custom, $matches );
+			preg_match( '#::cck::(\d+)::/cck::#U', $item->$custom, $matches );
 			$id		=	$matches[1];
 
 			if ( ! $id ) {
@@ -159,7 +159,7 @@ class plgContentCCK extends JPlugin
 							$config['storages'][$Pt]	=	'';
 							
 							if ( $Pt == $table_name ) {
-								$config['storages'][$Pt]	=	$data;
+								$config['storages'][$Pt]	=	$item;
 							} else {
 								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
 							}
@@ -194,11 +194,15 @@ class plgContentCCK extends JPlugin
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onContentAfterDelete';
-			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 			if ( isset( $processing[$event] ) ) {
+				$data	=	$item;	/* Avoid B/C issue */
+
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						include_once JPATH_SITE.$p->scriptfile;	/* Variables: $id, $pk, $type */
+						$options	=	new JRegistry( $p->options );
+
+						include JPATH_SITE.$p->scriptfile;	/* Variables: $id, $item, $pk, $type */
 					}
 				}
 			}
