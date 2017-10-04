@@ -149,6 +149,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 						$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					} elseif ( $f->live ) {
 						$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
+					} else {
+						$f_value				=	$f->live_value;
 					}
 					$inherit					=	array();
 					$clone						=	clone $f;
