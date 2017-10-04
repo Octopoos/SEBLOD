@@ -25,9 +25,9 @@ $ -> Language fix or change
 -------------------- 3.15.0 Upgrade Release [4-Oct-2017] ------------
 
 ^ JCckContent class updated, and greatly improved! :)
+  >> Method Chaining capabilities added, use ->setOptions( array( 'chain_methods'=>0 ) ) for previous behaviour of create/load.
   >> "__construct" methods' arguments changed: "$identifier" removed, use getInstance or new+load (cf 3.11.0 changelog)
   >> $identifier is now "pk" when the object is already known instead of the unique seblod id.
-  >> Method Chaining capabilities added, use ->setOptions( array( 'chain_methods'=>0 ) ) for previous behaviour of create/load.
   >> "batch", "batchResults" methods added.
   >> "clear" method added.
   >> "find", "getResults" methods added.
@@ -37,6 +37,8 @@ $ -> Language fix or change
 + Support for Table name (or Aka) added on Search query parts >> Search Join plug-in required.
 + "Translated Text" mode added for Title on Form & List Menu Items.
 + Variables can be sent alongside Processing AJAX task.
+
+^ "PrepareExport" applied on JForm Calendar plug-in.
 
 - Temporary fixes for Joomla! 3.8 removed.
 
