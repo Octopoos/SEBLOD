@@ -260,6 +260,34 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		return $opts;
 	}
 
+	// _getOptionsListProperty
+	protected static function _getOptionsListProperty( $property, $field, $value, $config = array() )
+	{
+		$method		=	'get'.ucfirst( $property).'FromOptions';
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+		
+		/* tmp */
+		$jtext						=	$config['doTranslation'];
+		$config['doTranslation']	=	0;
+		/* tmp */
+		
+		self::_getOptionsList( $options2, $field, $config );
+		
+		$result				=	parent::$method( $field, $value, $config );
+
+		/* tmp */
+		$config['doTranslation']	=	$jtext;
+		/* tmp */
+
+		return $result;
+	}
+
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config = array() )
+	{
+		return self::_getOptionsListProperty( 'text', $field, $value, $config );
+	}
+
 	// isConvertible
 	public static function isConvertible()
 	{
