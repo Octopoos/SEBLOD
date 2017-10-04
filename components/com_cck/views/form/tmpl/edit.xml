@@ -22,8 +22,8 @@
 			<field name="cckjs" type="cckjs" label="" description=""
 				   js_appendto="jform_params_show_form_title=J(as tag),#jform_params_tag_form_title,J(with class),#jform_params_class_form_title"
 				   js_isvisiblewhen="div#jform_params_cckjs-more='jform_params_show_form_title','1',false" js_format="html" hidden="true" />
-			<field name="display_form_title" type="cck" construction="core_dev_select" cck_options="Custom Text=1||Language Constant=2||Menu Item=0" cck_selectlabel="Inherited" default="" label="LIB_CCK_TITLE" description="" class="inputbox" />
-			<field name="title_form_title" type="cck" construction="core_dev_text" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Title)'" js_appendto="jform_params_display_form_title=#jform_params_title_form_title" js_isvisiblewhen="div#jform_params_title_form_title-more='jform_params_display_form_title','1',false" js_format="html" hidden="true" />
+			<field name="display_form_title" type="cck" construction="core_dev_select" cck_options="Custom Text=1||Language Constant=2||Menu Item=0||Translated Text=3" cck_selectlabel="Inherited" default="" label="LIB_CCK_TITLE" description="" class="inputbox" />
+			<field name="title_form_title" type="cck" construction="core_dev_text" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Title)'" js_appendto="jform_params_display_form_title=#jform_params_title_form_title" js_isvisiblewhen="div#jform_params_title_form_title-more='jform_params_display_form_title','1,3',false" js_format="html" hidden="true" />
 			<field name="show_form_desc" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global"
 				   label="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION_DESC" class="inputbox" />
 			<field name="form_desc" type="cck" construction="core_description" default="" label="" description="..." class="inputbox" cck_selectlabel="Edit"

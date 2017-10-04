@@ -134,10 +134,12 @@ class CCKViewList extends JViewLegacy
 			if ( is_object( $search ) ) {
 				$this->title			=	JText::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
 			}
+		} elseif ( $params->get( 'display_list_title', '' ) == '3' ) {
+			$this->title				=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_list_title', '' ) ) ) );
 		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
 			$this->title				=	$params->get( 'title_list_title', '' );
 		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
-			$this->title				=		$menu->title;
+			$this->title				=	$menu->title;
 		} else {
 			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 		}
