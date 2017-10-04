@@ -81,9 +81,13 @@ class JCckContentJoomla_User extends JCckContent
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
 
+	// _addToGroup
 	protected function _addToGroup( $group_id )
 	{
 		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->can( 'save' ) ) {
 			return false;
 		}
 
@@ -94,9 +98,13 @@ class JCckContentJoomla_User extends JCckContent
 		}
 	}
 
+	// _removeFromGroup
 	protected function _removeFromGroup( $group_id )
 	{
 		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->can( 'save' ) ) {
 			return false;
 		}
 
