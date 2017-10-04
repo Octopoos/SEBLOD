@@ -365,7 +365,7 @@ class plgSearchCCK extends JPlugin
 				if ( isset( $config['query_parts']['select'] ) ) {
 					if ( ( is_string( $config['query_parts']['select'] ) && $config['query_parts']['select'] != '' )
 						|| count( $config['query_parts']['select'] ) ) {
-						$query->select( $config['query_parts']['select'] );
+						$query->select( self::_prepareParts( $config['query_parts']['select'], $tables ) );
 					}
 				}
 				if ( $where != '' ) {
@@ -374,18 +374,18 @@ class plgSearchCCK extends JPlugin
 				if ( isset( $config['query_parts']['where'] ) ) {
 					if ( ( is_string( $config['query_parts']['where'] ) && $config['query_parts']['where'] != '' )
 						|| count( $config['query_parts']['where'] ) ) {
-						$query->where( $config['query_parts']['where'] );	
+						$query->where( self::_prepareParts( $config['query_parts']['where'], $tables ) );
 					}
 				}
 				if ( isset( $config['query_parts']['having'] ) ) {
 					if ( ( is_string( $config['query_parts']['having'] ) && $config['query_parts']['having'] != '' )
 						|| count( $config['query_parts']['having'] ) ) {
-						$query->having( $config['query_parts']['having'] );	
+						$query->having( self::_prepareParts( $config['query_parts']['having'], $tables ) );	
 					}
 				}
 				if ( isset( $config['query_parts']['group'] ) && count( $config['query_parts']['group'] ) ) {
 					$hasGroup	=	true;
-					$query->group( $config['query_parts']['group'] );
+					$query->group( self::_prepareParts( $config['query_parts']['group'], $tables ) );
 				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
 				
@@ -654,9 +654,35 @@ class plgSearchCCK extends JPlugin
 		if ( isset( $config['query_parts']['order_by'] ) ) {
 			if ( ( is_string( $config['query_parts']['order_by'] ) && $config['query_parts']['order_by'] != '' )
 				|| count( $config['query_parts']['order_by'] ) ) {
-				$query->order( $config['query_parts']['order_by'] );
+				$query->order( self::_prepareParts( $config['query_parts']['order_by'], $tables ) );
 			}
 		}
+	}
+
+	// _preparePart
+	protected static function _preparePart( $part, $tables )
+	{
+		foreach ( $tables as $k=>$v ) {
+			if ( strpos( $part, $k.'.' ) !== false ) {
+				$part	=	str_replace( $k.'.', $v['_'].'.', $part );
+			}
+		}
+
+		return $part;
+	}
+
+	// _prepareParts
+	protected static function _prepareParts( $parts, $tables )
+	{
+		if ( is_array( $parts ) ) {
+			foreach ( $parts as $k=>$part ) {
+				$parts[$k]	=	self::_preparePart( $part, $tables );
+			}
+		} else {
+			$parts	=	self::_preparePart( $parts, $tables );
+		}
+
+		return $parts;
 	}
 
 	// _setStorage
