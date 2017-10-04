@@ -103,7 +103,7 @@ class JCckContent
 				return false;
 			}
 
-			self::$instances[$key]	=	new $classname( $identifier );
+			self::$instances[$key]	=	new $classname;
 
 			if ( $identifier ) {
 				self::$instances[$key]->load( $identifier );
