@@ -45,13 +45,21 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 			$value	=	implode( ',', $value );
 		}
 		if ( $value != '' ) {
-			$text	=	JCckDatabase::loadColumn( 'SELECT a.title FROM #__usergroups AS a WHERE id IN ('.$value.') ORDER BY FIELD(id, '.$value.')' );
-			$text	=	implode( ',', $text );
+			$texts	=	JCckDatabase::loadColumn( 'SELECT a.title FROM #__usergroups AS a WHERE id IN ('.$value.') ORDER BY FIELD(id, '.$value.')' );
+			$text	=	implode( ',', $texts );
 		}
 
 		// Set
 		$field->text		=	$text;
 		$field->value		=	$value;
+
+		$values				=	explode( ',', $value );
+		if ( count( $values ) ) {
+			$field->values			=	array();
+			foreach ( $values as $k=>$v ) {
+				$field->values[$k]	=	(object)array( 'text'=>$texts[$k], 'typo_target'=>'text', 'value'=>$v );
+			}
+		}
 		$field->typo_target	=	'text';
 	}
 	
