@@ -360,6 +360,8 @@ class JCckContent
 			return false;
 		}
 		if ( !$this->can( 'delete' ) ) {
+			// $this->log( 'error', 'Permissions denied.' );
+
 			return false;
 		}
 		
@@ -988,7 +990,7 @@ class JCckContent
 	// preSave
 	protected function preSave( $instance_name, &$data ) {}
 	
-	// save
+	// save ($)
 	public function save( $instance_name, $data = array() )
 	{
 		if ( !$this->isSuccessful() ) {
@@ -997,7 +999,7 @@ class JCckContent
 
 		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
-				$this->_error	=	true;
+				// $this->log( 'error', 'Permissions denied.' );
 
 				return false;
 			}
@@ -1005,8 +1007,8 @@ class JCckContent
 
 		$this->preSave( $instance_name, $data );
 
-		$status		=	$this->bind( $instance_name, $data );
-		$status		=	$this->check( $instance_name );
+		$this->bind( $instance_name, $data );
+		$this->check( $instance_name );
 
 		if ( $instance_name == 'base' ) {
 			$result	=	$this->trigger( 'save', 'before' );
@@ -1023,46 +1025,48 @@ class JCckContent
 			$status	=	$this->$method();
 		}
 
-		if ( $status ) {
-			switch( $instance_name ) {
-				case 'base':
-					$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
-					
-					if ( $this->_instance_core->id ) {
-						$data_core	=	array();
+		if ( !$status ) {
+			return $status;
+		}
 
-						if ( $this->_columns['author'] == $this->_columns['key'] ) {
-							$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
-						} elseif ( isset( $data[$this->_columns['author']] ) ) {
-							$data_core['author_id']	=	$data[$this->_columns['author']];
-						}
-						if ( isset( $data[$this->_columns['parent']] ) ) {
-							$data_core['parent_id']	=	$data[$this->_columns['parent']];
-						}
-						if ( count( $data_core ) ) {
-							$this->save( 'core', $data_core );
-						}
-					}
-					break;
-				case 'core':
-					$this->_id	=	$this->{'_instance_'.$instance_name}->id;
-					
-					if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
-						$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
-					}
-					$this->store( 'base' );
-					break;
-				case 'more':
-				case 'more2':
-				default:
-					break;
-			}
+		switch( $instance_name ) {
+			case 'base':
+				$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
+				
+				if ( $this->_instance_core->id ) {
+					$data_core	=	array();
 
-			$this->postSave( $instance_name, $data );
-			
-			if ( $instance_name == 'base' ) {
-				$this->trigger( 'save', 'after' );
-			}
+					if ( $this->_columns['author'] == $this->_columns['key'] ) {
+						$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
+					} elseif ( isset( $data[$this->_columns['author']] ) ) {
+						$data_core['author_id']	=	$data[$this->_columns['author']];
+					}
+					if ( isset( $data[$this->_columns['parent']] ) ) {
+						$data_core['parent_id']	=	$data[$this->_columns['parent']];
+					}
+					if ( count( $data_core ) ) {
+						$this->save( 'core', $data_core );
+					}
+				}
+				break;
+			case 'core':
+				$this->_id	=	$this->{'_instance_'.$instance_name}->id;
+				
+				if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
+					$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+				}
+				$this->store( 'base' );
+				break;
+			case 'more':
+			case 'more2':
+			default:
+				break;
+		}
+
+		$this->postSave( $instance_name, $data );
+		
+		if ( $instance_name == 'base' ) {
+			$this->trigger( 'save', 'after' );
 		}
 
 		return $status;
@@ -1098,7 +1102,7 @@ class JCckContent
 		return $this->_instance_more2->store();
 	}
 
-	// store
+	// store ($)
 	public function store( $instance_name )
 	{
 		if ( !$this->isSuccessful() ) {
@@ -1107,8 +1111,8 @@ class JCckContent
 
 		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
-				$this->_error	=	true;
-				
+				// $this->log( 'error', 'Permissions denied.' );
+
 				return false;
 			}
 		}
@@ -1116,7 +1120,7 @@ class JCckContent
 		return $this->{'_instance_'.$instance_name}->store();
 	}
 
-	// update
+	// update ($)
 	public function update( $instance_name, $property, $value )
 	{
 		if ( !$this->isSuccessful() ) {
@@ -1124,7 +1128,7 @@ class JCckContent
 		}
 
 		if ( !$this->can( 'update', $property ) ) {
-			$this->_error	=	true;
+			// $this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
@@ -1149,7 +1153,7 @@ class JCckContent
 		return $result;
 	}
 
-	// updateProperty
+	// updateProperty ($)
 	public function updateProperty( $property, $value )
 	{
 		if ( !$this->isSuccessful() ) {
@@ -1159,7 +1163,7 @@ class JCckContent
 		if ( isset( $this->_data_map[$property] ) ) {
 			return $this->update( $this->_data_map[$property], $property, $value );
 		} else {
-			$this->_error	=	true;
+			// $this->log( 'error', 'Property uknown.' );
 		}
 
 		return false;
