@@ -44,6 +44,7 @@ $ -> Language fix or change
 
 # ->values added in PrepareContent on JForm User Groups plug-in.
 # "Default/Static" Live value fixed for fields within Group.
+# Issue while saving Integration Options on PHP 7.1 fixed.
 # Various improvements or issues fixed.
 
 -------------------- 3.14.1 Upgrade Release [20-Sept-2017] ----------
