@@ -91,6 +91,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
+				$config['n']	=	1;
 				$config['pk']	=	0;
 
 				// Check Permissions?
@@ -197,7 +198,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				
 				$config['pk']	=	$item->pk;
 
-				// BeforeImport
+				// BeforeExport
 				$event	=	'onCckPreBeforeExport';
 				if ( isset( $config['processing'][$event] ) ) {
 					foreach ( $config['processing'][$event] as $p ) {
@@ -226,9 +227,17 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 
 				// Export
 				if ( $config['ftp'] == '1' ) {
-					$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+					for ( $i = 0; $i < $config['n']; $i++ ) {
+						$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+					}
 				} else {
-					fputcsv( $config['handle'], $fields, $config['separator'] );
+					if ( $config['n'] > 1 ) {
+						for ( $i = 0; $i < $config['n']; $i++ ) {
+							fputcsv( $config['handle'], $fields, $config['separator'] );
+						}
+					} else {
+						fputcsv( $config['handle'], $fields, $config['separator'] );
+					}
 				}
 				$config['count']++;
 			}
