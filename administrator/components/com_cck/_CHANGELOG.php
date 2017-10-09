@@ -22,15 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.15.0 Upgrade Release [4-Oct-2017] ------------
+-------------------- 3.15.0 Upgrade Release [9-Oct-2017] ------------
 
 ^ JCckContent class updated, and greatly improved! :)
   >> Method Chaining capabilities added, use ->setOptions( array( 'chain_methods'=>0 ) ) for previous behaviour of create/load.
   >> "__construct" methods' arguments changed: "$identifier" removed, use getInstance or new+load (cf 3.11.0 changelog)
   >> $identifier is now "pk" when the object is already known instead of the unique seblod id.
-  >> "batch", "batchResults" methods added.
+  >> "count", "find", "getResults" methods added.
   >> "clear" method added.
-  >> "find", "getResults" methods added.
+  >> "batch", "batchResults" methods added.
   >> missing permissions check added to "addToGroup", "removeFromGroup" on JCckContentJoomla_User class.
   >> "remove" method declaration has changed (from public to protected)!, use delete.
 
@@ -42,6 +42,7 @@ $ -> Language fix or change
 
 - Temporary fixes for Joomla! 3.8 removed.
 
+# ->values added in PrepareContent on JForm User Groups plug-in.
 # "Default/Static" Live value fixed for fields within Group.
 # Various improvements or issues fixed.
 
