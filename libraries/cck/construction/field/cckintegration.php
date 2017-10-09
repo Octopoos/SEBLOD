@@ -245,7 +245,7 @@ class JFormFieldCckIntegration extends JFormField
 										cache: false,
 										data: encoded,
 										type: "POST",
-										url: "index.php?option=com_cck&task=ajaxSaveIntegration",
+										url: "'.JUri::base().'index.php?option=com_cck&task=ajaxSaveIntegration",
 										beforeSend:function(){ $("#toolbar-help").after(\'<div id="toolbar-spinner" class="btn-group">\'+loading+\'</div>\'); },
 										success: function(response){ $("#toolbar-spinner").remove(); Joomla.submitbutton("config.save.component."+task); },
 										error:function(){}
