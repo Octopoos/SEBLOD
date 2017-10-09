@@ -170,7 +170,7 @@ class CCKController extends JControllerLegacy
 	public function ajaxSaveIntegration()
 	{
 		$app		=	JFactory::getApplication();
-		$json		=	$app->input->JSON->getRaw();
+		$json		=	$app->input->json->getRaw();
 		$objects	=	json_decode( $json );
 		
 		if ( count( $objects ) ) {
