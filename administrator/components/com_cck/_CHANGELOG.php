@@ -33,6 +33,7 @@ $ -> Language fix or change
   >> "batch", "batchResults" methods added.
   >> missing permissions check added to "addToGroup", "removeFromGroup" on JCckContentJoomla_User class.
   >> "remove" method declaration has changed (from public to protected)!, use delete.
+  >> "bind" return changed.
 
 + Support for Table name (or Aka) added on Search query parts >> Search Join plug-in required.
 + "Translated Text" mode added for Title on Form & List Menu Items.
