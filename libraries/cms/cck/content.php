@@ -459,6 +459,22 @@ class JCckContent
 		return $this;
 	}
 
+	// bind
+	public function bind( $instance_name, $data )
+	{
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		$result	=	$this->{'_instance_'.$instance_name}->bind( $data );
+
+		if ( !$result ) {
+			$this->_error	=	true;
+		}
+
+		return $this;
+	}
+
 	// call
 	public function call()
 	{
@@ -964,15 +980,7 @@ class JCckContent
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
 
-	// bind
-	public function bind( $instance_name, $data )
-	{
-		if ( !$this->isSuccessful() ) {
-			return false;
-		}
 
-		return $this->{'_instance_'.$instance_name}->bind( $data );
-	}
 
 	// check
 	public function check( $instance_name )
