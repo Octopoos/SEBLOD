@@ -23,10 +23,10 @@
 			<menuitem
 				title="{sql:title}"
 				type="component"
-				element="{sql:element}"
+				element="com_cck"
 				link="index.php?option=com_cck&amp;view=list&amp;search={sql:name}"
-				class="class:menu">
-			</menuitem>
+				class="class:menu"
+			/>
 		</menuitem>
 	</menuitem>
 </menu>

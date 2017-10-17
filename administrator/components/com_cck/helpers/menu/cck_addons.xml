@@ -17,7 +17,7 @@
 			hidden="false"
 			sql_select="a.element, b.title"
 			sql_from="#__extensions AS a"
-			sql_where="a.type = 'component' AND a.element LIKE 'com_cck\_%'"
+			sql_where="a.type = 'component' AND a.element LIKE 'com_cck\_%' AND b.link NOT LIKE '%view=%'"
 			sql_leftjoin="#__menu AS b on b.component_id = a.extension_id"
 			sql_order="b.title ASC">
 			<menuitem
