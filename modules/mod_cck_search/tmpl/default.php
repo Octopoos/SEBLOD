@@ -31,7 +31,7 @@ if ( $description != '' ) {
 if ( $show_list_desc == 1 && $description != '' ) {
 	echo $description;
 }
-if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
+if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $config['validation'] != '' ) {
 	JCckDev::addValidation( $config['validation'], $config['validation_options'], $formId );
 	$js	=	'if ( jQuery("#'.$formId.'").validationEngine("validate",task) === true ) { JCck.Core.submitForm("search", document.getElementById("'.$formId.'")); }';
 } else {

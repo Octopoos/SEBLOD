@@ -37,7 +37,7 @@ if ( isset( $this->config['error'] ) && (int)$this->config['error'] == 1 ) { ?>
 	<?php }
 	return;
 }
-if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $this->config['validation'] != '' ) {
+if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['validation'] != '' ) {
 	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'], $this->form_id );
 	$js	=	'if (task == "cancel") { JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); } else { if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { if (jQuery("#'.$this->form_id.'").isStillReady() === true) { jQuery("#'.$this->form_id.' input[name=\'config[unique]\']").val("'.$this->unique.'"); JCck.Core.submitForm(task, document.getElementById("'.$this->form_id.'")); } } }';
 } else {

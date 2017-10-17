@@ -142,7 +142,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'core'=>true,
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
-				   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
+				   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
    				   'error'=>0,
 				   'fields'=>array(),
 				   'formId'=>$preconfig['formId'],
@@ -244,7 +244,7 @@ if ( $id ) {
 $dispatcher	=	JEventDispatcher::getInstance();
 
 // Validation
-if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
+if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
 	$lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
 	require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 }

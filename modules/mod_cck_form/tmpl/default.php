@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 if ( (int)$config['error'] == 1 ) {
 	return;
 }
-if ( ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) && $config['validation'] != '' ) {
+if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $config['validation'] != '' ) {
 	JCckDev::addValidation( $config['validation'], $config['validation_options'], $formId );
 	$js	=	'if (jQuery("#'.$formId.'").validationEngine("validate",task) === true) { if (jQuery("#'.$formId.'").isStillReady() === true) { jQuery("#'.$formId.' input[name=\'config[unique]\']").val("'.$formId.'"); JCck.Core.submitForm("save", document.getElementById("'.$formId.'")); } }';
 } else {
