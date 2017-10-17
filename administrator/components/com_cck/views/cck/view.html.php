@@ -40,7 +40,7 @@ class CCKViewCck extends JCckBaseLegacyView
         $components     =   JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element'
                                                         . ' FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
                                                         . ' WHERE a.link LIKE "index.php?option=com_cck\_%"'
-                                                        . ' AND a.link NOT IN ("index.php?option=com_cck_ecommerce&view=listen","index.php?option=com_cck_toolbox&view=processing","index.php?option=com_cck_webservices&view=api")'
+                                                        . ' AND a.link NOT LIKE "%view=%"'
                                                         . ' AND b.enabled = 1'
                                                         . ' ORDER BY a.title ASC' );
         $groupedButtons =   array();
