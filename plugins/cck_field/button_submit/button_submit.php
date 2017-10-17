@@ -456,7 +456,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 											JCck.Core.SubmitButton.batch = [];
 
-											if (document[JCck.Core.SubmitButton.formId].boxchecked.value!=0) {	
+											if (document[JCck.Core.SubmitButton.formId].boxchecked !== undefined && document[JCck.Core.SubmitButton.formId].boxchecked.value!=0) {	
 												$(\'input:checkbox[name="cid[]"]:checked\').each(function(i) {
 													JCck.Core.SubmitButton.batch[i] = $(this).val();
 												});
