@@ -79,116 +79,148 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			}
 		}
 
-		if ( ( $content == '2' || (int)$itemId < 0 ) && $sef ) {
+		if ( ( $content == '2' || $content == '-2' || (int)$itemId < 0 ) && $sef ) {
 			$field->link	=	'';
 			
-			if ( $content == '2' ) {
+			if ( $content == '2' || $content == '-2' ) {
 				$location	=	$link->get( 'content_location' );
 				$pk			=	0;
 			} else {
 				$location	=	$config['location'];
 				$pk			=	$config['pk'];
 			}
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
+			if ( $content != '-2' ) {
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
+			}
 		}
 		$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
 		
 		// Set
-		if ( ( $content == '4' || $content == '5' ) ) {
-			//$goto				=	self::_goTo( $app->input->getInt( 'Itemid', $config['Itemid'] ) );
-			$field->link		=	'';
-			if ( $content == '5' ) {
-				//
-			} else {
-				//
+		if ( is_array( $field->value ) ) {
+			$location	=	'joomla_article';
+
+			foreach ( $field->value as $f ) {
+				$f->link			=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $f->value, $sef, $itemId, $config ) );
+
+				$f->link_attributes	=	$link_attr ? $link_attr : ( isset( $f->link_attributes ) ? $f->link_attributes : '' );
+				$f->link_class		=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
+				$f->link_rel		=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
+				$f->link_state		=	$link->get( 'state', 1 );
+				$f->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $f->link_target ) ? $f->link_target : '' );
+
+				if ( $link_title ) {
+					if ( $link_title == '2' ) {
+						$f->link_title	=	$link_title2;
+					} elseif ( $link_title == '3' ) {
+						$f->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+					}
+					if ( !isset( $f->link_title ) ) {
+						$f->link_title	=	'';
+					}
+				} else {
+					$f->link_title		=	'';
+				}
 			}
-		} elseif ( $content != '2' ) {
-			$field->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+			$field->link		=	'#';	//todo
 		} else {
-			$field->link		=	'';
-		}
-		if ( $field->link ) {
-			if ( $vars ) {
-				$field->link	.=	( strpos( $field->link, '?' ) !== false ) ? '&'.$vars : '?'.$vars;
+			if ( ( $content == '4' || $content == '5' ) ) {
+				// $goto				=	self::_goTo( $app->input->getInt( 'Itemid', $config['Itemid'] ) );
+				$field->link		=	'';
+				if ( $content == '5' ) {
+					//
+				} else {
+					//
+				}
+			} elseif ( $content == '-2' ) {
+				$field->link		=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $field->value, $sef, $itemId, $config ) );
+			} elseif ( $content != '2' ) {
+				$field->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+			} else {
+				$field->link		=	'';
 			}
-			if ( $custom ) {
-				$field->link	.=	( $custom[0] == '#' ) ? $custom : ( ( strpos( $field->link, '?' ) !== false ) ? '&'.$custom : '?'.$custom );
+			if ( $field->link ) {
+				if ( $vars ) {
+					$field->link	.=	( strpos( $field->link, '?' ) !== false ) ? '&'.$vars : '?'.$vars;
+				}
+				if ( $custom ) {
+					$field->link	.=	( $custom[0] == '#' ) ? $custom : ( ( strpos( $field->link, '?' ) !== false ) ? '&'.$custom : '?'.$custom );
+				}
 			}
-		}
-		if ( $app->isClient( 'administrator' ) ) {
-			$field->link	=	str_replace( '/administrator', '', $field->link );
+			if ( $app->isClient( 'administrator' ) ) {
+				$field->link	=	str_replace( '/administrator', '', $field->link );
 
-			$link_attr		=	' data-cck-route="'.base64_encode( $field->link ).'"';
+				$link_attr		=	' data-cck-route="'.base64_encode( $field->link ).'"';
 
-			static $loaded	=	0;
+				static $loaded	=	0;
 
-			if ( !$loaded ) {
-				$loaded	=	1;
-				$js		=	'(function ($){
-								$(document).ready(function() {
-									
-									$("a[data-cck-route]").each(function(i) {
-										var $el = $(this);
-										$.ajax({
-											cache: false,
-											data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
-											type: "GET",
-											url: "'. JCckDevHelper::getAbsoluteUrl( 'auto', 'task=route&format=raw', 'root' ) .'",
-											beforeSend:function(){},
-											success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
+				if ( !$loaded ) {
+					$loaded	=	1;
+					$js		=	'(function ($){
+									$(document).ready(function() {
+										
+										$("a[data-cck-route]").each(function(i) {
+											var $el = $(this);
+											$.ajax({
+												cache: false,
+												data: "link="+encodeURIComponent( $el.attr("data-cck-route") ),
+												type: "GET",
+												url: "'. JCckDevHelper::getAbsoluteUrl( 'auto', 'task=route&format=raw', 'root' ) .'",
+												beforeSend:function(){},
+												success: function(resp){ $el.attr("href",resp); $el.removeAttr("data-cck-route"); }
+											});
 										});
 									});
-								});
-							})(jQuery);';
-				JFactory::getDocument()->addScriptDeclaration( $js );
-			}
-		}
-		if ( $path_type ) {
-			if ( $site_id = $link->get( 'site', '' ) ) {
-				$base		=	'';
-				$site		=	JCck::getSiteById( $site_id );
-				
-				if ( is_object( $site ) && $site->name != '' ) {
-					$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+								})(jQuery);';
+					JFactory::getDocument()->addScriptDeclaration( $js );
 				}
-			} else {
-				$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
 			}
-			if ( $path_type == 2 || $path_type == 3 ) {
-				$field->link	=	$base.$field->link;
-				$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
-
-				if ( $segment == '/' ) {
-					$segment	=	'';
+			if ( $path_type ) {
+				if ( $site_id = $link->get( 'site', '' ) ) {
+					$base		=	'';
+					$site		=	JCck::getSiteById( $site_id );
+					
+					if ( is_object( $site ) && $site->name != '' ) {
+						$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+					}
+				} else {
+					$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
 				}
-				$base			.=	$segment.'/';
-				$field->link	=	str_replace( $base, '', $field->link );
-				$field->link	=	'#'.$field->link;
+				if ( $path_type == 2 || $path_type == 3 ) {
+					$field->link	=	$base.$field->link;
+					$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
 
-				if ( $path_type == 2 ) {
+					if ( $segment == '/' ) {
+						$segment	=	'';
+					}
+					$base			.=	$segment.'/';
+					$field->link	=	str_replace( $base, '', $field->link );
+					$field->link	=	'#'.$field->link;
+
+					if ( $path_type == 2 ) {
+						$field->link	=	$base.$field->link;
+					}
+				} else {
 					$field->link	=	$base.$field->link;
 				}
-			} else {
-				$field->link	=	$base.$field->link;
 			}
-		}
-		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
-		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
-		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
-		$field->link_state		=	$link->get( 'state', 1 );
-		$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
+			$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
+			$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
+			$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
+			$field->link_state		=	$link->get( 'state', 1 );
+			$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
 
-		if ( $link_title ) {
-			if ( $link_title == '2' ) {
-				$field->link_title	=	$link_title2;
-			} elseif ( $link_title == '3' ) {
-				$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+			if ( $link_title ) {
+				if ( $link_title == '2' ) {
+					$field->link_title	=	$link_title2;
+				} elseif ( $link_title == '3' ) {
+					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+				}
+				if ( !isset( $field->link_title ) ) {
+					$field->link_title	=	'';
+				}
+			} else {
+				$field->link_title		=	'';
 			}
-			if ( !isset( $field->link_title ) ) {
-				$field->link_title	=	'';
-			}
-		} else {
-			$field->link_title		=	'';
 		}
 	}
 
