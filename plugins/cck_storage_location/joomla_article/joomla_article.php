@@ -816,8 +816,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $active->query['search'] ) );
 			
 			if ( $cck != '' ) {
-				$join		=	' LEFT JOIN #__cck_core AS b on b.'.$config['join_key'].' = a.id';
-				$where		=	( strpos( $cck, ',' ) !== false ) ? ' AND b.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND b.cck = "'.$cck.'"';
+				if ( $config['doSEF'][0] != '3' ) {
+					$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = a.id';
+					$where	.=	( strpos( $cck, ',' ) !== false ) ? ' AND e.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND e.cck = "'.$cck.'"';
+				}
 			}
 		}
 
