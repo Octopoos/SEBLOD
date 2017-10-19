@@ -210,28 +210,34 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		$step	=	( $options2['step'] ? $options2['step'] : 0 );
 		$limit 	=	( $options2['end'] ? $options2['end'] : 0 );
 		$math	=	isset( $options2['math'] ) ? $options2['math'] : NULL;
-		$force	=	( isset( $options2['force_digits'] ) && $options2['force_digits'] ) ? $options2['force_digits'] : 0;
+		
+		$force_digits	=	( isset( $options2['force_digits'] ) && $options2['force_digits'] ) ? $options2['force_digits'] : 0;
+		$force_decimals	=	( isset( $options2['force_decimals'] ) && $options2['force_decimals'] ) ? $options2['force_decimals'] : 0;
 		
 		if ( $step && $val || $step && $limit || $step && $val && $limit ) {
 			while ( 69 ) {
-				if ( $force ) {
-					$val	=	str_pad( $val, $force, '0' , STR_PAD_LEFT );
+				if ( $force_digits ) {
+					$val	=	str_pad( $val, $force_digits, '0' , STR_PAD_LEFT );
 				}
 				if ( $math == 0 && $val <= $limit  ) {
-					$opts[]		=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$options[]	=	$val.'='.$val;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
 					$val		=	$val + $step;
 				} elseif ( $math == 1 && $val <= $limit  ) {
-					$opts[]		=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$options[]	=	$val.'='.$val;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
 					$val		=	$val * $step;
 				} elseif ( $math == 2 && $val >= $limit  ) {
-					$opts[]		=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$options[]	=	$val.'='.$val;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
 					$val		=	$val - $step;
 				} elseif ( $math == 3 && $val > $limit  ) {
-					$opts[]		=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$options[]	=	$val.'='.$val;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
 					$val		=	floor( $val / $step );
 				} else {
 					break;

@@ -29,6 +29,9 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo JCckDev::renderForm( 'core_options_end', @$options2['end'], $config );
 		echo JCckDev::renderForm( 'core_dev_select', @$options2['force_digits'], $config, array( 'label'=>'Force Digits', 'defaultvalue'=>'0', 'selectlabel'=>'',
 																								 'options'=>'No=0||2 Digits=2||3 Digits=3||4 Digits=4||5 Digits=5', 'storage_field'=>'json[options2][force_digits]' ) );
+		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_dev_select', @$options2['force_decimals'], $config, array( 'label'=>'Force Decimals', 'defaultvalue'=>'0', 'selectlabel'=>'',
+																								 'options'=>'No=0||2 Decimals=2', 'storage_field'=>'json[options2][force_decimals]' ) );
 		
 		echo JCckDev::renderHelp( 'field', 'seblod-2-x-select-numeric-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
