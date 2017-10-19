@@ -1097,9 +1097,16 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( $field->script );
 			}
 			if ( $variation == 'form_filter_ajax' ) {
-				$field->form	=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
+				static $keypress	=	0;
+				$field->form		=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
 
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0"+q,0,1); });' );
+				
+				if ( !$keypress ) {
+					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) {if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
+
+					$keypress	=	1;
+				}
 			} else {
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter", function() { '.$submit.'(\'search\'); });' );
 			}
