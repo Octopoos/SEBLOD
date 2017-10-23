@@ -149,6 +149,10 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 				parent::g_addScriptDeclaration( $field->script );
 			}
 		} else {
+			if ( (int)$value > 0 ) {
+				$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+			}
+
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$value;
