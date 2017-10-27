@@ -841,6 +841,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			} else {
 				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
 				$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+
+				if ( JCckDevHelper::isMultilingual() ) {
+					$where			.=	' AND (a.language = "*" OR a.language = "'.JFactory::getLanguage()->getTag().'")';
+				}
 			}
 		}
 		if ( $where != '' ) {

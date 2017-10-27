@@ -261,6 +261,12 @@ abstract class JCckDevHelper
 			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );
 		}
 	}
+
+	// isMultilingual
+	public static function isMultilingual()
+	{
+		return JPluginHelper::getPlugin( 'system', 'languagefilter' );
+	}
 	
 	// matchUrlVars
 	public static function matchUrlVars( $vars, $url = NULL )
