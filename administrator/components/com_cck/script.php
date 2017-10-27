@@ -267,37 +267,41 @@ class com_cckInstallerScript
 			$db->execute();
 		}
 		
-		/* Todo: loop */
+		// Additional stuff
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
 		if ( JFile::exists( $src ) ) {
 			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
 			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
+			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
 
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
 		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
-		if ( !JFile::exists( $dest ) ) {
-			JFile::copy( $src, $dest );
-		}
-		$query	=	$db->getQuery( true );
-		$query->select( $db->quoteName( array( 'template' ) ) )
-			  ->from( $db->quoteName( '#__template_styles' ) )
-			  ->where( $db->quoteName( 'client_id' ) . ' = 0' )
-			  ->where( $db->quoteName( 'home' ) . ' = 1' );
-		$db->setQuery( $query );
-		
-		if ( $site_template = $db->loadResult() ) {
-			$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
+		if ( JFile::exists( $src ) ) {
 			if ( !JFile::exists( $dest ) ) {
 				JFile::copy( $src, $dest );
 			}
+			$query	=	$db->getQuery( true );
+			$query->select( $db->quoteName( array( 'template' ) ) )
+				  ->from( $db->quoteName( '#__template_styles' ) )
+				  ->where( $db->quoteName( 'client_id' ) . ' = 0' )
+				  ->where( $db->quoteName( 'home' ) . ' = 1' );
+			$db->setQuery( $query );
+		
+			if ( $site_template = $db->loadResult() ) {
+				$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
+				if ( !JFile::exists( $dest ) ) {
+					JFile::copy( $src, $dest );
+				}
+			}
+			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
 		}
-
+		
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
+			JFolder::delete( $src );
 		}
-		/* Todo: loop */
 		
 		if ( $type == 'install' ) {
 			// Post Install Log
