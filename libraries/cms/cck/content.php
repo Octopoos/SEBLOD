@@ -32,6 +32,7 @@ class JCckContent
 	protected $_instance_more_parent	=	null;
 	protected $_instance_more2			=	null;
 	protected $_is_new					=	false;
+	protected $_logs					=	array();
 	protected $_object					=	'';
 	protected $_pk						=	0;
 	protected $_results					=	array();
@@ -49,6 +50,8 @@ class JCckContent
 		$this->_dispatcher		=	JEventDispatcher::getInstance();
 		$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$this->_options			=	new Registry;
+
+		/* TODO: $this->_object ??  */
 
 		$this->initialize();
 	}
@@ -162,9 +165,11 @@ class JCckContent
 
 		if ( $this->$method() ) {
 			if ( $load && $this->_pk ) {
-				$this->{'_instance_'.$instance_name}->load( $this->_pk );
+				return $this->{'_instance_'.$instance_name}->load( $this->_pk );
 			}
 		}
+		
+		return true;
 	}
 
 	// setInstanceBase
@@ -204,7 +209,7 @@ class JCckContent
 		}
 
 		$this->_instance_more_parent	=	JCckTable::getInstance( '#__'.$table );
-		// $this->_setDataMap( 'more_parent' );
+		$this->_setDataMap( 'more_parent' );
 
 		return true;
 	}
@@ -222,6 +227,12 @@ class JCckContent
 		$this->_setDataMap( 'more2' );
 
 		return true;
+	}
+
+	// unsetInstance
+	protected function unsetInstance( $instance_name )
+	{
+		$this->{'_instance_'.$instance_name}	=	null;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Can
@@ -243,13 +254,10 @@ class JCckContent
 	{
 		$author_id	=	-1;
 
-		if ( $this->_columns['author'] ) {
-			if ( !$this->_instance_base ) {
-				//
-			}
-			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
+			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], -1 );
 		}
-
+		
 		$user			=	JFactory::getUser();
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$this->_type_id );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$this->_type_id );
@@ -268,11 +276,8 @@ class JCckContent
 	{
 		$author_id	=	-1;
 
-		if ( $this->_columns['author'] ) {
-			if ( !$this->_instance_base ) {
-				//
-			}
-			$author_id	=	$this->_instance_base->get( $this->_columns['author'] );
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
+			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], -1 );
 		}
 
 		$user				=	JFactory::getUser();
@@ -351,7 +356,11 @@ class JCckContent
 					return false;
 				}
 			}
-			$this->setInstance( 'base', true );
+			if ( !$this->setInstance( 'base', true ) ) {
+				$this->reset();
+
+				return false;
+			}
 		}
 		if ( !$this->_object ) {
 			return false;
@@ -360,7 +369,7 @@ class JCckContent
 			return false;
 		}
 		if ( !$this->can( 'delete' ) ) {
-			// $this->log( 'error', 'Permissions denied.' );
+			$this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
@@ -438,7 +447,7 @@ class JCckContent
 			}
 		}
 
-		// $this->log( '...', $count );
+		/* TODO: $this->log( '...', $count ); */
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : ( $count ? $count : false );
 	}
@@ -506,6 +515,8 @@ class JCckContent
 				$this->_error	=	true;
 			}
 		} else {
+			$this->log( 'error', 'Method not found.' );
+
 			$this->_error	=	true;
 		}
 
@@ -545,6 +556,7 @@ class JCckContent
 
 		if ( $this->_options->get( 'check_permissions', 1 ) ) {
 			if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
+				$this->log( 'error', 'Permissions denied.' );
 				$this->reset();
 
 				$this->_error	=	true;
@@ -738,12 +750,20 @@ class JCckContent
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 		if ( !$this->_instance_core->load( $this->_id ) ) {
+			$this->reset();
+
 			$this->_error	=	true;
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
+		if ( !$this->setInstance( 'base', true ) ) {
+			$this->reset();
 
-		$this->setInstance( 'base', true );
+			$this->_error	=	true;
+		
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
 		$this->setInstance( 'more', true );
 		$this->setInstance( 'more_parent', true );
 		$this->setInstance( 'more2', true );
@@ -753,6 +773,16 @@ class JCckContent
 		}
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// log
+	protected function log( $type, $message )
+	{
+		if ( !isset( $this->_logs[$type] ) ) {
+			$this->_logs[$type]	=	array();
+		}
+
+		$this->_logs[$type][]	=	$message;
 	}
 
 	// reset
@@ -786,6 +816,8 @@ class JCckContent
 		if ( property_exists( $this->{'_instance_'.$instance_name}, $property ) ) {
 			$this->{'_instance_'.$instance_name}->$property	=	$value;
 		} else {
+			$this->log( 'error', 'Property unknown.' );
+
 			$this->_error	=	true;
 		}
 		
@@ -814,6 +846,8 @@ class JCckContent
 		if ( isset( $this->_data_map[$property] ) ) {
 			$this->set( $this->_data_map[$property], $property, $value );
 		} else {
+			$this->log( 'error', 'Property unknown.' );
+
 			$this->_error	=	true;
 		}
 
@@ -831,13 +865,20 @@ class JCckContent
 		$this->_type				=	$content_type;
 		
 		if ( $reload ) {
-			$this->_instance_more	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type );
-			$this->_instance_more->load( $this->_pk );
-			
-			// if ( $this->_type_parent ) {
-				// $this->_instance_more_parent	=	JCckTable::getInstance( '#__cck_store_form_'.$this->_type_parent );
-				// $this->_instance_more_parent->load( $this->_pk );
-			// }
+			if ( !$this->_setObjectByType( $content_type ) ) {
+				$this->reset();
+
+				$this->_error	=	true;
+
+				return $this;
+			}
+			$this->_data	=	null;
+
+			$this->unsetInstance( 'more' );
+			$this->unsetInstance( 'more_parent' );
+
+			$this->setInstance( 'more', true );
+			$this->setInstance( 'more_parent', true );
 		}
 
 		return $this;
@@ -859,7 +900,8 @@ class JCckContent
 		if ( isset( $keys[$instance_name] ) ) {
 			return $this->{'_instance_'.$instance_name}->get( $property, $default );
 		} else {
-			// Deprecated: get( $property, $default = '' )
+			$this->log( 'notice', 'Usage deprecated.' );
+
 			$default	=	$property;
 			$property	=	$instance_name;
 
@@ -930,6 +972,8 @@ class JCckContent
 	{
 		if ( isset( $this->_data_map[$property] ) ) {
 			return $this->get( $this->_data_map[$property], $property, $default );
+		} else {
+			$this->log( 'notice', 'Property unknown.' );
 		}
 
 		return $default;
@@ -980,8 +1024,6 @@ class JCckContent
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
 
-
-
 	// check
 	public function check( $instance_name )
 	{
@@ -1007,7 +1049,7 @@ class JCckContent
 
 		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
-				// $this->log( 'error', 'Permissions denied.' );
+				$this->log( 'error', 'Permissions denied.' );
 
 				return false;
 			}
@@ -1119,7 +1161,7 @@ class JCckContent
 
 		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
-				// $this->log( 'error', 'Permissions denied.' );
+				$this->log( 'error', 'Permissions denied.' );
 
 				return false;
 			}
@@ -1136,7 +1178,7 @@ class JCckContent
 		}
 
 		if ( !$this->can( 'update', $property ) ) {
-			// $this->log( 'error', 'Permissions denied.' );
+			$this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
@@ -1171,19 +1213,34 @@ class JCckContent
 		if ( isset( $this->_data_map[$property] ) ) {
 			return $this->update( $this->_data_map[$property], $property, $value );
 		} else {
-			// $this->log( 'error', 'Property uknown.' );
+			$this->log( 'error', 'Property unknown.' );
 		}
 
 		return false;
 	}
 
-	// updateType
-	public function updateType( $content_type )
+	// updateType ($)
+	public function updateType( $content_type, $reload = true )
 	{
-		$this->_instance_core->cck	=	$content_type;
-		$this->_type				=	$content_type;
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
 
-		$this->_instance_core->store();
+		if ( !$this->isNew() ) {
+			if ( !$this->can( 'save' ) ) {
+				$this->log( 'error', 'Permissions denied.' );
+
+				return false;
+			}
+		}
+
+		if ( !$this->setType( $content_type, $reload )->isSuccessful() ) {
+			$this->_error	=	false;
+
+			return false;
+		}
+
+		return $this->_instance_core->store();
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
@@ -1220,12 +1277,14 @@ class JCckContent
 		return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base, $this->_is_new ) );
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Various
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
 	
 	// dump
 	public function dump()
 	{
 		if ( !function_exists( 'dump' ) ) {
+			$this->log( 'notice', 'Function not found.' );
+
 			return false;
 		}
 
@@ -1234,6 +1293,7 @@ class JCckContent
 		dump( $this->_error, 'error' );
 		dump( $this->_id, 'id' );
 		dump( $this->_is_new, 'isnew' );
+		dump( $this->_logs, 'logs' );
 		dump( $this->_object, 'object' );
 		dump( $this->_pk, 'pk' );
 		dump( $this->_results, 'results' );
@@ -1399,6 +1459,8 @@ class JCckContent
 			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			
 			if ( !is_object( $type ) ) {
+				$this->log( 'error', 'Content Type not found.' );
+
 				return false;
 			}
 
@@ -1410,12 +1472,19 @@ class JCckContent
 
 			$this->_columns				=	$this->_getColumnsAliases();
 			$this->_table				=	$this->_columns['table'];
-			$this->_type_id				=	$type->id;
-			$this->_type_parent			=	$type->parent;
-			$this->_type_permissions	=	$type->permissions;
 		} else {
-			$this->_type_id				=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+
+			if ( !is_object( $type ) ) {
+				$this->log( 'error', 'Content Type not found.' );
+
+				return false;
+			}
 		}
+
+		$this->_type_id				=	$type->id;
+		$this->_type_parent			=	$type->parent;
+		$this->_type_permissions	=	$type->permissions;
 
 		return true;
 	}
@@ -1423,6 +1492,8 @@ class JCckContent
 	// _saveLegacy (deprecated)
 	protected function _saveLegacy( $instance_name, $data )
 	{
+		$this->log( 'notice', 'Usage deprecated.' );
+
 		if ( $instance_name == 'base' ) {
 			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
 				$this->{'_instance_'.$instance_name}->language	=	'*';
@@ -1441,8 +1512,6 @@ class JCckContent
 				$this->{'_instance_'.$instance_name}->alias	=	$alias;
 
 				$status		=	$this->store( $instance_name );
-
-				/* TODO: publish_up */
 			}
 		} else {
 			$status			=	$this->store( $instance_name );
