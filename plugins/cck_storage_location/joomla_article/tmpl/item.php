@@ -44,7 +44,6 @@ if ( $plg_params->get( 'item_params', 0 ) ) {
 	$item->params->merge( $attribs );
 }
 ?>
-
 <div>
 	<?php
 	if ( $item->params->get( 'show_title' ) ) {

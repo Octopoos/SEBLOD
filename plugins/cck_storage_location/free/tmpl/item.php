@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 ?>
-
 <div>
 	<?php
 	if ( count( $item ) ) {

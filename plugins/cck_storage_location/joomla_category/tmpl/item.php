@@ -31,7 +31,6 @@ if ( isset( $items[$item->pk]->parent_alias ) ) {
 }
 $link		=	plgCCK_Storage_LocationJoomla_Category::getRoute( $item, $config['doSEF'], $config['Itemid'], $config );
 ?>
-
 <div>
 	<?php
 	if ( $item->params->get( 'show_category_title' ) ) {
