@@ -406,10 +406,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 								(function ($){
 									JCck.Core.SubmitButton = {
 										batch:[],
+										count:0,
 										css:"",
 										formId:"'.$config['formId'].'",
 										instances: [],
 										kvp: "",
+										return: "'.base64_encode( JUri::getInstance()->toString() ).'",
 										uniq_id:"'.uniqid().'",
 										width:0,
 										ajaxLoopRequest: function(el) {
@@ -422,6 +424,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
 													$(el+" .bar").css("width",parseInt(w+JCck.Core.SubmitButton.width)+"%");
+													JCck.Core.SubmitButton.count++;
 													if (JCck.Core.SubmitButton.batch.length) {
 														JCck.Core.SubmitButton.ajaxLoopRequest(el);
 													} else {
@@ -436,7 +439,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 																
 																document.location.href = resp.output_path;
 															} else {
-																document.location.reload();
+																document.location.href = "index.php?option=com_cck&task=outputMessage&return="+JCck.Core.SubmitButton.return;
 															}
 														}
 													}

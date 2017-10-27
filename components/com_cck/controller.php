@@ -439,6 +439,18 @@ class CCKController extends JControllerLegacy
 		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
 	}
 
+	// outputMessage
+	public function outputMessage()
+	{
+		$app	=	JFactory::getApplication();
+		$link	=	$this->_getReturnPage();
+
+		$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+		$msgType	=	'message';
+
+		$this->setRedirect( $link, $msg, $msgType );
+	}
+
 	// processAjax
 	public function processAjax()
 	{
