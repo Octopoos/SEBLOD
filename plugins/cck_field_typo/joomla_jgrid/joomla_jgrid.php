@@ -105,9 +105,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			case 'form':
 			case 'form_disabled':
 			case 'form_hidden':
-				$class			=	$typo->get( 'class2', '' );
+				$class				=	$typo->get( 'class2', '' );
+				$unset_validation	=	false;
+
 				if ( !isset( $config['doValidation'] ) ) {
 					$config['doValidation']	=	0;
+					$unset_validation		=	true;
+				} else {
+					$doValidation	=	$config['doValidation'];
 				}
 				$hasIdentifier		=	$typo->get( 'use_identifier', '1' );
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
@@ -143,12 +148,38 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$field->variation	=	'disabled';
 				} elseif ( $type == 'form_hidden' ) {
 					$field->variation	=	'hidden';
+				} else {
+					if ( $typo->get( 'required' ) == 'required' ) {
+						// JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR );
+
+						// require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
+
+						$config['doValidation']	=	2;
+						$field->required		=	'required';
+						$field->required_alert	=	'';
+					}
 				}
 				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
-				$field->form		=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
-				$value				=	$field->form;
-
+				
+				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
+				$value					=	$field->form;
 				$config['formWrapper']	=	true;
+
+				if ( $config['doValidation'] ) {
+					// static $validation_loaded	=	0;
+					
+					// if ( !$validation_loaded )	{
+					// 	$validation_loaded		=	1;
+						
+					// 	JCckDev::addValidation( ( count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '' ), '', '_' );
+					// }
+				}
+
+				if ( $unset_validation ) {
+					unset( $config['doValidation'] );
+				} else {
+					$config['doValidation']	=	$doValidation;
+				}
 				break;
 			case 'increment':
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
@@ -182,6 +213,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$value		=	'<label for="cb'.$pks[$pk].'">'.$value.'</label>';
 				break;
 			case 'sort':
+			case 'sort_grip':
 				$parentId		=	$config['parent_id'];
 				static $orders	=	array();
 
@@ -191,17 +223,20 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$orders[$parentId]++;
 				$order			=	$orders[$parentId];
 
-				static $loaded 	= 	false;
-				$listDir		=	'asc';
+				if ( $type == 'sort' ) {
+					static $loaded 	= 	false;
+					$listDir		=	'asc';
 
-				if ( !$loaded ) {
-					if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
-						$app			=	JFactory::getApplication();
-						$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
-						$tableWrapper	=	$formId . ' table.table';
-						$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
-						JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
-						$loaded			= 	true;
+					if ( !$loaded ) {
+						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
+							$app			=	JFactory::getApplication();
+							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+							$loaded			= 	true;
+							$tableWrapper	=	$formId . ' table.table';
+							$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
+							
+							JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+						}
 					}
 				}
 
