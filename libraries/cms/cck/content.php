@@ -249,6 +249,16 @@ class JCckContent
 		return ( $task == 'update' ) ? $this->$method( $target ) : $this->$method();
 	}
 
+	// canCreate
+	public function canCreate()
+	{
+		if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
 	// canDelete
 	public function canDelete()
 	{
@@ -496,7 +506,8 @@ class JCckContent
 		
 		static $excluded	=	array(
 									'_getColumnsAliases'=>'',
-									'_getSearchQuery'=>'',
+									'_getDataDispatch'=>'',
+									'_getDataQuery'=>'',
 									'_saveLegacy'=>'',
 									'_setDataMap'=>'',
 									'_setObjectById'=>'',
@@ -536,7 +547,7 @@ class JCckContent
 	}
 
 	// create (^)
-	public function create( $content_type, $data_content, $data_more = null, $data_more2 = null )
+	public function create( $content_type, $data, $data_more = array(), $data_more2 = array() )
 	{
 		if ( $this->_id ) {
 			$this->_error	=	true;
@@ -545,7 +556,7 @@ class JCckContent
 		}
 
 		$this->clear();
-		
+
 		if ( !$this->_setObjectByType( $content_type ) ) {
 			$this->reset();
 
@@ -554,122 +565,68 @@ class JCckContent
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 
-		if ( $this->_options->get( 'check_permissions', 1 ) ) {
-			if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
-				$this->log( 'error', 'Permissions denied.' );
-				$this->reset();
+		if ( !$this->can( 'create' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+			$this->reset();
 
-				$this->_error	=	true;
+			$this->_error	=	true;
 
-				return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-			}
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 		
 		$this->setInstance( 'base' );
-		$this->_is_new			=	true;
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
 
-		$author_id 				=	0; /* TODO: get default author id */
-		$parent_id				=	0; /* TODO: get default parent_id */
+		$data			=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
+		$this->_is_new	=	true;
 		
 		// Base
-		if ( !( $this->save( 'base', $data_content ) ) ) {
+		if ( !( $this->save( 'base', $data['base'] ) ) ) {
 			$this->_error	=	true;
 			$this->_is_new	=	false;
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
-		
-		// Set the author_id
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
-			if ( $this->_columns['author'] == $this->_columns['key'] ) {
-				$author_id	=	$this->_instance_base->get( $this->_columns['key'], 0 );
-			} elseif ( isset( $data_content[$this->_columns['author']] ) ) {
-				$author_id	=	$data_content[$this->_columns['author']];
-			}
-		}
-		if ( !$author_id ) {
-			$user_id		=	JFactory::getUser()->id;
-			
-			if ( $user_id ) {
-				$author_id	=	$user_id;
-			}
-		}
-
-		// Set the parent_id
-		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] && isset( $data_content[$this->_columns['parent']] ) ) {
-			$parent_id	=	$data_content[$this->_columns['parent']];
-		}
 
 		// Core
-		if ( !( $this->save( 'core',
-							 array(
-								'cck'=>$this->_type,
-								'pk'=>$this->_pk,
-								'storage_location'=>$this->_object,
-								'author_id'=>$author_id,
-								'parent_id'=>$parent_id,
-								'date_time'=>JFactory::getDate()->toSql()
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author']
+		  && $this->_columns['author'] == $this->_columns['key'] ) {
+			$data['core']['author_id']	=	$this->get( 'base', $this->_columns['key'], 0 );
+		}
+
+		if ( !( $this->save( 'core', array(
+										'cck'=>$this->_type,
+										'pk'=>$this->_pk,
+										'storage_location'=>$this->_object,
+										'author_id'=>$data['core']['author_id'],
+										'parent_id'=>$data['core']['parent_id'],
+										'date_time'=>$data['core']['date_time']
 						   ) ) ) ) {
 			$this->_error	=	true;
 			$this->_is_new	=	false;
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
-		
-		$this->setInstance( 'more' );
-		$this->setInstance( 'more_parent' );
-		$this->setInstance( 'more2' );
 
 		// More
-		if ( $this->_type_parent && ( isset( $data_more[$this->_type] ) || isset( $data_more[$this->_type_parent] ) ) ) {
-			if ( isset( $data_more[$this->_type] ) && count( $data_more[$this->_type] ) ) {
-				$this->_instance_more->load( $this->_pk, true );
-				unset( $data_more[$this->_type]['id'] );
-				
-				if ( !( $this->save( 'more', $data_more[$this->_type] ) ) ) {
+		static $names	=	array(
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>''
+							);
+
+		foreach ( $names as $instance_name=>$null ) {
+			if ( count( $data[$instance_name] ) ) {
+				$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
+			
+				if ( !( $this->save( $instance_name, $data[$instance_name] ) ) ) {
 					$this->_error	=	true;
 					$this->_is_new	=	false;
 
 					return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 				}
-			}
-
-			if ( isset( $data_more[$this->_type_parent] ) && count( $data_more[$this->_type_parent] ) ) {
-				$this->_instance_more_parent->load( $this->_pk, true );
-				unset( $data_more[$this->_type_parent]['id'] );
-				
-				if ( !( $this->save( 'more_parent', $data_more[$this->_type_parent] ) ) ) {
-					$this->_error	=	true;
-					$this->_is_new	=	false;
-
-					return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-				}
-			}
-		} elseif ( is_array( $data_more ) && count( $data_more ) ) {
-			$this->_instance_more->load( $this->_pk, true );
-			unset( $data_more['id'] );
-			
-			if ( !( $this->save( 'more', $data_more ) ) ) {
-				$this->_error	=	true;
-				$this->_is_new	=	false;
-
-				return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-			}
-		}
-
-		if ( is_array( $data_more2 ) && count( $data_more2 ) ) {
-			$this->_instance_more2->load( $this->_pk, true );
-
-			if ( !isset( $data_more2['cck'] ) ) {
-				$data_more2['cck']	=	$this->_type;
-			}
-			unset( $data_more2['id'] );
-			
-			if ( !( $this->save( 'more2', $data_more2 ) ) ) {
-				$this->_error	=	true;
-				$this->_is_new	=	false;
-
-				return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 			}
 		}
 		
@@ -699,7 +656,7 @@ class JCckContent
 		$this->setInstance( 'more2' );
 
 		$db		=	JFactory::getDbo();
-		$query	=	$this->_getSearchQuery( $content_type, $data );
+		$query	=	$this->_getDataQuery( $content_type, $data );
 
 		$query->select( 'COUNT('.$db->quoteName( 'a.pk' ).')' );
 
@@ -728,7 +685,7 @@ class JCckContent
 		$this->setInstance( 'more2' );
 
 		$db		=	JFactory::getDbo();
-		$query	=	$this->_getSearchQuery( $content_type, $data );
+		$query	=	$this->_getDataQuery( $content_type, $data );
 
 		$query->select( $db->quoteName( 'a.pk' ) );
 
@@ -889,7 +846,7 @@ class JCckContent
 	// get
 	public function get( $instance_name, $property = '', $default = '' )
 	{
-		static $keys	=	array(
+		static $names	=	array(
 								'base'=>'',
 								'core'=>'',
 								'more'=>'',
@@ -897,7 +854,7 @@ class JCckContent
 								'more2'=>'',
 							);
 
-		if ( isset( $keys[$instance_name] ) ) {
+		if ( isset( $names[$instance_name] ) ) {
 			return $this->{'_instance_'.$instance_name}->get( $property, $default );
 		} else {
 			$this->log( 'notice', 'Usage deprecated.' );
@@ -928,16 +885,17 @@ class JCckContent
 			return $data;
 		} elseif ( !isset( $this->_data ) ) {
 			$this->_data	=	array();
-			static $keys	=	array(
+
+			static $names	=	array(
 									'base'=>'',
 									'more'=>'',
 									'more_parent'=>'',
 									'more2'=>'',
 								);
 			
-			foreach ( $keys as $key=>$v ) {
-				if ( is_object( $this->{'_instance_'.$key} ) ) {
-					$data	=	$this->{'_instance_'.$key}->getProperties();
+			foreach ( $names as $instance_name=>$null ) {
+				if ( is_object( $this->{'_instance_'.$instance_name} ) ) {
+					$data	=	$this->{'_instance_'.$instance_name}->getProperties();
 
 					unset( $data['id'], $data['cck'] );
 
@@ -1324,7 +1282,7 @@ class JCckContent
 
 	// _getColumnsAliases
 	protected function _getColumnsAliases()
-	{	
+	{
 		$values		=	array(
 							'author',
 							'context',
@@ -1345,8 +1303,77 @@ class JCckContent
 		return $properties;
 	}
 
-	// _getSearchQuery
-	protected function _getSearchQuery( $content_type, $data )
+	// _getDataDispatch
+	protected function _getDataDispatch( $content_type, $data_base, $data_more, $data_more2 )
+	{
+		$data				=	array(
+									'base'=>array(),
+									'more'=>array(),
+									'more_parent'=>array(),
+									'more2'=>array()
+								);
+		$data_more_parent	=	array();
+
+		// Base & More
+		if ( $this->_type_parent ) {
+			if ( isset( $data_more[$this->_type_parent] ) ) {
+				$data_more_parent	=	$data_more[$this->_type_parent];
+			}
+			if ( isset( $data_more[$this->_type] ) ) {
+				$data_more			=	$data_more[$this->_type];
+			} else {
+				$data_more			=	array();
+			}
+		}
+
+		foreach ( $data as $name=>$array ) {
+			$data_array	=	${'data_'.$name};
+
+			if ( count( $data_array ) ) {
+				foreach ( $data_array as $k=>$v ) {
+					if ( !isset( $this->_data_map[$k] ) ) {
+						continue;
+					}
+
+					$instance_name				=	$this->_data_map[$k];
+					$data[$instance_name][$k]	=	$v;
+				}
+			}
+		}
+
+		if ( count( $data['more2'] ) ) {
+			if ( !isset( $data['more2']['cck'] ) ) {
+				$data['more2']['cck']	=	$this->_type;
+			}
+		}
+
+		// Core
+		$data['core']	=	array(
+								'author_id'=>0,
+								'date_time'=>JFactory::getDate()->toSql(),
+								'parent_id'=>0
+							);
+
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author']
+		  && isset( $data['base'][$this->_columns['author']] ) ) {
+			$data['core']['author_id']	=	$data['base'][$this->_columns['author']];
+		}
+		if ( !$data['core']['author_id'] ) {
+			$data['core']['author_id']	=	JFactory::getUser()->id;
+		}
+		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent']
+		  && isset( $data['base'][$this->_columns['parent']] ) ) {
+			$data['core']['parent_id']	=	$data['base'][$this->_columns['parent']];
+		}
+
+		/* TODO: force to default author id when null? */
+		/* TODO: force to default parent_id when null? */
+
+		return $data;
+	}
+
+	// _getDataQuery
+	protected function _getDataQuery( $content_type, $data )
 	{
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true );
@@ -1399,14 +1426,15 @@ class JCckContent
 	// _setDataMap
 	protected function _setDataMap( $instance_name, $force = false )
 	{
-		$fields				=	array_keys( $this->{'_instance_'.$instance_name}->getFields() );		
-		unset( $fields['id'], $fields['cck'] );
+		$fields				=	array_keys( $this->{'_instance_'.$instance_name}->getFields() );
 		$this->_data_map	=	array_merge( $this->_data_map, array_fill_keys( $fields, $instance_name ) );
+
+		unset( $this->_data_map['id'], $this->_data_map['cck'] );
 	}
 
 	// _setObjectById
 	protected function _setObjectById( $identifier )
-	{	
+	{
 		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
