@@ -46,7 +46,7 @@ class CCKViewSessions extends JCckBaseLegacyViewList
 		}
 
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
-		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-extension', JText::_( $this->extension ), JRoute::_( 'index.php?option='.$this->extension ), '_self' );
+		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-addon', JText::_( $this->extension ), JRoute::_( 'index.php?option='.$this->extension ), '_self' );
 		
 		$this->sidebar = '';
 	}
