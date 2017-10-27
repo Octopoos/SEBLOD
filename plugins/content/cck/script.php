@@ -37,11 +37,34 @@ class plgContentCCKInstallerScript
 			JFile::delete( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' );
 		}
 		
-		$groups	=	array( 'cck_field', 'cck_field_link', 'cck_field_live', 'cck_field_restriction', 'cck_field_typo', 'cck_field_validation', 'cck_storage', 'cck_storage_location' );
+		$groups	=	array(
+						'cck_field',
+						'cck_field_link',
+						'cck_field_live',
+						'cck_field_restriction',
+						'cck_field_typo',
+						'cck_field_validation',
+						'cck_storage',
+						'cck_storage_location'
+					);
+		
 		foreach ( $groups as $group ) {
 			if ( JFolder::exists( JPATH_PLUGINS.'/'.$group ) ) {
 				JFolder::delete( JPATH_PLUGINS.'/'.$group );
 			}
+		}
+
+		// Additional stuff
+		$path	=	JPATH_SITE.'/cli/cck_job.php';
+
+		if ( JFile::exists( $path ) ) {
+			JFile::delete( $path );
+		}
+
+		$path	=	JPATH_SITE.'/libraries/cms/cck';
+
+		if ( JFolder::exists( $path ) ) {
+			JFolder::delete( $path );
 		}
 	}
 	
@@ -321,9 +344,9 @@ class plgContentCCKInstallerScript
 									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5',
 									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2', 95=>'3.10.0', 96=>'3.10.1', 97=>'3.10.2', 98=>'3.10.3', 99=>'3.10.4', 100=>'3.10.5', 101=>'3.10.6', 102=>'3.10.7', 103=>'3.10.8', 104=>'3.10.9',
 									105=>'3.11.0', 106=>'3.11.1', 107=>'3.11.2', 108=>'3.11.3', 109=>'3.11.4',
-									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3',
-									114=>'3.13.0', 115=>'3.13.1', 116=>'3.14.0', 117=>'3.14.1',
-									118=>'3.15.0', 119=>'3.15.1', 120=>'3.15.2'
+									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3', 114=>'3.13.0', 115=>'3.13.1',
+									116=>'3.14.0', 117=>'3.14.1', 118=>'3.15.0', 119=>'3.15.1',
+									120=>'3.16.0'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
