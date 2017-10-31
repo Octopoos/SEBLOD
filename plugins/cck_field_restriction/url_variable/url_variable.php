@@ -83,6 +83,17 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 			} elseif ( $variable != '' ) {
 				$state		=	1;
 			}
+		} elseif ( $condition_match == 'isNull' ) {
+			if ( is_array( $variable ) ) {
+				foreach ( $variable as $v ) {
+					if ( $v ) {
+						$state	=	1;
+						break;
+					}
+				}
+			} elseif ( $variable ) {
+				$state		=	1;
+			}
 		} elseif ( $condition_match == 'isEqual' ) {
 			if ( isset( $variable ) ) {
 				$condition_values	=	explode( ',', $condition_values );
