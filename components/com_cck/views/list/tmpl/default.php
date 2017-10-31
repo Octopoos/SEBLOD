@@ -109,7 +109,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 <?php if ( $this->load_ajax ) {
 $context	=	'&context={\'Itemid\':'.$app->input->getInt( 'Itemid', 0 ).',\'view\':\'list\'}';
 $pre		=	'';
-$url		=	JUri::current();
+$url		=	JUri::getInstance()->toString();
 
 if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	$pre	=	'#seblod_form_raw ';
@@ -126,7 +126,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 		var search = search || 0;
 		$.ajax({
 			cache: false,
-			data: "format=raw&task=search&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
+			data: "format=raw&infinite=1<?php echo $context; ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+more,
 			type: "GET",
 			url: "<?php echo $url; ?>",
 			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },

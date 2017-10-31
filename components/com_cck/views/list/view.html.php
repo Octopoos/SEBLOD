@@ -113,6 +113,30 @@ class CCKViewList extends JViewLegacy
 		jimport( 'cck.base.list.list' );
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 		$pagination	=	$this->getModel()->_getPagination( $total_items );
+
+		$vars		=	JUri::getInstance()->getQuery( true );
+
+		if (count($vars))
+		{
+			foreach ($vars as $k => $v)
+			{
+				if ($v != '')
+				{
+					if (is_array($v))
+					{
+						foreach ($v AS $av)
+						{
+							$pagination->setAdditionalUrlParam($k . '[]', $av);
+						}
+					}
+					else
+					{
+						$pagination->setAdditionalUrlParam($k, $v);
+					}
+
+				}
+			}
+		}
 		
 		// Set
 		if ( !is_object( @$options ) ) {
