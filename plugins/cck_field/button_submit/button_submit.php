@@ -424,7 +424,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
 													$(el+" .bar").css("width",parseInt(w+JCck.Core.SubmitButton.width)+"%");
-													JCck.Core.SubmitButton.count++;
+													
 													if (JCck.Core.SubmitButton.batch.length) {
 														JCck.Core.SubmitButton.ajaxLoopRequest(el);
 													} else {
@@ -432,6 +432,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 														var resp = JSON.parse(jqXHR.responseText);
 
 														if (typeof resp == "object") {
+															if (!resp.error) {
+																JCck.Core.SubmitButton.count++;
+															}
 															if (resp.output_path !== undefined) {
 																window.setTimeout(function(){
 																	$(el+" .bar").css("font-size","inherit").css("padding",JCck.Core.SubmitButton.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
@@ -439,7 +442,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 																
 																document.location.href = resp.output_path;
 															} else {
-																document.location.href = "index.php?option=com_cck&task=outputMessage&return="+JCck.Core.SubmitButton.return;
+																var type = "message";
+
+																if (!JCck.Core.SubmitButton.count) {
+																	type = "error";
+																}
+																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.Core.SubmitButton.return;
 															}
 														}
 													}

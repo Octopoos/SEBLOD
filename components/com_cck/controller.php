@@ -445,8 +445,13 @@ class CCKController extends JControllerLegacy
 		$app	=	JFactory::getApplication();
 		$link	=	$this->_getReturnPage();
 
-		$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
-		$msgType	=	'message';
+		$msgType	=	$app->input->get( 'type', 'message' );
+
+		if ( $msgType == 'error' ) {
+			$msg	=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+		} else {
+			$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+		}
 
 		$this->setRedirect( $link, $msg, $msgType );
 	}
@@ -466,12 +471,12 @@ class CCKController extends JControllerLegacy
 		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
+		
+		$config		=	array();
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
 
-		$config		=	array();
-		$model->process( $params, $task_id, $ids, $config );
-		
+		$result		=	$model->process( $params, $task_id, $ids, $config );
 		$return		=	array(
 							'error'=>0,
 							'id'=>@$config['id'],
@@ -479,7 +484,9 @@ class CCKController extends JControllerLegacy
 							'pk'=>@$config['pk']
 						);
 
-		if ( !$return['pk'] ) {
+		if ( $result === false ) {
+			$return['error']	=	1;
+		} elseif ( !$return['pk'] ) {
 			$return['error']	=	1;
 		}
 		
