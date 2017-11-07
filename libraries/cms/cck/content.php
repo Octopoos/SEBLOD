@@ -262,10 +262,10 @@ class JCckContent
 	// canDelete
 	public function canDelete()
 	{
-		$author_id	=	-1;
+		$author_id		=	$this->getAuthor();
 
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
-			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], -1 );
+		if ( !$author_id ) {
+			$author_id	=	-1;
 		}
 		
 		$user			=	JFactory::getUser();
@@ -284,10 +284,10 @@ class JCckContent
 	// canSave
 	public function canSave()
 	{
-		$author_id	=	-1;
+		$author_id		=	$this->getAuthor();
 
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
-			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], -1 );
+		if ( !$author_id ) {
+			$author_id	=	-1;
 		}
 
 		$user				=	JFactory::getUser();
@@ -591,16 +591,11 @@ class JCckContent
 		}
 
 		// Core
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author']
-		  && $this->_columns['author'] == $this->_columns['key'] ) {
-			$data['core']['author_id']	=	$this->get( 'base', $this->_columns['key'], 0 );
-		}
-
 		if ( !( $this->save( 'core', array(
 										'cck'=>$this->_type,
 										'pk'=>$this->_pk,
 										'storage_location'=>$this->_object,
-										'author_id'=>$data['core']['author_id'],
+										'author_id'=>$this->getAuthor(),
 										'parent_id'=>$data['core']['parent_id'],
 										'date_time'=>$data['core']['date_time']
 						   ) ) ) ) {
@@ -874,6 +869,18 @@ class JCckContent
 		}
 	}
 
+	// getAuthor
+	public function getAuthor()
+	{
+		$author_id	=	0;
+
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
+			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], 0 );
+		}
+
+		return $author_id;
+	}
+
 	// getData
 	public function getData( $instance_name = '' )
 	{
@@ -917,6 +924,12 @@ class JCckContent
 	public function getId()
 	{
 		return (int)$this->_id;
+	}
+
+	// getObject
+	public function getObject()
+	{
+		return $this->_object;
 	}
 
 	// getPk
