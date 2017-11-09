@@ -1174,6 +1174,46 @@ class JCckContent
 		return $result;
 	}
 
+	// updateAuthor ($)
+	public function updateAuthor( $author_id )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		if ( !$this->isNew() ) { /* TODO: change to getPk() or check getPk() prior to permissions check */
+			if ( !$this->can( 'save' ) ) {
+				$this->log( 'error', 'Permissions denied.' );
+
+				return false;
+			}
+		}
+
+		$pre_update	=	$this->get( 'base', $this->_columns['author'], 0 );
+
+		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
+			$this->set( 'base', $this->_columns['author'], $author_id );
+
+			if ( !$this->store( 'base' ) ) {
+				$this->set( 'base', $this->_columns['author'], $pre_update );
+
+				return false;
+			}
+		}
+		
+		$this->_instance_core->author_id	=	$author_id;
+
+		if ( !$this->_instance_core->store() ) {
+			$this->_instance_core->author_id	=	$pre_update;
+
+			return false;
+		}
+
+		/* TODO: update bridge author */
+
+		return true;
+	}
+
 	// updateProperty ($)
 	public function updateProperty( $property, $value )
 	{
@@ -1197,7 +1237,7 @@ class JCckContent
 			return false;
 		}
 
-		if ( !$this->isNew() ) {
+		if ( !$this->isNew() ) { /* TODO: change to getPk() or check getPk() prior to permissions check */
 			if ( !$this->can( 'save' ) ) {
 				$this->log( 'error', 'Permissions denied.' );
 
@@ -1206,12 +1246,14 @@ class JCckContent
 		}
 
 		if ( !$this->setType( $content_type, $reload )->isSuccessful() ) {
+			/* TODO: revert? */
+
 			$this->_error	=	false;
 
 			return false;
 		}
 
-		return $this->_instance_core->store();
+		return $this->_instance_core->store(); /* TODO: revert? */
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
