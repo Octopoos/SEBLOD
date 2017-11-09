@@ -34,6 +34,10 @@ class JCckContentJoomla_User extends JCckContent
 	// check
 	public function check( $instance_name )
 	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
 		if ( $instance_name == 'base' ) {
 			return true;
 		} else {
@@ -53,11 +57,19 @@ class JCckContentJoomla_User extends JCckContent
 		return $this->_instance_base->save();
 	}
 
-	// store
+	// store ($)
 	public function store( $instance_name )
 	{
-		if ( !$this->can( 'save' ) ) {
+		if ( !$this->isSuccessful() ) {
 			return false;
+		}
+
+		if ( !$this->isNew() ) {
+			if ( !$this->can( 'save' ) ) {
+				$this->log( 'error', 'Permissions denied.' );
+
+				return false;
+			}
 		}
 
 		if ( $instance_name == 'base' ) {
@@ -88,6 +100,8 @@ class JCckContentJoomla_User extends JCckContent
 			return false;
 		}
 		if ( !$this->can( 'save' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+
 			return false;
 		}
 
@@ -105,6 +119,8 @@ class JCckContentJoomla_User extends JCckContent
 			return false;
 		}
 		if ( !$this->can( 'save' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+
 			return false;
 		}
 
