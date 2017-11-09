@@ -109,7 +109,7 @@ class JCckContentJoomla_User extends JCckContent
 		}
 
 		if ( JCck::getUser()->id == $this->_pk ) {
-			return JUserHelper::removeFromGroup( $this->_pk, $group_id );
+			return JUserHelper::removeUserFromGroup( $this->_pk, $group_id );
 		} else {
 			return JCckDatabase::execute( 'DELETE FROM #__user_usergroup_map WHERE user_id = '.(int)$this->_pk.' AND group_id = '. (int)$group_id );
 		}
