@@ -309,11 +309,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$app		=	JFactory::getApplication();
 		$table		=	self::_getTable( $pk );
 		$isNew		=	( $pk > 0 ) ? false : true;
+		
 		if ( isset( $table->tags ) ) {
-			$tags	=	$table->tags;
 			unset( $table->tags );
-		} else {
-			$tags	=	null;
 		}
 		if ( isset( $data['tags'] ) ) {
 			if ( !empty( $data['tags'] ) && $data['tags'][0] != '' ) {
