@@ -16,6 +16,7 @@ JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_user';
+	protected static $type_alias	=	'User';
 	protected static $table			=	'#__users';
 	protected static $table_object	=	array( 'User', 'JTable' );
 	protected static $key			=	'id';

@@ -18,6 +18,7 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_article';
+	protected static $type_alias	=	'Article';
 	protected static $table			=	'#__content';
 	protected static $table_object	=	array( 'Content', 'JTable' );
 	protected static $key			=	'id';

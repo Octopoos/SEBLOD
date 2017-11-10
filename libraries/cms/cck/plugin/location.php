@@ -19,8 +19,16 @@ class JCckPluginLocation extends JPlugin
 	public function __construct( &$subject, $config = array() )
 	{
 		parent::__construct( $subject, $config );
-		
-		JLoader::register( 'JCckContent'.static::$type, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+
+		$object		=	ucwords( static::$type, '_' );
+  		$properties	=	array( 'type_alias' );
+		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+
+		JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+
+		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
+			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
+		}
 	}
 	
 	// access
@@ -71,13 +79,20 @@ class JCckPluginLocation extends JPlugin
 									'status'=>'',
 									'table'=>'',
 									'table_object'=>'',
-									'to_route'=>''
+									'to_route'=>'',
+									'type_alias'=>''
 								);
 		
 		if ( count( $properties ) ) {
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	static::${$p};
+					if ( $p == 'type_alias' ) {
+						if ( property_exists( static::class, $p ) ) {
+							$properties[$p]	=	static::${$p};
+						}
+					} else {
+						$properties[$p]	=	static::${$p};
+					}
 				}
 				unset( $properties[$i] );
 			}

@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Storage_LocationFree extends JCckPluginLocation
 {
 	protected static $type			=	'free';
+	protected static $type_alias	=	'Free';
 	protected static $table			=	'';
 	protected static $table_object	=	array();
 	protected static $key			=	'id';

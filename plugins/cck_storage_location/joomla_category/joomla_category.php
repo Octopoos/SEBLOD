@@ -18,6 +18,7 @@ JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/cate
 class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_category';
+	protected static $type_alias	=	'Category';
 	protected static $table			=	'#__categories';
 	protected static $table_object	=	array( 'Category', 'JTable' );
 	protected static $key			=	'id';
