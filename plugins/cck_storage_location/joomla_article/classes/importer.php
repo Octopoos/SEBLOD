@@ -15,19 +15,21 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 // Class
 class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_LocationJoomla_Article
 {
-	protected static $columns_excluded	=	array();
+	protected static $columns_excluded	=	array(); /* TODO */
 	
 	// getColumnsToImport
 	public static function getColumnsToImport()
 	{
 		$table		=	self::_getTable();
 		$columns	=	$table->getProperties();
-		
+
 		foreach ( self::$columns_excluded as $column ) {
 			if ( array_key_exists( $column, $columns ) ) {
 				unset( $columns[$column] );
 			}
 		}
+
+		$columns['tags']	=	null;
 
 		return array_keys( $columns );
 	}
@@ -50,7 +52,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
-			
+
 			if ( $isNew ) {
 				if ( isset( $data[self::$key] ) ) {
 					$iPk	=	$data[self::$key];
@@ -64,6 +66,18 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			}
 			if ( !$config['id'] ) {
 				$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
+			}
+
+			if ( isset( $table->tags ) ) {
+				unset( $table->tags );
+			}
+			if ( isset( $data['tags'] ) ) {
+				$table->tags	=	new JHelperTags;
+				$data['tags']	=	explode( ',', $data['tags'] );
+				if ( !empty( $data['tags'] ) && $data['tags'][0] != '' ) {
+					$table->newTags	=	$data['tags'];
+				}
+				unset( $data['tags'] );
 			}
 			self::_initTable( $table, $data, $config, true );
 			

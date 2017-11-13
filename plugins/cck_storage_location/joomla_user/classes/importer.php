@@ -28,6 +28,8 @@ class plgCCK_Storage_LocationJoomla_User_Importer extends plgCCK_Storage_Locatio
 				unset( $columns[$column] );
 			}
 		}
+
+		$columns['groups']	=	null;
 		
 		return array_keys( $columns );
 	}

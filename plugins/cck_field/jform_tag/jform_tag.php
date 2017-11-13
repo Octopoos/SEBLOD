@@ -65,6 +65,22 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		$field->html	=	$html;
 	}
 
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		$field->output	=	'';
+
+		if ( is_object( $value ) ) {
+			$tags			=	explode( ',', $value->tags );
+			$tags			=	$value->getTagNames( $tags );
+			$field->output	=	implode( ',', $tags );
+		}
+	}
+
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{

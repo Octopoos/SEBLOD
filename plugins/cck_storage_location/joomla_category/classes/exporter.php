@@ -15,8 +15,8 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_ca
 // Class
 class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_LocationJoomla_Category
 {
-	protected static $columns_excluded	=	array( 'asset_id', 'tags', 'tagsHelper' );
-	protected static $columns_ignored	=	array( 'id', 'asset_id', 'level', 'path', 'lft', 'rgt', 'checked_out', 'checked_out_time', 'tags', 'tagsHelper' );
+	protected static $columns_excluded	=	array( 'asset_id', 'tagsHelper' );
+	protected static $columns_ignored	=	array( 'id', 'asset_id', 'level', 'path', 'lft', 'rgt', 'checked_out', 'checked_out_time', 'tagsHelper' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -29,6 +29,8 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				unset( $columns[$column] );
 			}
 		}
+
+		$columns['tags']	=	null;
 		
 		return array_keys( $columns );
 	}
@@ -49,6 +51,8 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		} elseif ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 			$fields	=	$config['fields'];
 		} else {
+			$fields['tags']	=	null;
+
 			if ( count( self::$columns_ignored ) ) {
 				foreach ( self::$columns_ignored as $exclude ) {
 					unset( $fields[$exclude] );
@@ -107,7 +111,9 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				}
 
 				// Core
-				$table	=	self::_getTable( $item->pk );
+				$config['pk']	=	$item->pk;
+				$table			=	self::_getTable( $item->pk );
+
 				if ( isset( $config['fields'] ) && $config['fields'] === false ) {
 					$fields	=	array();
 				} elseif ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
@@ -121,18 +127,34 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 						}
 					} else {
 						$vars 	=	get_object_vars( $table );
+
 						foreach ( $vars as $key=>$val ) {
 							if ( isset( $config['fields'][$key] ) ) {
 								$fields[$key]	=	$val;
 							}
 						}
+
+						// Tags
+						if ( isset( $fields['tags'] ) && is_object( $fields['tags'] ) ) {
+							$fields['tags']	=	$fields['tags']->tags;
+						} else {
+							$fields['tags']	=	'';
+						}
 					}
 				} else {
 					$fields	=	$table->getProperties();
+
 					if ( count( self::$columns_ignored ) ) {
 						foreach ( self::$columns_ignored as $exclude ) {
 							unset( $fields[$exclude] );
 						}
+					}
+
+					// Tags
+					if ( isset( $fields['tags'] ) && is_object( $fields['tags'] ) ) {
+						$fields['tags']	=	$fields['tags']->tags;
+					} else {
+						$fields['tags']	=	'';
 					}
 				}
 
@@ -195,8 +217,6 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 						}
 					}
 				}
-				
-				$config['pk']	=	$item->pk;
 
 				// BeforeExport
 				$event	=	'onCckPreBeforeExport';
