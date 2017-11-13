@@ -644,7 +644,7 @@ class JCckContent
 
 			return false;
 		}
-		
+
 		$this->setInstance( 'base' );
 		$this->setInstance( 'more' );
 		$this->setInstance( 'more_parent' );
@@ -1481,8 +1481,13 @@ class JCckContent
 	// _setDataMap
 	protected function _setDataMap( $instance_name, $force = false )
 	{
-		$fields				=	array_keys( $this->{'_instance_'.$instance_name}->getFields() );
-		$this->_data_map	=	array_merge( $this->_data_map, array_fill_keys( $fields, $instance_name ) );
+		$fields	=	$this->{'_instance_'.$instance_name}->getFields();
+
+		foreach ( $fields as $k=>$v ) {
+			if ( !isset( $this->_data_map[$k] ) ) {
+				$this->_data_map[$k]	=	$instance_name;
+			}
+		}
 
 		unset( $this->_data_map['id'], $this->_data_map['cck'] );
 	}
