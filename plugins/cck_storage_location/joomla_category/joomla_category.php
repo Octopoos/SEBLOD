@@ -704,28 +704,34 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 		// Identity the PK
 		if ( self::$sef[$config['doSEF']] == 'full' ) {
-			$idArray				=	explode( ':', $segments[$n - 1], 2 );
-			$id						=	(int)$idArray[0];
+			$idArray			=	explode( ':', $segments[$n - 1], 2 );
+			$id 				=	(int)$idArray[0];
+			$alias				=	substr( $idArray[0], strlen( $id ) + 1 );
 
-			if ( $where != '' ) {
-				$where				=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+			if ( $id ) {
+				$where			.=	' AND a.alias = '.JCckDatabase::quote( $alias );
 			}
-		} else {
+			if ( $where != '' ) {
+				$where			=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
+			}
+		} elseif ( self::$sef[$config['doSEF']] == 'id' ) {
 			if ( is_numeric( $segments[$n - 1] ) ) {
-				$id					=	$segments[$n - 1];
+				$id				=	$segments[$n - 1];
 
 				if ( $where != '' ) {
-					$where			=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
-				}
-			} else {
-				$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-				$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
-
-				if ( JCckDevHelper::isMultilingual() ) {
-					$where			.=	' AND (a.language = "*" OR a.language = "'.JFactory::getLanguage()->getTag().'")';
+					$where		=	' WHERE a.id = '.JCckDatabase::clean( $id ).$where;
 				}
 			}
+		} else {
+			$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
+			$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+
+			if ( JCckDevHelper::isMultilingual() ) {
+				$where			.=	' AND (a.language = "*" OR a.language = "'.JFactory::getLanguage()->getTag().'")';
+			}
 		}
+
+		// Set the ID
 		if ( $where != '' ) {
 			$vars['id']	=	(int)JCckDatabaseCache::loadResult( 'SELECT a.id FROM '.self::$table.' AS a'.$join.$where );
 		} else {

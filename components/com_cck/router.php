@@ -132,6 +132,7 @@ class CckRouter extends JComponentRouterBase
 									}
 								}
 								if ( $isNew ) {
+									$params['doSEF'][1]	=	'3';
 									$params['location']	=	$properties[$target];
 								}
 							}
