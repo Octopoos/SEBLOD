@@ -556,6 +556,14 @@ class plgContentCCKInstallerScript
 				}
 			}
 
+			if ( $i2 < 120 ) {
+				$path	=	JPATH_SITE.'/libraries/cms/cck/content';
+
+				if ( JFolder::exists( $path ) ) {
+					JFolder::delete( $path );
+				}
+			}
+
 			// Convert Tables To Utf8mb4
 			self::_convertTablesToUtf8mb4();
 
