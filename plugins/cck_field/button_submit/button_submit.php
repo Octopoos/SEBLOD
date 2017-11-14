@@ -420,6 +420,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											$.ajax({
 												cache: false,
 												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
+												type: "POST",
 												url:  JCck.Core.SubmitButton.instances[el].url,
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
