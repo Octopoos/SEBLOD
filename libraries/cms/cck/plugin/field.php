@@ -1100,7 +1100,7 @@ class JCckPluginField extends JPlugin
 				static $keypress	=	0;
 				$field->form		=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
 
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0"+q,0,1); });' );
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { var q = ""; var f = 0; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); if ($(this).myVal()!=""){f=1;} }); if(f) {$("form#'.$parent.' .pagination").hide();}else{$("form#'.$parent.' .pagination").show();} JCck.Core.loadmore("&start=0"+q,0,1); });' );
 				
 				if ( !$keypress ) {
 					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) {if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
