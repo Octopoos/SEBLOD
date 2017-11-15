@@ -110,8 +110,9 @@ $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stage
 if ( $stages > 1 ) {
 	$stage	=	$preconfig['stage'];
 }
-$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.JCckDatabase::escape( $preconfig['type'] ).'"' );
-$fields		=	CCK_Form::getFields( array( $preconfig['type'], $parent ), $preconfig['client'], $stage, '', true );
+$parent		=	JCckDatabase::loadObject( 'SELECT parent as name, parent_inherit as inherit FROM #__cck_core_types WHERE name = "'.JCckDatabase::escape( $preconfig['type'] ).'"' );
+$target		=	$parent->inherit ? array( $preconfig['type'], $parent->name ) : $preconfig['type'];
+$fields		=	CCK_Form::getFields( $target, $preconfig['client'], $stage, '', true );
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 
@@ -166,6 +167,11 @@ if ( count( $fields ) ) {
 			if ( !$field->authorised ) {
 				continue;
 			}
+			/*
+			else {
+				$field->value	=	null;
+			}
+			*/
 		}
 		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled' || $field->variation == 'value' ) && !$field->live && $field->live_value != '' ) {
 			$value	=	$field->live_value;
