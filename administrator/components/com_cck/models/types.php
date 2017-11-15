@@ -26,6 +26,8 @@ class CCKModelTypes extends JModelList
 				'folder', 'a.folder', 'folder_title',
 				'published', 'a.published',
 				'location', 'a.location',
+				'parent', 'a.parent',
+				'parent_inherit', 'a.parent_inherit',
 				'storage_location', 'a.storage_location',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
@@ -88,6 +90,8 @@ class CCKModelTypes extends JModelList
 				'a.template_content as template_content,' .
 				'a.published as published,' .
 				'a.location as location,' .
+				'a.parent as parent,' .
+				'a.parent_inherit as parent_inherit,' .
 				'a.storage_location as storage_location,' .
 				'a.checked_out as checked_out,' .
 				'a.checked_out_time as checked_out_time'

@@ -112,7 +112,7 @@ if ( !$isNew ) {
 		$author			=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 	}
 } else {
-	if ( $type->location && (( $app->isClient( 'administrator' ) && $type->location != 'admin' ) || ( $app->isClient( 'site' ) && $type->location != 'site' )) ) {
+	if ( $type->location && $type->location != 'hidden' && (( $app->isClient( 'administrator' ) && $type->location != 'admin' ) || ( $app->isClient( 'site' ) && $type->location != 'site' )) ) {
 		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config, $doDebug ); return;
 	}
 	$actionACL			=	'create';
