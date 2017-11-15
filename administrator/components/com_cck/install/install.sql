@@ -1093,6 +1093,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `location` varchar(50) NOT NULL,
   `locked` tinyint(3) NOT NULL DEFAULT '1',
   `parent` varchar(50) NOT NULL,
+  `parent_inherit` varchar(50) NOT NULL,
   `permissions` varchar(255) NOT NULL,
   `storage_location` varchar(50) NOT NULL,
   `stylesheets` varchar(5) NOT NULL,
@@ -1114,21 +1115,21 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
-INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `location`, `locked`, `parent`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`, `access`, `created_date`, `created_user_id`, `modified_date`, `modified_user_id`) VALUES
-(1, 0, 'Article', 'article', '', 10, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', 1, '', 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(28, 0, 'User Grp Basic', 'user_grp_basic', '', 13, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(5, 0, 'Category', 'category', '', 11, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', 1, '', 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(8, 0, 'User', 'user', '', 13, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', 0, '', 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(25, 0, 'Category Grp Publishing', 'category_grp_publishing', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(26, 0, 'Category Grp Basic', 'category_grp_basic', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(21, 0, 'Article Grp Basic', 'article_grp_basic', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(11, 0, 'User Group', 'user_group', '', 14, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', 1, '', 'joomla_user_group', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(20, 0, 'Article Grp Publishing', 'article_grp_publishing', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(22, 0, 'Article Grp Metadata', 'article_grp_metadata', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(27, 0, 'Category Grp Metadata', 'category_grp_metadata', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 'none', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(38, 0, 'User Grp Password', 'user_grp_password', '', 13, 14, 15, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
+INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `folder`, `template_admin`, `template_site`, `template_content`, `template_intro`, `description`, `indexed`, `published`, `options_admin`, `options_site`, `options_content`, `options_intro`, `location`, `locked`, `parent`, `parent_inherit`, `storage_location`, `stylesheets`, `version`, `checked_out`, `checked_out_time`, `access`, `created_date`, `created_user_id`, `modified_date`, `modified_user_id`) VALUES
+(1, 0, 'Article', 'article', '', 10, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(28, 0, 'User Grp Basic', 'user_grp_basic', '', 13, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(5, 0, 'Category', 'category', '', 11, 7, 7, 7, 7, '', '', 1, '', '{"redirection":"form_edition"}', '', '', '', 1, '', 0, 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(8, 0, 'User', 'user', '', 13, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', 0, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(25, 0, 'Category Grp Publishing', 'category_grp_publishing', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(26, 0, 'Category Grp Basic', 'category_grp_basic', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(21, 0, 'Article Grp Basic', 'article_grp_basic', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(11, 0, 'User Group', 'user_group', '', 14, 7, 7, 7, 7, '', '', 1, '', '', '', '', '', 1, '', 0, 'joomla_user_group', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(20, 0, 'Article Grp Publishing', 'article_grp_publishing', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(22, 0, 'Article Grp Metadata', 'article_grp_metadata', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(27, 0, 'Category Grp Metadata', 'category_grp_metadata', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(38, 0, 'User Grp Password', 'user_grp_password', '', 13, 14, 15, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
 
 
 -- --------------------------------------------------------
