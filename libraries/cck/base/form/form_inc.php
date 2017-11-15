@@ -175,7 +175,8 @@ if ( $type->storage_location == 'joomla_user' && $isNew ) {
 }
 
 // Fields
-$fields		=	CCK_Form::getFields( array( $type->name, $type->parent ), $preconfig['client'], $stage, '', true, true );
+$target		=	$type->parent_inherit ? array( $type->name, $type->parent ) : $type->name;
+$fields		=	CCK_Form::getFields( $target, $preconfig['client'], $stage, '', true, true );
 if ( ! count( $fields ) ) {
 	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
 }
@@ -221,7 +222,7 @@ foreach ( $variation as $var ) {
 // Positions
 $positions		=	array();
 $positions_w	=	'a.typeid = '.(int)$type->id;
-if ( $type->parent != '' ) {
+if ( $type->parent_inherit && $type->parent != '' ) {
 	$parent_id		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type->parent.'"' );
 	if ( $parent_id ) {
 		$positions_w	=	'('.$positions_w.' OR a.typeid = '.$parent_id.')';

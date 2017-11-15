@@ -96,7 +96,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
             </ul>
             <ul class="spe spe_name">
-            	<?php echo JCckDev::renderForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) ); ?>
+            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
+            	<?php
+            	echo JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) );
+            	echo JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'css'=>'input-xsmall', 'storage_field'=>'parent_inherit' ) );
+            	?>
+            	</li>
             </ul>
             <ul class="spe spe_type">
             	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ); ?>
