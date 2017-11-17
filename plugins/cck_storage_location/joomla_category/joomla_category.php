@@ -880,7 +880,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'status'=>'',
 									'table'=>'',
 									'table_object'=>'',
-									'to_route'=>''
+									'to_route'=>'',
+									'type_alias'=>''
 								);
 
 		if ( count( $properties ) ) {
