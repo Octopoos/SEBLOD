@@ -53,7 +53,15 @@ $preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfi
 $preconfig['auto_redirect']	=	( $preconfig['auto_redirect'] != '' ) ? $preconfig['auto_redirect'] : $options->get( 'auto_redirect', 0 );
 
 $doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
-$doDebug					=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
+
+if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
+	$doDebug				=	 1;
+} elseif ( $doDebug == -1 || ( $doDebug == -2 && $user->authorise( 'core.admin' ) ) ) {
+	$doDebug				=	 -1;
+} else {
+	$doDebug				=	 0;
+}
+
 $options->set( 'debug', $doDebug );
 
 // ACL

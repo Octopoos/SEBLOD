@@ -54,6 +54,7 @@ class plgSearchCCK extends JPlugin
 		$dispatcher		=	JEventDispatcher::getInstance();
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
+		$doDebug		=	$options->get( 'debug' );
 		$doLimit		=	false;
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
@@ -394,7 +395,9 @@ class plgSearchCCK extends JPlugin
 				} else {
 					$db->setQuery( $query, 0, $limit );
 				}
-				$results	=	$db->loadObjectList();
+				if ( $doDebug != -1 ) {
+					$results	=	$db->loadObjectList();
+				}
 
 				if ( $doLimit ) {
 					$count	=	count( $results );
@@ -471,12 +474,15 @@ class plgSearchCCK extends JPlugin
 					$query->where( $where );
 				}
 				$db->setQuery( $query );
-				$results	=	$db->loadColumn();
+
+				if ( $doDebug != -1 ) {
+					$results	=	$db->loadColumn();
+				}
 			}
 		}
 		
 		// Debug
-		if ( $options->get( 'debug' ) ) {
+		if ( $doDebug ) {
 			if ( !isset( $query1 ) ) {
 				$query1	=	(string)$query;
 			}
