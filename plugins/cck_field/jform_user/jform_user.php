@@ -39,7 +39,13 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 
 		$field->value		=	$value;
-		$field->text		=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value ); //@
+
+		if ( $config['client'] == 'list' || $config['client'] == 'item' ) {
+			$field->text	=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value ); //@
+		} else {
+			$field->text	=	JCckDatabase::loadResult( 'SELECT name FROM #__users WHERE id = '.(int)$value ); //@
+		}
+		
 		$field->typo_target	=	'text';
 	}
 
