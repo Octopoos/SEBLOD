@@ -278,6 +278,18 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		echo '<script src="'.$root.'/media/system/js/fields/calendar.js" type="text/javascript"></script>';
 	}
 
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config )
+	{
+		$options2	=	json_decode( $field->options2 );
+
+		if ( !( isset( $options2->time ) && (int)$options2->time ) ) {
+			$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+		}
+
+		return $value;
+	}
+
 	// isFriendly
 	public static function isFriendly()
 	{
