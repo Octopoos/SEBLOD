@@ -1094,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `location` varchar(50) NOT NULL,
   `locked` tinyint(3) NOT NULL DEFAULT '1',
   `parent` varchar(50) NOT NULL,
-  `parent_inherit` varchar(50) NOT NULL,
+  `parent_inherit` tinyint(3) NOT NULL,
   `permissions` varchar(255) NOT NULL,
   `storage_location` varchar(50) NOT NULL,
   `stylesheets` varchar(5) NOT NULL,
