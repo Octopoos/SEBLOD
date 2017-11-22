@@ -140,9 +140,17 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( static::$type != $field->type ) {
 			return;
 		}
-		
+
+		static $options	=	null;
+
+		if ( !is_string( $options ) ) {
+			$options		=	$field->options;
+		} else {
+			$field->options	=	$options;
+		}
+
 		self::onCCK_FieldPrepareContent( $field, $value, $config );
-		
+
 		$field->output	=	$field->text;
 	}
 
