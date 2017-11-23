@@ -65,14 +65,13 @@ class plgCCK_FieldPassword extends JCckPluginField
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
-			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true ) );
+			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true, 'maxSize'=>true ) );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 		
 		// Prepare
 		$class	=	'inputbox password'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
-		$attr	=	'class="'.$class.'" size="'.$field->size.'" autocomplete="off"'.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
+		$attr	=	'class="'.$class.'" size="'.$field->size.'" autocomplete="off"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'<input type="password" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
 		
 		// Set
