@@ -112,12 +112,17 @@ class plgContentCCKInstallerScript
 
 		// Re-build menu
 		$query	=	'SELECT id, level, lft, path FROM #__menu WHERE link = "index.php?option=com_cck"';
+
 		$db->setQuery( $query );
 		$seblod	=	$db->loadObject();
+
 		if ( $seblod->id > 0 ) {		
 			$query	=	'SELECT extension_id as id, element FROM #__extensions WHERE type = "component" AND element LIKE "com_cck_%" ORDER BY name';
+
 			$db->setQuery( $query );
+			
 			$addons	=	$db->loadObjectList();
+			
 			if ( count( $addons ) ) {			
 				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
 				$titles	=	array(
@@ -575,32 +580,61 @@ class plgContentCCKInstallerScript
 		self::_forceAutoIncrements();
 	}
 	
-	// _addAddon
+	// _addAddon (#JFMTree)
 	protected function _addAddon( $addon, $parent, $type )
 	{
 		$db		=	JFactory::getDbo();
+		$exists	=	0;
 		$name	=	str_replace( 'com_cck_', '', $addon->element );
 
 		// -- Dirty workaround cleanup
 		if ( $type == 'update' && version_compare( JFactory::getApplication()->cck_core_version_old, '3.11.4', '<' ) && $name != '' ) {
-			$db->setQuery( 'DELETE FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND parent_id IN (0,1)' );
+			$db->setQuery( 'DELETE FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND client_id = 1 AND parent_id IN (0,1)' );
+			$db->execute();
+		} elseif ( $type == 'update' ) {
+			$query	=	'SELECT id, parent_id FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND client_id = 1 ORDER BY parent_id DESC';
+			
+			$db->setQuery( $query );
+			
+			$exists	=	$db->loadObjectList();
+		}
+		if ( is_array( $exists ) ) {
+			if ( count( $exists ) > 1 ) {
+				$db->setQuery( 'DELETE FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND client_id = 1 AND id = '.$exists[0]->id );
+				$db->execute();
+
+				if ( isset( $exists[1] ) && $exists[1]->id ) {
+					$exists	=	$exists[1]->id;
+				} else {
+					$exists	=	0;
+				}
+			} else {
+				$exists	=	$exists[0]->id;
+			}
+		}
+		if ( $exists ) {
+			$table  =   JTable::getInstance( 'Menu' );
+			$table->load( $exists );
+			$table->setLocation( $parent->id, 'last-child' );
+			$table->check();
+			$table->store();
+			$table->rebuildPath( $table->id );
+		} else {
+			$table	=	JTable::getInstance( 'Menu' );
+			$data	=	array( 'menutype'=>'main', 'title'=>$addon->element.'_title', 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
+							   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
+							   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
+			
+			$table->setLocation( $data['parent_id'], 'last-child' );
+			$table->bind( $data );
+			$table->check();
+			$table->alias	=	$addon->title;
+			$table->path	=	'SEBLOD/'.$addon->title;
+			$table->store();
+			$table->rebuildPath( $table->id );
+			$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon->title.'", path = "SEBLOD/'.$addon->title.'" WHERE id = '.(int)$table->id. ' AND client_id = 1' );
 			$db->execute();
 		}
-		
-		$table	=	JTable::getInstance( 'Menu' );
-		$data	=	array( 'menutype'=>'main', 'title'=>$addon->element.'_title', 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
-						   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
-						   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
-		
-		$table->setLocation( $data['parent_id'], 'last-child' );
-		$table->bind( $data );
-		$table->check();
-		$table->alias	=	$addon->title;
-		$table->path	=	'SEBLOD/'.$addon->title;
-		$table->store();
-		$table->rebuildPath( $table->id );
-		$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon->title.'", path = "SEBLOD/'.$addon->title.'" WHERE id = '.(int)$table->id. ' AND client_id = 1' );
-		$db->execute();
 	}
 
 	// _convertTablesToUtf8mb4

@@ -172,7 +172,7 @@ class CCK_Install
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Manage
 	
-	// manageAddon
+	// manageAddon (#JFMTree)
 	public static function manageAddon( $event, $addon )
 	{
 		$db		=	JFactory::getDbo();
