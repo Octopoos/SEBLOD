@@ -415,11 +415,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										uniq_id:"'.uniqid().'",
 										width:0,
 										ajaxLoopRequest: function(el) {
-											var values = JCck.Core.SubmitButton.batch.splice(0, JCck.Core.SubmitButton.instances[el].step).join("&cid[]=");
+											var start = ( JCck.Core.SubmitButton.batch.length == JCck.Core.SubmitButton.instances[el].total ) ? 1 : 0;
+											var values = JCck.Core.SubmitButton.batch.splice(0, JCck.Core.SubmitButton.instances[el].step).join("&cid[]=");											
 											var end = ( JCck.Core.SubmitButton.batch.length > 0 ) ? 0 : 1;
 											$.ajax({
 												cache: false,
-												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
+												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&start="+start+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
 												type: "POST",
 												url:  JCck.Core.SubmitButton.instances[el].url,
 												complete: function(jqXHR) {
