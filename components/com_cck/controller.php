@@ -465,17 +465,17 @@ class CCKController extends JControllerLegacy
 		}
 		
 		$app		=	JFactory::getApplication();
-		$config		=	array();
+		$config		=	array(
+							'uniqid'=>$app->input->get( 'uniqid', '' )
+						);
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
 		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		
-		$config		=	array();
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
-
 		$result		=	$model->process( $params, $task_id, $ids, $config );
 		$return		=	array(
 							'error'=>0,
