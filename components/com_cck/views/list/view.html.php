@@ -234,8 +234,15 @@ class CCKViewList extends JViewLegacy
 		} else {
 			$this->pages_total	=	0;
 		}
+
+		if ( !isset( $config['context'] ) ) {
+			$config['context']	=	array();
+		}
+		$config['context']['Itemid']	=	$app->input->getInt( 'Itemid', 0 );
+		$config['context']['view']		=	'list';
 		
 		$this->config					=	&$config;
+		$this->context					=	$config['context'];
 		$this->data						=	&$data;
 		$this->filter_ajax				=	( isset( $hasAjax ) && $hasAjax ) ? true : false;
 		$this->form						=	&$form;

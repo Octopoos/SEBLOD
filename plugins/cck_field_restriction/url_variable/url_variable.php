@@ -59,14 +59,13 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		$do					=	$restriction->get( 'do', 0 );
 		$state				=	0;
 
-		// --
 		$condition_field	=	$restriction->get( 'trigger' );
 		$condition_match	=	$restriction->get( 'match' );
 		$condition_values	=	$restriction->get( 'values' );
-
 		$variable			=	JFactory::getApplication()->input->get( $condition_field, null, null );
-
-		if ( $config['client'] == 'site' /* || $config['client'] == 'admin' */ ) {
+		
+		// Keep Context
+		if ( $config['client'] == 'site' || $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
 			if ( !isset( $config['context'][$condition_field] ) ) {
 				$config['context'][$condition_field]	=	(string)$variable;
 			}
@@ -111,7 +110,6 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 				}	
 			}
 		}
-		// --
 
 		if ( $state ) {
 			$do		=	( $do ) ? false : true;

@@ -37,9 +37,11 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 		$ignore_null	=	$options->get( 'ignore_null', 0 );
 		$multiple		=	$options->get( 'multiple', 0 );
 		$return			=	$options->get( 'return', 'first' );
+		
 		if ( $multiple ) {
 			$variables	=	$options->get( 'variables', '' );
 			$variables	=	explode( '||', $variables );
+
 			if ( count( $variables ) ) {
 				foreach ( $variables as $variable ) {
 					$request	=	'get'.ucfirst( $options->get( 'type', 'string' ) );
@@ -61,8 +63,10 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 			}
 		} else {
 			$variable		=	$options->get( 'variable', $field->name );
+
 			if ( $variable ) {
 				$filter		=	$options->get( 'type', 'string' );
+
 				if ( $filter == 'array' ) {
 					$live		=	$app->input->get( $variable, $default, 'array' );
 				} elseif ( $filter == 'integers' ) {
@@ -73,8 +77,16 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 				} else {
 					$request	=	'get'.ucfirst( $filter );
 					$live		=	(string)$app->input->$request( $variable, $default );
+
 					if ( $crypt == 'base64' ) {
 						$live	=	base64_decode( $live );
+					}
+				}
+				
+				// Keep Context
+				if ( /* $config['client'] == 'site' || */ $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
+					if ( !isset( $config['context'][$variable] ) ) {
+						$config['context'][$variable]	=	(string)$live;
 					}
 				}
 			}

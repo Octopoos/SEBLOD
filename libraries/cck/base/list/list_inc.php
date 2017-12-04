@@ -174,6 +174,7 @@ if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
 }
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
+						   'context'=>array(),
 						   'core'=>true,
 						   'doPagination'=>true,
 						   'doQuery'=>true,
@@ -238,28 +239,28 @@ if ( $preconfig['show_form'] ) {
 $context	=	$app->input->getString( 'context' );
 
 if ( $context != '' ) {
-	$context	=	str_replace( "'", '"', $context );
-	$context	=	json_decode( $context );
-	$vars		=	array(
-						'Itemid'=>'',
-						'view'=>array( 'form', 'list', 'article', 'category' )
+	$context	=	str_replace( "'", '"', $context );	/* TODO: remove */
+	$context	=	json_decode( $context, true );
+	$excluded	=	array(
+						'cid'=>'',
+						'copyfrom_id'=>'',
+						/* 'id'=>'', OK, we can keep it */
+						'limit'=>'',
+						'option'=>'',
+						'pk'=>'',
+						'return'=>'',
+						'search'=>'',
+						'skip'=>'',
+						'stage'=>'',
+						'task'=>'',
+						'tid'=>'',
+						'type'=>''
 					);
-	foreach ( $vars as $key=>$val ) {
-
-		if ( isset( $context->$key ) ) {
-			$v	=	$context->$key;
-
-			if ( is_array( $val ) ) {
-				if ( !in_array( $v, $val ) ) {
-					continue;
-				}
-			} elseif ( $val != '' ) {
-				if ( $v != $val ) {
-					continue;
-				}
-			}
-			$app->input->set( $key, $v );
+	foreach ( $context as $k=>$v ) {
+		if ( isset( $excluded[$k] ) ) {
+			continue;
 		}
+		$app->input->set( $k, $v );
 	}
 }
 
