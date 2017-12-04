@@ -305,15 +305,13 @@ class plgSearchCCK extends JPlugin
 		
 		// Finalize
 		$where		=	implode( ' ', $where2 );
+
 		if ( $doClean !== false ) {
 			$where	=	preg_replace( '/\s+/', ' ', $where );
-			$where	=	str_replace( 'AND (  )', '', $where );
-			$where	=	str_replace( 'AND ( )', '', $where );
-			$where	=	str_replace( 'OR OR', 'OR', $where );
-			$where	=	str_replace( '( OR', '(', $where );
-			$where	=	str_replace( 'OR ) )', ')', $where );
-			$where	=	str_replace( 'OR )', ')', $where );
+			$where	=	str_replace( array( 'AND (  )', 'AND ( )', '(  ) AND', '( ) AND' ), '', $where );
+			$where	=	str_replace( array( 'OR OR', '( OR', 'OR ) )', 'OR )' ), array( 'OR', '(', ')', ')' ), $where );
 		}
+
 		$where		=	str_replace( 'AND ()', '', $where );
 		$pos		=	strpos( $where, '() AND' );
 		
