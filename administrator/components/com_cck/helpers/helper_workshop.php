@@ -360,6 +360,7 @@ class Helper_Workshop
 											Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true )
 										);
 				$data['stage']		=	array(
+											'-1'=>JHtml::_( 'select.option', '-1', JText::_( 'COM_CCK_STAGE_ALL' ) ),
 											'0'=>JHtml::_( 'select.option', '0', JText::_( 'COM_CCK_STAGE_FINAL' ) ),
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAGE_TEMP' ) ),
 											'1'=>JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_STAGE_1ST' ) ),

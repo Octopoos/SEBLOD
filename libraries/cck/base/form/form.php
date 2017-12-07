@@ -54,7 +54,7 @@ class CCK_Form
 			}
 		}
 		if ( $stage > -1 ) {
-			$where 	.=	' AND c.stage = '.(int)$stage;
+			$where 	.=	' AND (c.stage = '.(int)$stage.' OR c.stage = -1)';
 		}
 		
 		if ( $excluded != '' ) {
