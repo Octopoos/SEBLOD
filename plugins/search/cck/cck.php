@@ -584,7 +584,8 @@ class plgSearchCCK extends JPlugin
 			}
 		} else {
 			$ordered	=	false;
-			if ( count( $fields_order ) ) {
+
+			if ( is_array( $fields_order ) && count( $fields_order ) ) {
 				$str		=	(string)$query;
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
