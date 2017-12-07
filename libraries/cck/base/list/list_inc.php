@@ -128,8 +128,9 @@ if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
 }
 if ( $limitstart != -1 ) {
 	$start_var	=	( $app->isClient( 'administrator' ) || !JFactory::getConfig()->get( 'sef' ) ) ? 'limitstart' : 'start';
-	
-	if ( $limitstart > 0 && !(int)$app->input->getInt( $start_var ) ) {
+	$start		=	(int)$app->input->getInt( $start_var );
+
+	if ( $limitstart > 0 && !$start ) {
 		$isAltered	=	true;
 	}
 	if ( isset( $this ) && isset( $this->state ) && is_object( $this->state ) ) {

@@ -79,7 +79,6 @@ abstract class JCckEcommerceRule
 						}
 					}
 				}
-
 				if ( $r->mode ) {
 					if ( !isset( $totals[$type][$r->target_type] ) ) {
 						continue;
@@ -99,7 +98,7 @@ abstract class JCckEcommerceRule
 					$min	=	(float)number_format( (float)$r->min, 2 );
 					$max	=	(float)number_format( (float)$r->max, 2 );
 					$value	=	(float)number_format( (float)$totals[$type]['_'], 2 );
-										
+
 					if ( $value < $min ) {
 						continue;
 					}
