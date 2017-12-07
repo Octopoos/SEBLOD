@@ -456,16 +456,16 @@ class plgContentCCK extends JPlugin
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_field_link' );
 		JPluginHelper::importPlugin( 'cck_field_restriction' );
+		JPluginHelper::importPlugin( 'cck_field_typo' );
+
 		$p_sef		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '2' );
 		$p_title	=	isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['title'] : '';
-		$p_typo		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['typo'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['typo'] : 1;
-		if ( $p_typo ) {
-			JPluginHelper::importPlugin( 'cck_field_typo' );
-		}
-		
+
 		jimport( 'cck.rendering.document.document' );
+
 		$doc		=	CCK_Document::getInstance( 'html' );
 		$positions	=	array();
+
 		if ( $parent_type != '' ) {
 			$w_type	=	'(b.name = "'.$contentType.'" OR b.name = "'.$parent_type.'")';
 		} else {
@@ -486,7 +486,6 @@ class plgContentCCK extends JPlugin
 							   'client'=>$client,
    							   'doSEF'=>$p_sef,
 							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
-							   'doTypo'=>$p_typo,
 							   'error'=>0,
 							   'fields'=>array(),
 							   'id'=>$cck->id,
@@ -527,7 +526,7 @@ class plgContentCCK extends JPlugin
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
-					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
+					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
 						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';

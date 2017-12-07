@@ -20,7 +20,6 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config );
-			echo JCckDev::renderForm( $cck['core_typo'], @$options['typo'], $config );
 			echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
 			?>
         </ul>

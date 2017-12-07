@@ -133,7 +133,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 							JCckPluginLink::g_setHtml( $content[$xi][$f_name], $target );
 						}
 					}
-					if ( @$content[$xi][$f_name]->typo && $content[$xi][$f_name]->$target != '' && $config['doTypo'] ) {
+					if ( @$content[$xi][$f_name]->typo && $content[$xi][$f_name]->$target != '' ) {
 						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$content[$xi][$f_name], $content[$xi][$f_name]->typo_target, &$config ) );
 					} else {
 						$content[$xi][$f_name]->typo	=	'';

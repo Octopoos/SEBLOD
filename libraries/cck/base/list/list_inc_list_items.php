@@ -12,12 +12,7 @@ defined( '_JEXEC' ) or die;
 
 // Prepare
 JPluginHelper::importPlugin( 'cck_field_link' );
-$p_title	=	0;
-$p_typo		=	1;
-if ( $p_typo ) {
-	JPluginHelper::importPlugin( 'cck_field_typo' );
-}
-
+JPluginHelper::importPlugin( 'cck_field_typo' );
 JPluginHelper::importPlugin( 'cck_storage' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
 
@@ -77,7 +72,6 @@ if ( $count ) {
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
 								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
-								'doTypo'=>$p_typo,
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -144,7 +138,7 @@ if ( $count ) {
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
-					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
+					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
 						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';
@@ -229,7 +223,6 @@ if ( $count ) {
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
 								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
-								'doTypo'=>$p_typo,
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -296,7 +289,7 @@ if ( $count ) {
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
-					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) && $p_typo ) {
+					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
 						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';

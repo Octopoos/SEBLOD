@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 $config	=	JCckDev::init( array(), true, array( 'item' => $this->item, 'tmpl' => 'ajax' ) );
 if ( $this->item->master == 'content' ) {
-	$cck	=	JCckDev::preload( array( 'core_title', 'core_typo', 'core_sef', 'core_linkage', 'core_template' ) );
+	$cck	=	JCckDev::preload( array( 'core_title', 'core_sef', 'core_linkage', 'core_template' ) );
 } else {
 	$cck	=	JCckDev::preload( array( 'core_message_style', 'core_redirection', 'core_dev_select', 'core_message',
 										 'core_redirection_url', 'core_menuitem', 'core_dev_text', 'core_show_hide', 'core_tag_title',
