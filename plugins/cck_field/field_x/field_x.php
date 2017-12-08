@@ -1,12 +1,12 @@
 <?php
 /**
- * @version 			SEBLOD 3.x Core
- * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
- * @url				https://www.seblod.com
- * @editor			Octopoos - www.octopoos.com
- * @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
- * @license 			GNU General Public License version 2 or later; see _LICENSE.php
- **/
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				https://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2017 SEBLOD. All Rights Reserved.
+* @license 			GNU General Public License version 2 or later; see _LICENSE.php
+**/
 
 defined( '_JEXEC' ) or die;
 
@@ -117,7 +117,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	$field->name;
 		}
 		//if ( $config['pk'] ) {
-		$dispatcher	=	JEventDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 		//}
 
 		// Prepare
@@ -208,15 +208,15 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$f->state	=	'';	//todo;
 			foreach ( $value as $val ) {
 				//if ( $val != '' ) {
-				$inherit	=	array( 'name' => $name, 'xk' => $xk, 'xi' => $xi, 'parent' => $name );
-				$results	=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, $inherit, true ) );
-				$v			=	$results[0];
+					$inherit	=	array( 'name' => $name, 'xk' => $xk, 'xi' => $xi, 'parent' => $name );
+					$results	=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, $inherit, true ) );
+					$v			=	$results[0];
 
-				if ( $v != '' ) {
-					$store	.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
-					$xi++;
-				}
-				// todo: add childs (secondary) storages.. not primary!
+					if ( $v != '' ) {
+						$store	.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
+						$xi++;
+					}
+					// todo: add childs (secondary) storages.. not primary!
 				//}
 				$xk++;
 			}
@@ -301,7 +301,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 							$(this).css({"overflow":"auto"});
 						}'
 				.	'});'
-			;
+				;
 		}
 		if ( $params['del'] ) {
 			$js	.=		'var elem;'
