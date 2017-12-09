@@ -648,7 +648,7 @@ class plgSystemCCK extends JPlugin
 										$urlvars	=	'&'.$urlvars;
 									}
 								}
-								$url		=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$user->id.'&Itemid='.$itemId2.$urlvars.$return );
+								$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$user->id.'&Itemid='.$itemId2.$urlvars.$return;
 							} else {
 								$url		=	'index.php?option=com_cck&view=form&layout=edit&type='.$type.'&id='.$user->id.'&Itemid='.$itemId.$return;
 							}
