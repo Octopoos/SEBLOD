@@ -16,14 +16,16 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<?php if ( $this->item->master == 'content' ) { ?>
 	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-			echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config );
-			echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-			?>
+            echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
+            echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config );
+            echo JCckDev::renderBlank();
+            echo JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config );
+            ?>
         </ul>
-	</div>
+    </div>
     <?php } else { ?>
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>

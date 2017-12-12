@@ -15,7 +15,6 @@ class plgContentCCK extends JPlugin
 {
 	protected $cache	=	false;
 	protected $loaded	=	array();
-	protected $title	=	'';
 	
 	// onContentAfterSave
 	public function onContentAfterSave( $context, $article, $isNew )
@@ -374,16 +373,24 @@ class plgContentCCK extends JPlugin
 			$registry	=	new JRegistry;
 			$registry->loadString( $cck->{'options_'.$client} );
 			$this->loaded[$contentType.'_'.$client.'_options']	=	$registry->toArray();
-			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ) {
-				if ( $this->loaded[$contentType.'_'.$client.'_options']['title'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['title'][0]	==	'{' ) {
-					$titles		=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['title'] );
-					$lang_tag	=	JFactory::getLanguage()->getTag();
-					$this->loaded[$contentType.'_'.$client.'_options']['title']	=	( isset( $titles->{$lang_tag} ) ) ? $titles->{$lang_tag} : '';
-				}
-			}
+
 			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ) {
 				if ( $this->loaded[$contentType.'_'.$client.'_options']['sef'] == '' ) {
 					$this->loaded[$contentType.'_'.$client.'_options']['sef']	=	JCck::getConfig_Param( 'sef', '2' );
+				}
+			}
+			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['desc'] ) ) {
+				if ( $this->loaded[$contentType.'_'.$client.'_options']['desc'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['desc'][0]	==	'{' ) {
+					$descriptions	=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['desc'] );
+					$lang_tag		=	JFactory::getLanguage()->getTag();
+					$this->loaded[$contentType.'_'.$client.'_options']['desc']	=	( isset( $descriptions->{$lang_tag} ) ) ? $descriptions->{$lang_tag} : '';
+				}
+			}
+			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ) {
+				if ( $this->loaded[$contentType.'_'.$client.'_options']['title'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['title'][0]	==	'{' ) {
+					$titles			=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['title'] );
+					$lang_tag		=	JFactory::getLanguage()->getTag();
+					$this->loaded[$contentType.'_'.$client.'_options']['title']	=	( isset( $titles->{$lang_tag} ) ) ? $titles->{$lang_tag} : '';
 				}
 			}
 		}
@@ -458,6 +465,7 @@ class plgContentCCK extends JPlugin
 		JPluginHelper::importPlugin( 'cck_field_restriction' );
 		JPluginHelper::importPlugin( 'cck_field_typo' );
 
+		$p_desc		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] : '';
 		$p_sef		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '2' );
 		$p_title	=	isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['title'] : '';
 
@@ -566,16 +574,36 @@ class plgContentCCK extends JPlugin
 		
 		// Set Title
 		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
- 			$this->title	=	$fields[$p_title]->value;
- 		}
-		if ( $this->title ) {
-			if ( is_object( $article ) && isset( $article->title ) ) {
-				$article->title	=	$this->title;
+ 			$p_title	=	$fields[$p_title]->value;
+
+ 			if ( is_object( $article ) && isset( $article->title ) ) {
+				$article->title		=	$p_title;
 			} else {
-				JFactory::getDocument()->setTitle( $this->title );
+				JFactory::getDocument()->setTitle( $p_title );
 			}
-		}
-		
+ 		}
+
+ 		// Set Description
+ 		if ( $p_desc != '' && isset( $fields[$p_desc]->value ) && !empty( $fields[$p_desc]->value ) ) {
+ 			$p_desc	=	$fields[$p_desc]->value;
+ 			$p_desc	=	strip_tags( $p_desc );
+
+ 			if ( strlen( $p_desc ) > 180 ) {
+	 			$p_desc	=	substr( $p_desc, 0, 200 );
+	 			$pos	=	strrpos( $p_desc, ' ' );
+
+	 			if ( $pos !== false ) {
+	 				$p_desc	=	substr( $p_desc, 0, $pos );
+	 			}
+ 			}
+
+ 			if ( is_object( $article ) && isset( $article->metadesc ) && $article->metadesc == '' ) {
+				$article->metadesc	=	$p_desc;
+			} else {
+				JFactory::getDocument()->setDescription( $p_desc );
+			}
+ 		}
+
 		// Finalize
 		$doc->fields	=	&$fields;
 		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JUri::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
