@@ -183,23 +183,25 @@
 			<option value="2">COM_CCK_YES_FOR_SUPER_ADMIN</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="hide_edit_icon" type="radio" default="0" label="COM_CCK_CONFIG_HIDE_EDIT_ICON" description="COM_CCK_CONFIG_HIDE_EDIT_ICON_DESC" class="btn-group btn-group-yesno">
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
 		<field name="optimize_memory" type="cck" construction="core_optimize_memory" default="0" label="COM_CCK_CONFIG_OPTIMIZE_MEMORY" description="COM_CCK_CONFIG_OPTIMIZE_MEMORY_DESC" class="inputbox" />
 		<field name="responsive" type="radio" default="0" label="COM_CCK_CONFIG_RESPONSIVE" description="COM_CCK_CONFIG_RESPONSIVE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
 		<field name="sef" type="cck" construction="core_sef" default="2" label="COM_CCK_CONFIG_SEF" description="COM_CCK_CONFIG_SEF_DESC" class="inputbox" cck_selectlabel="" />
-		<field name="sef_canonical" type="radio" default="0" label="COM_CCK_CONFIG_SEF_CANONICAL" description="COM_CCK_CONFIG_SEF_CANONICAL_DESC" class="btn-group btn-group-yesno">
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
+		<field name="sef_canonical_list" type="cck" construction="core_sef_canonical" default="0" label="COM_CCK_CONFIG_SEF_CANONICAL_LIST" description="COM_CCK_CONFIG_SEF_CANONICAL_LIST_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="sef_root" type="sql" default="0" label="COM_CCK_CONFIG_SEF_ROOT" description="COM_CCK_CONFIG_SEF_ROOT_DESC" query="SELECT id, title FROM #__menu WHERE published=1 AND client_id=0 AND link LIKE 'index.php?option=com_cck&amp;%' ORDER BY title" key_field="id" value_field="title" class="inputbox">
 			<option value="0">JOPTION_USE_DEFAULT</option>
 			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
+		</field>
+		<field name="COM_CCK_CONFIG_LEGEND_JOOMLA_OVERRIDES" type="spacer" hr="false" />
+		<field name="hide_edit_icon" type="radio" default="0" label="COM_CCK_CONFIG_HIDE_EDIT_ICON" description="COM_CCK_CONFIG_HIDE_EDIT_ICON_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="sef_canonical" type="radio" default="0" label="COM_CCK_CONFIG_SEF_CANONICAL" description="COM_CCK_CONFIG_SEF_CANONICAL_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
 		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />

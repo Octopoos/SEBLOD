@@ -105,7 +105,7 @@ class CCKViewList extends JViewLegacy
 		}
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
-		
+
 		// Pagination
 		$pagination	=	$params->get( 'show_pagination' );
 		
@@ -113,7 +113,7 @@ class CCKViewList extends JViewLegacy
 		jimport( 'cck.base.list.list' );
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 		$pagination	=	$this->getModel()->_getPagination( $total_items );
-		
+
 		// Set
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
@@ -219,6 +219,37 @@ class CCKViewList extends JViewLegacy
 		if ( $this->load_resource ) {
 			$this->json_resource		=	$options->get( 'json_resource', '{}' );
 			$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
+		}
+
+		// Canonical
+		if ( $sef_canonical = $options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 0 ) ) ) {
+			$current	=	JUri::getInstance()->current();
+
+			if ( ( $sef_canonical == 2 || $sef_canonical == 3 ) && $start ) {
+				$url	=	$current.'?start='.$start;	
+			} else {
+				$url	=	$current;
+			}
+
+			$this->document->addHeadLink( $url, 'canonical' );
+
+			if ( $sef_canonical == 3 ) {
+				$pages	=	$pagination->getPaginationPages();
+
+				if ( isset( $pages['previous']['active'] ) && $pages['previous']['active'] ) {
+					if ( !empty( $pages['previous']['data']->base ) ) {
+						$url	=	$current.'?start='.$pages['previous']['data']->base;
+					} else {
+						$url	=	$current;
+					}
+					$this->document->addHeadLink( $url, 'prev' );
+				}
+				if ( isset( $pages['next']['active'] ) && $pages['next']['active'] ) {
+					$this->document->addHeadLink( $current.'?start='.$pages['next']['data']->base, 'next' );
+				}
+			}
+
+			$app->cck_canonical	=	true;
 		}
 
 		// Force Titles to be hidden

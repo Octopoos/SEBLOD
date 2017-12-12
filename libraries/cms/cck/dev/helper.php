@@ -208,19 +208,21 @@ abstract class JCckDevHelper
 			return array();
 		}
 		if ( !isset( $params[$name] )  ) {
-			$object				=	JCckDatabase::loadObject( 'SELECT a.storage_location, a.options FROM #__cck_core_searchs AS a WHERE a.name = "'.$name.'"' );
+			$object				=	JCckDatabase::loadObject( 'SELECT options, sef_route, sef_route_aliases, storage_location FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $name ) );
 			$object->options	=	json_decode( $object->options );
 
-			$params[$name]				=	array();
+			$params[$name]		=	array();
 
 			if ( $sef != '' ) {
-				$params[$name]['doSEF']	=	$sef;
+				$params[$name]['doSEF']		=	$sef;
 			} else {
-				$params[$name]['doSEF']	=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+				$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
 			}
 
-			$params[$name]['join_key']	=	'pk';
-			$params[$name]['location']	=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
+			$params[$name]['join_key']		=	'pk';
+			$params[$name]['location']		=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
+			$params[$name]['sef_aliases']	=	$object->sef_route_aliases;
+			$params[$name]['sef_types']		=	$object->sef_route;
 		}
 		
 		return $params[$name];

@@ -87,8 +87,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Set
 		if ( $table == self::$table ) {
-			$storage			=	self::_getTable( $pk, true );
-			$storage->slug		=	( $storage->alias ) ? $storage->id.':'.$storage->alias : $storage->id;
+			$storage	=	self::_getTable( $pk, true );
 
 			if ( 1 == 1 ) {
 				$storage->author_alias	=	JCckDatabaseCache::loadResult( 'SELECT b.alias as author_alias FROM #__cck_core AS a'
@@ -99,10 +98,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		} else {
 			$storage			=	parent::g_onCCK_Storage_LocationPrepareContent( $table, $pk );
 			if ( ! isset( $config['storages'][self::$table] ) ) {
-				$config['storages'][self::$table]		=	self::_getTable( $pk, true );
-				$config['storages'][self::$table]->slug	=	( $config['storages'][self::$table]->alias ) ? $config['storages'][self::$table]->id.':'.$config['storages'][self::$table]->alias
-																										 : $config['storages'][self::$table]->id;
-				$config['author']						=	$config['storages'][self::$table]->{self::$author};
+				$config['storages'][self::$table]	=	self::_getTable( $pk, true );
+				$config['author']					=	$config['storages'][self::$table]->{self::$author};
 			}
 		}
 		if ( isset( $config['doSEF'] ) && $config['doSEF'] && isset( $row->readmore_link ) ) {
@@ -159,7 +156,23 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		// Prepare
 		if ( $load ) {
 			if ( $table == self::$table ) {
+				$sef_slug			=	false;
 				$select				=	( $config['doSEF'][0] == '5' ) ? ', d.alias AS author_alias' : '';
+
+				if ( JCckDevHelper::isMultilingual() ) {
+					$lang			=	JFactory::getLanguage();
+					$lang_tag		=	JFactory::getLanguage()->getTag();
+					$sef_aliases	=	1; /* TODO */
+
+					if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+						$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+						
+						$sef_slug	=	true;
+						$select		.=	', f.alias_'.$lang_sef.' AS alias_slug, g.alias_'.$lang_sef.' AS category_alias_slug';
+					}
+				}
+
 				$query				=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
 									.	' FROM '.$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
 				
@@ -167,11 +180,25 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$query			.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
 									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
 				}
+				
+				if ( $sef_slug ) {
+					$query			.=	' LEFT JOIN #__cck_store_item_content AS f on f.id = a.id';
+					$query			.=	' LEFT JOIN #__cck_store_item_categories AS g on g.id = a.catid';
+				}
+
 				$query				.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
 
 				$storages[$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
+
 				foreach ( $storages[self::$table] as $s ) {
-					$s->slug		=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
+					if ( $sef_slug && $s->alias_slug ) {
+						$s->slug		=	$s->id.':'.$s->alias_slug;
+					} else {
+						$s->slug		=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
+					}
+					if ( $sef_slug && $s->category_alias_slug ) {
+						$s->category_alias	=	$s->category_alias_slug;
+					}
 				}
 			} else {
 				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE id IN ('.$config['pks'].')', 'id' );
@@ -426,15 +453,53 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$table->load( $pk );
 			if ( $table->id ) {
 				if ( $join ) { // todo:join
-					$join						=	JCckDatabaseCache::loadObject( 'SELECT a.title, a.alias FROM #__categories AS a WHERE a.id = '.$table->catid );	//@
-					if ( is_object( $join ) && isset( $join->title ) ) {
-						$table->category_title	=	$join->title;
-						$table->category_alias	=	$join->alias;
+					$join		=	'';
+					$select		=	'';
+					$sef_slug	=	false;
+
+					if ( JCckDevHelper::isMultilingual() ) {
+						$lang			=	JFactory::getLanguage();
+						$lang_tag		=	JFactory::getLanguage()->getTag();
+						$sef_aliases	=	1; /* TODO */
+
+						if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+							$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+							
+							$sef_slug	=	true;
+
+							$select		.=	' , c.alias_'.$lang_sef.' AS alias_slug, d.alias_'.$lang_sef.' AS category_alias_slug';
+							$join		.=	' LEFT JOIN #__cck_store_item_content AS c ON c.id = a.id'
+										.	' LEFT JOIN #__cck_store_item_categories AS d ON d.id = a.catid';
+						}
+					}
+
+					$query				=	'SELECT b.title AS category_title, b.alias AS category_alias'.$select
+										.	' FROM #__content AS a'
+										.	' LEFT JOIN #__categories AS b ON b.id = a.catid'
+										.	$join
+										.	' WHERE a.id = '.$table->id;
+					$join				=	JCckDatabaseCache::loadObject( $query );	//@
+
+					if ( is_object( $join ) ) {
+						if ( $sef_slug && $join->alias_slug ) {
+							$table->slug	=	$table->id.':'.$join->alias_slug;
+						} else {
+							$table->slug	=	( $table->alias ) ? $table->id.':'.$table->alias : $table->id;
+						}
+						if ( $sef_slug && $join->category_alias_slug ) {
+							$table->category_alias	=	$join->category_alias_slug;
+						} else {
+							$table->category_alias	=	$join->category_alias;
+						}
+						$table->category_title	=	$join->category_title;
 					} else {
 						$table->category_title	=	'';
 						$table->category_alias	=	'';
+						$table->slug			=	'';
 					}
 				}
+
 				if ( JCck::on( '3.1' ) ) {
 					$table->tags	=	new JHelperTags;
 
@@ -672,6 +737,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	public static function getRoute( $item, $sef, $itemId, $config = array(), $lang = '' )
 	{
 		$route		=	'';
+		
 		if ( is_numeric( $item ) ) {
 			$select	=	( $sef[0] == '5' ) ? ', a.created_by, d.alias AS author_alias' : '';
 			$query	=	'SELECT a.id, a.alias, a.catid, a.language, b.alias AS category_alias'.$select
@@ -684,10 +750,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$query	.=	' WHERE a.id = '.(int)$item;
 			
 			$item	=	JCckDatabaseCache::loadObject( $query );
+			
 			if ( empty( $item ) ) {
 				return '';
 			}
 		}
+		
 		$pk			=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 		$item->slug	=	( $item->alias ) ? $pk.':'.$item->alias : $pk;
 		
@@ -781,14 +849,25 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// parseRoute
 	public static function parseRoute( &$vars, $segments, $n, $config )
 	{
-		$active			=	JFactory::getApplication()->getMenu()->getActive();
-		$id				=	0;
-		$join			=	'';
-		$where			=	'';
-		
-		$vars['option']	=	'com_content';
-		$vars['view']	=	'article';
-		
+		$id					=	0;
+		$isMultiAlias		=	false;
+		$isMultiLanguage	=	JCckDevHelper::isMultilingual();
+		$join				=	'';
+		$vars['option']		=	'com_content';
+		$vars['view']		=	'article';
+		$where				=	'';
+
+		if ( $isMultiLanguage ) {
+			$lang		=	JFactory::getLanguage();
+			$lang_tag	=	JFactory::getLanguage()->getTag();
+
+			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+				$isMultiAlias	=	true;
+				$languages		=	JLanguageHelper::getLanguages( 'lang_code' );
+				$lang_sef		=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+			}
+		}
+
 		// Prepare the query
 		if ( $n == 2 ) {
 			if ( $config['doSEF'][0] == '5' ) {
@@ -800,25 +879,28 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$where				=	' AND b.cck = '.JCckDatabase::quote( (string)$segments[0] );
 			} else {
 				$join				=	' LEFT JOIN #__categories AS b on b.id = a.catid';
+
 				if ( $config['doSEF'] == '1'  ) {
 					$where			=	' AND b.id = '.(int)$segments[0];
 					$vars['catid']	=	$segments[0];
 				} else {
 					$segments[0]	=	str_replace( ':', '-', $segments[0] );
-					$where			=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
+
+					if ( $isMultiLanguage && $isMultiAlias ) {
+						$join		=	' LEFT JOIN #__cck_store_item_categories AS b on b.id = a.catid';
+						$where		=	' AND b.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[0] );
+					} else {
+						$where		=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
+					}
 				}
 			}
 		}
 		
 		// Retrieve Content Type(s)
-		if ( isset( $active->query['search'] ) && $active->query['search'] ) {
-			$cck			=	JCckDatabaseCache::loadResult( 'SELECT sef_route FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $active->query['search'] ) );
-			
-			if ( $cck != '' ) {
-				if ( $config['doSEF'][0] != '3' ) {
-					$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = a.id';
-					$where	.=	( strpos( $cck, ',' ) !== false ) ? ' AND e.cck IN ("'.str_replace( ',', '","', $cck ).'")' : ' AND e.cck = "'.$cck.'"';
-				}
+		if ( isset( $config['sef_types'] ) && $config['sef_types'] != '' ) {
+			if ( $config['doSEF'][0] != '3' ) {
+				$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = a.id';
+				$where	.=	( strpos( $config['sef_types'], ',' ) !== false ) ? ' AND e.cck IN ("'.str_replace( ',', '","', $config['sef_types'] ).'")' : ' AND e.cck = "'.$config['sef_types'].'"';
 			}
 		}
 
@@ -844,10 +926,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 		} else {
 			$segments[$n - 1]	=	str_replace( ':', '-', $segments[$n - 1] );
-			$where				=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 
-			if ( JCckDevHelper::isMultilingual() ) {
-				$where			.=	' AND (a.language = "*" OR a.language = "'.JFactory::getLanguage()->getTag().'")';
+			if ( $isMultiLanguage && $isMultiAlias ) {
+				$join		.=	' LEFT JOIN #__cck_store_item_content AS f on f.id = a.id';
+				$where		=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+			} else {
+				$where		=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+			}
+			if ( $isMultiLanguage ) {
+				$where		.=	' AND (a.language = "*" OR a.language = "'.$lang_tag.'")';
 			}
 		}
 
