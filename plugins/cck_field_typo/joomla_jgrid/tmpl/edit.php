@@ -22,6 +22,9 @@ JCckDev::initScript( 'typo', $this->item );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Start', 'defaultvalue'=>'1', 'options'=>'0=0||1=1', 'storage_field'=>'start' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'', 'size'=>24, 'storage_field'=>'class1' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'input-small', 'size'=>24, 'storage_field'=>'class2' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'defaultvalue'=>'', 'selectlabel'=>'', 'options'=>'Use Native=||SEBLOD Toolbox Addon=optgroup||Task Process Ajax=process_ajax', 'storage_field'=>'task' ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
+		echo JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'task_id_process' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_IDENTIFIER' ).'</label>'
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'id', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'identifier' ) )
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'1', 'storage_field'=>'use_identifier' ) )
@@ -51,6 +54,9 @@ jQuery(document).ready(function($) {
 	$('#class1').isVisibleWhen('type','dropdown');
 	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden');
 	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,increment');
+	$('#task').isVisibleWhen('type','sort');
+	$('#blank_li2,#task_id_process').isVisibleWhen('task','process_ajax');	
+
 	$('#identifier_suffix').isDisabledWhen('type','increment');
 	$('#blank_li').isVisibleWhen('type','increment');
 	$('#start').isVisibleWhen('type','increment');

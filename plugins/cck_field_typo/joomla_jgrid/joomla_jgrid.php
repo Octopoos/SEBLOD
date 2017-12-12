@@ -233,8 +233,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 							$loaded			= 	true;
 							$tableWrapper	=	$formId . ' table.table';
-							$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
 							
+							$task			=	$typo->get( 'task', '' );
+							$task_id		=	$typo->get( 'task_id_process', '' );
+
+							if ( $task == 'process_ajax' && $task_id ) {
+								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id );
+							} else {
+								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
+							}
+
 							JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
 						}
 					}
