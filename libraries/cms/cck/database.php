@@ -146,12 +146,6 @@ abstract class JCckDatabase
 		return $res;
 	}
 	
-	// loadResultArray (deprecated)
-	public static function loadResultArray( $query )
-	{
-		return self::loadColumn( $query );
-	}
-	
 	// loadObject
 	public static function loadObject( $query )
 	{

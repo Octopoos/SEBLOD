@@ -316,16 +316,6 @@ abstract class JCck
 		return self::$_user;
 	}
 	
-	// getUser_Value
-	public static function getUser_Value( $name, $default = '' )
-	{
-		if ( ! self::$_user ) {
-			self::_setUser();
-		}
-				
-		return ( @self::$_user->$name != '' ) ? @self::$_user->$name : $default;
-	}
-	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// _
