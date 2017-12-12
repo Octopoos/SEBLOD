@@ -73,16 +73,5 @@ class CommonHelper_Include
 		$js		=	'jQuery(document).ready(function($){ $(".scroll").click(function(event){ event.preventDefault(); $("html,body").animate({scrollTop:$(this.hash).offset().top}, '.$time.'); }); });';
 		$doc->addScriptDeclaration( $js );
 	}
-	
-	// addTooltip
-	public static function addTooltip( $elem = '', $pos_my = 'top left', $pos_at = 'bottom right', $classes = '', $script = true, $tmpl = '' )
-	{
-	}
-	
-	// addValidation (deprecated)
-	public static function addValidation( $rules, $options, $id = '', &$config = array() )
-	{
-		JCckDev::addValidation( $rules, $options, $id, $config );
-	}
 }
 ?>
