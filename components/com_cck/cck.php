@@ -10,10 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$lang	=	JFactory::getLanguage();
-$lang->load( 'com_cck_default', JPATH_SITE );
-
-require_once JPATH_COMPONENT.'/helpers/helper_include.php'; /* (deprecated) to be removed in 3.12 */
+JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
 
 $controller	=	JControllerLegacy::getInstance( 'CCK' );
 $controller->execute( JFactory::getApplication()->input->get( 'task' ) );

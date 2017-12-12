@@ -23,8 +23,6 @@
 	</install>
 	
 	<files folder="site">
-		<folder>assets</folder>
-		<folder>helpers</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 		
