@@ -571,6 +571,7 @@
 /administrator/manifests/packages/pkg_cck_ecommerce.xml
 /administrator/manifests/packages/pkg_cck_field_code.xml
 /administrator/manifests/packages/pkg_cck_field_geoip.xml
+/administrator/manifests/packages/pkg_cck_field_item_x.xml
 /administrator/manifests/packages/pkg_cck_field_join_x.xml
 /administrator/manifests/packages/pkg_cck_field_restriction_joomla_acl.xml
 /administrator/manifests/packages/pkg_cck_field_seblod.xml
@@ -757,6 +758,7 @@
 /language/en-GB/en-GB.pkg_cck_webservices.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_code.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_geoip.sys.ini
+/language/en-GB/en-GB.pkg_cck_field_item_x.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_join_x.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/en-GB/en-GB.pkg_cck_field_seblod.sys.ini
@@ -878,6 +880,7 @@
 /language/fr-FR/fr-FR.pkg_cck_webservices.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_code.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_geoip.sys.ini
+/language/fr-FR/fr-FR.pkg_cck_field_item_x.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_join_x.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_restriction_joomla_acl.sys.ini
 /language/fr-FR/fr-FR.pkg_cck_field_seblod.sys.ini
@@ -1490,6 +1493,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_iframe.sys.ini
 /plugins/cck_field/iframe/*
 
+######## SEBLOD Plug-ins >> Field >> ItemX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_item_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_item_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_item_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_item_x.sys.ini
+/plugins/cck_field/item_x/*
+
 ######## SEBLOD Plug-ins >> Field >> JoinX
 
 /administrator/language/en-GB/en-GB.plg_cck_field_join_x.ini
@@ -1521,6 +1532,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_radio_numeric.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_radio_numeric.sys.ini
 /plugins/cck_field/radio_numeric/*
+
+######## SEBLOD Plug-ins >> Field >> Search Breadcrumbs
+
+/administrator/language/en-GB/en-GB.plg_cck_field_search_breadcrumbs.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_search_breadcrumbs.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_breadcrumbs.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_search_breadcrumbs.sys.ini
+/plugins/cck_field/search_breadcrumbs/*
 
 ######## SEBLOD Plug-ins >> Field >> Search Join
 
@@ -1624,7 +1643,7 @@ Temporary Items
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_order.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_order.sys.ini
-/plugins/cck_field/cck_ecommerce_payment_gateway/*
+/plugins/cck_field/cck_ecommerce_order/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Payment Gateway
 
@@ -1632,7 +1651,7 @@ Temporary Items
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_payment_gateway.sys.ini
-/plugins/cck_field/cck_ecommerce_order/*
+/plugins/cck_field/cck_ecommerce_payment_gateway/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Price
 
@@ -1658,13 +1677,13 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_quantity.sys.ini
 /plugins/cck_field/cck_ecommerce_quantity/*
 
-######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Shipping
+######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Shipping Methord
 
-/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_shipping.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_shipping.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_shipping.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_shipping.sys.ini
-/plugins/cck_field/cck_ecommerce_shipping/*
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_shipping_method.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_cck_ecommerce_shipping_method.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_shipping_method.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_ecommerce_shipping_method.sys.ini
+/plugins/cck_field/cck_ecommerce_shipping_method/*
 
 ######## SEBLOD Plug-ins >> Field >> SEBLOD eCommerce Store
 
@@ -1702,6 +1721,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_select_dynamic_cascade.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_select_dynamic_cascade.sys.ini
 /plugins/cck_field/select_dynamic_cascade/*
+
+######## SEBLOD Plug-ins >> Field >> Slider
+
+/administrator/language/en-GB/en-GB.plg_cck_field_slider.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_slider.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_slider.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_slider.sys.ini
+/plugins/cck_field/slider/*
 
 ######## SEBLOD Plug-ins >> Field >> SQL (Pack)
 
@@ -1776,6 +1803,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.sys.ini
 /plugins/cck_field_link/history_back_js/*
+
+######## SEBLOD Plug-ins >> Link >> ItemX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_item_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_item_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_item_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_item_x.sys.ini
+/plugins/cck_field_restriction/item_x/*
 
 ######## SEBLOD Plug-ins >> Link >> JoinX
 
@@ -2133,6 +2168,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.sys.ini
 /plugins/cck_field_restriction/increment/*
+
+######## SEBLOD Plug-ins >> Restriction >> ItemX
+
+/administrator/language/en-GB/en-GB.plg_cck_field_link_item_x.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_link_item_x.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_item_x.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_link_item_x.sys.ini
+/plugins/cck_field_link/item_x/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 
