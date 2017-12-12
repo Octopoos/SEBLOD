@@ -1650,6 +1650,20 @@ INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e
 -- --------------------------------------------------------
 
 
+CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
+  `id` int(10) unsigned NOT NULL,
+  `cck` varchar(50) NOT NULL,
+  `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias_fr` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `idx_alias_en` (`alias_en`(191)),
+  KEY `idx_alias_fr` (`alias_fr`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
+
+
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
   `id` int(10) unsigned NOT NULL,
   `cck` varchar(50) NOT NULL,
