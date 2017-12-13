@@ -20,7 +20,7 @@ class Helper_Display extends CommonHelper_Display
 	{
 		?>
 		<div class="copyright">
-			<strong><a target="_blank" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::sprintf( 'COM_CCK_COPYRIGHT_SEBLOD', JText::_( 'COM_CCK_'.CCK_BUILDER ) ); ?>
+			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::sprintf( 'COM_CCK_COPYRIGHT_SEBLOD', JText::_( 'COM_CCK_'.CCK_BUILDER ) ); ?>
 			<br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2017'; ?>
 			<?php
 			if ( $cpanel !== false ) {

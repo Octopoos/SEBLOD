@@ -74,7 +74,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center">
-				<a target="_blank" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+				<a target="_blank" rel="noopener noreferrer" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
 					 <?php echo $action; ?>
 				</a>
 			</td>

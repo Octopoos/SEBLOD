@@ -101,10 +101,10 @@ class pkg_cckInstallerScript
 		</div>
 		<legend><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_GETTING_STARTED' ); ?></legend>
 		<div style="margin-bottom:30px;">
-			<a class="btn btn-success" href="https://www.seblod.com/store" target="_blank"><span class="icon-puzzle"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_MARKETPLACE' ); ?></a>
-			<a class="btn btn-primary" href="https://www.seblod.com/resources/manuals" target="_blank"><span class="icon-book"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_DOCUMENTATION' ); ?></a>
-			<a class="btn btn-info" href="https://www.seblod.com/resources/videos" target="_blank"><span class="icon-play-circle"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_VIDEOS' ); ?></a>
-			<a class="btn" href="https://www.seblod.com/changelogs" target="_blank"><span class="icon-file-2"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_LATEST_CHANGELOG' ); ?></a>
+			<a class="btn btn-success" href="https://www.seblod.com/store" target="_blank" rel="noopener noreferrer"><span class="icon-puzzle"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_MARKETPLACE' ); ?></a>
+			<a class="btn btn-primary" href="https://www.seblod.com/resources/manuals" target="_blank" rel="noopener noreferrer"><span class="icon-book"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_DOCUMENTATION' ); ?></a>
+			<a class="btn btn-info" href="https://www.seblod.com/resources/videos" target="_blank" rel="noopener noreferrer"><span class="icon-play-circle"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_VIDEOS' ); ?></a>
+			<a class="btn" href="https://www.seblod.com/changelogs" target="_blank" rel="noopener noreferrer"><span class="icon-file-2"></span> <?php echo JText::_( 'LIB_CCK_INSTALLATION_LATEST_CHANGELOG' ); ?></a>
 		</div>
 		<legend><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_RECOMMENDED_SETTINGS' ); ?></legend>
 		<table class="table table-bordered">

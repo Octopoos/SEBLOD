@@ -69,7 +69,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDevAccordion::end(); ?>
             <?php if ( $uix != 'compact' ) { ?>
             <div class="alert alert-info">
-                <a href="http://jed.seblod.com" target="_blank" class="close"><span class="icon-arrow-right-2"></span></a>
+                <a href="http://jed.seblod.com" target="_blank" rel="noopener noreferrer" class="close"><span class="icon-arrow-right-2"></span></a>
                 <div><strong>If you use SEBLOD, please post a rating & review at the JED. Thank you.</strong></div>
             </div>
             <?php } ?>

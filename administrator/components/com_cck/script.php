@@ -352,7 +352,7 @@ class com_cckInstallerScript
 			} else {
 				$user_link	=	'index.php?option=com_users&task=user.edit&id='.$user_id;
 			}
-			$user_name	=	'<a href="'.$user_link.'" target="_blank">'.$user->name.'</a>';
+			$user_name	=	'<a href="'.$user_link.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 			$text		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
 		}
 		$title		=	'SEBLOD '.$version;

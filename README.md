@@ -5,15 +5,15 @@ SEBLOD is a Web Application Builder &amp; Content Construction Kit (CCK) for Joo
 
 Getting Started
 ======
-- <a href="https://demo.seblod.com" target="_blank">Demo</a>
-- <a href="https://www.seblod.com/resources/manuals" target="_blank">Manuals</a>
-- <a href="https://www.seblod.com/community/forums" target="_blank">Forums</a>
+- <a href="https://demo.seblod.com" target="_blank" rel="noopener noreferrer">Demo</a>
+- <a href="https://www.seblod.com/resources/manuals" target="_blank" rel="noopener noreferrer">Manuals</a>
+- <a href="https://www.seblod.com/community/forums" target="_blank" rel="noopener noreferrer">Forums</a>
 
 Going Further
 ======
-- <a href="https://www.seblod.com/store/clubs" target="_blank">Clubs</a>
-- <a href="https://www.seblod.com/store/extensions" target="_blank">Marketplace</a>
-- <a href="https://www.seblod.com/store/services" target="_blank">Support</a>
+- <a href="https://www.seblod.com/store/clubs" target="_blank" rel="noopener noreferrer">Clubs</a>
+- <a href="https://www.seblod.com/store/extensions" target="_blank" rel="noopener noreferrer">Marketplace</a>
+- <a href="https://www.seblod.com/store/services" target="_blank" rel="noopener noreferrer">Support</a>
 
 Get Involved?
 ======

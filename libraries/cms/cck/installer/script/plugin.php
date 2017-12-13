@@ -145,7 +145,7 @@ class JCckInstallerScriptPlugin
 			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
 		}
 		$user		=	JFactory::getUser();
-		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank">'.$user->name.'</a>';
+		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
