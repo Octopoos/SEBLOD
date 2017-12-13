@@ -222,18 +222,8 @@ class JCckPluginLink extends JPlugin
 			foreach ( $field->value as $f ) {
 				if ( is_object( $f ) ) {
 					if ( isset( $f->link ) ) {
-						$target			=	$f->typo_target;
-
-						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
-						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-						$link_title		=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
-						$attr			=	( $attr != '' ) ? ' '.$attr : '';
-						
-						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
+						$target		=	$f->typo_target;						
+						$f->html	=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.self::getLinkAttr( $f ).'>'.$f->$target.'</a>' : '';
 					}
 				}
 			}
@@ -242,19 +232,9 @@ class JCckPluginLink extends JPlugin
 			foreach ( $field->values as $f ) {
 				if ( is_object( $f ) ) {
 					if ( isset( $f->link ) ) {
-						$target			=	$f->typo_target;
-
-						$link_onclick	=	( isset( $f->link_onclick ) && $f->link_onclick != '' ) ? 'onclick="'.$f->link_onclick.'" ' : '';
-						$link_attr		=	( isset( $f->link_attributes ) && $f->link_attributes != '' ) ? $f->link_attributes : '';
-						$link_class		=	( isset( $f->link_class ) && $f->link_class != '' ) ? 'class="'.$f->link_class.'" ' : '';
-						$link_rel		=	( isset( $f->link_rel ) && $f->link_rel != '' ) ? 'rel="'.$f->link_rel.'" ' : '';
-						$link_target	=	( isset( $f->link_target ) && $f->link_target != '' ) ? 'target="'.$f->link_target.'" ' : '';
-						$link_title	=	( isset( $f->link_title ) && $f->link_title != '' ) ? 'title="'.$f->link_title.'" ' : '';
-						$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
-						$attr			=	( $attr != '' ) ? ' '.$attr : '';
-						
-						$f->html		=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.$attr.'>'.$f->$target.'</a>' : '';
-						$html			.=	$f->html.', ';
+						$target		=	$f->typo_target;						
+						$f->html	=	( $f->$target != '' ) ? '<a href="'.$f->link.'"'.self::getLinkAttr( $f ).'>'.$f->$target.'</a>' : '';
+						$html		.=	$f->html.', ';
 					}
 				}
 			}
@@ -263,20 +243,47 @@ class JCckPluginLink extends JPlugin
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 			
 			if ( $applyLink ) {
-				$link_attr		=	( isset( $field->link_attributes ) && $field->link_attributes != '' ) ? $field->link_attributes : '';
-				$link_class		=	( isset( $field->link_class ) && $field->link_class != '' ) ? 'class="'.$field->link_class.'" ' : '';
-				$link_onclick	=	( isset( $field->link_onclick ) && $field->link_onclick != '' ) ? 'onclick="'.$field->link_onclick.'" ' : '';
-				$link_rel		=	( isset( $field->link_rel ) && $field->link_rel != '' ) ? 'rel="'.$field->link_rel.'" ' : '';
-				$link_target	=	( isset( $field->link_target ) && $field->link_target != '' ) ? 'target="'.$field->link_target.'" ' : '';
-				$link_title		=	( isset( $field->link_title ) && $field->link_title != '' ) ? 'title="'.$field->link_title.'" ' : '';
-				$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
-				$attr			=	( $attr != '' ) ? ' '.$attr : '';
-
-				$field->html	=	( $field->$target != '' ) ? '<a href="'.$field->link.'"'.$attr.'>'.$field->$target.'</a>' : '';
+				$field->html	=	( $field->$target != '' ) ? '<a href="'.$field->link.'"'.self::getLinkAttr( $field ).'>'.$field->$target.'</a>' : '';
 			} else {
 				$field->html	=	( $field->$target != '' ) ? $field->$target : '';
 			}
 		}
+	}
+
+	// getLinkAttr
+	public static function getLinkAttr( $field )
+	{
+		$link_attr		=	( isset( $field->link_attributes ) && $field->link_attributes != '' ) ? $field->link_attributes : '';
+		$link_class		=	( isset( $field->link_class ) && $field->link_class != '' ) ? 'class="'.$field->link_class.'" ' : '';
+		$link_onclick	=	( isset( $field->link_onclick ) && $field->link_onclick != '' ) ? 'onclick="'.$field->link_onclick.'" ' : '';
+		$link_title		=	( isset( $field->link_title ) && $field->link_title != '' ) ? 'title="'.$field->link_title.'" ' : '';
+		
+		if ( isset( $field->link_target ) && $field->link_target != '' ) {
+			$link_target	=	 'target="'.$field->link_target.'" ';
+
+			if ( $field->link_target == '_blank' ) {
+				$rel		=	trim( JCck::getConfig_Param( 'link_rel_blank', 'noopener noreferrer' ) );
+
+				if ( isset( $field->link_rel ) && $field->link_rel != '' ) {
+					$rel	=	explode( ' ', $rel );
+
+					if ( count( $rel ) ) {
+						$link_rel	=	explode( ' ', $field->link_rel );
+						$rel		=	array_merge( $link_rel, array_diff( $rel, $link_rel ) );
+						$rel		=	implode( ' ', $rel );
+					}
+				}
+				$field->link_rel	=	trim( $rel );
+			}
+		} else {
+			$link_target	=	'';
+		}
+		$link_rel		=	( isset( $field->link_rel ) && $field->link_rel != '' ) ? 'rel="'.$field->link_rel.'" ' : '';			
+
+		$attr			=	trim( $link_onclick.$link_class.$link_rel.$link_target.$link_title.$link_attr );
+		$attr			=	( $attr != '' ) ? ' '.$attr : '';
+
+		return $attr;
 	}
 }
 ?>

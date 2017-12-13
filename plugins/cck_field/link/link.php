@@ -73,6 +73,22 @@ class plgCCK_FieldLink extends JCckPluginField
 			$field->link_target	=	$target;
 			$field->link_class	=	$class;
 			$field->link_rel	=	$rel;
+
+			if ( $field->link_target == '_blank' ) {
+				$rel		=	trim( JCck::getConfig_Param( 'link_rel_blank', 'noopener noreferrer' ) );
+
+				if ( isset( $field->link_rel ) && $field->link_rel != '' ) {
+					$rel	=	explode( ' ', $rel );
+
+					if ( count( $rel ) ) {
+						$link_rel	=	explode( ' ', $field->link_rel );
+						$rel		=	array_merge( $link_rel, array_diff( $rel, $link_rel ) );
+						$rel		=	implode( ' ', $rel );
+					}
+				}
+				$field->link_rel	=	trim( $rel );
+			}
+
 			$field->linked		=	true;
 			$class				=	( $class != '' ) ? 'class="'.$class.'" ' : '';
 			$rel				=	( $rel != '' ) ? ' rel="'.$rel.'"' : '';
