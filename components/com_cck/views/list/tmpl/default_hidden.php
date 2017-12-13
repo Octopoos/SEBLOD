@@ -30,24 +30,30 @@ $js		=	'
 									}
 								});
 							}
-							if ($("#boxchecked").val() > 0) {
-								$("[data-cck-has-boxchecked]").show();
-								$("[data-cck-has-no-boxchecked]").hide();
+							if ($("#boxchecked").val() == 1) {
+								$("[data-cck-has-boxchecked]").hide();
+								$("[data-cck-has-boxchecked=\"single\"],[data-cck-has-boxchecked=\"\"]").show();
+							} else if ($("#boxchecked").val() > 0) {
+								$("[data-cck-has-boxchecked]").hide();
+								$("[data-cck-has-boxchecked=\"multiple\"],[data-cck-has-boxchecked=\"\"]").show();
 							} else {
 								$("[data-cck-has-boxchecked]").hide();
-								$("[data-cck-has-no-boxchecked]").show();
+								$("[data-cck-has-boxchecked=\"none\"]").show();
 							}
 						}
 					});
 				});
 				$(document).ready(function() {
 					if ($("#boxchecked").length) {
-						if ($("#boxchecked").val() > 0) {
-							$("[data-cck-has-boxchecked]").show();
-							$("[data-cck-has-no-boxchecked]").hide();
+						if ($("#boxchecked").val() == 1) {
+							$("[data-cck-has-boxchecked]").hide();
+							$("[data-cck-has-boxchecked=\"single\"],[data-cck-has-boxchecked=\"\"]").show();
+						} else if ($("#boxchecked").val() > 0) {
+							$("[data-cck-has-boxchecked]").hide();
+							$("[data-cck-has-boxchecked=\"multiple\"],[data-cck-has-boxchecked=\"\"]").show();
 						} else {
 							$("[data-cck-has-boxchecked]").hide();
-							$("[data-cck-has-no-boxchecked]").show();
+							$("[data-cck-has-boxchecked=\"none\"]").show();
 						}
 						observer.observe(document.querySelector("#boxchecked"), {attributes:true});
 					}
