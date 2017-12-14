@@ -162,7 +162,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				if ( JCckDevHelper::isMultilingual() ) {
 					$lang			=	JFactory::getLanguage();
 					$lang_tag		=	JFactory::getLanguage()->getTag();
-					$sef_aliases	=	1; /* TODO */
+					$sef_aliases	=	1; /* TODO#SEBLOD: */
 
 					if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
 						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
@@ -452,7 +452,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( $pk > 0 ) {
 			$table->load( $pk );
 			if ( $table->id ) {
-				if ( $join ) { // todo:join
+				if ( $join ) { /* TODO#SEBLOD: join */
 					$join		=	'';
 					$select		=	'';
 					$sef_slug	=	false;
@@ -460,7 +460,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					if ( JCckDevHelper::isMultilingual() ) {
 						$lang			=	JFactory::getLanguage();
 						$lang_tag		=	JFactory::getLanguage()->getTag();
-						$sef_aliases	=	1; /* TODO */
+						$sef_aliases	=	1; /* TODO#SEBLOD: */
 
 						if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
 							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );

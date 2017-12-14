@@ -73,7 +73,7 @@ class CCK_Install
 		self::_import( 'content', $data, $config );
 		
 		// Elements
-		self::_importMore( 'category', $data, $config ); //todo >> self::_import( 'content', 'joomla_category', $data );
+		self::_importMore( 'category', $data, $config ); /* TODO#SEBLOD: self::_import( 'content', 'joomla_category', $data ); */
 		
 		self::_importElements( 'folder', $data, $config );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );

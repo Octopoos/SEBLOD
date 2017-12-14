@@ -173,7 +173,7 @@ class CCKViewType extends JViewLegacy
 		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
 		$folder		=	$this->state->get( 'skeleton_id', $this->item->folder );
 
-		if ( $featured == 11 ) { // TODO: dynamic mapping
+		if ( $featured == 11 ) { /* TODO#SEBLOD: dynamic mapping */
 			$this->item->storage_location	=	'joomla_category';
 		} elseif ( $featured == 13 ) {
 			$this->item->storage_location	=	'joomla_user';
@@ -202,7 +202,7 @@ class CCKViewType extends JViewLegacy
 		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'type', $this->item, $and, 'a.folder != '.(int)$folder, $or );
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
-		// Languages (todo: optimize)
+		// Languages /* TODO#SEBLOD: optimize */
 		Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
 		JPluginHelper::importPlugin( 'cck_field' );
 	}

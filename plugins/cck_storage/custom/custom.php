@@ -302,7 +302,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				$sql		=	$target.' NOT REGEXP "'.$TA.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 			case 'not_any_exact':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'not_zeta': /* Zeta is not the last letter of Greek alphabet but.. this won't be an issue here. */
 				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).$TZ.'"';
@@ -320,10 +320,10 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				$sql		=	$target.' NOT REGEXP "'.$TA.'0'.$TZ.'"';
 				break;
 			case 'is_null':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'is_not_null':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'radius_higher':
 			case 'radius_lower':

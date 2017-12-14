@@ -56,7 +56,7 @@ class plgCCK_Field_Restriction%class% extends JCckPluginRestriction
 	// _authorise
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
-		if ( 1 == 1 ) { // TODO
+		if ( 1 == 1 ) { /* TODO */
 			return false;
 		}
 		

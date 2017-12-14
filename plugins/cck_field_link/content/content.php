@@ -121,7 +121,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 					$f->link_title		=	'';
 				}
 			}
-			$field->link		=	'#';	//todo
+			$field->link		=	'#'; /* TODO#SEBLOD: */
 		} else {
 			if ( ( $content == '4' || $content == '5' ) ) {
 				// $goto				=	self::_goTo( $app->input->getInt( 'Itemid', $config['Itemid'] ) );
@@ -343,15 +343,15 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			$preconfig['show_form']		=	0;
 			$preconfig['show_list']		=	0;
 			$preconfig['auto_redirect']	=	0;
-			$preconfig['limit2']		=	0; // todo
-			$preconfig['ordering']		=	''; // todo
-			$preconfig['ordering2']		=	''; // todo
+			$preconfig['limit2']		=	0; /* TODO#SEBLOD: */
+			$preconfig['ordering']		=	''; /* TODO#SEBLOD: */
+			$preconfig['ordering2']		=	''; /* TODO#SEBLOD: */
 			
 			$live						=	'';
 			$variation					=	'';
 			$limitstart					=	-1;
 			
-			$params						=	new JRegistry;	// todo : remove+inherit?
+			$params						=	new JRegistry; /* TODO#SEBLOD: remove+inherit? */
 			$params->set( 'order_by', '' );
 			
 			// Prepare

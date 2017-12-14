@@ -91,7 +91,7 @@ class CommonHelper_Admin
 					JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
 				} else {
 					$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
-					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
+					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; /* TODO#SEBLOD: I'll see this one later.. */
 					JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
 											constant( '_C'.$item['val'].'_LINK' ),
 											$active );

@@ -205,7 +205,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$store		=	'<br />';	//begin?
 			$f			=	self::_getChild( $field, $config );
 			$f_name		=	$f->name;
-			$f->state	=	'';	//todo;
+			$f->state	=	'';	/* TODO#SEBLOD:; */
 			foreach ( $value as $val ) {
 				//if ( $val != '' ) {
 					$inherit	=	array( 'name' => $name, 'xk' => $xk, 'xi' => $xi, 'parent' => $name );					
@@ -216,7 +216,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 						$store	.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$xi++;
 					}
-					// todo: add childs (secondary) storages.. not primary!
+					/* TODO#SEBLOD: add childs (secondary) storages.. not primary! */
 				//}
 				$xk++;
 			}

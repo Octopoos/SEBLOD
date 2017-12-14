@@ -127,7 +127,7 @@ class CCKControllerForm extends JControllerForm
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
-		// Todo::Checkin,etc..
+		/* TODO#SEBLOD: checkin, etc.. */
 		
 		$link	=	$this->_getRedirectQuery( true );
 		

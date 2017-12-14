@@ -156,7 +156,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				if ( JCckDevHelper::isMultilingual() ) {
 					$lang			=	JFactory::getLanguage();
 					$lang_tag		=	JFactory::getLanguage()->getTag();
-					$sef_aliases	=	1; /* TODO */
+					$sef_aliases	=	1; /* TODO#SEBLOD: */
 
 					if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
 						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
@@ -425,7 +425,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( $pk > 0 ) {
 			$table->load( $pk );
 			if ( $table->id ) {
-				if ( $join ) { // todo:join
+				if ( $join ) { /* TODO#SEBLOD: join */
 					$join		=	'';
 					$select		=	'';
 					$sef_slug	=	false;
@@ -433,7 +433,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					if ( JCckDevHelper::isMultilingual() ) {
 						$lang			=	JFactory::getLanguage();
 						$lang_tag		=	JFactory::getLanguage()->getTag();
-						$sef_aliases	=	1; /* TODO */
+						$sef_aliases	=	1; /* TODO#SEBLOD: */
 
 						if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
 							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
@@ -476,7 +476,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$table->tags	=	new JHelperTags;
 
 					// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
-					$table->tags->getTagIds( $table->id, 'com_content.category' );	// todo: dynamic context per extension
+					$table->tags->getTagIds( $table->id, 'com_content.category' );	/* TODO#SEBLOD: dynamic context per extension */
 					// }
 				}
 			}
@@ -714,7 +714,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 			// Multilanguage Associations
 			if ( JCckDevHelper::hasLanguageAssociations() ) {
-				// TODO (mod_cck_lang...)
+				/* TODO#SEBLOD: (mod_cck_lang...) */
 			}
 		} else {
 			require_once JPATH_SITE.'/components/com_content/helpers/route.php';

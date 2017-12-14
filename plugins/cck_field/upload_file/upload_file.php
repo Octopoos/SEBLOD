@@ -337,11 +337,11 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$onchange . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'<input type="file" id="'.$id.'" name="'.$name.'" '.$attr.' />';
 		if ( $options2['custom_path'] == '1' ) {
-			$lock	=	'<a class="switch lock_file" href="javascript:void(0);"><span class="linkage linked"></span></a>';	//TODO
+			$lock	=	'<a class="switch lock_file" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 		}
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {

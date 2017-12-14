@@ -122,7 +122,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		}
 
 		// Set
-		$field->form	=	$form;	// todo: '<div class="tabbable tabs-left">'
+		$field->form	=	$form; /* TODO#SEBLOD: '<div class="tabbable tabs-left">' */
 		$field->value	=	$field->label;
 		$field->label	=	'';
 		

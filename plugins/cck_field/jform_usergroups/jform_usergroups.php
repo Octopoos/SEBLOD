@@ -119,7 +119,7 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 
 			if ( $values != '' ) {
 				$field->text	=	JCckDatabase::loadColumn( 'SELECT title FROM #__usergroups WHERE id IN ('.(string)$values.')' );
-				$field->text	=	implode( ',', $field->text ); //todo	
+				$field->text	=	implode( ',', $field->text ); /* TODO#SEBLOD: */
 			} else {
 				$field->text	=	'';
 			}

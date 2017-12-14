@@ -779,7 +779,7 @@ class CCK_Export
 				$xml->{$elemtype}->{$n}	=	'';
 			}
 		}
-		if ( isset( $xml->{$elemtype}->path ) && isset( $xml->{$elemtype}->alias ) ) {	//todo: remove
+		if ( isset( $xml->{$elemtype}->path ) && isset( $xml->{$elemtype}->alias ) ) {	/* TODO#SEBLOD: remove */
 			$xml->{$elemtype}->path	=	(string)$xml->{$elemtype}->alias;
 		}
 		if ( isset( $xml->{$elemtype}->hits ) ) {
@@ -828,7 +828,7 @@ class CCK_Export
 				$xml->{$elemtype}->{$n}	=	'';
 			}
 		}
-		if ( isset( $xml->{$elemtype}->path ) && isset( $xml->{$elemtype}->alias ) ) {	//todo: remove
+		if ( isset( $xml->{$elemtype}->path ) && isset( $xml->{$elemtype}->alias ) ) {	/* TODO#SEBLOD: remove */
 			$xml->{$elemtype}->path	=	(string)$xml->{$elemtype}->alias;
 		}
 		if ( isset( $xml->{$elemtype}->hits ) ) {

@@ -15,7 +15,7 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 // Class
 class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_LocationJoomla_Article
 {
-	protected static $columns_excluded	=	array(); /* TODO */
+	protected static $columns_excluded	=	array(); /* TODO#SEBLOD: */
 	
 	// getColumnsToImport
 	public static function getColumnsToImport()

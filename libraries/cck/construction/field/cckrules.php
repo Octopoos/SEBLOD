@@ -13,6 +13,8 @@ defined( 'JPATH_PLATFORM' ) or die;
 jimport( 'joomla.html.html' );
 jimport( 'cck.joomla.access.access' );
 
+/* TODO#SEBLOD: compare */
+
 // JFormField
 class JFormFieldCCKRules extends JFormField
 {

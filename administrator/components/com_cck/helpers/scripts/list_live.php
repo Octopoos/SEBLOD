@@ -78,7 +78,7 @@ if ( count( $fields ) ) {
 		foreach ( $pos as $field ) {
 			$value		=	( isset( $values[$field->name] ) ) ? htmlspecialchars( $values[$field->name] ) : '';
 			$variat		=	( isset( $variations[$field->name] ) ) ? $variations[$field->name] : '';
-			$variat		=	( $variat == 'none' ) ? $variat = 'hidden' : $variat;	// TODO: FIX TO REMOVE AFTER GA
+			$variat		=	( $variat == 'none' ) ? $variat = 'hidden' : $variat; /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
 			$variation	=	Jhtml::_( 'select.genericlist', $opts, 'variation_'.$field->name, 'class="inputbox variation_values" onchange="CCK_setOptions(\'variation\');"', 'value', 'text', $variat );
 			$html		.=	'<label style="padding-left: 10px;">'.$field->title.'</label>'
 						.	'<input class="live_values inputbox" type="text" id="live_'.$field->name.'" name="live_'.$field->name.'" value="'.$value.'" onchange="CCK_setOptions(\'live\');" />'

@@ -61,7 +61,7 @@ class plgSearchCCK extends JPlugin
 		$hasGroup		=	false;
 		$isLoadingMore	=	( $app->input->get( 'format' ) == 'raw' && $app->input->getInt( 'infinite' ) > 0 ) ? 1 : 0;
 		if ( $isLoadingMore ) {
-			$isLoadingMore	=	0; /* todo: only when it was triggered by the component itself */
+			$isLoadingMore	=	0; /* TODO#SEBLOD: only when it was triggered by the component itself */
 		}
 		$glues			=	1;
 		$order			=	'';
@@ -419,7 +419,7 @@ class plgSearchCCK extends JPlugin
 
 							if ( strpos( $query1, 'HAVING' ) !== false ) {
 								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
-									// todo
+									/* TODO#SEBLOD: */
 								}
 								$query->clear( 'order' )->clear( 'limit' );
 
@@ -570,7 +570,7 @@ class plgSearchCCK extends JPlugin
 	{
 		if ( $ordering != '' ) {
 			if ( $ordering == '-1' ) {
-				// Todo: alias. + join table if doesn't exist..
+				/* TODO#SEBLOD: alias. + join table if doesn't exist.. */
 				if ( $current['order_by'] ) {
 					$query->order( $current['order_by'] );
 				}

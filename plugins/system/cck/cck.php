@@ -59,7 +59,7 @@ class plgSystemCCK extends JPlugin
 		jimport( 'cck.content.content' );
 		jimport( 'cck.content.user' );
 
-		$this->multisite	=	JCck::_setMultisite(); // todo: _isMultiSite()
+		$this->multisite	=	JCck::_setMultisite(); /* TODO#SEBLOD: _isMultiSite() */
 		$this->restapi		=	$this->_isRestApi();
 
 		JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -1024,7 +1024,7 @@ class plgSystemCCK extends JPlugin
 		$my		=	$menu->getItem( $id );
 		$path	=	substr( JUri::getInstance()->getPath(), 1 );
 
-		// todo: need to be improved!
+		/* TODO#SEBLOD: need to be improved! */
 		if ( !( !$path || $path == 'index.php/'.@$my->alias || $path == @$my->alias.'.html' ) ) {
 			$home->title		=	@$my->title;
 		} else {

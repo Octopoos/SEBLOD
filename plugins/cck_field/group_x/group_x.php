@@ -57,7 +57,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config, false );
 
-		// TODO: call storage plugin.
+		/* TODO#SEBLOD: call storage plugin. */
 		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
 		$content	=	array();
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
@@ -101,7 +101,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$name		=	$field->name;
 		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
-		// TODO: call storage plugin.
+		/* TODO#SEBLOD: call storage plugin. */
 		$xn			=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
 		$content	=	array();
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
@@ -166,7 +166,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		if ( $value ) {
-			// TODO: call storage plugin.
+			/* TODO#SEBLOD: call storage plugin. */
 			$xn		=	( $field->storage == 'xml' ) ? ( is_object( $value ) ? count( $value->children() ) : count( $value ) ) : $value;
 		} else {
 			$xn		=	$field->rows;
@@ -274,7 +274,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$f->storage			=	$field->storage;
 						$f->storage_table	=	$field->storage_table;
 						$f->storage_field	=	$field->storage_field;
-						$f->state			=	'';	//todo;
+						$f->state			=	'';	/* TODO#SEBLOD: */
 						$f_label			=	$f->label;
 						$f_name				=	$f->name;
 						$f_value			=	@$val[$f_name];
@@ -283,7 +283,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$v					=	@$results[0];
 						$store				.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$text				.=	'<li style="line-height:10px;">'.$f_label.' : '.$v.'</li>';
-						// todo: add childs (secondary) storages.. not primary!
+						/* TODO#SEBLOD: add childs (secondary) storages.. not primary! */
 					}
 				}
 				$store	.=	'<br />::cckend_'.$name.'::::/cckend_'.$name.'::';

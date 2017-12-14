@@ -92,7 +92,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		// Init
 		$table	=	$field->storage_table;
 		if ( $table == '#__cck_core' ) {
-			// todo: use API
+			/* TODO#SEBLOD: use API */
 			$pk	=	JCckDatabase::loadResult( 'SELECT a.id FROM #__cck_core AS a'
 											. ' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
 											. ' WHERE a.storage_location = b.storage_location AND a.pk = '.(int)$pk );

@@ -190,7 +190,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 				}
 			}
 			$inherit['opts']	=	$opts;
-			// todo: type2
+			/* TODO#SEBLOD: type2 */
 			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 		}
 		

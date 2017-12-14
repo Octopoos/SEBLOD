@@ -58,7 +58,7 @@ class JCckContentJoomla_Category extends JCckContent
 
 			$status		=	$this->_instance_base->store();
 
-			/* TODO: publish_up */
+			/* TODO#SEBLOD: publish_up */
 		}
 
 		return $status;

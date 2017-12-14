@@ -194,7 +194,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 		}
 		if ( $value ) {
-			// if () TODO check multiple
+			/* TODO#SEBLOD: check multiple if () */
 			$m_value		=	self::_split( $value );
 			$m_value_size	=	count( $m_value );
 			if ( $m_value_size > 1 ) {

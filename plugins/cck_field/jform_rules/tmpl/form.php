@@ -113,7 +113,7 @@ $js		=	'
 								}
 								key = key.replace(".","\\.");
 								if (v!="") {
-									$("[id=\'"+elem+"_"+key+"_"+k+"\']").myVal(v); /todo: empty/
+									$("[id=\'"+elem+"_"+key+"_"+k+"\']").myVal(v);
 								} else {
 									$("[id=\'"+elem+"_"+key+"_"+k+"\']").val("");
 								}

@@ -14,25 +14,25 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Storage_Location%class% extends JCckPluginLocation
 {
 	protected static $type			=	'%name%';
-	protected static $table			=	'#__'; // TODO
-	protected static $table_object	=	array( '', '' ); // TODO
-	protected static $key			=	'id'; // TODO
+	protected static $table			=	'#__'; /* TODO */
+	protected static $table_object	=	array( '', '' ); /* TODO */
+	protected static $key			=	'id'; /* TODO */
 	
-	protected static $access		=	'access'; // TODO
-	protected static $author		=	''; // TODO
-	protected static $author_object	=	''; // TODO
-	protected static $created_at	=	''; // TODO
-	protected static $custom		=	'description'; // TODO
-	protected static $modified_at	=	''; // TODO
-	protected static $parent		=	''; // TODO
-	protected static $parent_object	=	''; // TODO
-	protected static $status		=	'state'; // TODO
-	protected static $to_route		=	'a.id as pk, a.title, a.alias'; // TODO
+	protected static $access		=	'access'; /* TODO */
+	protected static $author		=	''; /* TODO */
+	protected static $author_object	=	''; /* TODO */
+	protected static $created_at	=	''; /* TODO */
+	protected static $custom		=	'description'; /* TODO */
+	protected static $modified_at	=	''; /* TODO */
+	protected static $parent		=	''; /* TODO */
+	protected static $parent_object	=	''; /* TODO */
+	protected static $status		=	'state'; /* TODO */
+	protected static $to_route		=	'a.id as pk, a.title, a.alias'; /* TODO */
 	
-	protected static $context		=	''; //TODO
-	protected static $contexts		=	array(); //TODO
+	protected static $context		=	''; /* TODO */
+	protected static $contexts		=	array(); /* TODO */
 	protected static $error			=	false;
-	protected static $ordering		=	array( 'alpha'=>'title ASC' ); // TODO
+	protected static $ordering		=	array( 'alpha'=>'title ASC' ); /* TODO */
 	protected static $ordering2		=	array();
 	protected static $pk			=	0;
 	protected static $routes		=	array();
@@ -70,11 +70,11 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		// Set
 		if ( $table == self::$table ) {
 			$storage			=	self::_getTable( $pk );
-			// TODO
+			/* TODO */
 		} else {
 			$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, $pk );
 			if ( ! isset( $config['storages'][self::$table] ) ) {
-				// TODO
+				/* TODO */
 			}
 		}
 	}
@@ -110,7 +110,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		// Set
 		if ( $table == self::$table ) {
 			$storage			=	self::_getTable( $pk );
-			// TODO
+			/* TODO */
 		} else {
 			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
 		}
@@ -144,7 +144,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	// onCCK_Storage_LocationPrepareList
 	public static function onCCK_Storage_LocationPrepareList( &$params )
 	{
-		// TODO
+		/* TODO */
 	}
 
 	// onCCK_Storage_LocationPrepareOrder
@@ -165,10 +165,10 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		}
 		
 		// Prepare
-		// TODO
+		/* TODO */
 		
 		// Set
-		// TODO
+		/* TODO */
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Store
@@ -176,7 +176,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		// TODO
+		/* TODO */
 		
 		return false;
 	}
@@ -237,8 +237,8 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 			$config['pk']	=	self::$pk;
 		}
 		
-		$config['author']	=	$table->{self::$author}; // TODO
-		$config['parent']	=	$table->{self::$parent}; // TODO
+		$config['author']	=	$table->{self::$author}; /* TODO */
+		$config['parent']	=	$table->{self::$parent}; /* TODO */
 		
 		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
@@ -246,7 +246,6 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		// TODO
 		$table	=	JTable::getInstance( /* TODO */ );
 		
 		if ( $pk > 0 ) {
@@ -261,19 +260,19 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	{
 		if ( ! $table->{self::$key} ) {
 			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
-			// TODO
+			/* TODO */
 		}
-		// TODO
-		//$table->{self::$custom}	=	'';
+		/* TODO */
+		// $table->{self::$custom}	=	'';
 	}
 	
 	// _completeTable
 	protected function _completeTable( &$table, &$data, &$config )
 	{
 		if ( ! $table->{self::$key} ) {
-			// TODO
+			/* TODO */
 		}
-		// TODO
+		/* TODO */
 		
 		parent::g_completeTable( $table, self::$custom, $config );
 	}
@@ -289,7 +288,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	public static function getRoute( $item, $sef, $itemId, $config = array() )
 	{
 		$route		=	'';
-		// TODO
+		/* TODO */
 		
 		return JRoute::_( $route );
 	}
@@ -302,9 +301,9 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 		}
 		
 		if ( $sef ) {
-			$storage[self::$table]->_route	=	''; // TODO
+			$storage[self::$table]->_route	=	''; /* TODO */
 		} else {
-			$storage[self::$table]->_route	=	''; // TODO
+			$storage[self::$table]->_route	=	''; /* TODO */
 		}
 		
 		return JRoute::_( $storage[self::$table]->_route );
@@ -330,7 +329,7 @@ class plgCCK_Storage_Location%class% extends JCckPluginLocation
 	{
 		$link	=	'';
 		
-		// TODO
+		/* TODO */
 		
 		return $link;
 	}

@@ -88,7 +88,7 @@ if ( !$isNew ) {
 	//if ( $user->id && !$user->guest ) {
 		$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
 	//} else {
-	//	$canEditOwn		=	false; // todo: guest
+	//	$canEditOwn		=	false; /* TODO#SEBLOD: guest */
 	//}
 	
 	// canEditOwnContent
@@ -214,7 +214,7 @@ $variations	=	array();
 foreach ( $variation as $var ) {
 	if ( $var != '' ) {
 		$v					=	explode( '=', $var );
-		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } // TODO: FIX TO REMOVE AFTER GA
+		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
 		$variations[$v[0]]	=	$v[1];
 	}
 }
@@ -417,7 +417,7 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 
 // Versions
 if ( $app->isClient( 'administrator' ) && JCck::on( '3.2' ) ) {
-	if ( @$config['base']->location == 'joomla_article' ) { // TODO: getContext / params from any object
+	if ( @$config['base']->location == 'joomla_article' ) { /* TODO#SEBLOD: getContext / params from any object */
 		$object_params	=	JComponentHelper::getParams( 'com_content' );
 
 		if ( $object_params->get( 'save_history', 0 ) ) {

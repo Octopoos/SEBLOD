@@ -57,7 +57,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
-		if ( !$field->state ) { /* TODO: Support for "onBeforeRender" restrictions may be implemented later. */
+		if ( !$field->state ) { /* TODO#SEBLOD: Support for "onBeforeRender" restrictions may be implemented later. */
 			$field->value	=	'';
 			return;
 		}
@@ -114,7 +114,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 
-		if ( !$field->state ) { /* TODO: Support for "onBeforeRender" restrictions may be implemented later. */
+		if ( !$field->state ) { /* TODO#SEBLOD: Support for "onBeforeRender" restrictions may be implemented later. */
 			$field->form	=	'';
 			$field->value	=	'';
 			return;

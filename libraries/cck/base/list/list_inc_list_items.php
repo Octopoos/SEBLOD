@@ -169,7 +169,7 @@ if ( $count ) {
 				unset( $config['fields'] );
 			}
 			
-			// Todo: ->legend2 may be deprecated (from here) in a near future... in order to move at template level.
+			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions as $p_key=>$p_fields ) {
 					$legend2	=	'';
@@ -326,7 +326,7 @@ if ( $count ) {
 				unset( $config['fields'] );
 			}
 			
-			// Todo: ->legend2 may be deprecated (from here) in a near future... in order to move at template level.
+			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions2 as $p_key=>$p_fields ) {
 					$legend2	=	'';

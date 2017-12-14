@@ -200,7 +200,7 @@ abstract class JCckDev
 	{
 		if ( count( $plugins ) > 0 ) {
 			foreach ( $plugins as $plugin ) {
-				JPluginHelper::importPlugin( $type, $plugin );	// todo: improve
+				JPluginHelper::importPlugin( $type, $plugin );	/* TODO#SEBLOD: improve */
 			}
 		} else {
 			JPluginHelper::importPlugin( $type );
@@ -762,7 +762,7 @@ abstract class JCckDev
 	// fromSTRING
 	public static function fromSTRING( $data = '', $glue = '||', $format = 'array' )
 	{
-		// todo: object
+		/* TODO#SEBLOD: object */
 		if ( ! $data || ! is_string( $data )  ) {
 			return ( $format == 'array' ) ? array() : new stdClass;
 		}
@@ -773,7 +773,7 @@ abstract class JCckDev
 	// toSTRING
 	public static function toSTRING( $data = '', $glue = '||' )
 	{
-		// todo: object
+		/* TODO#SEBLOD: object */
 		if ( ! is_array( $data ) ) {
 			return '';
 		}

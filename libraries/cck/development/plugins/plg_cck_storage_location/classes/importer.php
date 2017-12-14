@@ -18,7 +18,7 @@ class plgCCK_Storage_Location%class%_Importer extends plgCCK_Storage_Location%cl
 	// onCCK_Storage_LocationImport
 	public static function onCCK_Storage_LocationImport( $data, &$config = array(), $pk = 0 )
 	{
-		// TODO
+		/* TODO */
 		
 		return true;
 	}

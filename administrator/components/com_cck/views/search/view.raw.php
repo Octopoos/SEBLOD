@@ -195,7 +195,7 @@ class CCKViewSearch extends JViewLegacy
 		$this->fieldsAv			=	Helper_Workshop::getFieldsAv( 'search', $this->item, $and, 'a.folder != '.(int)$folder );
 		$this->type_fields		=	JCckDatabase::loadObjectList( 'SELECT fieldid, GROUP_CONCAT(DISTINCT typeid separator " c-") AS cc FROM #__cck_core_type_field group by fieldid', 'fieldid' );
 		
-		// Languages (todo: optimize)
+		// Languages /* TODO#SEBLOD: optimize */
 		Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
 		JPluginHelper::importPlugin( 'cck_field' );
 	}

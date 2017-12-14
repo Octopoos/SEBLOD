@@ -309,7 +309,7 @@ class CCK_List
 	// getSearch
 	public static function getSearch( $name, $id, $location = '' )
 	{
-		// todo: API (move)
+		/* TODO#SEBLOD: API (move) */
 		$query	=	'SELECT a.id, a.title, a.name, a.alias, a.description, a.access, a.content, a.location, a.storage_location, a.stylesheets, b.app as folder_app,'
 				.	' a.options, a.template_search, a.template_filter, a.template_list, a.template_item'
 				.	' FROM #__cck_core_searchs AS a'

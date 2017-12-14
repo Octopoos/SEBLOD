@@ -117,7 +117,7 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 									.	'&id='.$id.'&name='.$name.'&type='.$value.'&params='.$component.'||'.$section;
 			
 			$class					=	'jform_rules_box variation_href';
-			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { // todo: remove later
+			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { /* TODO#SEBLOD: remove later */
 					$class			.=	' btn';
 			}
 			$class					=	'class="'.$class.'" ';

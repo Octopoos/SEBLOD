@@ -86,7 +86,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			// if ( $user->id && !$user->guest ) {
 				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
 			// } else {
-			//	$canEditOwn		=	false; // todo: guest
+			//	$canEditOwn		=	false; /* TODO#SEBLOD: guest */
 			// }
 			$canEditOwnContent	=	'';
 
@@ -168,7 +168,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		
 		/*
 		if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
-			$redirection		=	'-1'; // todo
+			$redirection		=	'-1'; /* TODO#SEBLOD: */
 		}
 		*/
 		
@@ -202,7 +202,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 					$f->link_title		=	'';
 				}
 			}
-			$field->link		=	'#';	//todo
+			$field->link		=	'#'; /* TODO#SEBLOD: */
 		} else {
 			$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
 			if ( $form[0] == '#' ) {
@@ -264,7 +264,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				$target					=	 $fields[$name]->typo_target;
 
 				if ( $fields[$name]->typo ) {
-					$fields[$name]->typo	=	$fields[$name]->$target; // todo: str_replace link+target par target
+					$fields[$name]->typo	=	$fields[$name]->$target; /* TODO#SEBLOD: str_replace link+target par target */
 				} else {
 					$fields[$name]->html	=	$fields[$name]->$target;
 				}

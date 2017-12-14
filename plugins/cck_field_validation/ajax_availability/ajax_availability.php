@@ -73,7 +73,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 				parent::g_addProcess( 'beforeStore', self::$type, $config, array( 'name'=>$name, 'value'=>$value, 'validation'=>$validation ) );
 			} else {
 				$do	=	true;
-				// Check if table = object (todo: will be improved later..)
+				// Check if table = object /* TODO#SEBLOD: will be improved later.. */
 				if ( $validation->table == '#__users' ) {
 					$type	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
 					

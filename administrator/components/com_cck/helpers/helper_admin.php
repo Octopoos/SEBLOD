@@ -195,7 +195,7 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 			if ( ! $vMore['isNew'] && $canDo->get( 'core.create' ) && $vName == 'folder' ) {
 				JToolBarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
-				//if ( @$params['rename'] ) { //Todo
+				//if ( @$params['rename'] ) { /* TODO#SEBLOD: */
 				//	JToolBarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
 				//}
 			}

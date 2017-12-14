@@ -140,7 +140,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 
 				$component				=	$app->input->get( 'option' );
 				if ( ( $component == 'com_cck' && $app->input->get( 'view' ) != 'form' )
-					|| $component == 'com_cck_ecommerce' || $component == 'com_cck_toolbox' || $component == 'com_cck_webservices' ) { // todo: remove later
+					|| $component == 'com_cck_ecommerce' || $component == 'com_cck_toolbox' || $component == 'com_cck_webservices' ) { /* TODO#SEBLOD: remove later */
 					$class				.=	' btn';
 				}
 				$class					=	'class="'.trim( $class ).'" ';

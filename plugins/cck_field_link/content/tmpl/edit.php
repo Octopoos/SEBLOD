@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php'; //todo: >> core_storage_location
+require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php'; /* TODO#SEBLOD: >> core_storage_location */
 
 $items		=	JCckDatabase::loadObjectList( 'SELECT id, title FROM #__cck_core_sites WHERE published = 1' );
 $options	=	array();

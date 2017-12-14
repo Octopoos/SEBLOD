@@ -26,7 +26,7 @@ $path			=	JPATH_SITE.'/templates';
 $total			=	0;
 $total_items	=	0;
 $user 			=	JCck::getUser();
-$user->gid		=	25; // Todo:: ACL
+$user->gid		=	25; /* TODO#SEBLOD: ACL */
 
 // Search
 $search			=	CCK_List::getSearch( $preconfig['search'], $id );
@@ -151,14 +151,14 @@ if ( !isset( $lives ) ) {
 		}
 	}
 } elseif ( count( $lives ) && $isInfinite ) {
-	// todo: force lives
+	/* TODO#SEBLOD: force lives */
 }
 $variation	=	explode( '||', $variation );
 $variations	=	array();
 foreach ( $variation as $var ) {
 	if ( $var != '' ) {
 		$v					=	explode( '=', $var );
-		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } // TODO: FIX TO REMOVE AFTER GA
+		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
 		$variations[$v[0]]	=	$v[1];
 	}
 }
@@ -240,7 +240,7 @@ if ( $preconfig['show_form'] ) {
 $context	=	$app->input->getString( 'context' );
 
 if ( $context != '' ) {
-	$context	=	str_replace( "'", '"', $context );	/* TODO: remove */
+	$context	=	str_replace( "'", '"', $context );	/* TODO#SEBLOD: remove */
 	$context	=	json_decode( $context, true );
 	$excluded	=	array(
 						'cid'=>'',
@@ -487,7 +487,7 @@ if ( $preconfig['task'] == 'search' ) {
 					$items	=	array_splice( $items, 0, $total );
 				}
 			} else {
-				$total	=	count( $items ); // todo: change above??
+				$total	=	count( $items ); /* TODO#SEBLOD: change above?? */
 			}
 			// Suffle
 			if ( $preconfig['ordering2'] == 'shuffle' || $preconfig['ordering2'] == 'random_shuffle' ) {

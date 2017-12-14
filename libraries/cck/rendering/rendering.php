@@ -882,7 +882,7 @@ class CCK_Rendering
 					;
 		}
 		if ( $variation ) {
-			$legend		=	'';	//Todo
+			$legend		=	'';	/* TODO#SEBLOD: */
 			$options	=	new JRegistry;
 			$html		=	$this->renderVariation( $variation, $legend, $html, $options, $position.'_line', '', false );
 		}
@@ -1084,7 +1084,7 @@ class CCK_Rendering
 			$this->browser->name	=	$browser->getBrowser();
 			$this->browser->agent	=	$browser->getAgentString();
 			$this->browser->version	=	$browser->getVersion();
-			//todo: process to get the right info from agent...!
+			/* TODO#SEBLOD: process to get the right info from agent...! */
 		}
 		
 		return @$this->browser->$property;

@@ -108,7 +108,7 @@ class CCKController extends JControllerLegacy
 		$cid	=	ArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
-			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); // todo: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb );
+			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); /* TODO#SEBLOD: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb ); */
 			$msgType	=	'message';
 		} else {
 			$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );

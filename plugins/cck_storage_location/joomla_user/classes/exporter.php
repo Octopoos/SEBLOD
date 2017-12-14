@@ -179,7 +179,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 						} elseif ( $field->storage != 'none' ) {
 							$name			=	$field->storage_field2 ? $field->storage_field2 : $name;
 							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
-								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array();	// TODO
+								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array(); /* TODO#SEBLOD: */
 							}
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
@@ -214,9 +214,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 					}
 				}
 
-				/*
-				TODO: beforeExport
-				*/
+				/* TODO#SEBLOD: beforeExport */
 
 				$event	=	'onCckPostBeforeExport';
 				if ( isset( $config['processing'][$event] ) ) {

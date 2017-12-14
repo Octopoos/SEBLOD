@@ -303,7 +303,7 @@ class JCckPluginLocation extends JPlugin
 		if ( $table && $table != $default && $table != 'none' ) {
 			$more	=	JCckTable::getInstance( $table, 'id' );
 			$more->load( $pk, true );
-			if ( isset( $more->cck ) ) {
+			if ( isset( $more->cck ) ) { /* TODO#SEBLOD: remove */
 				$more->cck	=	$config['type'];
 			}
 			$more->bind( $config['storages'][$table] );
@@ -398,7 +398,7 @@ class JCckPluginLocation extends JPlugin
 	// g_doBridge
 	public function g_doBridge( $type, $pk, $location, &$config, $params )
 	{
-		// Todo: move to plug-in
+		/* TODO#SEBLOD: move to plug-in */
 		if ( $type == 'joomla_category' ) {
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
@@ -628,14 +628,14 @@ class JCckPluginLocation extends JPlugin
 	// g_getBridgeAuthor
 	public function g_getBridgeAuthor( $type, $pk, $location )
 	{
-		// Todo: move to plug-in
+		/* TODO#SEBLOD: move to plug-in */
 		if ( $type == 'joomla_category' ) {
 			$author_id	=	JCckDatabase::loadResult( 'SELECT b.created_user_id FROM #__cck_core AS a LEFT JOIN #__categories AS b ON b.id = a.pkb WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk );
 		} else {
 			$author_id	=	JCckDatabase::loadResult( 'SELECT b.created_by FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pkb WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk );
 		}
 		if ( !$author_id ) {
-			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk ); // todo: a recuperer
+			$author_id	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.storage_location = "'.$location.'" AND a.pk = '.$pk ); /* TODO#SEBLOD: a recuperer */
 		}
 
 		return $author_id;

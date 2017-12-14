@@ -247,7 +247,7 @@ foreach ( $users as $k=>$u ) {
 		$id						=	(int)$core->id;
 
 		// More
-		$users_more[$k]['cck']	=	$content_type;
+		$users_more[$k]['cck']	=	$content_type;	/* TODO#SEBLOD: remove */
 
 		$more					=	JCckTable::getInstance( '#__cck_store_item_users', 'id' );
 		$more->load( $u->id, true );

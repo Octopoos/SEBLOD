@@ -228,7 +228,7 @@ class CCK_Item
 						$html	=	$label.$html;
 					}
 				} elseif ( $this->markup ) {
-					// todo
+					/* TODO#SEBLOD: */
 				} else {					
 					// Description
 					$desc	=	'';

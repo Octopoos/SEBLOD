@@ -343,7 +343,7 @@ class CCK_Import
 	// beforeImportJoomla_Category
 	public static function beforeImportJoomla_Category( $type, &$table, &$data, $config = array() )
 	{
-		if ( $config['isApp'] && $config['isUpgrade'] ) { // todo: improve (import only new categories)
+		if ( $config['isApp'] && $config['isUpgrade'] ) { /* TODO#SEBLOD: improve (import only new categories) */
 			return -1;
 		}
 
@@ -444,7 +444,7 @@ class CCK_Import
 		if ( @$core->pk > 0 ) {
 			$table->id	=	$core->pk;
 		}
-		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	//todo
+		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	/* TODO#SEBLOD: */
 		$table->parent_id	=	( $data['root_category'] > 0 ) ? $data['root_category'] : 1;
 		
 		$rules	=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
@@ -462,11 +462,11 @@ class CCK_Import
 			$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $id );
 			$core->pk				=	$table->id;
-			$core->cck				=	'category';														//todo
+			$core->cck				=	'category';														/* TODO#SEBLOD: */
 			$core->storage_location	=	'joomla_category';
-			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	//todo
+			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	/* TODO#SEBLOD: */
 			$core->parent_id		=	$table->parent_id;
-			$core->date_time		=	'';																//todo
+			$core->date_time		=	'';																/* TODO#SEBLOD: */
 			$core->app				=	$app;
 			$core->storeIt();
 		}
@@ -637,7 +637,7 @@ class CCK_Import
 								if ( $k == 'PRIMARY' ) {
 									JCckDatabase::execute( 'ALTER TABLE '.$name.' DROP PRIMARY KEY, ADD PRIMARY KEY ( '.implode( ',', $v ).' )' );
 								} else {
-									// todo
+									/* TODO#SEBLOD: */
 								}
 							}
 						}

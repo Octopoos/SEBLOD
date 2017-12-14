@@ -126,7 +126,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 			unset( $data['exclusions'] );
 		}
 		
-		// todo: call generic->store = JSON
+		/* TODO#SEBLOD: call generic->store = JSON */
 		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
 			foreach ( $data['json'] as $k => $v ) {
 				if ( is_array( $v ) ) {
@@ -135,7 +135,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 			}
 		}
 		
-		// todo: call plugins->prepareStore()
+		/* TODO#SEBLOD: call plugins->prepareStore() */
 		$data['groups']		=	$this->_implodeValues( $data['groups'], $data['guest_only_group'] );
 		$data['viewlevels']	=	$this->_implodeValues( $data['viewlevels'], $data['guest_only_viewlevel'] );
 		

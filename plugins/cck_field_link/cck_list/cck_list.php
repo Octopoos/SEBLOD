@@ -84,7 +84,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				$f->link_state	=	$link->get( 'state', 1 );
 				$f->link_target	=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $f->link_target ) ? $f->link_target : '' );
 			}
-			$field->link		=	'#';	//todo
+			$field->link		=	'#'; /* TODO#SEBLOD: */
 		} elseif ( is_array( $field->value ) ) {
 			foreach ( $field->value as $f ) {
 				$c				=	$custom;
@@ -101,7 +101,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				$f->link_state	=	$link->get( 'state', 1 );
 				$f->link_target	=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $f->link_target ) ? $f->link_target : '' );
 			}
-			$field->link		=	'#';	//todo
+			$field->link		=	'#'; /* TODO#SEBLOD: */
 		} else {
 			$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
 			$search_for			=	( $search_field > -1 ) ? '&'.$name.'='.$field->value : '';

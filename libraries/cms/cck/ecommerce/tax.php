@@ -38,7 +38,7 @@ abstract class JCckEcommerceTax
 							$product_def	=	JCckEcommerce::getProductDefinition( $t->target_type );
 							$content_types	=	explode( '||', $product_def->content_type );
 						}
-						/* TODO */
+						/* TODO#SEBLOD: */
 					} elseif ( $params['target'] == 'product' && $t->target == 1 ) {
 						// OK
 					} elseif ( $params['target'] == 'shipping' && $t->target == 3 ) {

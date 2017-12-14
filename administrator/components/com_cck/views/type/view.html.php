@@ -115,7 +115,7 @@ class CCKViewType extends JViewLegacy
 			$name				=	'';
 			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
 			$this->item->access	=	3;
-			if ( $featured == 10 ) { // TODO: dynamic mapping
+			if ( $featured == 10 ) { /* TODO#SEBLOD: dynamic mapping */
 				$this->item->storage_location	=	'joomla_article';
 			} elseif ( $featured == 11 ) {
 				$this->item->storage_location	=	'joomla_category';

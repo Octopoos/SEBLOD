@@ -299,7 +299,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -316,7 +316,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -332,7 +332,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';	//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -349,7 +349,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['custom_path']	=	@$options2['custom_path'];
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
 		}
 		
 		$params['image_colorbox']	=	'0';

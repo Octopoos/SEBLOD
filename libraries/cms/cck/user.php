@@ -56,7 +56,7 @@ abstract class JCckUser
 		// More
 		if ( $user->id && $profile ) {
 			if ( !$content_type ) {
-				$content_type	=	''; // todo: config
+				$content_type	=	''; /* TODO#SEBLOD: config */
 				if ( !$content_type ) {
 					$content_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_user" AND pk = '.(int)$user->id );
 				}

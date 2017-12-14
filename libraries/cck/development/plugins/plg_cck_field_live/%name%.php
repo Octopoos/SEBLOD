@@ -30,8 +30,9 @@ class plgCCK_Field_Live%class% extends JCckPluginLive
 		
 		// Prepare
 		$variable	=	$options->get( 'variable' );
+		
 		if ( $variable ) {
-			//
+			/* TODO */
 		}
 		
 		// Set

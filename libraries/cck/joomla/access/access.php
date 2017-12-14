@@ -13,6 +13,8 @@ use Joomla\Utilities\ArrayHelper;
 
 jimport( 'cck.joomla.access.rules' );
 
+/* TODO#SEBLOD: compare */
+
 // CCKAccess
 class CCKAccess
 {

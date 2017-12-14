@@ -481,10 +481,10 @@ class plgContentCCK extends JPlugin
 		}
 		if ( $client == 'intro' /* && $this->cache */ ) {
 			$positions_more	=	JCckDatabaseCache::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-																 . ' WHERE '.$w_type.' AND a.client ="'.$client.'"', 'position' );	// todo::improve
+																 . ' WHERE '.$w_type.' AND a.client ="'.$client.'"', 'position' );	/* TODO#SEBLOD: improve */
 		} else {
 			$positions_more	=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-															. ' WHERE '.$w_type.' AND a.client ="'.$client.'"', 'position' );	// todo::improve
+															. ' WHERE '.$w_type.' AND a.client ="'.$client.'"', 'position' );	/* TODO#SEBLOD: improve */
 		}
 
 		// Fields

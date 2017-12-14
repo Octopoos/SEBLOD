@@ -360,8 +360,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		if ( $return === true ) {
 			return $value;
 		}
-		$field->text	=	$text;	//todo: move up
-		$field->value	=	$value;	//todo: move up
+		$field->text	=	$text; /* TODO#SEBLOD: move up */
+		$field->value	=	$value; /* TODO#SEBLOD: move up */
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	

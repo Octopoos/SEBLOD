@@ -105,7 +105,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$table	=	$field->storage_table;
 		if ( !isset( $config['primary'] ) ) {
 			$config['primary']	=	self::$type;
-			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); // todo: move+improve
+			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); /* TODO#SEBLOD: move+improve */
 		}
 		
 		// Set
@@ -595,7 +595,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		plgCCK_Storage_LocationJoomla_Article::buildRoute( $query, $segments, $config, $menuItem );
 	}
 	
-	// getRoute	//todo: make a parent::getBridgeRoute..
+	// getRoute	/* TODO#SEBLOD: make a parent::getBridgeRoute.. */
 	public static function getRoute( $item, $sef, $itemId, $config = array() )
 	{
 		if ( is_numeric( $item ) ) {
@@ -617,7 +617,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		return plgCCK_Storage_LocationJoomla_Article::getRoute( $pk, $sef, $itemId, $config );
 	}
 	
-	// getRouteByStorage //todo: make a parent::getBridgeRoute.. + optimize ($storage->)
+	// getRouteByStorage /* TODO#SEBLOD: make a parent::getBridgeRoute.. + optimize ($storage->) */
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {

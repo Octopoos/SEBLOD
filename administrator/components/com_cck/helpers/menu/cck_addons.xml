@@ -8,8 +8,7 @@
 		type="heading"
 		>
 		<!--
-		Todo:
-		$user->authorise( 'core.manage', $item->element ) ??
+		/* TODO#SEBLOD: $user->authorise( 'core.manage', $item->element ) ?? */
 		-->
 		<menuitem
 			type="separator"

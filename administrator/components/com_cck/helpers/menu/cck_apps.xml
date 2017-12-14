@@ -8,9 +8,7 @@
 		type="heading"
 		>
 		<!--
-		Todo:
-		$groups	=	implode( ',', $user->getAuthorisedViewLevels() );
-		a.access IN ('.$groups.')
+		/* TODO#SEBLOD: $groups	=	implode( ',', $user->getAuthorisedViewLevels() ); + a.access IN ('.$groups.') */
 		-->
 		<menuitem
 			type="separator"

@@ -35,7 +35,7 @@ class plgCCK_Field_Link%class% extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$field->link	=	'#';
+		$field->link	=	'#'; /* TODO */
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events

@@ -38,7 +38,7 @@ class plgCCK_Field_Typo%class% extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		return '#'.$value.'#';
+		return '#'.$value.'#'; /* TODO */
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events

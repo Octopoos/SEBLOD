@@ -82,7 +82,7 @@ class CCK_Content
 	{
 		$res	=	array();
 		
-		//TODO:: if $fieldnames
+		/* TODO#SEBLOD: if $fieldnames */
 		
 		$regex	=	CCK_Content::getRegex();
 		preg_match_all( $regex, $text, $matches );

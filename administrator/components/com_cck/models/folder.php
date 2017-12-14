@@ -334,7 +334,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 						$f_file['src']		=	JPATH_SITE.'/templates/'.( ( strpos( $f_id, 'tpl_' ) !== false && strpos( $f_id, 'tpl_' ) == 0 ) ? substr( $f_id, 4 ) : $f_id );
 						$f_file['lang_src']	=	$f_file['src'].'/templateDetails.xml';
 					} else {
-						// todo
+						/* TODO#SEBLOD: */
 					}
 					if ( is_array( $f_file ) && $f_file['src'] != '' ) {
 						CCK_Export::exportFile( $f_type, $data, $f_file, array(), $copyright );
