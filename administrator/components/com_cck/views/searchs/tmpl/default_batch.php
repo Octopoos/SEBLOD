@@ -106,9 +106,9 @@ defined( '_JEXEC' ) or die;
         <?php } ?>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-mini btn-success pull-left" type="button" onclick="window.open('https://www.seblod.com/store/extensions?seb_item_category=27', '_blank'); return false;">
+        <a href="javascript:void(0);" class="btn btn-mini btn-success pull-left" onclick="window.open('https://www.seblod.com/store/extensions?seb_item_category=27', '_blank'); return false;" rel="noopener noreferrer">
             <?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_TEMPLATES' ); ?>
-        </button>
+        </a>
         <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
         <div class="btn-group dropup pull-right">
             <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>

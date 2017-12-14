@@ -117,7 +117,11 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
 					}
 				} elseif ( $field1->link ) {
-					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
+					if ( isset( $field1->link_target ) && $field1->link_target == '_blank' ) {
+						$onclick	=	'var otherWindow = window.open(); otherWindow.opener = null; otherWindow.location = \''.$field1->link.'\';';					
+					} else {
+						$onclick	=	'document.location.href=\''.$field1->link.'\'';
+					}
 				}
 				if ( $onclick ) {
 					$onclick	=	' onclick="'.$onclick.'"';
@@ -220,7 +224,11 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
 					}				
 				} elseif ( $field1->link ) {
-					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
+					if ( isset( $field1->link_target ) && $field1->link_target == '_blank' ) {
+						$onclick	=	'var otherWindow = window.open(); otherWindow.opener = null; otherWindow.location = \''.$field1->link.'\';';					
+					} else {
+						$onclick	=	'document.location.href=\''.$field1->link.'\'';
+					}
 				} else {
 					$canDo		=	false;
 				}
