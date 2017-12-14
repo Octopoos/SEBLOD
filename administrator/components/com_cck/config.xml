@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config addfieldpath="/libraries/cck/construction/field">
 	<fieldset name="fs_main" label="COM_CCK_CONFIG_FIELDSET_MAIN" description="COM_CCK_CONFIG_FIELDSET_MAIN_DESC">
+		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
+		<field name="link_rel_blank" type="text" size="32" default="noopener noreferrer" label="COM_CCK_CONFIG_LINK_REL_BLANK" description="COM_CCK_CONFIG_LINK_REL_BLANK_DESC" class="inputbox" />
 		<field name="COM_CCK_CONFIG_LEGEND_FORM" type="spacer" hr="false" />
 		<field name="autosave" type="radio" default="0" label="COM_CCK_CONFIG_AUTOSAVE" description="COM_CCK_CONFIG_AUTOSAVE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
@@ -204,8 +206,6 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
-		<field name="link_rel_blank" type="text" size="32" default="noopener noreferrer" label="COM_CCK_CONFIG_LINK_REL_BLANK" description="COM_CCK_CONFIG_LINK_REL_BLANK_DESC" class="inputbox" />
-		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box" type="list" default="0" label="COM_CCK_CONFIG_SITE_MODAL_BOX" description="COM_CCK_CONFIG_SITE_MODAL_BOX_DESC" class="inputbox chzn-color" >
