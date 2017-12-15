@@ -113,7 +113,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$storage			=	self::_getTable( $pk );
 			$storage->password	=	'';
 			$storage->password2	=	'';
-			$storage->groups	=	( count( $storage->groups ) == 1 ) ? key( $storage->groups ) : $storage->groups;
 			$config['asset']	=	'';
 			$config['asset_id']	=	0;
 			$config['author']	=	parent::g_getBridgeAuthor( 'joomla_article', $pk, self::$type );
