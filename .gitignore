@@ -130,6 +130,8 @@
 /administrator/language/en-GB/en-GB.mod_popular.sys.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.sys.ini
+/administrator/language/en-GB/en-GB.mod_sampledata.ini
+/administrator/language/en-GB/en-GB.mod_sampledata.sys.ini
 /administrator/language/en-GB/en-GB.mod_stats_admin.ini
 /administrator/language/en-GB/en-GB.mod_stats_admin.sys.ini
 /administrator/language/en-GB/en-GB.mod_status.ini
@@ -231,6 +233,8 @@
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.sys.ini
+/administrator/language/en-GB/en-GB.plg_sampledata_blog.ini
+/administrator/language/en-GB/en-GB.plg_sampledata_blog.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_contacts.ini
@@ -621,6 +625,7 @@
 /administrator/modules/mod_quickicon/*
 /administrator/modules/mod_stats_admin/*
 /administrator/modules/mod_status/*
+/administrator/modules/mod_sampledata/*
 /administrator/modules/mod_submenu/*
 /administrator/modules/mod_title/*
 /administrator/modules/mod_toolbar/*
@@ -976,6 +981,7 @@
 /libraries/phpmailer/*
 /libraries/phputf8/*
 /libraries/simplepie/*
+/libraries/src/*
 /libraries/vendor/*
 /libraries/ClassLoader.php
 /libraries/composer_autoload.php
@@ -1010,6 +1016,7 @@
 /media/mailto/*
 /media/media/*
 /media/mod_languages/*
+/media/mod_sampledata/*
 /media/overrider/*
 /media/plg_captcha_recaptcha/*
 /media/plg_quickicon_extensionupdate/*
@@ -1100,6 +1107,7 @@
 /plugins/finder/weblinks/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
+/plugins/sampledata/*
 /plugins/search/categories/*
 /plugins/search/contacts/*
 /plugins/search/content/*
