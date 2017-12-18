@@ -166,11 +166,9 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$tmpl			=	( $tmpl ) ? '&tmpl='.$tmpl : '';
 		$vars			=	$tmpl;	// + live
 		
-		/*
-		if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
-			$redirection		=	'-1'; /* TODO#SEBLOD: */
-		}
-		*/
+		// if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
+			// $redirection		=	'-1'; /* TODO#SEBLOD: */
+		// }
 		
 		// Set
 		if ( is_array( $field->value ) ) {
