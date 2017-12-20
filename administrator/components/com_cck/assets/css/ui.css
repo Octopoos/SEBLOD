@@ -91,6 +91,9 @@ div.seblod .adminformlist fieldset.checkboxes {
 	margin: 0;
 	clear:right;
 }
+div.seblod .adminformlist fieldset.checkboxes .cck-fl {
+	float:left;
+}
 div.seblod .adminformlist fieldset.checkboxes label, #collapseModal fieldset.checkboxes label {
 	clear: right;
 	min-width: 30px;
