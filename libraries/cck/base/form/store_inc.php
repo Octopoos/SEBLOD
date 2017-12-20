@@ -231,8 +231,10 @@ if ( count( $config['fields'] ) ) {
 
 // Stage (..and the next stage is..)
 if ( $stages > 1 && $stage ) {
-	if ( ! $config['validate'] ) {
-		$stage++;
+	if ( $config['task'] != 'apply' ) {
+		if ( ! $config['validate'] ) {
+			$stage++;
+		}
 	}
 	if ( $stage <= $stages ) {
 		if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
