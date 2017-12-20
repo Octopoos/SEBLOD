@@ -100,6 +100,16 @@ if ( $description != '' ) {
 			}
 		}
 	}
+	if ( $description != '' && strpos( $description, 'J(' ) !== false ) {
+		$matches	=	'';
+		$regex		=	'#J\((.*)\)#U';
+		preg_match_all( $regex, $description, $matches );
+		if ( count( $matches[1] ) ) {
+			foreach ( $matches[1] as $text ) {
+				$description	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
+			}
+		}
+	}
 }
 if ( $target ) {
 	$target	=	$app->getMenu()->getItem( str_replace( '&Itemid=', '', $params->get( 'menu_item', $itemId ) ) );
