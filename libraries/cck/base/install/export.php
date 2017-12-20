@@ -520,6 +520,11 @@ class CCK_Export
 			}
 			if ( $el->restriction != '' ) {
 				self::exportPlugin( 'cck_field_restriction', $el->restriction, $data, $extensions );
+
+				if ( file_exists( JPATH_SITE.'/plugins/cck_field_restriction/'.$el->restriction.'/classes/app.php' ) ) {
+					require_once JPATH_SITE.'/plugins/cck_field_restriction/'.$el->restriction.'/classes/app.php';
+					JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$el->restriction.'_App', 'onCCK_Field_RestrictionExportType_Field', array( $fields[$el->fieldid], &$el, &$data, &$extensions ) );
+				}
 			}
 			if ( $el->typo != '' ) {
 				self::exportPlugin( 'cck_field_typo', $el->typo, $data, $extensions );
