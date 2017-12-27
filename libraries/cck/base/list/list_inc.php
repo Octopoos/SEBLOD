@@ -240,7 +240,6 @@ if ( $preconfig['show_form'] ) {
 $context	=	$app->input->getString( 'context' );
 
 if ( $context != '' ) {
-	$context	=	str_replace( "'", '"', $context );	/* TODO#SEBLOD: remove */
 	$context	=	json_decode( $context, true );
 	$excluded	=	array(
 						'cid'=>'',
