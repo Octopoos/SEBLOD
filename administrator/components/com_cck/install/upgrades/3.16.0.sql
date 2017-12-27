@@ -5,6 +5,9 @@ ALTER TABLE `#__cck_core_searchs` ADD `sef_route_aliases` TINYINT(3) NOT NULL DE
 
 UPDATE `#__cck_core_types` SET `parent_inherit`=1 WHERE `parent` != "";
 
+UPDATE `#__cck_core_fields` SET `script` = '', `attributes` = '' WHERE `id` = 27;
+UPDATE `#__cck_core_fields` SET `options2` = '{"preparecontent":"","prepareform":"$value = ( $value ) ? $value : ''custom'';\\r\\n$options = array();\\r\\n$options[] = JHtml::_( ''select.option'', ''none'', ''- ''.JText::_( ''COM_CCK_NONE'' ).'' -'', ''value'', ''text'' );\\r\\nif ( ( JCck::getConfig_Param( ''storage_dev'', ''0'' ) == 3) || ( $value == ''dev'' ) ) { $options[] = JHtml::_( ''select.option'', ''dev'', JText::_ ( ''COM_CCK_DEVELOPMENT'' ), ''value'', ''text'' );\\r\\n}\\r\\n$options = array_merge( $options, Helper_Admin::getPluginOptions( ''storage'', ''cck_'', false, false, true ) );\\r\\n$form = JHtml::_( ''select.genericlist'', $options, $name, ''class=\\"inputbox select\\" ''.$field->attributes, ''value'', ''text'', $value );","preparestore":""}' WHERE `id` = 28;
+
 UPDATE `#__cck_core_fields` SET `options` = 'Allowed=||Allowed Hidden=hidden||Not Allowed=none||location=optgroup||Administrator Only=admin||Site Only=site' WHERE `id` = 276;
 UPDATE `#__cck_core_fields` SET `options` = 'No=0||Yes=optgroup||Yes for Everyone=1||Yes for Super Admin=2||Config No Search=optgroup||Yes for Everyone=-1||Yes for Super Admin=-2' WHERE `id` = 174;
 
