@@ -54,6 +54,15 @@ input[type="checkbox"] {-webkit-border-radius: 3px; -moz-border-radius: 3px; bor
 .pagination-toolbar .pagination-list li span[class*=" icon-"]{position:relative; top:2px;}
 th.caret-fix > a:first-child > span{float:left; position:relative; left:3px;}
 .btn-primary .icon-edit:before{color:#fff;}
+.input-group{width: 222px; float:left; position: relative;}
+.input-group .insidebox{position: absolute; left:initial; right:5px; z-index: 101; top:11px!important;}
+.input-group input{width:97px; position: relative;}
+.input-group.left [data-pos="left"]{width:147px; z-index: 100; -webkit-transition: width 0.5s; transition: width 0.5s;}
+.input-group.left [data-pos="right"]{width:46px; z-index: 99; -webkit-transition: width 0.5s; transition: width 0.5s; border-left:0; border-bottom-left-radius: 0!important; border-top-left-radius: 0!important;}
+.input-group.right input{left:-2px;}
+.input-group.right [data-pos="left"]{width:46px; z-index: 99; -webkit-transition: width 0.5s; transition: width 0.5s; border-right:0; border-bottom-right-radius: 0!important; border-top-right-radius: 0!important;}
+.input-group.right [data-pos="right"]{width:147px; z-index: 100; -webkit-transition: width 0.5s; transition: width 0.5s;}
+.input-group > input.right{left:-2px;}
 
 /* switch linkage */
 .switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}

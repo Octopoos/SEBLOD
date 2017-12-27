@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 $app	=	JFactory::getApplication();
 $lang	=	JFactory::getLanguage();
-$my		=	JFactory::getUser();
+$mode	=	JCck::getConfig_Param( 'storage_dev', '0' );
 $tmpl	=	$app->input->getString( 'tmpl', '' );
 $wrap	=	( $tmpl ) ? $this->css['wrapper_tmpl'] : $this->css['wrapper'];
 
@@ -57,7 +57,18 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 	<div class="seblod first">
         <div id="loading" class="loading"></div>
         <ul class="spe spe_title">
-            <?php echo JCckDev::renderForm( $cck['core_title_field'], $this->item->title, $config ); ?>
+        	<?php if ( $this->isNew && $mode >= 2 ) { ?>
+	        	<li><label>Title</label>
+	        	<div class="input-group left">
+	            <?php
+	            echo JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="left" tabindex="1"' ), array( 'name'=>'title[]', 'id'=>'title2' ) );
+	            echo JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="right" tabindex="2" placeholder="..."', 'required'=>'' ), array( 'name'=>'title[]' ) );
+	            ?>
+	            </div>
+	        	</li>
+        	<?php } else {
+        		echo JCckDev::renderForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'tabindex="1"' ) );
+        	} ?>
         </ul>
         <ul class="spe spe_folder">
 			<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
@@ -68,8 +79,7 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
         <ul class="spe spe_name">
 	        <?php
 			$ajax			=	'';
-    		$iAmSuperAdmin	=	$my->authorise( 'core.admin' );
-			if ( ! $this->item->id || ( $this->item->id && ( JCck::getConfig_Param( 'storage_dev', '0' ) == 1 && $iAmSuperAdmin === true ) ) ) {
+			if ( ! $this->item->id || ( $this->item->id && $mode ) ) {
 				JFactory::getLanguage()->load( 'plg_cck_field_validation_ajax_availability', JPATH_ADMINISTRATOR, null, false, true );
 				$class	=	'inputbox text validate[required,custom[field_name],ajax[availability_name]]';
 				$extra	=	'';
@@ -82,7 +92,7 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 						.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
 						.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
 				echo	'<li><label>'.JText::_( 'COM_CCK_NAME' ).'<span class="star"> *</span></label>'
-					.	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="2" />'
+					.	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="3" />'
 					.	'</li>';				
 			} else {
 				echo '<li><label>'.JText::_( 'COM_CCK_NAME' ).'</label><span class="variation_value" style="display:block;"><strong>'.$this->item->name.'</strong></span>'
@@ -91,7 +101,7 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 			?>
 		</ul>
         <ul class="spe spe_type">
-            <?php echo JCckDev::renderForm( $cck['core_type'], $this->item->type, $config ); ?>
+            <?php echo str_replace( 'tabindex="3"', 'tabindex="4"', JCckDev::renderForm( $cck['core_type'], $this->item->type, $config ) ); ?>
         </ul>
         <ul class="spe spe_description spe_latest">
             <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
@@ -137,6 +147,7 @@ Helper_Display::quickCopyright();
 (function ($){
 	JCck.Dev = {
 		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
+		mode:<?php echo (int)$mode; ?>,
 		name:"field",
 		transliteration:<?php echo $transliterate; ?>,
 		ajaxLayer: function(view, layout, elem, mydata) {
@@ -147,7 +158,12 @@ Helper_Display::quickCopyright();
 				type: "POST",
 				url: "index.php?option=com_cck&view="+view+"&layout="+layout+"&format=raw",
 				beforeSend:function(){ $("#loading").html(loading); $(elem).html(""); },
-				success: function(response){ $("#loading").html(""); $(elem).css("opacity", 0.4).html(response).fadeTo("fast",1); },
+				success: function(response){
+					$("#loading").html(""); $(elem).css("opacity", 0.4).html(response).fadeTo("fast",1);
+					if (JCck.Dev.mode >= 2 && $("#jform_id").val()==0 && $("#title").val()) {
+						JCck.Dev.propagateName($("#title").val());
+					}
+				},
 				error:function(){ $(elem).html("<div><strong>Oops!</strong> Try to close the page & re-open it properly.</div>"); }
 			});
 		},
@@ -215,9 +231,26 @@ Helper_Display::quickCopyright();
 				}
 			});
 		},
+		propagateName: function(str) {
+			if ($("#label").length) {
+				$("#label").val(str);	
+			}
+			if ($("#storage_field").length) {
+				$("#storage_field").val( str.toLowerCase().replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "") );	
+			}
+		},
 		transliterateName: function() {
 			if ($("span.insidebox").length > 0) { var p = $("span.insidebox").html()+"_"; } else { var p = ""; }
-			var str = JCck.transliterate(p+$("#title").val(),JCck.Dev.transliteration);
+			var title = $("#title").val().trim();
+
+			if (JCck.Dev.mode >= 2) {
+				var title2 = $("#title2").val().trim();
+				if (title2 != "") {
+					JCck.Dev.propagateName(title);
+					title = title2+" "+title;
+				}
+			}
+			var str = JCck.transliterate(p+title,JCck.Dev.transliteration);
 			$("#name").val( str.toLowerCase().replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "") );
 		},
 		toggleTranslation: function() {
@@ -251,6 +284,29 @@ Helper_Display::quickCopyright();
 	}
 	<?php } ?>
 	$(document).ready(function() {
+		$(".input-group input").focusin(function() {
+			var pos = $(this).attr("data-pos");
+			var $el = $(this).parent();
+
+			if (!$el.hasClass(pos)) {
+				$el.removeClass("left right").addClass(pos);
+			}
+		});
+		$("#title").on("change", function() {
+			if ( !$("#name").val() ) {
+				JCck.Dev.transliterateName();
+			}
+		});
+		$("#name").on("focusin", function() {
+			if ( !$("#name").val() ) {
+				JCck.Dev.transliterateName();
+			}
+		});
+		if (JCck.Dev.mode >= 2) {
+			if( !$("#title2").val() ) { $("#title2").focus(); }
+		} else {
+			if( !$("#title").val() ) { $("#title").focus(); }
+		}
 		$("#type").on('change', function() {
 			var cur = $("#myid").val();
 			var data = "id="+cur+"&ajax_type="+$("#type").val();
