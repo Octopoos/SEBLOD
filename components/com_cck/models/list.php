@@ -82,7 +82,7 @@ class CCKModelList extends JModelLegacy
 
 		$db 	= 	JFactory::getDbo();
 		$query	= 	$db->getQuery( true );
-		$query->select( 'a.id, a.pk, a.storage_location, b.id AS type_id' )
+		$query->select( 'a.id, a.pk, a.storage_location, author_id, b.id AS type_id' )
 			  ->from( '#__cck_core AS a' )
 			  ->join( 'LEFT', '#__cck_core_types AS b ON b.name = a.cck' )
 			  ->where( 'a.id IN (' . implode( ',', $pks ) . ')' );
@@ -93,6 +93,7 @@ class CCKModelList extends JModelLegacy
 		if ( !empty( $results ) ) {
 			$ids 		= 	array();
 			$location 	= 	null;
+			$orders		=	array();
 			$user 		=	JCck::getUser();
 
 			foreach ( $pks as $i=>$pk ) {
@@ -103,19 +104,18 @@ class CCKModelList extends JModelLegacy
 				if ( !( $canEdit && $canEditOwn
 					|| ( $canEdit && !$canEditOwn && ( $results[$pk]['author_id'] != $user->id ) )
 					|| ( $canEditOwn && ( $results[$pk]['author_id'] == $user->id ) ) ) ) {
-					unset( $lft[$i] );
 					continue;
 				}
 
 				$ids[] 		= 	$results[$pk]['pk'];
+				$orders[]	=	$lft[$i];
 
 				if ( null === $location ) {
 					$location 	= 	$results[$pk]['storage_location'];
 				}
-
 			}
 			if ( $location && count( $ids ) ) {
-				return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'onCCK_Storage_LocationSaveOrder', array( $ids, $lft ) );
+				return JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'onCCK_Storage_LocationSaveOrder', array( $ids, $orders ) );
 			}
 		}
 
