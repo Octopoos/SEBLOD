@@ -32,7 +32,7 @@ if ( $task == 'save2copy' ) {
 	$isNew				=	1;
 	$preconfig['id']	=	0;
 }
-if ( $app->isClient( 'site' ) && $hashed !== NULL && ( $hash != $hashed ) ) {
+if ( !$user->authorise( 'core.admin' ) && $hashed !== NULL && ( $hash != $hashed ) ) {
 	$config	=	array(
 					'pk'=>0,
 					'options'=>'',
