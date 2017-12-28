@@ -214,8 +214,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				break;
 			case 'sort':
 			case 'sort_grip':
+				$canDo			=	false;
 				$parentId		=	$config['parent_id'];
 				static $orders	=	array();
+				static $user	=	null;
 
 				if ( !isset( $orders[$parentId] ) ) {
 					$orders[$parentId]	=	0;
@@ -225,12 +227,26 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				if ( $type == 'sort' ) {
 					static $loaded 	= 	false;
-					$listDir		=	'asc';
+					static $can		=	null;
 
-					if ( !$loaded ) {
+					if ( !is_array( $can ) ) {
+						$user				=	JFactory::getUser();
+						$can				=	array(
+													'edit'=>$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] ),
+													'edit.own'=>$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] )
+												);
+					}
+					if ( $can['edit'] && $can['edit.own']
+						|| ( $can['edit'] && !$can['edit.own'] && ( $config['author'] != $user->id ) )
+						|| ( $can['edit.own'] && ( $config['author'] == $user->id ) ) ) {
+						$canDo	=	true;
+					}
+
+					if ( !$loaded && $canDo ) {
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
 							$app			=	JFactory::getApplication();
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+							$listDir		=	'asc';
 							$loaded			= 	true;
 							$tableWrapper	=	$formId . ' table.table';
 							
@@ -246,13 +262,19 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
 						}
 					}
+				} else {
+					$canDo	=	true;
 				}
 
-				$value 	= 	'<span class="sortable-handler">'
-						.	'<span class="icon-menu"></span>'
-						.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
-						.	'</span>';
-
+				if ( $canDo ) {
+					$value 	= 	'<span class="sortable-handler">'
+							.	'<span class="icon-menu"></span>'
+							.	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />'
+							.	'</span>';
+				} else {
+					$value	=	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />';
+				}
+				
 				$config['formWrapper']	=	true;
 				break;
 			case 'state':
