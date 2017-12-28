@@ -1051,23 +1051,5 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	{
 		return JFactory::getUser()->authorise( $rule, 'com_content.article.'.$pk );
 	}
-
-	// checkIn
-	public static function checkIn( $pk = 0 )
-	{
-		if ( !$pk ) {
-			return false;
-		}
-		
-		$table	=	self::_getTable( $pk );
-		
-		return parent::g_checkIn( $table );
-	}
-	
-	// getId
-	public static function getId( $config )
-	{
-		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
 }
 ?>

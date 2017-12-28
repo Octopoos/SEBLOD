@@ -43,6 +43,40 @@ class JCckPluginLocation extends JPlugin
 		return true;
 	}
 
+	// checkIn
+	public static function checkIn( $pk = 0 )
+	{
+		if ( !$pk ) {
+			return false;
+		}
+
+		$app	=	JFactory::getApplication();
+		$table	=	static::_getTable( $pk );
+		$user	=	JFactory::getUser();
+		
+		if ( $table->checked_out > 0 ) {
+			if ( $table->checked_out != $user->id && !$user->authorise( 'core.admin', 'com_checkin' ) ) {
+				$app->enqueueMessage( JText::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
+				return false;
+			}
+			
+			if ( !$table->checkin() ) {
+				$app->enqueueMessage( $table->getError(), 'error' );
+				return false;
+			}
+		}
+		
+		/* TODO#SEBLOD: releaseEditId */
+		
+		return true;
+	}
+
+	// getId
+	public static function getId( $config )
+	{
+		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.static::$type.'" AND pk='.(int)$config['pk'] );
+	}
+
 	// getStaticParams
 	public static function getStaticParams()
 	{
@@ -329,7 +363,7 @@ class JCckPluginLocation extends JPlugin
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
-	// g_checkIn
+	// g_checkIn (deprecated)
 	public static function g_checkIn( $table )
 	{
 		$app	=	JFactory::getApplication();
@@ -347,7 +381,7 @@ class JCckPluginLocation extends JPlugin
 			}
 		}
 		
-		// releaseEditId
+		/* TODO#SEBLOD: releaseEditId */
 		
 		return true;
 	}

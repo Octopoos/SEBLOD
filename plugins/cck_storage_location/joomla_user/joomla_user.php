@@ -676,11 +676,5 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	{
 		return true;
 	}
-	
-	// getId
-	public static function getId( $config )
-	{
-		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
 }
 ?>
