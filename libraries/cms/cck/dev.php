@@ -695,7 +695,8 @@ abstract class JCckDev
 		}
 
 		if ( $tooltip != '' ) {
-			$tag		=	'<span class="star"> &sup'.$tag.';</span>';
+			$tag		=	( $tag == '1' || $tag == '2' ) ? ' &sup'.$tag.';' : ' <sup style="font-size:10px;">'.$tag.'</sup>';
+			$tag		=	'<span class="star">'.$tag.'</span>';
 			$tooltip	=	' class="hasTooltip qtip_cck" title="'.$tooltip.'"';
 		} else {
 			$tag		=	'';
