@@ -308,7 +308,7 @@ abstract class JCckDevHelper
 	}
 
 	// replaceLive
-	public static function replaceLive( $str, $name = '' )
+	public static function replaceLive( $str, $name = '', $config = array() )
 	{
 		$app	=	JFactory::getApplication();
 		if ( !$name ) {
@@ -364,6 +364,28 @@ abstract class JCckDevHelper
 						}
 					}
 				}
+			}
+		}
+		if ( $str != '' && strpos( $str, '$context->' ) !== false ) {
+			if ( strpos( $str, '$context->getType()' ) !== false ) {
+				if ( isset( $config['client'], $config['type'] ) && !( $config['client'] == 'search' || $config['client'] == 'order' ) ) {
+					$type	=	$config['type'];
+				}
+				if ( !$type ) {
+					$type	=	$app->input->get( 'type', '' );
+				}
+
+				$str		=	str_replace( '$context->getType()', $type, $str );
+			}
+			if ( strpos( $str, '$context->getAuthor()' ) !== false ) {
+				if ( isset( $config['client'], $config['type'] ) && !( $config['client'] == 'search' || $config['client'] == 'order' ) ) {
+					$author	=	$config['author'];
+				}
+				if ( !$type ) {
+					$author	=	JFactory::getUser()->id;
+				}
+
+				$str		=	str_replace( '$context->getAuthor()', $author, $str );
 			}
 		}
 		if ( $str != '' && strpos( $str, '$user->' ) !== false ) {
