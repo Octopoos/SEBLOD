@@ -310,16 +310,6 @@ if ( isset( $config['process']['beforeStore'] ) && count( $config['process']['be
 		}
 	}
 }
-$event	=	'onCckPostBeforeStore';
-if ( isset( $processing[$event] ) ) {
-	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
-
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
-		}
-	}
-}
 
 // Stop here if an error occurred
 if ( $config['error'] !== false ) {
@@ -329,6 +319,17 @@ if ( $config['error'] !== false ) {
 // Validate
 if ( $config['validate'] ) {
 	return 0;
+}
+
+$event	=	'onCckPostBeforeStore';
+if ( isset( $processing[$event] ) ) {
+	foreach ( $processing[$event] as $p ) {
+		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+			$options	=	new JRegistry( $p->options );
+
+			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+		}
+	}
 }
 
 // Store
