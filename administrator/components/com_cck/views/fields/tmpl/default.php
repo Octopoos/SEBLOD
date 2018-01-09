@@ -184,6 +184,9 @@ Helper_Display::quickCopyright();
 
 $js	=	'
 		(function ($){
+			JCck.Dev = {
+				count:'.count( $this->items ).'
+			}
 			Joomla.orderTable = function()
 			{
 				table = document.getElementById("sortTable");
@@ -210,15 +213,28 @@ $js	=	'
 				$(document).keypress(function(e) {
 					if (!$(":input:focus").length) {
 						e.preventDefault();
+						var k = e.which;
 
-						if (e.which == 64) {
+						if (k == 64) {
 							if ( $("#filter_search").val() != "" ) {
 								$("#filter_search").select();
 							} else {
 								$("#filter_search").focus();
 							}
-						} else if (e.which == 110) {
+						} else if (k == 110) {
 							$("#toolbar-new > button").click();
+						} else if (k == 13 && document.adminForm.boxchecked.value==1) {
+							$("#toolbar-edit > button").click();
+						} else if (JCck.Dev.count > 0 && k >= 48 && k <= 57) {
+							if (k == 48) {
+								k = 58;
+							}
+							var tk = k - 49;
+
+							if ($("#cb"+tk).length) {
+								$("[name=\'toggle\']").click().click();
+								$("#cb"+tk).click();
+							}
 						}
 					}
 				});

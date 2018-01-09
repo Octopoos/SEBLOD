@@ -226,19 +226,38 @@ $js	=	'
 				$(document).keypress(function(e) {
 					if (!$(":input:focus").length) {
 						e.preventDefault();
+						var k = e.which;
 
-						if (e.which == 64) {
+						if (k == 64) {
 							if ( $("#filter_search").val() != "" ) {
 								$("#filter_search").select();
+								if ( $("#filter_location").val() == "id" ) {
+									$("#filter_location").val("title").trigger("liszt:updated");
+								}
 							} else {
 								$("#filter_search").focus();
 							}
-						} else if (e.which == 110) {
+						} else if (k == 110) {
 							$("#toolbar-new > button").click();
-						} else if (JCck.Dev.count == 1 && e.which >= 49 && e.which <= 52) {
+						} else if (k == 13 && document.adminForm.boxchecked.value==1) {
+							var v = $("[name=\'cid[]\']:checked").val();
+							$("#filter_location").val("id");
+							$("#filter_search").val(v);
+							$("#core_filter_go").click();
+						} else if (JCck.Dev.count == 1 && k >= 49 && k <= 52) {
 							var n = e.which - 48;
 							if ($(\'[data-edit-trigger="\'+n+\'"]\').length) {
 								document.location.href=$(\'[data-edit-trigger="\'+n+\'"]\').attr("href");
+							}
+						} else if (JCck.Dev.count > 1 && k >= 48 && k <= 57) {
+							if (k == 48) {
+								k = 58;
+							}
+							var tk = k - 49;
+
+							if ($("#cb"+tk).length) {
+								$("[name=\'toggle\']").click().click();
+								$("#cb"+tk).click();
 							}
 						}
 					}
