@@ -38,17 +38,19 @@ class CCKController extends JControllerLegacy
 				}
 			}
 			
-			if ( ( $view == 'template' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.template', $id ) ) ||
+			if ( ( $view == 'folder' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.folder', $id ) ) ||
 				 ( $view == 'type' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.type', $id ) ) ||
 				 ( $view == 'field' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.field', $id ) ) ||
 				 ( $view == 'search' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.search', $id ) ) ||
-				 ( $view == 'folder' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.folder', $id ) ) ||
+				 ( $view == 'template' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.template', $id ) ) ||
 				 ( $view == 'site' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.site', $id ) ) ||
-				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ) {
-				// $this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
-				// $this->setMessage( $this->getError(), 'error' );
-				// $this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
-				// return false;
+				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ||
+				 ( $view == 'session' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.session', $id ) ) ) {
+				$this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
+				$this->setMessage( $this->getError(), 'error' );
+				$this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
+				
+				return false;
 			}
 		}
 		
