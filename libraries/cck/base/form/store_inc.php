@@ -49,9 +49,19 @@ $type		=	CCK_Form::getType( $preconfig['type'], 'store' );
 if ( ! $type ) {
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
+
+$options	=	new JRegistry;
+$options->loadString( $type->{'options_'.$client} );
+
 if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
 	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
 		$preconfig['client']	=	'admin';
+		$more_options			=	$type->{'options_'.$preconfig['client']};
+
+		if ( $more_options != '' ) {
+			$more_options		=	json_decode( $more_options, true );
+		}
+		$options->loadArray( $more_options );
 	}
 }
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
@@ -105,6 +115,28 @@ if ( $preconfig['client'] ) {
 	}
 }
 
+// ACL
+$can	=	CCK_Form::getPermissions( $type, $config );
+$cannot	=	CCK_Form::getNoAccessParams( $options );
+
+if ( $can === false ) {	
+	CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+}
+if ( ! $can['do'] ) {
+	if ( $config['isNew'] ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+	}
+	if ( ! ( $can['edit.own'] && $config['author'] == $user->id || $can['edit.own.content'] ) ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+	}
+}
+if ( $type->storage_location == 'joomla_user' && $config['isNew'] ) {
+	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+	}
+}
+
+// Fields
 $stage		=	-1;
 $stages		=	( isset( $config['options']['stages'] ) ) ? $config['options']['stages'] : 1;
 if ( $stages > 1 ) {
