@@ -21,16 +21,19 @@ class JFormFieldCCKexport extends JFormField
 		$app		=	JFactory::getApplication();
 		$type		=	(string)$this->element['extension_type'];
 		$type		=	( $type ) ? $type : 'plugin';
+		
 		$extension	=	'&extension='.$type;
+		$token		=	'&'.JSession::getFormToken().'=1';
+		
 		if ( $type == 'languages' ) {
 			$lang	=	JFactory::getLanguage()->getTag();			
-			$url	=	'index.php?option=com_cck&task=export'.$extension.'&lang_tag=en-GB';
+			$url	=	'index.php?option=com_cck&task=export'.$extension.'&lang_tag=en-GB'.$token;
 			$text	=	self::_getHtml( 'en-GB', $url, ' btn-small' );
 			
 			if ( $lang != 'en-GB' ) {
 				$text	.=	'&nbsp;&nbsp;<span style="font-weight: normal;">or</span>&nbsp;&nbsp;';
 				$tag	=	'&lang_tag='.$lang;
-				$url	=	'index.php?option=com_cck&task=export'.$extension.$tag;
+				$url	=	'index.php?option=com_cck&task=export'.$extension.$tag.$token;
 				$text	.=	self::_getHtml( $lang, $url, ' btn-small' );
 			}
 		} else {
@@ -38,7 +41,7 @@ class JFormFieldCCKexport extends JFormField
 			$lang->load( 'com_cck_default', JPATH_SITE );
 			$id		=	$app->input->getInt( 'extension_id', 0 );
 			$id		=	'&extension_id='.$id;
-			$url	=	'index.php?option=com_cck&task=export'.$extension.$id;
+			$url	=	'index.php?option=com_cck&task=export'.$extension.$id.$token;
 			$text	=	self::_getHtml( JText::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
 		}
 		

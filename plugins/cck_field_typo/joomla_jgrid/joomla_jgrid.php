@@ -254,7 +254,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							$task_id		=	$typo->get( 'task_id_process', '' );
 
 							if ( $task == 'process_ajax' && $task_id ) {
-								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id );
+								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id.'&'.JSession::getFormToken().'=1' );
 							} else {
 								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
 							}

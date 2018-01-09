@@ -24,7 +24,8 @@ class CCKControllerSite extends JControllerForm
 
 		// Parent Method
 		$result	=	parent::add();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		

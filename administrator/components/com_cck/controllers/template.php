@@ -28,16 +28,16 @@ class CCKControllerTemplate extends JControllerForm
 		$allow		=	null;
 		
 		if ( $folderId ) {
-			// If Folder
+			// Folder Permissions
 			$allow	=	$user->authorise( 'core.create', $this->option.'.folder.'.$folderId );
 		}
 		
-		if ( $allow === null ) {
-			// Component Permissions
-			return parent::allowAdd( $data );
-		} else {
+		if ( $allow !== null ) {
 			return $allow;
 		}
+
+		// Component Permissions
+		return parent::allowAdd( $data );
 	}
 
 	// allowEdit
@@ -54,10 +54,10 @@ class CCKControllerTemplate extends JControllerForm
 		if ( $folderId ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit', $this->option.'.folder.'.$folderId );
-		} else {
-			// Component Permissions
-			return parent::allowEdit( $data, $key );
 		}
+
+		// Component Permissions
+		return parent::allowEdit( $data, $key );
 	}
 	
 	// add
@@ -67,7 +67,8 @@ class CCKControllerTemplate extends JControllerForm
 
 		// Parent Method
 		$result	=	parent::add();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		
@@ -78,6 +79,8 @@ class CCKControllerTemplate extends JControllerForm
 	// export_variation
 	public function export_variation()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel();
 		$name	=	$app->input->getString( 'variation', '' );

@@ -28,16 +28,16 @@ class CCKControllerType extends CCK_ControllerForm
 		$allow		=	null;
 		
 		if ( $folderId ) {
-			// If Folder
+			// Folder Permissions
 			$allow	=	$user->authorise( 'core.create', $this->option.'.folder.'.$folderId );
 		}
 		
-		if ( $allow === null ) {
-			// Component Permissions
-			return parent::allowAdd( $data );
-		} else {
+		if ( $allow !== null ) {
 			return $allow;
 		}
+
+		// Component Permissions
+		return parent::allowAdd( $data );
 	}
 	
 	// allowEdit
@@ -54,10 +54,10 @@ class CCKControllerType extends CCK_ControllerForm
 		if ( $folderId ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit', $this->option.'.folder.'.$folderId );
-		} else {
-			// Component Permissions
-			return parent::allowEdit( $data, $key );
 		}
+
+		// Component Permissions
+		return parent::allowEdit( $data, $key );
 	}
 	
 	// add
@@ -67,7 +67,8 @@ class CCKControllerType extends CCK_ControllerForm
 
 		// Parent Method
 		$result	=	parent::add();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		
@@ -86,7 +87,8 @@ class CCKControllerType extends CCK_ControllerForm
 
 		// Parent Method
 		$result	=	parent::edit();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		

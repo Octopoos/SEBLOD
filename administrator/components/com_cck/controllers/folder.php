@@ -32,6 +32,8 @@ class CCKControllerFolder extends JControllerForm
 	// export
 	public function export()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app			=	JFactory::getApplication();
 		$model			=	$this->getModel();
 		$recordId		=	$app->input->getInt( 'id', 0 );

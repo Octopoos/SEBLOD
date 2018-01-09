@@ -30,6 +30,8 @@ class CCKControllerForm extends JControllerForm
 	// saveAjax
 	public function saveAjax()
 	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$config		=	$this->save( null, null, true );
 		$return		=	array(
 							'error'=>0,
@@ -48,9 +50,7 @@ class CCKControllerForm extends JControllerForm
 	// save
 	public function save( $key = null, $urlVar = null, $isAjax = false )
 	{
-		if ( $isAjax !== true ) {
-			JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-		}
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	JFactory::getApplication();
 		$model		=	$this->getModel( 'form' );

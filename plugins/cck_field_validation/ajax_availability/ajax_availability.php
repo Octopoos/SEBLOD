@@ -50,7 +50,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		
 		$rule		=	'
 					"'.$name.'":{
-						"url": "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task=ajax&format=raw&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
+						"url": "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task=ajax&format=raw&'.JSession::getFormToken().'=1&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
 						"extraData": "'.$extraData.'",
 						'.$extraData2.'
 						"alertText": "'.$prefix.$alert.'",

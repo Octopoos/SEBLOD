@@ -66,6 +66,8 @@ class CCKController extends JControllerLegacy
 	// ajax
 	public function ajax()
     {
+    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
 		$file	=	JPATH_SITE.'/'.$file;
@@ -100,7 +102,7 @@ class CCKController extends JControllerLegacy
 	// delete
 	public function delete()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel( 'list' );
@@ -333,7 +335,9 @@ class CCKController extends JControllerLegacy
 	// export
 	public function export()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		if ( !JSession::checkToken( 'get' ) ) {
+			JSession::checkToken( 'post' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -365,6 +369,8 @@ class CCKController extends JControllerLegacy
 	// exportAjax
 	public function exportAjax()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 			return;
@@ -400,7 +406,7 @@ class CCKController extends JControllerLegacy
 		echo json_encode( $return );
 	}
 
-	// getRoute
+	// getRoute (deprecated)
 	public function getRoute()
 	{
 		$app		=	JFactory::getApplication();
@@ -442,6 +448,8 @@ class CCKController extends JControllerLegacy
 	// outputMessage
 	public function outputMessage()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$app	=	JFactory::getApplication();
 		$link	=	$this->_getReturnPage();
 
@@ -459,6 +467,8 @@ class CCKController extends JControllerLegacy
 	// processAjax
 	public function processAjax()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 			return;
@@ -496,7 +506,9 @@ class CCKController extends JControllerLegacy
 	// process
 	public function process()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		if ( !JSession::checkToken( 'get' ) ) {
+			JSession::checkToken( 'post' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -559,6 +571,8 @@ class CCKController extends JControllerLegacy
 	// saveAjax
 	public function saveAjax()
 	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$config		=	$this->save( true );
 		$return		=	array(
 							'error'=>0,
@@ -577,9 +591,7 @@ class CCKController extends JControllerLegacy
 	// save	
 	public function save( $isAjax = false )
 	{
-		if ( $isAjax !== true ) {
-			JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-		}
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	JFactory::getApplication();
 		$model		=	$this->getModel( 'form' );
@@ -774,6 +786,8 @@ class CCKController extends JControllerLegacy
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app	=	JFactory::getApplication();
 		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
 		$order 	= 	$app->input->post->get( 'order', array(), 'array' );

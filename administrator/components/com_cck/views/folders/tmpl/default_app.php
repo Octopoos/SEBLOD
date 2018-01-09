@@ -92,7 +92,7 @@ jQuery(document).ready(function($) {
 			var v = $(this).myVal();
 			opts += "&options["+k+"]="+v;
 		});
-		document.location.href	=	url+"&elements="+elements+"&dep_categories="+$("#app_dependencies_categories").myVal()+"&dep_menu="+$("#app_dependencies_menu").myVal()+opts;
+		document.location.href	=	url+"&elements="+elements+"&dep_categories="+$("#app_dependencies_categories").myVal()+"&dep_menu="+$("#app_dependencies_menu").myVal()+opts+"&"+Joomla.getOptions("csrf.token")+"=1";
 		return;
 	});
 });

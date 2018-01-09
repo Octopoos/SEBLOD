@@ -107,16 +107,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$field->label	=	'';
 
 		// Prepare
-		$pre_task	=	'';
-		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
-		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
-		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		$task			=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
+		$task_auto		=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
+		$task_id		=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
 		
-		if ( $task_id ) {
-			$pre_task	=	htmlspecialchars( 'jQuery("#'.$form_id.'").append(\'<input type="hidden" name="tid" value="'.$task_id.'">\');' );
-		}
-		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
+		$class			=	'button btn' . ( $field->css ? ' '.$field->css : '' );
 		
 		if ( $task == 'export' || $task == 'process' ) {
 			$click	=	'';
@@ -150,12 +146,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 
 		if ( $form != '' ) {
-			$uri	=	JUri::getInstance()->toString();
-			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$form_id.'" name="'.$form_id.'">'
+			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'
 					.	$form
 					.	'<input type="hidden" name="task" value="'.$task.'" />'
 					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
-					.	'<input type="hidden" name="return" value="'.base64_encode( $uri ).'">'
+					.	'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">'
 					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
 					.	JHtml::_( 'form.token' )
 					.	'</form>';
@@ -221,8 +216,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$config['doQuery2']	=	true;
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id, 'fieldnames'=>$field->options ) );
 			} elseif ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
-				$uri		=	JUri::getInstance()->toString();
-				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( $uri ).'">\');' );
+				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">\');' )
+							.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.JHtml::_( 'form.token' ).'\');' );
 
 				$click		=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
 				if ( $field->variation != 'toolbar_button' ) {
@@ -412,6 +407,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										instances: [],
 										kvp: "",
 										return: "'.base64_encode( JUri::getInstance()->toString() ).'",
+										token:Joomla.getOptions("csrf.token")+"=1",
 										uniq_id:"'.uniqid().'",
 										width:0,
 										ajaxLoopRequest: function(el) {
@@ -422,7 +418,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												cache: false,
 												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&start="+start+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
 												type: "POST",
-												url:  JCck.Core.SubmitButton.instances[el].url,
+												url:  JCck.Core.SubmitButton.instances[el].url+"&"+JCck.Core.SubmitButton.token,
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
 													$(el+" .bar").css("width",parseInt(w+JCck.Core.SubmitButton.width)+"%");
@@ -449,7 +445,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 																if (!JCck.Core.SubmitButton.count) {
 																	type = "error";
 																}
-																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.Core.SubmitButton.return;
+																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.Core.SubmitButton.return+"&"+JCck.Core.SubmitButton.token;
 															}
 														}
 													}

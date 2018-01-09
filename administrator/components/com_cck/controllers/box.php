@@ -30,7 +30,8 @@ class CCKControllerBox extends JControllerForm
 		
 		// Parent Method
 		$result	=	parent::add();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		
@@ -44,6 +45,12 @@ class CCKControllerBox extends JControllerForm
 		$app->setUserState( CCK_COM.'.add.box.bx.name', $app->input->get( 'name', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.type', $app->input->getString( 'type', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.params', $app->input->getString( 'params', '' ) );
+	}
+
+	// save
+	public function save( $key = null, $urlVar = null )
+	{
+		jexit( JText::_( 'JINVALID_TOKEN' ) );
 	}
 }
 ?>

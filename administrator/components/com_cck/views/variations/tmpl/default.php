@@ -18,6 +18,7 @@ $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $top			=	'content';
+$token			=	'&'.JSession::getFormToken().'=1';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter' ) );
@@ -53,7 +54,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <tbody>
 	<?php
 	foreach ( $this->items as $i=>$item ) {
-		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.export_variation&variation='.$item->title.'&folder='.$item->folder );
+		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.export_variation&variation='.$item->title.'&folder='.$item->folder.$token );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>

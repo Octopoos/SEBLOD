@@ -86,7 +86,7 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 				if ( (int)$this->item->id > 0 ) {
 					$extra	=	'&avKey=id&avPk='.$this->item->id.'&avPv='.htmlspecialchars( $this->item->name );
 				}
-				$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
+				$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
 						.	',"extraData": "avTable=cck_core_fields&avColumn=name'.$extra.'"'
 						.	',"alertText": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
 						.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
@@ -149,6 +149,7 @@ Helper_Display::quickCopyright();
 		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
 		mode:<?php echo (int)$mode; ?>,
 		name:"field",
+		token:Joomla.getOptions("csrf.token")+"=1",
 		transliteration:<?php echo $transliterate; ?>,
 		ajaxLayer: function(view, layout, elem, mydata) {
 			var loading = "<img align='center' src='<?php echo $ajax_load; ?>' alt='' />";  
@@ -180,13 +181,14 @@ Helper_Display::quickCopyright();
 				success: function() {
 					if (task!='field.cancel') {
 						if ( !existing ) {
-							var fieldname = '&fieldname='+$("#name").val();
+							var fieldname = 'fieldname='+$("#name").val();
 							var element = '&element='+parent.jQuery("#element").val();
 							var client = '&client='+parent.jQuery('input[name=client]:checked', '#adminForm').val();
 							$.ajax({
 								cache: false,
+								data: fieldname+element+client+'&'+JCck.Dev.token,
 								type: "POST",
-								url: 'index.php?option=com_cck&task=ajax_field_li&format=raw'+fieldname+element+client,
+								url: 'index.php?option=com_cck&task=addFieldRowAjax&format=raw',
 								success: function(response) {
 									var obj = jQuery.parseJSON(response);
 									$("#myid").val(obj.id); $("#jform_id").val(obj.id);

@@ -93,7 +93,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$link_title		=	$link->get( 'title', '' );
 		$link_title2	=	$link->get( 'title_custom', '' );
 		
-		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.( $return ? '&return='.$return : '' );
+		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.( $return ? '&return='.$return : '' ).'&'.JSession::getFormToken().'=1';
 		$field->link		=	JRoute::_( $field->link );
 		$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		if ( $link->get( 'confirm', 1 ) ) {

@@ -60,6 +60,8 @@ class CCKController extends JControllerLegacy
 	// ajax
 	public function ajax()
     {
+    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
 		$file	=	JPATH_SITE.'/'.$file;
@@ -71,9 +73,11 @@ class CCKController extends JControllerLegacy
 		}
 	}
 	
-	// ajaxAddType
-	public function ajaxAddType()
+	// addTypeAjax
+	public function addTypeAjax()
     {
+    	JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$app		=	JFactory::getApplication();
 		$client		=	$app->input->get( 'client', '' );
 		$fields		=	$app->input->getString( 'fields', '' );
@@ -149,9 +153,7 @@ class CCKController extends JControllerLegacy
 		if ( $fields && $client && $type_id ) {
 			if ( $client == 'list' ) {
 				$client	=	'intro';
-				/*
-				TODO
-				*/
+				/* TODO#SEBLOD: */
 				return;
 			} else {
 				$query	=	'UPDATE #__cck_core_type_field'
@@ -162,13 +164,15 @@ class CCKController extends JControllerLegacy
 		}
 
 		if ( is_object( $table2 ) ) {
-			echo $this->ajax_field_li( $table2, $client );
+			echo $this->addFieldRowAjax( $table2, $client );
 		}
 	}
 
-	// ajaxSaveIntegration
-	public function ajaxSaveIntegration()
+	// saveIntegrationAjax
+	public function saveIntegrationAjax()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
 		$app		=	JFactory::getApplication();
 		$json		=	$app->input->json->getRaw();
 		$objects	=	json_decode( $json );
@@ -185,9 +189,11 @@ class CCKController extends JControllerLegacy
 		}
 	}
 
-	// ajax_field_li
-	public function ajax_field_li( $field = NULL, $client = '' )
+	// addFieldRowAjax
+	public function addFieldRowAjax( $field = NULL, $client = '' )
 	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app		=	JFactory::getApplication();
 		$lang		=	JFactory::getLanguage();
 
@@ -283,40 +289,45 @@ class CCKController extends JControllerLegacy
 		echo JCckDev::toJSON( $json );
 	}
 	
-	// ajax_session
-	public function ajax_session()
+	// saveSessionAjax
+	public function saveSessionAjax()
 	{
-		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
-		if ( !$user->authorise( 'core.admin' ) ) {
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
 			return;
 		}
 		
+		$app	=	JFactory::getApplication();
 		$data	=	array( 'extension'=>$app->input->get( 'extension', '' ),
 						   'folder'=>$app->input->getInt( 'folder', 0 ),
 						   'type'=>$app->input->get( 'type', '' ),
 						   'options'=>$app->input->getString( 'data', '{}' ) );
 		
 		$table	=	JCckTable::getInstance( '#__cck_more_sessions' );
-		$table->bind($data);
+
+		$table->bind( $data );
 		$table->store();
+
 		if ( !$table->title ) {
 			$table->title = 'Session'.$table->id;
 			$table->store();
 		}
 	}
 	
-	// ajax_session_del
-	public function ajax_session_del()
+	// deleteSessionAjax
+	public function deleteSessionAjax()
 	{
-		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
-		if ( !$user->authorise( 'core.admin' ) ) {
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
 			return;
 		}
 		
+		$app		=	JFactory::getApplication();
 		$session_id	=	$app->input->getInt( 'sid', 0 );
 		$table		=	JCckTable::getInstance( '#__cck_more_sessions' );
+
 		$table->load( $session_id );
 		$table->delete();
 	}
@@ -474,6 +485,8 @@ class CCKController extends JControllerLegacy
 	// export
 	public function export()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app	=	JFactory::getApplication();
 		$type	=	$app->input->getString( 'extension', 'plugin' );
 		$model	=	$this->getModel();
@@ -505,6 +518,8 @@ class CCKController extends JControllerLegacy
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app	=	JFactory::getApplication();
 		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
 		$order 	= 	$app->input->post->get( 'order', array(), 'array' );
