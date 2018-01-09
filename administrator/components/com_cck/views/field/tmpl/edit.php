@@ -31,6 +31,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout(), $tmpl );
 JHtml::_( 'bootstrap.tooltip' );
 
 JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
+JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
@@ -191,31 +192,35 @@ Helper_Display::quickCopyright();
 								url: 'index.php?option=com_cck&task=addFieldRowAjax&format=raw',
 								success: function(response) {
 									var obj = jQuery.parseJSON(response);
-									$("#myid").val(obj.id); $("#jform_id").val(obj.id);
-									var elem = parent.jQuery('input:radio[name="positions"]:checked').attr('golast');
-									if (!(!elem || elem=="undefined")) {
-										if (!parent.jQuery("ul#sortable1 li#"+obj.id).length) {
-											parent.jQuery(elem).before(obj.html);
-											JCck.DevHelper.switchP(JCck.DevHelper.getPane('parent'), obj.id, 'parent');
-										}
-									}
-									var target_id = "#layer_fields_options";
-									if (obj.construction != "") {
-										parent.jQuery(target_id).after('<div id="layer_fields_options_tmp">'+obj.construction+'</div>');
-										parent.jQuery(target_id+"_tmp select").each(function(i) {
-											if (!parent.jQuery(target_id+" #"+$(this).attr("id")).length) {
-												$(this).appendTo(parent.jQuery(target_id));
-											}
-							  			});
-										parent.jQuery(target_id+"_tmp").remove();
-									}
-									if (task=="field.save2new") {
-										$('#ajaxMessage').html('');
-										document.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
+									if (obj === null) {
+										$('#ajaxMessage').html('<span class="badge badge-important">'+Joomla.JText._("COM_CCK_FIELD_ROW_AJAX_ERROR")+'</span>'); return false;
 									} else {
-										$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
-											if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }
-										});
+										$("#myid").val(obj.id); $("#jform_id").val(obj.id);
+										var elem = parent.jQuery('input:radio[name="positions"]:checked').attr('golast');
+										if (!(!elem || elem=="undefined")) {
+											if (!parent.jQuery("ul#sortable1 li#"+obj.id).length) {
+												parent.jQuery(elem).before(obj.html);
+												JCck.DevHelper.switchP(JCck.DevHelper.getPane('parent'), obj.id, 'parent');
+											}
+										}
+										var target_id = "#layer_fields_options";
+										if (obj.construction != "") {
+											parent.jQuery(target_id).after('<div id="layer_fields_options_tmp">'+obj.construction+'</div>');
+											parent.jQuery(target_id+"_tmp select").each(function(i) {
+												if (!parent.jQuery(target_id+" #"+$(this).attr("id")).length) {
+													$(this).appendTo(parent.jQuery(target_id));
+												}
+								  			});
+											parent.jQuery(target_id+"_tmp").remove();
+										}
+										if (task=="field.save2new") {
+											$('#ajaxMessage').html('');
+											document.location.replace("index.php?option=com_cck&task=field.add&tmpl=component&ajax_state=1&ajax_type=text");
+										} else {
+											$('#ajaxMessage').html('<span class="badge badge-info">'+Joomla.JText._("JLIB_APPLICATION_SAVE_SUCCESS")+'</span>').hide().fadeIn(150, function() {
+												if ( task=="field.save" && parent.jQuery.colorbox ) { parent.jQuery.colorbox.close(); } else { $('#ajaxMessage').html(''); }
+											});
+										}
 									}
 								}
 							});
