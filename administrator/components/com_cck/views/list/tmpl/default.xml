@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CCK_LIST_VIEW_DEFAULT_TITLE" option="COM_CCK_LIST_VIEW_DEFAULT_OPTION">
+		<help key = "..." />
+		<message><![CDATA[COM_CCK_LIST_VIEW_DEFAULT_DESC]]></message>
+	</layout>
+
+	<!-- Request variables. -->
+	<fields name="request">
+		<fieldset name="request" label="COM_CCK_CONFIG_FIELDSET_REQUIRED_SETTINGS" addfieldpath="/libraries/cck/construction/field">
+			<field name="search" type="cck" construction="core_search_type" label="COM_CCK_CONFIG_SEARCH" description="COM_CCK_CONFIG_SEARCH_DESC" id="jform_trigger_search" class="inputbox" required="true" />
+			<field name="task" type="radio" default="search" label="COM_CCK_CONFIG_SEARCH_TASK" description="COM_CCK_CONFIG_SEARCH_TASK_DESC" class="btn-group btn-group-yesno">
+				<option	value="no">JNO</option>
+				<option	value="search">JYES</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>
