@@ -15,8 +15,7 @@ $task	=	$app->input->get( 'task' );
 $view	=	$app->input->get( 'view' );
 
 if ( !JFactory::getUser()->authorise( 'core.manage', 'com_cck' )
-  && !( $view == 'form' || $view == 'list' || $view == 'box' || $task == 'box.add'
-  						|| in_array( substr( $task, 0, 5 ), array( 'form.', 'list.' ) ) ) ) {
+  && !( $view == 'form' || $view == 'list' || in_array( substr( $task, 0, 5 ), array( 'form.', 'list.' ) ) ) ) {
 	return JError::raiseWarning( 404, JText::_( 'JERROR_ALERTNOAUTHOR' ) );
 }
 
