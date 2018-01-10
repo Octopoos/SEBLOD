@@ -29,7 +29,7 @@ defined( '_JEXEC' ) or die;
     </div>
     <div class="modal-footer">
         <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
-        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batch_folder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
+        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
     <?php } ?>
     <?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>

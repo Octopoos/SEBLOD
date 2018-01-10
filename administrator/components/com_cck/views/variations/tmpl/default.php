@@ -54,7 +54,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <tbody>
 	<?php
 	foreach ( $this->items as $i=>$item ) {
-		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.export_variation&variation='.$item->title.'&folder='.$item->folder.$token );
+		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.exportVariation&variation='.$item->title.'&folder='.$item->folder.$token );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>

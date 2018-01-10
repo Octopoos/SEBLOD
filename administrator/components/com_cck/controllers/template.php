@@ -76,8 +76,8 @@ class CCKControllerTemplate extends JControllerForm
 		$app->setUserState( CCK_COM.'.edit.template.mode', $app->input->getString( 'mode', '' ) );
 	}
 
-	// export_variation
-	public function export_variation()
+	// exportVariation
+	public function exportVariation()
 	{
 		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		

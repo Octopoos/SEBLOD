@@ -334,8 +334,8 @@ class CCKController extends JControllerLegacy
 		$table->delete();
 	}
 	
-	// batch_folder
-	public function batch_folder()
+	// batchFolder
+	public function batchFolder()
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
