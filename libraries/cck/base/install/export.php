@@ -776,7 +776,7 @@ class CCK_Export
 	}
 
 	// exportCategory
-	public static function exportCategory( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
+	public static function exportCategory( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
 		$null	=	array( 'asset_id', 'parent_id', 'level', 'lft', 'rgt', 'created_time', 'modified_time', 'modified_user_id' );
 		foreach ( $null as $n ) {
@@ -825,7 +825,7 @@ class CCK_Export
 	}
 
 	// exportJoomla_Category
-	public static function exportJoomla_Category( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
+	public static function exportJoomla_Category( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
 		$null	=	array( 'asset_id', 'parent_id', 'level', 'lft', 'rgt', 'created_time', 'created_user_id', 'modified_time', 'modified_user_id' );
 		foreach ( $null as $n ) {
@@ -852,7 +852,7 @@ class CCK_Export
 	}
 
 	// exportJoomla_Menu
-	public static function exportJoomla_Menu( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
+	public static function exportJoomla_Menu( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
 		if ( isset( $xml->{$elemtype}->asset_id ) ) {
 			$xml->{$elemtype}->asset_id	=	'';
@@ -863,7 +863,7 @@ class CCK_Export
 	}
 
 	// exportJoomla_MenuItem
-	public static function exportJoomla_MenuItem( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
+	public static function exportJoomla_MenuItem( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
 		$null	=	array( 'lft', 'rgt' );
 		foreach ( $null as $n ) {
@@ -883,7 +883,7 @@ class CCK_Export
 	}
 
 	// exportJoomla_Module
-	public static function exportJoomla_Module( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = NULL )
+	public static function exportJoomla_Module( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
 	}
 

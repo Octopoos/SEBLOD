@@ -164,7 +164,7 @@ class CCK_Rendering
 		$this->name			=	$me->template;
 		$this->template		=	$me->template;
 		$this->type			=	$me->cck_type;
-		$this->type_infos	=	NULL;
+		$this->type_infos	=	null;
 		$this->location		=	( $app->isClient( 'administrator' ) ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
@@ -538,7 +538,7 @@ class CCK_Rendering
 	}
 	
 	// renderField
-	public function renderField( $fieldname, $options = NULL )
+	public function renderField( $fieldname, $options = null )
 	{
 		$field		=	$this->get( $fieldname );
 		$html		=	'';
@@ -693,7 +693,7 @@ class CCK_Rendering
 	// getItem
 	public function getItem( $pk )
 	{
-		return ( isset( $this->list[$pk] ) ) ? $this->list[$pk] : NULL;
+		return ( isset( $this->list[$pk] ) ) ? $this->list[$pk] : null;
 	}	
 	
 	// getItems
@@ -799,7 +799,7 @@ class CCK_Rendering
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	NULL;
+			$options	=	null;
 		}
 		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : (( $this->doDebug() ) ? $position : '' );

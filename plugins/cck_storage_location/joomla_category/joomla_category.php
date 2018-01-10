@@ -589,7 +589,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = null )
 	{
 		if ( isset( $query['typeid'] ) ) {
 			$segments[]	=	$query['typeid'];

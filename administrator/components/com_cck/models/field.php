@@ -53,7 +53,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		if ( $ajaxState	=	(int)$app->getUserState( CCK_COM.'.add.field.ajax_state' ) != '' ) {
 			$this->setState( 'ajax.state', $ajaxState );
 		} else {
-			$this->setState( 'ajax.state', NULL );
+			$this->setState( 'ajax.state', null );
 		}
 		if ( $ajaxType	=	(string)$app->getUserState( CCK_COM.'.edit.field.ajax_type' ) ) {
 			$this->setState( 'ajax.type', $ajaxType );

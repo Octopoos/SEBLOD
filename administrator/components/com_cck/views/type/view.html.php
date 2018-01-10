@@ -106,7 +106,7 @@ class CCKViewType extends JViewLegacy
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
 			$name				=	$this->item->name;
-			$app->setUserState( CCK_COM.'.edit.type.client', NULL );
+			$app->setUserState( CCK_COM.'.edit.type.client', null );
 		} else {
 			$this->isNew		=	1;
 			$this->item->locked	=	1;

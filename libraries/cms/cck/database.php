@@ -199,7 +199,7 @@ abstract class JCckDatabase
 	}
 
 	// quoteName
-	public static function quoteName( $name, $as = NULL )
+	public static function quoteName( $name, $as = null )
 	{
 		return JFactory::getDbo()->quoteName( $name, $as );
 	}

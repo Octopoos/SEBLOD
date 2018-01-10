@@ -203,7 +203,7 @@ class CCK_List
 			$cache		=	JFactory::getCache( $group );
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
-			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : NULL;
+			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
 			$results	=	$cache->call( array( $dispatcher, 'trigger' ), 'onContentSearch',
 										  array( '', '', $ordering, $areas['active'], $fields, $fields_order, &$config, $current, $options, $user ) );
 		} else {

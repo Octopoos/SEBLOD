@@ -217,7 +217,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					if ( isset( $data[$name] ) ) {
 						$val		=	$data[$name];
 					} else {
-						$val		=	NULL;
+						$val		=	null;
 						$f->state	=	'disabled';
 					}
 				}

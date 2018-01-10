@@ -16,7 +16,7 @@ class JButtonCckScroll extends JButton
 	protected $_name = 'CckScroll';
 	
 	// fetchButton
-	public function fetchButton( $type = 'CckScroll', $name = '', $text = '', $url = NULL )
+	public function fetchButton( $type = 'CckScroll', $name = '', $text = '', $url = null )
 	{
 		$class	=	$this->fetchIconClass( $name );
 		$doTask	=	$this->_getCommand( $url );

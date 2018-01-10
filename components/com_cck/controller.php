@@ -263,7 +263,7 @@ class CCKController extends JControllerLegacy
 								$fields[$k]	=	$v;
 							}
 						}
-						$config['fields']	=	NULL;
+						$config['fields']	=	null;
 						unset( $config['fields'] );
 					}
 

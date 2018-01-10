@@ -249,7 +249,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$folders[0]->description	=	'SEBLOD 3.x '.$folders[0]->title.' App - www.seblod.com';
 		$folders[0]->name			=	$filename;
 		$folders[0]->title			=	'pkg_'.$folders['0']->name;
-		$manifest					=	NULL;
+		$manifest					=	null;
 		$xml						=	CCK_Export::preparePackage( $folders[0] );
 		
 		if ( is_object( $xml ) ) {

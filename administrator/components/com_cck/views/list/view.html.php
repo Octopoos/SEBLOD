@@ -18,7 +18,7 @@ class CCKViewList extends JViewLegacy
 	protected $vName	=	'list';
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app						=	JFactory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );

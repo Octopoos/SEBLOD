@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKViewList extends JViewLegacy
 {
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app						=	JFactory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );
@@ -91,7 +91,7 @@ class CCKViewList extends JViewLegacy
 		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
 			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
-		$config		=	NULL;
+		$config		=	null;
 		$this->document->setTitle( $title );
 		
 		if ( $params->get( 'menu-meta_description' ) ) {

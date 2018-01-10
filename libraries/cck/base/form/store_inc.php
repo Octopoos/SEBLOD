@@ -32,7 +32,7 @@ if ( $task == 'save2copy' ) {
 	$isNew				=	1;
 	$preconfig['id']	=	0;
 }
-if ( !$user->authorise( 'core.admin' ) && $hashed !== NULL && ( $hash != $hashed ) ) {
+if ( !$user->authorise( 'core.admin' ) && $hashed !== null && ( $hash != $hashed ) ) {
 	$config	=	array(
 					'pk'=>0,
 					'options'=>'',
@@ -211,7 +211,7 @@ if ( count( $fields ) ) {
 			if ( isset( $post[$field->name] ) ) {
 				$value			=	$post[$field->name];
 			} else {
-				$value			=	NULL;
+				$value			=	null;
 				$field->state	=	'disabled';
 			}
 			if ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && !$field->live && $session->has( 'cck_hash_live_'.$field->name ) ) {
@@ -257,7 +257,7 @@ if ( count( $config['fields'] ) ) {
 			$fields[$k]	=	$v;
 		}
 	}
-	$config['fields']	=	NULL;
+	$config['fields']	=	null;
 	unset( $config['fields'] );
 }
 

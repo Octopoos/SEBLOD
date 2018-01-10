@@ -556,7 +556,7 @@ class plgContentCCK extends JPlugin
 						$fields[$k]	=	$v;
 					}
 				}
-				$config['fields']	=	NULL;
+				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
 		}

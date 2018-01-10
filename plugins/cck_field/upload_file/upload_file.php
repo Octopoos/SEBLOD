@@ -488,7 +488,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			}
 		}
 		$legal_ext	=	explode( ',', $legal_ext );
-		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, NULL, 'files', 'array' ) : JRequest::getVar( $name, NULL, 'files', 'array' );
+		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, null, 'files', 'array' ) : JRequest::getVar( $name, null, 'files', 'array' );
 		if ( is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
 				$userfile_name			=	$userfile['name'][$xk][$name];

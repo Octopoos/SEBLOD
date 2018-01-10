@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckToolbox
 {
 	public static $_me		=	'cck_toolbox';
-	public static $_config	=	NULL;
+	public static $_config	=	null;
 	public static $_urls	=	array();
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config

@@ -18,7 +18,7 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	protected $state;
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		if ( $this->getlayout() == 'delete' ) {
 			$this->prepareDelete();

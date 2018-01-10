@@ -209,7 +209,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		$val	=	( $options2['start'] ? $options2['start'] : 0 );
 		$step	=	( $options2['step'] ? $options2['step'] : 0 );
 		$limit 	=	( $options2['end'] ? $options2['end'] : 0 );
-		$math	=	isset( $options2['math'] ) ? $options2['math'] : NULL;
+		$math	=	isset( $options2['math'] ) ? $options2['math'] : null;
 		
 		$force_digits	=	( isset( $options2['force_digits'] ) && $options2['force_digits'] ) ? $options2['force_digits'] : 0;
 		$force_decimals	=	( isset( $options2['force_decimals'] ) && $options2['force_decimals'] ) ? $options2['force_decimals'] : 0;

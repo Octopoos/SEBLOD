@@ -28,7 +28,7 @@ abstract class JCckDatabaseCache extends JCckDatabase
 	// getTableList
 	public static function getTableList( $flip = false )
 	{
-		static $cache	=	NULL;
+		static $cache	=	null;
 		
 		if ( !$cache ) {
 			$cache	=	parent::getTableList();

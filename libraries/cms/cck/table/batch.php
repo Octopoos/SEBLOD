@@ -172,7 +172,7 @@ class JCckTableBatch extends JObject
 	}
 
 	// load
-	public function load( $where_clause, $key = NULL )
+	public function load( $where_clause, $key = null )
 	{
 		$str	=	'';
 		$where	=	'';

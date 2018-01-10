@@ -30,7 +30,7 @@ class plgSearchCCK extends JPlugin
 	}
 	
 	// onContentSearch
-	public function onContentSearch( $text = '', $phrase = '', $ordering = '', $areas = NULL, $fields = array(), $fields_order = array(), &$config = array(), $current = array(), $options = NULL, $user = NULL )
+	public function onContentSearch( $text = '', $phrase = '', $ordering = '', $areas = null, $fields = array(), $fields_order = array(), &$config = array(), $current = array(), $options = null, $user = null )
 	{
 		if ( is_array( $areas ) ) {
 			if ( ! array_intersect( $areas, array_keys( $this->onContentSearchAreas() ) ) ) {
@@ -331,7 +331,7 @@ class plgSearchCCK extends JPlugin
 		}
 		
 		$inherit	=	array( 'bridge'=>'', 'query'=>'' );
-		$query		=	NULL;
+		$query		=	null;
 		$query2		=	'';
 		$results	=	array();
 		self::_setStorage( $tables, $config, $inherit );

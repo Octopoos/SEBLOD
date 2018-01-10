@@ -18,7 +18,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	protected $state;
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		if ( $this->getlayout() == 'element' ) {
 			$this->prepareDisplay();

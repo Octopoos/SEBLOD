@@ -271,7 +271,7 @@ abstract class JCckDevHelper
 	}
 	
 	// matchUrlVars
-	public static function matchUrlVars( $vars, $url = NULL )
+	public static function matchUrlVars( $vars, $url = null )
 	{
 		$app	=	JFactory::getApplication();
 		$custom	=	( is_object( $url ) ) ? true : false;

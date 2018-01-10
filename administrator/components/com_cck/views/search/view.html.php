@@ -108,7 +108,7 @@ class CCKViewSearch extends JViewLegacy
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
 			$name				=	$this->item->name;
-			$app->setUserState( CCK_COM.'.edit.search.client', NULL );
+			$app->setUserState( CCK_COM.'.edit.search.client', null );
 		} else {
 			$this->isNew		=	1;
 			$this->panel_class	=	'open';

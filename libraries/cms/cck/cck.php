@@ -14,15 +14,15 @@ defined( '_JEXEC' ) or die;
 abstract class JCck
 {
 	public static $_me				=	'cck';
-	public static $_config			=	NULL;
-	public static $_user			=	NULL;
+	public static $_config			=	null;
+	public static $_user			=	null;
 	
-	protected static $_host			=	NULL;
-	protected static $_site			=	NULL;
+	protected static $_host			=	null;
+	protected static $_site			=	null;
 	protected static $_sites		=	array();
 	protected static $_sites_info	=	array();
 	
-	public static function callFunc( $class, $method, &$args = NULL, $ref = false )
+	public static function callFunc( $class, $method, &$args = null, $ref = false )
 	{
 		return $class::$method( $args );
 	}
@@ -246,7 +246,7 @@ abstract class JCck
 	// getSiteById
 	public static function getSiteById( $id )
 	{
-		static $sites	=	NULL;
+		static $sites	=	null;
 
 		if ( !is_array( $sites ) ) {
 			$sites		=	array();

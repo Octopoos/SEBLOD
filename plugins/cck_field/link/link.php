@@ -265,7 +265,7 @@ class plgCCK_FieldLink extends JCckPluginField
 		if ( count( $value ) > 0 && ( $value['link'] || $value['text'] ) ) {
 			$value	=	JCckDev::toJSON( $value );
 		} else {
-			$value	=	NULL;
+			$value	=	null;
 		}
 		// Set or Return
 		if ( $return === true ) {

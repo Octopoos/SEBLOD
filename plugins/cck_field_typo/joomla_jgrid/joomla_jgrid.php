@@ -45,7 +45,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 		}
 
 		static $i		=	0;
-		static $formId	=	NULL;
+		static $formId	=	null;
 		static $pks		=	array();
 		$pk				=	$config['pk'];
 		if ( !isset( $pks[$pk] ) ) {
@@ -371,7 +371,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			}
 		} elseif ( $type == 'block' || $type == 'activation' ) {
 			static $loaded_users	=	0;
-			static $user			=	NULL;
+			static $user			=	null;
 			if ( !$loaded_users ) {
 				require_once JPATH_ADMINISTRATOR.'/components/com_users/helpers/html/users.php';
 				$loaded_users		=	1;

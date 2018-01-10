@@ -138,7 +138,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				foreach ( $storages[self::$table] as $s ) {
 					$query			=	'SELECT a.id FROM #__usergroups AS a INNER JOIN #__user_usergroup_map AS b ON b.group_id = a.id WHERE b.user_id = '.$s->id;
 					$s->groups		=	JCckDatabase::loadAssocList( $query, 'id', 'id' );
-					$s->guest		=	NULL;
+					$s->guest		=	null;
 					$s->password	=	'';
 					$s->password2	=	'';
 				}
@@ -150,7 +150,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					foreach ( $storages[self::$table] as $s ) {
 						$query			=	'SELECT a.id FROM #__usergroups AS a INNER JOIN #__user_usergroup_map AS b ON b.group_id = a.id WHERE b.user_id = '.$s->id;
 						$s->groups		=	JCckDatabase::loadAssocList( $query, 'id', 'id' );
-						$s->guest		=	NULL;
+						$s->guest		=	null;
 						$s->password	=	'';
 						$s->password2	=	'';
 					}
@@ -588,7 +588,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = null )
 	{
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 		plgCCK_Storage_LocationJoomla_Article::buildRoute( $query, $segments, $config, $menuItem );

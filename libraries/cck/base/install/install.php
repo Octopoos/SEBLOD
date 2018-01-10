@@ -44,7 +44,7 @@ class CCK_Install
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Import
 	
 	// import
-	public static function import( &$parent, $folder = 'elements', $extension = NULL )
+	public static function import( &$parent, $folder = 'elements', $extension = null )
 	{
 		$config		=	JFactory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );

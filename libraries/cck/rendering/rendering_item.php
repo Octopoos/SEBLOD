@@ -204,7 +204,7 @@ class CCK_Item
 
 	// renderField
 	public function getField( $fieldname ) { return $this->renderField( $fieldname ); } // (deprecated)
-	public function renderField( $fieldname, $options = NULL )
+	public function renderField( $fieldname, $options = null )
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
@@ -303,7 +303,7 @@ class CCK_Item
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	NULL;
+			$options	=	null;
 		}
 		if ( ! $variation ) {
 			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );

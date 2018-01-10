@@ -14,12 +14,12 @@ defined( '_JEXEC' ) or die;
 abstract class JCckEcommerce
 {
 	public static $_me			=	'cck_ecommerce';
-	public static $_config		=	NULL;
+	public static $_config		=	null;
 	
-	public static $currency		=	NULL;
-	public static $promotions	=	NULL;
-	public static $rules		=	NULL;
-	public static $taxes		=	NULL;
+	public static $currency		=	null;
+	public static $promotions	=	null;
+	public static $rules		=	null;
+	public static $taxes		=	null;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 	
@@ -131,7 +131,7 @@ abstract class JCckEcommerce
 	// getCurrency
 	public static function getCurrency( $id = 0 )
 	{
-		static $currency	=	NULL;
+		static $currency	=	null;
 		
 		if ( (int)$id > 0 ) {
 			return JCckDatabase::loadObject( 'SELECT a.id, a.title, a.code, a.conversion_rate, a.lft, a.rgt'

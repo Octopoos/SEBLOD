@@ -18,11 +18,11 @@ class JCckDevImage
 	protected $_exif 		=	array();
 	protected $_extension 	=	'';
 	protected $_height 		=	0;
-	protected $_pathinfo 	=	NULL;
+	protected $_pathinfo 	=	null;
 	protected $_quality_jpg	=	90;
 	protected $_quality_png	=	3;
 	protected $_ratio 		=	0;
-	protected $_resource 	=	NULL;
+	protected $_resource 	=	null;
 	protected $_width 		=	0;
 
 	// __construct
@@ -148,10 +148,10 @@ class JCckDevImage
 		if ( $ext == 'gif' ) {
 			imagegif( $resource );
 		} elseif ( $ext == 'jpg' || $ext == 'jpeg' ) {
-			imagejpeg( $resource, NULL, $this->_quality_jpg );
+			imagejpeg( $resource, null, $this->_quality_jpg );
 		} elseif ( $ext == 'png' ) {
 			imagesavealpha( $resource, true );
-			imagepng( $resource, NULL, $this->_quality_png );
+			imagepng( $resource, null, $this->_quality_png );
 		} else {
 			// Bad extension !
 		}

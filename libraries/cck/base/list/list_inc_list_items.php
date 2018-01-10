@@ -165,7 +165,7 @@ if ( $count ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
-				$config['fields']	=	NULL;
+				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
 			
@@ -322,7 +322,7 @@ if ( $count ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
-				$config['fields']	=	NULL;
+				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
 			

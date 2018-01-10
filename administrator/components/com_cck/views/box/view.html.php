@@ -17,7 +17,7 @@ class CCKViewBox extends JViewLegacy
 	protected $state;
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app				=	JFactory::getApplication();
 		$this->item			=	new stdClass;

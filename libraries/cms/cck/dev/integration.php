@@ -16,7 +16,7 @@ use Joomla\CMS\Menu\MenuHelper;
 abstract class JCckDevIntegration
 {
 	// addDropdown
-	public static function addDropdown( $view, $variables = '', $options = NULL )
+	public static function addDropdown( $view, $variables = '', $options = null )
 	{
 		$doc	=	JFactory::getDocument();
 		$html	=	'';
@@ -144,7 +144,7 @@ abstract class JCckDevIntegration
 	}
 
 	// addModalBox
-	public static function addModalBox( $layout = 'icon', $variables = '', $options = NULL )
+	public static function addModalBox( $layout = 'icon', $variables = '', $options = null )
 	{
 		JCck::loadjQuery();
 		$layout	=	JPATH_ADMINISTRATOR.'/components/com_cck/views/form/tmpl/modal_'.$layout.'.php';
@@ -163,7 +163,7 @@ abstract class JCckDevIntegration
 	}
 
 	// appendModal
-	public static function appendModal( $layout, $target_id, $trigger, $params = array(), $variables = '', $options = NULL )
+	public static function appendModal( $layout, $target_id, $trigger, $params = array(), $variables = '', $options = null )
 	{
 		$doc	=	JFactory::getDocument();
 
@@ -229,7 +229,7 @@ abstract class JCckDevIntegration
 				$order_by	=	' ORDER BY folder ASC, title ASC';
 			} else {
 				$call		=	'loadObjectList';
-				$index		=	NULL;
+				$index		=	null;
 				$order_by	=	' ORDER BY title';
 			}
 			$items	=	JCckDatabase::$call( 'SELECT a.id, a.title, a.name, a.description, b.id as folder_id, b.title as folder, b.app as folder_app, b.icon_path as folder_icon'

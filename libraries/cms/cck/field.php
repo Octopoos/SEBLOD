@@ -16,7 +16,7 @@ class JCckField
 	protected static $instances	=	array();
 	protected $_config 			=	array();
 	protected $_name			=	'';
-	protected $_params 			=	NULL;
+	protected $_params 			=	null;
 	
 	// __construct
 	public function __construct( $name, $config )

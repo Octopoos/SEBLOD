@@ -192,7 +192,7 @@ class CCKController extends JControllerLegacy
 	}
 
 	// addFieldRowAjax
-	public function addFieldRowAjax( $field = NULL, $client = '' )
+	public function addFieldRowAjax( $field = null, $client = '' )
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		

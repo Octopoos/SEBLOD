@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class JCckBaseLegacyView extends JViewLegacy
 {
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app			=	JFactory::getApplication();
 		$this->option	=	$app->input->get( 'option', '' );

@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKViewList extends JViewLegacy
 {
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app						=	JFactory::getApplication();
 		$preconfig					=	array();

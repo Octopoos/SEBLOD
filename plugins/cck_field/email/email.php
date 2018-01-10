@@ -321,7 +321,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// {del fieldname}{/del}
 			if ( $body != '' && strpos( $body, '{del' ) !== false ) {
-				$dels	=	NULL;
+				$dels	=	null;
 				$body = str_replace( "\n", "", $body );
 				preg_match_all( '#\{del ([^\{]*)\}([^\{]*)\{\/del\}#', $body, $dels );
 				for ( $i = 0, $n = count( $dels[1] ); $i <= $n; $i++ ) {
@@ -335,7 +335,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 
 			// #fieldnames#
-			$matches	=	NULL;
+			$matches	=	null;
 			preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $body, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $match ) {
@@ -346,7 +346,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			$matches	=	NULL;
+			$matches	=	null;
 			preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $subject, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $match ) {
@@ -407,7 +407,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
-				$matches	=	NULL;
+				$matches	=	null;
 				preg_match_all( '#\[date(.*)\]#U', $body, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $match ) {
@@ -419,7 +419,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// [fields]
 			if ( strpos( $body, '[fields]' ) !== false ) {
-				$bodyF	=	NULL;
+				$bodyF	=	null;
 				if ( count( $fields ) ) {
 					foreach ( $fields as $field ) {
 						$fieldName	=	$field->name;
@@ -466,7 +466,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$cc		=	self::_split( $process['cc_param'] );
 					break;
 				default:
-					$cc		=	NULL;
+					$cc		=	null;
 					break;
 			}
 			if ( ( is_string( $cc ) && empty( $cc ) ) || is_array( $cc ) && empty( $cc[0] ) ) {
@@ -481,7 +481,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$bcc		=	self::_split( $process['bcc_param'] );
 					break;
 				default:
-					$bcc	=	NULL;
+					$bcc	=	null;
 					break;
 			}
 			if ( ( is_string( $bcc ) && empty( $bcc ) ) || is_array( $bcc ) && empty( $bcc[0] ) ) {
@@ -492,7 +492,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				if ( isset( $fields[$send_attach]->value ) )
 					$send_attach	=	$fields[$send_attach]->value;				
 			}
-			$attach	=	NULL;
+			$attach	=	null;
 			if ( $send_attach && $process['moreattach'] ) {
 				$attach	=	array();
 				$more	=	self::_split( $process['moreattach'] );

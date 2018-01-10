@@ -234,7 +234,7 @@ foreach ( $fields as $field ) {
 				$field->$k	=	$v;
 			}
 		}
-		$field->variation_override	=	NULL;
+		$field->variation_override	=	null;
 	}
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
 	
@@ -314,7 +314,7 @@ if ( count( $config['fields'] ) ) {
 			$fields[$k]	=	$v;
 		}
 	}
-	$config['fields']	=	NULL;
+	$config['fields']	=	null;
 	unset( $config['fields'] );
 }
 

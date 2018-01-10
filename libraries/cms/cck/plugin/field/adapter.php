@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class JCckPluginFieldAdapter
 {
 	protected $config	=	array();
-	protected $item		=	NULL;
+	protected $item		=	null;
 	protected $type		=	'';
 
 	// __construct

@@ -40,9 +40,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['computation']	=	NULL;
-		$data['live']			=	NULL;
-		$data['validation']		=	NULL;
+		$data['computation']	=	null;
+		$data['live']			=	null;
+		$data['validation']		=	null;
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
@@ -66,9 +66,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['live']		=	NULL;
-		$data['match_mode']	=	NULL;
-		$data['validation']	=	NULL;
+		$data['live']		=	null;
+		$data['match_mode']	=	null;
+		$data['validation']	=	null;
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(

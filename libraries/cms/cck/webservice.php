@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 abstract class JCckWebservice
 {
 	public static $_me			=	'cck_webservices';
-	public static $_config		=	NULL;
+	public static $_config		=	null;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 	

@@ -137,9 +137,9 @@ class modCCKBreadCrumbsHelper
 		
 		if ( $custom == null ) {
 			if ( $lang->isRTL() ) {
-				$_separator	=	JHtml::_( 'image', 'system/arrow_rtl.png', NULL, NULL, true );
+				$_separator	=	JHtml::_( 'image', 'system/arrow_rtl.png', null, null, true );
 			} else {
-				$_separator	=	JHtml::_( 'image', 'system/arrow.png', NULL, NULL, true );
+				$_separator	=	JHtml::_( 'image', 'system/arrow.png', null, null, true );
 			}
 		} else {
 			$_separator	=	htmlspecialchars( $custom );
