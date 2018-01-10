@@ -17,7 +17,7 @@ class CCKViewFolder extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C0_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$this->form		=	$this->get( 'Form' );
@@ -39,7 +39,7 @@ class CCKViewFolder extends JCckBaseLegacyViewForm
 	}
 	
 	// prepareDelete
-	function prepareDelete()
+	protected function prepareDelete()
 	{
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}

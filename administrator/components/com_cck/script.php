@@ -17,12 +17,12 @@ jimport( 'joomla.filesystem.folder' );
 class com_cckInstallerScript
 {
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		// Post Install Log
 		self::_postInstallMessage( 'uninstall', $parent );
@@ -84,7 +84,7 @@ class com_cckInstallerScript
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		// Post Install Log
 		self::_postInstallMessage( 'update', $parent );
@@ -211,7 +211,7 @@ class com_cckInstallerScript
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		$app		=	JFactory::getApplication();
 		$lang		=	JFactory::getLanguage();
@@ -244,7 +244,7 @@ class com_cckInstallerScript
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
@@ -310,7 +310,7 @@ class com_cckInstallerScript
 	}
 	
 	// _getVersion
-	function _getVersion( $default = '2.0.0' )
+	public function _getVersion( $default = '2.0.0' )
 	{
 		$db		=	JFactory::getDbo();
 		
@@ -324,7 +324,7 @@ class com_cckInstallerScript
 	}
 
 	// _postInstallMessage
-	function _postInstallMessage( $event, $parent )
+	public function _postInstallMessage( $event, $parent )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;

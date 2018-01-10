@@ -18,7 +18,7 @@ jimport( 'joomla.filesystem.folder' );
 class plgContentCCKInstallerScript
 {
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 		$data	=	"<!DOCTYPE html><title></title>";
 		$groups	=	array( 'cck_field', 'cck_field_link', 'cck_field_live', 'cck_field_restriction', 'cck_field_typo', 'cck_field_validation', 'cck_storage', 'cck_storage_location' );
@@ -28,7 +28,7 @@ class plgContentCCKInstallerScript
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' ) ) {
 			JFile::delete( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' );
@@ -69,12 +69,12 @@ class plgContentCCKInstallerScript
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{		
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		// WAITING FOR JOOMLA 1.7.x FIX
 		$app		=	JFactory::getApplication();
@@ -97,7 +97,7 @@ class plgContentCCKInstallerScript
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();

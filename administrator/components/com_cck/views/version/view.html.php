@@ -17,7 +17,7 @@ class CCKViewVersion extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C6_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();

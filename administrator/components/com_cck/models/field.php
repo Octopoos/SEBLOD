@@ -128,7 +128,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Display
 	
 	// saveorder
-	function saveorder( $pks = null, $order = null )
+	public function saveorder( $pks = null, $order = null )
 	{
 		$orders	=	array();
 		$table	=	$this->getTable();

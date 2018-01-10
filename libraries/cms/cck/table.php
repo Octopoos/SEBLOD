@@ -60,7 +60,7 @@ if ( JCck::on( '3.7' ) ) {
 class JCckTable extends JCckTablePlaceholder
 {
 	// __construct
-	function __construct( $table, $key, &$db )
+	public function __construct( $table, $key, &$db )
 	{
 		parent::__construct( $table, $key, $db );
 

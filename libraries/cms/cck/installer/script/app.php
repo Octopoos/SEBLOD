@@ -19,28 +19,28 @@ class JCckInstallerScriptApp
 	protected $core;
 	
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'install' );
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'uninstall' );
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'update' );
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		$app		=	JFactory::getApplication();
 		$this->core	=	( isset( $app->cck_core ) ) ? $app->cck_core : false;
@@ -57,7 +57,7 @@ class JCckInstallerScriptApp
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		if ( $this->core === true ) {
 			return;
@@ -67,7 +67,7 @@ class JCckInstallerScriptApp
 	}
 
 	// postInstallMessage
-	function postInstallMessage( $event, $pk = 0 )
+	protected function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !( property_exists( $this, 'template_placeholder' ) && $this->template_placeholder != '' ) ) {
 			return;

@@ -17,7 +17,7 @@ class CCKViewBox extends JViewLegacy
 	protected $state;
 	
 	// display
-	function display( $tpl = NULL )
+	public function display( $tpl = NULL )
 	{
 		$app				=	JFactory::getApplication();
 		$this->item			=	new stdClass;
@@ -50,7 +50,7 @@ class CCKViewBox extends JViewLegacy
 	}
 	
 	// onceFile
-	function onceFile( $method, &$config = array(), $file = '' )
+	public function onceFile( $method, &$config = array(), $file = '' )
 	{
 		if ( ! $file ) {
 			$file	=	$this->file;

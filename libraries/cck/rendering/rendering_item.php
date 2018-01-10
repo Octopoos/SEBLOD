@@ -34,7 +34,7 @@ class CCK_Item
 	var $js2;
 	
 	// __construct
-	function __construct( $template = '', $type = '', $pk = 0 )
+	public function __construct( $template = '', $type = '', $pk = 0 )
 	{
 		$this->config		=	array();
 		$this->id			=	'cck'.$pk;

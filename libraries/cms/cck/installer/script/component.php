@@ -19,39 +19,39 @@ class JCckInstallerScriptComponent
 	protected $core;
 	
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'install' );
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'uninstall' );
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'update' );
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		$this->cck	=	CCK_Install::init( $parent );
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 	}
 
 	// postInstallMessage
-	function postInstallMessage( $event, $pk = 0 )
+	protected function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;

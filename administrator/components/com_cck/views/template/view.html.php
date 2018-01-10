@@ -17,7 +17,7 @@ class CCKViewTemplate extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C1_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();
@@ -46,7 +46,7 @@ class CCKViewTemplate extends JCckBaseLegacyViewForm
 	}
 	
 	// _generateTree
-	function _generateTree()
+	protected function _generateTree()
 	{
 		$path		=	JPATH_SITE.'/templates/'.$this->item->name;
 		$folders	=	JFolder::listFolderTree( $path, '.', 5 );

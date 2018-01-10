@@ -32,7 +32,7 @@ class CCKControllerFolders extends JControllerAdmin
 	}
 	
 	// clear
-	function clear()
+	public function clear()
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
@@ -60,7 +60,7 @@ class CCKControllerFolders extends JControllerAdmin
 	}
 
 	// rebuild
-	function rebuild()
+	public function rebuild()
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		

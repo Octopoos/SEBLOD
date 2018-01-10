@@ -26,7 +26,7 @@ class JCckDevImage
 	protected $_width 		=	0;
 
 	// __construct
-	function __construct( $path )
+	public function __construct( $path )
 	{
 		$this->_quality_jpg	=	JCck::getConfig_Param( 'media_quality_jpeg', 90 );
 		$this->_quality_png	=	JCck::getConfig_Param( 'media_quality_png', 3 );

@@ -58,7 +58,7 @@ class JCckBaseLegacyView extends JViewLegacy
 	}
 	
 	// completeUI
-	public function completeUI()
+	protected function completeUI()
 	{
 	}
 

@@ -215,7 +215,7 @@ class CCK_Document extends JObject
 	}
 	
 	// finalize
-	function finalize( $mode, $name, $client, $positions, $positions_more, $infos, $pk = 0 )
+	public function finalize( $mode, $name, $client, $positions, $positions_more, $infos, $pk = 0 )
 	{
 		$this->cck_client		=	$client;
 		$this->cck_params		=	$infos['params'];

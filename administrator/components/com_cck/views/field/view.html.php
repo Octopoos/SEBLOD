@@ -17,7 +17,7 @@ class CCKViewField extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C3_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();

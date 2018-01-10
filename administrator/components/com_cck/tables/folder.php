@@ -36,7 +36,7 @@ if ( version_compare( JVERSION, '3.2', 'ge' ) ) {
 class CCK_TableFolder extends CCK_TableFolderAdapter
 {
 	// __construct
-	function __construct( &$db )
+	public function __construct( &$db )
 	{				
 		parent::__construct( '#__cck_core_folders', 'id', $db );
 	}

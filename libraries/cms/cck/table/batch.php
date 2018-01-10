@@ -19,7 +19,7 @@ class JCckTableBatch extends JObject
 	protected $_db;
 	
 	// __construct
-	function __construct( &$db, $table )
+	public function __construct( &$db, $table )
 	{
 		$this->_tbl	=	$table;
 		$this->_db	=	&$db;

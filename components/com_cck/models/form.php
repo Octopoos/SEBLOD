@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKModelForm extends JModelLegacy
 {
 	// store
-	function store( $preconfig, $task = '' )
+	public function store( $preconfig, $task = '' )
 	{
 		$preconfig['client']	=	'site';
 		

@@ -14,23 +14,23 @@ defined( '_JEXEC' ) or die;
 class pkg_cckInstallerScript
 {
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 		JFactory::getLanguage()->load( 'com_cck.sys', JPATH_ADMINISTRATOR, null, true );
 	}
 
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 	}
 
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 	}
 
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		if ( !defined( 'DS' ) ) {
 			define( 'DS', DIRECTORY_SEPARATOR );
@@ -39,7 +39,7 @@ class pkg_cckInstallerScript
 	}
 
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		if ( JCck::on( '3.8' ) ) {
 			if ( $type == 'install' || $type == 'update' && version_compare( JCck::getConfig_Param( 'initial_version', '3' ), '3.13.0', '>=' ) ) {

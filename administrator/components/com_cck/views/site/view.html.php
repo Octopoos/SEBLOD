@@ -17,7 +17,7 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C5_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();

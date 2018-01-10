@@ -24,7 +24,7 @@ class CCKViewType extends JViewLegacy
 	protected $vTitle	=	_C2_TEXT;
 	
 	// display
-	function display( $tpl = null )
+	public function display( $tpl = null )
 	{
 		switch ( $this->getlayout() ) {
 			case 'delete':
@@ -67,13 +67,13 @@ class CCKViewType extends JViewLegacy
 	}
 	
 	// prepareDelete
-	function prepareDelete()
+	protected function prepareDelete()
 	{		
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$this->form		=	$this->get( 'Form' );
@@ -111,7 +111,7 @@ class CCKViewType extends JViewLegacy
 	}
 	
 	// prepareDisplay_Ajax
-	function prepareDisplay_Ajax()
+	protected function prepareDisplay_Ajax()
 	{
 		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
 		$folder		=	( $featured ) ? 0 : $this->item->folder;
@@ -167,7 +167,7 @@ class CCKViewType extends JViewLegacy
 	}
 
 	// prepareDisplay_Ajax2
-	function prepareDisplay_Ajax2( $isScoped )
+	protected function prepareDisplay_Ajax2( $isScoped )
 	{
 		$and		=	'';
 		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
@@ -208,7 +208,7 @@ class CCKViewType extends JViewLegacy
 	}
 	
 	// setPosition
-	function setPosition( $name, $title = '' )
+	public function setPosition( $name, $title = '' )
 	{
 		$title	=	( !empty( $title ) ) ? $title : $name;
 		$legend	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][legend]" value="'.htmlspecialchars( @$this->positions[$name]->legend ).'" size="22" />';

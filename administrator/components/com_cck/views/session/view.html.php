@@ -19,7 +19,7 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C8_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();

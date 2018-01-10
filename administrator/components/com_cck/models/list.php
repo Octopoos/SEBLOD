@@ -16,7 +16,7 @@ class CCKModelList extends JModelLegacy
 	var	$_pagination	=	null;
 		
 	// __construct
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		
@@ -28,7 +28,7 @@ class CCKModelList extends JModelLegacy
 	}
 	
 	// _getPagination
-	function _getPagination( $total = 0 )
+	public function _getPagination( $total = 0 )
 	{
 		if ( empty( $this->_pagination ) )
 		{
@@ -40,7 +40,7 @@ class CCKModelList extends JModelLegacy
 	}
 	
 	// delete
-	function delete( $pks = array() )
+	public function delete( $pks = array() )
 	{
 		JPluginHelper::importPlugin( 'content' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );

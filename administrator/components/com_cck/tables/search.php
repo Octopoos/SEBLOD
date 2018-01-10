@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCK_TableSearch extends JTable
 {
 	// __construct
-	function __construct( &$db )
+	public function __construct( &$db )
 	{
 		parent::__construct( '#__cck_core_searchs', 'id', $db );
 	}

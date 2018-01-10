@@ -24,7 +24,7 @@ class CCKViewSearch extends JViewLegacy
 	protected $vTitle	=	_C4_TEXT;
 	
 	// display
-	function display( $tpl = null )
+	public function display( $tpl = null )
 	{
 		switch ( $this->getlayout() ) {
 			case 'delete':
@@ -69,7 +69,7 @@ class CCKViewSearch extends JViewLegacy
 	}
 	
 	// completeUI
-	function completeUI()
+	protected function completeUI()
 	{
 		$title	=	'COM_CCK_SEARCH_TYPE';
 
@@ -82,13 +82,13 @@ class CCKViewSearch extends JViewLegacy
 	}
 
 	// prepareDelete
-	function prepareDelete()
+	protected function prepareDelete()
 	{		
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$this->form		=	$this->get( 'Form' );
