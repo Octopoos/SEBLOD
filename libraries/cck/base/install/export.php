@@ -896,9 +896,14 @@ class CCK_Export
 		
 		foreach ( $data['processings'] as $k=>$v ) {
 			$folder_id	=	$data['processings'][$k]->folder;
+			
 			if ( !isset( $data['elements']['processings'][$folder_id] ) ) {
 				continue;
 			}
+			if ( !( isset( $data['elements']['folder'][$folder_id] ) && $data['elements']['folder'][$folder_id] === true ) ) {
+				continue;
+			}
+
 			$name		=	$data['processings'][$k]->name;
 			$name2		=	$data['processings'][$k]->scriptfile;
 
