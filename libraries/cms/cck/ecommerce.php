@@ -298,7 +298,7 @@ abstract class JCckEcommerce
 	// getPromotions
 	public static function getPromotions( $type = '' )
 	{
-		if ( !self::$promotions ) {
+		if ( self::$promotions === null ) {
 			self::$promotions	=	self::_setPromotions();
 		}
 		
@@ -354,7 +354,7 @@ abstract class JCckEcommerce
 	// getShippingRules
 	public static function getShippingRules( $type = '', $zones = array() )
 	{
-		if ( !self::$rules ) {
+		if ( self::$rules === null ) {
 			self::$rules	=	self::_setShippingRules( $zones );
 		}
 		
@@ -417,7 +417,7 @@ abstract class JCckEcommerce
 	// getTaxes
 	public static function getTaxes( $type = '', $zones = array() )
 	{
-		if ( !self::$taxes ) {
+		if ( self::$taxes === null ) {
 			self::$taxes	=	self::_setTaxes( $zones );
 		}
 
