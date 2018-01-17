@@ -374,7 +374,7 @@ abstract class JCckEcommerce
 		}
 	}
 	
-	// _setTaxes
+	// _setShippingRules
 	protected static function _setShippingRules( $zones )
 	{
 		$db			=	JFactory::getDbo();
@@ -420,7 +420,7 @@ abstract class JCckEcommerce
 		if ( !self::$taxes ) {
 			self::$taxes	=	self::_setTaxes( $zones );
 		}
-		
+
 		if ( $type ) {
 			return ( isset( self::$taxes[$type] ) ) ? self::$taxes[$type] : array();	
 		} else {
@@ -475,24 +475,67 @@ abstract class JCckEcommerce
 
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$isValid	=	true;
+				$do	=	0;
 
 				if ( $item->profile ) {
+					$count		=	0;
 					$profile	=	json_decode( $item->profile );
 
-					if ( is_object( $profile ) ) {
-						$target	=	$profile->trigger;
+					if ( isset( $profile->do ) && $profile->do ) {
+						$do		=	1;
+					}
+					if ( isset( $profile->conditions ) ) {
+						$conditions	=	$profile->conditions;
+					} else {
+						$conditions	=	array( 0=>$conditions );
+					}
 
-						if ( $profile->match == 'isFilled' ) {
-							if ( $user->$target == '' ) {
+					foreach ( $conditions as $condition ) {
+						$isValid	=	true;
+
+						if ( is_object( $condition ) ) {
+							$target		=	$condition->trigger;
+
+							if ( $condition->match == 'isFilled' ) {
+								if ( $user->$target == '' ) {
+									$isValid	=	false;
+								}
+							} elseif ( $condition->match == 'isEmpty' ) {
+								if ( $user->$target != '' ) {
+									$isValid	=	false;
+								}
+							} elseif ( $condition->match == 'isEqual' ) {
 								$isValid	=	false;
+
+								if ( isset( $condition->values ) ) {
+									$condition_values	=	explode( ',', $condition->values );
+
+									foreach ( $condition_values as $v ) {
+										if ( $user->$target == $v ) {
+											$isValid	=	true;
+											break;
+										}
+									}
+								}
 							}
-						} elseif ( $profile->match == 'isEmpty' ) {
-							if ( $user->$target != '' ) {
-								$isValid	=	false;
-							}
+						} else {
+							$isValid	=	false;
+						}
+
+						if ( $isValid ) {
+							$count++;
 						}
 					}
+
+					$isValid	=	( $count == count( $conditions ) ) ? true : false;
+				} else {
+					$isValid	=	true;
+				}
+
+				if ( $isValid ) {
+					$isValid	=	( $do ) ? false : true;
+				} else {
+					$isValid	=	( $do ) ? true : false;
 				}
 
 				if ( $isValid ) {
@@ -500,6 +543,7 @@ abstract class JCckEcommerce
 				}
 			}
 		}
+
 		return $zones;
 	}
 }
