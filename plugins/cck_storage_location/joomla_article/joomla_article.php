@@ -500,13 +500,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				}
 
-				if ( JCck::on( '3.1' ) ) {
-					$table->tags	=	new JHelperTags;
+				// Tags
+				$table->tags	=	new JHelperTags;
 
-					// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
-					$table->tags->getTagIds( $table->id, 'com_content.article' );
-					// }
-				}
+				// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
+				$table->tags->getTagIds( $table->id, 'com_content.article' );
+				// }
 			}
 		}
 		

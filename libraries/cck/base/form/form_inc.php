@@ -10,11 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( !JCck::on( '3.4' ) ) {
-	JHtml::_( 'behavior.framework' );
-} else {
-	JHtml::_( 'behavior.core' );
-}
+JHtml::_( 'behavior.core' );
 
 $app			=	JFactory::getApplication();
 $copyfrom_id	=	0;
@@ -387,7 +383,7 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 }
 
 // Versions
-if ( $app->isClient( 'administrator' ) && JCck::on( '3.2' ) ) {
+if ( $app->isClient( 'administrator' ) ) {
 	if ( @$config['base']->location == 'joomla_article' ) { /* TODO#SEBLOD: getContext / params from any object */
 		$object_params	=	JComponentHelper::getParams( 'com_content' );
 

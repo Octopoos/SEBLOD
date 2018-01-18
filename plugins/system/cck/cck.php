@@ -236,7 +236,7 @@ class plgSystemCCK extends JPlugin
 			$app->input->set( 'format', $format );
 		}
 
-		$router	=	JCck::on( '3.3' ) ? $app::getRouter() : $app->getRouter();
+		$router	=	$app::getRouter();
 
 		$router->attachBuildRule( array( $this, 'buildRule' ), JRouter::PROCESS_DURING );
 		$router->attachParseRule( array( $this, 'parseRule' ), JRouter::PROCESS_DURING );
@@ -591,9 +591,8 @@ class plgSystemCCK extends JPlugin
 										   'params'=>$template->params,
 										   'template'=>$template->template
 									);
-					if ( JCck::on( '3.6') ) {
-						$params['params']	=	new JRegistry( $params['params'] );
-					}
+					$params['params']	=	new JRegistry( $params['params'] );
+					
 					$doc->parse( $params );
 					$this->offline_buffer	=	$doc->render( false, $params );
 				} elseif ( $this->site_cfg->get( 'set_template_style', false ) ) {

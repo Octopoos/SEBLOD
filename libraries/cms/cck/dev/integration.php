@@ -261,8 +261,7 @@ abstract class JCckDevIntegration
 	// rewriteBuffer
 	public static function rewriteBuffer( $buffer, $data, $list, $list_assoc = array() )
 	{
-		$app			=	JFactory::getApplication();
-		$class			=	JCck::on( '3.4' ) ? ' class="hasTooltip"' : '';
+		$class			=	' class="hasTooltip"';
 		$idx			=	0;
 		$idx2			=	2;
 		$idx3			=	3;

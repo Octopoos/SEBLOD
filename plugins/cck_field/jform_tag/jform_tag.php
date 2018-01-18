@@ -173,29 +173,27 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		}
 		$isMultiple	=	( strpos( $value, ',' ) !== false ) ? 1 : 0;
 
-		if ( $value != '' && JCck::on( '3.1' ) ) {
-			if ( $field->storage_location != '' ) {
-				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
-				$properties	=	array( 'context', 'context2', 'key', 'table' );
-				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
+		if ( $value != '' && $field->storage_location != '' ) {
+			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
+			$properties	=	array( 'context', 'context2', 'key', 'table' );
+			$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
 
-				$field->storage_location	=	'free';
-				$field->storage_table		=	'#__contentitem_tag_map';
-				$field->storage_field		=	'tag_id';
-				$field->storage_field2		=	'';
+			$field->storage_location	=	'free';
+			$field->storage_table		=	'#__contentitem_tag_map';
+			$field->storage_field		=	'tag_id';
+			$field->storage_field2		=	'';
 
-				$join						=	new stdClass;
-				$join->table				=	'#__contentitem_tag_map';
-				$join->column				=	'content_item_id';
-				$join->column2				=	$properties['key'];
-				$join->table2				=	$properties['table'];
-				$join->and					=	'type_alias = "'.( ( isset( $properties['context2'] ) && $properties['context2'] != '' ) ? $properties['context2'] : $properties['context'] ).'"';
+			$join						=	new stdClass;
+			$join->table				=	'#__contentitem_tag_map';
+			$join->column				=	'content_item_id';
+			$join->column2				=	$properties['key'];
+			$join->table2				=	$properties['table'];
+			$join->and					=	'type_alias = "'.( ( isset( $properties['context2'] ) && $properties['context2'] != '' ) ? $properties['context2'] : $properties['context'] ).'"';
 
-				$config['joins'][$field->stage][]		=	$join;
+			$config['joins'][$field->stage][]		=	$join;
 
-				if ( $isMultiple ) {
-					$config['query_parts']['group'][]	=	't0.id';
-				}
+			if ( $isMultiple ) {
+				$config['query_parts']['group'][]	=	't0.id';
 			}
 		} else {
 			$field->storage					=	'none';

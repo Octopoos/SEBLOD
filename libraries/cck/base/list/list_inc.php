@@ -10,9 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( !JCck::on( '3.4' ) ) {
-	JHtml::_( 'behavior.framework' );
-}
+JHtml::_( 'behavior.core' );
 
 $app			=	JFactory::getApplication();
 $data			=	'';
@@ -206,10 +204,7 @@ $dispatcher	=	JEventDispatcher::getInstance();
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
 if ( $preconfig['show_form'] ) {
-	
-	if ( JCck::on( '3.4' ) ) {
-		JHtml::_( 'behavior.core' );
-	}
+	JHtml::_( 'behavior.core' );
 
 	// Template
 	$P				=	'template_'.$preconfig['client'];
