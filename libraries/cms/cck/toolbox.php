@@ -163,11 +163,53 @@ abstract class JCckToolbox
 	// run
 	public static function run( $name )
 	{
-		$job			=	JCckDatabase::loadObject( 'SELECT id, run_as FROM #__cck_more_jobs WHERE name = "'.$name.'" AND published = 1' );
+		$host	=	'';
+		$job	=	JCckDatabase::loadObject( 'SELECT id, run_as, run_url, run_url_custom FROM #__cck_more_jobs WHERE name = "'.$name.'" AND published = 1' );
 
 		if ( !is_object( $job ) ) {
 			return;
 		}
+		if ( $job->run_url != '' ) {
+			if ( $job->run_url == -1 ) {
+				$url	=	$job->run_url_custom;
+			} else {
+				$url	=	JCckDatabase::loadResult( 'SELECT name FROM #__cck_core_sites WHERE id = '.(int)$job->run_url );
+			}
+
+			$pos	=	strpos( $url, '/' );
+
+			if ( $pos !== false ) {
+				$host	=	substr( $url, 0, $pos );
+				$url	=	substr( $url, $pos );
+			} else {
+				$host	=	$url;
+				$url	=	'';
+			}
+
+			if ( $url != '' ) {
+				if ( $url[0] != '/' ) {
+					$url	=	'/'.$url;
+				}
+				$length		=	strlen( $url );
+
+				if ( $url[$length - 1] != '/' ) {
+					$url	.=	'/';
+				}
+
+				$url	.=	'index.php';
+
+				$_SERVER['PHP_SELF']	=	$url;
+				$_SERVER['REQUEST_URI']	=	$url;
+				$_SERVER['SCRIPT_NAME']	=	$url;
+			}
+		}
+		
+		// Fool the system into thinking we are running as JSite, from the front-end.
+		$_SERVER['HTTP_HOST']	=	$host;
+		
+		JFactory::getApplication( 'site' );
+		
+		// Force identity
 		if ( !$job->run_as ) {
 			$job->run_as	=	(int)JCck::getConfig_Param( 'integration_user_default_author' );
 		}
