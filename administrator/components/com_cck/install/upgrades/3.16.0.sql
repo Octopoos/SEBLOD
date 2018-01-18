@@ -6,8 +6,6 @@ ALTER TABLE `#__cck_core_searchs` ADD `sef_route_aliases` TINYINT(3) NOT NULL DE
 ALTER TABLE `#__cck_more_jobs` ADD `run_url` INT(11) NOT NULL DEFAULT '0' AFTER `run_as`;
 ALTER TABLE `#__cck_more_jobs` ADD `run_url_custom` VARCHAR(255) NOT NULL AFTER `run_url`;
 
-UPDATE `#__cck_more_ecommerce_zones` SET profile = CONCAT('{"conditions":[', profile, '],"do":"0"}') WHERE profile != "" AND profile NOT LIKE ('{"conditions":%');
-
 UPDATE `#__cck_core_fields` SET `script` = REPLACE( `script`, 'task=ajax&format=raw"', 'task=ajax&format=raw&"+Joomla.getOptions("csrf.token")+"=1"' ) WHERE `id` IN (58,59);
 
 UPDATE `#__cck_core_types` SET `parent_inherit`=1 WHERE `parent` != "";

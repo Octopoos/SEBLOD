@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_jobs` (
   `ordering` int(11) NOT NULL DEFAULT '0',
   `published` tinyint(3) NOT NULL DEFAULT '0',
   `run_as` int(10) unsigned NOT NULL DEFAULT '0',
+  `run_url` int(11) NOT NULL DEFAULT '0',
+  `run_url_custom` varchar(255) NOT NULL,
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
