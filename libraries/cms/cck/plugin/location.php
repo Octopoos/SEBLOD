@@ -121,7 +121,7 @@ class JCckPluginLocation extends JPlugin
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {
 					if ( $p == 'type_alias' ) {
-						if ( property_exists( static::class, $p ) ) {
+						if ( property_exists( get_called_class(), $p ) ) { /* TODO#SEBLOD: replace with static::class !! PHP 5.4+ */
 							$properties[$p]	=	static::${$p};
 						}
 					} else {
