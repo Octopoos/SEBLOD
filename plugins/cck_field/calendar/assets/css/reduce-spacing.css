@@ -18,10 +18,10 @@
 .DynarchCalendar-menu-year { font-size: 12px; }
 
 .DynarchCalendar-hover-date {
-  padding: 0px 1px;
+  padding: 0 1px;
 }
 .DynarchCalendar-day-selected {
-  padding: 0px 1px;
+  padding: 0 1px;
 }
 .DynarchCalendar-menu table td div {
   padding: 2px 4px;
