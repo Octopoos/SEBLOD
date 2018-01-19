@@ -106,20 +106,20 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		} else {			
 			// Prepare
 			if ( $years != 0 ) {
-				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
-				$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
+				$text_years		=	JString::strtolower( JText::_( 'COM_CCK_YEARS' ) );
+				$text_year		=	JString::strtolower( JText::_( 'COM_CCK_YEAR' ) );
 
-				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
+				$interval		=	( $years > 1 ) ? $years .' '. $text_years : $years .' '. $text_year;
 				$interval		=	JText::sprintf( $state, $interval );
 			} elseif ( $months != 0 ) {
-				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
-				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
+				$text_months	=	JString::strtolower( JText::_( 'COM_CCK_MONTHS' ) );
+				$text_month		=	JString::strtolower( JText::_( 'COM_CCK_MONTH' ) );
 
-				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
+				$interval		=	( $months > 1 ) ? $months .' '. $text_months : $months .' '. $text_month;
 				$interval		=	JText::sprintf( $state, $interval );
 			} else {
 				if ( $days > 1 ) {
-					$interval	=	JText::sprintf( $state, $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
+					$interval	=	JText::sprintf( $state, $days .' '. JString::strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
 				} elseif ( $days > 0 ) {
 					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
 				} else {
@@ -133,26 +133,26 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 						$minutes		=	$interval->format( '%i' );
 						if ( $unit == 2 ) {
 							$minutes		+=	( $hours * 60 );
-							$text_minutes	=	strtolower( JText::_( 'COM_CCK_MINUTES' ) );
-							$text_minute	=	strtolower( JText::_( 'COM_CCK_MINUTE' ) );
+							$text_minutes	=	JString::strtolower( JText::_( 'COM_CCK_MINUTES' ) );
+							$text_minute	=	JString::strtolower( JText::_( 'COM_CCK_MINUTE' ) );
 
 							if ( $minutes == 0 ) {
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
 							} elseif ( $minutes < 60 ) {
-								$interval	=	( $minutes > 1 ) ? $minutes.' '.$text_minutes : $minutes.' '.$text_minute;
+								$interval	=	( $minutes > 1 ) ? $minutes .' '. $text_minutes : $minutes .' '. $text_minute;
 								$interval	=	JText::sprintf( $state, $interval );
 							} else {
 								$unit		=	1;
 							}
 						}
 						if ( $unit == 1 ) {
-							$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
-							$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
+							$text_hours		=	JString::strtolower( JText::_( 'COM_CCK_HOURS' ) );
+							$text_hour		=	JString::strtolower( JText::_( 'COM_CCK_HOUR' ) );
 
 							if ( $hours == 0 ) {
 								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
 							} else {
-								$interval	=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
+								$interval	=	( $hours > 1 ) ? $hours .' '. $text_hours : $hours .' '. $text_hour;
 								$interval	=	JText::sprintf( $state, $interval );
 							}
 						}
