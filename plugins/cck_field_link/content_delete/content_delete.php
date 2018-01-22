@@ -101,13 +101,20 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		}
 		if ( $config['client'] == 'search' ) {
 			$field->link	=	'';
+			$hasConfirm		=	 ( isset( $field->link_onclick ) ) ? true : false;
 
-			if ( isset( $field->link_onclick ) ) {
-				$field->link_onclick	.=	'else{'.htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.$return.'">\');' )
-										.	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));}';
+			if ( $hasConfirm ) {
+				$field->link_onclick	.=	'else{';
 			} else {
-				$field->link_onclick	=	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));';
+				$field->link_onclick	=	'';
 			}
+			$field->link_onclick		.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.$return.'">\');' )
+										.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.JHtml::_( 'form.token' ).'\');' )
+										.	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));';
+			if ( $hasConfirm ) {
+				$field->link_onclick	.=	'}';
+			}
+
 			$field->link_onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$field->link_onclick.'}';
 		}
 		$field->link_state	=	$link->get( 'state', 1 );
