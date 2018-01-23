@@ -337,7 +337,7 @@ class JCckPluginLocation extends JPlugin
 		if ( $table && $table != $default && $table != 'none' ) {
 			$more	=	JCckTable::getInstance( $table, 'id' );
 			$more->load( $pk, true );
-			if ( isset( $more->cck ) ) { /* TODO#SEBLOD: remove */
+			if ( isset( $more->cck ) ) { /* TODO#SEBLOD: remove "cck" column */
 				$more->cck	=	$config['type'];
 			}
 			$more->bind( $config['storages'][$table] );

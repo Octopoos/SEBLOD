@@ -118,6 +118,7 @@ $limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) 
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 $isAltered	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
+$isSearch	=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($post[...]) */
 
 if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
 	if ( $app->input->get( 'end', '' ) != '' ) {
@@ -601,8 +602,8 @@ if ( $no_action ) {
 		}
 		$search->content		=	$search2->content;
 	}
-
 	if ( $no_action == 'auto_redirect' ) {
+		/* TODO#SEBLOD: is this even possible? */
 		if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
 			$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
 			$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
