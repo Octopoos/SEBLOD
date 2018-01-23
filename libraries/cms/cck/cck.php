@@ -328,7 +328,10 @@ abstract class JCck
 		
 		$doc	=	JFactory::getDocument();
 		if ( $key == 'cck.ecommerce' ) { /* TODO#SEBLOD: explode & dispatch */
+			JHtml::_( 'behavior.core' );
+
 			$version	=	'2.25.0';
+
 			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php' ) ) {
 				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
 				$version	=	new JCckEcommerceVersion;
