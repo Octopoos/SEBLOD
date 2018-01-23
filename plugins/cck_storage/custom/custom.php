@@ -97,14 +97,14 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 
 		// Set
 		if ( $config['collection'] != '' ) {
-			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );			
+			$regex	=	'#::'.$config['fieldname'].'\|'.$config['xi'].'\|'.$config['collection'].'::(.*?)::/'.$config['fieldname'].'\|'.$config['xi'].'\|'.$config['collection'].'::#s';
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
 		} else {
 			if ( is_object( $field ) && $field->storage_field2 ) {
 				$config['fieldname']	=	$field->storage_field2;
 			}
-			$regex	=	CCK_Content::getRegex_Field( $config['fieldname'] );
+			$regex	=	'#::'.$config['fieldname'].'::(.*?)::/'.$config['fieldname'].'::#s';
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
 		}
@@ -407,7 +407,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	// _initValues
 	protected function _initValues( $value )
 	{
-		preg_match_all( CCK_Content::getRegex(), $value, $values );
+		preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $value, $values );
 		
 		return $values;
 	}
