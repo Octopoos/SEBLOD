@@ -301,6 +301,7 @@ class plgContentCCKInstallerScript
 			$db->execute();
 			
 			// Init Default Config
+			$params->set( 'core_legacy', '0' );
 			$params->set( 'site_variation', 'seb_css3b' );
 			$params->set( 'site_variation_form', 'seb_css3b' );
 			$params->set( 'optimize_memory', '1' );
