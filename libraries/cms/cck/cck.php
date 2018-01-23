@@ -289,10 +289,6 @@ abstract class JCck
 	// getUser
 	public static function getUser( $userid = 0, $content_type = '', $profile = true )
 	{
-		// Legacy Code, just in case..
-		if ( is_bool( $content_type ) ) {
-			return JCckLegacy::getUser( $userid, $content_type, $profile );
-		}
 		$update		=	false;
 
 		if ( is_array( $userid ) ) {
