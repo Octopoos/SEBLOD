@@ -271,7 +271,11 @@ class CCKViewList extends JViewLegacy
 		}
 		$config['context']['Itemid']	=	$app->input->getInt( 'Itemid', 0 );
 		$config['context']['view']		=	'list';
-		
+
+		if ( !$this->show_form && $config['formWrapper'] ) {
+			JHtml::_( 'behavior.core' );
+		}
+
 		$this->config					=	&$config;
 		$this->context					=	$config['context'];
 		$this->data						=	&$data;
