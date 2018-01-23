@@ -16,11 +16,13 @@ class JCckContentJoomla_User extends JCckContent
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		$this->_instance_base	=	JUser::getInstance();
+		$this->_instance_base	=	new JUser;
 
-		$fields					=	 array_keys( $this->_instance_base->getTable()->getFields() );
-		unset( $fields['id'], $fields['cck'] ); /* TODO#SEBLOD: remove "cck" column */
-		$this->_data_map		=	array_merge( $this->_data_map, array_fill_keys( $fields, 'base' ) );
+		$fields					=	array_keys( $this->_instance_base->getTable()->getFields() );
+		unset( $fields['id'] );
+
+		$this->_data_map			=	array_merge( $this->_data_map, array_fill_keys( $fields, 'base' ) );
+		$this->_data_map['groups']	=	'base';
 
 		return true;
 	}
