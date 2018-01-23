@@ -30,19 +30,6 @@ class plgSystemCCK extends JPlugin
 		parent::__construct( $subject, $config );
 
 		$app	=	JFactory::getApplication();
-		$root	=	JUri::root( true );
-
-		// Deprecated :: start
-		if ( ! defined( 'JROOT_CCK' ) ) {
-			define( 'JROOT_CCK', $root );
-		}
-		if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
-			define( 'JROOT_MEDIA_CCK', $root.'/media/cck' );
-		}
-		if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
-			define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
-		}
-		// Deprecated :: end
 
 		if ( $app->isClient( 'administrator' ) ) {
 			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
@@ -53,11 +40,7 @@ class plgSystemCCK extends JPlugin
 		}
 		jimport( 'joomla.filesystem.file' );
 
-		// Content
-		jimport( 'cck.content.article' );
-		// jimport( 'cck.content.category' );
-		jimport( 'cck.content.content' );
-		jimport( 'cck.content.user' );
+		$this->_setLegacyMode();
 
 		$this->multisite	=	JCck::_setMultisite(); /* TODO#SEBLOD: _isMultiSite() */
 		$this->restapi		=	$this->_isRestApi();
@@ -1036,6 +1019,44 @@ class plgSystemCCK extends JPlugin
 			$home->link			=	@$my->link;
 			$home->params		=	@$my->params;
 			$home->query  		=	@$my->query;
+		}
+	}
+
+	// _setLegacyMode
+	protected function _setLegacyMode()
+	{
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+
+		if ( !$legacy ) {
+			return;
+		}
+
+		if ( $legacy == 2012 ) {
+			JLoader::registerAlias( 'plgCCK_FieldGeneric', 'JCckPluginField' );
+			JLoader::registerAlias( 'plgCCK_Field_LinkGeneric', 'JCckPluginLink' );
+			JLoader::registerAlias( 'plgCCK_Field_LiveGeneric', 'JCckPluginLive' );
+			JLoader::registerAlias( 'plgCCK_Field_TypoGeneric', 'JCckPluginTypo' );
+			JLoader::registerAlias( 'plgCCK_Field_ValidationGeneric', 'JCckPluginValidation' );
+			JLoader::registerAlias( 'plgCCK_StorageGeneric', 'JCckPluginStorage' );
+			JLoader::registerAlias( 'plgCCK_Storage_LocationGeneric', 'JCckPluginLocation' );
+			JLoader::registerAlias( 'CCK_TableGeneric', 'JCckTable' );
+		}
+
+		if ( $legacy <= 2017 ) {
+			if ( ! defined( 'JROOT_CCK' ) ) {
+				define( 'JROOT_CCK', JUri::root( true ) );
+			}
+			if ( ! defined( 'JROOT_MEDIA_CCK' ) ) {
+				define( 'JROOT_MEDIA_CCK', JUri::root( true ).'/media/cck' );
+			}
+			if ( ! defined( 'JPATH_LIBRARIES_CCK' ) ) {
+				define( 'JPATH_LIBRARIES_CCK', JPATH_SITE.'/libraries/cck' );
+			}
+
+			jimport( 'cck.content.article' );
+			jimport( 'cck.content.category' );
+			jimport( 'cck.content.content' );
+			jimport( 'cck.content.user' );
 		}
 	}
 
