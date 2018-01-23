@@ -30,38 +30,6 @@ class CCKController extends JControllerLegacy
 		$this->registerTask( 'save2view', 'save' );
 		$this->registerTask( 'save4later', 'save' );
 	}
-
-	// display
-	public function display( $cachable = false, $urlparams = false )
-	{
-		$cachable	=	true;
-
-		// Disable caching on Forms and in Search & List where search is performed
-		if ( $this->input->getCmd( 'view', 'form' ) == "form" || $this->input->getMethod() == 'POST' ) {
-			$cachable	=	false;
-		} elseif ( $this->task == 'search' ) {
-			if ( JUri::getInstance()->getQuery() != '' ) {
-				$cachable = false;
-			}
-		}
-
-		if ( $cachable ) {
-			$safeurlparams	=	array(
-									'boxchecked' => 'INT',
-									'id' => 'INT',
-									'Itemid' => 'INT',
-									'lang' => 'CMD',
-									'return' => 'BASE64',
-									'search' => 'STRING',
-									'task' => 'CMD',
-									'type' => 'STRING'
-								);
-		} else {
-			$safeurlparams	=	false;
-		}
-
-		parent::display( $cachable, $safeurlparams );
-	}
 	
 	// ajax
 	public function ajax()
@@ -120,6 +88,38 @@ class CCKController extends JControllerLegacy
 		$this->setRedirect( $this->_getReturnPage(), $msg, $msgType );
 	}
 	
+	// display
+	public function display( $cachable = false, $urlparams = false )
+	{
+		$cachable	=	true;
+
+		// Disable caching on Forms and in Search & List where search is performed
+		if ( $this->input->getCmd( 'view', 'form' ) == "form" || $this->input->getMethod() == 'POST' ) {
+			$cachable	=	false;
+		} elseif ( $this->task == 'search' ) {
+			if ( JUri::getInstance()->getQuery() != '' ) {
+				$cachable = false;
+			}
+		}
+
+		if ( $cachable ) {
+			$safeurlparams	=	array(
+									'boxchecked' => 'INT',
+									'id' => 'INT',
+									'Itemid' => 'INT',
+									'lang' => 'CMD',
+									'return' => 'BASE64',
+									'search' => 'STRING',
+									'task' => 'CMD',
+									'type' => 'STRING'
+								);
+		} else {
+			$safeurlparams	=	false;
+		}
+
+		parent::display( $cachable, $safeurlparams );
+	}
+
 	// download
 	public function download()
 	{
@@ -464,45 +464,6 @@ class CCKController extends JControllerLegacy
 		$this->setRedirect( $link, $msg, $msgType );
 	}
 
-	// processAjax
-	public function processAjax()
-	{
-		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
-			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
-			return;
-		}
-		
-		$app		=	JFactory::getApplication();
-		$config		=	array(
-							'uniqid'=>$app->input->get( 'uniqid', '' )
-						);
-		$ids		=	$app->input->get( 'cid', array(), 'array' );
-		$task_id	=	$app->input->getInt( 'tid', 0 );
-		$ids		=	ArrayHelper::toInteger( $ids );
-		
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
-		
-		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
-		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
-		$result		=	$model->process( $params, $task_id, $ids, $config );
-		$return		=	array(
-							'error'=>0,
-							'id'=>@$config['id'],
-							'isNew'=>1,
-							'pk'=>@$config['pk']
-						);
-
-		if ( $result === false ) {
-			$return['error']	=	1;
-		} elseif ( !$return['pk'] ) {
-			$return['error']	=	1;
-		}
-		
-		echo json_encode( $return );
-	}
-
 	// process
 	public function process()
 	{
@@ -554,6 +515,45 @@ class CCKController extends JControllerLegacy
 		}
 	}
 
+	// processAjax
+	public function processAjax()
+	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
+			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$config		=	array(
+							'uniqid'=>$app->input->get( 'uniqid', '' )
+						);
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
+		$ids		=	ArrayHelper::toInteger( $ids );
+		
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
+		
+		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
+		$result		=	$model->process( $params, $task_id, $ids, $config );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@$config['id'],
+							'isNew'=>1,
+							'pk'=>@$config['pk']
+						);
+
+		if ( $result === false ) {
+			$return['error']	=	1;
+		} elseif ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
+	}
+
 	// route
 	public function route()
 	{
@@ -566,26 +566,6 @@ class CCKController extends JControllerLegacy
 			}
 		}
 		echo JRoute::_( $url );
-	}
-
-	// saveAjax
-	public function saveAjax()
-	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		$config		=	$this->save( true );
-		$return		=	array(
-							'error'=>0,
-							'id'=>@$config['id'],
-							'isNew'=>@$config['isNew'],
-							'pk'=>$config['pk']
-						);
-		
-		if ( !$return['pk'] ) {
-			$return['error']	=	1;
-		}
-		
-		echo json_encode( $return );
 	}
 
 	// save	
@@ -781,6 +761,26 @@ class CCKController extends JControllerLegacy
 		} else {
 			$this->setRedirect( htmlspecialchars_decode( $link ) );
 		}
+	}
+
+	// saveAjax
+	public function saveAjax()
+	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		$config		=	$this->save( true );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@$config['id'],
+							'isNew'=>@$config['isNew'],
+							'pk'=>$config['pk']
+						);
+		
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
 	}
 
 	// saveOrderAjax
