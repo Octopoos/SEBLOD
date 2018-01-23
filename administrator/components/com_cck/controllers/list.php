@@ -25,12 +25,6 @@ class CCKControllerList extends JControllerAdmin
 		parent::__construct( $config );
 	}
 	
-	// getModel
-	public function getModel( $name = 'List', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		return parent::getModel( $name, $prefix, $config );
-	}
-	
 	// delete
 	public function delete()
 	{
@@ -84,6 +78,12 @@ class CCKControllerList extends JControllerAdmin
 		} else {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
+	}
+
+	// getModel
+	public function getModel( $name = 'List', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
 	}
 
 	// process

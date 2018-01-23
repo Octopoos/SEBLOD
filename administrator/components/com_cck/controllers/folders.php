@@ -25,12 +25,6 @@ class CCKControllerFolders extends JControllerAdmin
 		parent::__construct( $config );
 	}
 	
-	// getModel
-	public function getModel( $name = 'Folder', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		return parent::getModel( $name, $prefix, $config );
-	}
-	
 	// clear
 	public function clear()
 	{
@@ -57,6 +51,12 @@ class CCKControllerFolders extends JControllerAdmin
 		}
 		
 		$this->setRedirect( _C0_LINK, $msg, $type );
+	}
+
+	// getModel
+	public function getModel( $name = 'Folder', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
 	}
 
 	// rebuild

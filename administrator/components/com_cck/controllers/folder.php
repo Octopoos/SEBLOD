@@ -16,19 +16,7 @@ jimport( 'joomla.application.component.controllerform' );
 class CCKControllerFolder extends JControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
-	
-	// postSaveHook
-	protected function postSaveHook( JModelLegacy $model, $validData = array() )
-	{
-		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
-		Helper_Folder::rebuildTree( 2, 1 );
 		
-		$recordId	=	$model->getState( $this->context.'.id' );
-		if ( $recordId ) {
-			Helper_Folder::rebuildBranch( $recordId );
-		}
-	}
-	
 	// export
 	public function export()
 	{
@@ -54,6 +42,18 @@ class CCKControllerFolder extends JControllerForm
 		} else {
 			$this->setRedirect( _C0_LINK, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
-	}	
+	}
+
+	// postSaveHook
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	{
+		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
+		Helper_Folder::rebuildTree( 2, 1 );
+		
+		$recordId	=	$model->getState( $this->context.'.id' );
+		if ( $recordId ) {
+			Helper_Folder::rebuildBranch( $recordId );
+		}
+	}
 }
 ?>

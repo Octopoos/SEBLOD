@@ -18,6 +18,23 @@ jimport( 'cck.joomla.application.component.controllerform' );
 class CCKControllerField extends CCK_ControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
+
+	// add
+	public function add()
+	{
+		$app	=	JFactory::getApplication();
+
+		// Parent Method
+		$result	=	parent::add();
+
+		if ( $result instanceof Exception ) {
+			return $result;
+		}
+		
+		// Additional Vars
+		$app->setUserState( CCK_COM.'.add.field.ajax_state', $app->input->getInt( 'ajax_state' ) );
+		$app->setUserState( CCK_COM.'.edit.field.ajax_type', $app->input->getString( 'ajax_type', '' ) );
+	}
 	
 	// allowAdd
 	protected function allowAdd( $data = array() )
@@ -59,22 +76,18 @@ class CCKControllerField extends CCK_ControllerForm
 		// Component Permissions
 		return parent::allowEdit( $data, $key );
 	}
-	
-	// add
-	public function add()
+
+	// cancel
+	public function cancel( $key = null )
 	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+			
 		$app	=	JFactory::getApplication();
 
-		// Parent Method
-		$result	=	parent::add();
-
-		if ( $result instanceof Exception ) {
-			return $result;
-		}
+		parent::cancel();
 		
-		// Additional Vars
-		$app->setUserState( CCK_COM.'.add.field.ajax_state', $app->input->getInt( 'ajax_state' ) );
-		$app->setUserState( CCK_COM.'.edit.field.ajax_type', $app->input->getString( 'ajax_type', '' ) );
+		$app->setUserState( CCK_COM.'.add.field.ajax_state', null );
+		$app->setUserState( CCK_COM.'.edit.field.ajax_type', null );
 	}
 	
 	// edit
@@ -91,19 +104,6 @@ class CCKControllerField extends CCK_ControllerForm
 		
 		// Additional Vars
 		$app->setUserState( CCK_COM.'.edit.field.ajax_type', $app->input->getString( 'ajax_type', '' ) );
-	}
-	
-	// cancel
-	public function cancel( $key = null )
-	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-			
-		$app	=	JFactory::getApplication();
-
-		parent::cancel();
-		
-		$app->setUserState( CCK_COM.'.add.field.ajax_state', null );
-		$app->setUserState( CCK_COM.'.edit.field.ajax_type', null );
 	}
 	
 	// postSaveHook

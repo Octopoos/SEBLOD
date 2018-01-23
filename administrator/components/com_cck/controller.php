@@ -16,180 +16,6 @@ use Joomla\Utilities\ArrayHelper;
 class CCKController extends JControllerLegacy
 {
 	protected $default_view	=	'cck';
-	
-	// display
-	public function display( $cachable = false, $urlparams = false )
-	{
-		$app		=	JFactory::getApplication();
-		$id			=	$app->input->getInt( 'id' );
-		$layout		=	$app->input->get( 'layout', 'default' );
-		$view		=	$app->input->get( 'view', $this->default_view );
-		
-		// _setUIX
-		$this->_setUIX( $view, $layout );
-		
-		if ( !( $view == 'box' || $view == 'form' || $view == 'list' ) ) {
-			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
-			require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
-			
-			if ( !( $layout == 'edit' || $layout == 'edit2' ) ) {
-				if ( $view != $this->default_view ) {
-					Helper_Admin::addSubmenu( $this->default_view, $view );
-				}
-			}
-			
-			if ( ( $view == 'folder' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.folder', $id ) ) ||
-				 ( $view == 'type' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.type', $id ) ) ||
-				 ( $view == 'field' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.field', $id ) ) ||
-				 ( $view == 'search' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.search', $id ) ) ||
-				 ( $view == 'template' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.template', $id ) ) ||
-				 ( $view == 'site' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.site', $id ) ) ||
-				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ||
-				 ( $view == 'session' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.session', $id ) ) ) {
-				$this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
-				$this->setMessage( $this->getError(), 'error' );
-				$this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
-				
-				return false;
-			}
-		}
-		
-		parent::display();
-		
-		return $this;
-	}
-	
-	// ajax
-	public function ajax()
-    {
-    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		$app	=	JFactory::getApplication();
-		$file	=	$app->input->getString( 'file', '' );
-		$file	=	JPATH_SITE.'/'.$file;
-		
-		jimport('joomla.filesystem.file');
-		
-		if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
-			include_once $file;
-		}
-	}
-	
-	// addTypeAjax
-	public function addTypeAjax()
-    {
-    	JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		$app		=	JFactory::getApplication();
-		$client		=	$app->input->get( 'client', '' );
-		$fields		=	$app->input->getString( 'fields', '' );
-		$folder		=	$app->input->getInt( 'folder_id', 1 );
-		$title		=	$app->input->getString( 'title', '' );
-		$type_id	=	$app->input->getInt( 'type_id', 0 );
-
-		if ( !$title ) {
-			return;
-		}
-
-		// -- Type
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
-		
-		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		$style						=	Helper_Workshop::getDefaultStyle();
-		
-		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
-		$table->title				=	$title;
-        $table->folder				=	$folder;
-		$table->template_admin		=	$style->id;
-		$table->template_site		=	$style->id;
-		$table->template_content	=	$style->id;
-		$table->template_intro		=	$style->id;
-		$table->published			=	1;
-		$table->access				=	3;
-		$table->indexed				=	'intro';
-		$table->location			=	'none';
-		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
-		
-		if ( !$table->storage_location ) {
-			$table->storage_location	=	'';
-		}
-
-		$rules	=	array( 'core.create'=>array(),
-						   'core.create.max.parent'=>array( '8'=>"0" ),
-						   'core.create.max.parent.author'=>array( '8'=>"0" ),
-						   'core.create.max.author'=>array( '8'=>"0" ),
-						   'core.delete'=>array(),
-						   'core.delete.own'=>array(),
-						   'core.edit'=>array(),
-						   'core.edit.own'=>array() );
-		$rules	=	new JAccessRules( $rules );
-		$table->setRules( $rules );
-		$table->check();
-		
-		if ( $prefix ) {
-			$table->name			=	$prefix.'_'.$table->name;
-		}
-		
-		$table->store();
-		// --
-
-		// -- Field
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$table2						=	JTable::getInstance( 'Field', 'CCK_Table' );
-		$table2->title				=	$title;
-		$table2->name				=	$table->name;
-		$table2->folder				=	$folder;
-		$table2->type				=	'group';
-		$table2->published			=	1;
-		$table2->label				=	'clear';
-		$table2->display			=	3;
-		$table2->extended			=	$table->name;
-		$table2->rows				=	1;
-		$table2->storage			=	'none';
-		$table2->storage_field		=	$table->name;
-		$table2->check();
-		$table2->store();
-		// --
-
-		if ( $fields && $client && $type_id ) {
-			if ( $client == 'list' ) {
-				$client	=	'intro';
-				/* TODO#SEBLOD: */
-				return;
-			} else {
-				$query	=	'UPDATE #__cck_core_type_field'
-						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
-						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
-				JCckDatabase::execute( $query );
-			}
-		}
-
-		if ( is_object( $table2 ) ) {
-			echo $this->addFieldRowAjax( $table2, $client );
-		}
-	}
-
-	// saveIntegrationAjax
-	public function saveIntegrationAjax()
-	{
-		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		$app		=	JFactory::getApplication();
-		$json		=	$app->input->json->getRaw();
-		$objects	=	json_decode( $json );
-		
-		if ( count( $objects ) ) {
-			$query	=	'UPDATE #__cck_core_objects SET options = CASE name';
-			foreach ( $objects as $k=>$v ) {
-				$query	.=	' WHEN "'.$k.'" THEN "'.JCckDatabase::escape( json_encode( $v ) ).'"';
-				$in		.=	'"'.$k.'",';
-			}
-			$in		=	substr( $in, 0, -1 );
-			$query	.=	' ELSE options END WHERE name IN ('.$in.')';
-			JCckDatabase::execute( $query );
-		}
-	}
 
 	// addFieldRowAjax
 	public function addFieldRowAjax( $field = null, $client = '' )
@@ -290,50 +116,118 @@ class CCKController extends JControllerLegacy
 		}
 		echo JCckDev::toJSON( $json );
 	}
-	
-	// saveSessionAjax
-	public function saveSessionAjax()
-	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
-		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
-			return;
-		}
-		
-		$app	=	JFactory::getApplication();
-		$data	=	array( 'extension'=>$app->input->get( 'extension', '' ),
-						   'folder'=>$app->input->getInt( 'folder', 0 ),
-						   'type'=>$app->input->get( 'type', '' ),
-						   'options'=>$app->input->getString( 'data', '{}' ) );
-		
-		$table	=	JCckTable::getInstance( '#__cck_more_sessions' );
+	// addTypeAjax
+	public function addTypeAjax()
+    {
+    	JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
-		$table->bind( $data );
-		$table->store();
-
-		if ( !$table->title ) {
-			$table->title = 'Session'.$table->id;
-			$table->store();
-		}
-	}
-	
-	// deleteSessionAjax
-	public function deleteSessionAjax()
-	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-
-		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
-			return;
-		}
-		
 		$app		=	JFactory::getApplication();
-		$session_id	=	$app->input->getInt( 'sid', 0 );
-		$table		=	JCckTable::getInstance( '#__cck_more_sessions' );
+		$client		=	$app->input->get( 'client', '' );
+		$fields		=	$app->input->getString( 'fields', '' );
+		$folder		=	$app->input->getInt( 'folder_id', 1 );
+		$title		=	$app->input->getString( 'title', '' );
+		$type_id	=	$app->input->getInt( 'type_id', 0 );
 
-		$table->load( $session_id );
-		$table->delete();
+		if ( !$title ) {
+			return;
+		}
+
+		// -- Type
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
+		
+		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
+		$style						=	Helper_Workshop::getDefaultStyle();
+		
+		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
+		$table->title				=	$title;
+        $table->folder				=	$folder;
+		$table->template_admin		=	$style->id;
+		$table->template_site		=	$style->id;
+		$table->template_content	=	$style->id;
+		$table->template_intro		=	$style->id;
+		$table->published			=	1;
+		$table->access				=	3;
+		$table->indexed				=	'intro';
+		$table->location			=	'none';
+		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+		
+		if ( !$table->storage_location ) {
+			$table->storage_location	=	'';
+		}
+
+		$rules	=	array( 'core.create'=>array(),
+						   'core.create.max.parent'=>array( '8'=>"0" ),
+						   'core.create.max.parent.author'=>array( '8'=>"0" ),
+						   'core.create.max.author'=>array( '8'=>"0" ),
+						   'core.delete'=>array(),
+						   'core.delete.own'=>array(),
+						   'core.edit'=>array(),
+						   'core.edit.own'=>array() );
+		$rules	=	new JAccessRules( $rules );
+		$table->setRules( $rules );
+		$table->check();
+		
+		if ( $prefix ) {
+			$table->name			=	$prefix.'_'.$table->name;
+		}
+		
+		$table->store();
+		// --
+
+		// -- Field
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
+		$table2						=	JTable::getInstance( 'Field', 'CCK_Table' );
+		$table2->title				=	$title;
+		$table2->name				=	$table->name;
+		$table2->folder				=	$folder;
+		$table2->type				=	'group';
+		$table2->published			=	1;
+		$table2->label				=	'clear';
+		$table2->display			=	3;
+		$table2->extended			=	$table->name;
+		$table2->rows				=	1;
+		$table2->storage			=	'none';
+		$table2->storage_field		=	$table->name;
+		$table2->check();
+		$table2->store();
+		// --
+
+		if ( $fields && $client && $type_id ) {
+			if ( $client == 'list' ) {
+				$client	=	'intro';
+				/* TODO#SEBLOD: */
+				return;
+			} else {
+				$query	=	'UPDATE #__cck_core_type_field'
+						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
+				JCckDatabase::execute( $query );
+			}
+		}
+
+		if ( is_object( $table2 ) ) {
+			echo $this->addFieldRowAjax( $table2, $client );
+		}
 	}
 	
+	// ajax
+	public function ajax()
+    {
+    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		$app	=	JFactory::getApplication();
+		$file	=	$app->input->getString( 'file', '' );
+		$file	=	JPATH_SITE.'/'.$file;
+		
+		jimport('joomla.filesystem.file');
+		
+		if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
+			include_once $file;
+		}
+	}
+
 	// batchFolder
 	public function batchFolder()
 	{
@@ -359,6 +253,65 @@ class CCKController extends JControllerLegacy
 		}
 		
 		$this->setRedirect( 'index.php?option=com_cck&view='.$view , $msg, $type );
+	}
+	
+	// deleteSessionAjax
+	public function deleteSessionAjax()
+	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$session_id	=	$app->input->getInt( 'sid', 0 );
+		$table		=	JCckTable::getInstance( '#__cck_more_sessions' );
+
+		$table->load( $session_id );
+		$table->delete();
+	}
+
+	// display
+	public function display( $cachable = false, $urlparams = false )
+	{
+		$app		=	JFactory::getApplication();
+		$id			=	$app->input->getInt( 'id' );
+		$layout		=	$app->input->get( 'layout', 'default' );
+		$view		=	$app->input->get( 'view', $this->default_view );
+		
+		// _setUIX
+		$this->_setUIX( $view, $layout );
+		
+		if ( !( $view == 'box' || $view == 'form' || $view == 'list' ) ) {
+			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
+			require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
+			
+			if ( !( $layout == 'edit' || $layout == 'edit2' ) ) {
+				if ( $view != $this->default_view ) {
+					Helper_Admin::addSubmenu( $this->default_view, $view );
+				}
+			}
+			
+			if ( ( $view == 'folder' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.folder', $id ) ) ||
+				 ( $view == 'type' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.type', $id ) ) ||
+				 ( $view == 'field' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.field', $id ) ) ||
+				 ( $view == 'search' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.search', $id ) ) ||
+				 ( $view == 'template' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.template', $id ) ) ||
+				 ( $view == 'site' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.site', $id ) ) ||
+				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ||
+				 ( $view == 'session' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.session', $id ) ) ) {
+				$this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
+				$this->setMessage( $this->getError(), 'error' );
+				$this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
+				
+				return false;
+			}
+		}
+		
+		parent::display();
+		
+		return $this;
 	}
 	
 	// download
@@ -516,7 +469,28 @@ class CCKController extends JControllerLegacy
 			}
 		}
 	}
-	
+
+	// saveIntegrationAjax
+	public function saveIntegrationAjax()
+	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		$app		=	JFactory::getApplication();
+		$json		=	$app->input->json->getRaw();
+		$objects	=	json_decode( $json );
+		
+		if ( count( $objects ) ) {
+			$query	=	'UPDATE #__cck_core_objects SET options = CASE name';
+			foreach ( $objects as $k=>$v ) {
+				$query	.=	' WHEN "'.$k.'" THEN "'.JCckDatabase::escape( json_encode( $v ) ).'"';
+				$in		.=	'"'.$k.'",';
+			}
+			$in		=	substr( $in, 0, -1 );
+			$query	.=	' ELSE options END WHERE name IN ('.$in.')';
+			JCckDatabase::execute( $query );
+		}
+	}
+
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
@@ -543,8 +517,32 @@ class CCKController extends JControllerLegacy
 		// Close the application
 		$app->close();
 	}
+	
+	// saveSessionAjax
+	public function saveSessionAjax()
+	{
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- //
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
+			return;
+		}
+		
+		$app	=	JFactory::getApplication();
+		$data	=	array( 'extension'=>$app->input->get( 'extension', '' ),
+						   'folder'=>$app->input->getInt( 'folder', 0 ),
+						   'type'=>$app->input->get( 'type', '' ),
+						   'options'=>$app->input->getString( 'data', '{}' ) );
+		
+		$table	=	JCckTable::getInstance( '#__cck_more_sessions' );
+
+		$table->bind( $data );
+		$table->store();
+
+		if ( !$table->title ) {
+			$table->title = 'Session'.$table->id;
+			$table->store();
+		}
+	}
 	
 	// _setUIX
 	protected function _setUIX( $view, $layout )

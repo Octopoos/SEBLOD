@@ -20,6 +20,27 @@ class CCKControllerSearch extends CCK_ControllerForm
 	protected $text_prefix	=	'COM_CCK';
 	protected $view_list	=	'searchs';
 	
+	// add
+	public function add()
+	{
+		$app	=	JFactory::getApplication();
+
+		// Parent Method
+		$result	=	parent::add();
+
+		if ( $result instanceof Exception ) {
+			return $result;
+		}
+		
+		// Additional Vars
+		$app->setUserState( CCK_COM.'.add.search.content_type', $app->input->getString( 'content_type', '' ) );
+		$app->setUserState( CCK_COM.'.add.search.tpl_search', $app->input->getString( 'tpl_s', '' ) );
+		$app->setUserState( CCK_COM.'.add.search.tpl_filter', $app->input->getString( 'tpl_f', '' ) );
+		$app->setUserState( CCK_COM.'.add.search.tpl_list', $app->input->getString( 'tpl_l', '' ) );
+		$app->setUserState( CCK_COM.'.add.search.tpl_item', $app->input->getString( 'tpl_i', '' ) );
+		$app->setUserState( CCK_COM.'.add.search.skip', $app->input->getString( 'skip', '' ) );
+	}
+	
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
@@ -59,27 +80,6 @@ class CCKControllerSearch extends CCK_ControllerForm
 
 		// Component Permissions
 		return parent::allowEdit( $data, $key );
-	}
-	
-	// add
-	public function add()
-	{
-		$app	=	JFactory::getApplication();
-
-		// Parent Method
-		$result	=	parent::add();
-
-		if ( $result instanceof Exception ) {
-			return $result;
-		}
-		
-		// Additional Vars
-		$app->setUserState( CCK_COM.'.add.search.content_type', $app->input->getString( 'content_type', '' ) );
-		$app->setUserState( CCK_COM.'.add.search.tpl_search', $app->input->getString( 'tpl_s', '' ) );
-		$app->setUserState( CCK_COM.'.add.search.tpl_filter', $app->input->getString( 'tpl_f', '' ) );
-		$app->setUserState( CCK_COM.'.add.search.tpl_list', $app->input->getString( 'tpl_l', '' ) );
-		$app->setUserState( CCK_COM.'.add.search.tpl_item', $app->input->getString( 'tpl_i', '' ) );
-		$app->setUserState( CCK_COM.'.add.search.skip', $app->input->getString( 'skip', '' ) );
 	}
 	
 	// edit

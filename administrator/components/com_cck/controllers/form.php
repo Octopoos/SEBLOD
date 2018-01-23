@@ -26,25 +26,17 @@ class CCKControllerForm extends JControllerForm
 		$this->registerTask( 'save2new', 'save' );
 		$this->registerTask( 'save2view', 'save' );
 	}
-	
-	// saveAjax
-	public function saveAjax()
+
+	// cancel
+	public function cancel( $key = null )
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
-		$config		=	$this->save( null, null, true );
-		$return		=	array(
-							'error'=>0,
-							'id'=>@(int)$config['id'],
-							'isNew'=>@$config['isNew'],
-							'pk'=>$config['pk']
-						);
+		/* TODO#SEBLOD: checkin, etc.. */
 		
-		if ( !$return['pk'] ) {
-			$return['error']	=	1;
-		}
+		$link	=	$this->_getRedirectQuery( true );
 		
-		echo json_encode( $return );
+		$this->setRedirect( htmlspecialchars_decode( $link ) );
 	}
 
 	// save
@@ -121,17 +113,25 @@ class CCKControllerForm extends JControllerForm
 		
 		$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
 	}
-	
-	// cancel
-	public function cancel( $key = null )
+
+	// saveAjax
+	public function saveAjax()
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
-		/* TODO#SEBLOD: checkin, etc.. */
+		$config		=	$this->save( null, null, true );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@(int)$config['id'],
+							'isNew'=>@$config['isNew'],
+							'pk'=>$config['pk']
+						);
 		
-		$link	=	$this->_getRedirectQuery( true );
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
 		
-		$this->setRedirect( htmlspecialchars_decode( $link ) );
+		echo json_encode( $return );
 	}
 	
 	// _getPreconfig

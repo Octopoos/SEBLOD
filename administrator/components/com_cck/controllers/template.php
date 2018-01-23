@@ -19,6 +19,22 @@ class CCKControllerTemplate extends JControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
 
+	// add
+	public function add()
+	{
+		$app	=	JFactory::getApplication();
+
+		// Parent Method
+		$result	=	parent::add();
+
+		if ( $result instanceof Exception ) {
+			return $result;
+		}
+		
+		// Additional Vars
+		$app->setUserState( CCK_COM.'.edit.template.mode', $app->input->getString( 'mode', '' ) );
+	}
+
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
@@ -58,22 +74,6 @@ class CCKControllerTemplate extends JControllerForm
 
 		// Component Permissions
 		return parent::allowEdit( $data, $key );
-	}
-	
-	// add
-	public function add()
-	{
-		$app	=	JFactory::getApplication();
-
-		// Parent Method
-		$result	=	parent::add();
-
-		if ( $result instanceof Exception ) {
-			return $result;
-		}
-		
-		// Additional Vars
-		$app->setUserState( CCK_COM.'.edit.template.mode', $app->input->getString( 'mode', '' ) );
 	}
 
 	// exportVariation

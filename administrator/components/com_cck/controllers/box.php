@@ -16,13 +16,7 @@ jimport( 'joomla.application.component.controllerform' );
 class CCKControllerBox extends JControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
-	
-	// allowAdd
-	protected function allowAdd( $data = array() )
-	{
-		return true;
-	}
-	
+		
 	// add
 	public function add()
 	{
@@ -45,6 +39,12 @@ class CCKControllerBox extends JControllerForm
 		$app->setUserState( CCK_COM.'.add.box.bx.name', $app->input->get( 'name', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.type', $app->input->getString( 'type', '' ) );
 		$app->setUserState( CCK_COM.'.add.box.bx.params', $app->input->getString( 'params', '' ) );
+	}
+
+	// allowAdd
+	protected function allowAdd( $data = array() )
+	{
+		return true;
 	}
 
 	// save

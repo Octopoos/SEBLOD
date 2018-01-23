@@ -25,12 +25,6 @@ class CCKControllerTypes extends JControllerAdmin
 		parent::__construct( $config );
 	}
 	
-	// getModel
-	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		return parent::getModel( $name, $prefix, $config );
-	}
-	
 	// duplicate
 	public function duplicate()
 	{
@@ -51,6 +45,12 @@ class CCKControllerTypes extends JControllerAdmin
 		}
 		
 		$this->setRedirect( _C2_LINK, $msg, $type );
+	}
+
+	// getModel
+	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// version

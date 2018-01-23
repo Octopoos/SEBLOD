@@ -18,6 +18,26 @@ jimport( 'cck.joomla.application.component.controllerform' );
 class CCKControllerType extends CCK_ControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
+
+	// add
+	public function add()
+	{
+		$app	=	JFactory::getApplication();
+
+		// Parent Method
+		$result	=	parent::add();
+
+		if ( $result instanceof Exception ) {
+			return $result;
+		}
+		
+		// Additional Vars
+		$app->setUserState( CCK_COM.'.add.type.skeleton_id', $app->input->getString( 'skeleton_id', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_admin', $app->input->getString( 'tpl_a', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_site', $app->input->getString( 'tpl_s', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_content', $app->input->getString( 'tpl_c', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_intro', $app->input->getString( 'tpl_i', '' ) );
+	}
 	
 	// allowAdd
 	protected function allowAdd( $data = array() )
@@ -58,26 +78,6 @@ class CCKControllerType extends CCK_ControllerForm
 
 		// Component Permissions
 		return parent::allowEdit( $data, $key );
-	}
-	
-	// add
-	public function add()
-	{
-		$app	=	JFactory::getApplication();
-
-		// Parent Method
-		$result	=	parent::add();
-
-		if ( $result instanceof Exception ) {
-			return $result;
-		}
-		
-		// Additional Vars
-		$app->setUserState( CCK_COM.'.add.type.skeleton_id', $app->input->getString( 'skeleton_id', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_admin', $app->input->getString( 'tpl_a', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_site', $app->input->getString( 'tpl_s', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_content', $app->input->getString( 'tpl_c', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_intro', $app->input->getString( 'tpl_i', '' ) );
 	}
 	
 	// edit

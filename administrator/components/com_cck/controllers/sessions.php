@@ -25,12 +25,6 @@ class CCKControllerSessions extends JControllerAdmin
 		parent::__construct( $config );
 	}
 	
-	// getModel
-	public function getModel( $name = 'Session', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		return parent::getModel( $name, $prefix, $config );
-	}
-	
 	// delete
 	public function delete()
 	{
@@ -63,6 +57,12 @@ class CCKControllerSessions extends JControllerAdmin
 		}
 		
 		$this->setRedirect( JRoute::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
+	}
+
+	// getModel
+	public function getModel( $name = 'Session', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
 	}
 }
 ?>
