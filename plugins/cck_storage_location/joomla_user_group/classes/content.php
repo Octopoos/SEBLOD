@@ -16,7 +16,7 @@ class JCckContentJoomla_User_Group extends JCckContent
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'user', 'cck' );
+		JPluginHelper::importPlugin( 'user' );
 	}
 
 	// triggerDelete

@@ -19,7 +19,7 @@ class JCckContentJoomla_User extends JCckContent
 		$this->_instance_base	=	JUser::getInstance();
 
 		$fields					=	 array_keys( $this->_instance_base->getTable()->getFields() );
-		unset( $fields['id'], $fields['cck'] );
+		unset( $fields['id'], $fields['cck'] ); /* TODO#SEBLOD: remove "cck" column */
 		$this->_data_map		=	array_merge( $this->_data_map, array_fill_keys( $fields, 'base' ) );
 
 		return true;
@@ -28,7 +28,7 @@ class JCckContentJoomla_User extends JCckContent
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'user', 'cck' );
+		JPluginHelper::importPlugin( 'user' );
 	}
 
 	// check
