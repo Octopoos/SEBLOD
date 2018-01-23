@@ -41,11 +41,11 @@ class CCK_Import
 			} else {
 				return;
 			}
-			$root	=	$xml->{$type};
+			$root	=	$xml->$type;
 			
 			foreach ( $item as $k => $v ) {
-				if ( isset( $root->{$k} ) ) {
-					$item->$k	=	(string)$root->{$k};
+				if ( isset( $root->$k ) ) {
+					$item->$k	=	(string)$root->$k;
 				}
 			}
 			
@@ -81,11 +81,11 @@ class CCK_Import
 			return;
 		}
 		$item	=	JTable::getInstance( ucfirst( $elemtype ), 'CCK_Table' );
-		$root	=	$xml->{$elemtype};
+		$root	=	$xml->$elemtype;
 		
 		foreach ( $item as $k => $v ) {
-			if ( isset( $root->{$k} ) ) {
-				$item->$k	=	(string)$root->{$k};
+			if ( isset( $root->$k ) ) {
+				$item->$k	=	(string)$root->$k;
 			}
 		}
 		if ( ! ( isset( $item->name ) && $item->name != '' ) ) {
@@ -407,12 +407,12 @@ class CCK_Import
 					return;
 				}
 				
-				$root	=	$xml->{$elemtype};
+				$root	=	$xml->$elemtype;
 				$call	=	'beforeImport'.$elemtype;
 				$table	=	self::$call( $elemtype, $data );
 				foreach ( $table as $k => $v ) {
-					if ( isset( $root->{$k} ) ) {
-						$table->$k	=	(string)$root->{$k};
+					if ( isset( $root->$k ) ) {
+						$table->$k	=	(string)$root->$k;
 					}
 				}
 				$call	=	'afterImport'.$elemtype;

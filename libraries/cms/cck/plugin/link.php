@@ -164,10 +164,10 @@ class JCckPluginLink extends JPlugin
 			$pos						=	strpos( $target, 'safe' );
 			if ( $pos !== false && $pos == 0 ) {
 				$target					=	substr( $target, 4 );
-				$replace				=	$fields[$fieldname]->{$target};
+				$replace				=	$fields[$fieldname]->$target;
 				$replace				=	JCckDev::toSafeID( $replace );
 			} else {
-				$replace				=	urlencode( $fields[$fieldname]->{$target} );
+				$replace				=	urlencode( $fields[$fieldname]->$target );
 			}
 			$fields[$name]->link        =	str_replace( $process['matches'][0][$k], $replace, $fields[$name]->link );
 			if ( isset( $fields[$name]->form ) ) {

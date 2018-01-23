@@ -87,11 +87,9 @@ class Helper_Version
 				$style			=	json_decode( $style );
 			}
 
-			$data				=	array( 'fields'=>$fields, 'positions'=>$positions, 'template_style'=>$style );
-			$e_more[$i]			=	(string)( count( $fields ) );
-			$name				=	'e_more'.$i;
-			
-			$version->{$name}	=	JCckDev::toJSON( $data );
+			$data					=	array( 'fields'=>$fields, 'positions'=>$positions, 'template_style'=>$style );
+			$e_more[$i]				=	(string)( count( $fields ) );
+			$version->{'e_more'.$i}	=	JCckDev::toJSON( $data );
 		}
 		$version->e_more	=	JCckDev::toJSON( array( 'fields'=>$e_more ) );
 		// --

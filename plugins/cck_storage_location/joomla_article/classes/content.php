@@ -31,7 +31,7 @@ class JCckContentJoomla_Article extends JCckContent
 			$property	=	$this->_columns['parent'];
 			$test		=	JTable::getInstance( 'Content' );
 			
-			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->{$property} ) ) ) {
+			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->$property ) ) ) {
 				$alias	=	$this->_instance_base->alias.'-'.$i++;
 			}
 			$this->_instance_base->alias	=	$alias;

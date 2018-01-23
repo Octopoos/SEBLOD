@@ -134,28 +134,28 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 							$search			=	str_replace( array( "'", '$', ',', '>', '(', ')', '[', ']', '-' ), array( "\'", '\$', '\,', '\>', '\(', '\)', '\[', '\]', '-' ), $process['matches'][0][$k] );
 
 							if ( $fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]] ) {
-								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->{$target};
+								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->$target;
 							}
 							$fields[$fieldname[0]]->value[$fieldname[1]][$name]->typo	=	str_replace( $process['matches'][0][$k], $value, $fields[$fieldname[0]]->value[$fieldname[1]][$name]->typo );
 							$x[$idx]++;
 						} else {
 							if ( $fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]] ) {
-								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->{$target};
+								$value	=	$fields[$fieldname[0]]->value[$fieldname[1]][$fieldname[2]]->$target;
 							}
 						}
 					} else {
 						if ( $fields[$fieldname[0]]->value[$fieldname[1]] ) {
-							$value	=	$fields[$fieldname[0]]->value[$fieldname[1]]->{$target};
+							$value	=	$fields[$fieldname[0]]->value[$fieldname[1]]->$target;
 						}
 					}
 				} else {
 					$pos						=	strpos( $target, 'safe' );
 					if ( $pos !== false && $pos == 0 ) {
 						$target					=	substr( $target, 4 );
-						$value					=	$fields[$fieldname]->{$target};
+						$value					=	$fields[$fieldname]->$target;
 						$value					=	JCckDev::toSafeID( $value );
 					} else {
-						$value					=	$fields[$fieldname]->{$target};
+						$value					=	$fields[$fieldname]->$target;
 					}
 				}
 				if ( $idx != '' && $search != '' ) {

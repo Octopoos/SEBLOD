@@ -175,7 +175,7 @@ class CCKViewList extends JViewLegacy
 						$fieldname			=	$matches[2][$k];
 						$target				=	strtolower( $v );
 						if ( count( @$doc->list ) ) {
-							$this->description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->{$target}, $this->description );
+							$this->description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->$target, $this->description );
 						} else {
 							$this->description	=	str_replace( $matches[0][$k], '', $this->description );
 						}

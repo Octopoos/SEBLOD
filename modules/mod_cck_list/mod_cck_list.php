@@ -94,7 +94,7 @@ if ( $description != '' ) {
 				$fieldname		=	$matches[2][$k];
 				$target			=	strtolower( $v );
 				if ( count( @$doc->list ) ) {
-					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->{$target}, $description );
+					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->$target, $description );
 				} else {
 					$description	=	str_replace( $matches[0][$k], '', $description );
 				}

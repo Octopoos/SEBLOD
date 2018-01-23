@@ -112,8 +112,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 			$clients	=	array( 1=>'admin', 2=>'site', 3=>'intro', 4=>'content' );			
 		}
 		foreach ( $clients as $i=>$client ) {
-			$name				=	'e_more'.$i;
-			$this->_revert_more( $type, $client, $table->e_id, $table->{$name}, $core );
+			$this->_revert_more( $type, $client, $table->e_id, $table->{'e_more'.$i}, $core );
 		}
 
 		// Override
