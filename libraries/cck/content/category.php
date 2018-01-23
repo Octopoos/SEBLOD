@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
-// CCK_Category
+// CCK_Category (deprecated)
 class CCK_Category
 {
 	// getRow

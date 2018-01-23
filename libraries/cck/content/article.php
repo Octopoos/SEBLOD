@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
 
-// CCK_Article
+// CCK_Article (deprecated)
 class CCK_Article
 {	
 	// getRow
@@ -33,7 +33,7 @@ class CCK_Article
 	{
 		$res	=	'';
 		
-		$row	=	CCK_Article::getRow( $id );
+		$row	=	self::getRow( $id );
 		
 		if ( ! $row ) {
 			return false;
@@ -56,7 +56,7 @@ class CCK_Article
 	// getValue
 	public static function getValue( $id, $fieldname )
 	{
-		$text	=	CCK_Article::getText( $id );
+		$text	=	self::getText( $id );
 		
 		$res	=	CCK_Content::getValue( $text, $fieldname );
 		
@@ -66,7 +66,7 @@ class CCK_Article
 	// getValues
 	public static function getValues( $id, $fieldnames = '' )
 	{		
-		$text	=	CCK_Article::getText( $id );
+		$text	=	self::getText( $id );
 		
 		$res	=	CCK_Content::getValues( $text, $fieldnames );
 		
@@ -76,7 +76,7 @@ class CCK_Article
 	// setRow_Value
 	public static function setRow_Value( $id, $fieldname,	$value )
 	{
-		$row	=	CCK_Article::getRow( $id );
+		$row	=	self::getRow( $id );
 		
 		if ( ! $row ) {
 			return false;
@@ -94,7 +94,7 @@ class CCK_Article
 	// setValue
 	public static function setValue( $id, $fieldname, $value, $old_value = '' )
 	{
-		$row	=	CCK_Article::getRow( $id );
+		$row	=	self::getRow( $id );
 		
 		if ( ! $row ) {
 			return false;
@@ -113,7 +113,7 @@ class CCK_Article
 	// setValues
 	public static function setValues( $id, $fieldnames, $values, $old_values = '' )
 	{
-		$row	=	CCK_Article::getRow( $id );
+		$row	=	self::getRow( $id );
 		
 		if ( ! $row ) {
 			return false;

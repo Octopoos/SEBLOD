@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-// CCK_Content
+// CCK_Content (deprecated)
 class CCK_Content
 {
 	// getRegex
@@ -56,7 +56,7 @@ class CCK_Content
 	// getText
 	public static function getText( $text )
 	{
-		$regex	=	CCK_Content::getRegex();
+		$regex	=	self::getRegex();
 		preg_match_all( $regex, $text, $res );
 		
 		return $res;
@@ -67,7 +67,7 @@ class CCK_Content
 	{
 		$res	=	'';
 		
-		$regex	=	CCK_Content::getRegex_Field( $fieldname );
+		$regex	=	self::getRegex_Field( $fieldname );
 		preg_match( $regex, $text, $matches );
 		
 		if ( count( $matches ) ) {
@@ -84,7 +84,7 @@ class CCK_Content
 		
 		/* TODO#SEBLOD: if $fieldnames */
 		
-		$regex	=	CCK_Content::getRegex();
+		$regex	=	self::getRegex();
 		preg_match_all( $regex, $text, $matches );
 		
 		if ( count( $matches[1] ) ) {
@@ -124,16 +124,16 @@ class CCK_Content
 		$search	=	'';
 		
 		if ( $old_value ) {
-			$search	=	CCK_Content::getSyntax( $fieldname, $old_value );
+			$search	=	self::getSyntax( $fieldname, $old_value );
 		} else {
-			$regex	=	CCK_Content::getRegex_Field( $fieldname );
+			$regex	=	self::getRegex_Field( $fieldname );
 			preg_match( $regex, $text, $matches );
 			if ( count( $matches ) ) {
 				$search	=	$matches[0];
 			}
 		}
 		if ( $search ) {
-			$replace	=	CCK_Content::getSyntax( $fieldname, $value );
+			$replace	=	self::getSyntax( $fieldname, $value );
 			if ( strpos( $text, $search ) !== false ) {
 				$res	=	str_replace( $search, $replace, $text );
 			}
@@ -153,13 +153,13 @@ class CCK_Content
 		if ( is_array( $old_values ) ) {
 			if ( ( $n_fieldnames == $n_values ) && ( $n_fieldnames == $n_old_values ) ) {
 				for ( $i = 0 ; $i < $n_fieldnames; $i++ ) {
-					$res	=	CCK_Content::setValue( $res, $fieldnames[$i], $values[$i], $old_values[$i] );
+					$res	=	self::setValue( $res, $fieldnames[$i], $values[$i], $old_values[$i] );
 				}
 			}
 		} else {
 			if ( $n_fieldnames == $n_values ) {
 				for ( $i = 0; $i < $n_fieldnames; $i++ ) {
-					$res	=	CCK_Content::setValue( $res, $fieldnames[$i], $values[$i], $old_values );
+					$res	=	self::setValue( $res, $fieldnames[$i], $values[$i], $old_values );
 				}
 			}
 		}		
