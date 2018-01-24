@@ -368,6 +368,8 @@ abstract class JCckDevHelper
 		}
 		if ( $str != '' && strpos( $str, '$context->' ) !== false ) {
 			if ( strpos( $str, '$context->getType()' ) !== false ) {
+				$type		=	'';
+				
 				if ( isset( $config['client'], $config['type'] ) && !( $config['client'] == 'search' || $config['client'] == 'order' ) ) {
 					$type	=	$config['type'];
 				}
@@ -378,10 +380,12 @@ abstract class JCckDevHelper
 				$str		=	str_replace( '$context->getType()', $type, $str );
 			}
 			if ( strpos( $str, '$context->getAuthor()' ) !== false ) {
+				$author		=	'0';
+
 				if ( isset( $config['client'], $config['type'] ) && !( $config['client'] == 'search' || $config['client'] == 'order' ) ) {
 					$author	=	$config['author'];
 				}
-				if ( !$type ) {
+				if ( !$author ) {
 					$author	=	JFactory::getUser()->id;
 				}
 
