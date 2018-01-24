@@ -51,7 +51,7 @@ JCckDev::initScript( 'typo', $this->item );
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#class').isVisibleWhen('type','activation,block,featured,state');
-	$('#class1').isVisibleWhen('type','dropdown');
+	$('#class1').isVisibleWhen('type','dropdown,selection');
 	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden');
 	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,increment');
 	$('#task').isVisibleWhen('type','sort');

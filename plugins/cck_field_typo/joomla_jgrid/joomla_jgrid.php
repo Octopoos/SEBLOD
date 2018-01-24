@@ -199,12 +199,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !$formId ) {
 					$formId	=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 				}
+				$class		=	$typo->get( 'class1', '' );
+				$class		=	$class ? ' class="' . $class . '"' : '';
 				$value		=	JHtml::_( 'grid.id', $pks[$pk], $value );
 				$value		=	str_replace( ' />', ' data-cck-remove-before-search="" />', $value );
 				if ( $typo->get( 'trigger' ) ) {
-					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"', $value );
+					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"' . $class, $value );
 				} else {					
-					$value	=	str_replace( 'this.checked', 'this.checked, document.getElementById(\''.$formId.'\')', $value );
+					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\'));"' . $class, $value );
 				}
 
 				$config['formWrapper']	=	true;
