@@ -5,7 +5,6 @@ ALTER TABLE `#__cck_core_searchs` ADD `sef_route_aliases` TINYINT(3) NOT NULL DE
 
 UPDATE `#__cck_core_types` SET `parent_inherit`=1 WHERE `parent` != "";
 
-UPDATE `#__cck_core_fields` SET `options` = 'Date=DATE||Datetime=DATETIME||Decimal 10 2=DECIMAL(10,2)||Decimal 10 3=DECIMAL(10,3)||Decimal 10 4=DECIMAL(10,4)||Decimal 10 8=DECIMAL(10,8)||Decimal 11 8=DECIMAL(11,8)||Int 11=INT(11)||Varchar 7=VARCHAR(7)||Varchar 50=VARCHAR(50)||Varchar 255=VARCHAR(255)||Varchar 512=VARCHAR(512)||Varchar 1024=VARCHAR(1024)||Varchar 2048=VARCHAR(2048)||Text=TEXT||Timestamp=TIMESTAMP||Tinyint 3=TINYINT(3)' WHERE `id` = 76;
 UPDATE `#__cck_core_fields` SET `options` = 'Allowed=||Allowed Hidden=hidden||Not Allowed=none||location=optgroup||Administrator Only=admin||Site Only=site' WHERE `id` = 276;
 UPDATE `#__cck_core_fields` SET `options` = 'No=0||Yes=optgroup||Yes for Everyone=1||Yes for Super Admin=2||Config No Search=optgroup||Yes for Everyone=-1||Yes for Super Admin=-2' WHERE `id` = 174;
 
