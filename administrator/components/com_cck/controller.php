@@ -260,7 +260,7 @@ class CCKController extends JControllerLegacy
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
-		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) { // TODO#SEBLOD change to ->authorise( 'core.admin', 'com_cck' ) ??
 			return;
 		}
 		
@@ -523,7 +523,7 @@ class CCKController extends JControllerLegacy
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
-		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) {
+		if ( !JFactory::getUser()->authorise( 'core.admin' ) ) { // TODO#SEBLOD change to ->authorise( 'core.admin', 'com_cck' ) ??
 			return;
 		}
 		
