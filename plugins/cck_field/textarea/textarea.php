@@ -202,39 +202,37 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	// _br2nl
 	protected static function _br2nl( $text )
 	{
-		return  preg_replace( '/\<br(\s*)?\/?\>/i', "\n", $text );
+		return preg_replace( '/\<br(\s*)?\/?\>/i', "\n", $text );
 	}
 
 	// _bn2br
 	protected static function _bn2br( $text )
 	{
-		return  preg_replace( '/\\n/i', "<br />", $text );
+		return preg_replace( '/\\n/i', "<br />", $text );
 	}
 
 	// _p2nl
 	protected static function _p2nl( $text )
 	{
-		return  preg_replace( '/\<p\>\<\/p\>/i', "\n", $text );
+		return preg_replace( '/\<p\>\<\/p\>/i', "\n", $text );
 	}
 
 	// _bn2p
 	protected static function _bn2p( $text )
 	{
-		$text	=	'<p>'.$text.'</p>';
-		return  preg_replace( '/\\n/i', "</p><p>", $text );
+		return preg_replace( '/\\n/i', "</p><p>", '<p>'.$text.'</p>' );
 	}
 
 	// _bn2p_br
 	protected static function _bn2br_in_p( $text )
 	{
-		$text	=	'<p>'.$text.'</p>';
-		return  preg_replace( '/\\n/i', "<br />", $text );
+		return preg_replace( '/\\n/i', "<br />", '<p>'.$text.'</p>' );
 	}
 
 	// _bn2clear
 	protected static function _bn2clear( $text )
 	{
-		return	preg_replace( '/\\n\\r/i', '', $text );
+		return preg_replace( '/\\n\\r/i', '', $text );
 	}
 }
 ?>
