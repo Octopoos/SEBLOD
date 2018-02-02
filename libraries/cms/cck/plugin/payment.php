@@ -60,6 +60,7 @@ class JCckPluginPayment extends JPlugin
 			$processing =   JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 			if ( isset( $processing[$event] ) ) {
+				ob_start();
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
 						$options	=	new JRegistry( $p->options );
@@ -67,6 +68,7 @@ class JCckPluginPayment extends JPlugin
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}
+				ob_end_clean();
 			}
 		}
 	}
