@@ -125,6 +125,50 @@ abstract class JCckDevHelper
 		
 		return( $items );
 	}
+
+	// getCountryName
+	public static function getCountryName( $code2 )
+	{
+		static $items = null;
+
+		$code2	=	strtoupper( $code2 );
+
+		if ( !is_array( $items ) ) {
+			$lang	=	JFactory::getLanguage();
+			$code	=	'en';
+			$codes	=	array(
+							'de'=>'',
+							'en'=>'',
+							'es'=>'',
+							'fr'=>'',
+							'it'=>'',
+							'ru'=>'',
+							'uk'=>''
+						);
+
+			jimport( 'joomla.language.helper' );
+			$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+			$lang_tag	=	JFactory::getLanguage()->getTag();
+			$lang_code	=	( isset( $languages[$lang_tag] ) ) ? strtoupper( $languages[$lang_tag]->sef ) : '';
+			$lang_code	=	strtolower( $lang_code );
+
+			if ( isset( $codes[$lang_code] ) ) {
+				$code	=	$lang_code;
+			}
+
+			$items	=	JCckDatabase::loadObjectList( 'SELECT name_'.$code.' AS name, code2 FROM #__cck_more_countries', 'code2' );
+
+			if ( !is_array( $items ) ) {
+				$items	=	array();
+			}
+		}
+
+		if ( isset( $items[$code2] ) ) {
+			return $items[$code2]->name;
+		}
+
+		return ucfirst( $code2 );
+	}
 	
 	// getPermalink()
 	public static function getPermalink( $types = 'canonical', $object = 'joomla_article' )
