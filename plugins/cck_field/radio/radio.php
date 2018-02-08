@@ -160,15 +160,16 @@ class plgCCK_FieldRadio extends JCckPluginField
 		if ( strpos( $field->css, 'btn-group' ) !== false ) {
 			$class		=	'radios radio'.$orientation . ( $field->css ? ' '.$field->css : '' );
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-			$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
+			$form_open	=	'<fieldset id="'.$id.'" '.$attr.'>';
 			$attr		=	'class="'.$validate.'" size="1"';
 		} else {
 			$class		=	'radios'.$orientation . ( $field->css ? ' '.$field->css : '' );
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-			$form		=	'<fieldset id="'.$id.'" '.$attr.'>';
+			$form_open	=	'<fieldset id="'.$id.'" '.$attr.'>';
 			$attr		=	'class="radio'.$validate.'" size="1"';
 		}
 		$attr_key		=	'data-cck';
+		$form			=	'';
 
 		static $indexes	=	array();
 
@@ -206,7 +207,10 @@ class plgCCK_FieldRadio extends JCckPluginField
 				$indexes[$name]++;
 			}
 		}
-		$form	.=	'</fieldset>';
+
+		if ( $form != '' ) {
+			$form	=	$form_open.$form.'</fieldset>';
+		}
 		
 		// Set
 		if ( ! $field->variation ) {

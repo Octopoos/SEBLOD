@@ -246,8 +246,11 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
 		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
-		
+
+		if ( $form != '' ) {
+			$form	=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
+		}
+
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
