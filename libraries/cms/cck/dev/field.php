@@ -209,9 +209,14 @@ abstract class JCckDevField
 			$event	=	$context[0];
 			$pk		=	$context[1];
 		} elseif ( is_numeric( $context ) ) {
+			$event	=	'afterStore';
 			$pk		=	$context;
 		} else {
 			$event	=	$context;
+
+			if ( isset( $config['pk'] ) && $config['pk'] ) {
+				$pk	=	$config['pk'];
+			}
 		}
 
 		if ( isset( $fields[$name] ) ) {
