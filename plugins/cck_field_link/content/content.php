@@ -100,7 +100,13 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			$location	=	'joomla_article';
 
 			foreach ( $field->value as $f ) {
-				$f->link			=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $f->value, $sef, $itemId, $config ) );
+				if ( $content == '-2' ) {
+					$f->link		=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $f->value, $sef, $itemId, $config ) );
+				} elseif ( $content != '2' ) {
+					$f->link		=	( $config['location'] ) ? JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteByStorage', array( &$config['storages'], $sef, $itemId, $config, $lang_tag ) ) : '';
+				} else {
+					$f->link		=	'';
+				}
 
 				$f->link_attributes	=	$link_attr ? $link_attr : ( isset( $f->link_attributes ) ? $f->link_attributes : '' );
 				$f->link_class		=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
