@@ -28,6 +28,9 @@
 		<fields name="params" addfieldpath="/libraries/cck/construction/field">
 			<fieldset name="basic">
 				<field name="type" type="cck" construction="core_content_type" id="jform_trigger_type" class="inputbox" required="true" label="MOD_CCK_FORM_CONFIG_TYPE" description="MOD_CCK_FORM_CONFIG_TYPE_DESC" />
+				<field name="menu_item"	type="menuitem"	label="MOD_CCK_FORM_CONFIG_MENU_ITEM" description="MOD_CCK_FORM_CONFIG_MENU_ITEM_DESC" class="inputbox">
+					<option value="">COM_CCK_INHERITED</option>
+				</field>
 			</fieldset>
 			<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="MOD_CCK_FORM_CONFIG_LIVE_DESC">
 				<field name="live" type="cckhidden" label="" description="" />

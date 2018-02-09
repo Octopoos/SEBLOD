@@ -23,6 +23,7 @@ $app	=	JFactory::getApplication();
 $data	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
+$itemId	=	(int)$params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) );
 
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
