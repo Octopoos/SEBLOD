@@ -571,8 +571,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( ( $activation < 2 ) && ( $admin_emails == 1 ) ) {
 			$subject	=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 			$body 		=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_NOTIFICATION_TO_ADMIN_BODY', $data['name'], $data['username'], $data['siteurl'] );
-			
 			$rows		=	JCckDatabase::loadObjectList( 'SELECT name, email, sendEmail FROM #__users WHERE sendEmail = 1' );
+			
 			if ( count( $rows ) ) {
 				foreach ( $rows as $row ) {
 					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
