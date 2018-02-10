@@ -302,7 +302,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			if ( strpos( $fields[$name]->typo, $fields[$name]->$target ) === false ) {
 				$fields[$name]->typo	=	$html;
 			} else {
-				$fields[$name]->typo	=	str_replace( $fields[$name]->$target, $html, $fields[$name]->typo );
+				$fields[$name]->typo	=	str_replace( $fields[$name]->$target, $fields[$name]->typo, $html );
 			}
 		}
 		if ( isset( $process['matches'] ) && count( $process['matches'][1] ) ) {
