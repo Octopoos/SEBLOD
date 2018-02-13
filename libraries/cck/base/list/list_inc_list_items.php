@@ -69,6 +69,7 @@ if ( $count ) {
 		if ( $count2 ) {
 			$config		=	array(
 								'author'=>$items[$i]->author,
+								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
 								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
@@ -220,6 +221,7 @@ if ( $count ) {
 		if ( $count3 ) {
 			$config		=	array(
 								'author'=>$items[$i]->author,
+								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
 								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),

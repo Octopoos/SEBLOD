@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $app		=	JFactory::getApplication();
-$author		=	0;
+$author		=	null;
 $client		=	$preconfig['client'];
 $context	=	'';
 $lang   	=	JFactory::getLanguage();
@@ -72,7 +72,7 @@ JPluginHelper::importPlugin( 'cck_field_restriction' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
 
 if ( !$isNew ) {
-	$author	=	JCckDatabase::loadResult( 'SELECT author_id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
+	$author	=	JCckDatabase::loadObject( 'SELECT author_id AS id, author_session AS session FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 }
 $dispatcher	=	JEventDispatcher::getInstance();
 $integrity	=	array();
@@ -81,7 +81,8 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
-$config		=	array( 'author'=>$author,
+$config		=	array( 'author'=>( is_object( $author ) ? $author->id : 0 ),
+					   'author_session'=>( is_object( $author ) ? $author->session : '' ),
 					   'client'=>$client,
 					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
@@ -122,7 +123,11 @@ $cannot	=	CCK_Form::getNoAccessParams( $options );
 if ( $can === false ) {	
 	CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 }
-if ( ! $can['do'] ) {
+if ( $can['guest.edit'] ) {
+	if ( !$can['edit.own'] ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+	}
+} elseif ( ! $can['do'] ) {
 	if ( $config['isNew'] ) {
 		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}

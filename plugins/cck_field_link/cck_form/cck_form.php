@@ -83,12 +83,18 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			}
 			$user 				=	JCck::getUser();
 			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
-			// if ( $user->id && !$user->guest ) {
-				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
-			// } else {
-			//	$canEditOwn		=	false; /* TODO#SEBLOD: guest */
-			// }
 			$canEditOwnContent	=	'';
+
+			if ( $user->id && !$user->guest ) {
+				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+			} else {
+				$canEditOwn		=	false;
+
+				if ( $config['author_session'] ) {
+					$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+					$session_id		=	$config['author_session'];
+				}
+			}
 
 			// canEditOwnContent
 			jimport( 'cck.joomla.access.access' );
@@ -133,6 +139,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			if ( !( $canEdit && $canEditOwn
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
+				|| ( $canEditOwn && ( isset( $session_id ) && $session_id == JFactory::getSession()->getId() ) )
 				|| ( $canEditOwnContent ) ) ) {
 				if ( !$link->get( 'no_access', 0 ) ) {
 					$field->display	=	0;

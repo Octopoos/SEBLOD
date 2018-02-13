@@ -110,12 +110,24 @@ class CCK_Form
 						'do'=>false,
 						'edit.own'=>false,
 						'edit.own.content'=>false,
+						'guest.edit'=>false
 					);
 		$user	=	JFactory::getUser();
 
 		if ( !$config['isNew'] ) {
-			$can['do']			=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
-			$can['edit.own']	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+			$can['do']	=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
+
+			if ( $user->id && !$user->guest ) {	
+				$can['edit.own']	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+			} else {
+				$can['edit.own']	=	false;
+
+				if ( $config['author_session']
+				  && $config['author_session'] == JFactory::getSession()->getId() ) {
+					$can['edit.own']	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
+					$can['guest.edit']	=	true;
+				}
+			}
 			
 			// canEditOwnContent
 			jimport( 'cck.joomla.access.access' );
