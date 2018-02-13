@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core` (
   `storage_location` varchar(50) NOT NULL,
   `storage_table` varchar(100) NOT NULL,
   `author_id` int(10) unsigned NOT NULL,
+  `author_session` varchar(191) NOT NULL,
   `parent_id` int(10) unsigned NOT NULL,
   `store_id` int(10) unsigned NOT NULL,
   `download_hits` int(10) unsigned NOT NULL,
