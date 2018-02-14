@@ -322,6 +322,14 @@ class JCckPluginLocation extends JPlugin
 				$core->pk				=	$pk;
 				$core->storage_location	=	( isset( $location['_']->location ) ) ? $location['_']->location : JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
 				$core->author_id		=	$config['author'];
+				$user					=	JFactory::getUser();
+
+				if ( !( $user->id && !$user->guest ) ) {
+					if ( $user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] ) ) {
+						$core->author_session	=	JFactory::getSession()->getId();
+					}
+				}
+
 				$core->parent_id		=	$config['parent'];
 				if ( isset( $config['storages']['#__cck_core']['store_id'] ) ) {
 					$core->store_id		=	$config['storages']['#__cck_core']['store_id'];
@@ -496,7 +504,7 @@ class JCckPluginLocation extends JPlugin
 			$bridge->description	=	'::cck::'.$config['id'].'::/cck::'.$bridge->description;
 			
 			if ( !$core->pkb ) {
-				// setLocation, etc..				
+				/* TODO#SEBLOD: setLocation, etc... */
 			}
 			$bridge->check();
 			$bridge->extension		=	'com_content';
@@ -532,6 +540,7 @@ class JCckPluginLocation extends JPlugin
 			
 			$core->pkb	=	( $bridge->id > 0 ) ? $bridge->id : 0;
 			$core->cck	=	$config['type'];
+			
 			if ( ! $core->pk ) {
 				$core->author_id	=	$config['author'];
 				$core->date_time	=	JFactory::getDate()->toSql();
@@ -541,6 +550,8 @@ class JCckPluginLocation extends JPlugin
 			$core->author_id		=	$config['author'];
 			$core->parent_id		=	$config['parent'];
 			$core->storeIt();
+
+			/* TODO#SEBLOD: author_session @bridge */
 			
 			$dispatcher->trigger( 'onContentAfterSave', array( 'com_categories.category', &$bridge, $isNew ) );
 		} else {
