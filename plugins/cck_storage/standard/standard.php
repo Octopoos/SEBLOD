@@ -103,6 +103,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		switch ( $match ) {
 			case 'exact':
 				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+				
 				if ( !$var_type ) {
 					$sql	=	$target.' = '.JCckDatabase::clean( $value );
 				} else {
@@ -121,6 +122,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'any':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
 					foreach ( $values as $v ) {
@@ -136,10 +138,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'any_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
 					$var_mode	=	( $field->match_options ) ? $field->match_options->get( 'var_mode', '0' ) : '0';
 					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+
 					if ( $var_mode == '1' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
@@ -177,9 +181,11 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
 				$count		=	count( $values );
+				
 				if ( $count ) {
 					$fragments	=	array();
 					$var_count	=	( $field->match_options ) ? $field->match_options->get( 'var_count', '' ) : '';
+					
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
@@ -240,6 +246,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
 				$column		=	'id';
 				$values		=	JCckDevHelper::getBranch( $table, $value );
+				
 				if ( $column != 'id' ) {
 					if ( count( $values ) ) {
 						$fragments	=	array();
@@ -279,9 +286,11 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'not_any_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
 					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+					
 					if ( !$var_type ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
@@ -336,6 +345,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$lng		=	( isset( $fields[$f_lng] ) ) ? $fields[$f_lng]->value : '';
 				$s_lat		=	( isset( $fields[$f_lat]->storage_field ) && $fields[$f_lat]->storage_field ) ? $fields[$f_lat]->storage_field : $f_lat;
 				$s_lng		=	( isset( $fields[$f_lng]->storage_field ) && $fields[$f_lng]->storage_field ) ? $fields[$f_lng]->storage_field : $f_lng;
+				
 				if ( $lat != '' && $lng != '' ) {
 					$alias		=	'distance';
 					$mod		=	( $field->match_options->get( 'var_unit', '1' ) ) ? '' : '*1.609344';
