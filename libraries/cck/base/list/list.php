@@ -310,7 +310,7 @@ class CCK_List
 	public static function getSearch( $name, $id, $location = '' )
 	{
 		/* TODO#SEBLOD: API (move) */
-		$query	=	'SELECT a.id, a.title, a.name, a.alias, a.description, a.access, a.content, a.location, a.storage_location, a.stylesheets, b.app as folder_app,'
+		$query	=	'SELECT a.id, a.title, a.name, a.alias, a.description, a.access, a.content, a.location, a.storage_location, a.stylesheets, a.sef_route_aliases, b.app as folder_app,'
 				.	' a.options, a.template_search, a.template_filter, a.template_list, a.template_item'
 				.	' FROM #__cck_core_searchs AS a'
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
@@ -360,6 +360,7 @@ class CCK_List
 						'isCore'=>$config_list['doQuery'],
 						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
 						'location'=>$config_list['location'],
+						'sef_aliases'=>$config_list['sef_aliases']
 					);
 		
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';

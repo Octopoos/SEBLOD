@@ -156,11 +156,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				if ( JCckDevHelper::isMultilingual() ) {
 					$lang			=	JFactory::getLanguage();
 					$lang_tag		=	JFactory::getLanguage()->getTag();
-					$sef_aliases	=	1; /* TODO#SEBLOD: */
 
-					if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+					if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() != $lang->getDefault() ) ) {
 						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-						$lang_sef	=	isset( $languages[$lang_tag] ) ? strtoupper( $languages[$lang_tag]->sef ) : substr( $lang_tag, 0, 2 );
+						$lang_sef	=	isset( $languages[$lang_tag] ) ? strtolower( $languages[$lang_tag]->sef ) : substr( $lang_tag, 0, 2 );
 						
 						$sef_slug	=	true;
 						$select		.=	', f.alias_'.$lang_sef.' AS alias_slug';
@@ -176,7 +175,16 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 				$query		.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
 
-				$storages[$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
+				try {
+					$storages[$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
+				} catch ( Exception $e ) {
+					if ( $sef_slug && strpos( $e->getMessage(), 'Unknown column' ) !== false ) {
+						throw new Exception( JText::sprintf( 'COM_CCK_SEF_ALIASES_EXCEPTION', 'alias_'.$lang_sef, '#__cck_store_item_categories' ), 500 );
+					}
+
+					$config['error']	=	true;
+					$storages[$table]	=	array();
+				}
 
 				foreach ( $storages[self::$table] as $s ) {
 					if ( $sef_slug && $s->alias_slug ) {
@@ -197,7 +205,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					}
 				}
 			}
+		} elseif ( empty( $config['storages'] ) ) {
+			$config['error']	=	true;
 		}
+		
+		if ( $config['error'] ) {
+			return;
+		}
+
 		$config['author']	=	(int)$storages[self::$table][$config['pk']]->{self::$author};
 	}
 	
@@ -433,9 +448,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					if ( JCckDevHelper::isMultilingual() ) {
 						$lang			=	JFactory::getLanguage();
 						$lang_tag		=	JFactory::getLanguage()->getTag();
-						$sef_aliases	=	1; /* TODO#SEBLOD: */
 
-						if ( $sef_aliases == 2 || ( $sef_aliases == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+						if ( self::$sef_aliases == 2 || ( self::$sef_aliases == 1 && $lang->getTag() != $lang->getDefault() ) ) {
 							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
 							$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
 							
@@ -694,7 +708,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( isset( $storage[self::$table]->_route[$idx] ) ) {
 			return JRoute::_( $storage[self::$table]->_route[$idx], false );
 		}
-		
+		if ( !is_object( $storage[self::$table] ) ) {
+			return '';
+		}
+
 		if ( $sef ) {
 			if ( $sef == '0' || $sef == '1' ) {
 				$path	=	'&catid='.$storage[self::$table]->catid;
@@ -743,7 +760,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$lang		=	JFactory::getLanguage();
 			$lang_tag	=	JFactory::getLanguage()->getTag();
 
-			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() == $lang->getDefault() ) ) {
+			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() != $lang->getDefault() ) ) {
+				self::$sef_aliases	=	$config['sef_aliases'];
+
 				$isMultiAlias	=	true;
 				$languages		=	JLanguageHelper::getLanguages( 'lang_code' );
 				$lang_sef		=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );

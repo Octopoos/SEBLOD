@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class JCckPluginLocation extends JPlugin
 {
 	protected static $construction	=	'cck_storage_location';
+	protected static $sef_aliases	=	0;
 
 	// __construct
 	public function __construct( &$subject, $config = array() )

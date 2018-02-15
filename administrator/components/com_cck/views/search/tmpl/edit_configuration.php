@@ -45,7 +45,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->sef_route, $config, array( 'label'=>'SEF Helper', 'storage_field'=>'sef_route' ) );
             echo JCckDev::renderForm( $cck['core_sef_canonical'], @$options['sef_canonical'], $config );
-            echo JCckDev::renderForm( 'core_dev_bool', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'defaultvalue'=>'0', 'storage_field'=>'sef_route_aliases' ) );
+            echo JCckDev::renderForm( 'core_dev_bool', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=optgroup||All languages=2||All languages but default=1', 'storage_field'=>'sef_route_aliases' ) );
             ?>
         </ul>
     </div>
