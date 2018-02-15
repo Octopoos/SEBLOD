@@ -20,6 +20,7 @@ abstract class JCckEcommerce
 	public static $promotions	=	null;
 	public static $rules		=	null;
 	public static $taxes		=	null;
+	public static $zones		=	null;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 	
@@ -179,7 +180,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$pay_key] ) ) {
-			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.info_billing'
+			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.stickers, a.info_billing, a.info_shipping'
 															. ' FROM #__cck_more_ecommerce_orders AS a'
 															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
 															. ' WHERE a.pay_key = "'.$pay_key.'"' );
@@ -462,15 +463,41 @@ abstract class JCckEcommerce
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Taxes
 
 	// getUserZones
-	public static function getUserZones()
+	public static function getUserZones( $context = 'billing' )
 	{
+		$app	=	JFactory::getApplication();
 		$user	=	JCck::getUser();
 		$zones	=	array();
+		
+		$country	=	'';
+		$source		=	'user';
+		
+		if ( isset( $user->country ) && $user->country ) {
+			$country	=	$user->country;
+		}
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form'
+		 &&  $pk = $app->input->getInt( 'id' ) ) {
+			$type	=	JCckEcommerce::getConfig_Param( 'integration_order', '' );
 
-		if ( !( isset( $user->country ) && $user->country != '' ) ) {
+			if ( $type && $app->input->get( 'type' ) == $type ) {
+				$order	=	JCckDatabaseCache::loadObject( 'SELECT info_billing, info_shipping FROM #__cck_more_ecommerce_orders WHERE id = '.(int)$pk );
+
+				if ( is_object( $order ) ) {
+					$order	=	json_decode( $order->{'info_'.$context} );
+
+					if ( $order->country ) {
+						$country	=	$order->country;
+						$source		=	'order';
+					}
+				}
+			}
+		}
+		
+		if ( !$country ) {
 			return $zones;
 		}
-		$where	=	'countries = "'.$user->country.'" OR countries LIKE "'.$user->country.'||%" OR countries LIKE "%||'.$user->country.'" OR countries LIKE "%||'.$user->country.'||%"';
+
+		$where	=	'countries = "'.$country.'" OR countries LIKE "'.$country.'||%" OR countries LIKE "%||'.$country.'" OR countries LIKE "%||'.$country.'||%"';
 		$items	=	JCckDatabaseCache::loadObjectList( 'SELECT id, profile FROM #__cck_more_ecommerce_zones WHERE published = 1 AND ('.$where.') ORDER BY CHARACTER_LENGTH(countries) ASC' );
 
 		if ( count( $items ) ) {
@@ -497,11 +524,11 @@ abstract class JCckEcommerce
 							$target		=	$condition->trigger;
 
 							if ( $condition->match == 'isFilled' ) {
-								if ( $user->$target == '' ) {
+								if ( @${$source}->$target == '' ) {
 									$isValid	=	false;
 								}
 							} elseif ( $condition->match == 'isEmpty' ) {
-								if ( $user->$target != '' ) {
+								if ( @${$source}->$target != '' ) {
 									$isValid	=	false;
 								}
 							} elseif ( $condition->match == 'isEqual' ) {
@@ -511,7 +538,7 @@ abstract class JCckEcommerce
 									$condition_values	=	explode( ',', $condition->values );
 
 									foreach ( $condition_values as $v ) {
-										if ( $user->$target == $v ) {
+										if ( @${$source}->$target == $v ) {
 											$isValid	=	true;
 											break;
 										}

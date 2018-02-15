@@ -18,8 +18,8 @@ abstract class JCckEcommerceRule
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
-		$my_zones	=	JCckEcommerce::getUserZones();
-		
+		$my_zones	=	JCckEcommerce::getUserZones( 'shipping' );
+
 		$currency	=	JCckEcommerce::getCurrency();
 		$res		=	0;
 		$results	=	array( 'items'=>array() );
