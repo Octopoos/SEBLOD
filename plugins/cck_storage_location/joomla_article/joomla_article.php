@@ -229,7 +229,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				}
 			}
-		} elseif ( empty( $config['storages'] ) ) {
+		} elseif ( empty( $storages[$table] ) ) {
 			$config['error']	=	true;
 		}
 		
