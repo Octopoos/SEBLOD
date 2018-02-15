@@ -153,7 +153,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->text		=	( $file_title != '' ) ? $file_title : ( ( @$options2['storage_format'] ) ? $value : substr( $value, strrpos( $value, '/' ) + 1 ) );
 			$field->hits		=	self::_getHits( $config['id'], $field->name, $collection, $xi );
 			$field->file_size	=	( file_exists( $file ) ) ? self::_formatBytes( filesize( $file ) ) : self::_formatBytes( 0 );
-			$field->link		=	'index.php?option=com_cck&task=download'.$link_more.'&file='.$field->name.'&id='.$config['id'];
+			$field->link		=	JRoute::_( 'index.php?option=com_cck&task=download'.$link_more.'&file='.$field->name.'&id='.$config['id'] );
 			$field->linked		=	true;
 			$field->html		=	'<a href="'.$field->link.'" title="'.$file_title.'">'.$field->text.'</a>';
 			$field->typo_target	=	'text';
