@@ -767,6 +767,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				return '';
 			}
 		}
+		if ( !is_object( $item ) ) {
+			return '';
+		}
 		
 		$pk			=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 		$item->slug	=	( $item->alias ) ? $pk.':'.$item->alias : $pk;

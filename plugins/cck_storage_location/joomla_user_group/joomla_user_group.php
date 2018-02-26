@@ -355,14 +355,20 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	{
 		if ( is_numeric( $item ) ) {
 			$core	=	JCckDatabase::loadObject( 'SELECT cck, pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$item );
+			
 			if ( !is_object( $core ) ) {
 				return '';
 			}
 			$pk				=	$core->pkb;
 			$config['type']	=	$core->cck;
 		} else {
+			if ( !is_object( $item ) ) {
+				return '';
+			}
+
 			$pk		=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 			$pk		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$pk );
+			
 			if ( !$pk ) {
 				return '';
 			}
