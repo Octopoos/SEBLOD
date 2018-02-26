@@ -55,6 +55,19 @@ abstract class JCckEcommercePromotion
 						continue;
 					}
 				}
+				if ( $p->usage_limit ) {
+					$query	=	'SELECT COUNT(a.id)'
+							.	' FROM #__cck_more_ecommerce_promotion_usage AS a'
+							.	' LEFT JOIN #__cck_more_ecommerce_orders AS b ON b.id = a.order_id'
+							.	' WHERE a.promotion_id = '.(int)$p->id
+							.	' AND b.user_id = '.(int)$user->id
+							.	' AND b.state > 0';
+					$usage	=	(int)JCckDatabase::loadResult( $query );
+
+					if ( $usage > 0 ) {
+						continue;
+					}
+				}
 				if ( $p->target_attributes != '' ) {
 					$attribute	=	false;
 
@@ -117,6 +130,7 @@ abstract class JCckEcommercePromotion
 							$total						=	$promotion;
 							$results['items'][$p->id]	=	array(
 																'code'=>@(string)$params['code'],
+																'id'=>$p->id,
 																'promotion'=>$p->discount,
 																'promotion_amount'=>'',
 																'target'=>@$params['target'],
@@ -133,6 +147,7 @@ abstract class JCckEcommercePromotion
 							$total						=	( $total < 0 ) ? 0 : $total;
 							$results['items'][$p->id]	=	array(
 																'code'=>@(string)$params['code'],
+																'id'=>$p->id,
 																'promotion'=>$p->discount,
 																'promotion_amount'=>(string)$promotion,
 																'target'=>@$params['target'],
@@ -148,6 +163,7 @@ abstract class JCckEcommercePromotion
 							$total						=	$total - $promotion;
 							$results['items'][$p->id]	=	array(
 																'code'=>@(string)$params['code'],
+																'id'=>$p->id,
 																'promotion'=>$p->discount,
 																'promotion_amount'=>(string)$promotion,
 																'target'=>@$params['target'],
@@ -163,16 +179,23 @@ abstract class JCckEcommercePromotion
 							$total						=	$total - $promotion;
 							$results['items'][$p->id]	=	array(
 																'code'=>@(string)$params['code'],
+																'id'=>$p->id,
 																'promotion'=>$p->discount,
 																'promotion_amount'=>(string)$promotion,
 																'target'=>@$params['target'],
 																'text'=>$text,
 																'title'=>$p->title,
-																'type'=>$p->type
+																'type'=>$p->type,
 															);
                             break;
 						default:
 							break;
+					}
+
+					if ( isset( $results['items'][$p->id] ) && $p->usage_limit ) {
+						$results['items'][$p->id]['usage_limit']	=	true;
+					} else {
+						$results['items'][$p->id]['usage_limit']	=	false;
 					}
 				}
 			}
