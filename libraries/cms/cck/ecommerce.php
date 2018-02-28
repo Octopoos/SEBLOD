@@ -196,6 +196,24 @@ abstract class JCckEcommerce
 		return $cache[$pay_key];
 	}
 
+	// isCheckout
+	public static function isCheckout( $strict = false )
+	{
+		$app	=	JFactory::getApplication();
+
+		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
+			if ( $strict ) {
+				if ( $pk = $app->input->getInt( 'id' ) ) {
+					return $pk;
+				}
+			} else {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Payments
 
 	// getGateway
@@ -475,8 +493,7 @@ abstract class JCckEcommerce
 		if ( isset( $user->country ) && $user->country ) {
 			$country	=	$user->country;
 		}
-		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form'
-		 &&  $pk = $app->input->getInt( 'id' ) ) {
+		if ( $pk = self::isCheckout( true ) ) {
 			$type	=	JCckEcommerce::getConfig_Param( 'integration_order', '' );
 
 			if ( $type && $app->input->get( 'type' ) == $type ) {
