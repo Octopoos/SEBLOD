@@ -302,6 +302,8 @@ abstract class JCckEcommerce
 							JCckEcommercePromotion::apply( '', $price, $items, $options );
 						}
 						
+						/* TODO#SEBLOD: should we apply Tax@product2 here? */
+
 						// Quantity /* Alter Price */
 						$total	+=	$price * $item->quantity;
 					}
