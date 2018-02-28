@@ -110,13 +110,13 @@ abstract class JCckEcommerceTax
 															);
 							break;
 						case 'percentage':
-							if ( $params['target'] == 'product2' && count( $items ) ) {
-								if ( isset( $params['target_id'] ) && $params['target_id'] && !empty( $items[$params['target_id']]['_']->price ) ) {
+							if ( $params['target'] == 'product2' ) {
+								if ( isset( $params['target_id'] ) && $params['target_id'] && $params['source'] == 'item' && count( $items ) && isset( $items[$params['target_id']] ) ) {
 									$tax	=	(float)number_format( $items[$params['target_id']]['_']->price * $t->tax_amount / 100, 2 );
-
-									if ( isset( $params['apply_quantity'] ) && $params['apply_quantity'] ) {
-										$tax	=	$tax * $quantity;
-									}
+									
+									// if ( isset( $params['apply_quantity'] ) && $params['apply_quantity'] ) {
+									$tax	=	$tax * $quantity;
+									// }
 								} else {
 									$tax	=	(float)number_format( $total * $t->tax_amount / 100, 2 );
 								}
