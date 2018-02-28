@@ -157,7 +157,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$lang			=	JFactory::getLanguage();
 					$lang_tag		=	JFactory::getLanguage()->getTag();
 
-					if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() != $lang->getDefault() ) ) {
+					if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
 						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
 						$lang_sef	=	isset( $languages[$lang_tag] ) ? strtolower( $languages[$lang_tag]->sef ) : substr( $lang_tag, 0, 2 );
 						
@@ -449,7 +449,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 						$lang			=	JFactory::getLanguage();
 						$lang_tag		=	JFactory::getLanguage()->getTag();
 
-						if ( self::$sef_aliases == 2 || ( self::$sef_aliases == 1 && $lang->getTag() != $lang->getDefault() ) ) {
+						if ( self::$sef_aliases == 2 || ( self::$sef_aliases == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
 							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
 							$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
 							
@@ -763,7 +763,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$lang		=	JFactory::getLanguage();
 			$lang_tag	=	JFactory::getLanguage()->getTag();
 
-			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang->getTag() != $lang->getDefault() ) ) {
+			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
 				self::$sef_aliases	=	$config['sef_aliases'];
 
 				$isMultiAlias	=	true;
