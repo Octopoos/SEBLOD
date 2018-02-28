@@ -311,7 +311,11 @@ abstract class JCckDevHelper
 	// isMultilingual
 	public static function isMultilingual()
 	{
-		return JPluginHelper::getPlugin( 'system', 'languagefilter' );
+		if ( is_object( JPluginHelper::getPlugin( 'system', 'languagefilter' ) ) ) {
+			return true;
+		}
+
+		return false;
 	}
 	
 	// matchUrlVars
