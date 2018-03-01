@@ -18,11 +18,13 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 	protected static $friendly	=	1;
 	protected static $path;
 
+	protected $serverOffset		=	null;
 	protected $userTimeZone		=	null;
 
 	// __construct
 	public function __construct( &$subject, $config = array() )
 	{
+		$this->serverOffset	=	JFactory::getConfig()->get( 'offset' );
 		$this->userTimeZone	=	new DateTimeZone( JFactory::getUser()->getParam( 'timezone', JFactory::getConfig()->get( 'offset' ) ) );
 
 		parent::__construct( $subject, $config );
@@ -112,6 +114,20 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 
+		$convert	=	( isset( $options2['format'] ) && $options2['format'] ) ? $options2['format'] : 'translate';
+		$format		=	'';
+		$show_time	=	( isset( $options2['time'] ) && $options2['time'] ) ? true : false;
+		
+		if ( $convert != 'translate' ) {
+			$format	=	'%Y-%m-%d';
+
+			if ( $show_time ) {
+				$format	.=	' %H:%M:%S';
+			}
+
+			$format	=	' format="'.$format.'"';
+		}
+		
 		// Prepare
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
@@ -122,11 +138,11 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								name="'.$name.'"
 								id="'.$id.'"
 								label="'.htmlspecialchars( $field->label ).'"
-								showtime="'.( isset( $options2['time'] ) && $options2['time'] ? 'true' : 'false' ).'"
+								showtime="'.( $show_time ? 'true' : 'false' ).'"
 								todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
-								translateformat="true"
-								filter="user_utc"
+								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format.'
+								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? 'user_utc' : 'server_utc' ).'"
 								class="'.$class.'"
 								'.$readonly.'
 							/>
@@ -206,10 +222,18 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
 		if ( (int)$value > 0 ) {
-			$date			=	JFactory::getDate( $value, $this->userTimeZone );
-			$timezone		=	new DateTimeZone( 'UTC' );
+			$options2		=	JCckDev::fromJSON( $field->options2 );
+			$format_filter	=	( isset( $options2['format_filter'] ) && $options2['format_filter'] ) ? $options2['format_filter'] : 'user_utc';
+			
+			if ( $format_filter == 'server_utc' ) {
+				$date	=	JFactory::getDate( $value, $this->serverOffset );
+			} else {
+				$date	=	JFactory::getDate( $value, $this->userTimeZone );
+			}
+
+			$timezone	=	new DateTimeZone( 'UTC' );
 			$date->setTimezone( $timezone );
-			$value	=	$date->toSql();
+			$value		=	$date->toSql();
 		}
 		
 		// Set or Return
@@ -217,6 +241,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			return $value;
 		}
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
 	
