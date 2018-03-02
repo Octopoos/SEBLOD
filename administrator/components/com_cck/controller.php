@@ -354,69 +354,8 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 		} else {
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
-			$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
-						.	' FROM #__cck_core AS a'
-						.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
-						.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
-						.	' WHERE a.id ='.(int)$id;
-			$core		=	JCckDatabase::loadObject( $query );
-
-			if ( !is_object( $core ) ) {
-				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
-				return;
-			}
-			JPluginHelper::importPlugin( 'cck_storage' );
-			JPluginHelper::importPlugin( 'cck_field' );
-
-			$config		=	array(
-								'author'=>$core->author_id,
-								'client'=>$client,
-								'collection'=>$collection,
-								'fieldname'=>$fieldname,
-								'id'=>$core->id,
-								'isNew'=>0,
-								'location'=>$core->storage_location,
-								'pk'=>$core->pk,
-								'pkb'=>0,
-								'store_id'=>$core->store_id,
-								'task'=>'download',
-								'type'=>$core->type,
-								'type_id'=>$core->type_id,
-								'xi'=>$xi
-							);
-			$dispatcher		=	JEventDispatcher::getInstance();
-			$field->value	=	$core->value;
-			$pk				=	$core->pk;
-			$value			=	'';
-
-			$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
-			
-			// Access
-			$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
-			$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
-			$autorised	=	$user->getAuthorisedViewLevels();
-			$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
-			if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
-				$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
-				return;
-			}
-			$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
-			
-			if ( $restricted ) {
-				JPluginHelper::importPlugin( 'cck_field_restriction' );
-				$field->restriction			=	$restricted;
-				$field->restriction_options	=	$clients[$client]->restriction_options;
-				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
-				if ( $allowed !== true ) {
-					$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
-					return;
-				}
-			}
-			
-			$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
-			$file	=	$field->filename;
+			$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
+			return;
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
