@@ -111,7 +111,8 @@ $pre		=	'';
 $url		=	JUri::current();
 
 if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-	$pre	=	'#seblod_form_raw ';
+	$pre					=	'#seblod_form_raw ';
+	$this->context['tmpl']	=	'raw';
 	
 	if ( $app->input->get( 'search' ) != '' ) {
 		$url	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$app->input->get( 'search' ) );

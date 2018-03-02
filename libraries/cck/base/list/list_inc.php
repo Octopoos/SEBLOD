@@ -235,6 +235,7 @@ if ( $preconfig['show_form'] ) {
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 
 $context	=	$app->input->getString( 'context' );
+$isRaw		=	false;
 
 if ( $context != '' ) {
 	$context	=	json_decode( $context, true );
@@ -251,14 +252,30 @@ if ( $context != '' ) {
 						'stage'=>'',
 						'task'=>'',
 						'tid'=>'',
+						'tmpl'=>'', /* Let's keep it when format!=raw for now */
 						'type'=>''
 					);
 	foreach ( $context as $k=>$v ) {
 		if ( isset( $excluded[$k] ) ) {
-			continue;
+			if ( $k == 'tmpl' ) {
+				if ( $v == 'raw' ) {
+					$isRaw	=	true;
+				}
+				if ( $app->input->get( 'format' ) == 'raw' ) {
+					continue;
+				}
+			} else {
+				continue;
+			}
 		}
 		$app->input->set( $k, $v );
 	}
+}
+
+// We need to override form stuff based on the tmpl found within the context
+if ( $isRaw ) {
+	$config['formId']	.=	'_raw';
+	$config['submit']	.=	'_raw';
 }
 
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
