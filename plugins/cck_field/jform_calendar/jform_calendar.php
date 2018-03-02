@@ -114,20 +114,24 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 
-		$convert	=	( isset( $options2['format'] ) && $options2['format'] ) ? $options2['format'] : 'translate';
-		$format		=	'';
-		$show_time	=	( isset( $options2['time'] ) && $options2['time'] ) ? true : false;
-		
+		$convert		=	( isset( $options2['format'] ) && $options2['format'] ) ? $options2['format'] : 'translate';
+		$format_date	=	'';
+		$format_time	=	'';
+		$show_time		=	( isset( $options2['time'] ) && $options2['time'] ) ? true : false;
+
 		if ( $convert != 'translate' ) {
-			$format	=	'%Y-%m-%d';
+			$format_date	=	'%Y-%m-%d';
 
 			if ( $show_time ) {
-				$format	.=	' %H:%M:%S';
+				$format_date	.=	' %H:%M:%S';
 			}
 
-			$format	=	' format="'.$format.'"';
+			$format_date	=	' format="'.$format_date.'"';
 		}
-		
+		if ( $show_time ) {
+			$format_time	.=	' timeformat="'.(int)$options2['time'].'"';
+		}
+
 		// Prepare
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
@@ -138,10 +142,10 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								name="'.$name.'"
 								id="'.$id.'"
 								label="'.htmlspecialchars( $field->label ).'"
-								showtime="'.( $show_time ? 'true' : 'false' ).'"
+								showtime="'.( $show_time ? 'true' : 'false' ).'"'.$format_time.'
 								todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
-								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format.'
+								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format_date.'
 								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? 'user_utc' : 'server_utc' ).'"
 								class="'.$class.'"
 								'.$readonly.'
@@ -166,7 +170,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			}
 		} else {
 			if ( (int)$value > 0 ) {
-				$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+				if ( !$show_time ) {
+					$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+				}
 			}
 
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<input', '', '', $config );

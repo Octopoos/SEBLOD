@@ -19,11 +19,11 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
         echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config );
-		echo JCckDev::renderForm( 'core_options_time', @$options2['time'], $config, array( 'label'=>'Show Time', 'defaultvalue'=>'12', 'options'=>'Hide=0||Show=12' ) );
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['format'], $config, array( 'label'=>'Format', 'selectlabel'=>'', 'defaultvalue'=>'translate', 'options'=>'International=international||Use JText=translate', 'storage_field'=>'json[options2][format]' ) );        
+		echo JCckDev::renderForm( 'core_options_time', @$options2['time'], $config, array( 'label'=>'Show Time', 'defaultvalue'=>'24', 'options'=>'Hide=0||Show=optgroup||12AM=12||24H=24' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['format'], $config, array( 'label'=>'Format', 'selectlabel'=>'', 'defaultvalue'=>'translate', 'options'=>'International=international||Use JText=translate', 'storage_field'=>'json[options2][format]' ) );
         echo JCckDev::renderForm( 'core_options_today', @$options2['today'], $config, array( 'label'=>'Show Today', 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1' ) );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['format_filter'], $config, array( 'label'=>'Storage Format', 'selectlabel'=>'', 'defaultvalue'=>'user_utc', 'options'=>'Raw=raw||UTC=optgroup||Server Time Zone=server_utc||User Time Zone=user_utc', 'storage_field'=>'json[options2][format_filter]' ) );
-        echo JCckDev::renderForm( 'core_options_week_numbers', @$options2['week_numbers'], $config );        
+        echo JCckDev::renderForm( 'core_options_week_numbers', @$options2['week_numbers'], $config );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
