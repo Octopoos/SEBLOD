@@ -600,7 +600,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$maxsize			=	floatval( $options2['max_size'] ) * $unit_prod;
 		$filename			=	JFile::stripExt( $userfile['name'] );
 		$userfile['name']	=	str_replace( $filename, JCckDev::toSafeSTRING( $filename, JCck::getConfig_Param( 'media_characters', '-' ), JCck::getConfig_Param( 'media_case', 0 ) ), $userfile['name'] );
-		if ( ! $maxsize || ( $maxsize && $userfile['size'] < $maxsize ) ) {
+		if ( ! $maxsize || ( $maxsize && @$userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
 				$ImageCustomName	=	$userfile['name'];
 				$ImageCustomPath	=	'';
