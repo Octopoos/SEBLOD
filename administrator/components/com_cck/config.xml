@@ -145,6 +145,7 @@
 		<field name="media_preset2_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
 		<field name="media_preset3_extensions" type="text" size="86" default="" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESET3" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_PRESETS_DESC" class="inputbox input-xlarge" />
 		<field name="media_preset3_extensions_label" type="text" size="8" default="" label="" description="" class="inputbox input-small" />
+		<field name="media_preview_extensions" type="text" size="86" default="" label="COM_CCK_CONFIG_MEDIA_PREVIEW_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_PREVIEW_EXTENSIONS_DESC" class="inputbox input-xlarge" />
 		<field name="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_LEGEND" type="spacer" hr="false" />
 		<field name="media_content_forbidden_extensions" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_DESC" class="btn-group btn-group-yesno">
 			<option value="0">None</option>

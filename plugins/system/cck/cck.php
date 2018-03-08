@@ -200,6 +200,12 @@ class plgSystemCCK extends JPlugin
 	public function onAfterInitialise()
 	{
 		$app	=	JFactory::getApplication();
+		$view	=	$app->input->get( 'view' );
+		$task	=	$app->input->get( 'task' );
+
+		if ( $view || ( $task && $task != 'download' ) ) {
+			JFactory::getSession()->set( 'cck_task', '' );
+		}
 
 		if ( $this->restapi ) {
 			$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
@@ -420,9 +426,9 @@ class plgSystemCCK extends JPlugin
 		$app		=	JFactory::getApplication();
 		$doc		=	JFactory::getDocument();
 		$id			=	$app->input->getInt( 'id', 0 );
+		$layout		=	$app->input->get( 'layout', '' );
 		$option		=	$app->input->get( 'option', '' );
 		$view		=	$app->input->get( 'view', '' );
-		$layout		=	$app->input->get( 'layout', '' );
 
 		if ( $app->isClient( 'administrator' ) ) {
 			switch ( $option ) {

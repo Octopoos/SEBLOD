@@ -51,6 +51,7 @@ class CCKViewForm extends JViewLegacy
 		$this->return_page	=	$app->input->getBase64( 'return' );
 		$option				=	$this->option;
 		$params				=	$app->getParams();
+		$session			=	JFactory::getSession();
 		$view				=	$this->getName();
 		
 		$live				=	urldecode( $params->get( 'live' ) );
@@ -97,8 +98,9 @@ class CCKViewForm extends JViewLegacy
 		include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
-		JFactory::getSession()->set( 'cck_hash_'.$unique, JApplication::getHash( (int)$id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
-		JFactory::getSession()->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+		$session->set( 'cck_hash_'.$unique, JApplication::getHash( (int)$id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+		$session->set( 'cck_task', 'form' );
 
 		// Set
 		if ( !is_object( @$options ) ) {

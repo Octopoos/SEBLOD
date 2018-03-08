@@ -58,6 +58,7 @@ class CCKViewForm extends JViewLegacy
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
 		$params			=	new JRegistry;
+		$session		=	JFactory::getSession();
 		$view			=	$this->getName();
 		
 		$isNew			=	1;
@@ -69,8 +70,9 @@ class CCKViewForm extends JViewLegacy
 		include_once JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
-		JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
-		JFactory::getSession()->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+		$session->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+		$session->set( 'cck_task', 'form' );
 		
 		$this->config	=	&$config;
 		$this->data		=	&$data;

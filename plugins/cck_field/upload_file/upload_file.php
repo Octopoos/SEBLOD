@@ -174,12 +174,31 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Path Folder
 		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
 		$file		=	'';
+		
 		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
 			$file	.=	$f_opt2['path'];
 			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
 			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
 		}
-		$file		.=	$field->value;
+		
+		$file			.=	$field->value;
+		
+		if ( JFactory::getSession()->get( 'cck_task' ) == 'form' ) {
+			$permissions	=	( isset( $options2['folder_permissions'] ) && $options2['folder_permissions'] ) ? octdec( $options2['folder_permissions'] ) : 0755;
+			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );		
+
+			if ( $preview_ext ) {
+				$preview_ext	=	explode( ',', $preview_ext );
+
+				if ( $file && is_file( JPATH_SITE.'/'.$file ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( JPATH_SITE.'/'.$file );
+
+					if ( in_array( $ext, $preview_ext ) ) {
+						$field->task	=	'read';
+					}
+				}
+			}
+		}
 
 		$field->filename	=	$file;
 	}
@@ -355,7 +374,22 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$link	=	JUri::root().$value2;
 				$target	=	'target="_blank"';
 			}
-			$title	=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
+			$title			=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
+			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );
+			
+			if ( $preview_ext ) {
+				$permissions	=	( isset( $options2['folder_permissions'] ) && $options2['folder_permissions'] ) ? octdec( $options2['folder_permissions'] ) : 0755;
+				$preview_ext	=	explode( ',', $preview_ext );
+
+				if ( $value2 && is_file( JPATH_SITE.'/'.$value2 ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( JPATH_SITE.'/'.$value2 );
+
+					if ( in_array( $ext, $preview_ext ) ) {
+						$target	=	' target="_blank"';
+					}
+				}
+			}
+
 			if ( $options2['preview'] == 8 ) {
 				$label		=	'';
 				$preview	=	'<span class="cck_preview">'.$title.'</span>';
