@@ -169,6 +169,151 @@ abstract class JCckDevHelper
 
 		return ucfirst( $code2 );
 	}
+
+	// getDownloadInfo
+	public static function getDownloadInfo( $id, $fieldname )
+	{
+		$app		=	JFactory::getApplication();
+		$client		=	$app->input->get( 'client', 'content' );
+		$collection	=	$app->input->get( 'collection', '' );
+		$restricted	=	'';
+		$user		=	JFactory::getUser();
+		$xi			=	$app->input->getInt( 'xi', 0 );
+
+		$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
+		$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
+					.	' FROM #__cck_core AS a'
+					.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
+					.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
+					.	' WHERE a.id ='.(int)$id;
+		$core		=	JCckDatabase::loadObject( $query );
+
+		if ( !is_object( $core ) ) {
+			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+		}
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+
+		if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
+			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+		}
+
+		JPluginHelper::importPlugin( 'cck_storage' );
+		JPluginHelper::importPlugin( 'cck_field' );
+
+		$config		=	array(
+							'author'=>$core->author_id,
+							'client'=>$client,
+							'collection'=>$collection,
+							'error'=>false,
+							'fieldname'=>$fieldname,
+							'id'=>$core->id,
+							'isNew'=>0,
+							'location'=>$core->storage_location,
+							'pk'=>$core->pk,
+							'pkb'=>0,
+							'store_id'=>$core->store_id,
+							'storages'=>array(),
+							'task'=>'download',
+							'type'=>$core->type,
+							'type_id'=>$core->type_id,
+							'xi'=>$xi
+						);
+		$dispatcher		=	JEventDispatcher::getInstance();
+		$field->value	=	$core->value;
+		$pk				=	$core->pk;
+		$value			=	'';
+
+		$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
+
+		// Access
+		$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
+													. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
+		$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
+		$autorised	=	$user->getAuthorisedViewLevels();
+		$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
+		if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
+			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+		}
+
+		if ( $restricted ) {
+			JPluginHelper::importPlugin( 'cck_field_restriction' );
+			$field->restriction			=	$restricted;
+			$field->restriction_options	=	$clients[$client]->restriction_options;
+			$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+			
+			if ( $allowed ) {
+				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+				$name		=	$field->name;
+				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
+				$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
+				
+				if ( count( $fields ) ) {
+					foreach ( $fields as $field2 ) {
+						$value2	=	'';
+
+						if ( $field2->name ) {
+							$Pt	=	$field2->storage_table;
+							if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+								$config['storages'][$Pt]	=	'';
+								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+							}
+							
+							$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+							if ( is_string( $value2 ) ) {
+								$value2		=	trim( $value2 );
+							}
+							
+							$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+
+							// Was it the last one?
+							// if ( $config['error'] ) {
+								// break;
+							// }
+						}
+					}
+				}
+				
+				// Merge
+				if ( count( $config['fields'] ) ) {
+					foreach ( $config['fields'] as $k=>$v ) {
+						if ( $v->restriction != 'unset' ) {
+							$fields[$k]	=	$v;
+						}
+					}
+					$config['fields']	=	null;
+					unset( $config['fields'] );
+				}
+
+				if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+					JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+					foreach ( $config['process']['beforeRenderContent'] as $process ) {
+						if ( $process->type ) {
+							JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
+						}
+					}
+				}
+
+				$allowed	=	(bool)$fields[$name]->state;
+			}
+
+			if ( $allowed !== true ) {
+				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+			}
+		}
+		$field			=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
+
+		$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
+
+		$config['file']	=	$field->filename;
+
+		if ( isset( $field->task ) ) {
+			$config['task2']	=	$field->task;
+		}
+
+		return $config;
+	}
 	
 	// getPermalink()
 	public static function getPermalink( $types = 'canonical', $object = 'joomla_article' )

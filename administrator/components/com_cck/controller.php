@@ -354,11 +354,18 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 		} else {
-			$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
-			return;
+			$config	=	JCckDevHelper::getDownloadInfo( $id, $fieldname );
+
+			if ( $config === false || isset( $config['error'] ) && $config['error'] ) {
+				$this->setRedirect( JUri::root(), $config['message'], "error" );
+				return;	
+			}
+
+			$file	=	( isset( $config['file'] ) ) ? $config['file'] : '';
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
+
 		if ( is_file( $path ) && $file ) {
 			$size	=	filesize( $path ); 
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
@@ -367,9 +374,13 @@ class CCKController extends JControllerLegacy
 			}
 			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
 			if ( $path ) {
-				set_time_limit( 0 );
-				@ob_end_clean();
-				include JPATH_ROOT.'/components/com_cck/download.php';
+				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {
+					$this->setRedirect( JUri::root( true ).'/'.$file );
+				} else {
+					set_time_limit( 0 );
+					@ob_end_clean();
+					include JPATH_ROOT.'/components/com_cck/download.php';
+				}
 			}
 		} else {
 			$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ), 'error' );
