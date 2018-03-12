@@ -15,7 +15,7 @@
 			$("body").on('click', '.cck_button_add_'+name, function() {
 
 				if ($(this).hasClass('external')) {
-					elem = root.children().last();
+					elem = root.children('div').last();
 				} else {
 					elem = $(this).closest('[id^="'+rid+'_forms_'+name+'"]');
 				}
@@ -24,13 +24,12 @@
 				if (length < max_element) {
 					position	=	position_in_gx( elem );
 					ind_elem	=	ind_group(elem) + 1;
-
 					switch ( position ) {
 						case 'first':
-							Child	=	root.children(":first");
+							Child	=	root.children("div:first");
 							set_group_as_no_last(Child);							
 							elem.after( update_empty_group(new_elem,ind_elem,name) );
-							$('#'+rid+'_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );						
+							$('#'+rid+'_button_'+name+'_'+ind_elem).show( 'highlight', options, 1000 );		
 							if ( length	==	1 ) {
 								set_group_as_no_last(elem);
 								set_group_as_last(elem.next());
@@ -39,7 +38,7 @@
 							}
 							break;
 						case 'last':	
-							Child	=	root.children(":last");									
+							Child	=	root.children("div:last");									
 							set_group_as_no_last(Child);
 							elem.after( update_empty_group(new_elem,ind_elem,name) );
 							set_group_as_last(elem.next());
@@ -51,6 +50,9 @@
 							update_group_position ( elem.next().next(), 'add', name, rid );
 							break;
 					}
+					root.find('script').each(function(){
+						$(this).removeAttr('id');
+					});
 				}
 			});
 		},
@@ -150,11 +152,11 @@
 			case 'add' : new_ind_group = num_group + 1; break;
 			case 'del' : new_ind_group = num_group - 1; break;
 		}
+
 		group_i.attr('id',rid+'_forms_'+name+'_'+new_ind_group);
 
 		var buttons = group_i.find(".cck_cgx_button");
 		buttons.attr('id',rid+'button_'+name+'_'+new_ind_group);
-
 		var forms = group_i.find(".cck_cgx_form");
 		if (forms.length > 1) {
 			forms.each(function( index ) {
@@ -180,7 +182,7 @@
 		var group_end	=	group_start.parent().children(":last"),
 			group_i		=	group_start,
 			end = false;
-		while ( ! end ) {			
+		while ( ! end ) {
 			if ( group_i.attr('id') ==  group_end.attr('id') ) {
 				update_group_i (group_i, op_type, name, rid);
 				end = true;
