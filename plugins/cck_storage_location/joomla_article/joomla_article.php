@@ -210,6 +210,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 			} else {
 				$storages[$table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE id IN ('.$config['pks'].')', 'id' );
+				
 				if ( !isset( $storages[self::$table] ) ) {
 					$storages['_']	=	self::$table;
 
@@ -229,13 +230,14 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				}
 			}
-		} elseif ( empty( $storages[$table] ) ) {
-			$config['error']	=	true;
+			if ( empty( $storages[self::$table] ) ) {
+				$config['error']	=	true;
+			}
 		}
-		
 		if ( $config['error'] ) {
 			return;
 		}
+
 		$config['author']	=	(int)$storages[self::$table][$config['pk']]->{self::$author};
 	}
 	
