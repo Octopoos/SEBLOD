@@ -649,7 +649,7 @@ if ( $no_action ) {
 		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 	}
 }
-if ( $doDebug && ( $preconfig['task'] == 'search' || $no_action ) ) {
+if ( $doDebug > 0 && ( $preconfig['task'] == 'search' || $no_action ) ) {
 	echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
 }
 

@@ -190,14 +190,14 @@ class CCK_List
 	{
 		JPluginHelper::importPlugin( 'search', 'cck' );
 		$doCache	=	$options->get( 'cache' );
-		$doDebug	=	$options->get( 'debug' );
+		$doDebug	=	(int)$options->get( 'debug' );
 		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Debug
 		if ( $doDebug ) {
 			$profiler	=	JProfiler::getInstance();
 		}
-		
+
 		if ( $doCache ) {
 			$group		=	( $doCache == '2' ) ? 'com_cck_'.$config['type_alias'] : 'com_cck';
 			$cache		=	JFactory::getCache( $group );
@@ -213,12 +213,14 @@ class CCK_List
 		$list			=	isset( $results[0] ) ? $results[0] : array();
 		
 		// Debug
-		if ( $doDebug ) {
+		if ( $doDebug > 0 ) {
 			$count		=	( isset( $config['total'] ) && $config['total'] ) ? $config['total'] : count( $list );
 			echo $profiler->mark( 'afterSearch'.$isCached ).' = '.$count.' '.( $count > 1 ? 'results' : 'result' ).'.<br />';
 			if ( isset( $current['stage'] ) && (int)$current['stage'] > 0 ) {
 				echo '<br />';
 			}
+		} elseif ( $doDebug == -1 ) {
+			echo JText::_( 'COM_CCK_DEBUG_OUTPUT_NO_SEARCH' );
 		}
 		
 		return $list;
