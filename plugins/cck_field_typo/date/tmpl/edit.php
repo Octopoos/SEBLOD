@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'typo', $this->item );
 
-$formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date Format 03=d m Y||Date Format 04=m d y||Date Format 05=m d Y||Date Format 06=m/Y||Date Format 07=M Y||Date Format 08=F Y||Date Format 09=F d, Y||Date Format 10=d F Y||Date Format 11=l, F d, Y||Date Format 12=l, d F Y||Use JText=optgroup||DATE_FORMAT_LC=DATE_FORMAT_LC||DATE_FORMAT_LC1=DATE_FORMAT_LC1||DATE_FORMAT_LC2=DATE_FORMAT_LC2||DATE_FORMAT_LC3=DATE_FORMAT_LC3||DATE_FORMAT_LC4=DATE_FORMAT_LC4||DATE_FORMAT_JS1=DATE_FORMAT_JS1';
+$formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date Format 03=d m Y||Date Format 04=m d y||Date Format 05=m d Y||Date Format 06=m/Y||Date Format 07=M Y||Date Format 08=F Y||Date Format 09=F d, Y||Date Format 10=d F Y||Date Format 11=l, F d, Y||Date Format 12=l, d F Y||Use JText=optgroup||DATE_FORMAT_LC=DATE_FORMAT_LC||DATE_FORMAT_LC1=DATE_FORMAT_LC1||DATE_FORMAT_LC2=DATE_FORMAT_LC2||DATE_FORMAT_LC3=DATE_FORMAT_LC3||DATE_FORMAT_LC4=DATE_FORMAT_LC4||DATE_FORMAT_JS1=DATE_FORMAT_JS1||DATE_FORMAT_CUSTOM=DATE_FORMAT_CUSTOM';
 ?>
 
 <div class="seblod">
