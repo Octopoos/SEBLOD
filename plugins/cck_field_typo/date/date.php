@@ -86,7 +86,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		if ( @!mktime( $value ) ) {
 			return;
 		}
-		
+
 		// Init
 		$date1			=	new DateTime( $value, new DateTimeZone('UTC') );
 		$date1->setTime( 00, 00, 00 );
@@ -97,13 +97,19 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$years			=	$interval->format( '%y' );
 		$months			=	$interval->format( '%m' );
 		$days			=	$interval->format( '%d' );
+		$days_total		=	$interval->format( '%a' );
         $state			=	( $date1 < $now ) ? 'COM_CCK_AGO_SENTENCE' : 'COM_CCK_TIMELEFT_SENTENCE';
 
-		if ( $limit && $days >= $limit ) {
+		if ( $limit && $days_total >= $limit ) {
 			$value		=	self::_getValueWithFormatStorage( $value );
-			$date_eng	=	$alt_format ? date(  $alt_format, $value ) : $value;
+
+			if ( strpos( $alt_format, 'COM_CCK_' ) !== false || strpos( $alt_format, 'DATE_FORMAT_' ) !== false ) {
+				$alt_format	=	JText::_( $alt_format );
+			}
+
+			$date_eng	=	$alt_format ? date( $alt_format, $value ) : $value;
 			$interval	=	self::_getDateByLang( $alt_format, $value, $date_eng );
-		} else {			
+		} else {
 			// Prepare
 			if ( $years != 0 ) {
 				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
@@ -111,15 +117,15 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 
 				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
 				$interval		=	JText::sprintf( $state, $interval );
-			} elseif ( $months != 0 ) {
+			} elseif ( $months != 0 && $days_total >= $limit ) {
 				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
 				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
 
 				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
 				$interval		=	JText::sprintf( $state, $interval );
 			} else {
-				if ( $days > 1 ) {
-					$interval	=	JText::sprintf( $state, $days.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
+				if ( $days_total > 1 ) {
+					$interval	=	JText::sprintf( $state, $days_total.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
 				} elseif ( $days > 0 ) {
 					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
 				} else {
