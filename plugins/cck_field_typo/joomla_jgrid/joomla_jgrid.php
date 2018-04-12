@@ -229,18 +229,18 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				if ( $type == 'sort' ) {
 					static $loaded 	= 	false;
-					static $can		=	null;
+					static $can		=	array();
 
-					if ( !is_array( $can ) ) {
+					if ( !isset( $can[$config['type_id']] ) ) {
 						$user				=	JFactory::getUser();
-						$can				=	array(
+						$can				=	array( $config['type_id']=>array(
 													'edit'=>$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] ),
 													'edit.own'=>$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] )
-												);
+												) );
 					}
-					if ( $can['edit'] && $can['edit.own']
-						|| ( $can['edit'] && !$can['edit.own'] && ( $config['author'] != $user->id ) )
-						|| ( $can['edit.own'] && ( $config['author'] == $user->id ) ) ) {
+					if ( $can[$config['type_id']]['edit'] && $can[$config['type_id']]['edit.own']
+						|| ( $can[$config['type_id']]['edit'] && !$can[$config['type_id']]['edit.own'] && ( $config['author'] != $user->id ) )
+						|| ( $can[$config['type_id']]['edit.own'] && ( $config['author'] == $user->id ) ) ) {
 						$canDo	=	true;
 					}
 
