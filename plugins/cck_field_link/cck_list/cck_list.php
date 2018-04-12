@@ -51,6 +51,9 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 		$link_class		=	$link->get( 'class', '' );
 		$link_rel		=	$link->get( 'rel', '' );
 		$link_target	=	$link->get( 'target', '' );
+		$link_title		=	$link->get( 'title', '' );
+		$link_title2	=	$link->get( 'title_custom', '' );
+		
 		$tmpl			=	$link->get( 'tmpl', '' );
 		$tmpl			=	( $tmpl == '-1' ) ? $app->input->getCmd( 'tmpl', '' ) : $tmpl;
 		$tmpl			=	( $tmpl ) ? '&tmpl='.$tmpl : '';
@@ -119,6 +122,19 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 			$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
 			$field->link_state		=	$link->get( 'state', 1 );
 			$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
+
+			if ( $link_title ) {
+				if ( $link_title == '2' ) {
+					$field->link_title	=	$link_title2;
+				} elseif ( $link_title == '3' ) {
+					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+				}
+				if ( !isset( $field->link_title ) ) {
+					$field->link_title	=	'';
+				}
+			} else {
+				$field->link_title		=	'';
+			}
 		}
 	}
 }
