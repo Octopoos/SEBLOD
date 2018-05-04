@@ -416,7 +416,7 @@ class plgContentCCK extends JPlugin
 			return;
 		}
 		
-		$this->_render( $context, $article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
+		$this->_render( $context, $article, $params, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type );
 	}
 	
 	// _process
@@ -450,7 +450,7 @@ class plgContentCCK extends JPlugin
 	}
 
 	// _render
-	protected function _render( $context, &$article, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
+	protected function _render( $context, &$article, &$article_params, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{
 		$app		=	JFactory::getApplication();
 		$dispatcher	=	JEventDispatcher::getInstance();
@@ -575,9 +575,13 @@ class plgContentCCK extends JPlugin
 		// Set Title
 		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
  			$p_title	=	$fields[$p_title]->value;
-
+ 			
  			if ( is_object( $article ) && isset( $article->title ) ) {
 				$article->title		=	$p_title;
+
+				// if ( is_object( $article_params ) ) {
+				// 	$article_params->set( 'page_title', $p_title );
+				// }
 			} else {
 				JFactory::getDocument()->setTitle( $p_title );
 			}
