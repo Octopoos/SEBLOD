@@ -152,7 +152,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		
 		// Make it safe
-		$value		=	JComponentHelper::filterText( $value );
+		if ( $field->bool7 ) {
+			$value	=	JComponentHelper::filterText( $value );
+		}
 
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
