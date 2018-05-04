@@ -63,7 +63,7 @@ class CCKViewCck extends JCckBaseLegacyView
         foreach ( $core as $k=>$v ) {
             $buttons[]  =   array(
                                 'access'=>array( 'core.manage', 'com_cck' ),
-                                'group' =>'COM_CCK_CORE',
+                                'group' =>'COM_CCK_SEBLOD_CORE',
                                 'image' =>$v['img'],
                                 'link'  =>JRoute::_( constant( '_C'.$v['val'].'_LINK' ) ),
                                 'target'=>'_self',
