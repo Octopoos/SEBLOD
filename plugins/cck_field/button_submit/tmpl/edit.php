@@ -48,8 +48,8 @@ if ( isset( $options2['task'] ) ) {
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_TEXT_LINK' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['alt_link_text'], $config, array( 'label'=>'Text', 'required'=>'required', 'size'=>14, 'storage_field'=>'json[options2][alt_link_text]' ) )
-		 .	 JCckDev::getForm( 'core_plugins', @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
-																					   'storage_field'=>'json[options2][alt_link]', 'attributes'=>'style="max-width:98px"' ) )
+		 .	 JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
+																																									'storage_field'=>'json[options2][alt_link]', 'attributes'=>'style="max-width:98px"' ) )
 		 .	 '<input type="hidden" id="json_options2_alt_link_options" name="json[options2][alt_link_options]" value="'.htmlspecialchars( @$options2['alt_link_options'] ).'" />'
 		 .	 '<span class="c_link" id="json_options2_alt" name="json_options2_alt">+</span>'
 		 .	 '</li>';

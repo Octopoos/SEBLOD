@@ -17,7 +17,7 @@ $tmpl	=	$app->input->getString( 'tmpl', '' );
 $wrap	=	( $tmpl ) ? $this->css['wrapper_tmpl'] : $this->css['wrapper'];
 
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-$cck		=	JCckDev::preload( array( 'core_title_field', 'core_folder', 'core_name_field', 'core_state', 'core_type', 'core_description' ) );
+$cck		=	JCckDev::preload( array( 'core_title_field', 'core_folder', 'core_name_field', 'core_state', 'core_description' ) );
 $config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'vName'=>$this->vName, 'tmpl'=>'' ) );
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 if ( $lang->hasKey( $key ) == 1 ) {
@@ -102,7 +102,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 			?>
 		</ul>
         <ul class="spe spe_type">
-            <?php echo str_replace( 'tabindex="3"', 'tabindex="4"', JCckDev::renderForm( $cck['core_type'], $this->item->type, $config ) ); ?>
+            <?php echo str_replace( 'tabindex="3"', 'tabindex="4"', JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getType', 'name'=>'core_type' ), $this->item->type, $config, array( 'storage_field'=>'type' ) ) ); ?>
         </ul>
         <ul class="spe spe_description spe_latest">
             <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>

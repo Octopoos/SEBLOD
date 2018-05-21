@@ -32,7 +32,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
         <div class="seblod">
-            <div id="linkage_wrap"><?php echo JCckDev::getForm( $cck['core_linkage'], 1, $config ); ?></div>
+            <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );

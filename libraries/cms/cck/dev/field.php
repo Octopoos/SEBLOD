@@ -16,7 +16,7 @@ abstract class JCckDevField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
 	
 	// get
-	public static function get( $field, $value, &$config = array( 'doTranslation'=>1, 'doValidation'=>2 ), $inherit = array(), $override = array() )
+	public static function get( $field, $value, &$config = array( 'doTranslation'=>1, 'doValidation'=>2 ), $inherit = array(), $override = array(), $completion = 'render' )
 	{
 		if ( ! is_object( $field ) ) {
 			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name = "'.$field.'"' ); //#
@@ -45,7 +45,13 @@ abstract class JCckDevField
 		if ( ! ( $field && ( @$field->storage == 'dev' && @$field->storage_field ) || $field->type == 'button_submit' ) ) {
 			return '';
 		}
+
+		if ( $completion == 'initialize' ) {
+			return $field;
+		}
+
 		$name	=	$field->storage_field;
+
 		if ( isset( $config['inherit'] ) ) {
 			if ( strpos( $name, '[' ) !== false ) {
 				$parts				=	explode( '[', $name );
@@ -61,7 +67,7 @@ abstract class JCckDevField
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
 		}
-		
+
 		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
 		if ( $field->required ) {
@@ -69,7 +75,7 @@ abstract class JCckDevField
 				$field->required	=	'';
 			}
 		}
-
+		
 		$field->form	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 		
 		return $field;

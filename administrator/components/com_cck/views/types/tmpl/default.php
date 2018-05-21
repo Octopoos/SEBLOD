@@ -25,7 +25,7 @@ $top			=	'content';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
-										 'core_folder_filter', 'core_state_filter', 'core_folder', 'core_dev_text', 'core_storage_location2', 'core_client_filter' ) );
+										 'core_folder_filter', 'core_state_filter', 'core_folder', 'core_dev_text', 'core_storage_location2' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>

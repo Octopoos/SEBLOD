@@ -30,7 +30,7 @@ class JFormFieldCCK extends JFormField
 		$suffix			=	(string)$this->element['more'] ? '<span class="variation_value">'.(string)$this->element['more'].'</span>' : '';
 		$suffix2		=	(string)$this->element['more2'] ? '<span class="variation_value">'.(string)$this->element['more2'].'</span>' : '';
 		$selectlabel	=	isset( $this->element['cck_selectlabel'] ) ? (string)$this->element['cck_selectlabel'] : 'undefined';
-		
+
 		if ( ! $name ) {
 			return;
 		}
@@ -39,11 +39,11 @@ class JFormFieldCCK extends JFormField
 		$lang  	 		=	JFactory::getLanguage();
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
+		
 		if ( $format != 'raw' ) {
 			JCck::loadjQuery( true, true, array( 'cck.dev-3.7.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		}
 		
-		$force_id		=	(string)$this->element['id'];
 		$config			=	array( 'asset'=>'',
 								   'asset_id'=>0,
 								   'client'=>'',
@@ -54,38 +54,51 @@ class JFormFieldCCK extends JFormField
 		if ( $format == 'raw' ) {
 			$config['tmpl']	=	'ajax';
 		}
+		$force_id		=	(string)$this->element['id'];
+		$html			=	'';
 		$inherit		=	( $force_id != '' ) ? array( 'id' => (string)$this->element['id'] ) : array();
 		
-		$field					=	JCckDevField::getObject( $name );
-		if ( ! $field ) {
-			return;
-		}
-		$storage_field			=	$field->storage_field;
-		$field->storage_field	=	$this->name;
-		if ( $attributes != '' ) {
-			$attributes	=	str_replace( "'", '"', $attributes );
-			
-			if ( $field->attributes ) {
-				$field->attributes	.=	' '.$attributes;
-			} else {
-				$field->attributes	=	$attributes;
+		/* TODO#SEBLOD: replace hardcoded check the suitable parameter from XML */
+		if ( $name == 'core_variation' ) {
+			if ( $selectlabel != 'undefined' ) {
+				$inherit['selectlabel']		=	$selectlabel;
+				$inherit['storage_field']	=	$this->name;
 			}
+			$html					=	JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getVariation', 'name'=>$this->name ), $this->value, $config, $inherit );
+		} else {
+			$field					=	JCckDevField::getObject( $name );
+			if ( ! $field ) {
+				return;
+			}
+			$storage_field			=	$field->storage_field;
+			$field->storage_field	=	$this->name;
+			if ( $attributes != '' ) {
+				$attributes	=	str_replace( "'", '"', $attributes );
+				
+				if ( $field->attributes ) {
+					$field->attributes	.=	' '.$attributes;
+				} else {
+					$field->attributes	=	$attributes;
+				}
+			}
+			if ( $options != '' ) {
+				$field->options		=	$options;
+			}
+			if ( $selectlabel != 'undefined' ) {
+				$field->selectlabel	=	$selectlabel;
+			}
+			if ( $class != '' ) {
+				$field->css			=	$class;
+			}
+			if ( $rows != '' ) {
+				$field->rows		=	$rows;
+			}
+			$field					=	JCckDevField::get( $field, $this->value, $config, $inherit );
+			$html					=	$field->form;
 		}
-		if ( $options != '' ) {
-			$field->options		=	$options;
-		}
-		if ( $selectlabel != 'undefined' ) {
-			$field->selectlabel	=	$selectlabel;
-		}
-		if ( $class != '' ) {
-			$field->css			=	$class;
-		}
-		if ( $rows != '' ) {
-			$field->rows		=	$rows;
-		}
-		$field					=	JCckDevField::get( $field, $this->value, $config, $inherit );
-		
+
 		$more			=	'';
+
 		if ( $name2 ) {
 			$field2					=	JCckDevField::getObject( $name2 );
 			$storage_field2			=	$field2->storage_field;
@@ -101,7 +114,7 @@ class JFormFieldCCK extends JFormField
 													'replaceHtml'=>(string)$this->element['js_replacehtml']
 												   ), $format );
 		
-		return $field->form.$suffix.$more.$suffix2.$script;
+		return $html.$suffix.$more.$suffix2.$script;
 	}
 	
 	// _addScripts

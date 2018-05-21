@@ -168,13 +168,13 @@ if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) 
 	$linked	=	'';
 }
 $table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
-$cck	=	JCckDev::preload( array( 'core_storage_mode', 'core_storage_location', 'core_storage_table', 'core_storage_field',
+$cck	=	JCckDev::preload( array( 'core_storage_location', 'core_storage_table', 'core_storage_field',
 									 'core_storage_alter', 'core_storage_alter_type', 'core_storage_alter_table', 'core_required', 'core_script', 'core_attributes', 'core_dev_text' ) );
 ?>
         <li class="w100">
             <?php
 			echo '<label>' . JText::_( 'COM_CCK_STORAGE_LABEL' ) . '</label>';
-			echo JCckDev::getForm( $cck['core_storage_mode'], $value, $config );
+			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_mode' ), $value, $config, array( 'storage_field'=>'storage' ) );
 			echo JCckDev::getForm( $cck['core_storage_location'], $config['item']->storage_location, $config );
 			// echo JCckDev::getForm( $cck['core_storage_table'], $table, $config );
 			if ( $config['item']->storage_field2 ) {

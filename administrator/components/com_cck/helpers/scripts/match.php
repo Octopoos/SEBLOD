@@ -95,7 +95,7 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
         <?php
 		echo '<li><label>'.JText::_( 'PLG_CCK_FIELD_GROUP_COLLECTION' ).'</label>'.$form.'</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
-		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
+		echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Mode', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Simple=0||Multiple=1', 'storage_field'=>'match_options[var_mode]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Count', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'None=||Equal=0||Minus=1', 'storage_field'=>'match_options[var_count]', 'css'=>'match_options' ) );

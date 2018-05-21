@@ -14,6 +14,101 @@ defined( '_JEXEC' ) or die;
 abstract class JCckDev
 {
 	public static $_urls	=	array();
+
+	// _getField
+	protected static function _getField( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		// Check & and Trigger fallback if needed
+		$fallback	=	false;
+		$method		=	$caller['function'];
+		$path		=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/helper_form.php';
+
+		if ( is_file( $path ) ) {
+			require_once $path;
+		} else {
+			$fallback	=	true;
+		}
+		if ( !$fallback ) {
+			if ( !method_exists( 'Helper_Form', $method ) ) {
+				$fallback	=	true;
+			}
+		}
+		if ( $fallback ) {
+			// return JCckDev::getForm( $caller['name'], $value, $config, $override, $inherit );
+		}
+
+		// Continue
+		if ( !( isset( $override['storage_field'] ) && $override['storage_field'] ) ) {
+			$override['storage_field']	=	$caller['name'];
+		}
+
+		$field	=	JCckDevField::get( 'core_dev_text', $value, $config, $inherit, $override, 'initialize' );
+		if ( ! $field ) {
+			return '';
+		}
+
+		$name	=	$field->storage_field;
+		
+		if ( isset( $config['inherit'] ) ) {
+			if ( strpos( $name, '[' ) !== false ) {
+				$parts				=	explode( '[', $name );
+				$inherit['name']	=	$config['inherit'].'['.$parts[0].']['.$parts[1];
+			} else {
+				$inherit['name']	=	$config['inherit'].'['.$name.']';
+			}
+		} else {
+			if ( ! isset( $inherit['name'] ) ) {
+				$inherit['name']	=	$name;
+			}
+		}
+		if ( ! isset( $inherit['id'] ) ) {
+			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
+		}
+
+		// --
+		JCckPluginField::g_onCCK_FieldPrepareForm( $field, $config );
+
+		// Init
+		if ( count( $inherit ) ) {
+			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
+		} else {
+			$id		=	$field->name;
+			$name	=	$field->name;
+		}
+		
+		// Validate
+		$validate	=	'';
+		if ( $config['doValidation'] > 1 ) {
+			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+		}
+		
+		// Prepare
+		if ( trim( $field->selectlabel ) ) {
+			if ( $config['doTranslation'] ) {
+				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+			}
+		}
+
+		// Set
+		$field->form	=	Helper_Form::$method( $field, $value, $name, $id, $config );
+		$field->value	=	$value;
+
+		if ( $field->script ) {
+			JCckPluginField::g_addScriptDeclaration( $field->script );
+		}
+		
+		if ( $field->required ) {
+			if ( trim( $field->label ) == '' ) {
+				$field->required	=	'';
+			}
+		}
+
+		// --
+
+		return $field;
+	}
 	
 	// addField
 	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
@@ -606,6 +701,20 @@ abstract class JCckDev
 		
 		return $html;
 	}
+
+	// getFormFromHelper
+	public static function getFormFromHelper( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		$field				=	self::_getField( $caller, $value, $config, $override, $inherit );
+		
+		$config['fields'][]	=	$field->storage_field;
+		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		if ( isset( $inherit['after'] ) ) {
+			$html			.=	$inherit['after'];
+		}
+		
+		return $html;
+	}
 	
 	// renderForm
 	public static function renderForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
@@ -623,6 +732,30 @@ abstract class JCckDev
 			$html			.=	$inherit['after'];
 		}
 		$label				=	'';
+		if ( $field->label ) {
+			$label			=	'<label>'.$field->label.$tag.'</label>';
+		}
+		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
+		
+		return $html;
+	}
+
+	// renderFormFromHelper
+	public static function renderFormFromHelper( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
+	{
+		$field				=	self::_getField( $caller, $value, $config, $override, $inherit );
+		
+		$class				=	( $class ) ? ' class="'.$class.'"' : '';
+		$config['fields'][]	=	$field->storage_field;
+		$html				=	( isset( $field->form ) ) ? $field->form : '';
+
+		if ( isset( $inherit['after'] ) ) {
+			$html			.=	$inherit['after'];
+		}
+
+		$label				=	'';
+		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
+		
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}

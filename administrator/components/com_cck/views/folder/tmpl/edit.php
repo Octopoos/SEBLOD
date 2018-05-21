@@ -23,7 +23,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( 'core_title_folder', $this->item->title, $config ); ?>
         </ul>
         <ul class="spe spe_folder">
-            <?php echo JCckDev::renderForm( 'core_folder_folder', $this->item->parent_id, $config ); ?>
+            <?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolderParent', 'name'=>'core_folder_folder' ), $this->item->parent_id, $config, array( 'storage_field'=>'parent_id' ) ); ?>
         </ul>
         <ul class="spe spe_state spe_third">
             <?php echo JCckDev::renderForm( 'core_state', $this->item->published, $config, array( 'label'=>'clear', 'defaultvalue'=>1 ) ); ?>

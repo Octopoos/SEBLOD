@@ -48,7 +48,7 @@ if ( $listDir == 'asc' ) {
 	<div class="<?php echo $this->css['filter_select']; ?>">
         <?php
         echo $this->html['filter_select_header'];
-        echo JCckDev::getForm( $cck['core_client_filter'], $this->state->get( 'filter.client' ), $config, array( 'css'=>'small span12' ) );
+        echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getClientFilter', 'name'=>'core_client_filter' ), $this->state->get( 'filter.client' ), $config, array( 'storage_field'=>'filter_client' ) );
 		echo $this->html['filter_select_separator'];
 		echo JCckDev::getForm( $cck['core_storage_location2'], $this->state->get( 'filter.type' ), $config,
 							   array( 'defaultvalue'=>'', 'selectlabel'=>'All Content Objects', 'storage_field'=>'filter_type', 'attributes'=>'onchange="this.form.submit()"', 'css'=>'small span12' ) );

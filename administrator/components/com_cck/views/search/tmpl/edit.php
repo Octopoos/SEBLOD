@@ -11,8 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_title_search', 'core_folder', 'core_description', 'core_state', 'core_client_search',
-										 'core_layer', 'core_storage_location2', 'core_location2', 'core_alias', 'core_access' ) );
+$cck		=	JCckDev::preload( array( 'core_title_search', 'core_folder', 'core_description', 'core_state',
+										 'core_storage_location2', 'core_location2', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -66,8 +66,8 @@ if ( $this->item->client == 'list' ) {
         <div class="togglebar">
         	<div>
 			<?php
-			echo JCckDev::getForm( $cck['core_client_search'], $this->item->client, $config );
-			echo JCckDev::getForm( $cck['core_layer'], $this->item->layer, $config );
+			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
             ?>
         	</div>
         </div>

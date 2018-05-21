@@ -11,8 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state', 'core_client_type',
-										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
+$cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state',
+										 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -55,8 +55,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <div class="togglebar">
         	<div>
 			<?php
-            echo JCckDev::getForm( $cck['core_client_type'], $this->item->client, $config );
-            echo JCckDev::getForm( $cck['core_layer'], $this->item->layer, $config );
+            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
             ?>
         	</div>
         </div>
