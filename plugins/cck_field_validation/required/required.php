@@ -95,11 +95,10 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 			// OK
 		} else {
 			$app	=	JFactory::getApplication();
-			//$lang =	JFactory::getLanguage();
-			//$lang->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
-			
 			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name ;
 			
+			/* TODO#SEBLOD: Add support for condRequired && groupRequired */
+
 			$app->enqueueMessage( $alert, 'error' );
 			$config['validate']	=	'error';
 		}
