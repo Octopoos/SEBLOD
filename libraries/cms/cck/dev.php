@@ -200,11 +200,11 @@ abstract class JCckDev
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.11.2.min.js" type="text/javascript"></script>';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.16.0.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
-			$doc->addScript( $root.'/media/cck/js/cck.validation-3.11.2.min.js' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.16.0.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
