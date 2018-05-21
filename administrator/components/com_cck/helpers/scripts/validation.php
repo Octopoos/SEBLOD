@@ -67,6 +67,8 @@ $js		=	'
 							var text = data ? "'.JText::_( 'COM_CCK_REQUIRED' ).'" : "'.JText::_( 'COM_CCK_OPTIONAL' ).'";
 							if (data == "grouprequired") {
 								data	=	"required["+$("#required2").val()+"]";
+							} else if (data == "condrequired") {
+								data	=	"required[cond:"+$("#required3").val()+"]";
 							}
 							parent.jQuery("#"+eid+"_required").val(data);
 							data = $("#required_alert").val();
@@ -103,10 +105,17 @@ $js		=	'
 					if (data != "" && data != "required") {
 						var data2 =	data.split("[");
 						data2 = data2[1];
-						len2 = data2.length;
-						data2 = data2.substr(0, len2-1);
-						data = "grouprequired";
-						$("#required2").val(data2);
+
+						if (data2.indexOf("cond:") !== -1) {
+							data2 = data2.substr(5);
+							data2 = data2.substr(0, data2.length - 1);
+							data = "condrequired";
+							$("#required3").val(data2);
+						} else {
+							data2 = data2.substr(0, data2.length - 1);
+							data = "grouprequired";
+							$("#required2").val(data2);
+						}
 					}
 					$("#required").val(data);
 					data = parent.jQuery("#"+eid+"_required_alert").val();
@@ -123,7 +132,9 @@ $js		=	'
 							$("#layer").html("");
 						}
 					});
-					$("#required2,#blank_li").isVisibleWhen("required","grouprequired");
+					$("#required2").isVisibleWhen("required","grouprequired");
+					$("#required3").isVisibleWhen("required","condrequired");
+					$("#blank_li").isVisibleWhen("required","grouprequired,condrequired");
 				});
 			})(jQuery);
 			';
@@ -137,10 +148,11 @@ JText::script( 'COM_CCK_REQUIRED' );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_REQUIRED' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired', 'storage_field'=>'required' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired||Yes CondRequired=condrequired', 'storage_field'=>'required' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'storage_field'=>'required_alert' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Group', 'required'=>'required', 'storage_field'=>'required2' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field', 'required'=>'required', 'storage_field'=>'required3' ) );
         ?>
     </ul>
 </div>
