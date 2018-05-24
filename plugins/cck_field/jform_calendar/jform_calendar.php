@@ -117,6 +117,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$convert		=	( isset( $options2['format'] ) && $options2['format'] ) ? $options2['format'] : 'translate';
 		$format_date	=	'';
 		$format_time	=	'';
+		$modify			=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
 		$show_time		=	( isset( $options2['time'] ) && $options2['time'] ) ? true : false;
 
 		if ( $convert != 'translate' ) {
@@ -130,6 +131,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		if ( $show_time ) {
 			$format_time	.=	' timeformat="'.(int)$options2['time'].'"';
+		}
+		if ( (int)$value > 0 && $modify ) {
+			$value	=	JFactory::getDate( $value )->modify( str_replace( '+', '-', $modify ) )->toSql();
 		}
 
 		// Prepare
@@ -194,14 +198,26 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$value	=	trim( $value );
 
 		if ( (int)$value > 0 ) {
-			$date			=	JFactory::getDate( $value, $this->userTimeZone );
-			$timezone		=	new DateTimeZone( 'UTC' );
+			$date		=	JFactory::getDate( $value, $this->userTimeZone );
+
+			$options2	=	JCckDev::fromJSON( $field->options2 );
+			$modify		=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
+
+			if ( $modify ) {
+				$date->modify( $modify );
+			}
+			$timezone	=	new DateTimeZone( 'UTC' );
 			$date->setTimezone( $timezone );
-			$value	=	$date->toSql();
+			$value		=	$date->toSql();
 		}
 
 		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+
+		if ( (int)$field->value > 0 && $modify ) {
+			$field->value	=	JFactory::getDate( $field->value )->modify( $modify )->toSql();
+
+		}
 		
 		// Return
 		if ( $return === true ) {
@@ -223,23 +239,35 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$value	=	trim( $value );
-		
+
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
 		if ( (int)$value > 0 ) {
 			$options2		=	JCckDev::fromJSON( $field->options2 );
 			$format_filter	=	( isset( $options2['format_filter'] ) && $options2['format_filter'] ) ? $options2['format_filter'] : 'user_utc';
+			$modify			=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
 			
-			if ( $format_filter == 'server_utc' ) {
-				$date	=	JFactory::getDate( $value, $this->serverOffset );
+			if ( $format_filter == 'raw' ) {
+				$date		=	JFactory::getDate( $value, 'GMT' );
+				if ( $modify ) {
+					$date->modify( $modify );
+				}
+				$value		=	$date->toSql();
 			} else {
-				$date	=	JFactory::getDate( $value, $this->userTimeZone );
-			}
+				if ( $format_filter == 'server_utc' ) {
+					$date	=	JFactory::getDate( $value, $this->serverOffset );
+				} else {
+					$date	=	JFactory::getDate( $value, $this->userTimeZone );
+				}
+				if ( $modify ) {
+					$date->modify( $modify );
+				}
 
-			$timezone	=	new DateTimeZone( 'UTC' );
-			$date->setTimezone( $timezone );
-			$value		=	$date->toSql();
+				$timezone	=	new DateTimeZone( 'UTC' );
+				$date->setTimezone( $timezone );
+				$value		=	$date->toSql();
+			}
 		}
 		
 		// Set or Return
