@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $config	=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck	=	JCckDev::preload( array( 'core_title_template', 'core_folder', 'core_description', 'core_state', 'core_name_template', 'core_type_template', 'core_featured' ) );
+$cck	=	JCckDev::preload( array( 'core_title_template', 'core_description', 'core_state', 'core_name_template', 'core_type_template', 'core_featured' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -23,7 +23,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_title_template'], $this->item->title, $config ); ?>
         </ul>
         <ul class="spe spe_folder">
-			<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
+			<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
         </ul>
         <ul class="spe spe_state spe_third">
             <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>

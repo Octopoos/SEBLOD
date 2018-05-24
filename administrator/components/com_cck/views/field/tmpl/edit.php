@@ -17,7 +17,7 @@ $tmpl	=	$app->input->getString( 'tmpl', '' );
 $wrap	=	( $tmpl ) ? $this->css['wrapper_tmpl'] : $this->css['wrapper'];
 
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-$cck		=	JCckDev::preload( array( 'core_title_field', 'core_folder', 'core_name_field', 'core_state', 'core_description' ) );
+$cck		=	JCckDev::preload( array( 'core_title_field', 'core_name_field', 'core_state', 'core_description' ) );
 $config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'vName'=>$this->vName, 'tmpl'=>'' ) );
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 if ( $lang->hasKey( $key ) == 1 ) {
@@ -72,7 +72,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
         	} ?>
         </ul>
         <ul class="spe spe_folder">
-			<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
+			<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
         </ul>
         <ul class="spe spe_state">
             <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>

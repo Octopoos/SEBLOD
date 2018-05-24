@@ -37,6 +37,7 @@ abstract class JCckDevField
 		$field->conditional_options	=	'';
 		$field->markup				=	'';
 		$field->markup_class		=	'';
+		
 		if ( count( $override ) ) {
 			foreach ( $override as $k => $v ) {
 				$field->$k	=	$v;

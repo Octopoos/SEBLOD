@@ -35,7 +35,7 @@ $options	=	implode( '||', $options );
 		// echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Next=4||Previous=5||Use Value=optgroup||Field=2', 'storage_field'=>'content' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'content_fieldname' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
-		echo JCckDev::renderForm( 'core_storage_location', '', $config, array( 'label'=>'Content Object', 'storage_field'=>'content_location' ) );
+		echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation', 'name'=>'core_storage_location' ), '', $config, array( 'label'=>'Content Object', 'storage_field'=>'content_location' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li3" value="" />' );
 		echo JCckDev::renderForm( 'core_languages', '', $config, array( 'label'=>'Language', 'selectlabel'=>'Auto', 'storage_field'=>'language' ) );
 		

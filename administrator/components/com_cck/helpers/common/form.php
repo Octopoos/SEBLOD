@@ -13,6 +13,31 @@ defined( '_JEXEC' ) or die;
 // CommonHelper
 class CommonHelper_Form
 {
+	// getFolder
+	public static function getFolder( &$field, $value, $name, $id, $config )
+	{
+		if ( empty( $field->label ) ) {
+			$field->label	=	'App Folder';
+		}
+		$class	=	$field->css ? ' '.$field->css : '';
+
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( false, true, false, true, $config['vName'] ), $name, 'class="inputbox select'.$class.'"', 'value', 'text', $value, $id );
+	}
+
+	// getLocationFilter
+	public static function getLocationFilter( &$field, $value, $name, $id, $config )
+	{
+		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="inputbox select hidden-phone" '.$field->attributes, 'value', 'text', $value, $id );
+	}
+
+	// getFolderFilter
+	public static function getFolderFilter( &$field, $value, $name, $id, $config )
+	{
+		$field->label	=	'App Folder';
+
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+	}
+
 	// getMediaExtensions
 	public static function getMediaExtensions( &$field, $value, $name, $id, $config )
 	{
@@ -65,6 +90,80 @@ class CommonHelper_Form
 		$css		=	( $field->required == 'required' ) ? ' validate[required]' : '';
 		
 		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select'.$css.'" '.$field->attributes, 'value', 'text', $value, $id );
+	}
+
+	// getStorageLocation
+	public static function getStorageLocation( &$field, $value, $name, $id, $config )
+	{
+		if ( empty( $field->label ) ) {
+			$field->label	=	'Storage Location';	
+		}
+		
+		$value			=	( $value ) ? $value : 'joomla_article';
+		$options		=	array();
+		$options		=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage_location', 'cck_', false, false, true ) );
+
+		$attr			=	'data-cck';
+		$base			=	JPATH_SITE.'/plugins/cck_storage_location';
+		
+		if ( count( $options ) ) {
+			foreach ( $options as $o ) {
+				if ( $o->value == '<OPTGROUP>' || $o->value == '</OPTGROUP>' ) {
+					continue;
+				}
+				$pp		=	array( 'custom' );
+		
+				if ( is_file( $base.'/'.$o->value.'/'.$o->value.'.php' ) ) {
+					require_once $base.'/'.$o->value.'/'.$o->value.'.php';
+
+					$pp	=	JCck::callFunc( 'plgCCK_Storage_Location'.$o->value,'getStaticProperties',$pp );
+					$v	=	$pp['custom'];
+				} else {
+					$v	=	'';
+				}
+				
+				$o->$attr = 'data-custom="'.$v.'"';
+			}
+		}
+
+		$attr	=	'class="inputbox select" '.$field->attributes;
+		$attr	=	array(
+						'id'=>$id,
+						'list.attr'=>$attr,
+						'list.select'=>$value,
+						'list.translate'=>FALSE,
+						'option.attr'=>'data-cck',
+						'option.key'=>'value',
+						'option.text'=>'text'
+					);
+
+		return JHtml::_( 'select.genericlist', $options, $name, $attr );
+	}
+
+	// getStorageLocation2
+	public static function getStorageLocation2( &$field, $value, $name, $id, $config )
+	{
+		if ( empty( $field->label ) ) {
+			$field->label	=	'Content Object';
+		}
+
+		$view		=	JFactory::getApplication()->input->get( 'view', '' );
+		$options	=	array();
+		
+		if ( trim( $field->selectlabel ) ) {
+			$options	=	array( JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' ) );
+		} else {
+			$value		=	( $value ) ? $value : '';
+			$options	=	array();
+		}
+		
+		if ( $view == 'type' || $view == 'types' ) {
+			$options[] = JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) );
+		}
+		$class		=	$field->css ? ' '.$field->css : '';
+		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage_location', 'cck_', false, false, true ) );
+		
+		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select'.$class.'" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getTables

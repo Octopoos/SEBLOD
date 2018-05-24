@@ -64,7 +64,7 @@ abstract class JCckDev
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
 		}
-
+		
 		// --
 		JCckPluginField::g_onCCK_FieldPrepareForm( $field, $config );
 

@@ -11,8 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_title_search', 'core_folder', 'core_description', 'core_state',
-										 'core_storage_location2', 'core_location2', 'core_alias', 'core_access' ) );
+$cck		=	JCckDev::preload( array( 'core_title_search', 'core_description', 'core_state',
+										 'core_location2', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -53,7 +53,7 @@ if ( $this->item->client == 'list' ) {
                 ?>
             </ul>
             <ul class="spe spe_folder">
-				<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
+				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
             </ul>
             <ul class="spe spe_state spe_third">
                 <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
@@ -79,7 +79,7 @@ if ( $this->item->client == 'list' ) {
 				<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
             </ul>
             <ul class="spe spe_folder">
-				<?php echo JCckDev::renderForm( $cck['core_storage_location2'], $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"' ) ); ?>
+				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
             </ul>
             <ul class="spe spe_third">
 				<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ); ?>

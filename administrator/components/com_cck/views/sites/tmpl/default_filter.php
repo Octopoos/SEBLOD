@@ -26,7 +26,7 @@ if ( $listDir == 'asc' ) {
 <div class="<?php echo $this->css['filter']; ?>" id="filter-bar">
 	<div class="<?php echo $this->css['filter_search']; ?>">
         <?php
-		echo JCckDev::getForm( $cck['core_location_filter'], $this->state->get( 'filter.location' ), $config );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLocationFilter', 'name'=>'core_location_filter' ), $this->state->get( 'filter.location' ), $config, array( 'storage_field'=>'filter_location' ) );
 		echo JCckDev::getForm( $cck['core_filter_input'], $this->escape( $this->state->get( 'filter.search' ) ), $config, array( 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_ITEMS_SEARCH_FILTER' ).'" style="text-align:center;"' ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_go'], '', $config, array( 'css'=>$this->css['filter_search_button'] ), array( 'after'=>"\n" ) );
 		echo JCckDev::getForm( $cck['core_filter_search'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="'.$clear.'this.form.submit();"' ), array( 'after'=>"\n" ) );
