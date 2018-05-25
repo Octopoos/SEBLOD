@@ -435,9 +435,21 @@ class CCKController extends JControllerLegacy
 							'uniqid'=>$app->input->get( 'uniqid', '' )
 						);
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_cid	=	'int';
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		$ids		=	ArrayHelper::toInteger( $ids );
-		
+
+		if ( $task_id ) {
+			$processing	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$task_id );
+			
+			if ( is_object( $processing ) && $processing->options != '' ) {
+				$processing->options	=	new JRegistry( $processing->options );
+				$task_cid				=	$processing->options->get( 'input_cid', 'int' );
+			}
+		}
+		if ( $task_cid == 'int' ) {
+			$ids		=	ArrayHelper::toInteger( $ids );
+		}
+
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
@@ -452,8 +464,15 @@ class CCKController extends JControllerLegacy
 
 		if ( $result === false ) {
 			$return['error']	=	1;
-		} elseif ( !$return['pk'] ) {
-			$return['error']	=	1;
+		} elseif ( !$return['pk'] ) { /* TODO#SEBLOD: this shouldn't be executed for standalones */
+			$task_input	=	0;
+
+			if ( isset( $processing ) && is_object( $processing->options ) ) {
+				$task_input			=	(int)$processing->options->get( 'input', '0' );
+			}
+			if ( !$task_input ) {
+				$return['error']	=	1;
+			}
 		}
 		
 		echo json_encode( $return );

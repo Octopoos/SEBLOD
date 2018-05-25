@@ -37,6 +37,11 @@ if ( $list['isCore'] ) {
 	}
 	$ids		=	substr( $ids, 0, -1 );
 	$pks		=	substr( $pks, 0, -1 );
+} else {
+	for ( $i = 0; $i < $count; $i++ ) {
+		$ids	.=	$items[$i]->id.',';
+	}
+	$ids		=	substr( $ids, 0, -1 );
 }
 $storages		=	array( '_'=>'' );
 $suffix			=	'';
