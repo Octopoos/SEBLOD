@@ -117,8 +117,10 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Set
+		$isDefault		=	false;
 		$value_json		=	JCckDev::fromJSON( $value );
 		$options2		=	JCckDev::fromJSON( $field->options2 );
+
 		if ( is_array( $value_json ) && !empty( $value_json ) ) {
 			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
@@ -128,13 +130,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$img_desc	=	self::_getAlt( $img_desc, $img_title, $file_name );
 			$img_desc	=	htmlspecialchars( $img_desc, ENT_QUOTES );
 		} else {
-			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			if ( trim( $value ) == '' ) {
+				$value		=	trim( $field->defaultvalue );
+				$isDefault	=	true;
+			} else {
+				$value		=	trim( $value );
+			}
+
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
 		}
 		if ( @$options2['storage_format'] ) {
-			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+			if ( $isDefault ) {
+				$value	=	$options2['path'].$value;
+			} else {
+				$value	=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+			}
 		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
