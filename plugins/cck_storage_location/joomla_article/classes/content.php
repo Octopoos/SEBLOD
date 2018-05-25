@@ -16,11 +16,13 @@ class JCckContentJoomla_Article extends JCckContent
 	// saveBase
 	protected function saveBase()
 	{
-		if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
-			$this->_instance_base->language	=	'*';
-		}
-		if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
-			$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		if ( !$this->getId() ) {
+			if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
+				$this->_instance_base->language	=	'*';
+			}
+			if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
+				$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+			}
 		}
 
 		$status			=	$this->_instance_base->store();
@@ -40,6 +42,56 @@ class JCckContentJoomla_Article extends JCckContent
 		}
 
 		return $status;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
+
+	// _tag
+	protected function _tag( $tags )
+	{
+		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->can( 'save' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+
+			return false;
+		}
+
+		if ( !is_array( $tags ) ) {
+			$tags	=	array( $tags );
+		}
+		foreach ( $tags as $k=>$v ) {
+			$tags[$k]	=	(string)$v;
+		}
+
+		$this->_instance_base->newTags	=	$tags;
+
+		return $this->_instance_base->store();
+	}
+
+	// _untag
+	protected function _untag( $tags )
+	{
+		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->can( 'save' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+
+			return false;
+		}
+
+		if ( !is_array( $tags ) ) {
+			$tags	=	array( $tags );
+		}
+		foreach ( $tags as $k=>$v ) {
+			$tags[$k]	=	(string)$v;
+		}
+
+		$tagHelper				=	new JHelperTags;
+		$tagHelper->typeAlias	=	'com_content.article';
+		$tagHelper->unTagItem( 0, $this->_instance_base, $tags );
 	}
 }
 ?>
