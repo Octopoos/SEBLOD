@@ -131,6 +131,7 @@
 		</field>
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
+		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
 		<field name="media_quality_jpeg" type="text" default="90" label="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG_DESC" class="inputbox input-small" />
 		<field name="media_quality_png" type="text" default="3" label="COM_CCK_CONFIG_MEDIA_QUALITY_PNG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_PNG_DESC" class="inputbox input-small" />
 		<field name="media_archive_extensions" type="text" size="98" default="7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP" label="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE" description="COM_CCK_CONFIG_MEDIA_LEGAL_EXTENSIONS_ARCHIVE_DESC" class="inputbox input-xlarge" />
