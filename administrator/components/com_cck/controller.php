@@ -317,14 +317,10 @@ class CCKController extends JControllerLegacy
 	// download
 	public function download()
 	{
-		$app		=	JFactory::getApplication();
-		$id			=	$app->input->getInt( 'id', 0 );
-		$fieldname	=	$app->input->getString( 'file', '' );
-		$collection	=	$app->input->get( 'collection', '' );
-		$xi			=	$app->input->getInt( 'xi', 0 );
-		$client		=	$app->input->get( 'client', 'content' );
-		$restricted	=	'';
-		$user		=	JFactory::getUser();
+		$app			=	JFactory::getApplication();
+		$id				=	$app->input->getInt( 'id', 0 );
+		$fieldname		=	$app->input->getString( 'file', '' );
+		$to_be_erased	=	false;
 		
 		if ( ! $id ) {
 			$file	=	$fieldname;
@@ -339,6 +335,9 @@ class CCKController extends JControllerLegacy
 				if ( count( $paths ) ) {
 					$paths[]	=	'tmp/';
 					foreach ( $paths as $p ) {
+						if ( empty( $p ) ) {
+							continue;
+						}
 						if ( strpos( $path, JPATH_ROOT.'/'.$p ) !== false ) {
 							$allowed	=	true;
 							break;
@@ -348,10 +347,37 @@ class CCKController extends JControllerLegacy
 				if ( !$allowed ) {
 					$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 					return;
+				} else {
+					$to_be_erased	=	true;
 				}
 			} elseif ( strpos( $path, JPATH_ROOT.'/tmp/' ) === false ) {
 				$this->setRedirect( JUri::base(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
+			} else {
+				$to_be_erased	=	true;
+			}
+			if ( $to_be_erased ) {
+				if ( strpos( $path, JPATH_ROOT.'/tmp/' ) === false ) {
+					$to_be_erased	=	false;
+					$paths			=	JCck::getConfig_Param( 'media_paths_tmp', '' );
+
+					if ( $paths != '' ) {
+						$paths			=	strtr( $paths, array( "\r\n"=>'<br />', "\r"=>'<br />', "\n"=>'<br />' ) );
+						$paths			=	explode( '<br />', $paths );
+
+						if ( count( $paths ) ) {
+							foreach ( $paths as $p ) {
+								if ( empty( $p ) ) {
+									continue;
+								}
+								if ( strpos( $path, JPATH_ROOT.'/'.$p ) !== false ) {
+									$to_be_erased	=	true;
+									break;
+								}
+							}
+						}
+					}
+				}
 			}
 		} else {
 			$config	=	JCckDevHelper::getDownloadInfo( $id, $fieldname );
@@ -365,7 +391,7 @@ class CCKController extends JControllerLegacy
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
-
+		
 		if ( is_file( $path ) && $file ) {
 			$size	=	filesize( $path ); 
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
