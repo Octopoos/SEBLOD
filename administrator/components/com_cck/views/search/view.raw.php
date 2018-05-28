@@ -99,6 +99,10 @@ class CCKViewSearch extends JViewLegacy
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
+
+			if ( $this->item->cck_type != '' ) {
+				$this->item->sef_route	=	$this->item->cck_type;
+			}
 		}
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
