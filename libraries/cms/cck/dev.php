@@ -34,7 +34,7 @@ abstract class JCckDev
 			}
 		}
 		if ( $fallback ) {
-			// return JCckDev::getForm( $caller['name'], $value, $config, $override, $inherit );
+			return JCckDev::getForm( $caller['name'], $value, $config, $override, $inherit );
 		}
 
 		// Continue

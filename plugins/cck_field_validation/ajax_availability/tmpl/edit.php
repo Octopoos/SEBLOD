@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-echo JCckDev::renderForm( 'core_tables', '', $config, array( 'selectlabel'=>'Select', 'required'=>'required' ) );
+echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'selectlabel'=>'Select', 'required'=>'required', 'storage_field'=>'table' ) );
 echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Column', 'required'=>'required', 'storage_field'=>'column' ) );
 echo JCckDev::renderBlank();
 echo JCckDev::renderForm( 'core_dev_text', 'id', $config, array( 'label'=>'Key Column', 'required'=>'required', 'storage_field'=>'key' ) );
