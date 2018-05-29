@@ -702,6 +702,49 @@ class JCckContent
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
 	}
 
+	// findMore (^)
+	public function findMore( $content_type, $data = array() )
+	{
+		$this->clear();
+		
+		if ( !$this->_setObjectByType( $content_type ) ) {
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+		
+		$this->setInstance( 'base' );
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
+
+		$db		=	JFactory::getDbo();
+		$query	=	$this->_getDataQuery( $content_type, $data );
+
+		if ( $query === false ) {
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$query->select( $db->quoteName( 'a.pk' ) );
+
+		$db->setQuery( $query );
+
+		$pks		=	array_flip( $this->_results );
+		$results	=	$db->loadColumn();
+
+		foreach ( $results as $pk ) {
+			if ( !isset( $pks[$pk] ) ) {
+				$this->_results[]	=	$pk;
+			}
+		}
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
+	}
+
 	// load (^)
 	public function load( $identifier )
 	{
