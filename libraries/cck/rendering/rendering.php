@@ -678,12 +678,14 @@ class CCK_Rendering
 	// setConditionalStates
 	public function setConditionalStates( &$field )
 	{	
+		$name	=	isset( $field->name2 ) ? $field->name2 : $field->name;
+
 		if ( $field->markup == 'none' ) {
 			$field->conditional_options	=	str_replace( array( ' #form#', '#form#' ), '', $field->conditional_options );
-			$selector					=	$field->name;
+			$selector					=	$name;
 		} else {
-			$field->conditional_options	=	str_replace( '#form#', '#'.$field->name, $field->conditional_options );
-			$selector					=	$this->id.'_'.$field->name;
+			$field->conditional_options	=	str_replace( '#form#', '#'.$name, $field->conditional_options );
+			$selector					=	$this->id.'_'.$name;
 		}
 		$this->addJS( '$("#'.$selector.'").conditionalStates('.$field->conditional_options.');' );
 	}
