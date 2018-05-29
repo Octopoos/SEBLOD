@@ -653,6 +653,10 @@ class JCckContent
 		$db		=	JFactory::getDbo();
 		$query	=	$this->_getDataQuery( $content_type, $data );
 
+		if ( $query === false ) {
+			return false;
+		}
+
 		$query->select( 'COUNT('.$db->quoteName( 'a.pk' ).')' );
 
 		$db->setQuery( $query );
@@ -681,6 +685,12 @@ class JCckContent
 
 		$db		=	JFactory::getDbo();
 		$query	=	$this->_getDataQuery( $content_type, $data );
+
+		if ( $query === false ) {
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
 
 		$query->select( $db->quoteName( 'a.pk' ) );
 
@@ -1448,10 +1458,14 @@ class JCckContent
 		$query->where( $db->quoteName( 'a.cck' ).' = '.$db->quote( $content_type ) );
 
 		foreach ( $data as $k=>$v ) {
-			if ( !isset( $this->_data_map[$k] ) ) {
-				continue;
+			if ( $k == $this->_columns['key'] ) {
+				$instance_name	=	'base';
+			} else {
+				if ( !isset( $this->_data_map[$k] ) ) {
+					return false;
+				}
+				$instance_name	=	$this->_data_map[$k];
 			}
-			$instance_name	=	$this->_data_map[$k];
 
 			$index	=	'';
 
