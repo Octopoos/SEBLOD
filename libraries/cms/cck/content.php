@@ -936,10 +936,28 @@ class JCckContent
 		return (int)$this->_id;
 	}
 
+	// getLog
+	public function getLog()
+	{
+		return $this->_logs;
+	}
+
 	// getObject
 	public function getObject()
 	{
 		return $this->_object;
+	}
+
+	// getParent
+	public function getParent()
+	{
+		$parent_id	=	0;
+
+		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] ) {
+			$parent_id	=	(int)$this->get( 'base', $this->_columns['parent'], 0 );
+		}
+
+		return $parent_id;
 	}
 
 	// getPk
