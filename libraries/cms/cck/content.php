@@ -24,6 +24,7 @@ class JCckContent
 	protected $_columns					=	array();
 	protected $_data					=	null;
 	protected $_data_map				=	array();
+	protected $_data_preset				=	array();
 	protected $_error					=	false;
 	protected $_id						=	0;
 	protected $_instance_base			=	null;
@@ -747,6 +748,17 @@ class JCckContent
 		$this->_logs[$type][]	=	$message;
 	}
 
+	// preset
+	public function preset( $data )
+	{
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		$this->_data_preset	=	$data;
+
+		return $this;
+	}
 	// reset
 	public function reset( $complete = false )
 	{
@@ -1415,6 +1427,18 @@ class JCckContent
 			}
 		}
 
+		if ( count( $this->_data_preset ) ) {
+			foreach ( $this->_data_preset as $k=>$v ) {
+				if ( !isset( $this->_data_map[$k] ) ) {
+					continue;
+				}
+
+				$instance_name				=	$this->_data_map[$k];
+				$data[$instance_name][$k]	=	$v;
+			}
+
+			$this->_data_preset	=	array();
+		}
 		foreach ( $data as $name=>$array ) {
 			$data_array	=	${'data_'.$name};
 
