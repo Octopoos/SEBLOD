@@ -51,7 +51,7 @@ class JCckContent
 		$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$this->_options			=	new Registry;
 
-		/* TODO: $this->_object ??  */
+		/* TODO#SEBLOD: $this->_object ??  */
 
 		$this->initialize();
 	}
@@ -304,7 +304,7 @@ class JCckContent
 			$canEditOwnContent	=	false;
 
 			if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
-				$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$this->getPk() );
+				$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$this->_pk );
 				$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
 
 				if ( $related_content->author_id == $user->id ) {
@@ -426,7 +426,7 @@ class JCckContent
 								'dump'=>false,
 								'updateProperty'=>true
 							);
-		/* TODO: call=true, triggerSave=true, updateType=true */
+		/* TODO#SEBLOD: call=true, triggerSave=true, updateType=true */
 
 		if ( !isset( $tasks[$task] ) ) {
 			$this->_error	=	true;
@@ -457,7 +457,7 @@ class JCckContent
 			}
 		}
 
-		/* TODO: $this->log( '...', $count ); */
+		/* TODO#SEBLOD: $this->log( '...', $count ); */
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : ( $count ? $count : false );
 	}
@@ -581,7 +581,7 @@ class JCckContent
 
 		$data			=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
 		$this->_is_new	=	true;
-		
+
 		// Base
 		if ( !( $this->save( 'base', $data['base'] ) ) ) {
 			$this->_error	=	true;
@@ -1181,7 +1181,10 @@ class JCckContent
 			return false;
 		}
 
-		if ( !$this->isNew() ) { /* TODO: change to getPk() or check getPk() prior to permissions check */
+		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
 				$this->log( 'error', 'Permissions denied.' );
 
@@ -1209,7 +1212,7 @@ class JCckContent
 			return false;
 		}
 
-		/* TODO: update bridge author */
+		/* TODO#SEBLOD: update bridge author */
 
 		return true;
 	}
@@ -1237,7 +1240,10 @@ class JCckContent
 			return false;
 		}
 
-		if ( !$this->isNew() ) { /* TODO: change to getPk() or check getPk() prior to permissions check */
+		if ( !$this->_pk ) {
+			return false;
+		}
+		if ( !$this->isNew() ) {
 			if ( !$this->can( 'save' ) ) {
 				$this->log( 'error', 'Permissions denied.' );
 
@@ -1246,14 +1252,14 @@ class JCckContent
 		}
 
 		if ( !$this->setType( $content_type, $reload )->isSuccessful() ) {
-			/* TODO: revert? */
+			/* TODO#SEBLOD: revert? */
 
 			$this->_error	=	false;
 
 			return false;
 		}
 
-		return $this->_instance_core->store(); /* TODO: revert? */
+		return $this->_instance_core->store(); /* TODO#SEBLOD: revert? */
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
@@ -1397,7 +1403,7 @@ class JCckContent
 		}
 
 		if ( count( $data['more2'] ) ) {
-			if ( !isset( $data['more2']['cck'] ) ) {
+			if ( !isset( $data['more2']['cck'] ) ) { /* TODO#SEBLOD: remove "cck" column */
 				$data['more2']['cck']	=	$this->_type;
 			}
 		}
@@ -1421,8 +1427,8 @@ class JCckContent
 			$data['core']['parent_id']	=	$data['base'][$this->_columns['parent']];
 		}
 
-		/* TODO: force to default author id when null? */
-		/* TODO: force to default parent_id when null? */
+		/* TODO#SEBLOD: force to default author id when null? */
+		/* TODO#SEBLOD: force to default parent_id when null? */
 
 		return $data;
 	}
@@ -1489,7 +1495,7 @@ class JCckContent
 			}
 		}
 
-		unset( $this->_data_map['id'], $this->_data_map['cck'] );
+		unset( $this->_data_map['id'], $this->_data_map['cck'] ); /* TODO#SEBLOD: remove "cck" column */
 	}
 
 	// _setObjectById
@@ -1594,7 +1600,7 @@ class JCckContent
 				$property	=	$this->_columns['parent'];
 				$test		=	JTable::getInstance( 'Content' );
 				
-				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->{$property} ) ) ) {
+				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->$property ) ) ) {
 					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
 				}
 				$this->{'_instance_'.$instance_name}->alias	=	$alias;
