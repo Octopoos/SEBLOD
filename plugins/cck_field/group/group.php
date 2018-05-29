@@ -154,6 +154,10 @@ class plgCCK_FieldGroup extends JCckPluginField
 					}
 					$inherit					=	array();
 					$clone						=	clone $f;
+
+					if ( $field->variation != '' && $clone->variation == '' ) {
+						$clone->variation		=	$field->variation;
+					}
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
 					$form[$f_name]				=	@$results[0];
 					@$form[$f_name]->name		=	$f->name;
