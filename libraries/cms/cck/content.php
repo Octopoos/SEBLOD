@@ -580,7 +580,53 @@ class JCckContent
 		$this->setInstance( 'more_parent' );
 		$this->setInstance( 'more2' );
 
-		$data			=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
+		if ( is_bool( $data_more ) ) {
+			$data		=	$this->_getDataDispatch( $content_type, $data );
+
+			if ( $data_more === true && is_array( $data_more2 ) && count( $data_more2 ) ) {
+				$results	=	$this->_results;
+
+				$this->find( $content_type, $data_more2 )->loadOne();
+
+				if ( $this->isSuccessful() ) {
+					$this->save( 'base', $data['base'] );
+					$this->save( 'core', array(
+											'cck'=>$this->_type,
+											'pk'=>$this->_pk,
+											'storage_location'=>$this->_object,
+											'author_id'=>$this->getAuthor(),
+											'parent_id'=>$data['core']['parent_id'],
+											'date_time'=>$data['core']['date_time']
+						   				 ) );
+
+					static $names	=	array(
+											'more'=>'',
+											'more_parent'=>'',
+											'more2'=>''
+										);
+
+					foreach ( $names as $instance_name=>$null ) {
+						if ( count( $data[$instance_name] ) ) {
+							$this->save( $instance_name, $data[$instance_name] );
+						}
+					}
+
+					// Keep it for later
+					self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
+					self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
+
+					$this->_results	=	$results;
+
+					return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
+				} else {
+					$this->_error	=	false;
+					$this->_results	=	$results;
+				}
+			}
+		} else {
+			$data		=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
+		}
+
 		$this->_is_new	=	true;
 
 		// Base
@@ -745,6 +791,87 @@ class JCckContent
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
 	}
 
+// import (^)
+	public function import( $content_type, $identifier )
+	{
+		$this->reset();
+
+		if ( !$this->_setObjectByType( $content_type ) ) {
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_pk	=	$identifier;
+
+		if ( !$this->setInstance( 'base', true ) ) {
+			$this->reset();
+
+			return false;
+		}
+
+		if ( JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core WHERE storage_location = "'.(string)$this->_object.'" AND pk = '.(int)$this->_pk ) ) {
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		if ( !$this->can( 'create' ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+		
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
+
+		$this->_is_new	=	true;
+
+		// Core
+		if ( !( $this->save( 'core', array(
+										'cck'=>$this->_type,
+										'pk'=>$this->_pk,
+										'storage_location'=>$this->_object,
+										'author_id'=>$this->getAuthor(),
+										'parent_id'=>$this->getParent(),
+										'date_time'=>JFactory::getDate()->toSql()
+						   ) ) ) ) {
+			$this->_error	=	true;
+			$this->_is_new	=	false;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		// More
+		static $names	=	array(
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>''
+							);
+
+		foreach ( $names as $instance_name=>$null ) {
+			if ( is_object( $this->{'_instance_'.$instance_name} ) ) {
+				$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
+			}
+		}
+		
+		$this->_is_new	=	false;
+
+		// Keep it for later
+		self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
+		self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
+		
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
+	}
+
 	// load (^)
 	public function load( $identifier )
 	{
@@ -779,6 +906,24 @@ class JCckContent
 		}
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// loadOne
+	public function loadOne()
+	{
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		if ( !count( $this->_results ) ) {
+			$this->_error	=	true;
+
+			return $this;
+		}
+
+		$this->load( $this->_results[0] );
+
+		return $this;
 	}
 
 	// log
@@ -1448,7 +1593,7 @@ class JCckContent
 	}
 
 	// _getDataDispatch
-	protected function _getDataDispatch( $content_type, $data_base, $data_more, $data_more2 )
+	protected function _getDataDispatch( $content_type, $data_base, $data_more = array(), $data_more2 = array() )
 	{
 		$data				=	array(
 									'base'=>array(),
