@@ -619,7 +619,7 @@ class CCK_Rendering
 	{
 		$field	=	$this->get( $fieldname );
 		
-		if ( !$field->display ) {
+		if ( !$field->state ) {
 			return '';
 		}
 		

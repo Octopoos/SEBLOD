@@ -258,7 +258,7 @@ class CCK_Item
 	{
 		$field	=	$this->get( $fieldname );
 		
-		if ( !is_object( $field ) || !$field->display ) {
+		if ( !is_object( $field ) || !$field->state ) {
 			return '';
 		}
 		
