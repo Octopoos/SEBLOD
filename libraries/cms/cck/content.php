@@ -1075,8 +1075,8 @@ class JCckContent
 				
 				if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
 					$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+					$this->store( 'base' );
 				}
-				$this->store( 'base' );
 				break;
 			case 'more':
 			case 'more2':
@@ -1463,11 +1463,11 @@ class JCckContent
 						break;
 					case 'more_parent':
 						$tables['more_parent']	=	'd';
-						$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type_parent, $tables['more'] ).' ON '.$db->quoteName( $tables['more'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+						$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type_parent, $tables['more_parent'] ).' ON '.$db->quoteName( $tables['more_parent'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
 						break;
 					case 'more2':
 						$tables['more2']		=	'e';
-						$query->join( 'left', $db->quoteName( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ), $tables['more'] ).' ON '.$db->quoteName( $tables['more'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+						$query->join( 'left', $db->quoteName( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ), $tables['more2'] ).' ON '.$db->quoteName( $tables['more2'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
 						break;
 					default:
 						break;
