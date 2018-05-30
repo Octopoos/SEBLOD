@@ -17,6 +17,7 @@ class JCckContent
 {
 	protected static $instances			=	array();
 	protected static $instances_map		=	array();
+	protected static $objects			=	array();
 
 	protected $_dispatcher				=	null;
 	protected $_options					=	null;
@@ -506,13 +507,13 @@ class JCckContent
 		$task	=	'_'.array_shift( $args );
 		
 		static $excluded	=	array(
-									'_getColumnsAliases'=>'',
 									'_getDataDispatch'=>'',
 									'_getDataQuery'=>'',
 									'_saveLegacy'=>'',
 									'_setDataMap'=>'',
 									'_setObjectById'=>'',
-									'_setObjectByType'=>''
+									'_setObjectByType'=>'',
+									'_setObjectMap'=>''
 								);
 		if ( isset( $excluded[$task] ) ) {
 			$this->_error	=	true;
@@ -791,7 +792,7 @@ class JCckContent
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
 	}
 
-// import (^)
+	// import (^)
 	public function import( $content_type, $identifier )
 	{
 		$this->reset();
@@ -947,6 +948,7 @@ class JCckContent
 
 		return $this;
 	}
+
 	// reset
 	public function reset( $complete = false )
 	{
@@ -963,6 +965,15 @@ class JCckContent
 			$this->_columns			=	array();
 			$this->_object			=	'';
 			$this->_table 			=	'';
+
+			$this->_data			=	null;
+			$this->_data_map		=	array(); /* TODO#SEBLOD: per content type or per item ? */
+			$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
+
+			$this->unsetInstance( 'base' );
+			$this->unsetInstance( 'more' );
+			$this->unsetInstance( 'more_parent' );
+			$this->unsetInstance( 'more2' );
 		}
 
 		return $this;
@@ -1569,29 +1580,6 @@ class JCckContent
 		return true;
 	}
 
-	// _getColumnsAliases
-	protected function _getColumnsAliases()
-	{
-		$values		=	array(
-							'author',
-							'context',
-							'custom',
-							'events',
-							'key',
-							'parent',
-							'table',
-							'table_object'
-						);
-		$properties	=	array();
-		
-		if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$this->_object.'/'.$this->_object.'.php' ) ) {
-			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$this->_object.'/'.$this->_object.'.php';
-			$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$this->_object, 'getStaticProperties', $values );
-		}
-		
-		return $properties;
-	}
-
 	// _getDataDispatch
 	protected function _getDataDispatch( $content_type, $data_base, $data_more = array(), $data_more2 = array() )
 	{
@@ -1742,6 +1730,41 @@ class JCckContent
 		unset( $this->_data_map['id'], $this->_data_map['cck'] ); /* TODO#SEBLOD: remove "cck" column */
 	}
 
+	// _setObjectMap
+	protected function _setObjectMap( $object = '' )
+	{
+		if ( !$object ) {
+			$current	=	true;
+			$object		=	$this->_object;
+		} else {
+			$current	=	false;
+		}
+		if ( !$object ) {
+			return false;
+		}
+
+		if ( !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php' ) ) {
+			return false;
+		}
+
+		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
+
+		$properties	=	array(
+							'author',
+							'context',
+							'custom',
+							'events',
+							'key',
+							'parent',
+							'table',
+							'table_object'
+						);
+
+		$this->_columns	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+
+		return true;
+	}
+
 	// _setObjectById
 	protected function _setObjectById( $identifier )
 	{
@@ -1769,7 +1792,8 @@ class JCckContent
 			return false;
 		}
 
-		$this->_columns				=	$this->_getColumnsAliases();
+		$this->_setObjectMap();
+
 		$this->_table				=	$this->_columns['table'];
 
 		if ( !$this->_table ) {
@@ -1808,7 +1832,8 @@ class JCckContent
 				return false;
 			}
 
-			$this->_columns				=	$this->_getColumnsAliases();
+			$this->_setObjectMap();
+
 			$this->_table				=	$this->_columns['table'];
 		} else {
 			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
