@@ -1281,6 +1281,11 @@ class JCckContent
 		if ( get_class( $this ) == 'JCckContent' ) {
 			$status	=	$this->_saveLegacy( $instance_name, $data );
 		} else {
+			// Let's make sure we have a valid instance /* TODO#SEBLOD: should we move this check to the suitable function(s) */
+			if ( !( $instance_name == 'base' || $instance_name == 'core' ) && empty( $this->{'_instance_'.$instance_name}->id ) ) {
+				$this->_fixDatabase( $instance_name );
+			}
+
 			$method	=	'save'.ucfirst( $instance_name );
 			$status	=	$this->$method();
 		}
@@ -1375,8 +1380,13 @@ class JCckContent
 
 				return false;
 			}
+
+			// Let's make sure we have a valid instance
+			if ( !( $instance_name == 'base' || $instance_name == 'core' ) && empty( $this->{'_instance_'.$instance_name}->id ) ) {
+				$this->_fixDatabase( $instance_name );
+			}
 		}
-		
+
 		return $this->{'_instance_'.$instance_name}->store();
 	}
 
@@ -1578,6 +1588,15 @@ class JCckContent
 		}
 
 		return true;
+	}
+	
+	// _fixDatabase
+	protected function _fixDatabase( $instance_name )
+	{
+		$data	=	$this->{'_instance_'.$instance_name}->getProperties();
+
+		$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
+		$this->{'_instance_'.$instance_name}->bind( $data );
 	}
 
 	// _getDataDispatch
