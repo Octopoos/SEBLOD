@@ -18,14 +18,13 @@ class JCckContent
 	protected static $instances			=	array();
 	protected static $instances_map		=	array();
 	protected static $objects			=	array();
+	protected static $types				=	array();
 
 	protected $_dispatcher				=	null;
 	protected $_options					=	null;
 
-	protected $_columns					=	array();
 	protected $_data					=	null;
-	protected $_data_map				=	array();
-	protected $_data_preset				=	array();
+	protected $_data_preset				=	array(); /* TODO#SEBLOD: reset? */
 	protected $_error					=	false;
 	protected $_id						=	0;
 	protected $_instance_base			=	null;
@@ -33,11 +32,11 @@ class JCckContent
 	protected $_instance_more			=	null;
 	protected $_instance_more_parent	=	null;
 	protected $_instance_more2			=	null;
-	protected $_is_new					=	false;
-	protected $_logs					=	array();
+	protected $_is_new					=	false; /* TODO#SEBLOD: reset? */
+	protected $_logs					=	array(); /* TODO#SEBLOD: reset? */
 	protected $_object					=	'';
 	protected $_pk						=	0;
-	protected $_results					=	array();
+	protected $_results					=	array(); /* TODO#SEBLOD: reset? */
 	protected $_table 					=	'';
 	protected $_type					=	'';
 	protected $_type_id					=	0;
@@ -177,7 +176,7 @@ class JCckContent
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		$this->_instance_base	=	JTable::getInstance( $this->_columns['table_object'][0], $this->_columns['table_object'][1] );
+		$this->_instance_base	=	JTable::getInstance( self::$objects[$this->_object]['properties']['table_object'][0], self::$objects[$this->_object]['properties']['table_object'][1] );
 		$this->_setDataMap( 'base' );
 
 		return true;
@@ -360,7 +359,7 @@ class JCckContent
 		if ( $identifier ) {
 			$this->reset();
 
-			if ( !$this->_setObjectById( $identifier ) ) {
+			if ( !$this->_setContentById( $identifier ) ) {
 				return false;
 			}
 			if ( $this->_instance_core->id ) {
@@ -510,10 +509,11 @@ class JCckContent
 									'_getDataDispatch'=>'',
 									'_getDataQuery'=>'',
 									'_saveLegacy'=>'',
+									'_setContentById'=>'',
+									'_setContentByType'=>'',
 									'_setDataMap'=>'',
-									'_setObjectById'=>'',
-									'_setObjectByType'=>'',
-									'_setObjectMap'=>''
+									'_setObjectMap'=>'',
+									'_setTypeMap'=>''
 								);
 		if ( isset( $excluded[$task] ) ) {
 			$this->_error	=	true;
@@ -559,7 +559,7 @@ class JCckContent
 
 		$this->clear();
 
-		if ( !$this->_setObjectByType( $content_type ) ) {
+		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
 
 			$this->_error	=	true;
@@ -687,7 +687,7 @@ class JCckContent
 	{
 		$this->clear();
 
-		if ( !$this->_setObjectByType( $content_type ) ) {
+		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
 
 			return false;
@@ -718,7 +718,7 @@ class JCckContent
 		$this->clear();
 		$this->clear( 'results' );
 		
-		if ( !$this->_setObjectByType( $content_type ) ) {
+		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
 
 			$this->_error	=	true;
@@ -754,7 +754,7 @@ class JCckContent
 	{
 		$this->clear();
 		
-		if ( !$this->_setObjectByType( $content_type ) ) {
+		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
 
 			$this->_error	=	true;
@@ -797,7 +797,7 @@ class JCckContent
 	{
 		$this->reset();
 
-		if ( !$this->_setObjectByType( $content_type ) ) {
+		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
 
 			$this->_error	=	true;
@@ -878,7 +878,7 @@ class JCckContent
 	{
 		$this->reset();
 
-		if ( !$this->_setObjectById( $identifier ) ) {
+		if ( !$this->_setContentById( $identifier ) ) {
 			$this->_error	=	true;
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
@@ -962,12 +962,10 @@ class JCckContent
 		$this->_type_permissions	=	'';
 
 		if ( $complete ) {
-			$this->_columns			=	array();
 			$this->_object			=	'';
 			$this->_table 			=	'';
 
 			$this->_data			=	null;
-			$this->_data_map		=	array(); /* TODO#SEBLOD: per content type or per item ? */
 			$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 
 			$this->unsetInstance( 'base' );
@@ -1016,8 +1014,8 @@ class JCckContent
 			return $this;
 		}
 		
-		if ( isset( $this->_data_map[$property] ) ) {
-			$this->set( $this->_data_map[$property], $property, $value );
+		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+			$this->set( self::$types[$this->_type]['data_map'][$property], $property, $value );
 		} else {
 			$this->log( 'error', 'Property unknown.' );
 
@@ -1038,7 +1036,7 @@ class JCckContent
 		$this->_type				=	$content_type;
 		
 		if ( $reload ) {
-			if ( !$this->_setObjectByType( $content_type ) ) {
+			if ( !$this->_setContentByType( $content_type ) ) {
 				$this->reset();
 
 				$this->_error	=	true;
@@ -1095,8 +1093,8 @@ class JCckContent
 	{
 		$author_id	=	0;
 
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
-			$author_id	=	(int)$this->get( 'base', $this->_columns['author'], 0 );
+		if ( isset( self::$objects[$this->_object]['properties']['author'] ) && self::$objects[$this->_object]['properties']['author'] ) {
+			$author_id	=	(int)$this->get( 'base', self::$objects[$this->_object]['properties']['author'], 0 );
 		}
 
 		return $author_id;
@@ -1164,8 +1162,8 @@ class JCckContent
 	{
 		$parent_id	=	0;
 
-		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent'] ) {
-			$parent_id	=	(int)$this->get( 'base', $this->_columns['parent'], 0 );
+		if ( isset( self::$objects[$this->_object]['properties']['parent'] ) && self::$objects[$this->_object]['properties']['parent'] ) {
+			$parent_id	=	(int)$this->get( 'base', self::$objects[$this->_object]['properties']['parent'], 0 );
 		}
 
 		return $parent_id;
@@ -1180,8 +1178,8 @@ class JCckContent
 	// getProperty
 	public function getProperty( $property, $default = '' )
 	{
-		if ( isset( $this->_data_map[$property] ) ) {
-			return $this->get( $this->_data_map[$property], $property, $default );
+		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+			return $this->get( self::$types[$this->_type]['data_map'][$property], $property, $default );
 		} else {
 			$this->log( 'notice', 'Property unknown.' );
 		}
@@ -1294,20 +1292,20 @@ class JCckContent
 			return $status;
 		}
 
-		switch( $instance_name ) {
+		switch ( $instance_name ) {
 			case 'base':
-				$this->_pk	=	$this->{'_instance_'.$instance_name}->{$this->_columns['key']};
+				$this->_pk	=	$this->{'_instance_'.$instance_name}->{self::$objects[$this->_object]['properties']['key']};
 				
 				if ( $this->_instance_core->id ) {
 					$data_core	=	array();
 
-					if ( $this->_columns['author'] == $this->_columns['key'] ) {
-						$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( $this->_columns['key'], 0 );
-					} elseif ( isset( $data[$this->_columns['author']] ) ) {
-						$data_core['author_id']	=	$data[$this->_columns['author']];
+					if ( self::$objects[$this->_object]['properties']['author'] == self::$objects[$this->_object]['properties']['key'] ) {
+						$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( self::$objects[$this->_object]['properties']['key'], 0 );
+					} elseif ( isset( $data[self::$objects[$this->_object]['properties']['author']] ) ) {
+						$data_core['author_id']	=	$data[self::$objects[$this->_object]['properties']['author']];
 					}
-					if ( isset( $data[$this->_columns['parent']] ) ) {
-						$data_core['parent_id']	=	$data[$this->_columns['parent']];
+					if ( isset( $data[self::$objects[$this->_object]['properties']['parent']] ) ) {
+						$data_core['parent_id']	=	$data[self::$objects[$this->_object]['properties']['parent']];
 					}
 					if ( count( $data_core ) ) {
 						$this->save( 'core', $data_core );
@@ -1317,13 +1315,11 @@ class JCckContent
 			case 'core':
 				$this->_id	=	$this->{'_instance_'.$instance_name}->id;
 				
-				if ( property_exists( $this->_instance_base, $this->_columns['custom'] ) ) {
-					$this->_instance_base->{$this->_columns['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+				if ( property_exists( $this->_instance_base, self::$objects[$this->_object]['properties']['custom'] ) ) {
+					$this->_instance_base->{self::$objects[$this->_object]['properties']['custom']}	=	'::cck::'.$this->_id.'::/cck::';
 					$this->store( 'base' );
 				}
 				break;
-			case 'more':
-			case 'more2':
 			default:
 				break;
 		}
@@ -1441,13 +1437,13 @@ class JCckContent
 			}
 		}
 
-		$pre_update	=	$this->get( 'base', $this->_columns['author'], 0 );
+		$pre_update	=	$this->get( 'base', self::$objects[$this->_object]['properties']['author'], 0 );
 
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author'] ) {
-			$this->set( 'base', $this->_columns['author'], $author_id );
+		if ( isset( self::$objects[$this->_object]['properties']['author'] ) && self::$objects[$this->_object]['properties']['author'] ) {
+			$this->set( 'base', self::$objects[$this->_object]['properties']['author'], $author_id );
 
 			if ( !$this->store( 'base' ) ) {
-				$this->set( 'base', $this->_columns['author'], $pre_update );
+				$this->set( 'base', self::$objects[$this->_object]['properties']['author'], $pre_update );
 
 				return false;
 			}
@@ -1473,8 +1469,8 @@ class JCckContent
 			return false;
 		}
 
-		if ( isset( $this->_data_map[$property] ) ) {
-			return $this->update( $this->_data_map[$property], $property, $value );
+		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+			return $this->update( self::$types[$this->_type]['data_map'][$property], $property, $value );
 		} else {
 			$this->log( 'error', 'Property unknown.' );
 		}
@@ -1526,7 +1522,7 @@ class JCckContent
 		$event	=	$event.$task;
 		$method	=	'trigger'.$task;
 
-		if ( !( $event != '' && isset( $this->_columns['events'][$event] ) ) ) {
+		if ( !( $event != '' && isset( self::$objects[$this->_object]['properties']['events'][$event] ) ) ) {
 			return false;
 		}
 
@@ -1536,19 +1532,19 @@ class JCckContent
 	// triggerDelete
 	public function triggerDelete( $event )
 	{
-		return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base ) );
+		return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base ) );
 	}
 
 	// triggerSave
 	public function triggerSave( $event )
 	{
-		return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base, $this->_is_new ) );
+		return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
 	
 	// dump
-	public function dump()
+	public function dump( $scope = 'this' )
 	{
 		if ( !function_exists( 'dump' ) ) {
 			$this->log( 'notice', 'Function not found.' );
@@ -1556,40 +1552,44 @@ class JCckContent
 			return false;
 		}
 
-		dump( $this->_columns, 'columns' );
-		dump( $this->_data, 'data' );
-		dump( $this->_error, 'error' );
-		dump( $this->_id, 'id' );
-		dump( $this->_is_new, 'isnew' );
-		dump( $this->_logs, 'logs' );
-		dump( $this->_object, 'object' );
-		dump( $this->_pk, 'pk' );
-		dump( $this->_results, 'results' );
-		dump( $this->_table, 'table' );
-		dump( $this->_type, 'type' );
-		dump( $this->_type_id, 'type_id' );
-		dump( $this->_type_parent, 'type_parent' );
-		dump( $this->_type_permissions, 'type_permissions' );
+		if ( $scope == 'self' ) {
+			dump( self::$objects, 'objects' );
+			dump( self::$types, 'types' );
+		} else {
+			dump( $this->_data, 'data' );
+			dump( $this->_error, 'error' );
+			dump( $this->_id, 'id' );
+			dump( $this->_is_new, 'isnew' );
+			dump( $this->_logs, 'logs' );
+			dump( $this->_object, 'object' );
+			dump( $this->_pk, 'pk' );
+			dump( $this->_results, 'results' );
+			dump( $this->_table, 'table' );
+			dump( $this->_type, 'type' );
+			dump( $this->_type_id, 'type_id' );
+			dump( $this->_type_parent, 'type_parent' );
+			dump( $this->_type_permissions, 'type_permissions' );
 
-		if ( $this->_instance_base ) {
-			dump( $this->_instance_base, 'base' );
-		}
-		if ( $this->_instance_core ) {
-			dump( $this->_instance_core, 'core' );
-		}
-		if ( $this->_instance_more ) {
-			dump( $this->_instance_more, 'more' );
-		}
-		if ( $this->_instance_more_parent ) {
-			dump( $this->_instance_more_parent, 'more_parent' );
-		}
-		if ( $this->_instance_more2 ) {
-			dump( $this->_instance_more2, 'more2' );
+			if ( $this->_instance_base ) {
+				dump( $this->_instance_base, 'base' );
+			}
+			if ( $this->_instance_core ) {
+				dump( $this->_instance_core, 'core' );
+			}
+			if ( $this->_instance_more ) {
+				dump( $this->_instance_more, 'more' );
+			}
+			if ( $this->_instance_more_parent ) {
+				dump( $this->_instance_more_parent, 'more_parent' );
+			}
+			if ( $this->_instance_more2 ) {
+				dump( $this->_instance_more2, 'more2' );
+			}
 		}
 
 		return true;
 	}
-	
+
 	// _fixDatabase
 	protected function _fixDatabase( $instance_name )
 	{
@@ -1624,11 +1624,11 @@ class JCckContent
 
 		if ( count( $this->_data_preset ) ) {
 			foreach ( $this->_data_preset as $k=>$v ) {
-				if ( !isset( $this->_data_map[$k] ) ) {
+				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 					continue;
 				}
 
-				$instance_name				=	$this->_data_map[$k];
+				$instance_name				=	self::$types[$this->_type]['data_map'][$k];
 				$data[$instance_name][$k]	=	$v;
 			}
 
@@ -1639,11 +1639,11 @@ class JCckContent
 
 			if ( count( $data_array ) ) {
 				foreach ( $data_array as $k=>$v ) {
-					if ( !isset( $this->_data_map[$k] ) ) {
+					if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 						continue;
 					}
 
-					$instance_name				=	$this->_data_map[$k];
+					$instance_name				=	self::$types[$this->_type]['data_map'][$k];
 					$data[$instance_name][$k]	=	$v;
 				}
 			}
@@ -1662,16 +1662,16 @@ class JCckContent
 								'parent_id'=>0
 							);
 
-		if ( isset( $this->_columns['author'] ) && $this->_columns['author']
-		  && isset( $data['base'][$this->_columns['author']] ) ) {
-			$data['core']['author_id']	=	$data['base'][$this->_columns['author']];
+		if ( isset( self::$objects[$this->_object]['properties']['author'] ) && self::$objects[$this->_object]['properties']['author']
+		  && isset( $data['base'][self::$objects[$this->_object]['properties']['author']] ) ) {
+			$data['core']['author_id']	=	$data['base'][self::$objects[$this->_object]['properties']['author']];
 		}
 		if ( !$data['core']['author_id'] ) {
 			$data['core']['author_id']	=	JFactory::getUser()->id;
 		}
-		if ( isset( $this->_columns['parent'] ) && $this->_columns['parent']
-		  && isset( $data['base'][$this->_columns['parent']] ) ) {
-			$data['core']['parent_id']	=	$data['base'][$this->_columns['parent']];
+		if ( isset( self::$objects[$this->_object]['properties']['parent'] ) && self::$objects[$this->_object]['properties']['parent']
+		  && isset( $data['base'][self::$objects[$this->_object]['properties']['parent']] ) ) {
+			$data['core']['parent_id']	=	$data['base'][self::$objects[$this->_object]['properties']['parent']];
 		}
 
 		/* TODO#SEBLOD: force to default author id when null? */
@@ -1695,13 +1695,13 @@ class JCckContent
 		$query->where( $db->quoteName( 'a.cck' ).' = '.$db->quote( $content_type ) );
 
 		foreach ( $data as $k=>$v ) {
-			if ( $k == $this->_columns['key'] ) {
+			if ( $k == self::$objects[$this->_object]['properties']['key'] ) {
 				$instance_name	=	'base';
 			} else {
-				if ( !isset( $this->_data_map[$k] ) ) {
+				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 					return false;
 				}
-				$instance_name	=	$this->_data_map[$k];
+				$instance_name	=	self::$types[$this->_type]['data_map'][$k];
 			}
 
 			$index	=	'';
@@ -1735,57 +1735,8 @@ class JCckContent
 		return $query;
 	}
 
-	// _setDataMap
-	protected function _setDataMap( $instance_name, $force = false )
-	{
-		$fields	=	$this->{'_instance_'.$instance_name}->getFields();
-
-		foreach ( $fields as $k=>$v ) {
-			if ( !isset( $this->_data_map[$k] ) ) {
-				$this->_data_map[$k]	=	$instance_name;
-			}
-		}
-
-		unset( $this->_data_map['id'], $this->_data_map['cck'] ); /* TODO#SEBLOD: remove "cck" column */
-	}
-
-	// _setObjectMap
-	protected function _setObjectMap( $object = '' )
-	{
-		if ( !$object ) {
-			$current	=	true;
-			$object		=	$this->_object;
-		} else {
-			$current	=	false;
-		}
-		if ( !$object ) {
-			return false;
-		}
-
-		if ( !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php' ) ) {
-			return false;
-		}
-
-		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-
-		$properties	=	array(
-							'author',
-							'context',
-							'custom',
-							'events',
-							'key',
-							'parent',
-							'table',
-							'table_object'
-						);
-
-		$this->_columns	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
-
-		return true;
-	}
-
-	// _setObjectById
-	protected function _setObjectById( $identifier )
+	// _setContentById
+	protected function _setContentById( $identifier )
 	{
 		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
 				.	' FROM #__cck_core AS a'
@@ -1813,7 +1764,7 @@ class JCckContent
 
 		$this->_setObjectMap();
 
-		$this->_table				=	$this->_columns['table'];
+		$this->_table				=	self::$objects[$this->_object]['properties']['table'];
 
 		if ( !$this->_table ) {
 			$this->reset( true );
@@ -1828,11 +1779,13 @@ class JCckContent
 		$this->_type_parent			=	$core->parent;
 		$this->_type_permissions	=	$core->permissions;
 
+		$this->_setTypeMap();
+
 		return true;
 	}
 
-	// _setObjectByType
-	protected function _setObjectByType( $content_type )
+	// _setContentByType
+	protected function _setContentByType( $content_type )
 	{
 		$this->_type	=	$content_type;
 
@@ -1853,7 +1806,7 @@ class JCckContent
 
 			$this->_setObjectMap();
 
-			$this->_table				=	$this->_columns['table'];
+			$this->_table				=	self::$objects[$this->_object]['properties']['table'];
 		} else {
 			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 
@@ -1868,8 +1821,86 @@ class JCckContent
 		$this->_type_parent			=	$type->parent;
 		$this->_type_permissions	=	$type->permissions;
 
+		$this->_setTypeMap();
+
 		return true;
 	}
+
+	// _setDataMap
+	protected function _setDataMap( $instance_name, $force = false )
+	{
+		$fields	=	$this->{'_instance_'.$instance_name}->getFields();
+
+		foreach ( $fields as $k=>$v ) {
+			if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
+				self::$types[$this->_type]['data_map'][$k]	=	$instance_name;
+			}
+		}
+
+		unset( self::$types[$this->_type]['data_map']['id'], self::$types[$this->_type]['data_map']['cck'] ); /* TODO#SEBLOD: remove "cck" column */
+	}
+
+	// _setObjectMap
+	protected function _setObjectMap( $object = '' )
+	{
+		if ( !$object ) {
+			$current	=	true;
+			$object		=	$this->_object;
+		} else {
+			$current	=	false;
+		}
+		if ( !$object ) {
+			return false;
+		}
+
+		if ( !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php' ) ) {
+			return false;
+		}
+
+		if ( isset( self::$objects[$object] ) ) {
+			return true;
+		}
+
+		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
+
+		$properties	=	array(
+							'author',
+							'context',
+							'custom',
+							'events',
+							'key',
+							'parent',
+							'table',
+							'table_object'
+						);
+
+		self::$objects[$object]	=	array(
+										'columns'=>array(),
+										'properties'=>JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties )
+									);
+
+		return true;
+	}
+
+	// _setTypeMap
+	protected function _setTypeMap()
+	{
+		if ( !$this->_type ) {
+			return false;
+		}
+
+		if ( isset( self::$types[$this->_type] ) ) {
+			return true;
+		}
+
+		self::$types[$this->_type]	=	array(
+											'data_map'=>array()
+										);
+
+		return true;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated
 
 	// _saveLegacy (deprecated)
 	protected function _saveLegacy( $instance_name, $data )
@@ -1885,7 +1916,7 @@ class JCckContent
 			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
 				$i			=	2;
 				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
-				$property	=	$this->_columns['parent'];
+				$property	=	self::$objects[$this->_object]['properties']['parent'];
 				$test		=	JTable::getInstance( 'Content' );
 				
 				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->$property ) ) ) {
