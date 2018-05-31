@@ -184,7 +184,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$file			.=	$field->value;
 		
 		if ( JFactory::getSession()->get( 'cck_task' ) == 'form' ) {
-			$permissions	=	( isset( $options2['folder_permissions'] ) && $options2['folder_permissions'] ) ? octdec( $options2['folder_permissions'] ) : 0755;
+			$permissions	=	( isset( $f_opt2['folder_permissions'] ) && $f_opt2['folder_permissions'] ) ? octdec( $f_opt2['folder_permissions'] ) : 0755;
 			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );		
 
 			if ( $preview_ext ) {
