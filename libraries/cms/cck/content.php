@@ -938,10 +938,14 @@ class JCckContent
 	}
 
 	// preset
-	public function preset( $data )
+	public function preset( $data, $reset = true )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
+		}
+
+		if ( $reset ) {
+			$this->reset( true );
 		}
 
 		$this->_data_preset	=	$data;
@@ -952,6 +956,8 @@ class JCckContent
 	// reset
 	public function reset( $complete = false )
 	{
+		/* TODO#SEBLOD: refactor... reset(content/item) or reset(object) or reset(true) */
+
 		$this->clear();
 
 		$this->_id					=	0;
@@ -1034,7 +1040,7 @@ class JCckContent
 
 		$this->_instance_core->cck	=	$content_type;
 		$this->_type				=	$content_type;
-		
+
 		if ( $reload ) {
 			if ( !$this->_setContentByType( $content_type ) ) {
 				$this->reset();
@@ -1048,8 +1054,10 @@ class JCckContent
 			$this->unsetInstance( 'more' );
 			$this->unsetInstance( 'more_parent' );
 
+			$this->_setDataMap( 'base' );
 			$this->setInstance( 'more', true );
 			$this->setInstance( 'more_parent', true );
+			$this->_setDataMap( 'more2' );
 		}
 
 		return $this;
@@ -1279,7 +1287,7 @@ class JCckContent
 		if ( get_class( $this ) == 'JCckContent' ) {
 			$status	=	$this->_saveLegacy( $instance_name, $data );
 		} else {
-			// Let's make sure we have a valid instance /* TODO#SEBLOD: should we move this check to the suitable function(s) */
+			// Let's make sure we have a valid instance		/* TODO#SEBLOD: should we move this check to the suitable function(s) */
 			if ( !( $instance_name == 'base' || $instance_name == 'core' ) && empty( $this->{'_instance_'.$instance_name}->id ) ) {
 				$this->_fixDatabase( $instance_name );
 			}
@@ -1829,6 +1837,10 @@ class JCckContent
 	// _setDataMap
 	protected function _setDataMap( $instance_name, $force = false )
 	{
+		if ( !is_object( $this->{'_instance_'.$instance_name} ) ) {
+			return false;
+		}
+
 		$fields	=	$this->{'_instance_'.$instance_name}->getFields();
 
 		foreach ( $fields as $k=>$v ) {
@@ -1838,6 +1850,8 @@ class JCckContent
 		}
 
 		unset( self::$types[$this->_type]['data_map']['id'], self::$types[$this->_type]['data_map']['cck'] ); /* TODO#SEBLOD: remove "cck" column */
+
+		return true;
 	}
 
 	// _setObjectMap
