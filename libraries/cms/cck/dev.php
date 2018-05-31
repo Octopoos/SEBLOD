@@ -19,17 +19,23 @@ abstract class JCckDev
 	protected static function _getField( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
 	{
 		// Check & and Trigger fallback if needed
+		$class		=	'Helper_Form';
 		$fallback	=	false;
 		$method		=	$caller['function'];
-		$path		=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/helper_form.php';
 
+		if ( $caller['component'] == 'com_cck' ) {
+			$class	=	'CommonHelper_Form';
+			$path	=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/common/form.php';
+		} else {
+			$path	=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/helper_form.php';
+		}
 		if ( is_file( $path ) ) {
 			require_once $path;
 		} else {
 			$fallback	=	true;
 		}
 		if ( !$fallback ) {
-			if ( !method_exists( 'Helper_Form', $method ) ) {
+			if ( !method_exists( $class, $method ) ) {
 				$fallback	=	true;
 			}
 		}
@@ -92,7 +98,7 @@ abstract class JCckDev
 		}
 
 		// Set
-		$field->form	=	Helper_Form::$method( $field, $value, $name, $id, $config );
+		$field->form	=	$class::$method( $field, $value, $name, $id, $config );
 		$field->value	=	$value;
 
 		if ( $field->script ) {
