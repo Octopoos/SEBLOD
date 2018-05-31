@@ -48,7 +48,7 @@ class JCckContentJoomla_Category extends JCckContent
 		if ( !$this->_pk && !$status ) {
 			$i			=	2;
 			$alias		=	$this->_instance_base->alias.'-'.$i;
-			$property	=	$this->_columns['parent'];
+			$property	=	self::$objects[$this->_object]['properties']['parent'];
 			$test		=	JTable::getInstance( 'Category' );
 			
 			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->$property ) ) ) {
@@ -67,7 +67,7 @@ class JCckContentJoomla_Category extends JCckContent
 	// triggerSave
 	public function triggerSave( $event )
 	{
-		$result	=	$this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_columns['context'], $this->_instance_base, $this->_is_new ) );
+		$result	=	$this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
 
 		if ( $event == 'afterSave' ) {
 			unset( $this->_instance_base->catid );

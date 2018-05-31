@@ -21,8 +21,8 @@ class JCckContentJoomla_User extends JCckContent
 		$fields					=	array_keys( $this->_instance_base->getTable()->getFields() );
 		unset( $fields['id'] );
 
-		$this->_data_map			=	array_merge( $this->_data_map, array_fill_keys( $fields, 'base' ) );
-		$this->_data_map['groups']	=	'base';
+		self::$types[$this->_type]['data_map']				=	array_merge( self::$types[$this->_type]['data_map'], array_fill_keys( $fields, 'base' ) );
+		self::$types[$this->_type]['data_map']['groups']	=	'base';
 
 		return true;
 	}
@@ -56,6 +56,12 @@ class JCckContentJoomla_User extends JCckContent
 	// saveBase
 	protected function saveBase()
 	{
+		if ( !$this->getId() ) {
+			if ( empty( $this->_instance_base->groups ) ) {
+				$this->_instance_base->groups	=	array( 2 );
+			}
+		}
+
 		return $this->_instance_base->save();
 	}
 
@@ -85,9 +91,9 @@ class JCckContentJoomla_User extends JCckContent
 	public function triggerDelete( $event )
 	{
 		if ( $event == 'beforeDelete' ) {
-			return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_instance_base->getProperties() ) );
+			return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties() ) );
 		} elseif ( $event == 'afterDelete' ) {
-			return $this->_dispatcher->trigger( $this->_columns['events'][$event], array( $this->_instance_base->getProperties(), true, $this->_instance_base->getError() ) );
+			return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties(), true, $this->_instance_base->getError() ) );
 		}
 
 		return true;
