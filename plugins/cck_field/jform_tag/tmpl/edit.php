@@ -23,6 +23,7 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_bool', @$options2['parent'], $config, array( 'label'=>'Parent', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][parent]' ) );
         echo JCckDev::renderForm( 'core_dev_bool', @$options2['custom'], $config, array( 'label'=>'Allow Submissions', 'options'=>'Yes=1||No=0', 'storage_field'=>'json[options2][custom]' ) );
         echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Multiple' ) );
+        echo JCckDev::renderForm( 'core_dev_text', @$options2['language'], $config, array( 'label'=>'Language', 'storage_field'=>'json[options2][language]', 'css'=>'input-xsmall' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

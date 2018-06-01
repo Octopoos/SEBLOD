@@ -122,6 +122,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
 			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
 			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
+			$lang_tag	=	( isset( $options2['language'] ) && $options2['language'] ) ? 'language="'.$options2['language'].'"' : '';
+
 			$xml		=	'
 							<form>
 								<field
@@ -134,6 +136,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 									'.$parent.'
 									'.$custom.'
 									'.$multiple.'
+									'.$lang_tag.'
 								>
 								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
 								</field>
@@ -262,6 +265,10 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 				$new			=	implode( ',', $new );
 				$field->text	.=	( $field->text != '' ) ? ','.$new : $new;
 			}
+		}
+		if ( $field->storage_field != 'tags' ) {
+			$field->value	=	( is_array( $field->value ) ) ? implode( ',', $field->value ) : $field->value;
+			$value			=	$field->value;
 		}
 
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
