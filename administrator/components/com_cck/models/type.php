@@ -121,17 +121,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	protected function prepareTable2( &$table, &$data )
 	{
 		if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
-			$data['jform']['rules']	=	array( 'core.create'=>array(),
-											   'core.create.max.parent'=>array( '8'=>"0" ),
-											   'core.create.max.parent.author'=>array( '8'=>"0" ),
-											   'core.create.max.author'=>array( '8'=>"0" ),
-											   'core.delete'=>array(),
-											   'core.delete.own'=>array(),
-											   'core.edit'=>array(),
-											   'core.edit.own'=>array(),
-											   'core.edit.own.content'=>array(),
-											   'core.export'=>array(),
-											   'core.process'=>array()
+			$data['jform']['rules']	=	array(
+											'core.create.max.parent'=>array( '8'=>'0' ),
+											'core.create.max.parent.author'=>array( '8'=>'0' ),
+											'core.create.max.author'=>array( '8'=>'0' )
 										);
 		}
 		if ( $data['jform']['rules'] ) {

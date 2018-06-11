@@ -272,7 +272,7 @@ class plgContentCCKInstallerScript
 				$table->access	=	2;
 				$table->setLocation( 1, 'last-child' );	
 				$table->bind( $category );
-				$rules	=	new JAccessRules( '{"core.create":{"1":0},"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
+				$rules	=	new JAccessRules( '{"core.create":{"1":0}}' );
 				$table->setRules( $rules );
 				$table->check();
 				$table->extension	=	'com_content';
@@ -310,15 +310,15 @@ class plgContentCCKInstallerScript
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_folders ORDER BY lft' );
 			if ( count( $pks ) ) {
-				$rules	=	'{"core.create":[],"core.delete":[],"core.delete.own":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}';
+				$rules	=	'{}';
 				Helper_Admin::initACL( array( 'table'=>'folder', 'name'=>'folder', 'rules'=>$rules ), $pks );
 			}
 			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_types ORDER BY id' );
 			if ( count( $pks ) ) {
-				$rules	=	'{"core.create":[],"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0},'
-						.	'"core.delete":[],"core.delete.own":[],"core.edit":[],"core.edit.own":[]}';
-				$rules2	=	array( 8=>'{"core.create":{"1":1,"2":0},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0},'
-									. '"core.delete":[],"core.delete.own":[],"core.edit":{"4":0},"core.edit.own":{"2":1}}' );
+				$rules	=	'{"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0}}';
+				$rules2	=	array(
+								8=>'{"core.create":{"1":1,"2":0},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0},"core.edit":{"4":0},"core.edit.own":{"2":1}}'
+							);
 				Helper_Admin::initACL( array( 'table'=>'type', 'name'=>'form', 'rules'=>$rules ), $pks, $rules2 );
 			}
 

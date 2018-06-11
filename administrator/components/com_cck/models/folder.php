@@ -64,15 +64,11 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		} else {
 			$data['elements']	=	'';
 		}
+
 		if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
-			$data['jform']['rules']	=	array( 'core.create'=>array(),
-											   'core.delete'=>array(),
-											   'core.delete.own'=>array(),
-											   'core.edit'=>array(),
-											   'core.edit.state'=>array(),
-											   'core.edit.own'=>array()
-										);
+			$data['jform']['rules']	=	array();
 		}
+
 		if ( $data['jform']['rules'] ) {
 			if ( !is_array( $data['jform']['rules'] ) ) {
 				$data['jform']['rules']	=	json_decode( $data['jform']['rules'] );
