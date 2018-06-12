@@ -81,6 +81,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 		$linkVersion	=	JRoute::_( 'index.php?option='.$this->option.'&view=versions&filter_e_type=type&e_id='.$item->id );
 		
+		$permissions	=	'';
+
+		if ( $item->rules && $item->rules != '{}' ) {
+			$rules			=	str_replace( array( '"core.create.max.parent":{"8":0}', '"core.create.max.parent.author":{"8":0}', '"core.create.max.author":{"8":0}' ), '', $item->rules );
+			$count			=	(int)substr_count( $rules, 'core.' );
+			
+			if ( $count ) {
+				$key			=	( $count == 1 ) ? 'COM_CCK_N_PERMISSIONS_1' : 'COM_CCK_N_PERMISSIONS';
+				$permissions	=	' <span class="icon-users small hasTooltip" style="color:#666666;" title="'.JText::sprintf( $key, $count ).'" data-trigger="click" data-placement="right"></span>';
+			}
+		}
+
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
@@ -100,9 +112,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 						echo JHtml::_( 'jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->vName.'s.', $canCheckin )."\n";
 					}
 					if ( $canEdit && ! $checkedOut ) {
-						echo '<a href="'.$link.'">'.$this->escape( $item->title ).'</a><div class="small">'.$this->escape( $item->name ).'</div>';
+						echo '<a href="'.$link.'">'.$this->escape( $item->title ).'</a><div class="small">'.$this->escape( $item->name ).$permissions.'</div>';
 					} else {
-						echo '<span>'.$this->escape( $item->title ).'</span><div class="small">'.$this->escape( $item->name ).'</div>';
+						echo '<span>'.$this->escape( $item->title ).'</span><div class="small">'.$this->escape( $item->name ).$permissions.'</div>';
 					}
 					?>
 				</div>

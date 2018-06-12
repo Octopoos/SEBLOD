@@ -100,6 +100,20 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$img			=	$images[$item->home];
 		$action_attr2	=	( $item->home ) ? str_replace( 'btn-micro', 'btn-primary btn-micro', $action_attr ) : $action_attr;
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
+
+		$elements		=	explode( ',', $item->elements );
+		$elements		=	array_flip( $elements );
+
+		$permissions	=	'';
+
+		if ( $item->rules && $item->rules != '{}' ) {
+			$count			=	(int)substr_count( $item->rules, 'core.' );
+
+			if ( $count ) {
+				$key			=	( $count == 1 ) ? 'COM_CCK_N_PERMISSIONS_1' : 'COM_CCK_N_PERMISSIONS';
+				$permissions	=	' <span class="icon-users small hasTooltip" style="color:#666666;" title="'.JText::sprintf( $key, $count ).'" data-trigger="click" data-placement="right"></span>';
+			}
+		}
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
@@ -115,18 +129,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					if ( ( $canEdit && ! $checkedOut ) ) {
                         if ( $item->id == 1 || $item->id == 2 ) { ?>
                             <?php echo $checked_out; ?><a href="<?php echo $link; ?>"><?php echo JText::_( 'COM_CCK_'.str_replace( ' ', '_', $item->title ) ); ?></a>
-                            <?php echo '<div class="small">'.strtolower( $item->name ).'</div>'; ?>
+                            <?php echo '<div class="small">'.strtolower( $item->name ).$permissions.'</div>'; ?>
                         <?php } else { ?>
                             <?php echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out; ?><a href="<?php echo $link; ?>"><?php echo $item->title; ?></a>
-                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>'; ?>
+                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>'; ?>
                         <?php }
                     } else {
                         if ( $item->id == 1 || $item->id == 2 ) {
                             echo $checked_out.$item->title
-                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).'</div>';
+                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).$permissions.'</div>';
                         } else {
                             echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out.$item->title
-                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>';
+                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>';
                         }
                     }
                     ?>
@@ -142,27 +156,27 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->types_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkType.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FORMS' ).'">'
 											   . '<span>'.$item->types_nb.'</span>'
-											   . '</a>' : '-'; ?>
+											   . '</a>' : ( isset( $elements['type'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->fields_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkField.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FIELDS' ).'">'
 												. '<span>'.$item->fields_nb.'</span>'
-												. '</a>' : '-'; ?>
+												. '</a>' : ( isset( $elements['field'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->searchs_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkSearch.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_LISTS' ).'">'
 												 . '<span>'.$item->searchs_nb.'</span>'
-												 . '</a>' : '-'; ?>
+												 . '</a>' : ( isset( $elements['search'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->templates_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkTemplate.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_TEMPLATES' ).'">'
 												   . '<span>'.$item->templates_nb.'</span>'
-												   . '</a>' : '-'; ?>
+												   . '</a>' : ( isset( $elements['template'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->processings_nb ) ? '<a class="btn btn-micro btn-count hasTooltip'.$classProcessing.'" href="'.$linkProcessing.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_PROCESSINGS' ).'">'
 												   . '<span>'.$item->processings_nb.'</span>'
-												   . '</a>' : '-'; ?>
+												   . '</a>' : ( $item->id != 2 ? '-' : '' ); ?>
 			</td>
 			<td class="center">
 				<div class="btn-group">

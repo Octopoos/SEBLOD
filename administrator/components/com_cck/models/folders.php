@@ -26,6 +26,7 @@ class CCKModelFolders extends JModelList
 				'color', 'a.color',
 				'introchar', 'a.introchar',
 				'colorchar', 'a.colorchar',
+				'elements', 'a.elements',
 				'lft', 'a.lft',
 				'rgt', 'a.rgt',
 				'featured', 'a.featured',
@@ -77,6 +78,7 @@ class CCKModelFolders extends JModelList
 				'a.color as color,' .
 				'a.introchar as introchar,' .
 				'a.colorchar as colorchar,' .
+				'a.elements as elements,' .
 				'a.depth as depth,' .
 				'a.lft as lft,' .
 				'a.rgt as rgt,' .
@@ -97,6 +99,10 @@ class CCKModelFolders extends JModelList
 		// Join User
 		$query->select( 'u.name AS editor' );
 		$query->join( 'LEFT', '#__users AS u ON u.id = a.checked_out' );
+
+		// Join Assets
+		$query->select( 'p.rules AS rules' );
+		$query->join( 'LEFT', '#__assets AS p ON p.id = a.asset_id' );
 
 		// Where
 		$query->where( 'a.lft BETWEEN parent.lft AND parent.rgt' );

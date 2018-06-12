@@ -111,6 +111,10 @@ class CCKModelTypes extends JModelList
 		$query->select( 'u.name AS editor' );
 		$query->join( 'LEFT', '#__users AS u ON u.id = a.checked_out' );
 
+		// Join Assets
+		$query->select( 'p.rules AS rules' );
+		$query->join( 'LEFT', '#__assets AS p ON p.id = a.asset_id' );
+
 		// Where
 		if ( $app->input->get( 'goto', '' ) == 'form' ) {
 			$folderId	=	'';
