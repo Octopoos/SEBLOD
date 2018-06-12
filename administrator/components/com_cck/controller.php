@@ -211,20 +211,25 @@ class CCKController extends JControllerLegacy
 			echo $this->addFieldRowAjax( $table2, $client );
 		}
 	}
-	
+
 	// ajax
 	public function ajax()
-    {
-    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
-		$file	=	JPATH_SITE.'/'.$file;
-		
-		jimport('joomla.filesystem.file');
-		
-		if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
-			include_once $file;
+
+		if ( $file != '' ) {
+			if ( JCckDevHelper::checkAjaxScript( $file ) ) {
+				$file	=	JPATH_ROOT.'/'.$file;
+
+				jimport( 'joomla.filesystem.file' );
+
+				if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
+					include_once $file;
+				}
+			}
 		}
 	}
 

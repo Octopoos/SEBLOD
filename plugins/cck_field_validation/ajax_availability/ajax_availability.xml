@@ -42,4 +42,10 @@
 			</fieldset>
 		</fields>
 	</config>
+
+	<cck_ajax>
+		<files>
+			<file>plugins/cck_field_validation/ajax_availability/assets/ajax/script.php</file>
+		</files>
+	</cck_ajax>
 </extension>

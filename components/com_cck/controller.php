@@ -30,23 +30,28 @@ class CCKController extends JControllerLegacy
 		$this->registerTask( 'save2view', 'save' );
 		$this->registerTask( 'save4later', 'save' );
 	}
-	
+
 	// ajax
 	public function ajax()
-    {
-    	JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
 
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
-		$file	=	JPATH_SITE.'/'.$file;
 
-		jimport('joomla.filesystem.file');
+		if ( $file != '' ) {
+			if ( JCckDevHelper::checkAjaxScript( $file ) ) {
+				$file	=	JPATH_ROOT.'/'.$file;
 
-		if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
-			include_once $file;
+				jimport( 'joomla.filesystem.file' );
+
+				if ( is_file( $file ) && JFile::getExt( $file ) == 'php' ) {
+					include_once $file;
+				}
+			}
 		}
 	}
-	
+
 	// cancel
 	public function cancel( $key = 'config' )
 	{

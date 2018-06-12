@@ -89,4 +89,10 @@
 		
 		<filename>index.html</filename>
 	</media>
+
+	<cck_ajax>
+		<files>
+			<file>administrator/components/com_cck/helpers/scripts/list_live.php</file>
+		</files>
+	</cck_ajax>
 </extension>

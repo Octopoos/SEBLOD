@@ -28,6 +28,53 @@ abstract class JCckDevHelper
 		}
 	}
 
+	// checkAjaxScript
+	public static function checkAjaxScript( $file )
+	{
+		$app		=	JFactory::getApplication();
+		$allowed	=	false;
+		$referrer	=	$app->input->getCmd( 'referrer', '' );
+
+		if ( $referrer != '' ) {
+			$manifest	=	'';
+			$referrer	=	explode( '.', $referrer );
+
+			if ( isset( $referrer[0], $referrer[1] ) ) {
+				switch ( $referrer[0] ) {
+					case 'component':
+						if ( $app->isClient( 'administrator' ) ) {
+							$manifest	=	JPATH_ADMINISTRATOR.'/components/'.$referrer[1].'/manifest.xml';
+						}
+						break;
+					case 'plugin':
+						$manifest	=	JPATH_SITE.'/plugins/'.$referrer[1].'/'.$referrer[2].'/'.$referrer[2].'.xml';
+						break;
+					case 'template':
+						$manifest	=	JPATH_SITE.'/templates/'.$referrer[1].'/templateDetails.xml';
+						break;
+					default:
+						break;
+				}
+
+				if ( $manifest && is_file( $manifest ) ) {
+					$xml	=	JCckDev::fromXML( $manifest );
+
+					if ( is_object( $xml ) && isset( $xml->cck_ajax ) ) {
+						foreach ( $xml->cck_ajax->files->file as $path ) {
+							$path	=	(string)$path;
+
+							if ( $path && $path == $file ) {
+								$allowed	=	true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $allowed;
+	}
+
 	// createFolder
 	public static function createFolder( $path, $mode = 0755 )
 	{

@@ -87,7 +87,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 				if ( (int)$this->item->id > 0 ) {
 					$extra	=	'&avKey=id&avPk='.$this->item->id.'&avPv='.htmlspecialchars( $this->item->name );
 				}
-				$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
+				$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
 						.	',"extraData": "avTable=cck_core_fields&avColumn=name'.$extra.'"'
 						.	',"alertText": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
 						.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
