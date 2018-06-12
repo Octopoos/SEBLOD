@@ -13,6 +13,7 @@ UPDATE `#__cck_core_fields` SET `bool7` = '1' WHERE `type` = "textarea";
 UPDATE `#__cck_core_fields` SET `defaultvalue` = '', `selectlabel` = 'Use Global', `options` = 'Email=1||Field=3' WHERE `id` = 124;
 
 UPDATE `#__cck_core_fields` SET `script` = REPLACE( `script`, 'task=ajax&format=raw"', 'task=ajax&format=raw&"+Joomla.getOptions("csrf.token")+"=1"' ) WHERE `id` IN (58,59);
+UPDATE `#__cck_core_fields` SET `script` = REPLACE( `script`, 'file+', 'file+"&referrer=component.com_cck"+' ) WHERE `id` IN (58,59);
 
 UPDATE `#__cck_core_types` SET `parent_inherit`=1 WHERE `parent` != "";
 
