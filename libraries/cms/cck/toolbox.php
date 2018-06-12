@@ -259,7 +259,17 @@ abstract class JCckToolbox
 			foreach ( $processing[$event] as $p ) {
 				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
 					$options	=	new JRegistry( $p->options );
-					
+
+					/*
+					$trigger	=	new JCckProcessing;
+
+					$trigger->set( 'event', $event );
+					$trigger->set( 'options', $options );
+					$trigger->set( 'script', JPATH_SITE.$p->scriptfile );
+
+					$trigger->execute( $config );
+					*/
+
 					include_once JPATH_SITE.$p->scriptfile;
 				}
 			}
