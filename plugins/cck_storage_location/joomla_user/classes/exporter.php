@@ -196,8 +196,10 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 					}
 				}
 				
-				// --- 
-				$fields['groups']	=	implode( ',', $fields['groups'] );
+				// ---
+				if ( isset( $fields['groups'] ) ) {
+					$fields['groups']	=	implode( ',', $fields['groups'] );
+				}
 				// ---
 				
 				$config['pk']	=	$item->pk;
