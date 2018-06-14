@@ -66,11 +66,13 @@ if ( $config['tmpl'] == 'ajax' ) {
 				});
 				$("#adminForm").on("change", ".storage-cck-more", function() {
 					var $n = $(this).next();
-					$n.children().hide();
-					if ($(this).val()) {
-						$n.find(".locked").show();
-					} else {
-						$n.find(".unlocked").show();
+					if ($n.length) {
+						$n.children().hide();
+						if ($(this).val()) {
+							$n.find(".locked").show();
+						} else {
+							$n.find(".unlocked").show();
+						}
 					}
 				});
 				$("#adminForm").on("click", "#storage_field_pick", function() {
