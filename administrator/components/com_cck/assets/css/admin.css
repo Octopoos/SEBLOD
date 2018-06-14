@@ -68,6 +68,8 @@ th.caret-fix > a:first-child > span{float:left; position:relative; left:3px;}
 .switch span.linkage {display:inline-block; height:24px; width:24px; position:relative; left:-2px;}
 /*.switch span.linked {background-image: url("../images/24/icon-24-lock.png");}*/
 .switch span.notice {background-position:left; background-repeat:no-repeat;}
+span.switch.notice{padding-top:4px; display: inline-block;}
+.switch.notice span.linkage{top:2px;}
 /*.switch span.unlinked {background-image: url("../images/24/icon-24-unlock.png");}*/
 
 .switch span.linkage.icon-lock{left: -2px; margin: 5px 0 0 6px; font-size: 18px; color:#3b99fc; background-image:none;}
@@ -97,6 +99,7 @@ span#storage_field_pick > .icon-menu-2,
 span.value-picker > .icon-menu-2{font-size:14px; font-weight: normal; margin-right:0;}
 span.value-picker{color: #3b99fc; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
 body.contentpane.component span.value-picker{left:-22px; top:10px;}
+span#storage_field_type{position:relative; right:96px; top:30px; font-weight:bold; font-size: 10px; color:#444444;}
 
 table.adminlist td div.title-left{padding-left: 9px;}
 table.adminlist .folder-parent{font-size:0.95em!important;}
@@ -136,6 +139,10 @@ div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 .toggle_more{position:absolute;float:right;right:10px;cursor:pointer; width:10px; height:10px; background-image: url("../images/10/toggle3.png"); background-repeat:no-repeat; background-size: cover;}
 .toggle_more.closed{background-position:0 0;}
 .toggle_more.open{background-position:0 -10px;}
+#toggle_adv{float:left; position:relative; top:14px; left:-4px;}
+#storage_advanced{float:left; clear:both;}
+#storage_alter > input{margin-top:13px;}
+#storage_alter > label{line-height: 30px;}
 
 #featured_session{position:relative; top:10px; cursor:pointer;}
 body.com_cck #cboxLoadedContent,

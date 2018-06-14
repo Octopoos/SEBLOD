@@ -479,7 +479,7 @@ div.seblod label.toggle_attr{clear:none;color:#eb8207;font-size:11px;position:re
 div#layer div.seblod label.toggle_attr{width:180px;height:auto; margin-bottom:0px;}
 div.attr span.star{float:left;}
 div.attr input[type="checkbox"]{position:relative; top:3px;margin-left:4px;}
-img#storage_alter_table_notice{position:relative; top:8px;}
+#storage_alter_table_notice{position:relative; top:12px; left:4px; cursor: help; color:#3b99fc;}
 div.seblod span.fill.trigger-value{font-size:15px; font-weight:bold; position:relative; top:8px; left:-22px; cursor:pointer; color:#eb8207;}
 div.seblod input.trigger-type{padding-right: 15px;} 
 .font-size-109{font-size:1.09em;}
@@ -497,6 +497,14 @@ body.contentpane.component ul.adminformlist-2cols{padding-left:0px!important;}
 
 body.com_cck ul.adminformlist-2cols li,
 body.contentpane.component ul.adminformlist-2cols li{padding:0!important; margin:10px 0px 10px 0px; width: 32em;}
+body.com_cck ul.adminformlist-2cols li > ul.ghost,
+body.contentpane.component ul.adminformlist-2cols li > ul.ghost{margin:0;}
+body.com_cck ul.adminformlist-2cols li > ul.ghost > li,
+body.contentpane.component ul.adminformlist-2cols li > ul.ghost > li{margin:10px 0;}
+body.com_cck ul.adminformlist-2cols li > ul.ghost > li,
+body.contentpane.component ul.adminformlist-2cols li > ul.ghost > li:first-child{margin-top:0;}
+body.com_cck ul.adminformlist-2cols li > ul.ghost > li,
+body.contentpane.component ul.adminformlist-2cols li > ul.ghost > li:last-child{margin-bottom:0;}
 body.com_cck ul.adminformlist-2cols li input[type="text"],
 body.contentpane.component ul.adminformlist-2cols li input[type="text"]{max-width:220px;}
 

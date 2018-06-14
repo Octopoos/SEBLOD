@@ -243,10 +243,11 @@ class JCckPluginField extends JPlugin
 				$data['storage']			=	'none';
 			}
 			if ( $data['alterTable'] ) {
-				$data['storage_alter_type']	=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
-				$alter						=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
-				$pos						=	strpos( $data['storage_table'], 'aka_table' );
-				
+				$data['storage_alter_type']		=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
+				$alter							=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
+				$pos							=	strpos( $data['storage_table'], 'aka_table' );
+				$data['storage_alter_table']	=	(int)$data['storage_alter_table'];
+
 				if ( !( $pos !== false && $pos == 0 ) ) {
 					if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
 						if ( $data['storage_table'] && $data['storage_field'] ) {

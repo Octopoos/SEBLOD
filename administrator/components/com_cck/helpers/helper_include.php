@@ -68,7 +68,7 @@ class Helper_Include extends CommonHelper_Include
 						}
 						#toolbar-eye-open{float:right;}' );
 				}
-				Helper_Include::addColorbox_Live( '930', '550', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
+				Helper_Include::addColorbox_Live( '930', '580', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
 				break;
 			case 'session':
