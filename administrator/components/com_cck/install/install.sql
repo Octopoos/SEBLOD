@@ -654,7 +654,8 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (626, 'Category Alias (EN)', 'cat_alias_en', 23, 'text', '', 1, 'Alias EN', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_category', '#__cck_store_item_categories', 'alias_en', '', '', '', 0, '0000-00-00 00:00:00'),
 (627, 'Category Alias (FR)', 'cat_alias_fr', 23, 'text', '', 1, 'Alias FR', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_category', '#__cck_store_item_categories', 'alias_fr', '', '', '', 0, '0000-00-00 00:00:00'),
 (628, 'Core MetaDesc', 'core_metadesc', 3, 'text', '', 0, 'Override MetaDesc', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[metadesc]', '', '', '', 0, '0000-00-00 00:00:00'),
-(629, 'Core SEF Canonical', 'core_sef_canonical', 3, 'select_simple', '', 0, 'SEF Canonical List', 'Use Global', 3, '', '', '', 'Canonical List All=0||Use Canonical=optgroup||Canonical List One=1||Canonical List Pages=2||Canonical List Pages Nav=3', '{\"options\":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[sef_canonical]', '', '', '', 0, '0000-00-00 00:00:00');
+(629, 'Core SEF Canonical', 'core_sef_canonical', 3, 'select_simple', '', 0, 'SEF Canonical List', 'Use Global', 3, '', '', '', 'Canonical List All=0||Use Canonical=optgroup||Canonical List One=1||Canonical List Pages=2||Canonical List Pages Nav=3', '{\"options\":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[sef_canonical]', '', '', '', 0, '0000-00-00 00:00:00'),
+(630, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', 3, 'group', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 1, 0, 0, '', 0, '', 'button_grp_form_alternative', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'button_grp_form_alternative', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -1119,7 +1120,8 @@ INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alia
 (27, 0, 'Category Grp Metadata', 'category_grp_metadata', '', 11, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_category', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(38, 0, 'User Grp Password', 'user_grp_password', '', 13, 14, 15, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
+(38, 0, 'User Grp Password', 'user_grp_password', '', 13, 14, 15, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(39, 0, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', '', 3, 15, 16, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 3, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
 
 
 -- --------------------------------------------------------
@@ -1502,7 +1504,17 @@ INSERT IGNORE INTO `#__cck_core_type_field` (`typeid`, `fieldid`, `client`, `ord
 (38, 607, 'admin', 2, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{\"location\":\"\",\"action\":\"edit\",\"form\":\"\",\"author\":\"\"}', '', '', '', '', 'mainbody'),
 (38, 607, 'site', 2, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{\"location\":\"\",\"action\":\"edit\",\"form\":\"\",\"author\":\"\"}', '', '', '', '', 'mainbody'),
 (38, 609, 'admin', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{\"location\":\"\",\"action\":\"add\",\"form\":\"\",\"author\":\"\"}', '', '', '', '', 'mainbody'),
-(38, 609, 'site', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{\"location\":\"\",\"action\":\"add\",\"form\":\"\",\"author\":\"\"}', '', '', '', '', 'mainbody');
+(38, 609, 'site', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'cck_workflow', '{\"location\":\"\",\"action\":\"add\",\"form\":\"\",\"author\":\"\"}', '', '', '', '', 'mainbody'),
+(39, 293, 'admin', 2, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 293, 'site', 2, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 487, 'admin', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 487, 'site', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 490, 'admin', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 490, 'site', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 588, 'admin', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', ' btn-toolbar', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 588, 'site', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', ' btn-toolbar', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 589, 'admin', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(39, 589, 'site', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody');
 
 
 -- --------------------------------------------------------
@@ -1589,7 +1601,11 @@ INSERT IGNORE INTO `#__cck_core_type_position` (`typeid`, `position`, `client`, 
 (38, 'clear', 'admin', '', '', '', '', '', ''),
 (38, 'clear', 'site', '', '', '', '', '', ''),
 (38, 'mainbody', 'admin', '', '', '', '', '', ''),
-(38, 'mainbody', 'site', '', '', '', '', '', '');
+(38, 'mainbody', 'site', '', '', '', '', '', ''),
+(39, 'clear', 'admin', '', '', '', '', '', ''),
+(39, 'clear', 'site', '', '', '', '', '', ''),
+(39, 'mainbody', 'admin', '', '', '', '', '', ''),
+(39, 'mainbody', 'site', '', '', '', '', '', '');
 
 
 -- --------------------------------------------------------
