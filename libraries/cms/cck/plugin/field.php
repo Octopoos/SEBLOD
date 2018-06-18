@@ -174,6 +174,22 @@ class JCckPluginField extends JPlugin
 							}
 						}
 						$v['options']	=	$options;
+					} elseif ( isset( $v['string'] ) ) {
+						foreach ( $v['string'] as $k2=>$v2 ) {
+							if ( is_array( $v2 ) ) {
+								$string	=	'';
+								foreach ( $v2 as $s2 ) {
+									if ( $s2 != '' ) {
+										$string	.=	$s2.'||';
+									}
+								}
+								if ( $string ) {
+									$string	=	substr( $string, 0, -2 );
+								}
+								$v[$k2]	=	$string;
+							}
+						}
+						unset( $v['string'] );
 					}
 					$data[$k]	=	JCckDev::toJSON( $v );
 				}
