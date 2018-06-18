@@ -197,7 +197,14 @@ abstract class JCckDev
 				}
 				$doc->addStyleDeclaration( $css );
 			}
-			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"}';
+			$more		=	'';
+			if ( $options->def( 'prettySelect' ) ) {
+				$more	.=	',prettySelect:'.( $options->get( 'prettySelect' ) ? 'true' : 'false' );
+			}
+			if ( $options->def( 'useSuffix' ) ) {
+				$more	.=	',useSuffix:"'.$options->get( 'useSuffix' ).'"';
+			}
+			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"'.$more.'}';
 		} else {
 			$options	=	'{}';
 		}

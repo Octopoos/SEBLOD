@@ -354,6 +354,12 @@ $doc->finalize( 'form', $type->name, $config['client'], $positions, $positions_m
 
 // Validation
 $config['validation']			=	( count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
+
+if ( count( $config['validation_options'] ) ) {
+	foreach ( $config['validation_options'] as $k=>$v ) {
+		$options->set( $k, $v );
+	}
+}
 $config['validation_options']	=&	$options;
 
 if ( @$profiler ) {

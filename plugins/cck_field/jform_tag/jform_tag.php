@@ -106,6 +106,11 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+
+			if ( $field->required || $field->validation ) {
+				$config['validation_options']['prettySelect']	=	'1';
+				$config['validation_options']['useSuffix']		=	'_chzn';
+			}
 		}
 
 		// Prepare
