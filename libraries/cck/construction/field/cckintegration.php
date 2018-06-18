@@ -203,9 +203,9 @@ class JFormFieldCckIntegration extends JFormField
 					$name	=	'add_layout';
 					$value	=	isset( $values->$name ) ? $values->$name : '';
 					if ( $location == 'form' ) {
-						$html[] =	JCckDev::getForm( 'core_dev_select', $value, $config, array( 'defaultvalue'=>'', 'selectlabel'=>'Inherit', 'options'=>'CONFIG_OPTION_ICON=icon||CONFIG_OPTION_LIST=list', 'css'=>'cck-integration input-small pull-left'.$disabled, 'storage_field'=>'integration['.$group->name.']['.$name.']' ), array( 'id'=>'integration_'.$group->name.'-'.$name ) );
+						$html[] =	JCckDev::getForm( 'core_dev_select', $value, $config, array( 'defaultvalue'=>'', 'selectlabel'=>'Inherit', 'options'=>'CONFIG_OPTION_ICON=icon||CONFIG_OPTION_LIST=list', 'css'=>'cck-integration alt-group input-small pull-left'.$disabled, 'storage_field'=>'integration['.$group->name.']['.$name.']' ), array( 'id'=>'integration_'.$group->name.'-'.$name ) );
 					} else {
-						$html[] =	JCckDev::getForm( 'core_dev_select', $value, $config, array( 'defaultvalue'=>'icon', 'type'=>'radio', 'options'=>'CONFIG_OPTION_ICON=icon||CONFIG_OPTION_LIST=list', 'css'=>'cck-integration btn-group btn-group-yesno pull-left'.$disabled, 'storage_field'=>'integration['.$group->name.']['.$name.']' ), array( 'id'=>'integration_'.$group->name.'-'.$name ) );						
+						$html[] =	JCckDev::getForm( 'core_dev_select', $value, $config, array( 'defaultvalue'=>'icon', 'type'=>'radio', 'options'=>'CONFIG_OPTION_ICON=icon||CONFIG_OPTION_LIST=list', 'css'=>'cck-integration alt-group btn-group btn-group-yesno pull-left'.$disabled, 'storage_field'=>'integration['.$group->name.']['.$name.']' ), array( 'id'=>'integration_'.$group->name.'-'.$name ) );						
 					}
 				} else {
 					$html[] =	JCckDev::getForm( $action->dev_fieldname, $value, $config, $action->dev_override, $inherit );

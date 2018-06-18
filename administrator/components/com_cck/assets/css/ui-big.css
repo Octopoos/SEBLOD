@@ -56,6 +56,8 @@ dd.tabs #jform_description-lbl {margin-top: 8px;!important}
 div.current dd.tabs label, div.current dd.tabs span.faux-label {min-width: 180px;}
 div.tab-content div.tab-pane div.control-label label, div.tab-content div.tab-pane div.control-label span.faux-label {min-width: 180px;}
 
+.cck-integration.alt-group{clear:both; margin: 5px 0 0 0!important;}
+
 /* ui-big (menu|module) */
 div.pane-sliders .inputbox {-webkit-border-radius: 3px; -moz-border-radius: 3px;	border-radius:3px; padding: 5px;}
 fieldset.panelform label, fieldset.panelform div.paramrow label, fieldset.panelform span.faux-label {margin-top:6px;}
