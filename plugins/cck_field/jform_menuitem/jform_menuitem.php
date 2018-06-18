@@ -103,6 +103,10 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 			$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
 		}
 		$class		=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$multiple	=	( $field->bool3 == 1 ) ? 'multiple="multiple"' : '';
+		$size		=	( $field->rows ) ? $field->rows : 1;
+		$size		=	( (int)$size > 1 ) ? ' size="'.$size.'"' : '';
+
 		if ( count( $options ) ) {
 			$group	=	false;
 			foreach ( $options as $i=>$val ) {
@@ -137,7 +141,8 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 								name="'.$name.'"
 								id="'.$id.'"
 								label="'.htmlspecialchars( $field->label ).'"
-								class="'.$class.'"
+								'.$multiple.'
+								class="'.$class.'"'.$size.'
 							>'.$opt.'</field>
 						</form>
 					';
