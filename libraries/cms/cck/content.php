@@ -160,13 +160,13 @@ class JCckContent
 	}
 
 	// setInstance
-	protected function setInstance( $instance_name, $load = false )
+	protected function setInstance( $table_instance_name, $load = false )
 	{
-		$method	=	'setInstance'.ucwords( $instance_name, '_' );
+		$method	=	'setInstance'.ucwords( $table_instance_name, '_' );
 
 		if ( $this->$method() ) {
 			if ( $load && $this->_pk ) {
-				return $this->{'_instance_'.$instance_name}->load( $this->_pk );
+				return $this->{'_instance_'.$table_instance_name}->load( $this->_pk );
 			}
 		}
 		
@@ -231,9 +231,9 @@ class JCckContent
 	}
 
 	// unsetInstance
-	protected function unsetInstance( $instance_name )
+	protected function unsetInstance( $table_instance_name )
 	{
-		$this->{'_instance_'.$instance_name}	=	null;
+		$this->{'_instance_'.$table_instance_name}	=	null;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Can
@@ -480,13 +480,13 @@ class JCckContent
 	}
 
 	// bind
-	public function bind( $instance_name, $data )
+	public function bind( $table_instance_name, $data )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
 		}
 
-		$result	=	$this->{'_instance_'.$instance_name}->bind( $data );
+		$result	=	$this->{'_instance_'.$table_instance_name}->bind( $data );
 
 		if ( !$result ) {
 			$this->_error	=	true;
@@ -606,9 +606,9 @@ class JCckContent
 											'more2'=>''
 										);
 
-					foreach ( $names as $instance_name=>$null ) {
-						if ( count( $data[$instance_name] ) ) {
-							$this->save( $instance_name, $data[$instance_name] );
+					foreach ( $names as $table_instance_name=>$null ) {
+						if ( count( $data[$table_instance_name] ) ) {
+							$this->save( $table_instance_name, $data[$table_instance_name] );
 						}
 					}
 
@@ -660,11 +660,11 @@ class JCckContent
 								'more2'=>''
 							);
 
-		foreach ( $names as $instance_name=>$null ) {
-			if ( count( $data[$instance_name] ) ) {
-				$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
+		foreach ( $names as $table_instance_name=>$null ) {
+			if ( count( $data[$table_instance_name] ) ) {
+				$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
 			
-				if ( !( $this->save( $instance_name, $data[$instance_name] ) ) ) {
+				if ( !( $this->save( $table_instance_name, $data[$table_instance_name] ) ) ) {
 					$this->_error	=	true;
 					$this->_is_new	=	false;
 
@@ -858,9 +858,9 @@ class JCckContent
 								'more2'=>''
 							);
 
-		foreach ( $names as $instance_name=>$null ) {
-			if ( is_object( $this->{'_instance_'.$instance_name} ) ) {
-				$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
+		foreach ( $names as $table_instance_name=>$null ) {
+			if ( is_object( $this->{'_instance_'.$table_instance_name} ) ) {
+				$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
 			}
 		}
 		
@@ -984,14 +984,14 @@ class JCckContent
 	}
 
 	// set
-	public function set( $instance_name, $property, $value )
+	public function set( $table_instance_name, $property, $value )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
 		}
 
-		if ( property_exists( $this->{'_instance_'.$instance_name}, $property ) ) {
-			$this->{'_instance_'.$instance_name}->$property	=	$value;
+		if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
+			$this->{'_instance_'.$table_instance_name}->$property	=	$value;
 		} else {
 			$this->log( 'error', 'Property unknown.' );
 
@@ -1066,7 +1066,7 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
 
 	// get
-	public function get( $instance_name, $property = '', $default = '' )
+	public function get( $table_instance_name, $property = '', $default = '' )
 	{
 		static $names	=	array(
 								'base'=>'',
@@ -1076,13 +1076,13 @@ class JCckContent
 								'more2'=>'',
 							);
 
-		if ( isset( $names[$instance_name] ) ) {
-			return $this->{'_instance_'.$instance_name}->get( $property, $default );
+		if ( isset( $names[$table_instance_name] ) ) {
+			return $this->{'_instance_'.$table_instance_name}->get( $property, $default );
 		} else {
 			$this->log( 'notice', 'Usage deprecated.' );
 
 			$default	=	$property;
-			$property	=	$instance_name;
+			$property	=	$table_instance_name;
 
 			if ( !isset( $this->_data ) ) {
 				$this->getData();
@@ -1109,10 +1109,10 @@ class JCckContent
 	}
 
 	// getData
-	public function getData( $instance_name = '' )
+	public function getData( $table_instance_name = '' )
 	{
-		if ( $instance_name ) {
-			$data	=	$this->{'_instance_'.$instance_name}->getProperties();
+		if ( $table_instance_name ) {
+			$data	=	$this->{'_instance_'.$table_instance_name}->getProperties();
 
 			unset( $data['id'], $data['cck'] );
 
@@ -1127,9 +1127,9 @@ class JCckContent
 									'more2'=>'',
 								);
 			
-			foreach ( $names as $instance_name=>$null ) {
-				if ( is_object( $this->{'_instance_'.$instance_name} ) ) {
-					$data	=	$this->{'_instance_'.$instance_name}->getProperties();
+			foreach ( $names as $table_instance_name=>$null ) {
+				if ( is_object( $this->{'_instance_'.$table_instance_name} ) ) {
+					$data	=	$this->{'_instance_'.$table_instance_name}->getProperties();
 
 					unset( $data['id'], $data['cck'] );
 
@@ -1142,9 +1142,9 @@ class JCckContent
 	}
 
 	// getDataObject
-	public function getDataObject( $instance_name = '' )
+	public function getDataObject( $table_instance_name = '' )
 	{
-		return (object)$this->getData( $instance_name );
+		return (object)$this->getData( $table_instance_name );
 	}
 
 	// getId
@@ -1241,23 +1241,23 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
 
 	// check
-	public function check( $instance_name )
+	public function check( $table_instance_name )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
 		}
 
-		return $this->{'_instance_'.$instance_name}->check();
+		return $this->{'_instance_'.$table_instance_name}->check();
 	}
 
 	// postSave
-	protected function postSave( $instance_name, $data ) {}
+	protected function postSave( $table_instance_name, $data ) {}
 	
 	// preSave
-	protected function preSave( $instance_name, &$data ) {}
+	protected function preSave( $table_instance_name, &$data ) {}
 	
 	// save ($)
-	public function save( $instance_name, $data = array() )
+	public function save( $table_instance_name, $data = array() )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
@@ -1271,12 +1271,12 @@ class JCckContent
 			}
 		}
 
-		$this->preSave( $instance_name, $data );
+		$this->preSave( $table_instance_name, $data );
 
-		$this->bind( $instance_name, $data );
-		$this->check( $instance_name );
+		$this->bind( $table_instance_name, $data );
+		$this->check( $table_instance_name );
 
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			$result	=	$this->trigger( 'save', 'before' );
 
 			if ( is_array( $result ) && in_array( false, $result, true ) ) {
@@ -1285,14 +1285,14 @@ class JCckContent
 		}
 
 		if ( get_class( $this ) == 'JCckContent' ) {
-			$status	=	$this->_saveLegacy( $instance_name, $data );
+			$status	=	$this->_saveLegacy( $table_instance_name, $data );
 		} else {
 			// Let's make sure we have a valid instance		/* TODO#SEBLOD: should we move this check to the suitable function(s) */
-			if ( !( $instance_name == 'base' || $instance_name == 'core' ) && empty( $this->{'_instance_'.$instance_name}->id ) ) {
-				$this->_fixDatabase( $instance_name );
+			if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
+				$this->_fixDatabase( $table_instance_name );
 			}
 
-			$method	=	'save'.ucfirst( $instance_name );
+			$method	=	'save'.ucfirst( $table_instance_name );
 			$status	=	$this->$method();
 		}
 
@@ -1300,15 +1300,15 @@ class JCckContent
 			return $status;
 		}
 
-		switch ( $instance_name ) {
+		switch ( $table_instance_name ) {
 			case 'base':
-				$this->_pk	=	$this->{'_instance_'.$instance_name}->{self::$objects[$this->_object]['properties']['key']};
+				$this->_pk	=	$this->{'_instance_'.$table_instance_name}->{self::$objects[$this->_object]['properties']['key']};
 				
 				if ( $this->_instance_core->id ) {
 					$data_core	=	array();
 
 					if ( self::$objects[$this->_object]['properties']['author'] == self::$objects[$this->_object]['properties']['key'] ) {
-						$data_core['author_id']	=	$this->{'_instance_'.$instance_name}->get( self::$objects[$this->_object]['properties']['key'], 0 );
+						$data_core['author_id']	=	$this->{'_instance_'.$table_instance_name}->get( self::$objects[$this->_object]['properties']['key'], 0 );
 					} elseif ( isset( $data[self::$objects[$this->_object]['properties']['author']] ) ) {
 						$data_core['author_id']	=	$data[self::$objects[$this->_object]['properties']['author']];
 					}
@@ -1321,7 +1321,7 @@ class JCckContent
 				}
 				break;
 			case 'core':
-				$this->_id	=	$this->{'_instance_'.$instance_name}->id;
+				$this->_id	=	$this->{'_instance_'.$table_instance_name}->id;
 				
 				if ( property_exists( $this->_instance_base, self::$objects[$this->_object]['properties']['custom'] ) ) {
 					$this->_instance_base->{self::$objects[$this->_object]['properties']['custom']}	=	'::cck::'.$this->_id.'::/cck::';
@@ -1332,9 +1332,9 @@ class JCckContent
 				break;
 		}
 
-		$this->postSave( $instance_name, $data );
+		$this->postSave( $table_instance_name, $data );
 		
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			$this->trigger( 'save', 'after' );
 		}
 
@@ -1372,7 +1372,7 @@ class JCckContent
 	}
 
 	// store ($)
-	public function store( $instance_name )
+	public function store( $table_instance_name )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
@@ -1386,16 +1386,16 @@ class JCckContent
 			}
 
 			// Let's make sure we have a valid instance
-			if ( !( $instance_name == 'base' || $instance_name == 'core' ) && empty( $this->{'_instance_'.$instance_name}->id ) ) {
-				$this->_fixDatabase( $instance_name );
+			if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
+				$this->_fixDatabase( $table_instance_name );
 			}
 		}
 
-		return $this->{'_instance_'.$instance_name}->store();
+		return $this->{'_instance_'.$table_instance_name}->store();
 	}
 
 	// update ($)
-	public function update( $instance_name, $property, $value )
+	public function update( $table_instance_name, $property, $value )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
@@ -1408,16 +1408,16 @@ class JCckContent
 		}
 
 		$check_permissions	=	$this->_options->get( 'check_permissions', 1 );
-		$pre_update			=	$this->{'_instance_'.$instance_name}->$property;
+		$pre_update			=	$this->{'_instance_'.$table_instance_name}->$property;
 
 		if ( $check_permissions ) {
 			$this->_options->set( 'check_permissions', 0 );
 		}
 		
-		$this->{'_instance_'.$instance_name}->$property	=	$value;
+		$this->{'_instance_'.$table_instance_name}->$property	=	$value;
 
-		if ( !( $result = $this->store( $instance_name ) ) ) {
-			$this->{'_instance_'.$instance_name}->$property	=	$pre_update;
+		if ( !( $result = $this->store( $table_instance_name ) ) ) {
+			$this->{'_instance_'.$table_instance_name}->$property	=	$pre_update;
 		}
 
 		if ( $check_permissions ) {
@@ -1599,12 +1599,12 @@ class JCckContent
 	}
 
 	// _fixDatabase
-	protected function _fixDatabase( $instance_name )
+	protected function _fixDatabase( $table_instance_name )
 	{
-		$data	=	$this->{'_instance_'.$instance_name}->getProperties();
+		$data	=	$this->{'_instance_'.$table_instance_name}->getProperties();
 
-		$this->{'_instance_'.$instance_name}->load( $this->_pk, true );
-		$this->{'_instance_'.$instance_name}->bind( $data );
+		$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
+		$this->{'_instance_'.$table_instance_name}->bind( $data );
 	}
 
 	// _getDataDispatch
@@ -1636,8 +1636,8 @@ class JCckContent
 					continue;
 				}
 
-				$instance_name				=	self::$types[$this->_type]['data_map'][$k];
-				$data[$instance_name][$k]	=	$v;
+				$table_instance_name				=	self::$types[$this->_type]['data_map'][$k];
+				$data[$table_instance_name][$k]	=	$v;
 			}
 
 			$this->_data_preset	=	array();
@@ -1651,8 +1651,8 @@ class JCckContent
 						continue;
 					}
 
-					$instance_name				=	self::$types[$this->_type]['data_map'][$k];
-					$data[$instance_name][$k]	=	$v;
+					$table_instance_name				=	self::$types[$this->_type]['data_map'][$k];
+					$data[$table_instance_name][$k]	=	$v;
 				}
 			}
 		}
@@ -1704,18 +1704,18 @@ class JCckContent
 
 		foreach ( $data as $k=>$v ) {
 			if ( $k == self::$objects[$this->_object]['properties']['key'] ) {
-				$instance_name	=	'base';
+				$table_instance_name	=	'base';
 			} else {
 				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 					return false;
 				}
-				$instance_name	=	self::$types[$this->_type]['data_map'][$k];
+				$table_instance_name	=	self::$types[$this->_type]['data_map'][$k];
 			}
 
 			$index	=	'';
 
-			if ( !isset( $tables[$instance_name] ) ) {
-				switch ( $instance_name ) {
+			if ( !isset( $tables[$table_instance_name] ) ) {
+				switch ( $table_instance_name ) {
 					case 'more':
 						$tables['more']			=	'c';
 						$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type, $tables['more'] ).' ON '.$db->quoteName( $tables['more'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
@@ -1732,7 +1732,7 @@ class JCckContent
 						break;
 				}
 			}
-			$index	=	$tables[$instance_name];
+			$index	=	$tables[$table_instance_name];
 
 			if ( !$index ) {
 				continue;
@@ -1835,17 +1835,17 @@ class JCckContent
 	}
 
 	// _setDataMap
-	protected function _setDataMap( $instance_name, $force = false )
+	protected function _setDataMap( $table_instance_name, $force = false )
 	{
-		if ( !is_object( $this->{'_instance_'.$instance_name} ) ) {
+		if ( !is_object( $this->{'_instance_'.$table_instance_name} ) ) {
 			return false;
 		}
 
-		$fields	=	$this->{'_instance_'.$instance_name}->getFields();
+		$fields	=	$this->{'_instance_'.$table_instance_name}->getFields();
 
 		foreach ( $fields as $k=>$v ) {
 			if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
-				self::$types[$this->_type]['data_map'][$k]	=	$instance_name;
+				self::$types[$this->_type]['data_map'][$k]	=	$table_instance_name;
 			}
 		}
 
@@ -1917,31 +1917,31 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated
 
 	// _saveLegacy (deprecated)
-	protected function _saveLegacy( $instance_name, $data )
+	protected function _saveLegacy( $table_instance_name, $data )
 	{
 		$this->log( 'notice', 'Usage deprecated.' );
 
-		if ( $instance_name == 'base' ) {
-			if ( property_exists( $this->{'_instance_'.$instance_name}, 'language' ) && $this->{'_instance_'.$instance_name}->language == '' ) {
-				$this->{'_instance_'.$instance_name}->language	=	'*';
+		if ( $table_instance_name == 'base' ) {
+			if ( property_exists( $this->{'_instance_'.$table_instance_name}, 'language' ) && $this->{'_instance_'.$table_instance_name}->language == '' ) {
+				$this->{'_instance_'.$table_instance_name}->language	=	'*';
 			}
-			$status			=	$this->store( $instance_name );
+			$status			=	$this->store( $table_instance_name );
 
 			if ( !$this->_pk && !$status && ( $this->_object == 'joomla_article' || $this->_object == 'joomla_category' ) ) {
 				$i			=	2;
-				$alias		=	$this->{'_instance_'.$instance_name}->alias.'-'.$i;
+				$alias		=	$this->{'_instance_'.$table_instance_name}->alias.'-'.$i;
 				$property	=	self::$objects[$this->_object]['properties']['parent'];
 				$test		=	JTable::getInstance( 'Content' );
 				
-				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$instance_name}->$property ) ) ) {
-					$alias	=	$this->{'_instance_'.$instance_name}->alias.'-'.$i++;
+				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$table_instance_name}->$property ) ) ) {
+					$alias	=	$this->{'_instance_'.$table_instance_name}->alias.'-'.$i++;
 				}
-				$this->{'_instance_'.$instance_name}->alias	=	$alias;
+				$this->{'_instance_'.$table_instance_name}->alias	=	$alias;
 
-				$status		=	$this->store( $instance_name );
+				$status		=	$this->store( $table_instance_name );
 			}
 		} else {
-			$status			=	$this->store( $instance_name );
+			$status			=	$this->store( $table_instance_name );
 		}
 
 		return $status;

@@ -34,16 +34,16 @@ class JCckContentJoomla_User extends JCckContent
 	}
 
 	// check
-	public function check( $instance_name )
+	public function check( $table_instance_name )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
 		}
 
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			return true;
 		} else {
-			return $this->{'_instance_'.$instance_name}->check();
+			return $this->{'_instance_'.$table_instance_name}->check();
 		}
 	}
 
@@ -66,7 +66,7 @@ class JCckContentJoomla_User extends JCckContent
 	}
 
 	// store ($)
-	public function store( $instance_name )
+	public function store( $table_instance_name )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
@@ -80,10 +80,10 @@ class JCckContentJoomla_User extends JCckContent
 			}
 		}
 
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			return $this->_instance_base->save();
 		} else {
-			return $this->{'_instance_'.$instance_name}->store();
+			return $this->{'_instance_'.$table_instance_name}->store();
 		}
 	}
 

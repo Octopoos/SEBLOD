@@ -22,9 +22,9 @@ class JCckContentJoomla_Category extends JCckContent
 	}
 
 	// preSave
-	protected function preSave( $instance_name, &$data )
+	protected function preSave( $table_instance_name, &$data )
 	{
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			if ( !( isset( $data['extension'] ) && $data['extension'] != '' ) ) {
 				$data['extension']	=	'com_content';
 			}
@@ -77,9 +77,9 @@ class JCckContentJoomla_Category extends JCckContent
 	}
 	
 	// postSave
-	protected function postSave( $instance_name, $data )
+	protected function postSave( $table_instance_name, $data )
 	{
-		if ( $instance_name == 'base' ) {
+		if ( $table_instance_name == 'base' ) {
 			$this->_instance_base->rebuildPath( $this->getPk() );
 		}
 	}
