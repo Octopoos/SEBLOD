@@ -251,7 +251,7 @@ abstract class JCckToolbox
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Processings
 	
 	// process
-	public static function process( $event )
+	public static function process( $event, $config = array() )
 	{
 		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
