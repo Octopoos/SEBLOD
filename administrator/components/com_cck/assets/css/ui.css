@@ -484,6 +484,8 @@ div.seblod span.fill.trigger-value{font-size:15px; font-weight:bold; position:re
 div.seblod input.trigger-type{padding-right: 15px;} 
 .font-size-109{font-size:1.09em;}
 
+.seblod #permissions-sliders .table-striped tr:nth-child(14) td{border-top: 3px solid #ddd;}
+
 /* Joomla 3.x */
 body.com_cck div.seblod:not(.cpanel_news) div.legend,
 body.com_cck_ecommerce div.seblod:not(.cpanel_news) div.legend,
