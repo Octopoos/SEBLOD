@@ -105,7 +105,7 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 						if ( $variable == $v ) {
 							$state		=	1;
 							break;
-						}  	
+						}
 					}
 				}	
 			}
