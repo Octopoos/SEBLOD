@@ -551,13 +551,7 @@ class JCckContent
 	// create (^)
 	public function create( $content_type, $data, $data_more = array(), $data_more2 = array() )
 	{
-		if ( $this->_id ) {
-			$this->_error	=	true;
-
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
-
-		$this->clear();
+		$this->reset();
 
 		if ( !$this->_setContentByType( $content_type ) ) {
 			$this->reset();
@@ -938,14 +932,10 @@ class JCckContent
 	}
 
 	// preset
-	public function preset( $data, $reset = true )
+	public function preset( $data )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
-		}
-
-		if ( $reset ) {
-			$this->reset( true );
 		}
 
 		$this->_data_preset	=	$data;
@@ -956,10 +946,9 @@ class JCckContent
 	// reset
 	public function reset( $complete = false )
 	{
-		/* TODO#SEBLOD: refactor... reset(content/item) or reset(object) or reset(true) */
-
 		$this->clear();
 
+		$this->_data				=	null;
 		$this->_id					=	0;
 		$this->_pk					=	0;
 		$this->_type				=	'';
@@ -967,17 +956,31 @@ class JCckContent
 		$this->_type_parent			=	'';
 		$this->_type_permissions	=	'';
 
+		$this->_instance_core		=	JCckTable::getInstance( '#__cck_core', 'id' );
+
+		$this->unsetInstance( 'base' );
+		$this->unsetInstance( 'more' );
+		$this->unsetInstance( 'more_parent' );
+		$this->unsetInstance( 'more2' );
+
+		/* TODO#SEBLOD: We may be able to refactor... */
+		// if ( !$complete ) {
+			// Same Content Type (content/item)
+			// $this->resetInstance( 'base' );
+			// $this->resetInstance( 'more' );
+			// $this->resetInstance( 'more_parent' );
+			// $this->resetInstance( 'more2' );		
+		// } elseif ( $complete ) {
+			// Different Content Type (object)
+			// $this->resetInstance( 'base' );
+			// $this->unsetInstance( 'more' );
+			// $this->unsetInstance( 'more_parent' );
+			// $this->resetInstance( 'more2' );
+		// }
+
 		if ( $complete ) {
 			$this->_object			=	'';
-			$this->_table 			=	'';
-
-			$this->_data			=	null;
-			$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
-
-			$this->unsetInstance( 'base' );
-			$this->unsetInstance( 'more' );
-			$this->unsetInstance( 'more_parent' );
-			$this->unsetInstance( 'more2' );
+			$this->_table 			=	'';			
 		}
 
 		return $this;
