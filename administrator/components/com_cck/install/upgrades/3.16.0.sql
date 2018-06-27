@@ -26,6 +26,8 @@ UPDATE `#__cck_core_fields` SET `options` = 'No=0||Yes=optgroup||Yes for Everyon
 UPDATE `#__cck_core_fields` SET `options` = 'Alter Table=1' WHERE `id` = 75;
 UPDATE `#__cck_core_fields` SET `options` = 'Alter Original Type=0||Alter Original Field=2||Base Table=optgroup||Alter Original Table=1' WHERE `id` = 192;
 
+UPDATE `#__cck_core_fields` SET `options` = 'Custom=custom||Path=path||Presets=optgroup||Base=base||Current=current||Root=root' WHERE `id` = 279;
+
 INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `description`, `published`, `label`, `selectlabel`, `display`, `required`, `validation`, `defaultvalue`, `options`, `options2`, `minlength`, `maxlength`, `size`, `cols`, `rows`, `ordering`, `sorting`, `divider`, `bool`, `location`, `extended`, `style`, `script`, `bool2`, `bool3`, `bool4`, `bool5`, `bool6`, `bool7`, `bool8`, `css`, `attributes`, `storage`, `storage_cck`, `storage_location`, `storage_table`, `storage_field`, `storage_field2`, `storage_params`, `storages`, `checked_out`, `checked_out_time`) VALUES
 (624, 'Article Alias (EN)', 'art_alias_en', 22, 'text', '', 1, 'Alias EN', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_article', '#__cck_store_item_content', 'alias_en', '', '', '', 0, '0000-00-00 00:00:00'),
 (625, 'Article Alias (FR)', 'art_alias_fr', 22, 'text', '', 1, 'Alias FR', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_article', '#__cck_store_item_content', 'alias_fr', '', '', '', 0, '0000-00-00 00:00:00'),
