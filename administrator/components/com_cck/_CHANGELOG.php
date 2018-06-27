@@ -63,7 +63,6 @@ $ -> Language fix or change
 + Ability to set the variation of all fields within a group from the group.
 + "Conditional Required" (only when...) capability added.
 + "Construction Mode" parameter added on SEBLOD Options >> new "Advanced" Field creation mode.
-+ Field Storage UI improved.
 + Keyboard Shortcuts improved.
 + "Match Occurences Offset" parameter added for "Any Word Exact" match mode.
 + Messages output added for "Process (Ajax)" tasks.
