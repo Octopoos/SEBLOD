@@ -810,7 +810,7 @@ class JCckContent
 		if ( !$this->setInstance( 'base', true ) ) {
 			$this->reset();
 
-			return false;
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 
 		if ( JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core WHERE storage_location = "'.(string)$this->_object.'" AND pk = '.(int)$this->_pk ) ) {
@@ -1019,7 +1019,7 @@ class JCckContent
 		if ( !$this->isSuccessful() ) {
 			return $this;
 		}
-		
+
 		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
 			$this->set( self::$types[$this->_type]['data_map'][$property], $property, $value );
 		} else {
@@ -1448,10 +1448,11 @@ class JCckContent
 		$pre_update	=	$this->get( 'base', self::$objects[$this->_object]['properties']['author'], 0 );
 
 		if ( isset( self::$objects[$this->_object]['properties']['author'] ) && self::$objects[$this->_object]['properties']['author'] ) {
-			$this->set( 'base', self::$objects[$this->_object]['properties']['author'], $author_id );
+			$property								=	self::$objects[$this->_object]['properties']['author'];
+			$this->_instance_base->$property		=	$author_id;
 
 			if ( !$this->store( 'base' ) ) {
-				$this->set( 'base', self::$objects[$this->_object]['properties']['author'], $pre_update );
+				$this->_instance_base->$property	=	$pre_update;
 
 				return false;
 			}
@@ -1636,7 +1637,7 @@ class JCckContent
 					continue;
 				}
 
-				$table_instance_name				=	self::$types[$this->_type]['data_map'][$k];
+				$table_instance_name			=	self::$types[$this->_type]['data_map'][$k];
 				$data[$table_instance_name][$k]	=	$v;
 			}
 
