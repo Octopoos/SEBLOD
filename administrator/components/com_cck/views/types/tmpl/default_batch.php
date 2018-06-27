@@ -92,7 +92,7 @@ defined( '_JEXEC' ) or die;
     <div class="modal-footer">
         <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
         <div class="btn-group dropup pull-right">
-            <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE_BLANK' ); ?></button>
+            <button class="btn" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE_BLANK' ); ?></button>
         </div>
     </div>
     <?php } ?>
