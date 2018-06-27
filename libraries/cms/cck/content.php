@@ -24,7 +24,8 @@ class JCckContent
 	protected $_options					=	null;
 
 	protected $_data					=	null;
-	protected $_data_preset				=	array(); /* TODO#SEBLOD: reset? */
+	protected $_data_preset				=	array();
+	protected $_data_update				=	array();
 	protected $_error					=	false;
 	protected $_id						=	0;
 	protected $_instance_base			=	null;
@@ -949,6 +950,7 @@ class JCckContent
 		$this->clear();
 
 		$this->_data				=	null;
+		$this->_data_update			=	array();
 		$this->_id					=	0;
 		$this->_pk					=	0;
 		$this->_type				=	'';
@@ -994,7 +996,8 @@ class JCckContent
 		}
 
 		if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
-			$this->{'_instance_'.$table_instance_name}->$property	=	$value;
+			$this->{'_instance_'.$table_instance_name}->$property					=	$value;
+			$this->_data_update[self::$types[$this->_type]['data_map'][$property]]	=	true;
 		} else {
 			$this->log( 'error', 'Property unknown.' );
 
@@ -1375,7 +1378,7 @@ class JCckContent
 	}
 
 	// store ($)
-	public function store( $table_instance_name )
+	public function store( $table_instance_name = '' )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
@@ -1387,7 +1390,33 @@ class JCckContent
 
 				return false;
 			}
+		}
 
+		if ( !$table_instance_name ) {
+			if ( !count( $this->_data_update ) ) {
+				return false;
+			}
+
+			$successful	=	true;
+
+			foreach ( $this->_data_update as $table_instance_name=>$null ) {
+				if ( !$this->isNew() ) {
+					// Let's make sure we have a valid instance
+					if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
+						$this->_fixDatabase( $table_instance_name );
+					}
+				}
+				if ( !$this->{'_instance_'.$table_instance_name}->store() ) {
+					$successful	=	false;
+				} else {
+					unset( $this->_data_update[$table_instance_name] );
+				}
+			}
+
+			return $successful;
+		}
+
+		if ( !$this->isNew() ) {
 			// Let's make sure we have a valid instance
 			if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
 				$this->_fixDatabase( $table_instance_name );
