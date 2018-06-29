@@ -1356,6 +1356,14 @@ Temporary Items
 /language/en-GB/en-GB.com_cck_updater.ini
 /language/fr-FR/fr-FR.com_cck_updater.ini
 
+######## SEBLOD Plug-ins >> Field >> 42
+
+/administrator/language/en-GB/en-GB.plg_cck_field_42.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_42.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_42.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_42.sys.ini
+/plugins/cck_field/42/*
+
 ######## SEBLOD Plug-ins >> Field >> Address to Coordinates
 
 /administrator/language/en-GB/en-GB.plg_cck_field_address_to_coordinates.ini
@@ -2229,6 +2237,14 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_language.sys.ini
 /plugins/cck_field_restriction/joomla_language/*
+
+######## SEBLOD Plug-ins >> Restriction >> Joomla! Menu Item
+
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_menu_item.ini
+/administrator/language/en-GB/en-GB.plg_cck_field_restriction_joomla_menu_item.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_menu_item.ini
+/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_joomla_menu_item.sys.ini
+/plugins/cck_field_restriction/joomla_menu_item/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! User
 
