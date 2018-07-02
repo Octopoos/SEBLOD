@@ -185,6 +185,7 @@ $js		=	'
 							this.removeClass("radio").addClass("checkbox");
 							this.removeClass("radios").addClass("checkboxes");
 						}
+						JCck.Dev.resize(offset);
 					}
 					return "";
 				}
