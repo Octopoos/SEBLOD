@@ -22,6 +22,18 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.16.1 Upgrade Release [xx-Jul-2018] -----------
+
++ "getCallable" method added on JCckContent class.
++ "tag", "untag" methods added on JCckContentCategory class.
+
+^ "tag", "untag" methods now implemented with PHP Traits.
+^ "tag", "untag" methods' declaration/behaviours changed (cf manuals).
+
+# Fatal error fixed on PHP < 5.4.32
+# "Save" (i.e "apply") task fixed on the last page of multi-page forms.
+# Various minor issues fixed.
+
 -------------------- 3.16.0 Upgrade Release [27-Jun-2018] -----------
 
 * Security Release:
