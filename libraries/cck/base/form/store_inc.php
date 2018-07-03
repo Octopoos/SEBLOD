@@ -266,24 +266,33 @@ if ( count( $config['fields'] ) ) {
 	unset( $config['fields'] );
 }
 
-// Stage (..and the next stage is..)
-if ( $stages > 1 && $stage ) {
-	if ( $config['task'] != 'apply' ) {
-		if ( ! $config['validate'] ) {
-			$stage++;
+// Stage (and the next stage is...!)
+if ( $stages > 1 ) {
+	if ( $stage ) {
+		if ( $config['task'] != 'apply' ) {
+			if ( ! $config['validate'] ) {
+				$stage++;
+			}
 		}
-	}
-	if ( $stage <= $stages ) {
-		if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
-			$config['message']			=	'';
-			$config['message_style']	=	0;
+		if ( $stage <= $stages ) {
+			if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
+				$config['message']			=	'';
+				$config['message_style']	=	0;
+			}
+			$config['url']		=	'';
+			$config['stage']	=	$stage;
+		} elseif ( $stage == $stages ) {
+			$config['stage']	=	0;
 		}
-		// if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
-		$config['url']				=	'';
-		// }
-		$config['stage']			=	$stage;
-	} elseif ( $stage == $stages ) {
-		$config['stage']			=	0;
+	} else {
+		if ( $config['task'] == 'apply' ) {
+			if ( !( isset( $preconfig['skip'] ) && $preconfig['skip'] == '1' ) ) {
+				$config['message']			=	'';
+				$config['message_style']	=	0;
+			}
+			$config['stage']	=	$stages;
+			$config['url']		=	'';
+		}
 	}
 }
 
