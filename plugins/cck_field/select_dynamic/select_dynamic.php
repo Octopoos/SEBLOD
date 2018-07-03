@@ -622,11 +622,14 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			$lang_tag	=	JFactory::getLanguage()->getTag();
 			$lang_code	=	( isset( $languages[$lang_tag] ) ) ? strtoupper( $languages[$lang_tag]->sef ) : '';
 		}
+		
 		$value			=	str_replace( '[lang]', $lang_code, $value );
 		$languages		=	explode( ',', @$options2['language_codes'] );
+		
 		if ( ! in_array( $lang_code, $languages ) ) {
 			$lang_code	=	@$options2['language_default'] ? $options2['language_default'] : '';
 		}
+		
 		$lang_code		=	strtolower( $lang_code );
 	}
 	
