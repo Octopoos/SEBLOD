@@ -36,50 +36,7 @@ class CCKViewTemplate extends JCckBaseLegacyViewForm
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
 		$this->item->mode		=	Helper_Admin::getSelected( $this->vName, 'mode', $this->state->get( 'mode', $this->item->mode ), '0' );
 		
-		if ( !$this->isNew ) {
-			jimport( 'joomla.filesystem.folder' );
-			$this->item->tree	=	$this->_generateTree();
-			$this->item->files	=	JFolder::files( JPATH_SITE.'/templates/'.$this->item->name );
-		}
-		
 		Helper_Admin::addToolbarEdit( $this->vName, _C1_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ) );
-	}
-	
-	// _generateTree
-	protected function _generateTree()
-	{
-		$path		=	JPATH_SITE.'/templates/'.$this->item->name;
-		$folders	=	JFolder::listFolderTree( $path, '.', 5 );
-		$i			=	0;
-		$path		=	array();
-		$prev		=	0;
-		$tree		=	'';
-		
-		foreach ( $folders as $k => $f ) {
-			$p	=	$f['parent'];
-			if ( $p > $prev ) {
-				$tree		.=	'<ul><li id="phtml_'.$f['id'].'">'.'<a href="#">'.$f['name'].'</a>';
-				$path[$i++]	=	$prev;
-			} else {
-				if ( $p < $prev ) {
-					for ( $j = $i - 1; $j >= 0; $j-- ) {
-						$tree	.=	'</li></ul>';
-						$last	=	$path[$j];
-						unset( $path[$j] );
-						$i--;
-						if ( $p == $last ) {
-							break;
-						}
-					}
-				}
-				$tree	.=	'</li><li id="phtml_'.$f['id'].'">'.'<a href="#">'.$f['name'].'</a>';
-			}
-			$prev	=	$p;
-			//$folders[$k]['files']	=	JFolder::files( $f['fullname'], '.', false, true );
-		}
-		$tree	=	'<ul><li id="phtml_0" class="jstree-open jstree-last">'.'<a href="#" class="jstree-clicked">'.'./'.'</a><ul>' . substr( $tree, 5 ) . '</li></ul></li></ul>';
-		
-		return $tree;
 	}
 }
 ?>
