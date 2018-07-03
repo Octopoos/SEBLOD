@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 trait JCckContentTraitTag
 {
 	// _tag
-	protected function _tag( $tags, $replace = true )
+	protected function _tag( $tags, $replace = false )
 	{
 		if ( !$this->_pk ) {
 			return false;
