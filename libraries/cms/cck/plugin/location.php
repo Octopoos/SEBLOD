@@ -21,8 +21,18 @@ class JCckPluginLocation extends JPlugin
 	{
 		parent::__construct( $subject, $config );
 
-		$object		=	ucwords( static::$type, '_' );
-  		$properties	=	array( 'type_alias' );
+		if ( version_compare( PHP_VERSION, '5.4.32', '<' ) ) {
+			$parts	=	explode( '_', static::$type );
+			
+			foreach ( $parts as $k=>$part ) {
+				$parts[$k]	=	ucfirst( $parts[$k] );
+			}
+			$object	=	implode( '_', $parts );
+		} else {
+			$object	=	ucwords( static::$type, '_' );
+		}
+		
+		$properties	=	array( 'type_alias' );
 		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 
 		JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
