@@ -39,9 +39,13 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 } else {
 	for ( $i = 0; $i < $count; $i++ ) {
-		$ids	.=	$items[$i]->id.',';
+		if ( isset( $items[$i]->id ) ) {
+			$ids	.=	$items[$i]->id.',';
+		}
 	}
-	$ids		=	substr( $ids, 0, -1 );
+	if ( $ids != '' ) {
+		$ids	=	substr( $ids, 0, -1 );
+	}
 }
 $storages		=	array( '_'=>'' );
 $suffix			=	'';
@@ -55,18 +59,19 @@ if ( $debug == -1 ) {
 if ( $count ) {
 	for ( $i = 0; $i < $count; $i++ ) {
 		if ( isset( $items[$i]->pk ) ) {
-			$PK						=	$items[$i]->pk;
+			$PK							=	$items[$i]->pk;
 		} else {
-			$PK						=	$i;
-			$items[$i]->author		=	0;
-			$items[$i]->cck			=	'';
-			$items[$i]->loc			=	$list['location'];
-			$items[$i]->parent		=	'';
-			$items[$i]->pid			=	0;
-			$items[$i]->pk			=	$i;
-			$items[$i]->pkb			=	0;
-			$items[$i]->type_id		=	0;
-			$items[$i]->type_alias	=	'';
+			$PK							=	$i;
+			$items[$i]->author			=	0;
+			$items[$i]->author_session	=	'';
+			$items[$i]->cck				=	'';
+			$items[$i]->loc				=	$list['location'];
+			$items[$i]->parent			=	'';
+			$items[$i]->pid				=	0;
+			$items[$i]->pk				=	$i;
+			$items[$i]->pkb				=	0;
+			$items[$i]->type_id			=	0;
+			$items[$i]->type_alias		=	'';
 		}
 		$item	=	new CCK_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		

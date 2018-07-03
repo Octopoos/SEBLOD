@@ -481,7 +481,9 @@ class plgSearchCCK extends JPlugin
 			$config['ids2']		=	array();
 
 			foreach ( $results as $k=>$v ) {
-				$config['ids2'][]	=	$results[$k]->id;
+				if ( isset( $results[$k]->id ) ) {
+					$config['ids2'][]	=	$results[$k]->id;
+				}
 			}
 			$config['ids2']		=	'"'.implode( '","', $config['ids2'] ).'"';
 		}
