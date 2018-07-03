@@ -106,7 +106,7 @@ class plgCCK_FieldCalendar extends JCckPluginField
 		}
 
 
-		if ( empty( $value ) || $value == '0000-00-00 00:00:00' ) {
+		if ( empty( $value ) || $value == '0000-00-00 00:00:00' || $value == '0000-00-00' ) {
 			$hiddenValue		=	'';
 			$displayValue		=	'';
 			$scriptDate         =	'';
