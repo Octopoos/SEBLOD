@@ -15,6 +15,18 @@ use Joomla\Registry\Registry;
 // JCckContent
 class JCckContent
 {
+	protected static $incognito			=	array(
+												'__construct'=>'',
+												'_fixDatabase'=>'',
+												'_getDataDispatch'=>'',
+												'_getDataQuery'=>'',
+												'_saveLegacy'=>'',
+												'_setContentById'=>'',
+												'_setContentByType'=>'',
+												'_setDataMap'=>'',
+												'_setObjectMap'=>'',
+												'_setTypeMap'=>''
+											);
 	protected static $instances			=	array();
 	protected static $instances_map		=	array();
 	protected static $objects			=	array();
@@ -506,17 +518,8 @@ class JCckContent
 		$args	=	func_get_args();
 		$task	=	'_'.array_shift( $args );
 		
-		static $excluded	=	array(
-									'_getDataDispatch'=>'',
-									'_getDataQuery'=>'',
-									'_saveLegacy'=>'',
-									'_setContentById'=>'',
-									'_setContentByType'=>'',
-									'_setDataMap'=>'',
-									'_setObjectMap'=>'',
-									'_setTypeMap'=>''
-								);
-		if ( isset( $excluded[$task] ) ) {
+		
+		if ( isset( self::$incognito[$task] ) ) {
 			$this->_error	=	true;
 
 			return $this;
@@ -1114,6 +1117,25 @@ class JCckContent
 		return $author_id;
 	}
 
+	// getCallable
+	public function getCallable()
+	{
+		$items		=	array();
+		$methods	=	get_class_methods( $this );
+
+		foreach ( $methods as $method ) {
+			$pos	=	strpos( $method, '_' );
+			
+			if ( $pos !== false && $pos == 0 ) {
+				if ( !isset( self::$incognito[$method] ) ) {
+					$items[]	=	substr( $method, 1 );
+				}
+			}
+		}
+
+		return $items;
+	}
+
 	// getData
 	public function getData( $table_instance_name = '' )
 	{
@@ -1596,6 +1618,10 @@ class JCckContent
 		if ( $scope == 'self' ) {
 			dump( self::$objects, 'objects' );
 			dump( self::$types, 'types' );
+		} elseif ( $scope == 'callable' ) {
+			dump( $this->getCallable() );
+		} elseif ( $scope == 'log' ) {
+			dump( $this->getLog() );
 		} else {
 			dump( $this->_data, 'data' );
 			dump( $this->_error, 'error' );
