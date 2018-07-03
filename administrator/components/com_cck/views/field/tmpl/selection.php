@@ -323,7 +323,7 @@ $js		=	'
 					}
 					if (toggle=="1") {
 						JCck.Dev.resize(32);
-						$("div.toggle-selection").html(\'<a href="#" id="toggle_selection">Toggle</a>\');
+						$("div.toggle-selection").html(\'<a href="javascript:void(0);" id="toggle_selection">Toggle</a>\');
 						if ($("#'.$this->item->name.'").isMultiple()) {
 							JCck.Dev.always = true;
 						}

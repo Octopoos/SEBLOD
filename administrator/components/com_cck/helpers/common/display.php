@@ -37,9 +37,9 @@ class CommonHelper_Display
 		$html	=	'<span class="icon-'.$state[5].'"></span>';
 
 		if ( $canChange ) {
-			$html	= '<a href="#" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
+			$html	= '<a href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
 		} else {
-			$html	= '<a href="#" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
+			$html	= '<a href="javascript:void(0);" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
 		}
 
 		echo $html;
