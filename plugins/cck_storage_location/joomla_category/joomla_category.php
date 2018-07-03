@@ -957,6 +957,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
+									'context2'=>'',
 									'contexts'=>'',
 									'custom'=>'',
 									'events'=>'',

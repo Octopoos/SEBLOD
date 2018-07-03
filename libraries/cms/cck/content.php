@@ -1913,6 +1913,7 @@ class JCckContent
 		$properties	=	array(
 							'author',
 							'context',
+							'context2',
 							'custom',
 							'events',
 							'key',
@@ -1925,6 +1926,10 @@ class JCckContent
 										'columns'=>array(),
 										'properties'=>JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties )
 									);
+
+		if ( !( isset( self::$objects[$object]['properties']['context2'] ) && self::$objects[$object]['properties']['context2'] != '' ) ) {
+			self::$objects[$object]['properties']['context2']	=	self::$objects[$object]['properties']['context'];
+		}
 
 		return true;
 	}

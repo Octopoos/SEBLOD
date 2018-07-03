@@ -13,6 +13,8 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentJoomla_Article extends JCckContent
 {
+	use JCckContentTraitTag;
+
 	// saveBase
 	protected function saveBase()
 	{
@@ -42,56 +44,6 @@ class JCckContentJoomla_Article extends JCckContent
 		}
 
 		return $status;
-	}
-
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
-
-	// _tag
-	protected function _tag( $tags )
-	{
-		if ( !$this->_pk ) {
-			return false;
-		}
-		if ( !$this->can( 'save' ) ) {
-			$this->log( 'error', 'Permissions denied.' );
-
-			return false;
-		}
-
-		if ( !is_array( $tags ) ) {
-			$tags	=	array( $tags );
-		}
-		foreach ( $tags as $k=>$v ) {
-			$tags[$k]	=	(string)$v;
-		}
-
-		$this->_instance_base->newTags	=	$tags;
-
-		return $this->_instance_base->store();
-	}
-
-	// _untag
-	protected function _untag( $tags )
-	{
-		if ( !$this->_pk ) {
-			return false;
-		}
-		if ( !$this->can( 'save' ) ) {
-			$this->log( 'error', 'Permissions denied.' );
-
-			return false;
-		}
-
-		if ( !is_array( $tags ) ) {
-			$tags	=	array( $tags );
-		}
-		foreach ( $tags as $k=>$v ) {
-			$tags[$k]	=	(string)$v;
-		}
-
-		$tagHelper				=	new JHelperTags;
-		$tagHelper->typeAlias	=	'com_content.article';
-		$tagHelper->unTagItem( 0, $this->_instance_base, $tags );
 	}
 }
 ?>

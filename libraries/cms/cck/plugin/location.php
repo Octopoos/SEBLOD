@@ -102,6 +102,7 @@ class JCckPluginLocation extends JPlugin
 									'child_object'=>'',
 									'created_at'=>'',
 									'context'=>'',
+									'context2'=>'',
 									'contexts'=>'',
 									'custom'=>'',
 									'events'=>'',

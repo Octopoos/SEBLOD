@@ -13,6 +13,8 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentJoomla_Category extends JCckContent
 {
+	use JCckContentTraitTag;
+
 	// initialize
 	protected function initialize()
 	{
