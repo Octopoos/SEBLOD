@@ -738,7 +738,8 @@ class JCckContent
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 
-		$query->select( $db->quoteName( 'a.pk' ) );
+		$query->select( $db->quoteName( 'a.pk' ) )
+			  ->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
 
 		$db->setQuery( $query );
 
@@ -774,7 +775,8 @@ class JCckContent
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 
-		$query->select( $db->quoteName( 'a.pk' ) );
+		$query->select( $db->quoteName( 'a.pk' ) )
+			  ->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
 
 		$db->setQuery( $query );
 
