@@ -1758,7 +1758,7 @@ class JCckContent
 					);
 
 		$query->from( $db->quoteName( '#__cck_core', 'a' ) );
-		$query->join( 'left', $db->quoteName( $this->_table, 'b' ).' ON '.$db->quoteName( 'b.id' ).' = '.$db->quoteName( 'a.pk' ) );
+		$query->join( 'left', $db->quoteName( $this->_table, 'b' ).' ON '.$db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ).' = '.$db->quoteName( 'a.pk' ) );
 		$query->where( $db->quoteName( 'a.cck' ).' = '.$db->quote( $content_type ) );
 
 		foreach ( $data as $k=>$v ) {
