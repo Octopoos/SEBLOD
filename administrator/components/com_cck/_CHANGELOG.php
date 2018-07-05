@@ -22,15 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.16.1 Upgrade Release [xx-Jul-2018] -----------
+-------------------- 3.16.1 Upgrade Release [06-Jul-2018] -----------
 
 + "getCallable" method added on JCckContent class.
 + "tag", "untag" methods added on JCckContentCategory class.
 
-^ "tag", "untag" methods now implemented with PHP Traits.
-^ "tag", "untag" methods' declaration/behaviours changed (cf manuals).
+^ JCckContent class updated.
+  >> "store" method with optional table instance (arg) available for ALL objects.
+  >> "tag", "untag" methods re-implemented with PHP Traits.
+  >> "tag", "untag" methods' declaration/behaviours changed (cf manuals).
 
-# Fatal error fixed on PHP < 5.4.32
+# Fatal error fixed on PHP < 5.4.32 (regression since SEBLOD 3.16.0).
 # "Save" (i.e "apply") task fixed on the last page of multi-page forms.
 # Various minor issues fixed.
 
