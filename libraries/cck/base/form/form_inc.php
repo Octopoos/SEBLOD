@@ -173,12 +173,14 @@ if ( file_exists( JPATH_ADMINISTRATOR.'/templates/'.$tpl['home'].'/html/tpl_'.$t
 }
 
 // INIT
-$live		=	explode( '||', $live );
-$lives		=	array();
-foreach ( $live as $liv ) {
-	if ( $liv != '' ) {
-		$l				=	explode( '=', $liv );
-		$lives[$l[0]]	=	$l[1];
+if ( !isset( $lives ) ) {
+	$live		=	explode( '||', $live );
+	$lives		=	array();
+	foreach ( $live as $liv ) {
+		if ( $liv != '' ) {
+			$l				=	explode( '=', $liv );
+			$lives[$l[0]]	=	$l[1];
+		}
 	}
 }
 $variation	=	explode( '||', $variation );
