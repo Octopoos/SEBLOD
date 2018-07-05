@@ -1430,7 +1430,12 @@ class JCckContent
 						$this->_fixDatabase( $table_instance_name );
 					}
 				}
-				if ( !$this->{'_instance_'.$table_instance_name}->store() ) {
+				if ( $table_instance_name == 'base' ) {
+					$successful	=	$this->storeBase();
+				} else {
+					$successful	=	$this->{'_instance_'.$table_instance_name}->store();	
+				}
+				if ( !$successful ) {
 					$successful	=	false;
 				} else {
 					unset( $this->_data_update[$table_instance_name] );
@@ -1447,7 +1452,17 @@ class JCckContent
 			}
 		}
 
-		return $this->{'_instance_'.$table_instance_name}->store();
+		if ( $table_instance_name == 'base' ) {
+			return $this->storeBase();
+		} else {
+			return $this->{'_instance_'.$table_instance_name}->store();
+		}
+	}
+
+	// storeBase
+	protected function storeBase()
+	{
+		return $this->_instance_base->store();
 	}
 
 	// update ($)

@@ -65,26 +65,10 @@ class JCckContentJoomla_User extends JCckContent
 		return $this->_instance_base->save();
 	}
 
-	// store ($)
-	public function store( $table_instance_name )
+	// storeBase
+	protected function storeBase()
 	{
-		if ( !$this->isSuccessful() ) {
-			return false;
-		}
-
-		if ( !$this->isNew() ) {
-			if ( !$this->can( 'save' ) ) {
-				$this->log( 'error', 'Permissions denied.' );
-
-				return false;
-			}
-		}
-
-		if ( $table_instance_name == 'base' ) {
-			return $this->_instance_base->save();
-		} else {
-			return $this->{'_instance_'.$table_instance_name}->store();
-		}
+		return $this->_instance_base->save();
 	}
 
 	// triggerDelete
