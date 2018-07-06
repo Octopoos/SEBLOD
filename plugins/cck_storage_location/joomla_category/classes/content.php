@@ -10,11 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
-// JCckContent
-class JCckContentJoomla_Category extends JCckContent
-{
-	use JCckContentTraitTag;
+if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
+	include_once __DIR__ . '/content_placeholder.php';
+} else {
+	include_once __DIR__ . '/content_placeholder_legacy.php';
+}
 
+// JCckContent
+class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
+{
 	// initialize
 	protected function initialize()
 	{

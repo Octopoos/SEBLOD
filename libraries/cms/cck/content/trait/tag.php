@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( version_compare( PHP_VERSION, '5.4', '<=' ) ) {
+	return;
+}
+
 // JCckContentTrait
 trait JCckContentTraitTag
 {
