@@ -154,25 +154,19 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ("'.str_replace( '||', '","', $fieldnames ).'")', 'name' );
 		$s_fields	=	array();
 		$where		=	explode( '||', $fieldnames );
-		if ( $method == 'object' ) {
-			foreach ( $where as $w ) {
-				if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
-					$s_field	=	$fields[$w]->storage_field;
+
+		foreach ( $where as $w ) {
+			if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
+				$s_field	=	$fields[$w]->storage_field;
+
+				if ( $method == 'object' ) {
 					$v			=	isset( $values->$s_field ) ? $values->$s_field : '';
-					if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
-						$s_fields[$s_field]	=	'';
-						$and				.=	' AND '.$s_field.'="'.JCckDatabase::escape( $v ).'"';
-					}
+				} else {
+					$v			=	$values[$w]->value;
 				}
-			}
-		} else {
-			foreach ( $where as $w ) {
-				if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
-					$v		=	$values[$w]->value;
-					if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
-						$s_fields[$s_field]	=	'';
-						$and				.=	' AND '.$values[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
-					}
+				if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
+					$s_fields[$s_field]	=	'';
+					$and				.=	' AND '.$s_field.'="'.JCckDatabase::escape( $v ).'"';
 				}
 			}
 		}
