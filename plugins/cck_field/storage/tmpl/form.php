@@ -39,11 +39,13 @@ if ( $config['tmpl'] == 'ajax' ) {
 						$("#storage_more, .storage_more").hide();
 						if ( v == "none" ) {
 							$("#storage_location, #storage_table, #storage_alter").hide().prop("disabled", true); $("#storage_field").hide().prop("disabled", true); $("#storage_field_pick").hide(); $(".object-params").hide(); $(".object-params select").prop("disabled",true);
+							$("#toggle_adv").hide();
 						} else {
 							var custom = $("#storage_location").find("option:selected").attr("data-custom"); $("#storage_location, #storage_field, #storage_alter").prop("disabled", false).show(); $("#storage_field_pick").show();
 							if (v == "standard") { if (custom && custom == $("#storage_field").val()){$("#storage_field").val("");}} else if (v == "custom" && !$("#storage_field").val()) {$("#storage_field").val(custom);}
 							var sl = $("#storage_location").val(); $("#op-"+sl).show();
 							if (sl == "free") { $("#storage_table").prop("disabled", false).show(); } else { $("#op-"+sl+" select").prop("disabled",false); }
+							$("#toggle_adv").show();
 						}
 					}
 				});
