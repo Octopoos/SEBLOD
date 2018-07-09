@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.16.2 Upgrade Release [09-Jul-2018] -----------
+
+# Upgrade process fixed for Trait (upgrade to 3.16.1+ from 3.15 or <)
+
 -------------------- 3.16.1 Upgrade Release [06-Jul-2018] -----------
 
 + "getCallable" method added on JCckContent class.
