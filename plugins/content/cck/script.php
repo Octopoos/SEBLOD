@@ -591,7 +591,19 @@ class plgContentCCKInstallerScript
 				$path	=	JPATH_SITE.'/libraries/cms/cck/content';
 
 				if ( JFolder::exists( $path ) ) {
+					$path2	=	JPATH_SITE.'/libraries/cms/cck/content/trait';
+					$path3	=	JPATH_SITE.'/libraries/cms/cck/trait';
+
+					if ( JFolder::exists( $path2 ) ) {
+						JFolder::move( $path2, $path3 );
+					}
+
 					JFolder::delete( $path );
+
+					if ( JFolder::exists( $path3 ) ) {
+						JFolder::create( $path );
+						JFolder::move( $path3, $path2 );
+					}
 				}
 
 				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
