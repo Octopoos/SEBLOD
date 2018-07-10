@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.16.3 Upgrade Release [xx-Jul-2018] -----------
+
++ "Extension" property added on Upload File plugin.
++ "Parent" Menu Item added on "Content" Link Plug-in.
+
 -------------------- 3.16.2 Upgrade Release [09-Jul-2018] -----------
 
 # Upgrade process fixed for Trait (upgrade to 3.16.1+ from 3.15 or <)
