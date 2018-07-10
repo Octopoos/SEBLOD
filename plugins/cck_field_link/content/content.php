@@ -44,7 +44,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$content	=	$link->get( 'content', '' );
 		$custom		=	$link->get( 'custom', '' );
 		$path_type	=	(int)$link->get( 'path_type', 0 );
-		
+
 		// Prepare
 		if ( !$itemId ) {
 			$view	=	$app->input->get( 'view', '' );
@@ -55,7 +55,14 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			if ( $sef ) {
 				$itemId		=	$app->input->getInt( 'Itemid', 0 );
 			}
+		} elseif ( (int)$itemId == -1 ) {
+			$menu	=	$app->getMenu()->getActive();
+
+			if ( is_object( $menu ) ) {
+				$itemId	=	$menu->parent_id;
+			}
 		}
+
 		$lang_tag			=	$link->get( 'language', '' );
 		$link_attr			=	$link->get( 'attributes', '' );
 		$link_class			=	$link->get( 'class', '' );
