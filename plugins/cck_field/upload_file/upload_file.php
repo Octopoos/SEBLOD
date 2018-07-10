@@ -153,6 +153,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->text		=	( $file_title != '' ) ? $file_title : ( ( @$options2['storage_format'] ) ? $value : substr( $value, strrpos( $value, '/' ) + 1 ) );
 			$field->hits		=	self::_getHits( $config['id'], $field->name, $collection, $xi );
 			$field->file_size	=	( file_exists( $file ) ) ? self::_formatBytes( filesize( $file ) ) : self::_formatBytes( 0 );
+			$field->extension	=	( strrpos( $file, '.' ) ) ? strtolower( substr( $file, strrpos( $file, '.' ) + 1 ) ) : '';
 			$field->link		=	JRoute::_( 'index.php?option=com_cck&task=download'.$link_more.'&file='.$field->name.'&id='.$config['id'] );
 			$field->linked		=	true;
 			$field->html		=	'<a href="'.$field->link.'" title="'.$file_title.'">'.$field->text.'</a>';
@@ -618,6 +619,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		if ( ! $maxsize || ( $maxsize && $userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
 				$item_custom_name	=	$userfile['name'];
+				$item_custom_path	=	'';
 				if ( @$options2['custom_path'] ) {
 					if ( strrpos( $item_custom_dir, '.' ) === false ) {
 						$item_custom_path	=	( $item_custom_dir == '' ) ? substr( $itemPath, 0, strrpos( $itemPath, '/' ) + 1 ) : ( ( $item_custom_dir[strlen( $item_custom_dir ) - 1] == '/' ) ? $item_custom_dir : $item_custom_dir.'/' );
