@@ -49,8 +49,14 @@ abstract class JCckDevHelper
 					case 'plugin':
 						$manifest	=	JPATH_SITE.'/plugins/'.$referrer[1].'/'.$referrer[2].'/'.$referrer[2].'.xml';
 						break;
+					case 'processing':
+						$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/pro_cck_'.$referrer[1].'.xml';
+						break;
 					case 'template':
 						$manifest	=	JPATH_SITE.'/templates/'.$referrer[1].'/templateDetails.xml';
+						break;
+					case 'variation':
+						$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/var_cck_'.$referrer[1].'.xml';
 						break;
 					default:
 						break;
