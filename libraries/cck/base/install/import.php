@@ -584,7 +584,7 @@ class CCK_Import
 			$items	=	JFolder::files( $path, '\.xml$' );
 			if ( count( $items ) ) {
 				$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
-				$tables		=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
+				$tables		=	JCckDatabase::getTableList( true );
 				
 				foreach ( $items as $item ) {
 					$xml	=	JCckDev::fromXML( $path.'/'.$item );

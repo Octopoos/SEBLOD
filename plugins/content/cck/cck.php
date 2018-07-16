@@ -207,7 +207,7 @@ class plgContentCCK extends JPlugin
 			}
 		}
 		
-		$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
+		$tables	=	JCckDatabase::getTableList();
 		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
 		
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {

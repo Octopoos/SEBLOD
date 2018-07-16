@@ -138,7 +138,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['processings']						=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_more_processings', 'id' );
 		$data['processings2']						=	JCckDatabase::loadObjectList( 'SELECT folder FROM #__cck_more_processings', 'folder' );
 		$data['styles']								=	JCckDatabase::loadObjectList( 'SELECT * FROM #__template_styles', 'id' );
-		$data['tables']								=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
+		$data['tables']								=	JCckDatabase::getTableList( true );
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
 		$data['variations']							=	array(
 															'empty'=>true,

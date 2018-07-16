@@ -217,7 +217,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 
 		// Delete More
 		$base		=	str_replace( '#__', '', $item->storage_table );
-		$tables		=	JCckDatabase::loadColumn( 'SHOW TABLES' );
+		$tables		=	JCckDatabase::getTableList();
 		$prefix		= 	JFactory::getConfig()->get( 'dbprefix' );
 
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {

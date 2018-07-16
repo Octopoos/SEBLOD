@@ -320,7 +320,7 @@ class CommonHelper_Form
 		
 		$opts		=	array();
 		$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
-		$tables		=	JCckDatabase::loadColumn( 'SHOW TABLES' );
+		$tables		=	JCckDatabase::getTableList();
 		
 		if ( trim( $field->selectlabel ) ) {
 			$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' );

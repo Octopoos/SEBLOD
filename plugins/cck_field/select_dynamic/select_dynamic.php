@@ -317,6 +317,8 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						$items		=	JCckDatabase::loadObjectList( $query );
 					}
 				}
+			} elseif ( $field->bool2 == 2 ) {
+				$items2	=	JCckDatabase::getTableList();
 			} else {
 				if ( @$options2['query'] != '' ) {
 					// Language Detection
@@ -338,7 +340,15 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				$opt_value	=	'value';
 				$opt_group	=	'optgroup';
 			}
-			if ( count( $items ) ) {
+
+			if ( isset( $items2 ) ) {
+				if ( count( $items2 ) ) {
+					foreach ( $items2 as $o ) {
+						$opts[]		=	JHtml::_( 'select.option', $o, $o, 'value', 'text' );
+						$options[]	=	$o.'='.$o;
+					}
+				}
+			} elseif ( count( $items ) ) {
 				if ( $opt_group ) {
 					$group	=	'';
 					foreach ( $items as $o ) {
@@ -694,11 +704,11 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 
 	// _getOptionsList
-	protected static function _getOptionsList( $options2, $free_sql, $lang_code, $config, $static = false )
+	protected static function _getOptionsList( $options2, $sql_type, $lang_code, $config, $static = false )
 	{
 		$options	=	'';
 		
-		if ( $free_sql == 0 ) {
+		if ( $sql_type == 0 ) {
 			$opt_table		=	isset( $options2['table'] ) ? ' FROM '.$options2['table'] : '';
 			$opt_name		=	isset( $options2['name'] ) ? $options2['name'] : '';
 			$opt_value		=	isset( $options2['value'] ) ? $options2['value'] : '';
@@ -719,6 +729,13 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					foreach ( $lists as $list ) {
 						$options	.=	$list->$opt_name.'='.$list->$opt_value.'||';
 					}
+				}
+			}
+		} elseif ( $sql_type == 2 ) {
+			$lists		=	JCckDatabaseCache::getTableList();
+			if ( count( $lists ) ) {
+				foreach ( $lists as $list ) {
+					$options	.=	@$list.'='.@$list.'||';
 				}
 			}
 		} else {
