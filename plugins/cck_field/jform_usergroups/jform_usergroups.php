@@ -106,6 +106,11 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		// Prepare
 		$class	=	( $field->css ) ? ' class="'.$field->css.'"' : '';
 		$form	=	JHtml::_( 'access.usergroups', $name, $value );		// JForm UserGroups ?!
+
+		if ( $field->required && $form != '' ) {
+			$form	=	str_replace( '<input ', '<input class="validate[required]" ', $form );
+		}
+
 		$form	=	'<div id="'.$name.'"'.$class.'>'.$form.'</div>';
 
 		// Set
