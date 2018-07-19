@@ -22,10 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.16.3 Upgrade Release [xx-Jul-2018] -----------
+-------------------- 3.16.3 Upgrade Release [20-Jul-2018] -----------
 
 + "Extension" property added on Upload File plugin.
 + "Parent" Menu Item added on "Content" Link Plug-in.
+
+! Processings & Variations support added for ajax scripts XML declarations.
+! Use of "SHOW TABLE" replaced by getTableList()
+
+# Download task (SEBLOD Break on Content View) fixed (regression since SEBLOD 3.16.0).
+# "prepareContent" fixed on JForm Usergroups field.
+# "Required" fixed on JForm Usergroups field.
 
 -------------------- 3.16.2 Upgrade Release [09-Jul-2018] -----------
 
@@ -48,7 +55,7 @@ $ -> Language fix or change
 -------------------- 3.16.0 Upgrade Release [27-Jun-2018] -----------
 
 * Security Release:
-  >> ajax task now requires scripts to be allowed by extensions.
+  >> ajax task now requires scripts to be allowed by extensions (XML).
   >> downloaded files from temporary folders are now removed.
   >> missing form token or permission checks added.
   >> rel="noopener noreferrer" applied on target="_blank" links.
