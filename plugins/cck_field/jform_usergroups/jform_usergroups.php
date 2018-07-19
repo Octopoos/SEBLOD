@@ -43,6 +43,8 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		$text	=	'';
 		if ( is_array( $value ) ) {
 			$value	=	implode( ',', $value );
+		} else {
+			$value 	=	str_replace( array( '[', ']' ), '', $value );
 		}
 		if ( $value != '' ) {
 			$texts	=	JCckDatabase::loadColumn( 'SELECT a.title FROM #__usergroups AS a WHERE id IN ('.$value.') ORDER BY FIELD(id, '.$value.')' );
