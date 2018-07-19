@@ -351,6 +351,9 @@ abstract class JCckDevHelper
 				$allowed	=	(bool)$fields[$name]->state;
 			}
 
+			// Prevent PrepareContent & beforeRenderContent to alter $config['error']
+			$config['error']	=	false;
+
 			if ( $allowed !== true ) {
 				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 			}
