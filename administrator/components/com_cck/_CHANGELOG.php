@@ -30,6 +30,7 @@ $ -> Language fix or change
 ! Processings & Variations support added for ajax scripts XML declarations.
 ! Use of "SHOW TABLE" replaced by getTableList()
 
+# Clean CSS (replace 0px by 0) @pull/475
 # Download task (SEBLOD Break on Content View) fixed (regression since SEBLOD 3.16.0).
 # "prepareContent" fixed on JForm Usergroups field.
 # "Required" fixed on JForm Usergroups field.
