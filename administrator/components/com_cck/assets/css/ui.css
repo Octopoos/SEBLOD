@@ -22,7 +22,7 @@ div.seblod {
 div.seblod.inverted { background-color:#f0f0f0; color:#666666; }
 div.seblod.ct{overflow: visible;}
 div.first {
-	margin-top: 0px;
+	margin-top: 0;
 }
 div.seblod dl.tabs dt {
 	-webkit-border-top-left-radius: 5px;
@@ -45,7 +45,7 @@ div.seblod dl.tabs dt.open {
 div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist textarea, div.seblod .adminformlist select, div.seblod .adminformlist button { 
 	float: left;
 	margin-bottom: 5px;
-	margin-left: 0px;
+	margin-left: 0;
 	margin-right: 5px;
 	margin-top: 5px;
 	width: auto;
@@ -176,7 +176,7 @@ div.seblod .inputbutton {
 	top:1px;
 }
 div.seblod .adminformlist button.inputbutton {
-	top:0px;
+	top:0;
 } 
 div.seblod .adminformlist:not(.spe) label {
 	width: 145px;
@@ -184,8 +184,8 @@ div.seblod .adminformlist:not(.spe) label {
 	display: block;
 	float: left;
 	margin-bottom: 5px;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	margin-top: 5px;
 	line-height: 23px;
 	height:30px;
@@ -333,7 +333,7 @@ div.seblod .adminformlist li a:link.variation_href,
 div.seblod .adminformlist li a:hover.variation_href,
 div.seblod .adminformlist li a:visited.variation_href {
 	float: left;
-	background: 0px 0px #FFFFFF;
+	background: 0 0 #FFFFFF;
 	border: 1px solid #C0C0C0;
 	border-radius: 3px;
 	font-size: 1em;
@@ -365,7 +365,7 @@ ul.adminformlist li div.button2-left {
 #ajaxToolbar > a.btn-success,
 #toolbarBox > a.btn-success{min-width:100px; line-height:23px;}
 #ajaxToolbar > a,
-#toolbarBox > a{float: right; margin-right: 10px; padding-top:0px; padding-bottom:0px; line-height:22px;}
+#toolbarBox > a{float: right; margin-right: 10px; padding-top:0; padding-bottom:0; line-height:22px;}
 #ajaxToolbar a:not(.btn-success) [class^="icon-"],
 #ajaxToolbar a:not(.btn-success) [class*=" icon-"],
 #toolbarBox a:not(.btn-success) [class^="icon-"],
@@ -381,14 +381,14 @@ ul.adminformlist li div.button2-left {
 	width: 28px;
 	z-index: -1;
 }
-#ajaxMessage {margin:3px 0px 0px 10px;}
+#ajaxMessage {margin:3px 0 0 10px;}
 #ajaxMessage span {color: #fff;}
-#ajaxMessage img {padding: 2px 2px 0px 0px;}
+#ajaxMessage img {padding: 2px 2px 0 0;}
 .sebwrapper{width:917px; margin:0 auto;}
 div.full div.togglebar{position:relative; left: 91px; padding-top: 14px; float:left;}
-body.com_cck div.full div.togglebar{left: 0px; top:6px; float:none; width:700px; margin: 0 auto!important; padding: 0;}
+body.com_cck div.full div.togglebar{left: 0; top:6px; float:none; width:700px; margin: 0 auto!important; padding: 0;}
 div.compact div.togglebar{position:relative; left: 200px; padding-top: 14px;}
-body.com_cck div.compact div.togglebar{left: 0px; top:6px; float:none; width:500px; margin: 0 auto!important; padding: 0;}
+body.com_cck div.compact div.togglebar{left: 0; top:6px; float:none; width:500px; margin: 0 auto!important; padding: 0;}
 div.togglebar > div{float:left; position:relative;}
 div.togglebar fieldset#layer{margin-left: 10px;float:left;}
 ul.spe, ul.spe li{list-style: none outside none; margin: 0; padding: 0;}
@@ -439,7 +439,7 @@ span.c_mat{display:inline-block;}
 div.conditional table.adminlist tr.row2 td {background-color:#f0f0f0;}
 div.conditional table.adminlist tr td.states {vertical-align:top;}
 div.conditional table.adminlist tr td.states .begin{float:left; position:relative; top:5px;}
-div.conditional table.adminlist tr td.states div.conditional_states{padding:0px; height:30px;}
+div.conditional table.adminlist tr td.states div.conditional_states{padding:0; height:30px;}
 div.conditional table.adminlist tr td.states .state_kk{margin-right: 2px;}
 div.conditional table.adminlist tr td.states div.define{float: right; padding-right:5px;}
 div.conditional table.adminlist tr td.states div.selector{float:right; position:relative; top:3px; margin-right:10px;}
@@ -448,7 +448,7 @@ div.conditional table.adminlist tr td.ope{font-weight:bold; text-transform:upper
 div.conditional table.adminlist tr td.ope .inputbox{width:54px; margin:6px 0 8px 0; padding:1px 2px; text-transform:lowercase; position:relative; left:2px;}
 div.conditional table.adminlist tr td .inputbox.blue{color:#146295; font-size:1em;}
 div.conditional table.adminlist tr td.triggers {vertical-align:top;}
-div.conditional table.adminlist tr td.triggers div.conditional_conditions{padding:0px; height:30px;}
+div.conditional table.adminlist tr td.triggers div.conditional_conditions{padding:0; height:30px;}
 div.conditional table.adminlist tr td.triggers div.conditional_conditions input.input-mini{width:70px;}
 div.conditional table.adminlist tr td.triggers span.equal{padding-left: 5px; padding-right: 8px;}
 div.conditional table.adminlist tr td.triggers span.fill{font-size:15px; position:relative; top:2px; cursor:pointer; color:#eb8207;}
@@ -470,13 +470,13 @@ body.com_cck div.seblod div.attr,
 body.contentpane.component div.seblod div.attr{max-width: 270px;}
 div.seblod input.inputbox.mini{padding:2px;margin-right:3px;}
 div.seblod input.inputbox.mini.valign{margin-top:8px;}
-div.seblod input.inputbox.mini2{padding:2px;margin:0px 7px 5px 0px;}
-div.seblod input.inputbox.mini2.middle{padding:2px;margin:0px 9px 5px 1px;}
+div.seblod input.inputbox.mini2{padding:2px;margin:0 7px 5px 0;}
+div.seblod input.inputbox.mini2.middle{padding:2px;margin:0 9px 5px 1px;}
 div.seblod.conditional .button-add{display:none;}
 div.seblod input#toggle_attr {position:relative; top:6px;}
 div.seblod.conditional input#toggle_attr {clear:left;}
 div.seblod label.toggle_attr{clear:none;color:#eb8207;font-size:11px;position:relative;top:2px;}
-div#layer div.seblod label.toggle_attr{width:180px;height:auto; margin-bottom:0px;}
+div#layer div.seblod label.toggle_attr{width:180px;height:auto; margin-bottom:0;}
 div.attr span.star{float:left;}
 div.attr input[type="checkbox"]{position:relative; top:3px;margin-left:4px;}
 #storage_alter_table_notice{position:relative; top:12px; left:4px; cursor: help; color:#3b99fc;}
@@ -495,10 +495,10 @@ div.accordion div.seblod div.legend {color:#3b99fc; font-size:1em;}
 div.accordion div.seblod{border:0;}
 
 body.contentpane.component ul.adminformlist-1col,
-body.contentpane.component ul.adminformlist-2cols{padding-left:0px!important;}
+body.contentpane.component ul.adminformlist-2cols{padding-left:0!important;}
 
 body.com_cck ul.adminformlist-2cols li,
-body.contentpane.component ul.adminformlist-2cols li{padding:0!important; margin:10px 0px 10px 0px; width: 32em;}
+body.contentpane.component ul.adminformlist-2cols li{padding:0!important; margin:10px 0 10px 0; width: 32em;}
 body.com_cck ul.adminformlist-2cols li > ul.ghost,
 body.contentpane.component ul.adminformlist-2cols li > ul.ghost{margin:0;}
 body.com_cck ul.adminformlist-2cols li > ul.ghost > li,

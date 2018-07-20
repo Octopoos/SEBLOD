@@ -7,7 +7,7 @@
 **/
 
 /*ADMIN ONLY*/
-div#element-box div.m{padding: 0px 3px;}
+div#element-box div.m{padding: 0 3px;}
 div.vertical,
 div.horizontal{padding:15px;}
 
@@ -30,8 +30,8 @@ div.cck_forms.cck_admin div.cck_label{float:left;line-height:25px;width:145px;}
 div.cck_forms.cck_admin div.cck_form a.cck_preview,div.cck_forms.cck_admin div.cck_form span.cck_preview{float:left;line-height:25px;width:145px;}
 div.cck_forms.cck_admin div.cck_form{float: none;width:auto;}
 div.cck_forms.cck_admin div.cck_desc{clear:both;width:auto;}
-div.cck_forms.cck_admin div.cck_desc p{ margin:8px 0px 0px 0px;}
-div.vertical div.cck_forms.cck_admin div.cck_label { width: 145px; text-align: left; padding: 0px 0px 0px 0px; }
+div.cck_forms.cck_admin div.cck_desc p{ margin:8px 0 0 0;}
+div.vertical div.cck_forms.cck_admin div.cck_label { width: 145px; text-align: left; padding:0;}
 div.cck_forms.cck_admin div.cck_form span.variation_value{line-height:26px;}
 div.cck_forms.cck_admin div.cck_desc .hasPopover{padding:3px 0 0 5px;}
 
@@ -72,23 +72,23 @@ div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_b
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x a:hover.wysiwyg_editor_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box,
-div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*ADMIN GENERIQUE FIELD X*/
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_label label {height:25px;margin:0;}
 div.cck_forms.cck_admin div.cck_form.cck_form_field_x div.cck_forms div.cck_form {clear:none;}
-div.cck_forms.cck_admin div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:0px!important;margin-top:12px!important;padding:1px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_field_x span input[type="checkbox"].inputbox{margin-left:0!important;margin-top:12px!important;padding:1px;}
 
 /*ADMIN GENERIQUE JFORM ASSOCIATIONS*/
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_associations .control-label{float:left; width:145px;}
 
 /*ADMIN GENERIQUE JFORM USER*/
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_user .input-append input:not(:last-child){font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
-div.cck_forms.cck_admin div.cck_form.cck_form_jform_user div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_user div.button2-left{margin-top:2px; margin-left:4px; margin-right:0;}
 
 /*ADMIN GENERIQUE JFORM MEDIA*/
-div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.button2-left{margin-top:2px; margin-left:4px; margin-right:0px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.button2-left{margin-top:2px; margin-left:4px; margin-right:0;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview{padding-left:2px;}
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_media div.media-preview span{line-height:26px;}
 
@@ -101,12 +101,12 @@ div.cck_forms.cck_admin div.cck_form.cck_form_jform_usergroups ul li input{float
 /*ADMIN GENERIQUE JFORM RULES*/
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:link.jform_rules_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:visited.jform_rules_box,
-div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*ADMIN GENERIQUE JOOMLA ROUTE*/
 div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:link.joomla_route_box,
 div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:visited.joomla_route_box,
-div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_admin div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE UPLOAD FILE */
 div.cck_forms.cck_admin div.cck_form.cck_form_upload_file div.cck_forms{clear:both;float:none;}

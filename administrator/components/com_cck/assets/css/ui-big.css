@@ -76,7 +76,7 @@ ul#objects fieldset.disabled label{color:silver; font-weight: normal;}
 ul#objects fieldset.radios label { 
 	clear: none;
 	float: left;
-	margin: 3px 0px 0px 5px;
+	margin: 3px 0 0 5px;
 	min-width: 120px;
 }
 #integration-sliders ul#objects table.group-rules td { 
@@ -102,14 +102,14 @@ ul#objects fieldset.radios label {
 }
 #integration-sliders ul#objects, #integration-sliders ul#objects ul {
 	background: #FFFFFF;
-	border: 0px solid #CCCCCC;
+	border: 0 solid #CCCCCC;
 	list-style-type: none;
-	margin: 0px !important;
-	padding: 0px !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 #integration-sliders p.rule-desc { 
 	font-size: 1.09em;
-	margin-left: 0px;
+	margin-left: 0;
 }
 /* ******** */
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"],
@@ -152,7 +152,7 @@ ul#objects fieldset.radios label {
 }
 #attrib-cck-overrides div.control-label{display:none;}
 #attrib-cck-overrides div.controls{margin-left:0;}
-#attrib-cck-overrides div.controls label{float: left; width:180px; padding-left:0px;}
+#attrib-cck-overrides div.controls label{float: left; width:180px; padding-left:0;}
 #attrib-cck-overrides div.controls div.clear{margin-bottom: 18px;}
 #attrib-cck-overrides div.controls .live_values{margin-right: 10px;}
 body.admin div.controls div.chzn-container{float:left;}

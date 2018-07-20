@@ -347,7 +347,7 @@ $js		=	'
 			';
 Helper_Include::addDependencies( 'box', 'edit' );
 $doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
-$doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}table.DynarchCalendar-topCont{top:0px!important;left:16px!important;} form{margin:0!important;}' );
+$doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}table.DynarchCalendar-topCont{top:0!important;left:16px!important;} form{margin:0!important;}' );
 $doc->addScriptDeclaration( $js );
 
 JText::script( 'COM_CCK_MATCH_ANY_WORDS' );

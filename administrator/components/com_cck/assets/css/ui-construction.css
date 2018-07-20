@@ -36,13 +36,13 @@ div.seb-wrapper.compact span.toggle{color:#146295; font-size:0.95em; font-weight
 /* ui-construction  (sidebar) */
 .seblod-wrapper{position: relative;width: 100%;overflow: hidden;}
 #seblod-main > div.seblod{margin-right:0 !important;}
-#seblod-sidebar{right: 0px;width: 32%; position:relative; margin-left:10px !important;}
-div.seb-wrapper #seblod-sidebar{top: 0px; position:absolute;}
+#seblod-sidebar{right: 0;width: 32%; position:relative; margin-left:10px !important;}
+div.seb-wrapper #seblod-sidebar{top: 0; position:absolute;}
 .active{position: absolute;}
 .passive{float: left;}
 #seblod-sidebar #seblod-sideblock{display: block;}
 #toggleSidebar{height: 20px;cursor: pointer;margin-bottom:20px;}
-#seblod-sideblock {position:relative; top:0px; margin-left:0px !important; min-height:560px;}
+#seblod-sideblock {position:relative; top:0; margin-left:0 !important; min-height:560px;}
 div#seblod-sidebar ul.sortable li.field div.move{ background-repeat:no-repeat; background-position: 0 -34px;}
 div#seblod-sidebar ul.sortable li.field div:hover.move{ background-repeat:no-repeat; background-position: 0 -51px;}
 
@@ -61,7 +61,7 @@ a:link.icons, a:visited.icons{ background-repeat:no-repeat;cursor: pointer;heigh
 ul.sortable{padding: 0; margin:0 0 9px 0;}
 #layer_fields{position:relative;}
 #sortable1{overflow:auto;}
-#sortable2{float: left;width: 100%;padding: 0px 0px 0px 15px; margin:0;}
+#sortable2{float: left;width: 100%;padding: 0 0 0 15px; margin:0;}
 #seblod-sidebar select { margin-bottom: 3px; }
 ul.sortable li{list-style: none outside none;margin-bottom: 3px;margin-top: 3px;padding: 8px;position: relative;width: auto; line-height:14px;}
 #pos-1{margin-top: 0 !important;}
@@ -73,12 +73,12 @@ li.position span.title{text-transform:uppercase; padding:4px; cursor: default;}
 li.position span.capitalize{text-transform:none!important;}
 ul.sortable li span.subtitle{cursor: pointer;font-weight: bold;padding: 10px;position: relative;}
 ul.sortable li.drop-highlight{height: 1em;}
-ul.sortable li.field a.edit{float: left;padding: 0px; width:16px; height:16px;}
-li.position img{cursor:pointer;float: left;padding: 0px 0px 0px 2px;}
+ul.sortable li.field a.edit{float: left;padding: 0; width:16px; height:16px;}
+li.position img{cursor:pointer;float: left;padding: 0 0 0 2px;}
 ul.sortable li div.pane div{display: block;float: left;position: absolute;text-align: center;top: 0;}
-div.seblod .selector{padding: 0px !important;margin: 0px 5px 0px 0px !important;float: right;}
+div.seblod .selector{padding: 0 !important;margin: 0 5px 0 0 !important;float: right;}
 ul.sortable_header{padding: 0;position:relative; margin:0;}
-ul.sortable_header li{list-style: none;padding: 0px 8px 3px 8px;position:relative;width: auto;}
+ul.sortable_header li{list-style: none;padding: 0 8px 3px 8px;position:relative;width: auto;}
 ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 300;font-size:11px;}
 ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 301;
 -webkit-border-top-left-radius: 2px;-webkit-border-top-right-radius: 2px;-moz-border-radius-topleft: 2px;-moz-border-radius-topright: 2px;border-top-left-radius:2px;border-top-right-radius:2px;}

@@ -187,7 +187,7 @@ if ( (int)$this->item->id > 0 ) {
 } else {
 	$fields	=	array();
 }
-$css		=	'div.collection-group-form{margin-right:0px;} ul.adminformlist-2cols li {width:31em!important; padding:0px 37px 0px 0px!important;} #custom{font-size:11px;}';
+$css		=	'div.collection-group-form{margin-right:0;} ul.adminformlist-2cols li {width:31em!important; padding:0 37px 0 0!important;} #custom{font-size:11px;}';
  
 if ( !$this->item->title ) {
 	$css	.=	'#collection-group-wrap-core_options__0{display:none;}';

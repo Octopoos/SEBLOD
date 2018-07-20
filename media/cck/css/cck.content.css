@@ -27,7 +27,7 @@ div.cck_contents.cck_content div.cck_label label,
 div.cck_contents.cck_content div.cck_value
 {line-height:30px;}
 
-div.cck_contents.cck_content div.cck_label label{margin-bottom: 0px;}
+div.cck_contents.cck_content div.cck_label label{margin-bottom: 0;}
 
 /*CONTENT GENERIQUE FORM/LABEL/VALUE*/
 div.vertical div.cck_contents{float:left;width:100%;}
@@ -35,8 +35,8 @@ div.horizontal div.cck_contents{float:left;padding-bottom:10px;width:auto;}
 div.cck_contents.cck_content div.cck_label{float:left;width:145px;}
 div.cck_contents.cck_content div.cck_form{float:left;width:auto;}
 div.cck_contents.cck_content div.cck_desc{clear:both;width:auto;}
-div.cck_contents.cck_content div.cck_desc p{margin:8px 0px 0px 0px;}
-div.seblod.vertical div.cck_contents.cck_content div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
+div.cck_contents.cck_content div.cck_desc p{margin:8px 0 0 0;}
+div.seblod.vertical div.cck_contents.cck_content div.cck_label {width: 145px; text-align: left; padding:0;}
 
 /*CONTENT DIV.CLEAR*/
 div.vertical div.clear{clear:none;}
@@ -93,4 +93,4 @@ div.cck_contents.cck_content div.cck_value.cck_value_jform_usergroups ul li inpu
 
 /* TEMPORARY.. until a proper group markup */
 ul.adminformlist, ul.adminformlist li {margin:0; padding:0; width:auto; list-style:none;}
-div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0px 5px 0px; line-height:23px; height:30px;}
+div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0 5px 0; line-height:23px; height:30px;}

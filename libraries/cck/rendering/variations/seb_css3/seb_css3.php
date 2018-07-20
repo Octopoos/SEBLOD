@@ -42,7 +42,7 @@ if ( $hasOptions ) {
 	$loaded[$variation]	=	true;
 	$padding			=	( $position_padding != '' ) ? 'padding:'.$position_padding.';' : '';
 	$css				=	'/* Variation: '.$variation.' */' ."\n" . $css
-						.	'div.'.$variation.' { background-color:'.$background_color.'; border:0px solid #dedede; position:relative; '.$padding
+						.	'div.'.$variation.' { background-color:'.$background_color.'; border:0 solid #dedede; position:relative; '.$padding
 						.	' -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; overflow:hidden; }'."\n";
 }
 

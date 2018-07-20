@@ -47,7 +47,7 @@ class CommonHelper_Include
 		
 		$doc->addStyleDeclaration( 'div.pagetitle {display: block!important;}' );
 		if ( $component ) {
-			$doc->addStyleDeclaration( 'div.seblod {margin: 0px 10px 10px 10px!important;}' );
+			$doc->addStyleDeclaration( 'div.seblod {margin: 0 10px 10px 10px!important;}' );
 			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/admin.css', array(), false );
 			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css', array(), false );
 		}

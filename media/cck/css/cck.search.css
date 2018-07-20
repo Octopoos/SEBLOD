@@ -71,7 +71,7 @@ div.cck_forms.cck_search div.cck_label,
 div.cck_forms.cck_search div.cck_value
 {line-height:1.2em;}
 
-div.cck_forms.cck_search div.cck_label label{margin-bottom: 0px;}
+div.cck_forms.cck_search div.cck_label label{margin-bottom: 0;}
 
 div.cck_forms.cck_search div.cck_form span[class^="icon-"],
 div.cck_forms.cck_search div.cck_form span[class*=" icon-"] 
@@ -83,8 +83,8 @@ div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
 div.cck_forms.cck_search div.cck_label{float:left;width:145px;}
 div.cck_forms.cck_search div.cck_form{float:left;width:auto;}
 div.cck_forms.cck_search div.cck_desc{clear:both;width:auto;}
-div.cck_forms.cck_search div.cck_desc p{margin:8px 0px 0px 0px;}
-div.vertical div.cck_forms.cck_search div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
+div.cck_forms.cck_search div.cck_desc p{margin:8px 0 0 0;}
+div.vertical div.cck_forms.cck_search div.cck_label {width: 145px; text-align: left; padding:0;}
 div.cck_forms.cck_search div.cck_form span.variation_value{line-height:1.2em;}
 div.cck_forms.cck_search div.cck_desc .hasPopover{padding:3px 0 0 5px;}
 

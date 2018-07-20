@@ -19,7 +19,7 @@ div.seblod-less.cpanel_news.full{width:600px;}
 div.cpanel_news.compact{width:350px;}
 div.seblod-less.cpanel_news.compact{width:380px;}
 div.seblod-less.cpanel_news.compact div.cpanel.compact{width:270px;}
-div.seblod.beta{background-image: url("../images/beta.png"); background-position:0px 0px; background-repeat:no-repeat; background-size: 42px;}
+div.seblod.beta{background-image: url("../images/beta.png"); background-position:0 0; background-repeat:no-repeat; background-size: 42px;}
 div.seblod.first.cpanel_news{margin-top:0 !important;}
 div.seblod.first.cpanel_news .legend,
 div.seblod.first.cpanel_news ul.adminformlist{margin:0;}
@@ -93,7 +93,7 @@ div.preview fieldset.checkboxes input.inputbox, div.preview fieldset.radios inpu
 div.preview fieldset.checkboxes label, div.preview fieldset.radios label{clear:none;display:block;float:left;line-height:190%;margin:0;padding-right:20px;}
 div.preview > div > div.cck_admin.cck_jform_usergroups{text-align: left;}
 
-input#storage_field{padding-right: 15px; margin-right:0px;}
+input#storage_field{padding-right: 15px; margin-right:0;}
 span#storage_field_pick{color: #3b99fc; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 8px; left:-18px; float:left; padding:0; margin:0;}
 span#storage_field_pick > .icon-menu-2,
 span.value-picker > .icon-menu-2{font-size:14px; font-weight: normal; margin-right:0;}
@@ -195,8 +195,8 @@ div.seblod-manager .table .dropdown-submenu .dropdown-menu{right: -1px;}
 div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
 #core_filter_go i.icon-checkmark:before{color: #333333;}
 div.filter-search.pull-left select, div.filter-search.pull-left input, div.filter-search.pull-left div.chzn-container{float:left;}
-div.filter-search.pull-left div.chzn-container{padding-right:0px; margin-right:6px;}
-div.btn-toolbar div.chzn-container{padding-right:0px; margin-right:6px;}
+div.filter-search.pull-left div.chzn-container{padding-right:0; margin-right:6px;}
+div.btn-toolbar div.chzn-container{padding-right:0; margin-right:6px;}
 div.btn-toolbar div#limit_chzn{padding-right:0;}
 body.contentpane.component div.seblod span.publish.icon-flag,
 body.com_cck div.seblod span.publish.icon-flag {color:#51a351;}
@@ -208,8 +208,8 @@ body.contentpane.component div.seblod #bool8.btn.btn-micro.jgrid{display:inline-
 body.com_cck div.preview{width:100%;}
 body.com_cck ul.adminformlist, body.com_cck_ecommerce ul.adminformlist{margin: 0;}
 #adminForm .chzn-container-single .chzn-single {-webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
-#adminForm .chzn-container-active .chzn-single-with-drop {-webkit-border-radius:3px 3px 0px 0px; -moz-border-radius:3px 3px 0px 0px; border-radius:3px 3px 0px 0px;}
-#adminForm .chzn-container-single .chzn-drop{-webkit-border-radius:0px 0px 3px 3px; -moz-border-radius:0px 0px 3px 3px; border-radius:0px 0px 3px 3px;}
+#adminForm .chzn-container-active .chzn-single-with-drop {-webkit-border-radius:3px 3px 0 0; -moz-border-radius:3px 3px 0 0; border-radius:3px 3px 0 0;}
+#adminForm .chzn-container-single .chzn-drop{-webkit-border-radius:0 0 3px 3px; -moz-border-radius:0 0 3px 3px; border-radius:0 0 3px 3px;}
 #sidebar .chzn-container-active > .chzn-single{border-bottom-left-radius: 0; border-bottom-right-radius: 0;}
 body.com_cck div.how-to-setup a,
 body.com_cck_exporter div.how-to-setup a,
@@ -260,7 +260,7 @@ body.com_cck fieldset.checkboxes input,body.com_cck fieldset.radios input{float:
 body.com_cck fieldset.checkboxes label,body.com_cck fieldset.radios label{float:left; box-sizing: border-box;}
 body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.vertical input{float:left; margin-top:0; margin-right:5px; clear:left;}
 .modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
-.modal-footer .btn-group .btn + .btn, .btn-group.dropup .btn.dropdown-toggle {padding-top:3px; font-size:0px;}
+.modal-footer .btn-group .btn + .btn, .btn-group.dropup .btn.dropdown-toggle {padding-top:3px; font-size:0;}
 
 .modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
 .modal.modal-small .modal-body{padding: 15px; width: auto;}
@@ -300,8 +300,8 @@ body.admin.view-list table.table tbody td .btn-group.btn-group-micro{height:18px
 
 body.admin.com_cck .chzn-container-single .chzn-drop{margin-top: -2px;}
 
-body.contentpane.component .span{margin-left:0px;}
-body.contentpane.component .span12{margin-left:0px; width:100%;}
+body.contentpane.component .span{margin-left:0;}
+body.contentpane.component .span12{margin-left:0; width:100%;}
 
 body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; position:relative; top:6px;}
 
