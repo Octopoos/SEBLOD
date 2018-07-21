@@ -670,9 +670,20 @@ abstract class JCckDevHelper
 			preg_match_all( $search, $str, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $k=>$v ) {
-					$v2		=	( isset( $site->$v ) ) ? $site->$v : '';
+					$v2	=	( isset( $site->$v ) ) ? $site->$v : '';
 					$str	=	str_replace( $matches[0][$k], $v2, $str );
 				}
+			}
+		}
+		if ( $str != '' && strpos( $str, '$config' ) !== false ) {
+			$matches		=	'';
+			$search			=	'#\$config\[\'([a-zA-Z0-9_]*)\'\]#';
+			preg_match_all( $search, $str, $matches );
+			if ( count( $matches[1] ) ) {
+				foreach ( $matches[1] as $k=>$v ) {
+					$v2	=	( isset( $config[$v] ) ) ? $config[$v] : '';
+					$str	=	str_replace( $matches[0][$k], $v2, $str );
+        			}
 			}
 		}
 		if ( $str != '' && strpos( $str, 'J(' ) !== false ) {
