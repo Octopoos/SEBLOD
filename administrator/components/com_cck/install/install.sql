@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_fields` (
   `display` int(11) NOT NULL DEFAULT '0',
   `required` varchar(50) NOT NULL,
   `validation` varchar(50) NOT NULL,
-  `defaultvalue` varchar(2048) NOT NULL,
+  `defaultvalue` text NOT NULL,
   `options` text NOT NULL COMMENT 'string-formated options',
   `options2` text NOT NULL COMMENT 'json-formated options',
   `minlength` int(11) NOT NULL DEFAULT '0',
