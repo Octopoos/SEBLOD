@@ -1848,7 +1848,9 @@ class JCckContent
 
 		$this->_setObjectMap();
 
-		$this->_table				=	self::$objects[$this->_object]['properties']['table'];
+		if ( self::$objects[$this->_object]['properties']['table'] != '' ) {
+			$this->_table			=	self::$objects[$this->_object]['properties']['table'];
+		}
 
 		if ( !$this->_table ) {
 			$this->reset( true );
@@ -1890,7 +1892,9 @@ class JCckContent
 
 			$this->_setObjectMap();
 
-			$this->_table				=	self::$objects[$this->_object]['properties']['table'];
+			if ( self::$objects[$this->_object]['properties']['table'] != '' ) {
+				$this->_table	=	self::$objects[$this->_object]['properties']['table'];	
+			}
 		} else {
 			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 
