@@ -514,6 +514,12 @@ abstract class JCckDevHelper
 	{
 		if ( is_object( JPluginHelper::getPlugin( 'system', 'languagefilter' ) ) ) {
 			return true;
+		} elseif ( JCck::isSite() ) {
+			$site	=	JCck::getSite();
+
+			if ( $site->configuration->get( 'language', '' ) != '' ) {
+				return true;
+			}
 		}
 
 		return false;

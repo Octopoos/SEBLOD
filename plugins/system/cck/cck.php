@@ -20,7 +20,6 @@ class plgSystemCCK extends JPlugin
 	protected $multisite		=	null;
 	protected $restapi			=	null;
 	protected $site				=	null;
-	protected $site_cfg			=	null;
 	protected $site_context		=	null;
 	protected $site_exclusion	=	false;
 
@@ -49,18 +48,16 @@ class plgSystemCCK extends JPlugin
 		
 		if ( $this->multisite === true ) {
 			$this->site		=	null;
-			$this->site_cfg	=	new JRegistry;
 
 			if ( JCck::isSite() ) {
 				$this->default_lang =	JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' );
 				$this->filter_lang	=	JPluginHelper::isEnabled( 'system', 'languagefilter' );
 				$this->site			=	JCck::getSite();
-				$this->site_cfg->loadString( $this->site->configuration );
 				$this->site_context	=	(int)JCck::getConfig_Param( 'multisite_context', '1' );
 
 				if ( $app->isClient( 'site' ) && $this->site ) {
 					// --- Redirect to Homepage
-					$homepage	=	$this->site_cfg->get( 'homepage', 0 );
+					$homepage	=	$this->site->configuration->get( 'homepage', 0 );
 
 					if ( $homepage > 0 ) {
 						$current	=	JUri::current( true );
@@ -115,7 +112,7 @@ class plgSystemCCK extends JPlugin
 					if ( $forced == true ) {
 						$tag	=	JFactory::getLanguage()->getDefault();
 					} else {
-						$tag	=	$this->site_cfg->get( 'language' );
+						$tag	=	$this->site->configuration->get( 'language' );
 					}
 
 					if ( $tag ) {
@@ -273,12 +270,12 @@ class plgSystemCCK extends JPlugin
 		}
 		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
 			if ( $app->isClient( 'site' ) ) {
-				$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
+				$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
 
-				$style	=	$this->site_cfg->get( 'template_style', '' );
+				$style	=	$this->site->configuration->get( 'template_style', '' );
 
 				if ( $style != '' ) {
-					$this->site_cfg->set( 'set_template_style', true );
+					$this->site->configuration->set( 'set_template_style', true );
 					$this->_setTemplateStyle( $style );
 				}
 			}
@@ -402,12 +399,12 @@ class plgSystemCCK extends JPlugin
 				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
 				$menuShadow->makeHimLive();
 			}
-			$this->_setHomepage( $this->site_cfg->get( 'homepage', 0 ) );
+			$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
 
-			$style	=	$this->site_cfg->get( 'template_style', '' );
+			$style	=	$this->site->configuration->get( 'template_style', '' );
 
 			if ( $style != '' ) {
-				$this->site_cfg->set( 'set_template_style', true );
+				$this->site->configuration->set( 'set_template_style', true );
 				$this->_setTemplateStyle( $style );
 			}
 		}
@@ -554,47 +551,49 @@ class plgSystemCCK extends JPlugin
 			}
 
 			if ( $this->multisite === true ) {
-				$config		=	JFactory::getConfig();
-				$site_title	=	$this->site_cfg->get( 'sitename', '' );
-				$site_pages	=	$this->site_cfg->get( 'sitename_pagetitles', 0 );
-				$site_desc	=	$this->site_cfg->get( 'metadesc', '' );
-				$site_keys	=	$this->site_cfg->get( 'metakeys', '' );
+				if ( $this->site ) {
+					$config		=	JFactory::getConfig();
+					$site_title	=	$this->site->configuration->get( 'sitename', '' );
+					$site_pages	=	$this->site->configuration->get( 'sitename_pagetitles', 0 );
+					$site_desc	=	$this->site->configuration->get( 'metadesc', '' );
+					$site_keys	=	$this->site->configuration->get( 'metakeys', '' );
 
-				$meta_desc	=	$doc->getMetaData( 'description' );
-				$meta_keys	=	$doc->getMetaData( 'keywords' );
+					$meta_desc	=	$doc->getMetaData( 'description' );
+					$meta_keys	=	$doc->getMetaData( 'keywords' );
 
-				if ( $site_pages ) {
-					$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
-					$doc->setTitle( $title );
-				}
-				if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
-					$doc->setMetaData( 'description', $site_desc );
-				}
-				if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
-					$doc->setMetaData( 'keywords', $site_keys );
-				}
-				if ( $this->site_cfg->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {
-					$template	=	JCckDatabase::loadObject( 'SELECT template, params FROM #__template_styles WHERE template = "'.$app->getTemplate().'"' );
-					$params		=	array( 'directory'=>JPATH_THEMES,
-										   'file'=>'offline.php',
-										   'params'=>$template->params,
-										   'template'=>$template->template
-									);
-					$params['params']	=	new JRegistry( $params['params'] );
-					
-					$doc->parse( $params );
-					$this->offline_buffer	=	$doc->render( false, $params );
-				} elseif ( $this->site_cfg->get( 'set_template_style', false ) ) {
-					$menu	=	$app->getMenu();
+					if ( $site_pages ) {
+						$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
+						$doc->setTitle( $title );
+					}
+					if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
+						$doc->setMetaData( 'description', $site_desc );
+					}
+					if ( $site_keys && ( !$meta_keys || $meta_keys == $config->get( 'MetaKeys' ) ) ) {
+						$doc->setMetaData( 'keywords', $site_keys );
+					}
+					if ( $this->site->configuration->get( 'offline' ) && !$user->authorise( 'core.login.offline' ) ) {
+						$template	=	JCckDatabase::loadObject( 'SELECT template, params FROM #__template_styles WHERE template = "'.$app->getTemplate().'"' );
+						$params		=	array( 'directory'=>JPATH_THEMES,
+											   'file'=>'offline.php',
+											   'params'=>$template->params,
+											   'template'=>$template->template
+										);
+						$params['params']	=	new JRegistry( $params['params'] );
+						
+						$doc->parse( $params );
+						$this->offline_buffer	=	$doc->render( false, $params );
+					} elseif ( $this->site->configuration->get( 'set_template_style', false ) ) {
+						$menu	=	$app->getMenu();
 
-					if ( is_object( $menu ) ) {
-						$active	=	$menu->getActive();
+						if ( is_object( $menu ) ) {
+							$active	=	$menu->getActive();
 
-						if ( is_object( $active ) ) {
-							$style	=	$active->template_style_id;
+							if ( is_object( $active ) ) {
+								$style	=	$active->template_style_id;
 
-							if ( $style ) {
-								$this->_setTemplateStyle( $style );
+								if ( $style ) {
+									$this->_setTemplateStyle( $style );
+								}
 							}
 						}
 					}
@@ -788,15 +787,15 @@ class plgSystemCCK extends JPlugin
 							$app->setBody( $buffer );
 						}
 					}
-				}
-				if ( $this->site_cfg->get( 'offline' ) && isset( $this->offline_buffer ) ) {
-					$uri		=	JUri::getInstance();
-					$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
+					if ( $this->site->configuration->get( 'offline' ) && isset( $this->offline_buffer ) ) {
+						$uri		=	JUri::getInstance();
+						$app->setUserState( 'users.login.form.data', array( 'return'=>(string)$uri ) );
 
-					if ( !isset( $app->cck_app['Header']['Status'] ) ) {
-						$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+						if ( !isset( $app->cck_app['Header']['Status'] ) ) {
+							$app->setHeader( 'Status', '503 Service Temporarily Unavailable', true );
+						}
+						$app->setBody( $this->offline_buffer );
 					}
-					$app->setBody( $this->offline_buffer );
 				}
 			}
 			return;

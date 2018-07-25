@@ -240,6 +240,10 @@ abstract class JCck
 	// getSite
 	public static function getSite()
 	{
+		if ( is_object( self::$_sites[self::$_host] ) && is_string( self::$_sites[self::$_host]->configuration ) ) {
+			self::$_sites[self::$_host]->configuration	=	new JRegistry( self::$_sites[self::$_host]->configuration );
+		}
+
 		return self::$_sites[self::$_host];
 	}
 	
