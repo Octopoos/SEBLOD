@@ -32,10 +32,16 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $status		=	'';
 	protected static $to_route		=	'';
 	
-	protected static $context		=	'';
+	protected static $context		=	'com_cck.free';
 	protected static $context2		=	'';
 	protected static $contexts		=	array();
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'onContentAfterDelete',
+											'afterSave'=>'onContentAfterSave',
+											'beforeDelete'=>'onContentBeforeDelete',
+											'beforeSave'=>'onContentBeforeSave'
+										);
 	protected static $ordering		=	array();
 	protected static $ordering2		=	array();
 	protected static $pk			=	0;
@@ -204,35 +210,14 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		}
 		
 		// Process
-		// -- onContentBeforeDelete?
+		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );
+		if ( in_array( false, $result, true ) ) {
+			return false;
+		}
 		if ( !$table->delete( $pk ) ) {
 			return false;
 		}
-
-		// Delete Core
-		if ( $item->id ) {
-			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $item->id );
-			$table->delete();
-		}
-
-		// Delete More
-		$base		=	str_replace( '#__', '', $item->storage_table );
-		$tables		=	JCckDatabase::getTableList();
-		$prefix		= 	JFactory::getConfig()->get( 'dbprefix' );
-
-		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
-			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
-			if ( $table->id ) {
-				$table->delete();
-			}
-		}
-		if ( in_array( $prefix.'cck_store_form_'.$item->type, $tables ) ) {
-			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$item->type, 'id', $pk );
-			if ( $table->id ) {
-				$table->delete();
-			}
-		}
-		// -- onContentAfterDelete?
+		$dispatcher->trigger( 'onContentAfterDelete', array( self::$context, $table ) );
 		
 		return true;
 	}
@@ -296,6 +281,9 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				self::_completeTable( $table, $data, $config );
 				
 				// Store
+				JPluginHelper::importPlugin( 'content' );
+				$dispatcher	=	JEventDispatcher::getInstance();
+				$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->id, 0, $config ) ) {
 					$config['error']	=	true;
 
@@ -316,6 +304,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				if ( ! $config['pk'] ) {
 					$config['pk']	=	self::$pk;
 				}
+				$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 				
 				if ( $config['join'] ) {
 					self::_core( $data, $config );
