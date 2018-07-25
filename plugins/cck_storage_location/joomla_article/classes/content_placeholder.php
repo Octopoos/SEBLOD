@@ -13,6 +13,6 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentJoomla_ArticlePlaceholder extends JCckContent
 {
-	use JCckContentTraitTag;
+	use JCckContentTraitTag, JCckContentTraitAlias;
 }
 ?>
