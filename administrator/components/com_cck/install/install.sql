@@ -740,7 +740,7 @@ INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `c
 (2, 'Joomla! Category', 'joomla_category', 'com_categories', 'com_categories.category', '{"default_type":"category","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","exclude":""}', '', ''),
 (3, 'Joomla! User', 'joomla_user', 'com_users', '', '{"default_type":"user","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1","registration":"1"}', '', 'users'),
 (4, 'Joomla! User Group', 'joomla_user_group', 'com_users', '', '{"default_type":"user_group","add":"1","add_layout":"icon","add_alt":"2","add_redirect":"1","edit":"0","edit_alt":"1"}', '', 'groups'),
-(5, 'SEBLOD Free', 'free', 'com_cck', 'com_cck.free', '{}', '', '');
+(6, 'SEBLOD Free', 'free', 'com_cck', 'com_cck.free', '{}', '', '');
 
 
 -- --------------------------------------------------------
