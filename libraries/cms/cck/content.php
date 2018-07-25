@@ -637,14 +637,18 @@ class JCckContent
 		}
 
 		// Core
-		if ( !( $this->save( 'core', array(
-										'cck'=>$this->_type,
-										'pk'=>$this->_pk,
-										'storage_location'=>$this->_object,
-										'author_id'=>$this->getAuthor(),
-										'parent_id'=>$data['core']['parent_id'],
-										'date_time'=>$data['core']['date_time']
-						   ) ) ) ) {
+		$data_core	=	array(
+							'cck'=>$this->_type,
+							'pk'=>$this->_pk,
+							'storage_location'=>$this->_object,
+							'author_id'=>$this->getAuthor(),
+							'parent_id'=>$data['core']['parent_id'],
+							'date_time'=>$data['core']['date_time']
+						);
+		if ( !$data_core['author_id'] ) {
+			$data_core['author_id']	=	JFactory::getUser()->id;
+		}
+		if ( !( $this->save( 'core', $data_core ) ) ) {
 			$this->_error	=	true;
 			$this->_is_new	=	false;
 
@@ -1114,6 +1118,8 @@ class JCckContent
 
 		if ( isset( self::$objects[$this->_object]['properties']['author'] ) && self::$objects[$this->_object]['properties']['author'] ) {
 			$author_id	=	(int)$this->get( 'base', self::$objects[$this->_object]['properties']['author'], 0 );
+		} elseif ( !$this->isNew() ) {
+			$author_id	=	(int)$this->_instance_core->author_id;
 		}
 
 		return $author_id;
