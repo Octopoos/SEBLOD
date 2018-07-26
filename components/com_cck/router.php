@@ -91,6 +91,9 @@ class CckRouter extends JComponentRouterBase
 		$menuItem	=	$menu->getActive();
 		$vars		=	array();
 
+		if ( $app->input->get( 'task' ) == 'ajax' ) {
+			return $vars;
+		}
 		if ( $segments[0] == 'form' ) {
 			$menu->setActive( $app->input->getInt( 'Itemid', 0 ) );
 			$vars['option']	=	'com_cck';
