@@ -21,7 +21,7 @@ class JCckPluginLocation extends JPlugin
 	{
 		parent::__construct( $subject, $config );
 
-		if ( version_compare( PHP_VERSION, '5.4.32', '<' ) ) {
+		if ( version_compare( PHP_VERSION, '5.5.16', '<' ) ) {
 			$parts	=	explode( '_', static::$type );
 			
 			foreach ( $parts as $k=>$part ) {
