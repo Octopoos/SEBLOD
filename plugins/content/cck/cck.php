@@ -231,6 +231,17 @@ class plgContentCCK extends JPlugin
 			}
 		}
 		
+		if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
+			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+				$trigger_config	=	array(
+										'pk'=>$config['pk'],
+										'type'=>$config['type']
+									);
+
+				JCckToolbox::process( 'onCckPostAfterDelete', $trigger_config );
+			}
+		}
+
 		return true;
 	}
 
