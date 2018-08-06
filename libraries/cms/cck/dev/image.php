@@ -28,6 +28,12 @@ class JCckDevImage
 	// __construct
 	public function __construct( $path )
 	{
+		if ( strpos( $path, JPATH_SITE ) === false ) {
+			if ( $path[0] == '/' ) {
+				$path 	=	substr( $path, 1 ); 	
+			}
+			$path 	=	JPATH_SITE.'/'.$path;
+		}
 		$this->_quality_jpg	=	JCck::getConfig_Param( 'media_quality_jpeg', 90 );
 		$this->_quality_png	=	JCck::getConfig_Param( 'media_quality_png', 3 );
 		
@@ -62,6 +68,21 @@ class JCckDevImage
         		return $this->$target;
         	}
 		}
+	}
+
+	// isResource
+	public function isResource()
+	{
+		return is_resource( $this->_resource );
+	}
+
+	// getThumb
+	public function getThumb( $tnumber )
+	{
+		$path 	=	str_replace( JPATH_SITE.'/', '', $this->_pathinfo['dirname'] );
+		$path 	.=	'/_thumb'.$tnumber.'/'. $this->_pathinfo['basename'];
+
+		return ( is_file( JPATH_SITE.'/'.$path ) ) ? $path : '';
 	}
 
 	// createThumb
