@@ -2737,3 +2737,19 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_tabs.ini
 /language/fr-FR/fr-FR.tpl_seb_tabs.ini
 /templates/seb_tabs/*
+
+######## SEBLOD Stuff >> Additional Content Plug-in
+
+/administrator/language/en-GB/en-GB.plg_content_cck_item.ini
+/administrator/language/en-GB/en-GB.plg_content_cck_item.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_content_cck_item.ini
+/administrator/language/fr-FR/fr-FR.plg_content_cck_item.sys.ini
+/plugins/content/cck_item/*
+
+######## SEBLOD Stuff >> Additional Editors-Xtd Plug-in
+
+/administrator/language/en-GB/en-GB.plg_editors-xtd_cck.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_cck.sys.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_cck.ini
+/administrator/language/fr-FR/fr-FR.plg_editors-xtd_cck.sys.ini
+/plugins/editors-xtd/cck/*
