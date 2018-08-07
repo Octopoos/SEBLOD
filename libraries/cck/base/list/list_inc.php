@@ -54,6 +54,8 @@ $doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) 
 
 if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
 	$doDebug				=	 1;
+} elseif ( $doDebug == 11 || ( $doDebug == 12 && $user->authorise( 'core.admin' ) ) ) {
+	$doDebug				=	 10;
 } elseif ( $doDebug == -1 || ( $doDebug == -2 && $user->authorise( 'core.admin' ) ) ) {
 	$doDebug				=	 -1;
 } else {
@@ -61,6 +63,8 @@ if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
 }
 
 $options->set( 'debug', $doDebug );
+
+
 
 // ACL
 if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
@@ -88,9 +92,7 @@ $fields						=	CCK_List::getFields( $search->name, array( $preconfig['client'], 
 
 $count						=	count( $fields['search'] );
 $excluded_stages			=	explode( ',', $options->get( 'stages_optional', '' ) );
-if ( $doDebug ) {
-	jimport( 'joomla.error.profiler' );
-}
+
 if ( ! $count ) {
 	$config		=	array( 'action'=>$preconfig['action'],
 						   'core'=>true,
@@ -390,7 +392,10 @@ $config['limitend']		=	$limitend;
 $config['doSelect']		=	$search->content ? false : true;
 
 if ( $doDebug ) {
+	jimport( 'joomla.error.profiler' );
+	
 	$profiler	=	JProfiler::getInstance();
+	echo $profiler->mark( 'beforeSearch'.$isCached ).'<br />';
 }
 
 if ( $search->storage_location ) {
@@ -550,7 +555,7 @@ if ( $preconfig['task'] == 'search' ) {
 					return;
 				}
 			}
-			
+
 			// Render
 			$doCache2		=	$options->get( 'cache2' );
 			if ( $doCache2 ) {
@@ -564,6 +569,14 @@ if ( $preconfig['task'] == 'search' ) {
 					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
+			}
+			if ( is_array( $data ) ) {
+				if ( count( $data['config'] ) ) {
+					foreach ( $data['config'] as $k=>$v ) {
+						$config[$k]	=	$v;
+					}
+				}
+				$data	=	$data['buffer'];
 			}
 		} else {
 			$no_action	=	$options->get( 'action', '' );
@@ -647,6 +660,13 @@ if ( $no_action ) {
 		}
 	} else {
 		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
+
+		if ( count( $data['config'] ) ) {
+			foreach ( $data['config'] as $k=>$v ) {
+				$config[$k]	=	$v;
+			}
+		}
+		$data	=	$data['buffer'];
 	}
 }
 if ( $doDebug > 0 && ( $preconfig['task'] == 'search' || $no_action ) ) {

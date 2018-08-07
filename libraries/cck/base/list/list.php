@@ -192,7 +192,7 @@ class CCK_List
 		$doCache	=	$options->get( 'cache' );
 		$doDebug	=	(int)$options->get( 'debug' );
 		$dispatcher	=	JEventDispatcher::getInstance();
-		
+
 		// Debug
 		if ( $doDebug ) {
 			$profiler	=	JProfiler::getInstance();
@@ -204,14 +204,19 @@ class CCK_List
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
 			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
-			$results	=	$cache->call( array( $dispatcher, 'trigger' ), 'onContentSearch',
-										  array( '', '', $ordering, $areas['active'], $fields, $fields_order, &$config, $current, $options, $user ) );
+			$data		=	$cache->call( array( $dispatcher, 'trigger' ), 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
 		} else {
 			$isCached	=	' [Cache=OFF]';
-			$results	=	$dispatcher->trigger( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, &$config, $current, $options, $user ) );
+			$data		=	$dispatcher->trigger( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
 		}
-		$list			=	isset( $results[0] ) ? $results[0] : array();
-		
+
+		if ( isset( $data[0] ) ) {
+			$config		=	$data[0]['config'];
+			$list		=	$data[0]['results'];
+		} else {
+			$list		=	array();
+		}
+
 		// Debug
 		if ( $doDebug > 0 ) {
 			$count		=	( isset( $config['total'] ) && $config['total'] ) ? $config['total'] : count( $list );
@@ -350,12 +355,14 @@ class CCK_List
 	}
 	
 	// render
-	public static function render( $items, $search, $path, $client, $itemId, $options, &$config_list )
+	public static function render( $items, $search, $path, $client, $itemId, $options, $config_list )
 	{
+		$access	=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
 		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
-		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
-		$data	=	'';
+		$data	=	array(
+						'buffer'=>'',
+						'config'=>array()
+					);
 		$list	=	array(
 						'doSEF'=>$config_list['doSEF'],
 						'formId'=>$config_list['formId'],
@@ -368,13 +375,13 @@ class CCK_List
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
 
 		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
-			$config_list['formWrapper']	=	$config['formWrapper'];
+			$data['config']['formWrapper']	=	$config['formWrapper'];
 		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );
-			$data	=	JHtml::_( 'content.prepare', $data );
+			$data['buffer']	=	JHtml::_( 'content.prepare', $data['buffer'] );
 		}
-		
+
 		return $data;
 	}
 

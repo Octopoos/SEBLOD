@@ -30,7 +30,7 @@ class plgSearchCCK extends JPlugin
 	}
 	
 	// onContentSearch
-	public function onContentSearch( $text = '', $phrase = '', $ordering = '', $areas = null, $fields = array(), $fields_order = array(), &$config = array(), $current = array(), $options = null, $user = null )
+	public function onContentSearch( $text = '', $phrase = '', $ordering = '', $areas = null, $fields = array(), $fields_order = array(), $config = array(), $current = array(), $options = null, $user = null )
 	{
 		if ( is_array( $areas ) ) {
 			if ( ! array_intersect( $areas, array_keys( $this->onContentSearchAreas() ) ) ) {
@@ -489,7 +489,7 @@ class plgSearchCCK extends JPlugin
 		}
 		
 		// Debug
-		if ( $doDebug ) {
+		if ( $doDebug > 0 && $doDebug < 10 ) {
 			if ( !isset( $query1 ) ) {
 				$query1	=	(string)$query;
 			}
@@ -511,8 +511,13 @@ class plgSearchCCK extends JPlugin
 		if ( isset( $config['total'] ) ) {
 			$config['doPagination']	=	false;
 		}
-		
-		return $results;
+
+		$data	=	array(
+						'config'=>$config,
+						'results'=>$results
+					);
+
+		return $data;
 	}
 	
 	// _buildQuery
