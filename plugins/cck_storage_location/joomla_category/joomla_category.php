@@ -667,7 +667,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 
 	// getRoute
-	public static function getRoute( $item, $sef, $itemId, $config = array() )
+	public static function getRoute( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{
 		$route		=	'';
 
@@ -695,7 +695,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			} else {
 				$path	=	'';
 			}
-			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path );
+			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
 		} else {
 			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
 			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
@@ -730,7 +730,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				if ( !isset( $storage[self::$table]->_route ) ) {
 					$storage[self::$table]->_route		=	array();
 				}
-				$storage[self::$table]->_route[$idx]	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path );
+				$storage[self::$table]->_route[$idx]	=	self::_getRoute( $sef, $itemId, $storage[self::$table]->slug, $path, '', $lang_tag );
 			}
 
 			// Multilanguage Associations
@@ -860,7 +860,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 	
 	// _getRoute
-	public static function _getRoute( $sef, $itemId, $id, $path = '', $option = '' )
+	public static function _getRoute( $sef, $itemId, $id, $path = '', $option = '', $lang_tag = '' )
 	{
 		static $isAdmin	=	-1;
 		static $itemIds	=	array();
@@ -914,6 +914,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		}
 		if ( $itemId ) {
 			$link	.=	'&Itemid='.$itemId;
+		}
+		if ( $lang_tag ) {
+			$link	.=	'&lang='.$lang_tag;
 		}
 		
 		return $link;
