@@ -37,6 +37,7 @@ class JCckContent
 
 	protected $_data					=	null;
 	protected $_data_preset				=	array();
+	protected $_data_registry			=	array();
 	protected $_data_update				=	array();
 	protected $_error					=	false;
 	protected $_id						=	0;
@@ -959,6 +960,7 @@ class JCckContent
 		$this->clear();
 
 		$this->_data				=	null;
+		$this->_data_registry		=	array();
 		$this->_data_update			=	array();
 		$this->_id					=	0;
 		$this->_pk					=	0;
@@ -1229,6 +1231,22 @@ class JCckContent
 		}
 
 		return $default;
+	}
+
+	// getRegistry
+	public function getRegistry( $property )
+	{
+		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+			if ( !isset( $this->_data_registry[$property] ) ) {
+				$this->_data_registry[$property]	=	new Registry( $this->get( self::$types[$this->_type]['data_map'][$property], $property ) );
+			}
+
+			return $this->_data_registry[$property];
+		} else {
+			$this->log( 'notice', 'Property unknown.' );
+		}
+
+		return new Registry;
 	}
 
 	// getResults
