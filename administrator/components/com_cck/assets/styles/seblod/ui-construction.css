@@ -62,6 +62,9 @@ ul.sortable li span.c_live{font-weight: normal; top:2px;}
 ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
 ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#16396f; padding-left:2px;}
 ul.sortable li.field a:hover.b{color:#3b99fc; padding-left:2px;}
+ul.sortable li.field a.zz,ul.sortable li.field a:visited.zz,ul.sortable li.field a:hover.zz{color:#333333; cursor: default;}
+ul.sortable li.field a.zz .icon-pencil-2:before{content:"\23";}
+
 ul.sortable li.field a.b [class^="icon-"],
 ul.sortable li.field a.b [class*=" icon-"] {margin-right: 0;}
 ul.sortable li div.pane div.col1 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: 302px; }

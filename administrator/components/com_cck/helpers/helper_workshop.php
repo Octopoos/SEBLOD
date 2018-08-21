@@ -25,7 +25,8 @@ class Helper_Workshop
 		}
 		$name	=	( $hasMb ) ? mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ) : strtolower( substr( $field->title, 0, 1 ) );
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class']; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		$class	=	$field->checked_out ? ' zz' : '';
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -231,7 +232,7 @@ class Helper_Workshop
 			$fields	=	array();
 			if ( $featured != '' ) {
 				$where	=	'WHERE '.$featured.' AND a.type != "" AND a.storage != "dev" AND ( a.storage_table NOT LIKE "#__cck_store_form_%" )';
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
+				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
 				if ( count( $fields ) ) {
 					$list	=	array();
 					foreach ( $fields as $f ) {
@@ -253,7 +254,7 @@ class Helper_Workshop
 			$fields	=	implode( ',', $fields );
 		} else {
 			$and	=	( $force === true ) ? ' '.$featured : '';
-			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
+			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
 					.	' FROM #__cck_core_fields AS a '
 					. 	' LEFT JOIN #__cck_core_'.$table.' AS c ON c.fieldid = a.id'
 					.	' WHERE c.'.$element.'id = '.(int)$item->id.' AND c.client = "'.$item->client.'"'
@@ -296,7 +297,7 @@ class Helper_Workshop
 		if ( $folder != '' ) {
 			$where	.=	' AND '.$folder;
 		}
-		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label'
+		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out'
 				.	$select
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder '

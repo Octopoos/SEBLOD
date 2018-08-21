@@ -67,8 +67,11 @@ class Helper_Include extends CommonHelper_Include
 							z-index:100;
 						}
 						#toolbar-eye-open{float:right;}' );
+
+					$js	=	'$(document).on("click",".zz", function(e) { e.preventDefault(); return false;});';
+					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				}
-				Helper_Include::addColorbox_Live( '930', '580', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
+				Helper_Include::addColorbox_Live( '930', '580', $script, 'cbox:not(.zz)', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
 				break;
 			case 'session':
@@ -147,7 +150,7 @@ class Helper_Include extends CommonHelper_Include
 			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 		}
 		
-		$js		=	'jQuery(document).ready(function($){ $(".'.$class.'").colorbox({iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'}); });';
+		$js		=	'jQuery(document).ready(function($){$(".'.$class.'").colorbox({iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'}); });';
 		$doc->addScriptDeclaration( $js );
 	}
 	
