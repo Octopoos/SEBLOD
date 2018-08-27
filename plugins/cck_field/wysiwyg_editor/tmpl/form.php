@@ -64,7 +64,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var elem 	=	"'.$this->item->id.'";
 					var content =	parent.jQuery("#"+elem).val();

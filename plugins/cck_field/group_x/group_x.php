@@ -456,10 +456,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
-			echo '<script src="'.self::$path.'assets/js/script3.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script4.js'.'" type="text/javascript"></script>';
 		} else {
 			JCck::loadjQueryUI();
-			$doc->addScript( self::$path.'assets/js/script3.js' );
+			$doc->addScript( self::$path.'assets/js/script4.js' );
 		}
 	}
 	

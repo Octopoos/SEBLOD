@@ -75,12 +75,12 @@ Helper_Display::quickCopyright();
         submit: function(task) {
             Joomla.submitbutton(task);
         }
-    }
+    };
     Joomla.submitbutton = function(task) {
         if (task == "template.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
             JCck.submitForm(task, document.getElementById('adminForm'));
         }
-    }
+    };
     $(document).ready(function() {
         $("#featured").isVisibleWhen('mode','0');
     });

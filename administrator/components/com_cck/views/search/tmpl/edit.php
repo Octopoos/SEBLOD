@@ -154,7 +154,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		transliteration:<?php echo $transliterate; ?>,
 		trash:"",
 		uix:"<?php echo $this->uix; ?>"
-	}
+	};
 	Joomla.submitbutton = function(task) {
 		if (task == JCck.Dev.name+".cancel") {
 			$("#layers").remove(); JCck.submitForm(task, document.getElementById('adminForm'));
@@ -163,7 +163,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 				JCck.DevHelper.preSubmit(); JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
-	}
+	};
 	$(document).ready(function(){
 		$("#toolbar-save-new button").prop("disabled",true);
 		var outerDiv = $("#seblod-app-builder");

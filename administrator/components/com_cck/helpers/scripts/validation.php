@@ -98,7 +98,7 @@ $js		=	'
 							return;
 						}
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var eid = "'.$id.'";
 					var data = parent.jQuery("#"+eid+"_required").val();

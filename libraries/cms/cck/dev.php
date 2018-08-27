@@ -640,7 +640,7 @@ abstract class JCckDev
 					JCck.Dev = {
 						reset: function() {'.$options['js']['reset'].'},
 						submit: function() {'.$options['js']['submit'].'}
-					}
+					};
 					$(document).ready(function(){'.$options['js']['load'].'});
 				})(jQuery); 
 			';

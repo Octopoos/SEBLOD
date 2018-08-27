@@ -33,7 +33,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var encoded = parent.jQuery("#'.$name.'_live_options").val();
 					var data = ( encoded != "" ) ? $.evalJSON(encoded) : "";

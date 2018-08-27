@@ -278,7 +278,7 @@ Helper_Display::quickCopyright();
 			}
 			<?php } ?>
 		}
-	}
+	};
 	<?php if ( !$tmpl ) { ?>
 	Joomla.submitbutton = function(task) {
 		if (task == 'field.cancel') {
@@ -288,7 +288,7 @@ Helper_Display::quickCopyright();
 				JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
-	}
+	};
 	<?php } ?>
 	$(document).ready(function() {
 		$(".input-group input").focusin(function() {

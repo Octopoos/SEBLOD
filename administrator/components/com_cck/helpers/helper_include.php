@@ -227,7 +227,7 @@ class Helper_Include extends CommonHelper_Include
 								});
 							}
 						}
-					}
+					};
 					$(document).ready(function() { setInterval("JCck.Dev.ajaxWork(\'form.apply\')",'.$delay.'); });
 				})(jQuery);
 				';

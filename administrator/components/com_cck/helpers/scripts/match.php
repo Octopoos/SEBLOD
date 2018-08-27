@@ -44,7 +44,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var data = parent.jQuery("#'.$name.'_match_collection").val();
 					$("#match_collection").val(data);

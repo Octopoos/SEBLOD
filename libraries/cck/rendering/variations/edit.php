@@ -27,7 +27,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var elem = "pos-'.$this->item->id.'_variation_options";
 					var encoded = parent.jQuery("#"+elem).val();

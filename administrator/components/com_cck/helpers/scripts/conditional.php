@@ -139,7 +139,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var elem = "ffp_'.$this->item->name.'_conditional";
 					var conditions = parent.jQuery("#"+elem).val();

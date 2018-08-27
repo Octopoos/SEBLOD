@@ -88,7 +88,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var reset = "'.$reset.'";
 					if (!reset) {

@@ -193,9 +193,8 @@ $js	=	'
 		(function ($){
 			JCck.Dev = {
 				count:'.count( $this->items ).'
-			}
-			Joomla.orderTable = function()
-			{
+			};
+			Joomla.orderTable = function() {
 				table = document.getElementById("sortTable");
 				direction = document.getElementById("directionTable");
 				order = table.options[table.selectedIndex].value;
@@ -205,7 +204,7 @@ $js	=	'
 					dirn = direction.options[direction.selectedIndex].value;
 				}
 				Joomla.tableOrdering(order, dirn, "");
-			}
+			};
 			Joomla.submitbutton = function(task, cid) {
 				if (task == "'.$this->vName.'s.delete") {
 					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
@@ -215,7 +214,7 @@ $js	=	'
 					}
 				}
 				Joomla.submitform(task);
-			}
+			};
 			$(document).ready(function() {
 				$(document).keypress(function(e) {
 					if (!$(":input:focus").length) {

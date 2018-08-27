@@ -159,7 +159,7 @@ $js		=	'
 						return "radio";
 					}
 					return "";
-				}
+				};
 				$.fn.toggleMultiple = function(offset) {
 					if (this.is("select")) {
 						if (this.prop("multiple")) {
@@ -188,7 +188,7 @@ $js		=	'
 						JCck.Dev.resize(offset);
 					}
 					return "";
-				}
+				};
 				JCck.Dev = {
 					always:false,
 					reset: function() {
@@ -279,7 +279,7 @@ $js		=	'
 							}
 						}
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var client = "'.$this->item->title.'";
 					var toggle = "'.$toggle.'";

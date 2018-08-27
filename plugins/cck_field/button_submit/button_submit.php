@@ -489,7 +489,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											}
 											return true;
 										}
-									}
+									};
 								})(jQuery);
 								';
 					$loaded	=	1;

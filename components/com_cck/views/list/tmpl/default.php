@@ -152,7 +152,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			},
 			error:function(){}
 		});
-	}
+	};
 	$(document).ready(function() {
 		$("#seblod_form_load_more").on("click", function() {
 			var start = parseInt($(this).attr("data-start"));

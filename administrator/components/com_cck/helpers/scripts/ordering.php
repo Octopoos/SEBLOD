@@ -52,7 +52,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var data = parent.jQuery("#'.$name.'_match_value").val();
 					$("#match_value").val(data);

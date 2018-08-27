@@ -87,7 +87,7 @@
 				}
 			});
 		}
-	}
+	};
 	/*
 	function callback(elem,time) {	// callback function to bring a hidden box back
 		setTimeout(function() { elem.parent().remove(); }, time );
@@ -142,7 +142,6 @@
 		html = html.replace(reg,name_group+"["+ind_group);
 		return html;
 	}
-
 	function update_group_i( group_i, op_type, name, rid) {
 		var num_group = ind_group(group_i)+'',
 			length_ind = num_group.length,
@@ -177,7 +176,6 @@
 			$(this).attr("id", newattr );
 		});
 	}
-
 	function update_group_position( group_start, op_type, name, rid ) {
 		var group_end	=	group_start.parent().children(":last"),
 			group_i		=	group_start,

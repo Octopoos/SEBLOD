@@ -254,7 +254,7 @@ class JFormFieldCckIntegration extends JFormField
 									Joomla.submitbutton("config.save.component."+task);
 								}
 							}
-						}
+						};
 						$(document).ready(function() {
 							$("#toolbar-apply button").attr("onclick","JCck.Dev.submit(\'apply\')");
 							$("#toolbar-save button").attr("onclick","JCck.Dev.submit(\'save\')");

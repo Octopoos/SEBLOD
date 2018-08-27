@@ -79,12 +79,12 @@ Helper_Display::quickCopyright();
         submit: function(task) {
             Joomla.submitbutton(task);
         }
-    }
+    };
     Joomla.submitbutton = function(task) {
         if (task == "folder.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
             JCck.submitForm(task, document.getElementById('adminForm'));
         }
-    }
+    };
     $(document).ready(function() {
         $("#toggle_acl").click(function(){
             $("#acl").slideToggle();

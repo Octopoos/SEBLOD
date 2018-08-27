@@ -85,7 +85,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function() {
 					var elem = "ffp_'.$this->item->name.'_computation";
 					var computation = parent.jQuery("#"+elem).val();

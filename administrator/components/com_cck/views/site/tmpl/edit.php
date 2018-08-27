@@ -168,12 +168,12 @@ Helper_Display::quickCopyright();
         submit: function(task) {
             Joomla.submitbutton(task);
         }
-    }
+    };
     Joomla.submitbutton = function(task) {
         if (task == "site.cancel" || $("#adminForm").validationEngine("validate",task) === true) {
             JCck.submitForm(task, document.getElementById('adminForm'));
         }
-    }
+    };
     $(document).ready(function() {
         $('select.inputbox').css('max-width','200px');
         $("#toggle_acl").click(function(){
