@@ -44,7 +44,7 @@ class CCKController extends JControllerLegacy
 				$master	=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
 			}
 			
-			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage_table, a.storage_field FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
+			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage_table, a.storage_field, a.checked_out FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
 			if ( !is_object( $field ) ) {
 				return;
 			}
