@@ -673,6 +673,15 @@ if ( $doDebug > 0 && ( $preconfig['task'] == 'search' || $no_action ) ) {
 	echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
 }
 
+// Ajax Wrapper
+if ( $isInfinite && $app->input->get( 'wrapper' ) ) {
+	$data	=	json_encode( array(
+								'count'=>(int)$total,
+								'html'=>$data,
+								'total'=>(int)$config['total']
+							 ), JSON_HEX_QUOT | JSON_HEX_TAG );
+}
+
 if ( $preconfig['show_form'] > 0 ) {
 	// BeforeRender
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {

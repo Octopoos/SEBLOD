@@ -121,23 +121,43 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 ?>
 <script type="text/javascript">
 (function ($){
-	JCck.Core.loadmore = function(more,stop,search) {
-		var elem = "<?php echo $pre; ?>.cck-loading-more";
-		var search = search || 0;
+	JCck.Core.loadmore = function(query_params,has_more,replace_html) {
+		var data_type    = 'html';
+		var elem_target  = "<?php echo $pre; ?>.cck-loading-more";
+		var replace_html = replace_html || 0;		
+		$("form#<?php echo $this->form_id; ?> [data-cck-ajax=\'\']").each(function(i) {
+			query_params += "&"+$(this).attr("name")+"="+$(this).myVal();
+		});
+		if (has_more < 0) {
+			data_type = 'json';
+			query_params += "&wrapper=1";
+		}
 		$.ajax({
 			cache: false,
-			data: 'format=raw&task=search&infinite=1&context=<?php echo json_encode( $this->context ); ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>'+more,
+			data: 'format=raw&task=search&infinite=1&context=<?php echo json_encode( $this->context ); ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>'+query_params,
+			dataType: data_type,
 			type: "GET",
 			url: "<?php echo $url; ?>",
-			beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
-			success: function(response){
-				if (stop != 1) {
-					$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
+			beforeSend:function() { $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
+			success: function(response) {
+				if (has_more < 0) {
+					var $el = $("#seblod_form_load_more");
+					$($el).attr("data-start",0).attr("data-end",response.total);
+					if (response.total > response.count) {
+						$("#seblod_form_load_more, .cck_page_list .pagination").show();
+					} else {
+						$(".cck_page_list .pagination").hide();
+					}
+					response = response.html;
 				} else {
-					$(".cck_page_list .pagination").hide();
+					if (has_more != 1) {
+						$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
+					} else {
+						$(".cck_page_list .pagination").hide();
+					}	
 				}
 				$("#seblod_form_loading_more").hide();
-				if (search==1) { $(elem).html(response); } else { $(elem).append(response); }
+				if (replace_html==1) { $(elem_target).html(response); } else { $(elem_target).append(response); }
 				<?php
 				if ( $this->callback_pagination != '' ) {
 					$pos	=	strpos( $this->callback_pagination, '$(' );

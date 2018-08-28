@@ -1117,10 +1117,10 @@ class JCckPluginField extends JPlugin
 				static $keypress	=	0;
 				$field->form		=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
 
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { var q = ""; var f = 0; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); if ($(this).myVal()!=""){f=1;} }); if(f) {$("form#'.$parent.' .pagination").hide();}else{$("form#'.$parent.' .pagination").show();} JCck.Core.loadmore("&start=0"+q,0,1); });' );
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { JCck.Core.loadmore("&start=0",-1,1); });' );
 				
 				if ( !$keypress ) {
-					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) {if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
+					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) { if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
 
 					$keypress	=	1;
 				}
@@ -1149,13 +1149,13 @@ class JCckPluginField extends JPlugin
 					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
 						if ( $variation == 'list_filter_ajax' ) {
 							$base	=	str_replace( 'class="', 'data-cck-ajax="" class="', $base );
-							$then	=	' var q = ""; $("form#'.$parent.' [data-cck-ajax=\'\']").each(function(i) { q += "&"+$(this).attr("name")+"="+$(this).myVal(); }); JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+q,0,1);';
+							$then	=	'JCck.Core.loadmore("&start=0",-1,1);';
 						}
 						$then		.=	' $("#'.$id.'_ > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
 						$then		=	' '.$submit.'("search");';
 					}
-					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() {var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
+					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() { var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js				=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
 					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
