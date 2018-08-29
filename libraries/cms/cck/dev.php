@@ -931,10 +931,23 @@ abstract class JCckDev
 	// toSafeID
 	public static function toSafeID( $string )
 	{
-		$str	=	str_replace( array( '&', '"', '<', '>' ), array( 'a', 'q', 'l', 'g' ), $string );
+		$string	=	str_replace( array( '&', '"', '<', '>', '-' ), array( 'a', 'q', 'l', 'g', '_' ), $string );
+		$str	=	JFactory::getLanguage()->transliterate( $string );
+		$length	=	strlen( $str );
+
+		if ( $length ) {
+			for ( $i = 0; $i < $length; $i++ ) {
+				$n	=	ord( $string[$i] );
+				
+				if ( $n >= 65 && $n <= 90 )	{
+					$str[$i]	=	$string[$i];
+				}
+			}
+		}
+
 		$str	=	trim( preg_replace( array( '/\s+/', '/[^A-Za-z0-9_]/' ), array( '_', '' ), $str ) );
 		
-		return $str;
+		return trim( $str, '_' );
 	}
 	
 	// toSafeSTRING
