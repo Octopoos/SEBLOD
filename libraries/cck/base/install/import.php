@@ -183,7 +183,7 @@ class CCK_Import
 	// beforeImportTemplate
 	public static function beforeImportTemplate( $elemtype, &$item, $data, $config = array() )
 	{
-		unset( $item->featured );
+		unset( $item->featured, $item->options );
 
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_'.$elemtype.'s WHERE name = "'.(string)$item->name.'"' );
 	}
