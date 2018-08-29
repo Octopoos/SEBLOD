@@ -333,7 +333,8 @@ class JCckPluginField extends JPlugin
 								.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		}
 		if ( !$data['variation'] ) {
-			$column2			=	'';
+			$column2		=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		} else {
 			$value			=	@$field->variation;
 			$text			=	( isset( $data['variation'][$value] ) ) ? $data['variation'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
