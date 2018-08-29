@@ -456,10 +456,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
-			echo '<script src="'.self::$path.'assets/js/script4.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script-3.17.0.min.js'.'" type="text/javascript"></script>';
 		} else {
 			JCck::loadjQueryUI();
-			$doc->addScript( self::$path.'assets/js/script4.js' );
+			$doc->addScript( self::$path.'assets/js/script-3.17.0.min.js' );
 		}
 	}
 	
@@ -477,10 +477,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		
 		$js		=	'jQuery(document).ready(function($) {';
 		if ( $params['del'] ) {
-			$js	.=	'JCck.GroupX.remove("'.$id.'",'.$params['min'].',"'.$rId.'");';
+			$js	.=	'JCck.More.GroupX.remove("'.$id.'",'.$params['min'].',"'.$rId.'");';
 		}
 		if ( $params['add'] ) {
-			$js	.=	'JCck.GroupX.add("'.$id.'",'.$params['max'].',"'.$params['empty_html'].'","'.$rId.'");';
+			$js	.=	'JCck.More.GroupX.add("'.$id.'",'.$params['max'].',"'.$params['empty_html'].'","'.$rId.'");';
 		}
 		if ($params['drag']) {
 			$js	.=	'$("#'.$rId.'_sortable_'.$id.'").sortable({'

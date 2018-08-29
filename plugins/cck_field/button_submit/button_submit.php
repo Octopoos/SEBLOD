@@ -398,8 +398,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 				if ( !$loaded ) {
 					$js 	=	'
+								if("undefined"===typeof JCck.More){JCck.More={}};
 								(function ($){
-									JCck.Core.SubmitButton = {
+									JCck.More.ButtonSubmit = {
 										batch:[],
 										count:0,
 										css:"",
@@ -411,41 +412,41 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										uniq_id:"'.uniqid().'",
 										width:0,
 										ajaxLoopRequest: function(el) {
-											var start = ( JCck.Core.SubmitButton.batch.length == JCck.Core.SubmitButton.instances[el].total ) ? 1 : 0;
-											var values = JCck.Core.SubmitButton.batch.splice(0, JCck.Core.SubmitButton.instances[el].step).join("&cid[]=");											
-											var end = ( JCck.Core.SubmitButton.batch.length > 0 ) ? 0 : 1;
+											var start = ( JCck.More.ButtonSubmit.batch.length == JCck.More.ButtonSubmit.instances[el].total ) ? 1 : 0;
+											var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].step).join("&cid[]=");											
+											var end = ( JCck.More.ButtonSubmit.batch.length > 0 ) ? 0 : 1;
 											$.ajax({
 												cache: false,
-												data: "cid[]="+values+"&tid="+JCck.Core.SubmitButton.instances[el].task_id+"&start="+start+"&end="+end+"&uniqid="+JCck.Core.SubmitButton.uniq_id+JCck.Core.SubmitButton.kvp,
+												data: "cid[]="+values+"&tid="+JCck.More.ButtonSubmit.instances[el].task_id+"&start="+start+"&end="+end+"&uniqid="+JCck.More.ButtonSubmit.uniq_id+JCck.More.ButtonSubmit.kvp,
 												type: "POST",
-												url:  JCck.Core.SubmitButton.instances[el].url+"&"+JCck.Core.SubmitButton.token,
+												url:  JCck.More.ButtonSubmit.instances[el].url+"&"+JCck.More.ButtonSubmit.token,
 												complete: function(jqXHR) {
 													var w = parseInt($(el+" .bar")[0].style.width);
-													$(el+" .bar").css("width",parseInt(w+JCck.Core.SubmitButton.width)+"%");
+													$(el+" .bar").css("width",parseInt(w+JCck.More.ButtonSubmit.width)+"%");
 													
-													if (JCck.Core.SubmitButton.batch.length) {
-														JCck.Core.SubmitButton.ajaxLoopRequest(el);
+													if (JCck.More.ButtonSubmit.batch.length) {
+														JCck.More.ButtonSubmit.ajaxLoopRequest(el);
 													} else {
 														$(el+" .bar").css("width","100%");
 														var resp = JSON.parse(jqXHR.responseText);
 
 														if (typeof resp == "object") {
 															if (!resp.error) {
-																JCck.Core.SubmitButton.count++;
+																JCck.More.ButtonSubmit.count++;
 															}
 															if (resp.output_path !== undefined) {
 																window.setTimeout(function(){
-																	$(el+" .bar").css("font-size","inherit").css("padding",JCck.Core.SubmitButton.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
+																	$(el+" .bar").css("font-size","inherit").css("padding",JCck.More.ButtonSubmit.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
 																},500);
 																
 																document.location.href = resp.output_path;
 															} else {
 																var type = "message";
 
-																if (!JCck.Core.SubmitButton.count) {
+																if (!JCck.More.ButtonSubmit.count) {
 																	type = "error";
 																}
-																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.Core.SubmitButton.return+"&"+JCck.Core.SubmitButton.token;
+																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
 															}
 														}
 													}
@@ -453,37 +454,37 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											});
 										},
 										initProcess: function(el, data) {
-											JCck.Core.SubmitButton.instances[el] = data;
+											JCck.More.ButtonSubmit.instances[el] = data;
 
 											var w = parseFloat($(el)[0].getBoundingClientRect().width);
 											var h = $(el).css("height");
 
-											JCck.Core.SubmitButton.css = $(el).css("padding");
+											JCck.More.ButtonSubmit.css = $(el).css("padding");
 											$(el).prop("disabled",true).addClass("btn-progress").css("width", w).css("height", h).css("padding", 0);
 											$(el).html(\'<div class="progress"><div class="bar" style="width:0%;"></div></div>\');
 											$(el+" > div").css("height", "100%").css("margin", "0").css("padding", "0");
 
-											JCck.Core.SubmitButton.batch = [];
+											JCck.More.ButtonSubmit.batch = [];
 
-											if (document[JCck.Core.SubmitButton.formId].boxchecked !== undefined && document[JCck.Core.SubmitButton.formId].boxchecked.value!=0) {	
+											if (document[JCck.More.ButtonSubmit.formId].boxchecked !== undefined && document[JCck.More.ButtonSubmit.formId].boxchecked.value!=0) {	
 												$(\'input:checkbox[name="cid[]"]:checked\').each(function(i) {
-													JCck.Core.SubmitButton.batch[i] = $(this).val();
+													JCck.More.ButtonSubmit.batch[i] = $(this).val();
 												});
 											} else {
-												JCck.Core.SubmitButton.batch = JCck.Core.SubmitButton.instances[el].items;
+												JCck.More.ButtonSubmit.batch = JCck.More.ButtonSubmit.instances[el].items;
 											}
-											JCck.Core.SubmitButton.instances[el].total = JCck.Core.SubmitButton.batch.length;
-											JCck.Core.SubmitButton.width = parseInt(JCck.Core.SubmitButton.instances[el].step/JCck.Core.SubmitButton.instances[el].total*100);
+											JCck.More.ButtonSubmit.instances[el].total = JCck.More.ButtonSubmit.batch.length;
+											JCck.More.ButtonSubmit.width = parseInt(JCck.More.ButtonSubmit.instances[el].step/JCck.More.ButtonSubmit.instances[el].total*100);
 
-											JCck.Core.SubmitButton.kvp = "";
-											$.each(JCck.Core.SubmitButton.instances[el].fields, function(k,v) {
-  												JCck.Core.SubmitButton.kvp	+=	"&"+v+"="+$("#"+v).myVal();
+											JCck.More.ButtonSubmit.kvp = "";
+											$.each(JCck.More.ButtonSubmit.instances[el].fields, function(k,v) {
+  												JCck.More.ButtonSubmit.kvp	+=	"&"+v+"="+$("#"+v).myVal();
   											});
 										},
 										isValid: function()
 										{
 											if (typeof jQuery.fn.validationEngine === "function") {
-												if ($("#"+JCck.Core.SubmitButton.formId).length && $("#"+JCck.Core.SubmitButton.formId).validationEngine("validate") === false) {
+												if ($("#"+JCck.More.ButtonSubmit.formId).length && $("#"+JCck.More.ButtonSubmit.formId).validationEngine("validate") === false) {
 													return false;
 												}
 											}
@@ -498,14 +499,14 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$js		=	'';
 
 				if ( !$process['task_auto'] ) {
-					$js	=	'if (document[JCck.Core.SubmitButton.formId].boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\'); return false;}';
+					$js	=	'if (document[JCck.More.ButtonSubmit.formId].boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\'); return false;}';
 				}
 
 				$js 	=	'
 							(function ($){
 								$(document).ready(function() {
 									$("#'.$process['id'].'").on("click", function() {'.$js.'
-										if (!JCck.Core.SubmitButton.isValid()) { return false; }
+										if (!JCck.More.ButtonSubmit.isValid()) { return false; }
 										var data = {
 											"fields":'.json_encode( $fieldnames ).',
 											"items":['.$config[$target].'],
@@ -514,8 +515,8 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											"total":'.( substr_count( $config[$target], ',' ) + 1 ).',
 											"url":"'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task='.str_replace( '_ajax', 'Ajax', $process['task'] ).'&format=raw' ).$vars.'"
 										}
-										JCck.Core.SubmitButton.initProcess("#"+$(this).attr("id"), data);
-										JCck.Core.SubmitButton.ajaxLoopRequest("#"+$(this).attr("id"));
+										JCck.More.ButtonSubmit.initProcess("#"+$(this).attr("id"), data);
+										JCck.More.ButtonSubmit.ajaxLoopRequest("#"+$(this).attr("id"));
 									});
 								});
 							})(jQuery);
