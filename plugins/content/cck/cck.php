@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // Plugin
 class plgContentCCK extends JPlugin
 {
@@ -390,11 +392,18 @@ class plgContentCCK extends JPlugin
 					$this->loaded[$contentType.'_'.$client.'_options']['sef']	=	JCck::getConfig_Param( 'sef', '2' );
 				}
 			}
-			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['desc'] ) ) {
-				if ( $this->loaded[$contentType.'_'.$client.'_options']['desc'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['desc'][0]	==	'{' ) {
-					$descriptions	=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['desc'] );
+			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ) {
+				if ( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['metadesc'][0]	==	'{' ) {
+					$descriptions	=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] );
 					$lang_tag		=	JFactory::getLanguage()->getTag();
-					$this->loaded[$contentType.'_'.$client.'_options']['desc']	=	( isset( $descriptions->$lang_tag ) ) ? $descriptions->$lang_tag : '';
+					$this->loaded[$contentType.'_'.$client.'_options']['metadesc']	=	( isset( $descriptions->$lang_tag ) ) ? $descriptions->$lang_tag : '';
+				}
+			}
+			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] ) ) {
+				if ( $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] != '' && $this->loaded[$contentType.'_'.$client.'_options']['metatitle'][0]	==	'{' ) {
+					$descriptions	=	json_decode( $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] );
+					$lang_tag		=	JFactory::getLanguage()->getTag();
+					$this->loaded[$contentType.'_'.$client.'_options']['metatitle']	=	( isset( $descriptions->$lang_tag ) ) ? $descriptions->$lang_tag : '';
 				}
 			}
 			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ) {
@@ -476,9 +485,10 @@ class plgContentCCK extends JPlugin
 		JPluginHelper::importPlugin( 'cck_field_restriction' );
 		JPluginHelper::importPlugin( 'cck_field_typo' );
 
-		$p_desc		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] : '';
-		$p_sef		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '2' );
-		$p_title	=	isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['title'] : '';
+		$p_metadesc		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] : '';
+		$p_metatitle	=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] : '';
+		$p_sef			=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '2' );
+		$p_title		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['title'] : '';
 
 		jimport( 'cck.rendering.document.document' );
 
@@ -585,37 +595,37 @@ class plgContentCCK extends JPlugin
 		
 		// Set Title
 		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
- 			$p_title	=	$fields[$p_title]->value;
- 			
+ 			$p_title		=	$fields[$p_title]->value;
+ 		} elseif ( $p_metatitle != '' && isset( $fields[$p_metatitle]->value ) && !empty( $fields[$p_metatitle]->value ) ) {
+ 			$p_title		=	$fields[$p_metatitle]->value;
+ 			$p_title		=	strip_tags( $p_title );
+			$p_title		=	$this->_truncate( $p_title, 70 );
+ 		} else {
+ 			$p_title		=	'';
+ 		}
+ 		if ( $p_title != '' ) {
  			if ( is_object( $article ) && isset( $article->title ) ) {
 				$article->title		=	$p_title;
-
+				
 				// if ( is_object( $article_params ) ) {
 				// 	$article_params->set( 'page_title', $p_title );
 				// }
+				$app->cck_page_title	=	$p_title;
 			} else {
 				JFactory::getDocument()->setTitle( $p_title );
 			}
  		}
 
  		// Set Description
- 		if ( $p_desc != '' && isset( $fields[$p_desc]->value ) && !empty( $fields[$p_desc]->value ) ) {
- 			$p_desc	=	$fields[$p_desc]->value;
- 			$p_desc	=	strip_tags( $p_desc );
-
- 			if ( strlen( $p_desc ) > 180 ) {
-	 			$p_desc	=	substr( $p_desc, 0, 200 );
-	 			$pos	=	strrpos( $p_desc, ' ' );
-
-	 			if ( $pos !== false ) {
-	 				$p_desc	=	substr( $p_desc, 0, $pos );
-	 			}
- 			}
+ 		if ( $p_metadesc != '' && isset( $fields[$p_metadesc]->value ) && !empty( $fields[$p_metadesc]->value ) ) {
+ 			$p_metadesc		=	$fields[$p_metadesc]->value;
+ 			$p_metadesc		=	strip_tags( $p_metadesc );
+			$p_metadesc		=	$this->_truncate( $p_metadesc, 200 );
 
  			if ( is_object( $article ) && isset( $article->metadesc ) && $article->metadesc == '' ) {
-				$article->metadesc	=	$p_desc;
+				$article->metadesc	=	$p_metadesc;
 			} else {
-				JFactory::getDocument()->setDescription( $p_desc );
+				JFactory::getDocument()->setDescription( $p_metadesc );
 			}
  		}
 
@@ -626,6 +636,36 @@ class plgContentCCK extends JPlugin
 		
 		$data					=	$doc->render( false, $params );
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
+	}
+
+	// _truncate
+	protected function _truncate( $str, $length )
+	{
+		if ( $str == '' ) {
+			return '';
+		}
+
+		/*
+		$str	=	str_replace( ' "', ' «', $str );
+		$str	=	str_replace( '"', '»', $str );
+		*/
+
+		if ( StringHelper::strlen( $str ) > $length ) {
+			$str2	=	StringHelper::substr( $str, $length );
+			$str	=	StringHelper::substr( $str, 0, $length );
+
+			if ( $str2[0] == ' ' ) {
+				return $str;
+			}
+
+			$pos	=	StringHelper::strrpos( $str, ' ' );
+
+			if ( $pos !== false ) {
+				$str	=	StringHelper::substr( $str, 0, $pos );
+			}
+		}
+
+		return $str;
 	}
 }
 ?>

@@ -20,9 +20,9 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
         <ul class="adminformlist adminformlist-2cols">
             <?php
             echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-            echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config );
-            echo JCckDev::renderBlank();
-            echo JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config );
+            echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"' ) );
+            echo JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (200)"' ) );
+            echo JCckDev::renderForm( 'core_title', @$options['metatitle'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (70)"', 'storage_field'=>'options[metatitle]' ) );
             ?>
         </ul>
     </div>
