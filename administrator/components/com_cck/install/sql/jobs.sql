@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
+-- --------------------------------------------------------
+
+
 CREATE TABLE IF NOT EXISTS `#__cck_more_job_processing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL,

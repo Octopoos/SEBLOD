@@ -14,9 +14,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_countries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=247 ;
 
 
--- ----------------------------------------------------------
-
-
 INSERT IGNORE INTO `#__cck_more_countries` (`id`, `name_en`, `name_fr`, `name_de`, `name_ru`, `name_es`, `name_it`, `name_uk`, `code2`, `code3`) VALUES
 (1, 'Afghanistan', 'Afghanistan', 'Afghanistan', 'Афганистан', 'Afganistán', 'Afghanistan', 'Афганістан', 'AF', 'AFG'),
 (2, 'Aland Islands', 'Åland, îles', 'Åland', 'Аландские острова', 'Åland, Islas', 'Åland, Isole', 'Аландські острови', 'AX', 'ALA'),
