@@ -81,21 +81,19 @@ class plgCCK_FieldDiv extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Init
-		$html	=	'';
+		$class	=	$field->css.$field->markup_class;
+		$class	=	$class ? ' class="'.trim( $class ).'"' : '';
 		
 		// Prepare
 		if ( $field->bool == -1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'<div'.$attr.'></div>';
 		} elseif ( $field->bool == 2 ) {
 			$html	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'</div><div'.$attr.'>';
 		} else {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'<div'.$attr.'>';
 		}
@@ -121,20 +119,19 @@ class plgCCK_FieldDiv extends JCckPluginField
 		} else {
 			$id		=	$field->name;
 		}
-		
+		$class	=	$field->css.$field->markup_class;
+		$class	=	$class ? ' class="'.trim( $class ).'"' : '';
+
 		// Prepare
 		if ( $field->bool == -1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'<div'.$attr.'></div>';
 		} elseif ( $field->bool == 2 ) {
 			$form	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'</div><div'.$attr.'>';
 		} else {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'<div'.$attr.'>';
 		}
