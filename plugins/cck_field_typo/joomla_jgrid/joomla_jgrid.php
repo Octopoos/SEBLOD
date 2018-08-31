@@ -67,7 +67,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( !isset( $dropdown[$pk] ) ) {
 					$class	=	$typo->get( 'class1', '' );
 					$class	=	$class ? ' '.$class : '';
-					$value	=	'<button data-toggle="dropdown" class="dropdown-toggle btn'.$class.'"><span class="caret"></span></button>'
+					$value	=	'<button type="button" data-toggle="dropdown" class="dropdown-toggle btn'.$class.'"><span class="caret"></span></button>'
 							.	'<ul class="dropdown-menu flex-column-reverse"></ul>';
 
 					$dropdown[$pk]		=	array( 'parent'=>$field->name, 'html'=>'' );
