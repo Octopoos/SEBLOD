@@ -270,7 +270,7 @@ abstract class JCckToolbox
 					$trigger->execute( $config );
 					*/
 
-					include_once JPATH_SITE.$p->scriptfile;
+					include JPATH_SITE.$p->scriptfile;
 				}
 			}
 		}
