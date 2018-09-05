@@ -536,7 +536,7 @@ class CCKController extends JControllerLegacy
 			}
 		}
 		
-		if ( (int)$id > 0 ) {
+		if ( (int)$id > 0 || $id === -1 ) {
 			if ( $config['message_style'] ) {
 				if ( isset( $config['message'] ) && $config['message'] != '' ) {
 					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
