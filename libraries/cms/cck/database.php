@@ -13,25 +13,7 @@ defined( '_JEXEC' ) or die;
 // JCckDatabase
 abstract class JCckDatabase
 {
-	// clean
-	public static function clean( $text )
-	{
-		if ( is_numeric( $text ) ) {
-			return (string)$text;
-		} else {
-			$len	=	strlen( $text );
-
-			if ( $text[0] == "'" && $text[$len - 1] == "'" ) {
-				$t	=	substr( $text, 1, - 1 );
-
-				if ( is_numeric( $t ) ) {
-					return "'".(string)$t."'";
-				}
-			}
-		}
-
-		return JCckDatabase::quote( uniqid() );
-	}
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Queries
 	
 	// convertUtf8mb4QueryToUtf8
 	public static function convertUtf8mb4QueryToUtf8( $query )
@@ -50,18 +32,6 @@ abstract class JCckDatabase
 		return str_replace( 'utf8mb4', 'utf8', $query );
 	}
 
-	// doQuery (deprecated)
-	public static function doQuery( $query )
-	{
-		return self::execute( $query );
-	}
-	
-	// escape
-	public static function escape( $text, $extra = false )
-	{
-		return JFactory::getDbo()->escape( $text, $extra );
-	}
-	
 	// execute
 	public static function execute( $query )
 	{
@@ -83,35 +53,6 @@ abstract class JCckDatabase
 		
 		return true;
 	}
-	
-	// getTableColumns
-	public static function getTableColumns( $table, $flip = false )
-	{
-		return $flip ? array_flip( array_keys( JFactory::getDbo()->getTableColumns( $table ) ) ) : array_keys( JFactory::getDbo()->getTableColumns( $table ) );
-	}
-
-	// getTableFullColumns
-	public static function getTableFullColumns( $table )
-	{
-		return JFactory::getDbo()->getTableColumns( $table, false );
-	}
-
-	// getTableCreate
-	public static function getTableCreate( $tables )
-	{
-		$res	=	JFactory::getDbo()->getTableCreate( $tables );
-		
-		$res	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $res );
-		$res	=	str_replace( 'CREATE TABLE `#__', 'CREATE TABLE IF NOT EXISTS `#__', $res );
-		
-		return $res;
-	}
-	
-	// getTableList
-	public static function getTableList( $flip = false )
-	{
-		return $flip ? array_flip( JFactory::getDbo()->getTableList() ) : JFactory::getDbo()->getTableList();
-	}
 
 	// loadAssocList
 	public static function loadAssocList( $query, $key = null, $column = null )
@@ -123,7 +64,7 @@ abstract class JCckDatabase
 		
 		return $res;
 	}
-	
+
 	// loadColumn
 	public static function loadColumn( $query )
 	{
@@ -134,18 +75,7 @@ abstract class JCckDatabase
 		
 		return $res;
 	}
-	
-	// loadResult
-	public static function loadResult( $query )
-	{
-		$db		=	JFactory::getDbo();
-	
-		$db->setQuery( $query );
-		$res	=	$db->loadResult();
-		
-		return $res;
-	}
-	
+
 	// loadObject
 	public static function loadObject( $query )
 	{
@@ -156,7 +86,7 @@ abstract class JCckDatabase
 		
 		return $res;
 	}
-	
+
 	// loadObjectList
 	public static function loadObjectList( $query, $key = null )
 	{
@@ -167,7 +97,7 @@ abstract class JCckDatabase
 		
 		return $res;
 	}
-	
+
 	// loadObjectListArray
 	public static function loadObjectListArray( $query, $akey, $key = null )
 	{
@@ -191,7 +121,94 @@ abstract class JCckDatabase
 		
 		return $res;
 	}
+
+	// loadResult
+	public static function loadResult( $query )
+	{
+		$db		=	JFactory::getDbo();
 	
+		$db->setQuery( $query );
+		$res	=	$db->loadResult();
+		
+		return $res;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+
+	// getTableColumns
+	public static function getTableColumns( $table, $flip = false )
+	{
+		return $flip ? array_flip( array_keys( JFactory::getDbo()->getTableColumns( $table ) ) ) : array_keys( JFactory::getDbo()->getTableColumns( $table ) );
+	}
+
+	// getTableFullColumns
+	public static function getTableFullColumns( $table )
+	{
+		return JFactory::getDbo()->getTableColumns( $table, false );
+	}
+
+	// getTableCreate
+	public static function getTableCreate( $tables )
+	{
+		$res	=	JFactory::getDbo()->getTableCreate( $tables );
+		
+		$res	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $res );
+		$res	=	str_replace( 'CREATE TABLE `#__', 'CREATE TABLE IF NOT EXISTS `#__', $res );
+		
+		return $res;
+	}
+
+	// getTableList
+	public static function getTableList( $flip = false )
+	{
+		return $flip ? array_flip( JFactory::getDbo()->getTableList() ) : JFactory::getDbo()->getTableList();
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
+
+	// clean
+	public static function clean( $text )
+	{
+		if ( is_numeric( $text ) ) {
+			return (string)$text;
+		} else {
+			$len	=	strlen( $text );
+
+			if ( $text[0] == "'" && $text[$len - 1] == "'" ) {
+				$t	=	substr( $text, 1, - 1 );
+
+				if ( is_numeric( $t ) ) {
+					return "'".(string)$t."'";
+				}
+			}
+		}
+
+		return JCckDatabase::quote( uniqid() );
+	}
+
+	// escape
+	public static function escape( $text, $extra = false )
+	{
+		return JFactory::getDbo()->escape( $text, $extra );
+	}
+
+	// match
+	public static function matchWithin( $column, $text )
+	{
+		if ( $text == '' ) {
+			return $text;
+		}
+
+		$glue	=	',';
+		$sql 	=	$column.' = '.self::quote( $text )
+				.	' OR '.$column.' LIKE '.self::quote( self::escape( $text, true ).$glue.'%', false )
+				.	' OR '.$column.' LIKE '.self::quote( '%'.$glue.self::escape( $text, true ).$glue.'%', false )
+				.	' OR '.$column.' LIKE '.self::quote( '%'.$glue.self::escape( $text, true ), false )
+				;
+
+		return '('.$sql.')';
+	}
+
 	// quote
 	public static function quote( $text, $escape = true )
 	{
@@ -202,6 +219,14 @@ abstract class JCckDatabase
 	public static function quoteName( $name, $as = null )
 	{
 		return JFactory::getDbo()->quoteName( $name, $as );
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated
+
+	// doQuery (deprecated)
+	public static function doQuery( $query )
+	{
+		return self::execute( $query );
 	}
 }
 ?>

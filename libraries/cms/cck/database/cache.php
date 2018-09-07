@@ -13,29 +13,7 @@ defined( '_JEXEC' ) or die;
 // JCckDatabaseCache
 abstract class JCckDatabaseCache extends JCckDatabase
 {
-	// getTableColumns
-	public static function getTableColumns( $table, $flip = false )
-	{
-		static $cache	=	array();
-
-		if ( !isset( $cache[$table] ) ) {
-			$cache[$table]	=	parent::getTableColumns( $table );
-		}
-
-		return $flip ? array_flip( $cache[$table] ) : $cache[$table];
-	}
-
-	// getTableList
-	public static function getTableList( $flip = false )
-	{
-		static $cache	=	null;
-		
-		if ( !$cache ) {
-			$cache	=	parent::getTableList();
-		}
-
-		return $flip ? array_flip( $cache ) : $cache;
-	}
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Queries
 
 	// loadResult
 	public static function loadObject( $query )
@@ -87,6 +65,32 @@ abstract class JCckDatabaseCache extends JCckDatabase
 		}
 		
 		return $cache[$idx];
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+
+	// getTableColumns
+	public static function getTableColumns( $table, $flip = false )
+	{
+		static $cache	=	array();
+
+		if ( !isset( $cache[$table] ) ) {
+			$cache[$table]	=	parent::getTableColumns( $table );
+		}
+
+		return $flip ? array_flip( $cache[$table] ) : $cache[$table];
+	}
+
+	// getTableList
+	public static function getTableList( $flip = false )
+	{
+		static $cache	=	null;
+		
+		if ( !$cache ) {
+			$cache	=	parent::getTableList();
+		}
+
+		return $flip ? array_flip( $cache ) : $cache;
 	}
 }
 ?>
