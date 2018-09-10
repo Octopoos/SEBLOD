@@ -200,7 +200,12 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				}
 				if ( $path_type == 2 || $path_type == 3 ) {
 					$field->link	=	$base.$field->link;
-					$segment		=	JRoute::_( 'index.php?Itemid='.$itemId );
+
+					if ( $lang_tag != '' ) {
+						$segment	=	JRoute::_( 'index.php?Itemid='.$itemId.'&lang='.$lang_tag );
+					} else {
+						$segment	=	JRoute::_( 'index.php?Itemid='.$itemId );
+					}
 
 					if ( $segment == '/' ) {
 						$segment	=	'';
