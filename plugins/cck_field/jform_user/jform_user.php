@@ -80,13 +80,6 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		}
 
 		$value		=	( $value !== '' ) ? $value : $field->defaultvalue;
-		$userid		=	JFactory::getUser()->id;
-
-		if ( $config['client'] != 'search' ) {
-			if ( ( ! $value && $userid && !( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) || ( $config['pk'] > 0 && ( $field->storage_field == 'modified_by' || $field->storage_field == 'modified_user_id' ) ) ) { /* TODO#SEBLOD: this must be changed asap! */
-				$value	=	$userid;
-			}
-		}
 
 		// Validate
 		$validate	=	'';
