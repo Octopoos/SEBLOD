@@ -17,9 +17,11 @@ class JCckContent
 {
 	protected static $incognito			=	array(
 												'__construct'=>'',
+												'_findResults'=>'',
 												'_fixDatabase'=>'',
 												'_getDataDispatch'=>'',
-												'_getDataQuery'=>'',
+												'_getSearchQuery'=>'',
+												'_getSearchQueryIndex'=>'',
 												'_saveLegacy'=>'',
 												'_setContentById'=>'',
 												'_setContentByType'=>'',
@@ -50,7 +52,8 @@ class JCckContent
 	protected $_logs					=	array(); /* TODO#SEBLOD: reset? */
 	protected $_object					=	'';
 	protected $_pk						=	0;
-	protected $_results					=	array(); /* TODO#SEBLOD: reset? */
+	protected $_search_query			=	null; /* TODO#SEBLOD: reset? */
+	protected $_search_results			=	array(); /* TODO#SEBLOD: reset? */
 	protected $_table 					=	'';
 	protected $_type					=	'';
 	protected $_type_id					=	0;
@@ -477,8 +480,8 @@ class JCckContent
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : ( $count ? $count : false );
 	}
 
-	// batchResults
-	public function batchResults()
+	// batchAll
+	public function batchAll()
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
@@ -486,7 +489,7 @@ class JCckContent
 
 		$args	=	func_get_args();
 
-		array_unshift( $args, $this->_results );
+		array_unshift( $args, $this->_search_results );
 
 		call_user_func_array( array( $this, 'batch' ), $args );
 
@@ -545,7 +548,7 @@ class JCckContent
 	public function clear( $property = '' )
 	{
 		if ( $property == 'results' ) {
-			$this->_results	=	array();
+			$this->_search_results	=	array();
 		} else {
 			$this->_error	=	false;
 		}
@@ -584,7 +587,7 @@ class JCckContent
 			$data		=	$this->_getDataDispatch( $content_type, $data );
 
 			if ( $data_more === true && is_array( $data_more2 ) && count( $data_more2 ) ) {
-				$results	=	$this->_results;
+				$results	=	$this->_search_results;
 
 				$this->find( $content_type, $data_more2 )->loadOne();
 
@@ -615,12 +618,12 @@ class JCckContent
 					self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
 					self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
 
-					$this->_results	=	$results;
+					$this->_search_results	=	$results;
 
 					return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
 				} else {
-					$this->_error	=	false;
-					$this->_results	=	$results;
+					$this->_error			=	false;
+					$this->_search_results	=	$results;
 				}
 			}
 		} else {
@@ -702,7 +705,7 @@ class JCckContent
 		$this->setInstance( 'more2' );
 
 		$db		=	JFactory::getDbo();
-		$query	=	$this->_getDataQuery( $content_type, $data );
+		$query	=	$this->_getSearchQuery( $content_type, $data, false );
 
 		if ( $query === false ) {
 			return false;
@@ -713,88 +716,6 @@ class JCckContent
 		$db->setQuery( $query );
 
 		return (int)$db->loadResult();
-	}
-
-	// find (^)
-	public function find( $content_type, $data = array() )
-	{
-		$this->clear();
-		$this->clear( 'results' );
-		
-		if ( !$this->_setContentByType( $content_type ) ) {
-			$this->reset();
-
-			$this->_error	=	true;
-
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
-		
-		$this->setInstance( 'base' );
-		$this->setInstance( 'more' );
-		$this->setInstance( 'more_parent' );
-		$this->setInstance( 'more2' );
-
-		$db		=	JFactory::getDbo();
-		$query	=	$this->_getDataQuery( $content_type, $data );
-
-		if ( $query === false ) {
-			$this->_error	=	true;
-
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
-
-		$query->select( $db->quoteName( 'a.pk' ) )
-			  ->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
-
-		$db->setQuery( $query );
-
-		$this->_results	=	$db->loadColumn();
-
-		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
-	}
-
-	// findMore (^)
-	public function findMore( $content_type, $data = array() )
-	{
-		$this->clear();
-		
-		if ( !$this->_setContentByType( $content_type ) ) {
-			$this->reset();
-
-			$this->_error	=	true;
-
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
-		
-		$this->setInstance( 'base' );
-		$this->setInstance( 'more' );
-		$this->setInstance( 'more_parent' );
-		$this->setInstance( 'more2' );
-
-		$db		=	JFactory::getDbo();
-		$query	=	$this->_getDataQuery( $content_type, $data );
-
-		if ( $query === false ) {
-			$this->_error	=	true;
-
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
-
-		$query->select( $db->quoteName( 'a.pk' ) )
-			  ->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
-
-		$db->setQuery( $query );
-
-		$pks		=	array_flip( $this->_results );
-		$results	=	$db->loadColumn();
-
-		foreach ( $results as $pk ) {
-			if ( !isset( $pks[$pk] ) ) {
-				$this->_results[]	=	$pk;
-			}
-		}
-
-		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_results;
 	}
 
 	// import (^)
@@ -921,13 +842,13 @@ class JCckContent
 			return $this;
 		}
 
-		if ( !count( $this->_results ) ) {
+		if ( !count( $this->_search_results ) ) {
 			$this->_error	=	true;
 
 			return $this;
 		}
 
-		$this->load( $this->_results[0] );
+		$this->load( $this->_search_results[0] );
 
 		return $this;
 	}
@@ -1080,6 +1001,69 @@ class JCckContent
 		return $this;
 	}
 
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Find
+
+	// by
+	public function by( $key, $direction = 'asc' )
+	{
+		if ( !isset( $this->_search_query ) ) {
+			/* TODO#SEBLOD: error? */
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_search_query['order'][$key]	=	$direction;
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// find (^)
+	public function find( $content_type, $data = array() )
+	{
+		return $this->_findResults( 'find', true, $content_type, $data );
+	}
+
+	// findMore (^)
+	public function findMore( $content_type, $data = array() )
+	{
+		return $this->_findResults( 'more', true, $content_type, $data );
+	}
+
+	// findPks ($)
+	public function findPks()
+	{
+		return $this->_findResults( 'pks', false );
+	}
+
+	// search (^)
+	public function search( $content_type, $data = array() )
+	{
+		$this->_search_query	=	array(
+										'content_type'=>$content_type,
+										'data'=>$data,
+										'match'=>array(),
+										'order'=>array()
+									);
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// with
+	public function with( $key, $match, $value = null )
+	{
+		if ( !isset( $this->_search_query ) ) {
+			/* TODO#SEBLOD: error? */
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_search_query['match'][$key]	=	$match;
+
+		if ( isset( $value ) ) {
+			$this->_search_query['data'][$key]	=	$value;
+		}
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
 
 	// get
@@ -1220,7 +1204,13 @@ class JCckContent
 	{
 		return (int)$this->_pk;
 	}
-	
+
+	// getPks
+	public function getPks()
+	{
+		return $this->_search_results;
+	}
+
 	// getProperty
 	public function getProperty( $property, $default = '' )
 	{
@@ -1247,12 +1237,6 @@ class JCckContent
 		}
 
 		return new Registry;
-	}
-
-	// getResults
-	public function getResults()
-	{
-		return $this->_results;
 	}
 
 	// getTable
@@ -1671,7 +1655,7 @@ class JCckContent
 			dump( $this->_logs, 'logs' );
 			dump( $this->_object, 'object' );
 			dump( $this->_pk, 'pk' );
-			dump( $this->_results, 'results' );
+			dump( $this->_search_results, 'results' );
 			dump( $this->_table, 'table' );
 			dump( $this->_type, 'type' );
 			dump( $this->_type_id, 'type_id' );
@@ -1696,6 +1680,78 @@ class JCckContent
 		}
 
 		return true;
+	}
+
+	// _findResults
+	protected function _findResults( $method, $mode, $content_type = '', $data = array() )
+	{
+		$this->clear();
+
+		if ( $method != 'more' ) {
+			$this->clear( 'results' );
+		}
+
+		if ( $mode === true ) {
+			$chain_methods		=	$this->_options->get( 'chain_methods', 1 );
+
+			if ( $data === true ) {
+				$data			=	array();
+			}
+		} else {
+			$chain_methods		=	false;
+
+			if ( isset( $this->_search_query ) ) {
+				$content_type	=	$this->_search_query['content_type'];
+				$data			=	true;
+			}
+		}
+
+		if ( !$this->_setContentByType( $content_type ) ) {
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $chain_methods ? $this : array();
+		}
+
+		$this->setInstance( 'base' );
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
+
+		$db		=	JFactory::getDbo();
+		$query	=	$this->_getSearchQuery( $content_type, $data );
+
+		if ( $query === false ) {
+			$this->_error	=	true;
+
+			return $chain_methods ? $this : array();
+		}
+
+		$query->select( $db->quoteName( 'a.pk' ) );
+
+		$db->setQuery( $query );
+
+		if ( $method == 'more' ) {
+			$pks		=	array_flip( $this->_search_results );
+			$results	=	$db->loadColumn();
+
+			foreach ( $results as $pk ) {
+				if ( !isset( $pks[$pk] ) ) {
+					$this->_search_results[]	=	$pk;
+				}
+			}
+		} else {
+			$this->_search_results	=	$db->loadColumn();
+		}
+
+		if ( $mode === true ) {
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_search_results;
+		}
+
+		$this->_search_query	=	null;
+
+		return $this->_search_results;
 	}
 
 	// _fixDatabase
@@ -1788,8 +1844,8 @@ class JCckContent
 		return $data;
 	}
 
-	// _getDataQuery
-	protected function _getDataQuery( $content_type, $data )
+	// _getSearchQuery
+	protected function _getSearchQuery( $content_type, $data, $order = array() )
 	{
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true );
@@ -1802,45 +1858,104 @@ class JCckContent
 		$query->join( 'left', $db->quoteName( $this->_table, 'b' ).' ON '.$db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ).' = '.$db->quoteName( 'a.pk' ) );
 		$query->where( $db->quoteName( 'a.cck' ).' = '.$db->quote( $content_type ) );
 
+		if ( $data === true ) {
+			$data	=	$this->_search_query['data'];
+			$match	=	$this->_search_query['match'];
+			$order	=	$this->_search_query['order'];
+		} else {
+			$match	=	array();
+		}
+
 		foreach ( $data as $k=>$v ) {
-			if ( $k == self::$objects[$this->_object]['properties']['key'] ) {
-				$table_instance_name	=	'base';
-			} else {
-				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
-					return false;
-				}
-				$table_instance_name	=	self::$types[$this->_type]['data_map'][$k];
-			}
+			$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
+			$operator	=	'';
+			$where		=	'';
 
-			$index	=	'';
-
-			if ( !isset( $tables[$table_instance_name] ) ) {
-				switch ( $table_instance_name ) {
-					case 'more':
-						$tables['more']			=	'c';
-						$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type, $tables['more'] ).' ON '.$db->quoteName( $tables['more'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
-						break;
-					case 'more_parent':
-						$tables['more_parent']	=	'd';
-						$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type_parent, $tables['more_parent'] ).' ON '.$db->quoteName( $tables['more_parent'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
-						break;
-					case 'more2':
-						$tables['more2']		=	'e';
-						$query->join( 'left', $db->quoteName( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ), $tables['more2'] ).' ON '.$db->quoteName( $tables['more2'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
-						break;
-					default:
-						break;
-				}
-			}
-			$index	=	$tables[$table_instance_name];
-
-			if ( !$index ) {
+			if ( $index === false ) {
+				return false;
+			} elseif ( $index === '' ) {
 				continue;
 			}
-			$query->where( $db->quoteName( $index.'.'.$k ) . ' = ' . $db->quote( $v ) );
+
+			if ( isset( $match[$k] ) ) {
+				$operator	=	$match[$k];
+			}
+
+			switch ( $operator ) {
+				case '<':
+				case '<=':
+				case '>=':
+				case '>':
+					$where	=	' ' . $operator . ' ' . $db->quote( $v );
+					break;
+				case '=':
+				default:
+					$where	=	' = ' . $db->quote( $v );
+					break;
+			}
+
+			$query->where( $db->quoteName( $index.'.'.$k ) . $where );
+		}
+
+		// Order
+		$isOrdered	=	false;
+
+		if ( is_array( $order ) ) {
+			foreach ( $order as $k=>$v ) {
+				$index	=	$this->_getSearchQueryIndex( $query, $tables, $k );
+
+				if ( $index === false ) {
+					return false;
+				} elseif ( $index === '' ) {
+					continue;
+				}
+
+				$query->order( $db->quoteName( $index.'.'.$k ) . strtoupper( $v ) );
+
+				$isOrdered	=	true;
+			}
+		}
+		if ( !$isOrdered && !is_bool( $order ) ) {
+			$query->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
 		}
 
 		return $query;
+	}
+
+	// _getSearchQueryIndex
+	protected function _getSearchQueryIndex( &$query, &$tables, $key )
+	{
+		$db	=	JFactory::getDbo();
+
+		if ( $key == self::$objects[$this->_object]['properties']['key'] ) {
+			$table_instance_name	=	'base';
+		} else {
+			if ( !isset( self::$types[$this->_type]['data_map'][$key] ) ) {
+				return false;
+			}
+			$table_instance_name	=	self::$types[$this->_type]['data_map'][$key];
+		}
+
+		if ( !isset( $tables[$table_instance_name] ) ) {
+			switch ( $table_instance_name ) {
+				case 'more':
+					$tables['more']			=	'c';
+					$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type, $tables['more'] ).' ON '.$db->quoteName( $tables['more'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+					break;
+				case 'more_parent':
+					$tables['more_parent']	=	'd';
+					$query->join( 'left', $db->quoteName( '#__cck_store_form_'.$this->_type_parent, $tables['more_parent'] ).' ON '.$db->quoteName( $tables['more_parent'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+					break;
+				case 'more2':
+					$tables['more2']		=	'e';
+					$query->join( 'left', $db->quoteName( '#__cck_store_item_'.str_replace( '#__', '', $this->_table ), $tables['more2'] ).' ON '.$db->quoteName( $tables['more2'].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+					break;
+				default:
+					break;
+			}
+		}
+
+		return isset( $tables[$table_instance_name] ) ? $tables[$table_instance_name] : '';
 	}
 
 	// _setContentById
@@ -2024,6 +2139,22 @@ class JCckContent
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated
+
+	// batchResults (deprecated)
+	public function batchResults()
+	{
+		$args	=	func_get_args();
+
+		call_user_func_array( array( $this, 'batchAll' ), $args );
+
+		return $this;
+	}
+
+	// getResults (deprecated)
+	public function getResults()
+	{
+		return $this->getPks();
+	}
 
 	// _saveLegacy (deprecated)
 	protected function _saveLegacy( $table_instance_name, $data )
