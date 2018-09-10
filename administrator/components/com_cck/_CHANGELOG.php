@@ -22,6 +22,41 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.17.0 Upgrade Release [xx-Sep-2018] -----------
+
++ Allow Multilanguage Aliases on Multi-sites system.
++ "onCckPostAfterDelete" event added.
++ "Override Page Title" parameter added on Content Types (Content View > Configuration).
+
++ JCckContent class updated & improved! :)
+  >> Free Object (JCckContentFree) support added (cf manuals).
+  >> "getPks", "getRegistry" method added.
+  >> "search", "with", "by" methods added (cf manuals).
+  >> "updateAlias" method added on JCckContentArticle class (PHP Traits).
+  >> "updateAlias" method added on JCckContentCategory class (PHP Traits).
+  >> "getResults" methods deprecated, use "getPks".
+  >> "batchResults" methods deprecated, use "batchAll".
+
++ Free Object plug-in improved.
+  >> "Delete" events now triggered: "onContentBeforeDelete", "onContentAfterDelete".
+  >> "Save" events now triggered: "onContentBeforeSave", "onContentAfterSave".
+
+^ "defaultvalue" Data Type changed to TEXT in install.sql. @pull/530
+^ hardcoded $user->id removed from JForm User plug-in, use Live Value if needed.
+
+# "author_id" issue and "getAuthor" method fixed on JCckContent.
+# Cache issues fixed on Lists. @issues/518
+# Fatal error fixed on PHP < 5.5.16 (regression since SEBLOD 3.16.0).
+# "Featured", "Options" (template parameters) now remains after App/Template install.
+# JCckToolbox::process() fixed for loops.
+# Message fixed for submission without storage (regression since SEBLOD 3.16.0). @issues/534
+# "Override Meta Desc" fixed for {"en-GB":"...","fr-FR":"..."}
+# "Override Page Title" fixed for "Single Article" Menu Items.
+# Router issue (specific language requested) fixed.
+# Router issue (task=ajax) fixed.
+# Unterminated statements (JS) fixed. @SEBLOD_more/pull/16
+# Various improvements or issues fixed.
+
 -------------------- 3.16.3 Upgrade Release [20-Jul-2018] -----------
 
 + "Extension" property added on Upload File plugin.
@@ -30,7 +65,7 @@ $ -> Language fix or change
 ! Processings & Variations support added for ajax scripts XML declarations.
 ! Use of "SHOW TABLE" replaced by getTableList()
 
-# Clean CSS (replace 0px by 0) @pull/475
+# Clean CSS (replace 0px by 0). @pull/475
 # Download task (SEBLOD Break on Content View) fixed (regression since SEBLOD 3.16.0).
 # "prepareContent" fixed on JForm Usergroups field.
 # "Required" fixed on JForm Usergroups field.
