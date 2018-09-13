@@ -54,10 +54,11 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <?php if ( !$this->raw_rendering ) { ?>
 <div class="clr"></div>
 <?php } ?>
-<?php if ( $this->config['core'] !== false ) { ?>
+<?php if ( $this->config['core'] ) { ?>
 <?php if ( !$this->raw_rendering ) { ?>
 <div>
 <?php } ?>
+<?php if ( $this->config['core'] !== 2 ) { ?>
 <input type="hidden" id="task" name="task" value="" />
 <input type="hidden" id="myid" name="id" value="<?php echo $this->id; ?>" />
 <input type="hidden" name="return" value="<?php echo $this->return_page; ?>" />
@@ -70,6 +71,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
+<?php } ?>
 <?php echo JHtml::_( 'form.token' ); ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div>
