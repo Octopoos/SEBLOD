@@ -16,11 +16,11 @@ if ( is_object( $this->style ) ) {
 ?>
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<?php if ( $this->item->client != 'order' ) { ?>
-        <div class="seblod">
-            <div class="legend top left"><?php echo JText::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
-            <ul class="adminformlist adminformlist-2cols">
-            	<?php
-                if ( $this->item->client == 'list' ) {
+		<div class="seblod">
+			<div class="legend top left"><?php echo JText::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+			<ul class="adminformlist adminformlist-2cols">
+				<?php
+				if ( $this->item->client == 'list' ) {
 					echo JCckDev::renderForm( $cck['core_template'], $this->item->template, $config, array( 'selectlabel'=>( ( isset( $this->item->template ) && $this->item->template ) ? 'Disable List Template' : 'Enable List Template' ),
 						'options2'=>'{"query":"SELECT DISTINCT a.template AS value, CONCAT(b.title,\" - \",b.name) AS text FROM #__template_styles AS a LEFT JOIN #__cck_core_templates AS b ON b.name = a.template WHERE b.id AND b.published !=-44 AND b.mode=2 ORDER BY b.title"}' ) );
 				} else {
@@ -33,23 +33,30 @@ if ( is_object( $this->style ) ) {
 					 .	 '<input class="inputbox" type="hidden" id="template_'.$this->item->client.'" name="template_'.$this->item->client.'" value="'.$this->style->id.'" /></li>';
 				}
 				?>
-            </ul>
-        </div>
+			</ul>
+		</div>
 		<div class="seblod">
 			<div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_GLOBAL' ); ?></div>
-	        <ul class="adminformlist adminformlist-2cols">
-	            <?php
-				echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_item_attributes'], $config, array( 'label'=>'Item Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_item_attributes]' ), array(), 'w100' );
+			<ul class="adminformlist adminformlist-2cols">
+				<?php
+				if ( $this->item->client == 'list' ) {
+					echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_item_attributes'], $config, array( 'label'=>'Item Custom Attributes', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_item_attributes]' ), array(), 'w100' );
+				}
+
 				echo JCckDev::renderForm( 'core_dev_text', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Root Class', 'size'=>'16', 'storage_field'=>'params[rendering_css_class]' ) );
 				echo JCckDev::renderBlank();
-	            ?>
-	        </ul>
-        </div>
-        <?php
+
+				if ( $this->item->client != 'list' ) {
+					echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_custom_attributes'], $config, array( 'label'=>'Root Custom Attr', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_custom_attributes]' ), array(), 'w100' );
+				}
+				?>
+			</ul>
+		</div>
+		<?php
 		if ( is_object( $this->style ) ) {
-	        Helper_Workshop::getTemplateParams( $this->style->xml, '//config', 'params', $this->style->params );
+			Helper_Workshop::getTemplateParams( $this->style->xml, '//config', 'params', $this->style->params );
 		}
 		?>
-    <?php } ?>
+	<?php } ?>
 </div>
 <div class="clr"></div>
