@@ -669,7 +669,9 @@ class Helper_Workshop
 		if ( !$template ) {
 			return 0;
 		}
+
 		$default	=	self::getDefaultStyle( $template );
+
 		if ( is_array( $params ) ) {
 			$params		=	JCckDev::toJSON( $params );
 		}
@@ -677,23 +679,27 @@ class Helper_Workshop
 		
 		if ( $template != $template2 ) {
 			$id		=	$default->id;
-			$update	=	1;	//or ajax reload of template params..
+			$update	=	1; /* TODO#SEBLOD: or ajax reload of template params... */
 		}
 		if ( $id == $default->id ) {
+			/* TODO#SEBLOD: explode json and diff each parameter */
 			if ( $params != '{}' && $params != $default->params && $update != 1 ) {
 				$ck		=	JCckTable::getInstance( '#__template_styles' );
 				$ck->load( $id );
+
 				if ( $ck->id > 0 ) {
 					$ck->id		=	0;
 					$ck->title	=	$ck->template . ' - ' .$tag;
 					$ck->params	=	$params;
 					$ck->store();
+					
 					$id			=	( $ck->id ) ? $ck->id : $id;
 				}
 			}
 		} else {
 			$ck		=	JCckTable::getInstance( '#__template_styles' );
 			$ck->load( $id );
+
 			if ( $ck->id > 0 ) {
 				if ( $force != false ) {
 					$ck->id		=	0;
@@ -701,6 +707,7 @@ class Helper_Workshop
 				}
 				$ck->params	=	$params;
 				$ck->store();
+
 				$id			=	( $ck->id ) ? $ck->id : $id;
 			}
 		}
