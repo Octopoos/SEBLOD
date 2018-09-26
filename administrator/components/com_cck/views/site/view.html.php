@@ -33,6 +33,7 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->type		=	$this->state->get( 'type', '2,7' );
 		$this->item->fields		=	JCck::getConfig_Param( 'multisite_options', array() );
 		$this->item->options	=	( $this->item->options ) ? JCckDev::fromJSON( $this->item->options ) : array();

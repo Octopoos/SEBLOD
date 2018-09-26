@@ -34,6 +34,7 @@ class CCKViewTemplate extends JCckBaseLegacyViewForm
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->mode		=	Helper_Admin::getSelected( $this->vName, 'mode', $this->state->get( 'mode', $this->item->mode ), '0' );
 		
 		Helper_Admin::addToolbarEdit( $this->vName, _C1_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ) );

@@ -34,6 +34,7 @@ class CCKViewField extends JCckBaseLegacyViewForm
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', ( ( ( $this->isNew ) ? $this->state->get( 'ajax.state' ) : $this->item->published ) ), 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->type		=	Helper_Admin::getSelected( $this->vName, 'type', $app->input->getString( 'ajax_type', $this->state->get( 'ajax.type', $this->item->type ) ), 'text' );
 		
 		Helper_Admin::addToolbarEdit( $this->vName, _C3_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ) );

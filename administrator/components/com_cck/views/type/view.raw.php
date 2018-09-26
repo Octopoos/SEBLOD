@@ -100,6 +100,7 @@ class CCKViewType extends JViewLegacy
 		}
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->client		=	( $this->isNew ) ? 'admin' : $app->input->getString( 'client', $app->input->cookie->getString( 'cck_type'.$name.'_client', 'admin' ) );
 		$this->item->master		=	( $this->item->client == 'content' || $this->item->client == 'intro' ) ? 'content' : 'form';
 		$this->item->layer		=	$app->input->getString( 'layer', 'fields' );
