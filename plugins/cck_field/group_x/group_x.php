@@ -690,7 +690,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 					$html	.=	'</div>';
 					$html	.=	'</div>';
 				}
-				
+
 				// Computation & Conditional
 				if ( @$elem->computation ) {			
 					$computation			=	new JRegistry;
@@ -765,7 +765,6 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		
 		$html	.=	'</div>';
-		$html	.=	'</div>';
 		
 		if ( $js ) {
 			if ( $js_format == 'raw' ) {
@@ -775,6 +774,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			}
 		}
 		
+		$html	.=	'</div>';
+
 		return $html;
 	}
 	
