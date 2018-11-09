@@ -170,7 +170,7 @@ abstract class JCck
 						$hasContext	=	true;
 						$pos		=	strpos( $path_base, '/'.$s->context );
 
-						if ( $pos !== false & $pos == 0 ) {
+						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;
 						}
 					}
