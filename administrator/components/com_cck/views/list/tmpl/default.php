@@ -22,7 +22,8 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['v
 $app	=	JFactory::getApplication();
 $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.seblod.pagination{text-align:center;}'
 		.	'form div.pagination div.button2-left,form div.pagination div.button2-right, form div.pagination div.limit{margin-right:10px!important;}'
-		.	'div.cck_page_list div.pagination .total{float:right; line-height:28px;}';
+		.	'div.cck_page_list div.pagination .total{float:right; line-height:28px;}'
+		.	'div.cck_forms.cck_search div.cck_form span{line-height:inherit;}';
 JFactory::getDocument()->addStyleDeclaration( $css );
 ?>
 

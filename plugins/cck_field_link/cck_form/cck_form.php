@@ -90,7 +90,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			} else {
 				$canEditOwn		=	false;
 
-				if ( $config['author_session'] ) {
+				if ( isset( $config['author_session'] ) && $config['author_session'] ) {
 					$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
 					$session_id		=	$config['author_session'];
 				}

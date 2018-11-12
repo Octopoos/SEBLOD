@@ -454,8 +454,12 @@ abstract class JCckDevHelper
 		}
 		if ( !isset( $params[$name] )  ) {
 			$object				=	JCckDatabase::loadObject( 'SELECT options, sef_route, sef_route_aliases, storage_location FROM #__cck_core_searchs WHERE name = '.JCckDatabase::quote( $name ) );
-			$object->options	=	json_decode( $object->options );
 
+			if ( is_null( $object ) ) {
+				return array();
+			}
+
+			$object->options	=	json_decode( $object->options );
 			$params[$name]		=	array();
 
 			if ( $sef != '' ) {
