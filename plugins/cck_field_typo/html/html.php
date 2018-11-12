@@ -42,9 +42,10 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$html	=	$typo->get( 'html', '' );
+		$app		=	JFactory::getApplication();
+		$html		=	$typo->get( 'html', '' );
 		$postpone	=	false;
+		$priority	=	$typo->get( 'priority', '' );
 
 		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*html*' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
 			$html		=	parent::g_hasLink( $field, $typo, $html );
@@ -71,7 +72,12 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				$postpone	=	true;
-				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ) );
+
+				if ( $priority ) {
+					parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ), $priority );
+				} else {
+					parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ) );
+				}
 			}
 		}
 		if ( $html != '' && strpos( $html, '$uri->get' ) !== false ) {
