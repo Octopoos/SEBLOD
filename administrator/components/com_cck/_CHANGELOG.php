@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.0 Upgrade Release [xx-Sep-2018] -----------
+-------------------- 3.17.0 Upgrade Release [xx-Nov-2018] -----------
 
 + Allow Multilanguage Aliases on Multi-sites system.
 + "onCckPostAfterDelete" event added.
@@ -39,6 +39,7 @@ $ -> Language fix or change
 
 + Free Object plug-in improved.
   >> "Delete" events now triggered: "onContentBeforeDelete", "onContentAfterDelete".
+  >> Export support added.
   >> "Save" events now triggered: "onContentBeforeSave", "onContentAfterSave".
 
 ^ "defaultvalue" Data Type changed to TEXT in install.sql. @pull/530
@@ -48,6 +49,7 @@ $ -> Language fix or change
 # Cache issues fixed on Lists. @issues/518
 # Fatal error fixed on PHP < 5.5.16 (regression since SEBLOD 3.16.0).
 # "Featured", "Options" (template parameters) now remains after App/Template install.
+# Group X (with conditional states) behavior fixed.
 # JCckToolbox::process() fixed for loops.
 # Message fixed for submission without storage (regression since SEBLOD 3.16.0). @issues/534
 # "Override Meta Desc" fixed for {"en-GB":"...","fr-FR":"..."}
