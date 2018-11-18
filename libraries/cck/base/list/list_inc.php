@@ -296,7 +296,7 @@ if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
 $context		=	'com_cck.'.$search->name;
 $isPersistent	=	(int)$options->get( 'persistent_query', '0' );
 
-if ( isset( $this ) && ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) ) {
+if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) {
 	$isPersistent	=	true;
 } else {
 	$isPersistent	=	false;
