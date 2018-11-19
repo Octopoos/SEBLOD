@@ -25,6 +25,7 @@ $ -> Language fix or change
 -------------------- 3.17.0 Upgrade Release [xx-Nov-2018] -----------
 
 + Allow Multilanguage Aliases on Multi-sites system.
++ "beforeSearch" event added.
 + "onCckPostAfterDelete" event added.
 + "Override Page Title" parameter added on Content Types (Content View > Configuration).
 
