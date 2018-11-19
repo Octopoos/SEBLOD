@@ -382,6 +382,15 @@ foreach ( $fields['search'] as $field ) {
 	}
 }
 
+// BeforeSearch
+if ( isset( $config['process']['beforeSearch'] ) && count( $config['process']['beforeSearch'] ) ) {
+	foreach ( $config['process']['beforeSearch'] as $process ) {
+		if ( $process->type ) {
+			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeSearch', array( $process->params, &$fields, &$config['storages'], &$config ) );
+		}
+	}
+}
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
 
 if ( isset( $doc ) ) {
