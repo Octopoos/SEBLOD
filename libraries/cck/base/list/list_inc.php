@@ -364,7 +364,7 @@ foreach ( $fields['search'] as $field ) {
 			}
 		}
 	}
-	
+
 	// Prepare
 	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
 		$field->variation	=	'hidden';
@@ -382,20 +382,8 @@ foreach ( $fields['search'] as $field ) {
 	}
 }
 
-// BeforeSearch
-if ( isset( $config['process']['beforeSearch'] ) && count( $config['process']['beforeSearch'] ) ) {
-	foreach ( $config['process']['beforeSearch'] as $process ) {
-		if ( $process->type ) {
-			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeSearch', array( $process->params, &$fields, &$config['storages'], &$config ) );
-		}
-	}
-}
-
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
 
-if ( isset( $doc ) ) {
-	$doc->fields		=	$fields['search'];
-}
 $config['limitstart']	=	$limitstart;
 $config['limitend']		=	$limitend;
 $config['doSelect']		=	$search->content ? false : true;
@@ -411,7 +399,15 @@ if ( $search->storage_location ) {
 	$config['type_object']	=	$search->storage_location;
 }
 if ( $preconfig['task'] == 'search' ) {
+	if ( isset( $config['process']['beforeSearch'] ) && count( $config['process']['beforeSearch'] ) ) {
+		foreach ( $config['process']['beforeSearch'] as $process ) {
+			if ( $process->type ) {
+				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeSearch', array( $process->params, &$fields, &$config['storages'], &$config ) );
+			}
+		}
+	}
 	$countStages	=	count( $stages );
+
 	if ( $countStages ) {		
 		for( $stage =  1; $stage <= $countStages; $stage++ ) {
 			if ( ! $error ) {
@@ -705,6 +701,8 @@ if ( $preconfig['show_form'] > 0 ) {
 	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
+} elseif ( $preconfig['show_form'] ) {
+	$doc->fields	=	&$fields['search'];
 }
 
 // Validation
