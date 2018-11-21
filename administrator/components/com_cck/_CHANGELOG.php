@@ -28,6 +28,7 @@ $ -> Language fix or change
 + "beforeSearch" event added.
 + "onCckPostAfterDelete" event added.
 + "Override Page Title" parameter added on Content Types (Content View > Configuration).
++ Persistent Search behaviour support added on Search module.
 
 + JCckContent class updated & improved! :)
   >> Free Object (JCckContentFree) support added (cf manuals).
@@ -42,6 +43,8 @@ $ -> Language fix or change
   >> "Delete" events now triggered: "onContentBeforeDelete", "onContentAfterDelete".
   >> Export support added.
   >> "Save" events now triggered: "onContentBeforeSave", "onContentAfterSave".
+
++ "Priority" parameter on HTML Typography plug-in >> to defer "beforeRenderContent".
 
 ^ "defaultvalue" Data Type changed to TEXT in install.sql. @pull/530
 ^ hardcoded $user->id removed from JForm User plug-in, use Live Value if needed.
