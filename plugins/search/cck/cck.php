@@ -55,6 +55,7 @@ class plgSearchCCK extends JPlugin
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doDebug		=	$options->get( 'debug' );
+
 		$doLimit		=	false;
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
@@ -487,9 +488,9 @@ class plgSearchCCK extends JPlugin
 			}
 			$config['ids2']		=	'"'.implode( '","', $config['ids2'] ).'"';
 		}
-		
+
 		// Debug
-		if ( $doDebug > 0 && $doDebug < 10 ) {
+		if ( $doDebug == -1 || ( $doDebug > 0 && $doDebug < 10 ) ) {
 			if ( !isset( $query1 ) ) {
 				$query1	=	(string)$query;
 			}
