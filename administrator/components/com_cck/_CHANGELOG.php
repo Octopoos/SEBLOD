@@ -32,7 +32,7 @@ $ -> Language fix or change
 
 + JCckContent class updated & improved! :)
   >> Free Object (JCckContentFree) support added (cf manuals).
-  >> "getPks", "getRegistry" method added.
+  >> "getPks", "getRegistry" methods added.
   >> "search", "with", "by" methods added (cf manuals).
   >> "updateAlias" method added on JCckContentArticle class (PHP Traits).
   >> "updateAlias" method added on JCckContentCategory class (PHP Traits).
@@ -48,6 +48,10 @@ $ -> Language fix or change
 
 ^ "defaultvalue" Data Type changed to TEXT in install.sql. @pull/530
 ^ hardcoded $user->id removed from JForm User plug-in, use Live Value if needed.
+
+! History/PostInstallLog deprecated >> will be removed in SEBLOD 4.0
+! List rendering without template deprecated  >> will be removed in SEBLOD 4.0
+! Permissions on App Folders deprecated >> will be removed in SEBLOD 4.0
 
 # "author_id" issue and "getAuthor" method fixed on JCckContent.
 # Cache issues fixed on Lists. @issues/518
