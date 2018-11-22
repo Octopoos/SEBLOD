@@ -152,8 +152,8 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target )
-	{		
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
+	{
 		return;
 	}
 	
