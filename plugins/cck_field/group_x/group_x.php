@@ -171,6 +171,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		} else {
 			$xn		=	$field->rows;
 		}
+		if ( !$xn ) {
+			$xn++;
+		}
+
 		$form		=	array();
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
 			foreach ( $fields as $f ) {
@@ -225,7 +229,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			parent::g_addScriptDeclaration( $field->script );
 		}
 		$field->form	=	$form;
-		$field->value	=	'';
+		$field->value	=	$value;
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -431,8 +435,9 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		
 		if ( $field->bool2 || $field->bool3 || $field->bool4 ) {
 			self::_addScripts();
+			$remove_first 	=	$field->rows == 0 && $field->value == 0;
 			self::_addScript( $field->name, array( 'min'=>$field->minlength, 'max'=>$field->maxlength, 'default'=>$field->rows,
-												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty, 'rId'=>$rId ) );
+												   'del'=>$field->bool3, 'add'=>$field->bool2, 'drag'=>$field->bool4, 'empty_html'=>$empty, 'rId'=>$rId, 'remove_first'=>$remove_first ) );
 		}
 				
 		return $html;
@@ -456,10 +461,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
-			echo '<script src="'.self::$path.'assets/js/script-3.17.0.min.js'.'" type="text/javascript"></script>';
+			echo '<script src="'.self::$path.'assets/js/script-3.17.1.min.js'.'" type="text/javascript"></script>';
 		} else {
 			JCck::loadjQueryUI();
-			$doc->addScript( self::$path.'assets/js/script-3.17.0.min.js' );
+			$doc->addScript( self::$path.'assets/js/script-3.17.1.min.js' );
 		}
 	}
 	
@@ -478,6 +483,9 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$js		=	'jQuery(document).ready(function($) {';
 		if ( $params['del'] ) {
 			$js	.=	'JCck.More.GroupX.remove("'.$id.'",'.$params['min'].',"'.$rId.'");';
+			if ( $params['remove_first'] ) {
+				$js 	.=	'$(".cck_button_del_'.$id.'").trigger("click");';
+			}
 		}
 		if ( $params['add'] ) {
 			$js	.=	'JCck.More.GroupX.add("'.$id.'",'.$params['max'].',"'.$params['empty_html'].'","'.$rId.'");';
