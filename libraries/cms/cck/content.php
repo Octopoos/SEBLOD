@@ -1961,7 +1961,7 @@ class JCckContent
 	// _setContentById
 	protected function _setContentById( $identifier )
 	{
-		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
+		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, a.storage_table as storage_table, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
 
@@ -1989,6 +1989,8 @@ class JCckContent
 
 		if ( self::$objects[$this->_object]['properties']['table'] != '' ) {
 			$this->_table			=	self::$objects[$this->_object]['properties']['table'];
+		} elseif ( !$this->_table && $core->storage_table ) {
+			$this->_table			=	$core->storage_table;
 		}
 
 		if ( !$this->_table ) {
