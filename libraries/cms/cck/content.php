@@ -688,36 +688,6 @@ class JCckContent
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
 	}
 
-	// count (^$)
-	public function count( $content_type, $data = array() )
-	{
-		$this->clear();
-
-		if ( !$this->_setContentByType( $content_type ) ) {
-			$this->reset();
-
-			return false;
-		}
-
-		$this->setInstance( 'base' );
-		$this->setInstance( 'more' );
-		$this->setInstance( 'more_parent' );
-		$this->setInstance( 'more2' );
-
-		$db		=	JFactory::getDbo();
-		$query	=	$this->_getSearchQuery( $content_type, $data, false );
-
-		if ( $query === false ) {
-			return false;
-		}
-
-		$query->select( 'COUNT('.$db->quoteName( 'a.pk' ).')' );
-
-		$db->setQuery( $query );
-
-		return (int)$db->loadResult();
-	}
-
 	// import (^)
 	public function import( $content_type, $identifier )
 	{
@@ -1014,6 +984,36 @@ class JCckContent
 		$this->_search_query['order'][$key]	=	$direction;
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// count (^$)
+	public function count( $content_type, $data = array() )
+	{
+		$this->clear();
+
+		if ( !$this->_setContentByType( $content_type ) ) {
+			$this->reset();
+
+			return false;
+		}
+
+		$this->setInstance( 'base' );
+		$this->setInstance( 'more' );
+		$this->setInstance( 'more_parent' );
+		$this->setInstance( 'more2' );
+
+		$db		=	JFactory::getDbo();
+		$query	=	$this->_getSearchQuery( $content_type, $data, false );
+
+		if ( $query === false ) {
+			return false;
+		}
+
+		$query->select( 'COUNT('.$db->quoteName( 'a.pk' ).')' );
+
+		$db->setQuery( $query );
+
+		return (int)$db->loadResult();
 	}
 
 	// find (^)
