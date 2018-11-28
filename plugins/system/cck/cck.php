@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // Plugin
 class plgSystemCCK extends JPlugin
 {
@@ -259,7 +261,7 @@ class plgSystemCCK extends JPlugin
 		$user	=	JFactory::getUser();
 
 		if ( JCck::getMultisiteInfo( 'hasContext' ) ) {
-			$guests	=	JCck::getMultisiteInfo('guests');
+			$guests	=	JCck::getMultisiteInfo( 'guests' );
 			$isUser	=	!isset( $guests[(string)$user->id] );
 		} else {
 			if ( !is_object( $this->site ) ) {
@@ -343,6 +345,7 @@ class plgSystemCCK extends JPlugin
 				$viewlevels		=	array_diff( $authlevels, $nolevels );
 				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
 				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
+				$otherlevels	=	ArrayHelper::toInteger( $otherlevels );
 
 				if ( count( $otherlevels ) ) {
 					$viewlevels	=	array_merge( $viewlevels, $otherlevels );
@@ -351,8 +354,8 @@ class plgSystemCCK extends JPlugin
 				$viewlevels		=	$authlevels;
 			}
 
-			if ( $app->isClient( 'administrator' ) && $this->site->guest_only_viewlevel > 0 ) {
-				$viewlevels[]	=	$this->site->guest_only_viewlevel;
+			if ( $app->isClient( 'administrator' ) && (int)$this->site->guest_only_viewlevel > 0 ) {
+				$viewlevels[]	=	(int)$this->site->guest_only_viewlevel;
 			}
 
 			if( ( count( array_diff( $authlevels, $viewlevels ) ) ) || ( count( array_diff( $viewlevels, $authlevels ) ) ) ) {
@@ -1074,6 +1077,7 @@ class plgSystemCCK extends JPlugin
 	protected function _setTemplateStyle( $style )
 	{
 		$style	=	JCckDatabase::loadObject( 'SELECT template, params FROM #__template_styles WHERE id = '.(int)$style );
+		
 		if ( is_object( $style ) ) {
 			JFactory::getApplication()->setTemplate( $style->template, $style->params );
 		}
