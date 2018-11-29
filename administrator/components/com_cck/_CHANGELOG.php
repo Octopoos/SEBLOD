@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.0 Upgrade Release [xx-Nov-2018] -----------
+-------------------- 3.17.0 Upgrade Release [30-Nov-2018] -----------
 
 + Allow Multilanguage Aliases on Multi-sites system.
 + "beforeSearch" event added.
