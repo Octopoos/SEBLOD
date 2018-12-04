@@ -93,7 +93,7 @@ abstract class JCckEcommerceTax
 
 					switch ( $t->tax ) {
 						case 'plus':
-							$tax						=	(float)number_format( $t->tax_amount, 2 );
+							$tax						=	(float)number_format( $t->tax_amount, 2, '.', '' );
 
 							if ( $params['target'] == 'product' || $params['target'] == 'product2' ) {
 								$tax					=	$tax * $quantity;
@@ -112,16 +112,16 @@ abstract class JCckEcommerceTax
 						case 'percentage':
 							if ( $params['target'] == 'product2' ) {
 								if ( isset( $params['target_id'] ) && $params['target_id'] && $params['source'] == 'item' && count( $items ) && isset( $items[$params['target_id']] ) ) {
-									$tax	=	(float)number_format( $items[$params['target_id']]['_']->price * $t->tax_amount / 100, 2 );
+									$tax	=	(float)number_format( $items[$params['target_id']]['_']->price * $t->tax_amount / 100, 2, '.', '' );
 									
 									// if ( isset( $params['apply_quantity'] ) && $params['apply_quantity'] ) {
 									$tax	=	$tax * $quantity;
 									// }
 								} else {
-									$tax	=	(float)number_format( $total * $t->tax_amount / 100, 2 );
+									$tax	=	(float)number_format( $total * $t->tax_amount / 100, 2, '.', '' );
 								}
 							} else {
-								$tax		=	(float)number_format( $total * $t->tax_amount / 100, 2 );
+								$tax		=	(float)number_format( $total * $t->tax_amount / 100, 2, '.', '' );
 							}
 
 							$res						+=	$tax;
@@ -151,7 +151,7 @@ abstract class JCckEcommerceTax
 									continue;
 								}
 
-								$tax					=	(float)number_format( $item->tax, 2 );
+								$tax					=	(float)number_format( $item->tax, 2, '.', '' );
 								$tax					=	$tax * $quantity;
 							} else {
 								if ( count( $items ) ) {
@@ -159,7 +159,7 @@ abstract class JCckEcommerceTax
 										if ( empty( $items[$params['target_id']]->price ) ) {
 											continue;
 										}
-										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2 );
+										$tax			=	(float)number_format( $items[$params['target_id']]->tax, 2, '.', '' );
 										$tax			=	$tax * $quantity;
 									} else {
 										foreach ( $items as $item_list ) {
@@ -190,7 +190,7 @@ abstract class JCckEcommerceTax
 														}
 													}
 													if ( isset( $item->tax ) && $item->tax != '' ) {
-														$amount	=	(float)number_format( $item->tax, 2 );
+														$amount	=	(float)number_format( $item->tax, 2, '.', '' );
 
 														if ( isset( $item->quantity ) && $item->quantity ) {
 															$qty	=	$item->quantity;
