@@ -78,7 +78,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		
 		if ( (int)$value > 0 ) {
-			$field->output	=	$value;
+			$field->output	=	JHtml::_( 'date', $value, 'Y-m-d H:i:s' );
 		} else {
 			$field->output	=	'';
 		}
