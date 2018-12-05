@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.17.1 Upgrade Release [xx-Dec-2018] -----------
+
+# Time Zone applied on Export (when "Prepare Output" = Yes).
+
 -------------------- 3.17.0 Upgrade Release [30-Nov-2018] -----------
 
 + Allow Multilanguage Aliases on Multi-sites system.
