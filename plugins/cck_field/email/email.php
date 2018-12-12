@@ -429,7 +429,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 						$fieldName	=	$field->name;
 						if ( ! ( $field->type == 'password' && $field->value == 'XXXX' ) && isset( $field->value ) && trim( $field->value ) != '' && ( $field->variation != 'hidden' ) ) {
 							$valF	=	( isset( $field->text ) && trim( $field->text ) != '' ) ? trim( $field->text ) : trim( $field->value );
-							$bodyF	.=	'- '.$field->label.' : '.$valF.'<br /><br />';
+							$bodyF	.=	'- '.$field->label.' : '.$valF.'<br />';
 						}
 					}
 				}
