@@ -126,7 +126,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 		var elem_target  = "<?php echo $pre; ?>.cck-loading-more";
 		var replace_html = replace_html || 0;		
 		$("form#<?php echo $this->form_id; ?> [data-cck-ajax=\'\']").each(function(i) {
-			query_params += "&"+$(this).attr("name")+"="+$(this).myVal();
+			query_params += "&"+$(this).attr("name")+"="+$(this).myVal().replace("&", "%26");
 		});
 		if (has_more < 0) {
 			data_type = 'json';
