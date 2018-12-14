@@ -327,6 +327,10 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
 
+			
+			// Set User Actions Log
+			self::_setUserActionsLog();
+
 			// Set Utf8mb4 flag
 			self::_setUtf8mb4( $params );
 		} else {
@@ -629,6 +633,9 @@ class plgContentCCKInstallerScript
 				}
 			}
 
+			// Set User Actions Log
+			self::_setUserActionsLog();
+
 			// Convert Tables To Utf8mb4
 			self::_convertTablesToUtf8mb4();
 
@@ -855,6 +862,25 @@ class plgContentCCKInstallerScript
 						}
 					}
 				}
+			}
+		}
+	}
+
+	// _setUserActionsLog
+	protected function _setUserActionsLog()
+	{
+		$db			=	JFactory::getDbo();
+		$db_prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+		$table_name	=	$db_prefix.'action_logs_extensions';
+		$tables		=	$db->getTableList();
+		$tables		=	array_flip( $tables );
+
+		if ( isset( $tables[$table_name] ) ) {
+			$db->setQuery( 'SELECT COUNT(id) FROM `#__action_logs_extensions` WHERE extension = "com_cck"' );
+			
+			if ( (int)$db->loadResult() == 0 ) {
+				$db->setQuery( 'INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ("com_cck")' );
+				$db->execute();
 			}
 		}
 	}
