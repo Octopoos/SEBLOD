@@ -22,8 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.1 Upgrade Release [xx-Dec-2018] -----------
+-------------------- 3.17.1 Upgrade Release [14-Dec-2018] -----------
 
++ User Actions Log support added.
+  >> it needs to be enabled manually from: User Actions Log > Options > Events To Log.
+
+# Ampersand issues fixed.
 # Time Zone applied on Export (when "Prepare Output" = Yes).
 
 -------------------- 3.17.0 Upgrade Release [30-Nov-2018] -----------
