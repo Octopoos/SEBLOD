@@ -1700,3 +1700,9 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
   `company_vat_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
+
+
+INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ('com_cck');
