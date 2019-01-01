@@ -1017,15 +1017,23 @@ class JCckContent
 	}
 
 	// find (^)
-	public function find( $content_type, $data = array() )
+	public function find( $content_type = '', $data = array() )
 	{
-		return $this->_findResults( 'find', true, $content_type, $data );
+		if ( $content_type != '' ) {
+			return $this->_findResults( 'find', true, $content_type, $data );
+		} else {
+			return $this->_findResults( 'find', true );
+		}
 	}
 
 	// findMore (^)
-	public function findMore( $content_type, $data = array() )
+	public function findMore( $content_type = '', $data = array() )
 	{
-		return $this->_findResults( 'more', true, $content_type, $data );
+		if ( $content_type != '' ) {
+			return $this->_findResults( 'more', true, $content_type, $data );
+		} else {
+			return $this->_findResults( 'more', true );
+		}
 	}
 
 	// findPks ($)
@@ -1696,6 +1704,9 @@ class JCckContent
 
 			if ( $data === true ) {
 				$data			=	array();
+			} elseif ( !$content_type && isset( $this->_search_query ) ) {
+				$content_type	=	$this->_search_query['content_type'];
+				$data			=	true;
 			}
 		} else {
 			$chain_methods		=	false;
@@ -1884,6 +1895,7 @@ class JCckContent
 			switch ( $operator ) {
 				case '<':
 				case '<=':
+				case '!=':
 				case '>=':
 				case '>':
 					$where	=	' ' . $operator . ' ' . $db->quote( $v );

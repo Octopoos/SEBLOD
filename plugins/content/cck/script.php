@@ -327,6 +327,10 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
 
+			
+			// Set User Actions Log
+			self::_setUserActionsLog();
+
 			// Set Utf8mb4 flag
 			self::_setUtf8mb4( $params );
 		} else {
@@ -353,7 +357,7 @@ class plgContentCCKInstallerScript
 									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3', 114=>'3.13.0', 115=>'3.13.1',
 									116=>'3.14.0', 117=>'3.14.1', 118=>'3.15.0', 119=>'3.15.1',
 									120=>'3.16.0', 121=>'3.16.1', 122=>'3.16.2', 123=>'3.16.3', 124=>'3.16.4',
-									125=>'3.17.0'
+									125=>'3.17.0', 126=>'3.17.1', 127=>'3.17.2'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
@@ -629,6 +633,9 @@ class plgContentCCKInstallerScript
 				}
 			}
 
+			// Set User Actions Log
+			self::_setUserActionsLog();
+
 			// Convert Tables To Utf8mb4
 			self::_convertTablesToUtf8mb4();
 
@@ -855,6 +862,25 @@ class plgContentCCKInstallerScript
 						}
 					}
 				}
+			}
+		}
+	}
+
+	// _setUserActionsLog
+	protected function _setUserActionsLog()
+	{
+		$db			=	JFactory::getDbo();
+		$db_prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+		$table_name	=	$db_prefix.'action_logs_extensions';
+		$tables		=	$db->getTableList();
+		$tables		=	array_flip( $tables );
+
+		if ( isset( $tables[$table_name] ) ) {
+			$db->setQuery( 'SELECT COUNT(id) FROM `#__action_logs_extensions` WHERE extension = "com_cck"' );
+			
+			if ( (int)$db->loadResult() == 0 ) {
+				$db->setQuery( 'INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ("com_cck")' );
+				$db->execute();
 			}
 		}
 	}
