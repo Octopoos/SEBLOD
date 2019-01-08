@@ -199,7 +199,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 				} else {
 					$checked	=	'';
 				}
-				$form		.=	'<span class="cck_checkbox_option"><input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+				$form		.=	'<span class="cck_option_checkbox"><input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 
 				$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label></span>';
 			}
@@ -225,7 +225,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 					} else {
 						$checked	=	'';
 					}
-					$form		.=	'<span class="cck_checkbox_option"><input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+					$form		.=	'<span class="cck_option_checkbox"><input type="checkbox" id="'.$id.$i.'" name="'.$name.'[]" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
 					$form		.=	'<label for="'.$id.$i.'">'.$o->text.'</label></span>';
 				}
 			}
@@ -233,7 +233,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		if ( $field->bool7 ) {
 			$checked	=	( $count == $count2 ? '1' : '' ) ? 'checked="checked" ' : '';
 			$attr		=	'onclick="Joomla.checkAll(this,\''.$id.'\');"';
-			$check_all	=	'<span class="cck_checkbox_option"><input type="checkbox" id="'.$id.'_toggle'.'" name="'.$name.'_toggle" value="" '.$checked.$attr.' />'
+			$check_all	=	'<span class="cck_option_checkbox"><input type="checkbox" id="'.$id.'_toggle'.'" name="'.$name.'_toggle" value="" '.$checked.$attr.' />'
 						.	'<label for="'.$id.'_toggle">'.JText::_( 'COM_CCK_CHECK_ALL' ).'</label></span>';
 			if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
 				$check_all	=	'<div class="cck-clrfix">'.$check_all.'</div>';

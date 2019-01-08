@@ -191,8 +191,8 @@ class plgCCK_FieldRadio extends JCckPluginField
 				$k++;
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
 				$checked	=	( $o->value == $value ) ? 'checked="checked" ' : '';
-				$form		.=	'<input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
-				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label>';
+				$form		.=	'<span class="cck_option_radio"><input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label></span>';
 
 				$indexes[$name]++;
 			}
@@ -201,8 +201,8 @@ class plgCCK_FieldRadio extends JCckPluginField
 			foreach ( $opts as $i=>$o ) {
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
 				$checked	=	( $o->value == $value ) ? 'checked="checked" ' : '';
-				$form		.=	'<input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
-				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label>';
+				$form		.=	'<span class="cck_option_radio"><input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label></span>';
 
 				$indexes[$name]++;
 			}
