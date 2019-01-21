@@ -289,16 +289,16 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				}
 				break;
 			case 'num_higher':
-				$sql	=	$target.' >= '.JCckDatabase::quote( $value );
+				$sql	=	$target.' >= '.JCckDatabase::quote( $value ).'+0';
 				break;
 			case 'num_higher_only':
-				$sql	=	$target.' > '.JCckDatabase::quote( $value );
+				$sql	=	$target.' > '.JCckDatabase::quote( $value ).'+0';
 				break;
 			case 'num_lower':
-				$sql	=	$target.' <= '.JCckDatabase::quote( $value );
+				$sql	=	$target.' <= '.JCckDatabase::quote( $value ).'+0';
 				break;
 			case 'num_lower_only':
-				$sql	=	$target.' < '.JCckDatabase::quote( $value );
+				$sql	=	$target.' < '.JCckDatabase::quote( $value ).'+0';
 				break;
 			case 'not_alpha':
 				$sql	=	$target.' NOT LIKE '.JCckDatabase::quote( JCckDatabase::escape( $value, true ).'%', false );
