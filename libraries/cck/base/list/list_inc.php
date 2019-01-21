@@ -122,26 +122,7 @@ $isAltered	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 $isSearch	=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($post[...]) */
 
-if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
-	if ( $app->input->get( 'end', '' ) != '' ) {
-		$limitend	=	(int)$app->input->getInt( 'end', '' );
-	}
-}
-if ( $limitstart != -1 ) {
-	$start_var	=	( $app->isClient( 'administrator' ) || !JFactory::getConfig()->get( 'sef' ) ) ? 'limitstart' : 'start';
-	$start		=	(int)$app->input->getInt( $start_var );
-
-	if ( $limitstart > 0 && !$start ) {
-		$isAltered	=	true;
-	}
-	if ( isset( $this ) && isset( $this->state ) && is_object( $this->state ) ) {
-		if ( $limitend != -1 ) {
-			$this->state->set( 'limit', (int)$limitend );
-		}
-		$limitend	=	(int)$this->state->get( 'limit' );
-	}
-}
-
+// Lives
 if ( !isset( $lives ) ) {
 	$live		=	explode( '||', $live );
 	$lives		=	array();
@@ -288,9 +269,6 @@ if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 		$preconfig['search2']	=	$menu->params->get( 'search2' );
 	}
 }
-if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
-	$options->set( 'limit', $preconfig['limit'] );
-}
 
 // isPersistent
 $context		=	'com_cck.'.$search->name;
@@ -384,9 +362,38 @@ foreach ( $fields['search'] as $field ) {
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
 
-$config['limitstart']	=	$limitstart;
-$config['limitend']		=	$limitend;
 $config['doSelect']		=	$search->content ? false : true;
+
+if ( (int)$app->input->getInt( 'infinite', '0' ) ) {
+	if ( $app->input->get( 'end', '' ) != '' ) {
+		$limitend	=	(int)$app->input->getInt( 'end', '' );
+	}
+}
+
+if ( $config['limitend'] > 0 ) {
+	$limitend		=	$config['limitend'];
+}
+
+if ( $limitstart != -1 ) {
+	$start_var		=	( $app->isClient( 'administrator' ) || !JFactory::getConfig()->get( 'sef' ) ) ? 'limitstart' : 'start';
+	$start			=	(int)$app->input->getInt( $start_var );
+
+	if ( $limitstart > 0 && !$start ) {
+		$isAltered	=	true;
+	}
+	if ( isset( $this ) && isset( $this->state ) && is_object( $this->state ) ) {
+		if ( $limitend != -1 ) {
+			$this->state->set( 'limit', (int)$limitend );
+		}
+		$limitend	=	(int)$this->state->get( 'limit' );
+	}
+}
+if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
+	$options->set( 'limit', $preconfig['limit'] );
+}
+
+$config['limitend']		=	$limitend;
+$config['limitstart']	=	$limitstart;
 
 if ( $doDebug ) {
 	jimport( 'joomla.error.profiler' );
