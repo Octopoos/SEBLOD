@@ -266,6 +266,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'date_past_only':
 			case 'date_past':
 			case 'date_future':
+			case 'date_future_isset':
 			case 'date_future_only':
 				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_DATE_AND_TIME_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;

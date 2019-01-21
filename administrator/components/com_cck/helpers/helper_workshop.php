@@ -435,6 +435,7 @@ class Helper_Workshop
 											'date_past_only'=>JHtml::_( 'select.option', 'date_past_only', JText::_( 'COM_CCK_MATCH_DATE_PAST_ONLY' ) ),
 											'date_past'=>JHtml::_( 'select.option', 'date_past', JText::_( 'COM_CCK_MATCH_DATE_PAST' ) ),
 											'date_future'=>JHtml::_( 'select.option', 'date_future', JText::_( 'COM_CCK_MATCH_DATE_FUTURE' ) ),
+											'date_future_isset'=>JHtml::_( 'select.option', 'date_future_isset', JText::_( 'COM_CCK_MATCH_DATE_FUTURE_IF_ISSET' ) ),
 											'date_future_only'=>JHtml::_( 'select.option', 'date_future_only', JText::_( 'COM_CCK_MATCH_DATE_FUTURE_ONLY' ) ),
 											'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
 											'104'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MATCH_GROUP_EXCLUSION' ) ),

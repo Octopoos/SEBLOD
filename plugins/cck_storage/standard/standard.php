@@ -259,6 +259,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'date_future':
 				$sql	=	$target.' >= '.JCckDatabase::quote( $value );
 				break;
+			case 'date_future_isset':
+				$sql	=	'('.$target.' = '.JCckDatabase::quote( JFactory::getDbo()->getNullDate() ).' OR '.$target.' >= '.JCckDatabase::quote( $value ).')';
+				break;
 			case 'date_future_only':
 				$sql	=	$target.' > '.JCckDatabase::quote( $value );
 				break;
