@@ -2,32 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: router.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.categories' );
-
 // CckRouter
-if ( !JCck::on() ) {
-	interface JComponentRouterInterface
-	{
-		public function preprocess($query);
-		public function build(&$query);
-		public function parse(&$segments);
-	}
-	abstract class JComponentRouterBase implements JComponentRouterInterface
-	{
-		public function preprocess($query)
-		{
-			return $query;
-		}
-	}
-}
 class CckRouter extends JComponentRouterBase
 {
 	// build
@@ -69,8 +52,8 @@ class CckRouter extends JComponentRouterBase
 		} else {
 			$menuItem	=	$menu->getItem( $query['Itemid'] );
 		}
-		$legacy			=	0;
-		if ( $legacy || !isset( $menuItem->query['search'] ) ) {
+		
+		if ( !isset( $menuItem->query['search'] ) ) {
 			if ( isset( $query['catid'] ) ) {
 				$segments[]	=	$query['catid'];
 				unset( $query['catid'] );
@@ -81,8 +64,11 @@ class CckRouter extends JComponentRouterBase
 			}
 		} else {
 			$params		=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
-			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-			JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+
+			if ( isset( $params['location'] ) && $params['location'] != '' && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {	
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
+			}
 		}
 		
 		unset( $query['view'] );
@@ -105,6 +91,9 @@ class CckRouter extends JComponentRouterBase
 		$menuItem	=	$menu->getActive();
 		$vars		=	array();
 
+		if ( $app->input->get( 'task' ) == 'ajax' ) {
+			return $vars;
+		}
 		if ( $segments[0] == 'form' ) {
 			$menu->setActive( $app->input->getInt( 'Itemid', 0 ) );
 			$vars['option']	=	'com_cck';
@@ -112,39 +101,57 @@ class CckRouter extends JComponentRouterBase
 			$vars['layout']	=	'edit';
 			$vars['type']	=	@$segments[1];
 		} else {
-			$legacy	=	0; // check later
-			if ( !( $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] == 'list' ) ) {
-				$legacy	=	0;
-			}
-			if ( !$legacy ) {
-				if ( isset( $menuItem->query['search'] ) ) {
-					$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->params->get( 'sef', '' ) );
-					
-					if ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) {
-						if ( $count == 1 ) {
-							if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
-								require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+			$params		=	array();
 
-								$target				=	( $params['doSEF'][0] == '5' ) ? 'author_object' : 'parent_object';
-								$properties			=	array( $target );
-								$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+			if ( isset( $menuItem->query['search'] ) ) {
+				$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->params->get( 'sef', '' ) );
+				
+				if ( ( ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) && $count == 1 )
+				  || ( ( $params['doSEF'][0] == '8' ) && ( $count == 1 || $count == 2 ) ) ) {
+					if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+						require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 
-								if ( $properties[$target] != '' ) {
-									$params['doSEF'][0]	=	'2';
-									$params['location']	=	$properties[$target];
+						$target			=	( $params['doSEF'][0] == '5' ) ? 'author_object' : 'parent_object';
+						$properties		=	array( $target );
+						$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+
+						if ( $properties[$target] != '' ) {
+							$params['doSEF'][0]	=	'2';
+							$isNew				=	true;
+							$parent_id			=	(int)$menuItem->parent_id;
+							
+							if ( $parent_id > 1 ) {
+								$parent	=	$menu->getItem( $parent_id );
+
+								if ( is_object( $parent ) ) {
+									if ( $parent->query['option'] == 'com_cck' && $parent->query['view'] == 'list' ) {
+										$isNew	=	false;
+									}
 								}
+							}
+							if ( $isNew ) {
+								$params['doSEF'][1]	=	'3';
+								$params['location']	=	$properties[$target];
 							}
 						}
 					}
-				}
-				if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+				} elseif ( $params['doSEF'][0] == '2' && $count > 1 ) {
 					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-					JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );
-				} else {
-					$legacy	=	1;
+					
+					$target				=	'child_object';
+					$properties			=	array( $target );
+					$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+
+					if ( $properties[$target] != '' ) {
+						$params['doSEF'][0]	=	'4';
+						$params['location']	=	$properties[$target];
+					}
 				}
 			}
-			if ( $legacy ) {
+			if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
+				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );
+			} else {
 				if ( $count == 2 ) {
 					$vars['option']		=	'com_content';
 					$vars['view']		=	'article';
@@ -152,6 +159,8 @@ class CckRouter extends JComponentRouterBase
 					$vars['id']			=	$segments[1];
 				} elseif ( $count == 1 ) {
 					$vars['option']		=	'com_content';
+
+					jimport( 'joomla.application.categories' );
 					
 					$idArray			=	explode( ':', $segments[0], 2 );
 					$id					=	(int)$idArray[0];

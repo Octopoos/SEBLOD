@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: validation.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -92,13 +92,14 @@ class JCckPluginValidation extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_addProcess
-	public static function g_addProcess( $event, $type, &$config, $params )
+	public static function g_addProcess( $event, $type, &$config, $params, $priority = 3 )
 	{
 		if ( $event && $type ) {
 			$process						=	new stdClass;
 			$process->group					=	self::$construction;
 			$process->type					=	$type;
 			$process->params				=	$params;
+			$process->priority				=	$priority;
 			$config['process'][$event][]	=	$process;
 		}
 	}

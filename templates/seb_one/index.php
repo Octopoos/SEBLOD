@@ -2,16 +2,16 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: index.php alexandrelapoux $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 // -- Initialize
-require_once dirname(__FILE__).'/config.php';
+require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
@@ -191,10 +191,13 @@ $cck->addStyleDeclaration( $css );
         }
     } ?>
     <?php // hidden
-    if ( $cck->countFields( 'modal' ) && JCck::on() ) {
+    if ( $cck->countFields( 'modal' ) ) {
         JHtml::_( 'bootstrap.modal', 'collapseModal' );
+        
+        $class = $cck->getPosition( 'modal' )->css;
+        $class = ( $class ) ? ' ' . $class : '';
         ?>
-        <div class="modal hide fade" id="collapseModal">
+        <div class="modal hide fade<?php echo $class; ?>" id="collapseModal">
             <?php echo $cck->renderPosition( 'modal' ); ?>
         </div>
     <?php } ?>

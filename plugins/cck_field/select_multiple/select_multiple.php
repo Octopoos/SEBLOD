@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\String\StringHelper;
 
 // Plugin
 class plgCCK_FieldSelect_Multiple extends JCckPluginField
@@ -129,7 +131,7 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 			foreach ( $optionsSorted as $i=>$val ) {
 				if ( trim( $val ) != '' ) {
 					$text	=	$val;
-					if ( JString::strpos( $val, '=' ) !== false ) {
+					if ( StringHelper::strpos( $val, '=' ) !== false ) {
 						$opt	=	explode( '=', $val );
 						$text	=	$opt[0];
 						$val	=	$opt[1];
@@ -151,7 +153,11 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		}
 		
 		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$size	=	( @$field->rows ) ? $field->rows : count( $opts );		
+		$size	=	( @$field->rows ) ? $field->rows : count( $opts );
+		
+		if ( count( $value ) && $value[0] != '' ) {
+			$class	.=	' has-value';
+		}
 		$attr	=	'class="'.$class.'" size="'.$size.'" multiple="multiple"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {
@@ -167,6 +173,8 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			$field->text	=	parent::g_getOptionText( $value, $field->options, $divider, $config );
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
@@ -213,9 +221,6 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		// Prepare
 		$field->divider	=	$divider;
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-		
-		// Set
-		$field->value	=	$value;
 		
 		// Return
 		if ( $return === true ) {

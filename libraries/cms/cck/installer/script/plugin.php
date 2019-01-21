@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,12 +19,15 @@ class JCckInstallerScriptPlugin
 	protected $core;
 	
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
+		if ( isset( $this->cck ) && is_object( $this->cck ) ) {
+			self::_setIntegration();
+		}
 		if ( $this->core === true ) {
 			return;
 		}
-		
+
 		$db		=	JFactory::getDbo();
 		$where	=	'WHERE type = "'.$this->cck->type.'" AND element = "'.$this->cck->element.'"';
 		if ( $this->cck->group ) {
@@ -38,14 +41,10 @@ class JCckInstallerScriptPlugin
 
 		// Post Install Log
 		self::postInstallMessage( 'install' );
-
-		// Integration
-		self::_setIntegration();
-		
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{	
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
@@ -69,7 +68,7 @@ class JCckInstallerScriptPlugin
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		if ( $this->core === true ) {
 			return;
@@ -83,18 +82,36 @@ class JCckInstallerScriptPlugin
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		$app		=	JFactory::getApplication();
 		$this->core	=	( isset( $app->cck_core ) ) ? $app->cck_core : false;
+		
 		if ( $this->core === true ) {
-			return;
+			if ( (string)$parent->getParent()->getManifest()->attributes()->type == 'plugin'
+			  && (string)$parent->getParent()->getManifest()->attributes()->group == 'cck_storage_location' ) {
+				
+				$core_objects	=	array(
+										'plg_cck_storage_location_free'=>'',
+										'plg_cck_storage_location_joomla_article'=>'',
+										'plg_cck_storage_location_joomla_category'=>'',
+										'plg_cck_storage_location_joomla_user'=>'',
+										'plg_cck_storage_location_joomla_user_group'=>''
+									);
+				$name	=	(string)$parent->getParent()->getManifest()->name;
+
+				if ( isset( $core_objects[$name] ) ) {
+					return;
+				}
+			} else {
+				return;
+			}
 		}
 		$this->cck	=	CCK_Install::init( $parent );
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		if ( $this->core === true ) {
 			return;
@@ -103,14 +120,14 @@ class JCckInstallerScriptPlugin
 	}
 
 	// postInstallMessage
-	function postInstallMessage( $event, $pk = 0 )
+	protected function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
 			$pk		=	$db->loadResult();
@@ -128,7 +145,7 @@ class JCckInstallerScriptPlugin
 			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
 		}
 		$user		=	JFactory::getUser();
-		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank">'.$user->name.'</a>';
+		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
@@ -137,7 +154,7 @@ class JCckInstallerScriptPlugin
 				$version	=	new JCckVersion;
 				$version	=	$version->getShortVersion();
 			} else {
-				$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+				$version	=	file_get_contents( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
 			}
 		}
 		
@@ -157,15 +174,16 @@ class JCckInstallerScriptPlugin
 	}
 
 	// _setIntegration
-	function _setIntegration()
+	protected function _setIntegration()
 	{
-		$db		=	JFactory::getDbo();
-
 		if ( $this->cck->group == 'cck_storage_location' ) {
 			if ( isset( $this->cck->xml->cck_integration ) ) {
-				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB' );
+				JFactory::getLanguage()->load( 'plg_cck_storage_location_'.$this->cck->element, JPATH_ADMINISTRATOR, 'en-GB', true );
+
+				$db				=	JFactory::getDbo();				
 				$integration	=	array( 'component', 'context', 'options', 'vars', 'view' );
 				$title			=	JText::_( 'PLG_CCK_STORAGE_LOCATION_'.$this->cck->element.'_LABEL2' );
+
 				foreach ( $integration as $i=>$elem ) {
 					if ( isset( $this->cck->xml->cck_integration->$elem ) ) {
 						$integration[$elem]	=	(string)$this->cck->xml->cck_integration->$elem;
@@ -173,12 +191,12 @@ class JCckInstallerScriptPlugin
 					}
 				}
 				if ( $id = JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' ) ) {
-					$query			=	'UPDATE #__cck_core_objects SET `component` = "'.$integration['component'].'", `context` = "'.$integration['context'].'", `vars` = "'.$integration['vars'].'", `view` = "'.$integration['view'].'" WHERE id = '.(int)$id;
+					$query		=	'UPDATE #__cck_core_objects SET `component` = "'.$integration['component'].'", `context` = "'.$integration['context'].'", `vars` = "'.$integration['vars'].'", `view` = "'.$integration['view'].'" WHERE id = '.(int)$id;
 					$db->setQuery( $query );
 					$db->query();
 				} else {
-					$query			=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`context`,`options`,`vars`,`view`)'
-									.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$integration['context'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
+					$query		=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`context`,`options`,`vars`,`view`)'
+								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$integration['context'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
 					$db->setQuery( $query );
 					$db->query();
 				}

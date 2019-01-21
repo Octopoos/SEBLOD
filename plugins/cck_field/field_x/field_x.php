@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -39,7 +39,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		
 		$name		=	$field->name;
 		
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -77,7 +77,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		}
 
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -117,7 +117,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	$field->name;
 		}
 		//if ( $config['pk'] ) {
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 		//}
 		
 		// Prepare
@@ -195,7 +195,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$value		=	( isset( $config['post'][$name.'_hidden'] ) ) ? $config['post'][$name.'_hidden'] : $value;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		
 		// Prepare
 		$store	=	'';
@@ -205,7 +205,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$store		=	'<br />';	//begin?
 			$f			=	self::_getChild( $field, $config );
 			$f_name		=	$f->name;
-			$f->state	=	'';	//todo;
+			$f->state	=	'';	/* TODO#SEBLOD:; */
 			foreach ( $value as $val ) {
 				//if ( $val != '' ) {
 					$inherit	=	array( 'name' => $name, 'xk' => $xk, 'xi' => $xi, 'parent' => $name );					
@@ -216,15 +216,16 @@ class plgCCK_FieldField_X extends JCckPluginField
 						$store	.=	'<br />::'.$f_name.'|'.$xi.'|'.$name.'::'.$v.'::/'.$f_name.'|'.$xi.'|'.$name.'::';
 						$xi++;
 					}
-					// todo: add childs (secondary) storages.. not primary!
+					/* TODO#SEBLOD: add childs (secondary) storages.. not primary! */
 				//}
 				$xk++;
 			}
 			$store	.=	'<br />';	//end?
 		}
-		$value	=	$xi;
-		
+		$field->values	=	$value;
+		$value			=	$xi;
 		$field->value	=	$value;
+
 		parent::g_onCCK_FieldPrepareStore_X( $field, $name, $value, $store, $config );
 	}
 	
@@ -307,7 +308,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var name = "'.$id.'";'
 				.		'var min_element = '.$params['min'].';'
 				.		'time	=	500;'
-				.		'$(".button-del-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-del-"+name, function() {'
 				.			'elem	=	$(this).parent().parent().parent().parent();'
 				.			'var n	=	elem.parent().children().length;'
 				.			'if (n > min_element) {'
@@ -334,7 +335,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 				.		'var max_element = '.$params['max'].';'
 				.		'var new_elem = "'.$params['empty_html'].'";'
 				.		'content = new_elem;'
-				.		'$(".button-add-"+name).live( "click", function() {'
+				.		'$("#sortable_'.$id.'").on( "click", ".button-add-"+name, function() {'
 				.			'elem = $(this).parent().parent().parent().parent();'
 				.			'length = ( elem.parent().children().length );'
 				.			'if (length < max_element) {'
@@ -356,6 +357,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			JCck::loadjQuery();

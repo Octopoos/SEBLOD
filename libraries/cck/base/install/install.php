@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: install.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,7 +44,7 @@ class CCK_Install
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Import
 	
 	// import
-	public static function import( &$parent, $folder = 'elements', $extension = NULL )
+	public static function import( &$parent, $folder = 'elements', $extension = null )
 	{
 		$config		=	JFactory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
@@ -63,7 +63,7 @@ class CCK_Install
 			$config['isApp']		=	true;
 			$config['isUpgrade']	=	$extension->isUpgrade;
 		}
-		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>'', 'fields'=>array(), 'styles'=>array() );
+		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>array(), 'fields'=>array(), 'styles'=>array() );
 		$data['elements']	=	array( 'folder'=>'folders', 'field'=>'fields', 'type'=>'types', 'search'=>'searchs', 'template'=>'templates', 'template_style'=>'template_styles', 'category'=>'categories' );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['folders2']	=	JCckDatabase::loadObjectList( 'SELECT id, path FROM #__cck_core_folders WHERE lft', 'path' );
@@ -73,7 +73,7 @@ class CCK_Install
 		self::_import( 'content', $data, $config );
 		
 		// Elements
-		self::_importMore( 'category', $data, $config ); //todo >> self::_import( 'content', 'joomla_category', $data );
+		self::_importMore( 'category', $data, $config ); /* TODO#SEBLOD: self::_import( 'content', 'joomla_category', $data ); */
 		
 		self::_importElements( 'folder', $data, $config );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );
@@ -172,7 +172,7 @@ class CCK_Install
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Manage
 	
-	// manageAddon
+	// manageAddon (#JFMTree)
 	public static function manageAddon( $event, $addon )
 	{
 		$db		=	JFactory::getDbo();
@@ -184,22 +184,26 @@ class CCK_Install
 			
 			if ( $id > 0 ) {
 				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-				$table	=	JTable::getInstance( 'menu' );
+				$table	=	JTable::getInstance( 'Menu' );
 				$table->load( $id );
 				
-				$query	=	'SELECT id, level, lft, path FROM #__menu WHERE link = "index.php?option=com_cck"';
+				$query		=	'SELECT id FROM #__menu WHERE link = "index.php?option=com_cck"';
 				$db->setQuery( $query );
-				$seblod	=	$db->loadObject();
+				$seblod_id		=	$db->loadResult();
 				
-				if ( $seblod->id > 0 ) {
-					$table->alias		=	$addon['title'];
-					$table->path		=	'SEBLOD 3.x/'.$addon['title'];
-					$table->level		=	2;
-					$table->parent_id	=	$seblod->id;
+				if ( $seblod_id > 0 ) {
+					$data	=	array(
+									'alias'=>ucfirst( $addon['title'] ),
+									'parent_id'=>$seblod_id,
+									'title'=>'com_'.$addon['name'].'_title'
+								);
+
+					$table->setLocation( $seblod_id, 'last-child' );
+					$table->bind( $data );
 					$table->check();
 					$table->store();
-					$table->rebuild( $seblod->id, $seblod->lft, $seblod->level, $seblod->path );
-					$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon['title'].'", path = "SEBLOD 3.x/'.$addon['title'].'" WHERE id = '.(int)$table->id );
+
+					$db->setQuery( 'UPDATE #__menu SET alias = "'.$addon['title'].'", path = "SEBLOD/'.$addon['title'].'" WHERE id = '.(int)$table->id. ' AND client_id = 1' );
 					$db->execute();
 				}
 			}

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: field.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,10 +24,10 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.delete', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canDelete( $record );
 		}
+
+		// Component Permissions
+		return parent::canDelete( $record );
 	}
 
 	// canEditState
@@ -38,10 +38,10 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit.state', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canEditState( $record );
 		}
+
+		// Component Permissions
+		return parent::canEditState( $record );
 	}
 	
 	// populateState
@@ -53,7 +53,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		if ( $ajaxState	=	(int)$app->getUserState( CCK_COM.'.add.field.ajax_state' ) != '' ) {
 			$this->setState( 'ajax.state', $ajaxState );
 		} else {
-			$this->setState( 'ajax.state', NULL );
+			$this->setState( 'ajax.state', null );
 		}
 		if ( $ajaxType	=	(string)$app->getUserState( CCK_COM.'.edit.field.ajax_type' ) ) {
 			$this->setState( 'ajax.type', $ajaxType );
@@ -110,20 +110,25 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
 		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
-		
+
+		if ( is_array( $data['title'] ) ) {
+			$data['title']	=	implode( ' ', $data['title'] );
+		}
+		$data['title']	=	str_replace( '  ', ' ', trim( $data['title'] ) );
+
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$dispatcher->trigger( 'onCCK_Storage_LocationConstruct', array( @$data['storage_location'], &$data ) );
 		$dispatcher->trigger( 'onCCK_FieldConstruct', array( $data['type'], &$data ) );
-		
+
 		return $data;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Display
 	
 	// saveorder
-	function saveorder( $pks = null, $order = null )
+	public function saveorder( $pks = null, $order = null )
 	{
 		$orders	=	array();
 		$table	=	$this->getTable();

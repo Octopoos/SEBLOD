@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -30,9 +30,9 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['computation']	=	NULL;
-		$data['live']			=	NULL;
-		$data['validation']		=	NULL;
+		$data['computation']	=	null;
+		$data['live']			=	null;
+		$data['validation']		=	null;
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
@@ -57,9 +57,9 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['live']		=	NULL;
-		$data['match_mode']	=	NULL;
-		$data['validation']	=	NULL;
+		$data['live']		=	null;
+		$data['match_mode']	=	null;
+		$data['validation']	=	null;
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
@@ -112,8 +112,17 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				JCckPluginLink::g_setHtml( $field1, 'text' );
 				if ( isset( $field1->link_onclick ) && $field1->link_onclick ) {
 					$onclick	=	$field1->link_onclick;
+					
+					if ( $field1->link && strpos( $field1->link, 'javascript:' ) === false
+					  && strpos( $onclick, 'if(' ) !== false && strpos( $onclick, 'else{' ) === false ) {
+						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
+					}
 				} elseif ( $field1->link ) {
-					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
+					if ( isset( $field1->link_target ) && $field1->link_target == '_blank' ) {
+						$onclick	=	'var otherWindow = window.open(); otherWindow.opener = null; otherWindow.location = \''.$field1->link.'\';';					
+					} else {
+						$onclick	=	'document.location.href=\''.$field1->link.'\'';
+					}
 				}
 				if ( $onclick ) {
 					$onclick	=	' onclick="'.$onclick.'"';
@@ -123,15 +132,14 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' ).$onclick;
 			if ( $field->bool ) {
 				$label		=	$value;
-				if ( JCck::on() ) {
-					if ( $field->bool6 == 3 ) {
-						$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
-						$attr		.=	' title="'.$value.'"';
-					} elseif ( $field->bool6 == 2 ) {
-						$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
-					} elseif ( $field->bool6 == 1 ) {
-						$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
-					}
+				
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$attr		.=	' title="'.$value.'"';
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
 				}
 				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
 				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
@@ -212,8 +220,16 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				JCckPluginLink::g_setHtml( $field1, 'text' );
 				if ( isset( $field1->link_onclick ) && $field1->link_onclick ) {
 					$onclick	=	$field1->link_onclick;
+					
+					if ( $field1->link && strpos( $field1->link, 'javascript:' ) === false ) {
+						$onclick	.=	'else{document.location.href=\''.$field1->link.'\'};';
+					}				
 				} elseif ( $field1->link ) {
-					$onclick	=	( isset( $field1->link_target ) && $field1->link_target == '_blank' ) ? 'window.open(\''.$field1->link.'\',\'_blank\')' : 'document.location.href=\''.$field1->link.'\'';
+					if ( isset( $field1->link_target ) && $field1->link_target == '_blank' ) {
+						$onclick	=	'var otherWindow = window.open(); otherWindow.opener = null; otherWindow.location = \''.$field1->link.'\';';					
+					} else {
+						$onclick	=	'document.location.href=\''.$field1->link.'\'';
+					}
 				} else {
 					$canDo		=	false;
 				}
@@ -226,17 +242,16 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' ).$onclick;
 			if ( $field->bool ) {
 				$label		=	$value;
-				if ( JCck::on() ) {
-					if ( $field->bool6 == 3 ) {
-						$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
-						if ( !$title ) {
-							$title	=	' title="'.$value.'"';
-						}
-					} elseif ( $field->bool6 == 2 ) {
-						$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
-					} elseif ( $field->bool6 == 1 ) {
-						$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+				
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					if ( !$title ) {
+						$title	=	' title="'.$value.'"';
 					}
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
 				}
 				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
 				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.$title.'>'.$label.'</button>';
@@ -294,7 +309,7 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				}
 				$field->form	=	'';
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
-				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.' href="#"><i class="'.$icon.'"></i> '.$value.'</button>';
+				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.'><span class="'.$icon.'"></span> '.$value.'</button>';
 				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, @$options2['icon'] );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );

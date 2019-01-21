@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: template.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,10 +24,10 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.delete', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canDelete( $record );
 		}
+
+		// Component Permissions
+		return parent::canDelete( $record );
 	}
 
 	// canEditState
@@ -38,10 +38,10 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit.state', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canEditState( $record );
 		}
+
+		// Component Permissions
+		return parent::canEditState( $record );
 	}
 	
 	// populateState
@@ -113,6 +113,15 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 			} else {
 				if ( !JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core_templates WHERE featured = 1 AND id != '.(int)$data['id'] ) ) {
 					$data['featured']	=	1;
+				}
+			}
+		}
+
+		// JSON
+		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
+			foreach ( $data['json'] as $k=>$v ) {
+				if ( is_array( $v ) ) {
+					$data[$k]	=	JCckDev::toJSON( $v );
 				}
 			}
 		}

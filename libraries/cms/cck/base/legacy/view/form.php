@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: form.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -18,7 +18,7 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	protected $state;
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		if ( $this->getlayout() == 'delete' ) {
 			$this->prepareDelete();
@@ -34,18 +34,18 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	}
 	
 	// prepareDelete
-	public function prepareDelete()
+	protected function prepareDelete()
 	{
 		Helper_Admin::addToolbarDelete( $this->vName, $this->vTitle );
 	}
 	
 	// prepareDisplay
-	public function prepareDisplay()
+	protected function prepareDisplay()
 	{
 	}
 	
 	// completeUI
-	public function completeUI()
+	protected function completeUI()
 	{
 		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( 'COM_CCK_'.$this->vName );
 		
@@ -53,27 +53,18 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	}
 
 	// prepareUI
-	public function prepareUI()
+	protected function prepareUI()
 	{
-		if ( JCck::on() ) {
-			$this->css		=	array( 'w30'=>'span4',
-									   'w70'=>'span8',
-									   'wrapper'=>'container',
-									   'wrapper2'=>'row-fluid',
-									   'wrapper_tmpl'=>'span12'
-								);
-		} else {
-			$this->css		=	array( 'w30'=>'width-30',
-									   'w70'=>'width-70 fltlft',
-									   'wrapper'=>'sebwrapper',
-									   'wrapper2'=>'seb-wrapper',
-									   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-								);
-		}
+		$this->css		=	array( 'w30'=>'span4',
+								   'w70'=>'span8',
+								   'wrapper'=>'container',
+								   'wrapper2'=>'row-fluid',
+								   'wrapper_tmpl'=>'span12'
+							);
 	}
 	
 	// prepareToolbar
-	public function prepareToolbar()
+	protected function prepareToolbar()
 	{
 	}
 }

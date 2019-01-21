@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit_configuration.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,15 +16,16 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<?php if ( $this->item->master == 'content' ) { ?>
 	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-			echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config );
-			echo JCckDev::renderForm( $cck['core_typo'], @$options['typo'], $config );
-			echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-			?>
+            echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
+            echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"' ) );
+            echo JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (200)"' ) );
+            echo JCckDev::renderForm( 'core_title', @$options['metatitle'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (70)"', 'storage_field'=>'options[metatitle]' ) );
+            ?>
         </ul>
-	</div>
+    </div>
     <?php } else { ?>
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
@@ -84,9 +85,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( $cck['core_stages'], @$options['stages'], $config, array( 'label'=>'Count' ) );
-			echo '<li><label>'.JText::_( 'COM_CCK_NAVIGATION' ).'</label><span class="variation_value">...</span></li>';
 			echo JCckDev::renderBlank();
-			echo '<li><label>'.JText::_( 'COM_CCK_PROGRESS_BAR' ).'</label><span class="variation_value">...</span></li>';
             ?>
         </ul>
 	</div>

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: field.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,7 +16,7 @@ abstract class JCckDevField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Get
 	
 	// get
-	public static function get( $field, $value, &$config = array( 'doTranslation'=>1, 'doValidation'=>2 ), $inherit = array(), $override = array() )
+	public static function get( $field, $value, &$config = array( 'doTranslation'=>1, 'doValidation'=>2 ), $inherit = array(), $override = array(), $completion = 'render' )
 	{
 		if ( ! is_object( $field ) ) {
 			$field	=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name = "'.$field.'"' ); //#
@@ -37,6 +37,7 @@ abstract class JCckDevField
 		$field->conditional_options	=	'';
 		$field->markup				=	'';
 		$field->markup_class		=	'';
+		
 		if ( count( $override ) ) {
 			foreach ( $override as $k => $v ) {
 				$field->$k	=	$v;
@@ -45,7 +46,13 @@ abstract class JCckDevField
 		if ( ! ( $field && ( @$field->storage == 'dev' && @$field->storage_field ) || $field->type == 'button_submit' ) ) {
 			return '';
 		}
+
+		if ( $completion == 'initialize' ) {
+			return $field;
+		}
+
 		$name	=	$field->storage_field;
+
 		if ( isset( $config['inherit'] ) ) {
 			if ( strpos( $name, '[' ) !== false ) {
 				$parts				=	explode( '[', $name );
@@ -61,9 +68,14 @@ abstract class JCckDevField
 		if ( ! isset( $inherit['id'] ) ) {
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
 		}
+
+		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
-		$dispatcher	=	JDispatcher::getInstance();
-		$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
+		if ( $field->required ) {
+			if ( trim( $field->label ) == '' ) {
+				$field->required	=	'';
+			}
+		}
 		
 		$field->form	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 		
@@ -116,8 +128,7 @@ abstract class JCckDevField
 			}
 		}
 		
-		$dispatcher	=	JDispatcher::getInstance();
-		$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
+		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
 		return JCck::callFunc( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', $field );
 	}
@@ -163,8 +174,7 @@ abstract class JCckDevField
 			}
 		}
 		
-		$dispatcher	=	JDispatcher::getInstance();
-		$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 		
 		return JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderContent', array( $field, &$config ) );
 	}
@@ -193,6 +203,47 @@ abstract class JCckDevField
 			$field->{$fieldname.'2'}	=	substr( $fieldname, $cut + 1, -1 );			
 		} else {
 			$field->{$fieldname.'2'}	=	$field->$fieldname;
+		}
+	}
+
+	// updateValue
+	public static function updateValue( $context, $name, $value, &$fields = array(), &$config = array() )
+	{
+		$event	=	'';
+		$pk		=	0;
+
+		if ( is_array( $context ) ) {
+			$event	=	$context[0];
+			$pk		=	$context[1];
+		} elseif ( is_numeric( $context ) ) {
+			$event	=	'afterStore';
+			$pk		=	$context;
+		} else {
+			$event	=	$context;
+
+			if ( isset( $config['pk'] ) && $config['pk'] ) {
+				$pk	=	$config['pk'];
+			}
+		}
+
+		if ( isset( $fields[$name] ) ) {
+			$fields[$name]->value	=	$value;
+
+			$query	=	'SELECT storage, storage_table, storage_field'
+					.	' FROM #__cck_core_fields'
+					.	' WHERE name = "'.$name.'"'
+					;
+			$field	=	JCckDatabase::loadObject( $query );
+
+			if ( is_object( $field ) && $field->storage == 'standard' && $field->storage_table && $field->storage_field ) {
+				if ( isset( $config['storages'] ) ) {
+					$config['storages'][$field->storage_table][$field->storage_field]	=	$value;
+				}
+
+				if ( $event == 'afterStore' && $pk ) {
+					JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.$value.'" WHERE id = '.(int)$pk );
+				}
+			}
 		}
 	}
 }

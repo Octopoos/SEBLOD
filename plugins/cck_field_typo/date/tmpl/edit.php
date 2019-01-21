@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'typo', $this->item );
 
-$formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date Format 03=d m Y||Date Format 04=m d y||Date Format 05=m d Y||Date Format 06=m/Y||Date Format 07=M Y||Date Format 08=F Y||Date Format 09=F d, Y||Date Format 10=d F Y||Date Format 11=l, F d, Y||Date Format 12=l, d F Y';
+$formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date Format 03=d m Y||Date Format 04=m d y||Date Format 05=m d Y||Date Format 06=m/Y||Date Format 07=M Y||Date Format 08=F Y||Date Format 09=F d, Y||Date Format 10=d F Y||Date Format 11=l, F d, Y||Date Format 12=l, d F Y||Use JText=optgroup||DATE_FORMAT_LC=DATE_FORMAT_LC||DATE_FORMAT_LC1=DATE_FORMAT_LC1||DATE_FORMAT_LC2=DATE_FORMAT_LC2||DATE_FORMAT_LC3=DATE_FORMAT_LC3||DATE_FORMAT_LC4=DATE_FORMAT_LC4||DATE_FORMAT_JS1=DATE_FORMAT_JS1||DATE_FORMAT_CUSTOM=DATE_FORMAT_CUSTOM';
 ?>
 
 <div class="seblod">
@@ -28,6 +28,7 @@ $formats	=	'Presets=optgroup||Date Format 01=Y-m-d||Date Format 02=d m y||Date F
 								  'options'=>$formats ) );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Unit', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Day=0||Hour=1||Minute=2', 'storage_field'=>'unit' ) );
 		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Apply Time Zone', 'defaultvalue'=>'1', 'storage_field'=>'timezone' ) );
+		echo JCckDev::renderForm( 'core_languages', '', $config, array( 'label'=>'Language', 'selectlabel'=>'Inherited', 'storage_field'=>'language' ) );
         ?>
     </ul>
 </div>

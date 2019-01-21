@@ -2,15 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: user.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-// CCK_User
+// CCK_User (deprecated)
 class CCK_User
 {	
 	// getIP
@@ -70,10 +70,10 @@ class CCK_User
 		
 		// Profile
 		if ( $user->id && $profile ) {
-			$text	=	'';	//CCK_User::getProfile( $user->id );
+			$text	=	'';	// self::getProfile( $user->id );
 			
 			if ( $profile ) {
-				$regex	=	CCK_Content::getRegex();
+				$regex	=	'#::(.*?)::(.*?)::/(.*?)::#s';
 				preg_match_all( $regex, $text, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $key => $val ) {
@@ -166,7 +166,7 @@ class CCK_User
 	// setValue
 	public static function setValue( $id, $fieldname, $value, $old_value = '' )
 	{
-		$profileId	=	CCK_User::getProfileId( $id );
+		$profileId	=	self::getProfileId( $id );
 		
 		if ( ! CCK_Article::setValue( $profileId, $fieldname, $value, $old_value ) ) {
 			return false;
@@ -178,7 +178,7 @@ class CCK_User
 	// setValues
 	public static function setValues( $id, $fieldnames, $values, $old_values = '' )
 	{
-		$profileId	=	CCK_User::getProfileId( $id );
+		$profileId	=	self::getProfileId( $id );
 		
 		if ( ! ARTICLE_setValues( $profileId, $fieldnames, $values, $old_values ) ) {
 			return false;

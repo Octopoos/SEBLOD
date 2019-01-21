@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -31,7 +31,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	// onCCK_FieldConstruct_SearchContent
 	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['markup']		=	NULL;
+		$data['markup']		=	null;
 
 		parent::onCCK_FieldConstruct_SearchContent( $field, $style, $data, $config );
 	}
@@ -39,12 +39,12 @@ class plgCCK_FieldDiv extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['label']		=	NULL;
-		$data['live']		=	NULL;
-		$data['match_mode']	=	NULL;
-		$data['markup']		=	NULL;
-		$data['validation']	=	NULL;
-		$data['variation']	=	NULL;
+		$data['label']		=	null;
+		$data['live']		=	null;
+		$data['match_mode']	=	null;
+		$data['markup']		=	null;
+		$data['validation']	=	null;
+		$data['variation']	=	null;
 
 		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
@@ -52,7 +52,7 @@ class plgCCK_FieldDiv extends JCckPluginField
 	// onCCK_FieldConstruct_TypeContent
 	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['markup']		=	NULL;
+		$data['markup']		=	null;
 
 		parent::onCCK_FieldConstruct_TypeContent( $field, $style, $data, $config );
 	}
@@ -60,12 +60,12 @@ class plgCCK_FieldDiv extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['computation']	=	NULL;
-		$data['label']			=	NULL;
-		$data['live']			=	NULL;
-		$data['markup']			=	NULL;
-		$data['validation']		=	NULL;
-		$data['variation']		=	NULL;
+		$data['computation']	=	null;
+		$data['label']			=	null;
+		$data['live']			=	null;
+		$data['markup']			=	null;
+		$data['validation']		=	null;
+		$data['variation']		=	null;
 		
 		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}
@@ -81,21 +81,19 @@ class plgCCK_FieldDiv extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Init
-		$html	=	'';
+		$class	=	$field->css.$field->markup_class;
+		$class	=	$class ? ' class="'.trim( $class ).'"' : '';
 		
 		// Prepare
 		if ( $field->bool == -1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'<div'.$attr.'></div>';
 		} elseif ( $field->bool == 2 ) {
 			$html	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'</div><div'.$attr.'>';
 		} else {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$html	=	'<div'.$attr.'>';
 		}
@@ -121,20 +119,19 @@ class plgCCK_FieldDiv extends JCckPluginField
 		} else {
 			$id		=	$field->name;
 		}
-		
+		$class	=	$field->css.$field->markup_class;
+		$class	=	$class ? ' class="'.trim( $class ).'"' : '';
+
 		// Prepare
 		if ( $field->bool == -1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'<div'.$attr.'></div>';
 		} elseif ( $field->bool == 2 ) {
 			$form	=	'</div>';
 		} elseif ( $field->bool == 1 ) {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'</div><div'.$attr.'>';
 		} else {
-			$class	=	( $field->markup_class ) ? ' class="'.trim( $field->markup_class ).'"' : '';
 			$attr	=	$class.( ( $field->attributes ) ? ' '.$field->attributes : '' );
 			$form	=	'<div'.$attr.'>';
 		}

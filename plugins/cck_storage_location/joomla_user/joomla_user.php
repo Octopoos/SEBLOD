@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: joomla_user.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,6 +16,7 @@ JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_user';
+	protected static $type_alias	=	'User';
 	protected static $table			=	'#__users';
 	protected static $table_object	=	array( 'User', 'JTable' );
 	protected static $key			=	'id';
@@ -23,6 +24,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'id';
 	protected static $author_object	=	'';
+	protected static $bridge_object	=	'joomla_article';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'registerDate';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -35,6 +38,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'onUserAfterDelete',
+											'afterSave'=>'',
+											'beforeDelete'=>'onUserBeforeDelete',
+											'beforeSave'=>''
+										);
 	protected static $ordering		=	array( 'alpha'=>'name ASC' );
 	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
@@ -84,24 +93,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			}
 		}
 	}
-	
-	// onCCK_Storage_LocationPrepareDelete
-	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
-	{
-		if ( self::$type != $field->storage_location ) {
-			return;
-		}
-		
-		// Init
-		$table	=	$field->storage_table;
-		
-		// Set
-		if ( $table == self::$table ) {
-			$storage	=	self::_getTable( $pk );
-		} else {
-			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
-		}
-	}
 
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
@@ -114,7 +105,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$table	=	$field->storage_table;
 		if ( !isset( $config['primary'] ) ) {
 			$config['primary']	=	self::$type;
-			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); // todo: move+improve
+			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); /* TODO#SEBLOD: move+improve */
 		}
 		
 		// Set
@@ -122,7 +113,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$storage			=	self::_getTable( $pk );
 			$storage->password	=	'';
 			$storage->password2	=	'';
-			$storage->groups	=	( count( $storage->groups ) == 1 ) ? key( $storage->groups ) : $storage->groups;
 			$config['asset']	=	'';
 			$config['asset_id']	=	0;
 			$config['author']	=	parent::g_getBridgeAuthor( 'joomla_article', $pk, self::$type );
@@ -148,7 +138,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				foreach ( $storages[self::$table] as $s ) {
 					$query			=	'SELECT a.id FROM #__usergroups AS a INNER JOIN #__user_usergroup_map AS b ON b.group_id = a.id WHERE b.user_id = '.$s->id;
 					$s->groups		=	JCckDatabase::loadAssocList( $query, 'id', 'id' );
-					$s->guest		=	NULL;
+					$s->guest		=	null;
 					$s->password	=	'';
 					$s->password2	=	'';
 				}
@@ -160,7 +150,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					foreach ( $storages[self::$table] as $s ) {
 						$query			=	'SELECT a.id FROM #__usergroups AS a INNER JOIN #__user_usergroup_map AS b ON b.group_id = a.id WHERE b.user_id = '.$s->id;
 						$s->groups		=	JCckDatabase::loadAssocList( $query, 'id', 'id' );
-						$s->guest		=	NULL;
+						$s->guest		=	null;
 						$s->password	=	'';
 						$s->password2	=	'';
 					}
@@ -262,7 +252,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$table		=	self::_getTable( $pk );	
 		
 		if ( !$table ) {
@@ -274,8 +264,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -287,7 +277,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
-		if ( !$table->delete( $pk ) ) {
+		if ( !$table->delete() ) {
 			return false;
 		}
 		$dispatcher->trigger( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
@@ -295,28 +285,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		return true;
 	}
 	
-	// onCCK_Storage_LocationStore
-	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
-	{
-		if ( self::$type != $type ) {
-			return;
-		}
-		
-		if ( ! @$config['storages'][self::$table]['_']->pk ) {
-			self::_core( $config['storages'][self::$table], $config, $pk, $this->params->toArray() );
-			$config['storages'][self::$table]['_']->pk	=	self::$pk;
-		}
-		if ( $data['_']->table != self::$table ) {
-			parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $this->params->toArray() );
-		}
-		
-		return self::$pk;
-	}
-	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Protected
 	
 	// _core
-	protected function _core( $data, &$config = array(), $pk = 0, $params = array() )
+	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		$app			=	JFactory::getApplication();
 		$parameters		=	JComponentHelper::getParams( 'com_users' );
@@ -326,7 +298,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 		}
 				
-		if ( $app->isSite() ) {	// Site
+		if ( $app->isClient( 'site' ) ) {	// Site
 			// Init
 			$table	=	self::_getTable_fromSite( $pk );
 			$isNew	=	( $pk > 0 ) ? false : true;
@@ -360,7 +332,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			}
 			
 			if ( $isNew ) {
-				self::_sendMails( $table, $activation, $params['auto_email'], $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
+				self::_sendMails( $table, $activation, self::getStaticParams()->get( 'auto_email', 1 ), $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
 			}
 			
 			self::$pk	=	$table->{self::$key};
@@ -402,7 +374,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		}
 		
 		$config['author']	=	$table->id;
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable
@@ -580,6 +552,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
 													$data['name'],
 													$data['sitename'],
+													$data['siteurl'],
 													$data['username'],
 													$data['password_clear']
 									);
@@ -598,11 +571,11 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( ( $activation < 2 ) && ( $admin_emails == 1 ) ) {
 			$subject	=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 			$body 		=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_NOTIFICATION_TO_ADMIN_BODY', $data['name'], $data['username'], $data['siteurl'] );
-			
 			$rows		=	JCckDatabase::loadObjectList( 'SELECT name, email, sendEmail FROM #__users WHERE sendEmail = 1' );
+			
 			if ( count( $rows ) ) {
 				foreach ( $rows as $row ) {
-					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $emailSubject, $body );
+					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
 					if ( $return !== true ) {
 						JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_REGISTRATION_ACTIVATION_NOTIFY_SEND_MAIL_FAILED' ), 'error' );
 						
@@ -616,25 +589,31 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = null )
 	{
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 		plgCCK_Storage_LocationJoomla_Article::buildRoute( $query, $segments, $config, $menuItem );
 	}
 	
-	// getRoute	//todo: make a parent::getBridgeRoute..
+	// getRoute	/* TODO#SEBLOD: make a parent::getBridgeRoute.. */
 	public static function getRoute( $item, $sef, $itemId, $config = array() )
 	{
 		if ( is_numeric( $item ) ) {
 			$core	=	JCckDatabase::loadObject( 'SELECT cck, pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$item );
+			
 			if ( !is_object( $core ) ) {
 				return '';
 			}
 			$pk				=	$core->pkb;
 			$config['type']	=	$core->cck;
 		} else {
+			if ( !is_object( $item ) ) {
+				return '';
+			}
+
 			$pk		=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 			$pk		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$pk );
+			
 			if ( !$pk ) {
 				return '';
 			}
@@ -644,11 +623,11 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		return plgCCK_Storage_LocationJoomla_Article::getRoute( $pk, $sef, $itemId, $config );
 	}
 	
-	// getRouteByStorage //todo: make a parent::getBridgeRoute.. + optimize ($storage->)
+	// getRouteByStorage /* TODO#SEBLOD: make a parent::getBridgeRoute.. + optimize ($storage->) */
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route );
+			return JRoute::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -676,7 +655,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return JRoute::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute
@@ -703,47 +682,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	public static function checkIn( $pk = 0 )
 	{
 		return true;
-	}
-	
-	// getId
-	public static function getId( $config )
-	{
-		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
-	
-	// getStaticProperties
-	public static function getStaticProperties( $properties )
-	{
-		static $autorized	=	array(
-									'access'=>'',
-									'author'=>'',
-									'author_object'=>'',
-									'created_at'=>'',
-									'context'=>'',
-									'contexts'=>'',
-									'custom'=>'',
-									'key'=>'',
-									'modified_at'=>'',
-									'ordering'=>'',
-									'parent'=>'',
-									'parent_object'=>'',
-									/*'routes'=>'',*/
-									'status'=>'',
-									'table'=>'',
-									'table_object'=>'',
-									'to_route'=>''
-								);
-		
-		if ( count( $properties ) ) {
-			foreach ( $properties as $i=>$p ) {
-				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
-				}
-				unset( $properties[$i] );
-			}
-		}
-		
-		return $properties;
 	}
 }
 ?>

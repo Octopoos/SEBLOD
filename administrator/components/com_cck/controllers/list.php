@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: list.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -23,28 +25,18 @@ class CCKControllerList extends JControllerAdmin
 		parent::__construct( $config );
 	}
 	
-	// getModel
-	public function getModel( $name = 'List', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
-	}
-	
 	// delete
 	public function delete()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	JFactory::getApplication();
 		$model	=	$this->getModel();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $cid );
+		$cid	=	ArrayHelper::toInteger( $cid );
 		
 		if ( $nb = $model->delete( $cid ) ) {
-			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); // todo: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb );
+			$msg		=	JText::_( 'COM_CCK_SUCCESSFULLY_DELETED' ); /* TODO#SEBLOD: JText::plural( 'COM_CCK_N_SUCCESSFULLY_DELETED', $nb ); */
 			$msgType	=	'message';
 		} else {
 			$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
@@ -57,7 +49,9 @@ class CCKControllerList extends JControllerAdmin
 	// export
 	public function export()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		if ( !JSession::checkToken( 'get' ) ) {
+			JSession::checkToken( 'post' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -67,9 +61,7 @@ class CCKControllerList extends JControllerAdmin
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
@@ -88,10 +80,18 @@ class CCKControllerList extends JControllerAdmin
 		}
 	}
 
+	// getModel
+	public function getModel( $name = 'List', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
+	}
+
 	// process
 	public function process()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		if ( !JSession::checkToken( 'get' ) ) {
+			JSession::checkToken( 'post' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -101,9 +101,7 @@ class CCKControllerList extends JControllerAdmin
 		$app		=	JFactory::getApplication();
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_id	=	$app->input->getInt( 'tid', 0 );
-		
-		jimport( 'joomla.utilities.arrayhelper' );
-		JArrayHelper::toInteger( $ids );
+		$ids		=	ArrayHelper::toInteger( $ids );
 		
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
@@ -112,7 +110,17 @@ class CCKControllerList extends JControllerAdmin
 		
 		if ( $file = $model->prepareProcess( $params, $task_id, $ids ) ) {
 			if ( $output > 0 ) {
-				$this->setRedirect( $this->_getReturnPage(), JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' ), 'message' );
+				if ( isset( $config['message'] ) && $config['message'] != '' ) {
+					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
+				} else {
+					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+				}
+				if ( isset( $config['message_style'] ) && $config['message_style'] != '' ) {
+					$msgType	=	$config['message_style'];
+				} else {
+					$msgType	=	'message';
+				}
+				$this->setRedirect( $this->_getReturnPage(), $msg, $msgType );
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );

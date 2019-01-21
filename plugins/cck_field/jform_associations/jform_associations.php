@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -69,10 +69,10 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		}
 		
 		// Prepare
-		$assoc	=	JCckDevHelper::hasLanguageAssociations();
 		$form	=	'';
-		
-		if ( $assoc && $config['pk'] ) {
+
+		if ( JCckDevHelper::hasLanguageAssociations() && $config['pk']
+		&& ( !$config['copyfrom_id'] || ( $config['copyfrom_id'] && JFactory::getApplication()->input->get( 'translate' ) ) ) ) {
 			if ( isset( $config['base']->location ) && $config['base']->location ) {
 				$location	=	$config['base']->location;
 			} else {

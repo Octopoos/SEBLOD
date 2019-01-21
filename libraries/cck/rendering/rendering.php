@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: rendering.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -164,14 +164,14 @@ class CCK_Rendering
 		$this->name			=	$me->template;
 		$this->template		=	$me->template;
 		$this->type			=	$me->cck_type;
-		$this->type_infos	=	NULL;
-		$this->location		=	( $app->isAdmin() ) ? 'admin' : 'site';
+		$this->type_infos	=	null;
+		$this->location		=	( $app->isClient( 'administrator' ) ) ? 'admin' : 'site';
 		$this->theme		=	$me->theme;
 		
 		$this->infinite		=	$me->infinite;
 		$this->params		=	$me->cck_params;
 		$this->path			=	$me->cck_path;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->positions	=	$me->positions;
 		$this->positions2	=	array();
 		$this->positions_m	=	$me->positions_more;
@@ -185,9 +185,9 @@ class CCK_Rendering
 
 		// Nested Lists.. yeah!
 		if ( isset( $me->list[$idx] ) ) {
-			$this->list			=	$me->list[$idx];
+			$this->list		=	$me->list[$idx];
 		} elseif ( isset( $me->list ) ) {
-			$this->list			=	$me->list;
+			$this->list		=	$me->list;
 		}
 
 		// Additional parameters (renderItem)
@@ -205,7 +205,7 @@ class CCK_Rendering
 		}
 		
 		if ( ! @$this->params['variation_default'] ) {
-			if ( $app->isAdmin() ) {
+			if ( $app->isClient( 'administrator' ) ) {
 				$this->params['variation_default']	=	'seb_css3b';
 			} else {
 				$this->params['variation_default']	=	JCck::getConfig_Param( ( $this->mode == 'form' ? 'site_variation_form' : 'site_variation' ), 'seb_css3' );
@@ -238,17 +238,17 @@ class CCK_Rendering
 			$css	=	$css * -1;
 		}
 		if ( $base ) {
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.css' );
+			$doc->addStyleSheet( $this->base.'/media/cck/css/cck.css' );
 			if ( $this->responsive ) {
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.responsive.css' );
+				$doc->addStyleSheet( $this->base.'/media/cck/css/cck.responsive.css' );
 			}
 		}
 		if ( $css == 1 || ( $css == 2 && $this->mode == 'content' ) || ( $css == 3 && $this->mode == 'form' ) ) {
 			if ( $this->client != 'list' ) {
 				if ( $this->isFile( $this->path.'/css/'.$this->client.'.css' ) ) {
-					$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->name. '/css/'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/templates/'.$this->name. '/css/'.$this->client.'.css' );
 				} else {
-					$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$this->client.'.css' );
+					$doc->addStyleSheet( $this->base.'/media/cck/css/cck.'.$this->client.'.css' );
 				}
 			}
 		}
@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.calculation-3.0.0.min.js' );
+			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.10.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';
@@ -352,6 +352,16 @@ class CCK_Rendering
 					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
 					$sepD		=	',';
 					$sepT		=	'.';
+				} elseif ( $format == '1234567.89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|.\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9.\-]/g, "")';
+					$sepD		=	',';
+					$sepT		=	'';
+				} elseif ( $format == '1234567,89' ) {
+					$search		=	'/(-?\$?)(\d+(\d{3})*(,\d{1,})?|,\d{1,})/g';
+					$replace	=	'v.replace(/[^0-9,\-]/g, "").replace(/,/g, ".")';
+					$sepD		=	',';
+					$sepT		=	'';
 				}
 				$formatNumber	=	JCck::getConfig_Param( 'computation_format_out', 0 ) ? 'formatNumber:1, ' : '';
 				$doc->addScriptDeclaration( 'jQuery.Calculation.setDefaults({ '.$formatNumber.'sepDecimals:"'.$sepD.'", sepThousands:"'.$sepT.'", reNumbers:'.$search.', cleanseNumber:function (v){ return '.$replace.'; } });' );
@@ -485,7 +495,9 @@ class CCK_Rendering
 			$label	=	'<label>'.$label.'</label>';
 		} else {
 			if ( $suffix ) {
-				$label	.=	'<span class="star"> '.$suffix.'</span>';
+				if ( $label != '&nbsp;' ) {
+					$label	.=	'<span class="star"> '.$suffix.'</span>';
+				}
 			}
 			if ( $label ) {
 				$label	=	'<label for="'.$this->me[$fieldname]->name.'">'.$label.'</label>';
@@ -526,7 +538,7 @@ class CCK_Rendering
 	}
 	
 	// renderField
-	public function renderField( $fieldname, $options = NULL )
+	public function renderField( $fieldname, $options = null )
 	{
 		$field		=	$this->get( $fieldname );
 		$html		=	'';
@@ -602,6 +614,18 @@ class CCK_Rendering
 		return $html;
 	}
 	
+	// retrieveValue
+	public function retrieveValue( $fieldname )
+	{
+		$field	=	$this->get( $fieldname );
+		
+		if ( !$field->state ) {
+			return '';
+		}
+		
+		return $field->value;
+	}
+	
 	// setComputationRules
 	public function setComputationRules( &$field )
 	{
@@ -654,12 +678,14 @@ class CCK_Rendering
 	// setConditionalStates
 	public function setConditionalStates( &$field )
 	{	
+		$name	=	isset( $field->name2 ) ? $field->name2 : $field->name;
+
 		if ( $field->markup == 'none' ) {
 			$field->conditional_options	=	str_replace( array( ' #form#', '#form#' ), '', $field->conditional_options );
-			$selector					=	$field->name;
+			$selector					=	$name;
 		} else {
-			$field->conditional_options	=	str_replace( '#form#', '#'.$field->name, $field->conditional_options );
-			$selector					=	$this->id.'_'.$field->name;
+			$field->conditional_options	=	str_replace( '#form#', '#'.$name, $field->conditional_options );
+			$selector					=	$this->id.'_'.$name;
 		}
 		$this->addJS( '$("#'.$selector.'").conditionalStates('.$field->conditional_options.');' );
 	}
@@ -669,7 +695,7 @@ class CCK_Rendering
 	// getItem
 	public function getItem( $pk )
 	{
-		return ( isset( $this->list[$pk] ) ) ? $this->list[$pk] : NULL;
+		return ( isset( $this->list[$pk] ) ) ? $this->list[$pk] : null;
 	}	
 	
 	// getItems
@@ -775,7 +801,7 @@ class CCK_Rendering
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	NULL;
+			$options	=	null;
 		}
 		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : (( $this->doDebug() ) ? $position : '' );
@@ -858,7 +884,7 @@ class CCK_Rendering
 					;
 		}
 		if ( $variation ) {
-			$legend		=	'';	//Todo
+			$legend		=	'';	/* TODO#SEBLOD: */
 			$options	=	new JRegistry;
 			$html		=	$this->renderVariation( $variation, $legend, $html, $options, $position.'_line', '', false );
 		}
@@ -903,7 +929,14 @@ class CCK_Rendering
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				if ( !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
+					$legend	=	trim( $legend );
+					$key	=	'COM_CCK_' . str_replace( ' ', '_', $legend );
+
+					if ( JFactory::getLanguage()->hasKey( $key ) ) {
+						$legend	=	JText::_( $key );
+					}
+				}
 			}
 			if ( is_object( $options ) ) {
 				if ( strpos( $position, '_line' ) !== false ) {
@@ -978,13 +1011,30 @@ class CCK_Rendering
 		return $content;
 	}
 
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Style
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Style & Template
 
 	// getStyleParam
 	public function getStyleParam( $param = '', $default = '' )
 	{		
 		if ( isset( $this->params[$param] ) ) {
 			return $this->params[$param];
+		} else {
+			return $default;
+		}
+	}
+
+	// getTemplateParam
+	public function getTemplateParam( $param = '', $default = '' )
+	{		
+		static $templates = array();
+
+		if ( !isset( $templates[$this->template] ) ) {
+			$templates[$this->template]	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_templates WHERE name = "'.$this->template.'"' );
+			$templates[$this->template]	=	( $templates[$this->template] != '' ) ? json_decode( $templates[$this->template], true ) : array();
+		}
+
+		if ( isset( $templates[$this->template][$param] ) ) {
+			return $templates[$this->template][$param];
 		} else {
 			return $default;
 		}
@@ -1010,13 +1060,14 @@ class CCK_Rendering
 		if ( $attr != '' ) {
 			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
 				$matches	=	'';
-				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				$search		=	'#\$cck\->(get|retrieve)([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
 				preg_match_all( $search, $attr, $matches );
 
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[2] as $k=>$fieldname ) {
-						$target		=	$matches[1][$k];
-						$get		=	'get'.$target;
+				if ( count( $matches[2] ) ) {
+					foreach ( $matches[3] as $k=>$fieldname ) {
+						$target		=	$matches[2][$k];
+						$method		=	( $matches[1][$k] == 'retrieve' ) ? $matches[1][$k] : 'get';
+						$get		=	$method.$target;
 						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}
@@ -1035,7 +1086,7 @@ class CCK_Rendering
 			$this->browser->name	=	$browser->getBrowser();
 			$this->browser->agent	=	$browser->getAgentString();
 			$this->browser->version	=	$browser->getVersion();
-			//todo: process to get the right info from agent...!
+			/* TODO#SEBLOD: process to get the right info from agent...! */
 		}
 		
 		return @$this->browser->$property;

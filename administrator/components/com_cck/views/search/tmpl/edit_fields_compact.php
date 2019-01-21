@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit_fields_compact.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,12 +13,7 @@ defined( '_JEXEC' ) or die;
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
-
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">

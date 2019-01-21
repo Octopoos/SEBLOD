@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -57,17 +57,14 @@ class plgCCK_FieldGroup extends JCckPluginField
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
-		/*
-		if ( !$field->state ) {
+		if ( !$field->state ) { /* TODO#SEBLOD: Support for "onBeforeRender" restrictions may be implemented later. */
 			$field->value	=	'';
 			return;
 		}
-		// TODO: SEBLOD 3.7 while checking for all Restriction plug-in behaviors..
-		*/
-
+	
 		// Prepare
 		$name		=	$field->name;
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		$xn			=	1;
 		$content	=	array();
@@ -81,19 +78,20 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$table				=	$f->storage_table;
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
 						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 					}
-					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					//					
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
-					$target	=	$content[$f_name]->typo_target;
+					
+					$target	=	( isset( $content[$f_name]->typo_target ) ) ? $content[$f_name]->typo_target : 'value';
 					if ( $content[$f_name]->link != '' ) {
 						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$content[$f_name], &$config ) );
 						if ( $content[$f_name]->link && !@$content[$f_name]->linked ) {
 							JCckPluginLink::g_setHtml( $content[$f_name], $target );
 						}
 					}
-					if ( @$content[$f_name]->typo && $content[$f_name]->$target != '' && $config['doTypo'] ) {
+					if ( @$content[$f_name]->typo && ( $content[$f_name]->$target != '' || $content[$f_name]->typo_label == -2 ) ) {
 						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$content[$f_name], $content[$f_name]->typo_target, &$config ) );
 					} else {
 						$content[$f_name]->typo	=	'';
@@ -115,6 +113,12 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
+
+		if ( !$field->state ) { /* TODO#SEBLOD: Support for "onBeforeRender" restrictions may be implemented later. */
+			$field->form	=	'';
+			$field->value	=	'';
+			return;
+		}
 		
 		// Init
 		if ( count( $inherit ) ) {
@@ -126,10 +130,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		// Prepare
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
 		$xn			=	( $value ) ? $value : $field->rows;
 		$form		=	array();
+
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
 			foreach ( $fields as $f ) {
 				if ( is_object( $f ) ) {
@@ -139,16 +144,22 @@ class plgCCK_FieldGroup extends JCckPluginField
 						$table	=	$f->storage_table;
 						if ( $table && ! isset( $config['storages'][$table] ) ) {
 							$config['storages'][$table]	=	'';
-							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 						}
 						$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					} elseif ( $f->live ) {
 						$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
+					} else {
+						$f_value				=	$f->live_value;
 					}
 					$inherit					=	array();
 					$clone						=	clone $f;
+
+					if ( $field->variation != '' && $clone->variation == '' ) {
+						$clone->variation		=	$field->variation;
+					}
 					$results					=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
-					$form[$f_name]				=	$results[0];
+					$form[$f_name]				=	@$results[0];
 					@$form[$f_name]->name		=	$f->name;
 					$config['fields'][$f->name]	=	$form[$f_name];
 				}
@@ -184,7 +195,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		// Init
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$data		=	$config['post'];
 		$value		=	'';
 		
@@ -194,13 +205,23 @@ class plgCCK_FieldGroup extends JCckPluginField
 			foreach ( $fields as $f ) {
 				$name		=	$f->name;
 				$f->state	=	'';
+				
+				// Restriction
+				if ( isset( $f->restriction ) && $f->restriction ) {
+					$f->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$f->restriction, 'onCCK_Field_RestrictionPrepareStore', array( &$f, &$config ) );
+					
+					if ( !$f->authorised ) {
+						continue;
+					}
+				}
+
 				if ( ( $f->variation == 'hidden' || $f->variation == 'disabled' || $f->variation == 'value' ) && ! $f->live && $f->live_value != '' ) {
 					$val	=	$f->live_value;
 				} else {
 					if ( isset( $data[$name] ) ) {
 						$val		=	$data[$name];
 					} else {
-						$val		=	NULL;
+						$val		=	null;
 						$f->state	=	'disabled';
 					}
 				}
@@ -312,11 +333,22 @@ class plgCCK_FieldGroup extends JCckPluginField
 
 				if ( $elem->markup == 'none' ) {
 					if ( $elem->label != '' ) {
-						$html	.=	'<label for="'.$elem->name.'">'.$elem->label.'</label>';
+						$suffix	=	'';
+						if ( $elem->label != '&nbsp;' ) {
+							$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						}
+						$html	.=	'<label for="'.$elem->name.'">'.$elem->label.$suffix.'</label>';
 					}
 				} else {
 					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">';
-					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.'</label></div>';
+					
+					if ( $elem->label != '' ) {
+						$suffix	=	'';
+						if ( $elem->label != '&nbsp;' ) {
+							$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+						}
+						$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.$suffix.'</label></div>';
+					}
 					$html	.=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">';
 				}
 			}
@@ -393,7 +425,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		if ( $js ) {
-			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
+			} else {
+				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+			}
 		}
 		
 		return $html;
@@ -408,20 +444,28 @@ class plgCCK_FieldGroup extends JCckPluginField
 		
 		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
 		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
-				.	' AND a.type != "form_action"'
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';
 		
+		if ( $client == 'intro' || $client == 'content' ) {
+			$cc	=	'';
+		} else {
+			$cc	=	'c.required, c.required_alert, ';
+		}
 		$query	= ' SELECT DISTINCT a.*, c.client,'
-		        . 	' c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.link, c.link_options, c.typo, c.typo_label, c.typo_options, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
+		        . 	' c.label as label2, c.variation, c.variation_override, '.$cc.'c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.link, c.link_options, c.typo, c.typo_label, c.typo_options, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a'
 				.	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
 				.	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
 				.	$where
 				.	$order
 				;
-		$db->setQuery( $query );
-		$fields	=	$db->loadObjectList( 'name' ); //#
+		if ( $config['client'] == 'list' || $config['client'] == 'item' ) {
+			$fields	=	JCckDatabaseCache::loadObjectList( $query, 'name' );
+		} else {
+			$db->setQuery( $query );
+			$fields	=	$db->loadObjectList( 'name' ); //#
+		}
 		
 		if ( ! count( $fields ) ) {
 			return array();

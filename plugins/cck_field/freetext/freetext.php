@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -31,7 +31,17 @@ class plgCCK_FieldFreeText extends JCckPluginField
 			$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
 		}
 	}
-	
+
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		$data['live']		=	null;
+		$data['match_mode']	=	null;
+		$data['validation']	=	null;
+
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -46,6 +56,8 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		$value	=	$field->defaultvalue;
 		
 		// Prepare
+		$value	=	JCckDevHelper::replaceLive( $value );
+
 		if ( $field->bool8 ) {
 			$field->bool8	=	$config['doTranslation'];
 		}
@@ -91,7 +103,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 				$value	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
 			}
 		}
-		$form	=	htmlspecialchars_decode( $value );
+		$form	=	$value;
 		
 		// Set
 		if ( ! $field->variation ) {

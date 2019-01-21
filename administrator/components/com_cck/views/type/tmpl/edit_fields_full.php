@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit_fields_full.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,17 +27,12 @@ $data2      =   array(
 $from_view	=	( $this->item->master == 'content' ) ? ( ( $this->item->client == 'intro' ) ? 'CONTENT' : 'INTRO' ) : ( ( $this->item->client == 'admin' ) ? 'SITE_FORM' : 'ADMIN_FORM' );
 $clone		=	( $this->item->id ) ? JText::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', JText::_( 'COM_CCK_'.$from_view ) ) : '';
 $positions	=	array();
-
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
         <div class="seblod">
-            <div id="linkage_wrap"><?php echo JCckDev::getForm( $cck['core_linkage'], 1, $config ); ?></div>
+            <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );
@@ -45,7 +40,7 @@ if ( JCck::on() ) {
             echo '<ul class="sortable connected" id="sortable1" myid="1">';
 			foreach ( $this->positions as $pos ) {
 				if ( isset( $this->fields[$pos->name] ) ) {
-					$this->setPosition( $pos->name );
+					$this->setPosition( $pos->name, @$pos->title );
 					foreach ( $this->fields[$pos->name] as $field ) {
 						$type_field		=	'';
 						if ( isset( $this->type_fields[$field->id] ) ) {
@@ -55,11 +50,11 @@ if ( JCck::on() ) {
 						Helper_Workshop::displayField( $field, $type_field, $attr );
 					}
 				} else {
-					$positions[]	=	$pos->name;
+					$positions[] =   array( 'name'=>$pos->name, 'title'=>$pos->title );
 				}
 			}
 			foreach ( $positions as $pos ) {
-				$this->setPosition( $pos );
+				$this->setPosition( $pos['name'], $pos['title'] );
 			}
 			Helper_Workshop::displayPositionEnd( $this->positions_nb );
             echo '</ul>';

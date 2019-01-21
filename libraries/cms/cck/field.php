@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: field.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,7 +16,7 @@ class JCckField
 	protected static $instances	=	array();
 	protected $_config 			=	array();
 	protected $_name			=	'';
-	protected $_params 			=	NULL;
+	protected $_params 			=	null;
 	
 	// __construct
 	public function __construct( $name, $config )
@@ -75,7 +75,7 @@ class JCckField
 	// loadValue
 	public function loadValue( $value )
 	{
-		JDispatcher::getInstance()->trigger( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
+		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
 	}
 	
 	// render

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -39,7 +39,19 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
-		$field->value	=	$value;
+		// Init
+		$doTranslation				=	$config['doTranslation'];
+
+		// Prepare
+		$options2					=	JCckDev::fromJSON( $field->options2 );
+		$opts						=	self::_getOptionsList( $options2, $field, $config );
+		$config['doTranslation']	=	0;
+
+		// Set
+		$field->text				=	parent::g_getOptionText( $value, $field->options, '', $config );
+		$field->value				=	$value;
+		$field->typo_target			=	'text';
+		$config['doTranslation']	=	$doTranslation;
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -71,8 +83,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		// Prepare
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$opts		=	self::_getOptionsList( $options2, $field, $config );
-		
-		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class		=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}
@@ -82,10 +93,13 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
 		} else {
+			$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<select', '', '', $config );
 		}
 		$field->value	=	$value;
@@ -108,7 +122,6 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		
 		// Set
 		$field->match_value	=	$field->match_value ? $field->match_value : ',';
-		$field->value		=	$value;
 		
 		// Return
 		if ( $return === true ) {
@@ -129,14 +142,21 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		} else {
 			$name	=	$field->name;
 		}
+		$doTranslation	=	$config['doTranslation'];
+		$options2		=	JCckDev::fromJSON( $field->options2 );
+		$opts			=	self::_getOptionsList( $options2, $field, $config );
 		
 		// Validate
+		$config['doTranslation']	=	0;
+		$text						=	parent::g_getOptionText( $value, $field->options, '', $config );
+		$config['doTranslation']	=	$doTranslation;
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 		
 		// Set or Return
 		if ( $return === true ) {
 			return $value;
 		}
+		$field->text	=	$text;
 		$field->value	=	$value;
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );
 	}
@@ -146,7 +166,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
-		return parent::g_onCCK_FieldRenderContent( $field );
+		return parent::g_onCCK_FieldRenderContent( $field, 'text' );
 	}
 	
 	// onCCK_FieldRenderForm
@@ -158,9 +178,10 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
 	// _getOptionsList
-	protected static function _getOptionsList( $options2, $field, $config )
+	protected static function _getOptionsList( $options2, &$field, $config )
 	{
 		$opts		=	array();
+		$options	=	array();
 		
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
@@ -170,36 +191,54 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		}
 		if ( isset( $options2['first'] ) && $options2['first'] != '' ) {
 			if ( strpos( $options2['first'], '=' ) !== false ) {
-				$opt	=	explode( '=', $options2['first'] );
-				$opt[0]	=	trim( $opt[0] );
-				$opts[]	=	JHtml::_( 'select.option', $opt[1], JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) ), 'value', 'text' );
+				$opt		=	explode( '=', $options2['first'] );
+				$opt[0]		=	trim( $opt[0] );
+
+				if ( $opt[0] != '' ) {
+					if ( $config['doTranslation'] ) {
+						$opt[0]		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
+					}
+				}
+				$opts[]		=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
+				$options[]	=	$opt[0].'='.$opt[1];
 			} else {
-				$opts[]	=	JHtml::_( 'select.option', $options2['first'], $options2['first'], 'value', 'text' );
+				$opts[]		=	JHtml::_( 'select.option', $options2['first'], $options2['first'], 'value', 'text' );
+				$options[]	=	$options2['first'].'='.$options2['first'];
 			}
 		}
 		$val	=	( $options2['start'] ? $options2['start'] : 0 );
 		$step	=	( $options2['step'] ? $options2['step'] : 0 );
 		$limit 	=	( $options2['end'] ? $options2['end'] : 0 );
-		$math	=	isset( $options2['math'] ) ? $options2['math'] : NULL;
-		$force	=	( isset( $options2['force_digits'] ) && $options2['force_digits'] ) ? $options2['force_digits'] : 0;
+		$math	=	isset( $options2['math'] ) ? $options2['math'] : null;
+		
+		$force_digits	=	( isset( $options2['force_digits'] ) && $options2['force_digits'] ) ? $options2['force_digits'] : 0;
+		$force_decimals	=	( isset( $options2['force_decimals'] ) && $options2['force_decimals'] ) ? $options2['force_decimals'] : 0;
 		
 		if ( $step && $val || $step && $limit || $step && $val && $limit ) {
 			while ( 69 ) {
-				if ( $force ) {
-					$val	=	str_pad( $val, $force, '0' , STR_PAD_LEFT );
+				if ( $force_digits ) {
+					$val	=	str_pad( $val, $force_digits, '0' , STR_PAD_LEFT );
 				}
 				if ( $math == 0 && $val <= $limit  ) {
-					$opts[]	=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$val	=	$val + $step;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
+					$val		=	$val + $step;
 				} elseif ( $math == 1 && $val <= $limit  ) {
-					$opts[]	=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$val	=	$val * $step;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
+					$val		=	$val * $step;
 				} elseif ( $math == 2 && $val >= $limit  ) {
-					$opts[]	=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$val	=	$val - $step;
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
+					$val		=	$val - $step;
 				} elseif ( $math == 3 && $val > $limit  ) {
-					$opts[]	=	JHtml::_('select.option', $val, $val, 'value', 'text' );
-					$val	=	floor( $val / $step );
+					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
+					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$options[]	=	$output.'='.$output;
+					$val		=	floor( $val / $step );
 				} else {
 					break;
 				}
@@ -207,15 +246,52 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		}
 		if ( isset( $options2['last'] ) && $options2['last'] != '' ) {
 			if ( strpos( $options2['last'], '=' ) !== false ) {
-				$opt	=	explode( '=', $options2['last'] );
-				$opt[0]	=	trim( $opt[0] );
-				$opts[]	=	JHtml::_( 'select.option', $opt[1], JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) ), 'value', 'text' );
+				$opt		=	explode( '=', $options2['last'] );
+				$opt[0]		=	trim( $opt[0] );
+
+				if ( $opt[0] != '' ) {
+					if ( $config['doTranslation'] ) {
+						$opt[0]		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
+					}
+				}
+				$opts[]		=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
+				$options[]	=	$opt[0].'='.$opt[1];
 			} else {
-				$opts[]	=	JHtml::_( 'select.option', $options2['last'], $options2['last'], 'value', 'text' );
+				$opts[]		=	JHtml::_( 'select.option', $options2['last'], $options2['last'], 'value', 'text' );
+				$options[]	=	$options2['last'].'='.$options2['last'];
 			}
 		}
-		
+		$field->options	=	implode( '||', $options );
+
 		return $opts;
+	}
+
+	// _getOptionsListProperty
+	protected static function _getOptionsListProperty( $property, $field, $value, $config = array() )
+	{
+		$method		=	'get'.ucfirst( $property).'FromOptions';
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+		
+		/* tmp */
+		$jtext						=	$config['doTranslation'];
+		$config['doTranslation']	=	0;
+		/* tmp */
+		
+		self::_getOptionsList( $options2, $field, $config );
+		
+		$result				=	parent::$method( $field, $value, $config );
+
+		/* tmp */
+		$config['doTranslation']	=	$jtext;
+		/* tmp */
+
+		return $result;
+	}
+
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config = array() )
+	{
+		return self::_getOptionsListProperty( 'text', $field, $value, $config );
 	}
 
 	// isConvertible

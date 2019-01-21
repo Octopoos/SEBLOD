@@ -31,7 +31,7 @@ if ( !count( $groups ) ) {
 	return;
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-require_once JPATH_LIBRARIES.'/joomla/user/user.php';
+JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 
 JFactory::getApplication()->input->set( 'type', $type );
 

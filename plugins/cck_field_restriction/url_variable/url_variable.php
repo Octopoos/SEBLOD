@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -49,13 +49,8 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		}
 		
 		$restriction	=	parent::g_getRestriction( $field->restriction_options );
-		$trigger		=	$restriction->get( 'trigger' );
-
-		if ( $trigger == 'Itemid' || $trigger == 'tmpl' ) {
-			return self::_authorise( $restriction, $field, $config );
-		} else {
-			return true;
-		}
+		
+		return self::_authorise( $restriction, $field, $config );
 	}
 	
 	// _authorise
@@ -64,12 +59,17 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		$do					=	$restriction->get( 'do', 0 );
 		$state				=	0;
 
-		// --
 		$condition_field	=	$restriction->get( 'trigger' );
 		$condition_match	=	$restriction->get( 'match' );
 		$condition_values	=	$restriction->get( 'values' );
-
-		$variable			=	Jfactory::getApplication()->input->get( $condition_field, null, null );
+		$variable			=	JFactory::getApplication()->input->get( $condition_field, null, null );
+		
+		// Keep Context
+		if ( $config['client'] == 'site' || $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
+			if ( !isset( $config['context'][$condition_field] ) ) {
+				$config['context'][$condition_field]	=	(string)$variable;
+			}
+		}
 
 		if ( $condition_match == 'isFilled' ) {
 			if ( is_array( $variable ) ) {
@@ -80,6 +80,17 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 					}
 				}
 			} elseif ( $variable != '' ) {
+				$state		=	1;
+			}
+		} elseif ( $condition_match == 'isNull' ) {
+			if ( is_array( $variable ) ) {
+				foreach ( $variable as $v ) {
+					if ( $v ) {
+						$state	=	1;
+						break;
+					}
+				}
+			} elseif ( $variable ) {
 				$state		=	1;
 			}
 		} elseif ( $condition_match == 'isEqual' ) {
@@ -94,12 +105,11 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 						if ( $variable == $v ) {
 							$state		=	1;
 							break;
-						}  	
+						}
 					}
 				}	
 			}
 		}
-		// --
 
 		if ( $state ) {
 			$do		=	( $do ) ? false : true;

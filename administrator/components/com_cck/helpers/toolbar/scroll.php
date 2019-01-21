@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: scroll.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,7 +16,7 @@ class JButtonCckScroll extends JButton
 	protected $_name = 'CckScroll';
 	
 	// fetchButton
-	public function fetchButton( $type = 'CckScroll', $name = '', $text = '', $url = NULL )
+	public function fetchButton( $type = 'CckScroll', $name = '', $text = '', $url = null )
 	{
 		$class	=	$this->fetchIconClass( $name );
 		$doTask	=	$this->_getCommand( $url );

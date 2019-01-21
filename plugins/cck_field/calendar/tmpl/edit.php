@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -50,23 +50,18 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 </div>
 
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-	$('#json_options2_time_pos').isVisibleWhen('json_options2_time','12,24',false);
-	$('#json_options2_default_hour').isVisibleWhen('json_options2_time','0');
-	$('#json_options2_storage_format').live('change', function() {
-		if ($j(this).val() == 1)  {
-			/*
-			$('#storage_alter_type').val('TIMESTAMP');
-			if($('#storage_alter_type').val()!='') {
+	jQuery(document).ready(function($) {
+		$('#json_options2_time_pos').isVisibleWhen('json_options2_time','12,24',false);
+		$('#json_options2_default_hour').isVisibleWhen('json_options2_time','0');
+		$('#json_options2_storage_format').on('change', function() {
+			if ($(this).val() == 1)  {
+				$('#storage_alter_type').val('INT(11)');
 				$('#storage_alter0').click();
+
 			} else {
-				$('#storage_alter_type').val('VARCHAR(255)');
+				$('#storage_alter_type').val('DATETIME');
+				$('#storage_alter0').click();
 			}
-			*/
-		} else {
-			$('#storage_alter_type').val('DATETIME');
-			$('#storage_alter0').click();
-		}
+		});
 	});
-});
 </script>

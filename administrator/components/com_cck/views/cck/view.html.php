@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -22,9 +22,6 @@ class CCKViewCck extends JCckBaseLegacyView
     // prepareSidebar
     protected function prepareSidebar()
     {
-        if ( !JCck::on() ) {
-            return;
-        }
         $buttons        =   array();
         if ( JCck::getUIX() == 'compact' ) {
             $core       =   array(
@@ -33,20 +30,21 @@ class CCKViewCck extends JCckBaseLegacyView
         } else {
             $core       =   array(
                                 array( 'val'=>'0', 'pre'=>'', 'key'=>'COM_CCK_', 'img'=>'cck-application' ),
-                                array( 'val'=>'2', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-form' ),
-                                array( 'val'=>'3', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-plugin' ),
-                                array( 'val'=>'4', 'pre'=>'-&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-search' ),
-                                array( 'val'=>'1', 'pre'=>'-&nbsp;', 'key'=>'', 'img'=>'cck-template' ),
+                                array( 'val'=>'2', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-form' ),
+                                array( 'val'=>'3', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'img'=>'cck-plugin' ),
+                                array( 'val'=>'4', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'img'=>'cck-search' ),
+                                array( 'val'=>'1', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'img'=>'cck-template' ),
                                 array( 'val'=>'5', 'pre'=>'', 'key'=>'', 'img'=>'cck-multisite' )
                             );
         }
         $components     =   JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element'
                                                         . ' FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
                                                         . ' WHERE a.link LIKE "index.php?option=com_cck\_%"'
-                                                        . ' AND a.link NOT IN ("index.php?option=com_cck_ecommerce&view=listen","index.php?option=com_cck_toolbox&view=processing","index.php?option=com_cck_webservices&view=api")'
+                                                        . ' AND a.link NOT LIKE "%view=%"'
                                                         . ' AND b.enabled = 1'
                                                         . ' ORDER BY a.title ASC' );
         $groupedButtons =   array();
+        $lang           =   JFactory::getLanguage();
         $more           =   array(
                                 'ADDON'=>16,
                                 'PLUGIN_FIELD'=>19,
@@ -65,7 +63,7 @@ class CCKViewCck extends JCckBaseLegacyView
         foreach ( $core as $k=>$v ) {
             $buttons[]  =   array(
                                 'access'=>array( 'core.manage', 'com_cck' ),
-                                'group' =>'COM_CCK_CORE',
+                                'group' =>'COM_CCK_SEBLOD_CORE',
                                 'image' =>$v['img'],
                                 'link'  =>JRoute::_( constant( '_C'.$v['val'].'_LINK' ) ),
                                 'target'=>'_self',
@@ -73,13 +71,15 @@ class CCKViewCck extends JCckBaseLegacyView
                             );
         }
         foreach ( $components as $k=>$v ) {
+            $lang->load( $v->element.'.sys' );
+            
             $buttons[]  =   array(
                                 'access'=>array( 'core.manage', $v->element ),
                                 'group' =>'COM_CCK_SEBLOD_MORE',
                                 'image' =>'cck-addon',
                                 'link'  =>JRoute::_( $v->link ),
                                 'target'=>'_self',
-                                'text'  =>$v->title
+                                'text'  =>JText::_( $v->element )
                             );
         }
         foreach ( $more as $k=>$v ) {
@@ -87,7 +87,7 @@ class CCKViewCck extends JCckBaseLegacyView
                                 'access'=>array( 'core.manage', 'com_cck' ),
                                 'group' =>'COM_CCK_SEBLOD_STORE',
                                 'image' =>'download',
-                                'link'  =>JRoute::_( 'http://www.seblod.com/store/extensions?seb_item_category='.$v ),
+                                'link'  =>JRoute::_( 'https://www.seblod.com/store/extensions?seb_item_category='.$v ),
                                 'target'=>'_blank',
                                 'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
                             );
@@ -108,11 +108,8 @@ class CCKViewCck extends JCckBaseLegacyView
 		$bar	=	JToolBar::getInstance( 'toolbar' );
 		$canDo	=	Helper_Admin::getActions();
 		
-		if ( JCck::on() ) {
-			JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
-		} else {
-			JToolBarHelper::title( '&nbsp;', 'seblod.png' );
-		}
+		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		
 		if ( $canDo->get( 'core.admin' ) ) {
 			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}

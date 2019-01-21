@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: type.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'cck.joomla.application.component.controllerform' );
 
@@ -16,26 +18,46 @@ jimport( 'cck.joomla.application.component.controllerform' );
 class CCKControllerType extends CCK_ControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
+
+	// add
+	public function add()
+	{
+		$app	=	JFactory::getApplication();
+
+		// Parent Method
+		$result	=	parent::add();
+
+		if ( $result instanceof Exception ) {
+			return $result;
+		}
+		
+		// Additional Vars
+		$app->setUserState( CCK_COM.'.add.type.skeleton_id', $app->input->getString( 'skeleton_id', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_admin', $app->input->getString( 'tpl_a', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_site', $app->input->getString( 'tpl_s', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_content', $app->input->getString( 'tpl_c', '' ) );
+		$app->setUserState( CCK_COM.'.add.type.tpl_intro', $app->input->getString( 'tpl_i', '' ) );
+	}
 	
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
 		$app		=	JFactory::getApplication();
 		$user		=	JFactory::getUser();
-		$folderId	=	JArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
+		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
 		if ( $folderId ) {
-			// If Folder
+			// Folder Permissions
 			$allow	=	$user->authorise( 'core.create', $this->option.'.folder.'.$folderId );
 		}
 		
-		if ( $allow === null ) {
-			// Component Permissions
-			return parent::allowAdd( $data );
-		} else {
+		if ( $allow !== null ) {
 			return $allow;
 		}
+
+		// Component Permissions
+		return parent::allowAdd( $data );
 	}
 	
 	// allowEdit
@@ -52,29 +74,10 @@ class CCKControllerType extends CCK_ControllerForm
 		if ( $folderId ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit', $this->option.'.folder.'.$folderId );
-		} else {
-			// Component Permissions
-			return parent::allowEdit( $data, $key );
 		}
-	}
-	
-	// add
-	public function add()
-	{
-		$app	=	JFactory::getApplication();
 
-		// Parent Method
-		$result	=	parent::add();
-		if ( JError::isError( $result ) ) {
-			return $result;
-		}
-		
-		// Additional Vars
-		$app->setUserState( CCK_COM.'.add.type.skeleton_id', $app->input->getString( 'skeleton_id', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_admin', $app->input->getString( 'tpl_a', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_site', $app->input->getString( 'tpl_s', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_content', $app->input->getString( 'tpl_c', '' ) );
-		$app->setUserState( CCK_COM.'.add.type.tpl_intro', $app->input->getString( 'tpl_i', '' ) );
+		// Component Permissions
+		return parent::allowEdit( $data, $key );
 	}
 	
 	// edit
@@ -84,7 +87,8 @@ class CCKControllerType extends CCK_ControllerForm
 
 		// Parent Method
 		$result	=	parent::edit();
-		if ( JError::isError( $result ) ) {
+
+		if ( $result instanceof Exception ) {
 			return $result;
 		}
 		
@@ -93,7 +97,7 @@ class CCKControllerType extends CCK_ControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( CCKModelType &$model, $validData = array() )
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		

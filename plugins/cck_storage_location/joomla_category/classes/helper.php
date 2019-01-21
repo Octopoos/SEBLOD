@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -55,8 +55,8 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 					$form->setValue( $tag, $name, $association_id );
 				}
 			}
-			if ( $config['translate_id'] && isset( $config['translate'] ) ) {
-				$form->setValue( $config['translate'], $name, $config['translate_id'] );
+			if ( $config['copyfrom_id'] && isset( $config['translate'] ) ) {
+				$form->setValue( $config['translate'], $name, $config['copyfrom_id'] );
 			}
 		}
 		

@@ -9,7 +9,7 @@
 defined('JPATH_PLATFORM') or die;
 
 //Register the renderer class with the loader
-JLoader::register( 'CCK_DocumentRenderer', dirname(__FILE__).'/renderer.php' );
+JLoader::register( 'CCK_DocumentRenderer', __DIR__.'/renderer.php' );
 jimport('joomla.filter.filteroutput');
 
 // CCK_Document
@@ -75,7 +75,7 @@ class CCK_Document extends JObject
 
 		if (empty($instances[$signature])) {
 			$type	= preg_replace('/[^A-Z0-9_\.-]/i', '', $type);
-			$path	= dirname(__FILE__) . '/' . $type . '/' . $type.'.php';
+			$path	= __DIR__ . '/' . $type . '/' . $type.'.php';
 			$ntype	= null;
 
 			// Check if the document type exists
@@ -88,12 +88,12 @@ class CCK_Document extends JObject
 			// Determine the path and class
 			$class = 'CCK_Document'.$type;
 			if (!class_exists($class)) {
-				$path	= dirname(__FILE__) . '/' . $type . '/' . $type.'.php';
+				$path	= __DIR__ . '/' . $type . '/' . $type.'.php';
 				if (file_exists($path)) {
 					require_once $path;
 				}
 				else {
-					JError::raiseError(500, JText::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'));
+					throw new RuntimeException(JText::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'), 500);
 				}
 			}
 
@@ -171,13 +171,13 @@ class CCK_Document extends JObject
 		$class	= 'CCK_DocumentRenderer'.$type;
 
 		if (!class_exists($class)) {
-			$path = dirname(__FILE__) . '/' . $this->_type . '/renderer/' . $type.'.php';
+			$path = __DIR__ . '/' . $this->_type . '/renderer/' . $type.'.php';
 
 			if (file_exists($path)) {
 				require_once $path;
 			}
 			else {
-				JError::raiseError(500, JText::_('Unable to load renderer class'));
+				throw new RuntimeException('Unable to load renderer class', 500);
 			}
 		}
 
@@ -215,7 +215,7 @@ class CCK_Document extends JObject
 	}
 	
 	// finalize
-	function finalize( $mode, $name, $client, $positions, $positions_more, $infos, $pk = 0 )
+	public function finalize( $mode, $name, $client, $positions, $positions_more, $infos, $pk = 0 )
 	{
 		$this->cck_client		=	$client;
 		$this->cck_params		=	$infos['params'];

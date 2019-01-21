@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -44,7 +44,7 @@ class plgCCK_FieldJForm_Editors extends JCckPluginField
 	
 	// onCCK_FieldPrepareForm
 	public function onCCK_FieldPrepareForm( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
-	{		
+	{
 		if ( self::$type != $field->type ) {
 			return;
 		}
@@ -156,7 +156,7 @@ class plgCCK_FieldJForm_Editors extends JCckPluginField
 	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
-	{		
+	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 	

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: site.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCK_TableSite extends JTable
 {	
 	// __construct
-	function __construct( &$db )
+	public function __construct( &$db )
 	{
 		parent::__construct( '#__cck_core_sites', 'id', $db );
 	}
@@ -39,7 +39,7 @@ class CCK_TableSite extends JTable
 				$this->created_date		=	JFactory::getDate()->toSql();
 			}
 			if ( empty( $this->created_user_id ) ) {
-				$this->created_user_id	=	JFactory::getUser()->get( 'id' );
+				$this->created_user_id	=	JFactory::getUser()->id;
 			}
 		}
 
@@ -127,7 +127,7 @@ abstract class CCK_TableSiteHelper
 		$data['parent_id']	=	$parent_id;
 		$data['title']		=	$title;
 		
-		$table				=	JTable::getInstance( 'usergroup' );
+		$table				=	JTable::getInstance( 'Usergroup' );
 		$table->bind( $data );
 		$table->store();
 		
@@ -137,7 +137,7 @@ abstract class CCK_TableSiteHelper
 	// addViewLevel
 	public static function addViewLevel( $title, $groups = array(), &$next = 0 )
 	{
-		$table			=	JTable::getInstance( 'viewlevel' );
+		$table			=	JTable::getInstance( 'Viewlevel' );
 		$table->title	=	$title;
 		
 		if ( count( $groups ) ) {
@@ -161,7 +161,7 @@ abstract class CCK_TableSiteHelper
 	// getRootAsset
 	public static function getRootAsset()
 	{
-		$table	=	JTable::getInstance( 'asset' );
+		$table	=	JTable::getInstance( 'Asset' );
 		$table->load( 1 );
 		
 		$rules				=	new JAccessRules( $table->rules );
@@ -229,7 +229,7 @@ abstract class CCK_TableSiteHelper
 	// updateViewLevel
 	public static function updateViewLevel( $id, $group_id )
 	{
-		$table			=	JTable::getInstance( 'viewlevel' );
+		$table			=	JTable::getInstance( 'Viewlevel' );
 		$table->load( $id );
 		$table->rules	=	str_replace( ']', ','.$group_id.']', $table->rules );
 		$table->store();

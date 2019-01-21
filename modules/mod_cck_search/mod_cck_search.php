@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: mod_cck_search.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -25,15 +25,8 @@ $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(string)$params->get( 'menu_item', '' );
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
-}
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JUri::root( true ).'/media/cck' );
-}
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
-require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 
 $preconfig					=	array();
 $preconfig['action']		=	'';
@@ -57,13 +50,14 @@ if ( $itemId == '-1' ) {
 } elseif ( $itemId ) {
 	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
 }
+$limitstart			=	-1;
 $live				=	urldecode( $params->get( 'live' ) );
+$order_by			=	'';
 $target				=	$params->get( 'menu_item_search', 0 );
 $variation			=	$params->get( 'variation' );
-$limitstart			=	-1;
 
 jimport( 'cck.base.list.list' );
-include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
+include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
 // Set
 if ( !is_object( @$options ) ) {
@@ -72,6 +66,7 @@ if ( !is_object( @$options ) ) {
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
 $show_list_title	=	( $params->exists( 'show_list_title' ) ) ? $params->get( 'show_list_title' ) : '0';
+$tag_desc			=	$params->get( 'tag_list_desc', 'div' );
 if ( $show_list_title == '' ) {
 	$show_list_title	=	$options->get( 'show_list_title', '1' );
 	$tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
@@ -98,10 +93,20 @@ if ( $description != '' ) {
 				$fieldname		=	$matches[2][$k];
 				$target			=	strtolower( $v );
 				if ( count( @$doc->list ) ) {
-					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->{$target}, $description );
+					$description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->$target, $description );
 				} else {
 					$description	=	str_replace( $matches[0][$k], '', $description );
 				}
+			}
+		}
+	}
+	if ( $description != '' && strpos( $description, 'J(' ) !== false ) {
+		$matches	=	'';
+		$regex		=	'#J\((.*)\)#U';
+		preg_match_all( $regex, $description, $matches );
+		if ( count( $matches[1] ) ) {
+			foreach ( $matches[1] as $text ) {
+				$description	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
 			}
 		}
 	}

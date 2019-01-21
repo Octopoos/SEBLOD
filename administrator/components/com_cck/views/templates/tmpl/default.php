@@ -2,27 +2,27 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-templates.png" border="0" alt="" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ).'" />';
-$action_attr	=	( JCck::on() ) ? ' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ).'"' : ' class="cbox"';
+$action			=	'<span class="icon-eye"></span>';
+$action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ).'"';
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
-										 'core_type_filter_template', 'core_folder_filter', 'core_state_filter', 'core_folder' ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
+										 	 'core_type_filter_template', 'core_state_filter' ) );
 jimport( 'joomla.filesystem.folder' );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
@@ -38,7 +38,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
@@ -174,7 +174,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</tfoot>
 	</table>
 </div>
-<?php include_once dirname(__FILE__).'/default_batch.php'; ?>
+<?php include_once __DIR__.'/default_batch.php'; ?>
 <div class="clr"></div>
 <div>
     <input type="hidden" name="task" value="" />
@@ -188,33 +188,66 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				count:'.count( $this->items ).'
+			};
+			Joomla.orderTable = function() {
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			};
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			};
+			$(document).ready(function() {
+				$(document).keypress(function(e) {
+					if (!$(":input:focus").length) {
+						e.preventDefault();
+						var k = e.which;
+
+						if (k == 64) {
+							if ( $("#filter_search").val() != "" ) {
+								$("#filter_search").select();
+							} else {
+								$("#filter_search").focus();
+							}
+						} else if (k == 110) {
+							$("#toolbar-new > button").click();
+						} else if (k == 13 && document.adminForm.boxchecked.value==1) {
+							$("#toolbar-edit > button").click();
+						} else if (JCck.Dev.count > 0 && k >= 48 && k <= 57) {
+							if (k == 48) {
+								k = 58;
+							}
+							var tk = k - 49;
+
+							if ($("#cb"+tk).length) {
+								$("[name=\'toggle\']").click().click();
+								$("#cb"+tk).click();
+							}
+						}
+					}
+				});
+			});
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-})(jQuery);
-</script>

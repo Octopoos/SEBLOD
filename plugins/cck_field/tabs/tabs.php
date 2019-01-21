@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -30,8 +30,8 @@ class plgCCK_FieldTabs extends JCckPluginField
 	// onCCK_FieldConstruct_SearchContent
 	public static function onCCK_FieldConstruct_SearchContent( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['markup']			=	NULL;
-		$data['markup_class']	=	NULL;
+		$data['markup']			=	null;
+		$data['markup_class']	=	null;
 
 		parent::onCCK_FieldConstruct_SearchContent( $field, $style, $data, $config );
 	}
@@ -39,11 +39,11 @@ class plgCCK_FieldTabs extends JCckPluginField
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['match_mode']		=	NULL;
-		$data['markup']			=	NULL;
-		$data['markup_class']	=	NULL;
-		$data['validation']		=	NULL;
-		$data['variation']		=	NULL;
+		$data['match_mode']		=	null;
+		$data['markup']			=	null;
+		$data['markup_class']	=	null;
+		$data['validation']		=	null;
+		$data['variation']		=	null;
 		
 		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
@@ -51,8 +51,8 @@ class plgCCK_FieldTabs extends JCckPluginField
 	// onCCK_FieldConstruct_TypeContent
 	public static function onCCK_FieldConstruct_TypeContent( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['markup']			=	NULL;
-		$data['markup_class']	=	NULL;
+		$data['markup']			=	null;
+		$data['markup_class']	=	null;
 
 		parent::onCCK_FieldConstruct_TypeContent( $field, $style, $data, $config );
 	}
@@ -60,10 +60,10 @@ class plgCCK_FieldTabs extends JCckPluginField
 	// onCCK_FieldConstruct_TypeForm
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
-		$data['markup']			=	NULL;
-		$data['markup_class']	=	NULL;
-		$data['validation']		=	NULL;
-		$data['variation']		=	NULL;
+		$data['markup']			=	null;
+		$data['markup_class']	=	null;
+		$data['validation']		=	null;
+		$data['variation']		=	null;
 
 		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}
@@ -87,7 +87,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set
@@ -118,11 +118,11 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ) );
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set
-		$field->form	=	$form;	// todo: '<div class="tabbable tabs-left">'
+		$field->form	=	$form; /* TODO#SEBLOD: '<div class="tabbable tabs-left">' */
 		$field->value	=	$field->label;
 		$field->label	=	'';
 		

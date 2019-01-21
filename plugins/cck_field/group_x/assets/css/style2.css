@@ -1,9 +1,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
 div.cck_forms.cck_admin div.cck_form.cck_form_group_x { float: left; width: 100%; }
@@ -32,3 +32,4 @@ div.horizontal_gx { overflow:auto; }
 div.vertical_gx {float:left; overflow:auto; position:relative; width:100%; padding: 0; margin: 0;}
 div.vertical div.horizontal_gx div.cck_forms { float: left; padding:0 10px 10px 0; width: auto; }
 div.cck_cgx_form { float:left; }
+table .ui-sortable-helper{display: table;}

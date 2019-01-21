@@ -2,18 +2,17 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_title_type', 'core_folder', 'core_description', 'core_state', 'core_client_type',
-										 'core_layer', 'core_storage_location2', 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
+$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+$cck		=	JCckDev::preload( array( 'core_title_type', 'core_description', 'core_state',
+										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -23,23 +22,19 @@ if ( $lang->hasKey( $key ) == 1 ) {
 } else {
 	$transliterate	=	'{}';
 }
-if ( JCck::on() ) {
-	JHtml::_( 'bootstrap.tooltip' );
-	$sidebar_inner	=	288;
-	$sidebar_top	=	85;
-} else {
-	$sidebar_inner	=	0;
-	$sidebar_top	=	0;
-}
+JHtml::_( 'bootstrap.tooltip' );
+$sidebar_inner	=	288;
+$sidebar_top	=	93;
+
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
+<div id="seblod-app-builder" class="clearfix">
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper'].' '.$this->uix; ?>">
 	<div class="seblod first">
     	<div>
-            <div id="loading" class="loading"></div>
             <ul class="spe spe_title">
                 <?php
                 echo JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config );        
@@ -47,7 +42,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
             </ul>
             <ul class="spe spe_folder">
-				<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
+				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
             </ul>
             <ul class="spe spe_state spe_third">
                 <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
@@ -60,8 +55,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <div class="togglebar">
         	<div>
 			<?php
-            echo JCckDev::getForm( $cck['core_client_type'], $this->item->client, $config );
-            echo JCckDev::getForm( $cck['core_layer'], $this->item->layer, $config );
+            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
             ?>
         	</div>
         </div>
@@ -73,10 +68,13 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
             </ul>
             <ul class="spe spe_folder">
-            	<?php echo JCckDev::renderForm( $cck['core_storage_location2'], $this->item->storage_location, $config, array( 'attributes'=>'style="width:140px;"' ) ); ?>
+            	<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
             </ul>
             <ul class="spe spe_third">
-            	<?php echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config ); ?>            	
+            	<?php
+				$html	=	JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) );
+            	echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>$html ) );
+            	?>            	
             </ul>
 			<ul class="spe spe_name">
 				<?php
@@ -87,7 +85,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
 					 .	 '</select></li>';
 				} else {
-					echo '<li><label>'.JText::_( 'COM_CCK_TYPE_ASSIGNMENTS' ).'</label><span class="variation_value">...</span></li>';
+					echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=optgroup||Administrator or Allowed Groups Always=1||Administrator or Allowed Groups Edit=2', 'storage_field'=>'admin_form' ) );
 				}
 				?>
 			</ul>
@@ -98,7 +96,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
             </ul>
             <ul class="spe spe_name">
-            	<?php echo JCckDev::renderForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) ); ?>
+            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
+            	<?php
+            	echo JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) );
+            	echo JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'css'=>'input-xsmall', 'storage_field'=>'parent_inherit' ) );
+            	?>
+            	</li>
             </ul>
             <ul class="spe spe_type">
             	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ); ?>
@@ -127,6 +130,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	?>
 </div>
 </form>
+</div><div id="seblod-loading"<?php echo (int)JCck::getConfig_Param( 'development_overlay', '1' ) ? '' : ' class="disabled"'; ?>></div>
 
 <?php
 Helper_Display::quickCopyright();
@@ -147,11 +151,11 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,
 		skip:"",
-		spinner:'<img align="center" src="<?php echo $ajax_load; ?>" alt="" />',
+		token:Joomla.getOptions("csrf.token")+"=1",
 		transliteration:<?php echo $transliterate; ?>,
 		trash:"",
 		uix:"<?php echo $this->uix; ?>"
-	}
+	};
 	Joomla.submitbutton = function(task) {
 		if (task == JCck.Dev.name+".cancel") {
 			$("#layers").remove(); JCck.submitForm(task, document.getElementById('adminForm'));
@@ -160,6 +164,17 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 				JCck.DevHelper.preSubmit(); JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
-	}
+	};
+	$(document).ready(function(){
+		var outerDiv = $("#seblod-app-builder");
+		
+		$("#seblod-loading:not(.disabled)")
+			.css("top", outerDiv.position().top - $(window).scrollTop())
+			.css("left", "0")
+			.css("width", "100%")
+			.css("height", "100%")
+			.css("display", "block")
+			.css("margin-top", "-10px");
+	});
 })(jQuery);
 </script>

@@ -2,30 +2,28 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cckactiondropdown.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on() ) {
-	JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actionsdropdown.php' );
+JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actionsdropdown.php' );
 
-	// JHtmlCckActionsDropdown
-	abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
+// JHtmlCckActionsDropdown
+abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
+{
+	// addCustomLinkItem
+	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
 	{
-		// addCustomLinkItem
-		public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
-		{
-			static::$dropDownList[] = '<li>'
-				. '<a href = "'.$link.'">'
-				. ($icon ? '<span class="icon-' . $icon . '"></span> ' : '')
-				. $label
-				. '</a>'
-				. '</li>';
-		}
+		static::$dropDownList[] = '<li>'
+			. '<a href = "'.$link.'">'
+			. ($icon ? '<span class="icon-' . $icon . '"></span> ' : '')
+			. $label
+			. '</a>'
+			. '</li>';
 	}
 }
 ?>

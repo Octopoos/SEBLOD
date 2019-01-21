@@ -1,9 +1,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
 .icon-32-seblod {background-image: url(../../assets/images/32/icon-32-seblod.png);}
@@ -27,4 +27,5 @@
 .icon-48-versions {background-image: url(../../assets/images/48/icon-48-versions.png);}
 
 div.copyright {color:#000; text-align:center; font-size:90%; margin-top:10px;}
+div.copyright a:link, div.copyright a:hover, div.copyright a:visited{color: #3b99fc;}
 #toolbar-folder .icon-folder:before {color: #f89406;}

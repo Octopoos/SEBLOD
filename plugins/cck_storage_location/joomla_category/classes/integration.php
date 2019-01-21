@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -46,7 +46,7 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 	public static function onCCK_Storage_LocationAfterRender( &$buffer, &$data, $uri = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$class		=	( JCck::on( '3.5' ) ) ? ' class="hasTooltip"' : '';
+		$class		=	' class="hasTooltip"';
 		$ext		=	$app->input->get( 'extension', '' );
 		$exclude	=	$data['options']->get( 'exclude', '' );
 		$extensions	=	explode( ',', str_replace( ' ', '', $exclude ) );

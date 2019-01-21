@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit_fields_compact.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,17 +14,12 @@ $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $clone		=	'';
 $positions	=	array();
-
-if ( JCck::on() ) {
-    $attr   =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
-} else {
-    $attr   =   array( 'class'=>' edit', 'span'=>'' );
-}
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">
         <div class="seblod">
-            <div id="linkage_wrap"><?php echo JCckDev::getForm( $cck['core_linkage'], 1, $config ); ?></div>
+            <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide' );
@@ -99,13 +94,13 @@ if ( JCck::on() ) {
 <script type="text/javascript">
 jQuery(document).ready(function($){
 	$("div#scroll").slideToggle();
-	$("#more_positions").live("click", function() {
+	$(document).on("click", "#more_positions", function() {
 		$("ul.more_pos").slideToggle();
 	});
-	$("#more_fields").live("click", function() {
+	$(document).on("click", "#more_fields", function() {
 		$("div#scroll").slideToggle();
 	});
-	$(".filter").live("change", function() {
+	$(document).on("change", ".filter", function() {
 		if(this.value) {
 			$("div#scroll").slideDown();
 		}

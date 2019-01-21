@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: type.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,10 +27,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.delete', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canDelete( $record );
 		}
+
+		// Component Permissions
+		return parent::canDelete( $record );
 	}
 
 	// canEditState
@@ -41,10 +41,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit.state', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canEditState( $record );
 		}
+
+		// Component Permissions
+		return parent::canEditState( $record );
 	}
 	
 	// populateState
@@ -121,17 +121,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	protected function prepareTable2( &$table, &$data )
 	{
 		if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
-			$data['jform']['rules']	=	array( 'core.create'=>array(),
-											   'core.create.max.parent'=>array( '8'=>"0" ),
-											   'core.create.max.parent.author'=>array( '8'=>"0" ),
-											   'core.create.max.author'=>array( '8'=>"0" ),
-											   'core.delete'=>array(),
-											   'core.delete.own'=>array(),
-											   'core.edit'=>array(),
-											   'core.edit.own'=>array(),
-											   'core.edit.own.content'=>array(),
-											   'core.export'=>array(),
-											   'core.process'=>array()
+			$data['jform']['rules']	=	array(
+											'core.create.max.parent'=>array( '8'=>'0' ),
+											'core.create.max.parent.author'=>array( '8'=>'0' ),
+											'core.create.max.author'=>array( '8'=>'0' )
 										);
 		}
 		if ( $data['jform']['rules'] ) {
@@ -170,6 +163,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'type', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'type', $data['id'] );
+
+				if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+					Helper_Version::removeVersion( 'type', $data['id'] );
+				}
 			}
 		}
 		
@@ -337,10 +334,11 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			
 			// Fields
 			$query	=	'SELECT a.*, b.storage_table FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_fields AS b ON b.id = a.fieldid WHERE a.typeid = '.(int)$pk;
-			$string	=	$this->_table_no_key_batch( 'query', $query, '#__cck_core_type_field', 'typeid', $table->id, array( 'storage_table' ), '_check_storage' );
+			
+			$this->_table_no_key_batch( 'query', $query, '#__cck_core_type_field', 'typeid', $table->id, array( 'storage_table' ), '_check_storage' );
 			
 			// Positions			
-			$string	=	$this->_table_no_key_batch( 'where', 'typeid = '.(int)$pk, '#__cck_core_type_position', 'typeid', $table->id );		
+			$this->_table_no_key_batch( 'where', 'typeid = '.(int)$pk, '#__cck_core_type_position', 'typeid', $table->id );		
 		}
 	}
 	
@@ -349,6 +347,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	{
 		foreach ( $pks as $pk ) {
 			Helper_Version::createVersion( 'type', $pk, '', true );
+
+			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+				Helper_Version::removeVersion( 'type', $pk );
+			}
 		}
 		
 		return true;
@@ -390,9 +392,8 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		if ( $str != '' ) {
 			$str	=	substr( trim( $str ), 0, -1 );
 		}
-		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 		
-		return $str;
+		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 	}
 	
 	// _check_storage

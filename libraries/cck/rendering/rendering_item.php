@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: rendering_item.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -34,13 +34,13 @@ class CCK_Item
 	var $js2;
 	
 	// __construct
-	function __construct( $template = '', $type = '', $pk = 0 )
+	public function __construct( $template = '', $type = '', $pk = 0 )
 	{
 		$this->config		=	array();
 		$this->id			=	'cck'.$pk;
 		$this->mode			=	'content';
 		$this->path 		= 	JPATH_SITE.'/templates/'.$template;
-		$this->path_lib		=	dirname(__FILE__);
+		$this->path_lib		=	__DIR__;
 		$this->template		=	$template;
 		$this->theme		=	JFactory::getApplication()->getTemplate();
 		$this->type			=	$type;
@@ -57,9 +57,10 @@ class CCK_Item
 		}
 		
         if ( $prefix == 'get' ) {
-			$fieldname	=	$args[0];
-			$count		=	count( $args );
+			$count	=	count( $args );
 			if ( $count ==  1 ) {
+				$fieldname	=	$args[0];
+
 				if ( empty( $property ) ) {
 					if ( isset( $this->me[$fieldname] ) ) {
 						return $this->me[$fieldname];
@@ -69,7 +70,11 @@ class CCK_Item
 						return $this->me[$fieldname]->$property;
 					}
 				}
+			} elseif ( $count == 0 ) {
+				return;
 			} else {
+				$fieldname	=	$args[0];
+
 				if ( $count == 2 ) {					
 					return empty( $property ) ? @$this->me[$fieldname]->value[$args[1]] : @$this->me[$fieldname]->value[$args[1]]->$property;
 				} else {
@@ -84,6 +89,30 @@ class CCK_Item
 		if ( isset( $this->$property ) ) {
 			return $this->$property;
 		}
+    }
+
+	// getAuthor
+    public function getAuthor()
+    {
+    	return $this->author;
+    }
+
+	// getId
+    public function getId()
+    {
+    	return $this->pid;
+    }
+
+    // getPk
+    public function getPk()
+    {
+		return $this->pk;
+    }
+
+	// getType
+    public function getType()
+    {
+		return $this->cck;
     }
 
 	// initialize
@@ -105,7 +134,7 @@ class CCK_Item
 			$this->css	=	'';
 		}
 		if ( $this->js != '' ) {
-			$doc->addScriptDeclaration( '(function ($){'.$js."\n".'$(document).ready(function(){'.$this->js.'});})(jQuery);' );
+			$doc->addScriptDeclaration( '(function ($){$(document).ready(function(){'.$this->js.'});})(jQuery);' );
 			$this->js	=	'';
 		}
 		if ( $this->js2 != '' ) {
@@ -175,7 +204,7 @@ class CCK_Item
 
 	// renderField
 	public function getField( $fieldname ) { return $this->renderField( $fieldname ); } // (deprecated)
-	public function renderField( $fieldname, $options = NULL )
+	public function renderField( $fieldname, $options = null )
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
@@ -199,7 +228,7 @@ class CCK_Item
 						$html	=	$label.$html;
 					}
 				} elseif ( $this->markup ) {
-					// todo
+					/* TODO#SEBLOD: */
 				} else {					
 					// Description
 					$desc	=	'';
@@ -222,6 +251,18 @@ class CCK_Item
 		}
 		
 		return $html;
+	}
+	
+	// retrieveValue
+	public function retrieveValue( $fieldname )
+	{
+		$field	=	$this->get( $fieldname );
+		
+		if ( !is_object( $field ) || !$field->state ) {
+			return '';
+		}
+		
+		return $field->value;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Positions
@@ -262,7 +303,7 @@ class CCK_Item
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	NULL;
+			$options	=	null;
 		}
 		if ( ! $variation ) {
 			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
@@ -345,7 +386,12 @@ class CCK_Item
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
-				$legend	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) ) );
+				$legend	=	trim( $legend );
+				$key	=	'COM_CCK_' . str_replace( ' ', '_', $legend );
+
+				if ( JFactory::getLanguage()->hasKey( $key ) ) {
+					$legend	=	JText::_( $key );
+				}
 			}
 			if ( is_object( $options ) ) {
 				$orientation			=	$options->get( 'field_orientation', 'vertical' );
@@ -434,13 +480,14 @@ class CCK_Item
 		if ( $attr != '' ) {
 			if ( $attr != '' && strpos( $attr, '$cck' ) !== false ) {
 				$matches	=	'';
-				$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
+				$search		=	'#\$cck\->(get|retrieve)([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,]*)\' ?\)(;)?#';
 				preg_match_all( $search, $attr, $matches );
 
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[2] as $k=>$fieldname ) {
-						$target		=	$matches[1][$k];
-						$get		=	'get'.$target;
+				if ( count( $matches[2] ) ) {
+					foreach ( $matches[3] as $k=>$fieldname ) {
+						$target		=	$matches[2][$k];
+						$method		=	( $matches[1][$k] == 'retrieve' ) ? $matches[1][$k] : 'get';
+						$get		=	$method.$target;
 						$replace	=	$this->$get( $fieldname );
 						$attr		=	str_replace( $matches[0][$k], $replace, $attr );
 					}

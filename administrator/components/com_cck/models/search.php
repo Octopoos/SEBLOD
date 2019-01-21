@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: search.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -27,10 +27,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.delete', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canDelete( $record );
 		}
+
+		// Component Permissions
+		return parent::canDelete( $record );
 	}
 
 	// canEditState
@@ -41,10 +41,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
 			return $user->authorise( 'core.edit.state', CCK_COM.'.folder.'.(int)$record->folder );
-		} else {
-			// Component Permissions
-			return parent::canEditState( $record );
 		}
+
+		// Component Permissions
+		return parent::canEditState( $record );
 	}
 	
 	// populateState
@@ -71,10 +71,9 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( $skip	=	(string)$app->getUserState( CCK_COM.'.add.search.skip' ) ) {
 				$this->setState( 'skip', $skip );
 			}
-		} else {
-			if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
-				$this->setState( 'client', $client );
-			}
+		}
+		if ( $client	=	(string)$app->getUserState( CCK_COM.'.edit.search.client' ) ) {
+			$this->setState( 'client', $client );
 		}
 		
 		$this->setState( 'search.id', $pk );
@@ -151,6 +150,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'search', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'search', $data['id'] );
+
+				if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+					Helper_Version::removeVersion( 'search', $data['id'] );
+				}
 			}
 		}
 		if ( $client == 'list' ) {
@@ -331,10 +334,11 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			
 			// Fields
 			$query	=	'SELECT a.*, b.storage_table FROM #__cck_core_search_field AS a LEFT JOIN #__cck_core_fields AS b ON b.id = a.fieldid WHERE a.searchid = '.(int)$pk;
-			$string	=	$this->_table_no_key_batch( 'query', $query, '#__cck_core_search_field', 'searchid', $table->id, array( 'storage_table' ) );
+			
+			$this->_table_no_key_batch( 'query', $query, '#__cck_core_search_field', 'searchid', $table->id, array( 'storage_table' ) );
 			
 			// Positions			
-			$string	=	$this->_table_no_key_batch( 'where', 'searchid = '.(int)$pk, '#__cck_core_search_position', 'searchid', $table->id );
+			$this->_table_no_key_batch( 'where', 'searchid = '.(int)$pk, '#__cck_core_search_position', 'searchid', $table->id );
 		}
 	}
 	
@@ -343,6 +347,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	{
 		foreach ( $pks as $pk ) {
 			Helper_Version::createVersion( 'search', $pk, '', true );
+
+			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
+				Helper_Version::removeVersion( 'search', $pk );
+			}
 		}
 		
 		return true;
@@ -384,9 +392,8 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		if ( $str != '' ) {
 			$str	=	substr( trim( $str ), 0, -1 );
 		}
-		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 		
-		return $str;
+		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 	}
 }
 ?>

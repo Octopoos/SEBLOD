@@ -59,7 +59,7 @@ class CCK_DocumentRenderer extends JObject
 	 * @return  string  The contentType
 	 * @since   11.1
 	 */
-	function getContentType() {
+	public function getContentType() {
 		return $this->_mime;
 	}
 }

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: folder.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,22 +16,12 @@ jimport( 'joomla.application.component.controllerform' );
 class CCKControllerFolder extends JControllerForm
 {
 	protected $text_prefix	=	'COM_CCK';
-	
-	// postSaveHook
-	protected function postSaveHook( CCKModelFolder &$model, $validData = array() )
-	{
-		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
-		Helper_Folder::rebuildTree( 2, 1 );
 		
-		$recordId	=	$model->getState( $this->context.'.id' );
-		if ( $recordId ) {
-			Helper_Folder::rebuildBranch( $recordId );
-		}
-	}
-	
 	// export
 	public function export()
 	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
 		$app			=	JFactory::getApplication();
 		$model			=	$this->getModel();
 		$recordId		=	$app->input->getInt( 'id', 0 );
@@ -52,6 +42,18 @@ class CCKControllerFolder extends JControllerForm
 		} else {
 			$this->setRedirect( _C0_LINK, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
-	}	
+	}
+
+	// postSaveHook
+	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	{
+		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
+		Helper_Folder::rebuildTree( 2, 1 );
+		
+		$recordId	=	$model->getState( $this->context.'.id' );
+		if ( $recordId ) {
+			Helper_Folder::rebuildBranch( $recordId );
+		}
+	}
 }
 ?>

@@ -1,9 +1,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
 /* ui-big */
@@ -56,6 +56,8 @@ dd.tabs #jform_description-lbl {margin-top: 8px;!important}
 div.current dd.tabs label, div.current dd.tabs span.faux-label {min-width: 180px;}
 div.tab-content div.tab-pane div.control-label label, div.tab-content div.tab-pane div.control-label span.faux-label {min-width: 180px;}
 
+.cck-integration.alt-group{clear:both; margin: 5px 0 0 0!important;}
+
 /* ui-big (menu|module) */
 div.pane-sliders .inputbox {-webkit-border-radius: 3px; -moz-border-radius: 3px;	border-radius:3px; padding: 5px;}
 fieldset.panelform label, fieldset.panelform div.paramrow label, fieldset.panelform span.faux-label {margin-top:6px;}
@@ -74,7 +76,7 @@ ul#objects fieldset.disabled label{color:silver; font-weight: normal;}
 ul#objects fieldset.radios label { 
 	clear: none;
 	float: left;
-	margin: 3px 0px 0px 5px;
+	margin: 3px 0 0 5px;
 	min-width: 120px;
 }
 #integration-sliders ul#objects table.group-rules td { 
@@ -100,14 +102,14 @@ ul#objects fieldset.radios label {
 }
 #integration-sliders ul#objects, #integration-sliders ul#objects ul {
 	background: #FFFFFF;
-	border: 0px solid #CCCCCC;
+	border: 0 solid #CCCCCC;
 	list-style-type: none;
-	margin: 0px !important;
-	padding: 0px !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 #integration-sliders p.rule-desc { 
 	font-size: 1.09em;
-	margin-left: 0px;
+	margin-left: 0;
 }
 /* ******** */
 .chzn-color.chzn-single.chzn-color-permissive[rel="value_2"],
@@ -150,7 +152,7 @@ ul#objects fieldset.radios label {
 }
 #attrib-cck-overrides div.control-label{display:none;}
 #attrib-cck-overrides div.controls{margin-left:0;}
-#attrib-cck-overrides div.controls label{float: left; width:180px; padding-left:0px;}
+#attrib-cck-overrides div.controls label{float: left; width:180px; padding-left:0;}
 #attrib-cck-overrides div.controls div.clear{margin-bottom: 18px;}
 #attrib-cck-overrides div.controls .live_values{margin-right: 10px;}
 body.admin div.controls div.chzn-container{float:left;}

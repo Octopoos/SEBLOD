@@ -1,9 +1,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
 /*SITE ONLY*/
@@ -65,7 +65,7 @@ div.cck_forms.cck_site div.cck_value.cck_value_wysiwyg_editor p,
 div.cck_forms.cck_site div.cck_value
 {line-height:1.2em;}
 
-div.cck_forms.cck_site div.cck_label label{margin-bottom: 0px;}
+div.cck_forms.cck_site div.cck_label label{margin-bottom: 0;}
 
 div.cck_forms.cck_site div.cck_form span[class^="icon-"],
 div.cck_forms.cck_site div.cck_form span[class*=" icon-"] 
@@ -77,15 +77,19 @@ div.horizontal div.cck_forms{float:left;padding-bottom:10px;width:auto;}
 div.cck_forms.cck_site div.cck_label{float:left;width:145px;}
 div.cck_forms.cck_site div.cck_form{float:left;width:auto;}
 div.cck_forms.cck_site div.cck_desc{clear:both;width:auto;}
-div.cck_forms.cck_site div.cck_desc p{margin:8px 0px 0px 0px;}
-div.vertical div.cck_forms.cck_site div.cck_label {width: 145px; text-align: left; padding: 0px 0px 0px 0px;}
-div.cck_forms.cck_site div.cck_form span.variation_value{line-height:1.2em;}
+div.cck_forms.cck_site div.cck_desc p{margin:8px 0 0 0;}
+div.vertical div.cck_forms.cck_site div.cck_label {width: 145px; text-align: left; padding: 0;}
+div.cck_forms.cck_site div.cck_form span.variation_value{line-height:30px;}
 div.cck_forms.cck_site div.cck_desc .hasPopover{padding:3px 0 0 5px;}
 
 /*SITE GENERIQUE CALENDAR*/
-div.cck_forms.cck_site div.cck_form.cck_form_calendar input.inputbox{float:left;}
+div.cck_forms.cck_site div.cck_form.cck_form_calendar input.inputbox,
+div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar input.inputbox{float:left;}
 div.cck_forms.cck_site div.cck_form.cck_form_calendar img.calendar{border:1px solid #C0C0C0;border-radius:3px 3px 3px 3px;cursor:pointer;float:left;margin:0 0 0 5px;padding:4px;}
-div.cck_forms.cck_site div.cck_form.cck_form_calendar.input-append input{font-size: 13px !important;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar .input-append{margin-bottom: 0;}
+div.cck_forms.cck_site div.cck_form.cck_form_calendar.input-append input,
+div.cck_forms.cck_site div.cck_form.cck_form_jform_calendar .input-append input,
+div.cck_forms.cck_site div.cck_form.cck_form_group_x > .table .input-append input{font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE CHECKBOX*/
 div.cck_forms.cck_site div.cck_form.cck_form_checkbox fieldset,
@@ -105,14 +109,14 @@ div.cck_forms.cck_site div.cck_form.cck_form_radio label{clear:none;display:tabl
 div.cck_forms.cck_site div.cck_form.cck_form_textarea textarea{height:auto;}
 
 /*SITE GENERIQUE WYSIWYG*/
-div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%;}
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor{border:none;margin:0;padding: 0 0 10px 0; background:none; width:100%; float:left;}
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor.cck_form_wysiwyg_editor_box{width:auto;}
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:link.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:visited.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_field_x a:hover.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:link.wysiwyg_editor_box,
 div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:visited.wysiwyg_editor_box,
-div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_wysiwyg_editor a:hover.wysiwyg_editor_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE FIELD X*/
 div.cck_forms.cck_site div.cck_form.cck_form_field_x ul.adminformlist li{clear: both;}
@@ -123,8 +127,13 @@ div.cck_forms.cck_site div.cck_form.cck_form_field_x span input[type="checkbox"]
 div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.button2-left a{margin-top:1px!important; margin-left:4px!important;}
 div.cck_forms.cck_site div.cck_form.cck_form_jform_media div.media-preview span{margin-left:4px; line-height:26px;}
 
+/*SITE GENERIQUE JFORM ASSOCIATIONS*/
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .control-label{float:left; width:145px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .control-label label{line-height: 30px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_associations .controls{float:left;}
+
 /*SITE GENERIQUE JFORM USER*/
-div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input{font-size: 13px !important;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_user .input-append input:not(:last-child){font-size: 13px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;border-right: none;}
 
 /*SITE GENERIQUE JFORM USER GROUP*/
 div.cck_forms.cck_site div.cck_form.cck_form_jform_usergroups ul{ padding:0;}
@@ -137,12 +146,12 @@ div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul {padding: 0!importan
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules ul li {list-style:none;}
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:link.jform_rules_box,
 div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:visited.jform_rules_box,
-div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_jform_rules a:hover.jform_rules_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE JOOMLA ROUTE*/
 div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:link.joomla_route_box,
 div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:visited.joomla_route_box,
-div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0px 0px #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
+div.cck_forms.cck_site div.cck_form.cck_form_joomla_route a:hover.joomla_route_box{background: 0 0 #FFFFFF; border: 1px solid #C0C0C0; border-radius: 3px; font-size: 1em; line-height: 25px; padding: 4px;}
 
 /*SITE GENERIQUE CAPTCHA MATH*/
 div.cck_forms.cck_site div.cck_form.cck_form_captcha_math span.variation_value{ float:left; padding-right:5px;}
@@ -162,6 +171,12 @@ div.cck_forms.cck_site div.cck_form.cck_form_link div.cck_forms{clear:both;}
 
 /*SITE GENERIQUE PRODUCTS*/
 div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products{width:100%;}
+div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products .table th,
+div.cck_forms.cck_site div.cck_form.cck_form_cck_ecommerce_products .table td{vertical-align: middle;}
+div.cck_forms.cck_cck_ecommerce_products input.inputbox,
+div.cck_forms.cck_cck_ecommerce_products textarea.inputbox,
+div.cck_forms.cck_cck_ecommerce_products select.inputbox,
+div.cck_forms.cck_cck_ecommerce_products button.inputbox {float: none !important;}
 
 /*SITE GENERIQUE CCK_FIELD_PARAMS*/
 div.cck_form_cck_field_params ul.adminformlist,
@@ -208,9 +223,14 @@ fieldset div.cck_forms.cck_site ul.adminformlist fieldset{
  
 /* TEMPORARY.. until a proper group markup */
 ul.adminformlist, ul.adminformlist li {margin:0; padding:0; width:auto; list-style:none;}
-div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0px 5px 0px; line-height:23px; height:30px;}
+div.vertical .adminformlist label, div.seblod .adminformlist label{width:145px; clear:left; display:block; float:left; margin:5px 0; line-height:23px; height:30px;}
 
 .btn [class^="icon-"],
 .btn [class*=" icon-"] {
     margin-right:0;
+}
+
+.input-append .add-on, .input-append .btn, .input-append .btn-group { 
+    z-index: 2;
+    position: relative;
 }

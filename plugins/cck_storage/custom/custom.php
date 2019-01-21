@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: custom.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -42,6 +42,28 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 		}
 	}
 
+	// onCCK_StoragePrepareContent_Xi
+	public function onCCK_StoragePrepareContent_Xi( &$field, &$value, &$storage, $x = '', $xi = 0 )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		parent::g_onCCK_StoragePrepareForm( $field, $config );
+		
+		// Init
+		$P	=	$field->storage_field;
+		
+		// Prepare
+		if ( ! isset( $storage->values[$P] ) ) {
+			$storage->values[$P]	=	self::_initValues( $storage->$P );
+		}
+		
+		// Set
+		if ( ( $k = array_search( $field->storage_field2.'|'.($xi).'|'.$x, $storage->values[$P][1] ) ) !== false ) {
+			$value	=	$storage->values[$P][2][$k];
+		}
+	}
+
 	// onCCK_StoragePrepareDelete
 	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage )
 	{
@@ -75,14 +97,14 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 
 		// Set
 		if ( $config['collection'] != '' ) {
-			$regex	=	CCK_Content::getRegex_Group( $config['fieldname'], $config['collection'], $config['xi'] );			
+			$regex	=	'#::'.$config['fieldname'].'\|'.$config['xi'].'\|'.$config['collection'].'::(.*?)::/'.$config['fieldname'].'\|'.$config['xi'].'\|'.$config['collection'].'::#s';
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
 		} else {
 			if ( is_object( $field ) && $field->storage_field2 ) {
 				$config['fieldname']	=	$field->storage_field2;
 			}
-			$regex	=	CCK_Content::getRegex_Field( $config['fieldname'] );
+			$regex	=	'#::'.$config['fieldname'].'::(.*?)::/'.$config['fieldname'].'::#s';
 			preg_match( $regex, $field->value, $matches );
 			$value	=	$matches[1];
 		}
@@ -138,16 +160,17 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target )
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
 	{
 		$sql	=	'';
 		$TA		=	'(::'.$name.$name2.'::)';
 		$TZ		=	'(::/'.$name.$name2.'::)';
-		//if ( !empty( $field->match_target ) && $field->match_target != '~' ) {
-		//	$target	=	self::_getTarget( $name, $field->match_target );
-		//	$TA		=	'';
-		//	$TZ		=	'';
-		//}
+
+		// if ( !empty( $field->match_target ) && $field->match_target != '~' ) {
+			// $target	=	self::_getTarget( $name, $field->match_target );
+			// $TA		=	'';
+			// $TZ		=	'';
+		// }
 		
 		switch ( $match ) {
 			case 'exact':
@@ -165,8 +188,10 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'any':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
+					
 					foreach ( $values as $v ) {
 						if ( strlen( $v ) > 0 ) {
 							$fragments[]	=	$target.' REGEXP "'.$TA.'.*'.JCckDatabase::escape( $v ).'.*'.$TZ.'"';
@@ -180,15 +205,32 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'any_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
-					foreach ( $values as $v ) {
-						if ( strlen( $v ) > 0 ) {
-							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"';
+					$var_mode	=	( $field->match_options ) ? $field->match_options->get( 'var_mode', '0' ) : '0';
+
+					if ( $var_mode == '1' ) {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' )
+												.	' OR '.$target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	' OR '.$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	' OR '.$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$TZ.'"';
+							}
 						}
-					}
-					if ( count( $fragments ) ) {
-						$sql	=	'((' . implode( ') OR (', $fragments ) . '))';
+						if ( count( $fragments ) ) {
+							$sql	=	'((' . implode( ') OR (', $fragments ) . '))';
+						}
+					} else {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"';
+							}
+						}
+						if ( count( $fragments ) ) {
+							$sql	=	'((' . implode( ') OR (', $fragments ) . '))';
+						}
 					}
 				}
 				break;
@@ -196,15 +238,17 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'each_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
+					
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
 								$fragments[]	=	( ( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' )
-												.	$target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
-												.	$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
-												.	$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$TZ.'"';
+												.	' OR '.$target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	' OR '.$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$separator.'.*'.$TZ.'"'
+												.	' OR '.$target.' REGEXP "'.$TA.'.*'.$separator.JCckDatabase::escape( $v ).$TZ.'"';
 							}
 						}
 					} else {
@@ -228,8 +272,10 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'nested_exact':
 				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
 				$values		=	JCckDevHelper::getBranch( $table, $value );
+				
 				if ( count( $values ) ) {
 					$fragments	=	array();
+					
 					foreach ( $values as $v ) {
 						if ( $v != '' ) {
 							$fragments[]	=	( !$TA ) ? $target.' = "'.$TA.JCckDatabase::escape( $v ).$TZ.'"' : $target.' REGEXP "'.$TA.JCckDatabase::escape( $v ).$TZ.'"';
@@ -243,6 +289,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'num_higher':
 				$range		=	'';
 				$max		=	( $field->match_value ) ? $field->match_value : 99999;
+				
 				if ( $value <= $max ) {
 					$range	=	CCK_List::generateRange( $value, $max );
 				}
@@ -252,6 +299,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'num_higher_only':
 				$range		=	'';
 				$max		=	( $field->match_value ) ? $field->match_value : 99999;
+				
 				if ( $value <= $max ) {
 					$range	=	CCK_List::generateRange( $value, $max );
 				}
@@ -261,6 +309,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'num_lower':
 				$range		=	'';
 				$min		=	( $field->match_value ) ? $field->match_value : 0;
+				
 				if ( $value >= $min ) {
 					$range	=	CCK_List::generateRange( $min, $value );
 				}
@@ -270,6 +319,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'num_lower_only':
 				$range		=	'';
 				$min		=	( $field->match_value ) ? $field->match_value : 0;
+				
 				if ( $value >= $min ) {
 					$range	=	CCK_List::generateRange( $min, $value );
 				}
@@ -280,7 +330,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				$sql		=	$target.' NOT REGEXP "'.$TA.JCckDatabase::escape( $value ).'.*'.$TZ.'"';
 				break;
 			case 'not_any_exact':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'not_zeta': /* Zeta is not the last letter of Greek alphabet but.. this won't be an issue here. */
 				$sql		=	$target.' NOT REGEXP "'.$TA.'.*'.JCckDatabase::escape( $value ).$TZ.'"';
@@ -298,10 +348,10 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				$sql		=	$target.' NOT REGEXP "'.$TA.'0'.$TZ.'"';
 				break;
 			case 'is_null':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'is_not_null':
-				// todo
+				/* TODO#SEBLOD: */
 				break;
 			case 'radius_higher':
 			case 'radius_lower':
@@ -385,7 +435,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 	// _initValues
 	protected function _initValues( $value )
 	{
-		preg_match_all( CCK_Content::getRegex(), $value, $values );
+		preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $value, $values );
 		
 		return $values;
 	}

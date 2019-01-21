@@ -2,24 +2,23 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: match.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
+$doc	=	JFactory::getDocument();
 $name	=	$this->item->name;
 $lang   =	JFactory::getLanguage();
+$root	=	JUri::root( true );
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
-
-$doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
 			(function ($){
 				JCck.Dev = {
@@ -45,7 +44,7 @@ $js		=	'
 						this.close();
 						return;
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var data = parent.jQuery("#'.$name.'_match_collection").val();
 					$("#match_collection").val(data);
@@ -63,6 +62,8 @@ $js		=	'
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
 					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
 					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");
+					$("#match_options_var_count").isVisibleWhen("match_mode","each_exact","any_exact");
+					$("#match_options_var_count_offset").isVisibleWhen("match_options_var_count","1");
 					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact,not_any_exact");
 					$("#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
@@ -94,9 +95,11 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
         <?php
 		echo '<li><label>'.JText::_( 'PLG_CCK_FIELD_GROUP_COLLECTION' ).'</label>'.$form.'</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
-		echo JCckDev::renderForm( 'core_tables', '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
+		echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Mode', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Simple=0||Multiple=1', 'storage_field'=>'match_options[var_mode]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Count', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'None=||Equal=0||Minus=1', 'storage_field'=>'match_options[var_count]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Comparison Count Offset', 'size'=>'8', 'storage_field'=>'match_options[var_count_offset]', 'css'=>'match_options' ) );
 
 		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Latitude Field', 'storage_field'=>'match_options[fieldname1]', 'css'=>'match_options' ) );

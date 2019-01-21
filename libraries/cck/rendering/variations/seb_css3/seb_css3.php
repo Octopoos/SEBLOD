@@ -2,16 +2,16 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 // Init
-if ( $app->isAdmin() ) {
+if ( $app->isClient( 'administrator' ) ) {
 	$background_color	=	'#ffffff';
 	$position_padding	=	'15px';
 } else {
@@ -21,7 +21,7 @@ if ( $app->isAdmin() ) {
 
 // Prepare Style
 if ( $hasOptions ) {
-	if ( $app->isAdmin() ) {
+	if ( $app->isClient( 'administrator' ) ) {
 		$background_color	=	$options->get( 'background_color', $background_color );
 		$background_color	=	( $background_color == 'none' ) ? '#ffffff' : $background_color;
 		$position_padding	=	$options->get( 'position_padding', $position_padding );
@@ -42,7 +42,7 @@ if ( $hasOptions ) {
 	$loaded[$variation]	=	true;
 	$padding			=	( $position_padding != '' ) ? 'padding:'.$position_padding.';' : '';
 	$css				=	'/* Variation: '.$variation.' */' ."\n" . $css
-						.	'div.'.$variation.' { background-color:'.$background_color.'; border:0px solid #dedede; position:relative; '.$padding
+						.	'div.'.$variation.' { background-color:'.$background_color.'; border:0 solid #dedede; position:relative; '.$padding
 						.	' -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; overflow:hidden; }'."\n";
 }
 

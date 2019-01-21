@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,7 +17,7 @@ class CCKViewField extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C3_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();
@@ -28,13 +28,13 @@ class CCKViewField extends JCckBaseLegacyViewForm
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', ( ( ( $this->isNew ) ? $this->state->get( 'ajax.state' ) : $this->item->published ) ), 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->type		=	Helper_Admin::getSelected( $this->vName, 'type', $app->input->getString( 'ajax_type', $this->state->get( 'ajax.type', $this->item->type ) ), 'text' );
 		$this->insidebox		=	Helper_Admin::addInsidebox( $this->isNew );
 		

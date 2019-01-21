@@ -2,26 +2,26 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-sites.png" border="0" alt="" title="'.JText::_( 'COM_CCK_VIEW_THIS_SITE' ).'" />';
-$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_VIEW_THIS_SITE' ).'"' : '';
+$action			=	'<span class="icon-eye"></span>';
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_VIEW_THIS_SITE' ).'"';
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
 										 'core_state_filter' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
@@ -37,7 +37,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
@@ -74,7 +74,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center">
-				<a target="_blank" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+				<a target="_blank" rel="noopener noreferrer" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
 					 <?php echo $action; ?>
 				</a>
 			</td>
@@ -113,7 +113,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</tfoot>
 	</table>
 </div>
-<?php include_once dirname(__FILE__).'/default_batch.php'; ?>
+<?php include_once __DIR__.'/default_batch.php'; ?>
 <div class="clr"></div>
 <div>
     <input type="hidden" name="task" value="" />
@@ -127,66 +127,98 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				count:'.count( $this->items ).',
+				status:0,
+				addNew: function() {
+					var grp = $("#site_grp").val();
+					var url = "index.php?option=com_cck&task=site.add&type="+grp;
+					document.location.href = url;
+					return false;
+				},
+				addScroll: function() {
+					var sly = new Sly(".sly",{
+						horizontal: 1,
+						activeMiddle: 1,
+						itemNav: "basic",
+						smart: 1,
+						dragHandle: 0,
+						dynamicHandle: 0,
+						dragContent: 1,
+						startAt: 1,
+						scrollBy: 0,
+						speed: 300,
+						activePageOn: "click",
+						clickBar: 1
+					}).init();
+				}
+			};
+			Joomla.orderTable = function() {
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			};
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			};
+			$(document).ready(function() {
+				$("#collapseModal2").on("hidden", function () {
+					$("#toolbar-new > button").blur();
+				});
+				$(document).keypress(function(e) {
+					if (!$(":input:focus").length) {
+						e.preventDefault();
+						var k = e.which;
+
+						if (k == 64) {
+							if ( $("#filter_search").val() != "" ) {
+								$("#filter_search").select();
+							} else {
+								$("#filter_search").focus();
+							}
+						} else if (k == 110) {
+							$("#toolbar-new > button").click();
+						} else if (k == 13 && document.adminForm.boxchecked.value==1) {
+							$("#toolbar-edit > button").click();
+						} else if (JCck.Dev.count > 0 && k >= 48 && k <= 57) {
+							if (k == 48) {
+								k = 58;
+							}
+							var tk = k - 49;
+
+							if ($("#cb"+tk).length) {
+								$("[name=\'toggle\']").click().click();
+								$("#cb"+tk).click();
+							}
+						}
+					}
+				});
+				$(".sly ul li").on("click", function () {
+					$(".sly ul li").removeClass("active"); $(this).addClass("active");
+					$("#site_grp").val($(this).attr("data-values"));
+				});
+				JCck.Dev.addScroll();
+				$(".sly ul li").removeClass("active"); $(".sly ul li:eq(1)").addClass("active");
+			});
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	JCck.Dev = {
-		status:0,
-		addNew: function() {
-			var grp = $("#site_grp").val();
-			var url = "index.php?option=com_cck&task=site.add&type="+grp;
-			window.location.href = url;
-			return false;
-		},
-		addScroll: function() {
-			var sly = new Sly('.sly',{
-				horizontal: 1,
-				activeMiddle: 1,
-				itemNav: "basic",
-				smart: 1,
-				dragHandle: 0,
-				dynamicHandle: 0,
-				dragContent: 1,
-				startAt: 1,
-				scrollBy: 0,
-				speed: 300,
-				activePageOn: "click",
-				clickBar: 1
-			}).init();
-		}
-	}
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-	$(document).ready(function() {
-		$(".sly ul li").on('click', function () {
-			$(".sly ul li").removeClass("active"); $(this).addClass("active");
-			$("#site_grp").val($(this).attr("data-values"));
-		});
-		JCck.Dev.addScroll();
-		$(".sly ul li").removeClass("active"); $(".sly ul li:eq(1)").addClass("active");
-	});
-})(jQuery);
-</script>

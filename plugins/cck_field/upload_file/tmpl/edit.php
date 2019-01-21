@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -28,7 +28,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 '</li>';
 		echo JCckDev::renderForm( 'core_options_path_user', @$options2['path_user'], $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_LEGAL_EXTENSIONS' ).'</label>'
-		 .	 JCckDev::getForm( 'core_options_media_extensions', $media_ext, $config )
+		 .	 JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getMediaExtensions', 'name'=>'core_options_media_extensions' ), $media_ext, $config, array( 'storage_field'=>'json[options2][media_extensions]' ) )
 		 .	 JCckDev::getForm( 'core_options_legal_extensions', @$options2['legal_extensions'], $config, array( 'size'=>13, 'required'=>'required' ) )
 		 .	 '</li>';
 		echo '<li><label>'.JText::_( 'COM_CCK_MAXIMUM_SIZE' ).'</label>'

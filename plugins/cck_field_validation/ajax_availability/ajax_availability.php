@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,30 +26,32 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		}
 		
 		$and		=	'';
-		$extra		=	'';
-		$extraData2	=	'';
 		$name		=	'availability_'.$fieldId;
 		$validation	=	parent::g_getValidation( $field->validation_options );
 		
+		$extraData	=	'avTable='.str_replace( '#__', '', $validation->table ).'&avColumn='.$validation->column;
+		$extraData2	=	'';
+
 		$alert		=	self::_alert( $validation, 'alert', $config );
 		$alert2		=	self::_alert( $validation, 'alert2', $config );
 		$alert3		=	self::_alert( $validation, 'alert3', $config );
 		$prefix		=	JCck::getConfig_Param( 'validation_prefix', '* ' );
 		
 		if ( isset( $validation->fieldnames ) && $validation->fieldnames ) {
-			$extra		.=	'&avWhere='.str_replace( '||', ',', $validation->fieldnames );
+			$extraData	.=	'&avWhere='.str_replace( '||', ',', $validation->fieldnames );
 			$extraData2	=	'"extraDataDynamic": "#'.str_replace( '||', ',#', $validation->fieldnames ).'",';
 			$and		=	self::_where( $validation->table, $validation->fieldnames, @$config['storages'][$validation->table], 'object' );
 		}
 		if ( isset( $field->value ) && $field->value != '' ) {
-			$pk		=	(int)JCckDatabase::loadResult( 'SELECT '.$validation->key.' FROM '.$validation->table.' WHERE '.$validation->column.'="'.JCckDatabase::escape( $field->value ).'"'.$and );
-			$extra	.=	'&avKey='.$validation->key.'&avPk='.$pk.'&avPv='.htmlspecialchars( str_replace( array( '<', '>', "'" ), array( '%26lt;', '%26gt;', '%27' ), $field->value ) );
+			$pk			=	(int)JCckDatabase::loadResult( 'SELECT '.$validation->key.' FROM '.$validation->table.' WHERE '.$validation->column.'="'.JCckDatabase::escape( $field->value ).'"'.$and );
+			$extraData	.=	'&avKey='.$validation->key.'&avPk='.$pk.'&avPv='.htmlspecialchars( str_replace( array( '<', '>', "'" ), array( '%26lt;', '%26gt;', '%27' ), $field->value ) );
 		}
+		$extraData	.=	'&avInvert='.(int)$validation->do;
 		
 		$rule		=	'
 					"'.$name.'":{
-						"url": "'.JUri::base().'index.php?option=com_cck&task=ajax&format=raw&file=/plugins/cck_field_validation/ajax_availability/assets/ajax/script.php",
-						"extraData": "avTable='.str_replace( '#__', '', $validation->table ).'&avColumn='.$validation->column.$extra.'",
+						"url": "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
+						"extraData": "'.$extraData.'",
 						'.$extraData2.'
 						"alertText": "'.$prefix.$alert.'",
 						"alertTextOk": "'.$prefix.$alert2.'",
@@ -71,7 +73,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 				parent::g_addProcess( 'beforeStore', self::$type, $config, array( 'name'=>$name, 'value'=>$value, 'validation'=>$validation ) );
 			} else {
 				$do	=	true;
-				// Check if table = object (todo: will be improved later..)
+				// Check if table = object /* TODO#SEBLOD: will be improved later.. */
 				if ( $validation->table == '#__users' ) {
 					$type	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
 					
@@ -152,25 +154,19 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		$fields		=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ("'.str_replace( '||', '","', $fieldnames ).'")', 'name' );
 		$s_fields	=	array();
 		$where		=	explode( '||', $fieldnames );
-		if ( $method == 'object' ) {
-			foreach ( $where as $w ) {
-				if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
-					$s_field	=	$fields[$w]->storage_field;
+
+		foreach ( $where as $w ) {
+			if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
+				$s_field	=	$fields[$w]->storage_field;
+
+				if ( $method == 'object' ) {
 					$v			=	isset( $values->$s_field ) ? $values->$s_field : '';
-					if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
-						$s_fields[$s_field]	=	'';
-						$and				.=	' AND '.$s_field.'="'.JCckDatabase::escape( $v ).'"';
-					}
+				} else {
+					$v			=	$values[$w]->value;
 				}
-			}
-		} else {
-			foreach ( $where as $w ) {
-				if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == $table ) {
-					$v		=	$values[$w]->value;
-					if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
-						$s_fields[$s_field]	=	'';
-						$and				.=	' AND '.$values[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
-					}
+				if ( $v != '' && !isset( $s_fields[$s_field] ) ) {
+					$s_fields[$s_field]	=	'';
+					$and				.=	' AND '.$s_field.'="'.JCckDatabase::escape( $v ).'"';
 				}
 			}
 		}

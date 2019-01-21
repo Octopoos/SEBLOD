@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: cck.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,15 +13,16 @@ defined( '_JEXEC' ) or die;
 // JCck
 abstract class JCck
 {
-	public static $_me			=	'cck';
-	public static $_config		=	NULL;
-	public static $_user		=	NULL;
+	public static $_me				=	'cck';
+	public static $_config			=	null;
+	public static $_user			=	null;
 	
-	protected static $_host		=	NULL;
-	protected static $_site		=	NULL;
-	protected static $_sites	=	array();
+	protected static $_host			=	null;
+	protected static $_site			=	null;
+	protected static $_sites		=	array();
+	protected static $_sites_info	=	array();
 	
-	public static function callFunc( $class, $method, &$args = NULL, $ref = false )
+	public static function callFunc( $class, $method, &$args = null, $ref = false )
 	{
 		return $class::$method( $args );
 	}
@@ -49,22 +50,9 @@ abstract class JCck
 		if ( self::$_config ) {
 			return self::$_config;
 		}
-
-		$app			=	JFactory::getApplication();
+		
 		$config			=	new stdClass;
 		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
-
-		// Tweak Language: JText
-		$translate		=	(int)$config->params->get( 'language_jtext', 0 );
-		if ( $translate == 2 ) {
-			if ( !( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) ) ) {
-				if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
-					$config->params->set( 'language_jtext', 0 );
-				} else {
-					$config->params->set( 'language_jtext', 1 );
-				}
-			}
-		}
 		
 		self::$_config	=&	$config;
 	}
@@ -85,7 +73,38 @@ abstract class JCck
 		if ( ! self::$_config ) {
 			self::_setConfig();
 		}
-		
+	
+		// Tweak Language: JText
+		if ( $name == 'language_jtext' ) {
+			static $tweaked	=	0;
+			
+			if ( !$tweaked ) {
+				$isConfigView	=	false;
+				
+				// Protect JFactory::getApplication for CLI
+				try {
+					$app			=	JFactory::getApplication();
+					$isConfigView	=	( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) );
+				} catch ( Exception $e ) {
+					// Do Nothing
+				}
+				
+				$translate		=	(int)self::$_config->params->get( 'language_jtext', 0 );
+				
+				if ( $translate == 2 ) {
+					if ( !$isConfigView ) {
+						if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+							self::$_config->params->set( 'language_jtext', 0 );
+						} else {
+							self::$_config->params->set( 'language_jtext', 1 );
+						}
+					}
+				}
+				
+				$tweaked++;
+			}
+		}
+
 		return self::$_config->params->get( $name, $default );
 	}
 	
@@ -119,19 +138,26 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
+			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
 			$path			=	JUri::getInstance()->getPath();
+			$path_base		=	$path;
+			
 			$host2			=	'';
 			if ( $path ) {
-				$path	=	substr( $path, 1 );
-				$path	=	substr( $path, 0, strpos( $path, '/' ) );
+				$path		=	substr( $path, 1 );
+				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, aliases, guest, guest_only_viewlevel, groups, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
-				
+				$context	=	'';
+				$hasContext	=	false;
+
+				self::$_sites_info['guests']	=	array();
+
 				foreach ( self::$_sites as $s ) {
 					$s->exclusions	=	array();
 					$json			=	json_decode( $s->configuration, true );
@@ -139,7 +165,20 @@ abstract class JCck
 					if ( isset( $json['exclusions'] ) && $json['exclusions'] != '' ) {
 						$s->exclusions	=	explode( '||', $json['exclusions'] );
 					}
+
+					if ( $s->context != '' ) {
+						$hasContext	=	true;
+						$pos		=	strpos( $path_base, '/'.$s->context );
+
+						if ( $pos !== false && $pos == 0 ) {
+							$context	=	$s->context;
+						}
+					}
+
+					self::$_sites_info['guests'][$s->guest]	=	'';
 				}
+				self::$_sites_info['hasContext']	=	$hasContext;
+				
 				foreach ( self::$_sites as $s ) {
 					if ( $s->aliases != '' ) {
 						$aliases	=	explode( '||', $s->aliases );
@@ -168,7 +207,12 @@ abstract class JCck
 					}
 				}
 			}
-			self::$_host				=	$host;
+
+			if ( $context != '' ) {
+				$host	.=	'@'.$context;
+			}
+			self::$_host	=	$host;
+
 			if ( isset( self::$_sites[$host] ) ) {
 				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
 			}
@@ -179,16 +223,63 @@ abstract class JCck
 		}
 	}
 	
+	// getMultisiteInfo
+	public static function getMultisiteInfo( $property = '' )
+	{
+		if ( $property == '' ) {
+			return self::$_sites_info;
+		}
+
+		if ( !isset( self::$_sites_info[$property] ) ) {
+			return null;
+		}
+
+		return self::$_sites_info[$property];
+	}
+
 	// getSite
 	public static function getSite()
 	{
+		if ( is_object( self::$_sites[self::$_host] ) && is_string( self::$_sites[self::$_host]->configuration ) ) {
+			self::$_sites[self::$_host]->configuration	=	new JRegistry( self::$_sites[self::$_host]->configuration );
+		}
+
 		return self::$_sites[self::$_host];
 	}
 	
-	// isSite
-	public static function isSite()
+	// getSiteById
+	public static function getSiteById( $id )
 	{
-		return ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) ? true : false;
+		static $sites	=	null;
+
+		if ( !is_array( $sites ) ) {
+			$sites		=	array();
+
+			if ( count( self::$_sites ) ) {
+				foreach ( self::$_sites as $k=>$v ) {
+					$sites[$v->id]	=	$v;
+				}
+			}
+		}
+		if ( !isset( $sites[$id] ) ) {
+			return null;
+		}
+
+		return $sites[$id];
+	}
+
+	// isSite
+	public static function isSite( $master = false )
+	{
+		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
+			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+				return false;
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // User
@@ -202,10 +293,6 @@ abstract class JCck
 	// getUser
 	public static function getUser( $userid = 0, $content_type = '', $profile = true )
 	{
-		// Legacy Code, just in case..
-		if ( is_bool( $content_type ) ) {
-			return JCckLegacy::getUser( $userid, $content_type, $profile );
-		}
 		$update		=	false;
 
 		if ( is_array( $userid ) ) {
@@ -229,45 +316,6 @@ abstract class JCck
 		return self::$_user;
 	}
 	
-	// getUser
-	public static function getUser_Value( $name, $default = '' )
-	{
-		if ( ! self::$_user ) {
-			self::_setUser();
-		}
-				
-		return ( @self::$_user->$name != '' ) ? @self::$_user->$name : $default;
-	}
-	
-	// setUser_Preference
-	public static function setUser_Preference( $name, $value )
-	{
-		if ( ! self::$_user ) {
-			self::_setUser();
-		}
-		
-		$name	=	'preferences_'.$name;
-		return self::$_user->$name	=	$value;
-	}
-	
-	// setUser_Preferences
-	public static function setUser_Preferences( $preferences )
-	{
-		if ( !$preferences ) {
-			return;
-		}
-		
-		$registry		=	new JRegistry;
-		$registry->loadString( $preferences );				
-		$preferences	=	$registry->toArray();
-		if ( count( $preferences ) ) {
-			foreach ( $preferences as $k => $v ) {
-				$k					=	'preferences_'.$k;
-				self::$_user->$k	=	$v;
-			}
-		}
-	}
-	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// _
@@ -279,13 +327,17 @@ abstract class JCck
 		}
 		
 		$doc	=	JFactory::getDocument();
-		if ( $key == 'cck.ecommerce' ) { // todo: explode & dispatch
-			$version	=	'1.0.0';
+		if ( $key == 'cck.ecommerce' ) { /* TODO#SEBLOD: explode & dispatch */
+			JHtml::_( 'behavior.core' );
+
+			$version	=	'2.25.0';
+
 			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php' ) ) {
 				require_once JPATH_ADMINISTRATOR.'/components/com_cck_ecommerce/_VERSION.php';
 				$version	=	new JCckEcommerceVersion;
+				$version	=	$version->getApiVersion();
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version->getApiVersion().'.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version.'.min.js' );
 		}
 		
 		$loaded[$key]	=	true;
@@ -296,40 +348,38 @@ abstract class JCck
 	{
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
+		$root	=	JUri::root( true );
+
+		JHtml::_( 'bootstrap.framework' );
 		
-		if ( self::on() ) {
-			JHtml::_( 'bootstrap.framework' );
-		} else {
-			if ( !( isset( $app->cck_jquery ) && $app->cck_jquery === true ) ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-1.8.3.min.js' );
-				$app->cck_jquery	=	true;
-			}
-			if ( $noconflict === true && !( isset( $app->cck_jquery_noconflict ) && $app->cck_jquery_noconflict === true ) ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery/js/jquery-noconflict.js' );
-				$app->cck_jquery_noconflict	=	true;
-			}
-		}
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( JUri::root( true ).'/media/cck/js/cck.dev-3.7.0.min.js' );
-				$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.effects.min.js' );
+				$doc->addScript( $root.'/media/cck/js/cck.dev-3.17.0.min.js' );
+				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					foreach ( $dev as $v ) {
-						echo '<script src="'.JUri::root( true ).'/media/cck/js/'.$v.'" type="text/javascript"></script>';
+						echo '<script src="'.$root.'/media/cck/js/'.$v.'" type="text/javascript"></script>';
 					}
 				} else {			
 					foreach ( $dev as $v ) {
-						$doc->addScript( JUri::root( true ).'/media/cck/js/'.$v );
+						$doc->addScript( $root.'/media/cck/js/'.$v );
 					}
 				}
 				$app->cck_jquery_dev	=	true;
 			}
 		}
 		if ( $more === true && !( isset( $app->cck_jquery_more ) && $app->cck_jquery_more === true ) && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
-			$doc->addScript( JUri::root( true ).'/media/cck/js/cck.core-3.8.1.min.js' );
-			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).'";' );
+			$context	=	'';
+
+			if ( JCck::isSite() && JCck::getSite()->context ) {
+				$context	=	'/'.JCck::getSite()->context;
+			}
+			$doc->addScript( $root.'/media/cck/js/cck.core-3.17.0.min.js' );
+			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
+			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
+			
 			$app->cck_jquery_more	=	true;
 		}
 	}
@@ -349,34 +399,15 @@ abstract class JCck
 	public static function loadModalBox()
 	{
 		$app	=	JFactory::getApplication();
+		$root	=	JUri::root( true );
+
 		if ( !( isset( $app->cck_modal_box ) && $app->cck_modal_box === true ) ) {
-			$style	=	$app->isAdmin() ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
+			$style	=	$app->isClient( 'administrator' ) ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
 			$doc	=	JFactory::getDocument();
-			$doc->addStyleSheet( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
-			$doc->addScript( JUri::root( true ).'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
+			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			$app->cck_modal_box	=	true;
 		}
-	}
-	
-	// googleAnalytics
-	public static function googleAnalytics( $url, $account )
-	{
-		$doc	=	JFactory::getDocument();
-		$js	=	"
-				var _gaq = _gaq || [];
-				_gaq.push(['_setAccount', '".$account."']);
-				_gaq.push(['_setDomainName', 'none']);
-				_gaq.push(['_setAllowLinker', true]);
-				_gaq.push(['_trackPageview', '".$url."']);
-				
-				(function() {
-					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-				})();
-				";
-				
-		$doc->addScriptDeclaration( $js );
 	}
 }
 ?>

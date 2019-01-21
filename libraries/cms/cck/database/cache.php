@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: database.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,17 +13,7 @@ defined( '_JEXEC' ) or die;
 // JCckDatabaseCache
 abstract class JCckDatabaseCache extends JCckDatabase
 {
-	// getTableList
-	public static function getTableList( $flip = false )
-	{
-		static $cache	=	NULL;
-		
-		if ( !$cache ) {
-			$cache	=	parent::getTableList();
-		}
-
-		return $flip ? array_flip( $cache ) : $cache;
-	}
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Queries
 
 	// loadResult
 	public static function loadObject( $query )
@@ -75,6 +65,32 @@ abstract class JCckDatabaseCache extends JCckDatabase
 		}
 		
 		return $cache[$idx];
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Tables
+
+	// getTableColumns
+	public static function getTableColumns( $table, $flip = false )
+	{
+		static $cache	=	array();
+
+		if ( !isset( $cache[$table] ) ) {
+			$cache[$table]	=	parent::getTableColumns( $table );
+		}
+
+		return $flip ? array_flip( $cache[$table] ) : $cache[$table];
+	}
+
+	// getTableList
+	public static function getTableList( $flip = false )
+	{
+		static $cache	=	null;
+		
+		if ( !$cache ) {
+			$cache	=	parent::getTableList();
+		}
+
+		return $flip ? array_flip( $cache ) : $cache;
 	}
 }
 ?>

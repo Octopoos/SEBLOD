@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: user.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -56,7 +56,7 @@ abstract class JCckUser
 		// More
 		if ( $user->id && $profile ) {
 			if ( !$content_type ) {
-				$content_type	=	''; // todo: config
+				$content_type	=	''; /* TODO#SEBLOD: config */
 				if ( !$content_type ) {
 					$content_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_user" AND pk = '.(int)$user->id );
 				}
@@ -69,7 +69,8 @@ abstract class JCckUser
 			
 			if ( isset( $tables[$prefix.'cck_store_item_users'] ) ) {
 				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_item_users WHERE id = '.(int)$user->id );
-				if ( count( $fields ) ) {
+				
+				if ( is_object( $fields ) ) {
 					foreach ( $fields as $k=>$v ) {
 						$user->$k	=	$v;
 					}
@@ -77,7 +78,8 @@ abstract class JCckUser
 			}
 			if ( isset( $tables[$prefix.'cck_store_form_'.$content_type] ) ) {
 				$fields	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_store_form_'.$content_type.' WHERE id = '.(int)$user->id );
-				if ( count( $fields ) ) {
+				
+				if ( is_object( $fields ) ) {
 					foreach ( $fields as $k=>$v ) {
 						$user->$k	=	$v;
 					}

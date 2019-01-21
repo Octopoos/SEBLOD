@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: json.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -47,6 +47,15 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		}
 	}
 
+	// onCCK_StoragePrepareContent_Xi
+	public function onCCK_StoragePrepareContent_Xi( &$field, &$value, &$storage, $x = '', $xi = 0 )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+		self::onCCK_StoragePrepareForm( $field, $value, $storage );
+	}
+
 	// onCCK_StoragePrepareDelete
 	public function onCCK_StoragePrepareDelete( &$field, &$value, &$storage )
 	{
@@ -79,16 +88,24 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			return;
 		}
 		
-		// Init
-		$P	=	$field->storage_field;
-
+		// Prepare
 		if ( $config['collection'] != '' ) {
 			$matches	=	json_decode( $field->value, true );
+			$P			=	$field->storage_field; /* Guess: it should be the $field->name? */
+			
+			if ( $field->storage_field2 != '' && $field->storage_field2 != $P ) {
+				$P		=	$field->storage_field2;
+			}
 			$value		=	$matches[$P][$config['xi']];
 		} else {
 			$matches	=	json_decode( $field->value, true );
-			if ( isset( $matches[$field->storage_field2] ) ) {
-				$value	=	$matches[$field->storage_field2];
+			$P			=	$field->storage_field2;
+
+			if ( $P == '' ) {
+				$P		=	$field->name;
+			}
+			if ( isset( $matches[$P] ) ) {
+				$value	=	$matches[$P];
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
 				}
@@ -135,8 +152,8 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target )
-	{		
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
+	{
 		return;
 	}
 	
@@ -195,7 +212,11 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		$idx1	=	$process['s_table'];
 		$idx2	=	$process['s_field'];
 		if ( $idx1 && $idx2 ) {
-			$storages[$idx1][$idx2]	=	'{' . substr( $storages[$idx1][$idx2], 0, -1 ) . '}';
+			if ( is_array( $storages[$idx1][$idx2] ) ) {
+				$storages[$idx1][$idx2]	=	json_encode( $storages[$idx1][$idx2] );
+			} else {
+				$storages[$idx1][$idx2]	=	'{' . substr( $storages[$idx1][$idx2], 0, -1 ) . '}';
+			}
 		}
 	}
 	

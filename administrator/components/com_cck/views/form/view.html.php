@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -14,7 +14,7 @@ defined( '_JEXEC' ) or die;
 class CCKViewForm extends JViewLegacy
 {
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app	=	JFactory::getApplication();
 		
@@ -58,6 +58,7 @@ class CCKViewForm extends JViewLegacy
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
 		$params			=	new JRegistry;
+		$session		=	JFactory::getSession();
 		$view			=	$this->getName();
 		
 		$isNew			=	1;
@@ -66,10 +67,12 @@ class CCKViewForm extends JViewLegacy
 		$variation		=	'';
 		
 		jimport( 'cck.base.form.form' );
-		include_once JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-		if ( isset( $config['id'] ) ) {
-			JFactory::getSession()->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.$type->name.'|'.$config['id'] ) );
-		}
+		include_once JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
+		$unique	=	$preconfig['formId'].'_'.@$type->name;
+		
+		$session->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
+		$session->set( 'cck_task', 'form' );
 		
 		$this->config	=	&$config;
 		$this->data		=	&$data;

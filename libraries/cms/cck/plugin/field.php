@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: field.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -59,6 +59,14 @@ class JCckPluginField extends JPlugin
 		$field->data	=	$value;
 	}
 
+	// getTextFromOptions
+	public static function getTextFromOptions( $field, $value, $config )
+	{
+		$v	=	$value;
+
+		return self::g_getOptionText( $v, $field->options, $field->divider, $config );
+	}
+
 	// getValueFromOptions
 	public static function getValueFromOptions( $field, $value, $config = array() )
 	{
@@ -68,19 +76,20 @@ class JCckPluginField extends JPlugin
 			return $value;
 		}
 		if ( count( $opts ) ) {
+			$length	=	strlen( $value );
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
+
 				if ( $config['doTranslation'] && trim( $o[0] ) ) {
 					$o[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o[0] ) ) );
 				}
-				// if ( strcasecmp( $o[0], $value ) == 0 ) {
-				if ( stristr( $o[0], $value ) !== false ) {
+				if ( stristr( $o[0], $value ) !== false && strlen( $o[0] ) == $length ) {
 					return ( isset( $o[1] ) ) ? $o[1] : $o[0];
 					break;
 				}
 			}
 		}
-		
+
 		return $value;
 	}
 	
@@ -152,7 +161,7 @@ class JCckPluginField extends JPlugin
 		if ( isset( $data['selectlabel'] ) && $data['selectlabel'] == '' ) {
 			$data['selectlabel']	=	' ';
 		}
-		
+
 		// JSON
 		if ( isset( $data['json'] ) && is_array( $data['json'] ) ) {
 			foreach ( $data['json'] as $k=>$v ) {
@@ -165,6 +174,22 @@ class JCckPluginField extends JPlugin
 							}
 						}
 						$v['options']	=	$options;
+					} elseif ( isset( $v['string'] ) ) {
+						foreach ( $v['string'] as $k2=>$v2 ) {
+							if ( is_array( $v2 ) ) {
+								$string	=	'';
+								foreach ( $v2 as $s2 ) {
+									if ( $s2 != '' ) {
+										$string	.=	$s2.'||';
+									}
+								}
+								if ( $string ) {
+									$string	=	substr( $string, 0, -2 );
+								}
+								$v[$k2]	=	$string;
+							}
+						}
+						unset( $v['string'] );
 					}
 					$data[$k]	=	JCckDev::toJSON( $v );
 				}
@@ -234,49 +259,54 @@ class JCckPluginField extends JPlugin
 				$data['storage']			=	'none';
 			}
 			if ( $data['alterTable'] ) {
-				$data['storage_alter_type']	=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
-				$alter						=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
-				if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
-					if ( $data['storage_table'] && $data['storage_field'] ) {
-						$columns	=	$db->getTableColumns( $data['storage_table'] );
-						if ( !isset( $columns[$data['storage_field']] ) ) {
-							if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+				$data['storage_alter_type']		=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
+				$alter							=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
+				$pos							=	strpos( $data['storage_table'], 'aka_table' );
+				$data['storage_alter_table']	=	(int)$data['storage_alter_table'];
+
+				if ( !( $pos !== false && $pos == 0 ) ) {
+					if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
+						if ( $data['storage_table'] && $data['storage_field'] ) {
+							$columns	=	$db->getTableColumns( $data['storage_table'] );
+							if ( !isset( $columns[$data['storage_field']] ) ) {
+								if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								} else {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}							
 							} else {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-							}							
-						} else {
-							JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-						}
-					}
-				} else {
-					if ( $data['storage_table'] && $data['storage_field'] ) {
-						if ( ( $data['type'] == 'jform_rules' && $data['storage_field'] == 'rules' ) ||
-							 ( $data['storage_table'] == @$data['core_table'] && in_array( $data['storage_field'], $data['core_columns'] ) ) ) {
-							unset( $data['core_table'] );
-							unset( $data['core_columns'] );
-							return;
-						}
-						$columns	=	$db->getTableColumns( $data['storage_table'] );
-						if ( !isset( $columns[$data['storage_field']] ) ) {
-							$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-							if ( $data['storage_cck'] != '' ) {
-								// #__cck_store_form_
-								$table	=	'#__cck_store_form_'.$data['storage_cck'];
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
-							} else {
-								// #__cck_store_item_
-								$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
-								JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(11) NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
-							}
-							$columns2	=	$db->getTableColumns( $table );
-							if ( !isset( $columns2[$data['storage_field']] ) ) {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
-							}
-							$data['storage_table']	=	$table;
-						} else {
-							if ( $alter ) {
 								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+							}
+						}
+					} else {
+						if ( $data['storage_table'] && $data['storage_field'] ) {
+							if ( ( $data['type'] == 'jform_rules' && $data['storage_field'] == 'rules' ) ||
+								 ( $data['storage_table'] == @$data['core_table'] && in_array( $data['storage_field'], $data['core_columns'] ) ) ) {
+								unset( $data['core_table'] );
+								unset( $data['core_columns'] );
+								return;
+							}
+							$columns	=	$db->getTableColumns( $data['storage_table'] );
+							if ( !isset( $columns[$data['storage_field']] ) ) {
+								$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+								if ( $data['storage_cck'] != '' ) {
+									// #__cck_store_form_
+									$table	=	'#__cck_store_form_'.$data['storage_cck'];
+									JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								} else {
+									// #__cck_store_item_
+									$table	=	( strpos( $data['storage_table'], 'cck_store_item' ) !== false ) ? $data['storage_table'] : '#__cck_store_item_'.str_replace( '#__', '', $data['storage_table'] );
+									JCckDatabase::execute( 'CREATE TABLE IF NOT EXISTS '.$table.' ( id int(10) UNSIGNED NOT NULL, cck VARCHAR(50) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;' );
+								}
+								$columns2	=	$db->getTableColumns( $table );
+								if ( !isset( $columns2[$data['storage_field']] ) ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}
+								$data['storage_table']	=	$table;
+							} else {
+								if ( $alter ) {
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								}
 							}
 						}
 					}
@@ -303,7 +333,8 @@ class JCckPluginField extends JPlugin
 								.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		}
 		if ( !$data['variation'] ) {
-			$column2			=	'';
+			$column2		=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		} else {
 			$value			=	@$field->variation;
 			$text			=	( isset( $data['variation'][$value] ) ) ? $data['variation'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
@@ -368,7 +399,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -476,7 +507,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -572,7 +603,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -710,7 +741,7 @@ class JCckPluginField extends JPlugin
 		
 		// 4
 		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access ) ? (int)$field->access : 1;
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
 		$text				=	$data['access'][$value]->text;
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
@@ -799,6 +830,29 @@ class JCckPluginField extends JPlugin
 			}
 		}
 
+		// Css
+		if ( $field->variation ) {
+			$css	=	'';
+
+			switch ( $field->variation ) {
+				case 'value':
+					$css	=	'is-value';
+					break;
+				case 'form_filter':
+					$css	=	'is-filter';
+					break;
+				case 'form_filter_ajax':
+					$css	=	'is-filter-ajax';
+					break;
+				default:
+					break;
+			}
+			if ( $css ) {
+				$field->css	.=	$field->css ? ' '.$css : $css;
+			}
+		}
+
+		// Attributes
 		if ( isset( $field->attributes ) && $field->attributes != '' ) {
 			if ( strpos( $field->attributes, 'J(' ) !== false ) {
 				$matches	=	'';
@@ -1000,13 +1054,14 @@ class JCckPluginField extends JPlugin
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_addProcess
-	public static function g_addProcess( $event, $type, &$config, $params )
+	public static function g_addProcess( $event, $type, &$config, $params, $priority = 3 )
 	{
 		if ( $event && $type ) {
 			$process						=	new stdClass;
 			$process->group					=	self::$construction;
 			$process->type					=	$type;
 			$process->params				=	$params;
+			$process->priority				=	$priority;
 			$config['process'][$event][]	=	$process;
 		}
 	}
@@ -1014,7 +1069,11 @@ class JCckPluginField extends JPlugin
 	// g_addScriptDeclaration
 	public static function g_addScriptDeclaration( $script )
 	{
-		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<script type="text/javascript">jQuery(document).ready(function($){'.$script.'});</script>';
+		} else {
+			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$script.'});' );
+		}
 	}
 	
 	//g_doConditionalStates
@@ -1036,7 +1095,7 @@ class JCckPluginField extends JPlugin
 		if ( $variation == 'value' ) {
 			$attr			=	$field->attributes ? ' '.$field->attributes : '';
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'"'.$attr.' />';
-			$field->form	=	$base . '<span id="_'.$id.'" class="variation_value">'.$text.'</span>';
+			$field->form	=	$base . '<span id="_'.$id.'" class="variation_value is-value">'.$text.'</span>';
 		} elseif ( $variation == 'disabled' ) {
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="_'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	$base;
@@ -1056,14 +1115,26 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( $field->script );
 			}
 			if ( $variation == 'form_filter_ajax' ) {
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { var v=$(this).myVal(); JCck.Core.loadmore("&start=0&"+$(this).attr("name")+"="+v,0,1); });' );
+				static $keypress	=	0;
+				$field->form		=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
+
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { JCck.Core.loadmore("&start=0",-1,1); });' );
+				
+				if ( !$keypress ) {
+					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) { if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
+
+					$keypress	=	1;
+				}
 			} else {
-				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'", function() { '.$submit.'(\'search\'); });' );
+				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter", function() { '.$submit.'(\'search\'); });' );
 			}
 		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
+			$attributes		=	( isset( $field->attributesList ) && $field->attributesList != '' ) ? explode( '||', $field->attributesList ) : array();
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
-			$field->form	=	'';
-			$options		=	explode( '||', ( isset( $field->optionsList ) ? $field->optionsList : $field->options ) );
+			$field->form	=	'';			
+			$options		=	( isset( $field->optionsList ) ) ? $field->optionsList : $field->options;
+			$options		=	( $options != '' ) ? explode( '||', $options ) : array();
+			
 			if ( count( $options ) ) {
 				static $loaded	=	array();
 				if ( !isset($loaded[$id] ) ) {
@@ -1078,25 +1149,27 @@ class JCckPluginField extends JPlugin
 					$then			=	'';
 					if ( $variation == 'list' || $variation == 'list_filter_ajax' ) {
 						if ( $variation == 'list_filter_ajax' ) {
-							$then	=	' JCck.Core.loadmore("&start=0&"+$("#'.$id.'").attr("name")+"="+v,0,1);';
+							$base	=	str_replace( 'class="', 'data-cck-ajax="" class="', $base );
+							$then	=	'JCck.Core.loadmore("&start=0",-1,1);';
 						}
 						$then		.=	' $("#'.$id.'_ > li").removeClass("active"); $(this).parent().addClass("active")';
 					} else {
 						$then		=	' '.$submit.'("search");';
 					}
-					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() {var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
+					$js				=	'$("form#'.$parent.'").on("click", "#'.$id.'_ > li a", function() { var v = $(this).parent().attr("data-value"); $("#'.$id.'").val(v);'.$then.' });';
 					$js				=	'(function ($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
-					$doc->addScriptDeclaration( $js );
+					self::g_addScriptDeclaration( $js );
 					$loaded[$id]	=	1;
 				}
-				foreach ( $options as $opt ) {
-					$o		=	explode( '=', $opt );
-					$class	=	'';
+				foreach ( $options as $k=>$opt ) {
+					$attribute	=	@$attributes[$k];
+					$o			=	explode( '=', $opt );
+					$class		=	'';
 					if ( @$o[1] == $value ) {
 						$class		=	' class="active"';
 					} 
 					if ( $o[0] != '' ) {
-						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"'.$attribute.'><a class="list-variation-item" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
 					}
 				}
 				if ( $field->form != '' ) {

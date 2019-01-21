@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -153,7 +153,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->text		=	( $file_title != '' ) ? $file_title : ( ( @$options2['storage_format'] ) ? $value : substr( $value, strrpos( $value, '/' ) + 1 ) );
 			$field->hits		=	self::_getHits( $config['id'], $field->name, $collection, $xi );
 			$field->file_size	=	( file_exists( $file ) ) ? self::_formatBytes( filesize( $file ) ) : self::_formatBytes( 0 );
-			$field->link		=	'index.php?option=com_cck&task=download'.$link_more.'&file='.$field->name.'&id='.$config['id'];
+			$field->extension	=	( strrpos( $file, '.' ) ) ? strtolower( substr( $file, strrpos( $file, '.' ) + 1 ) ) : '';
+			$field->link		=	JRoute::_( 'index.php?option=com_cck&task=download'.$link_more.'&file='.$field->name.'&id='.$config['id'] );
 			$field->linked		=	true;
 			$field->html		=	'<a href="'.$field->link.'" title="'.$file_title.'">'.$field->text.'</a>';
 			$field->typo_target	=	'text';
@@ -174,12 +175,31 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Path Folder
 		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
 		$file		=	'';
+		
 		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
 			$file	.=	$f_opt2['path'];
 			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
 			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
 		}
-		$file		.=	$field->value;
+		
+		$file			.=	$field->value;
+		
+		if ( JFactory::getSession()->get( 'cck_task' ) == 'form' ) {
+			$permissions	=	( isset( $f_opt2['folder_permissions'] ) && $f_opt2['folder_permissions'] ) ? octdec( $f_opt2['folder_permissions'] ) : 0755;
+			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );		
+
+			if ( $preview_ext ) {
+				$preview_ext	=	explode( ',', $preview_ext );
+
+				if ( $file && is_file( JPATH_SITE.'/'.$file ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( JPATH_SITE.'/'.$file );
+
+					if ( in_array( $ext, $preview_ext ) ) {
+						$field->task	=	'read';
+					}
+				}
+			}
+		}
 
 		$field->filename	=	$file;
 	}
@@ -203,7 +223,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$name	=	$field->name;
 			$xk		=	'';
 		}
-		
+
+		// Clear Value for assets
+		if ( isset( $config['copyfrom_id'] ) && $config['copyfrom_id'] ) {
+			$value	=	'';
+		}
+
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
@@ -266,7 +291,18 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
-			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions' );
+			$default	=	array(
+								'archive'=>'7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP',
+								'audio'=>'flac,mp3,ogg,wma,wav,FLAC,MP3,OGG,WMA,WAV',
+								'document'=>'csv,doc,docx,pdf,pps,ppsx,ppt,pptx,txt,xls,xlsx,CSV,DOC,DOCX,PDF,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX',
+								'image'=>'bmp,gif,jpg,jpeg,png,tif,tiff,BMP,GIF,JPEG,JPG,PNG,TIF,TIFF',
+								'video'=>'flv,mov,mp4,mpg,mpeg,swf,wmv,FLV,MOV,MP4,MPG,MPEG,SWF,WMV',
+								'common'=>'bmp,csv,doc,docx,gif,jpg,pdf,png,pps,ppsx,ppt,pptx,txt,xls,xlsx,zip,BMP,CSV,DOC,DOCX,GIF,JPG,PDF,PNG,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX,ZIP',
+								'preset1'=>'',
+								'preset2'=>'',
+								'preset3'=>''
+							);
+			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions', $default[$legal_ext] );
 			if ( !$legal_ext ) {
 				$legal_ext	=	$options2['legal_extensions'];
 			}
@@ -274,10 +310,12 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 
 		$class				=	'inputbox file'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$attr_input_text	=	'class="inputbox text" size="'.$field->size.'"';
+		$collection			=	'';
 		
 		if ( strpos( $name, '[]' ) !== false ) { //FieldX
-			$nameH	=	substr( $name, 0, -2 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -2 );
+			$collection 	=	$nameH;
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden[]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false ); 
 			}
@@ -289,8 +327,9 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$form_more3	=	self::_addFormText( $id.'_title', $nameH.'_title[]', $attr_input_text, $title_label, $file_title, 'upload_file' );
 			}
 		} elseif ( $name[(strlen($name) - 1 )] == ']' ) { //GroupX
-			$nameH	=	substr( $name, 0, -1 );
-			$form_more 	=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
+			$nameH			=	substr( $name, 0, -1 );
+			$collection 	=	substr( $name, 0, strpos( $name, '[' ) );
+			$form_more 		=	'<input class="inputbox" type="hidden" id="'.$id.'_hidden" name="'.$nameH.'_hidden]" value="'.$location.'" />';
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more2	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  @$options2['path_label'].$fold_3 , $value3, 'upload_file', false );
 			}
@@ -318,24 +357,40 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$onchange . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'<input type="file" id="'.$id.'" name="'.$name.'" '.$attr.' />';
 		if ( $options2['custom_path'] == '1' ) {
-			$lock	=	'<a class="switch lock_file" href="javascript:void(0);"><span class="linkage linked"></span></a>';	//TODO
+			$lock	=	'<a class="switch lock_file" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 		}
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
 		}
 		$form	=	$form.$form_more.$lock.$form_more2.$form_more3;
 		if ( $options2['preview'] != -1 && $value['file_location'] && $value2 != '' ) {
-			$more	=	'';
+			$more	=	( $collection ) ? '&collection='.$collection.'&xi='.$xk : '';
 			$label	=	JText::_( 'COM_CCK_PREVIEW' );
+
 			if ( isset( $config['id'] ) && $config['id'] ) {
-				$link	=	JUri::root().'component/cck/index.php?option=com_cck&task=download'.$more.'&file='.$name.'&id='.$config['id'];
+				$link	=	JRoute::_( 'index.php?option=com_cck&task=download'.$more.'&file='.( ( !$config['client'] && $inherit['name'] ) ? $inherit['name'] : $field->name ).'&id='.$config['id'] );
 				$target	=	'';
 			} else {
 				$link	=	JUri::root().$value2;
 				$target	=	'target="_blank"';
 			}
-			$title	=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
+			$title			=	( $value['file_title'] != '' ) ? $value['file_title'] : ( ( strrpos( $value2, '/' ) === false ) ? $value2 : substr( $value2, strrpos( $value2, '/' ) + 1 ) );
+			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );
+			
+			if ( $preview_ext ) {
+				$permissions	=	( isset( $options2['folder_permissions'] ) && $options2['folder_permissions'] ) ? octdec( $options2['folder_permissions'] ) : 0755;
+				$preview_ext	=	explode( ',', $preview_ext );
+
+				if ( $value2 && is_file( JPATH_SITE.'/'.$value2 ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( JPATH_SITE.'/'.$value2 );
+
+					if ( in_array( $ext, $preview_ext ) ) {
+						$target	=	' target="_blank"';
+					}
+				}
+			}
+
 			if ( $options2['preview'] == 8 ) {
 				$label		=	'';
 				$preview	=	'<span class="cck_preview">'.$title.'</span>';
@@ -469,7 +524,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			}
 		}
 		$legal_ext	=	explode( ',', $legal_ext );
-		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, NULL, 'files', 'array' ) : JRequest::getVar( $name, NULL, 'files', 'array' );
+		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, null, 'files', 'array' ) : JRequest::getVar( $name, null, 'files', 'array' );
 		if ( is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
 				$userfile_name			=	$userfile['name'][$xk][$name];
@@ -564,6 +619,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		if ( ! $maxsize || ( $maxsize && $userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
 				$item_custom_name	=	$userfile['name'];
+				$item_custom_path	=	'';
 				if ( @$options2['custom_path'] ) {
 					if ( strrpos( $item_custom_dir, '.' ) === false ) {
 						$item_custom_path	=	( $item_custom_dir == '' ) ? substr( $itemPath, 0, strrpos( $itemPath, '/' ) + 1 ) : ( ( $item_custom_dir[strlen( $item_custom_dir ) - 1] == '/' ) ? $item_custom_dir : $item_custom_dir.'/' );
@@ -688,7 +744,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	{
 		jimport( 'joomla.filesystem.folder' );
 		
-		include dirname(__FILE__).'/includes/afterstore.php';
+		include __DIR__.'/includes/afterstore.php';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
@@ -709,7 +765,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	// _getHits
 	protected static function _getHits( $id, $fieldname, $collection = '', $x = 0 )
 	{
-		$query	= 'SELECT a.hits FROM #__cck_core_downloads AS a WHERE a.id = '.(int)$id.' AND a.field = "'.(string)$fieldname.'" AND a.collection = "'.(string)$collection.'" AND a.x = '.(int)$x;
+		$query	=	'SELECT a.hits FROM #__cck_core_downloads AS a WHERE a.id = '.(int)$id.' AND a.field = "'.(string)$fieldname.'" AND a.collection = "'.(string)$collection.'" AND a.x = '.(int)$x;
 		$hits	=	JCckDatabase::loadResult( $query ); //@
 		
 		return ( $hits ) ? $hits : 0;

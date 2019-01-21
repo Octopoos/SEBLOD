@@ -1,6 +1,8 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 if ( $context != 'com_cck.site' ) {
 	return;
 }
@@ -12,11 +14,9 @@ $app			=	JFactory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
 $type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,3,6,7 */
 $groups			=	explode( ',', $type );
-
-jimport( 'joomla.utilities.arrayhelper' );
-JArrayHelper::toInteger( $groups );
-
+$groups			=	ArrayHelper::toInteger( $groups );
 $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
+$levels			=	array();
 $sitetitle		=	$item->title;
 $sitename		=	$item->name;
 $sitemail		=	JFactory::getConfig()->get( 'mailfrom' );
@@ -24,12 +24,24 @@ $sitemail		=	substr( $sitemail, strpos( $sitemail, '@' ) );
 
 $existing_users	=	array();
 $next_level		=	0;
+$parent			=	null;
 $usergroups		=	array();
 $users			=	array();
 $users_author	=	array();
 $users_bridge	=	array();
 $users_force	=	array();
 $users_more		=	array();
+
+if ( $item->parent_id ) {
+	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, groups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
+
+	if ( is_object( $parent ) ) {
+		$parent->groups		=	explode( ',', $parent->groups );
+		$parent->groups[]	=	0;
+
+		array_shift( $parent->groups );
+	}
+}
 
 if ( isset( $item->groups ) && $item->groups != '' ) {
 	$item->groups		=	json_decode( $item->groups, true );
@@ -40,7 +52,7 @@ if ( isset( $item->groups ) && $item->groups != '' ) {
 	unset( $item->groups );
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-require_once JPATH_LIBRARIES.'/joomla/user/user.php';
+JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 
 // Guest Group
 $guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 )
@@ -49,12 +61,21 @@ $parent_id		=	$guest_group;
 $usergroups[]	=	$guest_group;
 
 if ( $guest_only ) {
-	$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, $guest_group )
-								  : CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, 1 );
+	if ( $mode ) {
+		$guest_group	=	CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, $guest_group );
+		CCK_TableSiteHelper::updateViewLevel( 5, $guest_group );
+	} else {
+		$guest_group	=	CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, 1 );
+	}
 }
 
 // Guest User
-$item->guest	=	CCK_TableSiteHelper::addUser( '', $sitetitle, $sitemail, array( 0=>$guest_group ) );
+$guest_groups	=	array( 0=>$guest_group );
+
+if ( is_object( $parent ) && $parent->guest_only_group ) {
+	$guest_groups[1]	=	$parent->guest_only_group;
+}
+$item->guest	=	CCK_TableSiteHelper::addUser( '', $sitetitle, $sitemail, $guest_groups );
 
 // Groups
 $special		=	0;
@@ -62,7 +83,7 @@ $root			=	CCK_TableSiteHelper::getRootAsset();
 $rules			=	array();
 
 foreach ( $groups as $i=>$g ) {
-	$group		=	JTable::getInstance( 'usergroup' );
+	$group		=	JTable::getInstance( 'Usergroup' );
 	$group->load( $g );
 	
 	// Usergroup
@@ -70,7 +91,7 @@ foreach ( $groups as $i=>$g ) {
 		$parent_id		=	CCK_TableSiteHelper::addUserGroup( $group->title .' - '. $sitetitle, $parent_id );
 		$usergroups[]	=	$parent_id;
 		if ( $special == 0 ) {
-			CCK_TableSiteHelper::updateViewLevel( 2, $parent_id );					
+			CCK_TableSiteHelper::updateViewLevel( 2, $parent_id );
 			$special++;
 		}
 		if ( ( $g == 6 || $g == 7 ) && $special == 1 ) {
@@ -132,15 +153,15 @@ if ( $mode == 1 ) {
 }
 
 // Guest Viewlevel
-$usergroups			=	$item->groups;
+$usergroups		=	$item->groups;
 if ( $guest_only ) {
 	$item->guest_only_group		=	$guest_group;
-	$usergroups[]					=	$guest_group;
-	$guest_viewlevel				=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
-	$usergroups						=	$item->groups;
+	$usergroups[]				=	$guest_group;
+	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
+	$usergroups					=	$item->groups;
 	$item->guest_only_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. 'Guest Only', array( 0 => $guest_group ), $next_level );
 } else {
-	$guest_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
+	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
 }
 
 // Viewlevels
@@ -182,11 +203,18 @@ $plg_params	=	$plg_params->toArray();
 if ( isset( $plg_params['bridge_default-access'] ) ) {
 	$plg_params['bridge_default-access']	=	$guest_viewlevel;
 }
+
 foreach ( $users as $k=>$u ) {
 	array_pop( $usergroups );
 
 	$id			=	0;
 	$u->groups	=	$usergroups;
+
+	if ( is_object( $parent ) && $parent->groups ) {
+		array_pop( $parent->groups );
+
+		$u->groups	=	array_merge( $u->groups, $parent->groups );
+	}
 
 	// Force Password
 	if ( isset( $users_force[$k] ) && $users_force[$k] ) {
@@ -219,7 +247,7 @@ foreach ( $users as $k=>$u ) {
 		$id						=	(int)$core->id;
 
 		// More
-		$users_more[$k]['cck']	=	$content_type;
+		$users_more[$k]['cck']	=	$content_type; /* TODO#SEBLOD: remove "cck" column */
 
 		$more					=	JCckTable::getInstance( '#__cck_store_item_users', 'id' );
 		$more->load( $u->id, true );
@@ -271,6 +299,7 @@ if ( is_array( $item->groups ) ) {
 	$item->groups		=	implode( ',', $item->groups );
 }
 if ( is_array( $item->viewlevels ) ) {
-	$item->viewlevels	=	implode( ',', $item->viewlevels );
+	$item->public_viewlevel	=	$item->viewlevels[0];
+	$item->viewlevels		=	implode( ',', $item->viewlevels );
 }
 ?>

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -78,7 +78,7 @@ class plgCCK_FieldJForm_Category_App extends plgCCK_FieldGeneric_App
 		$value	=	array();
 		
 		foreach ( $values as $v ) {
-			$table	=	JTable::getInstance( 'category' );
+			$table	=	JTable::getInstance( 'Category' );
 			if ( $v > 0 ) {
 				$table->load( $v );
 			}

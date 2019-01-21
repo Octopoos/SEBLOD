@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\String\StringHelper;
 
 // Plugin
 class plgCCK_FieldCheckbox extends JCckPluginField
@@ -143,7 +145,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			foreach ( $optionsSorted as $i=>$val ) {
 				if ( trim( $val ) != '' ) {
 					$text	=	$val;
-					if ( JString::strpos( $val, '=' ) !== false ) {
+					if ( StringHelper::strpos( $val, '=' ) !== false ) {
 						$opt	=	explode( '=', $val );
 						$text	=	$opt[0];
 						$val	=	$opt[1];
@@ -175,13 +177,9 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		} else {
 			$orientation	=	'';
 		}
-		if ( JCck::on() ) {
-			$attr	=	'class="checkbox'.$validate.'" size="1"';
-		} else {
-			$attr	=	'class="inputbox checkbox'.$validate.'" size="1"';
-		}
-		
+		$attr	=	'class="checkbox'.$validate.'" size="1"';
 		$attr_key	=	'data-cck';
+
 		if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
 			$k	=	0;
 			foreach ( $opts as $i=>$o ) {
@@ -248,11 +246,16 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		$class		=	'checkboxes'.$orientation . ( $field->css ? ' '.$field->css : '' );
 		$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form		=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
-		
+
+		if ( $form != '' ) {
+			$form	=	'<fieldset id="'.$id.'" '.$attr.'>'.$form.'</fieldset>';
+		}
+
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+			$field->text	=	parent::g_getOptionText( $value, $field->options, $divider, $config );
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
@@ -299,9 +302,6 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		// Prepare
 		$field->divider	=	$divider;
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
-		
-		// Set
-		$field->value	=	$value;
 		
 		// Return
 		if ( $return === true ) {
@@ -360,7 +360,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
-	{		
+	{
 		return parent::g_onCCK_FieldRenderForm( $field );
 	}
 	

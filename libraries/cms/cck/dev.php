@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: dev.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,8 +13,115 @@ defined( '_JEXEC' ) or die;
 // JCckDev
 abstract class JCckDev
 {
-	public static $_urls		=	array();
+	public static $_urls	=	array();
+
+	// _getField
+	protected static function _getField( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		// Check & and Trigger fallback if needed
+		$class		=	'Helper_Form';
+		$fallback	=	false;
+		$method		=	$caller['function'];
+
+		if ( $caller['component'] == 'com_cck' ) {
+			$class	=	'CommonHelper_Form';
+			$path	=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/common/form.php';
+		} else {
+			$path	=	JPATH_ADMINISTRATOR.'/components/'.$caller['component'].'/helpers/helper_form.php';
+		}
+		if ( is_file( $path ) ) {
+			require_once $path;
+		} else {
+			$fallback	=	true;
+		}
+		if ( !$fallback ) {
+			if ( !method_exists( $class, $method ) ) {
+				$fallback	=	true;
+			}
+		}
+		if ( $fallback ) {
+			return JCckDev::getForm( $caller['name'], $value, $config, $override, $inherit );
+		}
+
+		// Continue
+		if ( !( isset( $override['storage_field'] ) && $override['storage_field'] ) ) {
+			$override['storage_field']	=	$caller['name'];
+		}
+
+		$field	=	JCckDevField::get( 'core_dev_text', $value, $config, $inherit, $override, 'initialize' );
+		if ( ! $field ) {
+			return '';
+		}
+
+		$name	=	$field->storage_field;
+		
+		if ( isset( $config['inherit'] ) ) {
+			if ( strpos( $name, '[' ) !== false ) {
+				$parts				=	explode( '[', $name );
+				$inherit['name']	=	$config['inherit'].'['.$parts[0].']['.$parts[1];
+			} else {
+				$inherit['name']	=	$config['inherit'].'['.$name.']';
+			}
+		} else {
+			if ( ! isset( $inherit['name'] ) ) {
+				$inherit['name']	=	$name;
+			}
+		}
+		if ( ! isset( $inherit['id'] ) ) {
+			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
+		}
+		
+		// --
+		JCckPluginField::g_onCCK_FieldPrepareForm( $field, $config );
+
+		// Init
+		if ( count( $inherit ) ) {
+			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
+			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
+		} else {
+			$id		=	$field->name;
+			$name	=	$field->name;
+		}
+		
+		// Validate
+		$validate	=	'';
+		if ( $config['doValidation'] > 1 ) {
+			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+		}
+		
+		// Prepare
+		if ( trim( $field->selectlabel ) ) {
+			if ( $config['doTranslation'] ) {
+				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+			}
+		}
+
+		// Set
+		$field->form	=	$class::$method( $field, $value, $name, $id, $config );
+		$field->value	=	$value;
+
+		if ( $field->script ) {
+			JCckPluginField::g_addScriptDeclaration( $field->script );
+		}
+		
+		if ( $field->required ) {
+			if ( trim( $field->label ) == '' ) {
+				$field->required	=	'';
+			}
+		}
+
+		// --
+
+		return $field;
+	}
 	
+	// addField
+	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
+	{
+		$config['fields'][]	=	$name;
+	}
+
 	// addScript
 	public static function addScript( $url, $type = "text/javascript", $defer = false, $async = false )
 	{
@@ -26,25 +133,12 @@ abstract class JCckDev
 		
 		// Make sure to have only one inclusion of special external scripts
 		if ( strpos( $url, 'http' ) !== false ) {
-			if ( strpos( $url, '//maps.googleapis.com/maps/api/js?' ) !== false ) {
-				if ( isset( self::$_urls['google_maps'] ) ) {
-					$cur		=	self::$_urls['google_maps'];
-					$vars2		=	JCckDevHelper::getUrlVars( $url );
-					if ( !$vars2->def( 'libraries' ) ) {
-						return;
-					}
-					$vars		=	JCckDevHelper::getUrlVars( $cur );
-					$libraries	=	array();
-					$libraries[$vars->get( 'libraries' )]	=	'';
-					$libraries[$vars2->get( 'libraries' )]	=	'';
-					$libraries	=	 array_keys( $libraries );
-					$url		=	str_replace( 'libraries='.$vars2->get( 'libraries' ), 'libraries='.implode( ',', $libraries ), $url );
-					unset( $app->cck_document['scripts'][$cur] );
-				}
-				self::$_urls['google_maps']	=	$url;
+			$url	=	self::getMergedScript( $url );
+			
+			if ( $url == '' ) {
+				return;
 			}
 		}
-		
 		$app->cck_document['scripts'][$url]['mime']			=	$type;
 		$app->cck_document['scripts'][$url]['defer']		=	$defer;
 		$app->cck_document['scripts'][$url]['async']		=	$async;
@@ -59,30 +153,162 @@ abstract class JCckDev
 			$app->cck_document	=	array();
 		}
 		$app->cck_document['styleSheets'][$url]['mime']		=	$type;
-		$app->cck_document['styleSheets'][$url]['media']	=	$media;
-		$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		if ( is_string( $media ) ) {
+			$app->cck_document['styleSheets'][$url]['media']	=	$media;
+		}
+		if ( count( $attribs) ) {
+			$app->cck_document['styleSheets'][$url]['attribs']	=	$attribs;
+		}
+	}
+
+	// addValidation
+	public static function addValidation( $rules, $options, $id = '', &$config = array() )
+	{
+		$app	=	JFactory::getApplication();
+		$doc	=	JFactory::getDocument();
+		
+		if ( !$id ) {
+			$id	=	'seblod_form';
+		}
+		if ( empty( $rules ) ) {
+			$rules	=	'';
+		}
+		$root	=	JUri::root( true );
+		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
+		
+		if ( is_object( $options ) ) {
+			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
+			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
+			$position	=	$options->get( 'validation_position', JCck::getConfig_Param( 'validation_position', 'topRight' ) );
+			$scroll		=	( $options->get( 'validation_scroll', JCck::getConfig_Param( 'validation_scroll', 1 ) ) ) ? 'scroll:true' : 'scroll:false';
+			if ( $color != '' ) {
+				if ( $position == 'inline' && $id != '_' ) {
+					$doc->addStyleDeclaration( '#'.$id.' .formError .formErrorContent{color: '.$color.'}' );
+				} else {
+					$doc->addStyleDeclaration( '.formError .formErrorContent{color: '.$color.'}' );
+				}
+			}
+			if ( $position != 'inline' && $bgcolor != '' ) {
+				$css	=	'.formError .formErrorContent{background: '.$bgcolor.'}';
+				if ( $position == 'topLeft' || $position == 'topRight' ) {
+					$css	.=	'.formError .formErrorArrow{border-color: '.$bgcolor.' transparent transparent transparent;}';
+				} else {
+					$css	.=	'.formError .formErrorArrow.formErrorArrowBottom{border-color: transparent transparent '.$bgcolor.' transparent;}';
+				}
+				$doc->addStyleDeclaration( $css );
+			}
+			$more		=	'';
+			if ( $options->def( 'prettySelect' ) ) {
+				$more	.=	',prettySelect:'.( $options->get( 'prettySelect' ) ? 'true' : 'false' );
+			}
+			if ( $options->def( 'useSuffix' ) ) {
+				$more	.=	',useSuffix:"'.$options->get( 'useSuffix' ).'"';
+			}
+			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"'.$more.'}';
+		} else {
+			$options	=	'{}';
+		}
+		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
+		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
+		
+		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.16.0.min.js" type="text/javascript"></script>';
+			echo '<script type="text/javascript">'.$js.'</script>';
+		} else {
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.16.0.min.js' );
+			$doc->addScriptDeclaration( $js );
+		}
 	}
 
 	// forceStorage
-	public static function forceStorage( $value = 'none' )
+	public static function forceStorage( $value = 'none', $allowed = '' )
 	{
 		$doc	=	JFactory::getDocument();
+		$js		=	'';
 		
 		if ( $value == 'none' ) {
-			$js		=	'jQuery(document).ready(function($){ $("#storage").val( "'.$value.'" ).attr("disabled", "disabled"); $("#force_storage").val( "1" ); });';
+			if ( $allowed == '' ) {
+				$allowed = false;
+			}
 		} else {
-			$js		=	'jQuery(document).ready(function($){ if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); } });';
+			if ( $allowed == '' ) {
+				$allowed = true;
+			}
+		}
+
+		if ( !$allowed ) {
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+		} else {
+			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
 		
-		echo '<script type="text/javascript">'.$js.'</script>';
+		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
+	public static function getMergedScript( $url )
+	{
+		$app	=	JFactory::getApplication();
+		$base	=	'';
+		$index	=	'';
+		$pos	=	strpos( $url, '?' );
+
+		$base	=	substr( $url, 0, $pos );
+		$index	=	str_replace( array( 'http://', 'https://' ), '', $base );
+
+		if ( isset( self::$_urls[$index] ) ) {
+			$cur		=	self::$_urls[$index];
+			$cur_vars	=	JCckDevHelper::getUrlVars( $cur )->toArray();
+			$new_vars	=	JCckDevHelper::getUrlVars( $url )->toArray();
+			$vars		=	array();
+
+			if ( count( $cur_vars ) ) {
+				foreach ( $cur_vars as $k=>$v ) {
+					if ( isset( $new_vars[$k] ) ) {
+						$values	=	array();
+						
+						if ( $v != '' ) {
+							$values[]	=	$v;
+						}
+						$v2		=	$new_vars[$k];
+
+						if ( $v2 != '' && !in_array( $v2, $values ) ) {
+							$values[]	=	$v2;
+						}
+						$vars[]	=	$k.'='.implode( ',', $values );
+						unset( $new_vars[$k] );
+					} else {
+						$vars[]	=	$k.'='.$v;
+					}
+				}
+			}
+
+			if ( count( $new_vars ) ) {
+				foreach ( $new_vars as $k=>$v ) {
+					$vars[]	=	$k.'='.$v;
+				}
+			}
+			if ( count( $vars ) ) {
+				$url	=	$base.'?'.implode( '&', $vars );
+			} else {
+				$url	=	$base;
+			}
+
+			unset( $app->cck_document['scripts'][$cur] );
+		}
+
+		self::$_urls[$index]	=	$url;
+		
+		return $url;
+	}
+
 	// importPlugin
 	public static function importPlugin( $type, $plugins )
 	{
 		if ( count( $plugins ) > 0 ) {
 			foreach ( $plugins as $plugin ) {
-				JPluginHelper::importPlugin( $type, $plugin );	// todo: improve
+				JPluginHelper::importPlugin( $type, $plugin );	/* TODO#SEBLOD: improve */
 			}
 		} else {
 			JPluginHelper::importPlugin( $type );
@@ -131,6 +357,7 @@ abstract class JCckDev
 		$js		=	'';
 		$js2	=	'';
 		$js3	=	'';
+
 		if ( $type == 'field' ) {
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
@@ -161,15 +388,12 @@ abstract class JCckDev
 					$c1 	=	'';
 					$class	=	'unpublish icon-flag';
 				}
-				$btn	=	( JCck::on() ) ? 'btn btn-micro ' : '';
-				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="'.$btn.'jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
+				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="btn btn-micro jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
 						.	'<input type="radio" id="bool80" name="bool8" value="0" '.$c0.' style="display:none;" />'
 						.	'<input type="radio" id="bool81" name="bool8" value="1" '.$c1. ' style="display:none;" />';
-				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");';
-				if ( JCck::on() ) {
-					$js2.=	'$("a#bool8 .hasTooltip").tooltip({});';
-				}
-				$js2	.=	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
+				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");'
+						.	'$("a#bool8 .hasTooltip").tooltip({});'
+						.	'$("#bool8").click(function(){ if ( $("#bool80").prop("checked") == true ) {'
 						.	'$("#bool8 span").removeClass("unpublish").addClass("publish"); $("#bool81").prop("checked", true); $("#bool80").prop("checked", false); } else {'
 						.	'$("#bool8 span").removeClass("publish").addClass("unpublish"); $("#bool81").prop("checked", false); $("#bool80").prop("checked", true); } });';
 			}
@@ -185,13 +409,14 @@ abstract class JCckDev
 						$keys	=	array();
 						$js3	=	'var disp = ($("#toggle_attr").prop("checked") !== false) ? \'style="display: block"\' : "";';
 						$n		=	0;
+						$nb		=	count( $options['customAttr'] );
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
-							$attribs	.=	'<div class="attr">'
+							$attribs	.=	'<div class="clr"></div><div class="attr">'
 										.	'<input type="text" id="attr__\'+k+\'" name="json[options2][options][\'+k+\']['.$customAttr.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-										.	' class="inputbox mini" size="10" />'
+										.	' class="inputbox mini" size="10" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$customAttr ) ).'" />'
 										.	'</div>';
 							$keys[]		=	$customAttr;
-							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+(++cur)+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
+							$js3		.=	'$("#sortable_core_options>div:last input:text[name=\'string[options][]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'><input type="text" id="attr__0" name="json[options2][options][\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$customAttr.']" value="" class="inputbox mini" size="10" /></div>\');';
 						}
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
@@ -242,7 +467,7 @@ abstract class JCckDev
 											if (values[k]) {for(i=0; i<len; i++) {if (values[k][keys[i]] !== undefined) {val[i] = values[k][keys[i]];}}}
 										} else {
 											if (values[k]) {
-												for(i=0;i<len2;i++){if (values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
+												for(i=0;i<len2;i++){if (values[k].attr !== undefined && values[k].attr[i] !== undefined) {val[i] = values[k].attr[i];}}
 											}
 										}
 										$(this).parent().append(\''.$attribs.'\');
@@ -275,8 +500,11 @@ abstract class JCckDev
 										var attr = "input:text[name=\'json\[options2\]\[options\]\[0\]\[direction\]\']";
 										if ($(attr).length) { $(attr).remove(); }
 									} isNew = 0;
-								});
 								';
+					if ( !$elem->options ) {
+						$js2	.=	'if ($("#sortable_core_options").children().length == 2 && $("#collection-group-wrap-core_options__0").length) { $("#collection-group-wrap-core_options__0").parent().remove(); }';
+					}
+					$js2	.=	'});';
 					if ( !$elem->options ) {
 						// $js2	.=	'$("#sortable_core_options>div:last .button-add-core_options").click();';
 					}
@@ -319,7 +547,6 @@ abstract class JCckDev
 				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
 			}
 		}
-		Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
 		
 		if ( $type == 'validation' ) {
 			return;
@@ -333,6 +560,7 @@ abstract class JCckDev
 		if ( !isset( $options['js']['load'] ) ) {
 			$options['js']['load']		=	'var eid = "'.$elem->id.'";
 											var elem = "'.$elem->id.'_'.$type.'_options";
+											if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 											var encoded = parent.jQuery("#"+elem).val();
 											var data = ( encoded !== undefined && encoded != "" ) ? $.evalJSON(encoded) : "";
 											if (data) {
@@ -362,6 +590,7 @@ abstract class JCckDev
 		}
 		if ( !isset( $options['js']['reset'] ) ) {
 			$options['js']['reset']		=	'var elem = "'.$elem->id.'_'.$type.'_options";
+											if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 											parent.jQuery("#"+elem).val("");
 											this.close();';
 		}
@@ -369,6 +598,7 @@ abstract class JCckDev
 			$options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") === true ) {
 												var eid = "'.$elem->id.'";
 												var elem = "'.$elem->id.'_'.$type.'_options";
+												if(!parent.jQuery("#"+elem).length) { elem = "'.$elem->id.'"; }
 												var data = {};
 												var excluded = [];
 												'.$js3.'
@@ -410,7 +640,7 @@ abstract class JCckDev
 					JCck.Dev = {
 						reset: function() {'.$options['js']['reset'].'},
 						submit: function() {'.$options['js']['submit'].'}
-					}
+					};
 					$(document).ready(function(){'.$options['js']['load'].'});
 				})(jQuery); 
 			';
@@ -438,11 +668,7 @@ abstract class JCckDev
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
-		if ( !class_exists( 'Helper_Include' ) ) {
-			require_once JPATH_BASE.'/components/com_cck/helpers/helper_include.php';
-		}
-		
-		Helper_Include::addValidation( $config['validation'], $config['validation_options'], $id );
+		self::addValidation( $config['validation'], $config['validation_options'], $id );
 		
 		if ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 			JFactory::getDocument()->addScriptDeclaration( 'var cck_dev = '.json_encode( $config['fields'] ).';' );
@@ -461,7 +687,7 @@ abstract class JCckDev
 	public static function getEmpty( $properties )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$field	=	JTable::getInstance( 'field', 'CCK_Table' );
+		$field	=	JTable::getInstance( 'Field', 'CCK_Table' );
 		
 		if ( is_array( $properties ) ) {
 			foreach ( $properties as $k => $v ) {
@@ -488,6 +714,20 @@ abstract class JCckDev
 		
 		return $html;
 	}
+
+	// getFormFromHelper
+	public static function getFormFromHelper( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		$field				=	self::_getField( $caller, $value, $config, $override, $inherit );
+		
+		$config['fields'][]	=	$field->storage_field;
+		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		if ( isset( $inherit['after'] ) ) {
+			$html			.=	$inherit['after'];
+		}
+		
+		return $html;
+	}
 	
 	// renderForm
 	public static function renderForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
@@ -505,6 +745,30 @@ abstract class JCckDev
 			$html			.=	$inherit['after'];
 		}
 		$label				=	'';
+		if ( $field->label ) {
+			$label			=	'<label>'.$field->label.$tag.'</label>';
+		}
+		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
+		
+		return $html;
+	}
+
+	// renderFormFromHelper
+	public static function renderFormFromHelper( $caller, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
+	{
+		$field				=	self::_getField( $caller, $value, $config, $override, $inherit );
+		
+		$class				=	( $class ) ? ' class="'.$class.'"' : '';
+		$config['fields'][]	=	$field->storage_field;
+		$html				=	( isset( $field->form ) ) ? $field->form : '';
+
+		if ( isset( $inherit['after'] ) ) {
+			$html			.=	$inherit['after'];
+		}
+
+		$label				=	'';
+		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
+		
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
@@ -558,10 +822,10 @@ abstract class JCckDev
 		
 		$app->cck_markup_closed	=	true;
 		
-		$link	=	'http://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
+		$link	=	'https://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="clr"></div><div class="how-to-setup">'
-				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
+				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;" rel="noopener noreferrer">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
 				.	'</div>';
 		
 		return ( $raw !== false ) ? $help : '</ul>'.$help.'</div>';
@@ -577,7 +841,8 @@ abstract class JCckDev
 		}
 
 		if ( $tooltip != '' ) {
-			$tag		=	'<span class="star"> &sup'.$tag.';</span>';
+			$tag		=	( $tag == '1' || $tag == '2' ) ? ' &sup'.$tag.';' : ' <sup style="font-size:10px;">'.$tag.'</sup>';
+			$tag		=	'<span class="star">'.$tag.'</span>';
 			$tooltip	=	' class="hasTooltip qtip_cck" title="'.$tooltip.'"';
 		} else {
 			$tag		=	'';
@@ -602,11 +867,18 @@ abstract class JCckDev
 		} else {
 			$close	=	'</ul></div>';
 		}
+
+		$note	=	'';
+
+		if ( $legend == JText::_( 'COM_CCK_STORAGE' ) ) {
+			$note	=	'<span class="storage-desc content-type">'.JText::_( 'COM_CCK_STORAGE_CONTENT_TYPE_FIELD_DESC' ).'</span>'
+					.	'<span class="storage-desc search-type">'.JText::_( 'COM_CCK_STORAGE_SEARCH_TYPE_FIELD_DESC' ).'</span>';
+		}
 		if ( $tooltip ) {
 			$legend	=	'<span class="hasTooltip qtip_cck" title="'.$tooltip.'">'.$legend.'<span class="star"> &sup'.$tag.';</span></span>';
 		}
 		
-		return $close.'<div class="seblod"><div class="legend top left">'.$legend.'</div><ul class="adminformlist adminformlist'.$options['class_sfx'].'">';
+		return $close.'<div class="seblod"><div class="legend top left">'.$legend.$note.'</div><ul class="adminformlist adminformlist'.$options['class_sfx'].'">';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variables Manipulation
@@ -637,7 +909,7 @@ abstract class JCckDev
 	// fromSTRING
 	public static function fromSTRING( $data = '', $glue = '||', $format = 'array' )
 	{
-		// todo: object
+		/* TODO#SEBLOD: object */
 		if ( ! $data || ! is_string( $data )  ) {
 			return ( $format == 'array' ) ? array() : new stdClass;
 		}
@@ -648,7 +920,7 @@ abstract class JCckDev
 	// toSTRING
 	public static function toSTRING( $data = '', $glue = '||' )
 	{
-		// todo: object
+		/* TODO#SEBLOD: object */
 		if ( ! is_array( $data ) ) {
 			return '';
 		}
@@ -659,10 +931,23 @@ abstract class JCckDev
 	// toSafeID
 	public static function toSafeID( $string )
 	{
-		$str	=	str_replace( array( '&', '"', '<', '>' ), array( 'a', 'q', 'l', 'g' ), $string );
+		$string	=	str_replace( array( '&', '"', '<', '>', '-' ), array( 'a', 'q', 'l', 'g', '_' ), $string );
+		$str	=	JFactory::getLanguage()->transliterate( $string );
+		$length	=	strlen( $str );
+
+		if ( $length ) {
+			for ( $i = 0; $i < $length; $i++ ) {
+				$n	=	ord( $string[$i] );
+				
+				if ( $n >= 65 && $n <= 90 )	{
+					$str[$i]	=	$string[$i];
+				}
+			}
+		}
+
 		$str	=	trim( preg_replace( array( '/\s+/', '/[^A-Za-z0-9_]/' ), array( '_', '' ), $str ) );
 		
-		return $str;
+		return trim( $str, '_' );
 	}
 	
 	// toSafeSTRING

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CCK_FORM_VIEW_EDIT_TITLE" option="COM_CCK_FORM_VIEW_EDIT_OPTION">
+		<help key = "..." />
+		<message><![CDATA[COM_CCK_FORM_VIEW_EDIT_DESC]]></message>
+	</layout>
+
+	<!-- Request variables. -->
+	<fields name="request">
+		<fieldset name="request" label="COM_CCK_CONFIG_FIELDSET_REQUIRED_SETTINGS" addfieldpath="/libraries/cck/construction/field">
+			<field name="type" type="cck" construction="core_content_type" label="COM_CCK_CONFIG_TYPE" description="Select a Form (Content Type)." id="jform_trigger_type" class="inputbox" required="true" />
+		</fieldset>
+	</fields>
+</metadata>

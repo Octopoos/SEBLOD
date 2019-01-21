@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: validation.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -12,16 +12,14 @@ defined( '_JEXEC' ) or die;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
+$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
+$doc		=	JFactory::getDocument();
 $id			=	$this->item->id;
 $name		=	$this->item->name;
 $lang   	=	JFactory::getLanguage();
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-//Helper_Include::addDependencies( 'box', 'edit' );
-Helper_Include::addTooltip( 'span[title].qtip_cck', 'left center', 'right center' );
-
-$doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/css/colorbox.css' );
-$doc->addScript( JROOT_MEDIA_CCK.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+$root		=	JUri::root( true );
+$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
+$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
 			(function ($){
 				JCck.Dev = {
@@ -42,12 +40,24 @@ $js		=	'
 						parent.jQuery("#"+eid+"_required_alert").val("");
 						parent.jQuery("#"+eid+"_validation").val("");
 						parent.jQuery("#"+eid+"_validation_options").val("");
+
+						if (parent.jQuery("#"+eid+"_required").val()) {
+							var txt = Joomla.JText._("COM_CCK_REQUIRED");
+						} else {
+							var txt = Joomla.JText._("COM_CCK_OPTIONAL");
+						}
+						parent.jQuery("span[name=\'"+eid+"\'].c_val").html(txt);
 						this.close();
 					},
 					setOptions: function(opts) {
 						var data = $.evalJSON(opts);
 						$.each(data, function(k, v) {
-							$("#"+k).myVal(v);
+							if (jQuery.isArray(v)) {
+								var encoded	= $.toJSON(v);
+								$("#"+k).myVal(encoded);
+							} else {
+								$("#"+k).myVal(v);
+							}
 						});
 					},
 					submit: function() {
@@ -57,6 +67,8 @@ $js		=	'
 							var text = data ? "'.JText::_( 'COM_CCK_REQUIRED' ).'" : "'.JText::_( 'COM_CCK_OPTIONAL' ).'";
 							if (data == "grouprequired") {
 								data	=	"required["+$("#required2").val()+"]";
+							} else if (data == "condrequired") {
+								data	=	"required[cond:"+$("#required3").val()+"]";
 							}
 							parent.jQuery("#"+eid+"_required").val(data);
 							data = $("#required_alert").val();
@@ -68,9 +80,17 @@ $js		=	'
 							parent.jQuery("#"+eid+"_validation").val(data);
 							data = {};
 							data["alert"] = ($("#alert").prop("disabled") !== false) ? "" : $("#alert").myVal();
+							var v = "";
+							var len = 0;
 							$("#layer input.text, #layer select.select, #layer fieldset.checkbox, #layer fieldset.radios").each(function(i) {
 								id = $(this).attr("id");
-								data[id] = $(this).myVal();
+								v = $(this).myVal();
+								len = v.length;
+								if (v[0] == "[" && v[(len-1)] == "]") {
+									data[id] = $.evalJSON(v);
+								} else {
+									data[id] = v;
+								}
 							});
 							var encoded	= $.toJSON(data);
 							parent.jQuery("#"+eid+"_validation_options").val(encoded).next("span").html(text);
@@ -78,17 +98,24 @@ $js		=	'
 							return;
 						}
 					}
-    			}
+    			};
 				$(document).ready(function(){
 					var eid = "'.$id.'";
 					var data = parent.jQuery("#"+eid+"_required").val();
 					if (data != "" && data != "required") {
 						var data2 =	data.split("[");
 						data2 = data2[1];
-						len2 = data2.length;
-						data2 = data2.substr(0, len2-1);
-						data = "grouprequired";
-						$("#required2").val(data2);
+
+						if (data2.indexOf("cond:") !== -1) {
+							data2 = data2.substr(5);
+							data2 = data2.substr(0, data2.length - 1);
+							data = "condrequired";
+							$("#required3").val(data2);
+						} else {
+							data2 = data2.substr(0, data2.length - 1);
+							data = "grouprequired";
+							$("#required2").val(data2);
+						}
 					}
 					$("#required").val(data);
 					data = parent.jQuery("#"+eid+"_required_alert").val();
@@ -97,7 +124,7 @@ $js		=	'
 					var opts = parent.jQuery("#"+eid+"_validation_options").val();
 					opts = (opts != "") ? opts : "{}";
 					JCck.Dev.setOptions(opts);
-					$("#validation").live("change", function() {
+					$("#validation").on("change", function() {
 						var validation = $(this).val();
 						if (validation) {
 							JCck.Dev.ajaxLayer("#layer", "&file=plugins/cck_field_validation/"+validation+"/tmpl/edit.php&name="+validation, opts);
@@ -105,21 +132,27 @@ $js		=	'
 							$("#layer").html("");
 						}
 					});
-					$("#required2,#blank_li").isVisibleWhen("required","grouprequired");
+					$("#required2").isVisibleWhen("required","grouprequired");
+					$("#required3").isVisibleWhen("required","condrequired");
+					$("#blank_li").isVisibleWhen("required","grouprequired,condrequired");
 				});
 			})(jQuery);
 			';
 $doc->addScriptDeclaration( $js );
+
+JText::script( 'COM_CCK_OPTIONAL' );
+JText::script( 'COM_CCK_REQUIRED' );
 ?>
 
 <div class="seblod">
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_REQUIRED' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired', 'storage_field'=>'required' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired||Yes CondRequired=condrequired', 'storage_field'=>'required' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'storage_field'=>'required_alert' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Group', 'required'=>'required', 'storage_field'=>'required2' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field', 'required'=>'required', 'storage_field'=>'required3' ) );
         ?>
     </ul>
 </div>

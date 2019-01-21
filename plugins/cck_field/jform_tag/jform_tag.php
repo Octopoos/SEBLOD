@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -38,6 +38,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+		
+		JLoader::register( 'TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php' );
 
 		$html	=	'';
 
@@ -61,6 +63,22 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		// Set
 		$field->value	=	$value;
 		$field->html	=	$html;
+	}
+
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		$field->output	=	'';
+
+		if ( is_object( $value ) ) {
+			$tags			=	explode( ',', $value->tags );
+			$tags			=	$value->getTagNames( $tags );
+			$field->output	=	implode( ',', $tags );
+		}
 	}
 
 	// onCCK_FieldPrepareForm
@@ -88,6 +106,11 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+
+			if ( $field->required || $field->validation ) {
+				$config['validation_options']['prettySelect']	=	'1';
+				$config['validation_options']['useSuffix']		=	'_chzn';
+			}
 		}
 
 		// Prepare
@@ -96,37 +119,36 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$field->text	=	'';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
-			if ( JCck::on() ) {
-				JHtml::_( 'formbehavior.chosen', 'select.tag' );
+			JHtml::_( 'formbehavior.chosen', 'select.tag' );
 
-				$options2	=	JCckDev::fromJSON( $field->options2 );
-				$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
-				$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
-				$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
-				$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
-				$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
-				$xml		=	'
-								<form>
-									<field
-										type="'.self::$type2.'"
-										name="'.$name.'"
-										id="'.$id.'"
-										label="'.htmlspecialchars( $field->label ).'"
-										class="'.$class.'"
-										'.$mode.'
-										'.$parent.'
-										'.$custom.'
-										'.$multiple.'
-									>
-									'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
-									</field>
-								</form>
-							';
-				$form	=	JForm::getInstance( $id, $xml );
-				$form	=	$form->getInput( $name, '', $value );
-			} else {
-				$form	=	'';
-			}
+			$options2	=	JCckDev::fromJSON( $field->options2 );
+			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
+			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';
+			$custom		=	( isset( $options2['custom'] ) && !$options2['custom'] ) ? 'custom="deny"' : '';
+			$multiple	=	( $field->bool3 ) ? 'multiple="true"' : '';
+			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
+			$lang_tag	=	( isset( $options2['language'] ) && $options2['language'] ) ? 'language="'.$options2['language'].'"' : '';
+
+			$xml		=	'
+							<form>
+								<field
+									type="'.self::$type2.'"
+									name="'.$name.'"
+									id="'.$id.'"
+									label="'.htmlspecialchars( $field->label ).'"
+									class="'.$class.'"
+									'.$mode.'
+									'.$parent.'
+									'.$custom.'
+									'.$multiple.'
+									'.$lang_tag.'
+								>
+								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
+								</field>
+							</form>
+						';
+			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	$form->getInput( $name, '', $value );
 		}
 
 		// Set
@@ -159,29 +181,27 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		}
 		$isMultiple	=	( strpos( $value, ',' ) !== false ) ? 1 : 0;
 
-		if ( $value != '' && JCck::on( '3.1' ) ) {
-			if ( $field->storage_location != '' ) {
-				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
-				$properties	=	array( 'context', 'context2', 'key', 'table' );
-				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
+		if ( $value != '' && $field->storage_location != '' ) {
+			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$field->storage_location.'/'.$field->storage_location.'.php';
+			$properties	=	array( 'context', 'context2', 'key', 'table' );
+			$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
 
-				$field->storage_location	=	'free';
-				$field->storage_table		=	'#__contentitem_tag_map';
-				$field->storage_field		=	'tag_id';
-				$field->storage_field2		=	'';
+			$field->storage_location	=	'free';
+			$field->storage_table		=	'#__contentitem_tag_map';
+			$field->storage_field		=	'tag_id';
+			$field->storage_field2		=	'';
 
-				$join						=	new stdClass;
-				$join->table				=	'#__contentitem_tag_map';
-				$join->column				=	'content_item_id';
-				$join->column2				=	$properties['key'];
-				$join->table2				=	$properties['table'];
-				$join->and					=	'type_alias = "'.( ( isset( $properties['context2'] ) && $properties['context2'] != '' ) ? $properties['context2'] : $properties['context'] ).'"';
+			$join						=	new stdClass;
+			$join->table				=	'#__contentitem_tag_map';
+			$join->column				=	'content_item_id';
+			$join->column2				=	$properties['key'];
+			$join->table2				=	$properties['table'];
+			$join->and					=	'type_alias = "'.( ( isset( $properties['context2'] ) && $properties['context2'] != '' ) ? $properties['context2'] : $properties['context'] ).'"';
 
-				$config['joins'][$field->stage][]		=	$join;
+			$config['joins'][$field->stage][]		=	$join;
 
-				if ( $isMultiple ) {
-					$config['query_parts']['group'][]	=	't0.id';
-				}
+			if ( $isMultiple ) {
+				$config['query_parts']['group'][]	=	't0.id';
 			}
 		} else {
 			$field->storage					=	'none';
@@ -250,6 +270,10 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 				$new			=	implode( ',', $new );
 				$field->text	.=	( $field->text != '' ) ? ','.$new : $new;
 			}
+		}
+		if ( $field->storage_field != 'tags' ) {
+			$field->value	=	( is_array( $field->value ) ) ? implode( ',', $field->value ) : $field->value;
+			$value			=	$field->value;
 		}
 
 		parent::g_onCCK_FieldPrepareStore( $field, $name, $value, $config );

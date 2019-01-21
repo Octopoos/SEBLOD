@@ -2,18 +2,17 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: edit.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
-$cck		=	JCckDev::preload( array( 'core_title_search', 'core_folder', 'core_description', 'core_state', 'core_client_search',
-										 'core_layer', 'core_storage_location2', 'core_location2', 'core_alias', 'core_access' ) );
+$cck		=	JCckDev::preload( array( 'core_title_search', 'core_description', 'core_state',
+										 'core_location2', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -23,14 +22,10 @@ if ( $lang->hasKey( $key ) == 1 ) {
 } else {
 	$transliterate	=	'{}';
 }
-if ( JCck::on() ) {
-	JHtml::_( 'bootstrap.tooltip' );
-	$sidebar_inner	=	288;
-	$sidebar_top	=	85;
-} else {
-	$sidebar_inner	=	0;
-	$sidebar_top	=	0;
-}
+JHtml::_( 'bootstrap.tooltip' );
+$sidebar_inner	=	288;
+$sidebar_top	=	93;
+
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 if ( $this->item->client == 'list' ) {
@@ -45,12 +40,12 @@ if ( $this->item->client == 'list' ) {
 }
 ?>
 
+<div id="seblod-app-builder" class="clearfix">
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?> full">
 	<div class="seblod first">
     	<div>
-            <div id="loading" class="loading"></div>
             <ul class="spe spe_title">
                 <?php
                 echo JCckDev::renderForm( $cck['core_title_search'], $this->item->title, $config );        
@@ -58,7 +53,7 @@ if ( $this->item->client == 'list' ) {
                 ?>
             </ul>
             <ul class="spe spe_folder">
-				<?php echo JCckDev::renderForm( $cck['core_folder'], $this->item->folder, $config, array( 'label'=>_C0_TEXT ) ); ?>
+				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
             </ul>
             <ul class="spe spe_state spe_third">
                 <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
@@ -71,8 +66,8 @@ if ( $this->item->client == 'list' ) {
         <div class="togglebar">
         	<div>
 			<?php
-			echo JCckDev::getForm( $cck['core_client_search'], $this->item->client, $config );
-			echo JCckDev::getForm( $cck['core_layer'], $this->item->layer, $config );
+			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
             ?>
         	</div>
         </div>
@@ -84,7 +79,7 @@ if ( $this->item->client == 'list' ) {
 				<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
             </ul>
             <ul class="spe spe_folder">
-				<?php echo JCckDev::renderForm( $cck['core_storage_location2'], $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"' ) ); ?>
+				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
             </ul>
             <ul class="spe spe_third">
 				<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ); ?>
@@ -98,7 +93,7 @@ if ( $this->item->client == 'list' ) {
 					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
 					 .	 '</select></li>';
 				} else {
-					echo '<li><label>'.JText::_( 'COM_CCK_SEARCH_ASSIGNMENTS' ).'</label><span class="variation_value">...</span></li>';
+					echo '<li>&nbsp;</li>';
 				}
 				?>
 			</ul>
@@ -134,6 +129,7 @@ if ( $this->item->client == 'list' ) {
 	?>
 </div>
 </form>
+</div><div id="seblod-loading"<?php echo (int)JCck::getConfig_Param( 'development_overlay', '1' ) ? '' : ' class="disabled"'; ?>></div>
 
 <?php
 Helper_Display::quickCopyright();
@@ -154,11 +150,11 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,
 		skip:"&skip=<?php echo $this->item->skip; ?>",
-		spinner:'<img align="center" src="<?php echo $ajax_load; ?>" alt="" />',
+		token:Joomla.getOptions("csrf.token")+"=1",
 		transliteration:<?php echo $transliterate; ?>,
 		trash:"",
 		uix:"<?php echo $this->uix; ?>"
-	}
+	};
 	Joomla.submitbutton = function(task) {
 		if (task == JCck.Dev.name+".cancel") {
 			$("#layers").remove(); JCck.submitForm(task, document.getElementById('adminForm'));
@@ -167,6 +163,18 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 				JCck.DevHelper.preSubmit(); JCck.submitForm(task, document.getElementById('adminForm'));
 			}
 		}
-	}
+	};
+	$(document).ready(function(){
+		$("#toolbar-save-new button").prop("disabled",true);
+		var outerDiv = $("#seblod-app-builder");
+		
+		$("#seblod-loading:not(.disabled)")
+			.css("top", outerDiv.position().top - $(window).scrollTop())
+			.css("left", "0")
+			.css("width", "100%")
+			.css("height", "100%")
+			.css("display", "block")
+			.css("margin-top", "-10px");
+	});
 })(jQuery);
 </script>

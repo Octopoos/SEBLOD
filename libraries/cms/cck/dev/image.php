@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: image.php lionelratel $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -18,16 +18,22 @@ class JCckDevImage
 	protected $_exif 		=	array();
 	protected $_extension 	=	'';
 	protected $_height 		=	0;
-	protected $_pathinfo 	=	NULL;
+	protected $_pathinfo 	=	null;
 	protected $_quality_jpg	=	90;
 	protected $_quality_png	=	3;
 	protected $_ratio 		=	0;
-	protected $_resource 	=	NULL;
+	protected $_resource 	=	null;
 	protected $_width 		=	0;
 
 	// __construct
-	function __construct( $path )
+	public function __construct( $path )
 	{
+		if ( strpos( $path, JPATH_SITE ) === false ) {
+			if ( $path[0] == '/' ) {
+				$path 	=	substr( $path, 1 ); 	
+			}
+			$path 	=	JPATH_SITE.'/'.$path;
+		}
 		$this->_quality_jpg	=	JCck::getConfig_Param( 'media_quality_jpeg', 90 );
 		$this->_quality_png	=	JCck::getConfig_Param( 'media_quality_png', 3 );
 		
@@ -36,7 +42,7 @@ class JCckDevImage
 
 		if ( in_array( $this->_extension, array( 'jpg', 'jpeg', 'tiff' ) ) ) {
 			if ( function_exists( 'exif_read_data' ) ) {
-				$this->_exif 	=	exif_read_data( $path, 0, true );
+				$this->_exif 	=	@exif_read_data( $path, 0, true );
 			}
 		}
 		
@@ -64,14 +70,29 @@ class JCckDevImage
 		}
 	}
 
+	// isResource
+	public function isResource()
+	{
+		return is_resource( $this->_resource );
+	}
+
+	// getThumb
+	public function getThumb( $tnumber )
+	{
+		$path 	=	str_replace( JPATH_SITE.'/', '', $this->_pathinfo['dirname'] );
+		$path 	.=	'/_thumb'.$tnumber.'/'. $this->_pathinfo['basename'];
+
+		return ( is_file( JPATH_SITE.'/'.$path ) ) ? $path : '';
+	}
+
 	// createThumb
-	public function createThumb( $image, $tnumber, $twidth, $theight, $tformat, $quality = 100 )
+	public function createThumb( $dest, $tnumber, $twidth, $theight, $tformat)
 	{
 		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
 			return false;
 		}
 		
-		$path 			=	$this->_pathinfo['dirname'];
+		$path 			=	( $dest != '' ) ? $dest : $this->_pathinfo['dirname'];
 		$resImage 		= 	$this->_resource;
 		$info			=	$this->_prepareDimensions( $this->_width, $this->_height, $twidth, $theight, $tformat );
 
@@ -94,7 +115,7 @@ class JCckDevImage
 		}
 		
 		// Create image
-		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation, $quality );
+		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation);
 
 		return true;
 	}
@@ -148,10 +169,10 @@ class JCckDevImage
 		if ( $ext == 'gif' ) {
 			imagegif( $resource );
 		} elseif ( $ext == 'jpg' || $ext == 'jpeg' ) {
-			imagejpeg( $resource, NULL, $this->_quality_jpg );
+			imagejpeg( $resource, null, $this->_quality_jpg );
 		} elseif ( $ext == 'png' ) {
 			imagesavealpha( $resource, true );
-			imagepng( $resource, NULL, $this->_quality_png );
+			imagepng( $resource, null, $this->_quality_png );
 		} else {
 			// Bad extension !
 		}

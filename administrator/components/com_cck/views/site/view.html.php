@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,7 +17,7 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C5_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();
@@ -28,12 +28,12 @@ class CCKViewSite extends JCckBaseLegacyViewForm
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->type		=	$this->state->get( 'type', '2,7' );
 		$this->item->fields		=	JCck::getConfig_Param( 'multisite_options', array() );
 		$this->item->options	=	( $this->item->options ) ? JCckDev::fromJSON( $this->item->options ) : array();

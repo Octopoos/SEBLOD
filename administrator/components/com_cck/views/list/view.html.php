@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -18,7 +18,7 @@ class CCKViewList extends JViewLegacy
 	protected $vName	=	'list';
 	
 	// display
-	public function display( $tpl = NULL )
+	public function display( $tpl = null )
 	{
 		$app						=	JFactory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );
@@ -56,6 +56,7 @@ class CCKViewList extends JViewLegacy
 		
 		$limitstart					=	$this->state->get( 'limitstart' );
 		$live						=	'';
+		$order_by					=	'';
 		$variation					=	'';
 
 		$preconfig['show_form']		=	'';
@@ -66,7 +67,7 @@ class CCKViewList extends JViewLegacy
 		
 		// Prepare
 		jimport( 'cck.base.list.list' );
-		include JPATH_LIBRARIES_CCK.'/base/list/list_inc.php';
+		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 		$pagination					=	$this->getModel()->_getPagination( $total_items );
 		
 		// Set
@@ -82,7 +83,7 @@ class CCKViewList extends JViewLegacy
 		$this->label_items_number	=	$options->get( 'label_items_number', 'Results' );
 		$this->class_items_number	=	$options->get( 'class_items_number', 'total' );
 		$this->show_pages_number	=	$options->get( 'show_pages_number', 1 );
-		$this->show_pagination		=	$options->get( 'show_pagination', 0 );
+		$this->show_pagination		=	(int)$options->get( 'show_pagination', 0 );
 		$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
 		$this->pageclass_sfx		=	'';
 		

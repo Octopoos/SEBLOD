@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,7 +17,7 @@ class CCKViewVersion extends JCckBaseLegacyViewForm
 	protected $vTitle	=	_C6_TEXT;
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$model 			=	$this->getModel();
@@ -28,8 +28,7 @@ class CCKViewVersion extends JCckBaseLegacyViewForm
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->isNew			=	( @$this->item->id > 0 ) ? 0 : 1;

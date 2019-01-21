@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 // Plugin
 class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
@@ -18,7 +20,7 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_Field_LivePrepareForm
-	public function onCCK_Field_LivePrepareForm( &$field, &$value = '', &$config = array() )
+	public function onCCK_Field_LivePrepareForm( &$field, &$value = '', &$config = array(), $inherit = array() )
 	{
 		if ( self::$type != $field->live ) {
 			return;
@@ -35,9 +37,11 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 		$ignore_null	=	$options->get( 'ignore_null', 0 );
 		$multiple		=	$options->get( 'multiple', 0 );
 		$return			=	$options->get( 'return', 'first' );
+		
 		if ( $multiple ) {
 			$variables	=	$options->get( 'variables', '' );
 			$variables	=	explode( '||', $variables );
+
 			if ( count( $variables ) ) {
 				foreach ( $variables as $variable ) {
 					$request	=	'get'.ucfirst( $options->get( 'type', 'string' ) );
@@ -59,15 +63,30 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 			}
 		} else {
 			$variable		=	$options->get( 'variable', $field->name );
+
 			if ( $variable ) {
 				$filter		=	$options->get( 'type', 'string' );
+
 				if ( $filter == 'array' ) {
 					$live		=	$app->input->get( $variable, $default, 'array' );
+				} elseif ( $filter == 'integers' ) {
+					$live		=	(string)$app->input->getString( $variable, $default );
+					$live		=	explode( ',', $live );
+					$live		=	ArrayHelper::toInteger( $live );
+					$live		=	implode( ',', $live );
 				} else {
 					$request	=	'get'.ucfirst( $filter );
 					$live		=	(string)$app->input->$request( $variable, $default );
+
 					if ( $crypt == 'base64' ) {
 						$live	=	base64_decode( $live );
+					}
+				}
+				
+				// Keep Context
+				if ( /* $config['client'] == 'site' || */ $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
+					if ( !isset( $config['context'][$variable] ) ) {
+						$config['context'][$variable]	=	(string)$live;
 					}
 				}
 			}

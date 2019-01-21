@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: joomla_user_group.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -16,6 +16,7 @@ JLoader::register( 'JTableUsergroup', JPATH_PLATFORM.'/joomla/database/table/use
 class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_user_group';
+	protected static $type_alias	=	'UserGroup';
 	protected static $table			=	'#__usergroups';
 	protected static $table_object	=	array( 'Usergroup', 'JTable' );
 	protected static $key			=	'id';
@@ -23,6 +24,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $access		=	'';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $bridge_object	=	'joomla_article';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -35,6 +38,12 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $context2		=	'';
 	protected static $contexts		=	array( 'com_content.article' );
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'onUserAfterDeleteGroup',
+											'afterSave'=>'onUserAfterSaveGroup',
+											'beforeDelete'=>'onUserBeforeDeleteGroup',
+											'beforeSave'=>'onUserBeforeSaveGroup'
+										);
 	protected static $ordering		=	array( 'alpha'=>'title ASC' );
 	protected static $ordering2		=	array( 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $pk			=	0;
@@ -78,24 +87,6 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			}
 		}
 	}
-	
-	// onCCK_Storage_LocationPrepareDelete
-	public function onCCK_Storage_LocationPrepareDelete( &$field, &$storage, $pk = 0, &$config = array() )
-	{
-		if ( self::$type != $field->storage_location ) {
-			return;
-		}
-		
-		// Init
-		$table	=	$field->storage_table;
-		
-		// Set
-		if ( $table == self::$table ) {
-			$storage	=	self::_getTable( $pk );
-		} else {
-			$storage	=	parent::g_onCCK_Storage_LocationPrepareForm( $table, $pk );
-		}
-	}
 
 	// onCCK_Storage_LocationPrepareForm
 	public function onCCK_Storage_LocationPrepareForm( &$field, &$storage, $pk = 0, &$config = array() )
@@ -108,7 +99,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		$table	=	$field->storage_table;
 		if ( !isset( $config['primary'] ) ) {
 			$config['primary']	=	self::$type;
-			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); // todo: move+improve
+			$config['pkb']		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] ); /* TODO#SEBLOD: move+improve */
 		}
 		
 		// Set
@@ -144,7 +135,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 				}
 			}
 		}
-		//$config['author']	=	''; //todo
+		// $config['author']	=	''; /* TODO#SEBLOD: */
 	}
 	
 	// onCCK_Storage_LocationPrepareList
@@ -239,7 +230,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		$table		=	self::_getTable( $pk );	
 		
 		if ( !$table ) {
@@ -251,8 +242,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$config['type_id'] );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$config['type_id'] );
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
-			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->get( 'id' ) ) ||
-			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->get( 'id' ) ) ) {
+			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
+			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
 			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
@@ -272,28 +263,10 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		return true;
 	}
 	
-	// onCCK_Storage_LocationStore
-	public function onCCK_Storage_LocationStore( $type, $data, &$config = array(), $pk = 0 )
-	{
-		if ( self::$type != $type ) {
-			return;
-		}
-		
-		if ( ! @$config['storages'][self::$table]['_']->pk ) {
-			self::_core( $config['storages'][self::$table], $config, $pk, $this->params->toArray() );
-			$config['storages'][self::$table]['_']->pk	=	self::$pk;
-		}
-		if ( $data['_']->table != self::$table ) {
-			parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $this->params->toArray() );
-		}
-		
-		return self::$pk;
-	}
-	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Protected
 	
 	// _core
-	protected function _core( $data, &$config = array(), $pk = 0, $params = array() )
+	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
 		if ( ! $config['id'] ) {
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
@@ -319,7 +292,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		self::_completeTable( $table, $data, $config );
 		
 		// Store
-		$dispatcher	=	JDispatcher::getInstance();
+		$dispatcher	=	JEventDispatcher::getInstance();
 		JPluginHelper::importPlugin( 'user' );
 		$dispatcher->trigger( 'onUserBeforeSaveGroup', array( self::$context, &$table, $isNew ) );
 		if ( !$table->store() ) {
@@ -339,14 +312,14 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$config['pk']	=	self::$pk;
 		}
 		
-		$config['author']	=	JFactory::getUser()->get( 'id' );
-		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config, $params );
+		$config['author']	=	JFactory::getUser()->id;
+		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JTable::getInstance( 'usergroup' );
+		$table	=	JTable::getInstance( 'Usergroup' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );
@@ -371,25 +344,31 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF
 	
 	// buildRoute
-	public static function buildRoute( &$query, &$segments, $config, $menuItem = NULL )
+	public static function buildRoute( &$query, &$segments, $config, $menuItem = null )
 	{
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 		plgCCK_Storage_LocationJoomla_Article::buildRoute( $query, $segments, $config, $menuItem );
 	}
 	
-	// getRoute	//todo: make a parent::getBridgeRoute..
+	// getRoute	/* TODO#SEBLOD: make a parent::getBridgeRoute.. */
 	public static function getRoute( $item, $sef, $itemId, $config = array() )
 	{
 		if ( is_numeric( $item ) ) {
 			$core	=	JCckDatabase::loadObject( 'SELECT cck, pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$item );
+			
 			if ( !is_object( $core ) ) {
 				return '';
 			}
 			$pk				=	$core->pkb;
 			$config['type']	=	$core->cck;
 		} else {
+			if ( !is_object( $item ) ) {
+				return '';
+			}
+
 			$pk		=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 			$pk		=	JCckDatabase::loadResult( 'SELECT pkb FROM #__cck_core WHERE storage_location = "'.self::$type.'" AND pk = '.(int)$pk );
+			
 			if ( !$pk ) {
 				return '';
 			}
@@ -399,11 +378,11 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		return plgCCK_Storage_LocationJoomla_Article::getRoute( $pk, $sef, $itemId, $config );
 	}
 	
-	// getRouteByStorage //todo: make a parent::getBridgeRoute.. + optimize ($storage->)
+	// getRouteByStorage /* TODO#SEBLOD: make a parent::getBridgeRoute.. + optimize ($storage->) */
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route );
+			return JRoute::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -432,7 +411,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return JRoute::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute
@@ -459,47 +438,6 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function checkIn( $pk = 0 )
 	{
 		return true;
-	}
-	
-	// getId
-	public static function getId( $config )
-	{
-		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.self::$type.'" AND pk='.(int)$config['pk'] );
-	}
-	
-	// getStaticProperties
-	public static function getStaticProperties( $properties )
-	{
-		static $autorized	=	array(
-									'access'=>'',
-									'author'=>'',
-									'author_object'=>'',
-									'created_at'=>'',
-									'context'=>'',
-									'contexts'=>'',
-									'custom'=>'',
-									'key'=>'',
-									'modified_at'=>'',
-									'ordering'=>'',
-									'parent'=>'',
-									'parent_object'=>'',
-									/*'routes'=>'',*/
-									'status'=>'',
-									'table'=>'',
-									'table_object'=>'',
-									'to_route'=>''
-								);
-		
-		if ( count( $properties ) ) {
-			foreach ( $properties as $i=>$p ) {
-				if ( isset( $autorized[$p] ) ) {
-					$properties[$p]	=	self::${$p};
-				}
-				unset( $properties[$i] );
-			}
-		}
-		
-		return $properties;
 	}
 }
 ?>

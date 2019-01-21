@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -152,21 +152,25 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
 		$new_message	=	( strlen( $options2['message_field'] ) > 0 ) ? $options2['message_field'] : '';
 
-		$dest				=	array();
-		$from				=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
-		$from_param			=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
-		$from_name			=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
-		$from_name_param	=	( isset( $options2['from_name_param'] ) ) ? $options2['from_name_param'] : '';
-		$cc					=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
-		$cc_param			=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
-		$bcc				=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
-		$bcc_param			=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
-		$moredest			=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
-		$send_attach		=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
-		$moreattach			=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
+		$dest					=	array();
+		$from					=	( isset( $options2['from'] ) ) ? $options2['from'] : 0;
+		$from_param				=	( isset( $options2['from_param'] ) ) ? $options2['from_param'] : '';
+		$from_name				=	( isset( $options2['from_name'] ) ) ? $options2['from_name'] : 0;
+		$from_name_param		=	( isset( $options2['from_name_param'] ) ) ? $options2['from_name_param'] : '';
+		$reply_to				=	( isset( $options2['reply_to'] ) ) ? $options2['reply_to'] : 0;
+		$reply_to_param			=	( isset( $options2['reply_to_param'] ) ) ? $options2['reply_to_param'] : '';
+		$reply_to_name			=	( isset( $options2['reply_to_name'] ) ) ? $options2['reply_to_name'] : 0;
+		$reply_to_name_param	=	( isset( $options2['reply_to_name_param'] ) ) ? $options2['reply_to_name_param'] : '';
+		$cc						=	( isset( $options2['cc'] ) ) ? $options2['cc'] : 0;
+		$cc_param				=	( isset( $options2['cc_param'] ) ) ? $options2['cc_param'] : '';
+		$bcc					=	( isset( $options2['bcc'] ) ) ? $options2['bcc'] : 0;
+		$bcc_param				=	( isset( $options2['bcc_param'] ) ) ? $options2['bcc_param'] : '';
+		$moredest				=	( isset( $options2['to_field'] ) ) ? $options2['to_field'] : '';
+		$send_attach			=	( isset( $options2['send_attachment_field'] ) && strlen( $options2['send_attachment_field'] ) > 0 ) ? $options2['send_attachment_field'] : 1;
+		$moreattach				=	( isset( $options2['attachment_field'] ) && strlen( $options2['attachment_field'] ) > 0 ) ? $options2['attachment_field'] : '';
 		
 		// Prepare
-		if ( $options2['to'] != '' ) {
+		if ( isset( $options2['to'] ) && $options2['to'] != '' ) {
 			$to		=	self::_split( $options2['to'] );
 			$dest	=	array_merge( $dest, $to );
 			$valid	=	1;
@@ -174,7 +178,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		if ( $moredest ) {
 			$valid	=	1;
 		}
-		if ( $options2['to_admin'] != '' ) {
+		if ( isset( $options2['to_admin'] ) && $options2['to_admin'] != '' ) {
 			$to_admin	=	( count( $options2['to_admin'] ) ) ? implode( ',', $options2['to_admin'] ) : $options2['to_admin'];
 			if ( strpos( $to_admin, ',' ) !== false ) {
 				$recips = explode( ',', $to_admin );
@@ -194,7 +198,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 		}
 		if ( $value ) {
-			// if () TODO check multiple
+			/* TODO#SEBLOD: check multiple if () */
 			$m_value		=	self::_split( $value );
 			$m_value_size	=	count( $m_value );
 			if ( $m_value_size > 1 ) {
@@ -211,7 +215,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Add Process
 		if ( ( $sender || $send_field ) && $valid ) {
-			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'isNew'=>$isNew, 'sender'=>$sender, 'send_field'=>$send_field, 'name'=>$name, 'valid'=>$valid, 'subject'=>$subject, 'message'=>$message, 'new_message'=>$new_message, 'dest'=>$dest, 'from'=>$from, 'from_param'=>$from_param,  'from_name'=>$from_name, 'from_name_param'=>$from_name_param, 'cc'=>$cc, 'cc_param'=>$cc_param, 'bcc'=>$bcc, 'bcc_param'=>$bcc_param, 'moredest'=>$moredest, 'send_attach'=>$send_attach, 'moreattach'=>$moreattach, 'format'=>@(string)$options2['format'] ) );
+			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'isNew'=>$isNew, 'sender'=>$sender, 'send_field'=>$send_field, 'name'=>$name, 'valid'=>$valid, 'subject'=>$subject, 'message'=>$message, 'new_message'=>$new_message, 'dest'=>$dest, 'from'=>(int)$from, 'from_param'=>$from_param, 'from_name'=>(int)$from_name, 'from_name_param'=>$from_name_param, 'reply_to'=>(int)$reply_to, 'reply_to_param'=>$reply_to_param, 'reply_to_name'=>(int)$reply_to_name, 'reply_to_name_param'=>$reply_to_name_param, 'cc'=>(int)$cc, 'cc_param'=>$cc_param, 'bcc'=>(int)$bcc, 'bcc_param'=>$bcc_param, 'moredest'=>$moredest, 'send_attach'=>$send_attach, 'moreattach'=>$moreattach, 'format'=>@(string)$options2['format'] ) );
 		}
 		
 		// Set or Return
@@ -321,7 +325,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// {del fieldname}{/del}
 			if ( $body != '' && strpos( $body, '{del' ) !== false ) {
-				$dels	=	NULL;
+				$dels	=	null;
 				$body = str_replace( "\n", "", $body );
 				preg_match_all( '#\{del ([^\{]*)\}([^\{]*)\{\/del\}#', $body, $dels );
 				for ( $i = 0, $n = count( $dels[1] ); $i <= $n; $i++ ) {
@@ -335,7 +339,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 
 			// #fieldnames#
-			$matches	=	NULL;
+			$matches	=	null;
 			preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $body, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $match ) {
@@ -346,7 +350,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
-			$matches	=	NULL;
+			$matches	=	null;
 			preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $subject, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $match ) {
@@ -407,7 +411,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// [date(.*)]
 			if ( $body != '' && strpos( $body, '[date' ) !== false ) {
-				$matches	=	NULL;
+				$matches	=	null;
 				preg_match_all( '#\[date(.*)\]#U', $body, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $match ) {
@@ -419,20 +423,22 @@ class plgCCK_FieldEmail extends JCckPluginField
 
 			// [fields]
 			if ( strpos( $body, '[fields]' ) !== false ) {
-				$bodyF	=	NULL;
+				$bodyF	=	null;
 				if ( count( $fields ) ) {
 					foreach ( $fields as $field ) {
 						$fieldName	=	$field->name;
 						if ( ! ( $field->type == 'password' && $field->value == 'XXXX' ) && isset( $field->value ) && trim( $field->value ) != '' && ( $field->variation != 'hidden' ) ) {
 							$valF	=	( isset( $field->text ) && trim( $field->text ) != '' ) ? trim( $field->text ) : trim( $field->value );
-							$bodyF	.=	'- '.$field->label.' : '.$valF.'<br /><br />';
+							$bodyF	.=	'- '.$field->label.' : '.$valF.'<br />';
 						}
 					}
 				}
 				$body	=	( strpos( $body, '[fields]' ) !== false ) ? str_replace( '[fields]', $bodyF, $body ) : $body.substr( $bodyF, 0, -12 );
 			}
-	
+
+			$cc		=	$process['cc'];
 			$from	=	$process['from'];
+
 			switch ( $from ) {
 				case 3:
 					$from		=	$fields[$process['from_param']]->value;
@@ -445,8 +451,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$from		=	$mailFrom;
 					break;
 			}
-			$fromName	=	$process['from_name'];
-			switch ( $fromName ) {
+			switch ( $process['from_name'] ) {
 				case 3:
 					$fromName		=	$fields[$process['from_name_param']]->value;
 					break;
@@ -457,7 +462,34 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$fromName		=	$fromName;
 					break;
 			}
-			$cc	=	$process['cc'];
+
+			// Reply To
+			switch ( $process['reply_to'] ) {
+				case 3:
+					$reply_to		=	$fields[$process['reply_to_param']]->value;
+					break;
+				default:
+					$reply_to		=	'';
+					break;
+			}
+			if ( ( is_string( $reply_to ) && empty( $reply_to ) ) || is_array( $reply_to ) && empty( $reply_to[0] ) ) {
+				$reply_to	=	array();
+			}
+
+			// Reply To Name
+			switch ( $process['reply_to_name'] ) {
+				case 3:
+					$reply_to_name		=	$fields[$process['reply_to_name_param']]->value;
+					break;
+				default:
+					$reply_to_name		=	'';
+					break;
+			}
+			if ( ( is_string( $reply_to_name ) && empty( $reply_to_name ) ) || is_array( $reply_to_name ) && empty( $reply_to_name[0] ) ) {
+				$reply_to_name	=	array();
+			}
+
+			// Cc
 			switch ( $cc ) {
 				case 3:
 					$cc		=	self::_split( $fields[$process['cc_param']]->value );
@@ -466,9 +498,14 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$cc		=	self::_split( $process['cc_param'] );
 					break;
 				default:
-					$cc		=	NULL;
+					$cc		=	null;
 					break;
 			}
+			if ( ( is_string( $cc ) && empty( $cc ) ) || is_array( $cc ) && empty( $cc[0] ) ) {
+				$cc	=	array();
+			}
+
+			// Bcc
 			$bcc	=	$process['bcc'];
 			switch ( $bcc ) {
 				case 3:
@@ -478,15 +515,20 @@ class plgCCK_FieldEmail extends JCckPluginField
 					$bcc		=	self::_split( $process['bcc_param'] );
 					break;
 				default:
-					$bcc	=	NULL;
+					$bcc	=	null;
 					break;
 			}
+			if ( ( is_string( $bcc ) && empty( $bcc ) ) || is_array( $bcc ) && empty( $bcc[0] ) ) {
+				$bcc	=	array();
+			}
+
+			// Attachments
 			$send_attach	=	$process['send_attach'];
 			if ( $send_attach != 1 && strlen( $process['send_attach'] ) > 1 ){
 				if ( isset( $fields[$send_attach]->value ) )
 					$send_attach	=	$fields[$send_attach]->value;				
 			}
-			$attach	=	NULL;
+			$attach	=	null;
 			if ( $send_attach && $process['moreattach'] ) {
 				$attach	=	array();
 				$more	=	self::_split( $process['moreattach'] );
@@ -498,6 +540,8 @@ class plgCCK_FieldEmail extends JCckPluginField
 					}
 				}
 			}
+
+			// Format
 			if ( $process['format'] == '0' ) {
 				$format		=	false;
 				$body		=	strip_tags( $body );
@@ -507,7 +551,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
-			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach );
+			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach, $reply_to, $reply_to_name );
 		}
 	}
 	

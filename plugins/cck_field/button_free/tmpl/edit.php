@@ -2,16 +2,16 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
 JCckDev::forceStorage();
-$class		=	( JCck::on() ) ? '' : ' class="hide"';
+
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 ?>
 
@@ -20,21 +20,18 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-		echo '<li'.$class.'><label>'.JText::_( 'COM_CCK_LABEL_ICON' ).'</label>'
+		echo '<li><label>'.JText::_( 'COM_CCK_LABEL_ICON' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_select', $this->item->bool6, $config, array( 'label'=>'Label Icon', 'defaultvalue'=>'0', 'selectlabel'=>'',
 		 																			  'options'=>'Hide=0||Show=optgroup||Prepend=1||Append=2||Replace=3', 'storage_field'=>'bool6' ) )
 		 .	 JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) )
 		 .	 '</li>';
-		if ( !JCck::on() ) {
-			echo JCckDev::renderBlank();
-		}
 		echo '<li><label>'.JText::_( 'COM_CCK_BUTTON' ).'</label>'
 		 .	 JCckDev::getForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Button', 'defaultvalue'=>'1', 'options'=>'Hide=-1||Show=optgroup||Input=0||Button=1' ) )
 		 .	 JCckDev::getForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Type', 'defaultvalue'=>'0', 'options'=>'Button=0||Submit=1', 'storage_field'=>'bool7' ) )
 		 .	 '</li>';
 		echo '<li><label>'.JText::_( 'COM_CCK_LINK' ).'</label>'
-		 .	 JCckDev::getForm( 'core_plugins', @$options2['button_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'',
-																					   'storage_field'=>'json[options2][button_link]', 'attributes'=>'style="max-width:98px"' ) )
+		 .	 JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['button_link'], $config, array( 'selectlabel'=>'None', 'location'=>'field_link', 'required'=>'',
+																																									   'storage_field'=>'json[options2][button_link]', 'attributes'=>'style="max-width:98px"' ) )
 		 .	 '<input type="hidden" id="json_options2_button_link_options" name="json[options2][button_link_options]" value="'.htmlspecialchars( @$options2['button_link_options'] ).'" />'
 		 .	 '<span class="c_link" id="json_options2_button" name="json_options2_button">+</span>'
 		 .	 '</li>';
@@ -43,8 +40,8 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_TEXT_LINK' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['alt_link_text'], $config, array( 'label'=>'Text', 'required'=>'required', 'size'=>14, 'storage_field'=>'json[options2][alt_link_text]' ) )
-		 .	 JCckDev::getForm( 'core_plugins', @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
-																					   'storage_field'=>'json[options2][alt_link]', 'attributes'=>'style="max-width:98px"' ) )
+		 .	 JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
+																																									'storage_field'=>'json[options2][alt_link]', 'attributes'=>'style="max-width:98px"' ) )
 		 .	 '<input type="hidden" id="json_options2_alt_link_options" name="json[options2][alt_link_options]" value="'.htmlspecialchars( @$options2['alt_link_options'] ).'" />'
 		 .	 '<span class="c_link" id="json_options2_alt" name="json_options2_alt">+</span>'
 		 .	 '</li>';
@@ -53,8 +50,8 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_TEXT_LINK' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_text', @$options2['alt2_link_text'], $config, array( 'label'=>'Text', 'required'=>'required', 'size'=>14, 'storage_field'=>'json[options2][alt2_link_text]' ) )
-		 .	 JCckDev::getForm( 'core_plugins', @$options2['alt2_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
-																					   'storage_field'=>'json[options2][alt2_link]', 'attributes'=>'style="max-width:98px"' ) )
+		 .	 JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['alt2_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required',
+																																									 'storage_field'=>'json[options2][alt2_link]', 'attributes'=>'style="max-width:98px"' ) )
 		 .	 '<input type="hidden" id="json_options2_alt2_link_options" name="json[options2][alt2_link_options]" value="'.htmlspecialchars( @$options2['alt2_link_options'] ).'" />'
 		 .	 '<span class="c_link" id="json_options2_alt2" name="json_options2_alt2">+</span>'
 		 .	 '</li>';		

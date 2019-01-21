@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: script.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -17,12 +17,12 @@ jimport( 'joomla.filesystem.folder' );
 class com_cckInstallerScript
 {
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		// Post Install Log
 		self::_postInstallMessage( 'uninstall', $parent );
@@ -84,7 +84,7 @@ class com_cckInstallerScript
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		// Post Install Log
 		self::_postInstallMessage( 'update', $parent );
@@ -103,7 +103,7 @@ class com_cckInstallerScript
 		// WAITING FOR JOOMLA 1.7.x FIX
 
 		// -- Patch for websites started with SEBLOD 2.x 
-		if ( (float)$app->cck_core_version_old < 3.2 ) {
+		if ( version_compare( $app->cck_core_version_old, '3.2', '<' ) ) {
 			$db		=	JFactory::getDbo();
 			$db->setQuery( 'SELECT id FROM #__cck_core_fields WHERE id >= 500 AND id < 5000' );
 			$fields	=	$db->loadObjectList();
@@ -137,7 +137,8 @@ class com_cckInstallerScript
 		// -- End
 
 		// -- Patch for websites started between SEBLOD 3.6.0+ and 3.8.0-
-		if ( (float)$app->cck_core_version_old >= 3.6 && (float)$app->cck_core_version_old < 3.8 ) {
+		if ( version_compare( $app->cck_core_version_old, '3.6', '>=' )
+		  && version_compare( $app->cck_core_version_old, '3.8', '<' ) ) {
 			$db			=	JFactory::getDbo();
 			$db->setQuery( 'SELECT id, name FROM #__cck_core_fields WHERE id >= 533 AND id < 5000' );
 			$fields		=	$db->loadObjectList();
@@ -210,26 +211,40 @@ class com_cckInstallerScript
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
-		$version	=	new JVersion;
-		
-		if ( version_compare( $version->getShortVersion(), '2.5.0', 'lt' ) ) {
-			Jerror::raiseWarning( null, 'This package IS NOT meant to be used on Joomla! 1.7. You should upgrade your site with Joomla 2.5 first, and then install it again !' );
-			return false;
-		}
-		
 		$app		=	JFactory::getApplication();
 		$lang		=	JFactory::getLanguage();
 		
 		$app->cck_core				=	true;
 		$app->cck_core_version_old	=	self::_getVersion();
-		
+
+		// -- Dirty workaround (for websites with corrupted Menu Tree) cleaned on postflight
+		if ( $type == 'update' && version_compare( $app->cck_core_version_old, '3.11.4', '<' ) ) {
+			$db			=	JFactory::getDbo();
+			$query		=	'SELECT b.id, b.lft, b.rgt'
+						.	' FROM #__menu AS a'
+						.	' LEFT JOIN #__menu AS b ON b.parent_id = a.id'
+						.	' WHERE a.link = "index.php?option=com_cck" AND a.client_id = 1';
+			$db->setQuery( $query );
+			$items		=	$db->loadObjectList();
+
+			if ( count( $items ) ) {
+				foreach ( $items as $item ) {
+					$db->setQuery( 'UPDATE #__menu SET parent_id = 1 AND level = 1 AND lft = 0 AND rgt = 0 WHERE id = '.(int)$item->id. ' AND client_id = 1' );
+					$db->execute();
+				}
+			}
+
+			$db->setQuery( 'UPDATE #__menu SET rgt = lft WHERE link = "index.php?option=com_cck" AND client_id = 1' );
+			$db->execute();
+		}
+
 		set_time_limit( 0 );
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
@@ -246,31 +261,48 @@ class com_cckInstallerScript
 				$db->execute();
 			}
 		} elseif ( 'install' ) {
-			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.delete.own":{"6":1},"core.edit":[],"core.edit.state":[],"core.edit.own":[],"core.addto.cart":{"7":1},"core.export":{"7":1},"core.process":{"7":1}}';
+			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.delete.own":{"6":1},"core.addto.cart":{"7":1},"core.admin.form":{"7":1},"core.export":{"7":1},"core.process":{"7":1}}';
 			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
 			$db->setQuery( $query );
 			$db->execute();
 		}
 		
-		/* Todo: loop */
+		// Additional stuff
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
 		if ( JFile::exists( $src ) ) {
 			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
 			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
+			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
+
+		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
+		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
+		if ( JFile::exists( $src ) ) {
+			if ( !JFile::exists( $dest ) ) {
+				JFile::copy( $src, $dest );
+			}
+			$query	=	$db->getQuery( true );
+			$query->select( $db->quoteName( array( 'template' ) ) )
+				  ->from( $db->quoteName( '#__template_styles' ) )
+				  ->where( $db->quoteName( 'client_id' ) . ' = 0' )
+				  ->where( $db->quoteName( 'home' ) . ' = 1' );
+			$db->setQuery( $query );
+		
+			if ( $site_template = $db->loadResult() ) {
+				$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
+				if ( !JFile::exists( $dest ) ) {
+					JFile::copy( $src, $dest );
+				}
+			}
+			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
+		}
+		
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
+			JFolder::delete( $src );
 		}
-		/* Todo: loop */
-		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
-			jimport( 'cck.base.cck_5_2' );
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/src/php5.2/libraries/cms/cck/cck.php';
-			if ( JFile::exists( $src ) ) {
-				JFile::copy( $src, JPATH_SITE.'/libraries/cms/cck/cck.php' );
-			}
-		}
-
+		
 		if ( $type == 'install' ) {
 			// Post Install Log
 			self::_postInstallMessage( 'install', $parent );
@@ -278,7 +310,7 @@ class com_cckInstallerScript
 	}
 	
 	// _getVersion
-	function _getVersion( $default = '2.0.0' )
+	public function _getVersion( $default = '2.0.0' )
 	{
 		$db		=	JFactory::getDbo();
 		
@@ -292,14 +324,14 @@ class com_cckInstallerScript
 	}
 
 	// _postInstallMessage
-	function _postInstallMessage( $event, $parent )
+	public function _postInstallMessage( $event, $parent )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;
 		}
 		$db		=	JFactory::getDbo();
 		$title	=	'com_cck';
-		$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "'.$title.'"';
+		$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$title.'"';
 
 		$db->setQuery( $query );
 		$pk		=	$db->loadResult();
@@ -320,7 +352,7 @@ class com_cckInstallerScript
 			} else {
 				$user_link	=	'index.php?option=com_users&task=user.edit&id='.$user_id;
 			}
-			$user_name	=	'<a href="'.$user_link.'" target="_blank">'.$user->name.'</a>';
+			$user_name	=	'<a href="'.$user_link.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 			$text		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
 		}
 		$title		=	'SEBLOD '.$version;

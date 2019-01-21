@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,20 +15,22 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 // Class
 class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_LocationJoomla_Article
 {
-	protected static $columns_excluded	=	array( 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'tags', 'tagsHelper' );
-	protected static $columns_ignored	=	array( 'id', 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'checked_out', 'checked_out_time', 'tags', 'tagsHelper' );
+	protected static $columns_excluded	=	array( 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'tagsHelper' );
+	protected static $columns_ignored	=	array( 'id', 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'checked_out', 'checked_out_time', 'tagsHelper' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
 	{
 		$table		=	self::_getTable();
 		$columns	=	$table->getProperties();
-		
+
 		foreach ( self::$columns_excluded as $column ) {
 			if ( array_key_exists( $column, $columns ) ) {
 				unset( $columns[$column] );
 			}
 		}
+
+		$columns['tags']	=	null;
 		
 		return array_keys( $columns );
 	}
@@ -44,11 +46,14 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 		// Prepare
 		$table		=	self::_getTable();
 		$fields		=	$table->getProperties();
+
 		if ( isset( $config['fields'] ) && $config['fields'] === false ) {
 			$fields	=	array();
 		} elseif ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
 			$fields	=	$config['fields'];
 		} else {
+			$fields['tags']	=	null;
+
 			if ( count( self::$columns_ignored ) ) {
 				foreach ( self::$columns_ignored as $exclude ) {
 					unset( $fields[$exclude] );
@@ -58,12 +63,18 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 		
 		if ( count( $config['fields2'] ) ) {
 			foreach ( $config['fields2'] as $k=>$field ) {
-				if ( $field->storage_table == '' ) {
-					continue;
-				}
-				if ( !isset( $storages[$field->storage_table] ) ) {
-					$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table, 'id' );
-				}
+				if ( $field->storage != 'none' ) {
+					if ( $field->storage_table == '' ) {
+						continue;
+					}
+					if ( !isset( $tables[$field->storage_table] ) ) {
+						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
+					}
+					if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
+					  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {
+						continue;
+					}
+				}				
 				if ( $config['component'] == 'com_cck_exporter' ) {
 					$key		=	$field->name;
 				} else {
@@ -73,19 +84,25 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 			}
 		}
 		$fields	=	array_keys( $fields );
-		if ( $config['ftp'] == '1' ) {
-			$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
-		} else {
-			fputcsv( $config['handle'], $fields, $config['separator'] );
+
+		if ( $config['isNew'] ) {
+			if ( $config['ftp'] == '1' ) {
+				$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+			} else {
+				fputcsv( $config['handle'], $fields, $config['separator'] );
+			}
 		}
 		
 		// Set
 		if ( $config['prepare_output'] ) {
 			JPluginHelper::importPlugin( 'cck_field' );
-			$dispatcher	=	JDispatcher::getInstance();
+			$dispatcher	=	JEventDispatcher::getInstance();
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
+				$config['n']	=	1;
+				$config['pk']	=	0;
+
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
 					continue;
@@ -99,7 +116,9 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 				}
 
 				// Core
-				$table	=	self::_getTable( $item->pk );
+				$config['pk']	=	$item->pk;
+				$table			=	self::_getTable( $item->pk );
+
 				if ( isset( $config['fields'] ) && $config['fields'] === false ) {
 					$fields	=	array();
 				} elseif ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
@@ -113,24 +132,40 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 						}
 					} else {
 						$vars 	=	get_object_vars( $table );
+						
 						foreach ( $vars as $key=>$val ) {
 							if ( isset( $config['fields'][$key] ) ) {
 								$fields[$key]	=	$val;
 							}
 						}
+
+						// Tags
+						if ( isset( $fields['tags'] ) && is_object( $fields['tags'] ) ) {
+							$fields['tags']	=	$fields['tags']->tags;
+						} else {
+							$fields['tags']	=	'';
+						}
 					}
 				} else {
 					$fields	=	$table->getProperties();
+
 					if ( count( self::$columns_ignored ) ) {
 						foreach ( self::$columns_ignored as $exclude ) {
 							unset( $fields[$exclude] );
 						}
 					}
+
+					// Tags
+					if ( isset( $fields['tags'] ) && is_object( $fields['tags'] ) ) {
+						$fields['tags']	=	$fields['tags']->tags;
+					} else {
+						$fields['tags']	=	'';
+					}
 				}
 
 				// Core > Custom
 				if ( self::$custom && isset( $fields[self::$custom] ) ) {
-					preg_match_all( CCK_Content::getRegex(), $fields[self::$custom], $values );
+					preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $fields[self::$custom], $values );
 					$tables[self::$table][$item->pk]->{self::$custom}	=	array();
 					$fields[self::$custom]								=	'';
 					if ( count( $values[1] ) ) {
@@ -148,15 +183,21 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 				// More
 				if ( count( $config['fields2'] ) ) {
 					foreach ( $config['fields2'] as $name=>$field ) {
-						if ( $field->storage_table == '' ) {
-							continue;
+						if ( $field->storage != 'none' ) {
+							if ( $field->storage_table == '' ) {
+								continue;
+							}
+							if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
+							  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {
+								continue;
+							}
+						}
+						if ( $config['component'] == 'com_cck_exporter' ) {
+							$key		=	$field->name;
+						} else {
+							$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
 						}
 						if ( $field->storage == 'standard' ) {
-							if ( $config['component'] == 'com_cck_exporter' ) {
-								$key		=	$field->name;
-							} else {
-								$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
-							}
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
@@ -164,36 +205,66 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 								$fields[$key]	=	$field->output;
 							} else {
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$fields[$key]	=	$val;
+							}
+						} elseif ( $field->storage != 'none' ) {
+							$name			=	$field->storage_field2 ? $field->storage_field2 : $name;
+							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
+								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array(); /* TODO#SEBLOD: */
+							}
+							// DISPATCH --> EXPORT
+							if ( $config['prepare_output'] ) {
+								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
+								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+								$fields[$key]	=	$field->output;
+							} else {
+								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$fields[$key]	=	$val;
 							}
 						} else {
-							$name			=	$field->storage_field2 ? $field->storage_field2 : $name;
-							if ( $config['component'] == 'com_cck_exporter' ) {
-								$key		=	$field->name;
-							} else {
-								$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
-							}
-							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
-								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array();	// TODO
-							}
-							// DISPATCH --> EXPORT
-							if ( $config['prepare_output'] ) {
-								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
-								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
-								$fields[$key]	=	$field->output;
-							} else {
-								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
-								$fields[$key]	=	$val;
-							}
+							$fields[$key]		=	'';
 						}
 					}
 				}
-				
+
+				// BeforeExport
+				$event	=	'onCckPreBeforeExport';
+				if ( isset( $config['processing'][$event] ) ) {
+					foreach ( $config['processing'][$event] as $p ) {
+						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+							$options	=	new JRegistry( $p->options );
+
+							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
+						}
+					}
+				}
+
+				/* TODO#SEBLOD: beforeExport */
+
+				$event	=	'onCckPostBeforeExport';
+				if ( isset( $config['processing'][$event] ) ) {
+					foreach ( $config['processing'][$event] as $p ) {
+						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+							$options	=	new JRegistry( $p->options );
+
+							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
+						}
+					}
+				}
+
 				// Export
 				if ( $config['ftp'] == '1' ) {
-					$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+					for ( $i = 0; $i < $config['n']; $i++ ) {
+						$config['buffer']	.=	str_putcsv( $fields, $config['separator'] )."\n";
+					}
 				} else {
-					fputcsv( $config['handle'], $fields, $config['separator'] );
+					if ( $config['n'] > 1 ) {
+						for ( $i = 0; $i < $config['n']; $i++ ) {
+							fputcsv( $config['handle'], $fields, $config['separator'] );
+						}
+					} else {
+						fputcsv( $config['handle'], $fields, $config['separator'] );
+					}
 				}
 				$config['count']++;
 			}

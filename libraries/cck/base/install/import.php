@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: import.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -13,14 +13,11 @@ defined( '_JEXEC' ) or die;
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.utilities.simplexml' );
+
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-if ( JCck::on() ) {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
-} else {
-	JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/joomla/database/table/menutype.php' );
-	JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-}
+JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
+JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
 // Import
@@ -36,19 +33,19 @@ class CCK_Import
 				return;
 			}
 			if ( $type == 'joomla_menu' ) {
-				$item	=	JTable::getInstance( 'menutype' );
+				$item	=	JTable::getInstance( 'MenuType' );
 			} elseif ( $type == 'joomla_menuitem' ) {
-				$item	=	JTable::getInstance( 'menu' );
+				$item	=	JTable::getInstance( 'Menu' );
 			} elseif ( $type == 'joomla_category' ) {
-				$item	=	JTable::getInstance( 'category' );
+				$item	=	JTable::getInstance( 'Category' );
 			} else {
 				return;
 			}
-			$root	=	$xml->{$type};
+			$root	=	$xml->$type;
 			
 			foreach ( $item as $k => $v ) {
-				if ( isset( $root->{$k} ) ) {
-					$item->$k	=	(string)$root->{$k};
+				if ( isset( $root->$k ) ) {
+					$item->$k	=	(string)$root->$k;
 				}
 			}
 			
@@ -83,12 +80,12 @@ class CCK_Import
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
 			return;
 		}
-		$item	=	JTable::getInstance( 'Table'.$elemtype, 'CCK_' );
-		$root	=	$xml->{$elemtype};
+		$item	=	JTable::getInstance( ucfirst( $elemtype ), 'CCK_Table' );
+		$root	=	$xml->$elemtype;
 		
 		foreach ( $item as $k => $v ) {
-			if ( isset( $root->{$k} ) ) {
-				$item->$k	=	(string)$root->{$k};
+			if ( isset( $root->$k ) ) {
+				$item->$k	=	(string)$root->$k;
 			}
 		}
 		if ( ! ( isset( $item->name ) && $item->name != '' ) ) {
@@ -186,6 +183,8 @@ class CCK_Import
 	// beforeImportTemplate
 	public static function beforeImportTemplate( $elemtype, &$item, $data, $config = array() )
 	{
+		unset( $item->featured, $item->options );
+
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_'.$elemtype.'s WHERE name = "'.(string)$item->name.'"' );
 	}
 	
@@ -295,7 +294,7 @@ class CCK_Import
 				$str2		=	$item->id.', "'.$name.'", ';
 				$attributes	=	$j->attributes();
 				
-				if ( (string)$attributes->link != '' ) {
+				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
 					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
 						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
 						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
@@ -346,7 +345,7 @@ class CCK_Import
 	// beforeImportJoomla_Category
 	public static function beforeImportJoomla_Category( $type, &$table, &$data, $config = array() )
 	{
-		if ( $config['isApp'] && $config['isUpgrade'] ) { // todo: improve (import only new categories)
+		if ( $config['isApp'] && $config['isUpgrade'] ) { /* TODO#SEBLOD: improve (import only new categories) */
 			return -1;
 		}
 
@@ -410,12 +409,12 @@ class CCK_Import
 					return;
 				}
 				
-				$root	=	$xml->{$elemtype};
+				$root	=	$xml->$elemtype;
 				$call	=	'beforeImport'.$elemtype;
 				$table	=	self::$call( $elemtype, $data );
 				foreach ( $table as $k => $v ) {
-					if ( isset( $root->{$k} ) ) {
-						$table->$k	=	(string)$root->{$k};
+					if ( isset( $root->$k ) ) {
+						$table->$k	=	(string)$root->$k;
 					}
 				}
 				$call	=	'afterImport'.$elemtype;
@@ -427,7 +426,7 @@ class CCK_Import
 	// beforeImportCategory
 	public static function beforeImportCategory( $elemtype, &$data )
 	{
-		return JTable::getInstance( 'category' );
+		return JTable::getInstance( 'Category' );
 	}
 	
 	// afterImportCategory
@@ -447,7 +446,7 @@ class CCK_Import
 		if ( @$core->pk > 0 ) {
 			$table->id	=	$core->pk;
 		}
-		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	//todo
+		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	/* TODO#SEBLOD: */
 		$table->parent_id	=	( $data['root_category'] > 0 ) ? $data['root_category'] : 1;
 		
 		$rules	=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
@@ -465,11 +464,11 @@ class CCK_Import
 			$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $id );
 			$core->pk				=	$table->id;
-			$core->cck				=	'category';														//todo
+			$core->cck				=	'category';														/* TODO#SEBLOD: */
 			$core->storage_location	=	'joomla_category';
-			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	//todo
+			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	/* TODO#SEBLOD: */
 			$core->parent_id		=	$table->parent_id;
-			$core->date_time		=	'';																//todo
+			$core->date_time		=	'';																/* TODO#SEBLOD: */
 			$core->app				=	$app;
 			$core->storeIt();
 		}
@@ -567,7 +566,7 @@ class CCK_Import
 			foreach ( $files as $file ) {
 				$path	=	$src.'/'.$file;
 				if ( JFile::exists( $path ) ) {
-					$query	=	JFile::read( $path );
+					$query	=	file_get_contents( $path );
 					$db->setQuery( $query );
 					$db->queryBatch();
 				}
@@ -587,7 +586,7 @@ class CCK_Import
 			$items	=	JFolder::files( $path, '\.xml$' );
 			if ( count( $items ) ) {
 				$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
-				$tables		=	array_flip( JCckDatabase::loadColumn( 'SHOW TABLES' ) );
+				$tables		=	JCckDatabase::getTableList( true );
 				
 				foreach ( $items as $item ) {
 					$xml	=	JCckDev::fromXML( $path.'/'.$item );
@@ -640,7 +639,7 @@ class CCK_Import
 								if ( $k == 'PRIMARY' ) {
 									JCckDatabase::execute( 'ALTER TABLE '.$name.' DROP PRIMARY KEY, ADD PRIMARY KEY ( '.implode( ',', $v ).' )' );
 								} else {
-									// todo
+									/* TODO#SEBLOD: */
 								}
 							}
 						}

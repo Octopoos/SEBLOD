@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: types.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -21,14 +23,6 @@ class CCKControllerTypes extends JControllerAdmin
 	public function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-	}
-	
-	// getModel
-	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		$model	=	parent::getModel( $name, $prefix, $config );
-		
-		return $model;
 	}
 	
 	// duplicate
@@ -52,6 +46,12 @@ class CCKControllerTypes extends JControllerAdmin
 		
 		$this->setRedirect( _C2_LINK, $msg, $type );
 	}
+
+	// getModel
+	public function getModel( $name = 'Type', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
+	}
 	
 	// version
 	public function version()
@@ -66,10 +66,9 @@ class CCKControllerTypes extends JControllerAdmin
 			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
-			
+			$cid	=	ArrayHelper::toInteger( $cid );
 			$model	=	$this->getModel();
+
 			if ( $model->version( $cid ) ) {
 				$msg	=	JText::sprintf( 'COM_CCK_SUCCESSFULLY_ARCHIVED', $n );
 				$type	=	'message';

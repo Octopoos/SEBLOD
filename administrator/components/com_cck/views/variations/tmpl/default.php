@@ -2,25 +2,26 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$action			=	( JCck::on() ) ? '<span class="icon-download"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-download.png" border="0" alt="" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'" />';
-$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'"' : '';
+$action			=	'<span class="icon-download"></span>';
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'"';
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
+$token			=	'&'.JSession::getFormToken().'=1';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter' ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
@@ -35,7 +36,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
@@ -53,7 +54,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <tbody>
 	<?php
 	foreach ( $this->items as $i=>$item ) {
-		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.export_variation&variation='.$item->title.'&folder='.$item->folder );
+		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.exportVariation&variation='.$item->title.'&folder='.$item->folder.$token );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
@@ -91,7 +92,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</tfoot>
 	</table>
 </div>
-<?php include_once dirname(__FILE__).'/default_batch.php'; ?>
+<?php include_once __DIR__.'/default_batch.php'; ?>
 <div class="clr"></div>
 <div>
     <input type="hidden" name="task" value="" />
@@ -104,21 +105,22 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <?php
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-})(jQuery);
-</script>

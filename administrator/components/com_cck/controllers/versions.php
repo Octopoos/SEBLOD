@@ -2,13 +2,15 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: versions.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -22,15 +24,7 @@ class CCKControllerVersions extends JControllerAdmin
 	{
 		parent::__construct( $config );
 	}
-	
-	// getModel
-	public function getModel( $name = 'Version', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
-	{
-		$model	=	parent::getModel( $name, $prefix, $config );
 		
-		return $model;
-	}
-	
 	// delete
 	public function delete()
 	{
@@ -46,8 +40,7 @@ class CCKControllerVersions extends JControllerAdmin
 			$model	=	$this->getModel();
 			
 			// Make sure the item ids are integers
-			jimport( 'joomla.utilities.arrayhelper' );
-			JArrayHelper::toInteger( $cid );
+			$cid	=	ArrayHelper::toInteger( $cid );
 			
 			// Remove the items.
 			if ( $model->delete( $cid ) ) {
@@ -64,6 +57,12 @@ class CCKControllerVersions extends JControllerAdmin
 		}
 		
 		$this->setRedirect( JRoute::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
+	}
+
+	// getModel
+	public function getModel( $name = 'Version', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
+	{
+		return parent::getModel( $name, $prefix, $config );
 	}
 	
 	// revert

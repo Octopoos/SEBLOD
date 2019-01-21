@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,7 +24,7 @@ class CCKViewSearch extends JViewLegacy
 	protected $vTitle	=	_C4_TEXT;
 	
 	// display
-	function display( $tpl = null )
+	public function display( $tpl = null )
 	{
 		switch ( $this->getlayout() ) {
 			case 'delete':
@@ -50,39 +50,26 @@ class CCKViewSearch extends JViewLegacy
 				break;
 		}
 		
-		if ( JCck::on() ) {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'80px',
-								   'w30'=>'span4',
-								   'w70'=>'span8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>'$(".hasTooltip").tooltip({});'
-							);
-		} else {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'65px',
-								   'w30'=>'width-30',
-								   'w70'=>'width-70 fltlft',
-								   'wrapper'=>'sebwrapper',
-								   'wrapper2'=>'seb-wrapper workshop',
-								   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>''
-							);
-		}
+		$this->css	=	array( '_'=>'',
+							   'panel_height'=>'80px',
+							   'w30'=>'span4',
+							   'w70'=>'span8',
+							   'wrapper'=>'container',
+							   'wrapper2'=>'row-fluid',
+							   'wrapper_tmpl'=>'span'
+						);
+		$this->js	=	array( '_'=>'',
+							   'tooltip'=>'$(".hasTooltip").tooltip({});'
+						);
 		$this->uix	=	'full';
+		
 		$this->completeUI();
 
 		parent::display( $tpl );
 	}
 	
 	// completeUI
-	function completeUI()
+	protected function completeUI()
 	{
 		$title	=	'COM_CCK_SEARCH_TYPE';
 
@@ -95,13 +82,13 @@ class CCKViewSearch extends JViewLegacy
 	}
 
 	// prepareDelete
-	function prepareDelete()
+	protected function prepareDelete()
 	{		
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$this->form		=	$this->get( 'Form' );
@@ -111,8 +98,7 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
 		$this->item->cck_type	=	$this->state->get( 'content_type', '' );
@@ -122,7 +108,7 @@ class CCKViewSearch extends JViewLegacy
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
 			$name				=	$this->item->name;
-			$app->setUserState( CCK_COM.'.edit.search.client', NULL );
+			$app->setUserState( CCK_COM.'.edit.search.client', null );
 		} else {
 			$this->isNew		=	1;
 			$this->panel_class	=	'open';
@@ -138,6 +124,8 @@ class CCKViewSearch extends JViewLegacy
 		}
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
+		
 		if ( $this->item->skip != '' ) {
 			$this->item->client	=	$this->item->skip;
 			$this->item->master	=	( $this->item->client == 'list' || $this->item->client == 'item' ) ? 'content' : ( ( $this->item->client == 'order' ) ? 'order' : 'search' );

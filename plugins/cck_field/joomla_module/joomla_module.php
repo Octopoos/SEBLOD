@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -37,6 +37,13 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
+		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
+		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+			$field->value	=	'';
+
+			return;
+		}
+
 		// Prepare
 		if ( $field->defaultvalue ) {
 			$mode	=	$field->bool ? 'module' : 'position';
@@ -64,6 +71,14 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		// Init
 		$form		=	'';
 		$value		=	'';
+
+		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
+		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+			$field->form	=	$form;
+			$field->value	=	$value;
+
+			return;
+		}
 
 		// Prepare
 		if ( $field->defaultvalue ) {

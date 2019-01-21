@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: admin.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -81,39 +81,20 @@ class CommonHelper_Admin
 	// addSubmenuEntries
 	public static function addSubmenuEntries( $option, $vName, $items, $addons = array() )
 	{
-		if ( JCck::on() ) {
-			$root	=	CCK_LABEL;
-			$user	=	JFactory::getUser();
-			JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												constant( '_C'.$item['val'].'_LINK' ),
-												$active );
-					}
-				}
-			}
-		} else {
-			$root	=	'<img src="'.JROOT_MEDIA_CCK.'/images/12/icon-12-star.png" border="0" alt=" " width="12" height="12" />';
-			$user	=	JFactory::getUser();
-			JSubMenuHelper::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
-			
-			if ( count( $items) ) {
-				foreach ( $items as $item ) {
-					if ( isset( $item['link'] ) ) {
-						JSubMenuHelper::addEntry( $item['name'], $item['link'], $item['active'] );
-					} else {
-						$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; // todo: I'll see this one later..
-						JSubMenuHelper::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
-												  constant( '_C'.$item['val'].'_LINK' ),
-												  $vName == constant( '_C'.$item['val'].'_NAME' ) );
-					}
+		$root	=	CCK_LABEL;
+		$user	=	JFactory::getUser();
+		JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
+		
+		if ( count( $items) ) {
+			foreach ( $items as $item ) {
+				if ( isset( $item['link'] ) ) {
+					JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
+				} else {
+					$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
+					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; /* TODO#SEBLOD: I'll see this one later.. */
+					JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
+											constant( '_C'.$item['val'].'_LINK' ),
+											$active );
 				}
 			}
 		}
@@ -150,9 +131,6 @@ class CommonHelper_Admin
 	// addToolbarHistoryButton
 	public static function addToolbarHistoryButton( $extension = 'com_cck' )
 	{
-		if ( !JCck::on() ) {
-			return;
-		}
 		$pk	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$extension.'"' );
 		
 		if ( $pk > 0 ) {
@@ -328,7 +306,7 @@ class CommonHelper_Admin
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_toolbox' ) {
-			if ( $view == 'processings' ) {
+			if ( $view == 'jobs' || $view == 'processings' ) {
 				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_APP_FOLDERS' ) );
 				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_APP_FOLDER_ID' ) );
 				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
@@ -429,7 +407,7 @@ class CommonHelper_Admin
 		if ( $selectlabel !== false ) {
 			$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_'._C2_TEXT.'S_SL' ), 'value', 'text' );
 		}
-		$where		=	( $published ) ? ' WHERE a.published = 1 ' : '';
+		$where		=	( $published ) ? ' WHERE a.published = 1 ' : ' WHERE a.published != -44';
 		$options2	=	JCckDatabase::loadObjectList( 'SELECT a.title AS text, a.id AS value FROM #__cck_core_types AS a '.$where.' ORDER BY a.title' );
 		if ( count( $options2 ) ) {
 			$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'._C2_TEXT.'S' ) );
@@ -461,7 +439,7 @@ class CommonHelper_Admin
 	{
 		$db		=	JFactory::getDbo();
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/'.$options['table'].'.php';
-		$table	=	JTable::getInstance( $options['table'], 'CCK_Table' );
+		$table	=	JTable::getInstance( ucfirst( $options['table'] ), 'CCK_Table' );
 		
 		foreach ( $pks as $pk ) {
 			$table->load( $pk );

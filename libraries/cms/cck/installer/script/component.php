@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -19,46 +19,46 @@ class JCckInstallerScriptComponent
 	protected $core;
 	
 	// install
-	function install( $parent )
+	public function install( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'install' );
 	}
 	
 	// uninstall
-	function uninstall( $parent )
+	public function uninstall( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'uninstall' );
 	}
 	
 	// update
-	function update( $parent )
+	public function update( $parent )
 	{
 		// Post Install Log
 		self::postInstallMessage( 'update' );
 	}
 	
 	// preflight
-	function preflight( $type, $parent )
+	public function preflight( $type, $parent )
 	{
 		$this->cck	=	CCK_Install::init( $parent );
 	}
 	
 	// postflight
-	function postflight( $type, $parent )
+	public function postflight( $type, $parent )
 	{
 	}
 
 	// postInstallMessage
-	function postInstallMessage( $event, $pk = 0 )
+	protected function postInstallMessage( $event, $pk = 0 )
 	{
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;
 		}
 		if ( !$pk ) {
 			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM  #__extensions WHERE type = "component" AND element = "com_cck"';
+			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
 			$pk		=	$db->loadResult();
@@ -67,6 +67,10 @@ class JCckInstallerScriptComponent
 			}
 		}
 		
+		if ( !( is_object( $this->cck ) && isset( $this->cck->element ) && $this->cck->element != '' ) ) {
+			return;
+		}
+
 		$lang		=	JFactory::getLanguage();
 		$title		=	(string)$this->cck->element;
 		$lang->load( $title );
@@ -76,7 +80,7 @@ class JCckInstallerScriptComponent
 			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
 		}
 		$user		=	JFactory::getUser();
-		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank">'.$user->name.'</a>';
+		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
 		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
@@ -85,7 +89,7 @@ class JCckInstallerScriptComponent
 				$version	=	new JCckVersion;
 				$version	=	$version->getShortVersion();
 			} else {
-				$version	=	JFile::read( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
+				$version	=	file_get_contents( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
 			}
 		}
 		

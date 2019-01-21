@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -15,6 +15,25 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_ca
 // Class
 class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_LocationJoomla_Category
 {
+	protected static $columns_excluded	=	array(); /* TODO#SEBLOD: */
+
+	// getColumnsToImport
+	public static function getColumnsToImport()
+	{
+		$table		=	self::_getTable();
+		$columns	=	$table->getProperties();
+		
+		foreach ( self::$columns_excluded as $column ) {
+			if ( array_key_exists( $column, $columns ) ) {
+				unset( $columns[$column] );
+			}
+		}
+
+		$columns['tags']	=	null;
+
+		return array_keys( $columns );
+	}
+
 	// onCCK_Storage_LocationImport
 	public static function onCCK_Storage_LocationImport( $data, &$config = array(), $pk = 0 )
 	{
@@ -48,10 +67,24 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			if ( !$config['id'] ) {
 				$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 			}
+
+			if ( isset( $table->tags ) ) {
+				unset( $table->tags );
+			}
+			if ( isset( $data['tags'] ) ) {
+				$table->tags	=	new JHelperTags;
+				$data['tags']	=	explode( ',', $data['tags'] );
+				if ( !empty( $data['tags'] ) && $data['tags'][0] != '' ) {
+					$table->newTags	=	$data['tags'];
+				}
+				unset( $data['tags'] );
+			}
 			self::_initTable( $table, $data, $config, true );
 			
 			// Prepare
-			$table->bind( $data );
+			if ( !empty( $data ) ) {
+				$table->bind( $data );
+			}
 			if ( $isNew && !isset( $data['rules'] ) ) {
 				$data['rules']	=	array( 'core.create'=>array(), 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array(), 'core.edit.own'=>array() );
 			}
@@ -69,15 +102,33 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			$dispatcher	=	JDispatcher::getInstance();
 			JPluginHelper::importPlugin( 'content' );
+			$dispatcher	=	JEventDispatcher::getInstance();
 			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
-				$config['error']	=	true;
-				$config['log']		=	'cancelled';
-				$config['pk']		=	$pk;
-				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
-				return false;
+				$error		=	true;
+
+				if ( $isNew ) {
+					$i		=	2;
+					$alias	=	$table->alias.'-'.$i;
+					$test	=	JTable::getInstance( 'Category' );
+					
+					while ( $test->load( array( 'alias'=>$alias, 'parent_id'=>$table->parent_id ) ) ) {
+						$alias		=	$table->alias.'-'.$i++;
+					}
+					$table->alias	=	$alias;
+
+					if ( $table->store() ) {
+						$error		=	false;
+					}
+				}
+				if ( $error ) {
+					$config['error']	=	true;
+					$config['log']		=	'cancelled';
+					$config['pk']		=	$pk;
+					parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+					return false;
+				}
 			}
 			$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 			

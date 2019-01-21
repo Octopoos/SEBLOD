@@ -4,12 +4,12 @@
 	<author>Octopoos</author>
 	<packagename>cck</packagename>
 	<packager>Octopoos</packager>
-	<packagerurl>http://www.seblod.com</packagerurl>
-	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
+	<packagerurl>https://www.seblod.com</packagerurl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.8.1</version>
+	<version>3.17.1</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	
@@ -39,7 +39,6 @@
 			<file type="template" id="seb_blog" client="site">tpl_seb_blog.zip</file>
 			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
 			<!-- Plugin // CCK Field -->
-			<file type="plugin" id="42" group="cck_field">plg_cck_field_42.zip</file>
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
 			<file type="plugin" id="calendar" group="cck_field">plg_cck_field_calendar.zip</file>
@@ -55,6 +54,7 @@
 			<file type="plugin" id="icon" group="cck_field">plg_cck_field_icon.zip</file>
 			<file type="plugin" id="jform_accesslevel" group="cck_field">plg_cck_field_jform_accesslevel.zip</file>
 			<file type="plugin" id="jform_associations" group="cck_field">plg_cck_field_jform_associations.zip</file>
+			<file type="plugin" id="jform_calendar" group="cck_field">plg_cck_field_jform_calendar.zip</file>
 			<file type="plugin" id="jform_category" group="cck_field">plg_cck_field_jform_category.zip</file>
 			<file type="plugin" id="jform_componentlayout" group="cck_field">plg_cck_field_jform_componentlayout.zip</file>
 			<file type="plugin" id="jform_contentlanguage" group="cck_field">plg_cck_field_jform_contentlanguage.zip</file>

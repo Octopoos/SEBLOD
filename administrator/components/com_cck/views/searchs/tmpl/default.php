@@ -2,31 +2,30 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$action			=	( JCck::on() ) ? '<span class="icon-eye"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-searchs.png" border="0" alt="" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'" />';
-$action_attr	=	( JCck::on() ) ? ' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"' : '';
+$action			=	'<span class="icon-eye"></span>';
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"';
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
-$hasDropdown	=	JCck::on();
 $label			=	JText::_( 'COM_CCK_FIELDS' );
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
-$top			=	( !JCck::on() ) ? 'border-top' : 'content';
+$top			=	'content';
 $templates		=	JCckDatabase::loadObjectList( 'SELECT name, title FROM #__cck_core_templates WHERE mode = 2 AND published = 1 ORDER BY name', 'name' );
 $scroll			=	( count( $templates ) >= 3 ) ? 1 : 0;
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
-$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
-										 'core_folder_filter', 'core_state_filter', 'core_folder', 'core_dev_text', 'core_storage_location2', 'core_client_filter' ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
+										 	 'core_state_filter', 'core_dev_text' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
@@ -41,7 +40,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
@@ -71,7 +70,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEditOwn		=	'';
 		
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
-		$link2			=	JRoute::_( JUri::root().'index.php?option='.$this->option.'&view=list&search='.$item->name );
+		$link2			=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$item->name, 'root' );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 		$linkVersion	=	JRoute::_( 'index.php?option='.$this->option.'&view=versions&filter_e_type=search&e_id='.$item->id );
@@ -82,7 +81,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
-            	<a target="_blank" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+            	<a target="_blank" rel="noopener noreferrer" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
             		 <?php echo $action; ?>
             	</a>
 			</td>
@@ -121,29 +120,27 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->searchTemplate.')';
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
-                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
+                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->listTemplate.')';
-                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
+                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->itemTemplate.')';
-                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
+                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center">
 				<div class="btn-group">
 				<?php
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
 
-				if ( $hasDropdown ) {
-					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'searchs.version' );
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'searchs.version' );
 
-					if ( $item->versions ) {
-						JHtml::_( 'cckactionsdropdown.addCustomLinkItem', 'Versions', 'archive', $i, $linkVersion );
-					}
-					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
 				}
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				?>
 				</div>
 			</td>
@@ -162,7 +159,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</tfoot>
 	</table>
 </div>
-<?php include_once dirname(__FILE__).'/default_batch.php'; ?>
+<?php include_once __DIR__.'/default_batch.php'; ?>
 <div class="clr"></div>
 <div>
 	<input type="hidden" name="task" value="" />
@@ -177,73 +174,117 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 JFactory::getDocument()->addStyleDeclaration('.sly > ul{position:relative; left:274px;}');
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			JCck.Dev = {
+				count:'.count( $this->items ).',
+				status:0,
+				addNew: function(skip) {
+					var tpl_s = "'.$template_name.'";
+					var tpl_f = "'.$template_name.'";
+					var tpl_l = $("#tpl_list").val();
+					var tpl_i = "'.$template_name.'";
+					var skip = skip || "";
+					var featured = $("#featured").val();
+					var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
+					document.location.href = url;
+					return false;
+				},
+				addScroll: function() {
+					var sly = new Sly(".sly",{
+						horizontal: 1,
+						itemNav: "forceCentered",
+						smart: 1,
+						activateOn: "click",
+						mouseDragging: 1,
+						touchDragging: 1,
+						releaseSwing: 1,
+						startAt: 2,
+						scrollBar: null,
+						scrollBy: 1,
+						speed: 300,
+						elasticBounds: 1,
+						dragHandle: 1,
+						dynamicHandle: 1,
+						clickBar: 1,
+					}).init();
+				}
+			};
+			Joomla.orderTable = function() {
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			};
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			};
+			$(document).ready(function() {
+				$(".sly ul li").on("click", function () {
+					$(".sly ul li").removeClass("active"); $(this).addClass("active");
+					$("#tpl_list").val($(this).attr("data-name"));
+				});
+				JCck.Dev.addScroll();
+
+				$("#collapseModal2").on("hidden", function () {
+					$("#toolbar-new > button").blur();
+				});
+				$(document).keypress(function(e) {
+					if (!$(":input:focus").length) {
+						e.preventDefault();
+						var k = e.which;
+						
+						if (k == 64) {
+							if ( $("#filter_search").val() != "" ) {
+								$("#filter_search").select();
+								if ( $("#filter_location").val() == "id" ) {
+									$("#filter_location").val("title").trigger("liszt:updated");
+								}
+							} else {
+								$("#filter_search").focus();
+							}
+						} else if (k == 110) {
+							$("#toolbar-new > button").click();
+						} else if (k == 13 && document.adminForm.boxchecked.value==1) {
+							var v = $("[name=\'cid[]\']:checked").val();
+							$("#filter_location").val("id");
+							$("#filter_search").val(v);
+							$("#core_filter_go").click();
+						} else if (JCck.Dev.count == 1 && k >= 49 && k <= 52) {
+							var n = e.which - 48;
+							if ($(\'[data-edit-trigger="\'+n+\'"]\').length) {
+								document.location.href=$(\'[data-edit-trigger="\'+n+\'"]\').attr("href");
+							}
+						} else if (JCck.Dev.count > 1 && k >= 48 && k <= 57) {
+							if (k == 48) {
+								k = 58;
+							}
+							var tk = k - 49;
+
+							if ($("#cb"+tk).length) {
+								$("[name=\'toggle\']").click().click();
+								$("#cb"+tk).click();
+							}
+						}
+					}
+				});
+			});
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	JCck.Dev = {
-		status:0,
-		addNew: function(skip) {
-			var tpl_s = "<?php echo $template_name; ?>";
-			var tpl_f = "<?php echo $template_name; ?>";
-			var tpl_l = $("#tpl_list").val();
-			var tpl_i = "<?php echo $template_name; ?>";
-			var skip = skip || "";
-			var featured = $("#featured").val();
-			var url = "index.php?option=com_cck&task=search.add&content_type="+featured+"&tpl_s="+tpl_s+"&tpl_f="+tpl_f+"&tpl_l="+tpl_l+"&tpl_i="+tpl_i+"&skip="+skip;
-			window.location.href = url;
-			return false;
-		},
-		addScroll: function() {
-			var sly = new Sly('.sly',{
-				horizontal: 1,
-				itemNav: 'forceCentered',
-				smart: 1,
-				activateOn: 'click',
-				mouseDragging: 1,
-				touchDragging: 1,
-				releaseSwing: 1,
-				startAt: 2,
-				scrollBar: null,
-				scrollBy: 1,
-				speed: 300,
-				elasticBounds: 1,
-				dragHandle: 1,
-				dynamicHandle: 1,
-				clickBar: 1,
-			}).init();
-		}
-	}
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-	$(document).ready(function() {
-		$(".sly ul li").on('click', function () {
-			$(".sly ul li").removeClass("active"); $(this).addClass("active");
-			$("#tpl_list").val($(this).attr("data-name"));
-		});
-		JCck.Dev.addScroll();
-	});
-})(jQuery);
-</script>

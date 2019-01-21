@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -20,7 +20,7 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'bool4'=>1, 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_EDITION' ).'</label>'
-			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'storage_field'=>'form_edition' ) )
+			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'options'=>'No=0||Yes=1||Yes as copy=2', 'storage_field'=>'form_edition' ) )
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'defaultvalue'=>'', 'options'=>'1=1||2=2||3=3||4=4||5=5||Final=0', 'bool8'=>0, 'storage_field'=>'form_edition_stage' ) )
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'form_fieldname' ) );
@@ -34,7 +34,7 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_options_target', '', $config, array( 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'storage_field'=>'target' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Rel', 'size'=>24, 'storage_field'=>'rel' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_TITLE' ).'</label>'
-			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'None', 'options'=>'Custom=2', 'storage_field'=>'title' ) )
+			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'None', 'options'=>'Custom Text=2||Translated Text=3', 'storage_field'=>'title' ) )
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Title', 'size'=>16, 'css'=>'input-medium', 'storage_field'=>'title_custom' ) )
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
@@ -51,7 +51,7 @@ JCckDev::initScript( 'link', $this->item );
 jQuery(document).ready(function($) {
 	$('#form_edition,#blank_li').isVisibleWhen('form','');
 	$('#form_fieldname').isVisibleWhen('form','-2');
-	$('#title_custom').isVisibleWhen('title','2',false);
+	$('#title_custom').isVisibleWhen('title','2,3',false);
 	$('#redirection_custom,#blank_li').isVisibleWhen('redirection','');
 });
 </script>

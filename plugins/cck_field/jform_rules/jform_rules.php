@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,6 +24,9 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 	{
 		if ( self::$type != $type ) {
 			return;
+		}
+		if ( $data['storage'] != 'dev' ) {
+			$data['bool']	=	'1';
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 	}
@@ -114,7 +117,7 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 									.	'&id='.$id.'&name='.$name.'&type='.$value.'&params='.$component.'||'.$section;
 			
 			$class					=	'jform_rules_box variation_href';
-			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { // todo: remove later
+			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { /* TODO#SEBLOD: remove later */
 					$class			.=	' btn';
 			}
 			$class					=	'class="'.$class.'" ';
@@ -203,31 +206,30 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 	// _addScript
 	protected static function _addScripts( $inline, $params = array(), &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
-		$height	=	'440';
-		
 		if ( !$inline ) {
+			$doc	=	JFactory::getDocument();
+			$root	=	JUri::root( true );
+
 			if ( empty( $config['client'] ) ) {
-				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
-					$doc->addScript( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
-				}
-				$doc->addStyleSheet( JUri::root( true ).'/media/cck'.'/scripts/jquery-colorbox/css/colorbox.css' );
-				
-				$js	=	' $(".'.self::$type.'_box").live("click", function(e) { e.preventDefault();'
+				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
 					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+
+				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
+					$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
+
+					$js	=	'$(document).ready(function() {'.$js.'});';
+				}
+				$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} elseif ( $params['inherited'] == true ) {
 				JCck::loadModalBox();
-				$js	=	' $(".'.self::$type.'_box").live("click", function(e) { e.preventDefault();'
-					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:440, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+				$js	=	'$(document).ready(function() {'.$js.'});';
 				$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 			} else {
 				JCck::loadModalBox();
-				$js	=	'
-						jQuery(document).ready(function($){
-							$(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:'.$height.', scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}});
-						});
-						';
+				$js	=	'jQuery(document).ready(function($){ $(".'.self::$type.'_box").colorbox({iframe:true, innerWidth:820, innerHeight:440, scrolling:true, overlayClose:true, fixed:true, onLoad: function(){$("#cboxClose").remove();}}); });';
 				$doc->addScriptDeclaration( $js );
 			}
 		}

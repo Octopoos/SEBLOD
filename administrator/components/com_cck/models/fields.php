@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: fields.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -163,31 +163,6 @@ class CCKModelFields extends JModelList
 	public function getTable( $type = 'Field', $prefix = CCK_TABLE, $config = array() )
 	{
 		return JTable::getInstance( $type, $prefix, $config );
-	}
-	
-	// getTotal
-	public function getTotal()
-	{
-		$store	=	$this->getStoreId( 'getTotal' );
-		if ( !empty( $this->cache[$store] ) ) {
-			return $this->cache[$store];
-		}
-		
-		$query	=	clone $this->_getListQuery();
-		if( is_object( $query ) ) {
-			$query->clear( 'order' );
-		}
-			
-		$total	=	(int)$this->_getListCount( (string)$query );
-
-		if ( $this->_db->getErrorNum() ) {
-			$this->setError( $this->_db->getErrorMsg() );
-			return false;
-		}
-
-		$this->cache[$store]	=	$total;
-
-		return $this->cache[$store];
 	}
 
 	// populateState

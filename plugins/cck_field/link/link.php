@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -73,12 +73,40 @@ class plgCCK_FieldLink extends JCckPluginField
 			$field->link_target	=	$target;
 			$field->link_class	=	$class;
 			$field->link_rel	=	$rel;
+
+			if ( $field->link_target == '_blank' ) {
+				$rel		=	trim( JCck::getConfig_Param( 'link_rel_blank', 'noopener noreferrer' ) );
+
+				if ( isset( $field->link_rel ) && $field->link_rel != '' ) {
+					$rel	=	explode( ' ', $rel );
+
+					if ( count( $rel ) ) {
+						$link_rel	=	explode( ' ', $field->link_rel );
+						$rel		=	array_merge( $link_rel, array_diff( $rel, $link_rel ) );
+						$rel		=	implode( ' ', $rel );
+					}
+				}
+				$field->link_rel	=	trim( $rel );
+			}
+
 			$field->linked		=	true;
 			$class				=	( $class != '' ) ? 'class="'.$class.'" ' : '';
 			$rel				=	( $rel != '' ) ? ' rel="'.$rel.'"' : '';
 			$field->html		=	'<a href="'.$field->link.'" '.$class.'target="'.$field->link_target.'"'.$rel.'>'.$field->text.'</a>';
 			$field->typo_target	=	'text';
 		}
+	}
+	
+	// onCCK_FieldPrepareExport
+	public function onCCK_FieldPrepareExport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		self::onCCK_FieldPrepareContent( $field, $value, $config );
+		
+		$field->output	=	$field->link;
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -159,7 +187,7 @@ class plgCCK_FieldLink extends JCckPluginField
 		}
 
 		if ( $field->bool4 == 1 ) {
-			$form	.=	self::_addSelect( $id.'_target', JText::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'storage_field' => $nameTarget ) );
+			$form	.=	self::_addSelect( $id.'_target', JText::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'client'=>$config['client'], 'doTranslation'=>1, 'doValidation'=>2 ), array( 'storage_field'=>$nameTarget ) );
 		}
 
 		if ( $field->bool5 == 1 && $config['pk'] && @$value['link'] != '' ) {
@@ -237,7 +265,7 @@ class plgCCK_FieldLink extends JCckPluginField
 		if ( count( $value ) > 0 && ( $value['link'] || $value['text'] ) ) {
 			$value	=	JCckDev::toJSON( $value );
 		} else {
-			$value	=	NULL;
+			$value	=	null;
 		}
 		// Set or Return
 		if ( $return === true ) {
@@ -280,7 +308,7 @@ class plgCCK_FieldLink extends JCckPluginField
 	}
 
 	// _addSelect
-	protected static function _addSelect( $id, $label, $suffix, $field, $value, $array = array() )
+	protected static function _addSelect( $id, $label, $suffix, $field, $value, $config, $array = array() )
 	{
 		$form	=	'<div class="cck_forms cck_link_'.$suffix.'">';
 		$form	.=	'<div class="cck_label cck_label_link_'.$suffix.'"><label for="'.$id.'" >'.$label.'</label></div>';

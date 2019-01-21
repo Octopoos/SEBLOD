@@ -2,31 +2,31 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: default.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-$action		=	( JCck::on() ) ? '<span class="icon-download"></span>' : '<img class="img-action" src="components/'.CCK_COM.'/assets/images/24/icon-24-download.png" border="0" alt="" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'" />';
-$action_attr=	( JCck::on() ) ? ' class="app-download btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'"' : ' class="app-download"';
-$uix		=	JCck::getUIX();
-$css		=	array();
-$doc		=	JFactory::getDocument();
-$hasToolbox	=	JCckToolbox::getConfig()->def( 'KO' ) ? false : true;
-$images		=	array( '0'=>'16/icon-16-download.png', '1'=>'24/icon-24-download.png' );
-$user		=	JFactory::getUser();
-$userId		=	$user->id;
-$listOrder	=	$this->state->get( 'list.ordering' );
-$listDir	=	$this->state->get( 'list.direction' );
-$link2		=	'index.php?option='.$this->option.'&task=folder.export&id=';
-$top		=	( !JCck::on() ) ? 'border-top' : 'content';
+$action			=	'<span class="icon-download"></span>';
+$action_attr	=	' class="app-download btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_APP' ).'"';
+$uix			=	JCck::getUIX();
+$css			=	array();
+$doc			=	JFactory::getDocument();
+$hasToolbox		=	JCckToolbox::getConfig()->def( 'KO' ) ? false : true;
+$images			=	array( '0'=>'16/icon-16-download.png', '1'=>'24/icon-24-download.png' );
+$user			=	JFactory::getUser();
+$userId			=	$user->id;
+$listOrder		=	$this->state->get( 'list.ordering' );
+$listDir		=	$this->state->get( 'list.direction' );
+$link2			=	'index.php?option='.$this->option.'&task=folder.export&id=';
+$top			=	'content';
 
-$config		=	JCckDev::init( array( '42', 'button_submit', 'checkbox', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text' ), true, array( 'vName' => '' ) );
-$cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear', 'core_location_filter',
-										 'core_folder_filter', 'core_state_filter', 'core_depth_filter', 'core_app_stuff' ) );
+$config			=	JCckDev::init( array( '42', 'button_submit', 'checkbox', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text' ), true, array( 'vName' => '' ) );
+$cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
+										 	 'core_state_filter', 'core_depth_filter', 'core_app_stuff' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
@@ -41,11 +41,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div id="j-main-container">
 <?php } ?>
 
-<?php include_once dirname(__FILE__).'/default_filter.php'; ?>
+<?php include_once __DIR__.'/default_filter.php'; ?>
 <div class="<?php echo $this->css['items']; ?>">
 	<?php
 	if ( $uix == 'compact' ) {
-		include_once dirname(__FILE__).'/default_compact.php';
+		include_once __DIR__.'/default_compact.php';
 	} else {
     ?>
 	<table class="<?php echo $this->css['table']; ?>">
@@ -57,7 +57,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</th>
 			<th class="center caret-fix" colspan="2">
 				<?php
-				echo JHtml::_( 'grid.sort', ( JCck::on() ? '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>' : '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />' ), 'a.lft', $listDir, $listOrder );
+				echo JHtml::_( 'grid.sort', '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>', 'a.lft', $listDir, $listOrder );
                 echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder );				
 				?>
 			</th>
@@ -100,6 +100,20 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$img			=	$images[$item->home];
 		$action_attr2	=	( $item->home ) ? str_replace( 'btn-micro', 'btn-primary btn-micro', $action_attr ) : $action_attr;
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
+
+		$elements		=	explode( ',', $item->elements );
+		$elements		=	array_flip( $elements );
+
+		$permissions	=	'';
+
+		if ( $item->rules && $item->rules != '{}' ) {
+			$count			=	(int)substr_count( $item->rules, 'core.' );
+
+			if ( $count ) {
+				$key			=	( $count == 1 ) ? 'COM_CCK_N_PERMISSIONS_1' : 'COM_CCK_N_PERMISSIONS';
+				$permissions	=	' <span class="icon-users small hasTooltip" style="color:#666666;" title="'.JText::sprintf( $key, $count ).'" data-trigger="click" data-placement="right"></span>';
+			}
+		}
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
@@ -115,18 +129,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					if ( ( $canEdit && ! $checkedOut ) ) {
                         if ( $item->id == 1 || $item->id == 2 ) { ?>
                             <?php echo $checked_out; ?><a href="<?php echo $link; ?>"><?php echo JText::_( 'COM_CCK_'.str_replace( ' ', '_', $item->title ) ); ?></a>
-                            <?php echo '<div class="small">'.strtolower( $item->name ).'</div>'; ?>
+                            <?php echo '<div class="small">'.strtolower( $item->name ).$permissions.'</div>'; ?>
                         <?php } else { ?>
                             <?php echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out; ?><a href="<?php echo $link; ?>"><?php echo $item->title; ?></a>
-                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>'; ?>
+                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>'; ?>
                         <?php }
                     } else {
                         if ( $item->id == 1 || $item->id == 2 ) {
                             echo $checked_out.$item->title
-                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).'</div>';
+                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).$permissions.'</div>';
                         } else {
                             echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out.$item->title
-                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>';
+                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>';
                         }
                     }
                     ?>
@@ -142,27 +156,27 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->types_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkType.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FORMS' ).'">'
 											   . '<span>'.$item->types_nb.'</span>'
-											   . '</a>' : '-'; ?>
+											   . '</a>' : ( isset( $elements['type'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->fields_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkField.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FIELDS' ).'">'
 												. '<span>'.$item->fields_nb.'</span>'
-												. '</a>' : '-'; ?>
+												. '</a>' : ( isset( $elements['field'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->searchs_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkSearch.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_LISTS' ).'">'
 												 . '<span>'.$item->searchs_nb.'</span>'
-												 . '</a>' : '-'; ?>
+												 . '</a>' : ( isset( $elements['search'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->templates_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkTemplate.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_TEMPLATES' ).'">'
 												   . '<span>'.$item->templates_nb.'</span>'
-												   . '</a>' : '-'; ?>
+												   . '</a>' : ( isset( $elements['template'] ) ? '-' : '' ); ?>
 			</td>
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->processings_nb ) ? '<a class="btn btn-micro btn-count hasTooltip'.$classProcessing.'" href="'.$linkProcessing.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_PROCESSINGS' ).'">'
 												   . '<span>'.$item->processings_nb.'</span>'
-												   . '</a>' : '-'; ?>
+												   . '</a>' : ( $item->id != 2 ? '-' : '' ); ?>
 			</td>
 			<td class="center">
 				<div class="btn-group">
@@ -190,7 +204,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 </div>
 <?php
 if ( $uix != 'compact' ) {
-	include_once dirname(__FILE__).'/default_app.php';
+	include_once __DIR__.'/default_app.php';
 }
 ?>
 <div class="clr"></div>
@@ -205,33 +219,34 @@ if ( $uix != 'compact' ) {
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
 Helper_Display::quickCopyright();
+
+$js	=	'
+		(function ($){
+			Joomla.orderTable = function()
+			{
+				table = document.getElementById("sortTable");
+				direction = document.getElementById("directionTable");
+				order = table.options[table.selectedIndex].value;
+				if (order != "'.$listOrder.'") {
+					dirn = "asc";
+				} else {
+					dirn = direction.options[direction.selectedIndex].value;
+				}
+				Joomla.tableOrdering(order, dirn, "");
+			}
+			Joomla.submitbutton = function(task, cid) {
+				if (task == "'.$this->vName.'s.delete") {
+					if (confirm(Joomla.JText._("COM_CCK_CONFIRM_DELETE"))) {
+						Joomla.submitform(task);
+					} else {
+						return false;
+					}
+				}
+				Joomla.submitform(task);
+			}
+		})(jQuery);
+		';
+$doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
-
-<script type="text/javascript">
-(function ($){
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-	Joomla.submitbutton = function(task, cid) {
-		if (task == "<?php echo $this->vName.'s'; ?>.delete") {
-			if (confirm(Joomla.JText._('COM_CCK_CONFIRM_DELETE'))) {
-				Joomla.submitform(task);
-			} else {
-				return false;
-			}
-		}
-		Joomla.submitform(task);
-	}
-})(jQuery);
-</script>

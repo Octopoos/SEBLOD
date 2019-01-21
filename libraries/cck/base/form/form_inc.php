@@ -2,88 +2,79 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: form_inc.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-if ( !JCck::on( '3.4' ) ) {
-	JHtml::_( 'behavior.framework' );
-} else {
-	JHtml::_( 'behavior.core' );
-}
+JHtml::_( 'behavior.core' );
 
 $app			=	JFactory::getApplication();
+$copyfrom_id	=	0;
 $data			=	'';
 $id				=	0;
-$translate_id	=	0;
+
 if ( $option == 'com_cck' && $view == 'form' ) {
+	$copyfrom_id	=	$app->input->getInt( 'copyfrom_id', 0 );
 	$id				=	$app->input->getInt( 'id', 0 );
-	$translate_id	=	$app->input->getInt( 'translate_id', 0 );
-	if ( $translate_id > 0 ) {
-		$id			=	$translate_id;
+	
+	if ( $copyfrom_id > 0 ) {
+		$id			=	$copyfrom_id;
 	}
 }
+$client			=	$preconfig['client'];
 $lang   		=	JFactory::getLanguage();
 $stage			=	-1;
 $user 			=	JCck::getUser();
 
 // Type
-$type			=	CCK_Form::getType( $preconfig['type'], $id );
+$type			=	CCK_Form::getType( $preconfig['type'] );
 if ( ! $type ) {
-	$config		=	array( 'action'=>$preconfig['action'], 'core'=>true, 'formId'=>$preconfig['formId'], 'javascript'=>'', 'submit'=>$preconfig['submit'], 'validation'=>array(), 'validation_options'=>array() );
+	$config		=	array(
+						'action'=>$preconfig['action'],
+						'core'=>true,
+						'formId'=>$preconfig['formId'],
+						'javascript'=>'',
+						'submit'=>$preconfig['submit'],
+						'type'=>'',
+						'validation'=>array(),
+						'validation_options'=>array()
+					);
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
 $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 
 $options	=	new JRegistry;
-$options->loadString( $type->{'options_'.$preconfig['client']} );
+$options->loadString( $type->{'options_'.$client} );
 
+if ( $id > 0 ) {
+	$isNew	=	0;
+} else {
+	$isNew	=	1;
+}
+
+if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
+	if ( $type->admin_form == 1 || ( $type->admin_form == 2 && !$isNew ) ) {
+		$preconfig['client']	=	'admin';
+		$more_options			=	$type->{'options_'.$preconfig['client']};
+
+		if ( $more_options != '' ) {
+			$more_options		=	json_decode( $more_options, true );
+		}
+		$options->loadArray( $more_options );
+	}
+}
+
+$author			=	null;
 $current		=	( $options->get( 'redirection' ) == 'current_full' ) ? JUri::getInstance()->toString() : JUri::current();
-$no_message		=	$options->get( 'message_no_access' );
-$no_redirect	=	$options->get( 'redirection_url_no_access', 'index.php?option=com_users&view=login' );
-$no_style		=	$options->get( 'message_style_no_access', 'error' );
-$no_action		=	$options->get( 'action_no_access' );
+$doDebug		=	(int)JCck::getConfig_Param( 'debug', 0 );
+$doDebug		=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
 $stages			=	$options->get( 'stages', 1 );
 $stage			=	-1;
 
-if ( $id > 0 ) {
-	$isNew				=	0;
-	$canAccess			=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
-	//if ( $user->id && !$user->guest ) {
-		$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
-	//} else {
-	//	$canEditOwn		=	false; // todo: guest
-	//}
-	
-	// canEditOwnContent
-	jimport( 'cck.joomla.access.access' );
-	$canEditOwnContent	=	CCKAccess::check( $user->get( 'id' ), 'core.edit.own.content', 'com_cck.form.'.$type->id );
-	if ( $canEditOwnContent ) {
-		$remote_field		=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$canEditOwnContent.'"' );
-		$canEditOwnContent	=	false;
-		if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
-			$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$id );
-			$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "joomla_article" AND pk = '.(int)$related_content_id );
-
-			if ( $related_content->author_id == $user->get( 'id' ) ) {
-				$canEditOwnContent	=	true;
-			}
-		}
-	}
-} else {
-	$isNew				=	1;
-	if ( $type->location && (( $app->isAdmin() && $type->location != 'admin' ) || ( $app->isSite() && $type->location != 'site' )) ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
-	}
-	$actionACL			=	'create';
-	$canAccess			=	$user->authorise( 'core.create', 'com_cck.form.'.$type->id );
-	$canEditOwn			=	false;
-	$canEditOwnContent	=	false;
-}
 if ( $stages > 1 ) {
 	if ( $isNew ) {
 		$stage		=	1;
@@ -94,17 +85,26 @@ if ( $stages > 1 ) {
 		$stage		=	0;
 	}
 }
+if ( !$isNew ) {
+	if ( !$copyfrom_id ) {
+		$author	=	JCckDatabase::loadObject( 'SELECT author_id AS id, author_session AS session FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
+	}
+}
+
 $retry	=	$app->input->get( 'retry', '' );
 $post	=	( $retry && $retry == $type->name ) ? JRequest::get( 'post' ) : array();
 $config	=	array( 'action'=>$preconfig['action'],
 				   'asset'=>'com_content',
 				   'asset_id'=>0,
-				   'author'=>0,
-				   'client'=>$preconfig['client'],
+				   'author'=>( is_object( $author ) ? $author->id : 0 ),
+				   'author_session'=>( is_object( $author ) ? $author->session : '' ),
+				   'client'=>$client,
+				   'context'=>array(),
+				   'copyfrom_id'=>$copyfrom_id,
 				   'core'=>true,
 				   'custom'=>'',
 				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
-				   'doValidation'=>JCck::getConfig_Param( 'validation', '2' ),
+				   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
    				   'error'=>0,
 				   'fields'=>array(),
 				   'formId'=>$preconfig['formId'],
@@ -113,7 +113,6 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'pk'=>$id,
    				   'submit'=>$preconfig['submit'],
 				   'storages'=>array(),
-				   'translate_id'=>$translate_id,
 				   'type'=>$type->name,
 				   'type_id'=>$type->id,
 				   'url'=>( ( @$preconfig['url'] ) ? $preconfig['url'] : $current ),
@@ -123,22 +122,33 @@ $config	=	array( 'action'=>$preconfig['action'],
 				);
 
 // ACL
-if ( ! $canAccess ) {
-	if ( $isNew ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+$can	=	CCK_Form::getPermissions( $type, $config );
+$cannot	=	CCK_Form::getNoAccessParams( $options );
+
+if ( $can === false ) {	
+	CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+}
+if ( $can['guest.edit'] ) {
+	if ( !$can['edit.own'] ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
-	if ( ! ( $canEditOwn || $canEditOwnContent ) ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+} elseif ( ! $can['do'] ) {
+	if ( $config['isNew'] ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
+	}
+	if ( ! ( $can['edit.own'] || $can['edit.own.content'] ) ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
 }
-if ( $type->storage_location == 'joomla_user' && $isNew ) {
+if ( $type->storage_location == 'joomla_user' && $config['isNew'] ) {
 	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
 }
 
 // Fields
-$fields		=	CCK_Form::getFields( array( $type->name, $type->parent ), $preconfig['client'], $stage, '', true, true );
+$target		=	$type->parent_inherit ? array( $type->name, $type->parent ) : $type->name;
+$fields		=	CCK_Form::getFields( $target, $preconfig['client'], $stage, '', true, true );
 if ( ! count( $fields ) ) {
 	$app->enqueueMessage( 'Oops! Fields not found.. ; (', 'error' ); return;
 }
@@ -163,12 +173,14 @@ if ( file_exists( JPATH_ADMINISTRATOR.'/templates/'.$tpl['home'].'/html/tpl_'.$t
 }
 
 // INIT
-$live		=	explode( '||', $live );
-$lives		=	array();
-foreach ( $live as $liv ) {
-	if ( $liv != '' ) {
-		$l				=	explode( '=', $liv );
-		$lives[$l[0]]	=	$l[1];
+if ( !isset( $lives ) ) {
+	$live		=	explode( '||', $live );
+	$lives		=	array();
+	foreach ( $live as $liv ) {
+		if ( $liv != '' ) {
+			$l				=	explode( '=', $liv );
+			$lives[$l[0]]	=	$l[1];
+		}
 	}
 }
 $variation	=	explode( '||', $variation );
@@ -176,7 +188,7 @@ $variations	=	array();
 foreach ( $variation as $var ) {
 	if ( $var != '' ) {
 		$v					=	explode( '=', $var );
-		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } // TODO: FIX TO REMOVE AFTER GA
+		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
 		$variations[$v[0]]	=	$v[1];
 	}
 }
@@ -184,7 +196,7 @@ foreach ( $variation as $var ) {
 // Positions
 $positions		=	array();
 $positions_w	=	'a.typeid = '.(int)$type->id;
-if ( $type->parent != '' ) {
+if ( $type->parent_inherit && $type->parent != '' ) {
 	$parent_id		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type->parent.'"' );
 	if ( $parent_id ) {
 		$positions_w	=	'('.$positions_w.' OR a.typeid = '.$parent_id.')';
@@ -204,10 +216,10 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
-$dispatcher	=	JDispatcher::getInstance();
+$dispatcher	=	JEventDispatcher::getInstance();
 
 // Validation
-if ( JCck::getConfig_Param( 'validation', 2 ) > 1 ) {
+if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
 	$lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
 	require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 }
@@ -225,7 +237,7 @@ foreach ( $fields as $field ) {
 				$field->$k	=	$v;
 			}
 		}
-		$field->variation_override	=	NULL;
+		$field->variation_override	=	null;
 	}
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
 	
@@ -238,20 +250,27 @@ foreach ( $fields as $field ) {
 			if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 				$config['storages'][$Pt]	=	'';
 				$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$field, &$config['storages'][$Pt], $id, &$config ) );
+				
 				if ( !isset( $config['base'] ) ) {
 					$config['base']				=	new stdClass;
 					$config['base']->location	=	$field->storage_location;
 					$config['base']->table		=	$Pt;
+
+					if ( !@$config['id'] && $config['base']->location ) {
+						$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
+					}
 				}
-				if ( $config['author'] ) {
+				if ( $can['guest.edit'] ) {
+					// Do nothing as we already checked permissions.
+				} elseif ( $config['author'] ) {
 					// ACL
-					if ( $canEditOwn && ! $canAccess ) {
-						if ( ( $user->get( 'id' ) != $config['author'] ) && !$canEditOwnContent ) {
-							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+					if ( $can['edit.own'] && ! $can['do'] ) {
+						if ( ( $user->id != $config['author'] ) && !$can['edit.own.content'] ) {
+							CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 						}
-					} elseif ( ! $canEditOwn && $canAccess ) {
-						if ( $user->get( 'id' ) == $config['author'] ) {
-							CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+					} elseif ( ! $can['edit.own'] && $can['do'] ) {
+						if ( $user->id == $config['author'] ) {
+							CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 						}
 					}
 				}
@@ -296,32 +315,36 @@ foreach ( $fields as $field ) {
 // Merge
 if ( count( $config['fields'] ) ) {
 	foreach ( $config['fields'] as $k=>$v ) {
-		if ( $v->restriction != 'unset' ) {
+		if ( isset( $v->restriction ) &&  $v->restriction != 'unset' ) {
 			$fields[$k]	=	$v;
 		}
 	}
-	$config['fields']	=	NULL;
+	$config['fields']	=	null;
 	unset( $config['fields'] );
 }
 
 // ACL
-if ( !$canAccess && $canEditOwn && !$config['author'] ) {
+if ( $can['guest.edit'] ) {
+	// Do nothing as we already checked permissions.
+} elseif ( !$can['do'] && $can['edit.own'] && !$config['author'] ) {
 	if ( empty( $config['id'] ) ) {
 		$location			=	( $type->storage_location ) ? $type->storage_location : $config['base']['location'];
 		$config['author']	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.storage_location = "'.$location.'" AND a.pk = '.(int)$config['pk'] );
 	} else {
 		$config['author']	=	JCckDatabase::loadResult( 'SELECT a.author_id FROM #__cck_core AS a WHERE a.id = '.(int)$config['id'] );
 	}
-	if ( ( !$config['author'] || ( $config['author'] != $user->get( 'id' ) ) ) && !$canEditOwnContent ) {
-		CCK_Form::redirect( $no_action, $no_redirect, $no_message, $no_style, $config ); return;
+	if ( ( !$config['author'] || ( $config['author'] != $user->id ) ) && !$can['edit.own.content'] ) {
+		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
 }
 
 // BeforeRender
 if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
+	JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderForm'], 'priority' );
+	
 	foreach ( $config['process']['beforeRenderForm'] as $process ) {
 		if ( $process->type ) {
-			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
+			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderForm', array( $process->params, &$fields, &$config['storages'], &$config ) );
 		}
 	}
 }
@@ -333,6 +356,12 @@ $doc->finalize( 'form', $type->name, $config['client'], $positions, $positions_m
 
 // Validation
 $config['validation']			=	( count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
+
+if ( count( $config['validation_options'] ) ) {
+	foreach ( $config['validation_options'] as $k=>$v ) {
+		$options->set( $k, $v );
+	}
+}
 $config['validation_options']	=&	$options;
 
 if ( @$profiler ) {
@@ -341,10 +370,11 @@ if ( @$profiler ) {
 }
 $data	=	$doc->render( false, $rparams );
 
-if ( $translate_id > 0 ) {
+if ( $copyfrom_id > 0 ) {
 	$config['asset_id']	=	0;
 	$config['author']	=	0;
 	$config['custom']	=	'';
+	$config['id']		=	0;
 	$config['pk']		=	0;
 	$config['storages']	=	array();
 	$id					=	0;
@@ -364,13 +394,19 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 			$config['base']->table	=	$properties['table'];
 		}
 	}
-	$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );	
+	$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
 } else {
 	$config['id']	=	( @$config['id'] ) ? $config['id'] : 0;
 }
 
 // Versions
-if ( $app->isAdmin() && JCck::on( '3.2' ) && @$config['base']->location == 'joomla_article' ) {
-	JToolbarHelper::versions( 'com_content.article', $config['pk'] );
+if ( $app->isClient( 'administrator' ) ) {
+	if ( @$config['base']->location == 'joomla_article' ) { /* TODO#SEBLOD: getContext / params from any object */
+		$object_params	=	JComponentHelper::getParams( 'com_content' );
+
+		if ( $object_params->get( 'save_history', 0 ) ) {
+			JToolbarHelper::versions( 'com_content.article', $config['pk'] );
+		}
+	}
 }
 ?>

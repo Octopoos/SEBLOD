@@ -3,12 +3,12 @@
 	<name>com_cck</name>
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
-	<authorUrl>http://www.seblod.com</authorUrl>
-	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>3.8.1</version>
+	<version>3.17.1</version>
 	
 	<scriptfile>script.php</scriptfile>
 	
@@ -16,6 +16,7 @@
 		<sql>
 			<file driver="mysql" charset="utf8">install/install.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/countries.sql</file>
+			<file driver="mysql" charset="utf8">install/sql/integers.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/jobs.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/processings.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/sessions.sql</file>
@@ -23,9 +24,6 @@
 	</install>
 	
 	<files folder="site">
-		<folder>assets</folder>
-		<folder>controllers</folder>
-		<folder>helpers</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 		
@@ -92,4 +90,10 @@
 		
 		<filename>index.html</filename>
 	</media>
+
+	<cck_ajax>
+		<files>
+			<file>administrator/components/com_cck/helpers/scripts/list_live.php</file>
+		</files>
+	</cck_ajax>
 </extension>

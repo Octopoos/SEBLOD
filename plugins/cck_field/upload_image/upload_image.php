@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -117,8 +117,10 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Set
+		$isDefault		=	false;
 		$value_json		=	JCckDev::fromJSON( $value );
 		$options2		=	JCckDev::fromJSON( $field->options2 );
+
 		if ( is_array( $value_json ) && !empty( $value_json ) ) {
 			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
@@ -128,13 +130,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$img_desc	=	self::_getAlt( $img_desc, $img_title, $file_name );
 			$img_desc	=	htmlspecialchars( $img_desc, ENT_QUOTES );
 		} else {
-			$value		=	( trim( $value ) == '' ) ? trim( $field->defaultvalue ) : trim( $value ) ;
+			if ( trim( $value ) == '' ) {
+				$value		=	trim( $field->defaultvalue );
+				$isDefault	=	true;
+			} else {
+				$value		=	trim( $value );
+			}
+
 			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
 		}
 		if ( @$options2['storage_format'] ) {
-			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+			if ( $isDefault ) {
+				$value	=	$options2['path'].$value;
+			} else {
+				$value	=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
+			}
 		}
 		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
@@ -205,14 +217,19 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$name	=	$field->name;
 			$xk		=	'';
 		}
-		
+
+		// Clear Value for assets
+		if ( isset( $config['copyfrom_id'] ) && $config['copyfrom_id'] ) {
+			$value	=	'';
+		}
+
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
-		
+
 		// Prepare
 		$options2		=	JCckDev::fromJSON( $field->options2 );
 		if ( $config['doTranslation'] ) {
@@ -257,7 +274,18 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
-			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions' );
+			$default	=	array(
+								'archive'=>'7z,bz2,gz,rar,zip,7Z,BZ2,GZ,RAR,ZIP',
+								'audio'=>'flac,mp3,ogg,wma,wav,FLAC,MP3,OGG,WMA,WAV',
+								'document'=>'csv,doc,docx,pdf,pps,ppsx,ppt,pptx,txt,xls,xlsx,CSV,DOC,DOCX,PDF,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX',
+								'image'=>'bmp,gif,jpg,jpeg,png,tif,tiff,BMP,GIF,JPEG,JPG,PNG,TIF,TIFF',
+								'video'=>'flv,mov,mp4,mpg,mpeg,swf,wmv,FLV,MOV,MP4,MPG,MPEG,SWF,WMV',
+								'common'=>'bmp,csv,doc,docx,gif,jpg,pdf,png,pps,ppsx,ppt,pptx,txt,xls,xlsx,zip,BMP,CSV,DOC,DOCX,GIF,JPG,PDF,PNG,PPS,PPSX,PPT,PPTX,TXT,XLS,XLSX,ZIP',
+								'preset1'=>'',
+								'preset2'=>'',
+								'preset3'=>''
+							);
+			$legal_ext	=	JCck::getConfig_Param( 'media_'.$legal_ext.'_extensions', $default[$legal_ext] );
 			if ( !$legal_ext ) {
 				$legal_ext	=	$options2['legal_extensions'];
 			}
@@ -283,7 +311,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path[]', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description[]', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -300,7 +328,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $nameH.'_path]', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';		//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $nameH.'_description]', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -316,7 +344,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 			if ( $options2['custom_path'] == '1' ) {
 				$form_more3	=	self::_addFormText( $id.'_path', $name.'_path', $attr_input_text,  $path_label, $value2, self::$type, false );
-				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>';	//TODO!
+				$lock		=	'<a class="switch lock_img" href="javascript:void(0);"><span class="linkage linked"></span></a>'; /* TODO#SEBLOD: */
 			}
 			if ( @$options2['desc_image'] == '1' && @$options2['multivalue_mode'] == '1' ) {
 				$form_more4	=	self::_addFormText( $id.'_description', $name.'_description', $attr_input_text,  $desc_label, $image_desc, self::$type );
@@ -333,11 +361,18 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['custom_path']	=	@$options2['custom_path'];
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>';	//TODO
+			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
 		}
 		
+		$params['image_colorbox']	=	'0';
+
 		if ( $options2['form_preview'] != -1 && $value['image_location'] ) {
-			$params['image_colorbox']	=	'1';
+			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+				$attr_preview				=	'id="colorBox'.$field->id.'" rel="colorBox'.$field->id.'"';
+				$params['image_colorbox']	=	'1';
+			} else {
+				$attr_preview				=	'data-cck-modal=\'{"mode":"image","body":false,"header":false}\'';
+			}
 			$title_image	=	self::_getTitle( $image_title, $title );
 			$desc_image		=	self::_getAlt( $image_desc, $image_title, $title );
 			$title_colorbox	=	$desc_image;
@@ -345,25 +380,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				if ( $options2['form_preview'] == 2 ) {
 					$width		=	( $options2['image_width'] ) ? 'width="'.$options2['image_width'].'"' : '';
 					$height		=	( $options2['image_height'] ) ? 'height="'.$options2['image_height'].'"' : '';
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'" '.$width.' '.$height.'>
+					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'" '.$width.' '.$height.'>
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
 									</a>';
 				} else {
 					$thumb_location	=	str_replace( $title,'_thumb'.( $options2['form_preview'] - 2 ).'/'.$title,$value['image_location'] );
-					$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
 									</a>';
 				}
 			} elseif ( $options2['form_preview'] == 1 ) {
-				$preview	=	'<a id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">
+				$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().'media/cck/images/16/icon-16-preview.png" />
 								</a>';
 			} else {
-				$preview	=	'<a class="cck_preview" id="colorBox'.$field->id.'" href="'.JUri::root().$value['image_location'].'" rel="colorBox'.$field->id.'" title="'.$title_colorbox.'">'.$title_image.'</a>';
+				$preview	=	'<a class="cck_preview" href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">'.$title_image.'</a>';
 			}
 			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
-		} else {
-			$params['image_colorbox']	=	'0';
 		}
 		$form	=	$form.$form_more.$lock.$form_more3.$form_more2.$form_more4.$preview;
 
@@ -494,7 +527,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 		}
 		$legal_ext	=	explode( ',', $legal_ext );
-		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, NULL, 'files', 'array' ) : JRequest::getVar( $name, NULL, 'files', 'array' );
+		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, null, 'files', 'array' ) : JRequest::getVar( $name, null, 'files', 'array' );
 		
 		if ( is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
@@ -579,7 +612,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$maxsize			=	floatval( $options2['max_size'] ) * $unit_prod;
 		$filename			=	JFile::stripExt( $userfile['name'] );
 		$userfile['name']	=	str_replace( $filename, JCckDev::toSafeSTRING( $filename, JCck::getConfig_Param( 'media_characters', '-' ), JCck::getConfig_Param( 'media_case', 0 ) ), $userfile['name'] );
-		if ( ! $maxsize || ( $maxsize && $userfile['size'] < $maxsize ) ) {
+		if ( ! $maxsize || ( $maxsize && @$userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
 				$ImageCustomName	=	$userfile['name'];
 				$ImageCustomPath	=	'';
@@ -693,7 +726,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		include dirname(__FILE__).'/includes/afterstore.php';
+		include __DIR__.'/includes/afterstore.php';
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script

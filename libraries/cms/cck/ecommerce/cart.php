@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: promotion.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -113,11 +113,31 @@ abstract class JCckEcommerceCart
 		$user			=	JCck::getUser();
 		
 		if ( !isset( $cache[$definition] ) ) {
-			$cache[$definition]	=	JCckDatabase::loadResult( 'SELECT COUNT(a.id) FROM #__cck_more_ecommerce_cart_product AS a'
-															. ' LEFT JOIN #__cck_more_ecommerce_carts AS b ON b.id = a.cart_id WHERE b.type = "'.$definition.'" AND b.'.(string)$user->where_clause.' AND b.state = 1' );
-		}
+			require_once JPATH_SITE.'/modules/mod_cck_ecommerce_cart/helper.php';
+			$items	=	modCCKeCommerceCartHelper::getItems( $user, $definition );
 
+			if ( is_array( $items ) ) {
+				$cache[$definition]	=	(int)count( $items, COUNT_RECURSIVE ) - (int)count( $items );
+			} else {
+				$cache[$definition]	=	0;
+			}
+		}
+		
 		return $cache[$definition];
+	}
+
+	// countUserCarts
+	public static function countUserCarts( $definition )
+	{
+		return (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_more_ecommerce_carts AS a WHERE a.'.JCck::getUser()->where_clause. ' AND a.type = "'.$definition.'"' );
+	}
+
+	// hasQuantity
+	public static function hasQuantity( $type )
+	{
+		$cart_def	=	JCckEcommerce::getCartDefinition( $type );
+
+		return $cart_def->quantity;
 	}
 
 	// isValidType

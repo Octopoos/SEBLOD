@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: view.html.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -24,7 +24,7 @@ class CCKViewType extends JViewLegacy
 	protected $vTitle	=	_C2_TEXT;
 	
 	// display
-	function display( $tpl = null )
+	public function display( $tpl = null )
 	{
 		switch ( $this->getlayout() ) {
 			case 'delete':
@@ -50,39 +50,26 @@ class CCKViewType extends JViewLegacy
 				break;
 		}
 		
-		if ( JCck::on() ) {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'132px',
-								   'w30'=>'span4',
-								   'w70'=>'span8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>'$(".hasTooltip").tooltip({});'
-							);
-		} else {
-			$this->css	=	array( '_'=>'',
-								   'panel_height'=>'105px',
-								   'w30'=>'width-30',
-								   'w70'=>'width-70 fltlft',
-								   'wrapper'=>'sebwrapper',
-								   'wrapper2'=>'seb-wrapper workshop',
-								   'wrapper_tmpl'=>'width-100 bg-dark fltlft'
-							);
-			$this->js	=	array( '_'=>'',
-								   'tooltip'=>''
-							);
-		}
+		$this->css	=	array( '_'=>'',
+							   'panel_height'=>'132px',
+							   'w30'=>'span4',
+							   'w70'=>'span8',
+							   'wrapper'=>'container',
+							   'wrapper2'=>'row-fluid',
+							   'wrapper_tmpl'=>'span'
+						);
+		$this->js	=	array( '_'=>'',
+							   'tooltip'=>'$(".hasTooltip").tooltip({});'
+						);
 		$this->uix	=	JCck::getUIX();
+		
 		$this->completeUI();
 
 		parent::display( $tpl );
 	}
 	
 	// completeUI
-	function completeUI()
+	protected function completeUI()
 	{
 		$title	=	'COM_CCK_CONTENT_TYPE';
 
@@ -95,13 +82,13 @@ class CCKViewType extends JViewLegacy
 	}
 
 	// prepareDelete
-	function prepareDelete()
+	protected function prepareDelete()
 	{		
 		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
 	}
 	
 	// prepareDisplay
-	function prepareDisplay()
+	protected function prepareDisplay()
 	{
 		$app			=	JFactory::getApplication();
 		$this->form		=	$this->get( 'Form' );
@@ -111,24 +98,26 @@ class CCKViewType extends JViewLegacy
 		
 		// Check Errors
 		if ( count( $errors	= $this->get( 'Errors' ) ) ) {
-			JError::raiseError( 500, implode( "\n", $errors ) );
-			return false;
+			throw new Exception( implode( "\n", $errors ), 500 );
 		}
 		
-		if ( @$this->item->id > 0 ) {
+		if ( isset( $this->item->id ) && $this->item->id > 0 ) {
 			$this->isNew		=	0;
 			$this->panel_class	=	'closed';
 			$this->panel_style	=	'display:none; ';
 			$name				=	$this->item->name;
-			$app->setUserState( CCK_COM.'.edit.type.client', NULL );
+			$app->setUserState( CCK_COM.'.edit.type.client', null );
 		} else {
 			$this->isNew		=	1;
+			$this->item->locked	=	1;
 			$this->panel_class	=	'open';
 			$this->panel_style	=	'';
 			$name				=	'';
 			$featured			=	(int)$this->state->get( 'skeleton_id', 0 );
 			$this->item->access	=	3;
-			if ( $featured == 11 ) { // TODO: dynamic mapping
+			if ( $featured == 10 ) { /* TODO#SEBLOD: dynamic mapping */
+				$this->item->storage_location	=	'joomla_article';
+			} elseif ( $featured == 11 ) {
 				$this->item->storage_location	=	'joomla_category';
 			} elseif ( $featured == 13 ) {
 				$this->item->storage_location	=	'joomla_user';
@@ -138,6 +127,7 @@ class CCKViewType extends JViewLegacy
 		}
 		$this->item->folder		=	Helper_Admin::getSelected( $this->vName, 'folder', $this->item->folder, 1 );
 		$this->item->published	=	Helper_Admin::getSelected( $this->vName, 'state', $this->item->published, 1 );
+		$this->item->published	=	(int)$this->item->published < 0 ? 1 : $this->item->published;
 		$this->item->client		=	( $this->isNew ) ? 'admin' : $this->state->get( 'client', $app->input->cookie->getString( 'cck_type'.$name.'_client', 'admin' ) );
 		$this->item->master		=	( $this->item->client == 'content' || $this->item->client == 'intro' ) ? 'content' : 'form';
 		$this->item->layer		=	$app->input->getString( 'layer', 'fields' );

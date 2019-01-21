@@ -2,15 +2,17 @@
 /**
 * @version 			SEBLOD 3.x More
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
 defined( '_JEXEC' ) or die;
 
-JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'fieldPicker'=>true ) );
+JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true,
+                                                  'customAttr'=>array( 'aka' ), 'customAttrLabel'=>JText::_( 'COM_CCK_AKA_AS_TARGET' ),
+                                                  'fieldPicker'=>true ) );
 JCckDev::forceStorage();
 $options	=	JCckDev::fromSTRING( $this->item->options );
 ?>

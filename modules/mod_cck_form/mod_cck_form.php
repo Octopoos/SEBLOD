@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: mod_cck_form.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -23,16 +23,10 @@ $app	=	JFactory::getApplication();
 $data	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
+$itemId	=	(int)$params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) );
 
-if ( ! defined ( 'JPATH_LIBRARIES_CCK' ) ) {
-	define( 'JPATH_LIBRARIES_CCK',	JPATH_SITE.'/libraries/cck' );
-}
-if ( ! defined ( 'JROOT_MEDIA_CCK' ) ) {
-	define( 'JROOT_MEDIA_CCK',	JUri::root( true ).'/media/cck' );
-}
 JCck::loadjQuery();
 JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
-require_once JPATH_SITE.'/components/com_cck/helpers/helper_include.php';
 
 $option					=	$app->input->get( 'option', '' );
 $view					=	'';
@@ -49,8 +43,9 @@ $live		=	urldecode( $params->get( 'live' ) );
 $variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.form.form' );
-include JPATH_LIBRARIES_CCK.'/base/form/form_inc.php';
-JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0' ) );
+include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
+JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0|0' ) );
+JFactory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );

@@ -2,9 +2,9 @@
 /**
 * @version 			SEBLOD 3.x Core ~ $Id: form.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				http://www.seblod.com
+* @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -26,31 +26,23 @@ class CCKControllerForm extends JControllerForm
 		$this->registerTask( 'save2new', 'save' );
 		$this->registerTask( 'save2view', 'save' );
 	}
-	
-	// saveAjax
-	public function saveAjax()
+
+	// cancel
+	public function cancel( $key = null )
 	{
-		$config		=	$this->save( null, null, true );
-		$return		=	array(
-							'error'=>0,
-							'id'=>@(int)$config['id'],
-							'isNew'=>@$config['isNew'],
-							'pk'=>$config['pk']
-						);
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
-		if ( !$return['pk'] ) {
-			$return['error']	=	1;
-		}
+		/* TODO#SEBLOD: checkin, etc.. */
 		
-		echo json_encode( $return );
+		$link	=	$this->_getRedirectQuery( true );
+		
+		$this->setRedirect( htmlspecialchars_decode( $link ) );
 	}
 
 	// save
 	public function save( $key = null, $urlVar = null, $isAjax = false )
 	{
-		if ( $isAjax !== true ) {
-			JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-		}
+		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	JFactory::getApplication();
 		$model		=	$this->getModel( 'form' );
@@ -59,6 +51,7 @@ class CCKControllerForm extends JControllerForm
 		
 		$config		=	$model->store( $preconfig );
 		$id			=	$config['pk'];
+		$link		=	'';
 		
 		// Return Now for Ajax..
 		if ( $isAjax ) {
@@ -112,6 +105,7 @@ class CCKControllerForm extends JControllerForm
 					$link	=	str_replace( '/administrator/', '/', $link );
 					break;
 				}
+                break;
 			default:
 				$link	=	$this->_getRedirectQuery( true );
 				break;
@@ -119,30 +113,39 @@ class CCKControllerForm extends JControllerForm
 		
 		$this->setRedirect( htmlspecialchars_decode( $link ), $msg, $msgType );
 	}
-	
-	// cancel
-	public function cancel( $key = null )
+
+	// saveAjax
+	public function saveAjax()
 	{
 		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
-		// Todo::Checkin,etc..
+		$config		=	$this->save( null, null, true );
+		$return		=	array(
+							'error'=>0,
+							'id'=>@(int)$config['id'],
+							'isNew'=>@$config['isNew'],
+							'pk'=>$config['pk']
+						);
 		
-		$link	=	$this->_getRedirectQuery( true );
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
 		
-		$this->setRedirect( htmlspecialchars_decode( $link ) );
+		echo json_encode( $return );
 	}
 	
 	// _getPreconfig
 	protected function _getPreconfig()
 	{
-		$data				=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+		$data	=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
 
-		$data['id']			=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
-		$data['itemId']		=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
-		$data['message']	=	( !isset( $data['message'] ) ) ? '' : $data['message'];
-		$data['type']		=	( !isset( $data['type'] ) ) ? '' : $data['type'];
-		$data['unique']		=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
-		$data['url']		=	( !isset( $data['url'] ) ) ? '' : $data['url'];
+		$data['copyfrom_id']	=	( !isset( $data['copyfrom_id'] ) ) ? 0 : $data['copyfrom_id'];
+		$data['id']				=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
+		$data['itemId']			=	( !isset( $data['itemId'] ) ) ? 0 : $data['itemId'];
+		$data['message']		=	( !isset( $data['message'] ) ) ? '' : $data['message'];
+		$data['type']			=	( !isset( $data['type'] ) ) ? '' : $data['type'];
+		$data['unique']			=	( !isset( $data['unique'] ) ) ? '' : $data['unique'];
+		$data['url']			=	( !isset( $data['url'] ) ) ? '' : $data['url'];
 
 		return $data;
 	}
