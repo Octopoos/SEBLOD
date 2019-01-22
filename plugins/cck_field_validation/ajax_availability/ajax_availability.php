@@ -117,6 +117,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 	// _check
 	protected static function _check( $validation, $value, $config, $and = '' )
 	{
+		$error = FALSE;
 		if ( $config['pk'] > 0 ) {
 			$count	=	(int)JCckDatabase::loadResult( 'SELECT '.$validation->key.' FROM '.$validation->table
 					.	' WHERE '.$validation->column.' = "'.JCckDatabase::escape( $value ).'"'.$and );
