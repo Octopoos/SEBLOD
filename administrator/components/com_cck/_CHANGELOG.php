@@ -22,11 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.2 Upgrade Release [xx-Jan-2018] -----------
+-------------------- 3.17.2 Upgrade Release [25-Jan-2018] -----------
 
 + "Future (> or =) or Null" Match mode added on Search Types.
 + Pagination (number of items per page) can now be changed dynamically.
   >> Search Pagination Plug-in required.
+
+# Notice removed. @SEBLOD_more/pull/548
 
 -------------------- 3.17.1 Upgrade Release [14-Dec-2018] -----------
 
