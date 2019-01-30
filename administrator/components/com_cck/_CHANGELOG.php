@@ -22,12 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.2 Upgrade Release [25-Jan-2018] -----------
+-------------------- 3.17.2 Upgrade Release [30-Jan-2018] -----------
 
 + "Future (> or =) or Null" Match mode added on Search Types.
 + Pagination (number of items per page) can now be changed dynamically.
   >> Search Pagination Plug-in required.
 
+# $cck->getValue() fixed when used to retrieve "Search" fields from List. (regression since SEBLOD 3.17.0).
 # Notice removed. @SEBLOD_more/pull/548
 
 -------------------- 3.17.1 Upgrade Release [14-Dec-2018] -----------
