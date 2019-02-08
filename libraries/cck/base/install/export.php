@@ -164,8 +164,10 @@ class CCK_Export
 			}
 		}
 		
-		require_once JPATH_COMPONENT.'/helpers/pclzip/pclzip.lib.php';
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/pclzip/pclzip.lib.php';
+
 		$zip	=	new PclZip( $path_zip );
+		
 		if ( $zip->create( $path, PCLZIP_OPT_REMOVE_PATH, $path ) == 0 ) {
 			return;
 		}
