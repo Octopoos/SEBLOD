@@ -162,11 +162,13 @@ class plgCCK_FieldRadio extends JCckPluginField
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 			$form_open	=	'<fieldset id="'.$id.'" '.$attr.'>';
 			$attr		=	'class="'.$validate.'" size="1"';
+			$span = false;
 		} else {
 			$class		=	'radios'.$orientation . ( $field->css ? ' '.$field->css : '' );
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 			$form_open	=	'<fieldset id="'.$id.'" '.$attr.'>';
 			$attr		=	'class="radio'.$validate.'" size="1"';
+			$span = true;
 		}
 		$attr_key		=	'data-cck';
 		$form			=	'';
@@ -191,8 +193,10 @@ class plgCCK_FieldRadio extends JCckPluginField
 				$k++;
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
 				$checked	=	( $o->value == $value ) ? 'checked="checked" ' : '';
-				$form		.=	'<span class="cck_option_radio"><input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
-				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label></span>';
+				$form		.= $span ? '<span class="cck_option_radio">' : '';
+				$form		.=	'<input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label>';
+				$form		.= $span ? '</span>' : '';
 
 				$indexes[$name]++;
 			}
@@ -201,8 +205,10 @@ class plgCCK_FieldRadio extends JCckPluginField
 			foreach ( $opts as $i=>$o ) {
 				$attr2		=	( isset( $o->$attr_key ) ) ? $o->$attr_key : '';
 				$checked	=	( $o->value == $value ) ? 'checked="checked" ' : '';
-				$form		.=	'<span class="cck_option_radio"><input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
-				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label></span>';
+				$form		.= $span ? '<span class="cck_option_radio">' : '';
+				$form		.=	'<input type="radio" id="'.$id.$indexes[$name].'" name="'.$name.'" value="'.$o->value.'" '.$checked.$attr.$attr2.' />';
+				$form		.=	'<label for="'.$id.$indexes[$name].'">'.$o->text.'</label>';
+				$form		.= $span ? '</span>' : '';
 
 				$indexes[$name]++;
 			}
