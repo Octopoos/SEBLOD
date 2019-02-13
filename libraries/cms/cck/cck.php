@@ -115,8 +115,27 @@ abstract class JCck
 	}
 	
 	// is
-	public static function is()
+	public static function is( $minimum = '3' )
 	{
+		static $current	=	null;
+
+		if ( $current === null ) {
+			if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
+				require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
+
+				$version	=	new JCckVersion;
+				
+				if ( $version->DEV_STATUS == 'dev-4.0' ) {
+					$current	=	'4.0.0';
+				} else {
+					$current	=	$version->RELEASE.'.'.$version->DEV_LEVEL;
+				}
+			} else {
+				$current	=	'3.0.0';
+			}
+		}
+
+		return version_compare( $current, $minimum, 'ge' );
 	}
 	
 	// on
