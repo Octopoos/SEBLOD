@@ -204,12 +204,12 @@ class CCKController extends JControllerLegacy
 		$path	=	JPATH_ROOT.'/'.$file;
 		
 		if ( is_file( $path ) && $file ) {
-			$size	=	filesize( $path ); 
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
+			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
+
 			if ( $ext == 'php' || $file == '.htaccess' ) {
 				return;
 			}
-			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
 			if ( $path ) {
 				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {
 					$this->setRedirect( JUri::root( true ).'/'.$file );
@@ -262,7 +262,7 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
 		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
-		$output		=	0; // $params->get( 'output', 0 );
+		$output		=	0;
 		
 		if ( $file = $model->prepareExport( $params, $task_id, $ids ) ) {
 			if ( $output > 0 ) {
@@ -411,13 +411,14 @@ class CCKController extends JControllerLegacy
 		
 		$file		=	$model->prepareProcess( $params, $task_id, $ids, $config );
 		$link		=	( isset( $config['url'] ) && $config['url'] ) ? $config['url'] : $this->_getReturnPage();
+		
 		if ( $file ) {
 			$output	=	$params->get( 'output', '' );
 
 			if ( $output == '' ) {
-				$output	=	1;
+				$output	=	-1;
 			}
-			if ( $output > 0 ) {
+			if ( $output == -1 ) {
 				if ( isset( $config['message'] ) && $config['message'] != '' ) {
 					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
 				} else {
@@ -472,6 +473,7 @@ class CCKController extends JControllerLegacy
 		
 		$model		=	JModelLegacy::getInstance( 'CCK_Toolbox', 'CCK_ToolboxModel' );
 		$params		=	JComponentHelper::getParams( 'com_cck_toolbox' );
+
 		$result		=	$model->process( $params, $task_id, $ids, $config );
 		$return		=	array(
 							'error'=>0,
@@ -490,6 +492,21 @@ class CCKController extends JControllerLegacy
 			}
 			if ( !$task_input ) {
 				$return['error']	=	1;
+			}
+		}
+		
+		$output	=	$params->get( 'output', '' );
+
+		if ( $output == '' ) {
+			$output	=	-1;
+		}
+		if ( $output == 1 ) {
+			if ( isset( $config['path'] ) && $config['path'] ) {
+				$config['path']			=	JCckDevHelper::getRelativePath( $config['path'], false );
+				$config['path']			=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$config['path'] );
+				$return['output_path']	=	$config['path'];
+			} else {
+				$return['output_path']	=	'';
 			}
 		}
 		
