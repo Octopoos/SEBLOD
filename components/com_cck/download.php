@@ -11,93 +11,115 @@
 defined( '_JEXEC' ) or die;
 
 if ( !( isset( $name ) && $name != '' && isset( $path ) && $path != '' ) ) {
-  return;
+	return;
 }
-$allowed_ext  = array(
-  // archives
-  'zip' => 'application/octet-stream',
-  'tgz' => 'application/x-compressed',
-  'rar' => 'application/x-rar-compressed',
-  'gz' => 'application/x-gzip',
+if ( !is_file( $path ) ) {
+	return;
+}
 
-  // documents
-  'pdf' => 'application/pdf',
-  'doc' => 'application/msword',
-  'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'xls' => 'application/vnd.ms-excel',
-  'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
-  'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'ppt' => 'application/vnd.ms-powerpoint',
-  'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'pps' => 'application/vnd.ms-powerpoint',
-  'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-  'odt' => 'application/vnd.oasis.opendocument.text',
-  'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-  'odp' => 'application/vnd.oasis.opendocument.presentation',
-  'txt' => 'text/plain',
-  'csv' => 'text/csv',
+$file_size	=	filesize( $path );
+$mime_types	=	array(
+					// Archives
+					'zip' => 'application/octet-stream',
+					'tgz' => 'application/x-compressed',
+					'rar' => 'application/x-rar-compressed',
+					'gz' => 'application/x-gzip',
 
-  // executables
-  'exe' => 'application/octet-stream',
+					// Documents
+					'pdf' => 'application/pdf',
+					'doc' => 'application/msword',
+					'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+					'xls' => 'application/vnd.ms-excel',
+					'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
+					'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+					'ppt' => 'application/vnd.ms-powerpoint',
+					'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+					'pps' => 'application/vnd.ms-powerpoint',
+					'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+					'odt' => 'application/vnd.oasis.opendocument.text',
+					'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+					'odp' => 'application/vnd.oasis.opendocument.presentation',
+					'txt' => 'text/plain',
+					'csv' => 'text/csv',
 
-  // images
-  'gif' => 'image/gif',
-  'png' => 'image/png',
-  'jpg' => 'image/jpeg',
-  'jpeg' => 'image/jpeg',
-  'tif' => 'image/tiff',
-  'tiff' => 'image/tiff',
-  'bmp' => 'image/bmp',
+					// Executables
+					'exe' => 'application/octet-stream',
 
-  // audio
-  'mp3' => 'audio/mpeg',
-  'wav' => 'audio/x-wav',
+					// Images
+					'gif' => 'image/gif',
+					'png' => 'image/png',
+					'jpg' => 'image/jpeg',
+					'jpeg' => 'image/jpeg',
+					'tif' => 'image/tiff',
+					'tiff' => 'image/tiff',
+					'bmp' => 'image/bmp',
 
-  // video
-  'mpeg' => 'video/mpeg',
-  'mpg' => 'video/mpeg',
-  'mpe' => 'video/mpeg',
-  'mov' => 'video/quicktime',
-  'avi' => 'video/x-msvideo',
-  'mp4' => 'video/mp4',
-  'flv' => 'video/x-flv'
-);
-if ( isset( $allowed_ext[$ext] ) && $allowed_ext[$ext] == '' ) {
-	$mtype	=	'';
+					// Audio
+					'mp3' => 'audio/mpeg',
+					'wav' => 'audio/x-wav',
+
+					// Video
+					'mpeg' => 'video/mpeg',
+					'mpg' => 'video/mpeg',
+					'mpe' => 'video/mpeg',
+					'mov' => 'video/quicktime',
+					'avi' => 'video/x-msvideo',
+					'mp4' => 'video/mp4',
+					'flv' => 'video/x-flv'
+				);
+
+if ( !isset( $mime_types[$ext] ) ) {
+	$mime_type	=	'';
+
 	if ( function_exists( 'mime_content_type' ) ) {
-		$mtype	=	mime_content_type( $path );
+		$mime_type	=	mime_content_type( $path );
 	} elseif ( function_exists( 'finfo_file' ) ) {
-		$finfo	=	finfo_open( FILEINFO_MIME );
-		$mtype	=	finfo_file( $finfo, $path );
-		finfo_close( $finfo );
-  }
-	if ( $mtype == '' ) {
-    	$mtype	=	"application/force-download";
+		$file_info	=	finfo_open( FILEINFO_MIME );
+		$mime_type	=	finfo_file( $file_info, $path );
+		
+		finfo_close( $file_info );
+	}
+
+	if ( !$mime_type ) {
+		$mime_type	=	"application/force-download";
 	}
 } else {
-	$mtype	=	$allowed_ext[$ext];
+	$mime_type	=	$mime_types[$ext];
 }
+
 header( "Pragma: public" );
 header( "Expires: 0" );
 header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 header( "Cache-Control: public" );
-header( "Content-Description: File Transfer" );
-header( "Content-Type: $mtype" );
+header( "Content-Type: $mime_type" );
 header( "Content-Disposition: attachment; filename=\"$name\"" );
-/*
-header( "Content-Transfer-Encoding: binary" );
-header( "Content-Length: " . filesize($path) );
-*/
-if ( is_file( $path ) ) {
-  ob_clean();
+header( "Content-Length: " . $file_size );
+
+if ( isset( $to_be_erased ) && $to_be_erased ) {
+	@chmod( $path, 0700 );
+}
+if ( $file_size < 10000000 ) {
+	ob_clean();
 	flush();
 	readfile( $path );
+} else {
+	$chunk_size	=	1024 * 1024;
+	$handle		=	fopen( $path, 'rb' );
 
-  if ( isset( $to_be_erased ) && $to_be_erased ) {
-      @chmod( $path, 0700 );
-      @unlink( $path );
-  }
+	if ( $handle === false ) {
+		return;
+	}
+	while ( !feof( $handle ) ) {
+		echo @fread( $handle, $chunk_size );
+		ob_flush();
+		flush();
+	}
 
-	exit();
+	fclose( $handle );
 }
+if ( isset( $to_be_erased ) && $to_be_erased ) {
+	@unlink( $path );
+}
+
+exit();
 ?>
