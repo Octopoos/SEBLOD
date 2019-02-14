@@ -22,7 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.2 Upgrade Release [30-Jan-2018] -----------
+-------------------- 3.17.3 Upgrade Release [xx-Feb-2019] -----------
+
+^ Download task improved.
+  >> chunks support added for large files.
+
+! JCck::is() implemented for SEBLOD 4.0
+
+# Fields with multiple values fixed on "Process (Ajax)" task.
+# Minor issues fixed.
+
+-------------------- 3.17.2 Upgrade Release [30-Jan-2019] -----------
 
 + "Future (> or =) or Null" Match mode added on Search Types.
 + Pagination (number of items per page) can now be changed dynamically.
