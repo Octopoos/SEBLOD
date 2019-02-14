@@ -478,7 +478,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 											JCck.More.ButtonSubmit.kvp = "";
 											$.each(JCck.More.ButtonSubmit.instances[el].fields, function(k,v) {
-  												JCck.More.ButtonSubmit.kvp	+=	"&"+v+"="+$("#"+v).myVal();
+												var vs = $("#"+v).myVal();
+
+												if (Array.isArray(vs)) {
+													$.each(vs, function(k2,v2) {
+														JCck.More.ButtonSubmit.kvp	+=	"&"+v+"[]="+v2;	
+													});
+												} else {
+													JCck.More.ButtonSubmit.kvp	+=	"&"+v+"="+vs;
+												}
   											});
 										},
 										isValid: function()
