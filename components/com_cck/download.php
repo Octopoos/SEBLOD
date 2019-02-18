@@ -96,27 +96,23 @@ header( "Content-Disposition: attachment; filename=\"$name\"" );
 header( "Content-Length: " . $file_size );
 
 if ( isset( $to_be_erased ) && $to_be_erased ) {
-	@chmod( $path, 0700 );
+	@chmod( $path, 0600 );
 }
-if ( $file_size < 10000000 ) {
-	ob_clean();
+
+$chunk_size	=	1024 * 1024;
+$handle		=	fopen( $path, 'rb' );
+
+if ( $handle === false ) {
+	return;
+}
+while ( !feof( $handle ) ) {
+	echo @fread( $handle, $chunk_size );
+	ob_flush();
 	flush();
-	readfile( $path );
-} else {
-	$chunk_size	=	1024 * 1024;
-	$handle		=	fopen( $path, 'rb' );
-
-	if ( $handle === false ) {
-		return;
-	}
-	while ( !feof( $handle ) ) {
-		echo @fread( $handle, $chunk_size );
-		ob_flush();
-		flush();
-	}
-
-	fclose( $handle );
 }
+
+fclose( $handle );
+
 if ( isset( $to_be_erased ) && $to_be_erased ) {
 	@unlink( $path );
 }
