@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // JCckDevHelper
 abstract class JCckDevHelper
 {
@@ -795,6 +797,36 @@ abstract class JCckDevHelper
 		}
 
 		$array	=	self::_sortHelper( $array, $property, '_index' );
+	}
+
+	// truncate
+	public static function truncate( $str, $length )
+	{
+		if ( $str == '' ) {
+			return '';
+		}
+
+		/*
+		$str	=	str_replace( ' "', ' «', $str );
+		$str	=	str_replace( '"', '»', $str );
+		*/
+
+		if ( StringHelper::strlen( $str ) > $length ) {
+			$str2	=	StringHelper::substr( $str, $length );
+			$str	=	StringHelper::substr( $str, 0, $length );
+
+			if ( $str2[0] == ' ' ) {
+				return $str;
+			}
+
+			$pos	=	StringHelper::strrpos( $str, ' ' );
+
+			if ( $pos !== false ) {
+				$str	=	StringHelper::substr( $str, 0, $pos );
+			}
+		}
+
+		return $str;
 	}
 
 	// _sortHelper
