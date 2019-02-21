@@ -22,10 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.3 Upgrade Release [xx-Feb-2019] -----------
+-------------------- 3.17.3 Upgrade Release [21-Feb-2019] -----------
 
 ^ Download task improved.
   >> chunks support added for large files.
+  
+^ hideEmptyLimitstart applied (only on Joomla! 3.9).
+  >> no more ?start=0 in pagination
 
 ! JCck::is() implemented for SEBLOD 4.0
 
