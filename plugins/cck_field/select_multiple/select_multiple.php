@@ -248,11 +248,9 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 
 		// Prepare
 		$divider	=	( $field->divider != '' ) ? $field->divider : ',';
-		if ( $divider ) {
-			$nb		=	count( $value );
-			if ( is_array( $value ) && $nb > 0 ) {
-				$value	=	implode( $divider ,$value );
-			}
+		
+		if ( is_array( $value ) && count( $value ) ) {
+			$value	=	implode( $divider, $value );
 		}
 		
 		// Validate

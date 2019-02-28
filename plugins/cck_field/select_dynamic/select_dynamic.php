@@ -556,11 +556,9 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( $field->bool3 ) {
 			// Set Multiple
 			$divider	=	( $field->divider != '' ) ? $field->divider : ',';
-			if ( $divider ) {
-				$nb			=	count( $value );
-				if ( is_array( $value ) && $nb > 0 ) {
-					$value	=	implode( $divider, $value );
-				}
+			
+			if ( is_array( $value ) && count( $value ) ) {
+				$value	=	implode( $divider, $value );
 			}
 		}
 
