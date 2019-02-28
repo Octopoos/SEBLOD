@@ -64,8 +64,6 @@ if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
 
 $options->set( 'debug', $doDebug );
 
-
-
 // ACL
 if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 	$config			=	array( 'action'=>$preconfig['action'],
@@ -115,28 +113,28 @@ if ( ! $count ) {
 }
 
 // Init
-$hasAjax	=	false;
-$limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
-$pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
-$isAltered	=	false;
-$isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
-$isSearch	=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($post[...]) */
+$hasAjax		=	false;
+$limitend		=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$list_context	=	'com_cck.'.$search->name;
+$pagination		=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 
-// Lives
-if ( !isset( $lives ) ) {
-	$live		=	explode( '||', $live );
-	$lives		=	array();
-	foreach ( $live as $liv ) {
-		if ( $liv != '' ) {
-			$l				=	explode( '=', $liv );
-			$lives[$l[0]]	=	$l[1];
-		}
-	}
-} elseif ( count( $lives ) && $isInfinite ) {
-	/* TODO#SEBLOD: force lives */
+$isAltered		=	false;
+$isInfinite		=	( $pagination == 2 || $pagination == 8 ) ? true : false;
+$isPersistent	=	(int)$options->get( 'persistent_query', '0' );
+$isSearch		=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($post[...]) */
+$session		=	JFactory::getSession();
+$registry		=	$session->get( 'registry' );
+
+if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) {
+	$isPersistent	=	true;
+} else {
+	$isPersistent	=	false;
 }
+
+// Variations
 $variation	=	explode( '||', $variation );
 $variations	=	array();
+
 foreach ( $variation as $var ) {
 	if ( $var != '' ) {
 		$v					=	explode( '=', $var );
@@ -229,6 +227,7 @@ if ( $context != '' ) {
 						'limit'=>'',
 						'option'=>'',
 						'pk'=>'',
+						'referrer'=>'',
 						'return'=>'',
 						'search'=>'',
 						'skip'=>'',
@@ -238,6 +237,7 @@ if ( $context != '' ) {
 						'tmpl'=>'', /* Let's keep it when format!=raw for now */
 						'type'=>''
 					);
+
 	foreach ( $context as $k=>$v ) {
 		if ( isset( $excluded[$k] ) ) {
 			if ( $k == 'tmpl' ) {
@@ -252,6 +252,30 @@ if ( $context != '' ) {
 			}
 		}
 		$app->input->set( $k, $v );
+	}
+}
+
+// Lives
+if ( !isset( $lives ) ) {
+	$lives		=	array();
+
+	if ( isset( $live ) && $live ) {
+		$live		=	explode( '||', $live );
+		
+		foreach ( $live as $liv ) {
+			if ( $liv != '' ) {
+				$l				=	explode( '=', $liv );
+				$lives[$l[0]]	=	$l[1];
+			}
+		}
+	} elseif ( isset( $context['referrer'] ) && $context['referrer'] ) {
+		if ( $registry->exists( $list_context.'.lives.'.$context['referrer'] ) ) {
+			$lives	=	$app->getUserState( $list_context.'.lives.'.$context['referrer'], array(), array() );
+		}
+	}
+} elseif ( count( $lives ) && $isInfinite ) {
+	if ( isset( $preconfig['caller'] ) && $preconfig['caller'] ) {
+		$app->setUserState( $list_context.'.lives.'.$preconfig['caller'], $lives );
 	}
 }
 
@@ -270,16 +294,6 @@ if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	}
 }
 
-// isPersistent
-$context		=	'com_cck.'.$search->name;
-$isPersistent	=	(int)$options->get( 'persistent_query', '0' );
-
-if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) {
-	$isPersistent	=	true;
-} else {
-	$isPersistent	=	false;
-}
-
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Search
 
 // Validation
@@ -290,8 +304,6 @@ if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
 $preconfig['client']	=	'list';
 $error					=	'';
 $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>@$order_by );
-$session				=	JFactory::getSession();
-$registry				=	$session->get( 'registry' );
 $stages					=	array();
 
 // Process
@@ -322,7 +334,7 @@ foreach ( $fields['search'] as $field ) {
 		
 		// Set Persistent Values
 		if ( $isPersistent ) {
-			$app->setUserState( $context.'.filter.'.$name, $value );
+			$app->setUserState( $list_context.'.filter.'.$name, $value );
 		}
 	} else {
 		if ( isset( $lives[$name] ) ) {
@@ -337,8 +349,8 @@ foreach ( $fields['search'] as $field ) {
 
 		// Get Persistent Values
 		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
-			if ( $registry->exists( $context.'.filter.'.$name ) ) {
-				$value	=	$app->getUserState( $context.'.filter.'.$name, '' );
+			if ( $registry->exists( $list_context.'.filter.'.$name ) ) {
+				$value	=	$app->getUserState( $list_context.'.filter.'.$name, '' );
 			}
 		}
 	}
