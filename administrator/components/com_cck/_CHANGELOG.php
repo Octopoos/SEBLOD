@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.17.4 Upgrade Release [..-Mar-2019] -----------
+
++ Infinite pagination improved with context-based live values.
+
+# Notice removed. @SEBLOD/pull/524
+
 -------------------- 3.17.3 Upgrade Release [21-Feb-2019] -----------
 
 ^ Download task improved.
