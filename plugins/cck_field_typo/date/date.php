@@ -195,7 +195,6 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$date	=	str_replace( $before, $after, $date_eng );
 		$before	=	array( $month_short, $day_short );
 		$after	=	array( $t_month_short, $t_day_short );
-		$date	=	str_replace( $before, $after, $date );
 
 		return $date;
 	}
