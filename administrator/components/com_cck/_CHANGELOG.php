@@ -22,11 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.4 Upgrade Release [..-Mar-2019] -----------
+-------------------- 3.17.4 Upgrade Release [27-Mar-2019] -----------
 
 + Infinite pagination improved with context-based live values.
 
+# Article Title issue (with Page Title Override) fixed. @SEBLOD/issues/544
+# Date Format (German, ...) fixed on Date Typography plug-in. @SEBLOD/pull/555
 # Notice removed. @SEBLOD/pull/524
+# Site Name in Page Titles issue (with Page Title Override) fixed. @SEBLOD/issues/550
 
 -------------------- 3.17.3 Upgrade Release [21-Feb-2019] -----------
 
