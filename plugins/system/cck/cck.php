@@ -556,18 +556,14 @@ class plgSystemCCK extends JPlugin
 			if ( $this->multisite === true ) {
 				if ( $this->site ) {
 					$config		=	JFactory::getConfig();
-					$site_title	=	$this->site->configuration->get( 'sitename', '' );
-					$site_pages	=	$this->site->configuration->get( 'sitename_pagetitles', 0 );
 					$site_desc	=	$this->site->configuration->get( 'metadesc', '' );
 					$site_keys	=	$this->site->configuration->get( 'metakeys', '' );
 
 					$meta_desc	=	$doc->getMetaData( 'description' );
 					$meta_keys	=	$doc->getMetaData( 'keywords' );
 
-					if ( $site_pages ) {
-						$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
-						$doc->setTitle( $title );
-					}
+					$this->_updateTitle();
+
 					if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {
 						$doc->setMetaData( 'description', $site_desc );
 					}
@@ -745,7 +741,23 @@ class plgSystemCCK extends JPlugin
 		}
 		if ( $app->isClient( 'site' ) && $doc->getType() == 'html' ) {
 			if ( isset( $app->cck_page_title ) ) {
-				$doc->setTitle( $app->cck_page_title );
+				$config		=	JFactory::getConfig();
+
+				if ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
+					$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $app->cck_page_title );
+				} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
+					$title	=	JText::sprintf( 'JPAGETITLE', $app->cck_page_title, $config->get( 'sitename' ) );
+				} else {
+					$title	=	$app->cck_page_title;
+				}
+
+				$doc->setTitle( $title );
+
+				if ( $this->multisite === true ) {
+					if ( $this->site ) {
+						$this->_updateTitle();
+					}
+				}
 			}
 		}
 		if ( $app->isClient( 'site' ) && isset( $app->cck_app['Header'] ) ) {
@@ -1080,6 +1092,20 @@ class plgSystemCCK extends JPlugin
 		
 		if ( is_object( $style ) ) {
 			JFactory::getApplication()->setTemplate( $style->template, $style->params );
+		}
+	}
+
+	// _setTitle
+	protected function _updateTitle()
+	{
+		$doc		=	JFactory::getDocument();
+		$site_title	=	$this->site->configuration->get( 'sitename', '' );
+		$site_pages	=	$this->site->configuration->get( 'sitename_pagetitles', 0 );
+
+		if ( $site_pages ) {
+			$title	=	( $site_pages ) == 2 ? $doc->getTitle().' - '.$site_title : $site_title .' - '.$doc->getTitle();
+
+			$doc->setTitle( $title );
 		}
 	}
 }
