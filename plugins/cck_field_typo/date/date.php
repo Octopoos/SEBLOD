@@ -175,28 +175,35 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	{
 		$format_storage	=	( isset( $format_storage ) ) ? $format_storage : '0';
 		
-		return ( trim ( $value ) == '' ) ? '' : ( ( $format_storage == '0' ) ? strtotime ( $value ) : $value );
+		return ( trim( $value ) == '' ) ? '' : ( ( $format_storage == '0' ) ? strtotime( $value ) : $value );
 	}
 	
 	// _getDateByLang
 	protected static function _getDateByLang( $format, $date_n, $date_eng )
 	{
-		$month_short	=	date( 'M', $date_n );
-		$month			=	date( 'F', $date_n );		
-		$t_month_short	=	JText::_( strtoupper( $month ).'_SHORT' );
-		$t_month		=	JText::_( strtoupper( $month ) );
-		$day_short		=	date( 'D', $date_n );
-		$t_day_short	=	JText::_( strtoupper( $day_short ) );
-		$day			=	date( 'l', $date_n );
-		$t_day			=	JText::_( strtoupper( $day ) );
+		$day		=	date( 'l', $date_n );
+		$month		=	date( 'F', $date_n );
+		$t_day		=	JText::_( strtoupper( $day ) );
+		$t_month	=	JText::_( strtoupper( $month ) );
 		
-		$before	=	array( $month, $day );
-		$after	=	array( $t_month, $t_day );
-		$date	=	str_replace( $before, $after, $date_eng );
-		$before	=	array( $month_short, $day_short );
-		$after	=	array( $t_month_short, $t_day_short );
-		$date	=	str_replace( $before, $after, $date );
+		$date		=	str_replace( array( $month, $day ), array( $t_month, $t_day ), $date_eng );
+		
+		// Short Day
+		if ( strpos( $format, 'D' ) !== false ) {
+			$day_short		=	date( 'D', $date_n );
+			$t_day_short	=	JText::_( strtoupper( $day_short ) );
 
+			$date			=	str_replace( $day_short, $t_day_short, $date );
+		}
+		
+		// Short Month
+		if ( strpos( $format, 'M' ) !== false ) {
+			$month_short	=	date( 'M', $date_n );
+			$t_month_short	=	JText::_( strtoupper( $month ).'_SHORT' );
+
+			$date			=	str_replace( $month_short, $t_month_short, $date );
+		}
+		
 		return $date;
 	}
 }
