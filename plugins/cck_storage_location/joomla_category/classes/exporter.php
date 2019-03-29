@@ -135,10 +135,12 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 						}
 
 						// Tags
-						if ( isset( $fields['tags'] ) && is_object( $fields['tags'] ) ) {
-							$fields['tags']	=	$fields['tags']->tags;
-						} else {
-							$fields['tags']	=	'';
+						if ( isset( $fields['tags'] ) ) {
+							if ( is_object( $fields['tags'] ) ) {
+								$fields['tags']	=	$fields['tags']->tags;
+							} else {
+								$fields['tags']	=	'';
+							}
 						}
 					}
 				} else {
