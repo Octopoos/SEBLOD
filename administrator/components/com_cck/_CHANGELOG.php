@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.4 Upgrade Release [27-Mar-2019] -----------
+-------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 
 + Infinite pagination improved with context-based live values.
 
