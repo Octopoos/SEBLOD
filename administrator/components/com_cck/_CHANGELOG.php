@@ -28,6 +28,7 @@ $ -> Language fix or change
 
 # Article Title issue (with Page Title Override) fixed. @SEBLOD/issues/544
 # Date Format (German, ...) fixed on Date Typography plug-in. @SEBLOD/pull/555
+# Export issue fixed on Joomla! Articles/Categories.
 # Notice removed. @SEBLOD/pull/524
 # Site Name in Page Titles issue (with Page Title Override) fixed. @SEBLOD/issues/550
 
