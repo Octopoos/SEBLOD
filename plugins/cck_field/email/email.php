@@ -74,7 +74,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form	=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+		$form	=	'<input type="email" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.'>';
 		
 		// Set
 		if ( ! $field->variation ) {
