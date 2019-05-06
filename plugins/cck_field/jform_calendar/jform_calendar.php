@@ -214,7 +214,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 
-		if ( (int)$field->value > 0 && $modify ) {
+		if ( (int)$field->value > 0 && isset($modify) ) {
 			$field->value	=	JFactory::getDate( $field->value )->modify( $modify )->toSql();
 
 		}
