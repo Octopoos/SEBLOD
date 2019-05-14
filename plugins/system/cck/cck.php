@@ -562,6 +562,22 @@ class plgSystemCCK extends JPlugin
 					$meta_desc	=	$doc->getMetaData( 'description' );
 					$meta_keys	=	$doc->getMetaData( 'keywords' );
 
+					$page_title	=	$this->site->configuration->get( 'pagetitle', '' );
+
+					if ( $page_title != '' ) {
+						$menu	=	$app->getMenu();
+
+						if ( is_object( $menu ) ) {
+							$active	=	$menu->getActive();
+
+							if ( is_object( $active ) && (int)$active->home ) {
+								if ( !$active->getParams()->get( 'page_title', '' ) ) {
+									$doc->setTitle( $page_title );
+								}
+							}
+						}
+					}
+
 					$this->_updateTitle();
 
 					if ( $site_desc && ( !$meta_desc || $meta_desc == $config->get( 'MetaDesc' ) ) ) {

@@ -52,11 +52,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             $cfg        =	JCckDev::fromJSON( $this->item->configuration, 'array' );
             echo JCckDev::renderForm( $cck['core_site_name'], @$cfg['sitename'], $config );
             echo JCckDev::renderForm( $cck['core_site_pagetitles'], @$cfg['sitename_pagetitles'], $config );
+            echo JCckDev::renderForm( 'core_dev_text', @$cfg['pagetitle'], $config, array( 'label'=>'Page Title', 'maxlength'=>70, 'storage_field'=>'json[configuration][pagetitle]' ) );
+            echo JCckDev::renderForm( $cck['core_site_offline'], @$cfg['offline'], $config );
             echo JCckDev::renderForm( $cck['core_site_metadesc'], @$cfg['metadesc'], $config );
             echo JCckDev::renderForm( $cck['core_site_metakeys'], @$cfg['metakeys'], $config );
             echo JCckDev::renderForm( $cck['core_site_homepage'], @$cfg['homepage'], $config );
-            echo JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config );
-            echo JCckDev::renderForm( $cck['core_site_offline'], @$cfg['offline'], $config );
+            echo JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config );            
             echo JCckDev::renderForm( $cck['core_site_template_style'], @$cfg['template_style'], $config );
             ?>
         </ul>
