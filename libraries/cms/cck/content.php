@@ -1938,7 +1938,7 @@ class JCckContent
 					continue;
 				}
 
-				$query->order( $db->quoteName( $index.'.'.$k ) . strtoupper( $v ) );
+				$query->order( $db->quoteName( $index.'.'.$k ) . ' ' . strtoupper( trim( $v ) ) );
 
 				$isOrdered	=	true;
 			}
