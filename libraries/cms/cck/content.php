@@ -1042,12 +1042,26 @@ class JCckContent
 		return $this->_findResults( 'pks', false );
 	}
 
+	// limit
+	public function limit( $limit = 0 )
+	{
+		if ( !isset( $this->_search_query ) ) {
+			/* TODO#SEBLOD: error? */
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_search_query['limit']	=	$limit;
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
 	// search (^)
 	public function search( $content_type, $data = array() )
 	{
 		$this->_search_query	=	array(
 										'content_type'=>$content_type,
 										'data'=>$data,
+										'limit'=>0,
 										'match'=>array(),
 										'order'=>array()
 									);
@@ -1871,9 +1885,11 @@ class JCckContent
 
 		if ( $data === true ) {
 			$data	=	$this->_search_query['data'];
+			$limit	=	(int)$this->_search_query['limit'];
 			$match	=	$this->_search_query['match'];
 			$order	=	$this->_search_query['order'];
 		} else {
+			$limit	=	0;
 			$match	=	array();
 		}
 
@@ -1929,6 +1945,9 @@ class JCckContent
 		}
 		if ( !$isOrdered && !is_bool( $order ) ) {
 			$query->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
+		}
+		if ( $limit ) {
+			$query->setLimit( $limit );
 		}
 
 		return $query;
