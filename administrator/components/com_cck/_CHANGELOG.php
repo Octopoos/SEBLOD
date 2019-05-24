@@ -22,11 +22,16 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.1x.x Upgrade Release [xx-Jun-2019] -----------
+-------------------- 3.18.0 Upgrade Release [xx-Jun-2019] -----------
+
++ JCckContent class updated & improved! :)
+  >> "extend" method added for callable/mixins (cf manuals).
+  >> "limit" methods added (cf manuals).
 
 + "Page Title" (Home Page) parameter added to Sites. (Multi-sites)
 
-# ...
+! Priority added on Process stack.
+  >> "beforeStore" support added.
 
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 
