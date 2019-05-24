@@ -279,6 +279,11 @@ class JCckDevImage
 				$thumbHeight	=	$height;
 				break;
 
+			case "quotient":
+				$thumbWidth		=	round( ( $src_w * $dest_w ) / $dest_h ) ;
+				$thumbHeight	=	round( ( $src_h * $dest_w ) / $dest_h ) ;
+				break;
+
 			case "shrink":
 				$width			=	( $width > $src_w ) ? $src_w : $width;
 				$height			=	( $height > $src_h ) ? $src_h : $height;
