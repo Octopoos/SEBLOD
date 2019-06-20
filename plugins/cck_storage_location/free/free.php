@@ -328,7 +328,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( ! $core->pk ) {
 			$core->date_time	=	JFactory::getDate()->toSql();
 		}
-		$core->pk				=	self::$pk;
+		$core->pk				=	self::$pk ? self::$pk : $config['pk'];
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
 		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->id;
