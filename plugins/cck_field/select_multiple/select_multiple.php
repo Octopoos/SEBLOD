@@ -204,6 +204,27 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 		}
 	}
 	
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		if ( $config['prepare_input'] && $value != '' ) {
+			$values	=	explode( $field->divider, $value );
+
+			foreach ( $values as $k=>$value ) {
+				$values[$k]	=	parent::getValueFromOptions( $field, $value, $config );
+			}
+
+			$values	=	array_filter( $values );
+			$value	=	implode( $field->divider, $values );
+		}
+
+		$field->value	=	$value;
+	}
+	
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{

@@ -234,7 +234,21 @@ class plgCCK_FieldRadio extends JCckPluginField
 			return $field;
 		}
 	}
-	
+
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		if ( $config['prepare_input'] && $value != '' ) {
+			$value	=	parent::getValueFromOptions( $field, $value, $config );
+		}
+
+		$field->value	=	$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
