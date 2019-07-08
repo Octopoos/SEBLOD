@@ -79,7 +79,7 @@ class JCckContent
 
 		$this->initialize();
 	}
-	
+
 	// getInstance
 	public static function getInstance( $identifier = '' )
 	{
@@ -1990,6 +1990,14 @@ class JCckContent
 				case '>=':
 				case '>':
 					$where	=	' ' . $operator . ' ' . $db->quote( $v );
+					break;
+				case 'in':
+					if ( strpos( $v, '|' ) !== false ) {
+						$parts	=	explode( '|', $v );
+						$where	=	' IN ("' .implode( '","', $parts ). '")';
+					} else {
+						$where	=	' IN (' .$v. ')';
+					}
 					break;
 				case '=':
 				default:
