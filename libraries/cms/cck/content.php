@@ -2087,7 +2087,8 @@ class JCckContent
 				return false;
 			}
 
-			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'" AND a.pk = '.(int)$identifier[1] );
+			$and					=	( (string)$identifier[0] == 'free' && $this->_table ) ? ' AND storage_table = "'.$this->_table.'"' : '';
+			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'"'.$and.' AND a.pk = '.(int)$identifier[1] );
 
 			$this->_object			=	$identifier[0];
 		} else {
