@@ -56,6 +56,8 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( self::$type != $type ) {
 			return;
 		}
+
+		$data['core_columns']	=	array( 'associations' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
