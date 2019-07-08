@@ -22,16 +22,26 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.18.0 Upgrade Release [xx-Jun-2019] -----------
+-------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
 
 + JCckContent class updated & improved! :)
   >> "extend" method added for callable/mixins (cf manuals).
+  >> "in" operator support added on find/search methods.
   >> "limit" methods added (cf manuals).
 
 + "Page Title" (Home Page) parameter added to Sites. (Multi-sites)
++ "PrepareImport" method added >> SEBLOD Importer Add-on required.
+  >> applied on Checkbox, Radio, Select Multiple/Simple plug-ins.
+  >> applied on JForm Category/Tag/User plug-ins.
+
++ Free Object plug-in improved.
+  >> Import support added.
+  >> Various issues fixed.
 
 ! Priority added on Process stack.
   >> "beforeStore" support added.
+
+# Minor issues fixed.
 
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 
