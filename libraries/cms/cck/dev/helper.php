@@ -330,7 +330,7 @@ abstract class JCckDevHelper
 				}
 				
 				// Merge
-				if ( count( $config['fields'] ) ) {
+				if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
 					foreach ( $config['fields'] as $k=>$v ) {
 						if ( $v->restriction != 'unset' ) {
 							$fields[$k]	=	$v;
