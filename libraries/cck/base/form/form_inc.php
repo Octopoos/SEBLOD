@@ -132,6 +132,8 @@ if ( $can['guest.edit'] ) {
 	if ( !$can['edit.own'] ) {
 		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
+} elseif ( $can['preview'] ) {
+	// OK
 } elseif ( ! $can['do'] ) {
 	if ( $config['isNew'] ) {
 		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
@@ -260,7 +262,7 @@ foreach ( $fields as $field ) {
 						$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
 					}
 				}
-				if ( $can['guest.edit'] ) {
+				if ( $can['guest.edit'] || $can['preview'] ) {
 					// Do nothing as we already checked permissions.
 				} elseif ( $config['author'] ) {
 					// ACL
@@ -324,7 +326,7 @@ if ( count( $config['fields'] ) ) {
 }
 
 // ACL
-if ( $can['guest.edit'] ) {
+if ( $can['guest.edit'] || $can['preview'] ) {
 	// Do nothing as we already checked permissions.
 } elseif ( !$can['do'] && $can['edit.own'] && !$config['author'] ) {
 	if ( empty( $config['id'] ) ) {

@@ -110,12 +110,14 @@ class CCK_Form
 						'do'=>false,
 						'edit.own'=>false,
 						'edit.own.content'=>false,
-						'guest.edit'=>false
+						'guest.edit'=>false,
+						'preview'=>false
 					);
 		$user	=	JFactory::getUser();
 
 		if ( !$config['isNew'] ) {
-			$can['do']	=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
+			$can['do']		=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
+			$can['preview']	=	$user->authorise( 'core.preview.form', 'com_cck.form.'.$type->id );
 
 			if ( $user->id && !$user->guest ) {	
 				$can['edit.own']	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
@@ -154,6 +156,7 @@ class CCK_Form
 			$can['do']					=	$user->authorise( 'core.create', 'com_cck.form.'.$type->id );
 			$can['edit.own']			=	false;
 			$can['edit.own.content']	=	false;
+			$can['preview']				=	false;
 		}
 
 		return $can;

@@ -205,6 +205,62 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
 		} else {
+			if ( ( $config['client'] == 'admin' || $config['client'] == 'site' ) && ( $task == 'apply' || strpos( $task, 'save' ) === 0 ) ) {
+				$canDo	=	true;
+				$user	=	JFactory::getUser();
+
+				if ( $config['isNew'] ) {
+					if ( !$user->authorise( 'core.create', 'com_cck.form.'.$config['type_id'] ) ) {
+						$canDo	=	false;
+					}
+				} else {
+					$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
+					$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
+					$canEditOwnContent	=	'';
+
+					jimport( 'cck.joomla.access.access' );
+					$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$config['type_id'] );
+
+					if ( $canEditOwnContent ) {
+						$parts				=	explode( '@', $canEditOwnContent );
+						$remote_field		=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
+						$canEditOwnContent	=	false;
+
+						if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
+							$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$config['pk'] );
+							$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
+
+							if ( $related_content->author_id == $user->id ) {
+								$canEditOwnContent	=	true;
+							}
+						}
+					}
+
+					if ( !( $canEdit && $canEditOwn
+						|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
+						|| ( $canEditOwn && ( $config['author'] == $user->id ) )
+						|| ( $canEditOwnContent ) ) ) {
+						$canDo	=	false;
+					}
+				}
+				if ( $task == 'save2new' || $task == 'save2copy' ) {
+					if ( !$user->authorise( 'core.create', 'com_cck.form.'.$config['type_id'] ) ) {
+						$canDo	=	false;
+					}
+				}
+
+				if ( !$canDo ) {
+					$field->form	=	'';
+					$field->value	=	'';
+					
+					// Return
+					if ( $return === true ) {
+						return $field;
+					}
+
+					return;
+				}
+			}
 			if ( $task == 'export_ajax' ) {
 				$click		=	'';
 				$pre_task	=	'';
