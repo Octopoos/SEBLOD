@@ -15,9 +15,11 @@ use Joomla\String\StringHelper;
 // Plugin
 class plgCCK_FieldSelect_Multiple extends JCckPluginField
 {
-	protected static $type		=	'select_multiple';
-	protected static $friendly	=	1;
+	protected static $type			=	'select_multiple';
+	
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -215,7 +217,13 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 			$values	=	explode( $field->divider, $value );
 
 			foreach ( $values as $k=>$value ) {
-				$values[$k]	=	parent::getValueFromOptions( $field, $value, $config );
+				if ( $value != '' ) {
+					$values[$k]	=	parent::getValueFromOptions( $field, $value, $config, true );
+
+					if ( $values[$k] == '' && $config['input_error'] ) {
+						$config['error']	=	true;
+					}
+				}
 			}
 
 			$values	=	array_filter( $values );

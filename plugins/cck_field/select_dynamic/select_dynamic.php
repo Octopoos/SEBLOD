@@ -792,7 +792,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 	
 	// getValueFromOptions
-	public static function getValueFromOptions( $field, $value, $config = array() )
+	public static function getValueFromOptions( $field, $value, $config = array(), $strict = false )
 	{
 		return self::_getOptionsListProperty( 'value', $field, $value, $config );
 	}

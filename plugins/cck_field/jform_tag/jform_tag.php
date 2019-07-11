@@ -13,10 +13,12 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_FieldJform_Tag extends JCckPluginField
 {
-	protected static $type		=	'jform_tag';
-	protected static $type2		=	'tag';
-	protected static $friendly	=	1;
+	protected static $type				=	'jform_tag';
+	protected static $type2				=	'tag';
+
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -168,6 +170,54 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		}
 	}
 
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		if ( $config['prepare_input'] ) {
+			$default_id	=	$config['params']['tags'];
+
+			if ( $value != '' ) {
+				$i			=	0;
+				$values		=	explode( ',', $value );
+
+				foreach ( $values as $value ) {
+					$parent_id	=	$config['params']['unknown_tags'] ? $config['params']['tags_parent'] : $default_id;
+					$parts		=	explode( '/', $value );
+
+					foreach ( $parts as $part ) {
+						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE title = "'.$part.'"' );
+
+						if ( !$pk ) {
+							if ( $config['params']['unknown_tags'] ) {
+								$parent_id	=	$this->_addNew( $part, ( $parent_id ? $parent_id : $config['params']['tags_parent'] ) );
+							} else {
+								$parent_id	=	0;
+							}
+						} else {
+							$parent_id	=	$pk;
+						}
+					}
+
+					if ( $parent_id ) {
+						$values[$i++]	=	$parent_id;
+					}
+				}
+
+				$value	=	implode( ',', $values );
+			}
+
+			if ( !$value ) {
+				$value	=	$default_id;
+			}
+		}
+
+		$field->value	=	$value;
+	}
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -294,6 +344,32 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
+
+	// _addNew
+	protected static function _addNew( $title, $parent_id )
+	{
+		$data	=	array(
+						'access'=>1,
+						'language'=>'*',
+						'parent_id'=>(int)$parent_id,
+						'published'=>1,
+						'title'=>$title
+					);
+
+		JLoader::register( 'TagsTableTag', JPATH_ADMINISTRATOR . '/components/com_tags/tables/tag.php' );
+
+		$table	=	JTable::getInstance( 'Tag', 'TagsTable' );
+
+		$table->setLocation( $data['parent_id'], 'last-child' );
+
+		if ( $table->save( $data ) ) {
+			$table->rebuildPath( $table->id );
+
+			return $table->id;
+		}
+
+		return 0;
+	}
 
 	// isFriendly
 	public static function isFriendly()

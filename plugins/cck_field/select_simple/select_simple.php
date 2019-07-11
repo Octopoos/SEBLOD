@@ -15,10 +15,12 @@ use Joomla\String\StringHelper;
 // Plugin
 class plgCCK_FieldSelect_Simple extends JCckPluginField
 {
-	protected static $type			=	'select_simple';
-	protected static $convertible	=	1;
-	protected static $friendly		=	1;
+	protected static $type				=	'select_simple';
+
+	protected static $convertible		=	1;
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -320,7 +322,11 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		}
 
 		if ( $config['prepare_input'] && $value != '' ) {
-			$value	=	parent::getValueFromOptions( $field, $value, $config );
+			$value	=	parent::getValueFromOptions( $field, $value, $config, true );
+
+			if ( $value == '' && $config['input_error'] ) {
+				$config['error']	=	true;
+			}
 		}
 
 		$field->value	=	$value;

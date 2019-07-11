@@ -15,11 +15,13 @@ JLoader::register( 'JFormFieldCckCategory', JPATH_PLATFORM.'/cck/joomla/form/fie
 // Plugin
 class plgCCK_FieldJForm_Category extends JCckPluginField
 {
-	protected static $type			=	'jform_category';
-	protected static $type2			=	'cckcategory';
-	protected static $convertible	=	1;
-	protected static $friendly		=	1;
+	protected static $type				=	'jform_category';
+	protected static $type2				=	'cckcategory';
+	
+	protected static $convertible		=	1;
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -210,8 +212,31 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 			return;
 		}
 
-		if ( $config['prepare_input'] && $value != '' ) {
-			$value	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__categories WHERE title = "'.$value.'"' );
+		if ( $config['prepare_input'] ) {
+			$default_id	=	(int)$config['params']['base_default-catid'] ? (int)$config['params']['base_default-catid'] : 2;
+
+			if ( $value != '' ) {	
+				$parent_id	=	$config['params']['unknown_categories'] ? $config['params']['category_parent'] : $default_id;
+				$parts		=	explode( '/', $value );
+
+				foreach ( $parts as $part ) {
+					$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__categories WHERE title = "'.$part.'"' );
+
+					if ( !$pk ) {
+						if ( $config['params']['unknown_categories'] ) {
+							$parent_id	=	$this->_addNew( $part, ( $parent_id ? $parent_id : $config['params']['category_parent'] ) );
+						}
+					} else {
+						$parent_id	=	$pk;
+					}
+				}
+
+				$value	=	$parent_id;
+			}
+
+			if ( !$value ) {
+				$value	=	$default_id;
+			}
 		}
 
 		$field->value	=	$value;
@@ -277,6 +302,25 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
+	// _addNew
+	protected static function _addNew( $title, $parent_id )
+	{
+		$data	=	array(
+						'access'=>1,
+						'parent_id'=>$parent_id,
+						'published'=>1,
+						'title'=>$title
+					);
+
+		$content_category	=	new JCckContentCategory;
+
+		if ( $content_category->create( 'category', $data )->isSuccessful() ) {
+			return $content_category->getPk();
+		}
+
+		return 0;
+	}
+
 	// isConvertible
 	public static function isConvertible()
 	{

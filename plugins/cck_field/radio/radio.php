@@ -16,9 +16,11 @@ use Joomla\String\StringHelper;
 class plgCCK_FieldRadio extends JCckPluginField
 {
 	protected static $type			=	'radio';
-	protected static $convertible	=	1;
-	protected static $friendly		=	1;
+	
+	protected static $convertible		=	1;
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -243,7 +245,11 @@ class plgCCK_FieldRadio extends JCckPluginField
 		}
 
 		if ( $config['prepare_input'] && $value != '' ) {
-			$value	=	parent::getValueFromOptions( $field, $value, $config );
+			$value	=	parent::getValueFromOptions( $field, $value, $config, true );
+
+			if ( $value == '' && $config['input_error'] ) {
+				$config['error']	=	true;
+			}
 		}
 
 		$field->value	=	$value;
