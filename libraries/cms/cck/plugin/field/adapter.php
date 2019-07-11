@@ -32,7 +32,7 @@ class JCckPluginFieldAdapter
 			return '';
 		}
 
-		JCck::loadjQuery( true, true, array( 'cck.dev-3.17.0.min.js' ) );
+		JCck::loadjQuery( true, true, array( 'cck.dev-3.18.0.min.js' ) );
 
 		$config	=	array(
 						'asset'=>'',

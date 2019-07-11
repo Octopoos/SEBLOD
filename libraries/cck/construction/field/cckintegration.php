@@ -222,7 +222,7 @@ class JFormFieldCckIntegration extends JFormField
 		$html[] =	'</div></div>';
 
 		// Stuff
-		JCck::loadjQuery( true, true, array( 'cck.dev-3.17.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+		JCck::loadjQuery( true, true, array( 'cck.dev-3.18.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		$ajax	=	'../media/system/images/modal/spinner.gif';
 		$js		=	'
 					(function ($){
