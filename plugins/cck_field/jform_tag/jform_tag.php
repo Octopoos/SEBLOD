@@ -131,6 +131,15 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
 			$lang_tag	=	( isset( $options2['language'] ) && $options2['language'] ) ? 'language="'.$options2['language'].'"' : '';
 
+			$opt		=	'';
+			$options2	=	JCckDev::fromJSON( $field->options2 );
+			if ( trim( $field->selectlabel ) ) {
+				if ( $config['doTranslation'] ) {
+					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				}
+				$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
+			}
+
 			$xml		=	'
 							<form>
 								<field
@@ -145,6 +154,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 									'.$multiple.'
 									'.$lang_tag.'
 								>
+								'.$opt.'
 								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
 								</field>
 							</form>
