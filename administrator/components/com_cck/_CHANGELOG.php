@@ -24,6 +24,8 @@ $ -> Language fix or change
 
 -------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
 
++ "Preview Form" permission added.
+
 + JCckContent class updated & improved! :)
   >> "extend" method added for callable/mixins (cf manuals).
   >> "in" operator support added on find/search methods.
@@ -38,6 +40,7 @@ $ -> Language fix or change
   >> Import support added.
   >> Various issues fixed.
 
+! Permissions applied on Tasks in Submit Button plug-in. 
 ! Priority added on Process stack.
   >> "beforeStore" support added.
 
