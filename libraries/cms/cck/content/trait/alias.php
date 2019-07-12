@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core ~ $Id: tag.php sebastienheraud $
+* @version 			SEBLOD 3.x Core ~ $Id: alias.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
