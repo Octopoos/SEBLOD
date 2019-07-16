@@ -23,16 +23,16 @@ class CCKUser extends JUser
 		$this->_user	=	JFactory::getUser( $identifier );
 	}
 	
-	// setAuthorisedViewLevels
-	public function setAuthorisedViewLevels( $viewlevels = array() )
-	{
-		$this->_user->_authLevels	=	$viewlevels;
-	}
-	
 	// setAuthorisedGroups
 	public function setAuthorisedGroups( $groups = array() )
 	{
 		$this->_user->_authGroups	=	$groups;
+	}
+	
+	// setAuthorisedViewLevels
+	public function setAuthorisedViewLevels( $viewlevels = array() )
+	{
+		$this->_user->_authLevels	=	$viewlevels;
 	}
 	
 	// makeHimLive
