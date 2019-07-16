@@ -205,10 +205,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
 		} else {
+			$user	=	JFactory::getUser();
+
 			if ( ( $config['client'] == 'admin' || $config['client'] == 'site' ) && ( $task == 'apply' || strpos( $task, 'save' ) === 0 ) ) {
 				$canDo	=	true;
-				$user	=	JFactory::getUser();
-
+				
 				if ( $config['isNew'] ) {
 					if ( !$user->authorise( 'core.create', 'com_cck.form.'.$config['type_id'] ) ) {
 						$canDo	=	false;
@@ -262,16 +263,68 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				}
 			}
 			if ( $task == 'export_ajax' ) {
+				if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
+					if ( !$user->authorise( 'core.export', 'com_cck.form.'.$config['type_id'] ) ) {
+						$field->form	=	'';
+						$field->value	=	'';
+						
+						// Return
+						if ( $return === true ) {
+							return $field;
+						}
+
+						return;
+					}
+				}
 				$click		=	'';
 				$pre_task	=	'';
 				$config['doQuery2']	=	true;
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id, 'fieldnames'=>$field->options ) );
 			} elseif ( $task == 'process_ajax' ) {
+				if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
+					if ( !$user->authorise( 'core.process', 'com_cck.form.'.$config['type_id'] ) ) {
+						$field->form	=	'';
+						$field->value	=	'';
+						
+						// Return
+						if ( $return === true ) {
+							return $field;
+						}
+
+						return;
+					}
+				}
 				$click		=	'';
 				$pre_task	=	'';
 				$config['doQuery2']	=	true;
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'id'=>$id, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id, 'fieldnames'=>$field->options ) );
 			} elseif ( $task == 'export' || $task == 'process' || $task == 'list.export' || $task == 'list.process' ) {
+				if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
+					$canDo		=	true;
+
+					if ( $task == 'export' || $task == 'list.export' ) {
+						if ( !$user->authorise( 'core.export', 'com_cck.form.'.$config['type_id'] ) ) {
+							$canDo	=	false;
+						}
+					} elseif ( $task == 'process' || $task == 'list.process' ) {
+						if ( !$user->authorise( 'core.process', 'com_cck.form.'.$config['type_id'] ) ) {
+							$canDo	=	false;
+						}
+					}
+
+					if ( !$canDo ) {
+						$field->form	=	'';
+						$field->value	=	'';
+						
+						// Return
+						if ( $return === true ) {
+							return $field;
+						}
+
+						return;
+					}
+				}
+
 				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">\');' )
 							.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.JHtml::_( 'form.token' ).'\');' );
 
