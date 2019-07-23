@@ -24,6 +24,7 @@ $ -> Language fix or change
 
 -------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
 
++ "Impersonate" capabilites implemented.
 + "Preview Form" permission added.
 
 + JCckContent class updated & improved! :)
@@ -44,6 +45,9 @@ $ -> Language fix or change
 ! Priority added on Process stack.
   >> "beforeStore" support added.
 
+! Inputmask JS script added.
+
+# Custom Attributes applied on "JForm Calendar" plug-in.
 # Minor issues fixed.
 
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
