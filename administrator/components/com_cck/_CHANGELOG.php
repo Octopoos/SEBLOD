@@ -50,6 +50,10 @@ $ -> Language fix or change
 # Custom Attributes applied on "JForm Calendar" plug-in.
 # Minor issues fixed.
 
+-------------------- 3.17.5 Upgrade Release [30-Aug-2019] -----------
+
+# Back-end JS issue fixed.
+
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 
 + Infinite pagination improved with context-based live values.
