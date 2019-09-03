@@ -231,8 +231,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				if ( $field->required ) {
 					$auto++;
 				}
-
-				$auto		=	2;
 			}
 			$count2			=	JCck::getConfig_Param( 'development_attr', 6 );
 			$opt_attr		=	'';
