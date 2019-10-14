@@ -1134,6 +1134,7 @@ class JCckPluginField extends JPlugin
 			if ( $variation == 'form_filter_ajax' ) {
 				static $keypress	=	0;
 				$field->form		=	str_replace( 'class="', 'data-cck-ajax="" class="', $field->form );
+				$field->form		=	str_replace( 'data-cck-ajax="" class="radio"', 'class="radio"', $field->form ); /* TODO#SEBLOD4: temporary fix */
 
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { JCck.Core.loadmore("&start=0",-1,1); });' );
 				
