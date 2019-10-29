@@ -15,10 +15,11 @@ use Joomla\String\StringHelper;
 // Plugin
 class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 {
-	protected static $type			=	'select_dynamic';
-	protected static $convertible	=	1;
-	protected static $friendly		=	1;
+	protected static $type				=	'select_dynamic';
+	protected static $convertible		=	1;
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -508,6 +509,24 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			return $field;
 		}
 	}
+
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		if ( $config['prepare_input'] && $value != '' ) {
+			$value	=	self::getValueFromOptions( $field, $value, $config, true );
+			
+			if ( $value == '' && $config['input_error'] ) {
+				$config['error']	=	true;
+			}
+		}
+
+		$field->value	=	$value;
+	}
 	
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
@@ -754,7 +773,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	}
 
 	// _getOptionsListProperty
-	protected static function _getOptionsListProperty( $property, $field, $value, $config = array() )
+	protected static function _getOptionsListProperty( $property, $field, $value, $config = array(), $strict = false )
 	{
 		$divider	=	'';
 		$lang_code	=	'';
@@ -776,7 +795,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		
 		$options_2			=	self::_getOptionsList( $options2, $field->bool2, $lang_code, $config );
 		$field->options		=	( $field->options ) ? $field->options.'||'.$options_2 : $options_2;
-		$result				=	parent::$method( $field, $value, $config );
+		$result				=	parent::$method( $field, $value, $config, $strict );
 
 		/* tmp */
 		$config['doTranslation']	=	$jtext;
@@ -794,7 +813,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 	// getValueFromOptions
 	public static function getValueFromOptions( $field, $value, $config = array(), $strict = false )
 	{
-		return self::_getOptionsListProperty( 'value', $field, $value, $config );
+		return self::_getOptionsListProperty( 'value', $field, $value, $config, $strict );
 	}
 	
 	// isConvertible
