@@ -35,9 +35,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     
 	<div class="seblod">
         <div class="legend top left"><?php echo JText::_( 'COM_CCK_SETTINGS' ); ?></div>
-       	<ul class="spe spe_type">
-			<?php echo JCckDev::renderForm( $cck['more_'.$extension_short_name.'_storage_location'], $this->item->type, $config, array( 'label'=>'CONTENT_OBJECT' ) ); ?>
-	    </ul>
+       	<pre><?php echo htmlspecialchars( json_encode( json_decode( $this->item->options ), JSON_PRETTY_PRINT ) ); ?></pre>
 	</div>
 </div>
 

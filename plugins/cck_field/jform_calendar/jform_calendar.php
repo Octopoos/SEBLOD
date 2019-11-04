@@ -135,8 +135,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		if ( (int)$value > 0 && $modify ) {
 			$value	=	JFactory::getDate( $value )->modify( str_replace( '+', '-', $modify ) )->toSql();
 		}
-
+		
 		// Prepare
+		$attr		=	'';
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
 		$xml		=	'
@@ -151,6 +152,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
 								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format_date.'
 								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? 'user_utc' : 'server_utc' ).'"
+								onchange="JCck.Core.trigger(this,\'blur\');"
 								class="'.$class.'"
 								'.$readonly.'
 							/>
@@ -159,16 +161,24 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$form	=	JForm::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		
+		if ( $field->attributes != '' ) {
+			$attr	.=	' '.$field->attributes;
+		}
+		
 		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 			$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
 			$form	.=	self::_addScript();
 
 			self::_addScripts();
 		}
-
+		$form	=	str_replace( '<input ', '<input '.$attr, $form );
+		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+
+			JCck::loadjQuery();
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}

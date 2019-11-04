@@ -16,14 +16,23 @@ defined( '_JEXEC' ) or die;
     <ul class="adminformlist adminformlist-2cols">
 		<?php
 		echo JCckDev::renderForm( 'core_joomla_article_created_by', '', $config );
-		echo JCckDev::renderForm( 'core_joomla_article_catid', '', $config );
+		echo '<li><label>'.JText::_( 'COM_CCK_CATEGORY' ).'</label>'
+		 .	 JCckDev::getForm( 'core_joomla_article_catid', '', $config )
+		 .	 JCckDev::getForm( 'core_joomla_article_catid', '', $config, array( 'selectlabel'=>'Parent', 'storage_field'=>'params[category_parent]', 'required'=>'required' ) )
+		 .	 '</li>';
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'&nbsp;', 'type'=>'checkbox', 'options'=>'Allow New Categories=1', 'storage_field'=>'params[unknown_categories]' ) );
+		echo '<li><label>'.JText::_( 'COM_CCK_TAGS' ).'</label>'
+		 .	 JCckDev::getForm( 'core_joomla_article_tag', '', $config )
+		 .	 JCckDev::getForm( 'core_joomla_article_tag', '', $config, array( 'selectlabel'=>'Parent', 'storage_field'=>'params[tags_parent]', 'required'=>'required' ) )
+		 .	 '</li>';
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'&nbsp;', 'type'=>'checkbox', 'options'=>'Allow New Tags=1', 'storage_field'=>'params[unknown_tags]' ) );
 		echo JCckDev::renderForm( 'core_joomla_article_state', '', $config );
 		?>
 	</ul><div class="clr"></div>
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
-		echo JCckDev::renderForm( 'core_bool', 1, $config, array( 'label'=>'Reordering', 'storage_field'=>'options[reordering]' ) );
+		echo JCckDev::renderForm( 'core_bool', 0, $config, array( 'label'=>'Reordering', 'storage_field'=>'options[reordering]' ) );
 		?>
 	</ul><div class="clr"></div>
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>
@@ -40,6 +49,8 @@ defined( '_JEXEC' ) or die;
 (function ($){
 	JCck.Dev.applyConditionalStates = function() {
 		$('#options_key_fieldname').isVisibleWhen('options_key','-1');
+		$('#params_category_parent').isVisibleWhen('params_unknown_categories','1',false);
+		$('#params_tags_parent').isVisibleWhen('params_unknown_tags','1',false);
 	}
 	$(document).ready(function() {
 		JCck.Dev.applyConditionalStates();

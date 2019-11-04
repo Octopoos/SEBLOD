@@ -355,6 +355,59 @@ class CCKController extends JControllerLegacy
 		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
 	}
 
+	// getBack
+	public function getBack()
+	{
+		$session	=	JFactory::getSession();
+		$session_id	=	$session->getId();
+		$to_id		=	JCckDatabase::loadResult( 'SELECT userid FROM #__session WHERE session_id = "'.$session_id.'"' );
+		$user		=	JFactory::getUser();
+
+		// Process
+		$hash		=	JApplicationHelper::getHash( $user->id.'|'.$to_id.'|'.$user->password );
+
+		if ( $to_id && $hash == $session->get( 'cck_impersonate' ) ) {
+			jimport( 'cck.joomla.user.user' );
+
+			$userShadow	=	new CCKUser( $to_id );
+
+			$userShadow->makeHimLive();
+
+			$session->clear( 'cck_impersonate' );
+		}
+
+
+		$this->setRedirect( JUri::root() );
+	}
+
+	// impersonate
+	public function impersonate()
+	{
+		if ( !JSession::checkToken( 'get' ) ) {
+			JSession::checkToken( 'post' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		}
+
+		$session	=	JFactory::getSession();
+		$user		=	JFactory::getUser();
+		$to_id		=	JFactory::getApplication()->input->getInt( 'tid', 0 );
+
+		// Process
+		if ( $to_id && $user->authorise( 'core.admin', 'com_users' ) ) {
+			jimport( 'cck.joomla.user.user' );
+
+			$str		=	$to_id.'|'.$user->id;
+			$userShadow	=	new CCKUser( $to_id );
+
+			$userShadow->makeHimLive();
+
+			$hash		=	JApplicationHelper::getHash( $str.'|'.JFactory::getUser()->password );
+
+			$session->set( 'cck_impersonate', $hash );
+		}
+
+		$this->setRedirect( JUri::root() );
+	}
+
 	// outputMessage
 	public function outputMessage()
 	{

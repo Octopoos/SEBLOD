@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="cck_field" version="2.5" method="upgrade">
+	<name>plg_cck_field_icon</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.18.0</version>
+	
+	<scriptfile>install/script.php</scriptfile>
+	
+	<files>
+		<folder>assets</folder>
+		<folder>classes</folder>
+		<folder>install</folder>
+		<folder>tmpl</folder>
+		
+		<filename plugin="icon">icon.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.plg_cck_field_icon.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_cck_field_icon.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_icon.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_icon.sys.ini</language>
+	</languages>
+	
+	<config>
+		<fields name="params" addfieldpath="/libraries/cck/construction/field">
+			<fieldset name="basic">
+				<field name="" type="spacer" hr="false" />
+			</fieldset>
+			
+			<fieldset name="advanced">
+				<field name="group" type="text" default="PLG_CCK_FIELD_GROUP_HTML" label="LIB_CCK_GROUP_LABEL" size="60" description="LIB_CCK_FIELD_GROUP_DESC" />
+				<field name="export" type="cckexport" default="" label="LIB_CCK_EXPORT_LABEL" description="LIB_CCK_FIELD_EXPORT_DESC" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

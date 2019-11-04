@@ -296,6 +296,11 @@ class CCKViewList extends JViewLegacy
 		$this->search					=	&$search;
 		$this->tag_desc					=	$params->get( 'tag_list_desc', 'div' );
 		$this->total					=	&$total_items;
+
+		// This may be a temporary fix but we need it for now
+		if ( $this->load_ajax && $app->input->get( 'tmpl' ) == 'raw' ) {
+			$this->form_wrapper	=	true;
+		}
 	}
 }
 ?>

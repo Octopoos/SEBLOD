@@ -15,7 +15,10 @@ use Joomla\Registry\Registry;
 // JCckContent
 class JCckContent
 {
+	protected static $callables			=	array();
+	protected static $callables_map		=	array();
 	protected static $incognito			=	array(
+												'__call'=>'',
 												'__construct'=>'',
 												'_findResults'=>'',
 												'_fixDatabase'=>'',
@@ -26,6 +29,8 @@ class JCckContent
 												'_setContentById'=>'',
 												'_setContentByType'=>'',
 												'_setDataMap'=>'',
+												'_setCallable'=>'',
+												'_setMixin'=>'',
 												'_setObjectMap'=>'',
 												'_setTypeMap'=>''
 											);
@@ -37,6 +42,7 @@ class JCckContent
 	protected $_dispatcher				=	null;
 	protected $_options					=	null;
 
+	protected $_callables				=	array();
 	protected $_data					=	null;
 	protected $_data_preset				=	array();
 	protected $_data_registry			=	array();
@@ -73,7 +79,7 @@ class JCckContent
 
 		$this->initialize();
 	}
-	
+
 	// getInstance
 	public static function getInstance( $identifier = '' )
 	{
@@ -1042,12 +1048,26 @@ class JCckContent
 		return $this->_findResults( 'pks', false );
 	}
 
+	// limit
+	public function limit( $limit = 0 )
+	{
+		if ( !isset( $this->_search_query ) ) {
+			/* TODO#SEBLOD: error? */
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_search_query['limit']	=	$limit;
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
 	// search (^)
 	public function search( $content_type, $data = array() )
 	{
 		$this->_search_query	=	array(
 										'content_type'=>$content_type,
 										'data'=>$data,
+										'limit'=>0,
 										'match'=>array(),
 										'order'=>array()
 									);
@@ -1257,6 +1277,32 @@ class JCckContent
 	public function getType()
 	{
 		return $this->_type;
+	}
+
+	// hasCallable
+	public function hasCallable( $name )
+	{
+		$scope	=	self::$callables_map[$name];
+
+		if ( $scope == 'object' ) {
+			if ( !isset( self::$objects[$this->_object]['callables'][$name] ) ) {
+				return false;
+			}
+		} elseif ( $scope == 'type' ) {
+			if ( !isset( self::$types[$this->_type]['callables'][$name] ) ) {
+				return false;
+			}
+		} elseif ( $scope == 'global' ) {
+			if ( !isset( self::$callables[$name] ) ) {
+				return false;
+			}
+		} else {
+			if ( !isset( $this->_callables[$name] ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	// hasTable
@@ -1638,6 +1684,32 @@ class JCckContent
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
+
+	// __call
+	public function __call( $method, $parameters )
+	{
+		if ( !$this->hasCallable( $method ) ) {
+			throw new BadMethodCallException( 'Method not found.' );
+		}
+
+		$scope	=	self::$callables_map[$method];
+
+		if ( $scope == 'object' ) {
+			$callable	=	self::$objects[$this->_object]['callables'][$method];
+		} elseif ( $scope == 'type' ) {
+			$callable	=	self::$types[$this->_type]['callables'][$method];
+		} elseif ( $scope == 'global' ) {
+			$callable	=	self::$callables[$method];
+		} else {
+			$callable	=	$this->_callables[$method];
+		}
+
+		if ( $callable instanceof Closure ) {
+			return call_user_func_array( $callable->bindTo( $this, static::class ), $parameters );
+		}
+
+		return call_user_func_array( $callable, $parameters );
+	}
 	
 	// dump
 	public function dump( $scope = 'this' )
@@ -1656,6 +1728,7 @@ class JCckContent
 		} elseif ( $scope == 'log' ) {
 			dump( $this->getLog() );
 		} else {
+			dump( $this->_callables, 'callables' );
 			dump( $this->_data, 'data' );
 			dump( $this->_error, 'error' );
 			dump( $this->_id, 'id' );
@@ -1688,6 +1761,22 @@ class JCckContent
 		}
 
 		return true;
+	}
+
+	// extend
+	public function extend( $path, $scope = 'instance' )
+	{
+		if ( !is_file( $path ) ) {
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		ob_start();
+		include $path;
+		ob_get_clean();
+
+		$this->_setMixin( $mixin, $scope );
 	}
 
 	// _findResults
@@ -1871,9 +1960,11 @@ class JCckContent
 
 		if ( $data === true ) {
 			$data	=	$this->_search_query['data'];
+			$limit	=	(int)$this->_search_query['limit'];
 			$match	=	$this->_search_query['match'];
 			$order	=	$this->_search_query['order'];
 		} else {
+			$limit	=	0;
 			$match	=	array();
 		}
 
@@ -1900,6 +1991,14 @@ class JCckContent
 				case '>':
 					$where	=	' ' . $operator . ' ' . $db->quote( $v );
 					break;
+				case 'in':
+					if ( strpos( $v, '|' ) !== false ) {
+						$parts	=	explode( '|', $v );
+						$where	=	' IN ("' .implode( '","', $parts ). '")';
+					} else {
+						$where	=	' IN (' .$v. ')';
+					}
+					break;
 				case '=':
 				default:
 					$where	=	' = ' . $db->quote( $v );
@@ -1922,13 +2021,16 @@ class JCckContent
 					continue;
 				}
 
-				$query->order( $db->quoteName( $index.'.'.$k ) . strtoupper( $v ) );
+				$query->order( $db->quoteName( $index.'.'.$k ) . ' ' . strtoupper( trim( $v ) ) );
 
 				$isOrdered	=	true;
 			}
 		}
 		if ( !$isOrdered && !is_bool( $order ) ) {
 			$query->order( $db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ) . ' DESC' );
+		}
+		if ( $limit ) {
+			$query->setLimit( $limit );
 		}
 
 		return $query;
@@ -1985,7 +2087,8 @@ class JCckContent
 				return false;
 			}
 
-			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'" AND a.pk = '.(int)$identifier[1] );
+			$and					=	( (string)$identifier[0] == 'free' && $this->_table ) ? ' AND storage_table = "'.$this->_table.'"' : '';
+			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'"'.$and.' AND a.pk = '.(int)$identifier[1] );
 
 			$this->_object			=	$identifier[0];
 		} else {
@@ -2087,6 +2190,34 @@ class JCckContent
 		return true;
 	}
 
+	// _setCallable
+	protected function _setCallable( $name, $callable, $scope )
+	{
+		if ( $scope == 'object' ) {
+			self::$objects[$this->_object]['callables'][$name]	=	$callable;
+		} elseif ( $scope == 'type' ) {
+			self::$types[$this->_type]['callables'][$name]		=	$callable;
+		} elseif ( $scope == 'global' ) {
+			self::$callables[$name]								=	$callable;
+		} else {
+			$this->_callables[$name]							=	$callable;
+		}
+
+		self::$callables_map[$name]	=	$scope;
+	}
+
+	// _setMixin
+	protected function _setMixin( $mixin, $scope )
+	{
+		$methods	=	(new ReflectionClass( $mixin ) )->getMethods( ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED );
+
+		foreach ( $methods as $method ) {
+			$method->setAccessible( true );
+
+			$this->_setCallable( $method->name, $method->invoke( $mixin ), $scope );
+		}
+	}
+
 	// _setObjectMap
 	protected function _setObjectMap( $object = '' )
 	{
@@ -2123,6 +2254,7 @@ class JCckContent
 						);
 
 		self::$objects[$object]	=	array(
+										'callables'=>array(),
 										'columns'=>array(),
 										'properties'=>JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties )
 									);
@@ -2146,6 +2278,7 @@ class JCckContent
 		}
 
 		self::$types[$this->_type]	=	array(
+											'callables'=>array(),
 											'data_map'=>array()
 										);
 

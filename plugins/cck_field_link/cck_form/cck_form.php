@@ -84,6 +84,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			$user 				=	JCck::getUser();
 			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
 			$canEditOwnContent	=	'';
+			$canPreview			=	$user->authorise( 'core.preview.form', 'com_cck.form.'.$config['type_id'] );
 
 			if ( $user->id && !$user->guest ) {
 				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] );
@@ -140,7 +141,8 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
 				|| ( $canEditOwn && ( isset( $session_id ) && $session_id == JFactory::getSession()->getId() ) )
-				|| ( $canEditOwnContent ) ) ) {
+				|| ( $canEditOwnContent )
+				|| ( $canPreview ) ) ) {
 				if ( !$link->get( 'no_access', 0 ) ) {
 					$field->display	=	0;
 				}

@@ -13,9 +13,11 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_FieldJForm_User extends JCckPluginField
 {
-	protected static $type		=	'jform_user';
-	protected static $type2		=	'user';
+	protected static $type				=	'jform_user';
+	protected static $type2				=	'user';
+	
 	protected static $path;
+	protected static $prepared_input	=	1;
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -135,6 +137,25 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+	}
+
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		if ( $config['prepare_input'] ) {
+			if ( $value != '' ) {
+				$value	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__users WHERE email = "'.$value.'"' );
+			}
+			if ( !$value ) {
+				$value	=	(int)$config['params']['base_default-created_by'] ? (int)$config['params']['base_default-created_by'] : JCck::getConfig_Param( 'integration_user_default_author', 42 );
+			}
+		}
+
+		$field->value	=	$value;
 	}
 
 	// onCCK_FieldPrepareSearch

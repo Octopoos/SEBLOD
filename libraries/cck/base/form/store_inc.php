@@ -318,6 +318,8 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 if ( isset( $config['process']['beforeStore'] ) && count( $config['process']['beforeStore'] ) ) {
+	JCckDevHelper::sortObjectsByProperty( $config['process']['beforeStore'], 'priority' );
+	
 	foreach ( $config['process']['beforeStore'] as $process ) {
 		if ( $process->type ) {
 			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeStore', array( $process->params, &$fields, &$config['storages'], &$config ) );

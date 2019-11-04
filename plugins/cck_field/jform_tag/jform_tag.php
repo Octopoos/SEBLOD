@@ -13,10 +13,12 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_FieldJform_Tag extends JCckPluginField
 {
-	protected static $type		=	'jform_tag';
-	protected static $type2		=	'tag';
-	protected static $friendly	=	1;
+	protected static $type				=	'jform_tag';
+	protected static $type2				=	'tag';
+
+	protected static $friendly			=	1;
 	protected static $path;
+	protected static $prepared_input	=	1;
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -129,6 +131,15 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$parent		=	( isset( $options2['parent'] ) && $options2['parent'] ) ? 'parent="parent"' : '';
 			$lang_tag	=	( isset( $options2['language'] ) && $options2['language'] ) ? 'language="'.$options2['language'].'"' : '';
 
+			$opt		=	'';
+			$options2	=	JCckDev::fromJSON( $field->options2 );
+			if ( trim( $field->selectlabel ) ) {
+				if ( $config['doTranslation'] ) {
+					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				}
+				$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
+			}
+
 			$xml		=	'
 							<form>
 								<field
@@ -143,6 +154,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 									'.$multiple.'
 									'.$lang_tag.'
 								>
+								'.$opt.'
 								'.( $parent ? '<option value="1">JNONE</option>' : '' ).'
 								</field>
 							</form>
@@ -166,6 +178,54 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+	}
+
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		if ( $config['prepare_input'] ) {
+			$default_id	=	$config['params']['tags'];
+
+			if ( $value != '' ) {
+				$i			=	0;
+				$values		=	explode( ',', $value );
+
+				foreach ( $values as $value ) {
+					$parent_id	=	$config['params']['unknown_tags'] ? $config['params']['tags_parent'] : $default_id;
+					$parts		=	explode( '/', $value );
+
+					foreach ( $parts as $part ) {
+						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE title = "'.$part.'"' );
+
+						if ( !$pk ) {
+							if ( $config['params']['unknown_tags'] ) {
+								$parent_id	=	$this->_addNew( $part, ( $parent_id ? $parent_id : $config['params']['tags_parent'] ) );
+							} else {
+								$parent_id	=	0;
+							}
+						} else {
+							$parent_id	=	$pk;
+						}
+					}
+
+					if ( $parent_id ) {
+						$values[$i++]	=	$parent_id;
+					}
+				}
+
+				$value	=	implode( ',', $values );
+			}
+
+			if ( !$value ) {
+				$value	=	$default_id;
+			}
+		}
+
+		$field->value	=	$value;
 	}
 
 	// onCCK_FieldPrepareSearch
@@ -294,6 +354,32 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
+
+	// _addNew
+	protected static function _addNew( $title, $parent_id )
+	{
+		$data	=	array(
+						'access'=>1,
+						'language'=>'*',
+						'parent_id'=>(int)$parent_id,
+						'published'=>1,
+						'title'=>$title
+					);
+
+		JLoader::register( 'TagsTableTag', JPATH_ADMINISTRATOR . '/components/com_tags/tables/tag.php' );
+
+		$table	=	JTable::getInstance( 'Tag', 'TagsTable' );
+
+		$table->setLocation( $data['parent_id'], 'last-child' );
+
+		if ( $table->save( $data ) ) {
+			$table->rebuildPath( $table->id );
+
+			return $table->id;
+		}
+
+		return 0;
+	}
 
 	// isFriendly
 	public static function isFriendly()

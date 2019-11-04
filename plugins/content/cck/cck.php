@@ -124,8 +124,13 @@ class plgContentCCK extends JPlugin
 			$type	=	$table->cck;
 			$pkb	=	(int)$table->pkb;
 		} else {
+			$idx	=	array( 'pk'=>$pk, 'storage_location'=>$object );
 			$table	=	JCckTable::getInstance( '#__cck_core' );
-			if ( $table->load( array( 'pk'=>$pk, 'storage_location'=>$object ) ) ) {
+
+			if ( $object == 'free' ) {
+				$idx['storage_table']	=	$table_name;
+			}
+			if ( $table->load( $idx ) ) {
 				$type	=	$table->cck;
 				$pkb	=	(int)$table->pkb;
 			}

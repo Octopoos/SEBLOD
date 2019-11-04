@@ -22,6 +22,38 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
+
++ "Impersonate" capabilites implemented.
++ "Preview Form" permission added.
+
++ JCckContent class updated & improved! :)
+  >> "extend" method added for callable/mixins (cf manuals).
+  >> "in" operator support added on find/search methods.
+  >> "limit" methods added (cf manuals).
+
++ "Page Title" (Home Page) parameter added to Sites. (Multi-sites)
++ "PrepareImport" method added >> SEBLOD Importer Add-on required.
+  >> applied on Checkbox, Radio, Select Multiple/Simple plug-ins.
+  >> applied on JForm Category/Tag/User plug-ins.
+
++ Free Object plug-in improved.
+  >> Import support added.
+  >> Various issues fixed.
+
+! Permissions applied on Tasks in Submit Button plug-in. 
+! Priority added on Process stack.
+  >> "beforeStore" support added.
+
+! Inputmask JS script added.
+
+# Custom Attributes applied on "JForm Calendar" plug-in.
+# Minor issues fixed.
+
+-------------------- 3.17.5 Upgrade Release [30-Aug-2019] -----------
+
+# Back-end JS issue fixed.
+
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 
 + Infinite pagination improved with context-based live values.
