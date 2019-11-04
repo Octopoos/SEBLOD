@@ -152,6 +152,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
 								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format_date.'
 								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? 'user_utc' : 'server_utc' ).'"
+								onchange="JCck.Core.trigger(this,\'blur\');"
 								class="'.$class.'"
 								'.$readonly.'
 							/>
@@ -175,6 +176,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+
+			JCck::loadjQuery();
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
