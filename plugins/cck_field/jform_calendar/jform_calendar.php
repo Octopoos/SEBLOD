@@ -140,7 +140,16 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$attr		=	'';
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
-		$xml		=	'
+
+		if ( $field->attributes != '' ) {
+			$attr	.=	' '.$field->attributes;
+		}
+
+		if ( parent::g_isStaticVariation( $field, $field->variation ) ) {
+			$attr	=	'class="'.$class.'"'.$attr;
+			$form	=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+		} else {
+			$xml	=	'
 						<form>
 							<field
 								type="'.self::$type2.'"
@@ -157,21 +166,19 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								'.$readonly.'
 							/>
 						</form>
-					';
-		$form	=	JForm::getInstance( $id, $xml );
-		$form	=	$form->getInput( $name, '', $value );
-		
-		if ( $field->attributes != '' ) {
-			$attr	.=	' '.$field->attributes;
-		}
-		
-		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
-			$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
-			$form	.=	self::_addScript();
+						';
+			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	$form->getInput( $name, '', $value );
 
-			self::_addScripts();
+			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
+				$form	.=	self::_addScript();
+
+				self::_addScripts();
+			}
+
+			$form	=	str_replace( '<input ', '<input '.trim( $attr ).' ', $form );
 		}
-		$form	=	str_replace( '<input ', '<input '.$attr, $form );
 		
 		// Set
 		if ( ! $field->variation ) {
