@@ -41,6 +41,8 @@ $ -> Language fix or change
   >> Import support added.
   >> Various issues fixed.
 
+^ Mobile Detect updated to 2.8.34.
+
 ! Permissions applied on Tasks in Submit Button plug-in. 
 ! Priority added on Process stack.
   >> "beforeStore" support added.
