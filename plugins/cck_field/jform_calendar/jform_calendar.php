@@ -160,7 +160,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								todaybutton="'.( ( isset( $options2['today'] ) && $options2['today'] ) || !isset( $options2['today'] ) ? 'true' : 'false' ).'"
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
 								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format_date.'
-								filter="'.( (string) $options2['format_filter'] ? (string) $options2['format_filter'] : 'USER_UTC' ).'"
+								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? (string)$options2['format_filter'] : 'server_utc' ).'"
 								onchange="JCck.Core.trigger(this,\'blur\');"
 								class="'.$class.'"
 								'.$readonly.'
