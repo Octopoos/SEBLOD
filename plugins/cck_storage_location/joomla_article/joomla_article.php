@@ -12,15 +12,13 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\Utilities\ArrayHelper;
 
-JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
-
 // Plugin
 class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_article';
 	protected static $type_alias	=	'Article';
 	protected static $table			=	'#__content';
-	protected static $table_object	=	array( 'Content', 'JTable' );
+	protected static $table_object	=	array( 'Content', 'JCckTable' );
 	protected static $key			=	'id';
 	
 	protected static $access		=	'access';
@@ -350,8 +348,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Init
 		$app		=	JFactory::getApplication();
-		$table		=	self::_getTable( $pk );
 		$isNew		=	( $pk > 0 ) ? false : true;
+		$rules		=	'{}';
+		$table		=	self::_getTable( $pk );
 		
 		if ( isset( $table->tags ) ) {
 			unset( $table->tags );
@@ -373,6 +372,15 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Prepare
 		if ( is_array( $data ) ) {
+			if ( isset( $data['rules'] ) && $data['rules'] ) {
+				if ( !is_array( $data['rules'] ) ) {
+					$data['rules']	=	json_decode( $data['rules'] );
+				}
+				$rules	=	new JAccessRules( JCckDevHelper::getRules( $data['rules'] ) );
+				
+				unset( $data['rules'] );
+			}
+
 			if ( $config['task'] == 'save2copy' ) {
 				$empty		=	array( self::$key, 'alias', 'created', 'created_by', 'hits', 'modified', 'modified_by', 'version' );
 				foreach ( $empty as $k ) {
@@ -381,20 +389,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 			$table->bind( $data );
 		}
-		if ( $isNew && !isset( $data['rules'] ) ) {
-			$data['rules']	=	array(
-									'core.delete'=>array(),
-									'core.edit'=>array(),
-									'core.edit.state'=>array()
-								);
-		}
-		if ( isset( $data['rules'] ) && $data['rules'] ) {
-			if ( !is_array( $data['rules'] ) ) {
-				$data['rules']	=	json_decode( $data['rules'] );
-			}
-			$rules	=	new JAccessRules( JCckDevHelper::getRules( $data['rules'] ) );
-			$table->setRules( $rules );
-		}
+		$table->setRules( $rules );
 		$table->check();
 		self::_completeTable( $table, $data, $config );
 		
@@ -463,7 +458,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0, $join = false )
 	{
-		$table	=	JTable::getInstance( 'Content' );
+		$table	=	JTable::getInstance( 'Content', 'JCckTable' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );

@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
+-------------------- 3.18.0 Upgrade Release [19-Dec-2019] -----------
 
 + "Impersonate" capabilites implemented.
 + "Preview Form" permission added.
@@ -34,13 +34,14 @@ $ -> Language fix or change
 
 + "Page Title" (Home Page) parameter added to Sites. (Multi-sites)
 + "PrepareImport" method added >> SEBLOD Importer Add-on required.
-  >> applied on Checkbox, Radio, Select Multiple/Simple plug-ins.
+  >> applied on Checkbox, Radio, Select Dynamic/Multiple/Simple plug-ins.
   >> applied on JForm Category/Tag/User plug-ins.
 
 + Free Object plug-in improved.
   >> Import support added.
   >> Various issues fixed.
 
+^ "Blur" event forced on "JForm Calendar" plug-in.
 ^ Mobile Detect updated to 2.8.34.
 
 ! Permissions applied on Tasks in Submit Button plug-in. 
@@ -50,7 +51,8 @@ $ -> Language fix or change
 ! Inputmask JS script added.
 
 # Custom Attributes applied on "JForm Calendar" plug-in.
-# Minor issues fixed.
+# "Static" Variations fixed on JForm Calendar plug-in.
+# Various issues fixed.
 
 -------------------- 3.17.5 Upgrade Release [30-Aug-2019] -----------
 
