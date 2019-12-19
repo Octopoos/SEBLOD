@@ -42,16 +42,16 @@ $ -> Language fix or change
   >> Various issues fixed.
 
 ^ "Blur" event forced on "JForm Calendar" plug-in.
-^ Mobile Detect updated to 2.8.34.
+^ "Mobile Detect" updated to 2.8.34.
 
-! Permissions applied on Tasks in Submit Button plug-in. 
+! Permissions applied on Tasks in Submit Button plug-in.
 ! Priority added on Process stack.
   >> "beforeStore" support added.
 
 ! Inputmask JS script added.
 
 # Custom Attributes applied on "JForm Calendar" plug-in.
-# "Static" Variations fixed on JForm Calendar plug-in.
+# "Static" Variations fixed on "JForm Calendar" plug-in.
 # Various issues fixed.
 
 -------------------- 3.17.5 Upgrade Release [30-Aug-2019] -----------
@@ -72,7 +72,7 @@ $ -> Language fix or change
 
 ^ Download task improved.
   >> chunks support added for large files.
-  
+
 ^ hideEmptyLimitstart applied (only on Joomla! 3.9).
   >> no more ?start=0 in pagination
 
@@ -257,7 +257,7 @@ $ -> Language fix or change
   >> use $content->call( 'untag', 00 );
 
 ^ Back-end UI improved: Fields' Storage.
-^ Mobile Detect updated to 2.8.32.
+^ "Mobile Detect" updated to 2.8.32.
 
 ^ maxlength="" attribute removed on Password plug-in
   >> let the Validation Engine handles it, so we avoid it to be truncated (without notice) on copy/paste.
@@ -421,7 +421,7 @@ $ -> Language fix or change
 
 ^ Back-end UI improved: Fields' Storage.
 ^ Various INT(11) updated to UNSIGNED INT(10).
-^ Mobile Detect updated to 2.8.26.
+^ "Mobile Detect" updated to 2.8.26.
 
 ! "data-cck-modal-hash" on any HTML element (Content View)
   >> to change the #fragment of the URL
@@ -612,7 +612,7 @@ $ -> Language fix or change
   >> use "$content = new JCckContentJoomla_User;" in order to create new Users.
   >> use "$content = new JCckContent[OBJECT_NAME];" in order to create new Items from a specific Object.
   >> use "$content = JCckContent::getInstance(...); in order to load/update any kind of Item."
-^ Mobile Detect updated to 2.8.24.
+^ "Mobile Detect" updated to 2.8.24.
 ^ Plug-ins translations updated.
 ^ Reset Button now clears hidden inputs as well.
   >> use data-cck-keep-for-search="" to keep them.
@@ -823,7 +823,7 @@ $ -> Language fix or change
 
 + Country List updated in install.sql to include German translation.
 
-^ Mobile Detect updated to 2.8.22.
+^ "Mobile Detect" updated to 2.8.22.
 
 # clearForm() fixed for multiple select in Firefox.
 # Filter Variation fixed in Calendar plug-in.
@@ -935,7 +935,7 @@ $ -> Language fix or change
 ^ Form/List titles, Page Heading forced to be hidden when tmpl=raw on Forms & Lists.
 ^ "Group X" refactored (cleaner JS, actions/buttons support added for Table mode).
 ^ jQuery Validation script updated for AJAX and Confirm validations.
-^ Mobile Detect updated to 2.8.21.
+^ "Mobile Detect" updated to 2.8.21.
 ^ One (seb_one) updated with "Inherited" variation parameter.
 ^ Table Template refactored (automatically ignore a column when there is no content in any of the rows).
 	>> "Empty Columns" parameter added for the previous behaviour
@@ -988,7 +988,7 @@ $ -> Language fix or change
 + "Class", "Custom Attributes" added on Image Typography plug-in.
 + "Comparison Rule" parameter added for "Exact", "Not Equal" for SQL optimizations.
 
-^ Mobile Detect updated from 2.8.15 to 2.8.16.
+^ "Mobile Detect" updated from 2.8.15 to 2.8.16.
 
 # Custom Attributes issue fixed on SEBLOD Form Link plug-in (regression).
 # Latest improvements in "Tabs" plug-in added on "PrepareForm", as well.
@@ -1036,7 +1036,7 @@ $ -> Language fix or change
 
 ^ <form> ID suffixed on Form View when tmpl=component OR tmpl=raw.
 ^ JCckContent class updated >> "delete" method added and issues fixed.
-^ Mobile Detect updated from 2.8.13 to 2.8.15.
+^ "Mobile Detect" updated from 2.8.13 to 2.8.15.
 ^ Various Core improvements for upcoming Builder App.
 ^ Various Script/Styles improved when tmpl=raw.
 
@@ -1065,7 +1065,7 @@ $ -> Language fix or change
 
 + J(...) support added for Custom Attributes on Textarea Field.
 
-^ Mobile Detect updated from 2.8.12 to 2.8.13.
+^ "Mobile Detect" updated from 2.8.12 to 2.8.13.
 
 # Notice removed on "Joomla Article" Object plug-in.
 # Routing issue fixed (regression).
@@ -1133,7 +1133,7 @@ $ -> Language fix or change
 ^ Chosen script loaded on List views (back-end).
 ^ Include inline scripts for Tabs when tmpl=raw
 ^ jQuery Validation script and style updated.
-^ Mobile Detect updated from 2.8.3 to 2.8.12.
+^ "Mobile Detect" updated from 2.8.3 to 2.8.12.
 ^ "template_preview.png" updated for One (seb_one) template.
 
 - "defines.php" file (from back-end component) removed.
@@ -1243,7 +1243,7 @@ $ -> Language fix or change
 + "Header", "Layout", "Margin" parameters added on Table (seb_table) template.
 + "no_result.php" updated on Blog (seb_blog), Table (seb_table) templates.
 
-^ Mobile Detect updated from 2.7.8 to 2.8.3.
+^ "Mobile Detect" updated from 2.7.8 to 2.8.3.
 
 ! "download.php" file (from back-end component) removed.
 ! No <form> tag anymore when Search Form option is set to hide.
@@ -1346,7 +1346,7 @@ $ -> Language fix or change
 + "CCK Workflow" Restriction plug-in added.
 + Core Stylesheets can be included/excluded easily.
 + Markup ("default" or "none") added on Content/Search Types.
-+ Mobile Detect Library added, use "new JCckDevice".
++ "Mobile Detect" Library added, use "new JCckDevice".
 + Plug-in type added => { CCK Field Restriction }.
 
 + Aliases (URL) added to Sites. (Multi-sites)
