@@ -25,7 +25,7 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
          .   '</li>';
         echo JCckDev::renderForm( 'core_dev_select', @$options2['format'], $config, array( 'label'=>'Format', 'selectlabel'=>'', 'defaultvalue'=>'translate', 'options'=>'International=international||Use JText=translate', 'storage_field'=>'json[options2][format]' ) );
         echo JCckDev::renderForm( 'core_options_today', @$options2['today'], $config, array( 'label'=>'Show Today', 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1' ) );
-        echo JCckDev::renderForm( 'core_dev_select', @$options2['format_filter'], $config, array( 'label'=>'Storage Format', 'selectlabel'=>'', 'defaultvalue'=>'user_utc', 'options'=>'Raw=raw||UTC=optgroup||Server Time Zone=server_utc||User Time Zone=user_utc', 'storage_field'=>'json[options2][format_filter]' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['format_filter'], $config, array( 'label'=>'Storage Format', 'selectlabel'=>'Select', 'defaultvalue'=>'', 'options'=>'Raw=raw||UTC=optgroup||Server Time Zone=server_utc||User Time Zone=user_utc', 'required'=>'required', 'storage_field'=>'json[options2][format_filter]' ) );
         echo JCckDev::renderForm( 'core_options_week_numbers', @$options2['week_numbers'], $config );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );

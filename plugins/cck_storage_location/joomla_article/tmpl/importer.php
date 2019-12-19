@@ -18,12 +18,12 @@ defined( '_JEXEC' ) or die;
 		echo JCckDev::renderForm( 'core_joomla_article_created_by', '', $config );
 		echo '<li><label>'.JText::_( 'COM_CCK_CATEGORY' ).'</label>'
 		 .	 JCckDev::getForm( 'core_joomla_article_catid', '', $config )
-		 .	 JCckDev::getForm( 'core_joomla_article_catid', '', $config, array( 'selectlabel'=>'Parent', 'storage_field'=>'params[category_parent]', 'required'=>'required' ) )
+		 .	 JCckDev::getForm( 'core_joomla_category_parent_id', '', $config, array( 'selectlabel'=>'No Parent', 'storage_field'=>'parent_id', 'required'=>'required' ), array( 'id'=>'params_category_parent', 'name'=>'params[category_parent]' ) )
 		 .	 '</li>';
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'&nbsp;', 'type'=>'checkbox', 'options'=>'Allow New Categories=1', 'storage_field'=>'params[unknown_categories]' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_TAGS' ).'</label>'
 		 .	 JCckDev::getForm( 'core_joomla_article_tag', '', $config )
-		 .	 JCckDev::getForm( 'core_joomla_article_tag', '', $config, array( 'selectlabel'=>'Parent', 'storage_field'=>'params[tags_parent]', 'required'=>'required' ) )
+		 .	 JCckDev::getForm( 'core_joomla_article_tag', '', $config, array( 'selectlabel'=>'Select a Parent', 'storage_field'=>'params[tags_parent]', 'required'=>'required' ) )
 		 .	 '</li>';
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'&nbsp;', 'type'=>'checkbox', 'options'=>'Allow New Tags=1', 'storage_field'=>'params[unknown_tags]' ) );
 		echo JCckDev::renderForm( 'core_joomla_article_state', '', $config );

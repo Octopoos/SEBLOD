@@ -192,20 +192,25 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 
 			if ( $value != '' ) {
 				$i			=	0;
+				$ids		=	array();
 				$values		=	explode( ',', $value );
-
+				
 				foreach ( $values as $value ) {
+					$value		=	trim( $value );
+
 					$parent_id	=	$config['params']['unknown_tags'] ? $config['params']['tags_parent'] : $default_id;
-					$parts		=	explode( '/', $value );
+					$parts		=	explode( $config['glue'], $value );
 
 					foreach ( $parts as $part ) {
-						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE title = "'.$part.'"' );
+						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE published != -2 AND title = "'.$part.'"' );
 
 						if ( !$pk ) {
 							if ( $config['params']['unknown_tags'] ) {
 								$parent_id	=	$this->_addNew( $part, ( $parent_id ? $parent_id : $config['params']['tags_parent'] ) );
 							} else {
+								// Trigger an error?
 								$parent_id	=	0;
+								break;
 							}
 						} else {
 							$parent_id	=	$pk;
@@ -213,11 +218,11 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 					}
 
 					if ( $parent_id ) {
-						$values[$i++]	=	$parent_id;
+						$ids[$i++]	=	$parent_id;
 					}
 				}
 
-				$value	=	implode( ',', $values );
+				$value	=	implode( ',', $ids );
 			}
 
 			if ( !$value ) {

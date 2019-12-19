@@ -215,20 +215,40 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 		if ( $config['prepare_input'] ) {
 			$default_id	=	(int)$config['params']['base_default-catid'] ? (int)$config['params']['base_default-catid'] : 2;
 
-			if ( $value != '' ) {	
-				$parent_id	=	$config['params']['unknown_categories'] ? $config['params']['category_parent'] : $default_id;
-				$parts		=	explode( '/', $value );
+			if ( $value != '' ) {
+				$level		=	1;
+				$parent_id	=	1;
+
+				if ( $config['params']['unknown_categories'] ) {
+					$parent_id	=	$config['params']['category_parent'];
+
+					if ( $parent_id > 1 ) {
+						$parent_item	=	JCckDatabase::loadObject( 'SELECT id, level FROM #__categories WHERE id = '.(int)$parent_id );
+
+						if ( is_object( $parent_item ) ) {
+							$level	=	(int)$parent_item->level + 1;
+						}
+					}
+				}
+				
+				$parts	=	explode( $config['glue'], $value );
 
 				foreach ( $parts as $part ) {
-					$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__categories WHERE title = "'.$part.'"' );
+					$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM  #__categories WHERE published != -2 AND parent_id = '.(int)$parent_id.' AND level = '.(int)$level.' AND title = "'.$part.'"' );
 
 					if ( !$pk ) {
 						if ( $config['params']['unknown_categories'] ) {
 							$parent_id	=	$this->_addNew( $part, ( $parent_id ? $parent_id : $config['params']['category_parent'] ) );
+						} else {
+							// Trigger an error?
+							$parent_id	=	0;
+							break;
 						}
 					} else {
 						$parent_id	=	$pk;
 					}
+
+					$level++;
 				}
 
 				$value	=	$parent_id;
