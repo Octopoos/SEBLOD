@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.18.1 Upgrade Release [31-Jan-2020] -----------
+
+# Back-end modal scrolling issue fixed.
+# Guest Edit permissions fixed on Submit Button plug-in.
+
 -------------------- 3.18.0 Upgrade Release [19-Dec-2019] -----------
 
 + "Impersonate" capabilites implemented.
