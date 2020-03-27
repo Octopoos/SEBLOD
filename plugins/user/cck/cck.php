@@ -75,6 +75,9 @@ class plgUserCCK extends JPlugin
 						include_once JPATH_SITE.$p->scriptfile;
 					}
 				}
+				if ( isset( $error ) && $error ) {
+					return false;
+				}
 			}
 		}
 	}
