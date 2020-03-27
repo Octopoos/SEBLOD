@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\String\StringHelper;
+
 // Plugin
 class plgCCK_StorageStandard extends JCckPluginStorage
 {
@@ -221,9 +223,20 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 							}
 						}
 					} else {
+						$case		=	( $field->match_options ) ? $field->match_options->get( 'var_case', '' ) : '';
+						$collate	=	( $field->match_options ) ? $field->match_options->get( 'var_collate', '' ) : '';
+						$collate	=	$collate ? ' COLLATE '.$collate : '';
+						
+						if ( $case ) {	
+							$target		=	'LOWER('.$target.')';
+						}
+
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false );
+								if ( $case ) {
+									$v	=	StringHelper::strtolower( $v );
+								}
+								$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
 							}
 						}
 					}
