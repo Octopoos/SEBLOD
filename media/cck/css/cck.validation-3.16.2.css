@@ -40,6 +40,7 @@ body[dir='rtl'] .formError .formErrorArrow, body.rtl .formError .formErrorArrow 
 .greenPopup .formErrorArrow,
 .greenPopup .formErrorArrow.formErrorArrowBottom{border-color: #33be40 transparent transparent transparent;}
 
-.cck-tab-required > a{color:#ff0000!important;} /*.cck-tab-required > a:after{content:" *";}*/
+.cck-tab-required > a,
+.cck-tab-info span.red{color:#ff0000!important;} /*.cck-tab-required > a:after{content:" *";}*/
 
 .formError.parentFormseblod_form_component, .formError.parentFormseblod_form_raw{z-index:1051;}

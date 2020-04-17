@@ -166,16 +166,25 @@ abstract class JCckDev
 	{
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-		
+		$lang	=	JFactory::getLanguage();
+
 		if ( !$id ) {
 			$id	=	'seblod_form';
 		}
 		if ( empty( $rules ) ) {
 			$rules	=	'';
 		}
-		$root	=	JUri::root( true );
-		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
-		
+
+		$message	=	'';
+		$root		=	JUri::root( true );
+		$rules		=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
+
+		if ( $lang->hasKey( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' ) ) {
+			$message	=	JText::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
+		}		
+
+		$rules	.=	',"_tabs":{"regex":"","alertText":"'.$message.'"}';
+
 		if ( is_object( $options ) ) {
 			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
 			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
@@ -213,11 +222,11 @@ abstract class JCckDev
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.16.0.min.js" type="text/javascript"></script>';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.16.2.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
-			$doc->addScript( $root.'/media/cck/js/cck.validation-3.16.0.min.js' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.16.2.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
