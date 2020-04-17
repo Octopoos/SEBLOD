@@ -221,12 +221,12 @@ abstract class JCckDev
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.9.0.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.16.2.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.18.3.css" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.18.3.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
-			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.9.0.css' );
-			$doc->addScript( $root.'/media/cck/js/cck.validation-3.16.2.min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.18.3.css' );
+			$doc->addScript( $root.'/media/cck/js/cck.validation-3.18.3.min.js' );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
