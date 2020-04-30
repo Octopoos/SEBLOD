@@ -82,15 +82,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEdit		=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditFolder	=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditOwn		=	'';
-		
+
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
 		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/preview.php&name='.$item->name );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
-		
+
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
-		<tr class="row<?php echo $i % 2; ?>" height="64px;">
+		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">

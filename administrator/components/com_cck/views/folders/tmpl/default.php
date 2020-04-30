@@ -58,7 +58,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<th class="center caret-fix" colspan="2">
 				<?php
 				echo JHtml::_( 'grid.sort', '<span class="icon-menu-2" style="float:left; position:relative; top:4px; left:8px;"></span>', 'a.lft', $listDir, $listOrder );
-                echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder );				
+                echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder );
 				?>
 			</th>
 			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_COLOR', 'a.color', $listDir, $listOrder ); ?></th>
@@ -96,7 +96,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			$linkProcessing		=	'javascript:void(0);';
 		}
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
-		
+
 		$img			=	$images[$item->home];
 		$action_attr2	=	( $item->home ) ? str_replace( 'btn-micro', 'btn-primary btn-micro', $action_attr ) : $action_attr;
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
@@ -115,7 +115,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			}
 		}
 		?>
-        <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
+        <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
             <td width="30px" class="center hidden-phone">
