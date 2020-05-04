@@ -22,6 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.18.2 Upgrade Release [27-Mar-2020] -----------
+
++ "Case" parameter added for "Each Word" match mode.
++ "Collate" parameter added for "Each Word" match mode.
+  >> utf8mb4_bin added
++ "onUserBeforeSave" can now return false.
+
+# Item X compatibility issue fixed.
+
 -------------------- 3.18.1 Upgrade Release [31-Jan-2020] -----------
 
 # Back-end modal scrolling issue fixed.
