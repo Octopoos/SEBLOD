@@ -206,6 +206,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 					$parts		=	explode( $config['glue'], $value );
 
 					foreach ( $parts as $part ) {
+						$part = trim( $part );
+						
 						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE published != -2 AND title = "'.$part.'"' );
 
 						if ( !$pk ) {
