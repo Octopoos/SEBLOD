@@ -68,16 +68,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEdit		=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditFolder	=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditOwn		=	'';
-		
+
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
 		$link2			=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$item->name, 'root' );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 		$linkVersion	=	JRoute::_( 'index.php?option='.$this->option.'&view=versions&filter_e_type=search&e_id='.$item->id );
-		
+
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
-		<tr class="row<?php echo $i % 2; ?>" height="64px;">
+		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">
@@ -246,7 +246,7 @@ $js	=	'
 					if (!$(":input:focus").length) {
 						e.preventDefault();
 						var k = e.which;
-						
+
 						if (k == 64) {
 							if ( $("#filter_search").val() != "" ) {
 								$("#filter_search").select();

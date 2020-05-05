@@ -43,7 +43,7 @@ foreach ( $this->items as $i=>$item ) {
     
     Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
     ?>
-    <tr class="row<?php echo $i % 2; ?>" height="64px;">
+    <tr class="row<?php echo $i % 2; ?>">
         <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
         <td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
         <td width="30px" class="center hidden-phone">
