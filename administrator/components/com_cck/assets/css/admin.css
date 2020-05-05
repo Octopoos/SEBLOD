@@ -190,7 +190,7 @@ body #j-main-container > .btn-toolbar{margin-top:15px;}
 ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #3b99fc; margin-bottom: 6px;}
 ul.nav.nav-list li a[href='#']:hover{background:none;}
 div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
-div.seblod-manager .table tr{height:64px;}
+div.seblod-manager .table tbody tr{height:64px;}
 div.seblod-manager .table .dropdown-menu{left: inherit; right: 0;}
 div.seblod-manager .table .dropdown-submenu .dropdown-menu{right: -1px;}
 div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
