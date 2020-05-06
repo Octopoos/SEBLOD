@@ -45,6 +45,7 @@ class JCckContent
 	protected $_callables				=	array();
 	protected $_data					=	null;
 	protected $_data_preset				=	array();
+	protected $_data_preset_null		=	false;
 	protected $_data_registry			=	array();
 	protected $_data_update				=	array();
 	protected $_error					=	false;
@@ -377,13 +378,19 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
 
 	// delete ($)
-	public function delete( $identifier = 0 )
+	public function delete( $identifier = 0, $force = '' )
 	{
 		if ( $identifier ) {
 			$this->reset();
 
 			if ( !$this->_setContentById( $identifier ) ) {
-				return false;
+				if ( $force ) {
+					if ( !$this->import( $force, $identifier )->isSuccessful() ) {
+						return false;
+					}
+				} else {
+					return false;
+				}
 			}
 			if ( $this->_instance_core->id ) {
 				if ( !$this->_instance_core->load( $this->_id ) ) {
@@ -395,19 +402,23 @@ class JCckContent
 
 				return false;
 			}
+		} elseif ( !$this->isSuccessful() ) {
+			return false;
 		}
+
 		if ( !$this->_object ) {
 			return false;
 		}
 		if ( !( $this->_id && $this->_pk ) ) {
 			return false;
 		}
+
 		if ( !$this->can( 'delete' ) ) {
 			$this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
-		
+
 		$result	=	$this->trigger( 'delete', 'before' );
 
 		if ( is_array( $result ) && in_array( false, $result, true ) ) {
@@ -636,6 +647,11 @@ class JCckContent
 			$data		=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
 		}
 
+		// Preset may set an error
+		if ( !$this->isSuccessful() ) {
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
 		$this->_is_new	=	true;
 
 		// Base
@@ -830,7 +846,7 @@ class JCckContent
 	}
 
 	// log
-	protected function log( $type, $message )
+	public function log( $type, $message )
 	{
 		if ( !isset( $this->_logs[$type] ) ) {
 			$this->_logs[$type]	=	array();
@@ -840,13 +856,14 @@ class JCckContent
 	}
 
 	// preset
-	public function preset( $data )
+	public function preset( $data, $check_null = false )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
 		}
 
-		$this->_data_preset	=	$data;
+		$this->_data_preset			=	$data;
+		$this->_data_preset_null	=	$check_null;
 
 		return $this;
 	}
@@ -1040,6 +1057,27 @@ class JCckContent
 		} else {
 			return $this->_findResults( 'more', true );
 		}
+	}
+
+	// findOne (^)
+	public function findOne( $content_type = '', $data = array() )
+	{
+		if ( $content_type != '' ) {
+			$this->search( $content_type, $data )->limit( 1 );
+			$this->_findResults( 'find', true );
+
+			if ( !count( $this->_search_results ) ) {
+				$this->_error	=	true;
+
+				return $this;
+			} else {
+				$this->load( $this->_search_results[0] );
+			}
+		} else {
+			// TODO
+		}
+
+		return $this;
 	}
 
 	// findPks ($)
@@ -1325,12 +1363,45 @@ class JCckContent
 	}
 
 	// isNew
-	protected function isNew()
+	public function isNew()
 	{
 		return $this->_is_new;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
+
+	// change ($)
+	protected function change( $table_instance_name, $property, $value )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		if ( !$this->can( 'update', $property ) ) {
+			$this->log( 'error', 'Permissions denied.' );
+
+			return false;
+		}
+
+		$check_permissions	=	$this->_options->get( 'check_permissions', 1 );
+		$pre_update			=	$this->{'_instance_'.$table_instance_name}->$property;
+
+		if ( $check_permissions ) {
+			$this->_options->set( 'check_permissions', 0 );
+		}
+		
+		$this->{'_instance_'.$table_instance_name}->$property	=	$value;
+
+		if ( !( $result = $this->store( $table_instance_name ) ) ) {
+			$this->{'_instance_'.$table_instance_name}->$property	=	$pre_update;
+		}
+
+		if ( $check_permissions ) {
+			$this->_options->set( 'check_permissions', $check_permissions );
+		}
+
+		return $result;
+	}
 
 	// check
 	public function check( $table_instance_name )
@@ -1528,36 +1599,53 @@ class JCckContent
 	}
 
 	// update ($)
-	public function update( $table_instance_name, $property, $value )
+	public function update( $data = array() )
 	{
 		if ( !$this->isSuccessful() ) {
 			return false;
 		}
 
-		if ( !$this->can( 'update', $property ) ) {
+		if ( !$this->_pk ) {
+			return false;
+		}
+
+		if ( !$this->can( 'save' ) ) {
 			$this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
 
-		$check_permissions	=	$this->_options->get( 'check_permissions', 1 );
-		$pre_update			=	$this->{'_instance_'.$table_instance_name}->$property;
-
-		if ( $check_permissions ) {
-			$this->_options->set( 'check_permissions', 0 );
+		if ( count( $data ) ) {
+			foreach ( $data as $k=>$v ) {
+				$this->setProperty( $k, $v );
+			}
 		}
-		
-		$this->{'_instance_'.$table_instance_name}->$property	=	$value;
-
-		if ( !( $result = $this->store( $table_instance_name ) ) ) {
-			$this->{'_instance_'.$table_instance_name}->$property	=	$pre_update;
+		if ( !count( $this->_data_update ) ) {
+			return false;
 		}
 
-		if ( $check_permissions ) {
-			$this->_options->set( 'check_permissions', $check_permissions );
+		$successful	=	true;
+
+		foreach ( $this->_data_update as $table_instance_name=>$null ) {
+			if ( !$this->isNew() ) {
+				// Let's make sure we have a valid instance
+				if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
+					$this->_fixDatabase( $table_instance_name );
+				}
+			}
+			if ( $table_instance_name == 'base' ) {
+				$successful	=	$this->save( 'base' );
+			} else {
+				$successful	=	$this->save( $table_instance_name );
+			}
+			if ( !$successful ) {
+				$successful	=	false;
+			} else {
+				unset( $this->_data_update[$table_instance_name] );
+			}
 		}
 
-		return $result;
+		return $successful;
 	}
 
 	// updateAuthor ($)
@@ -1612,7 +1700,7 @@ class JCckContent
 		}
 
 		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
-			return $this->update( self::$types[$this->_type]['data_map'][$property], $property, $value );
+			return $this->change( self::$types[$this->_type]['data_map'][$property], $property, $value );
 		} else {
 			$this->log( 'error', 'Property unknown.' );
 		}
@@ -1764,7 +1852,7 @@ class JCckContent
 	}
 
 	// extend
-	public function extend( $path, $scope = 'instance' )
+	public function extend( $path, $scope = 'instance', $scope_target = '' )
 	{
 		if ( !is_file( $path ) ) {
 			$this->_error	=	true;
@@ -1776,7 +1864,7 @@ class JCckContent
 		include $path;
 		ob_get_clean();
 
-		$this->_setMixin( $mixin, $scope );
+		$this->_setMixin( $mixin, $scope, $scope_target );
 	}
 
 	// _findResults
@@ -1891,12 +1979,18 @@ class JCckContent
 				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 					continue;
 				}
+				if ( $this->_data_preset_null ) {
+					if ( empty( $v ) || $v == '0000-00-00' || $v == '0000-00-00 00:00:00' ) {
+						$this->_error	=	true;
+					}
+				}
 
 				$table_instance_name			=	self::$types[$this->_type]['data_map'][$k];
 				$data[$table_instance_name][$k]	=	$v;
 			}
 
-			$this->_data_preset	=	array();
+			$this->_data_preset			=	array();
+			$this->_data_preset_null	=	false;
 		}
 		foreach ( $data as $name=>$array ) {
 			$data_array	=	${'data_'.$name};
@@ -2191,30 +2285,30 @@ class JCckContent
 	}
 
 	// _setCallable
-	protected function _setCallable( $name, $callable, $scope )
+	protected function _setCallable( $name, $callable, $scope, $scope_target = '' )
 	{
 		if ( $scope == 'object' ) {
-			self::$objects[$this->_object]['callables'][$name]	=	$callable;
+			self::$objects[($scope_target ? $scope_target : $this->_object)]['callables'][$name]	=	$callable;
 		} elseif ( $scope == 'type' ) {
-			self::$types[$this->_type]['callables'][$name]		=	$callable;
+			self::$types[($scope_target ? $scope_target : $this->_type)]['callables'][$name]		=	$callable;
 		} elseif ( $scope == 'global' ) {
-			self::$callables[$name]								=	$callable;
+			self::$callables[$name]		=	$callable;
 		} else {
-			$this->_callables[$name]							=	$callable;
+			$this->_callables[$name]	=	$callable;
 		}
 
 		self::$callables_map[$name]	=	$scope;
 	}
 
 	// _setMixin
-	protected function _setMixin( $mixin, $scope )
+	protected function _setMixin( $mixin, $scope, $scope_target = '' )
 	{
 		$methods	=	(new ReflectionClass( $mixin ) )->getMethods( ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED );
 
 		foreach ( $methods as $method ) {
 			$method->setAccessible( true );
 
-			$this->_setCallable( $method->name, $method->invoke( $mixin ), $scope );
+			$this->_setCallable( $method->name, $method->invoke( $mixin ), $scope, $scope_target );
 		}
 	}
 

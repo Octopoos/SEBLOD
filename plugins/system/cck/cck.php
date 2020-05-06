@@ -986,20 +986,29 @@ class plgSystemCCK extends JPlugin
 		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
 		 	return false;
 		} else {
-			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
-													. ' FROM #__menu WHERE'
-													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
-			$path	=	JUri::getInstance()->getPath();
-			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+			$api_paths	=	JCckDatabase::loadObjectList( 'SELECT path'
+														. ' FROM #__menu WHERE'
+														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
+			$base_path	=	JUri::getInstance()->getPath();
+			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
-			if ( count( $apis ) ) {
-				foreach ( $apis as $api ) {
-					$api	=	$prefix.'/'.$api->path.'/';
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				$language_codes	=	JCckDevHelper::getLanguageCodes();
 
-					$pos	=	strpos( $path, $api );
+				foreach ( $language_codes as $k=>$sef ) {
+					$language_codes[$k]	=	$prefix.'/'.$sef;
+				}
+			}
 
-					if ( $pos !== false && $pos == 0 ) {
-						return true;
+			if ( count( $api_paths ) ) {
+				foreach ( $api_paths as $api_path ) {
+					foreach ( $language_codes as $sef ) {
+						$path	=	$sef.'/'.$api_path->path.'/';
+						$pos	=	strpos( $base_path, $path );
+
+						if ( $pos !== false && $pos == 0 ) {
+							return true;
+						}
 					}
 				}
 			}

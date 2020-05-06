@@ -372,6 +372,12 @@ abstract class JCckDevHelper
 
 		return $config;
 	}
+
+	// getLanguageCodes
+	public static function getLanguageCodes()
+	{
+		return JCckDatabase::loadColumn( 'SELECT sef FROM #__languages WHERE published = 1 ORDER BY title' );
+	}
 	
 	// getPermalink()
 	public static function getPermalink( $types = 'canonical', $object = 'joomla_article' )
