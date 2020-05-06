@@ -118,6 +118,7 @@ div.toggle-selection {float:right;margin-top:10px;}
 div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 .cck-highlighted{color:#eb8207;}
 .adminformlist-maxwidth{max-width:200px;}
+.adminformlist-minwidth{min-width:82px;}
 
 #toolbar a:not(.btn-success) [class^="myicon-"],
 #toolbar a:not(.btn-success) [class*=" myicon-"] {

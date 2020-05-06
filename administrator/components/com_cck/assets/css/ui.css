@@ -46,7 +46,7 @@ div.seblod .adminformlist input:not(.input-mini), div.seblod .adminformlist text
 	float: left;
 	margin-bottom: 5px;
 	margin-left: 0;
-	margin-right: 5px;
+	margin-right: 6px;
 	margin-top: 5px;
 	width: auto;
 	/*font-size: 11px;*/
@@ -409,6 +409,9 @@ ul.spe_name span.variation_value{line-height: 24px;}
 ul.spe_double li {width: 57em; padding-left: 7px; margin-top: 15px; clear: left;}
 ul.spe_double label{width:100px;}
 ul.spe_double input{width:auto;}
+ul.spe_double .checkboxes{padding-top:2px;}
+ul.spe_double .checkboxes input{margin-top:5px;}
+ul.spe_double .checkboxes label{width:auto; padding: 0 12px 0 4px;}
 ul.spe_type li{width:28em; margin-top:15px;}
 ul.spe_type label, ul.spe_name.adminformlist label, ul.spe_type.adminformlist label{width:100px;}
 ul.spe_second li{width:40em;}
@@ -466,6 +469,11 @@ ul.adminformlist li span.c_link,ul.adminformlist li span.c_link2 {color:#eb8207;
 #layer div.seblod div.attr{padding-top:3px;}
 
 div.seblod div.attr{display:none;float:left;max-width:240px;}
+ul.adminformlist li.inline-x div.attr{display:block;}
+ul.adminformlist li.inline-x div.attr > span{display: none;}
+ul.adminformlist li.inline-x > div > div:first-child div.attr > span{display:block; position:absolute; top:-5px; font-size:11px; font-weight:bold; padding-left:7px;}
+ul.adminformlist li.inline-x div.clr{display: none;}
+
 body.com_cck div.seblod div.attr,
 body.contentpane.component div.seblod div.attr{max-width: 270px;}
 div.seblod input.inputbox.mini{padding:2px;margin-right:3px;}
