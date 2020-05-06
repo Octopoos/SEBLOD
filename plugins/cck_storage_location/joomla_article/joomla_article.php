@@ -724,17 +724,22 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( isset( $query['id'] ) ) {
 			if ( self::$sef[$config['doSEF']] == 'full' ) {
 				$id		=	$query['id'];
+				
 				// Make sure we have the id and the alias
-				if (strpos($query['id'], ':') === false)
-				{
-					$db = JFactory::getDbo();
-					$dbQuery = $db->getQuery(true)
-						->select('alias')
-						->from('#__content')
-						->where('id=' . (int) $query['id']);
-					$db->setQuery($dbQuery);
-					$alias = $db->loadResult();
-					$id = $id . ':' . $alias;
+				if ( strpos( $query['id'], ':' ) === false ) {
+					$db			=	JFactory::getDbo();
+					$dbQuery	=	$db->getQuery( true )
+									   ->select( 'alias' )
+									   ->from( '#__content' )
+									   ->where( 'id='.(int)$query['id'] );
+					
+					$db->setQuery( $dbQuery );
+
+					$alias	=	$db->loadResult();
+
+					if ( $alias != '' ) {
+						$id	=	$id.':'.$alias;
+					}
 				}
 			} else {
 				if ( strpos( $query['id'], ':' ) !== false ) {
