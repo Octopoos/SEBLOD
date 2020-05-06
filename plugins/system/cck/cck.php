@@ -989,8 +989,14 @@ class plgSystemCCK extends JPlugin
 			$api_paths	=	JCckDatabase::loadObjectList( 'SELECT path'
 														. ' FROM #__menu WHERE'
 														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
-			$base_path	=	JUri::getInstance()->getPath();
-			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+			
+			if ( !count( $api_paths ) ) {
+				return false;
+			}
+
+			$base_path		=	JUri::getInstance()->getPath();
+			$language_codes	=	array();
+			$prefix			=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
 				$language_codes	=	JCckDevHelper::getLanguageCodes();
@@ -1000,7 +1006,7 @@ class plgSystemCCK extends JPlugin
 				}
 			}
 
-			if ( count( $api_paths ) ) {
+			if ( count( $language_codes ) ) {
 				foreach ( $api_paths as $api_path ) {
 					foreach ( $language_codes as $sef ) {
 						$path	=	$sef.'/'.$api_path->path.'/';
@@ -1009,6 +1015,15 @@ class plgSystemCCK extends JPlugin
 						if ( $pos !== false && $pos == 0 ) {
 							return true;
 						}
+					}
+				}	
+			} else {
+				foreach ( $api_paths as $api_path ) {
+					$path	=	$prefix.'/'.$api_path->path.'/';
+					$pos	=	strpos( $base_path, $path );
+
+					if ( $pos !== false && $pos == 0 ) {
+						return true;
 					}
 				}
 			}
