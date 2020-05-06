@@ -22,6 +22,19 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.19.0 Upgrade Release [07-May-2020] -----------
+
++ jQuery Validation script updated for Tabs
+  >> an additional message displayed: COM_CCK_PLEASE_CHECK_REQUIRED_TABS
+  >> switching to another tab now triggers validation automatically
++ Router updated (for Articles on "id-alias"):
+  >> alias retrived from id when only id is known @SEBLOD/pull/545
+
+^ Inputmask JS script updated.
+
+# Empty Tags import issue fixed. @SEBLOD/pull/586, @SEBLOD/pull/587
+# Minor issues fixed.
+
 -------------------- 3.18.2 Upgrade Release [27-Mar-2020] -----------
 
 + "Case" parameter added for "Each Word" match mode.
