@@ -1017,7 +1017,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `guest` int(10) unsigned NOT NULL,
   `guest_only_group` int(10) unsigned NOT NULL,
   `guest_only_viewlevel` int(10) unsigned NOT NULL,
-  `groups` varchar(255) NOT NULL,
+  `usergroups` varchar(255) NOT NULL,
   `public_viewlevel` int(10) unsigned NOT NULL DEFAULT '0',
   `viewlevels` varchar(255) NOT NULL,
   `configuration` varchar(1024) NOT NULL,

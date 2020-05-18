@@ -33,23 +33,23 @@ $users_force	=	array();
 $users_more		=	array();
 
 if ( $item->parent_id ) {
-	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, groups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
+	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, usergroups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
 
 	if ( is_object( $parent ) ) {
-		$parent->groups		=	explode( ',', $parent->groups );
-		$parent->groups[]	=	0;
+		$parent->usergroups		=	explode( ',', $parent->usergroups );
+		$parent->usergroups[]	=	0;
 
-		array_shift( $parent->groups );
+		array_shift( $parent->usergroups );
 	}
 }
 
-if ( isset( $item->groups ) && $item->groups != '' ) {
-	$item->groups		=	json_decode( $item->groups, true );
+if ( isset( $item->usergroups ) && $item->usergroups != '' ) {
+	$item->usergroups		=	json_decode( $item->usergroups, true );
 
-	if ( count( $item->groups ) ) {
-		$existing_users	=	$item->groups;
+	if ( count( $item->usergroups ) ) {
+		$existing_users	=	$item->usergroups;
 	}
-	unset( $item->groups );
+	unset( $item->usergroups );
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
 JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
@@ -146,19 +146,19 @@ foreach ( $groups as $i=>$g ) {
 		$levels[$i]		=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. $group->title, array(), $next_level );
 	}
 }
-$item->groups	=	$usergroups;	
+$item->usergroups	=	$usergroups;	
 
 if ( $mode == 1 ) {
 	CCK_TableSiteHelper::updateRootAsset( $root, $rules );
 }
 
 // Guest Viewlevel
-$usergroups		=	$item->groups;
+$usergroups		=	$item->usergroups;
 if ( $guest_only ) {
 	$item->guest_only_group		=	$guest_group;
 	$usergroups[]				=	$guest_group;
 	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
-	$usergroups					=	$item->groups;
+	$usergroups					=	$item->usergroups;
 	$item->guest_only_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. 'Guest Only', array( 0 => $guest_group ), $next_level );
 } else {
 	$guest_viewlevel			=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
@@ -210,10 +210,10 @@ foreach ( $users as $k=>$u ) {
 	$id			=	0;
 	$u->groups	=	$usergroups;
 
-	if ( is_object( $parent ) && $parent->groups ) {
-		array_pop( $parent->groups );
+	if ( is_object( $parent ) && $parent->usergroups ) {
+		array_pop( $parent->usergroups );
 
-		$u->groups	=	array_merge( $u->groups, $parent->groups );
+		$u->groups	=	array_merge( $u->groups, $parent->usergroups );
 	}
 
 	// Force Password
@@ -295,8 +295,8 @@ if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '1' ) == 1 ) {
 }
 
 // Finalize
-if ( is_array( $item->groups ) ) {
-	$item->groups		=	implode( ',', $item->groups );
+if ( is_array( $item->usergroups ) ) {
+	$item->usergroups		=	implode( ',', $item->usergroups );
 }
 if ( is_array( $item->viewlevels ) ) {
 	$item->public_viewlevel	=	$item->viewlevels[0];

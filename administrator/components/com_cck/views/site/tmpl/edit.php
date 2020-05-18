@@ -130,7 +130,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 echo JCckDev::renderForm( $cck['core_guest'], $this->item->guest, $config );
 				if ( strpos( $this->item->viewlevels, ',' ) !== false ) {
                     if ( $this->item->guest_only_group != '' ) {
-                        $this->item->groups     .=  ','.$this->item->guest_only_group;
+                        $this->item->usergroups     .=  ','.$this->item->guest_only_group;
                     }
                     if ( $this->item->guest_only_viewlevel != '' ) {
                         $this->item->viewlevels .=  ','.$this->item->guest_only_viewlevel;
@@ -139,7 +139,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                     echo JCckDev::renderForm( $cck['core_guest_only_group'], $this->item->guest_only_group, $config );
 				}
                 echo JCckDev::renderForm( $cck['core_public_viewlevel'], $this->item->public_viewlevel, $config );
-                echo JCckDev::renderForm( $cck['core_groups'], $this->item->groups, $config );
+                echo JCckDev::renderForm( $cck['core_groups'], $this->item->usergroups, $config, array( 'storage_field'=>'usergroups' ) );
                 echo JCckDev::renderForm( $cck['core_viewlevels'], $this->item->viewlevels, $config );
                 ?>
             </ul>
