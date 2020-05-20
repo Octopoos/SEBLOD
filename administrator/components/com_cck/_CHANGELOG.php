@@ -27,7 +27,7 @@ $ -> Language fix or change
 + jQuery Validation script updated for Tabs
   >> an additional message displayed: COM_CCK_PLEASE_CHECK_REQUIRED_TABS
   >> switching to another tab now triggers validation automatically
-+ No message output allowed on "Process" Task.
++ Redirection without message allowed on "Process" Task.
 + Router updated (for Articles on "id-alias"):
   >> alias retrived from id when only id is known @SEBLOD/pull/545
 
