@@ -22,18 +22,21 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.19.0 Upgrade Release [07-May-2020] -----------
+-------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
 
 + jQuery Validation script updated for Tabs
   >> an additional message displayed: COM_CCK_PLEASE_CHECK_REQUIRED_TABS
   >> switching to another tab now triggers validation automatically
++ No message output allowed on "Process" Task.
 + Router updated (for Articles on "id-alias"):
   >> alias retrived from id when only id is known @SEBLOD/pull/545
 
+^ Core Update for SEBLOD WebServices add-on.
 ^ Inputmask JS script updated.
 
 # Empty Tags import issue fixed. @SEBLOD/pull/586, @SEBLOD/pull/587
-# Minor issues fixed.
+# Multi-sites system on MySQL 8.0 issue fixed.
+# Various issues fixed.
 
 -------------------- 3.18.2 Upgrade Release [27-Mar-2020] -----------
 
