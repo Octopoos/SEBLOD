@@ -1139,7 +1139,7 @@ class JCckPluginField extends JPlugin
 				self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter-ajax", function() { JCck.Core.loadmore("&start=0",-1,1); });' );
 				
 				if ( !$keypress ) {
-					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) { if (e.which == 13) {e.preventDefault(); $(this).change();} });' );
+					self::g_addScriptDeclaration( '$(".is-filter-ajax").keypress(function(e) { if (e.which == 13) {e.preventDefault(); $(this).blur();} });' );
 
 					$keypress	=	1;
 				}
