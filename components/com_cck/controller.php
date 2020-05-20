@@ -472,17 +472,23 @@ class CCKController extends JControllerLegacy
 				$output	=	-1;
 			}
 			if ( $output == -1 ) {
-				if ( isset( $config['message'] ) && $config['message'] != '' ) {
-					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
-				} else {
-					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
-				}
-				if ( isset( $config['message_style'] ) && $config['message_style'] != '' ) {
+				if ( $config['message_style'] ) {
+					if ( isset( $config['message'] ) && $config['message'] != '' ) {
+						$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
+					} else {
+						$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_PROCESSED' );
+					}
 					$msgType	=	$config['message_style'];
 				} else {
-					$msgType	=	'message';
+					$msg		=	'';
+					$msgType	=	'';
 				}
-				$this->setRedirect( $link, $msg, $msgType );
+
+				if ( $msg != '' ) {
+					$this->setRedirect( $link, $msg, $msgType );
+				} else {
+					$this->setRedirect( $link );
+				}
 			} else {
 				$file	=	JCckDevHelper::getRelativePath( $file, false );
 				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
@@ -618,7 +624,6 @@ class CCKController extends JControllerLegacy
 				}
 			}
 		}
-		
 		if ( (int)$id > 0 || $id === -1 ) {
 			if ( $config['message_style'] ) {
 				if ( isset( $config['message'] ) && $config['message'] != '' ) {
