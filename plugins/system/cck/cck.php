@@ -293,7 +293,7 @@ class plgSystemCCK extends JPlugin
 
 			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
 				if ( !$user->authorise( 'core.admin' ) ) {
-					$groups		=	explode( ',', $this->site->groups );
+					$groups		=	explode( ',', $this->site->usergroups );
 					$hasGroups	=	0;
 
 					if ( count( $groups ) ) {
