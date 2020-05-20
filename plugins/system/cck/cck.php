@@ -317,7 +317,7 @@ class plgSystemCCK extends JPlugin
 
 			// Groups
 			$authgroups	=	$user->getAuthorisedGroups();
-			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
+			$nogroups	=	JCckDatabase::loadColumn( 'SELECT usergroups FROM #__cck_core_sites WHERE id != '.$this->site->id );
 			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
 			$multisite	=	false;
 
