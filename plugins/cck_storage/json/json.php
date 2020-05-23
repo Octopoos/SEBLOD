@@ -167,15 +167,9 @@ class plgCCK_StorageJson extends JCckPluginStorage
 				$field->{'storage_field'.($i + 2)}	=	$levels[$i];
 			}
 			$value	=	array( $field->storage_field3=>$value );
-			$value	=	json_encode( $value );
-		} elseif ( is_array( $value ) ) {
-			$value	=	json_encode( $value );
-		} else {
-			if ( $value != '' ) {
-				$value	=	addcslashes( $value, "\"\n\r\\" );
-			}
-			$value	=	'"'.$value.'"';
 		}
+
+		$value	=	json_encode( $value );
 		$store	=	'"'.$field->storage_field2.'":'.$value.',';
 		
 		// Add Process
