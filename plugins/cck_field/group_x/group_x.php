@@ -275,6 +275,10 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 				$fields	=	self::_getChildren( $field, $config );
 				if ( count( $fields ) ) {
 					foreach ( $fields as $f ) {
+						if ( $f->type == 'div' ) {
+							continue;
+						}
+
 						$f->storage			=	$field->storage;
 						$f->storage_table	=	$field->storage_table;
 						$f->storage_field	=	$field->storage_field;
