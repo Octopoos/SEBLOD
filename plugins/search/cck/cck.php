@@ -500,9 +500,14 @@ class plgSearchCCK extends JPlugin
 			if ( isset( $query3 ) ) {
 				$query2	.=	$query3.'<br />';
 			}
-			echo str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'HAVING', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
-							  array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />HAVING', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
-							  $query1.'<br />'.$query2 ).'<br />';
+			$output	=	$query1.'<br />'.$query2;
+			$output	=	str_replace( 'RAND()', 'R@ND()', $output );
+			$output	=	str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'HAVING', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
+									 array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />HAVING', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
+									 $output );
+			$output	=	str_replace( 'R@ND()', 'RAND()', $output );
+
+			echo $output.'<br />';
 		}
 		
 		unset( $fields );
@@ -610,7 +615,10 @@ class plgSearchCCK extends JPlugin
 					$modifier2	=	'';
 					$modifier3	=	$field->match_mode; // direction
 					
-					if ( $modifier3 ) {
+					if ( $modifier3 == 'RAND' ) {
+						$ordered	=	true;
+						$query->order( $query->Rand() ); /* OK for 1000- records */
+					} elseif ( $modifier3 ) {
 						$s_field	=	$field->storage_field;
 						$s_table	=	$field->storage_table;
 						
