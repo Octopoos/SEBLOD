@@ -22,6 +22,19 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.20.0 Upgrade Release [xx-Jul-2020] -----------
+
++ RAND() (SQL Random) implemented on Search Types
+
++ JCckContent class updated & improved! :)
+  >> change/update ...
+  >> delete/preset ...
+  >> findOne ...
+
+! Changes applied for SEBLOD eCommerce add-on.
+
+# "Div" fields excluded from Group X storage.
+
 -------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
 
 + jQuery Validation script updated for Tabs
