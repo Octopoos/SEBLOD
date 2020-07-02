@@ -18,7 +18,7 @@ abstract class JCckEcommercePromotion
 	{
 		$user		=	JCck::getUser();
 		$my_groups	=	$user->groups; /* $user->getAuthorisedGroups(); */
-		
+
 		$currency	=	JCckEcommerce::getCurrency();
 		$promotions	=	JCckEcommerce::getPromotions( $type );
 		$res		=	0;
@@ -27,6 +27,9 @@ abstract class JCckEcommercePromotion
 		
 		if ( count( $promotions ) ) {
 			foreach ( $promotions as $p ) {
+				if ( (int)$p->user_id && (int)$p->user_id != $user->id ) {
+					continue;
+				}
 				if ( isset( $params['target'] ) && $params['target'] ) {
 					if ( $params['target'] == 'order2' && $p->target == 0 ) {
 						// OK
