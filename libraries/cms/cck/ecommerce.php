@@ -180,7 +180,7 @@ abstract class JCckEcommerce
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$pay_key] ) ) {
-			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.stickers, a.info_billing, a.info_shipping'
+			$cache[$pay_key]	=	JCckDatabase::loadObject( 'SELECT a.number, b.id, b.pk, a.type, a.state, a.user_id, a.session_id, a.total, a.total_ht, a.total_paid, a.weight, a.invoice, a.stickers, a.info_billing, a.info_promotions, a.info_shipping'
 															. ' FROM #__cck_more_ecommerce_orders AS a'
 															. ' LEFT JOIN #__cck_core AS b ON (b.pk = a.id AND b.storage_location = "cck_ecommerce_order")'
 															. ' WHERE a.pay_key = "'.$pay_key.'"' );
@@ -315,6 +315,27 @@ abstract class JCckEcommerce
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Promotions
+
+	// getPromotionByCode
+	public static function getPromotionByCode( $code, $isCached = true )
+	{
+		static $cache	=	array();
+		
+		if ( !isset( $cache[$code] ) ) {
+			$cache[$code]	=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products, a.usage_limit, a.user_id'
+														.  ' FROM #__cck_more_ecommerce_promotions AS a'
+														.  ' WHERE a.code = "'.$code.'"' );
+			if ( !$isCached ) {
+				$temp	=	$cache[$code];
+				
+				unset( $cache[$code] );
+
+				return $temp;
+			}
+		}
+
+		return $cache[$code];
+	}
 	
 	// getPromotions
 	public static function getPromotions( $type = '' )

@@ -220,6 +220,40 @@ abstract class JCckEcommercePromotion
 		return count( JCckEcommerce::getPromotions( $type ) );
 	}
 
+	// discount
+	public static function discount( $promotion, &$total, &$balance )
+	{
+		switch ( $promotion->discount ) {
+			case 'free':
+				$total		=	0;
+				break;
+			case 'minus':
+				if ( !$promotion->discount_amount ) {
+					return false;
+				}
+				$total		=	$total - $promotion->discount_amount;
+
+				if ( $total < 0 ) {
+					$balance	=	abs( $total );
+					$total		=	0;
+				} else {
+					$balance	=	0;
+				}
+				break;
+			case 'percentage':
+				$discount	=	$total * $promotion->discount_amount / 100;
+				$total		=	$total - $promotion;
+				break;
+			case 'set':
+				$total		=	$promotion->discount_amount;
+				break;
+			default:
+				break;
+		}
+
+		return true;
+	}
+
 	// getCurrentCoupon
 	public static function getCurrentCoupon( $strict = false )
 	{
