@@ -135,7 +135,7 @@ $js		=	'
 						$(".storage-cck-core").remove();
 					}
 				} else {
-					$(".storage-cck-more").parents(".object-params").remove();
+					$(".storage-cck-more").parents(".object-params").not("#op-cck_webservice").remove();
 					$(".storage-desc").remove();
 				}
 				$("#storage_advanced").hide();
