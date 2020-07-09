@@ -15,6 +15,8 @@ class JCckPluginWebservice extends JPlugin
 {
 	protected static $construction	=	'cck_webservice';
 	
+	protected $autoloadLanguage		=	true;
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// g_onCCK_FieldConstruct
