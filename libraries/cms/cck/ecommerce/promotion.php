@@ -39,6 +39,35 @@ abstract class JCckEcommercePromotion
 						    || ( $params['target'] == 'product2' && $p->target == 2 ) ) {
 						if ( $p->target_products == 0 ) {
 							// OK
+
+							if ( isset( $p->target_type ) && $p->target_type ) {
+								$continue					=	true;
+								$product_def				=	JCckEcommerce::getProductDefinition( $p->target_type );
+								$content_types				=	explode( '||', $product_def->content_type );
+								$item_type					=	'';
+								
+								if ( isset( $params['target_id'] ) && $params['target_id'] && isset( $items[$params['target_id']] ) ) {
+									if ( is_object( $items[$params['target_id']] ) ) {
+										$item_type	=	$items[$params['target_id']]->type;
+									} else {
+										$object		=	current( $items[$params['target_id']] );
+										$item_type	=	$object->type;
+									}
+								}
+								if ( $item_type ) {
+									if ( count( $content_types ) ) {
+										foreach ( $content_types as $content_type ) {
+											if ( $content_type == $item_type ) {
+												$continue		=	false;
+												break;
+											}
+										}
+									}
+								}
+								if ( $continue ) {
+									continue;
+								}
+							}
 						} elseif ( $p->target_products == 2 ) {
 							$products	=	self::getTargets( $p->id );
 
@@ -223,6 +252,8 @@ abstract class JCckEcommercePromotion
 	// discount
 	public static function discount( $promotion, &$total, &$balance )
 	{
+		$total_to_pay	=	$total;
+
 		switch ( $promotion->discount ) {
 			case 'free':
 				$total		=	0;
@@ -251,7 +282,7 @@ abstract class JCckEcommercePromotion
 				break;
 		}
 
-		return true;
+		return $total_to_pay != $total ? true : false;
 	}
 
 	// getCurrentCoupon

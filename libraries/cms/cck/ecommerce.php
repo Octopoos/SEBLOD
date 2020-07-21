@@ -367,7 +367,7 @@ abstract class JCckEcommerce
 		$null	=	$db->getNullDate();
 		$now	=	JFactory::getDate()->toSql();
 
-		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products, a.usage_limit, a.user_id'
+		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products, a.target_type, a.usage_limit, a.user_id'
 														.  ' FROM #__cck_more_ecommerce_promotions AS a'
 														.  ' WHERE a.published = 1'
 														.  ' AND (a.publish_up = '.JCckDatabase::quote( $null ).' OR '.'a.publish_up <= '.JCckDatabase::quote( $now ).')'
