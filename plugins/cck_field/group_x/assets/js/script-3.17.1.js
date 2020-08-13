@@ -102,6 +102,10 @@ if ("undefined" === typeof JCck.More) {
             });
         },
         insert: function (t, e, c, r, n) {
+            var rr = jQuery(i(e, c, r));
+            if(rr.find('.cck_jform_media').length){
+                rr.find('.field-media-wrapper').first().fieldMedia();
+            }
             "after" == n ? t.after(rr) : t.append(rr);
         },
         remove: function (c, r, n) {
