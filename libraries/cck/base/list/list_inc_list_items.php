@@ -39,7 +39,7 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 } else {
 	for ( $i = 0; $i < $count; $i++ ) {
-		if ( isset( $items[$i]->id ) ) {
+		if ( isset( $items[$i]->id ) && is_string( $items[$i]->id ) ) {
 			$ids	.=	$items[$i]->id.',';
 		}
 	}
