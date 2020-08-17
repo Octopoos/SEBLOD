@@ -158,6 +158,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->linked		=	true;
 			$field->html		=	'<a href="'.$field->link.'" title="'.$file_title.'">'.$field->text.'</a>';
 			$field->typo_target	=	'text';
+
+			JCckPluginLink::setLinkAttr( $field );
 		}
 		$field->value			=	$value;
 	}
