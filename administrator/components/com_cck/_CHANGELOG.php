@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.0 Upgrade Release [xx-Jul-2020] -----------
+-------------------- 3.20.0 Upgrade Release [xx-Sep-2020] -----------
 
 + RAND() (SQL Random) implemented on Search Types
 
@@ -31,9 +31,11 @@ $ -> Language fix or change
   >> delete/preset ...
   >> findOne ...
 
-! Changes applied for SEBLOD eCommerce add-on.
+^ Core Update for SEBLOD Ecommerce add-on.
+^ Core Update for SEBLOD WebServices add-on.
 
 # "Div" fields excluded from Group X storage.
+# Link Parameters issues fixed on Upload File plugin.
 
 -------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
 
