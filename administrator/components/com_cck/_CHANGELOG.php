@@ -33,6 +33,7 @@ $ -> Language fix or change
 
 ^ Core Update for SEBLOD Ecommerce add-on.
 ^ Core Update for SEBLOD WebServices add-on.
+^ Inputmask JS script updated.
 
 # "Div" fields excluded from Group X storage.
 # Link Parameters issues fixed on Upload File plugin.
