@@ -335,7 +335,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.10.0.min.js' );
+			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.20.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
 					$search		=	'/(-?\$?)(\d+( \d{3})*(\.\d{1,})?|\.\d{1,})/g';
@@ -646,17 +646,17 @@ class CCK_Rendering
 			$targets	=	@$computation_options->targets ? json_encode( $computation_options->targets ) : '[]';
 			$format		=	'';
 			if ( $computation_options->format == 'toFixed' ) {
-				$format	=	'.'.$computation_options->format.'('.$computation_options->precision.')';
+				$format	=	's.'.$computation_options->format.'('.$computation_options->precision.')';
 			} elseif ( $computation_options->format ) {
-				$format	=	'.'.$computation_options->format.'()';
+				$format	=	'Math.'.$computation_options->format.'(s)';
 			}
 			if ( @$computation_options->recalc ) {
 				$this->config['computation'][$event][]	=	array( '_'=>$field->computation,
 																   'js'=>'$("#'.$field->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '
-																										 .$targets.', function (s){return s'.$format.';} );' );
+																										 .$targets.', function (s){return '.$format.';} );' );
 			} else {
 				$this->addScriptDeclaration( '(function ($){JCck.Core.recalc_'.$field->name.' = function() {'
-					.'$("#'.$field->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return s'.$format.';} );}'.'})(jQuery);' );
+					.'$("#'.$field->name.'").calc( "'.$computation_options->custom.'", {'.$computed.'}, '.$targets.', function (s){return '.$format.';} );}'.'})(jQuery);' );
 				if ( $event != 'none' ) {
 					$this->addJS( '$("'.$field->computation.'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'); JCck.Core.recalc_'.$field->name.'();' );
 				}
