@@ -168,17 +168,25 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			}
 		}
 		
+		$class	=	' class="cck-fl"';
 		$count	=	count( $opts );
 		$count2	=	0;
 		$form	=	'';
+
 		if ( $field->bool ) {
 			$orientation	=	' vertical';
-			$field->bool2	=	( !$field->bool2 ) ? 1 : $field->bool2;
+			$field->bool2	=	( !$field->bool2 ) ? $count : $field->bool2;
 			$modulo			=	$count % $field->bool2;
 			$columns		=	(int)( $count / ( !$field->bool2 ? 1 : $field->bool2 ) );
 		} else {
 			$orientation	=	'';
 		}
+
+		if ( JCck::is( '4.0' ) ) {
+			$class			=	'';
+			$orientation	=	'';
+		}
+
 		$attr	=	'class="checkbox'.$validate.'" size="1"';
 		$attr_key	=	'data-cck';
 
@@ -186,10 +194,10 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			$k	=	0;
 			foreach ( $opts as $i=>$o ) {
 				if ( $i == 0 ) {
-					$form	.=	'<div class="cck-fl">';
+					$form	.=	'<div'.$class.'>';
 				} elseif ( ( $modulo && ( $k % ($columns+1) == 0 ) )
 						|| ( $modulo <= 0 && ( $k % $columns == 0 ) ) ) {
-					$form	.=	'</div><div class="cck-fl">';
+					$form	.=	'</div><div'.$class.'>';
 					$modulo--;
 					$k	=	0;
 				}
