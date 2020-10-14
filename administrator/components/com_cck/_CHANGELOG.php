@@ -22,20 +22,24 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.0 Upgrade Release [xx-Sep-2020] -----------
+-------------------- 3.20.0 Upgrade Release [xx-Oct-2020] -----------
 
-+ RAND() (SQL Random) implemented on Search Types
++ RAND() (SQL Random) implemented on Search Types.
++ WebP support added.
 
 + JCckContent class updated & improved! :)
   >> change/update ...
   >> delete/preset ...
   >> findOne ...
 
++ "Auto" column mode added on Checkbox/Radio plug-ins.
+
 ^ Core Update for SEBLOD Ecommerce add-on.
 ^ Core Update for SEBLOD WebServices add-on.
 
 # "Div" fields excluded from Group X storage.
 # Link Parameters issues fixed on Upload File plugin.
+# Math functions fixed on Computation Rules.
 
 -------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
 
