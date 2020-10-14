@@ -83,13 +83,14 @@ class CCK_Rendering
         if ( $prefix == 'get' ) {
 			$fieldname	=	$args[0];
 			$count		=	count( $args );
+
 			if ( $count ==  1 ) {
 				if ( empty( $property ) ) {
-					if ( isset ( $this->me[$fieldname] ) ) {
+					if ( isset( $this->me[$fieldname] ) ) {
 						return $this->me[$fieldname];
 					}
 				} else {
-					if ( isset ( $this->me[$fieldname]->$property ) ) {
+					if ( isset( $this->me[$fieldname]->$property ) ) {
 						return $this->me[$fieldname]->$property;
 					}
 				}
@@ -483,7 +484,7 @@ class CCK_Rendering
 	// getLabel
 	public function getLabel( $fieldname = '', $html = false, $suffix = '' )
 	{
-		if ( ! isset ( $this->me[$fieldname] ) ) {
+		if ( ! isset( $this->me[$fieldname] ) ) {
 			return;
 		}
 		
@@ -535,6 +536,16 @@ class CCK_Rendering
 		}
 		
 		return $fields;
+	}
+
+	// getOptions
+	public function getOptions( $fieldname = '' )
+	{
+		if ( ! isset( $this->me[$fieldname] ) ) {
+			return;
+		}
+		
+		return ( isset( $this->me[$fieldname]->optionsList ) ) ? $this->me[$fieldname]->optionsList : $this->me[$fieldname]->options;
 	}
 	
 	// renderField
