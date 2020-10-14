@@ -151,14 +151,20 @@ class plgCCK_FieldRadio extends JCckPluginField
 		}
 
 		$count	=	count( $opts );
+
 		if ( $field->bool ) {
 			$orientation	=	' vertical';
-			$field->bool2	=	( !$field->bool2 ) ? 1 : $field->bool2;
+			$field->bool2	=	( !$field->bool2 ) ? $count : $field->bool2;
 			$modulo			=	$count % $field->bool2;
 			$columns		=	(int)( $count / ( !$field->bool2 ? 1 : $field->bool2 ) );
 		} else {
 			$orientation	=	'';
 		}
+
+		if ( JCck::is( '4.0' ) ) {
+			$orientation	=	'';
+		}
+
 		if ( strpos( $field->css, 'btn-group' ) !== false ) {
 			$class		=	'radios radio'.$orientation . ( $field->css ? ' '.$field->css : '' );
 			$attr		=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
@@ -170,6 +176,13 @@ class plgCCK_FieldRadio extends JCckPluginField
 			$form_open	=	'<fieldset id="'.$id.'" '.$attr.'>';
 			$attr		=	'class="radio'.$validate.'" size="1"';
 		}
+
+		$class	=	' class="cck-fl"';
+
+		if ( JCck::is( '4.0' ) ) {
+			$class			=	'';
+		}
+
 		$attr_key		=	'data-cck';
 		$form			=	'';
 
@@ -183,10 +196,10 @@ class plgCCK_FieldRadio extends JCckPluginField
 			$k	=	0;
 			foreach ( $opts as $i=>$o ) {
 				if ( $i == 0 ) {
-					$form	.=	'<div class="cck-fl">';
+					$form	.=	'<div'.$class.'>';
 				} elseif ( ( $modulo && ( $k % ($columns+1) == 0 ) )
 						|| ( $modulo <= 0 && ( $k % $columns == 0 ) ) ) {
-					$form	.=	'</div><div class="cck-fl">';
+					$form	.=	'</div><div'.$class.'>';
 					$modulo--;
 					$k	=	0;
 				}
