@@ -117,6 +117,13 @@ class JCckDevImage
 		// Create image
 		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation);
 
+		if ( JCck::getConfig_Param( 'media_image_webp', 0 ) ) {
+			if ( function_exists( 'imagewebp' ) ) {
+				$p 	=	$path.'/_thumb'.$tnumber.'/'.$this->_pathinfo['filename'].'.webp';
+				imagewebp( $thumbImage, $p, 90 );
+			}
+		}
+		
 		return true;
 	}
 
