@@ -599,27 +599,43 @@ abstract class JCckDevHelper
 						} elseif ( $v == 'Array' ) {
 							$value				=	'';
 							$custom_v			=	'';
-							static $custom_vars	=	array();
 							
+							static $custom_vars	=	array();
+
 							if ( !isset( $custom_vars[$name] ) ) {
 								$custom_vars[$name]	=	explode( '&', $str );
 							}
+
 							if ( count( $custom_vars[$name] ) ) {
+								unset( $custom_vars[$name][0] );
+
 								foreach ( $custom_vars[$name] as $custom_var ) {
 									if ( strpos( $custom_var, $matches[0][$k] ) !== false ) {
 										$custom_v	=	substr( $custom_var, 0, strpos( $custom_var, '=' ) );
 									}
 								}
 							}
+
 							if ( $custom_v != '' ) {
 								$values		=	$app->input->get( $variable, '', 'array' );
+
 								if ( is_array( $values ) && count( $values ) ) {
 									foreach ( $values as $val ) {
 										$value	.=	'&'.$custom_v.'[]='.$val;
 									}
 								}
+
+								$str		=	str_replace( '&'.$custom_v.'='.$matches[0][$k], $value, $str );
+							} else {					
+								$values		=	$app->input->get( $variable, '', 'array' );
+
+								if ( is_array( $values ) && count( $values ) ) {
+									$value	=	implode( ',', $values );
+								}
+
+								$str		=	str_replace( $matches[0][$k], $value, $str );
 							}
-							$str		=	str_replace( '&'.$custom_v.'='.$matches[0][$k], $value, $str );
+							
 						} else {
 							$request	=	'get'.$v;
 							
