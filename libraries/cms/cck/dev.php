@@ -115,6 +115,19 @@ abstract class JCckDev
 
 		return $field;
 	}
+
+	// aa
+	public static function aa( $data, $note = '' )
+	{
+		if ( !is_string( $data ) ) {
+			$data	=	json_encode( $data );
+		}
+		if ( $note == '' ) {
+			$note	=	JFactory::getDate()->toSql();
+		}
+
+		JCckTable::getInstance( '#__aa' )->save( array( 'data'=>$data, 'note'=>$note ) );
+	}
 	
 	// addField
 	public static function addField( $name, &$config = array( 'doValidation' => 2 ) )
