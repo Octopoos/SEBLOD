@@ -674,6 +674,15 @@ abstract class JCckDevHelper
 
 				$str		=	str_replace( '$context->getPk()', (string)$pk, $str );
 			}
+			if ( strpos( $str, '$context->getId()' ) !== false ) {
+				$id		=	0;
+				
+				if ( isset( $config['id'] ) ) {
+					$id	=	$config['id'];
+				}
+
+				$str		=	str_replace( '$context->getId()', (string)$id, $str );
+			}
 			if ( strpos( $str, '$context->getAuthor()' ) !== false ) {
 				$author		=	'0';
 
