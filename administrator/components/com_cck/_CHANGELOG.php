@@ -36,6 +36,7 @@ $ -> Language fix or change
 + $context->getId() syntax process added.
 + $context->getPk() syntax process added.
 + $uri->getArray() syntax process added.
++ Multiple Distance/Radius search matching allowed.
 
 ^ Core Update for SEBLOD Ecommerce add-on.
 ^ Core Update for SEBLOD WebServices add-on.
