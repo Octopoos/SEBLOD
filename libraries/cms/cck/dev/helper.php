@@ -373,6 +373,30 @@ abstract class JCckDevHelper
 		return $config;
 	}
 
+	// getLanguageCode
+	public static function getLanguageCode()
+	{
+		jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
+
+		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+		$lang_tag	=	JFactory::getLanguage()->getTag();
+
+		if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
+			if ( self::isMultilingual( true )  ) {
+				$plugin			=	JPluginHelper::getPlugin( 'system', 'languagefilter' );
+				$plugin_params	=	new JRegistry( $plugin->params );
+
+				if ( $plugin_params->get( 'remove_default_prefix', 0 ) ) {
+					return '';
+				}
+			}
+
+			return strtolower( $languages[$lang_tag]->sef );
+		}
+
+		return '';
+	}
+
 	// getLanguageCodes
 	public static function getLanguageCodes()
 	{
