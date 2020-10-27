@@ -374,15 +374,21 @@ abstract class JCckDevHelper
 	}
 
 	// getLanguageCode
-	public static function getLanguageCode()
+	public static function getLanguageCode( $strictly = false )
 	{
+		if ( $strictly ) {
+			if ( !self::isMultilingual( true ) ) {
+				return '';
+			}
+		}
+
 		jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
 
 		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
 		$lang_tag	=	JFactory::getLanguage()->getTag();
 
 		if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
-			if ( self::isMultilingual( true )  ) {
+			if ( $strictly && self::isMultilingual( true ) ) {
 				$plugin			=	JPluginHelper::getPlugin( 'system', 'languagefilter' );
 				$plugin_params	=	new JRegistry( $plugin->params );
 
