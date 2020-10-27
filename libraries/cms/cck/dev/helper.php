@@ -546,11 +546,11 @@ abstract class JCckDevHelper
 	}
 
 	// isMultilingual
-	public static function isMultilingual()
+	public static function isMultilingual( $strictly = false )
 	{
 		if ( is_object( JPluginHelper::getPlugin( 'system', 'languagefilter' ) ) ) {
 			return true;
-		} elseif ( JCck::isSite() ) {
+		} elseif ( !$strictly && JCck::isSite() ) {
 			$site	=	JCck::getSite();
 
 			if ( $site->configuration->get( 'language', '' ) != '' ) {
