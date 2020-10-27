@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.0 Upgrade Release [xx-Oct-2020] -----------
+-------------------- 3.20.0 Upgrade Release [xx-Nov-2020] -----------
 
 + RAND() (SQL Random) implemented on Search Types.
 + WebP support added.
@@ -33,6 +33,9 @@ $ -> Language fix or change
   >> findOne ...
 
 + "Auto" column mode added on Checkbox/Radio plug-ins.
++ $context->getId() syntax process added.
++ $context->getPk() syntax process added.
++ $uri->getArray() syntax process added.
 
 ^ Core Update for SEBLOD Ecommerce add-on.
 ^ Core Update for SEBLOD WebServices add-on.
