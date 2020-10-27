@@ -383,7 +383,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$s_lng		=	( isset( $fields[$f_lng]->storage_field ) && $fields[$f_lng]->storage_field ) ? $fields[$f_lng]->storage_field : $f_lng;
 
 				if ( $lat != '' && $lng != '' ) {
-					$alias		=	'distance';
+					$aka		=	$field->match_options->get( 'distance_aka', '' );
+					$alias		=	$aka ? $aka : 'distance';
+
 					$mod		=	( $field->match_options->get( 'var_unit', '1' ) ) ? '' : '*1.609344';
 					$radius		=	( isset( $fields[$f_rad] ) ) ? $fields[$f_rad]->value : '';
 					$sign		=	( $match == 'radius_higher' ) ? '>' : '<';
