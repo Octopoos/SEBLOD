@@ -67,7 +67,7 @@ abstract class JCckWebservice
 		$webservice		=	self::getCall( $name );
 
 		if ( !is_object( $webservice ) ) {
-			return;
+			return false;
 		}
 		$allowed		=	array(
 								'request'=>'',
@@ -110,12 +110,12 @@ abstract class JCckWebservice
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$name] ) ) {
-			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT a.id, b.name, b.type, b.options, a.options as options2, a.request, a.request_object, a.request_options, a.response, a.response_format'
+			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_object, a.request_options, a.response, a.response_format'
 														. ' FROM #__cck_more_webservices_calls AS a'
 														. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 														. ' WHERE a.name = "'.$name.'" AND a.published = 1' );
 		}
-		
+
 		return $cache[$name];
 	}
 
