@@ -40,7 +40,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$edit			=	(int)$link->get( 'form_edition', 1 );
 		$form			=	$link->get( 'form', '' );
 
-		if ( !$form ) {
+		if ( (int)$config['pk'] ) {
 			if ( (int)$edit == 1 ) {
 				$edit	=	'&id='.$config['pk'];
 			} elseif ( $edit == 2 ) {
@@ -49,8 +49,9 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				$edit	=	'';
 			}
 		} else {
-			$edit		=	'';
+			$edit	=	'';
 		}
+
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
@@ -257,10 +258,10 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			$fieldname	=	$process['fieldname'];
 			$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
 			$user 		=	JCck::getUser();
-				
+			
 			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
 			$canCreate	=	( $type_id ) ? $user->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
-
+			
 			// Check Permissions
 			if ( $canCreate ) {
 				$fields[$name]->link	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->link );
