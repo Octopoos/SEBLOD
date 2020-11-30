@@ -587,12 +587,20 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					} else {
 						$user_folder	=	'';
 					}
+
 					$content_folder		=	( $options2['path_content'] ) ? $config['pk'].'/' : '';
+					$extention 			=	JFile::getExt( $title );
+					$title_webp 		=	str_replace( '.'.$extention, '.webp', $title );
+
 					for ( $i = 1; $i < 11; $i++ ) {
 						if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title ) ) {
 							JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title );
 						}
+						if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp ) ) {
+							JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp );
+						}
 					}
+
 					if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.$title ) ) {	
 						JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.$title );
 					}
@@ -646,6 +654,11 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				}
 				$value				=	$file_path.$ImageCustomName;
 				$process			=	true;
+
+				if ( $value != '' ) {
+					$extension	=	strtolower( JFile::getExt( $value ) );
+					$value		=	substr( $value, 0, strlen( $extension ) * -1 ).$extension;	
+				}
 			} else {
 				if ( $deleteBox == 1 ) {
 					$imageTitle	=	'';

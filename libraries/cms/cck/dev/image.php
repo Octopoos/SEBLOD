@@ -24,6 +24,7 @@ class JCckDevImage
 	protected $_ratio 		=	0;
 	protected $_resource 	=	null;
 	protected $_width 		=	0;
+	protected $_error 		=	false;
 
 	// __construct
 	public function __construct( $path )
@@ -33,6 +34,12 @@ class JCckDevImage
 				$path 	=	substr( $path, 1 ); 	
 			}
 			$path 	=	JPATH_SITE.'/'.$path;
+		}
+
+		if ( !is_file( $path ) ) {
+			$this->_error	=	true;
+
+			return;
 		}
 		$this->_quality_jpg	=	JCck::getConfig_Param( 'media_quality_jpeg', 90 );
 		$this->_quality_png	=	JCck::getConfig_Param( 'media_quality_png', 3 );
@@ -79,6 +86,10 @@ class JCckDevImage
 	// getThumb
 	public function getThumb( $tnumber )
 	{
+		if ( $this->_error ) {
+			return '';
+		}
+
 		$path 	=	str_replace( JPATH_SITE.'/', '', $this->_pathinfo['dirname'] );
 		$path 	.=	'/_thumb'.$tnumber.'/'. $this->_pathinfo['basename'];
 
@@ -88,6 +99,10 @@ class JCckDevImage
 	// createThumb
 	public function createThumb( $dest, $tnumber, $twidth, $theight, $tformat)
 	{
+		if ( $this->_error ) {
+			return false;
+		}
+
 		if ( ! ( $twidth && trim( $twidth ) != '' && is_numeric( $twidth ) ) && ! ( $theight && trim( $theight ) != '' && is_numeric( $theight ) ) ) {
 			return false;
 		}
@@ -98,6 +113,7 @@ class JCckDevImage
 
 		// Add transparence for PNG
 		$thumbImage	=	imageCreateTrueColor( $info['thumbWidth'], $info['thumbHeight'] );
+
 		if ( $this->_extension == 'png' ) {
 			imagealphablending( $thumbImage, false );
 		}
@@ -106,30 +122,53 @@ class JCckDevImage
 		imagecopyresampled( $thumbImage, $resImage, $info['thumbX'], $info['thumbY'], $info['newX'], $info['newY'], $info['thumbWidth'], $info['thumbHeight'], $info['newWidth'], $info['newHeight'] );
 
 		// Set Folder
-		// $file_path ='';
 		if ( $tnumber == 0 ) {
-			$thumbLocation	=	$path . '/' . $this->_pathinfo['basename'];
+			$thumbLocation	=	$path . '/' . $this->_pathinfo['filename'];
 		} else {
 			JCckDevHelper::createFolder( $path . '/_thumb'.$tnumber );
-			$thumbLocation	=	$path . '/_thumb'.$tnumber . '/' . $this->_pathinfo['basename'];
+			$thumbLocation	=	$path . '/_thumb'.$tnumber . '/' . $this->_pathinfo['filename'];
 		}
 		
 		// Create image
-		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation);
+		$this->_generateThumb( $this->_extension, $thumbImage, $thumbLocation.'.'.$this->_extension );
+
+		// Create webp
+		$this->createWebp( $thumbLocation.'.webp', $thumbImage );
+		
+		return true;
+	}
+
+	// createWebp
+	public function createWebp( $path = '', $tres = null )
+	{
+		if ( $this->_error ) {
+			return false;
+		}
 
 		if ( JCck::getConfig_Param( 'media_image_webp', 0 ) ) {
 			if ( function_exists( 'imagewebp' ) ) {
-				$p 	=	$path.'/_thumb'.$tnumber.'/'.$this->_pathinfo['filename'].'.webp';
-				imagewebp( $thumbImage, $p, 90 );
+				if ( !$path ) {
+					$path 	=	$this->_pathinfo['dirname'].'/'.$this->_pathinfo['filename'].'.webp';
+				}
+
+				if ( $tres ) {
+					imagewebp( $tres, $path, 90 );
+				} else {
+					imagewebp( $this->_resource, $path, 90 );
+				}
 			}
 		}
-		
+
 		return true;
 	}
 
 	// rotate
 	public function rotate( $degrees = 0 )
 	{
+		if ( $this->_error ) {
+			return false;
+		}
+
 		if ( !$degrees && isset( $this->_exif['IFD0']['Orientation'] ) ) {
 			switch ( $this->_exif['IFD0']['Orientation'] ) {
 				case 8:
@@ -149,8 +188,10 @@ class JCckDevImage
 
 		if ( $degrees ) {
 			$rotate	=	imagerotate( $this->_resource, $degrees, 0 );
-			$this->_generateThumb( $this->_extension, $rotate, $this->_pathinfo['dirname'].'/'.$this->_pathinfo['basename'] );
+			$this->_generateThumb( $this->_extension, $rotate, $this->_pathinfo['dirname'].'/'.$this->_pathinfo['filename'].'.'.$this->_extension );
 		}
+
+		return true;
 	}
 	
 	// _createResource
@@ -186,7 +227,7 @@ class JCckDevImage
 
 		$output	=	ob_get_contents();
 		ob_end_clean();
-
+		
 		JFile::write( $file, $output );
 	}
 
