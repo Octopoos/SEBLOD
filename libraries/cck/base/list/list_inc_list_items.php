@@ -56,19 +56,21 @@ if ( $debug == -1 ) {
 		$field->storage	=	'lipsum';
 	}
 }
+
 if ( $count ) {
 	for ( $i = 0; $i < $count; $i++ ) {
 		if ( isset( $items[$i]->pk ) ) {
 			$PK							=	$items[$i]->pk;
 		} else {
-			$PK							=	$i;
+			$PK							=	isset( $config_list['identifier'] ) && $config_list['identifier'] ? $items[$i]->{$config_list['identifier']} : $i;
+
 			$items[$i]->author			=	0;
 			$items[$i]->author_session	=	'';
 			$items[$i]->cck				=	'';
 			$items[$i]->loc				=	$list['location'];
 			$items[$i]->parent			=	'';
 			$items[$i]->pid				=	0;
-			$items[$i]->pk				=	$i;
+			$items[$i]->pk				=	$PK;
 			$items[$i]->pkb				=	0;
 			$items[$i]->type_id			=	0;
 			$items[$i]->type_alias		=	'';
@@ -103,13 +105,14 @@ if ( $count ) {
 								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
 							);
 			$fieldsI	=	array();
-			
+
 			foreach ( $fields as $field ) {
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
 				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
+
 				if ( $fieldName ) {
 					$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
