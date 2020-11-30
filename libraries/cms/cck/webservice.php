@@ -61,44 +61,36 @@ abstract class JCckWebservice
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Call
 
 	// call
-	public static function call( $name, $data = array(), $fields = array() )
+	public static function call( $name, $data = array(), $fields = array(), $fallback = false )
 	{
-		$response		=	null;
-		$webservice		=	self::getCall( $name );
-
+		$config		=	array();
+		$response	=	null;
+		$webservice	=	self::getCall( $name );
+		
 		if ( !is_object( $webservice ) ) {
 			return false;
-		}
-		$allowed		=	array(
-								'request'=>'',
-								'response'=>'',
-								'response_format'=>''
-							);
-		$config			=	array();
-		$identifier		=	0;
-
-		// Override
-		if ( count( $data ) ) {
-			foreach ( $data as $k=>$v ) {
-				if ( !isset( $allowed[$k] ) ) {
-					continue;
-				}
-				if ( isset( $webservice->$k ) ) {
-					$webservice->$k	=	$v;
-				}
-			}
-		}
-		if ( isset( $data['request_id'] ) && $data['request_id'] != '' ) {
-			$identifier		=	$data['request_id'];
-		}
-		$webservice->request	=	str_replace( '{id}', (string)$identifier, $webservice->request );
+		}		
 		
-		JPluginHelper::importPlugin( 'cck_webservice' );
+		$resp_key	=	$webservice->response;
 
-		JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+		self::_call( $webservice, $config, $data, $fields );
 
 		if ( isset( $webservice->response ) ) {
 			$response	=	$webservice->response;
+		}
+
+		if ( $fallback ) {
+			if ( isset( $webservice->response_format ) && $webservice->response_format == 'json' ) {
+				if ( isset( $webservice->response->status ) && $webservice->response->status != 'error' ) {
+					// OK
+				} else {
+					$webservice->response	=	$resp_key;
+
+					self::_stack( $webservice );
+				}
+			} elseif ( 1 == 1 ) { // OK
+				// OK
+			}
 		}
 
 		return $response;
@@ -110,7 +102,7 @@ abstract class JCckWebservice
 		static $cache	=	array();
 		
 		if ( !isset( $cache[$name] ) ) {
-			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_object, a.request_options, a.response, a.response_format'
+			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_object, a.request_options, a.response, a.response_format, a.response_identifier'
 														. ' FROM #__cck_more_webservices_calls AS a'
 														. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 														. ' WHERE a.name = "'.$name.'" AND a.published = 1' );
@@ -162,19 +154,29 @@ abstract class JCckWebservice
 	// stack
 	public static function stack( $name, $data = array(), $fields = array() )
 	{
-		$response		=	null;
-		$webservice		=	self::getCall( $name );
+		$config		=	array(
+							'task'=>'stack'
+						);
+		$webservice	=	self::getCall( $name );
 
 		if ( !is_object( $webservice ) ) {
 			return false;
 		}
-		$allowed		=	array(
-								'request'=>'',
-								'response'=>'',
-								'response_format'=>''
-							);
-		$config			=	array();
-		$identifier		=	0;
+
+		self::_call( $webservice, $config, $data, $fields );
+
+		return self::_stack( $webservice );
+	}
+
+	// _call
+	protected function _call( &$webservice, $config, $data, $fields )
+	{
+		$allowed	=	array(
+							'request'=>'',
+							'response'=>'',
+							'response_format'=>''
+						);
+		$identifier	=	0;
 
 		// Override
 		if ( count( $data ) ) {
@@ -192,6 +194,16 @@ abstract class JCckWebservice
 		}
 		$webservice->request	=	str_replace( '{id}', (string)$identifier, $webservice->request );
 		
+		JPluginHelper::importPlugin( 'cck_webservice' );
+
+		JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+
+		return true;
+	}
+
+	// _stack
+	protected function _stack( $webservice )
+	{
 		JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
 
 		$table	=	JTable::getInstance( 'Stack', 'CCK_Table' );
