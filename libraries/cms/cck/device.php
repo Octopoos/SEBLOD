@@ -10,10 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Environment\Browser;
+
 JLoader::register( 'Mobile_Detect', JPATH_PLATFORM.'/cck/misc/Mobile_Detect.php' );
 
 // JCckDevice
 class JCckDevice extends Mobile_Detect
 {
+	protected $_platform	=	null;
+
+	// isMacOs
+	public function isMacOs()
+	{
+		if ( is_null( $this->_platform ) ) {
+			$this->_platform	=	Browser::getInstance();
+		}
+
+		return $this->_platform->getPlatform() == 'mac' ? true : false; 
+	}
 }
 ?>
