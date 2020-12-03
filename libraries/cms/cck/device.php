@@ -22,7 +22,9 @@ class JCckDevice extends Mobile_Detect
 	// isMacOs
 	public function isMacOs()
 	{
-		if ( is_null( $this->_platform ) ) {
+		if ( $this->isMobile() ) {
+			return false;
+		} elseif ( is_null( $this->_platform ) ) {
 			$this->_platform	=	Browser::getInstance();
 		}
 
