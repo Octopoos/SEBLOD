@@ -921,6 +921,10 @@ class JCckContent
 		}
 
 		if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
+			if ( is_array( $value ) ) {
+				$value	=	json_encode( $value );
+			}
+
 			$this->{'_instance_'.$table_instance_name}->$property					=	$value;
 			$this->_data_update[self::$types[$this->_type]['data_map'][$property]]	=	true;
 		} else {
@@ -935,10 +939,6 @@ class JCckContent
 	// setOptions
 	public function setOptions( $options )
 	{
-		if ( !$this->isSuccessful() ) {
-			return $this;
-		}
-
 		$this->_options	=	new Registry( $options );
 
 		return $this;
@@ -1280,7 +1280,11 @@ class JCckContent
 	// getProperty
 	public function getProperty( $property, $default = '' )
 	{
-		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+		if ( strpos( $property, '.' ) !== false ) {
+			$parts	=	explode( '.', $property );
+
+			return $this->getRegistry( $parts[0] )->get( $parts[1] );
+		} elseif ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
 			return $this->get( self::$types[$this->_type]['data_map'][$property], $property, $default );
 		} else {
 			$this->log( 'notice', 'Property unknown.' );
@@ -2093,13 +2097,25 @@ class JCckContent
 						$where	=	' IN (' .$v. ')';
 					}
 					break;
+				case 'within':
+					$glue		=	',';
+					$where		=	array();
+					$where[] 	=	$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $v )
+								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( $db->escape( $v, true ).$glue.'%', false )
+								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $v, true ).$glue.'%', false )
+								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $v, true ), false );
+					break;
 				case '=':
 				default:
 					$where	=	' = ' . $db->quote( $v );
 					break;
 			}
 
-			$query->where( $db->quoteName( $index.'.'.$k ) . $where );
+			if ( is_array( $where ) ) {
+				$query->where( '((' . implode( ') OR (', $where ) . '))' );
+			} else {
+				$query->where( $db->quoteName( $index.'.'.$k ) . $where );
+			}
 		}
 
 		// Order
