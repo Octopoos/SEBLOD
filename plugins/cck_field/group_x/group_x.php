@@ -684,7 +684,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$html	.=	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form">';
 		}
 		
-		if ( count( $group ) ) {
+		if ( is_array( $group ) && count( $group ) ) {
 			foreach ( $group as $elem ) {
 				if ( $elem->display > 1 ) {
 					if ( $elem->markup == 'none' ) {
