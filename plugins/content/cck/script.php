@@ -462,7 +462,7 @@ class plgContentCCKInstallerScript
 					foreach ( $queries as $query ) {
 						$query	=	trim( $query );
 						
-						if ( $query != '' && $query{0} != '#' ) {
+						if ( $query != '' && $query[0] != '#' ) {
 							$db->setQuery( $query );
 							$db->execute();
 						}
