@@ -22,29 +22,34 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.0 Upgrade Release [xx-Nov-2020] -----------
+-------------------- 3.20.0 Upgrade Release [10-Dec-2020] -----------
 
 + RAND() (SQL Random) implemented on Search Types.
 + WebP support added.
 
 + JCckContent class updated & improved! :)
-  >> change/update ...
-  >> delete/preset ...
-  >> findOne ...
+  >> "_" method implemented within JCckContentTraitMixin Trait.
+  >> "delete", "preset" methods updated.
+  >> "findOne" method added (cf manuals).
+  >> "update" method refactored (cf manuals).
 
 + "Auto" column mode added on Checkbox/Radio plug-ins.
++ "isMacOs" method added to JCckDevice class.
++ Multiple Distance/Radius search matching allowed.
 + $context->getId() syntax process added.
 + $context->getPk() syntax process added.
 + $uri->getArray() syntax process added.
-+ Multiple Distance/Radius search matching allowed.
 
 ^ Core Update for SEBLOD Ecommerce add-on.
 ^ Core Update for SEBLOD WebServices add-on.
+^ Edit/Form Link Behaviour changed.
+
 ^ Inputmask JS script updated.
 
 # "Div" fields excluded from Group X storage.
 # Link Parameters issues fixed on Upload File plugin.
 # Math functions fixed on Computation Rules.
+# Reset issue fixed on Search Module.
 
 -------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
 
