@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.0 Upgrade Release [10-Dec-2020] -----------
+-------------------- 3.20.0 Upgrade Release [11-Dec-2020] -----------
 
 + RAND() (SQL Random) implemented on Search Types.
 + WebP support added.
