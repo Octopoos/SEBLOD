@@ -162,14 +162,16 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			} else {
 				$field->html	=	'<img src="'.$value.'" title="'.$img_title.'" alt="'.$img_desc.'" />';
 			}
-			$field->value		=	$value;
-			$field->image_title	=	$img_title;
+			$field->extension	=	( strrpos( $value, '.' ) ) ? substr( $value, strrpos( $value, '.' ) + 1 ) : '';
 			$field->image_alt	=	$img_desc;
+			$field->image_title	=	$img_title;
+			$field->value		=	$value;
 		} else {
-			$field->value		=	'';
+			$field->extension	=	'';
 			$field->html		=	'';
-			$field->image_title	=	'';
 			$field->image_alt	=	'';
+			$field->image_title	=	'';
+			$field->value		=	'';
 		}
 		
 		$field->typo_target	=	'html';
