@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- 3.20.1 Upgrade Release [17-Dec-2020] -----------
+
+# Form submission (including uploads) with no storage fixed.
+# WebP output fixed for Upload Image plug-in.
+
 -------------------- 3.20.0 Upgrade Release [11-Dec-2020] -----------
 
 + RAND() (SQL Random) implemented on Search Types.
