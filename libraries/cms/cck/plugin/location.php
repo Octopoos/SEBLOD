@@ -373,7 +373,10 @@ class JCckPluginLocation extends JPlugin
 	// g_onCCK_Storage_LocationUpdate
 	public static function g_onCCK_Storage_LocationUpdate( $pk, $table, $field, $search, $replace, &$config = array() )
 	{
-		if ( ! $pk ) {
+		if ( !$pk ) {
+			return;
+		}
+		if ( !$table ) {
 			return;
 		}
 		$update			=	JCckTable::getInstance( $table, 'id', $pk );
