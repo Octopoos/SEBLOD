@@ -2,6 +2,7 @@
 
 /.htaccess
 /administrator/cache/*
+/administrator/components/com_actionlogs/*
 /administrator/components/com_admin/*
 /administrator/components/com_ajax/*
 /administrator/components/com_associations/*
@@ -30,6 +31,7 @@
 /administrator/components/com_newsfeeds/*
 /administrator/components/com_postinstall/*
 /administrator/components/com_plugins/*
+/administrator/components/com_privacy/*
 /administrator/components/com_redirect/*
 /administrator/components/com_search/*
 /administrator/components/com_tags/*
@@ -42,6 +44,8 @@
 /administrator/components/index.html
 /administrator/help/*
 /administrator/includes/*
+/administrator/language/en-GB/en-GB.com_actionlogs.ini
+/administrator/language/en-GB/en-GB.com_actionlogs.sys.ini
 /administrator/language/en-GB/en-GB.com_admin.ini
 /administrator/language/en-GB/en-GB.com_admin.sys.ini
 /administrator/language/en-GB/en-GB.com_ajax.ini
@@ -93,6 +97,8 @@
 /administrator/language/en-GB/en-GB.com_plugins.sys.ini
 /administrator/language/en-GB/en-GB.com_postinstall.ini
 /administrator/language/en-GB/en-GB.com_postinstall.sys.ini
+/administrator/language/en-GB/en-GB.com_privacy.ini
+/administrator/language/en-GB/en-GB.com_privacy.sys.ini
 /administrator/language/en-GB/en-GB.com_redirect.ini
 /administrator/language/en-GB/en-GB.com_redirect.sys.ini
 /administrator/language/en-GB/en-GB.com_search.ini
@@ -116,6 +122,8 @@
 /administrator/language/en-GB/en-GB.mod_feed.sys.ini
 /administrator/language/en-GB/en-GB.mod_latest.ini
 /administrator/language/en-GB/en-GB.mod_latest.sys.ini
+/administrator/language/en-GB/en-GB.mod_latestactions.ini
+/administrator/language/en-GB/en-GB.mod_latestactions.sys.ini
 /administrator/language/en-GB/en-GB.mod_logged.ini
 /administrator/language/en-GB/en-GB.mod_logged.sys.ini
 /administrator/language/en-GB/en-GB.mod_login.ini
@@ -128,6 +136,8 @@
 /administrator/language/en-GB/en-GB.mod_online.sys.ini
 /administrator/language/en-GB/en-GB.mod_popular.ini
 /administrator/language/en-GB/en-GB.mod_popular.sys.ini
+/administrator/language/en-GB/en-GB.mod_privacy_dashboard.ini
+/administrator/language/en-GB/en-GB.mod_privacy_dashboard.sys.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.ini
 /administrator/language/en-GB/en-GB.mod_quickicon.sys.ini
 /administrator/language/en-GB/en-GB.mod_sampledata.ini
@@ -146,6 +156,8 @@
 /administrator/language/en-GB/en-GB.mod_unread.sys.ini
 /administrator/language/en-GB/en-GB.mod_version.ini
 /administrator/language/en-GB/en-GB.mod_version.sys.ini
+/administrator/language/en-GB/en-GB.plg_actionlog_joomla.ini
+/administrator/language/en-GB/en-GB.plg_actionlog_joomla.sys.ini
 /administrator/language/en-GB/en-GB.plg_authentication_cookie.ini
 /administrator/language/en-GB/en-GB.plg_authentication_cookie.sys.ini
 /administrator/language/en-GB/en-GB.plg_authentication_example.ini
@@ -158,6 +170,10 @@
 /administrator/language/en-GB/en-GB.plg_authentication_ldap.sys.ini
 /administrator/language/en-GB/en-GB.plg_captcha_recaptcha.ini
 /administrator/language/en-GB/en-GB.plg_captcha_recaptcha.sys.ini
+/administrator/language/en-GB/en-GB.plg_captcha_recaptcha_invisible.ini
+/administrator/language/en-GB/en-GB.plg_captcha_recaptcha_invisible.sys.ini
+/administrator/language/en-GB/en-GB.plg_content_confirmconsent.ini
+/administrator/language/en-GB/en-GB.plg_content_confirmconsent.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_contact.ini
 /administrator/language/en-GB/en-GB.plg_content_contact.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
@@ -202,6 +218,8 @@
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_weblink.ini
+/administrator/language/en-GB/en-GB.plg_editors-xtd_weblink.sys.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.sys.ini
 /administrator/language/en-GB/en-GB.plg_fields_*.ini
@@ -225,6 +243,18 @@
 /administrator/language/en-GB/en-GB.plg_installer_urlinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_webinstaller.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_actionlogs.ini
+/administrator/language/en-GB/en-GB.plg_privacy_actionlogs.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_consents.ini
+/administrator/language/en-GB/en-GB.plg_privacy_consents.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_contact.ini
+/administrator/language/en-GB/en-GB.plg_privacy_contact.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_content.ini
+/administrator/language/en-GB/en-GB.plg_privacy_content.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_message.ini
+/administrator/language/en-GB/en-GB.plg_privacy_message.sys.ini
+/administrator/language/en-GB/en-GB.plg_privacy_user.ini
+/administrator/language/en-GB/en-GB.plg_privacy_user.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_joomlaupdate.ini
@@ -233,6 +263,8 @@
 /administrator/language/en-GB/en-GB.plg_quickicon_extensionupdate.sys.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.ini
 /administrator/language/en-GB/en-GB.plg_quickicon_phpversioncheck.sys.ini
+/administrator/language/en-GB/en-GB.plg_quickicon_privacycheck.ini
+/administrator/language/en-GB/en-GB.plg_quickicon_privacycheck.sys.ini
 /administrator/language/en-GB/en-GB.plg_sampledata_blog.ini
 /administrator/language/en-GB/en-GB.plg_sampledata_blog.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_categories.ini
@@ -247,6 +279,8 @@
 /administrator/language/en-GB/en-GB.plg_search_tags.sys.ini
 /administrator/language/en-GB/en-GB.plg_search_weblinks.ini
 /administrator/language/en-GB/en-GB.plg_search_weblinks.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_actionlogs.ini
+/administrator/language/en-GB/en-GB.plg_system_actionlogs.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_cache.ini
 /administrator/language/en-GB/en-GB.plg_system_cache.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_debug.ini
@@ -260,11 +294,15 @@
 /administrator/language/en-GB/en-GB.plg_system_languagefilter.ini
 /administrator/language/en-GB/en-GB.plg_system_languagefilter.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_log.ini
+/administrator/language/en-GB/en-GB.plg_system_logrotation.ini
+/administrator/language/en-GB/en-GB.plg_system_logrotation.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_logout.ini
 /administrator/language/en-GB/en-GB.plg_system_logout.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_log.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_p3p.ini
 /administrator/language/en-GB/en-GB.plg_system_p3p.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_privacyconsent.ini
+/administrator/language/en-GB/en-GB.plg_system_privacyconsent.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_redirect.ini
 /administrator/language/en-GB/en-GB.plg_system_redirect.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_remember.ini
@@ -275,6 +313,8 @@
 /administrator/language/en-GB/en-GB.plg_system_sef.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_stats.ini
 /administrator/language/en-GB/en-GB.plg_system_stats.sys.ini
+/administrator/language/en-GB/en-GB.plg_system_weblinks.ini
+/administrator/language/en-GB/en-GB.plg_system_weblinks.sys.ini
 /administrator/language/en-GB/en-GB.plg_system_updatenotification.ini
 /administrator/language/en-GB/en-GB.plg_system_updatenotification.sys.ini
 /administrator/language/en-GB/en-GB.plg_twofactorauth_totp.ini
@@ -287,6 +327,8 @@
 /administrator/language/en-GB/en-GB.plg_user_joomla.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_profile.ini
 /administrator/language/en-GB/en-GB.plg_user_profile.sys.ini
+/administrator/language/en-GB/en-GB.plg_user_terms.ini
+/administrator/language/en-GB/en-GB.plg_user_terms.sys.ini
 /administrator/language/en-GB/en-GB.tpl_bluestork.ini
 /administrator/language/en-GB/en-GB.tpl_bluestork.sys.ini
 /administrator/language/en-GB/en-GB.tpl_hathor.ini
@@ -624,12 +666,14 @@
 /administrator/modules/mod_custom/*
 /administrator/modules/mod_feed/*
 /administrator/modules/mod_latest/*
+/administrator/modules/mod_latestactions/*
 /administrator/modules/mod_logged/*
 /administrator/modules/mod_login/*
 /administrator/modules/mod_menu/*
 /administrator/modules/mod_multilangstatus/*
 /administrator/modules/mod_online/*
 /administrator/modules/mod_popular/*
+/administrator/modules/mod_privacy_dashboard/*
 /administrator/modules/mod_quickicon/*
 /administrator/modules/mod_stats_admin/*
 /administrator/modules/mod_status/*
@@ -671,6 +715,7 @@
 /components/com_media/*
 /components/com_modules/*
 /components/com_newsfeeds/*
+/components/com_privacy/*
 /components/com_search/*
 /components/com_tags/*
 /components/com_users/*
@@ -696,6 +741,7 @@
 /language/en-GB/en-GB.com_media.ini
 /language/en-GB/en-GB.com_messages.ini
 /language/en-GB/en-GB.com_newsfeeds.ini
+/language/en-GB/en-GB.com_privacy.ini
 /language/en-GB/en-GB.com_search.ini
 /language/en-GB/en-GB.com_tags.ini
 /language/en-GB/en-GB.com_users.ini
@@ -940,7 +986,9 @@
 /layouts/libraries/cms/index.html
 /layouts/libraries/index.html
 /layouts/plugins/editors/tinymce/*
+/layouts/plugins/system/privacyconsent/*
 /layouts/plugins/user/profile/*
+/layouts/plugins/user/terms/*
 /layouts/index.html
 /language/en-GB/en-GB.tpl_beez5.ini
 /language/en-GB/en-GB.tpl_beez5.sys.ini
@@ -1029,10 +1077,13 @@
 /media/mod_sampledata/*
 /media/overrider/*
 /media/plg_captcha_recaptcha/*
+/media/plg_captcha_recaptcha_invisible/*
 /media/plg_quickicon_extensionupdate/*
 /media/plg_quickicon_joomlaupdate/*
+/media/plg_quickicon_privacycheck/*
 /media/plg_system_highlight/*
 /media/plg_system_stats/*
+/media/plg_twofactorauth_totp/*
 /media/system/*
 /media/index.html
 /modules/mod_articles_archive/*
@@ -1062,6 +1113,7 @@
 /modules/mod_whosonline/*
 /modules/mod_wrapper/*
 /modules/index.html
+/plugins/actionlog/*
 /plugins/authentication/cookie/*
 /plugins/authentication/example/*
 /plugins/authentication/gmail/*
@@ -1069,7 +1121,9 @@
 /plugins/authentication/ldap/*
 /plugins/authentication/index.html
 /plugins/captcha/recaptcha/*
+/plugins/captcha/recaptcha_invisible/*
 /plugins/captcha/index.html
+/plugins/content/confirmconsent/*
 /plugins/content/contact/*
 /plugins/content/emailcloak/*
 /plugins/content/example/*
@@ -1110,9 +1164,11 @@
 /plugins/installer/packageinstaller/*
 /plugins/installer/urlinstaller/*
 /plugins/installer/webinstaller/*
+/plugins/privacy/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/joomlaupdate/*
 /plugins/quickicon/phpversioncheck/*
+/plugins/quickicon/privacycheck/*
 /plugins/quickicon/index.html
 /plugins/finder/weblinks/*
 /plugins/quickicon/extensionupdate/*
@@ -1125,6 +1181,7 @@
 /plugins/search/tags/*
 /plugins/search/weblinks/*
 /plugins/search/index.html
+/plugins/system/actionlogs/*
 /plugins/system/cache/*
 /plugins/system/debug/*
 /plugins/system/fields/*
@@ -1133,7 +1190,9 @@
 /plugins/system/languagefilter/*
 /plugins/system/log/*
 /plugins/system/logout/*
+/plugins/system/logrotation/*
 /plugins/system/p3p/*
+/plugins/system/privacyconsent/*
 /plugins/system/redirect/*
 /plugins/system/remember/*
 /plugins/system/sef/*
@@ -1148,6 +1207,7 @@
 /plugins/user/example/*
 /plugins/user/joomla/*
 /plugins/user/profile/*
+/plugins/user/terms/*
 /plugins/user/index.html
 /plugins/index.html
 /templates/beez3/*
