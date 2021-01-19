@@ -152,9 +152,9 @@ class JCckDevImage
 				}
 
 				if ( $tres ) {
-					imagewebp( $tres, $path, 90 );
+					imagewebp( $tres, $path, 70 );
 				} else {
-					imagewebp( $this->_resource, $path, 90 );
+					imagewebp( $this->_resource, $path, 70 );
 				}
 			}
 		}
