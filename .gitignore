@@ -2747,6 +2747,12 @@ Temporary Items
 /language/fr-FR/fr-FR.tpl_seb_list2mail.ini
 /templates/seb_list2mail/*
 
+######## SEBLOD Templates >> Manager Search
+
+/language/en-GB/en-GB.tpl_seb_manager_search.ini
+/language/fr-FR/fr-FR.tpl_seb_manager_search.ini
+/templates/seb_manager_search/*
+
 ######## SEBLOD Templates >> Map
 
 /language/en-GB/en-GB.tpl_seb_map.ini
