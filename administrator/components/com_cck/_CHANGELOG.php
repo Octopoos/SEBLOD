@@ -22,12 +22,32 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.20.1 Upgrade Release [17-Dec-2020] -----------
+-------------------- 3.20.2 Upgrade Release [8-Mar-2021] -----------
+
+^ Core JS updated.
+^ Inputmask JS updated.
+
+! Note:
+
+Alongside ^ Edit/Form Link Behaviour change from SEBLOD 3.20, one SQL was applied to update the configuration
+in order to keep the behaviour... but it was only applied in one use case instead of 3.
+
+The 2 other queries are now included in the 3.20.0.sql file (for those who have not already updated).
+
+For those already using 3.20.0, you can choose to apply the following query manually:
+
+(required if a "cck_form" link for a "ADD NEW" behaviour is assign on a intro/content view)
+UPDATE `#__cck_core_type_field` SET `link_options` = REPLACE( `link_options`, '"form_edition":"1"', '"form_edition":"0"' ) WHERE `link` = 'cck_form' AND `link_options` LIKE '%"form":%' AND `link_options` NOT LIKE '%"form":""%';
+
+(required if a "button_free" field for a "ADD NEW" behaviour is assigned on a intro/content/list view) on a search form configuration is OK even for edit, as no pk is set
+UPDATE `#__cck_core_fields` SET `options2` = REPLACE( `options2`, '\\\"form_edition\\\":\\\"1\\\"', '\\\"form_edition\\\":\\\"0\\\"' ) WHERE `type` = "button_free" AND `options2` LIKE '%\\\"button_link\\\":\\\"cck_form\\\"%' AND `options2` NOT LIKE '\\\"form\\\":\\\"\\\"%';
+
+-------------------- 3.20.1 Upgrade Release [17-Dec-2020] ----------
 
 # Form submission (including uploads) with no storage fixed.
 # WebP output fixed for Upload Image plug-in.
 
--------------------- 3.20.0 Upgrade Release [11-Dec-2020] -----------
+-------------------- 3.20.0 Upgrade Release [11-Dec-2020] ----------
 
 + RAND() (SQL Random) implemented on Search Types.
 + WebP support added.
