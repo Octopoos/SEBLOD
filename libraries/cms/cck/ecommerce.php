@@ -89,7 +89,7 @@ abstract class JCckEcommerce
 		static $definitions	=	array();
 		
 		if ( !isset( $definitions[$name] ) ) {
-			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, formula, multicart, multistore, ordering, persistent, quantity, request, request_code, request_payment, request_payment_table, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_shipping, request_shipping_field, request_state_id'
+			$definitions[$name]	=	JCckDatabase::loadObject( 'SELECT title, name, storage_location, storage_table, storage_field, formula, multicart, multistore, ordering, persistent, quantity, request, request_code, request_for, request_payment, request_payment_table, request_payment_field, request_payment_field_live, request_payment_field_live_options, request_shipping, request_shipping_field, request_state_id'
 															. ' FROM #__cck_more_ecommerce_cart_definitions WHERE name = "'.JCckDatabase::escape( $name ).'"' );
 			if ( strpos( $definitions[$name]->request_payment_field, '$' ) !== false ) {
 				$definitions[$name]->request_payment_field	=	str_replace( '$', strtolower( JCckEcommerce::getCurrency()->code ), $definitions[$name]->request_payment_field );
