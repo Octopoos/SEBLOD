@@ -428,6 +428,9 @@ if ( $preconfig['task'] == 'search' ) {
 	if ( $preconfig['show_form'] ) {
 		$doc->fields	=	$fields['search'];
 	}
+	if ( isset( $config['error'] ) && $config['error'] ) {
+		$error	=	1;
+	}
 	
 	$countStages		=	count( $stages );
 
