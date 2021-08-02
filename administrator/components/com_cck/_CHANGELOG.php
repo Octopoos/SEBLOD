@@ -22,6 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+-------------------- x.xx.x Upgrade Release [xx-Aug-2021] ----------
+
++ "beforeRenderForm" support added on SEBLOD Form Link plug-in.
++ "No Result" can be triggered for multiple (> 1) results.
+
+^ Core Update for SEBLOD Ecommerce add-on.
+
 -------------------- 3.20.2 Upgrade Release [8-Mar-2021] -----------
 
 ^ Core JS updated.
