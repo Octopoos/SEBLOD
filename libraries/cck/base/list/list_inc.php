@@ -504,6 +504,10 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 			$search->content		=	$search2->content;
 		}
+		if ( (int)$options->get( 'mode_no_result', '0' ) && (int)$total > 1 ) {
+			$total 	=	0;
+		}
+
 		if ( $total ) {
 			if ( isset( $preconfig['idx'] ) ) {
 				$config['idx']	=	$preconfig['idx'];

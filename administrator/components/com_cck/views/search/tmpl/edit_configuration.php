@@ -96,6 +96,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 			echo JCckDev::renderForm( $cck['core_action'], @$options['action'], $config );
 			echo JCckDev::renderForm( $cck['core_message'], @$options['message'], $config );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_list_desc_no_result'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc_no_result]' ) );
+            echo JCckDev::renderForm( 'core_dev_bool', @$options['mode_no_result'], $config, array( 'label'=>'Trigger', 'defaultvalue'=>'0', 'options'=>'Config No Result=0||Config No Unique Result=1', 'storage_field'=>'options[mode_no_result]' ) );
             ?>
         </ul>
 	</div>
