@@ -150,9 +150,13 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				return;
 			}
 		} elseif ( $form == '-2' ) {
-			$form		=	'#'.$link->get( 'form_fieldname', '' ).'#';
+			$form	=	'#'.$link->get( 'form_fieldname', '' ).'#';
 
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ), 'form'=>'-2' ) );
+			if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ), 'form'=>'-2' ) );
+			} else {
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'form_fieldname', '' ), 'form'=>'-2' ) );
+			}
 		} elseif ( $form != '' ) {
 			$user 		=	JCck::getUser();
 			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
@@ -248,6 +252,19 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+
+	// onCCK_Field_LinkBeforeRenderForm
+	public static function onCCK_Field_LinkBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
+	{
+		$name		=	$process['name'];
+
+		if ( isset( $process['form'] ) && $process['form'] == '-2' ) {
+			$fieldname	=	$process['fieldname'];
+			$form		=	( isset( $fields[$fieldname] ) ) ? $fields[$fieldname]->value : '';
+
+			$fields[$name]->form	=	str_replace( '#'.$fieldname.'#', $form, $fields[$name]->form );
+		}
+	}
 	
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
