@@ -15,6 +15,7 @@
 /administrator/components/com_content/*
 /administrator/components/com_contenthistory/*
 /administrator/components/com_cpanel/*
+/administrator/components/com_dump/*
 /administrator/components/com_fields/*
 /administrator/components/com_finder/*
 /administrator/components/com_installer/*
@@ -641,6 +642,7 @@
 /administrator/manifests/packages/pkg_cck_toolbox.xml
 /administrator/manifests/packages/pkg_cck_vip_unzip_first.xml
 /administrator/manifests/packages/pkg_cck_webservices.xml
+/administrator/manifests/packages/pkg_dump.xml
 /administrator/manifests/packages/pkg_en-GB.xml
 /administrator/manifests/packages/pkg_fr-FR.xml
 /administrator/manifests/packages/pkg_seb_accordion.xml
@@ -705,6 +707,7 @@
 /components/com_contact/*
 /components/com_content/*
 /components/com_contenthistory/*
+/components/com_dump/*
 /components/com_fields/*
 /components/com_menus/*
 /components/com_banners/*
@@ -1184,6 +1187,7 @@
 /plugins/system/actionlogs/*
 /plugins/system/cache/*
 /plugins/system/debug/*
+/plugins/system/dump/*
 /plugins/system/fields/*
 /plugins/system/highlight/*
 /plugins/system/languagecode/*
