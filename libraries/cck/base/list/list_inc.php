@@ -291,8 +291,8 @@ if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 		$menu_params			=	$menu->getParams();
 
 		if ( is_object( isset( $menu_params ) ) ) {
-			$preconfig['limit']		=	$menu->params->get( 'limit' );
-			$preconfig['search2']	=	$menu->params->get( 'search2' );
+			$preconfig['limit']		=	$menu_params->get( 'limit' );
+			$preconfig['search2']	=	$menu_params->get( 'search2' );
 		}
 	}
 }

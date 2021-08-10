@@ -104,7 +104,7 @@ class CckRouter extends JComponentRouterBase
 			$params		=	array();
 
 			if ( isset( $menuItem->query['search'] ) ) {
-				$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->params->get( 'sef', '' ) );
+				$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'], $menuItem->getParams()->get( 'sef', '' ) );
 				
 				if ( ( ( $params['doSEF'][0] == '4' || $params['doSEF'][0] == '5' ) && $count == 1 )
 				  || ( ( $params['doSEF'][0] == '8' ) && ( $count == 1 || $count == 2 ) ) ) {
