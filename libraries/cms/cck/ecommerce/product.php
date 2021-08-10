@@ -84,9 +84,9 @@ abstract class JCckEcommerceProduct
 				if ( count( $definitions ) ) {
 					JPluginHelper::importPlugin( 'cck_field_live' );
 					
-					$config			=	array();
-					$dispatcher		=	JEventDispatcher::getInstance();
-					$keys			=	array( 'payment', 'tax' );
+					$app	=	JFactory::getApplication();
+					$config	=	array();
+					$keys	=	array( 'payment', 'tax' );
 					
 					foreach ( $definitions as $name=>$product_def ) {
 						if ( is_string( $product_def->attributes ) ) {
@@ -105,7 +105,7 @@ abstract class JCckEcommerceProduct
 												);
 								$suffix			=	'';
 								
-								$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+								$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
 								if ( $suffix != '' ) {
 									if ( $product_def->{'request_'.$key.'_field'} != '' ) {

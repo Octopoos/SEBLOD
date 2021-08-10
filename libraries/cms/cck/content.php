@@ -39,7 +39,6 @@ class JCckContent
 	protected static $objects			=	array();
 	protected static $types				=	array();
 
-	protected $_dispatcher				=	null;
 	protected $_options					=	null;
 
 	protected $_callables				=	array();
@@ -72,7 +71,6 @@ class JCckContent
 	// __construct
 	public function __construct()
 	{
-		$this->_dispatcher		=	JEventDispatcher::getInstance();
 		$this->_instance_core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$this->_options			=	new Registry;
 
@@ -1766,13 +1764,13 @@ class JCckContent
 	// triggerDelete
 	public function triggerDelete( $event )
 	{
-		return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base ) );
+		return $this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base ) );
 	}
 
 	// triggerSave
 	public function triggerSave( $event )
 	{
-		return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
+		return $this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
@@ -2393,6 +2391,17 @@ class JCckContent
 										);
 
 		return true;
+	}
+
+	// _triggerEvent
+	protected function _triggerEvent( $event, array $args = null )
+	{
+		// Safe call for now
+		try {
+			JFactory::getApplication()->triggerEvent( $event, $args );
+		} catch ( Exception $e ) {
+			// Do Nothing
+		}		
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated

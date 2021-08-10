@@ -51,7 +51,6 @@ class plgSearchCCK extends JPlugin
 
 		$app			=	JFactory::getApplication();
 		$db				=	JFactory::getDbo();
-		$dispatcher		=	JEventDispatcher::getInstance();
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doDebug		=	$options->get( 'debug' );
@@ -338,7 +337,7 @@ class plgSearchCCK extends JPlugin
 		self::_setStorage( $tables, $config, $inherit );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 		if ( isset( $config['location'] ) && $config['location'] ) {
-			$dispatcher->trigger( 'onCCK_Storage_LocationSearch', array( $config['location'], $tables, $fields, $fields_order, &$config, &$inherit, &$results ) );
+			$app->triggerEvent( 'onCCK_Storage_LocationSearch', array( $config['location'], $tables, $fields, $fields_order, &$config, &$inherit, &$results ) );
 			$query	=	$inherit['query'];
 		}
 		if ( $config['doQuery'] !== false ) {
@@ -354,7 +353,7 @@ class plgSearchCCK extends JPlugin
 				$query	=	$db->getQuery( true );
 				$query->select( 't0.id AS pid,t0.pk AS pk,t0.pkb AS pkb,t0.parent_id AS parent,t0.author_id AS author,t0.author_session AS author_session' );
 				$query->from( '`#__cck_core` AS t0' );
-				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
+				self::_buildQuery( $app, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
 				if ( $config['location'] == 'cck_type' ) {
 					$query->select( $tables['#__cck_core_types']['_'].'.id AS type_id,'.$tables['#__cck_core_types']['_'].'.alias AS type_alias' );
@@ -387,7 +386,7 @@ class plgSearchCCK extends JPlugin
 					$hasGroup	=	true;
 					$query->group( self::_prepareParts( $config['query_parts']['group'], $tables ) );
 				}
-				self::_buildQueryOrdering( $order, $ordering, $fields_order, $dispatcher, $query, $tables, $t, $config, $current, $inherit, $user );
+				self::_buildQueryOrdering( $order, $ordering, $fields_order, $app, $query, $tables, $t, $config, $current, $inherit, $user );
 				
 				if ( $doLimit && $config['limitstart'] >= 0 ) {
 					$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
@@ -468,7 +467,7 @@ class plgSearchCCK extends JPlugin
 				$query	=	$db->getQuery( true );
 				$query->select( 't0.pk as pk' );
 				$query->from( '`#__cck_core` AS t0' );
-				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, false );
+				self::_buildQuery( $app, $query, $tables, $t, $config, $inherit, $user, false );
 				if ( $where != '' ) {
 					$query->where( $where );
 				}
@@ -527,21 +526,21 @@ class plgSearchCCK extends JPlugin
 	}
 	
 	// _buildQuery
-	protected static function _buildQuery( &$dispatcher, &$query, &$tables, &$t, &$config, &$inherit, $user, $doSelect )
+	protected static function _buildQuery( &$app, &$query, &$tables, &$t, &$config, &$inherit, $user, $doSelect )
 	{
 		if ( isset( $config['location'] ) && $config['location'] ) {
-			$dispatcher->trigger( 'onCCK_Storage_LocationPrepareSearch', array( $config['location'], &$query, &$tables, &$t, &$config, &$inherit, $user ) );
+			$app->triggerEvent( 'onCCK_Storage_LocationPrepareSearch', array( $config['location'], &$query, &$tables, &$t, &$config, &$inherit, $user ) );
 		}
 		
-		self::_buildQuery2( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $doSelect, 1 );
-		self::_buildQuery2( $dispatcher, $query, $tables, $t, $config, $inherit, $user, false, 2 );
+		self::_buildQuery2( $app, $query, $tables, $t, $config, $inherit, $user, $doSelect, 1 );
+		self::_buildQuery2( $app, $query, $tables, $t, $config, $inherit, $user, false, 2 );
 		if ( !( isset( $tables['#__cck_core']['fields']['cck'] ) || isset( $tables['#__cck_core']['fields']['storage_location'] ) ) && $config['location'] ) {
 			$query->where( 't0.storage_location = "'.$config['location'].'"' );
 		}
 	}
 	
 	// _buildQuery2
-	protected static function _buildQuery2( &$dispatcher, &$query, &$tables, &$t, &$config, &$inherit, $user, $doSelect, $join )
+	protected static function _buildQuery2( &$app, &$query, &$tables, &$t, &$config, &$inherit, $user, $doSelect, $join )
 	{
 		foreach ( $tables as $tk=>$tv ) {
 			$j	=	( isset( $tv['join'] ) ) ? $tv['join'] : 1;
@@ -549,7 +548,7 @@ class plgSearchCCK extends JPlugin
 				if ( ! $config['location'] && $tv['_'] == 't1' ) {
 					$config['location']	=	$tv['location'];
 					$inherit['table']	=	$tk;
-					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareSearch', array( $config['location'], &$query, &$tables, &$t, &$config, &$inherit, $user ) );
+					$app->triggerEvent( 'onCCK_Storage_LocationPrepareSearch', array( $config['location'], &$query, &$tables, &$t, &$config, &$inherit, $user ) );
 				}
 				if ( $doSelect === true ) {
 					$query->select( ' '.$tv['_'].'.*' );
@@ -586,7 +585,7 @@ class plgSearchCCK extends JPlugin
 	}
 	
 	// _buildQueryOrdering
-	protected static function _buildQueryOrdering( &$order, &$ordering, $fields_order, &$dispatcher, &$query, &$tables, &$t, &$config, $current, &$inherit, $user )
+	protected static function _buildQueryOrdering( &$order, &$ordering, $fields_order, &$app, &$query, &$tables, &$t, &$config, $current, &$inherit, $user )
 	{
 		if ( $ordering != '' ) {
 			if ( $ordering == '-1' ) {
@@ -596,7 +595,7 @@ class plgSearchCCK extends JPlugin
 				}
 			} elseif ( $ordering != 'none' ) {
 				if ( @$config['location'] ) {
-					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
+					$app->triggerEvent( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
 					if ( $ordering ) {
 						$query->order( $ordering );
 					}
@@ -672,7 +671,7 @@ class plgSearchCCK extends JPlugin
 			if ( !$ordered ) {
 				$ordering	=	'alpha';
 				if ( @$config['location'] ) {
-					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
+					$app->triggerEvent( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
 					if ( $ordering ) {
 						$query->order( $ordering );
 					}

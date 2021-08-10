@@ -145,14 +145,15 @@ class plgUserCCK extends JPlugin
 				JPluginHelper::importPlugin( 'cck_storage' );
 				JPluginHelper::importPlugin( 'cck_storage_location' );
 
-				$config		=	array(
-									'pk'=>$table->pk,
-									'storages'=>array(),
-									'type'=>$table->cck
-								);
-				$dispatcher	=	JEventDispatcher::getInstance();
-				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
-				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				$app	=	JFactory::getApplication();
+				$config	=	array(
+								'pk'=>$table->pk,
+								'storages'=>array(),
+								'type'=>$table->cck
+							);
+				$parent	=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
+				$fields	=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				
 				if ( count( $fields ) ) {
 					foreach ( $fields as $field ) {
 						$Pt		=	$field->storage_table;
@@ -163,10 +164,10 @@ class plgUserCCK extends JPlugin
 						if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 							$config['storages'][$Pt]	=	'';
 							
-							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );
+							$app->triggerEvent( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );
 						}
-						$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
-						$dispatcher->trigger( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
+						$app->triggerEvent( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+						$app->triggerEvent( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
 					}
 				}
 			}

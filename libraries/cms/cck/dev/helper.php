@@ -273,12 +273,12 @@ abstract class JCckDevHelper
 							'type_id'=>$core->type_id,
 							'xi'=>$xi
 						);
-		$dispatcher		=	JEventDispatcher::getInstance();
+
 		$field->value	=	$core->value;
 		$pk				=	$core->pk;
 		$value			=	'';
 
-		$dispatcher->trigger( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
+		$app->triggerEvent( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 
 		// Access
 		$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
@@ -311,15 +311,15 @@ abstract class JCckDevHelper
 							$Pt	=	$field2->storage_table;
 							if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 								$config['storages'][$Pt]	=	'';
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
 							}
 							
-							$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+							$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
 							if ( is_string( $value2 ) ) {
 								$value2		=	trim( $value2 );
 							}
 							
-							$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+							$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
 
 							// Was it the last one?
 							// if ( $config['error'] ) {
@@ -362,7 +362,7 @@ abstract class JCckDevHelper
 		}
 		$field			=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
 
-		$dispatcher->trigger( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
+		$app->triggerEvent( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
 
 		$config['file']	=	$field->filename;
 

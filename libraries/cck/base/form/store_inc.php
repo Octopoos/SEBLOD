@@ -74,7 +74,7 @@ JPluginHelper::importPlugin( 'cck_storage_location' );
 if ( !$isNew ) {
 	$author	=	JCckDatabase::loadObject( 'SELECT author_id AS id, author_session AS session FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
 }
-$dispatcher	=	JEventDispatcher::getInstance();
+
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
@@ -223,7 +223,7 @@ if ( count( $fields ) ) {
 				$toBeChecked	=	true;
 			}
 		}
-		$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
+		$app->triggerEvent( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
 
 		if ( !$config['copyfrom_id'] ) {
 			if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
@@ -352,7 +352,7 @@ if ( isset( $processing[$event] ) ) {
 $k	=	0;
 foreach ( $config['storages'] as $data ) {
 	if ( isset( $data['_'] ) && $data['_'] && $data['_']->state !== true && $config['error'] !== true ) {
-		$dispatcher->trigger( 'onCCK_Storage_LocationStore', array( $data['_']->location, $data, &$config, $id ) );
+		$app->triggerEvent( 'onCCK_Storage_LocationStore', array( $data['_']->location, $data, &$config, $id ) );
 		$k++;
 	}
 }

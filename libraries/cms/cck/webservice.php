@@ -116,6 +116,7 @@ abstract class JCckWebservice
 	{
 		JPluginHelper::importPlugin( 'cck_webservice' );
 
+		$app	=	JFactory::getApplication();
 		$config	=	array();
 		$fields	=	array();
 		$items	=	JCckDatabase::loadObjectList( 'SELECT id, webservice_object'
@@ -134,7 +135,7 @@ abstract class JCckWebservice
 
 			$webservice	=	json_decode( $item->webservice_object );
 
-			JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+			$app->triggerEvent( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
 			$table->bind( array( 'response'=>json_encode( $webservice->response ) ) );
 			$table->store();
@@ -196,7 +197,7 @@ abstract class JCckWebservice
 		
 		JPluginHelper::importPlugin( 'cck_webservice' );
 
-		JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+		JFactory::getApplication()->triggerEvent( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
 		return true;
 	}

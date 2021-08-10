@@ -159,7 +159,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						$field->required_alert	=	'';
 					}
 				}
-				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
+				JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$value					=	$field->form;

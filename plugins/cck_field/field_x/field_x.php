@@ -39,7 +39,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		
 		$name		=	$field->name;
 		
-		$dispatcher	=	JEventDispatcher::getInstance();
+		$app		=	JFactory::getApplication();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -52,11 +52,11 @@ class plgCCK_FieldField_X extends JCckPluginField
 				$table				=	$f->storage_table;
 				if ( $table && ! isset( $config['storages'][$table] ) ) {
 					$config['storages'][$table]	=	'';
-					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+					$app->triggerEvent( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
 				}
-				$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+				$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 				//
-				$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$xi], $f_value, &$config, $inherit, true ) );
+				$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$content[$xi], $f_value, &$config, $inherit, true ) );
 			}
 			if ( $content[0] ) {
 				$field->display	=	$content[0]->display;
@@ -76,8 +76,8 @@ class plgCCK_FieldField_X extends JCckPluginField
 			return;
 		}
 
+		$app		=	JFactory::getApplication();
 		$name		=	$field->name;
-		$dispatcher	=	JEventDispatcher::getInstance();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -90,11 +90,11 @@ class plgCCK_FieldField_X extends JCckPluginField
 				$table				=	$f->storage_table;
 				if ( $table && ! isset( $config['storages'][$table] ) ) {
 					$config['storages'][$table]	=	'';
-					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+					$app->triggerEvent( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
 				}
-				$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+				$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 				//
-				$dispatcher->trigger( 'onCCK_FieldDelete', array( &$content[$xi], $f_value, &$config ) );
+				$app->triggerEvent( 'onCCK_FieldDelete', array( &$content[$xi], $f_value, &$config ) );
 			}
 		}
 	}
@@ -116,9 +116,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		//if ( $config['pk'] ) {
-			$dispatcher	=	JEventDispatcher::getInstance();
-		//}
+		$app	=	JFactory::getApplication();
 		
 		// Prepare
 		$f		=	self::_getChild( $field, $config );
@@ -132,15 +130,15 @@ class plgCCK_FieldField_X extends JCckPluginField
 					$table			=	$f->storage_table;
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
 						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
+						$app->triggerEvent( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'] ) );
 					}
-					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 				} else {
 					$f_value		=	@$value[$xi];
 				}
 				$inherit			=	array( 'id' => $name.'__'.$xi, 'name' => $name.'[]', 'xk' => $xi );
 				$clone				=	clone $f;
-				$results			=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
+				$results			=	$app->triggerEvent( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
 				$form[$xi]			=	$results[0];
 				$form[$xi]->name	=	$f->name;
 			}
@@ -150,7 +148,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			// Empty			
 			$inherit			=	array( 'id' => $name.'__'.'0', 'name' => $name.'[]', 'xk' => '0', 'empty' => true );
 			$clone				=	clone $f;
-			$results			=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, '', &$config, $inherit, true ) );
+			$results			=	$app->triggerEvent( 'onCCK_FieldPrepareForm', array( &$clone, '', &$config, $inherit, true ) );
 			$form[$xi]			=	$results[0];
 			$form[$xi]->name	=	$f->name;
 		}
@@ -194,8 +192,9 @@ class plgCCK_FieldField_X extends JCckPluginField
 		} else {
 			$name	=	$field->name;
 		}
-		$value		=	( isset( $config['post'][$name.'_hidden'] ) ) ? $config['post'][$name.'_hidden'] : $value;
-		$dispatcher	=	JEventDispatcher::getInstance();
+
+		$app	=	JFactory::getApplication();
+		$value	=	( isset( $config['post'][$name.'_hidden'] ) ) ? $config['post'][$name.'_hidden'] : $value;
 		
 		// Prepare
 		$store	=	'';
@@ -209,7 +208,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			foreach ( $value as $val ) {
 				//if ( $val != '' ) {
 					$inherit	=	array( 'name' => $name, 'xk' => $xk, 'xi' => $xi, 'parent' => $name );					
-					$results	=	$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, $inherit, true ) );
+					$results	=	$app->triggerEvent( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, $inherit, true ) );
 					$v			=	$results[0];
 					
 					if ( $v != '' ) {

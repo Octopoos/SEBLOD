@@ -85,6 +85,7 @@ class plgContentCCK extends JPlugin
 			return false;
 		}
 
+		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
@@ -145,14 +146,13 @@ class plgContentCCK extends JPlugin
 				JPluginHelper::importPlugin( 'cck_storage' );
 				JPluginHelper::importPlugin( 'cck_storage_location' );
 
-				$config		=	array(
-									'pk'=>$table->pk,
-									'storages'=>array(),
-									'type'=>$table->cck
-								);
-				$dispatcher	=	JEventDispatcher::getInstance();
-				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
-				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				$config	=	array(
+								'pk'=>$table->pk,
+								'storages'=>array(),
+								'type'=>$table->cck
+							);
+				$parent	=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
+				$fields	=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
 				
 				if ( count( $fields ) ) {
 					foreach ( $fields as $field ) {
@@ -167,11 +167,11 @@ class plgContentCCK extends JPlugin
 							if ( $Pt == $table_name ) {
 								$config['storages'][$Pt]	=	$item;
 							} else {
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
 							}
 						}
-						$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
-						$dispatcher->trigger( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
+						$app->triggerEvent( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+						$app->triggerEvent( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
 					}
 				}
 			}
@@ -477,10 +477,9 @@ class plgContentCCK extends JPlugin
 	// _render
 	protected function _render( $context, &$article, &$article_params, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$user		=	JFactory::getUser();
-		$params		=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
+		$app	=	JFactory::getApplication();
+		$user	=	JFactory::getUser();
+		$params	=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
 		
 		$lang	=	JFactory::getLanguage();
 		$lang->load( 'com_cck_default', JPATH_SITE );
@@ -543,25 +542,25 @@ class plgContentCCK extends JPlugin
 					$Pt	=	$field->storage_table;
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 						$config['storages'][$Pt]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$field, &$config['storages'][$Pt], $config['pk'], &$config, &$article ) );
+						$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field, &$config['storages'][$Pt], $config['pk'], &$config, &$article ) );
 					}
 					
-					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
 					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
-					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+					$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
 					if ( $hasLink ) {
-						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
 						if ( $field->link ) {
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
 					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
-						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';
 					}

@@ -461,8 +461,9 @@ class JCckPluginLocation extends JPlugin
 			$core->load( $config['id'] );
 			
 			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-			$bridge		=	JTable::getInstance( 'Category' );
-			$dispatcher	=	JEventDispatcher::getInstance();
+
+			$app	=	JFactory::getApplication();
+			$bridge	=	JTable::getInstance( 'Category' );
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -535,7 +536,7 @@ class JCckPluginLocation extends JPlugin
 				$bridge->language	=	'*';
 			}
 			JPluginHelper::importPlugin( 'content' );
-			$dispatcher->trigger( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
 					$test	=	JTable::getInstance( 'Category' );
@@ -568,7 +569,7 @@ class JCckPluginLocation extends JPlugin
 
 			/* TODO#SEBLOD: author_session @bridge */
 			
-			$dispatcher->trigger( 'onContentAfterSave', array( 'com_categories.category', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentAfterSave', array( 'com_categories.category', &$bridge, $isNew ) );
 		} else {
 			if ( !isset( $params['bridge_ordering'] ) ) {
 				$params['bridge_ordering']	=	1;
@@ -579,8 +580,9 @@ class JCckPluginLocation extends JPlugin
 			$core->load( $config['id'] );
 			
 			JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
-			$bridge		=	JTable::getInstance( 'Content' );
-			$dispatcher	=	JEventDispatcher::getInstance();
+
+			$app	=	JFactory::getApplication();
+			$bridge	=	JTable::getInstance( 'Content' );
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -651,7 +653,7 @@ class JCckPluginLocation extends JPlugin
 			}
 			
 			JPluginHelper::importPlugin( 'content' );
-			$dispatcher->trigger( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
 					$test	=	JTable::getInstance( 'Content' );
@@ -681,7 +683,7 @@ class JCckPluginLocation extends JPlugin
 			$core->parent_id		=	$config['parent'];
 			$core->storeIt();
 			
-			$dispatcher->trigger( 'onContentAfterSave', array( 'com_content.article', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentAfterSave', array( 'com_content.article', &$bridge, $isNew ) );
 		}
 	}
 	

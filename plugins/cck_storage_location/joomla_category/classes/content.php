@@ -73,7 +73,7 @@ class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
 	// triggerSave
 	public function triggerSave( $event )
 	{
-		$result	=	$this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
+		$result	=	$this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base, $this->_is_new ) );
 
 		if ( $event == 'afterSave' ) {
 			unset( $this->_instance_base->catid );

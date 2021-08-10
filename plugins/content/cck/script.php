@@ -265,7 +265,6 @@ class plgContentCCKInstallerScript
 			
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
-			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			foreach ( $categories as $category ) {
 				$table	=	JTable::getInstance( 'Category' );
@@ -280,9 +279,9 @@ class plgContentCCKInstallerScript
 				$table->language	=	'*';
 				$table->store();
 				
-				$dispatcher->trigger( 'onContentBeforeSave', array( '', &$table, true ) );
+				$app->triggerEvent( 'onContentBeforeSave', array( '', &$table, true ) );
 				$table->store();
-				$dispatcher->trigger( 'onContentAfterSave', array( '', &$table, true ) );
+				$app->triggerEvent( 'onContentAfterSave', array( '', &$table, true ) );
 				
 				$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
 				$db->setQuery( $query );

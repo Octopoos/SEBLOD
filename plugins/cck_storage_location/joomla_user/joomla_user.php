@@ -251,9 +251,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$table		=	self::_getTable( $pk );	
+		$app	=	JFactory::getApplication();
+		$table	=	self::_getTable( $pk );
 		
 		if ( !$table ) {
 			return false;
@@ -273,14 +272,14 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		// Process
 		JPluginHelper::importPlugin( 'user' );
 		
-		$result	=	$dispatcher->trigger( 'onUserBeforeDelete', array( $table->getProperties() ) );
+		$result	=	$app->triggerEvent( 'onUserBeforeDelete', array( $table->getProperties() ) );
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
 		if ( !$table->delete() ) {
 			return false;
 		}
-		$dispatcher->trigger( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
+		$app->triggerEvent( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
 		
 		return true;
 	}

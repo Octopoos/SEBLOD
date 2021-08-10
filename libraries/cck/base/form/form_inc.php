@@ -219,7 +219,6 @@ if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );
 }
-$dispatcher	=	JEventDispatcher::getInstance();
 
 // Validation
 if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
@@ -252,7 +251,7 @@ foreach ( $fields as $field ) {
 			$Pt	=	$field->storage_table;
 			if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
 				$config['storages'][$Pt]	=	'';
-				$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$field, &$config['storages'][$Pt], $id, &$config ) );
+				$app->triggerEvent( 'onCCK_Storage_LocationPrepareForm', array( &$field, &$config['storages'][$Pt], $id, &$config ) );
 				
 				if ( !isset( $config['base'] ) ) {
 					$config['base']				=	new stdClass;
@@ -278,10 +277,10 @@ foreach ( $fields as $field ) {
 					}
 				}
 			}
-			$dispatcher->trigger( 'onCCK_StoragePrepareForm', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+			$app->triggerEvent( 'onCCK_StoragePrepareForm', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
 		} else {
 			if ( $field->live ) {
-				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
+				$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 
 				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
 					JCckDevHelper::secureField( $field, $value );
@@ -304,7 +303,7 @@ foreach ( $fields as $field ) {
 			$field->variation	=	'';
 		}
 	}
-	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
+	$app->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
 	
 	$position				=	$field->position;
 	$positions[$position][]	=	$field->name;

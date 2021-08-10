@@ -121,7 +121,7 @@ if ( $count ) {
 							if ( !$list['isCore'] || $Pt == '_' ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
@@ -131,7 +131,7 @@ if ( $count ) {
 							if ( !$list['isCore'] || $Pt == '_' ) {
 								$config['storages'][$Pt]	=	$items[$i];						
 							} else {
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
@@ -140,21 +140,21 @@ if ( $count ) {
 						}
 					}
 					
-					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
-					$dispatcher->trigger( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
+					$app->triggerEvent( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
 					if ( $hasLink ) {
-						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
 						if ( $field->link ) {
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
 					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
-						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';
 					}
@@ -274,7 +274,7 @@ if ( $count ) {
 							if ( !$list['isCore'] || $Pt == '_' ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
@@ -284,7 +284,7 @@ if ( $count ) {
 							if ( !$list['isCore'] || $Pt == '_' ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
-								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
+								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
@@ -293,21 +293,21 @@ if ( $count ) {
 						}
 					}
 					
-					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
-					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+					$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
 					if ( $hasLink ) {
-						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_LinkPrepareContent', array( &$field, &$config ) );
 						if ( $field->link ) {
 							JCckPluginLink::g_setHtml( $field, $target );
 						}
 					}
 					if ( @$field->typo && ( $field->$target !== '' || $field->typo_label == -2 ) ) {
-						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
+						$app->triggerEvent( 'onCCK_Field_TypoPrepareContent', array( &$field, $field->typo_target, &$config ) );
 					} else {
 						$field->typo	=	'';
 					}

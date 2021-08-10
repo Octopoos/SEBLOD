@@ -182,7 +182,6 @@ jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
-$dispatcher	=	JEventDispatcher::getInstance();
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
@@ -341,7 +340,7 @@ foreach ( $fields['search'] as $field ) {
 			$value		=	$lives[$name];
 		} else {
 			if ( $field->live && $field->variation != 'clear' ) {
-				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
+				$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 			} else {
 				$value	=	$field->live_value;
 			}
@@ -359,7 +358,7 @@ foreach ( $fields['search'] as $field ) {
 	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
 		$field->variation	=	'hidden';
 	}
-	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
+	$app->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
 	if ( (int)$field->stage > 0 ) {

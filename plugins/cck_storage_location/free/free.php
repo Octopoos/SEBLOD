@@ -183,10 +183,9 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
+		$app	=	JFactory::getApplication();
 		
-		$item		=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
+		$item	=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
 		if ( !is_object( $item ) ) {
 			return false;
 		}
@@ -212,14 +211,14 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		}
 		
 		// Process
-		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );
+		$result	=	$app->triggerEvent( 'onContentBeforeDelete', array( self::$context, $table ) );
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
 		if ( !$table->delete( $pk ) ) {
 			return false;
 		}
-		$dispatcher->trigger( 'onContentAfterDelete', array( self::$context, $table ) );
+		$app->triggerEvent( 'onContentAfterDelete', array( self::$context, $table ) );
 		
 		return true;
 	}
@@ -258,6 +257,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		} else {
 			if ( ! self::$pk ) {
 				// Init
+				$app	=	JFactory::getApplication();
 				$table	=	self::_getTable( $pk, $data['_']->table, $config );
 				$isNew	=	( $pk > 0 ) ? false : true;
 				self::_initTable( $table, $data, $config );
@@ -284,8 +284,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				
 				// Store
 				JPluginHelper::importPlugin( 'content' );
-				$dispatcher	=	JEventDispatcher::getInstance();
-				$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+				$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->id, 0, $config ) ) {
 					$config['error']	=	true;
 
@@ -306,7 +305,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				if ( ! $config['pk'] ) {
 					$config['pk']	=	self::$pk;
 				}
-				$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
+				$app->triggerEvent( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 				
 				if ( $config['join'] ) {
 					self::_core( $data, $config );

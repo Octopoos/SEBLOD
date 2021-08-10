@@ -49,6 +49,8 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 					$pk		=	( isset( $data[self::$key] ) && (int)$data[self::$key] > 0 ) ? (int)$data[self::$key] : 0;
 				}
 			}
+
+			$app	=	JFactory::getApplication();
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
@@ -103,8 +105,7 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 			
 			// Store
 			JPluginHelper::importPlugin( 'content' );
-			$dispatcher	=	JEventDispatcher::getInstance();
-			$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
 			if ( !$table->store() ) {
 				$error		=	true;
 
@@ -130,7 +131,7 @@ class plgCCK_Storage_LocationJoomla_Category_Importer extends plgCCK_Storage_Loc
 					return false;
 				}
 			}
-			$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
+			$app->triggerEvent( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 			
 			// Tweak
 			if ( $iPk > 0 ) {

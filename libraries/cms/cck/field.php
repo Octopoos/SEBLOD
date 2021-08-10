@@ -75,7 +75,7 @@ class JCckField
 	// loadValue
 	public function loadValue( $value )
 	{
-		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
+		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
 	}
 	
 	// render

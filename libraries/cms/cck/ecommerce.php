@@ -104,7 +104,7 @@ abstract class JCckEcommerce
 									);
 				$suffix			=	'';
 				
-				JEventDispatcher::getInstance()->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+				JFactory::getApplication()->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
 				if ( $suffix != '' ) {
 					if ( $definitions[$name]->request_payment_field != '' ) {

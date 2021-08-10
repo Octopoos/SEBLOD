@@ -23,9 +23,9 @@ class JCckContentJoomla_User_Group extends JCckContent
 	public function triggerDelete( $event )
 	{
 		if ( $event == 'beforeDelete' ) {
-			return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties() ) );
+			return $this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties() ) );
 		} elseif ( $event == 'afterDelete' ) {
-			return $this->_dispatcher->trigger( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties(), true, $this->_instance_base->getError() ) );
+			return $this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( $this->_instance_base->getProperties(), true, $this->_instance_base->getError() ) );
 		}
 
 		return true;
