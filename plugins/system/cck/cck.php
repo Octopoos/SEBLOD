@@ -778,7 +778,7 @@ class plgSystemCCK extends JPlugin
 				}
 			}
 		}
-		if ( $app->isClient( 'site' ) && isset( $app->cck_app['Header'] ) ) {
+		if ( $app->isClient( 'site' ) && isset( $app->cck_app ) && isset( $app->cck_app['Header'] ) ) {
 			if ( count( $app->cck_app['Header'] ) ) {
 				foreach ( $app->cck_app['Header'] as $k=>$v ) {
 					$app->setHeader( $k, $v, true );
