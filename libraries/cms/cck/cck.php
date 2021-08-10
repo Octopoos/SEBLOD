@@ -369,6 +369,9 @@ abstract class JCck
 		$doc	=	JFactory::getDocument();
 		$root	=	JUri::root( true );
 
+		if ( JCck::on( '4.0' ) ) {
+			JHtml::_( 'jquery.framework' );
+		}
 		JHtml::_( 'bootstrap.framework' );
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
