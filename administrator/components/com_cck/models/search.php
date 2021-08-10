@@ -124,8 +124,9 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$app					=	JFactory::getApplication();
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
 		$P						=	'template_'.$client;
 		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
@@ -166,7 +167,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$data	=	JRequest::get( 'post' );
+		$data	=	JFactory::getApplication()->input->post->getArray();
 		$client	=	$data['client'];
 		
 		if ( isset( $data['li_end'] ) && $data['li_end'] == '1' ) {

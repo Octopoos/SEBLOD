@@ -108,8 +108,8 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	protected function prepareData()
 	{
 		$app					=	JFactory::getApplication();
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 
 		if ( is_array( $data['title'] ) ) {

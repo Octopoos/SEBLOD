@@ -102,9 +102,10 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
-		
+		$app					=	JFactory::getApplication();
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
+
 		if ( $data['mode'] ) {
 			$data['featured']	=	0;
 		} else {

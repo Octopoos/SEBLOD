@@ -92,7 +92,7 @@ if ( !$isNew ) {
 }
 
 $retry	=	$app->input->get( 'retry', '' );
-$post	=	( $retry && $retry == $type->name ) ? JRequest::get( 'post' ) : array();
+$post	=	( $retry && $retry == $type->name ) ? $app->input->post->getArray() : array();
 $config	=	array( 'action'=>$preconfig['action'],
 				   'asset'=>'com_content',
 				   'asset_id'=>0,

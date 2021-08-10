@@ -151,7 +151,7 @@ $active[0]		=	'cck';
 $areas['active']=	$active;
 
 if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
-	$post		=	( $method ) ? JRequest::get( 'post' ) : JRequest::get( 'get' );
+	$post		=	( $method ) ? $app->input->post->getArray() : $app->input->get->getArray();
 }
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
