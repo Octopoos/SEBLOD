@@ -22,7 +22,7 @@ class JButtonCckSeparator extends JButton
 	}
 	
 	// render
-	public function render( &$definition )
+	public function render( &$definition = null )
 	{
 		$class	=	( empty( $definition[1] ) ) ? 'divider' : 'btn-group '.$definition[1];
 		
@@ -36,7 +36,7 @@ class JToolbarButtonCckSeparator extends JButtonCckSeparator
 	protected $tag		=	'div';
 	
 	// render
-	public function render( &$definition )
+	public function render( &$definition = null )
 	{
 		$class	=	( empty( $definition[1] ) ) ? '' : 'btn-group '.$definition[1];
 		
