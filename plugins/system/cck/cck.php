@@ -1090,6 +1090,17 @@ class plgSystemCCK extends JPlugin
 	// _setLegacyMode
 	protected function _setLegacyMode()
 	{
+		// Joomla!
+		if ( !class_exists( 'JCck' ) ) {
+			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+
+			if ( JCck::on( '4.0' ) ) {
+				// 
+			}
+		}
+
+		// SEBLOD
 		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
 
 		if ( !$legacy ) {

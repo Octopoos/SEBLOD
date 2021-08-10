@@ -12,6 +12,7 @@
 	<version>3.20.2</version>
 		
 	<files>
+		<folder>_</folder>
 		<folder>base</folder>
 		<folder>construction</folder>
 		<folder>content</folder>
