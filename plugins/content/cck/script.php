@@ -636,6 +636,11 @@ class plgContentCCKInstallerScript
 				}
 			}
 
+			if ( $i2 < 141 ) {
+				JCckDatabase::doQuery( 'UPDATE #__modules SET published = 0 WHERE module = "mod_cck_menu"' );
+				JCckDatabase::doQuery( 'UPDATE #__modules SET published = 0 WHERE module = "mod_cck_quickadd"' );
+			}
+
 			// Set User Actions Log
 			self::_setUserActionsLog();
 
