@@ -230,7 +230,9 @@ class plgSystemCCK extends JPlugin
 		$router->attachParseRule( array( $this, 'parseRule' ), JRouter::PROCESS_DURING );
 
 		if ( $app->isClient( 'administrator' ) ) {
-			JCckDevIntegration::addMenuPresets();
+			if ( !JCck::on( '4.0' ) ) {
+				JCckDevIntegration::addMenuPresets();
+			}
 			
 			if ( $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component' ), 'com_cck' ) !== false ) {
 				JFactory::getLanguage()->load( 'com_cck_core' );
