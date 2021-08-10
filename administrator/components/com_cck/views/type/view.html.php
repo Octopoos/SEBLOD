@@ -52,10 +52,10 @@ class CCKViewType extends JViewLegacy
 		
 		$this->css	=	array( '_'=>'',
 							   'panel_height'=>'132px',
-							   'w30'=>'span4',
-							   'w70'=>'span8',
+							   'w30'=>'span4 col-lg-4',
+							   'w70'=>'span8 col-lg-8',
 							   'wrapper'=>'container',
-							   'wrapper2'=>'row-fluid',
+							   'wrapper2'=>'row',
 							   'wrapper_tmpl'=>'span'
 						);
 		$this->js	=	array( '_'=>'',
