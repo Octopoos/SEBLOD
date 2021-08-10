@@ -287,9 +287,13 @@ if ( $isRaw ) {
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
-	if ( is_object( $menu ) && isset( $menu->params ) ) {
-		$preconfig['limit']		=	$menu->params->get( 'limit' );
-		$preconfig['search2']	=	$menu->params->get( 'search2' );
+	if ( is_object( $menu ) ) {
+		$menu_params			=	$menu->getParams();
+
+		if ( is_object( isset( $menu_params ) ) ) {
+			$preconfig['limit']		=	$menu->params->get( 'limit' );
+			$preconfig['search2']	=	$menu->params->get( 'search2' );
+		}
 	}
 }
 
