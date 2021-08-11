@@ -269,7 +269,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		// Init
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 		
 		// Prepare
 		if ( ! isset( $tables[self::$table] ) ) {
@@ -290,10 +289,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$query->where( $t_pk.'.access IN ('.$access.')' );
 		}
 		if ( ! isset( $tables[self::$table]['fields']['publish_up'] ) ) {
-			$query->where( '( '.$t_pk.'.publish_up = '.$db->quote( $null ).' OR '.$t_pk.'.publish_up <= '.$db->quote( $now ).' )' );
+			$query->where( '( '.$t_pk.'.publish_up '.JCckDatabase::null().' OR '.$t_pk.'.publish_up <= '.$db->quote( $now ).' )' );
 		}
 		if ( ! isset( $tables[self::$table]['fields']['publish_down'] ) ) {
-			$query->where( '( '.$t_pk.'.publish_down = '.$db->quote( $null ).' OR '.$t_pk.'.publish_down >= '.$db->quote( $now ).' )' );
+			$query->where( '( '.$t_pk.'.publish_down '.JCckDatabase::null().' OR '.$t_pk.'.publish_down >= '.$db->quote( $now ).' )' );
 		}
 	}
 	
@@ -1057,7 +1056,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	{
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 
 		$states	=	self::getStaticParams()->get( 'allowed_status', '1,2' );
 		$states	=	explode( ',', $states );
@@ -1067,8 +1065,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				.	' FROM '.self::$table
 				.	' WHERE '.self::$key.' = '.(int)$pk
 				.	' AND '.self::$status.' '.$states
-				.	' AND ( publish_up = '.$db->quote( $null ).' OR publish_up <= '.$db->quote( $now ).' )'
-				.	' AND ( publish_down = '.$db->quote( $null ).' OR publish_down >= '.$db->quote( $now ).' )'
+				.	' AND ( publish_up '.JCckDatabase::null().' OR publish_up <= '.$db->quote( $now ).' )'
+				.	' AND ( publish_down '.JCckDatabase::null().' OR publish_down >= '.$db->quote( $now ).' )'
 				;
 		
 		if ( $checkAccess ) {

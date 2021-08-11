@@ -197,7 +197,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		// Init
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {
@@ -238,10 +237,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				$query->where( $t_pkb.'.access IN ('.$access.')' );
 			}
 			if ( ! isset( $tables[$bridge]['fields']['publish_up'] ) ) {
-				$query->where( '( '.$t_pkb.'.publish_up = '.$db->quote( $null ).' OR '.$t_pkb.'.publish_up <= '.$db->quote( $now ).' )' );
+				$query->where( '( '.$t_pkb.'.publish_up '.JCckDatabase::null().' OR '.$t_pkb.'.publish_up <= '.$db->quote( $now ).' )' );
 			}
 			if ( ! isset( $tables[$bridge]['fields']['publish_down'] ) ) {
-				$query->where( '( '.$t_pkb.'.publish_down = '.$db->quote( $null ).' OR '.$t_pkb.'.publish_down >= '.$db->quote( $now ).' )' );
+				$query->where( '( '.$t_pkb.'.publish_down '.JCckDatabase::null().' OR '.$t_pkb.'.publish_down >= '.$db->quote( $now ).' )' );
 			}
 		}
 	}
