@@ -149,7 +149,11 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		$P						=	'template_'.$client;
 		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
 		$P						=	'options_'.$client;
-		$data[$P]				=	JCckDev::toJSON( @$data['options'] );
+
+		if ( !isset( $data['options'] ) ) {
+			$data['options']	=	array();
+		}
+		$data[$P]				=	JCckDev::toJSON( $data['options'] );
 		
 		if ( ! $data['id'] ) {
 			$clients			=	array( 'admin', 'site', 'content', 'intro' );
