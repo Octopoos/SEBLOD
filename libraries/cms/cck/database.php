@@ -209,6 +209,14 @@ abstract class JCckDatabase
 		return '('.$sql.')';
 	}
 
+	// null
+	public static function null()
+	{
+		$db	=	JFactory::getDbo();
+
+		return JCck::on( '4.0' ) ? 'IS NULL' : '= '.$db->quote( $db->getNullDate() );
+	}
+
 	// quote
 	public static function quote( $text, $escape = true )
 	{
