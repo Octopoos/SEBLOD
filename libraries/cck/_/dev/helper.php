@@ -777,7 +777,7 @@ abstract class JCckDevHelper
 	// secureField
 	public static function secureField( $field, $value )
 	{
-		JFactory::getSession()->set( 'cck_hash_live_'.$field->name, JApplication::getHash( $value ) );
+		JFactory::getSession()->set( 'cck_hash_live_'.$field->name, JApplicationHelper::getHash( $value ) );
 	}
 
 	// setDynamicVars

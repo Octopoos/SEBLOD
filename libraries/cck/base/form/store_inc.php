@@ -21,7 +21,7 @@ $user		=	JFactory::getUser();
 $unique		=	( $preconfig['unique'] ) ? $preconfig['unique'] : 'seblod_form';
 $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
-$hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
+$hash		=	JApplicationHelper::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
 
 if ( $id && $preconfig['id'] ) {
@@ -231,7 +231,7 @@ if ( count( $fields ) ) {
 			}
 		}
 		if ( $toBeChecked && !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
-			$hash		=	JApplication::getHash( $value );
+			$hash		=	JApplicationHelper::getHash( $value );
 			$hashed		=	$session->get( 'cck_hash_live_'.$field->name );
 			$session->clear( 'cck_hash_live_'.$field->name );
 			

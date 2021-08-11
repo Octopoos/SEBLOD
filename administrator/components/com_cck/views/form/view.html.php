@@ -70,7 +70,7 @@ class CCKViewForm extends JViewLegacy
 		include_once JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
-		$session->set( 'cck_hash_seblod_form', JApplication::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_seblod_form', JApplicationHelper::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
 		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
 		$session->set( 'cck_task', 'form' );
 		
