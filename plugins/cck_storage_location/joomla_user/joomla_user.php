@@ -657,7 +657,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	}
 	
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 		$config['join_key']	=	'pkb';
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';

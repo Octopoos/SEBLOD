@@ -876,7 +876,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 		$id					=	0;
 		$isMultiAlias		=	false;
@@ -974,6 +974,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$vars['id']	=	(int)JCckDatabaseCache::loadResult( 'SELECT a.id FROM '.self::$table.' AS a'.$join.$where );
 		} else {
 			$vars['id']	=	$id;
+		}
+		if ( JCck::on( '4.0') && ( $n == 1 || $n == 2 ) ) {
+			$segments	=	array();
 		}
 	}
 	

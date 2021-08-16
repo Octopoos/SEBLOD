@@ -749,7 +749,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 		$id					=	0;
 		$isMultiLanguage	=	JCckDevHelper::isMultilingual();
@@ -845,6 +845,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		}
 		if ( $vars['id'] == 0 ) {
 			throw new Exception( JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ), 404 );
+		} else {
+			if ( JCck::on( '4.0') && ( $n == 1 || $n == 2 ) ) {
+				$segments	=	array();
+			}
 		}
 	}
 	

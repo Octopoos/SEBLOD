@@ -284,7 +284,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				
 				// Store
 				JPluginHelper::importPlugin( 'content' );
-				$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+				$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->id, 0, $config ) ) {
 					$config['error']	=	true;
 
@@ -382,7 +382,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 	
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 	}
 	

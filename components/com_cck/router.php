@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // CckRouter
-class CckRouter extends JComponentRouterBase
+class CckRouter extends JComponentRouterView
 {
 	// build
 	public function build( &$query )
@@ -69,6 +69,13 @@ class CckRouter extends JComponentRouterBase
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'buildRoute', array( &$query, &$segments, $params, $menuItem ) );
 			}
+			if ( JCck::on( '4.0' ) ) {
+				if ( isset( $query['task'] ) && $query['task'] == 'search' ) {
+					unset( $query['task'] );
+				}
+
+				unset( $query['search'] );
+			}
 		}
 		
 		unset( $query['view'] );
@@ -95,11 +102,17 @@ class CckRouter extends JComponentRouterBase
 			return $vars;
 		}
 		if ( $segments[0] == 'form' ) {
-			$menu->setActive( $app->input->getInt( 'Itemid', 0 ) );
-			$vars['option']	=	'com_cck';
-			$vars['view']	=	'form';
-			$vars['layout']	=	'edit';
-			$vars['type']	=	@$segments[1];
+			if ( $count == 2 ) {
+				$menu->setActive( $app->input->getInt( 'Itemid', 0 ) );
+				$vars['option']	=	'com_cck';
+				$vars['view']	=	'form';
+				$vars['layout']	=	'edit';
+				$vars['type']	=	$segments[1];
+
+				if ( JCck::on( '4.0' ) ) {
+					$segments	=	array();
+				}
+			}
 		} else {
 			$params		=	array();
 
@@ -150,8 +163,8 @@ class CckRouter extends JComponentRouterBase
 			}
 			if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, $segments, $count, $params ) );
-			} else {
+				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, &$segments, $count, $params ) );
+			} elseif ( !JCck::on( '4.0' ) ) {
 				if ( $count == 2 ) {
 					$vars['option']		=	'com_content';
 					$vars['view']		=	'article';
@@ -184,7 +197,8 @@ class CckRouter extends JComponentRouterBase
 // CckBuildRoute
 function CckBuildRoute( &$query )
 {
-	$router	=	new CckRouter;
+	$app	=	JFactory::getApplication();
+	$router	=	new CckRouter( $app, $app->getMenu() );
 
 	return $router->build( $query );
 }
@@ -192,7 +206,8 @@ function CckBuildRoute( &$query )
 // CckParseRoute
 function CckParseRoute( $segments )
 {
-	$router	=	new CckRouter;
+	$app	=	JFactory::getApplication();
+	$router	=	new CckRouter( $app, $app->getMenu() );
 
 	return $router->parse( $segments );
 }
