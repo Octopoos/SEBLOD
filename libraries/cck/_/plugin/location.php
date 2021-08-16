@@ -536,7 +536,7 @@ class JCckPluginLocation extends JPlugin
 				$bridge->language	=	'*';
 			}
 			JPluginHelper::importPlugin( 'content' );
-			$app->triggerEvent( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew, array() ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
 					$test	=	JTable::getInstance( 'Category' );
@@ -653,7 +653,7 @@ class JCckPluginLocation extends JPlugin
 			}
 			
 			JPluginHelper::importPlugin( 'content' );
-			$app->triggerEvent( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew, array() ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
 					$test	=	JTable::getInstance( 'Content' );

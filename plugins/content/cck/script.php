@@ -279,7 +279,7 @@ class plgContentCCKInstallerScript
 				$table->language	=	'*';
 				$table->store();
 				
-				$app->triggerEvent( 'onContentBeforeSave', array( '', &$table, true ) );
+				$app->triggerEvent( 'onContentBeforeSave', array( '', &$table, true, array() ) );
 				$table->store();
 				$app->triggerEvent( 'onContentAfterSave', array( '', &$table, true ) );
 				

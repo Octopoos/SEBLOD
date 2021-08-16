@@ -72,7 +72,7 @@ class plgCCK_Storage_LocationFree_Importer extends plgCCK_Storage_LocationFree
 			
 			// Store
 			JPluginHelper::importPlugin( 'content' );
-			$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+			$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 			if ( !$table->store() ) {
 				$config['error']	=	true;
 				$config['log']		=	'cancelled';

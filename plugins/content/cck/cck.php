@@ -29,7 +29,7 @@ class plgContentCCK extends JPlugin
 	}
 
 	// onContentBeforeSave
-	public function onContentBeforeSave( $context, $article, $isNew )
+	public function onContentBeforeSave( $context, $article, $isNew, $data = array() )
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onContentBeforeSave';

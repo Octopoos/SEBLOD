@@ -377,7 +377,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		
 		// Store
 		JPluginHelper::importPlugin( 'content' );
-		$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+		$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 		if ( $isNew === true && parent::g_isMax( $table->{self::$author}, $table->{self::$parent}, $config ) ) {
 			$config['error']	=	true;
 
