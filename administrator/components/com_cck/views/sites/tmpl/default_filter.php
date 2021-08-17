@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( JCck::on( '4.0' ) ) { return; }
+
 $clear	=	"document.getElementById('filter_state').value='1';";
 if ( $this->js['filter'] ) {
 	$doc->addScriptDeclaration( $this->js['filter'] );
