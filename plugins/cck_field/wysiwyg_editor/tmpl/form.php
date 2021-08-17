@@ -75,7 +75,7 @@ $js		=	'
 $doc->addScriptDeclaration( $js );
 
 $value		=	'';
-$editor		=	isset( $this->item->type ) && $this->item->type ? $this->item->type : $app->getConfig()->get( 'editor', 'none' );
+$editor		=	isset( $this->item->type ) && $this->item->type ? $this->item->type : JFactory::getConfig()->get( 'editor', 'none' );
 $editor		=	JEditor::getInstance( $editor );
 $params		=	explode( '||', $this->item->params );
 $width		=	( @$params[0] ) ? $params[0] : '100%';
