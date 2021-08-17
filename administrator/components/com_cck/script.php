@@ -297,10 +297,12 @@ class com_cckInstallerScript
 			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
 		}
 		
-		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
-		if ( JFolder::exists( $src ) ) {
-			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
-			JFolder::delete( $src );
+		if ( !version_compare( JVERSION, '4.0', 'ge' ) ) {
+			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
+			if ( JFolder::exists( $src ) ) {
+				JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
+				JFolder::delete( $src );
+			}
 		}
 		
 		if ( $type == 'install' ) {
@@ -357,9 +359,15 @@ class com_cckInstallerScript
 		}
 		$title		=	'SEBLOD '.$version;
 		
-		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
-		require_once JPATH_SITE.'/libraries/cms/cck/database.php';
-		require_once JPATH_SITE.'/libraries/cms/cck/table.php';
+		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
+			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+		} else {
+			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';
+			require_once JPATH_SITE.'/libraries/cms/cck/database.php';
+			require_once JPATH_SITE.'/libraries/cms/cck/table.php';
+		}
+		
 		$table						=	JCckTable::getInstance( '#__postinstall_messages' );
 		$table->extension_id		=	$pk;
 		$table->title_key			=	$title;

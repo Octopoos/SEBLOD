@@ -102,6 +102,20 @@ class plgContentCCKInstallerScript
 		$app	=	JFactory::getApplication();
 		$db		=	JFactory::getDbo();
 		
+		// Allow 4-0.RC versions to be tested
+		if ( JCck::on( '4.0' ) && !isset( $app->cck_core_version ) ) {
+			$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
+			
+			$res		=	$db->loadResult();
+			$registry	=	new JRegistry;
+			$registry->loadString( $res );
+			
+			$app->cck_core_version		=	'4.0.0';
+			$app->cck_core_version_old	=	$registry->get( 'version', '3.21.0' );
+
+			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
+		}
+
 		// Force { CCK } Plugins + { CCK } Library to be published
 		$db->setQuery( 'UPDATE #__extensions SET enabled = 1 WHERE element = "cck"' );
 		$db->execute();
@@ -111,7 +125,7 @@ class plgContentCCKInstallerScript
 		$db->execute();
 
 		// Re-build menu
-		$query	=	'SELECT id, level, lft, path FROM #__menu WHERE link = "index.php?option=com_cck"';
+		$query	=	'SELECT id, level, lft, path, component_id FROM #__menu WHERE link = "index.php?option=com_cck"';
 
 		$db->setQuery( $query );
 		$seblod	=	$db->loadObject();
@@ -360,7 +374,7 @@ class plgContentCCKInstallerScript
 									131=>'3.18.0', 132=>'3.18.1', 133=>'3.18.2', 134=>'3.18.3', 135=>'3.18.4',
 									136=>'3.19.0', 137=>'3.19.1',
 									138=>'3.20.0', 139=>'3.20.1', 140=>'3.20.2',
-									141=>'3.21.0'
+									141=>'3.21.0', 142=>'3.21.1', 143=>'4.0.0'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
@@ -457,7 +471,7 @@ class plgContentCCKInstallerScript
 				
 				if ( JFile::exists( $file ) ) {
 					$buffer		=	file_get_contents( $file );
-					$queries	=	JInstallerHelper::splitSql( $buffer );
+					$queries	=	$db->splitSql( $buffer );
 					
 					foreach ( $queries as $query ) {
 						$query	=	trim( $query );
@@ -635,10 +649,25 @@ class plgContentCCKInstallerScript
 					}
 				}
 			}
-
-			if ( $i2 < 141 ) {
-				JCckDatabase::doQuery( 'UPDATE #__modules SET published = 0 WHERE module = "mod_cck_menu"' );
-				JCckDatabase::doQuery( 'UPDATE #__modules SET published = 0 WHERE module = "mod_cck_quickadd"' );
+			
+			// Joomla! 4
+			if ( JCck::on( '4.0' ) ) {
+				if ( $i2 >= 143 !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
+					$table	=	JTable::getInstance( 'Menu' );
+					$data	=	array( 'menutype'=>'main', 'title'=>'com_cck', 'alias'=>'core', 'path'=>'SEBLOD/core',
+									   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$seblod->id,
+									   'level'=>2, 'component_id'=>$seblod->component_id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
+					
+					$table->setLocation( $seblod->id, 'last-child' );
+					$table->bind( $data );
+					$table->check();
+					$table->alias	=	'core';
+					$table->path	=	'SEBLOD/core';
+					$table->store();
+					$table->rebuildPath( $table->id );
+					$db->setQuery( 'UPDATE #__menu SET alias = "core", path = "SEBLOD/core" WHERE id = '.(int)$table->id );
+					$db->execute();
+				}
 			}
 
 			// Set User Actions Log
