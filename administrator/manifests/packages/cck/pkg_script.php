@@ -51,37 +51,39 @@ class pkg_cckInstallerScript
 					  ->where( $db->quoteName( 'type' ) . ' = ' . $db->quote( 'module' ) )
 					  ->where( $db->quoteName( 'element' ) . ' = ' . $db->quote( 'mod_cck_menu' ) );
 				$db->setQuery( $query );
-				$module_id	=	$db->loadResult();
+				$module_id	=	(int)$db->loadResult();
 				
-				$installer  =   JInstaller::getInstance();
+				if ( $module_id ) {
+					$installer  =   JInstaller::getInstance();
 				
-				$module     =   JTable::getInstance( 'Extension' );
-				$module->load( $module_id );
+					$module     =   JTable::getInstance( 'Extension' );
+					$module->load( $module_id );
 				
-				if ( $module->type == 'module' ) {
-					$installer->uninstall( $module->type, $module_id );
+					if ( $module->type == 'module' ) {
+						$installer->uninstall( $module->type, $module_id );
 
-					if ( $type == 'install' ) {
-						$new_module	=	JTable::getInstance( 'Module', 'JTable' );
-					
-						if ( $new_module->save( array(
-													'access'=>3,
-													'client_id'=>1,
-													'language'=>'*',
-													'module'=>'mod_menu',
-													'ordering'=>2,
-													'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
-													'position'=>'menu',
-													'published'=>1,
-													'showtitle'=>0,
-													'title'=>'Admin Menu - SEBLOD'
-												   ) ) ) {
-							try {
-								$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
-								$db->setQuery( $query );
-								$db->execute();
-							} catch ( Exception $e ) {
-								// Do nothing
+						if ( $type == 'install' ) {
+							$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+						
+							if ( $new_module->save( array(
+														'access'=>3,
+														'client_id'=>1,
+														'language'=>'*',
+														'module'=>'mod_menu',
+														'ordering'=>2,
+														'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
+														'position'=>'menu',
+														'published'=>1,
+														'showtitle'=>0,
+														'title'=>'Admin Menu - SEBLOD'
+													   ) ) ) {
+								try {
+									$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
+									$db->setQuery( $query );
+									$db->execute();
+								} catch ( Exception $e ) {
+									// Do nothing
+								}
 							}
 						}
 					}

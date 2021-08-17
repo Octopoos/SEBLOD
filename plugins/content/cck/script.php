@@ -652,13 +652,13 @@ class plgContentCCKInstallerScript
 			
 			// Joomla! 4
 			if ( JCck::on( '4.0' ) ) {
-				if ( $i2 >= 143 !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
+				if ( $n >= 143 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
 					$table	=	JTable::getInstance( 'Menu' );
-					$data	=	array( 'menutype'=>'main', 'title'=>'com_cck', 'alias'=>'core', 'path'=>'SEBLOD/core',
+					$data	=	array( 'menutype'=>'main', 'title'=>'com_cck_core_title', 'alias'=>'core', 'path'=>'SEBLOD/core',
 									   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$seblod->id,
 									   'level'=>2, 'component_id'=>$seblod->component_id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
 					
-					$table->setLocation( $seblod->id, 'last-child' );
+					$table->setLocation( $seblod->id, 'first-child' );
 					$table->bind( $data );
 					$table->check();
 					$table->alias	=	'core';
@@ -666,6 +666,9 @@ class plgContentCCKInstallerScript
 					$table->store();
 					$table->rebuildPath( $table->id );
 					$db->setQuery( 'UPDATE #__menu SET alias = "core", path = "SEBLOD/core" WHERE id = '.(int)$table->id );
+					$db->execute();
+
+					$db->setQuery( 'UPDATE #__menu SET title = "SEBLOD 4.x" WHERE id = '.(int)$seblod->id );
 					$db->execute();
 				}
 			}

@@ -26,7 +26,6 @@
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->
-			<file type="module" id="mod_cck_menu" client="administrator">mod_cck_menu.zip</file>
 			<file type="module" id="mod_cck_quickadd" client="administrator">mod_cck_quickadd.zip</file>
 			<file type="module" id="mod_cck_quickicon" client="administrator">mod_cck_quickicon.zip</file>
 			<!-- Module // Site -->
