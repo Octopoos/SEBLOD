@@ -73,6 +73,10 @@ class JCckBaseLegacyView extends JViewLegacy
 							   'w100'=>'span12',
 							   'wrapper'=>'row-fluid'
 						);
+
+		if ( JCck::on( '4.0' ) ) {
+			$this->css['table']	=	'table';
+		}
 	}
 }
 ?>

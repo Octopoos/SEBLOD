@@ -55,7 +55,7 @@ class CCKViewSearch extends JViewLegacy
 							   'w30'=>'span4 col-lg-4',
 							   'w70'=>'span8 col-lg-8',
 							   'wrapper'=>'container',
-							   'wrapper2'=>'row',
+							   'wrapper2'=>'row-fluid',
 							   'wrapper_tmpl'=>'span'
 						);
 		$this->js	=	array( '_'=>'',
@@ -63,6 +63,10 @@ class CCKViewSearch extends JViewLegacy
 						);
 
 		$this->uix	=	'full';
+		
+		if ( JCck::on( '4.0' ) ) {
+			$this->css['wrapper2']	=	'row';
+		}
 		
 		parent::display( $tpl );
 	}

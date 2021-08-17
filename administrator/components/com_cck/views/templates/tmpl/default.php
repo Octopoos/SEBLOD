@@ -30,7 +30,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( !empty( $this->sidebar ) ) { ?>
-	<div id="j-sidebar-container" class="span2">
+	<div id="j-sidebar-container" class="span2 top-bar">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">

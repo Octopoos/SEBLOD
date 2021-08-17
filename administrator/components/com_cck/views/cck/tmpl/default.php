@@ -16,11 +16,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option ); ?>" method="post" id="adminForm" name="adminForm">
+<?php if ( JCck::on( '4.0' ) ) { ?>
+    <div class="row main-card-columns">
+<?php } ?>
 <?php if ( !empty( $this->sidebar ) ) { ?>
-    <div id="j-sidebar-container" class="span3">
+    <div id="j-sidebar-container" class="span3 col-md-4">
         <?php echo $this->sidebar; ?>
     </div>
-    <div id="j-main-container" class="span9">
+    <div id="j-main-container" class="span9 col-md-8">
 <?php } else { ?>
     <div id="j-main-container">
 <?php } ?>
@@ -88,4 +91,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 Helper_Display::quickCopyright( true );
 ?>
 </div>
+<?php if ( JCck::on( '4.0' ) ) { ?>
+    </div>
+<?php } ?>
 </form>

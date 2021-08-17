@@ -309,3 +309,15 @@ body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; p
 
 body.com_cck span.value-picker {color: #3b99fc; top:9px;}
 body:not(.com_cck) div.alert.alert-info > div{text-align: center;}
+
+body.task-display .top-bar .sidebar-nav{padding-left: 0; padding-right: 0;}
+body.task-display .top-bar .sidebar-nav ul{background-color: #ffffff; padding: 15px 10px;}
+body.task-display .top-bar .sidebar-nav li{background-color: #ffffff; margin-left: 5px; margin-right: 5px; min-width: 84px;}
+body.task-display .top-bar .sidebar-nav li a {padding: 8px 12px; text-align: center; font-size: 15px; background-color: var(--template-bg-dark-75); border-radius: 22px; color: #ffffff;}
+body.task-display .top-bar .sidebar-nav li.active a{background-color: var(--template-bg-dark-50); color: #ffffff;}
+body.task-display .top-bar .sidebar-nav li a:hover{background-color: var(--template-bg-dark-60); }
+body.task-display .top-bar .sidebar-nav li a:before{content:""; margin: 0;}
+body.task-display .top-bar .sidebar-nav li.active {font-weight: bold;}
+
+body.task-display .top-bar .flex-column{flex-direction: inherit!important;}
+

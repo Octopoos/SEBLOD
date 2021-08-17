@@ -92,6 +92,11 @@ class JCckBaseLegacyViewList extends JViewLegacy
 											.'var w = $("div.sidebar-nav").width()-28; $("div.filter-select,div.sidebar-nav div.chzn-container").css("width",w+"px"); $("div.sidebar-nav div.chzn-drop").css("width",(w)+"px");  $("div.sidebar-nav div.chzn-search > input").css("width",(w-10)+"px"); });'
 							);
 		$this->sidebar	=	JHtmlSidebar::render();
+
+		if ( JCck::on( '4.0' ) ) {
+			$this->css['table']	=	'table';
+			$this->sidebar	=	str_replace( '<li>', '<li class="item">', $this->sidebar );
+		}
 	}
 	
 	// prepareToolbar

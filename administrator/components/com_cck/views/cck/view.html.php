@@ -46,19 +46,11 @@ class CCKViewCck extends JCckBaseLegacyView
         $groupedButtons =   array();
         $lang           =   JFactory::getLanguage();
         $more           =   array(
-                                'ADDON'=>16,
-                                'PLUGIN_FIELD'=>19,
-                                'PLUGIN_LINK'=>20,
-                                'PLUGIN_LIVE'=>21,
-                                'PLUGIN_OBJECT'=>22,
-                                'PLUGIN_RESTRICTION'=>112,
-                                /*
-                                'PLUGIN_STORAGE'=>23,
-                                */
-                                'PLUGIN_TYPOGRAPHY'=>24,
-                                'PLUGIN_VALIDATION'=>25,
-                                'TEMPLATE'=>27,
+                                'ADDON'=>'16',
+                                'PLUGIN'=>'19,21,22,112,24,25',
+                                'TEMPLATE'=>'27',
                             );
+        $user			=	JFactory::getUser();
 
         foreach ( $core as $k=>$v ) {
             $buttons[]  =   array(
@@ -93,13 +85,35 @@ class CCKViewCck extends JCckBaseLegacyView
                             );
         }
 
-        foreach ( $buttons as $button ) {
-            $groupedButtons[$button['group']][] =   $button;
-        }
+        
 
-        $this->sidebar  =   '<div class="sidebar-nav quick-icons">'
-                        .   JHtml::_( 'links.linksgroups', $groupedButtons )
-                        .   '</div>';
+        if ( JCck::on( '4.0' ) ) {
+            $html   =   array(  );
+            $group	=	'';
+
+            foreach ( $buttons as $button ) {
+            	if ( $button['group'] != $group ) {
+            		$html[] =   '<li class="nav-header">'.JText::_( $button['group'] ).'</li>';
+            		$group	=	$button['group'];
+            	}
+            	if ( !$user->authorise( $button['group'][0], $button['group'][1] ) ) {
+            		continue;
+            	}
+                $html[] =   '<li class="item"><a href="'.$button['link'].'" target="'.$button['target'].'">'.$button['text'].'</a></li>';
+            }
+
+            $this->sidebar  =	'<div class="sidebar-nav">'
+							.	'<ul class="nav flex-column">'.implode( '', $html ).'</ul>'
+							.	'</div>';
+        } else {
+            foreach ( $buttons as $button ) {
+                $groupedButtons[$button['group']][] =   $button;
+            }
+
+        	$this->sidebar  =	'<div class="sidebar-nav quick-icons">'
+						.	JHtml::_( 'links.linksgroups', $groupedButtons )
+						.	'</div>';
+        }
     }
 
 	// prepareToolbar
