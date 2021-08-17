@@ -14,7 +14,7 @@ if ( !$user->authorise( 'core.create', 'com_cck' ) ) {
     return;
 }
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_SITE' ).' ('.JText::_( 'COM_CCK_MULTISITES' ).')'; ?></h3>
@@ -50,4 +50,4 @@ if ( !$user->authorise( 'core.create', 'com_cck' ) ) {
         </div>
     </div>
     <?php } ?>
-</div>
+</div></div></div>

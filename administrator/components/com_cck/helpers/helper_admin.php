@@ -80,9 +80,10 @@ class Helper_Admin extends CommonHelper_Admin
 	// addToolbar
 	public static function addToolbar( $vName, $vTitle, $folderId = 0 )
 	{
-		$bar	=	JToolBar::getInstance( 'toolbar' );
-		$canDo	=	self::getActions( $folderId );
-		$uix	=	JCck::getUIX();
+		$bar		=	JToolBar::getInstance( 'toolbar' );
+		$canDo		=	self::getActions( $folderId );
+		$data_bs	=   JCck::on( '4.0' ) ? 'data-bs-' : 'data-';
+		$uix		=	JCck::getUIX();
 		
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
@@ -94,7 +95,7 @@ class Helper_Admin extends CommonHelper_Admin
 				if ( $vName == 'type' || $vName == 'search' || $vName == 'site' ) {
 					JHtml::_( 'bootstrap.modal', 'collapseModal' );
 					$label	=	JText::_( 'JTOOLBAR_NEW' );
-					$html	=	'<button data-toggle="modal" data-target="#collapseModal2" class="btn btn-small btn-success">'
+					$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal2" class="btn btn-small btn-success">'
 							.	'<span class="icon-new" title="'.$label.'"></span> '.$label.'</button>';
 					$bar->appendButton( 'Custom', $html, 'new' );
 				} else {
@@ -129,7 +130,7 @@ class Helper_Admin extends CommonHelper_Admin
 				|| $canDo->get('core.edit' ) ) {
 				JHtml::_( 'bootstrap.modal', 'collapseModal' );
 				$label	=	JText::_( 'JTOOLBAR_BATCH' );
-				$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
+				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 						.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 				$bar->appendButton( 'Custom', $html, 'batch' );
 			}
@@ -140,7 +141,7 @@ class Helper_Admin extends CommonHelper_Admin
 
 			JHtml::_( 'bootstrap.modal', 'collapseModal' );
 			$label	=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
-			$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
+			$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 					.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 			$bar->appendButton( 'Custom', $html, 'batch' );
 		} elseif ( $vName == 'site' ) {

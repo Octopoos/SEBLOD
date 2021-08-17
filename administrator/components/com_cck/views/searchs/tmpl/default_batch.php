@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3><?php echo JText::_( 'COM_CCK_BATCH_PROCESS'); ?></h3>
@@ -49,7 +49,7 @@ defined( '_JEXEC' ) or die;
         <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('searchs.duplicate');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
     <?php } ?>
-</div>
+</div></div></div>
 <?php if ( 1 == 1 ) {
     $options        =   array();
     $options[]      =   JHtml::_( 'select.option', 0, '- '.JText::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
@@ -61,7 +61,7 @@ defined( '_JEXEC' ) or die;
     $options        =   JCckDatabase::loadObjectList( 'SELECT a.name AS text, a.name AS value FROM #__cck_core_templates AS a WHERE a.published = 1 AND a.mode = 2 ORDER BY a.title' );
     $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen"', 'value', 'text', '', 'template_search' );
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C4_TEXT ); ?></h3>
@@ -123,5 +123,5 @@ defined( '_JEXEC' ) or die;
         </div>
     </div>
     <?php } ?>
-</div>
+</div></div></div>
 <?php } ?>

@@ -45,7 +45,7 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQueryUI();
 				}
 				if ( $tmpl == 'component' ) {
-					$doc->addScript( $root.'/media/cck/js/cck.backend-3.17.0.min.js' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.21.0.min.js' );
 				}
 				break;
 			case 'type':
@@ -53,7 +53,7 @@ class Helper_Include extends CommonHelper_Include
 				if ( $script === true ) {
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( $root.'/media/cck/js/cck.backend-3.17.0.min.js' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.21.0.min.js' );
 					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
 					$doc->addStyleDeclaration(

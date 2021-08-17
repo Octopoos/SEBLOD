@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3><?php echo JText::_( 'COM_CCK_BATCH_PROCESS'); ?></h3>
@@ -49,11 +49,11 @@ defined( '_JEXEC' ) or die;
         <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('types.duplicate');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
     <?php } ?>
-</div>
+</div></div></div>
 <?php if ( 1 == 1 ) {
     $items  =   JCckDatabase::loadObjectList( 'SELECT id, title, name, app, icon_path as icon FROM #__cck_core_folders WHERE featured = 1 ORDER BY lft' );
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal2"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C2_TEXT ); ?></h3>
@@ -96,5 +96,5 @@ defined( '_JEXEC' ) or die;
         </div>
     </div>
     <?php } ?>
-</div>
+</div></div></div>
 <?php } ?>
