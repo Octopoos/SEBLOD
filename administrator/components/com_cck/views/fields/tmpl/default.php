@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+JPluginHelper::importPlugin( 'cck_field' );
+
 $action			=	'<span class="icon-eye"></span>';
 $action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"';
 $css			=	array();

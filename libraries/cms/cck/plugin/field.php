@@ -18,6 +18,16 @@ class JCckPluginField extends JPlugin
 	protected static $friendly			=	0;
 	protected static $prepared_input	=	0;
 
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$this->loadLanguage();
+		}
+	}
+
 	// onCCK_FieldPrepareContentDebug
 	public function onCCK_FieldPrepareContentDebug( &$field, $value = '', &$config = array() )
 	{
