@@ -32,6 +32,8 @@ $ -> Language fix or change
   >> More Joomla! 4 changes/fixes will be included in SEBLOD 4.0 RC 2
   >> Additional SEBLOD capabilities/improvements will be merged (from 4-0.dev branch) before SEBLOD 4.0 GA
 
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
+
 ---------------- 3.21.0 Upgrade Release [18-Aug-2021] --------------
 
 + "beforeRenderForm" support added on SEBLOD Form Link plug-in.
@@ -44,6 +46,8 @@ $ -> Language fix or change
 ^ Compatibility/support changes for Joomla! 4
   ! SEBLOD 3.21 is intended to be used on Joomla! 3.10
   ! SEBLOD 3.21 will allow a future upgrade from Joomla! 3.10 to Joomla! 4.0 (once SEBLOD 4.0 GA will be released) 
+
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
 
 -------------------- 3.20.2 Upgrade Release [8-Mar-2021] -----------
 
