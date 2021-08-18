@@ -3,6 +3,14 @@ UPDATE `#__modules` SET `published` = 0 WHERE `module` IN ("mod_cck_menu","mod_c
 
 --
 
+ALTER TABLE `#__cck_core_types` CHANGE `parent_inherit` `parent_inherit` TINYINT(3) NOT NULL DEFAULT '0';
+			
+ALTER TABLE `#__cck_core_fields` CHANGE `cols` `cols` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `#__cck_core_fields` CHANGE `rows` `rows` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `#__cck_core_fields` CHANGE `bool` `bool` TINYINT(4) NOT NULL DEFAULT '0';
+
+--
+
 ALTER TABLE `#__cck_core_fields` MODIFY `checked_out_time` datetime NULL DEFAULT NULL;
 ALTER TABLE `#__cck_core_folders` MODIFY `checked_out_time` datetime NULL DEFAULT NULL;
 ALTER TABLE `#__cck_core_searchs` MODIFY `checked_out_time` datetime NULL DEFAULT NULL;
