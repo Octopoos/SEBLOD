@@ -22,12 +22,28 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- x.xx.x Upgrade Release [xx-Aug-2021] ----------
+--------------- 4.0.0 Release Candidate 1 [18-Aug-2021] ------------
+
+! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
+  ^ Language filenames changes
+  ^ SQL updates related to STRICT_TRANS_TABLES
+
+! Inherits a 1st batch of Joomla! 4 compatibility/support changes from SEBLOD 3.21
+  >> More Joomla! 4 changes/fixes will be included in SEBLOD 4.0 RC 2
+  >> Additional SEBLOD capabilities/improvements will be merged (from 4-0.dev branch) before SEBLOD 4.0 GA
+
+---------------- 3.21.0 Upgrade Release [18-Aug-2021] --------------
 
 + "beforeRenderForm" support added on SEBLOD Form Link plug-in.
 + "No Result" can be triggered for multiple (> 1) results.
 
 ^ Core Update for SEBLOD Ecommerce add-on.
+^ Inputmask JS updated.
+^ Mobile Detect updated.
+
+^ Compatibility/support changes for Joomla! 4
+  ! SEBLOD 3.21 is intended to be used on Joomla! 3.10
+  ! SEBLOD 3.21 will allow a future upgrade from Joomla! 3.10 to Joomla! 4.0 (once SEBLOD 4.0 GA will be released) 
 
 -------------------- 3.20.2 Upgrade Release [8-Mar-2021] -----------
 
