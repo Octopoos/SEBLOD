@@ -653,6 +653,16 @@ class plgContentCCKInstallerScript
 			// Joomla! 4
 			if ( JCck::on( '4.0' ) ) {
 				if ( $n >= 143 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
+					// Languages
+					self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/en-GB' );
+					self::_renameLanguageFiles( JPATH_SITE.'/language/en-GB' );
+
+					if ( is_dir( JPATH_SITE.'/language/fr-FR' ) ) {
+						self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/fr-FR' );
+						self::_renameLanguageFiles( JPATH_SITE.'/language/fr-FR' );
+					}
+
+					// Menu
 					$table	=	JTable::getInstance( 'Menu' );
 					$data	=	array( 'menutype'=>'main', 'title'=>'com_cck_core_title', 'alias'=>'core', 'path'=>'SEBLOD/core',
 									   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$seblod->id,
@@ -665,12 +675,13 @@ class plgContentCCKInstallerScript
 					$table->path	=	'SEBLOD/core';
 					$table->store();
 					$table->rebuildPath( $table->id );
-					$db->setQuery( 'UPDATE #__menu SET alias = "core", path = "SEBLOD/core" WHERE id = '.(int)$table->id );
-					$db->execute();
-
-					$db->setQuery( 'UPDATE #__menu SET title = "SEBLOD 4.x" WHERE id = '.(int)$seblod->id );
-					$db->execute();
 				}
+
+				$db->setQuery( 'UPDATE #__menu SET title = "SEBLOD 4.x" WHERE id = '.(int)$seblod->id );
+				$db->execute();
+
+				$db->setQuery( 'UPDATE #__menu SET title = "com_cck_core_title", alias = "core", path = "SEBLOD/core" WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id );
+				$db->execute();
 			}
 
 			// Set User Actions Log
@@ -901,6 +912,31 @@ class plgContentCCKInstallerScript
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+
+	// _renameLanguageFiles
+	protected function _renameLanguageFiles( $folder )
+	{
+		$items	=	JFolder::files( $folder, '^en-GB' );
+
+		if ( count( $items ) ) {
+			foreach ( $items as $path ) {
+				if ( ( strpos( $path, '.com_cck.' ) !== false )  
+					|| ( strpos( $path, '.com_cck_' ) !== false )
+					|| ( strpos( $path, '.files_var_cck' ) !== false )
+					|| ( strpos( $path, '.lib_cck.' ) !== false )
+					|| ( strpos( $path, '.mod_cck_' ) !== false )
+					|| ( strpos( $path, '.pkg_app_cck_' ) !== false )
+					|| ( strpos( $path, '.pkg_cck_' ) !== false )
+					|| ( strpos( $path, '.pkg_seb_' ) !== false )
+					|| ( strpos( $path, '.plg_cck_' ) !== false )
+					|| ( strpos( $path, '.tpl_seb_' ) !== false ) ) {
+					$new_path   =   substr( $path, 6 );
+
+					JFile::move( $folder.'/'.$path, $folder.'/'.$new_path );
 				}
 			}
 		}

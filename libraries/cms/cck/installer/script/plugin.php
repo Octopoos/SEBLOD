@@ -158,9 +158,15 @@ class JCckInstallerScriptPlugin
 			}
 		}
 		
-		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
-		require_once JPATH_SITE.'/libraries/cms/cck/database.php';
-		require_once JPATH_SITE.'/libraries/cms/cck/table.php';
+		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
+			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+		} else {
+			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
+			require_once JPATH_SITE.'/libraries/cms/cck/database.php';
+			require_once JPATH_SITE.'/libraries/cms/cck/table.php';
+		}
+
 		$table						=	JCckTable::getInstance( '#__postinstall_messages' );
 		$table->extension_id		=	$pk;
 		$table->title_key			=	$title;
