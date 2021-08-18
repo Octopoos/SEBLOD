@@ -259,9 +259,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 					$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
 					$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
 					$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
+					$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
 					$position			=	substr( $k, 4 );
 					if ( $next != 'position' ) {
-						$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'" )';
+						$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
 					}
 				} else {
 					$assigned	.= ', ( '.(int)$typeId.', '.(int)$v.', "'.$client.'", '.$ordering.', '.plgCCK_FieldGeneric_More::$method( $k, $params, $position, $client ).' )';
@@ -275,7 +276,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			if ( $positions ) {
 				$positions	=	substr( $positions, 1 );
 				JCckDatabase::execute( 'DELETE FROM #__cck_core_type_position WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
-				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height ) VALUES ' . $positions );
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height, css ) VALUES ' . $positions );
 			}
 		}
 	}

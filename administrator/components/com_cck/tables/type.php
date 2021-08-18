@@ -75,15 +75,27 @@ class CCK_TableType extends JTable
 			}
 		}
 
-		if ( $this->id ) {
-			$this->modified_date		=	$date->toSql();
-			$this->modified_user_id		=	$user->id;
-		} else {
+		$this->modified_date		=	$date->toSql();
+		$this->modified_user_id		=	$user->id;
+
+		if ( !$this->id ) {
 			if ( !(int)$this->created_date ) {
 				$this->created_date		=	$date->toSql();
 			}
 			if ( empty( $this->created_user_id ) ) {
 				$this->created_user_id	=	$user->id;
+			}
+			if ( is_null( $this->options_admin ) ) {
+				$this->options_admin	=	'';
+			}
+			if ( is_null( $this->options_content ) ) {
+				$this->options_content	=	'';
+			}
+			if ( is_null( $this->options_intro ) ) {
+				$this->options_intro	=	'';
+			}
+			if ( is_null( $this->options_site ) ) {
+				$this->options_site	=	'';
 			}
 		}
 

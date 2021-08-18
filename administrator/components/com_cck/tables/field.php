@@ -29,6 +29,39 @@ class CCK_TableField extends JTable
 		if ( empty( $this->name ) ) {
 			return false;
 		}
+
+		if ( !$this->id ) {
+			if ( is_null( $this->selectlabel ) ) {
+				$this->selectlabel	=	'';
+			}
+			if ( is_null( $this->validation ) ) {
+				$this->validation	=	'';
+			}
+			if ( is_null( $this->options ) ) {
+				$this->options	=	'';
+			}
+			if ( is_null( $this->options2 ) ) {
+				$this->options2	=	'';
+			}
+			if ( is_null( $this->divider ) ) {
+				$this->divider	=	'';
+			}
+			if ( is_null( $this->location ) ) {
+				$this->location	=	'';
+			}
+			if ( is_null( $this->extended ) ) {
+				$this->extended	=	'';
+			}
+			if ( is_null( $this->style ) ) {
+				$this->style	=	'';
+			}
+			if ( is_null( $this->storage_field2 ) ) {
+				$this->storage_field2	=	'';
+			}
+			if ( is_null( $this->storages ) ) {
+				$this->storages	=	'';
+			}
+		}
 		
 		return true;
 	}

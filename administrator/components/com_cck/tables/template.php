@@ -29,6 +29,12 @@ class CCK_TableTemplate extends JTable
 		if ( empty( $this->name ) ) {
 			return false;
 		}
+
+		if ( !$this->id ) {
+			if ( is_null( $this->options ) ) {
+				$this->options	=	'';
+			}
+		}
 		
 		return true;
 	}
