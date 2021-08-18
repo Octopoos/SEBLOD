@@ -58,6 +58,9 @@ class CCK_TableField extends JTable
 			if ( is_null( $this->storage_field2 ) ) {
 				$this->storage_field2	=	'';
 			}
+			if ( is_null( $this->storage_params ) ) {
+				$this->storage_params	=	'';
+			}
 			if ( is_null( $this->storages ) ) {
 				$this->storages	=	'';
 			}
