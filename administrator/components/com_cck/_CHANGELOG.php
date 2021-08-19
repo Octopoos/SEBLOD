@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+---------------- 3.21.1 Upgrade Release [19-Aug-2021] --------------
+
+# Regression fixed on Content/Search Types
+  >> HTML was removed from HTML Typography while saving the Content/Search Type.
+  >> other plug-ins (storing HTML) applied on fields (within Content/Search Types) may have been affected.
+
 --------------- 4.0.0 Release Candidate 1 [18-Aug-2021] ------------
 
 ! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
