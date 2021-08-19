@@ -171,11 +171,19 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$data	=	JFactory::getApplication()->input->post->getArray();
+		$app	=	JFactory::getApplication();
+		$data	=	$app->input->post->getArray();
 		$client	=	$data['client'];
 		
 		if ( isset( $data['li_end'] ) && $data['li_end'] == '1' ) {
+			$raw_data	=	$app->input->post->getArray( array( 'ffp'=>'raw' ) );
+
+			if ( isset( $raw_data['ffp'] ) ) {
+				$data['ffp']	=	$raw_data['ffp'];
+			}
+				
 			$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
+
 			if ( isset( $data['cck_type'] ) && $data['cck_type'] != '' ) {
 				$data['ff2']	=	array( 'cck'=>1 );
 				$data['ffp2']	=	array( 'cck'=>array(

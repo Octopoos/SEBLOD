@@ -181,7 +181,8 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$data	=	JFactory::getApplication()->input->post->getArray();
+		$app	=	JFactory::getApplication();
+		$data	=	$app->input->post->getArray();
 		$client	=	$data['client'];
 		
 		if ( $data['fromclient'] ) {
@@ -205,6 +206,12 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			$table->store();
 		} else {
 			if ( isset( $data['li_end'] ) && $data['li_end'] == '1' ) {
+				$raw_data	=	$app->input->post->getArray( array( 'ffp'=>'raw' ) );
+
+				if ( isset( $raw_data['ffp'] ) ) {
+					$data['ffp']	=	$raw_data['ffp'];
+				}
+
 				$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
 			}
 		}
