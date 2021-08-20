@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+---------------- 3.21.2 Upgrade Release [20-Aug-2021] --------------
+
+# Regression fixed on Field/Group X
+  >> HTML was removed on Store (Textarea, Wysiwyg Editor, ...)
+
 ---------------- 3.21.1 Upgrade Release [19-Aug-2021] --------------
 
 # Regression fixed on Content/Search Types
