@@ -22,6 +22,22 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.0 Release Candidate 2 [20-Aug-2021] ------------
+
+! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
+  ^ Language filenames changes
+  ^ SQL updates related to STRICT_TRANS_TABLES
+
+! Inherits a 1st batch of Joomla! 4 compatibility/support changes from SEBLOD 3.21
+  >> More Joomla! 4 changes/fixes will be included in SEBLOD 4.0 RC 2
+  >> Additional SEBLOD capabilities/improvements will be merged (from 4-0.dev branch) before SEBLOD 4.0 GA
+
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
+
+Since 4.0-rc1:
++ includes the following message:
+  "This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com"
+
 ---------------- 3.21.2 Upgrade Release [20-Aug-2021] --------------
 
 # Regression fixed on Field/Group X
