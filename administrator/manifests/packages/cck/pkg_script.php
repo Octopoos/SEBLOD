@@ -41,6 +41,10 @@ class pkg_cckInstallerScript
 	// postflight
 	public function postflight( $type, $parent )
 	{
+		if ( !class_exists( 'JCck' ) ) {
+			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com' );
+			return;
+		}
 		if ( JCck::on( '3.8' ) ) {
 			if ( $type == 'install' || $type == 'update' && version_compare( JCck::getConfig_Param( 'initial_version', '3' ), '3.13.0', '>=' ) ) {
 				$db			=	JFactory::getDbo();
