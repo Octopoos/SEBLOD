@@ -260,6 +260,11 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
+			$raw	=	JFactory::getApplication()->input->post->getArray( array( $name=>'raw' ) );
+
+			if ( isset( $raw[$name] ) ) {
+				$value	=	$raw[$name];
+			}
 		}
 
 		$app	=	JFactory::getApplication();
