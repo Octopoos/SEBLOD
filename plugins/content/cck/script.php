@@ -656,6 +656,20 @@ class plgContentCCKInstallerScript
 					}
 				}
 			}
+
+			if ( $i2 < 144 ) {
+				$columns    =   JCckDatabase::getTableColumns( '#__cck_core_fields', true );
+
+				if ( isset( $columns['storage_params'] ) ) {
+					if ( isset( $columns['storage_mode'] ) ) {
+						JCckDatabase::execute( 'ALTER TABLE `#__cck_core_fields` DROP `storage_params`' );
+					} else {
+						JCckDatabase::execute( 'ALTER TABLE `#__cck_core_fields` CHANGE `storage_params` `storage_mode` TINYINT(3) NOT NULL DEFAULT "0"' );        
+					}
+				} elseif ( !isset( $columns['storage_mode'] ) ) {
+					JCckDatabase::execute( 'ALTER TABLE `#__cck_core_templates` ADD `storage_mode` TINYINT(3) NOT NULL DEFAULT "0" AFTER `storage_field2`' );
+				}
+			}
 			
 			// Joomla! 4
 			if ( JCck::on( '4.0' ) ) {
