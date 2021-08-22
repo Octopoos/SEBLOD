@@ -22,6 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+---------------- 3.21.3 Upgrade Release [23-Aug-2021] --------------
+
+# Regression fixed on Email
+  >> HTML was removed on Store (Textarea, Wysiwyg Editor, ...)
+# Missing column change in install.sql since SEBLOD 3.19.0
+  >> Field creation (for updated sites) issue fixed
+
 --------------- 4.0.0 Release Candidate 2 [20-Aug-2021] ------------
 
 ! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
