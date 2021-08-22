@@ -42,7 +42,7 @@ class pkg_cckInstallerScript
 	public function postflight( $type, $parent )
 	{
 		if ( !class_exists( 'JCck' ) ) {
-			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com' );
+			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
 			return;
 		}
 		if ( JCck::on( '3.8' ) ) {
