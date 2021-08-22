@@ -24,6 +24,13 @@ class plgCCK_FieldEmail extends JCckPluginField
 		if ( self::$type != $type ) {
 			return;
 		}
+
+		$raw	=	JFactory::getApplication()->input->post->getArray( array( 'json'=>'raw' ) );
+
+		if ( isset( $raw['json']['options2']['message'] ) ) {
+			$data['json']['options2']['message']	=	$raw['json']['options2']['message'];
+		}
+
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
