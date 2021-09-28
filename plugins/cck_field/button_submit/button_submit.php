@@ -644,7 +644,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 											"task_id":'.(int)$process['task_id'].',
 											"total":'.( substr_count( $config[$target], ',' ) + 1 ).',
 											"url":"'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task='.str_replace( '_ajax', 'Ajax', $process['task'] ).'&format=raw' ).$vars.'"
-										}
+										};
 										JCck.More.ButtonSubmit.initProcess("#"+$(this).attr("id"), data);
 										JCck.More.ButtonSubmit.ajaxLoopRequest("#"+$(this).attr("id"));
 									});
