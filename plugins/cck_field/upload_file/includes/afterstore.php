@@ -71,29 +71,45 @@ if ( ! JFolder::exists( JPATH_SITE.'/'.$file_path ) ) {
 	$file_body	=	'<!DOCTYPE html><title></title>';
 	JFile::write( JPATH_SITE.'/'.$file_path.'/index.html', $file_body );
 }
-$safeFileOptions		=	array();
+$allowUnsafe		=	false;
+$safeFileOptions	=	array();
 
 if ( $process['forbidden_ext'] ) {
-	$forbiddenExtensions	=	array( 'php', 'phps', 'php5', 'php3', 'php4', 'inc', 'pl', 'cgi', 'fcgi', 'java', 'jar', 'py' );
-	$safeExtensions			=	JCck::getConfig_Param( 'media_content_forbidden_extensions_whitelist', 'php' );
+	if ( $process['forbidden_ext'] == 2 ) {
+		$allowUnsafe	=	true;
+	} else {
+		$forbiddenExtensions	=	array(
+			'php', 'phps', 'pht', 'phtml', 'php3', 'php4', 'php5', 'php6', 'php7',
+			'php8', 'phar', 'inc', 'pl', 'cgi', 'fcgi', 'java', 'jar', 'py',
+		);
+		$safeExtensions			=	JCck::getConfig_Param( 'media_content_forbidden_extensions_whitelist', 'php' );
 
-	if ( $safeExtensions != '' ) {
-		$safeExtensions		=	explode( ',', $safeExtensions );
+		if ( $safeExtensions != '' ) {
+			$allowPhp			=	strpos( $safeExtensions, 'php' ) !== false;
+			$safeExtensions		=	explode( ',', $safeExtensions );
 
-		if ( count( $safeExtensions ) ) {
-			$safeExtensions		=	array_diff( $forbiddenExtensions, $safeExtensions );
-			$safeFileOptions	=	array(
-										'forbidden_extensions'=>$safeExtensions
-									);
+			if ( count( $safeExtensions ) ) {
+				$safeExtensions		=	array_diff( $forbiddenExtensions, $safeExtensions );
+				$safeFileOptions	=	array(
+											'forbidden_extensions'=>$safeExtensions
+										);
+				/*
+				if ( $allowPhp ) {
+					$safeFileOptions['php_tag_in_content']	=	false;
+					$safeFileOptions['shorttag_in_content']	=	false;
+				}
+				*/
+			}
 		}
 	}
 }
-if ( JFile::upload( $tmp_name, $location, false, false, $safeFileOptions ) ) {
+
+if ( JFile::upload( $tmp_name, $location, false, $allowUnsafe, $safeFileOptions ) ) {
 	$value					=	$file_location;
 	$fields[$name]->value	=	$value;
 } else {
 	$value					=	'';
-
+	
 	if ( $x2k > -1 ) {
 		if ( $array_x ) { //GroupX
 			$search		=	'::'.$name.'|'.$x2k.'|'.$parent_name.'::'.'{"file_location":"'.$old_path.$file_name.'","file_title":"'.$file_title.'"}'.'::/'.$name.'|'.$x2k.'|'.$parent_name.'::';

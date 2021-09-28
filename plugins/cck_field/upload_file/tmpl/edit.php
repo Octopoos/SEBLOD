@@ -35,7 +35,7 @@ $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) 
 		 .	 JCckDev::getForm( 'core_options_max_size', @$options2['max_size'], $config )
 		 .	 JCckDev::getForm( 'core_options_size_unit', @$options2['size_unit'], $config )
 		 .	 '</li>';
-		echo JCckDev::renderForm( 'core_dev_select', @$options2['forbidden_extensions'], $config, array( 'label'=>'Forbidden Extensions', 'selectlabel'=>'Inherited', 'options'=>'None=0||Whitelist=1', 'storage_field'=>'json[options2][forbidden_extensions]' ) );
+		echo JCckDev::renderForm( 'core_dev_select', @$options2['forbidden_extensions'], $config, array( 'label'=>'Forbidden Extensions', 'selectlabel'=>'Inherited', 'options'=>'Bypass Check=2||Not Allowed=0||Whitelist=1', 'storage_field'=>'json[options2][forbidden_extensions]' ) );
 		echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
 		echo JCckDev::renderForm( 'core_options_preview', @$options2['preview'], $config );
 		echo JCckDev::renderForm( 'core_options_delete_box', @$options2['delete_box'], $config );

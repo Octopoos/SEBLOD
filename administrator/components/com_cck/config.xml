@@ -153,7 +153,7 @@
 		<field name="media_preview_extensions" type="text" size="86" default="" label="COM_CCK_CONFIG_MEDIA_PREVIEW_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_PREVIEW_EXTENSIONS_DESC" class="inputbox input-xlarge" />
 		<field name="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_LEGEND" type="spacer" hr="false" />
 		<field name="media_content_forbidden_extensions" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_DESC" class="btn-group btn-group-yesno">
-			<option value="0">None</option>
+			<option value="0">COM_CCK_NOT_ALLOWED</option>
 			<option value="1">COM_CCK_WHITELIST</option>
 		</field>
 		<field name="media_content_forbidden_extensions_whitelist" type="text" size="98" default="php" label="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST" description="COM_CCK_CONFIG_MEDIA_CONTENT_FORBIDDEN_EXTENSIONS_WHITELIST_DESC" class="inputbox input-xlarge" />

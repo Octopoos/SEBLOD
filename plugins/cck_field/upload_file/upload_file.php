@@ -525,8 +525,14 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$legal_ext	=	$options2['legal_extensions'];
 			}
 		}
-		$legal_ext	=	explode( ',', $legal_ext );
-		$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
+		$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
+		$legal_ext		=	explode( ',', $legal_ext );
+
+		if ( (int)$forbidden_ext ) {
+			$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null, 'raw' ) : $app->input->files->get( $name, null, 'raw' );
+		} else {
+			$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
+		}
 
 		if ( is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
@@ -738,8 +744,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>$forbidden_ext,
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>(int)$forbidden_ext,
 									   'file_name'=>$item_custom_name, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, 'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field'=>$field->storage_field, 'storage_field2'=>($field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$item_custom_title );
