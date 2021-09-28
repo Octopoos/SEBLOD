@@ -574,7 +574,36 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					$deleteBox	=	$deleteBox[$xk];
 				}
 			}
+		} elseif ( is_array( $userfile[$xk] ) ) {
+			$userfile_name			=	$userfile[$xk]['name'];
+			$userfile_type			=	$userfile[$xk]['type'];
+			$userfile_tmp_name		=	$userfile[$xk]['tmp_name'];
+			$userfile_error			=	$userfile[$xk]['error'];
+			$userfile_size			=	$userfile[$xk]['size'];
+			$userfile				=	null;
+			$userfile				=	array();
+			$userfile['name']		=	$userfile_name;
+			$userfile['type']		=	$userfile_type;
+			$userfile['tmp_name']	=	$userfile_tmp_name;
+			$userfile['error']		=	$userfile_error;
+			$userfile['size']		=	$userfile_size;
+			if ( is_array( $itemPath ) ) {
+				$itemPath	=	trim( $itemPath[$xk] );
+			}
+			if ( is_array( $imageTitle ) ) {
+				$imageTitle	=	trim( $imageTitle[$xk] );
+			}
+			if ( is_array( $imageDesc ) ) {
+				$imageDesc	=	trim( $imageDesc[$xk] );
+			}
+			if ( is_array( $imageCustomDir ) ) {
+				$imageCustomDir	=	trim( $imageCustomDir[$xk] );
+			}
+			if ( is_array( $deleteBox ) ) {
+				$deleteBox	=	$deleteBox[$xk];
+			}
 		}
+
 		if ( $deleteBox == 1 ) {
 			$title	=	strrpos( $itemPath, '/' ) ? substr( $itemPath, strrpos( $itemPath, '/' ) + 1 ) : $itemPath;
 			

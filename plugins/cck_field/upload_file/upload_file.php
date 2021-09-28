@@ -571,7 +571,36 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					$deleteBox	=	$deleteBox[$xk];
 				}
 			}
+		} elseif ( is_array( $userfile[$xk] ) ) {
+			$userfile_name			=	$userfile[$xk]['name'];
+			$userfile_type			=	$userfile[$xk]['type'];
+			$userfile_tmp_name		=	$userfile[$xk]['tmp_name'];
+			$userfile_error			=	$userfile[$xk]['error'];
+			$userfile_size			=	$userfile[$xk]['size'];
+			$userfile				=	null;
+			$userfile				=	array();
+			$userfile['name']		=	$userfile_name;
+			$userfile['type']		=	$userfile_type;
+			$userfile['tmp_name']	=	$userfile_tmp_name;
+			$userfile['error']		=	$userfile_error;
+			$userfile['size']		=	$userfile_size;
+
+			if ( is_array( $itemPath ) ) {
+				$itemPath	=	$itemPath[$xk];
+			}
+			if ( $options2['multivalue_mode'] ) {
+				if ( is_array( $item_custom_dir ) ) {
+					$item_custom_dir	=	trim( $item_custom_dir[$xk] );
+				}
+				if ( is_array( $item_custom_title ) ) {
+					$item_custom_title	=	trim( $item_custom_title[$xk] );
+				}
+			}
+			if ( is_array( $deleteBox ) ) {
+				$deleteBox	=	$deleteBox[$xk];
+			}
 		}
+		
 		// Short Format Path
 		if ( @$options2['storage_format'] ) {
 			$itemPath	=	$itemPrePath.$itemPath;
