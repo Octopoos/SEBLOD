@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
----------------- 3.21.4 Upgrade Release [28-Sep-2021] --------------
+---------------- 3.21.4 Upgrade Release [01-Oct-2021] --------------
 
 # Regression fixed on Field X (for Upload File/Image)
 # Regression fixed on Group X (for Upload File/Image)
