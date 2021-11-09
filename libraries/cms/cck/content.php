@@ -2087,6 +2087,15 @@ class JCckContent
 				case '>':
 					$where	=	' ' . $operator . ' ' . $db->quote( $v );
 					break;
+				case 'between':
+					if ( strpos( $v, '|' ) !== false ) {
+						$parts	=	explode( '|', $v );
+						$where	=	' >= '.$db->quote( $parts[0] ).' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $db->quote( $parts[1] );
+					} else {
+						$parts	=	explode( ',', $v );
+						$where	=	' >= '.$parts[0].' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $parts[1];
+					}
+					break;
 				case 'in':
 					if ( strpos( $v, '|' ) !== false ) {
 						$parts	=	explode( '|', $v );
