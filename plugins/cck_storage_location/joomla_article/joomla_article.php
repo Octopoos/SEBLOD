@@ -975,7 +975,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		} else {
 			$vars['id']	=	$id;
 		}
-		if ( JCck::on( '4.0') && ( $n == 1 || $n == 2 ) ) {
+		if ( ( JCck::on( '4.0' ) || !JCck::on( '4.0' ) && JComponentHelper::getParams( 'com_content' )->get( 'sef_advanced', 0 ) ) && ( $n == 1 || $n == 2 ) ) {
 			$segments	=	array();
 		}
 	}
