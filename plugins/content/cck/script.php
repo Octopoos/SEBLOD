@@ -380,8 +380,9 @@ class plgContentCCKInstallerScript
 									131=>'3.18.0', 132=>'3.18.1', 133=>'3.18.2', 134=>'3.18.3', 135=>'3.18.4',
 									136=>'3.19.0', 137=>'3.19.1',
 									138=>'3.20.0', 139=>'3.20.1', 140=>'3.20.2',
-									141=>'3.21.0', 142=>'3.21.1', 143=>'3.21.2', 144=>'3.21.3', 145=>'3.21.4',
-									146=>'4.0.0'
+									141=>'3.21.0', 142=>'3.21.1', 143=>'3.21.2', 144=>'3.21.3', 145=>'3.21.4', 146=>'3.21.5', 147=>'3.21.6', 148=>'3.21.7',
+									149=>'3.22.0', 150=>'3.22.1', 151=>'3.22.2', 152=>'3.22.3',
+									153=>'4.0.0'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
@@ -673,7 +674,7 @@ class plgContentCCKInstallerScript
 			
 			// Joomla! 4
 			if ( JCck::on( '4.0' ) ) {
-				if ( $n >= 146 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
+				if ( $n >= 153 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
 					// Languages
 					self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/en-GB' );
 					self::_renameLanguageFiles( JPATH_SITE.'/language/en-GB' );
