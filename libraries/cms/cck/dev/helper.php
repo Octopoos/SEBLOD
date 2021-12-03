@@ -249,7 +249,19 @@ abstract class JCckDevHelper
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 
 		if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
-			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+			$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
+
+			if ( $user->id && !$user->guest ) {
+				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$core->type_id );
+			} else {
+				$canEditOwn		=	false;
+			}
+
+			if ( !( $canEdit && $canEditOwn
+				|| ( $canEdit && !$canEditOwn && ( $core->author_id != $user->id ) )
+				|| ( $canEditOwn && ( $core->author_id == $user->id ) ) ) ) {
+				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+			}
 		}
 
 		JPluginHelper::importPlugin( 'cck_storage' );
