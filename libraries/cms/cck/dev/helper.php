@@ -249,7 +249,7 @@ abstract class JCckDevHelper
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 
 		if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
-			$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] );
+			$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
 
 			if ( $user->id && !$user->guest ) {
 				$canEditOwn		=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$core->type_id );
