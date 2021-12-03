@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+---------------- 3.21.5 Upgrade Release [03-Dec-2021] --------------
+
++ "between" operator support added on JCckContent find/search methods.
+
+# Group X (with Calendar) JS changed.
+# Joomla! 4 router behaviour (partially) allowed on Joomla! 3.
+# Regression fixed on Field (Construct)
+
 ---------------- 3.21.4 Upgrade Release [01-Oct-2021] --------------
 
 # Regression fixed on Field X (for Upload File/Image)
