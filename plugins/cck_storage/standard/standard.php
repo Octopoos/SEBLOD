@@ -200,14 +200,17 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				break;
 			case 'each':
 			case 'each_exact':
+			case 'n':
+			case 'n_exact':
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
 				$count		=	count( $values );
 				
 				if ( $count ) {
 					$fragments	=	array();
+					$operator	=	'AND';
 					$var_count	=	( $field->match_options ) ? $field->match_options->get( 'var_count', '' ) : '';
-					
+
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
@@ -222,6 +225,32 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 								$fragments[] 	=	$fragment;
 							}
 						}
+					} elseif ( $match == 'n_exact' ) {
+						$operator	=	'OR';
+						$min		=	(int)( $field->match_options ? $field->match_options->get( 'var_num', '2' ) : '2' );
+
+						if ( $count < $min ) {
+							$min	=	$count;
+						}
+						
+						$parts	=	self::_combine( $values );
+
+						foreach ( $parts as $part ) {
+							if ( count( $part ) == $min ) {
+								$part_sql	=	array();
+
+								foreach ( $part as $v ) {
+									if ( strlen( $v ) > 0 ) {
+										$part_sql[] 	=	$target.' = '.JCckDatabase::quote( $v )
+														.	' OR '.$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
+														.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
+														.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
+									}
+								}
+
+								$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
+							}
+						}
 					} else {
 						$case		=	( $field->match_options ) ? $field->match_options->get( 'var_case', '' ) : '';
 						$collate	=	( $field->match_options ) ? $field->match_options->get( 'var_collate', '' ) : '';
@@ -231,17 +260,40 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 							$target		=	'LOWER('.$target.')';
 						}
 
-						foreach ( $values as $v ) {
-							if ( strlen( $v ) > 0 ) {
-								if ( $case ) {
-									$v	=	StringHelper::strtolower( $v );
+						if ( $match == 'n' ) {
+							$operator	=	'OR';
+							$min		=	(int)( $field->match_options ? $field->match_options->get( 'var_num', '2' ) : '2' );
+
+							if ( $count < $min ) {
+								$min	=	$count;
+							}
+
+							$parts	=	self::_combine( $values );
+
+							foreach ( $parts as $part ) {
+								if ( count( $part ) == $min ) {
+									$part_sql	=	array();
+
+									foreach ( $part as $v ) {
+										$part_sql[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
+									}
+
+									$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
 								}
-								$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
+							}
+						} else {
+							foreach ( $values as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									if ( $case ) {
+										$v	=	StringHelper::strtolower( $v );
+									}
+									$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
+								}
 							}
 						}
 					}
 					if ( count( $fragments ) ) {
-						$sql	=	'((' . implode( ') AND (', $fragments ) . '))';
+						$sql	=	'((' . implode( ') '.$operator.' (', $fragments ) . '))';
 					}
 					if ( $var_count != '' ) {
 						if ( (int)$var_count == 0 || (int)$var_count == 1 ) {
@@ -456,6 +508,20 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
+	// _combine
+	public static function _combine( $values )
+	{
+		$results	=	array( array() );
+
+		foreach ( $values as $value ) {
+			foreach ( $results as $combination ) {
+				array_push( $results, array_merge( array( $value ), $combination ) );
+			}
+		}
+
+		return $results;
+	}
+
 	// _format
 	public static function _format( $name, $value, &$config = array() )
 	{
