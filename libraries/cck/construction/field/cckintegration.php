@@ -222,8 +222,9 @@ class JFormFieldCckIntegration extends JFormField
 		$html[] =	'</div></div>';
 
 		// Stuff
-		JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+		JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		$ajax	=	'../media/system/images/modal/spinner.gif';
+		$pre	=	!JCck::on( '4.0' ) ? 'config.save.' : '';
 		$js		=	'
 					(function ($){
 						JCck.Dev = {
@@ -247,11 +248,11 @@ class JFormFieldCckIntegration extends JFormField
 										type: "POST",
 										url: "index.php?option=com_cck&task=saveIntegrationAjax&"+Joomla.getOptions("csrf.token")+"=1",
 										beforeSend:function(){ $("#toolbar-help").after(\'<div id="toolbar-spinner" class="btn-group">\'+loading+\'</div>\'); },
-										success: function(response){ $("#toolbar-spinner").remove(); Joomla.submitbutton("config.save.component."+task); },
+										success: function(response){ $("#toolbar-spinner").remove(); Joomla.submitbutton("'.$pre.'component."+task); },
 										error:function(){}
 									});
 								} else {
-									Joomla.submitbutton("config.save.component."+task);
+									Joomla.submitbutton("'.$pre.'component."+task);
 								}
 							}
 						};

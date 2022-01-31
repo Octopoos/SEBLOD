@@ -261,7 +261,8 @@ abstract class JCckDev
 		}
 
 		if ( !$allowed ) {
-			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );'
+				.	'$("#storage").parents("fieldset").addClass("disabled")';
 		} else {
 			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
