@@ -54,10 +54,17 @@ class CCKViewSearch extends JViewLegacy
 							   'panel_height'=>'80px',
 							   'w30'=>'span4 col-lg-4',
 							   'w70'=>'span8 col-lg-8',
-							   'wrapper'=>'container',
+							   'wrapper'=>'',
 							   'wrapper2'=>'row-fluid',
+							   'wrapper_first'=>'',
 							   'wrapper_tmpl'=>'span'
 						);
+		
+		if ( !JCck::on( '4' ) ) {
+			$this->css['wrapper']		=	'container';
+			$this->css['wrapper_first']	=	'seblod first';
+		}
+
 		$this->js	=	array( '_'=>'',
 							   'tooltip'=>'$(".hasTooltip").tooltip({});'
 						);
