@@ -541,7 +541,7 @@ class CCKController extends JControllerLegacy
 			define( '_C2_TEXT',		'CONTENT_TYPE' );
 			define( '_C4_TEXT',		'SEARCH_TYPE' );
 			define( 'CCK_BUILDER',	'APP_BUILDER' );
-			define( 'CCK_LABEL',	'SEBLOD 3.x' );
+			define( 'CCK_LABEL',	JText::_( 'COM_CCK' ) );
 			define( 'CCK_LABEL1',	'SEBLOD' );
 			define( 'CCK_LABEL2',	'' );
 		}
