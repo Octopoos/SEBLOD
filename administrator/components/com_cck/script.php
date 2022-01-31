@@ -297,17 +297,21 @@ class com_cckInstallerScript
 			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
 		}
 		
-		if ( !version_compare( JVERSION, '4.0', 'ge' ) ) {
+		if ( $type == 'install' ) {
+			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
+			if ( JFolder::exists( $src ) ) {
+				JFolder::copy( $src, JPATH_SITE.'/libraries/cck/_', '', true );
+				JFolder::delete( $src );
+			}
+
+			// Post Install Log
+			self::_postInstallMessage( 'install', $parent );
+		} elseif ( !version_compare( JVERSION, '4.0', 'ge' ) ) {
 			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 			if ( JFolder::exists( $src ) ) {
 				JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
 				JFolder::delete( $src );
 			}
-		}
-		
-		if ( $type == 'install' ) {
-			// Post Install Log
-			self::_postInstallMessage( 'install', $parent );
 		}
 	}
 	

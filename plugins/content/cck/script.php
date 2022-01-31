@@ -183,12 +183,17 @@ class plgContentCCKInstallerScript
 		$db->execute();			
 		$db->setQuery( 'UPDATE #__extensions SET ordering = 1 WHERE type = "plugin" AND folder = "content" AND element = "cck"' );
 		$db->execute();
-		
+
 		if ( $type == 'install' ) {
+			if ( JCck::on( '4.0' ) ) {
+				// Menu 4.x
+				self::_insertNavItem( $seblod->id, $seblod->component_id );
+			}
+			
 			// Manage Modules
 			$modules	=	array(	0=>array( 'name'=>'mod_cck_menu', 'update'=>'title = "Admin Menu - SEBLOD", access = 3, published = 1, position = "menu", ordering = 2' ),
-									1=>array( 'name'=>'mod_cck_quickadd', 'update'=>'title = "Quick Add - SEBLOD", access = 3, published = 1, position = "status", ordering = 0' ),
-									2=>array( 'name'=>'mod_cck_quickicon', 'update'=>'title = "Quick Icons - SEBLOD", access = 3, published = 1, position = "icon", ordering = 2' ),
+									/*1=>array( 'name'=>'mod_cck_quickadd', 'update'=>'title = "Quick Add - SEBLOD", access = 3, published = 1, position = "status", ordering = 0' ),*/
+									/*2=>array( 'name'=>'mod_cck_quickicon', 'update'=>'title = "Quick Icons - SEBLOD", access = 3, published = 1, position = "icon", ordering = 2' ),*/
 									3=>array( 'name'=>'mod_cck_breadcrumbs', 'update'=>'title = "Breadcrumbs - SEBLOD"' ),
 									4=>array( 'name'=>'mod_cck_form', 'update'=>'title = "Form - SEBLOD"' ),
 									5=>array( 'name'=>'mod_cck_list', 'update'=>'title = "List - SEBLOD"' ),
@@ -345,13 +350,21 @@ class plgContentCCKInstallerScript
 			$params->set( 'initial_version', $app->cck_core_version );
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
-
 			
 			// Set User Actions Log
 			self::_setUserActionsLog();
 
 			// Set Utf8mb4 flag
 			self::_setUtf8mb4( $params );
+
+			// Languages
+			self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/en-GB' );
+			self::_renameLanguageFiles( JPATH_SITE.'/language/en-GB' );
+
+			if ( is_dir( JPATH_SITE.'/language/fr-FR' ) ) {
+				self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/fr-FR' );
+				self::_renameLanguageFiles( JPATH_SITE.'/language/fr-FR' );
+			}
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
@@ -674,6 +687,9 @@ class plgContentCCKInstallerScript
 			
 			// Joomla! 4
 			if ( JCck::on( '4.0' ) ) {
+				// Menu 4.x
+				self::_insertNavItem( $seblod->id, $seblod->component_id );
+
 				if ( $n >= 153 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
 					// Languages
 					self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/en-GB' );
@@ -683,27 +699,15 @@ class plgContentCCKInstallerScript
 						self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/fr-FR' );
 						self::_renameLanguageFiles( JPATH_SITE.'/language/fr-FR' );
 					}
-
-					// Menu
-					$table	=	JTable::getInstance( 'Menu' );
-					$data	=	array( 'menutype'=>'main', 'title'=>'com_cck_core_title', 'alias'=>'core', 'path'=>'SEBLOD/core',
-									   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$seblod->id,
-									   'level'=>2, 'component_id'=>$seblod->component_id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
-					
-					$table->setLocation( $seblod->id, 'first-child' );
-					$table->bind( $data );
-					$table->check();
-					$table->alias	=	'core';
-					$table->path	=	'SEBLOD/core';
-					$table->store();
-					$table->rebuildPath( $table->id );
 				}
 
+				/*
 				$db->setQuery( 'UPDATE #__menu SET title = "SEBLOD 4.x" WHERE id = '.(int)$seblod->id );
 				$db->execute();
 
 				$db->setQuery( 'UPDATE #__menu SET title = "com_cck_core_title", alias = "core", path = "SEBLOD/core" WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id );
 				$db->execute();
+				*/
 			}
 
 			// Set User Actions Log
@@ -715,7 +719,7 @@ class plgContentCCKInstallerScript
 			// Rebuild Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
-		
+		return;
 		// Force Auto Increments
 		self::_forceAutoIncrements();
 	}
@@ -920,6 +924,10 @@ class plgContentCCKInstallerScript
 							$table->published   =   -44;
 							$table->store();
 						}
+						if ( property_exists( $table, 'title' ) ) {
+							$table->title   =   '-';
+							$table->store();
+						}
 					}
 				} elseif ( $max > $auto_inc ) {
 					// Remove temp entry (id = $auto_inc && published = -44 && title == '')
@@ -937,6 +945,23 @@ class plgContentCCKInstallerScript
 				}
 			}
 		}
+	}
+
+	// _insertNavItem
+	protected function _insertNavItem( $parent_id, $component_id )
+	{
+		$table	=	JTable::getInstance( 'Menu' );
+		$data	=	array( 'menutype'=>'main', 'title'=>'com_cck_core_title', 'alias'=>'core', 'path'=>'SEBLOD/core',
+						   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$parent_id,
+						   'level'=>2, 'component_id'=>$component_id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
+		
+		$table->setLocation( $parent_id, 'first-child' );
+		$table->bind( $data );
+		$table->check();
+		$table->alias	=	'core';
+		$table->path	=	'SEBLOD/core';
+		$table->store();
+		$table->rebuildPath( $table->id );
 	}
 
 	// _renameLanguageFiles
