@@ -10,21 +10,30 @@
 
 defined( '_JEXEC' ) or die;
 
-//$preload	=	JCckDev::preload( array( 'core_label', 'core_defaultvalue', 'core_minlength', 'core_maxlength', 'core_size', 'core_storage' ) );
-?>
+// Set
+$displayData	=	array(
+						'config'=>$config,
+						'form'=>array(
+							array(
+								'fields'=>array(
+									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
+									JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
+									JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config ),
+									JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config ),
+									JCckDev::renderForm( 'core_size', $this->item->size, $config )
+								)
+							),
+							array(
+								'fields'=>array(
+									JCckDev::getForm( 'core_storage', $this->item->storage, $config )
+								),
+								'mode'=>'storage'
+							)
+						),
+						'html'=>'',
+						'item'=>$this->item,
+						'script'=>''
+					);
 
-<div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config );
-        echo JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config );
-        echo JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config );
-        echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
-		
-		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
-		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
-        ?>
-    </ul>
-</div>
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit', $displayData );
+?>
