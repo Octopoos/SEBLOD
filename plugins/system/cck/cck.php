@@ -775,6 +775,15 @@ class plgSystemCCK extends JPlugin
 					}
 				}
 			}
+
+			// Data Layer
+			$session	=	JFactory::getSession();
+			$page_data	=	$session->get( 'cck.data_layer', null );
+
+			if ( $page_data ) {
+				$doc->addScriptDeclaration( 'window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).');' );
+				$session->clear( 'cck.data_layer' );
+			}
 		}
 		if ( $app->isClient( 'site' ) && isset( $app->cck_app ) && isset( $app->cck_app['Header'] ) ) {
 			if ( count( $app->cck_app['Header'] ) ) {

@@ -792,12 +792,24 @@ class CCKController extends JControllerLegacy
 							'isNew'=>@$config['isNew'],
 							'pk'=>$config['pk']
 						);
-		
+		$session	=	JFactory::getSession();
+
+		if ( $page_data = $session->get( 'cck.data_layer', null ) ) {
+			$return['data_layer']	=	$page_data;
+
+			$session->clear( 'cck.data_layer' );
+		}
+
+		if ( isset( $config['html'] ) ) {
+			$return['html']	=	$config['html'];
+		}
 		if ( !$return['pk'] ) {
 			$return['error']	=	1;
 		}
 		
 		echo json_encode( $return );
+
+		exit();
 	}
 
 	// saveOrderAjax
