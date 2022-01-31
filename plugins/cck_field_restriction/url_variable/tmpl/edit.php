@@ -11,25 +11,39 @@
 defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'restriction', $this->item );
+
+// JS
+$js =	'jQuery(document).ready(function($) {
+			$("#values").isVisibleWhen("match","isEqual",false);
+		});';
+
+// Set
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', array(
+	'config'=>$config,
+	'form'=>array(
+		array(
+			'fields'=>array(
+				JCckDev::renderBlank(),
+				JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'type'=>'radio', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=1', 'css'=>'btn-group', 'storage_field'=>'do' ) ),
+				JCckDev::renderLayoutFile(
+					'cck'.JCck::v().'.form.field', array(
+						'label'=>JText::_( 'COM_CCK_VARIABLE_VALUES' ),
+						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
+							'grid'=>'|auto|25%',
+							'html'=>array(
+								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'trigger' ) ),
+								JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isEqual', 'options'=>'STATE_IS_EQUAL_IN=isEqual||STATE_IS_FILLED=isFilled||STATE_IS_NULL=isNull', 'storage_field'=>'match' ) ),
+								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) )
+							)
+						) )
+					)
+				)
+			)
+		)
+	),
+	'html'=>'',
+	'item'=>$this->item,
+	'script'=>$js,
+	'type'=>'restriction'
+) );
 ?>
-
-<div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_RESTRICTION_'.$this->item->name.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-        echo JCckDev::renderBlank();
-		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) );
-		echo '<li class="w100"><label>'.JText::_( 'COM_CCK_VARIABLE_VALUES' ).'</label>'
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'trigger' ) )
-		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isEqual', 'options'=>'STATE_IS_EQUAL_IN=isEqual||STATE_IS_FILLED=isFilled||STATE_IS_NULL=isNull', 'storage_field'=>'match' ) )
-		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) )
-		 .	 '</li>';
-        ?>
-    </ul>
-</div>
-
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$('#values').isVisibleWhen('match','isEqual',false);
-});
-</script>
