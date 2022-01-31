@@ -22,6 +22,31 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.0 Release Candidate 3 [31-Jan-2022] ------------
+
+! New package for testing purposes on Joomla! 4
+
+Since 4.0-rc2:
++ Can be installed directly on Joomla! 4
++ Includes a 2nd batch of Joomla! 4 compatibility/support changes
++ Introduces UI changes for the back-end template (i.e. Bootstrap 5 support)
+  >> For a sneak peek:
+  Add|Edit a field: Text, Textarea, Tabs, Group
+  Apply a Link: Content, Form
+  Apply a Live Value: Joomla! User, URL Variable
+  Apply a Restriction: URL Variable, Workflow
+  Apply a Typography: Date, HTML
+  >>  More Plug-ins and Views to come!!
+
+---------------- 3.22.0 Upgrade Release [31-Jan-2022] --------------
+
++ "n Words" Match mode added on Search Types.
++ "n Words Exact" Match mode added on Search Types.
+
++ dataLayer output added.
+  >> ex: can be triggered as following from an afterStore:
+  JFactory::getSession()->set( 'cck.data_layer', array( 'type'=>$config['type'], 'subject'=>'my_subject' ) );
+
 ---------------- 3.21.5 Upgrade Release [03-Dec-2021] --------------
 
 + "between" operator support added on JCckContent find/search methods.
