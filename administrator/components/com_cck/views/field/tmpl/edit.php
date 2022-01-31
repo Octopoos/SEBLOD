@@ -10,14 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $app	=	JFactory::getApplication();
 $lang	=	JFactory::getLanguage();
 $mode	=	JCck::getConfig_Param( 'storage_dev', '0' );
 $tmpl	=	$app->input->getString( 'tmpl', '' );
 $wrap	=	( $tmpl ) ? $this->css['wrapper_tmpl'] : $this->css['wrapper'];
 
+$ajax		=	'';
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
 $cck		=	JCckDev::preload( array( 'core_title_field', 'core_name_field', 'core_state', 'core_description' ) );
+$class		=	$tmpl ? ' class="modal-large"' : '';
 $config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'vName'=>$this->vName, 'tmpl'=>'' ) );
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 if ( $lang->hasKey( $key ) == 1 ) {
@@ -34,108 +38,132 @@ JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm"<?php echo $class;?>>
 
 <?php if ( $tmpl ) { ?>
-    <div id="ajaxToolbar" class="span12">
-        <div style="float: left;" id="ajaxMessage"></div>
-        <a href="javascript:void(0);" class="btn btn-small" id="cancel_ajax"><span class="icon-unpublish"></span>
+	<div id="ajaxToolbar" class="span12 subhead">
+		<div style="float: left;" id="ajaxMessage"></div>
+		<a href="javascript:void(0);" class="<?php echo $this->css['btn-no']; ?>" id="cancel_ajax"><span class="icon-unpublish"></span>
 			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
-        </a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save2new"><span class="icon-save-new"></span>
+		</a>
+		<a href="javascript:void(0);" class="<?php echo $this->css['btn-yes']; ?> submit_ajax" data-task="save2new"><span class="icon-save-new"></span>
 			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
 		</a>
-        <a href="javascript:void(0);" class="btn btn-small submit_ajax" data-task="save"><span class="icon-save"></span>
+		<a href="javascript:void(0);" class="<?php echo $this->css['btn-yes']; ?> submit_ajax" data-task="save"><span class="icon-save"></span>
 			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
 		</a>
-		<a href="javascript:void(0);" class="btn btn-small btn-success submit_ajax" data-task="apply"><span class="icon-apply"></span>
-			<?php echo JText::_( 'COM_CCK_SAVE' ); ?>
-		</a>
-    </div>
+	</div>
 <?php } ?>
 
 <div class="<?php echo $wrap; ?>">
-	<div class="seblod first">
-        <div id="loading" class="loading"></div>
-        <ul class="spe spe_title">
-        	<?php if ( $this->isNew && $mode >= 2 ) { ?>
-	        	<li><label>Title</label>
-	        	<div class="input-group left">
-	            <?php
-	            echo JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="left" tabindex="1"' ), array( 'name'=>'title[]', 'id'=>'title2' ) );
-	            echo JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="right" tabindex="2" placeholder="..."', 'required'=>'' ), array( 'name'=>'title[]' ) );
-	            ?>
-	            </div>
-	        	</li>
-        	<?php } else {
-        		echo JCckDev::renderForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'tabindex="1"' ) );
-        	} ?>
-        </ul>
-        <ul class="spe spe_folder">
-			<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
-        </ul>
-        <ul class="spe spe_state">
-            <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
-        </ul>
-        <ul class="spe spe_name">
-	        <?php
-			$ajax			=	'';
-			if ( ! $this->item->id || ( $this->item->id && $mode ) ) {
-				JFactory::getLanguage()->load( 'plg_cck_field_validation_ajax_availability', JPATH_ADMINISTRATOR, null, false, true );
-				$class	=	'inputbox text validate[required,custom[field_name],ajax[availability_name]]';
-				$extra	=	'';
-				if ( (int)$this->item->id > 0 ) {
-					$extra	=	'&avKey=id&avPk='.$this->item->id.'&avPv='.htmlspecialchars( $this->item->name );
-				}
-				$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
-						.	',"extraData": "avTable=cck_core_fields&avColumn=name'.$extra.'"'
-						.	',"alertText": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
-						.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
-						.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
-				echo	'<li><label>'.JText::_( 'COM_CCK_NAME' ).'<span class="star"> *</span></label>'
-					.	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="3" />'
-					.	'</li>';				
-			} else {
-				echo '<li><label>'.JText::_( 'COM_CCK_NAME' ).'</label><span class="variation_value" style="display:block;"><strong>'.$this->item->name.'</strong></span>'
-				 .	 '<input type="hidden" id="name" name="name" value="'.$this->item->name.'" /></li>';
+	<div class="<?php echo $this->css['wrapper_first']; ?>">
+		<div id="loading" class="loading"></div>
+		<?php
+		// Name
+		if ( ! $this->item->id || ( $this->item->id && $mode ) ) {
+			JFactory::getLanguage()->load( 'plg_cck_field_validation_ajax_availability', JPATH_ADMINISTRATOR, null, false, true );
+
+			$class	=	'form-control inputbox text validate[required,custom[field_name],ajax[availability_name]]';
+			$extra	=	'';
+			
+			if ( (int)$this->item->id > 0 ) {
+				$extra	=	'&avKey=id&avPk='.$this->item->id.'&avPv='.htmlspecialchars( $this->item->name );
 			}
-			?>
-		</ul>
-        <ul class="spe spe_type">
-            <?php echo str_replace( 'tabindex="3"', 'tabindex="4"', JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getType', 'name'=>'core_type' ), $this->item->type, $config, array( 'storage_field'=>'type' ) ) ); ?>
-        </ul>
-        <ul class="spe spe_description spe_latest">
-            <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
-        </ul>
+			$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
+					.	',"extraData": "avTable=cck_core_fields&avColumn=name'.$extra.'"'
+					.	',"alertText": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
+					.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
+					.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
+			
+			$dataName	=	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="3" />';
+			$modeName	=	true;
+		} else {
+			$dataName	=	'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />';			
+			$modeName	=	false;
+		}
+
+		// Title
+		if ( $this->isNew && $mode >= 2 ) {
+			$dataTitle	=	JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="left" tabindex="1"' ), array( 'name'=>'title[]', 'id'=>'title2' ) )
+						.	JCckDev::getForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'data-pos="right" tabindex="2" placeholder="..."', 'required'=>'' ), array( 'name'=>'title[]' ) );
+			$modeTitle	=	true;
+		} else {
+			$dataTitle	=	JCckDev::renderForm( $cck['core_title_field'], $this->item->title, $config, array( 'attributes'=>'tabindex="1"' ) );
+			$modeTitle	=	false;
+		}
+
+		$dataTmpl	=	array(
+							'fields'=>array(
+								'attributes'=>JCckDev::renderForm( 'core_attributes', $this->item->attributes, $config, array( 'label'=>'Custom Attributes' ) ),
+								'css'=>JCckDev::renderForm( 'core_dev_text', $this->item->css, $config, array( 'label'=>'Class CSS', 'storage_field'=>'css' ) ),
+								'description'=>JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
+								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
+								'name'=>$dataName,
+								'required'=>JCckDev::renderForm( 'core_required', $this->item->required, $config ),
+								'script'=>JCckDev::renderForm( 'core_script', $this->item->script, $config ),
+								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
+								'title'=>$dataTitle,
+								'type'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getType', 'name'=>'core_type' ), $this->item->type, $config, array( 'storage_field'=>'type', 'required'=>'required' ) )
+							),
+							'item'=>$this->item,
+							'params'=>array(
+								'name_mode'=>$modeName,
+								'name_value'=>$this->item->name,
+								'title_mode'=>$modeTitle
+							)
+						);
+
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.field.edit_main', $dataTmpl );
+		?>
 	</div>
-    
-    <div id="layer" style="text-align: center;">
-	    <?php
-		$type	=	( $this->item->type ) ? $this->item->type : 'text';
-		$layer	=	JPATH_PLUGINS.'/cck_field/'.$type.'/tmpl/edit.php';
-		if ( is_file( $layer ) ) {
-			include_once $layer;
+	
+	<div class="main-card">
+		<?php
+		if ( JCck::on( '4.0' ) ) {
+			echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
 		}
 		?>
-    </div>
+		<div id="layer" style="text-align: center;">
+			<?php
+			$type	=	( $this->item->type ) ? $this->item->type : 'text';
+			$layer	=	JPATH_PLUGINS.'/cck_field/'.$type.'/tmpl/edit.php';
+			if ( is_file( $layer ) ) {
+				include_once $layer;
+			}
+			?>
+		</div>
+		<?php
+		if ( JCck::on( '4.0' ) ) {
+			echo HTMLHelper::_( 'uitab.endTab' );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', JText::_( 'COM_CCK_OPTIONS' ) );
+			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.field.edit_options', $dataTmpl );
+			echo HTMLHelper::_( 'uitab.endTab' );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.field.edit_publishing', $dataTmpl );
+			echo HTMLHelper::_( 'uitab.endTab' );
+			echo HTMLHelper::_( 'uitab.endTabSet' );
+		}
+		?>
+	</div>
 </div>
 
 <div class="clr"></div>
 <div>
 	<input type="hidden" id="task" name="task" value="" />
 	<input type="hidden" id="myid" name="id" value="<?php echo @$this->item->id; ?>" />
-    <?php if ( $tmpl == 'component' ) { ?>
-    <input type="hidden" id="tmpl" name="tmpl" value="component" />
-    <input type="hidden" id="brb" name="brb" value="field" />
-    <?php } ?>
-    <?php
-    echo $this->form->getInput( 'id' );
+	<?php if ( $tmpl == 'component' ) { ?>
+	<input type="hidden" id="tmpl" name="tmpl" value="component" />
+	<input type="hidden" id="brb" name="brb" value="field" />
+	<?php } ?>
+	<?php
+	echo $this->form->getInput( 'id' );
 	$config['validation']['field_name']				=	'"field_name":{"regex": /^[a-z0-9_]+$/,"alertText":"* '.JText::_( 'COM_CCK_FIELD_NAME_VALIDATION' ).'"}';
 	if ( $ajax ) {
 		$config['validation']['availability_name']	=	$ajax;
 	}
 	JCckDev::validate( $config );
-    echo JHtml::_( 'form.token' );
+	echo JHtml::_( 'form.token' );
 	?>
 </div>
 </form>
@@ -210,7 +238,7 @@ Helper_Display::quickCopyright();
 												if (!parent.jQuery(target_id+" #"+$(this).attr("id")).length) {
 													$(this).appendTo(parent.jQuery(target_id));
 												}
-								  			});
+											});
 											parent.jQuery(target_id+"_tmp").remove();
 										}
 										if (task=="field.save2new") {

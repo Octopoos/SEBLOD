@@ -78,7 +78,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	}
 	$field						=	new stdClass;
 	$field->type				=	'select_simple';
-	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'map' );
+	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="form-select inputbox select max-width-180"', 'value', 'text', '', 'map' );
 } elseif ( $this->item->id == 'object_property' ) {
 	$columns					=	array();
 	$field						=	new stdClass;
@@ -96,7 +96,7 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	}
 	
 	$columns					=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
-	$form						=	JHtml::_( 'select.genericlist', $columns, $this->item->name, 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', $this->item->name );
+	$form						=	JHtml::_( 'select.genericlist', $columns, $this->item->name, 'class="form-select inputbox select max-width-180"', 'value', 'text', '', $this->item->name );
 } else {
 	$desc						=	'';
 	$field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
@@ -146,6 +146,20 @@ if ( $this->item->title == 'search' ) {
 }
 if ( $alterMatch ) {
 	$matchForm	=	JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'', 'options'=>'Keep Match Unchanged=0||Update Match Mode=1', 'storage_field'=>'alter_match', 'attributes'=>'disabled="disabled"' ) );
+}
+
+if ( JCck::on( '4.0' ) ) {
+	$vars	=	array(
+					'h'=>104,
+					'h2'=>96,
+					't'=>' class="btn btn-primary btn-small"'
+				);
+} else {
+	$vars	=	array(
+					'h'=>54,
+					'h2'=>32,
+					't'=>''
+				);
 }
 
 // Set
@@ -287,7 +301,7 @@ $js		=	'
 					var fieldtype = "'.$field->type.'";
 					var elem = "#'.$this->item->name.'";
 					var w = $("#toolbarBox").width()+69;
-					var h = $("#layout").height()+54;
+					var h = $("#layout").height()+'.$vars['h'].';
 					if (w > 300 || h > 200) {
 						w = (w > 300) ? w+42 : w;
 						parent.jQuery.colorbox.resize({innerWidth:w, innerHeight:h});
@@ -308,7 +322,7 @@ $js		=	'
 							v = v.replace(reg, ",");
 							if (!$(elem).isMultiple() && v.split(",").length > 1) {
 								$("#alter_match_div").toggleClass("hidden-important");
-								$(elem).toggleMultiple(18);
+								$(elem).toggleMultiple(15);
 							}
 						} else {
 							var v = parent.jQuery(elem2).val();
@@ -322,8 +336,8 @@ $js		=	'
 						$(elem+" input").val(v2);
 					}
 					if (toggle=="1") {
-						JCck.Dev.resize(32);
-						$("div.toggle-selection").html(\'<a href="javascript:void(0);" id="toggle_selection">Toggle</a>\');
+						JCck.Dev.resize('.$vars['h2'].');
+						$("div.toggle-selection").html(\'<a href="javascript:void(0);" id="toggle_selection"'.$vars['t'].'>Toggle</a>\');
 						if ($("#'.$this->item->name.'").isMultiple()) {
 							JCck.Dev.always = true;
 						}
@@ -355,16 +369,15 @@ JText::script( 'COM_CCK_MATCH_ANY_WORDS_EXACT' );
 JText::script( 'COM_CCK_MATCH_DEFAULT_PHRASE' );
 JText::script( 'COM_CCK_MATCH_EXACT_PHRASE' );
 ?>
-
-<div class="seblod preview">
+<div class="row"><div class="col-12">
 	<div align="center" style="text-align:center;">
-		<div class="cck_forms cck_admin cck_<?php echo $field->type; ?>">
+		<div class="control-group cck_forms cck_admin cck_<?php echo $field->type; ?> row">
             <?php if ( $desc ) { ?>
 			<div class="cck_desc cck_desc_<?php echo $field->type; ?>">
 				<?php echo $desc; ?>
 			</div>
             <?php } ?>
-			<div class="cck_form cck_form_<?php echo $field->type; ?>">
+			<div class="controls cck_form cck_form_<?php echo $field->type; ?>">
 				<?php echo $form; ?>
 			</div>
 			<?php if ( $alterMatch ) { ?>
@@ -374,10 +387,7 @@ JText::script( 'COM_CCK_MATCH_EXACT_PHRASE' );
 			<?php } ?>
 		</div>
 	</div>
-    <!--<div align="center" style="text-align:center;">
-		<?php //echo $form; ?>
-	</div>-->
     <?php if ( $toggle ) { ?>
 		<div class="toggle-selection"></div>
     <?php } ?>
-</div>
+</div></div>
