@@ -11,7 +11,7 @@
 .ajaxSubmit {padding: 20px; background: #55ea55; border: 1px solid #999; display: none;}
 
 .formError .formErrorContent {
-	width: 100%; background: #242424; position:relative; color: #fff; min-width: 120px; font-family: tahoma; font-size: 11px;
+	width: 100%; background: #242424; position:relative; color: #fff; min-width: 120px; font-size: 12px;
 	padding: 4px 10px 4px 10px; border-radius: 4px; text-align:left;
 }
 
