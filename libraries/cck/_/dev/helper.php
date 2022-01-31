@@ -181,6 +181,16 @@ abstract class JCckDevHelper
 		return( $items );
 	}
 
+	// getCombinations
+	public static function getCombinations( $array, $length )
+	{
+		JLoader::register( 'Combinations', JPATH_PLATFORM.'/cck/misc/Combinations.php' );
+
+		$combinations	=	new Combinations( $array );
+
+		return $combinations->getCombinations( $length );
+	}
+
 	// getCountryName
 	public static function getCountryName( $code2 )
 	{

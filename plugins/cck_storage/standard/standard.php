@@ -233,23 +233,23 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 							$min	=	$count;
 						}
 						
-						$parts	=	self::_combine( $values );
+						$parts	=	JCckDevHelper::getCombinations( $values, $min );
 
 						foreach ( $parts as $part ) {
-							if ( count( $part ) == $min ) {
-								$part_sql	=	array();
+							// if ( count( $part ) == $min ) {
+							$part_sql	=	array();
 
-								foreach ( $part as $v ) {
-									if ( strlen( $v ) > 0 ) {
-										$part_sql[] 	=	$target.' = '.JCckDatabase::quote( $v )
-														.	' OR '.$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
-														.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
-														.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
-									}
+							foreach ( $part as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									$part_sql[] 	=	$target.' = '.JCckDatabase::quote( $v )
+													.	' OR '.$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
+													.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
+													.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
 								}
-
-								$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
 							}
+
+							$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
+							// }
 						}
 					} else {
 						$case		=	( $field->match_options ) ? $field->match_options->get( 'var_case', '' ) : '';
@@ -268,18 +268,18 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 								$min	=	$count;
 							}
 
-							$parts	=	self::_combine( $values );
+							$parts	=	JCckDevHelper::getCombinations( $values, $min );
 
 							foreach ( $parts as $part ) {
-								if ( count( $part ) == $min ) {
-									$part_sql	=	array();
+								// if ( count( $part ) == $min ) {
+								$part_sql	=	array();
 
-									foreach ( $part as $v ) {
-										$part_sql[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
-									}
-
-									$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
+								foreach ( $part as $v ) {
+									$part_sql[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
 								}
+
+								$fragments[]	=	'(' . implode( ') AND (', $part_sql ) . ')';
+								// }
 							}
 						} else {
 							foreach ( $values as $v ) {
@@ -507,20 +507,6 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
-	
-	// _combine
-	public static function _combine( $values )
-	{
-		$results	=	array( array() );
-
-		foreach ( $values as $value ) {
-			foreach ( $results as $combination ) {
-				array_push( $results, array_merge( array( $value ), $combination ) );
-			}
-		}
-
-		return $results;
-	}
 
 	// _format
 	public static function _format( $name, $value, &$config = array() )
