@@ -30,7 +30,7 @@ JCck.DevHelper.setSidebar();
 (function ($){
 $("#pos-1 input:radio[name='positions']").prop("checked", true);
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}
-$("#options_tag_form_title").isVisibleWhen('options_show_form_title','1'); $("#parent_inherit").isDisabledWhen('parent','');
+$("#options_tag_form_title").isVisibleWhen('options_show_form_title','1'); $("#parent_inherit").isHiddenWhen('parent','',false);
 $("#options_validation_background_color").isDisabledWhen('options_validation_position','inline');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }

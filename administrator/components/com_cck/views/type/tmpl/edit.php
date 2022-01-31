@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_description', 'core_state',
 										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
@@ -33,88 +35,85 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper'].' '.$this->uix; ?>">
-	<div class="seblod first">
-    	<div>
-            <ul class="spe spe_title">
-                <?php
-                echo JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config );        
-                echo '<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />';
-                ?>
-            </ul>
-            <ul class="spe spe_folder">
-				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
-            </ul>
-            <ul class="spe spe_state spe_third">
-                <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
-            </ul>
-            <ul class="spe spe_description">
-                <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
-            </ul>
-        </div>
-		<div class="clr"></div>
-        <div class="togglebar">
-        	<div>
-			<?php
-            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
-            echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
-            ?>
-        	</div>
-        </div>
-        <div id="toggle_more" class="toggle_more <?php echo $this->panel_class; ?>"></div>
-	</div>
-	<div class="seblod first" id="more" style="<?php echo $this->panel_style; ?>height:<?php echo $this->css['panel_height']; ?>;">
-    	<div>
-            <ul class="spe spe_title">
-            	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
-            </ul>
-            <ul class="spe spe_folder">
-            	<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
-            </ul>
-            <ul class="spe spe_third">
-            	<?php
-				$html	=	JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) );
-            	echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>$html ) );
-            	?>            	
-            </ul>
-			<ul class="spe spe_name">
-				<?php
-				if ( !$this->item->id ) {
-					echo '<li><label>'.JText::_( 'COM_CCK_QUICK_MENU_ITEM' ).'</label>'
-					 .	 '<select id="quick_menuitem" name="quick_menuitem" class="inputbox" style="max-width:180px;">'
-					 .	 '<option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'
-					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
-					 .	 '</select></li>';
-				} else {
-					echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=optgroup||Administrator or Allowed Groups Always=1||Administrator or Allowed Groups Edit=2', 'storage_field'=>'admin_form' ) );
-				}
-				?>
-			</ul>
-            <ul class="spe spe_type">
-            	<?php echo JCckDev::renderForm( $cck['core_location'], $this->item->location, $config, array( 'attributes'=>'style="width:140px;"' ) ); ?>
-            </ul>
-			<ul class="spe spe_sixth">
-				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
-            </ul>
-            <ul class="spe spe_name">
-            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
-            	<?php
-            	echo JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) );
-            	echo JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'css'=>'input-xsmall', 'storage_field'=>'parent_inherit' ) );
-            	?>
-            	</li>
-            </ul>
-            <ul class="spe spe_type">
-            	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ); ?>
-            </ul>
-            <ul class="spe spe_sixth">
-            	<?php echo JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ); ?>
-            </ul>
-        </div>
+	<div class="<?php echo $this->css['wrapper_first']; ?>">
+		<?php
+		// if ( !$this->item->id ) {
+		// 	echo '<li><label>'.JText::_( 'COM_CCK_QUICK_MENU_ITEM' ).'</label>'
+		// 	 .	 '<select id="quick_menuitem" name="quick_menuitem" class="inputbox" style="max-width:180px;">'
+		// 	 .	 '<option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'
+		// 	 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
+		// 	 .	 '</select></li>';
+		// } else {
+		// 	echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=optgroup||Administrator or Allowed Groups Always=1||Administrator or Allowed Groups Edit=2', 'storage_field'=>'admin_form' ) );
+		// }
+		?>
+        <?php
+		$dataTmpl	=	array(
+							'fields'=>array(
+								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ),
+								'alias'=>JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ),
+								'css_core'=>JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ),
+								'description'=>JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
+								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
+								'location'=>JCckDev::renderForm( $cck['core_location'], $this->item->location, $config, array( 'css'=>'max-width-140' ) ),
+								'indexed'=>JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ),
+								'name'=>'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />',
+								'parent'=>JCckDev::renderLayoutFile(
+									'cck'.JCck::v().'.form.field', array(
+										'label'=>JCckDev::getLabel( 'core_parent_type', $config ),
+										'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
+											'grid'=>'|30%',
+											'html'=>array(
+												JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) ),
+												JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'type'=>'radio', 'options'=>'INHERIT_PARENT_WITHOUT_FIELDS=0||INHERIT_PARENT_WITH_FIELDS=1', 'css'=>'btn-group', 'storage_field'=>'parent_inherit' ) )
+											)
+										) )
+									)
+								),
+								'permissions'=>JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ),
+								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
+								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'css'=>'max-width-140', 'storage_field'=>'storage_location' ) ),
+								'title'=>JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config )
+							),
+							'item'=>$this->item,
+							'params'=>array()
+						);
+
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.type.edit_main', $dataTmpl );
+		?>
 	</div>
 </div>
 
-<div class="clr"></div>
-<div align="center" id="layers"></div>
+<div class="main-card">
+	<?php
+	if ( JCck::on( '4.0' ) ) {
+		echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+	}
+	?>
+	<div class="row togglebar">
+		<div>
+		<?php
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
+		?>
+		</div>
+	</div>
+	<div class="clr"></div>
+	<div align="center" id="layers"></div>
+	<?php
+	if ( JCck::on( '4.0' ) ) {
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', JText::_( 'COM_CCK_OPTIONS' ) );
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.type.edit_options', $dataTmpl );
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.type.edit_publishing', $dataTmpl );
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.endTabSet' );
+	}
+	?>
+</div>
 
 <div>
 	<input type="hidden" id="task" name="task" value="" />
