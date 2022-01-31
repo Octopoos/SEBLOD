@@ -9,7 +9,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.21.5</version>
+	<version>4.0.0</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	
@@ -132,6 +132,9 @@
 		
 		<!-- Library -->
 		<file type="library" id="cck">lib_cck.zip</file>
+		<file type="files" id="cck" src="layouts/cck">lay_cck.zip</file>
+		<file type="files" id="cck_3x" src="layouts/cck_3x">lay_cck_3x.zip</file>
+		
 		<!-- Plugin // Content -->
 		<file type="plugin" id="cck" group="content">plg_content_cck.zip</file>
 	</files>
