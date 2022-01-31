@@ -1,0 +1,210 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				https://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
+**/
+
+/* LIST */
+
+body #wrapper .top-bar .sidebar-nav{padding: 0;}
+body #wrapper .top-bar .sidebar-nav ul{
+	border-bottom: 1px solid var(--template-bg-dark-10);
+	display: flex;
+	flex-flow: wrap;
+	list-style: none outside none;
+	padding: 0; white-space: nowrap;
+}
+body #wrapper .top-bar .sidebar-nav ul.flex-column{flex-direction: inherit!important;}
+body #wrapper .top-bar .sidebar-nav li{
+	background-color: var(--white);
+	border: 0;
+	border-bottom: 0;
+	border-right: 0;
+	border-top: 0;
+	box-shadow: none;
+	box-sizing: border-box;
+	color: var(--primary);
+	display: block;
+	font-size: 16px;
+	padding: 0.6rem 1rem;
+	position: relative;
+	text-decoration: none;
+}
+body #wrapper .top-bar .sidebar-nav li.active {
+	background: var(--template-bg-dark-3);
+}
+body #wrapper .top-bar .sidebar-nav li.active a {
+	font-weight: bold;
+}
+body #wrapper .top-bar .sidebar-nav li.active a,
+body #wrapper .top-bar .sidebar-nav li:hover a {
+	color: var(--primary);
+}
+body #wrapper .top-bar .sidebar-nav li.active a:after,
+body #wrapper .top-bar .sidebar-nav li:hover a:after {
+	background-color: var(--template-link-color);
+	bottom: 0;
+	content: "";
+	height: 3px;
+	left: 0;
+	opacity: .8;
+	position: absolute;
+	right: 0;
+}
+body #wrapper .top-bar .sidebar-nav li a:before{content:""; margin: 0;}
+
+body.layout-default main form{
+	background: #fff;
+	border-radius: 0.25rem;
+	box-shadow: 0 2px 10px -8px var(--template-bg-dark-50);
+	margin-top: 12px;
+	padding-bottom: 12px;
+}
+
+.sidebar-nav li.nav-header span {
+	color: var(--template-text-dark);
+	display: block;
+	font-weight: bold;
+	padding: 0.25rem;
+	text-decoration: none;
+}
+
+/* FORM */
+.control-group [class*="max-width-"]{max-width:none;}
+.col-auto .form-select{padding: 0.5rem 4rem 0.5rem 1rem;}
+
+details {
+	border-color: var(--template-link-color);
+}
+details.success {
+	background-color: rgba(var(--success-rgb), 0.05) !important;
+	border-color: var(--success);
+}
+details.success summary {
+	color: var(--success);
+}
+
+fieldset.disabled{opacity: 1; height: 142px;
+	background: 
+		linear-gradient(to top left,
+			rgba(0,0,0,0) 0%,
+			rgba(0,0,0,0) calc(50% - 0.8px),
+			var(--template-bg-dark-20) 50%,
+			rgba(0,0,0,0) calc(50% + 0.8px),
+			rgba(0,0,0,0) 100%),
+		linear-gradient(to top right,
+			rgba(0,0,0,0) 0%,
+			rgba(0,0,0,0) calc(50% - 0.8px),
+			var(--template-bg-dark-20) 50%,
+			rgba(0,0,0,0) calc(50% + 0.8px),
+			rgba(0,0,0,0) 100%);
+}
+fieldset.disabled > div{opacity:0.4;}
+fieldset.disabled > div .control-group{margin: 0;}
+fieldset.disabled details{display: none;}
+fieldset.disabled legend{background-color: transparent; color: var(--template-bg-dark-60);}
+
+.form-control:disabled,
+.form-control[readonly]{background-color: transparent; color: var(--template-bg-dark-60);}
+.form-select:disabled{background-color: var(--template-bg-dark-5); color: var(--template-bg-dark-60); border: 1px solid var(--template-bg-dark-5);}
+
+.input-group .btn{padding: 0.5rem 0.9rem;}
+.input-group .btn-secondary{background-color: var(--template-bg-light); border-color: var(--template-bg-dark-20); border-left-color: transparent!important; color: #212529;}
+.input-group .btn-secondary:focus{box-shadow: none;}
+
+.main-card{outline: none;}
+
+.row.row-grid > *:not(:first-child){padding-left: 0;}
+.row-pane {
+	--gutter-x: 2rem;
+	background-color: #fff;
+	border: 0;
+	border-radius: 0.25rem;
+	box-shadow: none;
+	display: block;
+	/*padding: 30px 2vw;*/
+	text-align: left;
+}
+.row-pane details{margin: -1rem 0 1rem 0;}
+
+/* -- */
+
+#alter_match_div{margin: 18px 0 10px 0;}
+#toggle_selection{margin-bottom: 6px;}
+.btn-small{padding-top: 2px; padding-bottom: 2px;}
+div.toggle-selection{float: none; margin: 0;}
+
+.ghost span.locked,fieldset.locked .storage-target{color: var(--template-link-color);}
+fieldset.locked input.storage-target{border-color: var(--template-link-color);}
+.ghost span.unlocked,fieldset.unlocked .storage-target{color: var(--success);}
+fieldset.unlocked input.storage-target{border-color: var(--success);}
+.ghost span.locked .icon-lock, span.unlocked .icon-lock{display: none!important;}
+.ghost span.locked .icon-lock:before, span.unlocked .icon-lock:before{content: none!important;}
+.ghost p{margin: 0; padding-top: 10px;}
+fieldset.locked .input-group .btn-secondary{border-color: var(--template-link-color);}
+fieldset.unlocked .input-group .btn-secondary{border-color: var(--success);}
+
+.radios.btn-group {padding: 6px 0;}
+.is-sticky{position: sticky; top:5.3rem;}
+form.modal-large .is-sticky{position: sticky; top:3.6rem;}
+.minus-1{order: -1;}
+.minus-2{order: -2;}
+.minus-2 > fieldset{min-height: 142px;}
+.w100{width: 100%;}
+
+.input-group{width: 100%!important;}
+span.star{font-size: 16px!important; font-weight: bold;}
+
+/* -- */
+
+body.contentpane{background-color: var(--template-bg-dark-5); padding: 0;}
+body.contentpane .span12{padding: 0 20px;}
+body.contentpane .span12:not(.subhead){padding-top: 20px;}
+body.contentpane form.modal-large .span12:not(.subhead){padding-top: 18px;}
+
+body.contentpane .subhead{
+	background-image: linear-gradient(var(--toolbar-bg),var(--template-bg-dark-3));
+	border-bottom: 0;
+	margin: 0;
+	min-height: 44px;
+	padding: 1px 10px 6px 20px!important;
+}
+body.contentpane #layout,/*{background: #fff; padding: 30px 2vw;}*/
+body.contentpane .main-card{
+	background: #fff;
+	border-radius: 0.25rem;
+}
+body.contentpane .modal-large .main-card{min-height: 477px;}
+body.contentpane #layout:not(.modal-small){min-height: 530px;}
+body.contentpane #layout.modal-small {
+	padding: 28px 28px 12px 28px;
+}
+body.contentpane #layout.modal-small .form-select[multiple]{padding-right: 0;}
+
+body.contentpane .abs{position: absolute; bottom: 0; width: 100%;}
+
+body #colorbox{box-shadow: 0 1px 3px rgb(0 0 0 / 40%);}
+body #colorbox, body #cboxOverlay, body #cboxWrapper{border-radius: 0.25rem;}
+body #cboxWrapper, body #cboxBottomCenter{background: var(--template-bg-dark-5);}
+body #cboxBottomCenter{height: 20px;}
+body #cboxMiddleLeft, body #cboxMiddleRight{width: 0!important;}
+
+body #ajaxToolbar > a, body #toolbarBox > a{
+	margin-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-top: 3px;
+}
+body #ajaxToolbar a [class^="icon-"],
+body #toolbarBox a [class^="icon-"] {
+	background: none!important;
+	border: 0!important;
+	height: auto;
+	margin: 0!important;
+	text-shadow: none;
+	width: 28px!important;
+}
+
+div.seblod.first.cpanel_news{border: none; margin-top: 10px!important;}

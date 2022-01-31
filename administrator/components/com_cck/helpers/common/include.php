@@ -53,8 +53,10 @@ class CommonHelper_Include
 		}
 		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css', array(), false );
 		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/ui.css', array(), false );
-		
-		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/seblod/ui.css', array(), false );
+
+		if ( JCck::on( '4.0' ) ) {
+			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/seblod/ui4.css', array(), false );
+		}
 		
 		if ( count( $paths ) ) {
 			foreach ( $paths as $path ) {
