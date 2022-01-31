@@ -18,7 +18,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
-	<div class="seblod first">       
+	<div class="<?php echo $this->css['wrapper_first']; ?>">   
         <ul class="spe spe_title">
             <?php echo JCckDev::renderForm( $cck['core_title_template'], $this->item->title, $config ); ?>
         </ul>
