@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.0.0 Release Candidate 3 [31-Jan-2022] ------------
+--------------- 4.0.0 Release Candidate 3 [01-Feb-2022] ------------
 
 ! New package for testing purposes on Joomla! 4
 
@@ -38,7 +38,7 @@ Since 4.0-rc2:
   Apply a Typography: Date, HTML
   >>  More Plug-ins and Views to come!!
 
----------------- 3.22.0 Upgrade Release [31-Jan-2022] --------------
+---------------- 3.22.0 Upgrade Release [01-Feb-2022] --------------
 
 + "n Words" Match mode added on Search Types.
 + "n Words Exact" Match mode added on Search Types.
@@ -46,6 +46,8 @@ Since 4.0-rc2:
 + dataLayer output added.
   >> ex: can be triggered as following from an afterStore:
   JFactory::getSession()->set( 'cck.data_layer', array( 'type'=>$config['type'], 'subject'=>'my_subject' ) );
+
+# Minor issues fixed.
 
 ---------------- 3.21.5 Upgrade Release [03-Dec-2021] --------------
 
