@@ -271,7 +271,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 			}
 		}
 		
-		$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class	=	'form-select inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}

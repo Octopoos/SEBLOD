@@ -16,7 +16,7 @@ class CommonHelper_Form
 	// getClientFilter
 	public static function getClientFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getConditionalTrigger
@@ -42,7 +42,7 @@ class CommonHelper_Form
 		}
 		$class	=	$field->css ? ' '.$field->css : '';
 
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( false, true, false, true, $config['vName'] ), $name, 'class="inputbox select'.$class.'"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( false, true, false, true, $config['vName'] ), $name, 'class="form-select inputbox select'.$class.'"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderFilter
@@ -50,7 +50,7 @@ class CommonHelper_Form
 	{
 		$field->label	=	'App Folder';
 
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderParent
@@ -67,7 +67,7 @@ class CommonHelper_Form
 			$disabled	=	'';
 		}
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select" '.$disabled.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$disabled.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getLayer
@@ -141,7 +141,7 @@ class CommonHelper_Form
 	// getLocationFilter
 	public static function getLocationFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="inputbox select hidden-phone" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getMediaExtensions
@@ -179,7 +179,7 @@ class CommonHelper_Form
 		
 		$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
 		
-		return JHtml::_( 'select.genericlist', $opts, $name, 'class="inputbox select" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', $opts, $name, 'class="form-select inputbox select" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getPlugins
@@ -195,7 +195,7 @@ class CommonHelper_Form
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( $type, 'cck_', false, false, true ) );
 		$css		=	( $field->required == 'required' ) ? ' validate[required]' : '';
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select'.$css.'" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$css.'" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getSearchClient
@@ -272,7 +272,7 @@ class CommonHelper_Form
 			}
 		}
 
-		$attr	=	'class="inputbox select" '.$field->attributes;
+		$attr	=	'class="form-select inputbox select" '.$field->attributes;
 		$attr	=	array(
 						'id'=>$id,
 						'list.attr'=>$attr,
@@ -309,7 +309,7 @@ class CommonHelper_Form
 		$class		=	$field->css ? ' '.$field->css : '';
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage_location', 'cck_', false, false, true ) );
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select'.$class.'" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$class.'" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getTables
@@ -333,7 +333,7 @@ class CommonHelper_Form
 			}
 		}
 		$class	=	$field->css ? ' '.$field->css : '';
-		$attr	=	'class="inputbox select'.$class.'" '.$field->attributes;
+		$attr	=	'class="form-select inputbox select'.$class.'" '.$field->attributes;
 		
 		return JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 	}
@@ -343,7 +343,7 @@ class CommonHelper_Form
 	{
 		$field->label	=	'Type';
 		
-		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', false, false, true ), $name, 'class="inputbox select" tabindex="3"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', false, false, true ), $name, 'class="form-select inputbox select" tabindex="3"', 'value', 'text', $value, $id );
 	}
 
 	// getTypeClient
@@ -400,7 +400,7 @@ class CommonHelper_Form
 	// getTypeFilter
 	public static function getTypeFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getStorageMode
@@ -416,7 +416,7 @@ class CommonHelper_Form
 
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage', 'cck_', false, false, true ) );
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="inputbox select" '.$field->attributes, 'value', 'text', $value );
+		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$field->attributes, 'value', 'text', $value );
 	}
 
 	// getVariation

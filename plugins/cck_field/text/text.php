@@ -111,7 +111,7 @@ class plgCCK_FieldText extends JCckPluginField
 		}
 		
 		// Prepare
-		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class	=	'form-control inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}

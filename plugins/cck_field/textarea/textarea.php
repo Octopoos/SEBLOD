@@ -90,7 +90,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		
 		// Prepare
-		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class	=	'form-control inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$cols	=	( $field->cols ) ? $field->cols : 25;
 		$rows	=	( $field->rows ) ? $field->rows : 3;
 		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
