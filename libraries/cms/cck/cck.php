@@ -376,7 +376,7 @@ abstract class JCck
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( $root.'/media/cck/js/cck.dev-3.18.1.min.js' );
+				$doc->addScript( $root.'/media/cck/js/cck.dev-3.22.0.min.js' );
 				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
