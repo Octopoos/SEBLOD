@@ -132,8 +132,8 @@
 		
 		<!-- Library -->
 		<file type="library" id="cck">lib_cck.zip</file>
-		<file type="files" id="cck" src="layouts/cck">lay_cck.zip</file>
-		<file type="files" id="cck_3x" src="layouts/cck_3x">lay_cck_3x.zip</file>
+		<file type="file" id="cck" src="layouts">lay_cck.zip</file>
+		<file type="file" id="cck_3x" src="layouts">lay_cck_3x.zip</file>
 		
 		<!-- Plugin // Content -->
 		<file type="plugin" id="cck" group="content">plg_content_cck.zip</file>
