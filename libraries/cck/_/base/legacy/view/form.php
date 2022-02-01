@@ -55,12 +55,25 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	// prepareUI
 	protected function prepareUI()
 	{
-		$this->css		=	array( 'w30'=>'span4 col-lg-4',
-								   'w70'=>'span8 col-lg-8',
-								   'wrapper'=>'container',
-								   'wrapper2'=>'row-fluid',
-								   'wrapper_tmpl'=>'span12'
-							);
+		$this->css	=	array(
+							'btn'=>'btn',
+							'btn-no'=>'button-cancel btn btn-danger',
+							'btn-yes'=>'button-save btn btn-success',
+							'w30'=>'span4 col-lg-4',
+							'w70'=>'span8 col-lg-8',
+							'wrapper'=>'',
+							'wrapper_first'=>'',
+							'wrapper2'=>'row-fluid',
+							'wrapper_tmpl'=>'span12'
+						);
+
+		if ( !JCck::on( '4' ) ) {
+			$this->css['btn']			=	'btn btn-small';
+			$this->css['btn-no']		=	'btn btn-small';
+			$this->css['btn-yes']		=	'btn btn-small';
+			$this->css['wrapper']		=	'container';
+			$this->css['wrapper_first']	=	'seblod first';
+		}
 	}
 	
 	// prepareToolbar

@@ -297,7 +297,7 @@ class JCckPluginLocation extends JPlugin
 
 	// g_onCCK_Storage_LocationStore
 	public static function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config )
-	{		
+	{
 		if ( ! $pk ) {
 			return;
 		}
