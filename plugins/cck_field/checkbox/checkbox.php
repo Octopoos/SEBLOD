@@ -182,7 +182,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			$orientation	=	'';
 		}
 
-		if ( JCck::is( '4.0' ) ) {
+		if ( JCck::is( '5.0' ) ) {
 			$class			=	'';
 			$orientation	=	'';
 		}
