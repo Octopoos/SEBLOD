@@ -129,7 +129,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 					}
 					$buttonlabel	=	$field->selectlabel;
 				} else {
-					$buttonlabel	=	JText::_( 'COM_CCK_EDITOR' );
+					$buttonlabel	=	JText::_( 'COM_CCK_OPEN_EDITOR' );
 				}
 				
 				$e_type					=	( @$options2['editor'] != '' ) ? '&type='.$options2['editor'] : '';
@@ -143,6 +143,10 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				if ( ( $component == 'com_cck' && $app->input->get( 'view' ) != 'form' )
 					|| $component == 'com_cck_ecommerce' || $component == 'com_cck_toolbox' || $component == 'com_cck_webservices' ) { /* TODO#SEBLOD: remove later */
 					$class				.=	' btn';
+
+					if ( JCck::on( '4' ) ) {
+						$class	.=	' btn-primary';
+					}
 				}
 				$class					=	'class="'.trim( $class ).'" ';
 				$attr					=	$class;
