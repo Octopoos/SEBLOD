@@ -161,7 +161,7 @@ class plgCCK_FieldRadio extends JCckPluginField
 			$orientation	=	'';
 		}
 
-		if ( JCck::is( '4.0' ) ) {
+		if ( JCck::is( '5.0' ) ) {
 			$orientation	=	'';
 		}
 
@@ -179,7 +179,7 @@ class plgCCK_FieldRadio extends JCckPluginField
 
 		$class	=	' class="cck-fl"';
 
-		if ( JCck::is( '4.0' ) ) {
+		if ( JCck::is( '5.0' ) ) {
 			$class			=	'';
 		}
 
