@@ -261,7 +261,8 @@ abstract class JCckDev
 		}
 
 		if ( !$allowed ) {
-			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );'
+				.	'$("#storage").parents("fieldset").addClass("disabled")';
 		} else {
 			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
@@ -813,7 +814,7 @@ abstract class JCckDev
 		
 		return $field;
 	}
-	
+
 	// getForm
 	public static function getForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
 	{
@@ -838,13 +839,33 @@ abstract class JCckDev
 		
 		$config['fields'][]	=	$field->storage_field;
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		
 		if ( isset( $inherit['after'] ) ) {
 			$html			.=	$inherit['after'];
 		}
-		
+
 		return $html;
 	}
 	
+	// getLabel
+	public static function getLabel( $field, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		$field	=	JCckDevField::get( $field, '', $config, $inherit, $override );
+		
+		if ( ! $field ) {
+			return '';
+		}
+		
+		$label	=	'';
+		$tag	=	( $field->required ) ? '<span class="star"> *</span>' : '';
+
+		if ( $field->label ) {
+			$label			=	'<label>'.$field->label.$tag.'</label>';
+		}
+
+		return $label;
+	}
+
 	// renderForm
 	public static function renderForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
 	{	
@@ -854,19 +875,23 @@ abstract class JCckDev
 		}
 		
 		$config['fields'][]	=	$field->storage_field;
-		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
 		$class				=	( $class ) ? ' class="'.$class.'"' : '';
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		$label				=	'';
+		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
+
 		if ( isset( $inherit['after'] ) ) {
 			$html			.=	$inherit['after'];
 		}
-		$label				=	'';
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
-		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
-		
-		return $html;
+
+		if ( JCck::on( '4.0' ) ) {
+			return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
+		} else {
+			return '<li'.$class.'>'.$label.$html.'</li>';
+		}
 	}
 
 	// renderFormFromHelper
@@ -888,9 +913,12 @@ abstract class JCckDev
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
-		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
-		
-		return $html;
+
+		if ( JCck::on( '4.0' ) ) {
+			return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
+		} else {
+			return '<li'.$class.'>'.$label.$html.'</li>';
+		}
 	}
 	
 	// renderBlank
@@ -902,7 +930,9 @@ abstract class JCckDev
 			return;
 		}
 
-		return '<li><label>'.$label.'</label>'.$html.'</li>';
+		if ( !JCck::on( '4.0' ) ) {
+			return '<li><label>'.$label.'</label>'.$html.'</li>';
+		}
 	}
 	
 	// renderHelp
@@ -947,6 +977,14 @@ abstract class JCckDev
 		return ( $raw !== false ) ? $help : '</ul>'.$help.'</div>';
 	}
 	
+	// renderLayoutFile
+	public static function renderLayoutFile( $path, $displayData = array() )
+	{
+		$layout	=	new JLayoutFile( $path );
+
+		return $layout->render( $displayData );
+	}
+
 	// renderLegend
 	public static function renderLegend( $legend, $tooltip = '', $tag = '1' )
 	{
@@ -965,9 +1003,13 @@ abstract class JCckDev
 			$tooltip	=	'';
 		}
 		
-		return '<div class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></div>';
+		if ( JCck::on( '4.0' ) ) {
+			return '<legend class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></legend>';
+		} else {
+			return '<div class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></div>';
+		}
 	}
-	
+
 	// renderSpacer
 	public static function renderSpacer( $legend, $tooltip = '', $tag = '2', $options = array( 'class_sfx'=>'-2cols' ) )
 	{

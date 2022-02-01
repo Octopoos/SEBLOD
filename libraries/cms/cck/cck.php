@@ -149,6 +149,12 @@ abstract class JCck
 		
 		return $versions[$minimum];
 	}
+
+	// v
+	public static function v()
+	{		
+		return JCck::on( '4' ) ? '' : '_3x';
+	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Site
 

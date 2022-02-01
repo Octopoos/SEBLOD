@@ -65,6 +65,8 @@ class JCckTable extends JCckTablePlaceholder
 		parent::__construct( $table, $key, $db );
 
 		$this->_trackAssets = false;
+
+		unset( $this->typeAlias );
 	}
 	
 	// getInstance

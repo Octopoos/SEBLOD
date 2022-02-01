@@ -65,13 +65,14 @@ class JCckBaseLegacyView extends JViewLegacy
 	// prepareUI
 	protected function prepareUI()
 	{
-		$this->css	=	array( 'items'=>'seblod-manager',
-							   'table'=>'table table-striped',
-							   'w33'=>'span4',
-							   'w50'=>'span6',
-							   'w66'=>'span8',
-							   'w100'=>'span12',
-							   'wrapper'=>'row-fluid'
+		$this->css	=	array(
+							'items'=>'seblod-manager',
+							'table'=>'table table-striped',
+							'w33'=>'span4',
+							'w50'=>'span6',
+							'w66'=>'span8',
+							'w100'=>'span12',
+							'wrapper'=>'row-fluid'
 						);
 
 		if ( JCck::on( '4.0' ) ) {

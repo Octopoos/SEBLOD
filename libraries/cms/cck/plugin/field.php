@@ -289,9 +289,18 @@ class JCckPluginField extends JPlugin
 			}
 			if ( $data['alterTable'] ) {
 				$data['storage_alter_type']		=	( isset( $data['storage_alter_type'] ) && $data['storage_alter_type'] ) ? $data['storage_alter_type'] : 'VARCHAR(255)';
+				$default						=	'';
 				$alter							=	isset( $data['storage_alter'] ) && $data['storage_alter'] && in_array( 1, $data['storage_alter'] );
 				$pos							=	strpos( $data['storage_table'], 'aka_table' );
 				$data['storage_alter_table']	=	(int)$data['storage_alter_table'];
+
+				if ( strpos( $data['storage_alter_type'], 'TEXT' ) !== false || strpos( $data['storage_alter_type'], 'CHAR' ) !== false ) {
+					//
+				} else {
+					$default	=	'0';
+				}
+
+				$default						=	' DEFAULT "'.$default.'"';
 
 				if ( !( $pos !== false && $pos == 0 ) ) {
 					if ( isset( $data['storage_alter_table'] ) && $data['storage_alter_table'] && $alter ) {
@@ -299,12 +308,12 @@ class JCckPluginField extends JPlugin
 							$columns	=	$db->getTableColumns( $data['storage_table'] );
 							if ( !isset( $columns[$data['storage_field']] ) ) {
 								if ( $data['storage_alter_table'] == 2 && $data['storage_field_prev'] != '' ) {
-									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field_prev'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL'.$default );
 								} else {
-									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL'.$default );
 								}							
 							} else {
-								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+								JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL'.$default );
 							}
 						}
 					} else {
@@ -316,6 +325,7 @@ class JCckPluginField extends JPlugin
 								return;
 							}
 							$columns	=	$db->getTableColumns( $data['storage_table'] );
+
 							if ( !isset( $columns[$data['storage_field']] ) ) {
 								$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
 								if ( $data['storage_cck'] != '' ) {
@@ -329,12 +339,12 @@ class JCckPluginField extends JPlugin
 								}
 								$columns2	=	$db->getTableColumns( $table );
 								if ( !isset( $columns2[$data['storage_field']] ) ) {
-									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' ADD '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL'.$default );
 								}
 								$data['storage_table']	=	$table;
 							} else {
 								if ( $alter ) {
-									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL' );
+									JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.$data['storage_alter_type'].' NOT NULL'.$default );
 								}
 							}
 						}
