@@ -98,7 +98,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$months			=	$interval->format( '%m' );
 		$days			=	$interval->format( '%d' );
 		$days_total		=	$interval->format( '%a' );
-        $state			=	( $date1 < $now ) ? 'COM_CCK_AGO_SENTENCE' : 'COM_CCK_TIMELEFT_SENTENCE';
+        $state			=	( $date1 <= $now ) ? 'COM_CCK_AGO_SENTENCE' : 'COM_CCK_TIMELEFT_SENTENCE';
 
 		if ( $limit && $days_total >= $limit ) {
 			$value		=	self::_getValueWithFormatStorage( $value );
