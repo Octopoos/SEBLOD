@@ -187,7 +187,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
-		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
+
+		$task2			=	str_replace( '_ajax', '', $task );
+		$task_id_idx	=	'task_id';
+
+		if ( $task2 == 'export' || $task2 == 'process' ) {
+			$task_id_idx	=	'task_id_' . $task2;
+		}
+
+		$task_id	=	( isset( $options2[$task_id_idx] ) && $options2[$task_id_idx] ) ? $options2[$task_id_idx] : 0;
 
 		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
 			$task	=	( $config['client'] == 'admin' ) ? 'form.'.$task : 'list.'.$task;
