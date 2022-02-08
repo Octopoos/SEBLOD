@@ -21,7 +21,7 @@ if ( isset( $options2['task'] ) ) {
 	$options2_task	=	str_replace( '_ajax', '', $options2['task'] );
 
 	if ( $options2_task == 'export' || $options2_task == 'process' ) {
-		$task_id[$options2_task]	=	$options2['task_id'];
+		$task_id[$options2_task]	=	$options2['task_id_' . $options2_task];
 	}
 }
 ?>
