@@ -47,6 +47,8 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 		// Prepare
 		$table		=	self::_getTable();
 		$fields		=	$table->getProperties();
+		$hasCustom	=	false;
+		$hasIntro	=	false;
 
 		if ( isset( $config['fields'] ) && $config['fields'] === false ) {
 			$fields	=	array();
@@ -61,7 +63,7 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 				}
 			}
 		}
-		
+
 		if ( count( $config['fields2'] ) ) {
 			foreach ( $config['fields2'] as $k=>$field ) {
 				if ( $field->storage != 'none' ) {
@@ -71,9 +73,12 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 					if ( !isset( $tables[$field->storage_table] ) ) {
 						$tables[$field->storage_table]	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$field->storage_table.' WHERE id IN ('.$config['pks'].')', 'id' );
 					}
-					if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
-					  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {
-						continue;
+					if ( self::$custom && isset( $field->storage_field ) && $field->storage_field == self::$custom ) {
+						if ( isset( $field->storage_field2 ) && $field->storage_field2 == self::$custom ) {
+							$hasIntro	=	true;
+						}
+
+						$hasCustom	=	true;
 					}
 				}				
 				if ( $config['component'] == 'com_cck_exporter' ) {
@@ -166,18 +171,51 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 				}
 
 				// Core > Custom
-				if ( self::$custom && isset( $fields[self::$custom] ) ) {
-					preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $fields[self::$custom], $values );
-					$tables[self::$table][$item->pk]->{self::$custom}	=	array();
-					$fields[self::$custom]								=	'';
-					if ( count( $values[1] ) ) {
-						foreach ( $values[1] as $k=>$v ) {
-							if ( $v == self::$custom ) {
-								// DISPATCH --> EXPORT
-								$fields[self::$custom]	=	$values[2][$k];
-							} elseif ( !isset( $excluded2[$v] ) ) {
-								$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
-							}	
+				if ( self::$custom ) {
+					$custom_value	=	'';
+					$hasCustomValue	=	false;
+
+					if ( isset( $fields[self::$custom] ) ) {
+						$custom_value	=	$fields[self::$custom];
+
+						$hasCustomField	=	true;
+						$hasCustomValue	=	true;
+					} else {
+						$hasCustomField	=	false;
+
+						if ( $hasCustom ) {
+							$custom_value	=	$tables[self::$table][$item->pk]->{self::$custom};
+							$hasCustomValue	=	true;
+						}
+					}
+
+					if ( $hasCustomValue ) {
+						preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $custom_value, $values );
+						
+						$tables[self::$table][$item->pk]->{self::$custom}	=	array();
+						$fields[self::$custom]								=	'';
+						
+						if ( count( $values[1] ) ) {
+							foreach ( $values[1] as $k=>$v ) {
+								if ( $v == self::$custom && !$hasIntro ) {
+									// DISPATCH --> EXPORT
+									$fields[self::$custom]	=	$values[2][$k];
+								} elseif ( !isset( $excluded2[$v] ) ) {
+									$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
+								}	
+							}
+						}
+						if ( !$hasCustomField ) {
+							unset( $fields[self::$custom] );
+						}
+
+						if ( $hasIntro ) {
+							if ( is_array( $tables[self::$table][$item->pk]->{self::$custom} ) && !isset( $tables[self::$table][$item->pk]->{self::$custom}['introtext'] ) ) {
+								$tables[self::$table][$item->pk]->{self::$custom}['introtext']	=	'';
+							}
+						}
+						if ( is_array( $tables[self::$table][$item->pk]->{self::$custom} ) && !isset( $tables[self::$table][$item->pk]->{self::$custom}['fulltext'] ) ) {
+							$tables[self::$table][$item->pk]->{self::$custom}['fulltext']	=	'';
 						}
 					}
 				}
@@ -187,10 +225,6 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 					foreach ( $config['fields2'] as $name=>$field ) {
 						if ( $field->storage != 'none' ) {
 							if ( $field->storage_table == '' ) {
-								continue;
-							}
-							if ( isset( $field->storage_field ) && $field->storage_field == 'introtext'
-							  && isset( $field->storage_field2 ) && $field->storage_field2 == 'fulltext' ) {
 								continue;
 							}
 						}
@@ -214,6 +248,7 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 							if ( !isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) ) {
 								$tables[$field->storage_table][$item->pk]->{$field->storage_field}	=	array(); /* TODO#SEBLOD: */
 							}
+
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
 								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
