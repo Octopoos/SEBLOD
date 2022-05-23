@@ -419,7 +419,11 @@ class plgSearchCCK extends JPlugin
 
 							if ( strpos( $query1, 'HAVING' ) !== false ) {
 								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
-									/* TODO#SEBLOD: */
+									$query->clear( 'limit' );
+									$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
+									$db->setQuery( $query );
+									$results2		=	$db->loadObjectList();
+									$query3			=	(string)$query;
 								}
 								$query->clear( 'order' )->clear( 'limit' );
 
