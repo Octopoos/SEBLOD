@@ -158,6 +158,8 @@ class plgCCK_FieldDiv extends JCckPluginField
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 		
 		// Return
+		unset( $config['pagination_vars'][$field->name] );
+
 		if ( $return === true ) {
 			return $field;
 		}

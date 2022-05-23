@@ -175,6 +175,8 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 				$field->form			=	'';
 				$field->form			=	$value;
 			}
+
+			$config['pagination_vars'][$field->name]	=	true;
 		} else {
 			if ( count( $field->children ) ) {
 				foreach ( $field->children as $k=>$child ) {
