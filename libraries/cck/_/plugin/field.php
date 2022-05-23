@@ -869,6 +869,11 @@ class JCckPluginField extends JPlugin
 			}
 		}
 
+		// Allowed Query Vars
+		if ( $config['client'] == 'search' && $field->state ) {
+			$config['pagination_vars'][$field->name]	=	true;
+		}
+
 		// Css
 		if ( $field->variation ) {
 			$css	=	'';
@@ -978,6 +983,11 @@ class JCckPluginField extends JPlugin
 				$field->display	=	0;
 				$field->state	=	0;
 			}
+		}
+
+		// Allowed Query Vars
+		if ( $field->state ) {
+			$config['pagination_vars'][$field->name]	=	true;
 		}
 	}
 	
