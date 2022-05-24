@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.22.1 Upgrade Release [24-May-2022] --------------
+
+* Security Release: XSS Vulnerability fixed. (Pagination Links)
+
+^ Export "introtext/fulltext" refactored, and improved.
+
+# Search Query with HAVING issue fixed.
+
 --------------- 4.0.0 Release Candidate 3 [01-Feb-2022] ------------
 
 ! New package for testing purposes on Joomla! 4
