@@ -6,13 +6,15 @@ echo '<div class="row-pane"><div class="row">';
 foreach ( $displayData['form'] as $form ) {
 	$attr	=	'';
 	$class	=	'';
+	$class2	=	'';
 
 	if ( isset( $form['legend'] ) && $form['legend'] ) {
 		$col	=	'8';
 		$legend	=	$form['legend'];
 		
 	} elseif ( isset( $form['mode'] ) && $form['mode'] == 'storage' ) {
-		$class	=	' minus-1 is-sticky';
+		$class	=	' minus-1';
+		$class2	=	' is-sticky';
 		$col	=	'4';
 		$legend	=	JText::_( 'COM_CCK_'.$form['mode'] );
 	} else {
@@ -25,7 +27,7 @@ foreach ( $displayData['form'] as $form ) {
 	}
 
 	echo '<div class="col-12 col-lg-'.$col.$class.'">';
-	echo '<fieldset class="options-form">'.$legend;
+	echo '<fieldset class="options-form'.$class2.'">'.$legend;
 	// echo '<div class="form-grid">';
 
 	if ( isset( $form['fields'] ) ) {
