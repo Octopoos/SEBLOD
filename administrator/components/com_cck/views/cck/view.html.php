@@ -47,7 +47,7 @@ class CCKViewCck extends JCckBaseLegacyView
 		$lang           =   JFactory::getLanguage();
 		$more           =   array(
 								'ADDON'=>'16',
-								'PLUGIN'=>'19,21,22,112,24,25',
+								'PLUGIN'=>'19,20,21,22,23,24,25,112',
 								'TEMPLATE'=>'27',
 							);
 		$user			=	JFactory::getUser();
