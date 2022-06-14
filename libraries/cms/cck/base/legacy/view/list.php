@@ -94,8 +94,11 @@ class JCckBaseLegacyViewList extends JViewLegacy
 		$this->sidebar	=	JHtmlSidebar::render();
 
 		if ( JCck::on( '4.0' ) ) {
-			$this->css['table']	=	'table';
-			$this->sidebar	=	str_replace( '<li>', '<li class="item">', $this->sidebar );
+			$this->css['filter_search_button']	=	'btn btn-secondary';
+			$this->css['filter_select']			=	'js-stools-container-filters-visible';
+			$this->css['table']					=	'table';
+			$this->html['filter_select_header']	=	'';
+			$this->sidebar						=	str_replace( '<li>', '<li class="item">', $this->sidebar );
 		}
 	}
 	

@@ -359,17 +359,22 @@ class JCckPluginField extends JPlugin
 	// g_onCCK_FieldConstruct_TypeForm
 	public static function g_onCCK_FieldConstruct_TypeForm( &$field, $style, $data, $config = array() )
 	{
+		$css				=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
+		$field->params		=	array();
 		$id					=	$field->id;
 		$name				=	$field->name;
-		$field->params		=	array();
+
+		if ( !isset( $field->restriction ) ) {
+			$field->restriction	=	'';
+		}
 
 		// 1
 		if ( !$data['label'] ) {
 			$column1			=	'';
 		} else {
-			$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
+			$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 								.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
-								.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
+								.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		}
 		if ( !$data['variation'] ) {
 			$column2		=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
@@ -405,7 +410,7 @@ class JCckPluginField extends JPlugin
 			$text2				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	'<input type="hidden" id="'.$name.'_live" name="ffp['.$name.'][live]" value="'.$value.'" />'
 								.	'<span class="text blue sp2se" data-id="'.$name.'_live" data-to="'.$to.'">'.$text.'</span>';
-			$column2			=	'<input class="thin blue c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
+			$column2			=	'<input class="'.$css.' c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
 								.	'value="'.( ( @$field->live_value != '' ) ? htmlspecialchars( $field->live_value ) : '' ).'" />'
 								.	'<input type="hidden" id="'.$name.'_live_options" name="ffp['.$name.'][live_options]" '
 								.	'value="'.( ( @$field->live_options != '' ) ? htmlspecialchars( $field->live_options ) : '' ).'" />'
@@ -437,12 +442,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
+		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	@$field->restriction;
+		$value				=	$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -484,7 +489,7 @@ class JCckPluginField extends JPlugin
 		if ( !$data['markup_class'] ) {
 			$column2		=	'';
 		} else {
-			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+			$column2		=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
 		}
 		$field->params[]	=	self::g_getParamsHtml( 6, $style, $column1, $column2 );
@@ -493,14 +498,19 @@ class JCckPluginField extends JPlugin
 	// g_onCCK_FieldConstruct_TypeContent
 	public static function g_onCCK_FieldConstruct_TypeContent( &$field, $style, $data, $config = array() )
 	{
+		$css				=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
 		
+		if ( !isset( $field->restriction ) ) {
+			$field->restriction	=	'';
+		}
+
 		// 1
-		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
+		$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
-							.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
+							.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		$column2			=	'';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
@@ -539,18 +549,18 @@ class JCckPluginField extends JPlugin
 		if ( !$data['markup_class'] ) {
 			$column2		=	'';
 		} else {
-			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+			$column2		=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
 		}
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
+		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	@$field->restriction;
+		$value				=	$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -564,17 +574,22 @@ class JCckPluginField extends JPlugin
 	// g_onCCK_FieldConstruct_SearchSearch
 	public static function g_onCCK_FieldConstruct_SearchSearch( &$field, $style, $data, $config = array() )
 	{
+		$css				=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
 		
+		if ( !isset( $field->restriction ) ) {
+			$field->restriction	=	'';
+		}
+
 		// 1
 		if ( !$data['label'] ) {
 			$column1			=	'';
 		} else {
-			$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
+			$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 								.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
-								.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
+								.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		}
 		if ( !$data['variation'] ) {
 			$column2			=	'';
@@ -609,7 +624,7 @@ class JCckPluginField extends JPlugin
 			$text2				=	( JCck::callFunc( 'plgCCK_Field'.$field->type, 'isFriendly' ) ) ? $data['_']['icon-friendly'] : '';	// ( static::$friendly ) ? $data['_']['icon-friendly'] : '';
 			$column1			=	'<input type="hidden" id="'.$name.'_live" name="ffp['.$name.'][live]" value="'.$value.'" />'
 								.	'<span class="text blue sp2se" data-id="'.$name.'_live" data-to="'.$to.'">'.$text.'</span>';
-			$column2			=	'<input class="thin blue c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
+			$column2			=	'<input class="'.$css.' c_live0'.$hide0.'" type="text" id="'.$name.'_live_value" name="ffp['.$name.'][live_value]" size="22" '
 								.	'value="'.( ( @$field->live_value != '' ) ? htmlspecialchars( $field->live_value ) : '' ).'" />'
 								.	'<input type="hidden" id="'.$name.'_live_options" name="ffp['.$name.'][live_options]" '
 								.	'value="'.( ( @$field->live_options != '' ) ? htmlspecialchars( $field->live_options ) : '' ).'" />'
@@ -641,12 +656,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
+		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	@$field->restriction;
+		$value				=	$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -681,7 +696,7 @@ class JCckPluginField extends JPlugin
 		if ( !$data['markup_class'] ) {
 			$column2		=	'';
 		} else {
-			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+			$column2		=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
 		}
 		$field->params[]	=	self::g_getParamsHtml( 6, $style, $column1, $column2 );
@@ -727,14 +742,19 @@ class JCckPluginField extends JPlugin
 	// g_onCCK_FieldConstruct_SearchContent
 	public static function g_onCCK_FieldConstruct_SearchContent( &$field, $style, $data, $config = array() )
 	{
+		$css				=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
 		$id					=	$field->id;
 		$name				=	$field->name;
 		$field->params		=	array();
 		
+		if ( !isset( $field->restriction ) ) {
+			$field->restriction	=	'';
+		}
+		
 		// 1
-		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
+		$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
-							.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
+							.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
 		$column2			=	'';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
@@ -773,18 +793,18 @@ class JCckPluginField extends JPlugin
 		if ( !$data['markup_class'] ) {
 			$column2		=	'';
 		} else {
-			$column2		=	'<input class="thin blue" type="text" name="ffp['.$name.'][markup_class]" size="22" '
+			$column2		=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][markup_class]" size="22" '
 							.	'value="'.( ( @$field->markup_class != '' ) ? htmlspecialchars( trim( $field->markup_class ) ) : '' ).'" />';
 		}
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
-		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
+		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	$data['access'][$value]->text;
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	@$field->restriction;
+		$value				=	$field->restriction;
 		$text				=	$data['restriction'][$value]->text;
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'

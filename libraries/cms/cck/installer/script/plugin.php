@@ -37,7 +37,7 @@ class JCckInstallerScriptPlugin
 		// Publish
 		$query	=	'UPDATE #__extensions SET enabled = 1 '.$where;
 		$db->setQuery( $query );
-		$db->query();
+		$db->execute();
 
 		// Post Install Log
 		self::postInstallMessage( 'install' );
@@ -56,7 +56,7 @@ class JCckInstallerScriptPlugin
 		// Integration
 		if ( $this->cck->group == 'cck_storage_location' && !isset( $app->cck_nosql ) ) {
 			$db->setQuery( 'DELETE FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' );
-			$db->query();
+			$db->execute();
 		}
 
 		if ( $this->core === true ) {
@@ -199,12 +199,12 @@ class JCckInstallerScriptPlugin
 				if ( $id = JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_objects WHERE name = "'.$this->cck->element.'"' ) ) {
 					$query		=	'UPDATE #__cck_core_objects SET `component` = "'.$integration['component'].'", `context` = "'.$integration['context'].'", `vars` = "'.$integration['vars'].'", `view` = "'.$integration['view'].'" WHERE id = '.(int)$id;
 					$db->setQuery( $query );
-					$db->query();
+					$db->execute();
 				} else {
 					$query		=	'INSERT IGNORE INTO #__cck_core_objects (`title`,`name`,`component`,`context`,`options`,`vars`,`view`)'
 								.	' VALUES ("'.$title.'", "'.$this->cck->element.'", "'.$integration['component'].'", "'.$integration['context'].'", "'.$db->escape( $integration['options'] ).'", "'.$integration['vars'].'", "'.$integration['view'].'")';
 					$db->setQuery( $query );
-					$db->query();
+					$db->execute();
 				}
 			}
 		}

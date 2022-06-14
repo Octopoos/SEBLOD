@@ -66,7 +66,7 @@ class JCckTable extends JCckTablePlaceholder
 
 		$this->_trackAssets = false;
 
-		unset( $this->typeAlias );
+		// unset( $this->typeAlias );
 	}
 	
 	// getInstance

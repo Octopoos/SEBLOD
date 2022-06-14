@@ -517,26 +517,26 @@ abstract class JCckDev
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
 						$n			=	(int)$options['customAttr'];
-						$attribs	=	'<div class="clr"></div><div class="attr">';
+						$attribs	=	'<div class="clr"></div><div class="attr attr-grid-'.$n.'">';
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css		=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="inputbox input-mini mini2'.$css.'" size="8" />';
+							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 						}
 						$attribs	.=	'</div>';
 						$location	=	( $elem->location ) ? explode( '||', $elem->location ) : array( 0=>'', 1=>'', 2=>'' );
-						$html		.=	'<div class="clr"></div><div class="attr">';
+						$html		.=	'<div class="clr"></div><div class="attr attr-grid-'.$n.'">';
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="inputbox input-mini mini2'.$css.'" size="8" value="'.htmlspecialchars( @$location[$i] ).'" />';
+							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.htmlspecialchars( @$location[$i] ).'" />';
 						}
 						$html		.=	'</div>';
 						$js3		.=	'var content = \'<div class="clr"></div><div class="attr"\'+disp+\'>';
 						for ( $i = 0; $i < $n; $i++ ) {
 							if ( $i == 0 ) {
-								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(++cur)+\'][attr][]" value="" class="inputbox input-mini mini2" size="8" />';
+								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(++cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2" size="8" />';
 							} else {
 								$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(cur)+\'][attr][]" value="" class="inputbox input-mini mini2'.$css.'" size="8" />';
+								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 							}
 						}
 						$js3		.=	'</div>\';';
