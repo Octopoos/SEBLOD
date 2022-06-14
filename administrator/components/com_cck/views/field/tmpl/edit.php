@@ -96,7 +96,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 							'fields'=>array(
 								'attributes'=>JCckDev::renderForm( 'core_attributes', $this->item->attributes, $config, array( 'label'=>'Custom Attributes' ) ),
 								'css'=>JCckDev::renderForm( 'core_dev_text', $this->item->css, $config, array( 'label'=>'Class CSS', 'storage_field'=>'css' ) ),
-								'description'=>JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
+								'description'=>JCckDev::getForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
 								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
 								'name'=>$dataName,
 								'required'=>JCckDev::renderForm( 'core_required', $this->item->required, $config ),
