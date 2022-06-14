@@ -217,30 +217,35 @@ class CommonHelper_Form
 		$selected4	=	( $config['item']->client == 'list' ) ? 'selected' : '';
 		$selected5	=	( $config['item']->client == 'item' ) ? 'selected' : '';
 
-		return	'<fieldset id="client" class="toggle">'
-			.	'<input type="radio" id="client1" name="client" value="search" '
-			.	'style="display: none" '.$checked1.' />'
-			.	'<input type="radio" id="client3" name="client" value="order" '
-			.	'style="display: none" '.$checked3.' />'
-			.	'<input type="radio" id="client4" name="client" value="list" '
-			.	'style="display: none" '.$checked4.' />'
-			.	'<input type="radio" id="client5" name="client" value="item" '
-			.	'style="display: none" '.$checked5.' />'
-			.	'<label id="client1_label" for="client1" class="toggle first '.$selected1.'">'
-			.	JText::_( 'COM_CCK_SEARCH_FORM' ).'</label>'
-			.	'<label id="client3_label" for="client3" class="toggle '.$selected3.'">'
-			.	JText::_( 'COM_CCK_ORDERING' ).'</label>'
-			.	'<label id="client4_label" for="client4" class="toggle '.$selected4.'">'
-			.	JText::_( 'COM_CCK_LIST' ).'</label>'
-			.	'<label id="client5_label" for="client5" class="toggle last '.$selected5.'">'
-			.	JText::_( 'COM_CCK_ITEM' ).'</label>'
-			.	'<div align="center" class="subtabs">'
-			.	'<div id="subtab1"></div>'
-			.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
-			.	'<div id="subtab3"></div>'
-			.	'</div>'
-			.	'</fieldset>'
-			;
+		$form	=	'<fieldset id="client" class="toggle">'
+				.	'<input type="radio" id="client1" name="client" value="search" '
+				.	'style="display: none" '.$checked1.' />'
+				.	'<input type="radio" id="client3" name="client" value="order" '
+				.	'style="display: none" '.$checked3.' />'
+				.	'<input type="radio" id="client4" name="client" value="list" '
+				.	'style="display: none" '.$checked4.' />'
+				.	'<input type="radio" id="client5" name="client" value="item" '
+				.	'style="display: none" '.$checked5.' />'
+				.	'<label id="client1_label" for="client1" class="toggle first '.$selected1.'">'
+				.	JText::_( 'COM_CCK_SEARCH_FORM' ).'</label>'
+				.	'<label id="client3_label" for="client3" class="toggle '.$selected3.'">'
+				.	JText::_( 'COM_CCK_ORDERING' ).'</label>'
+				.	'<label id="client4_label" for="client4" class="toggle '.$selected4.'">'
+				.	JText::_( 'COM_CCK_LIST' ).'</label>'
+				.	'<label id="client5_label" for="client5" class="toggle last '.$selected5.'">'
+				.	JText::_( 'COM_CCK_ITEM' ).'</label>';
+
+		if ( !JCck::on( '4.0' ) ) {
+			$form	.=	'<div align="center" class="subtabs">'
+					.	'<div id="subtab1"></div>'
+					.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
+					.	'<div id="subtab3"></div>'
+					.	'</div>';
+		}
+
+		$form	.=	'</fieldset>';
+
+		return $form;
 	}
 
 	// getStorageLocation
