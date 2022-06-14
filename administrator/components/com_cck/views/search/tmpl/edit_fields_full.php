@@ -26,78 +26,54 @@ $data2      =   array(
                                     )
                 );
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>' );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
+        <?php if ( JCck::on( '4.0' ) ) { ?>
+            <fieldset class="options-form seblod">
+                <?php include __DIR__.'/edit_fields_as.php'; ?>
+            </fieldset>
+        <?php } else { ?>
         <div class="seblod">
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
-            <?php
-			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
-            Helper_Workshop::displayHeader( 'search', $this->item->master );
-            echo '<ul class="sortable connected" id="sortable1" myid="1">';
-            if ( $this->item->client == 'order' ) {
-				Helper_Workshop::displayPositionStatic( 1, 'mainbody', '# '.JText::_( 'COM_CCK_ORDER_BY' ) );
-                if ( isset( $this->fields['mainbody'] ) ) {
-                    foreach ( $this->fields['mainbody'] as $field ) {
-                        $type_field		=	'';
-                        if ( isset( $this->type_fields[$field->id] ) ) {
-                            $type_field	=	' c-'.$this->type_fields[$field->id]->cc;
-                        }
-                        JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
-                        Helper_Workshop::displayField( $field, $type_field, $attr );
-                    }
-                }
-				Helper_Workshop::displayPositionEnd();
-            } else {
-                if ( $this->item->client == 'list' && ! $this->item->template ) {
-                    echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
-					Helper_Workshop::displayPositionEnd();
-                } else {
-					if ( $this->positions_nb ) {
-						foreach ( $this->positions as $pos ) {
-							if ( isset( $this->fields[$pos->name] ) ) {
-								$this->setPosition( $pos->name, @$pos->title );
-								foreach ( $this->fields[$pos->name] as $field ) {
-									$type_field		=	'';
-									if ( isset( $this->type_fields[$field->id] ) ) {
-										$type_field	=	' c-'.$this->type_fields[$field->id]->cc;
-									}
-									JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
-									Helper_Workshop::displayField( $field, $type_field, $attr );
-								}
-							} else {
-								$positions[] =   array( 'name'=>$pos->name, 'title'=>$pos->title );
-							}
-						}
-						foreach ( $positions as $pos ) {
-							$this->setPosition( $pos['name'], $pos['title'] );
-						}
-						Helper_Workshop::displayPositionEnd( $this->positions_nb );
-					} else {
-						echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
-						Helper_Workshop::displayPositionEnd();
-					}
-                }
-            }
-            echo '</ul>';
-            ?>
+            <?php include __DIR__.'/edit_fields_as.php'; ?>
         </div>
+        <?php } ?>
     </div>
     
     <div class="<?php echo $this->css['w30'].' '.$bar; ?> active" id="seblod-sidebar">
-        <div class="seblod" id="seblod-sideblock">
-            <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
-            <div class="legend top flexenter"><?php echo $this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a'] ?></div>
-            <div id="scroll">
-                <ul class="sortable connected" id="sortable2" myid="2">
-        			<?php include __DIR__.'/edit_fields_av.php'; ?>
-                </ul>
+        <?php if ( JCck::on( '4.0' ) ) { ?>
+            <fieldset class="options-form seblod">
+                <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
+                <div id="scroll">
+                    <div>
+                        <?php echo '<div class="row"><div class="col">'.$this->lists['af_f'].'</div><div class="col-auto">'.$this->lists['af_a'].'</div></div>'.$this->lists['af_c'].$this->lists['af_t']; ?>
+                    </div>
+                    <hr>
+                    <ul class="sortable connected" id="sortable2" myid="2">
+                        <?php include __DIR__.'/edit_fields_av.php'; ?>
+                    </ul>
+                </div>
+                <div style="display: none;">
+                    <ul id="sortable3"></ul>
+                </div>
+                <span class="expand-main">&nbsp;</span>
+            </fieldset>
+        <?php } else { ?>
+            <div class="seblod" id="seblod-sideblock">
+                <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'search', $this->item->master, $this->item->client, $this->uix, '' ); ?></div>
+                <div class="legend top flexenter"><?php echo $this->lists['af_f'].$this->lists['af_c'].'<br />'.$this->lists['af_t'].$this->lists['af_a']; ?></div>
+                <div id="scroll">
+                    <ul class="sortable connected" id="sortable2" myid="2">
+            			<?php include __DIR__.'/edit_fields_av.php'; ?>
+                    </ul>
+                </div>
+                <div style="display: none;">
+                    <ul id="sortable3"></ul>
+                </div>
             </div>
-            <div style="display: none;">
-                <ul id="sortable3"></ul>
-            </div>
-        </div>
+        <?php } ?>
     </div>
 </div>
 <div class="clr" id="seblod-cleaner"></div>
@@ -113,11 +89,11 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                                  $data['variation']['300']  =   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
                                  $data['variation']['301']  =   JHtml::_( 'select.option', '</OPTGROUP>', '' );    
                             }
-                            echo JHtml::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
+                            echo JHtml::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     } else {
                         if ( count( $v2 ) ) {
-                            echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
+                            echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     }
                 }
