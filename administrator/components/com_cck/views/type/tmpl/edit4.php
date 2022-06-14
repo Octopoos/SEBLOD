@@ -33,7 +33,7 @@ if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {
             foreach ( $v as $k2=>$v2 ) {
                 if ( $k2 != '_' ) {
                     if ( count( $v2 ) ) {
-                        echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
+                        echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide form-select md" data-type="'.$k.'"', 'value', 'text', '' );
                     }
                 }
             }

@@ -53,7 +53,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ),
 								'alias'=>JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ),
 								'css_core'=>JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ),
-								'description'=>JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
+								'description'=>JCckDev::getForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
 								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
 								'location'=>JCckDev::renderForm( $cck['core_location'], $this->item->location, $config, array( 'css'=>'max-width-140' ) ),
 								'indexed'=>JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ),
@@ -72,7 +72,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 								),
 								'permissions'=>JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ),
 								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
-								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'css'=>'max-width-140', 'storage_field'=>'storage_location' ) ),
+								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'css'=>'max-width-140', 'required'=>'required', 'storage_field'=>'storage_location' ) ),
 								'title'=>JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config )
 							),
 							'item'=>$this->item,
@@ -89,7 +89,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	if ( JCck::on( '4.0' ) ) {
 		echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
 		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
-	}
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
+	} else {
 	?>
 	<div class="row togglebar">
 		<div>
@@ -100,6 +102,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		</div>
 	</div>
 	<div class="clr"></div>
+	<?php } ?>
 	<div align="center" id="layers"></div>
 	<?php
 	if ( JCck::on( '4.0' ) ) {
@@ -136,6 +139,22 @@ Helper_Display::quickCopyright();
 JText::script( 'COM_CCK_OPTIONAL' );
 JText::script( 'COM_CCK_REQUIRED' );
 JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
+
+$js4	=	'';
+
+if ( JCck::on( '4.0' ) ) {
+	$js4	=	'
+				var $b4 = $(\'[aria-controls="details"]\');
+				$b4.html(\'<span class="d">\'+$b4.html()+\'</span>\');
+				$("#client,#layer").appendTo($b4);
+				$("#client").after(\'<span class="i icon-arrow-right"></span>\');
+
+				$(document).ready(function(){
+					$("#adminForm").on( "click", "#seblod-sidebar .expand-main", function() {
+						$("#layer_fields > div").toggleClass("expanded");
+					});
+				});';
+}
 ?>
 
 <script type="text/javascript">
@@ -144,6 +163,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		block_item:0,
 		count:6,
 		insidebox:'<?php echo $this->insidebox; ?>',
+		legacy:<?php echo JCck::on( '4' ) ? 0 : 1; ?>,
 		name:"type",
 		prompt_group:"<?php echo str_replace( '<br />', '\n', JText::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
 		root:"<?php echo JUri::root(); ?>",
@@ -174,6 +194,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			.css("height", "100%")
 			.css("display", "block")
 			.css("margin-top", "-10px");
+			<?php echo $js4; ?>
 	});
 })(jQuery);
 </script>
