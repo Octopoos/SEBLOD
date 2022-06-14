@@ -28,7 +28,6 @@ class Helper_Include extends CommonHelper_Include
 		switch ( $view ) {
 			case 'box':
 				JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
-				Helper_Include::addSmoothScrool( 500 );
 				break;
 			case 'folder':
 				JCck::loadjQuery( true, true, true );
@@ -56,6 +55,9 @@ class Helper_Include extends CommonHelper_Include
 					$doc->addScript( $root.'/media/cck/js/cck.backend-3.22.0.min.js' );
 					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
 					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
+					if ( JCck::on( '4.0' ) ) {
+						JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/seblod/ui4-construction.css', array(), false );
+					}
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
 							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 15%/66px 66px no-repeat;
@@ -97,9 +99,10 @@ class Helper_Include extends CommonHelper_Include
 				}
 				JHtml::_( 'bootstrap.tooltip' );
 				JHtml::_( 'behavior.multiselect' );
-				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
-				
-				Helper_Include::addSmoothScrool();
+
+				if ( !JCck::on( '4' ) ) {
+					JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+				}
 				
 				if ( $view == 'fields' ) {
 					Helper_Include::addColorbox( '500', '300', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );

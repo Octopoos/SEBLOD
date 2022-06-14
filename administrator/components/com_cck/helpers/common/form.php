@@ -16,7 +16,7 @@ class CommonHelper_Form
 	// getClientFilter
 	public static function getClientFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getConditionalTrigger
@@ -50,7 +50,7 @@ class CommonHelper_Form
 	{
 		$field->label	=	'App Folder';
 
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderParent
@@ -91,26 +91,31 @@ class CommonHelper_Form
 							});
 							';
 		
-		return	'<fieldset id="layer" class="toggle">'
-			.	'<input type="radio" id="layer1" name="layer" value="configuration" '
-			.	'style="display: none" '.$checked1.' />'
-			.	'<input type="radio" id="layer2" name="layer" value="fields" '
-			.	'style="display: none" '.$checked2.' />'
-			.	'<input type="radio" id="layer3" name="layer" value="template" '
-			.	'style="display: none" '.$checked3.' />'
-			.	'<label id="layer1_label" for="layer1" class="toggle first '.$selected1.'">'
-			.	JText::_( 'COM_CCK_CONFIG' ).'</label>'
-			.	'<label id="layer2_label" for="layer2" class="toggle '.$selected2.'">'
-			.	JText::_( 'COM_CCK_FIELDS' ).'</label>'
-			.	'<label id="layer3_label" for="layer3" class="toggle last '.$selected3.'">'
-			.	JText::_( 'COM_CCK_TEMPLATE' ).'</label>'
-			.	'<div align="center" class="subtabs">'
-			.	'<div id="subtab4"></div>'
-			.	'<div id="subtab5">'.JText::_( 'COM_CCK_OPTIONS' ).'</div>'
-			.	'<div id="subtab6"></div>'
-			.	'</div>'
-			.	'</fieldset>'
-			;
+		$form	=	'<fieldset id="layer" class="toggle">'
+				.	'<input type="radio" id="layer1" name="layer" value="configuration" '
+				.	'style="display: none" '.$checked1.' />'
+				.	'<input type="radio" id="layer2" name="layer" value="fields" '
+				.	'style="display: none" '.$checked2.' />'
+				.	'<input type="radio" id="layer3" name="layer" value="template" '
+				.	'style="display: none" '.$checked3.' />'
+				.	'<label id="layer1_label" for="layer1" class="toggle first '.$selected1.'">'
+				.	JText::_( 'COM_CCK_CONFIG' ).'</label>'
+				.	'<label id="layer2_label" for="layer2" class="toggle '.$selected2.'">'
+				.	JText::_( 'COM_CCK_FIELDS' ).'</label>'
+				.	'<label id="layer3_label" for="layer3" class="toggle last '.$selected3.'">'
+				.	JText::_( 'COM_CCK_TEMPLATE' ).'</label>';
+
+		if ( !JCck::on( '4.0' ) ) {	
+			$form	.=	'<div align="center" class="subtabs">'
+					.	'<div id="subtab4"></div>'
+					.	'<div id="subtab5">'.JText::_( 'COM_CCK_OPTIONS' ).'</div>'
+					.	'<div id="subtab6"></div>'
+					.	'</div>';
+		}
+
+		$form	.=	'</fieldset>';
+
+		return $form;
 	}
 
 	// getLinkage
@@ -141,7 +146,7 @@ class CommonHelper_Form
 	// getLocationFilter
 	public static function getLocationFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone md" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getMediaExtensions
@@ -387,12 +392,15 @@ class CommonHelper_Form
 					.	JText::_( 'COM_CCK_CONTENT' ).'</label>';
 		}
 		
-		$form	.=	'<div align="center" class="subtabs">'
-				.	'<div id="subtab1"></div>'
-				.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
-				.	'<div id="subtab3"></div>'
-				.	'</div>'
-				.	'</fieldset>';
+		if ( !JCck::on( '4.0' ) ) {
+			$form	.=	'<div align="center" class="subtabs">'
+					.	'<div id="subtab1"></div>'
+					.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
+					.	'<div id="subtab3"></div>'
+					.	'</div>';
+		}
+
+		$form	.=	'</fieldset>';
 		
 		return $form;
 	}
@@ -400,7 +408,7 @@ class CommonHelper_Form
 	// getTypeFilter
 	public static function getTypeFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="form-select inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getStorageMode

@@ -321,6 +321,10 @@ class Helper_Workshop
 		$data['_']				=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
 										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>'<span class="icon-menu-2"></span>' );
 		
+		if ( JCck::on( '4.0' ) ) {
+			$data['_']['icon-friendly']	=	'<span class="icon-expand"></span>';
+		}
+
 		$data['computation']	=	true;
 		$data['conditional']	=	true;
 		$data['label']			=	true;

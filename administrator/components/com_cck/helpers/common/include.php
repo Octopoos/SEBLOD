@@ -64,16 +64,5 @@ class CommonHelper_Include
 			}
 		}
 	}
-	
-	// -------- -------- -------- -------- -------- -------- -------- -------- //
-	
-	// addSmoothScrool
-	public static function addSmoothScrool( $time = 1000 )
-	{
-		$doc	=	JFactory::getDocument();
-		
-		$js		=	'jQuery(document).ready(function($){ $(".scroll").click(function(event){ event.preventDefault(); $("html,body").animate({scrollTop:$(this.hash).offset().top}, '.$time.'); }); });';
-		$doc->addScriptDeclaration( $js );
-	}
 }
 ?>
