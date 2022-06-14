@@ -147,26 +147,28 @@ if("undefined"===typeof JCck)var JCck={};
 			}
 		},
 		setEdit2: function(uix) {
-			var wo = JCck.Dev.sb_inner;
-			if (wo) {
-				var wh = $(window).height();
-				$("#scroll").height(wh-wo);
-			}
-			$(window).scroll(function() {
-				var $sidebar = $("#seblod-sidebar");
-				var winScroll = $(window).scrollTop();
-				var diff = ( $sidebar.length ) ? $sidebar.offset().top : 0;
-				if (winScroll > diff) {
-					JCck.DevHelper.setSidebar();
-				} else {
-					if ($("#seblod-sideblock").css('position') == 'fixed') {
-						$("#seblod-sideblock").css({'position' : 'relative'});
-						$("#seblod-sideblock").css({'top' : '0px'});
-					}
+			if (JCck.Dev.legacy) {
+				var wo = JCck.Dev.sb_inner;
+				if (wo) {
+					var wh = $(window).height();
+					$("#scroll").height(wh-wo);
 				}
-			});
-			$("#sortable1").parent().css({"overflow" : "visible"});
-			$("#sortable2").parent().parent().css({"overflow" : "visible"});
+				$(window).scroll(function() {
+					var $sidebar = $("#seblod-sidebar");
+					var winScroll = $(window).scrollTop();
+					var diff = ( $sidebar.length ) ? $sidebar.offset().top : 0;
+					if (winScroll > diff) {
+						JCck.DevHelper.setSidebar();
+					} else {
+						if ($("#seblod-sideblock").css('position') == 'fixed') {
+							$("#seblod-sideblock").css({'position' : 'relative'});
+							$("#seblod-sideblock").css({'top' : '0px'});
+						}
+					}
+				});
+				$("#sortable1").parent().css({"overflow" : "visible"});
+				$("#sortable2").parent().parent().css({"overflow" : "visible"});
+			}
 			$("#pos-1").addClass("boundary");
 			/* -- */
 			var sortable_ids = (uix=="compact") ? "#sortable1" : "#sortable1, #sortable2";
