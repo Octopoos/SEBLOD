@@ -6,6 +6,13 @@
 * @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
+body {
+    --x-col-offset: 302px;
+    --x-col-width: 200px;
+    --x-cols-width: 510px;
+    --x-form-width: auto;
+}
+
 /* ui-construction */
 .hide{display:none!important;}
 .show{display:inline-block!important;}
@@ -35,8 +42,10 @@ div.seb-wrapper.compact span.toggle{color:#146295; font-size:0.95em; font-weight
 
 /* ui-construction  (sidebar) */
 .seblod-wrapper{position: relative;width: 100%;overflow: hidden;}
+#seblod-main{text-align: left;}
 #seblod-main > div.seblod{margin-right:0 !important;}
-#seblod-sidebar{right: 0;width: 32%; position:relative; margin-left:10px !important;}
+#seblod-sidebar{right: 0; position:relative; margin-left:10px !important; text-align: left;}
+body.itemid-0 #seblod-sidebar{width: 32%;}
 div.seb-wrapper #seblod-sidebar{top: 0; position:absolute;}
 .active{position: absolute;}
 .passive{float: left;}
@@ -66,7 +75,7 @@ ul.sortable{padding: 0; margin:0 0 9px 0;}
 ul.sortable li{list-style: none outside none;margin-bottom: 3px;margin-top: 3px;padding: 8px;position: relative;width: auto; line-height:14px;}
 #pos-1{margin-top: 0 !important;}
 ul.sortable li.panel_slider {}
-ul.sortable input, ul.sortable select{width:auto;height:auto;margin:0;}
+ul.sortable input, ul.sortable select{width:var(--x-form-width);height:auto;margin:0;}
 ul.sortable span, ul.sortable input, ul.sortable select{font-size:11px;}
 li span.title{cursor: pointer;font-weight: bold;padding: 10px;}
 li.position span.title{text-transform:uppercase; padding:4px; cursor: default;}
@@ -76,13 +85,13 @@ ul.sortable li.drop-highlight{height: 1em;}
 ul.sortable li.field a.edit{float: left;padding: 0; width:16px; height:16px;}
 li.position img{cursor:pointer;float: left;padding: 0 0 0 2px;}
 ul.sortable li div.pane div{display: block;float: left;position: absolute;text-align: center;top: 0;}
-div.seblod .selector{padding: 0 !important;margin: 0 5px 0 0 !important;float: right;}
+ul.sortable .selector{padding: 0 !important;margin: 0 5px 0 0 !important;float: right;}
 ul.sortable_header{padding: 0;position:relative; margin:0;}
 ul.sortable_header li{list-style: none;padding: 0 8px 3px 8px;position:relative;width: auto;}
 ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 300;font-size:11px;}
-ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 301;
+ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: var(--x-col-width);z-index: 301;
 -webkit-border-top-left-radius: 2px;-webkit-border-top-right-radius: 2px;-moz-border-radius-topleft: 2px;-moz-border-radius-topright: 2px;border-top-left-radius:2px;border-top-right-radius:2px;}
-ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: 200px;z-index: 900;}
+ul.sortable li div.pane div.colc{padding-top: 4px;position: relative;width: var(--x-col-width);z-index: 900;}
 #linkage{display:block; height:24px; width:22px; z-index: 99;}
 #linkage_wrap{position:absolute; top:13px; right:15px; z-index: 99;}
 ul.sortable li div.pane span.text {font-size: 10px;}
@@ -105,7 +114,7 @@ div.colc::selection {background: none;}
     width: auto !important; margin: auto;
 }
 .flexenter > .input-medium {width: 40%; margin: 0 1px;}
-div.seblod div.legend.flexenter .inputbox{font-size: 11px;}
+ul.sortable div.legend.flexenter .inputbox{font-size: 11px;}
 
 #minwidth-body .colorpicker{display:none;}
 div.subtabs{color:#16396f; font-size:0.95em;}
@@ -130,6 +139,109 @@ div.textdesc{float:left;line-height:34px;}
 a#initclient:link, a#initclient:hover, a#initclient:visited{font-weight:bold;color:#3b99fc; margin-top: 8px;}
 
 body.com_cck ul.sortable_header li div.pane{right: 24px;}
-body.com_cck ul.sortable li div.pane div.colc{padding-top: 0;position: relative;width: 200px;z-index: 99;}
-body.com_cck ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: 510px;z-index: 97;font-size:11px;  top:-15px;}
-body.com_cck ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: 200px;z-index: 98;
+body.com_cck ul.sortable li div.pane div.colc{padding-top: 0;position: relative;width: var(--x-col-width);z-index: 99;}
+body.com_cck ul.sortable_header li div.pane{float: right;height: inherit;margin-right: 0;overflow: hidden;position: absolute;right: 0;width: var(--x-cols-width);z-index: 97;font-size:11px;  top:-15px;}
+body.com_cck ul.sortable_header li div.pane div{display: block;float: right;font-weight: 700;margin-right: 50px;padding-top: 0;position: relative;right: 0;text-align: center;top: 0;width: var(--x-col-width);z-index: 98;}
+
+/*styes/ui3-construction*/
+/*toggle*/
+div.seblod fieldset.toggle{background-color:#FFFFFF;}
+fieldset.toggle label.selected{background: none repeat scroll 0 0 #16396f;color: #ffffff; border-color:#16396f;}
+fieldset.toggle label.disabled, fieldset.toggle label.disabled:hover{background: none repeat scroll 0 0 #ffffff;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0; border-color:#ccc; border-style: solid;color: #cccccc;text-decoration: line-through; cursor: default!important;}
+fieldset.toggle label{background: none repeat scroll 0 0 #f1f1f1;border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 0; border-color:#ccc; border-style: solid; color: #16396f;}
+fieldset.toggle label:hover{background-color: #16396f;color: #ffffff; border-color:#16396f;}
+fieldset.toggle label.first{border-left: 1px solid #ccc !important; -webkit-border-top-left-radius:2px; -webkit-border-bottom-left-radius:2px; -moz-border-radius-topleft:2px; -moz-border-radius-bottomleft:2px; border-top-left-radius:2px; border-bottom-left-radius:2px;}
+fieldset.toggle label.first.selected,fieldset.toggle label:hover.first{border-left: 1px solid #16396f !important;}
+fieldset.toggle label.last{-webkit-border-top-right-radius:2px; -webkit-border-bottom-right-radius:2px; -moz-border-radius-topright:2px; -moz-border-radius-bottomright:2px; border-top-right-radius:2px; border-bottom-right-radius:2px;}
+
+.loading{top:68px!important;}
+
+/*sortable*/
+ul.sortable li{background-color: #f1f1f1 ;border: 1px solid #dedede ; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
+ul.sortable li.div_clear{}
+ul.sortable li span.title{color: #16396f !important;}
+ul.sortable li span.subtitle{color: #999 !important;}
+ul.sortable li.panel_slider span.title{color: #000000 !important;}
+ul.sortable li.drop-highlight{background-color: #ffffff !important;border: 1px dashed #dedede !important;}
+li.ui-selecting{background: #ffffcc !important;}
+li.ui-selected{background: #ffffcc !important;}
+li.ui-sortable-helper{background: #ffffcc !important;}
+ul.sortable li.t-tabs,ul.sortable li.t-search_operator,ul.sortable li.t-div{background-color: #dedede;}
+/*li:hover.ui-selectee{border-color: #bbbbbb !important;}*/
+ul.sortable li.position{background-color: #16396f !important; border-color:#16396f;}
+ul.sortable li.position span.title{color: #ffffff !important;}
+ul.sortable li.position span.title.overridden::before{content: attr(data-path); width: 100%; position: absolute; left: 12px; bottom: -3px; color: #3b99fc; font-size: 8px;}
+
+ul.sortable .selector{background-color: #16396f !important;border-color: #16396f !important;}
+ul.sortable .thin.blue{background-color: #ffffff;border-color: #16396f;color: #16396f;}
+div.pane span.text.blue{color: #16396f;!important;}
+div.pane span.text > span.icon-key{position: relative; left: 4px;}
+div.pane span.c_live2, div.pane span.c_mat2, div.pane span.c_comp, div.pane span.c_cond, div.pane span.c_val, div.pane .sp2se{cursor: pointer;font-size:0.95em;}
+div.pane span.c_live2:hover, div.pane span.c_mat2:hover, div.pane span.c_comp:hover, div.pane span.c_cond:hover, div.pane span.c_val:hover, div.pane span.sp2se:hover{text-decoration:underline;}
+ul.sortable input[type="radio"].selector:checked{color: #f1f1f1 !important;}
+ul.sortable_header li{color: #ffffff !important;}
+ul.sortable_header li div.pane div{background-color: #16396f !important;border-left: 1px solid #16396f !important;border-right: 1px solid #16396f !important;border-top: 1px solid #16396f !important;}
+
+ul.sortable li.field div.drag {cursor: move;height: 14px;position: absolute;right: 1px;top: 8px;width: 23px;}
+div#seblod-main ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
+ul.sortable li.field div.drag{background: url(images/grip3.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip3.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 0 transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
+a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,
+a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons3.png); background-size: cover;}
+
+div#seblod-sidebar ul.sortable li.field div.move{cursor: pointer;height: 17px;position: absolute;right: 28px;top: 7px;width: 16px;}
+
+ul.sortable li span.c_var {color: #f1f1f1; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 2px;}
+ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res{color: #16396f; cursor: pointer; font-weight: bold; font-size: 15px; position: relative; top: 0;}
+ul.sortable li span:hover.c_live, ul.sortable li span:hover.c_mat, ul.sortable li span:hover.c_link, ul.sortable li span:hover.c_typo, ul.sortable li span:hover.c_res{color: #3b99fc;}
+ul.sortable li span.c_live{font-weight: normal; top:2px;}
+
+ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}
+ul.sortable li.field a.b,ul.sortable li.field a:visited.b{color:#16396f; padding-left:2px;}
+ul.sortable li.field a:hover.b{color:#3b99fc; padding-left:2px;}
+ul.sortable li.field a.zz,ul.sortable li.field a:visited.zz,ul.sortable li.field a:hover.zz{color:#333333; cursor: default;}
+ul.sortable li.field a.zz .icon-pencil-2:before{content:"\23";}
+
+ul.sortable li.field a.b [class^="icon-"],
+ul.sortable li.field a.b [class*=" icon-"] {margin-right: 0;}
+ul.sortable li div.pane div.col1 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: var(--x-col-offset); }
+ul.sortable li div.pane div.col2 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; height: 30px; right: 52px; }
+ul.sortable li div.pane div.col1 > *,
+ul.sortable li div.pane div.col2 > * {display: block; margin: auto;}
+
+ul.sortable li div.pane div{color: #ffffff; font-weight: bold;}
+
+div#seblod-sidebar a.panel { float:left; width:20px; height:20px; text-align:center; cursor:pointer; font-size:14px !important; font-weight:bold;
+    line-height:20px; border:1px solid #dedede; text-decoration:none !important; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius:2px;}
+div#seblod-sidebar a.panel{background: none repeat scroll 0 0 #f1f1f1; color: #16396f;}
+div#seblod-sidebar a.panel:hover{background-color:#16396f; color:#ffffff; border-color: #16396f;}
+div#seblod-sidebar a.panel.selected{background-color:#16396f; color:#ffffff; border-color: #16396f;}
+
+/*sidebar*/
+a:link.icons.icon-add, a:visited.icons.icon-add{background-position: 0 0!important;}
+a:hover.icons.icon-add{background-position: 0 -20px!important;}
+a:link.icons.icon-add2, a:visited.icons.icon-add2{background-position: 0 -200px!important;}
+a:hover.icons.icon-add2{background-position: 0 -220px!important;}
+a:link.icons.icon-right, a:visited.icons.icon-right{background-position: 0 -40px!important;}
+a:hover.icons.icon-right{background-position: 0 -60px!important;}
+a:link.icons.icon-left, a:visited.icons.icon-left{background-position: 0 -80px!important;}
+a:hover.icons.icon-left{background-position: 0 -100px!important;}
+a:link.icons.icon-up, a:visited.icons.icon-up{background-position: 0 -120px!important;}
+a:hover.icons.icon-up{background-position: 0 -140px!important;}
+a:link.icons.icon-down, a:visited.icons.icon-down{background-position: 0 -160px!important;}
+a:hover.icons.icon-down{background-position: 0 -180px!important;}
+a:link.icons.icon-toggle, a:visited.icons.icon-toggle{background-position: 0 -200px!important;}
+a:hover.icons.icon-toggle{background-position: 0 -220px!important;}
+
+/* Joomla 3.x */
+div.row-fluid div.span12 ul.sortable li.position,
+div.row-fluid div.span12 fieldset.toggle label:hover:not(.disabled),
+div.row-fluid div.span12 fieldset.toggle label.selected{
+    background-color: #16396f;
+}
+div.row-fluid div.span12 ul.sortable_header li div.pane > div{background-color:#16396f!important;}
+div.row-fluid div.span12 ul.sortable_header li div.pane{top:-15px;}

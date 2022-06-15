@@ -6,8 +6,14 @@
 * @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
 **/
 
-/* LIST */
+body {
+	--x-col-offset: 50px;
+	--x-col-offset-live: 27px;
+	--x-col-width: 200px;
+	--x-cols-width: 810px;
+}
 
+/* LIST */
 body #wrapper .top-bar .sidebar-nav{padding: 0;}
 body #wrapper .top-bar .sidebar-nav ul{
 	border-bottom: 1px solid var(--template-bg-dark-10);
@@ -56,7 +62,7 @@ body #wrapper .top-bar .sidebar-nav li:hover a:after {
 body #wrapper .top-bar .sidebar-nav li a:before{content:""; margin: 0;}
 
 body.layout-default main form{
-	background: #fff;
+	/*background: #fff;*/
 	border-radius: 0.25rem;
 	box-shadow: 0 2px 10px -8px var(--template-bg-dark-50);
 	margin-top: 12px;
@@ -69,6 +75,57 @@ body.layout-default main form{
 	font-weight: bold;
 	padding: 0.25rem;
 	text-decoration: none;
+}
+
+body.layout-default main #j-sidebar-container {
+	background: #fff;
+}
+body.layout-default main #j-main-container {
+	display: grid;
+}
+#j-main-container #filter_location {
+	left: -1px;
+    position: relative;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    background-color: var(--template-bg-light);
+}
+#j-main-container #filter-bar {
+	display: grid;
+	grid-row-gap: 16px;
+	margin: 16px;
+}
+#j-main-container .filter-search {
+	justify-self: flex-start;
+	display: grid;
+	grid-column-gap: 16px;
+}
+#j-main-container .filter-search .btn-group {
+	display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+#j-main-container .filter-search button {
+	width: 48px;
+}
+#j-main-container .filter-search input {
+	width: 355px;
+}
+#j-main-container .pull-right {
+	display: grid;
+    grid-template-columns: repeat(3,auto);
+    justify-self: flex-end;
+    grid-column-gap: 16px;
+    grid-row-gap: 16px;
+}
+#j-main-container .js-stools-container-filters-visible {
+	display: grid;
+	grid-template-columns: repeat(auto-fill,240px);
+	grid-column-gap: 16px;
+	grid-column: span 2;
+}
+#j-main-container .js-stools-container-filters-visible hr {
+	display: none;
 }
 
 /* FORM */
@@ -114,9 +171,8 @@ fieldset.disabled legend{background-color: transparent; color: var(--template-bg
 .input-group .btn-secondary{background-color: var(--template-bg-light); border-color: var(--template-bg-dark-20); border-left-color: transparent!important; color: #212529;}
 .input-group .btn-secondary:focus{box-shadow: none;}
 
-.main-card{outline: none;}
-
-.row.row-grid > *:not(:first-child){padding-left: 0;}
+.row.row-grid > *:not(:first-child):not(.col-12){padding-left: 0;}
+.row.row-grid > *:not(:first-child).col-12{padding-top: calc(var(--gutter-x)*.5);}
 .row-pane {
 	--gutter-x: 2rem;
 	background-color: #fff;
@@ -129,6 +185,11 @@ fieldset.disabled legend{background-color: transparent; color: var(--template-bg
 }
 .row-pane details{margin: -1rem 0 1rem 0;}
 
+[aria-controls="details"]{margin-right: auto;}
+[role="tab"],
+[role="tabpanel"],
+.main-card{outline: none;}
+
 /* -- */
 
 #alter_match_div{margin: 18px 0 10px 0;}
@@ -138,20 +199,59 @@ div.toggle-selection{float: none; margin: 0;}
 
 .ghost span.locked,fieldset.locked .storage-target{color: var(--template-link-color);}
 fieldset.locked input.storage-target{border-color: var(--template-link-color);}
+fieldset.locked input.storage-target::placeholder{
+	color: var(--template-link-color);
+}
 .ghost span.unlocked,fieldset.unlocked .storage-target{color: var(--success);}
-fieldset.unlocked input.storage-target{border-color: var(--success);}
+fieldset.unlocked input.storage-target{
+	border-color: var(--success);
+}
+fieldset.unlocked input.storage-target::placeholder {
+	color: var(--success);
+}
 .ghost span.locked .icon-lock, span.unlocked .icon-lock{display: none!important;}
 .ghost span.locked .icon-lock:before, span.unlocked .icon-lock:before{content: none!important;}
 .ghost p{margin: 0; padding-top: 10px;}
 fieldset.locked .input-group .btn-secondary{border-color: var(--template-link-color);}
 fieldset.unlocked .input-group .btn-secondary{border-color: var(--success);}
 
-.radios.btn-group {padding: 6px 0;}
-.is-sticky{position: sticky; top:5.3rem;}
-form.modal-large .is-sticky{position: sticky; top:3.6rem;}
+
+.attr > .is-mini{/*display: inline-block; margin: 6px 3px;*/}
+/*.attr > .is-mini:first-child{margin-left: 0;}*/
+/*.attr > .is-mini:last-child{margin-right: 0;}*/
+/*.attr-grid-*/
+.attr-grid-4{grid-template-columns: repeat(4,1fr);}
+.attr-grid-6{grid-template-columns: repeat(6,1fr);}
+/*grid-template-columns*/
+[class*="attr-grid-"] {
+	display: grid;
+	grid-column-gap: 6px;
+	grid-row-gap: 6px;
+	padding: 8px;
+    margin: 0 8px;
+    background-color: var(--template-bg-dark-5);
+    border: 1px solid var(--template-bg-dark-20);
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    position: relative;
+    top: -1px;
+}
+.control-group div.collection-group-wrap{
+	border-bottom: 0;
+	overflow: inherit;
+	margin-bottom: 16px!important;
+}
+.control-group div.adminformlist {
+	overflow: inherit;
+}
+
+.is-mini{padding: 4px 8px; width: 100%;}
+.is-sticky{position: sticky; top:86px;}
+form.modal-large .is-sticky{position: sticky; top:59px;}
 .minus-1{order: -1;}
 .minus-2{order: -2;}
 .minus-2 > fieldset{min-height: 142px;}
+.radios.btn-group {padding: 6px 0;}
 .w100{width: 100%;}
 
 .input-group{width: 100%!important;}
@@ -208,3 +308,41 @@ body #toolbarBox a [class^="icon-"] {
 }
 
 div.seblod.first.cpanel_news{border: none; margin-top: 10px!important;}
+
+/* body */
+body.layout-edit .header{display: none;}
+
+.form-control.md,
+.form-control.xs{
+	padding: 2px 6px!important;
+}
+.form-control.xs,
+.form-select.xs{
+	font-size: 13px!important;	
+}
+.form-select.md,
+.form-select.xs{
+	padding-bottom: 2px!important;
+	padding-top: 2px!important;
+}
+
+#cboxOverlay {
+    background: var(--template-bg-dark-70);
+    opacity: 0.7;
+}
+
+@media (max-width:1520px) {
+	#wrapper:not(.closed) #j-main-container .filter-search input {
+		width: 195px;
+	}
+}
+@media (max-width:1300px) {
+	.attr-grid-6,.attr-grid-9 {
+		grid-template-columns: repeat(3,1fr);
+	}
+}
+@media (max-width:1240px){
+	#j-main-container .filter-search input {
+		width: 195px;
+	}
+}

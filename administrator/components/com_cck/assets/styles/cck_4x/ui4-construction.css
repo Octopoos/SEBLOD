@@ -1,0 +1,320 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				https://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
+**/
+
+.toggler-burger{display: none!important;}
+
+/*images*/
+ul.sortable li.field div.drag{background: url(images/grip4.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip4.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow4.png) no-repeat scroll 0 0 transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow4.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow4.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow4.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
+
+a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,
+a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons4.png); background-size: cover;}
+
+/*sortable*/
+#seblod-main > fieldset,
+#seblod-sidebar > fieldset {
+	background-color: var(--template-bg-light);
+	border: 1px solid var(--template-bg-dark-20);
+	padding: 1vw;
+	position: sticky;
+	top: 140px;
+	left: 0;
+	right: 0;
+}
+#seblod-sidebar{
+	margin: 0!important;
+}
+#seblod-sidebar #scroll {
+	padding: 0 0 0 1vw;
+}
+#seblod-sidebar #scroll .row {
+	--gutter-x: 1rem;
+	--gutter-y: 1rem;
+}
+#seblod-sidebar select {
+	margin-bottom: 1rem;
+}
+#seblod-sidebar .seblod-toolbar {
+	margin-top: 5px;
+	position: sticky;
+	top: 160px;
+}
+#seblod-sidebar .seblod-toolbar a{
+	font-family: var(--font-sans-serif)!important;
+}
+#seblod-sidebar .seblod-toolbar a:before{
+	content:  "";
+}
+#seblod-sidebar .seblod-toolbar a.panel {
+	background-color: var(--template-bg-dark-7);
+	border-color: var(--template-bg-dark-20);
+	color: var(--template-bg-dark-40);
+	height: 22px;
+	width: 22px;
+	position: relative;
+	left: -1px;
+	font-size: 15px!important;
+	line-height: 22px;
+}
+#seblod-sidebar .seblod-toolbar a.panel.selected,
+#seblod-sidebar .seblod-toolbar a.panel:hover {
+	background-color: var(--template-bg-dark-75);
+	border-color: var(--template-bg-dark-75);
+}
+#seblod-sidebar #sortable2 {
+	padding: 0;
+}
+#seblod-sidebar #sortable2 :first-child {
+	margin-top: 0;
+}
+#seblod-main > fieldset {
+	padding-top: 2vw;
+}
+#seblod-main > fieldset > legend {
+	background-color: var(--template-bg-light);
+}
+ul.sortable li.field div.move {
+	top: 13px!important;
+}
+ul.sortable li.field div.drag {
+	top: 14px!important;
+}
+ul.sortable_header li {
+	padding-top: 2px;
+	padding-bottom: 5px;
+	text-transform: uppercase;
+}
+ul.sortable_header li div.pane {
+	font-size: 12px!important;
+	top: -13px!important;
+}
+ul.sortable_header li div.pane div {
+	background-color: var(--template-bg-dark-75)!important;
+	font-weight: normal!important;
+	padding: 1px 0 3px 0!important;
+}
+ul.sortable span, ul.sortable input, ul.sortable select {
+	font-size: 13px;
+}
+ul.sortable {
+	margin-bottom: 2px;
+}
+ul.sortable li:last-child {
+	margin-bottom: 0;
+}
+ul.sortable li {
+	background-color: #fff;
+	border: 1px solid var(--template-bg-dark-20);
+	line-height: 15px;
+	margin: 6px 0;
+	padding: 12px 8px;
+}
+ul.sortable li div.pane div.col1,
+ul.sortable li div.pane div.col2 {
+	height: 100%;
+}
+ul.sortable li div.pane span.text {
+	font-size: 13px;
+	line-height: 16px;
+}
+ul.sortable .form-control.xs:not(.auto),
+ul.sortable .form-select.xs {
+	margin-left: auto;
+	margin-right: auto;
+}
+ul.sortable li.t-div,
+ul.sortable li.t-search_operator,
+ul.sortable li.t-tabs {
+	background-color: var(--template-bg-dark-10)!important;
+}
+ul.sortable li.position {
+	background-color: var(--template-bg-dark-75)!important;
+	border-color: var(--template-bg-dark-75)!important;
+}
+ul.sortable li.position .form-control {
+	border-color: var(--template-bg-dark-75);
+}
+ul.sortable li.position .form-control:focus,
+ul.sortable li.position .form-select:focus {
+	box-shadow: 0 0 0 0.2rem var(--template-bg-dark-60);
+}
+ul.sortable li.position span.title,
+ul.sortable li span.subtitle {
+	font-weight: normal;
+}
+ul.sortable li span.subtitle,
+ul.sortable li a.b, ul.sortable li a:visited.b {
+	color: var(--template-bg-dark-40)!important;
+}
+ul.sortable li a.b:hover {
+	color: #39f!important;
+	cursor: pointer;
+}
+ul.sortable li. span.title {
+	color: var(--primary);
+}
+ul.sortable li.ui-selected,
+ul.sortable li.ui-selecting {
+	border-color: #39f!important;
+	/*background-color: var(--template-bg-light)!important;*/
+	background-color: rgb(51 153 255 / 13%)!important;
+}
+ul.sortable li.ui-selected span.title,
+ul.sortable li.ui-selecting span.title {
+	color: #39f!important;
+}
+
+/**/
+#myTab div[role="tablist"] {
+	background: #fff;
+	box-shadow: 0 2px 10px -8px var(--template-bg-dark-50);
+	position: sticky;
+	top: 67px;
+	left: 0;
+	right: 0;
+	z-index: 999;
+}
+
+hr {
+	border-top: 1px solid var(--template-bg-dark-50);
+}
+[role="tablist"] [aria-controls="details"] {
+	display: grid!important;
+	grid-template-columns: 1fr auto auto auto;
+	grid-column-gap: 6px;
+}
+[role="tablist"] [aria-controls="details"] fieldset {
+	float: none;
+}
+[role="tablist"] [aria-controls="details"] fieldset label {
+	background-color: #fff;
+	/*border-color: var(--template-bg-dark-20);*/
+	color: var(--primary);
+	font-size: 12px;
+	min-width: 84px;
+	padding: 2px;
+/*border-width: 1px;*/
+	border-radius: 4px;
+	margin: 0 4px;
+
+color: var(--template-bg-dark-40);
+font-weight: normal;
+	border: 1px solid var(--template-bg-dark-20)!important;
+
+/*border-color: transparent;*/
+background: transparent;
+	/*background: none;*/
+	/*border: 2px transparent;*/
+}
+[role="tablist"] [aria-controls="details"] fieldset label.selected,
+[role="tablist"] [aria-controls="details"] fieldset label:hover {
+	background-color: var(--template-bg-dark-75);
+	/*border-color: var(--template-link-color)!important;*/
+font-weight: normal;
+	border-color: var(--template-bg-dark-75)!important;
+	color: #fff;
+
+
+	/*background: none;*/
+	/*border: 0;*/
+}
+
+[role="tablist"] [aria-controls="details"] span.d {
+	margin-right: 3px;
+}
+[role="tablist"] [aria-controls="details"][aria-expanded] span.d {
+	margin-right: 2px;
+}
+[role="tablist"] [aria-controls="details"] span.i {
+	margin-right: 2px;	
+	position: relative;
+	left: 2px;
+	line-height: 25px;
+}
+
+ul.sortable li span.c_live, ul.sortable li span.c_mat, ul.sortable li span.c_link, ul.sortable li span.c_typo, ul.sortable li span.c_res, ul.sortable li span.c_var {
+	font-size: 18px;
+	font-weight: normal;
+	top: 2px;
+}
+
+ul.sortable li span.c_live {
+	position: absolute;
+	right: var(--x-col-offset-live);
+	top: 5px;
+}
+ul.sortable li span.c_var {
+	position: absolute;
+	right: 14px;
+	top: 6px;
+}
+
+input[value="clear"] {
+	color: var(--template-bg-dark-20);
+}
+
+#seblod-sidebar .expand-main {
+	background-color: var(--template-bg-dark-20);
+	position: absolute;
+	right: -5px;
+	top: 5px;
+	text-indent: 2px;
+	width: 5px;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	cursor: pointer;
+	color: var(--template-bg-dark-20);
+}
+
+#layer_fields .expanded #seblod-main {
+	width: calc(100% - 84px);
+}
+#layer_fields .expanded #seblod-main ul.sortable_header li div.pane {
+	--x-cols-width: 810px;
+}
+
+#layer_fields .expanded #seblod-main ul.sortable_header li div.pane div,
+#layer_fields .expanded #seblod-main ul.sortable li div.pane div.colc {
+	--x-col-width: 350px;
+}
+#layer_fields .expanded #seblod-main ul.sortable li div.pane div.col1 {
+	--x-col-offset: 452px;
+}
+#layer_fields .expanded #seblod-main ul.sortable li span.c_live {
+	--x-col-offset-live: 62px;
+}
+#layer_fields .expanded #seblod-main ul.sortable input.form-control,
+#layer_fields .expanded #seblod-main ul.sortable select.form-select {
+	--x-form-width: 69%;
+}
+#layer_fields .expanded #seblod-sidebar {
+	width: 84px;
+}
+#layer_fields .expanded #seblod-sidebar .seblod-toolbar {
+	margin-left: auto; margin-right: auto; float: none;
+}
+#layer_fields .expanded #scroll {
+	display: none;
+}
+
+@media (min-width:1960px) {
+	body {
+		--x-cols-width: 810px;
+		--x-col-offset: 452px;
+		--x-col-offset-live: 62px;
+		--x-col-width: 350px;
+		--x-form-width: 69%;
+	}
+	.expand-main {
+		display: none;
+	}
+}
