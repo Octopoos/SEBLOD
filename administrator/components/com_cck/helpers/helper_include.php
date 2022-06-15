@@ -53,10 +53,11 @@ class Helper_Include extends CommonHelper_Include
 					JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
 					$doc->addScript( $root.'/media/cck/js/cck.backend-3.22.0.min.js' );
-					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
-					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
+					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css?v4' );
 					if ( JCck::on( '4.0' ) ) {
-						JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/seblod/ui4-construction.css', array(), false );
+						JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4-construction.css', array(), false );
+					} else {
+						$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/cck_3x/ui3-construction.css' );
 					}
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
