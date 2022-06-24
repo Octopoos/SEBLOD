@@ -160,13 +160,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	}
 	?>
     </tbody>
+    <?php if ( (int)$this->pagination->pagesTotal > 1 ) { ?>
 	<tfoot>
 		<tr height="40px;">
-	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
+			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 			<td class="center" colspan="8" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>
+	<?php } ?>
 	</table>
 </div>
 <?php include_once __DIR__.'/default_batch.php'; ?>
@@ -182,7 +184,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
-Helper_Display::quickCopyright();
 
 $js	=	'
 		(function ($){
@@ -246,3 +247,4 @@ $doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
+<?php Helper_Display::quickCopyright(); ?>
