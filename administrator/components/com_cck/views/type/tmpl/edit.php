@@ -52,6 +52,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 							'fields'=>array(
 								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ),
 								'alias'=>JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ),
+								'bar_clients'=>JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) ),
+								'bar_panels'=>JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config ),
 								'css_core'=>JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ),
 								'description'=>JCckDev::getForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
 								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
@@ -89,20 +91,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	if ( JCck::on( '4.0' ) ) {
 		echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
 		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
-		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
-		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
-	} else {
+		echo $dataTmpl['fields']['bar_clients'];
+		echo $dataTmpl['fields']['bar_panels'];
+	}
 	?>
-	<div class="row togglebar">
-		<div>
-		<?php
-		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
-		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
-		?>
-		</div>
-	</div>
-	<div class="clr"></div>
-	<?php } ?>
 	<div align="center" id="layers"></div>
 	<?php
 	if ( JCck::on( '4.0' ) ) {
