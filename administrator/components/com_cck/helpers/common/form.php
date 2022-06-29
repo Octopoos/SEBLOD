@@ -53,6 +53,12 @@ class CommonHelper_Form
 		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
+	// getFolderFilterApp
+	public static function getFolderFilterApp( &$field, $value, $name, $id, $config )
+	{
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( 'ANY_APP', true, true, true, 'master' ), $name, 'class="form-select inputbox select md form-select-bg" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+	}
+
 	// getFolderParent
 	public static function getFolderParent( &$field, $value, $name, $id, $config )
 	{
@@ -146,7 +152,7 @@ class CommonHelper_Form
 	// getLocationFilter
 	public static function getLocationFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone md" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone md form-select-bg" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getMediaExtensions
@@ -419,8 +425,17 @@ class CommonHelper_Form
 	// getStorageMode
 	public static function getStorageMode( &$field, $value, $name, $id, $config )
 	{
-		$value		=	( $value ) ? $value : 'custom';
 		$options	=	array();
+		$view		=	JFactory::getApplication()->input->get( 'view', '' );
+		
+		if ( $view == 'fields' ) {
+			if ( trim( $field->selectlabel ) ) {
+				$options[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
+			}
+		} else {
+			$value		=	( $value ) ? $value : 'custom';
+		}
+
 		$options[]	=	JHtml::_( 'select.option', 'none', '- '.JText::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
 		
 		if ( ( JCck::getConfig_Param( 'storage_dev', '0' ) == 3 ) || ( $value == 'dev' ) ) {

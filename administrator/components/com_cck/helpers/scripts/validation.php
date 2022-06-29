@@ -69,6 +69,8 @@ $js		=	'
 								data	=	"required["+$("#required2").val()+"]";
 							} else if (data == "condrequired") {
 								data	=	"required[cond:"+$("#required3").val()+"]";
+							} else if (data == "langrequired") {
+								data	=	"required[lang:default]";
 							}
 							parent.jQuery("#"+eid+"_required").val(data);
 							data = $("#required_alert").val();
@@ -106,7 +108,9 @@ $js		=	'
 						var data2 =	data.split("[");
 						data2 = data2[1];
 
-						if (data2.indexOf("cond:") !== -1) {
+						if (data2.indexOf("lang:") !== -1) {
+							data = "langrequired";
+						} else if (data2.indexOf("cond:") !== -1) {
 							data2 = data2.substr(5);
 							data2 = data2.substr(0, data2.length - 1);
 							data = "condrequired";
@@ -148,7 +152,7 @@ JText::script( 'COM_CCK_REQUIRED' );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_REQUIRED' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired||Yes CondRequired=condrequired', 'storage_field'=>'required' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes LangRequired=langrequired||Yes GroupRequired=grouprequired||Yes CondRequired=condrequired', 'storage_field'=>'required' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'storage_field'=>'required_alert' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Group', 'required'=>'required', 'storage_field'=>'required2' ) );

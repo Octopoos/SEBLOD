@@ -33,6 +33,12 @@ class CommonHelper_Display
 						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
 						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
 					);
+
+		if ( $type == 'language' ) {
+			$states[0][2]	=	'';
+			$states[1][2]	=	'COM_CCK_MULTILANGUAGE';
+		}
+
 		$state	=	ArrayHelper::getValue( $states, (int) $value, $states[1] );
 		$html	=	'<span class="icon-'.$state[5].'"></span>';
 
@@ -48,14 +54,11 @@ class CommonHelper_Display
 	// quickSlideTo
 	public static function quickSlideTo( $direction, $text = '', $class = '' )
 	{
-		$direction	=	'#' . $direction;
-		if ( $text == 'up' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<span class="icon-arrow-up-2"></span></a>';
-		} elseif ( $text == 'down' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<span class="icon-arrow-down-2"></span></a>';
-		} else {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none; color: #666666;">&nbsp;'.$text.'&nbsp;</a>';
+		if ( $text == 'up' || $text == 'down' ) {
+			return;
 		}
+
+		echo $text;
 	}
 	
 	// quickSession

@@ -61,7 +61,7 @@ class Helper_Include extends CommonHelper_Include
 					}
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
-							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 15%/66px 66px no-repeat;
+							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 25%/66px 66px no-repeat;
 							position: fixed;
 							opacity: 0.8;
 							-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);

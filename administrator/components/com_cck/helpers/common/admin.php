@@ -19,9 +19,17 @@ class CommonHelper_Admin
 		if ( ! isset( $css[$id] ) ) {
 			$bgcolor	=	$color ? ' background-color:'.$color.';' : '';
 			$color		=	$colorchar ? ' color:'.$colorchar.';' : '';
-			$css[$id]	=	'.folderColor'.$id.' {width: '.$width.'px; height: 18px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
-						.	'vertical-align: middle; border: none; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius:20px; text-align:center; margin-left:auto; margin-right:auto; font-size:12px;}'
-						.	'.folderColor'.$id.' > strong{position:relative; top:1px;}';
+
+			if ( JCck::on( '4.0' ) ) {
+				$width		=	'32';
+				$css[$id]	=	'.folderColor'.$id.' {width: '.$width.'px; height: 32px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
+							.	'vertical-align: middle; border: none; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius:20px; text-align:center; margin-left:auto; margin-right:auto; font-size:16px;}'
+							.	'.folderColor'.$id.' > strong{position:relative; top:1px;}';
+			} else {
+				$css[$id]	=	'.folderColor'.$id.' {width: '.$width.'px; height: 18px;'.$bgcolor.$color.' padding-top:3px; padding-bottom:3px;'
+							.	'vertical-align: middle; border: none; -webkit-border-radius: 20px; -moz-border-radius: 20px; border-radius:20px; text-align:center; margin-left:auto; margin-right:auto; font-size:12px;}'
+							.	'.folderColor'.$id.' > strong{position:relative; top:1px;}';
+			}
 		}
 	}
 	
@@ -131,6 +139,7 @@ class CommonHelper_Admin
 	// addToolbarHistoryButton
 	public static function addToolbarHistoryButton( $extension = 'com_cck' )
 	{
+		return;
 		$pk	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$extension.'"' );
 		
 		if ( $pk > 0 ) {
@@ -187,6 +196,12 @@ class CommonHelper_Admin
 			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : '- '.JText::_( 'COM_CCK_ALL_LOCATIONS' ).' -';
 			$options[]		=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
 		}
+		if ( $view == 'types' ) {
+			$options[]		=	JHtml::_( 'select.option', 'no_collection', JText::_( 'COM_CCK_ALL_BUT_COLLECTIONS' ), 'value', 'text' );
+		}
+		if ( ( $view == 'type' || $view == 'types' ) ) {
+			$options[]		=	JHtml::_( 'select.option', 'collection', JText::_( 'COM_CCK_AS_COLLECTION' ), 'value', 'text' );
+		}
 		$options[]			=	JHtml::_( 'select.option', 'both', JText::_( 'COM_CCK_BOTH' ) );
 		if ( $selectnone !== false || ( $view == 'type' || $view == 'types' ) ) {
 			$options[]		=	JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ), 'value', 'text' );
@@ -214,7 +229,16 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
+			if ( is_string( $selectlabel ) ) {
+				$selectlabel	=	JText::_( 'COM_CCK_'.$selectlabel );
+
+				if ( $element != 'master' ) {
+					$selectlabel	=	'- '.JText::_( 'COM_CCK_'.$selectlabel ).' -';
+				}
+				$options[]	=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
+			} else {
+				$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
+			}
 		}
 		if ( $quickfolder !== false ) {
 			$options[]	=	JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_QUICK_FOLDER' ), 'value', 'text' );
@@ -237,7 +261,7 @@ class CommonHelper_Admin
 			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
-			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
+			$query		= 'SELECT CONCAT( REPEAT("–", COUNT(parent.title) - '.$n.'), " ", s.title) AS text, s.id AS value'
 							. ' FROM #__cck_core'.$more.'_folders AS s, #__cck_core'.$more.'_folders AS parent'
 						. $where
 						. $orderby
@@ -245,9 +269,10 @@ class CommonHelper_Admin
 		}
 		
 		$options2	=	JCckDatabase::loadObjectList( $query );
+		
 		if ( count( $options2 ) ) {
 			if ( $top && $options2[0]->value == '2' ) {
-				$options2[0]->text	=	JText::_( 'COM_CCK_'.$options2[0]->text );
+				$options2[0]->text	=	JText::_( 'COM_CCK_'.trim( $options2[0]->text ) );
 			}
 			$optgroup			=	( defined( '_C0_TEXT' ) ) ? 'COM_CCK_'._C0_TEXT.'S' : 'COM_CCK_APP_FOLDERS';
 			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $optgroup ) );

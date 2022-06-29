@@ -201,9 +201,6 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 			JToolBarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
 		}
-		if ( $vName == 'type' || $vName == 'search' ) {
-			$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.DevHelper.previewPositions();' );
-		}
 	}
 	
 	// addToolbarDelete
