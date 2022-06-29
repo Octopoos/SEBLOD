@@ -506,6 +506,9 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
+			if ( $option == 'com_cck' ) {
+				$app->input->cookie->set( 'atumSidebarState', 'closed' );
+			}
 		} elseif ( $app->isClient( 'site' ) ) {
 			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && isset( $doc->_links ) && count( $doc->_links ) ) {
 				foreach ( $doc->_links as $k=>$link ) {
@@ -924,6 +927,9 @@ class plgSystemCCK extends JPlugin
 							}
 						}
 						break;
+				}
+				if ( $option == 'com_cck' ) {
+					$buffer	=	str_replace( '<body class="', '<body class="widescreen ', $buffer );
 				}
 				$app->setBody( $buffer );
 			} elseif ( $option == 'com_cck' && $type == 'raw' ) {
