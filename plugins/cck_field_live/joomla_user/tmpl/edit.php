@@ -30,7 +30,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 	'form'=>array(
 		array(
 			'fields'=>array(
-				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'User', 'selectlabel'=>'Current', 'options'=>'', 'storage_field'=>'content' ) ),
+				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'User', 'selectlabel'=>'Current', 'options'=>'Session=session', 'storage_field'=>'content' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
 						'label'=>JText::_( 'COM_CCK_PROPERTY' ),
