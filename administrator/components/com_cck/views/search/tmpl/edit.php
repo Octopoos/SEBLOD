@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 
-$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+$config		=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_search', 'core_description', 'core_state',
 										 'core_location2', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();

@@ -53,7 +53,7 @@ defined( '_JEXEC' ) or die;
 <?php if ( 1 == 1 ) {
     $options        =   array();
     $options[]      =   JHtml::_( 'select.option', 0, '- '.JText::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
-    $options2       =   JCckDatabase::loadObjectList( 'SELECT a.title AS text, a.name AS value FROM #__cck_core_types AS a WHERE a.published = 1 ORDER BY a.title' );
+    $options2       =   JCckDatabase::loadObjectList( 'SELECT a.title AS text, a.name AS value FROM #__cck_core_types AS a WHERE a.published = 1 AND a.location NOT IN ("collection") ORDER BY a.title' );
     if ( count( $options2 ) ) {
         $options    =   array_merge( $options, $options2 );
     }

@@ -45,7 +45,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->sef_route, $config, array( 'label'=>'SEF Helper', 'storage_field'=>'sef_route' ) );
             echo JCckDev::renderForm( $cck['core_sef_canonical'], @$options['sef_canonical'], $config );
-            echo JCckDev::renderForm( 'core_dev_bool', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=optgroup||All languages=2||All languages but default=1', 'storage_field'=>'sef_route_aliases' ) );
+            echo JCckDev::renderForm( 'core_dev_select', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'selectlabel'=>'', 'defaultvalue'=>'-1', 'options'=>'Use Global SL=-1||No=0||Yes=optgroup||All languages=2||All languages but default=1', 'storage_field'=>'sef_route_aliases' ) );
             ?>
         </ul>
     </div>
@@ -69,7 +69,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
              .	 JCckDev::getForm( $cck['core_label_total'], @$options['label_items_number'], $config, array( 'storage_field'=>'options[label_items_number]' ) )
              .	 JCckDev::getForm( $cck['core_class_total'], @$options['class_items_number'], $config, array( 'size'=>16, 'storage_field'=>'options[class_items_number]' ) )
              .	 '</li>';
-            echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>'0', 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
+            echo JCckDev::renderForm( 'core_show_hide', @$options['show_pages_number'], $config, array( 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'label'=>'CONFIG_SHOW_PAGES_NUMBER', 'storage_field'=>'options[show_pages_number]' ) );
             echo JCckDev::renderForm( $cck['core_show_pagination'], @$options['show_pagination'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_PAGINATION', 'storage_field'=>'options[show_pagination]' ) );
             echo JCckDev::renderForm( $cck['core_class_pagination'], @$options['class_pagination'], $config, array( 'label'=>'CONFIG_PAGINATION_CLASS', 'size'=>16, 'storage_field'=>'options[class_pagination]' ) );
             echo JCckDev::renderForm( 'core_dev_text', @$options['label_pagination'], $config, array( 'label'=>'Config Pagination Label', 'size'=>32, 'storage_field'=>'options[label_pagination]' ) );
@@ -92,8 +92,8 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_RESULT' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-			echo JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config );
-			echo JCckDev::renderForm( $cck['core_action'], @$options['action'], $config );
+			echo JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config, array( 'defaultvalue'=>'0' ) );
+			echo JCckDev::renderForm( $cck['core_action'], @$options['action'], $config, array( 'defaultvalue'=>'file' ) );
 			echo JCckDev::renderForm( $cck['core_message'], @$options['message'], $config );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_list_desc_no_result'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc_no_result]' ) );
             echo JCckDev::renderForm( 'core_dev_bool', @$options['mode_no_result'], $config, array( 'label'=>'Trigger', 'defaultvalue'=>'0', 'options'=>'Config No Result=0||Config No Unique Result=1', 'storage_field'=>'options[mode_no_result]' ) );
@@ -119,6 +119,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
             echo JCckDev::renderBlank( '<input type="hidden" id="blank_li7" value="" />' );
             echo JCckDev::renderForm( 'core_dev_select', @$options['tmpl_resource'], $config, array( 'defaultvalue'=>'', 'label'=>'Tmpl', 'selectlabel'=>'None', 'options'=>'Component=component||Raw=raw', 'storage_field'=>'options[tmpl_resource]' ) );
             echo JCckDev::renderForm( 'core_dev_textarea', @$options['json_resource'], $config, array( 'label'=>'Parameters', 'cols'=>80, 'rows'=>1, 'storage_field'=>'options[json_resource]' ), array(), 'w100' );
+            echo JCckDev::renderForm( 'core_dev_text', @$options['autoid_resource'], $config, array( 'defaultvalue'=>'', 'label'=>'Auto ItemId', 'storage_field'=>'options[autoid_resource]' ) );
             ?>
         </ul>
     </div>

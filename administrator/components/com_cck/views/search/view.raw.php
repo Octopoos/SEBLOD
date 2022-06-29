@@ -145,7 +145,7 @@ class CCKViewSearch extends JViewLegacy
 
 		// Fields
 		if ( $this->item->cck_type != '' && !$this->item->skip ) {
-			$pos								=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
+			$pos								=	'_pre_';
 			$this->fields						=	Helper_Workshop::getFields( 'search', $this->item, 'a.name = "cck"', false, false, $pos );
 			$this->fields[$pos][0]->variation	=	'hidden';
 			$this->fields[$pos][0]->match_mode	=	'exact';
@@ -159,8 +159,15 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Positions
 		$positions				=	Helper_Workshop::getPositions( 'search', $this->item );
-		if ( is_object( $this->style ) && count( $this->style->positions ) ) {
-			$this->positions	=	array();
+		
+		if ( is_object( $this->style ) && ( $count = count( $this->style->positions ) ) ) {
+			$this->positions				=	array();
+
+			if ( $this->item->client == 'list' ) {
+				$this->style->positions[$count]			=	(object)array( 'disable'=>false, 'text'=>'Above', 'value'=>'_above_' );
+				$this->style->positions[($count + 1)]	=	(object)array( 'disable'=>false, 'text'=>'Below', 'value'=>'_below_' );
+			}
+
 			foreach ( $this->style->positions as $p ) {
 				if ( $p->value ) {
 					$this->positions[$p->value]						=	new stdClass;
@@ -173,7 +180,16 @@ class CCKViewSearch extends JViewLegacy
 					$this->positions[$p->value]->width				=	@$positions[$p->value]->width;
 					$this->positions[$p->value]->height				=	@$positions[$p->value]->height;
 					$this->positions[$p->value]->css				=	@$positions[$p->value]->css;
+
+					if ( ( $p->value == '_above_' || $p->value == '_below_' ) && !isset( $positions[$p->value] ) ) {
+						$this->positions[$p->value]->variation	=	'none';
+					}
 				}
+			}
+
+			if ( $this->item->client == 'list' ) {
+				unset( $this->style->positions[$count] );
+				unset( $this->style->positions[($count + 1)] );
 			}
 		} else {
 			$this->positions	=	array( 'mainbody' => (object)array( 'title'=>'(mainbody)', 'name'=>'mainbody', 'disable'=>false, 'legend'=>'',
@@ -218,7 +234,7 @@ class CCKViewSearch extends JViewLegacy
 	}
 
 	// setPosition
-	public function setPosition( $name, $title = '' )
+	public function setPosition( $name, $title = '', $no = '' )
 	{
 		$css	=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
 		
@@ -230,7 +246,7 @@ class CCKViewSearch extends JViewLegacy
 		$height	=	'<input class="'.$css.' auto" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
 		$css	=	'<input class="'.$css.'" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
 		
-		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ) );
+		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ), $no );
 		$this->p++;
 		
 		return $name;
