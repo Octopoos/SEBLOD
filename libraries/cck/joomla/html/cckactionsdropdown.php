@@ -25,5 +25,27 @@ abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
 			. '</a>'
 			. '</li>';
 	}
+
+	public static function render($item = '')
+	{
+		$html	= array();
+
+		if ( JCck::on( '4.0 ') ) {
+			$html[] = '<button data-bs-toggle="dropdown" class="dropdown-toggle btn btn-sm btn-outline-secondary">';
+			$html[] = '<span class="icon-ellipsis-h"></span>';
+		} else {
+			$html[] = '<button data-toggle="dropdown" class="dropdown-toggle btn btn-micro">';
+			$html[] = '<span class="caret"></span>';
+		}
+
+		$html[] = '</button>';
+		$html[] = '<ul class="dropdown-menu">';
+		$html[] = implode( '', static::$dropDownList );
+		$html[] = '</ul>';
+
+		static::$dropDownList = null;
+
+		return implode( '', $html );
+	}
 }
 ?>

@@ -107,6 +107,9 @@ if ( $count ) {
 			$fieldsI	=	array();
 
 			foreach ( $fields as $field ) {
+				if ( $field->position == '_above_' || $field->position == '_below_' ) {
+					continue;
+				}
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
@@ -261,6 +264,9 @@ if ( $count ) {
 			$fieldsI	=	array();
 			
 			foreach ( $fields2 as $field ) {
+				if ( $field->position == '_above_' || $field->position == '_below_' ) {
+					continue;
+				}
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
