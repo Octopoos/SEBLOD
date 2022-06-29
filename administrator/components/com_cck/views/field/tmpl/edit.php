@@ -75,7 +75,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 					.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
 					.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
 			
-			$dataName	=	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="3" />';
+			$dataName	=	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="80" size="28" tabindex="3" />';
 			$modeName	=	true;
 		} else {
 			$dataName	=	'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />';			
@@ -175,7 +175,7 @@ Helper_Display::quickCopyright();
 <script type="text/javascript">
 (function ($){
 	JCck.Dev = {
-		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
+		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 1 ); ?>",
 		mode:<?php echo (int)$mode; ?>,
 		name:"field",
 		token:Joomla.getOptions("csrf.token")+"=1",

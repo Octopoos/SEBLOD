@@ -26,9 +26,9 @@ $canOrder		=	0;
 $saveOrder		=	0;
 $top			=	'content';
 
-$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_dynamic', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
-											 'core_state_filter' ) );
+											 'core_state_filter', 'core_languages' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );

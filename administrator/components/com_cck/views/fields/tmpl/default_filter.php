@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$clear	=	"document.getElementById('filter_folder').value='';document.getElementById('filter_state').value='1';document.getElementById('filter_type').value='';";
+$clear	=	"document.getElementById('filter_folder').value='';document.getElementById('filter_state').value='1';document.getElementById('filter_type').value='';document.getElementById('filter_storage').value='';document.getElementById('filter_language').value='';";
 if ( $this->js['filter'] ) {
 	$doc->addScriptDeclaration( $this->js['filter'] );
 }
@@ -21,6 +21,8 @@ if ( $listDir == 'asc' ) {
 	$selected_asc	=	'';
 	$selected_desc	=	' selected="selected"';
 }
+
+$status_filter	=	JCckDev::getForm( $cck['core_state_filter'], $this->state->get( 'filter.state' ), $config, array( 'css'=>'span12' ) );
 ?>
 
 <div class="<?php echo $this->css['filter']; ?>" id="filter-bar">
@@ -30,10 +32,15 @@ if ( $listDir == 'asc' ) {
         echo $this->html['filter_select_header'];
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeFilter', 'name'=>'core_type_filter' ), $this->state->get( 'filter.type' ), $config, array( 'storage_field'=>'filter_type' ) );
 		echo $this->html['filter_select_separator'];
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_filter' ), $this->state->get( 'filter.storage' ), $config, array( 'selectlabel'=>'All Storages', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_storage' ) );
+		echo $this->html['filter_select_separator'];
+		echo JCckDev::getForm( $cck['core_languages'], $this->state->get( 'filter.language' ), $config, array( 'selectlabel'=>'Any Language', 'options'=>'All=*', 'bool4'=>'1', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_language', 'css'=>'span12' ) );
+		echo $this->html['filter_select_separator'];
+		echo $this->html['filter_select_divider'];
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolderFilter', 'name'=>'core_folder_filter' ), $this->state->get( 'filter.folder' ), $config, array( 'storage_field'=>'filter_folder' ) );
 		echo $this->html['filter_select_separator'];
-		echo JCckDev::getForm( $cck['core_state_filter'], $this->state->get( 'filter.state' ), $config, array( 'css'=>'span12' ) );
+		echo $status_filter;
 		echo $this->html['filter_select_separator'];
         ?>
-	</div>
+	</div></div>
 </div>
