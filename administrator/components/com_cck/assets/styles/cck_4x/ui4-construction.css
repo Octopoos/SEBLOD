@@ -26,7 +26,7 @@ a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right,
 	border: 1px solid var(--template-bg-dark-20);
 	padding: 1vw;
 	position: sticky;
-	top: 140px;
+	top: calc(140px + var(--x-h-offset));
 	left: 0;
 	right: 0;
 }
@@ -156,21 +156,26 @@ ul.sortable li a.b, ul.sortable li a:visited.b {
 	color: var(--template-bg-dark-40)!important;
 }
 ul.sortable li a.b:hover {
-	color: #39f!important;
+	color: var(--focus)!important;
 	cursor: pointer;
 }
 ul.sortable li. span.title {
 	color: var(--primary);
 }
 ul.sortable li.ui-selected,
-ul.sortable li.ui-selecting {
-	border-color: #39f!important;
-	/*background-color: var(--template-bg-light)!important;*/
+ul.sortable li.ui-selecting,
+ul.sortable li.ui-sortable-helper {
+	border-color: var(--focus)!important;
 	background-color: rgb(51 153 255 / 13%)!important;
+}
+ul.sortable li.drop-highlight{
+	background-color: var(--template-bg-light) !important;
+	border: 1px dashed var(--focus)!important;
+	height: 42px;
 }
 ul.sortable li.ui-selected span.title,
 ul.sortable li.ui-selecting span.title {
-	color: #39f!important;
+	color: var(--focus)!important;
 }
 
 /**/
@@ -267,12 +272,12 @@ input[value="clear"] {
 	position: absolute;
 	right: -5px;
 	top: 5px;
-	text-indent: 2px;
-	width: 5px;
+	width: auto;
 	border-top-right-radius: 1px;
 	border-bottom-right-radius: 1px;
 	cursor: pointer;
 	color: var(--template-bg-dark-20);
+	height: 30px;
 }
 
 #layer_fields .expanded #seblod-main {
