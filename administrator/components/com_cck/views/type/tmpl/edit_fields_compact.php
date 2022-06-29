@@ -14,7 +14,7 @@ $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $clone		=	'';
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>JFactory::getUser()->id );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">

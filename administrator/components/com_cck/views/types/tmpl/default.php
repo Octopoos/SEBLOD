@@ -23,9 +23,9 @@ $listDir		=	$this->state->get( 'list.direction' );
 $template_name	=	Helper_Admin::getDefaultTemplate();
 $top			=	'content';
 
-$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_dynamic', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
-										 	 'core_state_filter', 'core_dev_text' ) );
+										 	 'core_state_filter', 'core_dev_text', 'core_languages' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
@@ -52,15 +52,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<tr>
 			<th width="32" class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
+            	<input type="checkbox" class="form-check-input" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
 			</th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th class="center hidden-phone nowrap" width="20%" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
 			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_ADMIN_FORM' ); ?></th>
 			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_SITE_FORM' ); ?></th>
-			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_INTRO' ); ?></th>
-			<th class="center hidden-phone nowrap" width="7%"><?php echo JText::_( 'COM_CCK_CONTENT' ); ?></th>
-			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_INTRO' ); ?></th>
+			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_CONTENT' ); ?></th>
+			<th width="8%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>			
 	</thead>
@@ -97,13 +97,25 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
-			<td width="30px" class="center hidden-phone">
-            	<?php if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) { ?>
-					<a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+			<td class="center hidden-phone"><?php echo '<div class="checkbox">'.JHtml::_( 'grid.id', $i, $item->id ).'</div>'; ?></td>
+			<td width="30px" class="center hidden-phone dropdown-col">
+            	<?php
+            	JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
+
+            	if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'collection' && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) {
+					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
+            		?>
+					<!-- <a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
 						<?php echo $action; ?>
-					</a>
-                <?php } ?>
+					</a> -->
+                <?php }
+
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
+				}
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+
+                ?>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -139,28 +151,45 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->adminTemplate.')';
-                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=admin" title="'.htmlspecialchars( $client ).'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
+				$class	=	' no-template';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+
+				if ( $item->adminTemplate ) {
+					$class	=	'';
+					$client	.=	' ('.$item->adminTemplate.')';
+				}
+                echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="1" href="'.$link.'&client=admin" title="'.htmlspecialchars( $client ).'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->siteTemplate.')';
-                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=site" title="'.htmlspecialchars( $client ).'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
+				$class	=	' no-template';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+
+				if ( $item->siteTemplate ) {
+					$class	=	'';
+					$client	.=	' ('.$item->siteTemplate.')';
+				}
+                echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="2" href="'.$link.'&client=site" title="'.htmlspecialchars( $client ).'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->introTemplate.')';
-                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=intro" title="'.htmlspecialchars( $client ).'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
+				$class	=	' no-template';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+
+				if ( $item->introTemplate ) {
+					$class	=	'';
+					$client	.=	' ('.$item->introTemplate.')';
+				}
+                echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="3" href="'.$link.'&client=intro" title="'.htmlspecialchars( $client ).'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->contentTemplate.')';
-                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
+				$class	=	' no-template';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+
+				if ( $item->contentTemplate ) {
+					$class	=	'';
+					$client	.=	' ('.$item->contentTemplate.')';
+				}
+                echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="4" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
 				<div class="btn-group">
 				<?php
 				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
-
-				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'types.version' );
-
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
-				}
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
 				?>
 				</div>
 			</td>
@@ -194,7 +223,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 </div>
 
 <?php
-Helper_Include::addStyleDeclaration( implode( '', $css ) );
+Helper_Include::addStyleDeclaration( implode( '', $css ).'.no-template{border-style:dashed;}' );
 
 $js	=	'
 		(function ($){

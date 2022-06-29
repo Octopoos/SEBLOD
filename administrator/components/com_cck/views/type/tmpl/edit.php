@@ -12,9 +12,9 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 
-$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+$config		=	JCckDev::init( array( '42', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_description', 'core_state',
-										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
+										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -51,14 +51,13 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$dataTmpl	=	array(
 							'fields'=>array(
 								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ),
-								'alias'=>JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ),
 								'bar_clients'=>JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeClient', 'name'=>'core_client_type' ), $this->item->client, $config, array( 'storage_field'=>'client' ) ),
 								'bar_panels'=>JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config ),
-								'css_core'=>JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ),
+								'css_core'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ) ),
 								'description'=>JCckDev::getForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
 								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
 								'location'=>JCckDev::renderForm( $cck['core_location'], $this->item->location, $config, array( 'css'=>'max-width-140' ) ),
-								'indexed'=>JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ),
+								'indexed'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ) ),
 								'name'=>'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />',
 								'parent'=>JCckDev::renderLayoutFile(
 									'cck'.JCck::v().'.form.field', array(
@@ -72,7 +71,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 										) )
 									)
 								),
-								'permissions'=>JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ),
+								'permissions'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ) ),
+								'relations'=>JCckDev::renderForm( 'core_dev_textarea', $this->item->relationships, $config, array( 'css'=>'max-width-150', 'storage_field'=>'relationships' ) ),
 								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
 								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'css'=>'max-width-140', 'required'=>'required', 'storage_field'=>'storage_location' ) ),
 								'title'=>JCckDev::renderForm( $cck['core_title_type'], $this->item->title, $config )

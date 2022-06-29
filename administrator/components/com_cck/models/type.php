@@ -120,20 +120,22 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	// prepareTable2
 	protected function prepareTable2( &$table, &$data )
 	{
-		if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
-			$data['jform']['rules']	=	array(
-											'core.create.max.parent'=>array( '8'=>'0' ),
-											'core.create.max.parent.author'=>array( '8'=>'0' ),
-											'core.create.max.author'=>array( '8'=>'0' )
-										);
-		}
-		if ( $data['jform']['rules'] ) {
-			if ( !is_array( $data['jform']['rules'] ) ) {
-				$data['jform']['rules']	=	json_decode( $data['jform']['rules'] );
+		if ( $data['location'] != 'collection' ) {
+			if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
+				$data['jform']['rules']	=	array(
+												'core.create.max.parent'=>array( '8'=>'0' ),
+												'core.create.max.parent.author'=>array( '8'=>'0' ),
+												'core.create.max.author'=>array( '8'=>'0' )
+											);
 			}
-			jimport( 'cck.joomla.access.access' );
-			$rules	=	new CCKRules( JCckDevHelper::getRules( $data['jform']['rules'] ), 'com_cck', 'form' );
-			$table->setRules( $rules );
+			if ( $data['jform']['rules'] ) {
+				if ( !is_array( $data['jform']['rules'] ) ) {
+					$data['jform']['rules']	=	json_decode( $data['jform']['rules'] );
+				}
+				jimport( 'cck.joomla.access.access' );
+				$rules	=	new CCKRules( JCckDevHelper::getRules( $data['jform']['rules'] ), 'com_cck', 'form' );
+				$table->setRules( $rules );
+			}
 		}
 	}
 	
@@ -146,26 +148,38 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
-		$P						=	'template_'.$client;
-		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
-		$P						=	'options_'.$client;
-
-		if ( !isset( $data['options'] ) ) {
-			$data['options']	=	array();
+		
+		if ( $data['location'] != 'collection' ) {
+			$P						=	'template_'.$client;
+			$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
+		
+			$P						=	'options_'.$client;
+			
+			if ( !isset( $data['options'] ) ) {
+				$data['options']	=	array();
+			}
+			$data[$P]				=	JCckDev::toJSON( $data['options'] );
+		} else {
+			$P						=	'template_'.$client;
+			$data[$P]				=	0;
+		
+			$P						=	'options_'.$client;
+			$data[$P]				=	'';
 		}
-		$data[$P]				=	JCckDev::toJSON( $data['options'] );
 		
 		if ( ! $data['id'] ) {
-			$clients			=	array( 'admin', 'site', 'content', 'intro' );
-			foreach ( $clients as $client ) {
-				$P	=	'template_'.$client;
-				if ( ! $data[$P] ) {
-					$default	=	Helper_Workshop::getDefaultStyle();
-					$data[$P]	=	$default->id;
+			if ( $data['location'] != 'collection' ) {
+				$clients			=	array( 'admin', 'site', 'content', 'intro' );
+				foreach ( $clients as $client ) {
+					$P	=	'template_'.$client;
+					if ( ! $data[$P] ) {
+						$default	=	Helper_Workshop::getDefaultStyle();
+						$data[$P]	=	$default->id;
+					}
 				}
 			}
 		} else {
-			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
+			$doVersion	=	JCck::getConfig_Param( 'version_auto', 1 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'type', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'type', $data['id'] );
 
@@ -212,7 +226,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 					$data['ffp']	=	$raw_data['ffp'];
 				}
 
-				$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
+				$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'], $data['location'] );
 			}
 		}
 		
@@ -245,45 +259,55 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	}
 	
 	// storeMore
-	protected function storeMore( $typeId, $client, $fields, $params )
+	protected function storeMore( $typeId, $client, $fields, $params, $location = '' )
 	{
-		$db		=	JFactory::getDbo();
 		jimport( 'cck.construction.field.generic_more' );
+
+		$db		=	JFactory::getDbo();
 		$table	=	'type_field';
 		$method	=	'gm_getConstruction_Values_Type';
 		
 		JCckDatabase::execute( 'DELETE FROM #__cck_core_'.$table.' WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
+
 		if ( count( $fields ) ) {
 			$assigned	=	'';
 			$ordering	=	1;
 			$position	=	'mainbody';
 			$positions	=	'';
+			
 			foreach ( $fields as $k => $v ) {
 				$next	=	next( $fields );
+				
 				if ( $v == 'position' ) {
-					$legend				=	( @$params[$k]['legend'] != '' ) ? $db->escape( $params[$k]['legend'] ) : '';
-					$variation			=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
-					$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
-					$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
-					$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
-					$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
-					$position			=	substr( $k, 4 );
-					if ( $next != 'position' ) {
-						$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
+					if ( $location != 'collection' ) {
+						$legend				=	( @$params[$k]['legend'] != '' ) ? $db->escape( $params[$k]['legend'] ) : '';
+						$variation			=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
+						$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
+						$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
+						$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
+						$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
+						$position			=	substr( $k, 4 );
+						
+						if ( $next != 'position' ) {
+							$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
+						}
 					}
 				} else {
+					if ( $location == 'collection' ) {
+						$position	=	'_main_';
+					}
 					$assigned	.= ', ( '.(int)$typeId.', '.(int)$v.', "'.$client.'", '.$ordering.', '.plgCCK_FieldGeneric_More::$method( $k, $params, $position, $client ).' )';
 					$ordering++;
 				}
 			}
 			if ( $assigned ) {
-				$assigned	=	substr( $assigned, 1 );
-				JCckDatabase::execute( 'INSERT INTO #__cck_core_'.$table.' ( typeid, fieldid, client, ordering, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table ).' ) VALUES ' . $assigned );
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_'.$table.' ( typeid, fieldid, client, ordering, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table ).' ) VALUES ' . substr( $assigned, 1 ) );
 			}
-			if ( $positions ) {
-				$positions	=	substr( $positions, 1 );
-				JCckDatabase::execute( 'DELETE FROM #__cck_core_type_position WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
-				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height, css ) VALUES ' . $positions );
+
+			JCckDatabase::execute( 'DELETE FROM #__cck_core_type_position WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
+
+			if ( $positions ) {				
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height ) VALUES ' . substr( $positions, 1 ) );
 			}
 		}
 	}
