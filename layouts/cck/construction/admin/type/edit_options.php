@@ -20,7 +20,7 @@ defined( '_JEXEC' ) or die;
 				<?php echo JText::_( 'COM_CCK_DEVELOPMENT' ); ?>
 			</legend>
 			<?php
-			echo $displayData['fields']['alias'];
+			echo $displayData['fields']['relations'];
 			echo $displayData['fields']['css_core'];
 			echo $displayData['fields']['indexed'];
 			?>

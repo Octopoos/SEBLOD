@@ -33,5 +33,5 @@ defined( '_JEXEC' ) or die;
 	<?php echo str_replace( 'tabindex="3"', 'tabindex="4"', $displayData['fields']['type'] ); ?>
 </ul>
 <ul class="spe spe_description spe_latest">
-	<?php echo $displayData['fields']['description']; ?>
+	<?php echo '<li>'.$displayData['fields']['description'].'</li>'; ?>
 </ul>
