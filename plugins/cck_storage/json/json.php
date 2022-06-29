@@ -153,9 +153,24 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		}
 		self::onCCK_StoragePrepareForm( $field, $value, $storage );
 	}
+
+	// onCCK_StoragePrepareResource
+	public function onCCK_StoragePrepareResource( &$field, &$value, &$config = array() )
+	{
+		if ( self::$type != $field->storage ) {
+			return;
+		}
+
+		// Prepare
+		$value	=	json_decode( $value, true );
+
+		if ( $field->storage_field2 && isset( $value[$field->storage_field2] ) ) {
+			$value	=	$value[$field->storage_field2];
+		}
+	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $suffix, $fields = array(), &$config = array() )
 	{
 		return;
 	}
