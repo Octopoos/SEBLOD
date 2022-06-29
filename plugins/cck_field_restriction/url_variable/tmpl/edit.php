@@ -29,10 +29,10 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 					'cck'.JCck::v().'.form.field', array(
 						'label'=>JText::_( 'COM_CCK_VARIABLE_VALUES' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
-							'grid'=>'|auto|25%',
+							'grid'=>'|auto|100%',
 							'html'=>array(
 								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'trigger' ) ),
-								JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isEqual', 'options'=>'STATE_IS_EQUAL_IN=isEqual||STATE_IS_FILLED=isFilled||STATE_IS_NULL=isNull', 'storage_field'=>'match' ) ),
+								JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isEqual', 'options'=>'STATE_IS_EQUAL_IN=isEqual||STATE_IS_FILLED=isFilled||STATE_IS_NULL=isNull||STATE_IS_VISIBLE=isVisible', 'storage_field'=>'match' ) ),
 								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) )
 							)
 						) )

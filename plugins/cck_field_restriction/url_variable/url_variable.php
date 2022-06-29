@@ -109,6 +109,10 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 					}
 				}	
 			}
+		} elseif ( $condition_match == 'isVisible' ) {
+			if ( JUri::getInstance()->hasVar( $condition_field ) ) {
+				$state	=	1;
+			}
 		}
 
 		if ( $state ) {

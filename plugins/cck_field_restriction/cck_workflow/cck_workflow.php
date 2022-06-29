@@ -59,36 +59,113 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		$action		=	$restriction->get( 'action', '' );
 		$author		=	$restriction->get( 'author', '' );
 		$location	=	$restriction->get( 'location', '' );
-		$type		=	$restriction->get('form', '');
-		
+		$type		=	$restriction->get( 'form', '' );
+		$do			=	(int)$restriction->get( 'do', 0 );
+
+		// Action
 		if ( $action ) {
 			if ( ( $action == 'add' && !$config['isNew'] )
 			  || ( $action == 'edit' && $config['isNew'] ) ) {
-				$field->display	=	0;
-				return false;
+			  	if ( !$do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;
+				}
+			} else {
+				if ( $do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;					
+				}
 			}
 		}
 
+		// Author
 		if ( $author ) {
 			$user	=	JFactory::getUser();
 			
 			if ( ( $author  == '1' && $config['author'] != $user->id )
 			  || ( $author  == '-1' && $config['author'] == $user->id ) ) {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
 		
+		// Content Type
 		if ( $type ) {
 			if ( $type != $config['type'] ) {
+				if ( !$do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;					
+				}
+			} else {
+				if ( $do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;					
+				}
+			}
+		}
+
+		// Location
+		if ( $location ) {
+			if ( !JFactory::getApplication()->{'is'.$location}() ) {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
 
-		if ( $location ) {
-			if ( !JFactory::getApplication()->{'is'.$location}() ) {
+		// Variable
+		$condition_field	=	$restriction->get( 'trigger' );
+		$condition_match	=	$restriction->get( 'match' );
+		$condition_values	=	$restriction->get( 'values' );
+		$state				=	0;
+		$variable			=	isset( $config['context'][$condition_field] ) ? $config['context'][$condition_field] : '';
+		
+		if ( $condition_field != '' ) {
+			if ( $condition_match == 'isFilled' ) {
+				if ( is_array( $variable ) ) {
+					foreach ( $variable as $v ) {
+						if ( $v != '' ) {
+							$state	=	1;
+							break;
+						}
+					}
+				} elseif ( $variable != '' ) {
+					$state		=	1;
+				}
+			} elseif ( $condition_match == 'isEqual' ) {
+				if ( isset( $variable ) ) {
+					$condition_values	=	explode( ',', $condition_values );
+					if ( is_array( $variable ) ) {
+						if ( count( array_intersect( $condition_values, $variable ) ) ) {
+							$state		=	1;
+						}
+					} else {
+						foreach ( $condition_values as $v ) {
+							if ( $variable == $v ) {
+								$state		=	1;
+								break;
+							}
+						}
+					}	
+				}
+			}
+
+			if ( $state ) {
+				$do		=	( $do ) ? false : true;
+			} else {
+				$do		=	( $do ) ? true : false;
+			}
+
+			if ( $do ) {
+				return true;
+			} else {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
