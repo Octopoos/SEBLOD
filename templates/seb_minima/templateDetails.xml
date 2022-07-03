@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="template" version="2.5" method="upgrade">
+	<name>seb_minima</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>April 2013</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>1.7.1</version>
+	
+	<files>
+		<folder>css</folder>
+		<folder>fields</folder>
+		<folder>images</folder>
+		<folder>includes</folder>
+		<folder>languages</folder>
+		<folder>positions</folder>
+		<folder>variations</folder>
+		
+		<filename>config.php</filename>
+		<filename>index.php</filename>
+		<filename>template_picker.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.tpl_seb_minima.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_seb_minima.ini</language>
+	</languages>
+	
+	<positions>
+		<position>mainbody</position>
+		<position toggle="position_modal" toggle_value="1,2,3,4,5">modal</position>
+		<position toggle="position_modal" toggle_value="2,3,4,5">modal2</position>
+		<position toggle="position_modal" toggle_value="3,4,5">modal3</position>
+		<position toggle="position_modal" toggle_value="4,5">modal4</position>
+		<position toggle="position_modal" toggle_value="5">modal5</position>
+		<position toggle="position_hidden">hidden</position>
+		<position toggle="position_clear">clear</position>
+	</positions>
+	
+	<config addfieldpath="/libraries/cck/construction/field">
+		<fields name="params">
+			<fieldset name="fields" label="TPL_SEB_MINIMA_LEGEND_FIELDS">
+				<field name="field_label" type="cck" construction="core_field_label" default="1" label="TPL_SEB_MINIMA_SHOW_LABEL" description="" class="inputbox" />
+				<field name="field_description" type="cck" construction="core_field_description" default="0" label="TPL_SEB_MINIMA_SHOW_DESCRIPTION" description="" class="inputbox" />
+			</fieldset>
+			
+			<fieldset name="positions" label="TPL_SEB_MINIMA_LEGEND_POSITIONS">
+				<field name="position_clear" type="list" default="1" label="TPL_SEB_MINIMA_CLEAR_POSITION" description="" class="inputbox">
+					<option	value="0">JHIDE</option>
+					<option	value="1">JSHOW</option>
+				</field>
+				<field name="variation_default" type="cck" construction="core_variation" default="" label="TPL_SEB_MINIMA_DEFAULT_VARIATION" description="" class="inputbox" cck_selectlabel="Inherited" />
+				<field name="position_hidden" type="list" default="1" label="TPL_SEB_MINIMA_HIDDEN_POSITION" description="" class="inputbox">
+					<option	value="0">JHIDE</option>
+					<option	value="1">JSHOW</option>
+				</field>
+				<field name="position_modal" type="list" default="1" label="TPL_SEB_MINIMA_MODAL_POSITION" description="" class="inputbox">
+					<option	value="0">JHIDE</option>
+					<option	value="1">JSHOW</option>
+					<option	value="2">2</option>
+					<option	value="3">3</option>
+					<option	value="4">4</option>
+					<option	value="5">5</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

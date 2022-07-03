@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" version="2.5" method="upgrade">
+	<name>Blank</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>http://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2016 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2011</creationDate>
+	<description>SEBLOD 2.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>3.0.0</version>
+	
+	<files>
+		<filename plugin="blank">blank.php</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<config>
+		<fields />
+	</config>
+</extension>

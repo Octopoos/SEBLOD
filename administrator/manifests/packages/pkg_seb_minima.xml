@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" version="2.5" method="upgrade">
+	<name>pkg_seb_minima</name>
+	<packagename>seb_minima</packagename>
+	<packager>Octopoos</packager>
+	<packagerurl>https://www.seblod.com</packagerurl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>April 2013</creationDate>
+	<description>SEBLOD 3.x Minima App - www.seblod.com</description>
+	<version>1.7.1</version>
+	<scriptfile>pkg_script.php</scriptfile>
+	<files folder="extensions">
+		<file type="plugin" id="plg_system_blank" group="system">plg_system_blank.zip</file>
+		<file type="template" id="tpl_seb_minima" client="site">tpl_seb_minima.zip</file>
+	</files>
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.pkg_seb_minima.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.pkg_seb_minima.sys.ini</language>
+	</languages>
+	<updateservers>
+		<server type="extension" priority="1" name="Minima Template Updates">http://update.seblod.com/pkg_seb_minima.xml</server>
+	</updateservers>
+</extension>
