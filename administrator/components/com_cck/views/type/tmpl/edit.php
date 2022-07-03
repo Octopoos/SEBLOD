@@ -36,17 +36,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <div class="<?php echo $this->css['wrapper'].' '.$this->uix; ?>">
 	<div class="<?php echo $this->css['wrapper_first']; ?>">
-		<?php
-		// if ( !$this->item->id ) {
-		// 	echo '<li><label>'.JText::_( 'COM_CCK_QUICK_MENU_ITEM' ).'</label>'
-		// 	 .	 '<select id="quick_menuitem" name="quick_menuitem" class="inputbox" style="max-width:180px;">'
-		// 	 .	 '<option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'
-		// 	 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
-		// 	 .	 '</select></li>';
-		// } else {
-		// 	echo JCckDev::renderForm( 'core_dev_select', $this->item->admin_form, $config, array( 'label'=>'Admin Form', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Administrator Only=0||Administrator or Allowed Groups=optgroup||Administrator or Allowed Groups Always=1||Administrator or Allowed Groups Edit=2', 'storage_field'=>'admin_form' ) );
-		// }
-		?>
         <?php
 		$dataTmpl	=	array(
 							'fields'=>array(
@@ -72,6 +61,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 									)
 								),
 								'permissions'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ) ),
+								'quick_nav'=>'',
 								'relations'=>JCckDev::renderForm( 'core_dev_textarea', $this->item->relationships, $config, array( 'css'=>'max-width-150', 'storage_field'=>'relationships' ) ),
 								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
 								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'css'=>'max-width-140', 'required'=>'required', 'storage_field'=>'storage_location' ) ),
@@ -80,6 +70,17 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 							'item'=>$this->item,
 							'params'=>array()
 						);
+
+		if ( !$this->item->id ) {
+			$dataTmpl['fields']['quick_nav']	=	JCckDev::renderLayoutFile(
+														'cck'.JCck::v().'.form.field', array(
+															'label'=>JText::_( 'COM_CCK_QUICK_MENU_ITEM' ),
+															'html'=>'<select id="quick_menuitem" name="quick_menuitem" class="form-select inputbox max-width-180"><option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'.JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) ).'</select>'
+														)
+													);
+		} elseif ( !JCck::on( '4.0' ) ) {
+			$dataTmpl['fields']['quick_nav']	=	'<li>&nbsp;</li>';
+		}
 
 		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.type.edit_main', $dataTmpl );
 		?>

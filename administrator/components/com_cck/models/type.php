@@ -235,26 +235,49 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 				require_once JPATH_SITE.'/libraries/joomla/database/table/menu.php';
 			}
 			$quick_item					=	explode( '.', $data['quick_menuitem'] );
-			$item						=	JTable::getInstance( 'Menu' );
-			$item->id					=	0;
-			$item->title				=	$data['title'];
-			$item->menutype				=	$quick_item[0];
-			$item->parent_id			=	$quick_item[1];
-			$item->published			=	1;
-			
-			$item->component_id			=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
-			$item->link					=	'index.php?option=com_cck&view=form&layout=edit&type='.$data['name'];
-			$item->params				=	'{}';
-			$item->type					=	'component';
-			
-			$item->client_id			=	0;
-			$item->home					=	0;
-			$item->language				=	'*';
-			$item->template_style_id	=	0;
-			
-			$item->setLocation( $quick_item[1], 'last-child' );
-			$item->check();
-			$item->store();
+
+			if ( JCck::is( '5' ) ) {
+				$content_item	=	new JCckContentMenuItem;
+				$item_data		=	array(
+										'access'=>$data['access'],
+										'client_id'=>0,
+										'component_id'=>JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' ),
+										'home'=>0,
+										'language'=>'*',
+										'link'=>'index.php?option=com_cck&view=form&layout=edit&type='.$data['name'],
+										'menutype'=>$quick_item[0],
+										'params'=>'{"display_list_title":"1","title_list_title":"'.$data['title'].'","menu_show":1}',
+										'parent_id'=>$quick_item[1],
+										'published'=>1,
+										'template_style_id'=>0,
+										'title'=>$data['title'],
+										'type'=>'component'
+									);
+
+				$content_item->create( 'o_nav_item', $item_data );
+			} else {
+				$item						=	JTable::getInstance( 'Menu' );
+				$item->id					=	0;
+				$item->title				=	$data['title'];
+				$item->menutype				=	$quick_item[0];
+				$item->parent_id			=	$quick_item[1];
+				$item->published			=	1;
+				
+				$item->component_id			=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
+				$item->link					=	'index.php?option=com_cck&view=form&layout=edit&type='.$data['name'];
+				$item->path					=	uniqid();
+				$item->params				=	'{}';
+				$item->type					=	'component';
+				
+				$item->client_id			=	0;
+				$item->home					=	0;
+				$item->language				=	'*';
+				$item->template_style_id	=	0;
+				
+				$item->setLocation( $quick_item[1], 'last-child' );
+				$item->check();
+				$item->store();				
+			}
 		}
 	}
 	
@@ -307,7 +330,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			JCckDatabase::execute( 'DELETE FROM #__cck_core_type_position WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
 
 			if ( $positions ) {				
-				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height ) VALUES ' . substr( $positions, 1 ) );
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height, css ) VALUES ' . substr( $positions, 1 ) );
 			}
 		}
 	}

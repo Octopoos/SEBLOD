@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $action			=	'<span class="icon-pencil-2"></span>';
 $action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ).'"';
 $uix			=	JCck::getUIX();
@@ -51,9 +53,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<thead>
 		<tr>
 			<th width="32" class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" class="form-check-input" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
-			</th>
+			<th width="30" class="center hidden-phone"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th class="center hidden-phone nowrap" width="20%" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
 			<th class="center hidden-phone nowrap" width="8%"><?php echo JText::_( 'COM_CCK_ADMIN_FORM' ); ?></th>
@@ -97,7 +97,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo '<div class="checkbox">'.JHtml::_( 'grid.id', $i, $item->id ).'</div>'; ?></td>
+			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone dropdown-col">
             	<?php
             	JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );

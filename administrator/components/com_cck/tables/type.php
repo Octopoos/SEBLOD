@@ -85,6 +85,9 @@ class CCK_TableType extends JTable
 			if ( empty( $this->created_user_id ) ) {
 				$this->created_user_id	=	$user->id;
 			}
+			if ( is_null( $this->description ) ) {
+				$this->description	=	'';
+			}
 			if ( is_null( $this->options_admin ) ) {
 				$this->options_admin	=	'';
 			}
@@ -96,6 +99,18 @@ class CCK_TableType extends JTable
 			}
 			if ( is_null( $this->options_site ) ) {
 				$this->options_site	=	'';
+			}
+			if ( is_null( $this->parent ) ) {
+				$this->parent	=	'';
+			}
+			if ( is_null( $this->permissions ) ) {
+				$this->permissions	=	'';
+			}
+			if ( is_null( $this->relationships ) ) {
+				$this->relationships	=	'';
+			}
+			if ( is_null( $this->stylesheets ) ) {
+				$this->stylesheets	=	'';
 			}
 		}
 
