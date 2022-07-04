@@ -15,7 +15,7 @@ JCckDev::initScript( 'field', $this->item, array( 'doTranslation'=>array( 'id'=>
 JCckDev::forceStorage();
 
 // Set
-$displayData    =   array(
+$displayData	=	array(
 						'config'=>$config,
 						'form'=>array(
 							array(

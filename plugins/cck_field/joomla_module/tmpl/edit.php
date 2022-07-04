@@ -11,23 +11,38 @@
 defined( '_JEXEC' ) or die;
 
 JCckDev::forceStorage();
-$options    =   JCckDev::fromSTRING( $this->item->options );
-?>
 
-<div class="seblod">
-    <?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'MODE', 'options'=>'NameTitle=1||Position=0' ) );
-        //echo JCckDev::renderForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Show Form', 'options'=>'Hide=0||Show=optgroup||Yes No=1||Modules=2' ) );
-		echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'label'=>'NAMETITLE_OR_POSITION' ) );
-        //echo JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Modules' ) );
-		echo JCckDev::renderForm( 'core_module_style', $this->item->style, $config );
-        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Prepare Content', 'defaultvalue'=>'0' ) );
-		
-        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
-        echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
-        ?>
-	</ul>
-</div>
+/*
+TODO: improve
+JCckDev::renderForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Show Form', 'options'=>'Hide=0||Show=optgroup||Yes No=1||Modules=2' ) );
+JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( $this->item->options ), $config, array( 'label'=>'Modules' ) );
+*/
+
+// Set
+$displayData    =   array(
+                        'config'=>$config,
+                        'form'=>array(
+                            array(
+                                'fields'=>array(
+                                            JCckDev::renderForm( 'core_label', $this->item->label, $config ),          
+                                            JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'MODE', 'options'=>'NameTitle=1||Position=0' ) ),
+                                            JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'label'=>'NAMETITLE_OR_POSITION' ) ),
+                                            JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Prepare Content', 'defaultvalue'=>'0' ) ),
+                                            JCckDev::renderForm( 'core_module_style', $this->item->style, $config )                                            
+                                ),
+                            ),
+                            array(
+                                'fields'=>array(
+                                    JCckDev::getForm( 'core_storage', $this->item->storage, $config )
+                                ),
+                                'mode'=>'storage'
+                            )
+                        ),
+                        'help'=>array(),
+                        'html'=>'',
+                        'item'=>$this->item,
+                        'script'=>''
+                    );
+
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit', $displayData );
+?>
