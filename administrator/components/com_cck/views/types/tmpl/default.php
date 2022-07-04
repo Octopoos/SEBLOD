@@ -99,23 +99,22 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone dropdown-col">
-            	<?php
-            	JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
+				<?php
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
 
-            	if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'collection' && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) {
+				if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'collection' && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) {
 					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
-            		?>
+					?>
 					<!-- <a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
 						<?php echo $action; ?>
 					</a> -->
-                <?php }
+				<?php }
 
 				if ( $item->versions ) {
 					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
 				}
 				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
-
-                ?>
+				?>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -187,11 +186,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				}
                 echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="4" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
-				<div class="btn-group">
-				<?php
-				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
-				?>
-				</div>
+				<?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>

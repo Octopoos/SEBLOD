@@ -55,7 +55,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 											'grid'=>'|30%',
 											'html'=>array(
 												JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) ),
-												JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'type'=>'radio', 'options'=>'INHERIT_PARENT_WITHOUT_FIELDS=0||INHERIT_PARENT_WITH_FIELDS=1', 'css'=>'btn-group', 'storage_field'=>'parent_inherit' ) )
+												JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'options'=>'INHERIT_PARENT_WITHOUT_FIELDS=0||INHERIT_PARENT_WITH_FIELDS=1||INHERIT_PARENT_WITH_FORM_FIELDS=-1', 'css'=>'btn-group', 'storage_field'=>'parent_inherit' ) )
 											)
 										) )
 									)

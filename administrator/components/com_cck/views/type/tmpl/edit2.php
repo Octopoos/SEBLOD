@@ -31,7 +31,7 @@ JCck.DevHelper.setSidebar();
 $("#pos-1 input:radio[name='positions']").prop("checked", true);
 var id = "<?php echo @$this->item->id; ?>"; if ($("#jform_id").val()==0) {$("#jform_id,#myid").val(id);}
 var location = "<?php echo $this->item->location; ?>";
-if (location == "collection") {$("#layer1_label,#layer3_label").addClass("disabled").prop("disabled",true);$("#parent_inherit").prop('disabled',true);}else{$("#parent_inherit").isDisabledWhen('parent','');}
+if (location == "collection") {$("#layer1_label,#layer3_label").addClass("disabled").prop("disabled",true);$("#parent_inherit").prop('disabled',true).hide();}else{$("#parent_inherit").isHiddenWhen('parent','',false);}
 $("#options_tag_form_title").isVisibleWhen('options_show_form_title','1');
 $("#options_validation_background_color").isDisabledWhen('options_validation_position','inline');
 if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menuitem").val("").prop("disabled",true);}}
