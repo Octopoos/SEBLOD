@@ -488,7 +488,7 @@ class CCK_Export
 				}
 			} else {
 				if ( $s > 0 ) {
-					$t		=	'seb_one';
+					$t		=	'seb_minima';
 				}
 				$tpl[$v]	=	$t;
 			}
@@ -601,7 +601,7 @@ class CCK_Export
 				}
 			} else {
 				if ( $s > 0 ) {
-					$t	=	'seb_one';
+					$t	=	'seb_minima';
 				}
 				$tpl[$v]	=	$t;
 			}

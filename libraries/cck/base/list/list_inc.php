@@ -160,7 +160,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'doPagination'=>true,
 						   'doQuery'=>true,
 						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
-						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 						   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
 						   'formId'=>$preconfig['formId'],
 						   'formWrapper'=>false,
@@ -625,7 +625,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $no_message ) {
 				$no_message	=	JText::_( 'COM_CCK_NO_RESULT' );
 			} else {
-				if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+				if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 					$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 				}
 			}
@@ -646,7 +646,7 @@ if ( $preconfig['task'] == 'search' ) {
 	if ( ! $no_message ) {
 		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
 	} else {
-		if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+		if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 		}
 	}

@@ -73,7 +73,6 @@ if ( $count ) {
 			$items[$i]->pk				=	$PK;
 			$items[$i]->pkb				=	0;
 			$items[$i]->type_id			=	0;
-			$items[$i]->type_alias		=	'';
 		}
 		$item	=	new CCK_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		
@@ -84,7 +83,7 @@ if ( $count ) {
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
-								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -101,8 +100,7 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 
@@ -241,7 +239,7 @@ if ( $count ) {
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
-								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -258,8 +256,7 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 			

@@ -507,7 +507,16 @@ class plgSystemCCK extends JPlugin
 					break;
 			}
 			if ( $option == 'com_cck' ) {
-				$app->input->cookie->set( 'atumSidebarState', 'closed' );
+				if ( $app->input->cookie->get( 'atumSidebarState', '' ) !== 'closed' ) {
+					$app->input->cookie->set( 'atumSidebarState', 'closed' );
+					JFactory::getSession()->set( 'cck_backend.atum', 1 );
+				}
+			} else {
+				$session	=	JFactory::getSession();
+				if ( (int)$session->get( 'cck_backend.atum' ) == 1 ) {
+					$app->input->cookie->set( 'atumSidebarState', '' );
+					$session->set( 'cck_backend.atum', 0 );
+				}
 			}
 		} elseif ( $app->isClient( 'site' ) ) {
 			if ( !JCck::getConfig_Param( 'sef_canonical', 0 ) && !isset( $app->cck_canonical ) && isset( $doc->_links ) && count( $doc->_links ) ) {

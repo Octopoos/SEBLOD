@@ -396,7 +396,7 @@ class CCK_List
 				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
 			}
 		} else {
-			if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
 			}
 			if ( $debug ) {

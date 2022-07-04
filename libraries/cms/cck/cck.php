@@ -89,7 +89,7 @@ abstract class JCck
 					// Do Nothing
 				}
 				
-				$translate		=	(int)self::$_config->params->get( 'language_jtext', 0 );
+				$translate		=	(int)self::$_config->params->get( 'language_jtext', 1 );
 				
 				if ( $translate == 2 ) {
 					if ( !$isConfigView ) {

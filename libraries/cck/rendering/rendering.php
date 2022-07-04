@@ -182,7 +182,7 @@ class CCK_Rendering
 		$this->js			=	'';
 		$this->profiler		=	@$me->profiler;
 		$this->profiler_log	=	@$me->profiler_log;
-		$this->translate	=	JCck::getConfig_Param( 'language_jtext', 0 );
+		$this->translate	=	JCck::getConfig_Param( 'language_jtext', 1 );
 
 		// Nested Lists.. yeah!
 		if ( isset( $me->list[$idx] ) ) {
