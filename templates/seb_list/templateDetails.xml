@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="template" version="2.5" method="upgrade">
+	<name>seb_list</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>April 2013</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>4.0.0</version>
+	
+	<files>
+		<folder>css</folder>
+		<folder>fields</folder>
+		<folder>images</folder>
+		<folder>includes</folder>
+		<folder>languages</folder>
+		<folder>positions</folder>
+		<folder>variations</folder>
+		
+		<filename>config.php</filename>
+		<filename>index.php</filename>
+		<filename>template_picker.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>index.html</filename>
+	</files>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.tpl_seb_list.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_seb_list.ini</language>
+	</languages>
+	
+	<positions>
+		<position>element</position>
+		<position>hidden</position>
+	</positions>
+	
+	<config addfieldpath="/libraries/cck/construction/field">
+		<fields name="params">
+			<fieldset name="style" label="TPL_SEB_LIST_LEGEND_STYLE">
+				<field name="cck_client_item" type="hidden" default="0" />
+				<field name="list_display" type="cck" construction="core_list_display" default="0" label="TPL_SEB_LIST_DISPLAY" description="" class="inputbox" cck_attributes="data-cck_client_item='0=0,1=1,2=0'" />
+				<field name="tag" type="list" default="ul_li" label="TPL_SEB_LIST_TAG" description="TPL_SEB_LIST_TAG_DESC" class="inputbox">
+					<option value="div_article">COM_CCK_DIV_ARTICLE</option>
+					<option value="div_div">COM_CCK_DIV_DIV</option>
+					<option value="ol_li">COM_CCK_OL_LI</option>
+					<option value="section_article">COM_CCK_SECTION_ARTICLE</option>
+					<option value="ul_li">COM_CCK_UL_LI</option>
+				</field>
+				<field name="class" type="cck" construction="core_dev_text" default="" label="TPL_SEB_LIST_CLASS" description="" class="inputbox" />
+				<field name="auto_clean" type="list" default="0" label="TPL_SEB_LIST_AUTO_CLEAN" description="TPL_SEB_LIST_AUTO_CLEAN_DESC" class="inputbox">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+					<option value="2">COM_CCK_ALWAYS</option>
+				</field>
+				<field name="attributes" type="cck" construction="core_dev_text" default="" label="TPL_SEB_LIST_CUSTOM_ATTRIBUTES" description="" cck_rows="1" class="inputbox" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>
