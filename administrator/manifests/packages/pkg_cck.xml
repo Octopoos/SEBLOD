@@ -37,6 +37,7 @@
 			<file type="template" id="seb_one" client="site">tpl_seb_one.zip</file>
 			<file type="template" id="seb_blog" client="site">tpl_seb_blog.zip</file>
 			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
+			<file type="template" id="seb_minima" client="site">tpl_seb_minima.zip</file>
 			<!-- Plugin // CCK Field -->
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
