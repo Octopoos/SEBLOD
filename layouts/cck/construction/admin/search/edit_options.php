@@ -9,6 +9,7 @@ defined( '_JEXEC' ) or die;
 			</legend>
 			<?php
 			echo $displayData['fields']['location'];
+			echo $displayData['fields']['quick_nav'];
 			?>
 		</fieldset>
 	</div>

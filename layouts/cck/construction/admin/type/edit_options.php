@@ -11,6 +11,7 @@ defined( '_JEXEC' ) or die;
 			echo $displayData['fields']['location'];
 			echo $displayData['fields']['parent'];
 			echo $displayData['fields']['permissions'];
+			echo $displayData['fields']['quick_nav'];
 			?>
 		</fieldset>
 	</div>
