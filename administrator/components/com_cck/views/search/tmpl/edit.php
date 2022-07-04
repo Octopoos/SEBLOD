@@ -48,17 +48,6 @@ if ( $this->item->client == 'list' ) {
 <div class="<?php echo $this->css['wrapper']; ?> full">
 	<div class="<?php echo $this->css['wrapper_first']; ?>">
 		<?php
-		// if ( !$this->item->id ) {
-		// 	echo '<li><label>'.JText::_( 'COM_CCK_QUICK_MENU_ITEM' ).'</label>'
-		// 	 .	 '<select id="quick_menuitem" name="quick_menuitem" class="inputbox" style="max-width:180px;">'
-		// 	 .	 '<option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'
-		// 	 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
-		// 	 .	 '</select></li>';
-		// } else {
-		// 	echo '<li>&nbsp;</li>';
-		// }
-		?>
-		<?php
 		$dataTmpl	=	array(
 							'fields'=>array(
 								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ),
@@ -68,6 +57,7 @@ if ( $this->item->client == 'list' ) {
 								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
 								'location'=>JCckDev::renderForm( $cck['core_location2'], $this->item->location, $config, array( 'css'=>'max-width-140' ) ),
 								'name'=>'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />',
+								'quick_nav'=>'',
 								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
 								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'css'=>'max-width-140', 'required'=>'required', 'storage_field'=>'storage_location' ) ),
 								'title'=>JCckDev::renderForm( $cck['core_title_search'], $this->item->title, $config )
@@ -75,6 +65,17 @@ if ( $this->item->client == 'list' ) {
 							'item'=>$this->item,
 							'params'=>array()
 						);
+
+		if ( !$this->item->id ) {
+			$dataTmpl['fields']['quick_nav']	=	JCckDev::renderLayoutFile(
+														'cck'.JCck::v().'.form.field', array(
+															'label'=>JText::_( 'COM_CCK_QUICK_MENU_ITEM' ),
+															'html'=>'<select id="quick_menuitem" name="quick_menuitem" class="form-select inputbox max-width-180"><option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'.JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) ).'</select>'
+														)
+													);
+		} elseif ( !JCck::on( '4.0' ) ) {
+			$dataTmpl['fields']['quick_nav']	=	'<li>&nbsp;</li>';
+		}
 
 		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_main', $dataTmpl );
 		?>

@@ -217,24 +217,49 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			}
 			$quick_item		=	explode( '.', $data['quick_menuitem'] );
 
-			$content_item	=	new JCckContentMenuItem;
-			$item_data		=	array(
-									'access'=>$data['access'],
-									'client_id'=>0,
-									'component_id'=>JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' ),
-									'home'=>0,
-									'language'=>'*',
-									'link'=>'index.php?option=com_cck&view=list&search='.$data['name'].'&task=search',
-									'menutype'=>$quick_item[0],
-									'params'=>'{"display_list_title":"1","title_list_title":"'.$data['title'].'","menu_show":1}',
-									'parent_id'=>$quick_item[1],
-									'published'=>1,
-									'template_style_id'=>0,
-									'title'=>$data['title'],
-									'type'=>'component'
-								);
+			if ( JCck::is( '5' ) ) {
+				$content_item	=	new JCckContentMenuItem;
+				$item_data		=	array(
+										'access'=>$data['access'],
+										'client_id'=>0,
+										'component_id'=>JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' ),
+										'home'=>0,
+										'language'=>'*',
+										'link'=>'index.php?option=com_cck&view=list&search='.$data['name'].'&task=search',
+										'menutype'=>$quick_item[0],
+										'params'=>'{"display_list_title":"1","title_list_title":"'.$data['title'].'","menu_show":1}',
+										'parent_id'=>$quick_item[1],
+										'published'=>1,
+										'template_style_id'=>0,
+										'title'=>$data['title'],
+										'type'=>'component'
+									);
 
-			$content_item->create( 'o_nav_item', $item_data );
+				$content_item->create( 'o_nav_item', $item_data );
+			} else {
+				$item						=	JTable::getInstance( 'Menu' );
+				$item->id					=	0;
+				$item->title				=	$data['title'];
+				$item->menutype				=	$quick_item[0];
+				$item->parent_id			=	$quick_item[1];
+				$item->published			=	1;
+				
+				$item->component_id			=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"' );
+				$item->link					=	'index.php?option=com_cck&view=list&search='.$data['name'].'&task=search';
+				$item->path					=	uniqid();
+				$item->params				=	'{}';
+				$item->type					=	'component';
+				
+				$item->access				=	$data['access'];
+				$item->client_id			=	0;
+				$item->home					=	0;
+				$item->language				=	'*';
+				$item->template_style_id	=	0;
+				
+				$item->setLocation( $quick_item[1], 'last-child' );
+				$item->check();
+				$item->store();
+			}
 		}
 	}
 	

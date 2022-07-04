@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $action			=	'<span class="icon-eye"></span>';
 $action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ).'"';
 $css			=	array();
@@ -46,16 +48,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<thead>
 		<tr>
 			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
-			</th>
+			<th width="30" class="center hidden-phone"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
 			<th width="8%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_SEARCH_FORM' ); ?></th>
 			<th width="8%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_ORDERING' ); ?></th>
-			<th width="7%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_LIST' ); ?></th>
-			<th width="7%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_ITEM' ); ?></th>
-			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+			<th width="8%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_LIST' ); ?></th>
+			<th width="8%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_ITEM' ); ?></th>
+			<th width="8%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
 	</thead>
@@ -79,11 +79,23 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
-			<td width="30px" class="center hidden-phone">
-            	<a target="_blank" rel="noopener noreferrer" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
-            		 <?php echo $action; ?>
-            	</a>
+			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
+			<td width="30px" class="center hidden-phone dropdown-col">
+				<?php
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
+
+				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'COM_CCK_LIST_RESULTS_OF_THIS_SEARCH' ), 'plus', 'cb_link'.$i, $link2 );
+				?>
+				<!-- <a target="_blank" rel="noopener noreferrer" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
+					<?php echo $action; ?>
+				</a> -->
+				<?php
+
+				if ( $item->versions ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
+				}
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				?>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -120,29 +132,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			</td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->searchTemplate.')';
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
-                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
+                echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="2" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->listTemplate.')';
-                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
+                echo ( ! $item->listFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="3" href="'.$link.'&client=list" title="'.htmlspecialchars( $client ).'">'.$item->listFields.'</a>' : $item->listFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->itemTemplate.')';
-                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
+                echo ( ! $item->itemFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="4" href="'.$link.'&client=item" title="'.htmlspecialchars( $client ).'">'.$item->itemFields.'</a>' : $item->itemFields ); ?></td>
 			<td class="center">
-				<div class="btn-group">
-				<?php
-				echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
-
-				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'unarchive', 'cb'.$i, 'searchs.version' );
-
-				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
-				}
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
-				?>
-				</div>
+				<?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
