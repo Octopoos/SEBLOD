@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 JPluginHelper::importPlugin( 'cck_field' );
 
 $action			=	'<span class="icon-eye"></span>';
@@ -50,9 +52,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<thead>
 		<tr>
 			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
-			</th>
+			<th width="30" class="center hidden-phone"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
 			<th width="15%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
@@ -94,7 +94,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
+			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone">
             	<?php if ( $item->id != 33 ) { ?>
 					<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
@@ -237,6 +237,21 @@ $js	=	'
 								$("[name=\'toggle\']").click().click();
 								$("#cb"+tk).click();
 							}
+						}
+					}
+				});
+				
+				$("#filter_search").on("keyup", function() {
+					var $el = $("#filter_location");
+
+					if ($el.val() != "name") {
+						var str = $(this).val();
+
+						if (str.indexOf("core_") == 0) {
+							$el.val("name");
+							$("#filter_state").val("0");
+						} else if (str.indexOf("_") != -1) {
+							$el.val("name");
 						}
 					}
 				});
