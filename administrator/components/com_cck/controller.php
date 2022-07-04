@@ -26,9 +26,10 @@ class CCKController extends JControllerLegacy
 		$lang		=	JFactory::getLanguage();
 
 		if ( is_object( $field ) ) {
-			$return		=	true;
-			$element	=	'type';
-			$master		=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$element		=	'type';
+			$field->markup	=	'none';
+			$master			=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$return			=	true;
 			
 			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
 		} else {
@@ -90,7 +91,7 @@ class CCKController extends JControllerLegacy
 		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
-		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>JFactory::getUser()->id );
 		$json		=	array();
 		ob_start();
 		Helper_Workshop::displayField( $field, '', $attr );
@@ -138,20 +139,21 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
 		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		$style						=	Helper_Workshop::getDefaultStyle();
-		
+		$type						=	JCckDatabase::loadObject( 'SELECT name, parent, location, storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+
 		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
 		$table->title				=	$title;
         $table->folder				=	$folder;
-		$table->template_admin		=	$style->id;
-		$table->template_site		=	$style->id;
-		$table->template_content	=	$style->id;
-		$table->template_intro		=	$style->id;
+		$table->template_admin		=	0;
+		$table->template_site		=	0;
+		$table->template_content	=	0;
+		$table->template_intro		=	0;
 		$table->published			=	1;
 		$table->access				=	3;
-		$table->indexed				=	'intro';
-		$table->location			=	'none';
-		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+		$table->indexed				=	'none';
+		$table->location			=	'collection';
+		$table->parent				=	( $type->location == 'collection' && $type->parent ) ? $type->parent : $type->name;
+		$table->storage_location	=	$type->storage_location;
 		
 		if ( !$table->storage_location ) {
 			$table->storage_location	=	'';
@@ -201,7 +203,7 @@ class CCKController extends JControllerLegacy
 				return;
 			} else {
 				$query	=	'UPDATE #__cck_core_type_field'
-						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' SET typeid = '.(int)$table->id.', position = "_main_", computation = "", computation_options = "", conditional = "", conditional_options = ""'
 						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
 				JCckDatabase::execute( $query );
 			}
