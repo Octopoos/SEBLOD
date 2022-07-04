@@ -11,10 +11,21 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 // CommonHelper
 class CommonHelper_Display
 {
+	// quickCheckbox
+	public static function quickCheckbox( $i, $item )
+	{
+		if ( !JCck::on( '4.0' ) ) {
+			echo JHtml::_( 'grid.id', $i, $item->id );
+		} else {
+			echo '<div class="checkbox">'.HTMLHelper::_( 'grid.id', $i, $item->id, false, 'cid', 'cb' ).'</div>';
+		}
+	}
+
 	// quickCopyright
 	public static function quickCopyright( $cpanel = false )
 	{

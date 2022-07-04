@@ -155,40 +155,38 @@ class Helper_Workshop
 		
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
-                $bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' <b>+</b> '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
-                			.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
+                $bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' + '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
+                			.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
 			} else {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' <b>+</b> '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).' <b>+</b> '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).' <b>+</b> '.JText::_( 'COM_CCK_COMPUTATION' ).'" href="javascript:void(0);">5</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' + '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).' + '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONALS' ).' + '.JText::_( 'COM_CCK_COMPUTATION' ).'" href="javascript:void(0);">5</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>';
 			}
 		} else {
 			if ( $master == 'content' ) {
-				$bar		.=	'<a class="hasTooltip qtip_cck panel pb1 icons icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' <b>+</b> '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck panel pb1 icons icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' + '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
 			} elseif ( $master == 'search' ) {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' <b>+</b> '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MATCH' ).' <b>+</b> '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).'" href="javascript:void(0);">5</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>'
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' + '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MATCH' ).' + '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONALS' ).'" href="javascript:void(0);">5</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>'
 							.	'<a class="hasTooltip qtip_cck icons panel pb7 icon-six" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).'" href="javascript:void(0);">7</a>';
 			} else {
 				$bar		.=	'<a class="hasTooltip qtip_cck icons panel icon-one first selected" title="'.JText::_( 'COM_CCK_DIRECTION' ).'" href="javascript: void(0);">1</a>';
 			}
 		}
 		if ( $master != 'order' ) {
-			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="<b>'.JText::_( 'COM_CCK_POSITIONS' ).':</b><br />'
-					.	JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'<br />'
-					.	JText::_( 'COM_CCK_WIDTH' ).' + '.JText::_( 'COM_CCK_HEIGHT' ).'" href="javascript:void(0);">&bull;</a>';
+			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="'.JText::_( 'COM_CCK_POSITIONS_STUFF' ).'" href="javascript:void(0);">&bull;</a>';
 		}
 		if ( $clone ) {
 			$bar	.=	'<a class="hasTooltip qtip_cck icons icon-add2 first" id="initclient" title="'.$clone.'" href="javascript:void(0);"></a>';
@@ -216,8 +214,9 @@ class Helper_Workshop
 	public static function getDefaultTemplate()
 	{
 		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		
 		if ( !$name) {
-			$name	=	'seb_one';
+			$name	=	'seb_minima';
 		}
 
 		return $name;
