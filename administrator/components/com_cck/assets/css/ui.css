@@ -427,8 +427,9 @@ ul.spe span.variation_value{line-height: 24px;}
 ul.adminformlist span.state{margin-top:8px;}
 ul.adminformlist a > span.state{margin-top:0;}
 .loading{position:absolute; right:50px; top:63px;}
-ul.spe_folder li.tweak-site label{width:50px;}
-ul.spe_folder li.tweak-site .variation_value{margin-left:5px; margin-right:5px; position:relative; top:-3px;}
+li.tweak-site{width:57em!important;}
+li.tweak-site .input-xxlarge{width:495px!important;}
+li.tweak-site .variation_value{margin-left:5px; margin-right:5px; position:relative; top:-3px;}
 body:not(.admin):not(.component) ul.spe_description a:link,
 body:not(.admin):not(.component) ul.spe_description a:visited,
 body:not(.admin):not(.component) ul.spe_third a:link,
@@ -498,6 +499,7 @@ div.seblod input.trigger-type{padding-right: 15px;}
 /* Joomla 3.x */
 body.com_cck div.seblod:not(.cpanel_news) div.legend,
 body.com_cck_ecommerce div.seblod:not(.cpanel_news) div.legend,
+body.com_cck_toolbox div.seblod:not(.cpanel_news) div.legend,
 body.com_cck_webservices div.seblod:not(.cpanel_news) div.legend,
 body.contentpane.component div.seblod div.legend,
 div.accordion div.seblod div.legend {color:#3b99fc; font-size:1em;}

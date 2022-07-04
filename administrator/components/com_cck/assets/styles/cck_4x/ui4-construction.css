@@ -140,6 +140,15 @@ ul.sortable li.position {
 	background-color: var(--template-bg-dark-75)!important;
 	border-color: var(--template-bg-dark-75)!important;
 }
+ul.sortable li.position:last-child {
+	padding: 6px;
+}
+ul.sortable li.position.p-no{
+	background: repeating-linear-gradient(-55deg,var(--template-bg-dark-40),var(--template-bg-dark-40) 1px,var(--template-bg-dark-75) 1px,var(--template-bg-dark-75) 6px);
+	border: 10px solid var(--template-bg-dark-75);
+	border-right-width: 40px;
+	padding:4px;
+}
 ul.sortable li.position .form-control {
 	border-color: var(--template-bg-dark-75);
 }
@@ -176,6 +185,19 @@ ul.sortable li.drop-highlight{
 ul.sortable li.ui-selected span.title,
 ul.sortable li.ui-selecting span.title {
 	color: var(--focus)!important;
+}
+
+ul.sortable .selector {
+    float: none;
+    position: absolute;
+    right: 9px;
+    top: 1px;
+    top: 14px;
+    width: auto;
+}
+ul.sortable li.position.p-no .selector {
+	right: -30px;
+	top: 6px;
 }
 
 /**/

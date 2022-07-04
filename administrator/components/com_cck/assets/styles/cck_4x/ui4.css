@@ -121,12 +121,12 @@ div.seblod-manager .table td.center {
 }
 div.seblod-manager .table th {
 	background: var(--template-bg-dark-3);
-	font-size: 15px;
+	font-size: 14px;
 	font-weight: 500;
 	text-transform: uppercase;
 	border-bottom-width: 3px;
 	border-color: var(--template-link-color);
-	padding: 1rem;
+	padding: 1rem 0.3rem;
 }
 div.seblod-manager .table tfoot td {
 	background: var(--template-bg-dark-3);
@@ -145,7 +145,7 @@ div.seblod-manager ul.pagination {
 	margin-bottom: 16px!important;
 }
 div.seblod-manager .table tbody a:not(:hover) {
-	text-decoration: none;
+	text-decoration: none!important;
 }
 div.seblod-manager .table .btn-outline-secondary {
 	border-color: var(--template-bg-dark-20);
@@ -254,6 +254,8 @@ body.layout-default main #j-main-container {
 #j-main-container .js-stools-container-filters-visible hr {
 	display: none;
 }
+
+.dropdown-menu .btn-danger > span {color: var(--danger);}
 
 /* FORM */
 .control-group [class*="max-width-"]{max-width:none;}
@@ -509,6 +511,10 @@ body.widescreen main {
 	}
 	#wrapper:not(.closed) #j-main-container .filter-search #filter_location {
     	padding-right: 21px!important;
+	}
+	div.seblod-manager .table th {
+		font-size: 15px;
+		padding: 1rem;
 	}
 }
 @media (max-width:1300px) {
