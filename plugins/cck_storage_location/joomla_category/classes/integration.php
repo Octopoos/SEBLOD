@@ -45,14 +45,18 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 	// onCCK_Storage_LocationAfterRender
 	public static function onCCK_Storage_LocationAfterRender( &$buffer, &$data, $uri = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$class		=	' class="hasTooltip"';
+		$app		=	JFactory::getApplication();		
 		$ext		=	$app->input->get( 'extension', '' );
 		$exclude	=	$data['options']->get( 'exclude', '' );
 		$extensions	=	explode( ',', str_replace( ' ', '', $exclude ) );
 		
 		if ( $uri['layout'] || !$ext || in_array( $ext, $extensions ) ) {
 			return;
+		}
+		if ( JCck::on( '4.0' ) ) {
+			$class		=	'';
+		} else {
+			$class		=	' class="hasTooltip"';	
 		}
 
 		$data['doIntegration']	=	true;

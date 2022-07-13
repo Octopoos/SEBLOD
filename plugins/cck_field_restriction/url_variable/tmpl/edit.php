@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'restriction', $this->item );
 
 // JS

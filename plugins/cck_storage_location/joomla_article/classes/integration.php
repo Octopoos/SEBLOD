@@ -50,6 +50,11 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 			return;
 		}
 		
+		if ( JCck::on( '4.0' ) ) {
+			$class		=	'';
+		} else {
+			$class		=	' class="hasTooltip"';	
+		}
 		if ( $uri['view'] == 'featured' ) {
 			$data['return_view']	=	'featured';
 			$tag					=	'&amp;return=featured';
@@ -58,7 +63,6 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 			$tag					=	'';
 		}
 		
-		$class					=	' class="hasTooltip"';
 		$data['doIntegration']	=	false;
 		$data['multilanguage']	=	$data['options']->get( 'multilanguage', 0 );
 		

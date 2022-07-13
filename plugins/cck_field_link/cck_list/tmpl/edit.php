@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'link', $this->item );
 
 $hide	=	$this->item->alt ? 'hide' : '';
@@ -72,6 +73,4 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 	'script'=>$js,
 	'type'=>'link'
 ) );
-
-JCckDev::initScript( 'link', $this->item );
 ?>

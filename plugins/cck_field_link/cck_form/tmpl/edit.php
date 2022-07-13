@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'link', $this->item );
 
 // JS

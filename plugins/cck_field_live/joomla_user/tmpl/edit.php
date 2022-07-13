@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'live', $this->item );
 JCck::loadModalBox();
 
@@ -50,6 +51,4 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 	'script'=>$js,
 	'type'=>'live'
 ) );
-
-JCckDev::initScript( 'live', $this->item );
 ?>

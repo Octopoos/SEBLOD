@@ -100,7 +100,10 @@ class JFormFieldCckIntegration extends JFormField
 			$html[] =	'</li>';
 		}
 		$html[]	=	'</ul>';
-		$html[]	=	'<div class="tab-content">';
+
+		$class	=	JCck::on( '4.0' ) ? '' : 'tab-content';
+
+		$html[]	=	'<div class="'.$class.'">';
 
 		foreach ( $groups as $i=>$group ) {
 			$actions2	=	$actions;
