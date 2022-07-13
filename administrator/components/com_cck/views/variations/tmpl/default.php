@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $action			=	'<span class="icon-download"></span>';
 $action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'"';
 $doc			=	JFactory::getDocument();
@@ -41,10 +43,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
 		<tr class="half">
-			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
-			</th>
+			<th width="60" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
+			<th width="30" class="center hidden-phone no-pad"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
             <th width="30%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_FOLDER' ); ?></th>
             <th width="20%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_LOCATION' ); ?></th>
@@ -58,11 +58,13 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
-            <td width="30px" class="center hidden-phone">
-            	<a href="<?php echo $link; ?>"<?php echo $action_attr; ?>>
-            		<?php echo $action; ?>
-            	</a>
+			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
+            <td width="30px" class="center hidden-phone dropdown-col">
+				<?php
+				JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ), 'download', 'cb_link'.$i, $link );
+
+				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+            	?>
 			</td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -75,7 +77,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					?>
 				</div>
 			</td>
-            <td class="center hidden-phone"><?php echo $item->folder; ?></td>
+            <td class="hidden-phone"><?php echo $item->folder; ?></td>
             <td class="center hidden-phone"><?php echo ( !$item->template ) ? strtolower( JText::_( 'COM_CCK_LIBRARY' ) ) : $item->template; ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
@@ -83,6 +85,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	}
 	?>
     </tbody>
+    <?php if ( (int)$this->pagination->pagesTotal > 1 ) { ?>
 	<tfoot>
 		<tr height="40px;">
 	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
@@ -90,6 +93,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>
+	<?php } ?>
 	</table>
 </div>
 <?php include_once __DIR__.'/default_batch.php'; ?>
@@ -104,8 +108,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 </div>
 
 <?php
-Helper_Display::quickCopyright();
-
 $js	=	'
 		(function ($){
 			Joomla.submitbutton = function(task, cid) {
@@ -124,3 +126,4 @@ $doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
+<?php Helper_Display::quickCopyright(); ?>
