@@ -157,9 +157,7 @@ class CommonHelper_Form
 
 	// getMediaExtensions
 	public static function getMediaExtensions( &$field, $value, $name, $id, $config )
-	{
-		$field->attributes	=	'style="width:90px;"';
-		
+	{	
 		$value	=	( $value != '' ) ? $value : 'common';
 		
 		if ( $field->options ) {
@@ -190,7 +188,7 @@ class CommonHelper_Form
 		
 		$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
 		
-		return JHtml::_( 'select.genericlist', $opts, $name, 'class="form-select inputbox select" '.$field->attributes, 'value', 'text', $value, $id );
+		return JHtml::_( 'select.genericlist', $opts, $name, 'class="form-select inputbox select max-width-100" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getPlugins

@@ -40,6 +40,11 @@ class CommonHelper_Display
 	// quickJGrid
 	public static function quickJGrid( $type, $value = 0, $i, $canChange = true )
 	{
+		if ( JCck::on( '4.0' ) && $type == 'featured' ) {
+			$html	=	'<a href="javascript:void(0);" class="tbody-icon no-link"><span class="'.( $value ? 'icon-color-featured ' : '' ).'icon-star"></span></a>';
+
+			echo $html; return;
+		}
 		$states	=	array(
 						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
 						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
@@ -57,6 +62,20 @@ class CommonHelper_Display
 			$html	= '<a href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
 		} else {
 			$html	= '<a href="javascript:void(0);" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
+		}
+
+		echo $html;
+	}
+
+	// quickModalTitle
+	public static function quickModalTitle( $text )
+	{
+		if ( JCck::on( '4.0' ) ) {
+			$html	=	'<h3 class="modal-title">'.$text.'</h3>'
+					.	'<button type="button" class="btn-close novalidate" data-bs-dismiss="modal" aria-label="Close"></button>';
+		} else {
+			$html	=	'<button type="button" class="close" data-dismiss="modal">×</button>'
+					.	'<h3 class="modal-title">'.$text.'</h3>';
 		}
 
 		echo $html;

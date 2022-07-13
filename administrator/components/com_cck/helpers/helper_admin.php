@@ -41,7 +41,8 @@ class Helper_Admin extends CommonHelper_Admin
 							   array( 'val'=>'3', 'pre'=>'', 'key'=>'' ),
 							   array( 'val'=>'4', 'pre'=>'', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
 							   array( 'val'=>'1', 'pre'=>'', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
-							   array( 'val'=>'5', 'pre'=>'', 'key'=>'' ) );
+							   // array( 'val'=>'5', 'pre'=>'', 'key'=>'' )
+							);
 		}
 		if ( $vName == 'cck' ) {
 			$addons	=	JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
@@ -95,7 +96,11 @@ class Helper_Admin extends CommonHelper_Admin
 				$hasModal	=	true;
 				$label	=	JText::_( 'JTOOLBAR_NEW' );
 				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal2" class="btn btn-small btn-success">'
-						.	'<span class="icon-new" title="'.$label.'"></span> '.$label.'</button>';
+						.	'<span class="icon-new" title="'.$label.'"></span>&nbsp;'.$label.'</button>';
+
+				if ( JCck::on( '4.0' ) ) {
+					$html	=	'<joomla-toolbar-button>'.$html.'</joomla-toolbar-button>';
+				}
 				$bar->appendButton( 'Custom', $html, 'new' );
 			} else {
 				JToolBarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
