@@ -10,18 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'typo', $this->item );
-?>
 
-<div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_TYPO_'.$this->item->name.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-		//
-        
-		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
-		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Typo Label=1', 'storage_field'=>'typo_label' ) );
-		echo JCckDev::renderBlank();
-        ?>
-    </ul>
-</div>
+// Set
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', array(
+	'config'=>$config,
+	'form'=>array(
+		array(
+			'fields'=>array(
+				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Typo Label=1', 'storage_field'=>'typo_label' ) )
+			),
+			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+		)
+	),
+	'html'=>'',
+	'item'=>$this->item,
+	'script'=>'',
+	'type'=>'typo'
+) );
+?>
