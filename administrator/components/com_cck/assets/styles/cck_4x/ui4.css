@@ -80,6 +80,10 @@ body.layout-default.view- main form {
 body.layout-default div.copyright {
 	/*background: #fff;	*/
 }
+div.seblod-manager .small,
+div.seblod-manager small {
+	font-size: 0.9rem!important;
+}
 div.seblod-manager .checkbox {
 	height: 16px;
 }
@@ -91,6 +95,7 @@ div.seblod-manager .dropdown-menu {
 	top: -2px!important;
 	border-top-left-radius: 0;
 	border-color: var(--focus);
+	width: 210px;
 }
 div.seblod-manager .dropdown-menu a span {
 	margin-right: 8px;
@@ -101,7 +106,7 @@ div.seblod-manager .dropdown-menu a:hover {
 div.seblod-manager .dropdown-toggle:after {
 	display: none;
 }
-div.seblod-manager tr:hover .btn-outline-secondary {
+div.seblod-manager tr:hover .btn-outline-secondary:not(.disabled) {
 	background:  var(--template-bg-dark-5);
 	opacity: 1;
 	color: var(--template-link-color);
@@ -126,7 +131,24 @@ div.seblod-manager .table th {
 	text-transform: uppercase;
 	border-bottom-width: 3px;
 	border-color: var(--template-link-color);
-	padding: 1rem 0.3rem;
+	padding: 1rem 0.3rem!important;
+}
+div.seblod-manager .table td.no-pad {
+	padding-left: 0.3rem;
+	padding-right: 0.3rem;
+}
+.no-pad .status {
+	display: grid;
+	grid-row-gap: 8px;
+}
+.no-pad .status .icon-star {
+	font-size: 0.70rem;
+    line-height: 16px;
+    height: 20px;
+    width: 20px;
+}
+.no-link {
+	cursor: default;
 }
 div.seblod-manager .table tfoot td {
 	background: var(--template-bg-dark-3);
@@ -418,6 +440,16 @@ span.star{font-size: 16px!important; font-weight: bold;}
 
 /* -- */
 
+.list-group-item-action.list-group-item-action {
+	color: var(--template-link-color);
+}
+.list-group-item-action.list-group-item-action:focus,
+.list-group-item-action.list-group-item-action:hover {
+    background-color: var(--template-bg-dark-5);
+    font-weight: bold;
+    color: var(--focus);
+}
+
 body.contentpane{background-color: var(--template-bg-dark-5); padding: 0;}
 body.contentpane .span12{padding: 0 20px;}
 body.contentpane .span12:not(.subhead){padding-top: 20px;}
@@ -514,7 +546,6 @@ body.widescreen main {
 	}
 	div.seblod-manager .table th {
 		font-size: 15px;
-		padding: 1rem;
 	}
 }
 @media (max-width:1300px) {

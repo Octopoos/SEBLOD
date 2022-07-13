@@ -243,7 +243,7 @@ div.seblod .input-append input+button{position: relative; left:-1px;}
 .sly-wrapper .scrollbar .handle { width: 100px; height: 100%; }
 .sly-wrapper .pages{margin-bottom: 0;}
 
-.mini-desc{color:#3b99fc; font-size: 11px; font-style: italic;}
+.mini-desc{color:#3b99fc; font-size: 13px; font-style: italic;}
 input.mini.input-xlarge{position:relative; top:2px; max-width: inherit!important; text-align: center;}
 body.com_cck div#status{box-shadow:none;}
 

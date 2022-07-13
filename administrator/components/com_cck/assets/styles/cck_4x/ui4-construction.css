@@ -156,6 +156,9 @@ ul.sortable li.position .form-control:focus,
 ul.sortable li.position .form-select:focus {
 	box-shadow: 0 0 0 0.2rem var(--template-bg-dark-60);
 }
+ul.sortable li span.title {
+	color: var(--template-bg-dark-75)!important;
+}
 ul.sortable li.position span.title,
 ul.sortable li span.subtitle {
 	font-weight: normal;
@@ -340,6 +343,9 @@ input[value="clear"] {
 		--x-col-offset-live: 62px;
 		--x-col-width: 350px;
 		--x-form-width: 69%;
+	}
+	li.position .pane.lb {
+		--x-form-width: auto;
 	}
 	.expand-main {
 		display: none;
