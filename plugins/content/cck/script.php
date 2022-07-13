@@ -690,7 +690,7 @@ class plgContentCCKInstallerScript
 				// Menu 4.x
 				self::_insertNavItem( $seblod->id, $seblod->component_id );
 
-				if ( $n >= 153 && !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__menu WHERE link = "index.php?option=com_cck" AND parent_id = '.(int)$seblod->id ) ) {
+				if ( $n >= 153 ) {
 					// Languages
 					self::_renameLanguageFiles( JPATH_ADMINISTRATOR.'/language/en-GB' );
 					self::_renameLanguageFiles( JPATH_SITE.'/language/en-GB' );
@@ -983,6 +983,9 @@ class plgContentCCKInstallerScript
 					|| ( strpos( $path, '.tpl_seb_' ) !== false ) ) {
 					$new_path   =   substr( $path, 6 );
 
+					if ( is_file( $folder.'/'.$new_path ) ) {
+						JFile::delete( $folder.'/'.$new_path );
+					}
 					JFile::move( $folder.'/'.$path, $folder.'/'.$new_path );
 				}
 			}
