@@ -939,6 +939,8 @@ class plgSystemCCK extends JPlugin
 				}
 				if ( $option == 'com_cck' ) {
 					$buffer	=	str_replace( '<body class="', '<body class="widescreen ', $buffer );
+				} elseif ( isset( $app->cck_integration_modal ) && $app->cck_integration_modal != '' ) {
+					$buffer	=	self::_updateBuffer( $buffer, $app->cck_integration_modal['path'], $app->cck_integration_modal['options'], $app->cck_integration_modal['params'], $app->cck_integration_modal['variables'] );
 				}
 				$app->setBody( $buffer );
 			} elseif ( $option == 'com_cck' && $type == 'raw' ) {
@@ -1170,7 +1172,17 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 
-	// _setTitle
+	// _updateBuffer
+	protected function _updateBuffer( $buffer, $path, $options, $params, $variables )
+	{
+		ob_start();
+		include $path;
+		$html	=	ob_get_clean();
+
+		return str_replace( '</body>', $html.'</body>', $buffer );
+	}
+
+	// _updateTitle
 	protected function _updateTitle()
 	{
 		$doc		=	JFactory::getDocument();

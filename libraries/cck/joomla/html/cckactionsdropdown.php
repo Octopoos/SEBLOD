@@ -16,11 +16,14 @@ JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actio
 abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
 {
 	// addCustomLinkItem
-	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '' )
+	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '', $class = '', $attr = '' )
 	{
+		$attr	=	$attr ? ' '.$attr : '';
+		$class	=	$class ? ' class="'.$class.'"' : '';
+
 		static::$dropDownList[] = '<li>'
-			. '<a href = "'.$link.'">'
-			. ($icon ? '<span class="icon-' . $icon . '"></span> ' : '')
+			. '<a href = "'.$link.'"'.$class.$attr.'>'
+			. ($icon ? '<span class="icon-' . $icon . '"></span>' : '')
 			. $label
 			. '</a>'
 			. '</li>';

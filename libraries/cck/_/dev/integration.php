@@ -149,7 +149,7 @@ abstract class JCckDevIntegration
 	public static function addModalBox( $layout = 'icon', $variables = '', $options = null )
 	{
 		JCck::loadjQuery();
-		$layout	=	JPATH_ADMINISTRATOR.'/components/com_cck/views/form/tmpl/modal_'.$layout.'.php';
+		$layout	=	JPATH_ADMINISTRATOR.'/components/com_cck/views/form/tmpl/modal_'.( JCck::on( '4.0' ) ? '4x' : $layout ).'.php';
 		self::appendModal( $layout, 'collapseModal2', '#toolbar-new > button', array(), $variables, $options );
 	}
 
@@ -173,14 +173,30 @@ abstract class JCckDevIntegration
 			$options	=	new JRegistry;
 		}
 		if ( is_file( $layout ) ) {
-			ob_start();
-			include $layout;
-			$html	=	ob_get_clean();
-			$html	=	preg_replace( '/(\r\n|\n|\r|\t)/', '', $html );
+			if ( JCck::on( '4.0' ) ) {
+				$html		=	'';
+				$trigger	=	'button.button-new';
+				
+				$js		=	'$("'.$trigger.'").attr("data-bs-toggle","modal").attr("data-bs-target","#'.$target_id.'").removeAttr("type").parent().removeAttr("id").removeAttr("task");';
+
+				JFactory::getApplication()->cck_integration_modal	=	array(
+																			'options'=>$options,
+																			'path'=>$layout,
+																			'params'=>$params,
+																			'variables'=>$variables
+																		);
+			} else {
+				ob_start();
+				include $layout;
+				$html	=	ob_get_clean();
+				$html	=	preg_replace( '/(\r\n|\n|\r|\t)/', '', $html );
+				$js		=	'$("'.$trigger.'").attr("data-toggle","modal").attr("data-target","#'.$target_id.'").attr("onclick","return;");'
+						.	'$("body").append("'.addslashes( $html ).'");';
+			}
 		}
+
 		$js		=	'jQuery(document).ready(function($){
-						$("'.$trigger.'").attr("data-toggle","modal").attr("data-target","#'.$target_id.'").attr("onclick","return;");
-						$("body").append("'.addslashes( $html ).'");
+						'.$js.'
 					});';
 		$doc->addScriptDeclaration( $js );
 	}

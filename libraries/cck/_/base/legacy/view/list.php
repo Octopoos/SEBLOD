@@ -85,7 +85,8 @@ class JCckBaseLegacyViewList extends JViewLegacy
 								   'w50'=>'span6',
 								   'wrapper'=>'row-fluid'
 							);
-		$this->html		=	array( 'filter_select_divider'=>'<div class="filter-search pull-right solo">',
+		$this->html		=	array( 'attr_modal_close'=>'data-dismiss="modal"',
+								   'filter_select_divider'=>'<div class="filter-search pull-right solo">',
 								   'filter_select_header'=>'<h4 class="page-header">'.JText::_( 'JSEARCH_FILTER_LABEL' ).'</h4>',
 								   'filter_select_header_custom'=>'<h4 class="page-header">*title*</h4>',
 								   'filter_select_separator'=>'<hr class="hr-condensed" />'
@@ -99,6 +100,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 			$this->css['filter_search_list']		.=	' solo';
 			$this->css['filter_select']				=	'js-stools-container-filters-visible';
 			$this->css['table']						=	'table';
+			$this->html['attr_modal_close']			=	'data-bs-dismiss="modal"';
 			$this->html['filter_select_divider']	=	'</div><div class="filter-search pull-right solo">';
 			$this->html['filter_select_header']		=	'';
 			$this->html['filter_select_separator']	=	'';
