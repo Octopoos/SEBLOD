@@ -60,7 +60,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 										) )
 									)
 								),
-								'permissions'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) ) ) ) ),
+								'permissions'=>( $this->item->location == 'collection' ? '' : JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config ) ),
 								'quick_nav'=>'',
 								'relations'=>JCckDev::renderForm( 'core_dev_textarea', $this->item->relationships, $config, array( 'css'=>'max-width-150', 'storage_field'=>'relationships' ) ),
 								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),

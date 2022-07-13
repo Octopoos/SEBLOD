@@ -52,7 +52,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
 		<tr>
-			<th width="32" class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
+			<th width="60" class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th class="center hidden-phone nowrap" width="20%" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
@@ -97,19 +97,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
+			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone dropdown-col">
 				<?php
 				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
 
 				if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'collection' && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) {
-					JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
-					?>
-					<!-- <a target="_self" href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
-						<?php echo $action; ?>
-					</a> -->
-				<?php }
-
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
+				}
 				if ( $item->versions ) {
 					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
 				}
@@ -295,6 +290,20 @@ $js	=	'
 								$("[name=\'toggle\']").click().click();
 								$("#cb"+tk).click();
 							}
+						}
+					}
+				});
+				$("#filter_search").on("keyup", function() {
+					var $el = $("#filter_location");
+					var str = $(this).val();
+
+					if (str == "") {
+						$el.val("title");
+					} else if (str[0] >= 0 && str[0] <= 9 ) {
+						$el.val("id");
+					} else if ($el.val() != "name") {
+						if (str.indexOf("_") != -1) {
+							$el.val("name");
 						}
 					}
 				});
