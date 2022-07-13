@@ -51,16 +51,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
 		<tr>
-			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
+			<th width="60" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
+			<th width="30" class="center hidden-phone no-pad"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="15%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
-			<th width="15%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
             <?php if ( $location == 'folder_id' && $search > 0 ) {
 				$canOrder	=	$user->authorise( 'core.edit.state', 'com_cck.folder' );
 				$saveOrder	=	( JCckDatabase::loadResult( 'SELECT featured FROM #__cck_core_folders WHERE id = '.(int)$search ) ); ?>
-                <th width="10%" class="center hidden-phone nowrap">
+                <th width="8%" class="center hidden-phone nowrap">
                     <?php
                     echo JHtml::_( 'grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDir, $listOrder );
 					if ( $canOrder && $saveOrder ) {
@@ -69,7 +69,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					?>
                 </th>
             <?php } else { ?>
-                <th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+                <th width="8%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
             <?php } ?>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -94,13 +94,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
-			<td width="30px" class="center hidden-phone">
-            	<?php if ( $item->id != 33 ) { ?>
-					<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
-						<?php echo $action; ?>
-					</a>
-                <?php } ?>
+			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
+			<td width="30px" class="center hidden-phone dropdown-col">
+            	<?php
+            	if ( $item->id != 33 ) {
+					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
+
+					echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+            	}
+            	?>
             </td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -240,13 +242,16 @@ $js	=	'
 						}
 					}
 				});
-				
 				$("#filter_search").on("keyup", function() {
 					var $el = $("#filter_location");
+					var str = $(this).val();
 
-					if ($el.val() != "name") {
-						var str = $(this).val();
-
+					if (str == "") {
+						$el.val("title");
+						$("#filter_state").val("1");
+					} else if (str[0] >= 0 && str[0] <= 9 ) {
+						$el.val("id");
+					} else if ($el.val() != "name") {
 						if (str.indexOf("core_") == 0) {
 							$el.val("name");
 							$("#filter_state").val("0");
