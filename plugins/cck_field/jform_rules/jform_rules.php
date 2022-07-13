@@ -114,12 +114,18 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 			}
 			
 			$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
-									.	'&id='.$id.'&name='.$name.'&type='.$value.'&params='.$component.'||'.$section;
+									.	'&id='.$id.'&name='.$name.'&type='.$value.'&params='.$component.'||'.$section.'&modal-style=large';
 			
 			$class					=	'jform_rules_box variation_href';
+			
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) != 'form' ) { /* TODO#SEBLOD: remove later */
 					$class			.=	' btn';
+
+					if ( JCck::on( '4' ) ) {
+						$class	.=	' btn-primary';
+					}
 			}
+
 			$class					=	'class="'.$class.'" ';
 			$attr					=	$class;
 			$rules					=	'';
@@ -212,7 +218,7 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 
 			if ( empty( $config['client'] ) ) {
 				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'
-					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:820, innerHeight:550, scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
+					.	' $.colorbox({href:$(this).attr(\'href\'), open:true, iframe:true, innerWidth:"85%", innerHeight:"75%", scrolling:true, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}}); return false; });';
 
 				if ( !( isset( $config['tmpl'] ) && $config['tmpl'] == 'ajax' ) ) {
 					$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );

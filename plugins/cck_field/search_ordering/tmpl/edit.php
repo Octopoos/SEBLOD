@@ -10,24 +10,38 @@
 
 defined( '_JEXEC' ) or die;
 
+// Init
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true,
 												  'customAttr'=>array( 'direction', 'prepend' ), 'customAttrLabel'=>JText::_( 'COM_CCK_DIRECTION_ASC_DESC' ),
 												  'fieldPicker'=>true ) );
 JCckDev::forceStorage();
-$options	=	JCckDev::fromSTRING( $this->item->options );
-?>
 
-<div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>'Field Optional', 'required'=>'' ) );
-		echo JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) );
-		echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'defaultvalue'=>'1', 'options'=>'Numeric=0||Text=1' ) );
-		
-		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
-		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
-        ?>
-    </ul>
-</div>
+$options	=	JCckDev::fromSTRING( $this->item->options );
+
+// Set
+$displayData	=	array(
+						'config'=>$config,
+						'form'=>array(
+							array(
+								'fields'=>array(
+									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
+									JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>'Field Optional', 'required'=>'' ) ),
+									JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) ),
+									JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'defaultvalue'=>'1', 'options'=>'Numeric=0||Text=1' ) )
+								),
+							),
+							array(
+								'fields'=>array(
+									JCckDev::getForm( 'core_storage', $this->item->storage, $config )
+								),
+								'mode'=>'storage'
+							)
+						),
+						'help'=>array(),
+						'html'=>'',
+						'item'=>$this->item,
+						'script'=>''
+					);
+
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit', $displayData );
+?>

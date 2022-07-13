@@ -83,7 +83,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		// Prepare
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$opts		=	self::_getOptionsList( $options2, $field, $config );
-		$class		=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class		=	'form-select inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}

@@ -18,9 +18,9 @@ $displayData	=	array(
 								'fields'=>array(
 									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 									JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
-									JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config ),
-									JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config ),
-									JCckDev::renderForm( 'core_size', $this->item->size, $config )
+									JCckDev::renderForm( 'core_minlength', $this->item->minlength, $config, array( 'variation'=>'custom_number' ) ),
+									JCckDev::renderForm( 'core_maxlength', $this->item->maxlength, $config, array( 'variation'=>'custom_number' ) ),
+									JCckDev::renderForm( 'core_size', $this->item->size, $config, array( 'variation'=>'custom_number' ) )
 								)
 							),
 							array(
