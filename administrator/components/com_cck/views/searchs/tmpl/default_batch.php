@@ -12,8 +12,7 @@ defined( '_JEXEC' ) or die;
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3><?php echo JText::_( 'COM_CCK_BATCH_PROCESS'); ?></h3>
+        <?php Helper_Display::quickModalTitle( JText::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
     </div>
     <?php if ( $user->authorise( 'core.edit', 'com_cck' ) ) { ?>
     <div class="modal-body">
@@ -28,7 +27,7 @@ defined( '_JEXEC' ) or die;
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
+        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
         <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
     <?php } ?>
@@ -45,7 +44,7 @@ defined( '_JEXEC' ) or die;
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
+        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
         <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('searchs.duplicate');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
     <?php } ?>
@@ -57,20 +56,20 @@ defined( '_JEXEC' ) or die;
     if ( count( $options2 ) ) {
         $options    =   array_merge( $options, $options2 );
     }
-    $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="inputbox no-chosen"', 'value', 'text', '', 'featured' );
+    $select         =   JHtml::_( 'select.genericlist', $options, 'featured', 'class="form-select inputbox no-chosen"', 'value', 'text', '', 'featured' );
     $options        =   JCckDatabase::loadObjectList( 'SELECT a.name AS text, a.name AS value FROM #__cck_core_templates AS a WHERE a.published = 1 AND a.mode = 2 ORDER BY a.title' );
     $select2        =   JHtml::_( 'select.genericlist', $options, 'template_search', 'class="inputbox no-chosen"', 'value', 'text', '', 'template_search' );
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal2"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3><?php echo JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C4_TEXT ); ?></h3>
+        <?php Helper_Display::quickModalTitle( JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C4_TEXT ) ); ?>
     </div>
     <?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>
     <div class="modal-body">
         <div class="control-group">
+            <p><?php echo JText::_( 'COM_CCK_SELECT_WHICH_CONTENT_TYPE' ); ?></p>
             <div class="control-label">
-                <label><?php echo JText::_( 'COM_CCK_SELECT_WHICH_CONTENT_TYPE' ); ?></label>
+                <label></label>
             </div>
             <div class="controls">
                 <?php echo $select; ?>
@@ -78,9 +77,7 @@ defined( '_JEXEC' ) or die;
         </div>
         <?php if ( count( $templates ) ) { ?>
         <div class="control-group">
-            <div class="control-label">
-                <label><?php echo JText::_( 'COM_CCK_SELECT_WHICH_LIST_TEMPLATE' ); ?></label>
-            </div>
+            <p><?php echo JText::_( 'COM_CCK_SELECT_WHICH_LIST_TEMPLATE' ); ?></p>
             <div class="sly-wrapper">
                 <div class="sly">
                     <ul>
@@ -106,21 +103,13 @@ defined( '_JEXEC' ) or die;
         <?php } ?>
     </div>
     <div class="modal-footer">
+        <!--
         <a href="javascript:void(0);" class="btn btn-mini btn-success pull-left" onclick="window.open('https://www.seblod.com/store/extensions?seb_item_category=27', '_blank'); return false;" rel="noopener noreferrer">
             <?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_TEMPLATES' ); ?>
         </a>
-        <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
-        <div class="btn-group dropup pull-right">
-            <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="javascript:void(0);" onclick="JCck.Dev.addNew('list');"><span class="icon-arrow-right"></span>
-                <?php echo JText::_( 'COM_CCK_CREATE_GO_TO_LIST' ); ?></a></li>
-                <!--<li><a href="javascript:void(0);" onclick="JCck.Dev.addNew('item');"><?php echo JText::_( 'COM_CCK_CREATE_GO_TO_ITEM' ); ?></a></li>-->
-            </ul>
-        </div>
+        -->
+        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
+        <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>
     </div>
     <?php } ?>
 </div></div></div>
