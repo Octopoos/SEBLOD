@@ -21,6 +21,11 @@ class plgContentCCK extends JPlugin
 	// onContentAfterSave
 	public function onContentAfterSave( $context, $article, $isNew )
 	{
+		if ( JCck::on( '4.0' ) ) {
+			if ( $isNew ) {
+				$this->_doWorkflow( 'add', $context, $article );
+			}
+		}
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onContentAfterSave';
 
@@ -274,6 +279,18 @@ class plgContentCCK extends JPlugin
 		$this->_prepare( $context, $article, $params, $limitstart );
 	}
 	
+	// _doWorkflow
+	protected function _doWorkflow( $task, $context, $article )
+	{
+		$db		=	JFactory::getDbo();
+		$query	=	$db->getQuery( true );
+				
+		$query->insert( '#__workflow_associations' )->values( (int)$article->id . ', ' . '1' . ', ' . $db->quote( $context ) );
+
+		$db->setQuery( $query );
+		$db->execute();
+	}
+
 	// _prepare
 	protected function _prepare( $context, &$article, &$params, $page = 0 )
 	{
