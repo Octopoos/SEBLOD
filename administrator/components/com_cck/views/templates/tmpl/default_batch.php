@@ -16,8 +16,7 @@ if ( !$user->authorise( 'core.edit', 'com_cck' ) ) {
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3><?php echo JText::_( 'COM_CCK_BATCH_PROCESS'); ?></h3>
+        <?php Helper_Display::quickModalTitle( JText::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
     </div>
     <div class="modal-body">
         <p><?php echo JText::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName ); ?></p>
@@ -31,7 +30,7 @@ if ( !$user->authorise( 'core.edit', 'com_cck' ) ) {
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
+        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
         <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
     </div>
 </div></div></div>
