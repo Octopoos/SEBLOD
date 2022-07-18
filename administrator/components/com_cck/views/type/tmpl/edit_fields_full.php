@@ -34,6 +34,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>
         <?php if ( JCck::on( '4.0' ) ) { ?>
             <fieldset class="options-form seblod">
                 <?php include __DIR__.'/edit_fields_as.php'; ?>
+                <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
             </fieldset>
         <?php } else { ?>
             <div class="seblod">

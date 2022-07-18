@@ -391,6 +391,7 @@ abstract class JCckDev
 				$options['picker']	=	$options['base'].'_fields_list';
 				$options['root']	=	'#sortable_'.$options['base'];
 			}
+
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
 				unset( $options['hasOptions'] );
@@ -459,13 +460,26 @@ abstract class JCckDev
 						$js3		=	'var disp = "";';
 					}
 
+					if ( JCck::on( '4.0' ) ) {
+						$js_open	=	'<div class="no-no attr-grid-2">';
+						$js_close	=	'</div>';
+					} else {
+						$js_open	=	'<div class="clr"></div>';
+						$js_close	=	'';
+					}
+
 					// Custom Attr
 					if ( is_array( $options['customAttr'] ) ) {
 						$keys	=	array();
 						$n		=	0;
 						$nb		=	count( $options['customAttr'] );
+						$attribs	.=	'<div class="attr-grid-2">';
+
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
-							$attribs	.=	'<div class="clr"></div><div class="attr">';
+							if ( !JCck::on( '4.0' ) ) {
+								$attribs	.=	'<div class="clr"></div>';
+							}
+							$attribs	.=	'<div class="attr no-no">';
 
 							if ( is_array( $customAttr ) ) {
 								$attr_id	=	$customAttr['id'];
@@ -489,13 +503,13 @@ abstract class JCckDev
 									}
 
 									$attribs		.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-													.	' class="inputbox'.$attr_class.'" size="'.$size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
+													.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
 								}
 							} else {
 								$attr_id	=	$customAttr;
 
 								$attribs	.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-											.	' class="inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
+											.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
 							}
 
 							$attribs		.=	'</div>';
@@ -509,28 +523,40 @@ abstract class JCckDev
 								} else {
 									$size	=	$attr_size;
 								}
-								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="inputbox'.$attr_class.'" size="'.$size.'" />';
+								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" />';
 							}
 							$keys[]			=	$attr_id;
-							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
+							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\''.$js_open.'<div class="attr"\'+disp+\'>'.$attribs_append.$js_close.'</div>\');';
 						}
+						$attribs	.=	'</div>';
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
 						$n			=	(int)$options['customAttr'];
-						$attribs	=	'<div class="clr"></div><div class="attr attr-grid-'.$n.'">';
+						$attribs	=	'<div class="clr"></div><div class="attr no-no attr-grid-2">';
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css		=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
 							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 						}
 						$attribs	.=	'</div>';
 						$location	=	( $elem->location ) ? explode( '||', $elem->location ) : array( 0=>'', 1=>'', 2=>'' );
-						$html		.=	'<div class="clr"></div><div class="attr attr-grid-'.$n.'">';
+
+						if ( !JCck::on( '4.0' ) ) {
+							$html	.=	'<div class="clr"></div>';
+						} else {
+							$html	.=	'<div class="collection-group-wrap def">';
+						}
+						$html		.=	'<div class="attr no-no attr-grid-2">';
+
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
 							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.htmlspecialchars( @$location[$i] ).'" />';
 						}
 						$html		.=	'</div>';
-						$js3		.=	'var content = \'<div class="clr"></div><div class="attr"\'+disp+\'>';
+						
+						if ( JCck::on( '4.0' ) ) {
+							$html	.=	'</div>';
+						}
+						$js3		.=	'var content = \''.$js_open.'<div class="attr"\'+disp+\'>';
 						for ( $i = 0; $i < $n; $i++ ) {
 							if ( $i == 0 ) {
 								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(++cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2" size="8" />';
@@ -539,7 +565,7 @@ abstract class JCckDev
 								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 							}
 						}
-						$js3		.=	'</div>\';';
+						$js3		.=	$js_close.'</div>\';';
 						$keys		=	'';
 					} else {
 						$js3		=	'';
@@ -592,7 +618,7 @@ abstract class JCckDev
 								}
 								';
 					if ( $options['toggleAttr'] ) {
-						$js2	.=	'$("div#layer").on("change", "input#toggle_attr", function() { $("div.attr, #location").toggle(); });';
+						$js2	.=	'$("div#layer").on("change", "input#toggle_attr", function() { $("div.attr, #location").toggleClass("no-no"); });';
 					}
 				}
 
@@ -601,11 +627,11 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="inputbox select" style="max-width:175px;"',
+					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select max-width-175"',
 															  'value', 'text', '', $options['picker'] );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
-								$("ul.adminformlist").on("change", "select#'.$options['picker'].'", function() {
+								$("#adminForm").on("change", "select#'.$options['picker'].'", function() {
 									var val = $(this).val();
 									if (val) {
 										$("'.$options['root'].'>div:last .button-add-'.$options['base'].'").click();

@@ -265,9 +265,19 @@ $fields	=	array(
 			);
 $html	=	'';
 
-if ( isset( $config['item']->id ) && $config['item']->id ) {
-	$html	.=	JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit.storage_type', array( 'type'=>$linked ) );
-}
+// if ( isset( $config['item']->id ) && $config['item']->id ) {
+	$html	.=	JCckDev::renderLayoutFile(
+					'cck'.JCck::v().'.construction.cck_field.edit.storage_type',
+						array(
+							'isNew'=>( isset( $config['item']->id ) && $config['item']->id ) ? false : true,
+							'storage'=>array(
+								'alter'=>JCckDev::getForm( $cck['core_storage_alter'], '', $config ),
+								'alter_table'=>JCckDev::getForm( $cck['core_storage_alter_table'], '', $config ),
+								'alter_type'=>JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config )
+							),
+							'type'=>$linked
+						) );
+// }
 
 // Set
 $displayData	=	array(
