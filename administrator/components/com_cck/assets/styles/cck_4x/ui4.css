@@ -401,6 +401,8 @@ fieldset.unlocked .input-group .btn-secondary{border-color: var(--success);}
 /*.attr > .is-mini:first-child{margin-left: 0;}*/
 /*.attr > .is-mini:last-child{margin-right: 0;}*/
 /*.attr-grid-*/
+.attr.no-no{display: none!important;}
+.attr-grid-2{grid-template-columns: repeat(2,1fr);}
 .attr-grid-4{grid-template-columns: repeat(4,1fr);}
 .attr-grid-6{grid-template-columns: repeat(6,1fr);}
 /*grid-template-columns*/
@@ -521,6 +523,15 @@ body.layout-edit .header{display: none;}
     background: var(--template-bg-dark-70);
     opacity: 0.7;
 }
+
+#bool8{position: absolute; left: -50px;}
+#bool8.btn:focus{box-shadow: none;}
+#bool8 .publish{color: #65ab55;}
+#bool8 .unpublish{color: #e9594d;}
+
+#toggle_attr{margin-right: 8px;}
+.collection-group-wrap.def .attr{border-radius: 0.25rem;}
+ul.sortable li div.pane div.col2 > .g3{display: grid; grid-template-columns: auto auto auto;}
 
 body.widescreen nav[aria-label="Toolbar"],
 body.widescreen main {

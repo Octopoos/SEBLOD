@@ -214,6 +214,15 @@ ul.sortable li.position.p-no .selector {
 	z-index: 999;
 }
 
+.switch span.linkage.icon-lock {
+	top: -6px;
+	left: -6px;
+	margin: 0;
+}
+.switch span.linkage.icon-lock.unlinked:before{
+	content: "\f09c";
+}
+
 hr {
 	border-top: 1px solid var(--template-bg-dark-50);
 }
