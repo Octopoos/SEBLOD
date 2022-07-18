@@ -46,27 +46,32 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 								'class'=>$typo->get( 'class', '' ),
 								'root'=>( $typo->get( 'path_type', 0 ) ? JUri::root() : '' )
 							);
-		$thumb_array	=	array( 'thumb'=>$typo->get( 'thumb', 'thumb1' ),
-								   'thumb_2x'=>$typo->get( 'thumb_2x', '' ),
-								   'thumb_3x'=>$typo->get( 'thumb_3x', '' ),
-								   'thumb_custom'=>$typo->get( 'thumb_custom', 0 ),
-								   'thumb_width'=>$typo->get( 'thumb_width', '' ),
-								   'thumb_height'=>$typo->get( 'thumb_height', '' ),
-								   'image'=>$typo->get( 'image', 'value' ),
-								   'image_custom'=>$typo->get( 'image_custom', 0 ),
-								   'image_width'=>$typo->get( 'image_width', '' ),
-								   'image_height'=>$typo->get( 'image_height', '' ),
-								   'image_title'=>$typo->get( 'image_title', 1 )
-								);
-		$alt_fieldname	= 	$typo->get( 'image_alt_fieldname', '' );
+		$thumb_array	=	array(
+								'state'=>$typo->get( 'state', 1 ),
+								'thumb'=>$typo->get( 'thumb', 'thumb1' ),
+								'thumb_2x'=>$typo->get( 'thumb_2x', '' ),
+								'thumb_3x'=>$typo->get( 'thumb_3x', '' ),
+								'thumb_custom'=>$typo->get( 'thumb_custom', 0 ),
+								'thumb_width'=>$typo->get( 'thumb_width', '' ),
+								'thumb_height'=>$typo->get( 'thumb_height', '' ),
+								'image'=>$typo->get( 'image', 'value' ),
+								'image_custom'=>$typo->get( 'image_custom', 0 ),
+								'image_width'=>$typo->get( 'image_width', '' ),
+								'image_height'=>$typo->get( 'image_height', '' ),
+								'image_title'=>$typo->get( 'image_title', 1 ),
+								'image_extension'=>$typo->get( 'image_extension', 0 ),
+								'image_tag'=>$typo->get( 'image_tag', 0 ),
+								'image_alt'=>$typo->get( 'image_alt', 1 ),
+								'image_alt_fieldname'=>$typo->get( 'image_alt_fieldname', '' )
+							);
 
 		if ( is_array( $field->value ) ) {
-			$typo	=	self::_addImages( $field, $thumb_array, $options );
+			$typo	=	self::_addImages( $field, $thumb_array, $options, $config );
 		} else {
-			$typo	=	self::_addImage( $field, $thumb_array, $options );
+			$typo	=	self::_addImage( $field, $thumb_array, $options, $config );
 		}
-		if ( $alt_fieldname != '' ) {
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'alt_fieldname'=>$alt_fieldname  ) );
+		if ( $thumb_array['image_alt'] && $thumb_array['image_alt_fieldname'] != '' ) {
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'alt_fieldname'=>$thumb_array['image_alt_fieldname']  ) );
 		}
 		
 		return $typo;
@@ -107,38 +112,81 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImage
-	protected static function _addImage( &$field, $params, $options )
+	protected static function _addImage( &$field, $params, $options, $config )
 	{
+		$alt				=	'';
 		$value				=	$field->value;
-		
+
 		$ext				=	substr( strrchr( $field->value, "." ), 1 );
 		$filename			=	substr( strrchr( $field->value, "/" ), 1 );
 		$filename			=	str_replace('.'.$ext,'',$filename);
 		
+		if ( $params['image_alt'] ) {
+			$alt			=	' alt="'.$field->image_alt.'"';
+		}
+
 		$image_title		=	( isset( $field->image_title ) ) ? $field->image_title : '';
 		$field->image_title	=	( $image_title != '' ) ? $image_title : $filename;
 		$image_alt			=	( isset( $field->image_alt ) ) ? $field->image_alt : '';
 		$field->image_alt	=	( $image_alt != '' ) ? $image_alt : $image_title;
 		$field->image_title	=	( $params['image_title'] && $field->image_title ) ? $field->image_title : '';
-		$title				=	( $field->image_title ) ? 'title="'.$field->image_title.'" ' : '';
+		$title				=	( $field->image_title ) ? ' title="'.$field->image_title.'" ' : '';
 
 		$attr				=	( $options['attributes'] != '' ) ? ' '.$options['attributes'] : '';
 		$class				=	( $options['class'] != '' ) ? ' class="'.$options['class'].'"' : '';
 		$height				=	'';
 		$srcset				=	'';
 		$width				=	'';
+
+		if ( (int)$params['image_tag'] == 1 ) {
+			$img_src	=	'srcset';
+			$img_tag	=	'source';
+		} else {
+			$img_src	=	'src';
+			$img_tag	=	'img';
+		}
+
 		if ( $params['thumb_custom'] == 1 ) {
 			$width	=	' width="'.$params['thumb_width'].'"';
 			$height	=	' height="'.$params['thumb_height'].'"';
 		}
 		if ( $params['thumb_2x'] ) {
-			$srcset	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options ).' 2x';
+			$srcset	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options, $params ).' 2x';
 			if ( $params['thumb_3x'] ) {
-				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options ).' 3x';
+				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options, $params ).' 3x';
 			}
 			$srcset	=	' srcset="'.$srcset.'"';
 		}
-		$img		=	'<img '.$title.'alt="'.$field->image_alt.'" src="'.self::_availableThumb( $field, $params['thumb'], $options ).'"'.$srcset.$class.$attr.$width.$height.' />';
+		$attr		=	$title.$alt.' '.$img_src.'="'.self::_availableThumb( $field, $params['thumb'], $options, $params ).'"'.$srcset.$class.$attr.$width.$height;
+		
+		if ( !$params['state'] ) {
+			$attr			=	trim( $attr );
+			$field->html	=	$attr;
+			$typo			=	$attr;
+
+			return $typo;
+		}
+
+		if ( $attr != '' && strpos( $attr, '%' ) !== false ) {
+			$matches	=	'';
+			$search		=	'#\%([a-zA-Z0-9-]*)\%#U';
+
+			preg_match_all( $search, $attr, $matches );
+
+			if ( count( $matches[1] ) ) {
+				foreach ( $matches[1] as $target ) {
+					$replace	=	'';
+
+					if ( isset( $config['context'][$target] ) && $config['context'][$target] != '' ) {
+						$replace	=	$target.'="'.$config['context'][$target].'"';
+					}
+					
+					$attr	=	str_replace( '%'.$target.'%', $replace, $attr );
+				}
+			}
+		}
+
+		$img	=	'<'.$img_tag.$attr.' />';
 
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
@@ -162,14 +210,14 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImages
-	protected static function _addImages( &$field, $params, $options )
+	protected static function _addImages( &$field, $params, $options, $config )
 	{
 		// Prepare
 		$value	=	$field->value;
 		$typo	=	'';
 		
 		foreach ( $field->value as $value_img ) {
-			$typo	.=	self::_addImage( $value_img, $params, $options );
+			$typo	.=	self::_addImage( $value_img, $params, $options, $config );
 		}
 		
 		return $typo;
@@ -198,14 +246,22 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _availableThumb
-	protected static function _availableThumb( $field, $thumb, $options )
+	protected static function _availableThumb( $field, $thumb, $options, $params )
 	{
 		if ( isset( $field->$thumb ) && $field->$thumb ) {
-			return $options['root'].$field->$thumb;
+			if ( (int)$params['image_extension'] == 1 ) {
+				return str_replace( '.'.$field->extension, '.webp', $options['root'].$field->$thumb );
+			} else {
+				return $options['root'].$field->$thumb;
+			}
 		} else {
 			for ( $i = 1; $i < self::$thumb_count; $i++ ) {
 				if ( isset( $field->{'thumb'.$i} ) && $field->{'thumb'.$i} ) {
-					return $options['root'].$field->{'thumb'.$i};
+					if ( (int)$params['image_extension'] == 1 ) {
+						return str_replace( '.'.$field->extension, '.webp', $options['root'].$field->{'thumb'.$i} );
+					} else {
+						return $options['root'].$field->{'thumb'.$i};
+					}
 				}
 			}
 			if ( isset( $field->value ) && $field->value ) {

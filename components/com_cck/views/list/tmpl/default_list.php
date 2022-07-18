@@ -22,7 +22,7 @@ if ( !$this->raw_rendering ) { ?>
 			$vars		=	JUri::getInstance()->getQuery( true );
 			if ( count( $vars ) ) {
 				foreach ( $vars as $k=>$v ) {
-					if ( $v == '' ) {
+					if ( $v == '' && isset( $this->config['pagination_vars'][$k] ) ) {
 						$pagination_replace	.=	$k.'=&';
 					}
 				}

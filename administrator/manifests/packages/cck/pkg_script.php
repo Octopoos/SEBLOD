@@ -4,7 +4,7 @@
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
+* @copyright		Copyright (C) 2009 - 2021 SEBLOD. All Rights Reserved.
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
@@ -41,6 +41,10 @@ class pkg_cckInstallerScript
 	// postflight
 	public function postflight( $type, $parent )
 	{
+		if ( !class_exists( 'JCck' ) ) {
+			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
+			return;
+		}
 		if ( JCck::on( '3.8' ) ) {
 			if ( $type == 'install' || $type == 'update' && version_compare( JCck::getConfig_Param( 'initial_version', '3' ), '3.13.0', '>=' ) ) {
 				$db			=	JFactory::getDbo();
@@ -51,37 +55,39 @@ class pkg_cckInstallerScript
 					  ->where( $db->quoteName( 'type' ) . ' = ' . $db->quote( 'module' ) )
 					  ->where( $db->quoteName( 'element' ) . ' = ' . $db->quote( 'mod_cck_menu' ) );
 				$db->setQuery( $query );
-				$module_id	=	$db->loadResult();
+				$module_id	=	(int)$db->loadResult();
 				
-				$installer  =   JInstaller::getInstance();
+				if ( $module_id ) {
+					$installer  =   JInstaller::getInstance();
 				
-				$module     =   JTable::getInstance( 'Extension' );
-				$module->load( $module_id );
+					$module     =   JTable::getInstance( 'Extension' );
+					$module->load( $module_id );
 				
-				if ( $module->type == 'module' ) {
-					$installer->uninstall( $module->type, $module_id );
+					if ( $module->type == 'module' ) {
+						$installer->uninstall( $module->type, $module_id );
 
-					if ( $type == 'install' ) {
-						$new_module	=	JTable::getInstance( 'Module', 'JTable' );
-					
-						if ( $new_module->save( array(
-													'access'=>3,
-													'client_id'=>1,
-													'language'=>'*',
-													'module'=>'mod_menu',
-													'ordering'=>2,
-													'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
-													'position'=>'menu',
-													'published'=>1,
-													'showtitle'=>0,
-													'title'=>'Admin Menu - SEBLOD'
-												   ) ) ) {
-							try {
-								$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
-								$db->setQuery( $query );
-								$db->execute();
-							} catch ( Exception $e ) {
-								// Do nothing
+						if ( $type == 'install' ) {
+							$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+						
+							if ( $new_module->save( array(
+														'access'=>3,
+														'client_id'=>1,
+														'language'=>'*',
+														'module'=>'mod_menu',
+														'ordering'=>2,
+														'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
+														'position'=>'menu',
+														'published'=>1,
+														'showtitle'=>0,
+														'title'=>'Admin Menu - SEBLOD'
+													   ) ) ) {
+								try {
+									$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
+									$db->setQuery( $query );
+									$db->execute();
+								} catch ( Exception $e ) {
+									// Do nothing
+								}
 							}
 						}
 					}

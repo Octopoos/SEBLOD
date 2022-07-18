@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+JPluginHelper::importPlugin( 'cck_field' );
+
 $action			=	'<span class="icon-eye"></span>';
 $action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"';
 $css			=	array();
@@ -34,7 +36,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( !empty( $this->sidebar ) ) { ?>
-	<div id="j-sidebar-container" class="span2">
+	<div id="j-sidebar-container" class="span2 top-bar">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
@@ -82,15 +84,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEdit		=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditFolder	=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditOwn		=	'';
-		
+
 		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
 		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/preview.php&name='.$item->name );
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
 		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
-		
+
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
-		<tr class="row<?php echo $i % 2; ?>" height="64px;">
+		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">

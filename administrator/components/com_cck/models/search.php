@@ -124,12 +124,17 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$app					=	JFactory::getApplication();
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
 		$P						=	'template_'.$client;
 		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
-		$data['options']		=	JCckDev::toJSON( @$data['options'] );
+
+		if ( !isset( $data['options'] ) ) {
+			$data['options']	=	array();
+		}
+		$data['options']		=	JCckDev::toJSON( $data['options'] );
 		
 		if ( ! $data['id'] ) {
 			$clients			=	array( 'search', 'filter', 'item' );
@@ -166,11 +171,19 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$data	=	JRequest::get( 'post' );
+		$app	=	JFactory::getApplication();
+		$data	=	$app->input->post->getArray();
 		$client	=	$data['client'];
 		
 		if ( isset( $data['li_end'] ) && $data['li_end'] == '1' ) {
+			$raw_data	=	$app->input->post->getArray( array( 'ffp'=>'raw' ) );
+
+			if ( isset( $raw_data['ffp'] ) ) {
+				$data['ffp']	=	$raw_data['ffp'];
+			}
+				
 			$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
+
 			if ( isset( $data['cck_type'] ) && $data['cck_type'] != '' ) {
 				$data['ff2']	=	array( 'cck'=>1 );
 				$data['ffp2']	=	array( 'cck'=>array(

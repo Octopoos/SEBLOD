@@ -99,6 +99,6 @@ foreach ( $groups as $i=>$g ) {
 }
 
 if ( count( $users ) ) {
-	$config['storages']['#__cck_core_sites']['groups']	=	json_encode( $users );
+	$config['storages']['#__cck_core_sites']['usergroups']	=	json_encode( $users );
 }
 ?>

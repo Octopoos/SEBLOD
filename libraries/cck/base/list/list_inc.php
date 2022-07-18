@@ -151,7 +151,7 @@ $active[0]		=	'cck';
 $areas['active']=	$active;
 
 if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
-	$post		=	( $method ) ? JRequest::get( 'post' ) : JRequest::get( 'get' );
+	$post		=	( $method ) ? $app->input->post->getArray() : $app->input->get->getArray();
 }
 $config			=	array( 'action'=>$preconfig['action'],
 						   'client'=>$preconfig['client'],
@@ -167,6 +167,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'Itemid'=>$itemId,
 						   'limitend'=>0,
 						   'location'=>'',
+						   'pagination_vars'=>array(),
 						   'pk'=>$id,
 						   'sef_aliases'=>$search->sef_route_aliases,
 						   'submit'=>$preconfig['submit'],
@@ -182,7 +183,6 @@ jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
-$dispatcher	=	JEventDispatcher::getInstance();
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
@@ -288,9 +288,13 @@ if ( $isRaw ) {
 if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
-	if ( is_object( $menu ) && isset( $menu->params ) ) {
-		$preconfig['limit']		=	$menu->params->get( 'limit' );
-		$preconfig['search2']	=	$menu->params->get( 'search2' );
+	if ( is_object( $menu ) ) {
+		$menu_params			=	$menu->getParams();
+
+		if ( is_object( isset( $menu_params ) ) ) {
+			$preconfig['limit']		=	$menu_params->get( 'limit' );
+			$preconfig['search2']	=	$menu_params->get( 'search2' );
+		}
 	}
 }
 
@@ -341,7 +345,7 @@ foreach ( $fields['search'] as $field ) {
 			$value		=	$lives[$name];
 		} else {
 			if ( $field->live && $field->variation != 'clear' ) {
-				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
+				$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 			} else {
 				$value	=	$field->live_value;
 			}
@@ -359,7 +363,7 @@ foreach ( $fields['search'] as $field ) {
 	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
 		$field->variation	=	'hidden';
 	}
-	$dispatcher->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
+	$app->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
 
 	// Stage
 	if ( (int)$field->stage > 0 ) {
@@ -427,6 +431,9 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	if ( $preconfig['show_form'] ) {
 		$doc->fields	=	$fields['search'];
+	}
+	if ( isset( $config['error'] ) && $config['error'] ) {
+		$error	=	1;
 	}
 	
 	$countStages		=	count( $stages );
@@ -504,6 +511,10 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 			$search->content		=	$search2->content;
 		}
+		if ( (int)$options->get( 'mode_no_result', '0' ) && (int)$total > 1 ) {
+			$total 	=	0;
+		}
+
 		if ( $total ) {
 			if ( isset( $preconfig['idx'] ) ) {
 				$config['idx']	=	$preconfig['idx'];

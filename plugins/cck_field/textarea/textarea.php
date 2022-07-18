@@ -26,7 +26,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -148,7 +148,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$value	=	JRequest::getVar( $name, '', 'post', 'string', JREQUEST_ALLOWRAW );
+			$value	=	JFactory::getApplication()->input->post->get( $name, '', 'raw' );
 		}
 		
 		// Make it safe

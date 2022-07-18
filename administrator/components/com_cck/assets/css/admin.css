@@ -118,6 +118,7 @@ div.toggle-selection {float:right;margin-top:10px;}
 div.toggle-selection a{color:#eb8207;font-size:10px;font-weight:bold;}
 .cck-highlighted{color:#eb8207;}
 .adminformlist-maxwidth{max-width:200px;}
+.adminformlist-minwidth{min-width:82px;}
 
 #toolbar a:not(.btn-success) [class^="myicon-"],
 #toolbar a:not(.btn-success) [class*=" myicon-"] {
@@ -190,6 +191,7 @@ body #j-main-container > .btn-toolbar{margin-top:15px;}
 ul.nav.nav-list li a[href='#']{border-bottom: 1px solid #3b99fc; margin-bottom: 6px;}
 ul.nav.nav-list li a[href='#']:hover{background:none;}
 div.seblod-manager .table th, div.seblod-manager .table td{vertical-align:middle;}
+div.seblod-manager .table tbody tr{height:64px;}
 div.seblod-manager .table .dropdown-menu{left: inherit; right: 0;}
 div.seblod-manager .table .dropdown-submenu .dropdown-menu{right: -1px;}
 div.filter-select select, div.filter-search select, div.filter-search input, div.filter-search button{margin:0;}
@@ -307,3 +309,15 @@ body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid{padding:2px 4px; p
 
 body.com_cck span.value-picker {color: #3b99fc; top:9px;}
 body:not(.com_cck) div.alert.alert-info > div{text-align: center;}
+
+body.task-display .top-bar .sidebar-nav{padding-left: 0; padding-right: 0;}
+body.task-display .top-bar .sidebar-nav ul{background-color: #ffffff; padding: 15px 10px;}
+body.task-display .top-bar .sidebar-nav li{background-color: #ffffff; margin-left: 5px; margin-right: 5px; min-width: 84px;}
+body.task-display .top-bar .sidebar-nav li a {padding: 8px 12px; text-align: center; font-size: 15px; background-color: var(--template-bg-dark-75); border-radius: 22px; color: #ffffff;}
+body.task-display .top-bar .sidebar-nav li.active a{background-color: var(--template-bg-dark-50); color: #ffffff;}
+body.task-display .top-bar .sidebar-nav li a:hover{background-color: var(--template-bg-dark-60); }
+body.task-display .top-bar .sidebar-nav li a:before{content:""; margin: 0;}
+body.task-display .top-bar .sidebar-nav li.active {font-weight: bold;}
+
+body.task-display .top-bar .flex-column{flex-direction: inherit!important;}
+

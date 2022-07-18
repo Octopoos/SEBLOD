@@ -107,8 +107,9 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$app					=	JFactory::getApplication();
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 
 		if ( is_array( $data['title'] ) ) {
@@ -118,9 +119,9 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$dispatcher->trigger( 'onCCK_Storage_LocationConstruct', array( @$data['storage_location'], &$data ) );
-		$dispatcher->trigger( 'onCCK_FieldConstruct', array( $data['type'], &$data ) );
+
+		$app->triggerEvent( 'onCCK_Storage_LocationConstruct', array( @$data['storage_location'], &$data ) );
+		$app->triggerEvent( 'onCCK_FieldConstruct', array( $data['type'], &$data ) );
 
 		return $data;
 	}

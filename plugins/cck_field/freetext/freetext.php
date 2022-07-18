@@ -28,7 +28,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		if ( !isset( $config['inherit'] ) ) {
-			$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+			$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 		}
 	}
 

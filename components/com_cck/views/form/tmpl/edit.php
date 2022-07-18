@@ -48,7 +48,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['v
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.htmlspecialchars( JUri::getInstance()->getPath() ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this->pageclass_sfx.' cck-clrfix" id="system">' . $this->data . '</div>';
 ?>
 <?php if ( !$this->raw_rendering ) { ?>

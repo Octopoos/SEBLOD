@@ -37,6 +37,12 @@ if ( $content_folder && $config['isNew'] ) {
 	$file_path		.=	$config['pk'].'/';
 	$file_location	=	$file_path.$file_name;
 	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+
+	// Disallow Uppercase extension
+	$extension		=	strtolower( JFile::getExt( $file_name ) );
+	$file_location	=	substr( $file_location, 0, strlen( $extension ) * -1 ).$extension;
+	$location		=	substr( $location, 0, strlen( $extension ) * -1 ).$extension;
+
 	$file_title =	( $file_title ) ? $file_title : '';
 	$file_descr	=	( $file_descr ) ? $file_descr : '';
 	if ( $file_title == '' && $file_descr == '' ) {
@@ -70,6 +76,11 @@ if ( $content_folder && $config['isNew'] ) {
 } else {
 	$file_location	=	$file_path.$file_name;
 	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+
+	// Disallow Uppercase extension
+	$extension		=	strtolower( JFile::getExt( $file_name ) );
+	$file_location	=	substr( $file_location, 0, strlen( $extension ) * -1 ).$extension;
+	$location		=	substr( $location, 0, strlen( $extension ) * -1 ).$extension;
 }
 
 JCckDevHelper::createFolder( JPATH_SITE.'/'.$file_path, $permissions );

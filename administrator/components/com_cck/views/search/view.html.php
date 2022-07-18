@@ -52,8 +52,8 @@ class CCKViewSearch extends JViewLegacy
 		
 		$this->css	=	array( '_'=>'',
 							   'panel_height'=>'80px',
-							   'w30'=>'span4',
-							   'w70'=>'span8',
+							   'w30'=>'span4 col-lg-4',
+							   'w70'=>'span8 col-lg-8',
 							   'wrapper'=>'container',
 							   'wrapper2'=>'row-fluid',
 							   'wrapper_tmpl'=>'span'
@@ -62,6 +62,10 @@ class CCKViewSearch extends JViewLegacy
 							   'tooltip'=>'$(".hasTooltip").tooltip({});'
 						);
 		$this->uix	=	'full';
+		
+		if ( JCck::on( '4.0' ) ) {
+			$this->css['wrapper2']	=	'row';
+		}
 		
 		$this->completeUI();
 

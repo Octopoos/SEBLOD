@@ -112,7 +112,7 @@ class CCK_Content
 		if ( isset( $row->$name ) ) {
 			$row->text	=	$row->$name;
 		}
-		$results	=	JEventDispatcher::getInstance()->trigger( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
+		$results	=	JFactory::getApplication()->triggerEvent( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
 		
 		return $row->text;
 	}

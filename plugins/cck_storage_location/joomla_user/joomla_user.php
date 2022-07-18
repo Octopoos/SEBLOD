@@ -197,7 +197,6 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		// Init
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {
@@ -238,10 +237,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				$query->where( $t_pkb.'.access IN ('.$access.')' );
 			}
 			if ( ! isset( $tables[$bridge]['fields']['publish_up'] ) ) {
-				$query->where( '( '.$t_pkb.'.publish_up = '.$db->quote( $null ).' OR '.$t_pkb.'.publish_up <= '.$db->quote( $now ).' )' );
+				$query->where( '( '.$t_pkb.'.publish_up '.JCckDatabase::null().' OR '.$t_pkb.'.publish_up <= '.$db->quote( $now ).' )' );
 			}
 			if ( ! isset( $tables[$bridge]['fields']['publish_down'] ) ) {
-				$query->where( '( '.$t_pkb.'.publish_down = '.$db->quote( $null ).' OR '.$t_pkb.'.publish_down >= '.$db->quote( $now ).' )' );
+				$query->where( '( '.$t_pkb.'.publish_down '.JCckDatabase::null().' OR '.$t_pkb.'.publish_down >= '.$db->quote( $now ).' )' );
 			}
 		}
 	}
@@ -251,9 +250,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$table		=	self::_getTable( $pk );	
+		$app	=	JFactory::getApplication();
+		$table	=	self::_getTable( $pk );
 		
 		if ( !$table ) {
 			return false;
@@ -273,14 +271,14 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		// Process
 		JPluginHelper::importPlugin( 'user' );
 		
-		$result	=	$dispatcher->trigger( 'onUserBeforeDelete', array( $table->getProperties() ) );
+		$result	=	$app->triggerEvent( 'onUserBeforeDelete', array( $table->getProperties() ) );
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
 		if ( !$table->delete() ) {
 			return false;
 		}
-		$dispatcher->trigger( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
+		$app->triggerEvent( 'onUserAfterDelete', array( $table->getProperties(), true, $table->getError() ) );
 		
 		return true;
 	}
@@ -312,7 +310,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$data['password2']	=	$data['password'];
 				}
 				if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
-					$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
+					$data['activation']					=	JApplicationHelper::getHash( JUserHelper::genRandomPassword() );
 					$data['block']						=	1;
 					$config['registration_activation']	=	$data['activation'];
 				}
@@ -659,7 +657,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	}
 	
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 		$config['join_key']	=	'pkb';
 		require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';

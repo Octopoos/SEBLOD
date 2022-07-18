@@ -12,8 +12,6 @@ defined( '_JEXEC' ) or die;
 
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
-jimport( 'joomla.utilities.simplexml' );
-jimport( 'cck.joomla.utilities.xmlelement' );
 
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );

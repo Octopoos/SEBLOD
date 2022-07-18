@@ -42,6 +42,9 @@ class plgCCK_StorageJson extends JCckPluginStorage
 				$value	=	$storage->values[$P][$field->storage_field2];
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
+					if ( is_array( $value ) && isset( $field->storage_field4 ) ) {
+						$value	=	$value[$field->storage_field4];
+					}
 				}
 			}
 		}
@@ -236,6 +239,10 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	// _initValues
 	protected function _initValues( $value )
 	{
+		if ( !is_string( $value ) ) {
+			$value 	=	json_encode( $value );
+		}
+
 		$values	=	JCckDev::fromJSON( $value );
 		
 		return $values;

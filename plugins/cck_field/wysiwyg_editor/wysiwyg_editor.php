@@ -29,7 +29,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JRequest::getVar( 'defaultvalue', '', '', 'string', JREQUEST_ALLOWRAW );
+		$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -116,7 +116,8 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 			if ( $field->bool ) {
 				// Default
 				$buttons		=	( $field->bool4 ) ? array( 'pagebreak', 'readmore' ) : false;
-				$editor			=	JFactory::getEditor( @$options2['editor'] ? $options2['editor'] : null );
+				$editor			=	isset( $options2['editor'] ) && $options2['editor'] ? $options2['editor'] : JFactory::getConfig()->get( 'editor', 'none' );
+				$editor			=	JEditor::getInstance( $editor );
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
 
 				JFactory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
@@ -179,7 +180,8 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		$field->type	=	'text';
 
 		// Prepare
-		$results		=	JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
+		$results		=	JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
+		
 		if ( is_array( $results ) && !empty( $results[0] ) ) {
 			$field		=	$results[0];
 		}
@@ -202,7 +204,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$value	=	JRequest::getVar( $name, '', 'post', 'string', JREQUEST_ALLOWRAW );
+			$value	=	JFactory::getApplication()->input->post->get( $name, '', 'raw' );
 		}
 		
 		// Make it safe

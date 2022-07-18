@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 $params	    =	JComponentHelper::getParams( 'com_cck' );
 ?>
-<div class="<?php echo $this->css['batch']; ?>" id="collapseModal">
+<div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
 		<h3><?php echo JText::_( 'COM_CCK_APP_PROCESS'); ?></h3>
@@ -77,7 +77,7 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 	<div class="modal-footer">
 		<button class="btn btn-primary" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'COM_CCK_CLOSE' ); ?></button>
 	</div>
-</div>
+</div></div></div>
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {	

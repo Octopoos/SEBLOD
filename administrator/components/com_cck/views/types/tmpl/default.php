@@ -32,7 +32,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( !empty( $this->sidebar ) ) { ?>
-	<div id="j-sidebar-container" class="span2">
+	<div id="j-sidebar-container" class="span2 top-bar">
 		<?php echo $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
@@ -95,7 +95,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
-		<tr class="row<?php echo $i % 2; ?>" height="64px;">
+		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
 			<td width="30px" class="center hidden-phone">

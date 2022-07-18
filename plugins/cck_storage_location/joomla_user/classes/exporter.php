@@ -37,6 +37,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 	public static function onCCK_Storage_LocationExport( $items, &$config = array() )
 	{
 		// Init
+		$app		=	JFactory::getApplication();
 		$excluded2	=	array( 'cck'=>'' );
 		$tables		=	array();
 		$user		=	JFactory::getUser();
@@ -87,7 +88,6 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 		// Set
 		if ( $config['prepare_output'] ) {
 			JPluginHelper::importPlugin( 'cck_field' );
-			$dispatcher	=	JEventDispatcher::getInstance();
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
@@ -116,7 +116,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 						foreach ( $config['fields'] as $name=>$field ) {
 							// DISPATCH --> EXPORT
 							$val			=	@$table->$name;
-							$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+							$app->triggerEvent( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
 							$fields[$name]	=	$field->output;
 						}
 					} else {
@@ -170,7 +170,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
-								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+								$app->triggerEvent( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
 								$fields[$key]	=	$field->output;
 							} else {
 								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
@@ -184,7 +184,7 @@ class plgCCK_Storage_LocationJoomla_User_Exporter extends plgCCK_Storage_Locatio
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
 								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};
-								$dispatcher->trigger( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
+								$app->triggerEvent( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
 								$fields[$key]	=	$field->output;
 							} else {
 								$val			=	( is_array( $tables[$field->storage_table][$item->pk]->{$field->storage_field} ) && isset( $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] ) ) ? $tables[$field->storage_table][$item->pk]->{$field->storage_field}[$name] : $tables[$field->storage_table][$item->pk]->{$field->storage_field};

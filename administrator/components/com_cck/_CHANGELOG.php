@@ -22,6 +22,200 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.22.1 Upgrade Release [24-May-2022] --------------
+
+* Security Release: XSS Vulnerability fixed. (Pagination Links)
+
+^ Export "introtext/fulltext" refactored, and improved.
+
+# Search Query with HAVING issue fixed.
+
+--------------- 4.0.0 Release Candidate 3 [01-Feb-2022] ------------
+
+! New package for testing purposes on Joomla! 4
+
+Since 4.0-rc2:
++ Can be installed directly on Joomla! 4
++ Includes a 2nd batch of Joomla! 4 compatibility/support changes
++ Introduces UI changes for the back-end template (i.e. Bootstrap 5 support)
+  >> For a sneak peek:
+  Add|Edit a field: Text, Textarea, Tabs, Group
+  Apply a Link: Content, Form
+  Apply a Live Value: Joomla! User, URL Variable
+  Apply a Restriction: URL Variable, Workflow
+  Apply a Typography: Date, HTML
+  >>  More Plug-ins and Views to come!!
+
+---------------- 3.22.0 Upgrade Release [01-Feb-2022] --------------
+
++ "n Words" Match mode added on Search Types.
++ "n Words Exact" Match mode added on Search Types.
+
++ dataLayer output added.
+  >> ex: can be triggered as following from an afterStore:
+  JFactory::getSession()->set( 'cck.data_layer', array( 'type'=>$config['type'], 'subject'=>'my_subject' ) );
+
+# Minor issues fixed.
+
+---------------- 3.21.5 Upgrade Release [03-Dec-2021] --------------
+
++ "between" operator support added on JCckContent find/search methods.
+
+# Group X (with Calendar) JS changed.
+# Joomla! 4 router behaviour (partially) allowed on Joomla! 3.
+# Regression fixed on Field (Construct)
+
+---------------- 3.21.4 Upgrade Release [01-Oct-2021] --------------
+
+# Regression fixed on Field X (for Upload File/Image)
+# Regression fixed on Group X (for Upload File/Image)
+# Various issues fixed.
+
+---------------- 3.21.3 Upgrade Release [23-Aug-2021] --------------
+
+# Regression fixed on Email
+  >> HTML was removed on Store (Textarea, Wysiwyg Editor, ...)
+# Missing column change in install.sql since SEBLOD 3.19.0
+  >> Field creation (for updated sites) issue fixed
+
+--------------- 4.0.0 Release Candidate 2 [20-Aug-2021] ------------
+
+! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
+  ^ Language filenames changes
+  ^ SQL updates related to STRICT_TRANS_TABLES
+
+! Inherits a 1st batch of Joomla! 4 compatibility/support changes from SEBLOD 3.21
+  >> More Joomla! 4 changes/fixes will be included in SEBLOD 4.0 RC 2
+  >> Additional SEBLOD capabilities/improvements will be merged (from 4-0.dev branch) before SEBLOD 4.0 GA
+
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
+
+Since 4.0-rc1:
++ includes the following message:
+  "This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com"
+
+---------------- 3.21.2 Upgrade Release [20-Aug-2021] --------------
+
+# Regression fixed on Field/Group X
+  >> HTML was removed on Store (Textarea, Wysiwyg Editor, ...)
+
+---------------- 3.21.1 Upgrade Release [19-Aug-2021] --------------
+
+# Regression fixed on Content/Search Types
+  >> HTML was removed from HTML Typography while saving the Content/Search Type.
+  >> other plug-ins (storing HTML) applied on fields (within Content/Search Types) may have been affected.
+
+--------------- 4.0.0 Release Candidate 1 [18-Aug-2021] ------------
+
+! "Placeholder" release for testing purposes on Joomla! 4, that triggers:
+  ^ Language filenames changes
+  ^ SQL updates related to STRICT_TRANS_TABLES
+
+! Inherits a 1st batch of Joomla! 4 compatibility/support changes from SEBLOD 3.21
+  >> More Joomla! 4 changes/fixes will be included in SEBLOD 4.0 RC 2
+  >> Additional SEBLOD capabilities/improvements will be merged (from 4-0.dev branch) before SEBLOD 4.0 GA
+
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
+
+---------------- 3.21.0 Upgrade Release [18-Aug-2021] --------------
+
++ "beforeRenderForm" support added on SEBLOD Form Link plug-in.
++ "No Result" can be triggered for multiple (> 1) results.
+
+^ Core Update for SEBLOD Ecommerce add-on.
+^ Inputmask JS updated.
+^ Mobile Detect updated.
+
+^ Compatibility/support changes for Joomla! 4
+  ! SEBLOD 3.21 is intended to be used on Joomla! 3.10
+  ! SEBLOD 3.21 will allow a future upgrade from Joomla! 3.10 to Joomla! 4.0 (once SEBLOD 4.0 GA will be released) 
+
+Please read the blog post "Joomla! 3.10 and Joomla! 4.0 support" on SEBLOD.com
+
+-------------------- 3.20.2 Upgrade Release [8-Mar-2021] -----------
+
+^ Core JS updated.
+^ Inputmask JS updated.
+
+! Note:
+
+Alongside ^ Edit/Form Link Behaviour change from SEBLOD 3.20, one SQL was applied to update the configuration
+in order to keep the behaviour... but it was only applied in one use case instead of 3.
+
+The 2 other queries are now included in the 3.20.0.sql file (for those who have not already updated).
+
+For those already using 3.20.0, you can choose to apply the following query manually:
+
+(required if a "cck_form" link for a "ADD NEW" behaviour is assign on a intro/content view)
+UPDATE `#__cck_core_type_field` SET `link_options` = REPLACE( `link_options`, '"form_edition":"1"', '"form_edition":"0"' ) WHERE `link` = 'cck_form' AND `link_options` LIKE '%"form":%' AND `link_options` NOT LIKE '%"form":""%';
+
+(required if a "button_free" field for a "ADD NEW" behaviour is assigned on a intro/content/list view) on a search form configuration is OK even for edit, as no pk is set
+UPDATE `#__cck_core_fields` SET `options2` = REPLACE( `options2`, '\\\"form_edition\\\":\\\"1\\\"', '\\\"form_edition\\\":\\\"0\\\"' ) WHERE `type` = "button_free" AND `options2` LIKE '%\\\"button_link\\\":\\\"cck_form\\\"%' AND `options2` NOT LIKE '\\\"form\\\":\\\"\\\"%';
+
+-------------------- 3.20.1 Upgrade Release [17-Dec-2020] ----------
+
+# Form submission (including uploads) with no storage fixed.
+# WebP output fixed for Upload Image plug-in.
+
+-------------------- 3.20.0 Upgrade Release [11-Dec-2020] ----------
+
++ RAND() (SQL Random) implemented on Search Types.
++ WebP support added.
+
++ JCckContent class updated & improved! :)
+  >> "_" method implemented within JCckContentTraitMixin Trait.
+  >> "delete", "preset" methods updated.
+  >> "findOne" method added (cf manuals).
+  >> "update" method refactored (cf manuals).
+
++ "Auto" column mode added on Checkbox/Radio plug-ins.
++ "isMacOs" method added to JCckDevice class.
++ Multiple Distance/Radius search matching allowed.
++ $context->getId() syntax process added.
++ $context->getPk() syntax process added.
++ $uri->getArray() syntax process added.
+
+^ Core Update for SEBLOD Ecommerce add-on.
+^ Core Update for SEBLOD WebServices add-on.
+^ Edit/Form Link Behaviour changed.
+
+^ Inputmask JS script updated.
+
+# "Div" fields excluded from Group X storage.
+# Link Parameters issues fixed on Upload File plugin.
+# Math functions fixed on Computation Rules.
+# Reset issue fixed on Search Module.
+
+-------------------- 3.19.0 Upgrade Release [20-May-2020] -----------
+
++ jQuery Validation script updated for Tabs
+  >> an additional message displayed: COM_CCK_PLEASE_CHECK_REQUIRED_TABS
+  >> switching to another tab now triggers validation automatically
++ Redirection without message allowed on "Process" Task.
++ Router updated (for Articles on "id-alias"):
+  >> alias retrived from id when only id is known @SEBLOD/pull/545
+
+^ Core Update for SEBLOD WebServices add-on.
+^ Inputmask JS script updated.
+
+# Empty Tags import issue fixed. @SEBLOD/pull/586, @SEBLOD/pull/587
+# Multi-sites system on MySQL 8.0 issue fixed.
+# Various issues fixed.
+
+-------------------- 3.18.2 Upgrade Release [27-Mar-2020] -----------
+
++ "Case" parameter added for "Each Word" match mode.
++ "Collate" parameter added for "Each Word" match mode.
+  >> utf8mb4_bin added
++ "onUserBeforeSave" can now return false.
+
+# Item X compatibility issue fixed.
+
+-------------------- 3.18.1 Upgrade Release [31-Jan-2020] -----------
+
+# Back-end modal scrolling issue fixed.
+# Guest Edit permissions fixed on Submit Button plug-in.
+
 -------------------- 3.18.0 Upgrade Release [19-Dec-2019] -----------
 
 + "Impersonate" capabilites implemented.

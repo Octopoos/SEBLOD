@@ -70,7 +70,7 @@ class CCKModelSession extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data	=	JRequest::get( 'post' );
+		$data	=	JFactory::getApplication()->input->post->getArray();
 		
 		return $data;
 	}

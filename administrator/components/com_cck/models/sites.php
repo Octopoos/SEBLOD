@@ -26,7 +26,7 @@ class CCKModelSites extends JModelList
 				'aliases', 'a.aliases',
 				'guest_only_group', 'a.guest_only_group',
 				'guest_only_viewlevel', 'a.guest_only_viewlevel',
-				'groups', 'a.groups',
+				'usergroups', 'a.usergroups',
 				'viewlevels', 'a.viewlevels',
 				'description', 'a.description',
 				'published', 'a.published',
@@ -47,8 +47,8 @@ class CCKModelSites extends JModelList
 			foreach ( $items as $item ) {
 				$item->name		=	str_replace( '@', '/', $item->name );
 
+				$usergroups		=	( $item->guest_only_group ) ? $item->guest_only_group.','.$item->usergroups : $item->usergroups;
 				$viewlevels		=	( $item->guest_only_viewlevel ) ? $item->guest_only_viewlevel.','.$item->viewlevels : $item->viewlevels;
-				$groups			=	( $item->guest_only_group ) ? $item->guest_only_group.','.$item->groups : $item->groups;
 
 				if ( $viewlevels ) {
 					$query			=	'SELECT COUNT(a.id) FROM #__cck_core AS a LEFT JOIN #__content AS b ON b.id = a.pk WHERE a.storage_location = "joomla_article" AND b.access IN ('.$viewlevels.');';				
@@ -56,8 +56,8 @@ class CCKModelSites extends JModelList
 				} else {
 					$item->articles	=	0;
 				}
-				if ( $groups ) {
-					$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$groups.');';
+				if ( $usergroups ) {
+					$query			=	'SELECT COUNT(DISTINCT a.user_id) FROM #__user_usergroup_map AS a WHERE a.group_id IN ('.$usergroups.');';
 					$item->users	=	JCckDatabase::loadResult( $query );
 				} else {
 					$item->users	=	0;
@@ -84,7 +84,7 @@ class CCKModelSites extends JModelList
 				'a.aliases as aliases,' .
 				'a.guest_only_group as guest_only_group,' .
 				'a.guest_only_viewlevel as guest_only_viewlevel,' .
-				'a.groups as groups,' .
+				'a.usergroups as usergroups,' .
 				'a.viewlevels as viewlevels,' .
 				'a.description as description,' .
 				'a.published as published,' .

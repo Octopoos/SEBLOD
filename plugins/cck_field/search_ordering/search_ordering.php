@@ -93,6 +93,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			$opts				=	$inherit['opts'];
 		} else {
 			$field->children	=	self::_getChildren( $field, $config );
+			
 			if ( count( $field->children ) ) {
 				foreach ( $field->children as $k=>$child ) {
 					$text		=	$child->label;
@@ -174,6 +175,8 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 				$field->form			=	'';
 				$field->form			=	$value;
 			}
+
+			$config['pagination_vars'][$field->name]	=	true;
 		} else {
 			if ( count( $field->children ) ) {
 				foreach ( $field->children as $k=>$child ) {
@@ -318,13 +321,20 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 					$dir		=	( isset( $options2['options'][$i]['direction'] ) && $options2['options'][$i]['direction'] ) ? $options2['options'][$i]['direction'] : 'ASC';
 					$prepend	=	( isset( $options2['options'][$i]['prepend'] ) && $options2['options'][$i]['prepend'] ) ? $options2['options'][$i]['prepend'] : '';
 					
+					if ( $name == 'random' ) {
+						$dir	=	'';
+					}
 					if ( $parent->bool ) {
-						$idx	=	$fields2[$name]->name.':'.strtolower( $dir );
+						$idx	=	$fields2[$name]->name.( $dir ? ':'.strtolower( $dir ) : '' );
 					} else {
 						$idx	=	$i;
 					}
+					if ( $name == 'random' ) {
+						$dir	=	'rand';
+					}
 					$fields[$idx]				=	clone $fields2[$name];
 					$fields[$idx]->match_mode	=	strtoupper( $dir );
+
 					if ( $override ) {
 						foreach ( $fieldnames as $k=>$f ) {
 							if ( $name == $f->key ) {

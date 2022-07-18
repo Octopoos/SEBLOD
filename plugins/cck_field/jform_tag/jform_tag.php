@@ -198,10 +198,16 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 				foreach ( $values as $value ) {
 					$value		=	trim( $value );
 
+					if ( empty( $value ) ) {
+						continue;
+					}
+
 					$parent_id	=	$config['params']['unknown_tags'] ? $config['params']['tags_parent'] : $default_id;
 					$parts		=	explode( $config['glue'], $value );
 
 					foreach ( $parts as $part ) {
+						$part = trim( $part );
+						
 						$pk	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__tags WHERE published != -2 AND title = "'.$part.'"' );
 
 						if ( !$pk ) {

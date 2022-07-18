@@ -84,8 +84,8 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 	protected function prepareData()
 	{
 		$app					=	JFactory::getApplication();
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		
 		if ( ( ( $data['parent_id'] != $data['parent_db'] ) && ( $data['parent_id'] != $data['jform']['id'] ) ) || ( $app->input->getCmd( 'task' ) == 'save2copy' ) ) {
 			$limit				=	Helper_Folder::prepareTree( $data['parent_id'], $data['title'] );

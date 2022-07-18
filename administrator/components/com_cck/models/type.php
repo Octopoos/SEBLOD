@@ -142,13 +142,18 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data					=	JRequest::get( 'post' );
-		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
+		$app					=	JFactory::getApplication();
+		$data					=	$app->input->post->getArray();
+		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
 		$P						=	'template_'.$client;
 		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
 		$P						=	'options_'.$client;
-		$data[$P]				=	JCckDev::toJSON( @$data['options'] );
+
+		if ( !isset( $data['options'] ) ) {
+			$data['options']	=	array();
+		}
+		$data[$P]				=	JCckDev::toJSON( $data['options'] );
 		
 		if ( ! $data['id'] ) {
 			$clients			=	array( 'admin', 'site', 'content', 'intro' );
@@ -176,7 +181,8 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$data	=	JRequest::get( 'post' );
+		$app	=	JFactory::getApplication();
+		$data	=	$app->input->post->getArray();
 		$client	=	$data['client'];
 		
 		if ( $data['fromclient'] ) {
@@ -200,6 +206,12 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			$table->store();
 		} else {
 			if ( isset( $data['li_end'] ) && $data['li_end'] == '1' ) {
+				$raw_data	=	$app->input->post->getArray( array( 'ffp'=>'raw' ) );
+
+				if ( isset( $raw_data['ffp'] ) ) {
+					$data['ffp']	=	$raw_data['ffp'];
+				}
+
 				$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
 			}
 		}
@@ -254,9 +266,10 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 					$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
 					$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
 					$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
+					$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
 					$position			=	substr( $k, 4 );
 					if ( $next != 'position' ) {
-						$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'" )';
+						$positions	.=	', ( '.(int)$typeId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
 					}
 				} else {
 					$assigned	.= ', ( '.(int)$typeId.', '.(int)$v.', "'.$client.'", '.$ordering.', '.plgCCK_FieldGeneric_More::$method( $k, $params, $position, $client ).' )';
@@ -270,7 +283,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			if ( $positions ) {
 				$positions	=	substr( $positions, 1 );
 				JCckDatabase::execute( 'DELETE FROM #__cck_core_type_position WHERE typeid = '.(int)$typeId . ' AND client = "'.$client.'"' );
-				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height ) VALUES ' . $positions );
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_type_position ( typeid, position, client, legend, variation, variation_options, width, height, css ) VALUES ' . $positions );
 			}
 		}
 	}

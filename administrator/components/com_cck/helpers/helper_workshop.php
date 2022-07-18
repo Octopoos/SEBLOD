@@ -466,6 +466,8 @@ class Helper_Workshop
 											'any_exact'=>JHtml::_( 'select.option', 'any_exact', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT' ) ),
 											'each'=>JHtml::_( 'select.option', 'each', JText::_( 'COM_CCK_MATCH_EACH_WORD' ) ),
 											'each_exact'=>JHtml::_( 'select.option', 'each_exact', JText::_( 'COM_CCK_MATCH_EACH_WORD_EXACT' ) ),
+											'n'=>JHtml::_( 'select.option', 'n', JText::_( 'COM_CCK_MATCH_N_WORDS' ) ),
+											'n_exact'=>JHtml::_( 'select.option', 'n_exact', JText::_( 'COM_CCK_MATCH_N_WORDS_EXACT' ) ),
 											'nested_exact'=>JHtml::_( 'select.option', 'nested_exact', JText::_( 'COM_CCK_MATCH_NESTED_EXACT' ) ),
 											'113'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);

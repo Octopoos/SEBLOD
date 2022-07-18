@@ -269,7 +269,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		// Init
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 		
 		// Prepare
 		if ( ! isset( $tables[self::$table] ) ) {
@@ -290,10 +289,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$query->where( $t_pk.'.access IN ('.$access.')' );
 		}
 		if ( ! isset( $tables[self::$table]['fields']['publish_up'] ) ) {
-			$query->where( '( '.$t_pk.'.publish_up = '.$db->quote( $null ).' OR '.$t_pk.'.publish_up <= '.$db->quote( $now ).' )' );
+			$query->where( '( '.$t_pk.'.publish_up '.JCckDatabase::null().' OR '.$t_pk.'.publish_up <= '.$db->quote( $now ).' )' );
 		}
 		if ( ! isset( $tables[self::$table]['fields']['publish_down'] ) ) {
-			$query->where( '( '.$t_pk.'.publish_down = '.$db->quote( $null ).' OR '.$t_pk.'.publish_down >= '.$db->quote( $now ).' )' );
+			$query->where( '( '.$t_pk.'.publish_down '.JCckDatabase::null().' OR '.$t_pk.'.publish_down >= '.$db->quote( $now ).' )' );
 		}
 	}
 	
@@ -302,9 +301,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$table		=	self::_getTable( $pk );
+		$app	=	JFactory::getApplication();
+		$table	=	self::_getTable( $pk );
 		
 		if ( !$table ) {
 			return false;
@@ -322,14 +320,14 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 		
 		// Process
-		$result	=	$dispatcher->trigger( 'onContentBeforeDelete', array( self::$context, $table ) );
+		$result	=	$app->triggerEvent( 'onContentBeforeDelete', array( self::$context, $table ) );
 		if ( in_array( false, $result, true ) ) {
 			return false;
 		}
 		if ( !$table->delete( $pk ) ) {
 			return false;
 		}
-		$dispatcher->trigger( 'onContentAfterDelete', array( self::$context, $table ) );
+		$app->triggerEvent( 'onContentAfterDelete', array( self::$context, $table ) );
 		
 		return true;
 	}
@@ -395,8 +393,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		// Store
 		JPluginHelper::importPlugin( 'content' );
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
+		$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 		if ( $isNew === true && parent::g_isMax( $table->{self::$author}, $table->{self::$parent}, $config ) ) {
 			$config['error']	=	true;
 
@@ -447,7 +444,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$config['parent']	=	$table->{self::$parent};
 		
 		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
-		$dispatcher->trigger( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
+		$app->triggerEvent( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 
 		// Associations
 		if ( JCckDevHelper::hasLanguageAssociations() ) {
@@ -724,6 +721,23 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( isset( $query['id'] ) ) {
 			if ( self::$sef[$config['doSEF']] == 'full' ) {
 				$id		=	$query['id'];
+				
+				// Make sure we have the id and the alias
+				if ( strpos( $query['id'], ':' ) === false ) {
+					$db			=	JFactory::getDbo();
+					$dbQuery	=	$db->getQuery( true )
+									   ->select( 'alias' )
+									   ->from( '#__content' )
+									   ->where( 'id='.(int)$query['id'] );
+					
+					$db->setQuery( $dbQuery );
+
+					$alias	=	$db->loadResult();
+
+					if ( $alias != '' ) {
+						$id	=	$id.':'.$alias;
+					}
+				}
 			} else {
 				if ( strpos( $query['id'], ':' ) !== false ) {
 					$idArray	=	explode( ':', $query['id'], 2 );
@@ -862,7 +876,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 
 	// parseRoute
-	public static function parseRoute( &$vars, $segments, $n, $config )
+	public static function parseRoute( &$vars, &$segments, $n, $config )
 	{
 		$id					=	0;
 		$isMultiAlias		=	false;
@@ -961,6 +975,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		} else {
 			$vars['id']	=	$id;
 		}
+		if ( ( JCck::on( '4.0' ) || !JCck::on( '4.0' ) && JComponentHelper::getParams( 'com_content' )->get( 'sef_advanced', 0 ) ) && ( $n == 1 || $n == 2 ) ) {
+			$segments	=	array();
+		}
 	}
 	
 	// setRoutes
@@ -1042,7 +1059,6 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	{
 		$db		=	JFactory::getDbo();
 		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
-		$null	=	$db->getNullDate();
 
 		$states	=	self::getStaticParams()->get( 'allowed_status', '1,2' );
 		$states	=	explode( ',', $states );
@@ -1052,8 +1068,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				.	' FROM '.self::$table
 				.	' WHERE '.self::$key.' = '.(int)$pk
 				.	' AND '.self::$status.' '.$states
-				.	' AND ( publish_up = '.$db->quote( $null ).' OR publish_up <= '.$db->quote( $now ).' )'
-				.	' AND ( publish_down = '.$db->quote( $null ).' OR publish_down >= '.$db->quote( $now ).' )'
+				.	' AND ( publish_up '.JCckDatabase::null().' OR publish_up <= '.$db->quote( $now ).' )'
+				.	' AND ( publish_down '.JCckDatabase::null().' OR publish_down >= '.$db->quote( $now ).' )'
 				;
 		
 		if ( $checkAccess ) {

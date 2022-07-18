@@ -293,7 +293,7 @@ class plgSystemCCK extends JPlugin
 
 			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
 				if ( !$user->authorise( 'core.admin' ) ) {
-					$groups		=	explode( ',', $this->site->groups );
+					$groups		=	explode( ',', $this->site->usergroups );
 					$hasGroups	=	0;
 
 					if ( count( $groups ) ) {
@@ -317,7 +317,7 @@ class plgSystemCCK extends JPlugin
 
 			// Groups
 			$authgroups	=	$user->getAuthorisedGroups();
-			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
+			$nogroups	=	JCckDatabase::loadColumn( 'SELECT usergroups FROM #__cck_core_sites WHERE id != '.$this->site->id );
 			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
 			$multisite	=	false;
 
@@ -775,8 +775,17 @@ class plgSystemCCK extends JPlugin
 					}
 				}
 			}
+
+			// Data Layer
+			$session	=	JFactory::getSession();
+			$page_data	=	$session->get( 'cck.data_layer', null );
+
+			if ( $page_data ) {
+				$doc->addScriptDeclaration( 'window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).');' );
+				$session->clear( 'cck.data_layer' );
+			}
 		}
-		if ( $app->isClient( 'site' ) && isset( $app->cck_app['Header'] ) ) {
+		if ( $app->isClient( 'site' ) && isset( $app->cck_app ) && isset( $app->cck_app['Header'] ) ) {
 			if ( count( $app->cck_app['Header'] ) ) {
 				foreach ( $app->cck_app['Header'] as $k=>$v ) {
 					$app->setHeader( $k, $v, true );
@@ -986,17 +995,41 @@ class plgSystemCCK extends JPlugin
 		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
 		 	return false;
 		} else {
-			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
-													. ' FROM #__menu WHERE'
-													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
-			$path	=	JUri::getInstance()->getPath();
-			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+			$api_paths	=	JCckDatabase::loadObjectList( 'SELECT path'
+														. ' FROM #__menu WHERE'
+														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
+			
+			if ( !count( $api_paths ) ) {
+				return false;
+			}
 
-			if ( count( $apis ) ) {
-				foreach ( $apis as $api ) {
-					$api	=	$prefix.'/'.$api->path.'/';
+			$base_path		=	JUri::getInstance()->getPath();
+			$language_codes	=	array();
+			$prefix			=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
-					$pos	=	strpos( $path, $api );
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				$language_codes	=	JCckDevHelper::getLanguageCodes();
+
+				foreach ( $language_codes as $k=>$sef ) {
+					$language_codes[$k]	=	$prefix.'/'.$sef;
+				}
+			}
+
+			if ( count( $language_codes ) ) {
+				foreach ( $api_paths as $api_path ) {
+					foreach ( $language_codes as $sef ) {
+						$path	=	$sef.'/'.$api_path->path.'/';
+						$pos	=	strpos( $base_path, $path );
+
+						if ( $pos !== false && $pos == 0 ) {
+							return true;
+						}
+					}
+				}	
+			} else {
+				foreach ( $api_paths as $api_path ) {
+					$path	=	$prefix.'/'.$api_path->path.'/';
+					$pos	=	strpos( $base_path, $path );
 
 					if ( $pos !== false && $pos == 0 ) {
 						return true;
@@ -1066,6 +1099,17 @@ class plgSystemCCK extends JPlugin
 	// _setLegacyMode
 	protected function _setLegacyMode()
 	{
+		// Joomla!
+		if ( !class_exists( 'JCck' ) ) {
+			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+
+			if ( JCck::on( '4.0' ) ) {
+				// 
+			}
+		}
+
+		// SEBLOD
 		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
 
 		if ( !$legacy ) {

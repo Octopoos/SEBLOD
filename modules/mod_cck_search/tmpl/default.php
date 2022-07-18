@@ -49,7 +49,7 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 <div class="clr"></div>
 <div>
 <?php } ?>
-<input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" />
+<input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" data-cck-keep-for-search="" />
 <input type="hidden" name="task" value="search" />
 <?php if ( !JFactory::getConfig()->get( 'sef' ) ) { ?>
 <input type="hidden" name="option" value="com_cck" />

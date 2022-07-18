@@ -66,7 +66,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 }
 if ( $this->show_form ) {
 	if ( $this->show_form == 1 ) {
-		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 
 		if ( $this->raw_rendering ) {
 			echo $this->form.$this->loadTemplate( 'hidden' );
@@ -77,7 +77,7 @@ if ( $this->show_form ) {
 			echo '</form>';
 		}
 	} elseif ( $this->show_form == 2 && $this->form_wrapper ) {
-		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 	}
 }
 
@@ -86,7 +86,7 @@ echo $this->loadTemplate( 'list' );
 if ( $this->show_form ) {
 	if ( $this->show_form == 2 ) {
 		if ( !$this->form_wrapper ) {
-			echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : JRoute::_( 'index.php?option='.$this->option ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+			echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 		}
 		if ( $this->raw_rendering ) { 
 			echo $this->form.$this->loadTemplate( 'hidden' );

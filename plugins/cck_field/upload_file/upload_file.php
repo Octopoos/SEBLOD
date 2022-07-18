@@ -158,6 +158,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->linked		=	true;
 			$field->html		=	'<a href="'.$field->link.'" title="'.$file_title.'">'.$field->text.'</a>';
 			$field->typo_target	=	'text';
+
+			JCckPluginLink::setLinkAttr( $field );
 		}
 		$field->value			=	$value;
 	}
@@ -523,52 +525,50 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$legal_ext	=	$options2['legal_extensions'];
 			}
 		}
-		$legal_ext	=	explode( ',', $legal_ext );
-		$userfile 	=	( $array_x ) ? JRequest::getVar( $parent, null, 'files', 'array' ) : JRequest::getVar( $name, null, 'files', 'array' );
+		$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
+		$legal_ext		=	explode( ',', $legal_ext );
+
+		if ( (int)$forbidden_ext ) {
+			$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null, 'raw' ) : $app->input->files->get( $name, null, 'raw' );
+		} else {
+			$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
+		}
+		
+		$userfile_more	=	false;
+
 		if ( is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
-				$userfile_name			=	$userfile['name'][$xk][$name];
-				$userfile_type			=	$userfile['type'][$xk][$name];
-				$userfile_tmp_name		=	$userfile['tmp_name'][$xk][$name];
-				$userfile_error			=	$userfile['error'][$xk][$name];
-				$userfile_size			=	$userfile['size'][$xk][$name];
-				$userfile				=	null;
-				$userfile				=	array();
-				$userfile['name']		=	$userfile_name;
-				$userfile['type']		=	$userfile_type;
-				$userfile['tmp_name']	=	$userfile_tmp_name;
-				$userfile['error']		=	$userfile_error;
-				$userfile['size']		=	$userfile_size;
+				$userfile		=	self::_getUserFile( false, $userfile, $xk, $name );
 			} else {
-				$userfile_name			=	$userfile['name'][$xk];
-				$userfile_type			=	$userfile['type'][$xk];
-				$userfile_tmp_name		=	$userfile['tmp_name'][$xk];
-				$userfile_error			=	$userfile['error'][$xk];
-				$userfile_size			=	$userfile['size'][$xk];
-				$userfile				=	null;
-				$userfile				=	array();
-				$userfile['name']		=	$userfile_name;
-				$userfile['type']		=	$userfile_type;
-				$userfile['tmp_name']	=	$userfile_tmp_name;
-				$userfile['error']		=	$userfile_error;
-				$userfile['size']		=	$userfile_size;
-				if ( is_array( $itemPath ) ) {
-					$itemPath	=	$itemPath[$xk];
-				}
-
-				if ( $options2['multivalue_mode'] ) {
-					if ( is_array( $item_custom_dir ) ) {
-						$item_custom_dir	=	trim( $item_custom_dir[$xk] );
-					}
-					if ( is_array( $item_custom_title ) ) {
-						$item_custom_title	=	trim( $item_custom_title[$xk] );
-					}
-				}
-				if ( is_array( $deleteBox ) ) {
-					$deleteBox	=	$deleteBox[$xk];
-				}
+				$userfile		=	self::_getUserFile( false, $userfile, $xk );
+				$userfile_more	=	true;
+			}
+		} elseif ( is_array( $userfile[$xk] ) ) {
+			if ( $array_x ) {
+				$userfile		=	self::_getUserFile( true, $userfile, $xk, $name );
+			} else {
+				$userfile		=	self::_getUserFile( true, $userfile, $xk );
+				$userfile_more	=	true;
 			}
 		}
+		if ( $userfile_more ) {
+			if ( is_array( $itemPath ) ) {
+				$itemPath	=	$itemPath[$xk];
+			}
+
+			if ( $options2['multivalue_mode'] ) {
+				if ( is_array( $item_custom_dir ) ) {
+					$item_custom_dir	=	trim( $item_custom_dir[$xk] );
+				}
+				if ( is_array( $item_custom_title ) ) {
+					$item_custom_title	=	trim( $item_custom_title[$xk] );
+				}
+			}
+			if ( is_array( $deleteBox ) ) {
+				$deleteBox	=	$deleteBox[$xk];
+			}
+		}
+
 		// Short Format Path
 		if ( @$options2['storage_format'] ) {
 			$itemPath	=	$itemPrePath.$itemPath;
@@ -706,8 +706,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$forbidden_ext	=	( $options2['forbidden_extensions'] != '' ) ? $options2['forbidden_extensions'] : JCck::getConfig_Param( 'media_content_forbidden_extensions', '0' );
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>$forbidden_ext,
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>(int)$forbidden_ext,
 									   'file_name'=>$item_custom_name, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, 'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field'=>$field->storage_field, 'storage_field2'=>($field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$item_custom_title );
@@ -836,6 +835,50 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		
 		return $bool;
+	}
+
+	// _getUserFile
+	protected static function _getUserFile( $idx, $userfile, $xk, $name = '' )
+	{
+		if ( $name != '' ) {
+			if ( $idx ) {
+				$userfile_name			=	$userfile[$xk][$name]['name'];
+				$userfile_type			=	$userfile[$xk][$name]['type'];
+				$userfile_tmp_name		=	$userfile[$xk][$name]['tmp_name'];
+				$userfile_error			=	$userfile[$xk][$name]['error'];
+				$userfile_size			=	$userfile[$xk][$name]['size'];
+			} else {
+				$userfile_name			=	$userfile['name'][$xk][$name];
+				$userfile_type			=	$userfile['type'][$xk][$name];
+				$userfile_tmp_name		=	$userfile['tmp_name'][$xk][$name];
+				$userfile_error			=	$userfile['error'][$xk][$name];
+				$userfile_size			=	$userfile['size'][$xk][$name];
+			}
+		} else {
+			if ( $idx ) {
+				$userfile_name			=	$userfile[$xk]['name'];
+				$userfile_type			=	$userfile[$xk]['type'];
+				$userfile_tmp_name		=	$userfile[$xk]['tmp_name'];
+				$userfile_error			=	$userfile[$xk]['error'];
+				$userfile_size			=	$userfile[$xk]['size'];
+			} else {
+				$userfile_name			=	$userfile['name'][$xk];
+				$userfile_type			=	$userfile['type'][$xk];
+				$userfile_tmp_name		=	$userfile['tmp_name'][$xk];
+				$userfile_error			=	$userfile['error'][$xk];
+				$userfile_size			=	$userfile['size'][$xk];	
+			}
+			
+		}
+
+		$userfile				=	array();
+		$userfile['name']		=	$userfile_name;
+		$userfile['type']		=	$userfile_type;
+		$userfile['tmp_name']	=	$userfile_tmp_name;
+		$userfile['error']		=	$userfile_error;
+		$userfile['size']		=	$userfile_size;
+
+		return $userfile;
 	}
 }
 ?>

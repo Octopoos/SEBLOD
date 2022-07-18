@@ -5,11 +5,11 @@
 	<packagename>cck</packagename>
 	<packager>Octopoos</packager>
 	<packagerurl>https://www.seblod.com</packagerurl>
-	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<copyright>Copyright (C) 2009 - 2021 SEBLOD. All Rights Reserved.</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.18.0</version>
+	<version>3.22.1</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	
@@ -26,7 +26,6 @@
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->
-			<file type="module" id="mod_cck_menu" client="administrator">mod_cck_menu.zip</file>
 			<file type="module" id="mod_cck_quickadd" client="administrator">mod_cck_quickadd.zip</file>
 			<file type="module" id="mod_cck_quickicon" client="administrator">mod_cck_quickicon.zip</file>
 			<!-- Module // Site -->

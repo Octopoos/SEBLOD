@@ -108,8 +108,7 @@ class CCK_List
 							'storage_location',
 							'storage_table',
 							'storage_field',
-							'storage_field2',
-							'storage_params'
+							'storage_field2'
 						);
 
 		return $t.'.'.implode( ', '.$t.'.', $columns );
@@ -189,9 +188,9 @@ class CCK_List
 	public static function getList( $ordering, $areas, $fields, $fields_order, &$config, $current, $options, $user )
 	{
 		JPluginHelper::importPlugin( 'search', 'cck' );
+		$app		=	JFactory::getApplication();
 		$doCache	=	$options->get( 'cache' );
 		$doDebug	=	(int)$options->get( 'debug' );
-		$dispatcher	=	JEventDispatcher::getInstance();
 
 		// Debug
 		if ( $doDebug ) {
@@ -204,10 +203,10 @@ class CCK_List
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
 			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
-			$data		=	$cache->call( array( $dispatcher, 'trigger' ), 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
+			$data		=	$cache->call( array( $app, 'triggerEvent' ), 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
 		} else {
 			$isCached	=	' [Cache=OFF]';
-			$data		=	$dispatcher->trigger( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
+			$data		=	$app->triggerEvent( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
 		}
 
 		if ( isset( $data[0] ) ) {
@@ -273,7 +272,6 @@ class CCK_List
 							'storage_table',
 							'storage_field',
 							'storage_field2',
-							'storage_params',
 							'typo_label',
 							'typo_options',
 							'validation',

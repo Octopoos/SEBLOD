@@ -17,12 +17,12 @@ JCckDev::initScript( 'link', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LINK_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'bool4'=>1, 'required'=>'' ) );
-		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
-		echo '<li><label>'.JText::_( 'COM_CCK_EDITION' ).'</label>'
-			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'options'=>'No=0||Yes=1||Yes as copy=2', 'storage_field'=>'form_edition' ) )
+		echo '<li><label>'.JText::_( 'COM_CCK_ACTION' ).'</label>'
+			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'options'=>'Add=0||Edit=1||Edit As Copy=2', 'storage_field'=>'form_edition' ) )
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'defaultvalue'=>'', 'options'=>'1=1||2=2||3=3||4=4||5=5||Final=0', 'bool8'=>0, 'storage_field'=>'form_edition_stage' ) )
 			. '</li>';
+		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
+		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'bool4'=>1, 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'form_fieldname' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Redirection', 'selectlabel'=>'Auto', 'options'=>'Inherited=-1', 'storage_field'=>'redirection' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
@@ -49,7 +49,7 @@ JCckDev::initScript( 'link', $this->item );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('#form_edition,#blank_li').isVisibleWhen('form','');
+	$('#form_edition_stage').isVisibleWhen('form_edition','1',false);
 	$('#form_fieldname').isVisibleWhen('form','-2');
 	$('#title_custom').isVisibleWhen('title','2,3',false);
 	$('#redirection_custom,#blank_li').isVisibleWhen('redirection','');

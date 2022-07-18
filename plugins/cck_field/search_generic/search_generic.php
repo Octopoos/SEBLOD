@@ -122,6 +122,8 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 			$form			=	JCckDevField::getForm( $field->extended, $value, $config, array( 'id'=>$field->id, 'name'=>$field->name, 'variation'=>$field->variation ) );
 			$field->form	=	$form;
 			$field->value	=	$value;
+
+			$config['pagination_vars'][$field->name]	=	true;
 		} else {
 			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 			
