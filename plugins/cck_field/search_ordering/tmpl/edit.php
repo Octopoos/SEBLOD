@@ -27,7 +27,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 									JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>'Field Optional', 'required'=>'' ) ),
 									JCckDev::renderForm( 'core_options', $options, $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) ),
-									JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'defaultvalue'=>'1', 'options'=>'Numeric=0||Text=1' ) )
+									JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Mode', 'type'=>'radio', 'defaultvalue'=>'1', 'options'=>'Numeric=0||Text=1', 'css'=>'btn-group' ) )
 								),
 							),
 							array(

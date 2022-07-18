@@ -114,7 +114,7 @@ class Helper_Workshop
 				.	'<div class="col2"><div class="colc">'.$variation.'<span class="c_var'.$hide.'" name="'.$name.'">+</span>'.'</div></div></div>'
 				.	'<div class="pane lb" style="display: none;">'
 				.	'<div class="col1"><div class="colc">'.$css.'</div></div>'
-				.	'<div class="col2"><div class="colc">'.$width.$height.'</div></div>'
+				.	'<div class="col2"><div class="colc g3">'.$width.$height.'</div></div>'
 				.	'</div>'
 				.	'</li>';
 		echo $pos;
