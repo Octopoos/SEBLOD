@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.0 Release Preview 1 [19-Jul-2022] ------------
+
+! Joomla! 4.x support
+  >> Intended to be installed on a fresh Joomla! 4 for new developments.
+
++ Minima Template included in Core Package.
++ List Template included in Core Package.
+
 --------------- 3.22.1 Upgrade Release [24-May-2022] --------------
 
 * Security Release: XSS Vulnerability fixed. (Pagination Links)
