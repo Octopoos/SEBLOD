@@ -10,14 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+if ( JCck::on( '4.0' ) {
+	use Joomla\CMS\HTML\HTMLHelper;
+}
+
 // JCckDevTabs
 abstract class JCckDevTabs
 {
 	// end
 	public static function end()
 	{
-		$html	=	JHtml::_( 'bootstrap.endTab' )
-			 	.	JHtml::_( 'bootstrap.endTabSet' );
+		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$html	=	HTMLHelper::_( 'uitab.endTab' )
+			 		.	HTMLHelper::_( 'uitab.endTabSet' );
+		} else {
+			$html	=	JHtml::_( 'bootstrap.endTab' )
+				 	.	JHtml::_( 'bootstrap.endTabSet' );
+		}
 
 		return $html;
 	}
@@ -25,8 +34,13 @@ abstract class JCckDevTabs
 	// open
 	public static function open( $selector, $id, $text )
 	{
-		$html	=	JHtml::_( 'bootstrap.endTab' )
-			 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$html	=	HTMLHelper::_( 'uitab.endTab' )
+				 	.	HTMLHelper::_( 'uitab.addTab', $selector, $id, $text );
+		} else {
+			$html	=	JHtml::_( 'bootstrap.endTab' )
+				 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+		}
 
 		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
         	static $tabScriptLayout	=	null;
@@ -48,8 +62,16 @@ abstract class JCckDevTabs
 	// start
 	public static function start( $selector, $id, $text, $params )
 	{
-        $html	=	JHtml::_( 'bootstrap.startTabSet', $selector, $params )
-        	 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$params['breakpoint']	=	768;
+			$params['recall']		=	true;
+
+			$html	=	HTMLHelper::_( 'uitab.startTabSet', $selector, $params )
+	        	 	.	HTMLHelper::_( 'uitab.addTab', $selector, $id, $text );
+		} else {
+			$html	=	JHtml::_( 'bootstrap.startTabSet', $selector, $params )
+	        	 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+		}
 
         if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 			$tabScriptLayout	=	new JLayoutFile( 'libraries.cms.html.bootstrap.addtabscript' );

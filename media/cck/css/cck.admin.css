@@ -416,3 +416,6 @@ div.horizontal .adminformlist li a:visited.cck_preview{
     z-index: 2;
     position: relative;
 }
+
+/* JOOMLA 4.x */
+body.task-display div.vertical div.cck_forms{float:none;}
