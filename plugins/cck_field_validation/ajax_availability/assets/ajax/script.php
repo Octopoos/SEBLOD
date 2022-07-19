@@ -26,16 +26,18 @@ $table		=	$app->input->get( 'avTable', '' );
 if ( $where ) {
 	$fields	=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ("'.str_replace( ',', '","', $where ).'")', 'name' );
 	$where	=	explode( ',', $where );
+
 	foreach ( $where as $w ) {
-		if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard' && $fields[$w]->storage_table == '#__'.$table ) {
+		if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard'  ) {
 			$v		=	$app->input->get( $w );
+
 			if ( $v != '' ) {
-				$and	.=	' '.$fields[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
+				$and	.=	' AND '.$fields[$w]->storage_field.'="'.JCckDatabase::escape( $v ).'"';
 			}
 		}
 	}
-	$and	=	( $and ) ? ' AND'.$and : '';
 }
+
 if ( $key ) {
 	$pk		=	$app->input->getInt( 'avPk', 0 );
 	$pv		=	$app->input->getString( 'avPv', '' );
