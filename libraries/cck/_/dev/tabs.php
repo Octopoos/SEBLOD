@@ -10,9 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( JCck::on( '4.0' ) {
-	use Joomla\CMS\HTML\HTMLHelper;
-}
+use Joomla\CMS\HTML\HTMLHelper;
 
 // JCckDevTabs
 abstract class JCckDevTabs
