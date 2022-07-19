@@ -1,4 +1,4 @@
-
+app
 UPDATE `#__modules` SET `published` = 0 WHERE `module` IN ("mod_cck_menu","mod_cck_quickadd");
 
 --
@@ -21,11 +21,13 @@ ALTER TABLE `#__cck_core` CHANGE `pk` `pk` INT(10) UNSIGNED NOT NULL DEFAULT '0'
 ALTER TABLE `#__cck_core` CHANGE `pkb` `pkb` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__cck_core` CHANGE `author_id` `author_id` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__cck_core` CHANGE `parent_id` `parent_id` INT(10) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `#__cck_core` CHANGE `store_id` `store_id` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__cck_core` CHANGE `download_hits` `download_hits` INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `#__cck_core` CHANGE `storage_location` `storage_location` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__cck_core` CHANGE `storage_table` `storage_table` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__cck_core` CHANGE `app` `app` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+ALTER TABLE `#__cck_core` CHANGE `storage_table` `storage_table` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+ALTER TABLE `#__cck_core` CHANGE `app` `app` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
 ALTER TABLE `#__cck_core` CHANGE `date_time` `date_time` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `#__cck_core` CHANGE `author_session` `author_session` VARCHAR(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
 --
 

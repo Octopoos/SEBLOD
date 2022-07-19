@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core` (
   `author_id` int(10) UNSIGNED NOT NULL  DEFAULT '0',
   `author_session` varchar(191),
   `parent_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `store_id` int(10) UNSIGNED,
+  `store_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `download_hits` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `date_time` datetime NULL DEFAULT NULL,
   `app` varchar(255) NOT NULL DEFAULT '',
