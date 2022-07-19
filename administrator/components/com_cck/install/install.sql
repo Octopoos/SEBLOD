@@ -1656,7 +1656,7 @@ INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
   `id` int(10) UNSIGNED NOT NULL,
-  `cck` varchar(50) NOT NULL,
+  `cck` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_fr` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
@@ -1670,7 +1670,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_categories` (
   `id` int(10) UNSIGNED NOT NULL,
-  `cck` varchar(50) NOT NULL,
+  `cck` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_fr` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
