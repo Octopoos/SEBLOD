@@ -111,7 +111,10 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 
 		// Location
 		if ( $location ) {
-			if ( !JFactory::getApplication()->{'is'.$location}() ) {
+			if ( $location == 'admin' ) {
+				$location	=	'administrator';
+			}
+			if ( !JFactory::getApplication()->isClient( $location ) ) {
 				$field->display	=	0;
 				$field->state	=	0;
 				return false;
