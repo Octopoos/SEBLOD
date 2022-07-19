@@ -89,5 +89,6 @@ UPDATE `#__cck_core_fields` SET `label` = 'clear' WHERE `name` IN ("icon_delete"
 
 ALTER TABLE `#__cck_store_item_content` CHANGE `cck` `cck` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
 ALTER TABLE `#__cck_store_item_categories` CHANGE `cck` `cck` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
+ALTER TABLE `#__cck_store_item_users` CHANGE `cck` `cck` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
 
 --
