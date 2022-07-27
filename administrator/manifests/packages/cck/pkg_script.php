@@ -110,7 +110,7 @@ class pkg_cckInstallerScript
 			</a>
 			<br>
 		</div>
-		<?php if ( JCck::on( '4' ) && $initial_release < 4 && !(int)JCck::getConfig_Param( 'sql_legacy', '0' ) ) { ?>
+		<?php if ( $type == 'update' && JCck::on( '4' ) && $initial_release < 4 && !(int)JCck::getConfig_Param( 'sql_legacy', '0' ) ) { ?>
 		<hr>
 		<h2 style="color:red;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3' ); ?></h2>
 		<div style="border: 3px solid red;color: red;padding:12px;">
