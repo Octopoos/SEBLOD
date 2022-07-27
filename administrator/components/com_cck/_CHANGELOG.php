@@ -22,6 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.0 Release Preview 1 [27-Jul-2022] ------------
+
+! Joomla! 4.x support
+  >> Intended to be installed on a fresh Joomla! 4 for new developments.
+  >> Bringing additional UI tweaks and initial upgrade changes.
+
+! STRICT_TRANS_TABLES solution (1/2) implemented.
+
+# Back-end (Construction UI) issue on PHP 8.x fixed.
+# Warnings on PHP 8.x fixed.
+
 --------------- 4.0.0 Release Preview 1 [19-Jul-2022] ------------
 
 ! Joomla! 4.x support
