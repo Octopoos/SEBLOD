@@ -38,7 +38,7 @@ class CommonHelper_Display
 	}
 	
 	// quickJGrid
-	public static function quickJGrid( $type, $value = 0, $i, $canChange = true )
+	public static function quickJGrid( $type, $value, $i, $canChange = true )
 	{
 		if ( JCck::on( '4.0' ) && $type == 'featured' ) {
 			$html	=	'<a href="javascript:void(0);" class="tbody-icon no-link"><span class="'.( $value ? 'icon-color-featured ' : '' ).'icon-star"></span></a>';

@@ -153,7 +153,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 
 	// onCCK_Storage_LocationPrepareSearch
-	public function onCCK_Storage_LocationPrepareSearch( $type, &$query, &$tables, &$t, &$config = array(), &$inherit = array(), $user )
+	public function onCCK_Storage_LocationPrepareSearch( $type, &$query, &$tables, &$t, &$config, &$inherit, $user )
 	{
 		if ( self::$type != $type ) {
 			return;
