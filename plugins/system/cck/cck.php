@@ -1126,6 +1126,20 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 
+		// Joomla! 4
+		if ( (int)JCck::getConfig_Param( 'sql_legacy', '0' ) ) {
+			$modes	=	JCckDatabase::loadResult( 'SELECT @@SESSION.sql_mode;' );
+
+			if ( $modes ) {
+				$modes	=	explode( ',', $modes );
+				$modes	=	array_flip( $modes );
+
+				unset( $modes['STRICT_TRANS_TABLES'] );
+
+				JCckDatabase::execute( 'SET SESSION sql_mode = "'.implode( ',', array_keys( $modes ) ).'";' );	
+			}	
+		}
+
 		// SEBLOD
 		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
 

@@ -9,6 +9,10 @@
 			<option value="2017">2017</option>
 			<option value="2012">2012</option>
 		</field>
+		<field name="sql_legacy" type="list" default="0" label="COM_CCK_CONFIG_SQL_LEGACY_MODE" description="COM_CCK_CONFIG_SQL_LEGACY_MODE_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
+			<option value="1">COM_CCK_CONFIG_SQL_LEGACY_J3</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_FORM" type="spacer" hr="false" />
 		<field name="autosave" type="radio" default="0" label="COM_CCK_CONFIG_AUTOSAVE" description="COM_CCK_CONFIG_AUTOSAVE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
