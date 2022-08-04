@@ -23,6 +23,10 @@ foreach ( $displayData['form'] as $k=>$form ) {
 
 	echo '</fieldset>';
 }
+if ( isset( $displayData['script'] ) && $displayData['script'] ) {
+	echo '<script>'.$displayData['script'].'</script>';
+}
+
 echo '</div>';
 echo '</div></div>';
 ?>

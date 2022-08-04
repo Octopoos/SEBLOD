@@ -36,7 +36,7 @@ foreach ( $displayData['form'] as $k=>$form ) {
 
 	echo HTMLHelper::_( 'uitab.endTab' );
 }
-if ( $displayData['script'] ) {
+if ( isset( $displayData['script'] ) && $displayData['script'] ) {
 	echo '<script>'.$displayData['script'].'</script>';
 }
 
