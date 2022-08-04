@@ -14,94 +14,110 @@ $P			=	'options_'.$this->item->client;
 $options	=	JCckDev::fromJSON( $this->item->$P );
 ?>
 <div class="<?php echo $this->css['wrapper']; ?>">
-	<?php if ( $this->item->master == 'content' ) { ?>
-	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-            echo JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config );
-            echo JCckDev::renderBlank();
-            echo JCckDev::renderForm( $cck['core_title'], @$options['title'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"' ) );
-            echo JCckDev::renderForm( 'core_metadesc', @$options['desc'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"', 'storage_field'=>'options[desc]' ) );
-            echo JCckDev::renderForm( 'core_title', @$options['metatitle'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (70)"', 'storage_field'=>'options[metatitle]' ) );
-            echo JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (200)"' ) );
-            ?>
-        </ul>
-    </div>
-    <?php } else { ?>
-	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-			echo JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config, array( 'options'=>'None=0||Joomla=optgroup||Error=error||Message=message||Notice=notice' ) );
-			if ( $this->item->client == 'site' ) {
-				echo JCckDev::renderForm( $cck['core_redirection'], @$options['redirection'], $config );
-			} else {
-				echo JCckDev::renderForm( $cck['core_dev_select'], 'toolbar', $config, array( 'label'=>'REDIRECTION', 'options'=>'ADMIN_TOOLBAR=toolbar', 'attributes'=>'disabled="disabled"' ) );
-			}
-			echo JCckDev::renderForm( $cck['core_message'], @$options['message'], $config, array( 'label'=>'MESSAGE_THANKS' ) );
-			if ( $this->item->client == 'site' ) {
-				echo JCckDev::renderForm( $cck['core_menuitem'], @$options['redirection_itemid'], $config, array( 'label'=>'Menu Item List','storage_field'=>'options[redirection_itemid]' ) );
-				echo JCckDev::renderForm( $cck['core_redirection_url'], @$options['redirection_url'], $config );
-			}
-            ?>
-        </ul>
-	</div>
-	<div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_DATA_INTEGRITY' ); ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-			echo JCckDev::renderForm( $cck['core_dev_text'], @$options['data_integrity_excluded'], $config, array( 'label'=>'Exclude Fields',
-																												  'storage_field'=>'options[data_integrity_excluded]' ) );
-            ?>
-        </ul>
-	</div>
-    <?php if ( $this->item->client == 'site' ) { ?>
-        <div class="seblod">
-            <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_GLOBAL_FORM' ); ?></div>
-            <ul class="adminformlist adminformlist-2cols">
-                <?php
-				echo JCckDev::renderForm( $cck['core_show_hide'], @$options['show_form_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_TITLE', 'storage_field'=>'options[show_form_title]' ) );
-				echo '<li><label>'.JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ).'</label>'
-				 .	 JCckDev::getForm( $cck['core_tag_title'], @$options['tag_form_title'], $config, array( 'storage_field'=>'options[tag_form_title]' ) )
-				 .	 JCckDev::getForm( $cck['core_class_title'], @$options['class_form_title'], $config, array( 'size'=>16, 'storage_field'=>'options[class_form_title]' ) )
-				 .	 '</li>';
-				echo JCckDev::renderForm( $cck['core_show_hide2'], @$options['show_form_desc'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_DESCRIPTION', 'storage_field'=>'options[show_form_desc]' ) );
-                ?>
-            </ul>
-        </div>
-    <?php } ?>
-	<div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_ACCESS' ); ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-			echo JCckDev::renderForm( 'core_message_style', @$options['message_style_no_access'], $config, array( 'defaultvalue'=>'error', 'storage_field'=>'options[message_style_no_access]' ) );
-			echo JCckDev::renderForm( $cck['core_action_no_access'], @$options['action_no_access'], $config );
-			echo JCckDev::renderForm( 'core_message', @$options['message_no_access'], $config, array( 'storage_field'=>'options[message_no_access]' ) );
-			echo JCckDev::renderForm( $cck['core_redirection_url_no_access'], @$options['redirection_url_no_access'], $config );
-            ?>
-        </ul>
-	</div>
-	<div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_STAGES' ); ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-			echo JCckDev::renderForm( $cck['core_stages'], @$options['stages'], $config, array( 'label'=>'Count' ) );
-			echo JCckDev::renderBlank();
-            ?>
-        </ul>
-	</div>
-	<div class="seblod">
-        <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' ); ?></div>
-        <ul class="adminformlist adminformlist-2cols">
-            <?php
-			echo JCckDev::renderForm( $cck['core_validation_position'], @$options['validation_position'], $config );
-			echo JCckDev::renderForm( $cck['core_validation_scroll'], @$options['validation_scroll'], $config );
-			echo JCckDev::renderForm( $cck['core_validation_color'], @$options['validation_color'], $config );
-			echo JCckDev::renderForm( $cck['core_validation_background_color'], @$options['validation_background_color'], $config );
-            ?>
-        </ul>
-	</div>
-    <?php } ?>
+	<?php
+	if ( $this->item->master == 'content' ) {
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+			'form'=>array(
+				array(
+					'fields'=>array(
+						JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config ),
+						JCckDev::renderBlank(),
+						JCckDev::renderForm( $cck['core_title'], @$options['title'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"' ) ),
+						JCckDev::renderForm( 'core_metadesc', @$options['desc'], $config, array( 'attributes'=>'placeholder="J(Useful for custom input)"', 'storage_field'=>'options[desc]' ) ),
+						JCckDev::renderForm( 'core_title', @$options['metatitle'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (70)"', 'storage_field'=>'options[metatitle]' ) ),
+						JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (200)"' ) )
+					),
+					'legend'=>JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
+				)
+			)
+	    ) );
+    } else {
+    	$dataTmpl1	=	array(
+							JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config, array( 'options'=>'None=0||Joomla=optgroup||Error=error||Message=message||Notice=notice' ) )
+    					);
+
+    	if ( $this->item->client == 'site' ) {
+    		$dataTmpl1[]	=	JCckDev::renderForm( $cck['core_redirection'], @$options['redirection'], $config );
+    	} else {
+			$dataTmpl1[]	=	JCckDev::renderForm( $cck['core_dev_select'], 'toolbar', $config, array( 'label'=>'REDIRECTION', 'options'=>'ADMIN_TOOLBAR=toolbar', 'attributes'=>'disabled="disabled"' ) );
+    	}
+
+    	$dataTmpl1[]	=	JCckDev::renderForm( $cck['core_message'], @$options['message'], $config, array( 'label'=>'MESSAGE_THANKS' ) );
+
+    	if ( $this->item->client == 'site' ) {
+			$dataTmpl1[]	=	JCckDev::renderForm( $cck['core_menuitem'], @$options['redirection_itemid'], $config, array( 'label'=>'Menu Item List','storage_field'=>'options[redirection_itemid]' ) );
+			$dataTmpl1[]	=	JCckDev::renderForm( $cck['core_redirection_url'], @$options['redirection_url'], $config );
+    	}
+
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+			'form'=>array(
+				array(
+					'fields'=>$dataTmpl1,
+					'legend'=>JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
+				),
+				array(
+					'fields'=>array(
+						JCckDev::renderForm( $cck['core_dev_text'], @$options['data_integrity_excluded'], $config, array( 'label'=>'Exclude Fields', 'storage_field'=>'options[data_integrity_excluded]' ) )
+					),
+					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_DATA_INTEGRITY' )
+				)
+			)
+		) );
+	    if ( $this->item->client == 'site' ) {
+			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+				'form'=>array(
+					array(
+						'fields'=>array(
+							JCckDev::renderForm( $cck['core_show_hide'], @$options['show_form_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_TITLE', 'storage_field'=>'options[show_form_title]' ) ),
+							JCckDev::renderLayoutFile(
+								'cck'.JCck::v().'.form.field', array(
+									'label'=>JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ),
+									'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
+										'grid'=>'30%|',
+										'html'=>array(
+											JCckDev::getForm( $cck['core_tag_title'], @$options['tag_form_title'], $config, array( 'storage_field'=>'options[tag_form_title]' ) ),
+											JCckDev::getForm( $cck['core_class_title'], @$options['class_form_title'], $config, array( 'size'=>16, 'storage_field'=>'options[class_form_title]' ) )
+										)
+									) )
+								)
+							),
+							JCckDev::renderForm( $cck['core_show_hide2'], @$options['show_form_desc'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_DESCRIPTION', 'storage_field'=>'options[show_form_desc]' ) )
+						),
+						'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_GLOBAL_FORM' )
+					)
+				)
+			) );
+	    }
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+			'form'=>array(
+				array(
+					'fields'=>array(
+						JCckDev::renderForm( 'core_message_style', @$options['message_style_no_access'], $config, array( 'defaultvalue'=>'error', 'storage_field'=>'options[message_style_no_access]' ) ),
+						JCckDev::renderForm( $cck['core_action_no_access'], @$options['action_no_access'], $config ),
+						JCckDev::renderForm( 'core_message', @$options['message_no_access'], $config, array( 'storage_field'=>'options[message_no_access]' ) ),
+						JCckDev::renderForm( $cck['core_redirection_url_no_access'], @$options['redirection_url_no_access'], $config )
+					),
+					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_ACCESS' )
+				),
+				array(
+					'fields'=>array(
+						JCckDev::renderForm( $cck['core_stages'], @$options['stages'], $config, array( 'label'=>'Count' ) ),
+						JCckDev::renderBlank()
+					),
+					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_STAGES' )
+				),
+				array(
+					'fields'=>array(
+						JCckDev::renderForm( $cck['core_validation_position'], @$options['validation_position'], $config ),
+						JCckDev::renderForm( $cck['core_validation_scroll'], @$options['validation_scroll'], $config ),
+						JCckDev::renderForm( $cck['core_validation_color'], @$options['validation_color'], $config ),
+						JCckDev::renderForm( $cck['core_validation_background_color'], @$options['validation_background_color'], $config )
+					),
+					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' )
+				)
+			)
+		) );
+	}
+    ?>
 </div>
 <div class="clr"></div>
