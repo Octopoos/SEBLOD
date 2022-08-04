@@ -30,7 +30,7 @@ $js		=	'
 						  cache: false,
 						  data: data,
 						  type: "POST",
-						  url: "index.php?option=com_cck&task=box.add&layout=raw&tmpl=component",
+						  url: "index.php?option=com_cck&task=box.add&layout=raw&tmpl=raw",
 						  beforeSend:function(){ $(elem).html(""); },
 						  success: function(response){ $(elem).html(response); if (opts) { JCck.Dev.setOptions(opts); } },
 						  error:function(){ $(elem).html("<div><strong>Oops!</strong> Try to close the page & re-open it properly.</div>"); }
