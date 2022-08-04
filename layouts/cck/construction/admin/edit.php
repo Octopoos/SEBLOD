@@ -3,7 +3,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 
-echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
+echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'tab0', 'recall' => true, 'breakpoint' => 768] );
 
 foreach ( $displayData['form'] as $k=>$form ) {
 	if ( isset( $form['legend'] ) && $form['legend'] ) {

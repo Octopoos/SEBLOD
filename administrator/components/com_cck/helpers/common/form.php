@@ -330,7 +330,6 @@ class CommonHelper_Form
 	public static function getTables( &$field, $value, $name, $id, $config )
 	{
 		$field->label		=	'Table';
-		$field->attributes	=	'style="max-width:200px;"';
 		
 		$opts		=	array();
 		$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
@@ -347,7 +346,7 @@ class CommonHelper_Form
 			}
 		}
 		$class	=	$field->css ? ' '.$field->css : '';
-		$attr	=	'class="form-select inputbox select'.$class.'" '.$field->attributes;
+		$attr	=	'class="form-select inputbox select max-width-200'.$class.'" '.$field->attributes;
 		
 		return JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 	}

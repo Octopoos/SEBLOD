@@ -10,10 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
-echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'selectlabel'=>'Select', 'required'=>'required', 'storage_field'=>'table' ) );
-echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Column', 'required'=>'required', 'storage_field'=>'column' ) );
-echo JCckDev::renderBlank();
-echo JCckDev::renderForm( 'core_dev_text', 'id', $config, array( 'label'=>'Key Column', 'required'=>'required', 'storage_field'=>'key' ) );
-echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Fields', 'storage_field'=>'fieldnames' ) );
-echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) );
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+	'config'=>$config,
+	'form'=>array(
+		array(
+			'fields'=>array(
+				JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'selectlabel'=>'Select', 'required'=>'required', 'storage_field'=>'table' ) ),
+				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Column', 'required'=>'required', 'storage_field'=>'column' ) ),
+				JCckDev::renderBlank(),
+				JCckDev::renderForm( 'core_dev_text', 'id', $config, array( 'label'=>'Key Column', 'required'=>'required', 'storage_field'=>'key' ) ),
+				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Fields', 'storage_field'=>'fieldnames' ) ),
+				JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) )
+			)
+		)
+	),
+	'html'=>'',
+	'item'=>$this->item,
+	'script'=>'',
+	'type'=>'validation'
+) );
 ?>
