@@ -531,6 +531,13 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
 				$data[self::$author]	=	$user->id;
 			}
+
+			$table->attribs			=	'';
+			$table->fulltext		=	'';
+			$table->images			=	'';
+			$table->metadata		=	'';
+			$table->metadesc		=	'';
+			$table->urls			=	'';
 		}
 		$table->{self::$custom}	=	'';
 	}
