@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\IpHelper;
+
 // JCckUser
 abstract class JCckUser
 {
@@ -51,8 +53,9 @@ abstract class JCckUser
 		}
 		
 		// IP
-		$user->ip	=	getenv( 'REMOTE_ADDR' ); // $_SERVER["REMOTE_ADDR"];
-		
+		$user->ip		=	IpHelper::getIp();
+		$user->ip_md5 	=	( $user->ip ) ? md5( $user->ip ) : '';
+
 		// More
 		if ( $user->id && $profile ) {
 			if ( !$content_type ) {
