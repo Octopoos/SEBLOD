@@ -13,6 +13,10 @@ defined( '_JEXEC' ) or die;
 $app	=	JFactory::getApplication();
 $uix	=	JCck::getUIX();
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
+
+if ( $this->_showInfo !== '' ) {
+	echo $this->_showInfo; return;
+}
 ?>
 
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option ); ?>" method="post" id="adminForm" name="adminForm">

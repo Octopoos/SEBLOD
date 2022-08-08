@@ -110,19 +110,26 @@ class pkg_cckInstallerScript
 			</a>
 			<br>
 		</div>
-		<?php if ( $type == 'update' && JCck::on( '4' ) && $initial_release < 4 && !(int)JCck::getConfig_Param( 'sql_legacy', '0' ) ) { ?>
-		<hr>
-		<h2 style="color:red;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3' ); ?></h2>
-		<div style="border: 3px solid red;color: red;padding:12px;">
-		<?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_INFO' ); ?>
-			<br><br><a href="/administrator/index.php?option=com_config&view=component&component=com_cck" class="btn btn-success"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1' ); ?></a>
-			<strong style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_INFO' ); ?></strong>
-			<br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_OR' ); ?></span>
-			<br><a href="javascript:alert('Pending Release Preview 3..');" class="btn btn-primary"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ); ?></a>
-			<br><br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_SUP' ); ?></span>
-		</div>
-		<hr>
-		<?php } ?>
+		<?php if ( $type == 'update' && JCck::on( '4' ) && $initial_release < 4 && !(int)JCck::getConfig_Param( 'sql_legacy', '0' ) ) {
+			$queries	=	self::_getPatchQueries();
+
+			if ( count( $queries ) ) {
+			?>
+			<hr>
+			<h2 style="color:red;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3' ); ?></h2>
+			<div style="border: 3px solid red;color: red;padding:12px;">
+			<?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_INFO' ); ?>
+				<br><br><a href="/administrator/index.php?option=com_config&view=component&component=com_cck" class="btn btn-success"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1' ); ?></a>
+				<strong style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_INFO' ); ?></strong>
+				<br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_OR' ); ?></span>
+				<br><a href="/administrator/index.php?option=com_cck&s=patchSQL" onclick="document.getElementById('collapseModal').style.display='block'" class="btn btn-primary"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ); ?></a>
+				<br><br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_SUP' ); ?></span>
+			</div>
+			<hr>
+			<?php
+			}
+		}
+		?>
 		<h2><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_GETTING_STARTED' ); ?></h2>
 		<div style="margin-bottom:30px;">
 			<a class="btn btn-info" href="https://www.seblod.com/store" target="_blank" rel="noopener noreferrer"><?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_MARKETPLACE' ); ?></a>
@@ -175,9 +182,50 @@ class pkg_cckInstallerScript
 			$info	=	'<br />'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO2' );
 			$text	=	JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_BACKUP' );
 		}
-		echo '<p>'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL' ).'<span class="label label-'.$badge.'">'.$text.'</span></p>';
-		echo '<p>'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO' ).$info.'</p>';
-		echo '<br />';
+	}
+
+	// _getPatchQueries
+	public static function _getPatchQueries()
+	{
+		$queries	=	array();
+		$tables		=	JCckDatabase::getTableList();
+
+		foreach ( $tables as $table_name ) {
+			if ( strpos( $table_name, 'cck_store_' ) !== false ) {
+				$columns	=	JCckDatabase::getTableFullColumns( $table_name );
+
+				foreach ( $columns as $column ) {
+					if ( $column->Null === 'NO' ) {
+						if ( $column->Default === null ) {
+							if ( $column->Field == 'id' ) {
+								continue;
+							}
+
+							$query	=	'';
+
+							if ( strpos( $column->Type, 'text' ) !== false || strpos( $column->Type, 'blob' ) !== false ) {
+								$query	=	'ALTER TABLE `'.$table_name.'` MODIFY `'.$column->Field.'` '.$column->Type.';';
+							} elseif ( strpos( $column->Type, 'char' ) !== false ) {
+								$query	=	'ALTER TABLE `'.$table_name.'` ALTER `'.$column->Field.'` SET DEFAULT ""'.';';
+							} elseif ( strpos( $column->Type, 'int' ) !== false ) {
+								$query	=	'ALTER TABLE `'.$table_name.'` CHANGE `'.$column->Field.'` `'.$column->Field.'` '.$column->Type.' NOT NULL DEFAULT "0"'.';';
+							} elseif ( strpos( $column->Type, 'date' ) !== false ) {
+								$query	=	'ALTER TABLE `'.$table_name.'` MODIFY `'.$column->Field.'` '.$column->Type.';';
+							}
+							if ( $query !== '' ) {
+								if ( !isset( $queries[$table_name] ) ) {
+									$queries[$table_name]	=	array();
+								}
+
+								$queries[$table_name][]		=	$query;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $queries;
 	}
 }
 ?>

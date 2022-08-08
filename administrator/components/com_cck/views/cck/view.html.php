@@ -13,6 +13,8 @@ defined( '_JEXEC' ) or die;
 // View
 class CCKViewCck extends JCckBaseLegacyView
 {
+	protected $_showInfo	=	'';
+
 	// completeUI
 	public function completeUI()
 	{
@@ -85,9 +87,9 @@ class CCKViewCck extends JCckBaseLegacyView
 							);
 		}
 
-		
-
 		if ( JCck::on( '4.0' ) ) {
+			$this->showInfo();
+
 			$html   =   array(  );
 			$group	=	'';
 
@@ -133,6 +135,38 @@ class CCKViewCck extends JCckBaseLegacyView
 		
 		Helper_Admin::addToolbarHistoryButton();
 		// Helper_Admin::addToolbarSupportButton();
+	}
+
+	// showInfo
+	protected function showInfo()
+	{
+		$info	=	JFactory::getApplication()->input->get( 's' );
+
+		if ( $info == 'patchSQL' ) {
+			require_once JPATH_ADMINISTRATOR.'/manifests/packages/cck/pkg_script.php';
+
+			$queries	=	pkg_cckInstallerScript::_getPatchQueries();
+
+			if ( count( $queries ) ) {
+				$sql		=	array();
+
+				foreach ( $queries as $k=>$v ) {
+					$sql[]	=	implode( "\n", $v );
+				}
+
+				// $this->_showInfo	.=	'<div class="modal modal-small hide fade" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">'
+				// 					.	'<div class="modal-header"><h3 class="modal-title">'.JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ).'</h3><button type="button" class="btn-close novalidate" onclick="toggleMyModal();" aria-label="Close"></button></div>'
+				// 					.	'<div class="modal-body" style="padding:15px">';
+
+				$this->_showInfo	.=	'<h4>SQL Tables:</h4>'
+									.	'<ul><li>'.implode( '</li><li>', array_keys( $queries ) ).'</li></ul>'
+									.	'<h4>SQL Queries:</h4>'
+									.	'<pre style="background:#000; color:#e14872; padding:16px;">'.implode( "\n", $sql ).'</pre>';
+
+				// $this->_showInfo	.=	'</div>'
+				// 					.	'</div></div></div>';
+			}
+		}
 	}
 }
 ?>
