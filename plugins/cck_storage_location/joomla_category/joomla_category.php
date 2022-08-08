@@ -537,6 +537,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$table->modified_user_id	=	0;
 			$table->extension			=	( ! $table->extension ) ? 'com_content' : $table->extension;
 		}
+		if ( ! $table->title ) {
+			$table->title	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+			$table->alias	=	$table->title;
+		}
 		$table->path	=	( $table->parent_id > 1 ) ? self::_getTable( $table->parent_id )->path.'/' : '';
 		$table->path	.=	$table->alias;
 		if ( empty( $table->language ) ) {
