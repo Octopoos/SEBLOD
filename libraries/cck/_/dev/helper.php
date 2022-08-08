@@ -10,7 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 
 // JCckDevHelper
@@ -144,13 +143,9 @@ abstract class JCckDevHelper
 			} else {
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
-				$lang_sef	=	self::getLanguageCode();
 
-				if ( $lang_sef ) {
-					$context	.=	$lang_sef.'/';
-				}
 				if ( JCck::isSite() && JCck::getSite()->context ) {
-					$context	.=	JCck::getSite()->context.'/';
+					$context	=	JCck::getSite()->context.'/';
 				}
 
 				return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;
@@ -160,26 +155,6 @@ abstract class JCckDevHelper
 		}
 	}
 	
-	// getApp
-	public static function getApp( $app )
-	{
-		if ( is_numeric( $app ) ) {
-			$where	=	'id = '.$app;
-		} else {
-			$where	=	'name = "'.$app.'"';
-		}
-
-		$app		=	JCckDatabase::loadObject( 'SELECT id, name, params FROM #__cck_core_folders WHERE '.$where );
-
-		if ( !$app ) {
-			$app	=	(object)array( 'id'=>0, 'name'=>'', 'params'=>'{}' );
-		}
-
-		$app->params	=	new Registry( $app->params );
-		
-		return $app;
-	}
-
 	// getBranch
 	public static function getBranch( $table, $pk )
 	{
@@ -420,87 +395,6 @@ abstract class JCckDevHelper
 		return $config;
 	}
 
-	// getLanguageAlternates
-	public static function getLanguageAlternates( $itemId = 0 )
-	{
-		static $routes = array();
-
-		if ( empty( $routes ) ) {
-			$app		=	JFactory::getApplication();
-			$menu		=	$app->getMenu();
-
-			JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
-
-			$active			=	$itemId ? $menu->getItem( $itemId ) : $menu->getActive();
-			$associations	=	MenusHelper::getAssociations( $active->id );
-			$languages		=	JLanguageHelper::getLanguages();
-			$levels			=	JFactory::getUser()->getAuthorisedViewLevels();
-			$levels			=	array_flip( $levels );
-			$path			=	JUri::getInstance()->getPath();
-			$route			=	JRoute::_( 'index.php?Itemid='.$active->id );
-			$view			=	null;
-
-			if ( $length = strlen( $route ) ) {
-				if ( $route[$length - 1] == '/' ) {
-					$route	=	substr( $route, 0, -1 );
-				}
-			}
-			if ( $path != $route ) {
-				$view		=	array(
-									'id'=>(int)$app->input->getInt( 'id', 0 ),
-									'name'=>$app->input->get( 'view', '' ),
-									'option'=>$app->input->get( 'option', '' )
-								);
-			}
-
-			foreach ( $languages as $language ) {
-				$lang_route	=	'';
-
-				if ( $active->language == '*' ) {
-					$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$active->id );
-				} elseif ( isset( $associations[$language->lang_code] ) && $associations[$language->lang_code] ) {
-					$item	=	$menu->getItem( $associations[$language->lang_code] );
-
-					if ( is_object( $item ) && isset( $levels[$item->access] ) ) {
-						$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
-					}
-				}
-
-				if ( $length = strlen( $lang_route ) ) {
-					if ( $lang_route[$length - 1] == '/' ) {
-						$lang_route	=	substr( $lang_route, 0, -1 );
-					}
-				}
-
-				if ( is_array( $view ) ) {
-					if ( $view['name'] == 'article' ) {
-						if ( $view['id'] ) {
-							/*
-							$content_article	=	new JCckContentArticle;
-
-							if ( $content_article->load( $view['id'] )->isSuccessful() ) {
-								if ( $content_article->getProperty( 'language' ) == '*' ) {
-									// dump( $content_article->getPk(), '@yes' );
-								}
-							}
-							*/
-						}
-					}
-					$lang_route	=	'';
-				}
-				if ( $lang_route ) {
-					$routes[$language->sef]	=	(object)array(
-													'home'=>(bool)$active->home,
-													'href'=>$lang_route,
-													'hreflang'=>strtolower( $language->lang_code ),
-												);
-				}
-			}
-		}
-
-		return $routes;
-	}
-
 	// getLanguageCode
 	public static function getLanguageCode( $strictly = false )
 	{
@@ -589,68 +483,6 @@ abstract class JCckDevHelper
 		return $path;
 	}
 
-	// getRouteSef
-	public static function getRouteSef( $itemId, $type, $sef = '' )
-	{
-		static $cache	=	array();
-
-		if ( !$itemId ) {
-			return $sef;
-		}
-		/*
-		if ( $itemId == JFactory::getApplication()->input->getInt( 'Itemid', 0 ) ) {
-			return $sef;
-		}
-		*/
-
-		$idx	=	$itemId.'_'.$type;
-
-		if ( !isset( $cache[$idx] ) ) {
-			$item			=	JFactory::getApplication()->getMenu()->getItem( $itemId );
-			$cache[$idx]	=	'';
-
-			if ( !( is_object( $item ) && isset( $item->params ) ) ) {
-				$item 			=	JCckDatabase::loadObject( 'SELECT link, params FROM #__menu WHERE id = '.(int)$itemId );
-				$item->query	=	self::getUrlVars( $item->link, true, false );
-			}
-			if ( isset( $item->params ) ) {
-				if ( is_string( $item->params ) ) {
-					$item->params		=	new JRegistry( $item->params );
-				}
-
-				$cache[$idx]	=	$item->params->get( 'sef', '' );
-			}
-			if ( isset( $item->query['search'] ) ) {
-				/* TODO
-				cache::getSearch
-
-				self::getRouteParams
-				*/
-				$list 			=	JCckDatabaseCache::loadObject( 'SELECT options, sef_route FROM #__cck_core_searchs WHERE name = "'.$item->query['search'].'"' );
-
-				if ( !$cache[$idx] ) {
-					$list->options	=	new JRegistry( $list->options );
-					$cache[$idx]	=	$list->options->get( 'sef', '' );	
-				}
-				if ( $list->sef_route && $type ) {
-					$parts			=	explode( '/', $list->sef_route );
-					$target			=	array_search( $type, $parts );
-
-					if ( $target !== false ) {
-						$targets		=	array( 0=>'2', 1=>'4', 2=>'8' );
-						$cache[$idx][0]	=	$targets[$target];	
-					}
-				}
-			}
-
-			if ( !$cache[$idx] ) {
-				$cache[$idx]	=	$sef;
-			}
-		}
-
-		return $cache[$idx];
-	}
-
 	// getRules
 	public static function getRules( $rules, $default = '{}' )
 	{
@@ -698,7 +530,7 @@ abstract class JCckDevHelper
 
 			$params[$name]['join_key']		=	'pk';
 			$params[$name]['location']		=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
-			$params[$name]['sef_aliases']	=	(int)( (int)$object->sef_route_aliases != -1 ? $object->sef_route_aliases : JCck::getConfig_Param( 'sef_aliases', '0' ) );
+			$params[$name]['sef_aliases']	=	$object->sef_route_aliases;
 			$params[$name]['sef_types']		=	$object->sef_route;
 		}
 		
@@ -706,7 +538,7 @@ abstract class JCckDevHelper
 	}
 
 	// getUrlVars
-	public static function getUrlVars( $url, $force = false, $registry = true )
+	public static function getUrlVars( $url, $force = false )
 	{
 		if ( ( $pos = strpos( $url, '?') ) !== false ) {
 			$url	=	substr( $url, $pos + 1 );
@@ -725,10 +557,7 @@ abstract class JCckDevHelper
 				}
 			}
 		}
-
-		if ( $registry ) {
-			$url	=	new JRegistry( $url );
-		}
+		$url	=	new JRegistry( $url );
 		
 		return $url;
 	}
@@ -809,7 +638,7 @@ abstract class JCckDevHelper
 			
 			if ( strpos( $str, '$uri->get' ) !== false ) {
 				$matches	=	'';
-				$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_\|]*)\'? ?\)(;)?#';
+				$search		=	'#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 				preg_match_all( $search, $str, $matches );
 				
 				if ( count( $matches[1] ) ) {
@@ -860,25 +689,11 @@ abstract class JCckDevHelper
 							}
 							
 						} else {
-										$request	=	'get'.$v;
+							$request	=	'get'.$v;
 							
 							if ( $v == 'Int' ) {
-								if ( strpos( $variable, '||' ) !== false ) {
-									$parts	=	explode( '||', $variable );
-									$var	=	0;
-									
-									foreach ( $parts as $part ) {
-										$var	=	(int)$app->input->$request( $part, '' );
-
-										if ( $var != 0 ) {
-											break;
-										}
-									}
-
-									$str	=	str_replace( $matches[0][$k], $var, $str );
-								} else {
-									$str	=	str_replace( $matches[0][$k], (int)$app->input->$request( $variable, '' ), $str );
-								}							} else {
+								$str		=	str_replace( $matches[0][$k], (int)$app->input->$request( $variable, '' ), $str );
+							} else {
 								$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
 							}
 						}
@@ -931,12 +746,6 @@ abstract class JCckDevHelper
 				}
 
 				$str		=	str_replace( '$context->getAuthor()', $author, $str );
-			}
-		}
-		if ( $str != '' && strpos( $str, '$lang->' ) !== false ) {
-			$lang	=	JFactory::getLanguage();
-			if ( strpos( $str, '$lang->getTag()' ) !== false ) {
-				$str		=	str_replace( '$lang->getTag()', $lang->getTag(), $str );
 			}
 		}
 		if ( $str != '' && strpos( $str, '$user->' ) !== false ) {
