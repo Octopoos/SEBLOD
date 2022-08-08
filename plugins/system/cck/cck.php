@@ -469,7 +469,9 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 				case 'com_joomlaupdate':
-					JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_JOOMLA' ), 'notice' );
+					if ( $app->input->get( 'layout', '' ) !== 'complete' ) {
+						JFactory::getApplication()->enqueueMessage( JText::_( 'LIB_CCK_INSTALLER_UPDATE_WARNING_JOOMLA' ), 'notice' );
+					}
 					break;
 				case 'com_menus':
 					if ( $layout || $view == 'item' ) {
