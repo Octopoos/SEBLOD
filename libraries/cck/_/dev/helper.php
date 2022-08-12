@@ -860,7 +860,7 @@ abstract class JCckDevHelper
 							}
 							
 						} else {
-										$request	=	'get'.$v;
+							$request	=	'get'.$v;
 							
 							if ( $v == 'Int' ) {
 								if ( strpos( $variable, '||' ) !== false ) {
