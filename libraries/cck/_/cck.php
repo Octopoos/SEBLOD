@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // JCck
 abstract class JCck
 {
@@ -163,18 +165,37 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
+			$base			=	JUri::base( true );
 			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
+			$host2			=	'';
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
-			
-			$host2			=	'';
+
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				$lang_sef	=	JCckDevHelper::getLanguageCode();
+				
+				if ( $lang_sef != '' ) {
+					$lang_sef	=	'/'.$lang_sef;
+				}
+			} else {
+				$lang_sef		=	'';
+			}
+
 			if ( $path ) {
 				$path		=	substr( $path, 1 );
 				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
+
+				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			
+			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options, parent_id'
+					.	' FROM #__cck_core_sites'
+					.	' WHERE published = 1'
+					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+
+			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
@@ -193,7 +214,7 @@ abstract class JCck
 
 					if ( $s->context != '' ) {
 						$hasContext	=	true;
-						$pos		=	strpos( $path_base.'/', '/'.$s->context.'/' );
+						$pos		=	strpos( $path_base.'/', $base.$lang_sef.'/'.$s->context.'/' );
 
 						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;
@@ -239,7 +260,59 @@ abstract class JCck
 			self::$_host	=	$host;
 
 			if ( isset( self::$_sites[$host] ) ) {
-				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
+				self::$_sites[$host]->environment	=	1;
+				self::$_sites[$host]->host			=	( $alias ) ? $alias : self::$_sites[$host]->name;
+
+				if ( self::$_sites[$host]->parent_id ) {
+					$parent		=	self::getSiteById( self::$_sites[$host]->parent_id );
+					$properties	=	array(
+										'guest_only_viewlevel',
+										'usergroups',
+										'public_viewlevel',
+										'viewlevels'
+									);
+
+					if ( self::$_sites[$host]->guest ) {
+						if ( !( self::$_sites[$host]->name.'@$' == $parent->name ) ) {
+							self::$_sites[$host]->environment	=	0;
+						}
+					} else {
+						$properties[]	=	'guest';
+					}
+
+					/*
+					guest: used to load the user in session > should not be overriden as the user (fake) already got the right group assigned
+					guest_only_group: -
+					guest_only_viewlevel: appended on client=administrator
+					public_viewlevel: -
+					*/
+
+					// Keeping own public_viewlevel (for logged-in users)
+					if ( self::$_sites[$host]->public_viewlevel ) {
+						$json						=	json_decode( self::$_sites[$host]->configuration, true );
+						$parent->public_viewlevel	.=	','.self::$_sites[$host]->public_viewlevel;
+
+						if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+							$parent->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						}
+
+						$parent->public_viewlevel	=	explode( ',', $parent->public_viewlevel );
+						$parent->public_viewlevel	=	ArrayHelper::toInteger( $parent->public_viewlevel );
+					}
+
+					foreach ( $properties as $property ) {
+						self::$_sites[$host]->$property	=	$parent->$property;
+					}
+				} else {
+					$json	=	json_decode( self::$_sites[$host]->configuration, true );
+
+					if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+						self::$_sites[$host]->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						self::$_sites[$host]->public_viewlevel	=	explode( ',', self::$_sites[$host]->public_viewlevel );
+						self::$_sites[$host]->public_viewlevel	=	ArrayHelper::toInteger( self::$_sites[$host]->public_viewlevel );	
+					}
+				}
+
 			}
 
 			return true;
@@ -265,6 +338,16 @@ abstract class JCck
 	// getSite
 	public static function getSite()
 	{
+		if ( !isset( self::$_sites[self::$_host] ) ) {
+			return (object)array(
+							'context'=>'',
+							'id'=>0,
+							'name'=>'',
+							'parent_id'=>0,
+							'title'=>''
+						   );
+		}
+		
 		if ( is_object( self::$_sites[self::$_host] ) && is_string( self::$_sites[self::$_host]->configuration ) ) {
 			self::$_sites[self::$_host]->configuration	=	new JRegistry( self::$_sites[self::$_host]->configuration );
 		}
@@ -294,13 +377,22 @@ abstract class JCck
 	}
 
 	// isSite
-	public static function isSite( $master = false )
+	public static function isSite( $master = false, $status = '' )
 	{
 		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
 			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
 				return false;
 			}
-
+			if ( $status ) {
+				if ( $status == 'production' || $status == 'prod' ) {
+					if ( !self::$_sites[self::$_host]->environment ) {
+						return false;
+					}
+				} elseif ( self::$_sites[self::$_host]->environment ) {
+					return false;
+				}
+			}
+			
 			return true;
 		} else {
 			return false;
