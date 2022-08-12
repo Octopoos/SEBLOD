@@ -253,7 +253,7 @@ abstract class JCckDevIntegration
 			$items	=	JCckDatabase::$call( 'SELECT a.id, a.title, a.name, a.description, b.id as folder_id, b.title as folder, b.app as folder_app, b.icon_path as folder_icon'
 											.' FROM #__cck_core_types AS a'
 											.' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder'
-											.' WHERE a.published = 1 AND a.location != "hidden" AND a.location != "none" AND a.location != "site"'
+											.' WHERE a.published = 1 AND a.location NOT IN ("collection","hidden","none","site")'
 											.' AND a.storage_location IN ('.$in.')'.$order_by, $index );
 		}
 
