@@ -22,7 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.0.0 Release Preview 1 [27-Jul-2022] ------------
+--------------- 4.0.0 Release Preview 3 [12-Aug-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+
+! STRICT_TRANS_TABLES solution (2/2) implemented.
+  >> no one-click update, but all SQL queries listed (to copy/paste and run on PhpMyAdmin, if needed)
+
++ Core updates for Multi-sites
+
+--------------- 4.0.0 Release Preview 2 [27-Jul-2022] ------------
 
 ! Joomla! 4.x support
   >> Intended to be installed on a fresh Joomla! 4 for new developments.
