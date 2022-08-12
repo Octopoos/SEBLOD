@@ -1070,7 +1070,10 @@ abstract class JCckDevHelper
 		JFactory::$language	=	$app->getLanguage();
 		
 		JFactory::getConfig()->set( 'language', $tag );
-		JFactory::getLanguage()->setLanguage( $tag );
+
+		if ( !JCck::on( '4' ) ) {
+			JFactory::getLanguage()->setLanguage( $tag );
+		}
 	}
 
 	// sortObjectsByProperty
