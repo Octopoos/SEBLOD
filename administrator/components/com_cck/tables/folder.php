@@ -98,6 +98,9 @@ class CCK_TableFolder extends CCK_TableFolderAdapter
 		if ( empty( $this->path ) ) {
 			$this->path	=	'';
 		}
+		if ( empty( $this->icon_path ) ) {
+			$this->icon_path	=	'';
+		}
 		if ( empty( $this->app ) ) {
 			$this->app	=	'';
 		}
