@@ -839,7 +839,7 @@ class plgSystemCCK extends JPlugin
 				return false;
 			}
 
-			$base_path		=	JUri::getInstance()->getPath();
+			$base_path		=	JUri::getInstance()->getPath().'/';
 			$language_codes	=	array();
 			$prefix			=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
