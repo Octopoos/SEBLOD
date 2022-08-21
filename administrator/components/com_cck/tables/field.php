@@ -61,12 +61,6 @@ class CCK_TableField extends JTable
 			if ( is_null( $this->style ) ) {
 				$this->style	=	'';
 			}
-			if ( is_null( $this->storage_field2 ) ) {
-				$this->storage_field2	=	'';
-			}
-			if ( is_null( $this->storages ) ) {
-				$this->storages	=	'';
-			}
 			if ( is_null( $this->required ) ) {
 				$this->required	=	'';
 			}
@@ -90,6 +84,15 @@ class CCK_TableField extends JTable
 			}
 			if ( is_null( $this->storage_field ) ) {
 				$this->storage_field	=	'';
+			}
+			if ( is_null( $this->storage_field2 ) ) {
+				$this->storage_field2	=	'';
+			}
+			if ( is_null( $this->storage_key ) ) {
+				$this->storage_key	=	'';
+			}
+			if ( is_null( $this->storages ) ) {
+				$this->storages	=	'';
 			}
 		}
 		
