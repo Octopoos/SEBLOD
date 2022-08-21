@@ -287,7 +287,7 @@ class plgSystemCCK extends JPlugin
 					}
 					break;
 			}
-			if ( $option == 'com_cck' ) {
+			if ( $option == 'com_cck' || $option == 'com_cck_toolbox' || $option == 'com_cck_webservices' ) {
 				if ( $app->input->cookie->get( 'atumSidebarState', '' ) !== 'closed' ) {
 					$app->input->cookie->set( 'atumSidebarState', 'closed' );
 					JFactory::getSession()->set( 'cck_backend.atum', 1 );
