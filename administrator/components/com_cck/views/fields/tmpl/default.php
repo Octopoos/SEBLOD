@@ -252,7 +252,7 @@ $js	=	'
 					} else if (str[0] >= 0 && str[0] <= 9 ) {
 						$el.val("id");
 					} else if ($el.val() != "name") {
-						if (str.indexOf("core_") == 0) {
+						if (str.indexOf("core_") == 0 || str.indexOf("more_") == 0) {
 							$el.val("name");
 							$("#filter_state").val("0");
 						} else if (str.indexOf("_") != -1) {
