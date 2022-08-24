@@ -100,6 +100,8 @@ class JCckBaseLegacyViewList extends JViewLegacy
 			$this->css['filter_search_list']		.=	' solo';
 			$this->css['filter_select']				=	'js-stools-container-filters-visible';
 			$this->css['table']						=	'table';
+			$this->css['w50']						=	'col-12 col-lg-6';
+			$this->css['wrapper']					=	'row';
 			$this->html['attr_modal_close']			=	'data-bs-dismiss="modal"';
 			$this->html['filter_select_divider']	=	'</div><div class="filter-search pull-right solo">';
 			$this->html['filter_select_header']		=	'';
