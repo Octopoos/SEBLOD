@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.0 Release Preview 4 [24-Aug-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+
+# Issue with App Folder fixed.
+# Issue with API path (WebServices) fixed.
+
 --------------- 4.0.0 Release Preview 3 [12-Aug-2022] ------------
 
 ! Joomla! 4.x support
