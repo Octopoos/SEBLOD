@@ -880,7 +880,10 @@ class CCKController extends JControllerLegacy
 		
 		/* Joomla! 3.2 FIX */
 		$check	=	base64_decode( $return );
-		$check	=	( strpos( $check, '?' ) === false && @$check[count($check) - 1] != '/' ) ? $check.'/' : $check;
+
+		if ( strpos( $check, '?' ) === false && is_array( $check ) && @$check[count($check) - 1] != '/' ) {
+			$check	=	$check.'/';
+		}
 		/* Joomla! 3.2 FIX */
 
 		if ( empty( $return ) || !JUri::isInternal( $check ) ) {
