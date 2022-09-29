@@ -100,7 +100,7 @@ if ( $legacy == 1 ) {
 		<button class="btn btn-secondary" onclick="window.open('https://www.seblod.com/store/extensions/applications/', '_blank'); return false;">
 			<?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
 		</button>
-		<button class="btn btn-secondary" type="button" data-dismiss="modal">
+		<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
 			<?php echo JText::_( 'JCANCEL' ); ?>
 		</button>
 	</div>
