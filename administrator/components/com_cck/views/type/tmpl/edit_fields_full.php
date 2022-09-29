@@ -85,7 +85,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
         foreach ( $data2['construction'] as $k=>$v ) {
             if ( count( $v ) ) {
                 foreach ( $v as $k2=>$v2 ) {
-                    if ( $k2 == '_' ) {
+                    if ( $v2 === '_' ) {
                         if ( isset( $data[$k] ) ) {
                             if ( $k == 'variation' ) {
                                  $data['variation']['300']  =   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
@@ -94,7 +94,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                             echo JHtml::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     } else {
-                        if ( count( $v2 ) ) {
+                        if ( is_array( $v2 ) && count( $v2 ) ) {
                             echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     }
