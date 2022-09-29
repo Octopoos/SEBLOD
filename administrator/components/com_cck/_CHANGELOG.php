@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.23.0 Upgrade Release [30-Sep-2022] --------------
+
+# Back-end (Construction UI) issue on PHP 8.x fixed.
+# Warnings and issues on PHP 8.x fixed.
+
 --------------- 3.22.1 Upgrade Release [24-May-2022] --------------
 
 * Security Release: XSS Vulnerability fixed. (Pagination Links)
