@@ -163,8 +163,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// onCCK_Storage_LocationPrepareList
 	public static function onCCK_Storage_LocationPrepareList( &$params )
 	{
-		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-		require_once JPATH_SITE.'/components/com_content/router.php';
+		if ( !JCck::on( '4.0' ) ) {
+			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			require_once JPATH_SITE.'/components/com_content/router.php';
+		}
 		
 		JPluginHelper::importPlugin( 'content' );
 		$params	=	JComponentHelper::getParams( 'com_content' );
@@ -649,7 +651,9 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			}
 			$storage[self::$table]->_route	=	plgCCK_Storage_LocationJoomla_Article::_getRoute( $sef, $itemId, $bridge->slug, $path );
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		

@@ -242,8 +242,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// onCCK_Storage_LocationPrepareList
 	public static function onCCK_Storage_LocationPrepareList( &$params )
 	{
-		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-		require_once JPATH_SITE.'/components/com_content/router.php';
+		if ( !JCck::on( '4.0' ) ) {
+			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			require_once JPATH_SITE.'/components/com_content/router.php';
+		}
 		
 		JPluginHelper::importPlugin( 'content' );
 		$params	=	JComponentHelper::getParams( 'com_content' );
@@ -806,7 +808,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
+
 			$route		=	ContentHelperRoute::getArticleRoute( $item->slug, $item->catid, $item->language );
 		}
 		
@@ -871,7 +876,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 			}
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
 
 			if ( !isset( $storage[self::$table]->_route ) ) {
 				$storage[self::$table]->_route		=	array();
