@@ -144,7 +144,7 @@ abstract class JCckDevHelper
 			} else {
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
-				$lang_sef	=	self::getLanguageCode();
+				$lang_sef	=	self::getLanguageCode( true );
 
 				if ( $lang_sef ) {
 					$context	.=	$lang_sef.'/';
