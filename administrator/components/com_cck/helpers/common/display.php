@@ -27,7 +27,7 @@ class CommonHelper_Display
 	}
 	
 	// quickJGrid
-	public static function quickJGrid( $type, $value = 0, $i, $canChange = true )
+	public static function quickJGrid( $type, $value, $i, $canChange = true )
 	{
 		$states	=	array(
 						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
