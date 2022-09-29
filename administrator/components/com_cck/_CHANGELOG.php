@@ -22,7 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.0.0 Release Preview 4 [24-Aug-2022] ------------
+--------------- 4.0.1 Release Preview 5 [30-Sep-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+
+# Back-end (Construction UI) issue on PHP 8.x fixed.
+# Regression (related to Language Context) fixed.
+
+--------------- 4.0.1 Release Preview 4 [24-Aug-2022] ------------
 
 ! Joomla! 4.x support
   >> Bringing additional UI tweaks and fixes.
