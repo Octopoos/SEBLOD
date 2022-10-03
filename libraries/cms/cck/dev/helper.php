@@ -488,18 +488,16 @@ abstract class JCckDevHelper
 	{
 		$json	=	'';
 		
-		if ( count( $rules ) ) {
-			foreach ( $rules as $name => $r ) {
-				$j	=	'';
-				foreach ( $r as $k => $v ) {
-					if ( $v != '' ) {
-						$j	.=	'"'.$k.'":'.$v.',';
-					}
+		foreach ( $rules as $name => $r ) {
+			$j	=	'';
+			foreach ( $r as $k => $v ) {
+				if ( $v != '' ) {
+					$j	.=	'"'.$k.'":'.$v.',';
 				}
-				$json	.=	'"'.$name.'":'.( $j ? '{'.substr( $j, 0, -1 ).'}' : '[]' ).',';
 			}
-			$json	=	substr( $json, 0, -1 );
+			$json	.=	'"'.$name.'":'.( $j ? '{'.substr( $j, 0, -1 ).'}' : '[]' ).',';
 		}
+		$json	=	substr( $json, 0, -1 );
 		
 		return ( $json != '' ) ? '{'.$json.'}' : $default;
 	}
