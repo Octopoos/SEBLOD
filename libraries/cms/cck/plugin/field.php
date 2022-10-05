@@ -197,7 +197,7 @@ class JCckPluginField extends JPlugin
 				if ( is_array( $v ) ) {
 					if ( isset( $v['options'] ) ) {
 						$options	=	array();
-						if ( count( $v['options'] ) ) {
+						if ( is_array( $v['options'] ) && count( $v['options'] ) ) {
 							foreach ( $v['options'] as $option ) {
 								$options[]	=	$option;
 							}
