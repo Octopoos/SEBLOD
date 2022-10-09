@@ -110,7 +110,12 @@ class CCK_Import
 			if ( $pk > 0 ) {
 				$item->id	=	$pk;
 			}
-			$item->store();
+			
+			// TODO later: ->check()
+			
+			if ( !$item->store() ) {
+				// var_dump( $item->getError() );
+			}
 			$call	=	'afterImport'.$elemtype;
 			self::$call( $xml, $elemtype, $item, $data );
 		}
@@ -169,6 +174,9 @@ class CCK_Import
 		if ( file_exists( JPATH_SITE.'/plugins/cck_field/'.$item->type.'/classes/app.php' ) ) {
 			require_once JPATH_SITE.'/plugins/cck_field/'.$item->type.'/classes/app.php';
 			JCck::callFunc_Array( 'plgCCK_Field'.$item->type.'_App', 'onCCK_FieldImportField', array( &$item, $data ) );
+		}
+		if ( is_null( $item->storage_key ) ) {
+			$item->storage_key	=	'';
 		}
 
 		return $pk;
