@@ -32,10 +32,14 @@ $types		=	array(
 <div class="seblod">
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<?php
-	echo '<ul class="adminformlist adminformlist-2cols" style="width:100%">';
+	if ( !JCck::on( '4.0' ) ) {
+		echo '<ul class="adminformlist adminformlist-2cols" style="width:100%">';
+	}
 	echo JCckDev::renderBlank();
 	echo JCckDev::renderForm( 'core_content_type', @$options['content_types'], $config, array( 'label'=>'Content Type Targets', 'defaultvalue'=>'', 'storage_field'=>'json[options][content_types]', 'required'=>'required' ) );
-	echo '</ul>';
+	if ( !JCck::on( '4.0' ) ) {
+		echo '</ul>';
+	}
 
 	if ( @$options['type'] != '' ) {
 		$users	=	explode( ',', @$options['type'] );
@@ -53,17 +57,18 @@ $types		=	array(
 		} else {
 			echo JCckDevTabs::open( $group_id, 'account'.$i, $label );
 		}
-		
-		echo '<ul class="adminformlist adminformlist-2cols">';
-
+		if ( !JCck::on( '4.0' ) ) {
+			echo '<ul class="adminformlist adminformlist-2cols">';
+		}
 		foreach ( $params as $p ) {
 			echo JCckDev::renderForm( 'core_dev_text', @$options[$account][$p['name']], $config, array( 'label'=>$p['label'], 'storage_field'=>'json[options]['.$account.']['.$p['name'].']', 'required'=>$p['required'], 'attributes'=>$p['attributes'] ) );
 		}
 		echo JCckDev::renderForm( 'core_bool', @$options[$account]['bridge'], $config, array( 'label'=>'Bridge', 'defaultvalue'=>'0', 'storage_field'=>'json[options]['.$account.'][bridge]' ) );
 		echo JCckDev::renderForm( 'core_bool', @$options[$account]['force_password'], $config, array( 'label'=>'Password', 'defaultvalue'=>'0', 'options'=>'Clear=0||MD5=1', 'storage_field'=>'json[options]['.$account.'][force_password]' ) );
 		echo JCckDev::renderForm( 'core_bool', @$options[$account]['set_author'], $config, array( 'label'=>'Set As Author', 'defaultvalue'=>'0', 'storage_field'=>'json[options]['.$account.'][set_author]' ) );
-
-		echo '</ul>';
+		if ( !JCck::on( '4.0' ) ) {
+			echo '</ul>';
+		}
 	}
 
 	// Options
@@ -72,9 +77,13 @@ $types		=	array(
 	} else {
 		echo JCckDevTabs::open( $group_id, 'tabs2', JText::_( 'COM_CCK_OPTIONS' ) );
 	}
-	echo '<ul class="adminformlist adminformlist-2cols">';
+	if ( !JCck::on( '4.0' ) ) {
+		echo '<ul class="adminformlist adminformlist-2cols">';
+	}
 	echo JCckDev::renderForm( 'core_dev_select', @$options['type'], $config, array( 'label'=>'Type', 'defaultvalue'=>'2,7', 'selectlabel'=>'', 'options'=>'Minimal=6||Basic=7||Standard=2,7||Advanced=2,3,6,7', 'storage_field'=>'json[options][type]' ) );
-	echo '</ul>';
+	if ( !JCck::on( '4.0' ) ) {
+		echo '</ul>';
+	}
 
 	echo JCckDevTabs::end();
 	?>
