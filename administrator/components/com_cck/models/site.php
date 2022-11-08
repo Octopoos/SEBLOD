@@ -109,7 +109,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		}
 		
 		/* TODO#SEBLOD: call plugins->prepareStore() */
-		$data['groups']		=	$this->_implodeValues( $data['groups'], $data['guest_only_group'] );
+		$data['usergroups']	=	$this->_implodeValues( $data['usergroups'], $data['guest_only_group'] );
 		$data['viewlevels']	=	$this->_implodeValues( $data['viewlevels'], $data['guest_only_viewlevel'] );
 		
 		return $data;
@@ -177,7 +177,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 				$levels[$k]		=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. $group->title, array(), $next_level );
 			}
 		}
-		$data['groups']	=	$usergroups;		
+		$data['usergroups']	=	$usergroups;		
 		if ( $mode == 1 ) {
 			CCK_TableSiteHelper::updateRootAsset( $root, $rules );
 		}
@@ -198,12 +198,12 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		}
 		
 		// Guest Viewlevel
-		$usergroups			=	$data['groups'];
+		$usergroups			=	$data['usergroups'];
 		if ( $guest_only ) {
 			$data['guest_only_group']		=	$guest_group;
 			$usergroups[]					=	$guest_group;
 			$guest_viewlevel				=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
-			$usergroups						=	$data['groups'];
+			$usergroups						=	$data['usergroups'];
 			$data['guest_only_viewlevel']	=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. 'Guest Only', array( 0 => $guest_group ), $next_level );
 		} else {
 			$guest_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
