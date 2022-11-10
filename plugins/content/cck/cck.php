@@ -22,7 +22,7 @@ class plgContentCCK extends JPlugin
 	public function onContentAfterSave( $context, $article, $isNew )
 	{
 		if ( JCck::on( '4.0' ) ) {
-			if ( $isNew ) {
+ 			if ( $isNew && $context == 'com_content.article' ) {
 				$this->_doWorkflow( 'add', $context, $article );
 			}
 		}
