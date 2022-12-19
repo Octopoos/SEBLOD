@@ -376,7 +376,6 @@ class CCKController extends JControllerLegacy
 			$session->clear( 'cck_impersonate' );
 		}
 
-
 		$this->setRedirect( JUri::root() );
 	}
 
