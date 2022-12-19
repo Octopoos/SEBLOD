@@ -39,8 +39,8 @@ $preconfig['task']		=	$app->input->get( 'task', '' );
 $preconfig['type']		=	$params->get( 'type', '' );
 $preconfig['url']		=	'';
 
-$live		=	urldecode( $params->get( 'live' ) );
-$variation	=	$params->get( 'variation' );
+$live		=	urldecode( $params->get( 'live', '' ) );
+$variation	=	$params->get( 'variation', '' );
 
 jimport( 'cck.base.form.form' );
 include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
@@ -48,7 +48,7 @@ JFactory::getSession()->set( 'cck_hash_'.$formId, JApplicationHelper::getHash( '
 JFactory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
-$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
+$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx', '' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_form', $params->get( 'layout', 'default' ) );
 ?>

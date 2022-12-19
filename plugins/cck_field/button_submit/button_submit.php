@@ -168,7 +168,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			return;
 		}
 		self::$path		=	parent::g_getPath( self::$type.'/' );
-		$field->label2	=	trim( @$field->label2 );
+		$field->label2	=	isset( $field->label2 ) ? trim( $field->label2 ) : '';
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
 		// Init

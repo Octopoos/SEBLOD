@@ -186,13 +186,17 @@ if ( !isset( $lives ) ) {
 		}
 	}
 }
-$variation	=	explode( '||', $variation );
 $variations	=	array();
-foreach ( $variation as $var ) {
-	if ( $var != '' ) {
-		$v					=	explode( '=', $var );
-		if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
-		$variations[$v[0]]	=	$v[1];
+
+if ( isset( $variation ) ) {
+	$variation	=	explode( '||', $variation );
+
+	foreach ( $variation as $var ) {
+		if ( $var != '' ) {
+			$v					=	explode( '=', $var );
+			if ( $v[1] == 'none' ) { $v[1] = 'hidden'; } /* TODO#SEBLOD: FIX TO REMOVE AFTER GA */
+			$variations[$v[0]]	=	$v[1];
+		}
 	}
 }
 
