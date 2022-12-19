@@ -24,7 +24,7 @@ $ -> Language fix or change
 
 --------------- 3.23.2 Upgrade Release [xx-Dec-2022] --------------
 
-...
+# Site parameters ("usergroups" column) fixed.
 
 --------------- 3.23.1 Upgrade Release [6-Oct-2022] ---------------
 
