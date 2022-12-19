@@ -258,7 +258,7 @@ abstract class JCckWebservice
 	}
 
 	// output
-	public static function output( $resource_name, $resource_config = array() )
+	public static function output( $resource_name, $resource_config = array(), $default = 'data' )
 	{
 		if ( !is_file( JPATH_SITE.'/components/com_cck_webservices/models/api.php' ) ) {
 			return false;
@@ -267,8 +267,17 @@ abstract class JCckWebservice
 		JModelLegacy::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
 
 		$model	=	JModelLegacy::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
+		$output	=	$model->doOutput( $resource_name, $resource_config );
 
-		return $model->doOutput( $resource_name, $resource_config );
+		if ( $default != 'data' ) {
+			if ( isset( $output['data']['status'] ) && $output['data']['status'] == 'error' ) {
+				return $default;
+			} else {
+				$output	=	$output['data'];
+			}
+		}
+
+		return $output;
 	}
 }
 ?>
