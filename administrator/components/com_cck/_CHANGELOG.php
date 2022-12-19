@@ -24,7 +24,9 @@ $ -> Language fix or change
 
 --------------- 4.0.1 Release Preview 8 [xx-Dec-2022] ------------
 
-...
+^ Core Update for SEBLOD WebServices add-on.
+
+# Workflow support restricted to Joomla! Article.
 
 --------------- 4.0.1 Release Preview 7 [10-Oct-2022] ------------
 
