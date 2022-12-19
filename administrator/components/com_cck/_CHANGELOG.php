@@ -26,6 +26,8 @@ $ -> Language fix or change
 
 ^ Core Update for SEBLOD WebServices add-on.
 
+# Back-end/Component Constant name issue on PHP 8.x fixed.
+# Site parameters ("usergroups" column) fixed.
 # Workflow support restricted to Joomla! Article.
 
 --------------- 4.0.1 Release Preview 7 [10-Oct-2022] ------------
