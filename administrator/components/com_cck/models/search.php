@@ -315,7 +315,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		$title	=	$app->input->getString( 'duplicate_title', '' );
 		$user	=	JFactory::getUser();
 
-		if ( ! $user->authorise( 'core.create', COM_CCK ) ) {
+		if ( ! $user->authorise( 'core.create', CCK_COM ) ) {
 			throw new Exception( JText::_( 'JERROR_CORE_CREATE_NOT_PERMITTED' ) );
 		}
 
