@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.1 Release Preview 8 [xx-Dec-2022] ------------
+
+...
+
 --------------- 4.0.1 Release Preview 7 [10-Oct-2022] ------------
 
 ! Joomla! 4.x support
