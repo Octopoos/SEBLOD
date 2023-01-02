@@ -10,74 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-if ( version_compare( JVERSION, '3.2', 'ge' ) ) {
-	// TableAdapter
-	class CCK_TableFolderAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( JTable $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-} else {
-	// TableAdapter
-	class CCK_TableFolderAdapter extends JTable
-	{
-		// _getAssetParentId
-		protected function _getAssetParentId( $table = null, $id = null )
-		{
-			return $this->_getAssetParentId2( $table, $id );
-		}
-	}
-}
-
 // Table
-class CCK_TableFolder extends CCK_TableFolderAdapter
+class CCK_TableFolder extends JTable
 {
 	// __construct
 	public function __construct( &$db )
 	{				
 		parent::__construct( '#__cck_core_folders', 'id', $db );
-	}
-	
-	// _getAssetName
-	protected function _getAssetName()
-	{
-		$k	=	$this->_tbl_key;
-		
-		return CCK_COM.'.folder.'.(int)$this->$k;
-	}
-
-	// _getAssetTitle
-	protected function _getAssetTitle()
-	{
-		return $this->title;
-	}
-	
-	// _getAssetParentId2
-	protected function _getAssetParentId2( $table, $id )
-	{
-		$assetId	=	0;
-		$k			=	$this->_tbl_key;
-		$db			=	$this->getDbo();
-		
-		if ( $this->$k == 1 || $this->$k == 2 ) {
-			$assetId	=	0;
-		} else {
-			require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
-			$parentId	=	Helper_Folder::getParent( $this->$k );
-			$db->setQuery( 'SELECT asset_id FROM #__cck_core_folders WHERE id = '.(int)$parentId );
-			$assetId	=	$db->loadResult();
-		}
-
-		if ( ! $assetId ) {
-			$query		=	'SELECT id FROM #__assets WHERE name = "com_cck"';
-			$db->setQuery( $query );
-			$assetId	=	$db->loadResult();
-		}
-		
-		return $assetId;
 	}
 	
 	// check
@@ -87,22 +26,13 @@ class CCK_TableFolder extends CCK_TableFolderAdapter
 		if ( empty( $this->title ) ) {
 			return false;
 		}
-		if ( empty( $this->name ) ) {
+		if( empty( $this->name ) ) {
 			$this->name	=	$this->title;
 			$this->name =	JCckDev::toSafeSTRING( $this->name );
 			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
 				$datenow	=	JFactory::getDate();
 				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );
 			}
-		}
-		if ( empty( $this->path ) ) {
-			$this->path	=	'';
-		}
-		if ( empty( $this->icon_path ) ) {
-			$this->icon_path	=	'';
-		}
-		if ( empty( $this->app ) ) {
-			$this->app	=	'';
 		}
 		
 		$prefix	=	JCck::getConfig_Param( 'development_prefix', '' );

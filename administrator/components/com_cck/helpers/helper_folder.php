@@ -41,34 +41,6 @@ class Helper_Folder
 		
 		return( $branch );
 	}
-
-	// getBrothers
-	public static function getBrothers( $parent_id, $more = '' )
-	{
-		$query  = 'SELECT s.name, (COUNT(parent.name) - (sub_tree.depth2 + 1)) AS depth2'
-				. ' FROM #__cck_core'.$more.'_folders AS s,'
-				. ' #__cck_core'.$more.'_folders AS parent,'
-				. ' #__cck_core'.$more.'_folders AS sub_parent,'
-				. ' ('
-		            . ' SELECT s.name, (COUNT(parent.name) - 1) AS depth2'
-		            . ' FROM #__cck_core'.$more.'_folders AS s,'
-		            . ' #__cck_core'.$more.'_folders AS parent'
-		            . ' WHERE s.lft BETWEEN parent.lft AND parent.rgt'
-		            . ' AND s.id = '.(int)$parent_id
-		            . ' GROUP BY s.name'
-		            . ' ORDER BY s.lft'
-					. ' ) AS sub_tree'
-				. ' WHERE s.lft BETWEEN parent.lft AND parent.rgt'
-				. ' AND s.lft BETWEEN sub_parent.lft AND sub_parent.rgt'
-				. ' AND sub_parent.name = sub_tree.name'
-				. ' GROUP BY s.name'
-				. ' HAVING depth2 <= 1'
-				. ' ORDER BY s.lft'
-				;
-      	$brothers	=	JCckDatabase::loadColumn( $query );
-		
-		return $brothers;
-	}
 	
 	// getParent
 	public static function getParent( $id, $more = '' )
@@ -118,6 +90,34 @@ class Helper_Folder
 		return $root;
 	}
 
+	// getSiblings
+	public static function getSiblings( $parent_id, $more = '' )
+	{
+		$query  = 'SELECT s.name, (COUNT(parent.name) - (sub_tree.depth2 + 1)) AS depth2'
+				. ' FROM #__cck_core'.$more.'_folders AS s,'
+				. ' #__cck_core'.$more.'_folders AS parent,'
+				. ' #__cck_core'.$more.'_folders AS sub_parent,'
+				. ' ('
+					. ' SELECT s.name, (COUNT(parent.name) - 1) AS depth2'
+					. ' FROM #__cck_core'.$more.'_folders AS s,'
+					. ' #__cck_core'.$more.'_folders AS parent'
+					. ' WHERE s.lft BETWEEN parent.lft AND parent.rgt'
+					. ' AND s.id = '.(int)$parent_id
+					. ' GROUP BY s.name'
+					. ' ORDER BY s.lft'
+					. ' ) AS sub_tree'
+				. ' WHERE s.lft BETWEEN parent.lft AND parent.rgt'
+				. ' AND s.lft BETWEEN sub_parent.lft AND sub_parent.rgt'
+				. ' AND sub_parent.name = sub_tree.name'
+				. ' GROUP BY s.name'
+				. ' HAVING depth2 <= 1'
+				. ' ORDER BY s.lft'
+				;
+		$siblings	=	JCckDatabase::loadColumn( $query );
+		
+		return $siblings;
+	}
+
 	// getTree
 	public static function getTree( $excluded, $published, $more = '' )
 	{
@@ -148,18 +148,18 @@ class Helper_Folder
 	// prepareTree
 	public static function prepareTree( $parent_id, $title, $more = '' )
 	{
-		$brothers	=	Helper_Folder::getBrothers( $parent_id, $more );
-		$parent		=	array_shift( $brothers );
-		$brothers[]	=	$title;
-		sort( $brothers );
-		$key		=	array_search( $title, $brothers );
+		$siblings	=	Helper_Folder::getSiblings( $parent_id, $more );
+		$parent		=	array_shift( $siblings );
+		$siblings[]	=	$title;
+		sort( $siblings );
+		$key		=	array_search( $title, $siblings );
 		
 		if ( $key == 0 ) {
 			$query	= ' SELECT lft FROM #__cck_core'.$more.'_folders'
 					. ' WHERE name = "'.$parent.'"'
 					;
 		} else {
-			$bigbro	=	$brothers[$key - 1];
+			$bigbro	=	$siblings[$key - 1];
 			$query	= ' SELECT rgt FROM #__cck_core'.$more.'_folders'
 					. ' WHERE name = "'.$bigbro.'"'
 					;
@@ -228,25 +228,6 @@ class Helper_Folder
 		}
 		
 		return $rgt + 1;
-	}
-	
-	// getRules
-	public static function getRules( $rules, $default = '{}' )
-	{
-		$json	=	'';
-		
-		foreach ( $rules as $name => $r ) {
-			$j	=	'';
-			foreach ( $r as $k => $v ) {
-				if ( $v != '' ) {
-					$j	.=	'"'.$k.'":'.$v.',';
-				}
-			}
-			$json	.=	'"'.$name.'":'.( $j ? '{'.substr( $j, 0, -1 ).'}' : '[]' ).',';
-		}
-		$json	=	substr( $json, 0, -1 );
-		
-		return ( $json != '' ) ? '{'.$json.'}' : $default;
 	}
 }
 ?>

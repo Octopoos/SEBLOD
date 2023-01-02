@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\HTML\HTMLHelper;
 
 $uix		=	JCck::getUIX();
-$config		=	JCckDev::init( array( '42', 'checkbox', 'colorpicker', 'jform_rules', 'radio', 'text', 'wysiwyg_editor' ), true, array( 'item' => $this->item ) );
+$config		=	JCckDev::init( array( '42', 'checkbox', 'colorpicker', 'radio', 'text', 'wysiwyg_editor' ), true, array( 'item' => $this->item ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -33,7 +33,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                                 'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolderParent', 'name'=>'core_folder_folder' ), $this->item->parent_id, $config, array( 'storage_field'=>'parent_id', 'required'=>'required' ) ),
                                 'home'=>JCckDev::renderForm( 'core_featured', $this->item->home, $config, array( 'label'=>'App Root',  'options'=>'No=0||Yes App Root=1', 'storage_field'=>'home', 'attributes'=>$attr, 'css'=>'btn-group btn-group-yesno' ), array(), 'w100' ),
                                 'introchar'=>JCckDev::renderForm( 'core_introchar', $this->item->introchar, $config ),
-                                'permissions'=>JCckDev::getForm( 'core_rules_folder', $this->item->asset_id, $config ),
                                 'state'=>JCckDev::renderForm( 'core_state', $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ), 'defaultvalue'=>1 ) ),
                                 'title'=>JCckDev::renderForm( 'core_title_folder', $this->item->title, $config )
                             ),

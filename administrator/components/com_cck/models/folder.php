@@ -64,18 +64,6 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		} else {
 			$data['elements']	=	'';
 		}
-
-		if ( !$data['jform']['id'] && !$data['jform']['rules'] ) {
-			$data['jform']['rules']	=	array();
-		}
-
-		if ( $data['jform']['rules'] ) {
-			if ( !is_array( $data['jform']['rules'] ) ) {
-				$data['jform']['rules']	=	json_decode( $data['jform']['rules'] );
-			}
-			$rules	=	new JAccessRules( JCckDevHelper::getRules( $data['jform']['rules'] ) );
-			$table->setRules( $rules );
-		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- //
@@ -404,19 +392,6 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			CCK_Export::update( $path.'/pkg_'.$filename.'.xml', $copyright );
 		}
 		return CCK_Export::zip( $path, $path_zip );
-	}
-	
-	// clearACL
-	public function clearACL( $pks )
-	{
-		require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
-		
-		if ( count( $pks ) ) {
-			return Helper_Admin::initACL( array( 'table'=>'folder', 'name'=>'folder',
-												 'rules'=>'{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' ), $pks );
-		}
-		
-		return false;
 	}
 
 	// rebuild

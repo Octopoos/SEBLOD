@@ -112,17 +112,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 		$elements		=	explode( ',', $item->elements );
 		$elements		=	array_flip( $elements );
-
-		$permissions	=	'';
-
-		if ( $item->rules && $item->rules != '{}' ) {
-			$count			=	(int)substr_count( $item->rules, 'core.' );
-
-			if ( $count ) {
-				$key			=	( $count == 1 ) ? 'COM_CCK_N_PERMISSIONS_1' : 'COM_CCK_N_PERMISSIONS';
-				$permissions	=	' <span class="icon-users small hasTooltip" style="color:#666666;" title="'.JText::sprintf( $key, $count ).'" data-trigger="click" data-placement="right"></span>';
-			}
-		}
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
@@ -140,18 +129,18 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					if ( ( $canEdit && ! $checkedOut ) ) {
                         if ( $item->id == 1 || $item->id == 2 ) { ?>
                             <?php echo $checked_out; ?><a href="<?php echo $link; ?>"><?php echo JText::_( 'COM_CCK_'.str_replace( ' ', '_', $item->title ) ); ?></a>
-                            <?php echo '<div class="small">'.strtolower( $item->name ).$permissions.'</div>'; ?>
+                            <?php echo '<div class="small">'.strtolower( $item->name ).'</div>'; ?>
                         <?php } else { ?>
                             <?php echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out; ?><a href="<?php echo $link; ?>"><?php echo $item->title; ?></a>
-                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>'; ?>
+                            <?php echo '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>'; ?>
                         <?php }
                     } else {
                         if ( $item->id == 1 || $item->id == 2 ) {
                             echo $checked_out.$item->title
-                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).$permissions.'</div>';
+                             .	 '<div class="small">'.strtolower( JText::_( $item->name ) ).'</div>';
                         } else {
                             echo str_repeat( '<span class="gtr2">\n</span>', $item->depth ).$checked_out.$item->title
-                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span>'.$permissions.'</div>';
+                             .	 '<div>'.str_repeat( '<span class="gtr2">\n</span>', $item->depth ).'<span class="small">'.$item->name.'</span></div>';
                         }
                     }
                     ?>

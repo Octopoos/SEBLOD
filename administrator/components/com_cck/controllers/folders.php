@@ -24,34 +24,6 @@ class CCKControllerFolders extends JControllerAdmin
 	{
 		parent::__construct( $config );
 	}
-	
-	// clear
-	public function clear()
-	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-		
-		$app	=	JFactory::getApplication();
-		$cid	=	$app->input->get( 'cid', array(), 'array' );
-		$n		=	count( $cid );
-		
-		if ( !is_array( $cid ) || $n < 1 ) {
-			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
-			$type	=	'error';
-		} else {
-			$cid	=	ArrayHelper::toInteger( $cid );
-			
-			$model	=	$this->getModel();
-			if ( $model->clearACL( $cid ) ) {
-				$msg	=	JText::sprintf( 'COM_CCK_SUCCESSFULLY_UPDATED', $n );
-				$type	=	'message';
-			} else {
-				$msg	=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
-				$type	=	'error';
-			}
-		}
-		
-		$this->setRedirect( _C0_LINK, $msg, $type );
-	}
 
 	// getModel
 	public function getModel( $name = 'Folder', $prefix = CCK_MODEL, $config = array( 'ignore_request' => true ) )
