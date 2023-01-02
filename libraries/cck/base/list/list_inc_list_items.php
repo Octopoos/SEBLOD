@@ -74,7 +74,7 @@ if ( $count ) {
 			$items[$i]->pkb				=	0;
 			$items[$i]->type_id			=	0;
 		}
-		$item	=	new CCK_Item( $templateStyle->name, $search->name, $items[$i]->pk );
+		$item	=	new CCK_Rendering_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		
 		// --
 		if ( $count2 ) {

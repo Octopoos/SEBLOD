@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 // Rendering Item
-class CCK_Item
+class CCK_Rendering_Item
 {
 	private $me;
 	
