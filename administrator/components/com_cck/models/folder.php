@@ -83,6 +83,10 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 				$data['rgt']	=	$limits[1];
 			}
 		}
+		if ( (int)$data['parent_id'] == 60 && !$data['jform']['id'] ) {
+			$data['home']	=	'0';
+			$data['params']	=	$this->setMore( $data );
+		}
 		
 		return $data;
 	}
@@ -109,6 +113,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		// Core
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'cck.base.install.export' );
+		
 		$data										=	array( 'root'=>$path,
 															   'root_content'=>$path.'/content',
 															   'root_elements'=>$path.'/elements',
@@ -408,6 +413,64 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		Helper_Folder::rebuildTree( $cid, $lft );
 
 		return true;
+	}
+
+	// setMore
+	public function setMore( $data )
+	{
+		$more		=	JCckDevHelper::getApp( 'more' );
+		$params		=	array(
+								'menu_item'=>0,
+								'user_group'=>0,
+								'viewing_access_level'=>0
+							);
+		$title		=	ucwords( strtolower( $data['title'] ) );
+
+		$content_menu_item	=	new JCckContentMenuItem;
+		$content_user_group	=	new JCckContentUserGroup;
+		$content_viewlevel	=	new JCckContentAccess;
+		
+		$parents			=	array(
+									'menu_item'=>$more->params->get( 'menu_item.Admin', 1 ),
+									'user_group'=>$more->params->get( 'user_group.Front-end-Manager', 10 )
+								);
+
+		// Add User Group
+		$params['user_group']			=	(int)$content_user_group->create( 'o_user_group', array(
+																								'parent_id'=>$parents['user_group'],
+																								'title'=>$title
+																							) )->getPk();
+
+		// Add View Access Levels
+		$params['viewing_access_level']	=	(int)$content_viewlevel->create( 'o_viewing_access_level', array(
+																										'ordering'=>4,
+																										'title'=>'Front-end Manager - '.$title,
+																										'rules'=>array( 0=>8, 1=>$params['user_group'] )
+																									 ) )->getPk();
+
+		$own_viewing_access_level		=	(int)$content_viewlevel->create( 'o_viewing_access_level', array(
+																										'ordering'=>4,
+																										'title'=>'Front-end Manager - '.$title.'+',
+																										'rules'=>array( 0=>8, 1=>$params['user_group'] )
+																									 ) )->getPk();
+
+		// Add Menu Item
+		$params['menu_item']			=	(int)$content_menu_item->create( 'o_nav_item', array(
+																							'access'=>$own_viewing_access_level,
+																							'client_id'=>0,
+																							'item_request'=>'{}',
+																							'item_type'=>'heading',
+																							'language'=>'*',
+																							'menutype'=>'adminmenu',
+																							'params'=>'{}',
+																							'parent_id'=>$parents['menu_item'],
+																							'published'=>1,
+																							'title'=>$title,
+																							'type'=>'heading'
+																						  ) )->getPk();
+
+		// Save childs for later
+		return json_encode( $params );
 	}
 }
 ?>
