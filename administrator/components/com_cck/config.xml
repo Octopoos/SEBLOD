@@ -4,6 +4,10 @@
 		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
 		<field name="link_rel_blank" type="text" size="32" default="noopener noreferrer" label="COM_CCK_CONFIG_LINK_REL_BLANK" description="COM_CCK_CONFIG_LINK_REL_BLANK_DESC" class="inputbox" />
 		<field name="COM_CCK_CONFIG_LEGEND_CORE" type="spacer" hr="false" />
+		<field name="core_js_bootstrap" type="list" default="0" label="COM_CCK_CONFIG_CORE_JS_BOOTSTRAP" description="COM_CCK_CONFIG_CORE_JS_BOOTSTRAP_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
+			<option value="1">COM_CCK_CONFIG_SQL_LEGACY_J3</option>
+		</field>
 		<field name="core_legacy" type="list" default="2012" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
 			<option value="2017">2017</option>

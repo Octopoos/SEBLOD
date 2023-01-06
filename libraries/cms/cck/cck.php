@@ -470,7 +470,11 @@ abstract class JCck
 		if ( JCck::on( '4.0' ) ) {
 			JHtml::_( 'jquery.framework' );
 		}
-		JHtml::_( 'bootstrap.framework' );
+		if ( (int)JCck::getConfig_Param( 'core_js_bootstrap', '0' ) ) {
+			$doc->addScript( $root.'/media/cck/js/bootstrap.min.js' );
+		} else {
+			JHtml::_( 'bootstrap.framework' );
+		}
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
