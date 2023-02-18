@@ -24,9 +24,12 @@ $ -> Language fix or change
 
 --------------- 3.23.2 Upgrade Release [18-Feb-2022] --------------
 
-# Additional fixes included for PHP 8.x.
-# Back-end/Component Constant name issue on PHP 8.x fixed.
+# Field parameters ("json@options2" column) storage issue fixed
+  >> read more @SEBLOD/pull/635
 # Site parameters ("usergroups" column) fixed.
+
+# Back-end/Component Constant name issue on PHP 8.x fixed.
+# Additional fixes included for PHP 8.x.
 
 --------------- 3.23.1 Upgrade Release [6-Oct-2022] ---------------
 
