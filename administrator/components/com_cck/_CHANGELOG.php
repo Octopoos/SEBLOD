@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.23.2 Upgrade Release [xx-Dec-2022] --------------
+--------------- 3.23.2 Upgrade Release [18-Feb-2022] --------------
 
 # Back-end/Component Constant name issue on PHP 8.x fixed.
 # Site parameters ("usergroups" column) fixed.
