@@ -24,6 +24,7 @@ $ -> Language fix or change
 
 --------------- 3.23.2 Upgrade Release [18-Feb-2022] --------------
 
+# Additional fixes included for PHP 8.x.
 # Back-end/Component Constant name issue on PHP 8.x fixed.
 # Site parameters ("usergroups" column) fixed.
 
