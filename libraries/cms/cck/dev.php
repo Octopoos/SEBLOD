@@ -1085,7 +1085,7 @@ abstract class JCckDev
 	public static function toJSON( $data = '' )
 	{
 		$registry	=	new JRegistry;
-		$registry->loadArray( $data );
+		$registry->loadArray( (array)$data );
 
 		return $registry->toString();
 	}
