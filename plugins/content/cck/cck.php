@@ -272,6 +272,11 @@ class plgContentCCK extends JPlugin
 	// onContentPrepare
 	public function onContentPrepare( $context, &$article, &$params, $limitstart = 0 )
 	{
+		// Leave the J! API alone
+		if ( JFactory::getApplication()->getName() == 'api' ) {
+			return true;
+		}
+
 		if ( strpos( $article->text, '/cck' ) === false ) {
 			return true;
 		}

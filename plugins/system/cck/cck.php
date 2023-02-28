@@ -124,6 +124,12 @@ class plgSystemCCK extends JPlugin
 	public function onAfterInitialise()
 	{
 		$app	=	JFactory::getApplication();
+
+		// Leave the J! API alone
+		if ( $app->getName() == 'api' ) {
+			return;
+		}
+
 		$view	=	$app->input->get( 'view' );
 		$task	=	$app->input->get( 'task' );
 
@@ -634,6 +640,7 @@ class plgSystemCCK extends JPlugin
 					}
 				}
 			}
+
 			return;
 		}
 
