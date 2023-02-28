@@ -236,6 +236,9 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// _implodeValues
 	protected function _implodeValues( $values, $excluded = '' )
 	{
+		if ( !is_array( $values ) ) {
+			return '';
+		}
 		if ( !$excluded ) {
 			return implode( ',', $values );
 		}
