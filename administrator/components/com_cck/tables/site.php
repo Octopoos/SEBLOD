@@ -41,6 +41,9 @@ class CCK_TableSite extends JTable
 			if ( empty( $this->created_user_id ) ) {
 				$this->created_user_id	=	JFactory::getUser()->id;
 			}
+			if ( is_null( $this->options ) ) {
+				$this->options	=	'';
+			}
 		}
 
 		return true;
