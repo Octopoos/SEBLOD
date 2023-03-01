@@ -26,13 +26,22 @@ class CCK_TableFolder extends JTable
 		if ( empty( $this->title ) ) {
 			return false;
 		}
-		if( empty( $this->name ) ) {
+		if ( empty( $this->name ) ) {
 			$this->name	=	$this->title;
 			$this->name =	JCckDev::toSafeSTRING( $this->name );
 			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
 				$datenow	=	JFactory::getDate();
 				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );
 			}
+		}
+		if ( empty( $this->path ) ) {
+			$this->path	=	'';
+		}
+		if ( empty( $this->icon_path ) ) {
+			$this->icon_path	=	'';
+		}
+		if ( empty( $this->app ) ) {
+			$this->app	=	'';
 		}
 		
 		$prefix	=	JCck::getConfig_Param( 'development_prefix', '' );
