@@ -304,7 +304,9 @@ class CCK_Export
 		// Prepare
 		$xml2	=	$xml->addChild( $elemtype );
 		foreach ( $elem as $k=>$v ) {
-			$xml2->addChild( $k, htmlspecialchars( $v ) );
+			if ( is_string( $v ) ) {
+				$xml2->addChild( $k, htmlspecialchars( $v ) );
+			}
 		}
 		
 		// Force

@@ -206,11 +206,11 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			}
 		}
 		
-		if ( count( $data['elements']['tables'] ) ) {
+		if ( is_array( $data['elements']['tables'] ) && count( $data['elements']['tables'] ) ) {
 			CCK_Export::exportTables( $data );
 		}
 
-		if ( count( $data['elements']['processings'] ) ) {
+		if ( is_array( $data['elements']['processings'] ) && count( $data['elements']['processings'] ) ) {
 			$isCck	=	true;
 
 			CCK_Export::exportProcessings( $data, $extensions );
