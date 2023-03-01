@@ -230,7 +230,7 @@ class plgSystemCCK extends JPlugin
 										   || $com == 'com_cck_toolbox'
 										   || $com == 'com_cck_updater'
 										   || $com == 'com_cck_webservices' ) {
-						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
+						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css' );
 						JCck::loadjQuery( true, true, true );
 					}
 					break;
@@ -260,12 +260,12 @@ class plgSystemCCK extends JPlugin
 					break;
 				case 'com_menus':
 					if ( $layout || $view == 'item' ) {
-						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
+						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css' );
 					}
 					break;
 				case 'com_modules':
 					if ( $layout ) {
-						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
+						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css' );
 					}
 					break;
 				case 'com_postinstall':
@@ -273,7 +273,7 @@ class plgSystemCCK extends JPlugin
 					break;
 				case 'com_plugins':
 					if ( $layout ) {
-						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css', array(), false );
+						JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/ui-big.css' );
 					}
 					break;
 				default:
