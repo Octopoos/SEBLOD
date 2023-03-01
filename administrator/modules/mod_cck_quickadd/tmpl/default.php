@@ -18,6 +18,10 @@ $elem	=	'';
 $href	=	'index.php?option=com_cck&view=form&layout=select&quickadd=1&quicklayout='.$modal_layout.'&tmpl=component';
 $label	=	JText::_( 'MOD_CCK_QUICKADD_ADD_NEW_CONTENT' );
 
+if ( !( $module->position == 'menu' || $module->position == 'status' ) ) {
+	return;
+}
+
 require JModuleHelper::getLayoutPath('mod_cck_quickadd', 'default_'.$module->position );
 
 if ( $css ) {
