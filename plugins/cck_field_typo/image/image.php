@@ -121,7 +121,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		$filename			=	substr( strrchr( $field->value, "/" ), 1 );
 		$filename			=	str_replace('.'.$ext,'',$filename);
 		
-		if ( $params['image_alt'] ) {
+		if ( $params['image_alt'] && isset( $field->image_alt ) ) {
 			$alt			=	' alt="'.$field->image_alt.'"';
 		}
 
