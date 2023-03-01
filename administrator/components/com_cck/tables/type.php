@@ -44,15 +44,8 @@ class CCK_TableType extends JTable
 		$assetId	=	null;
 		$db			=	$this->getDbo();
 		
-		if ( $this->folder ) {
-			$db->setQuery( 'SELECT asset_id FROM #__cck_core_folders WHERE id = '.(int)$this->folder );
-			$assetId	=	$db->loadResult();
-		}
-		
-		if ( ! $assetId ) {
-			$db->setQuery( 'SELECT id FROM #__assets WHERE name = "com_cck"' );
-			$assetId	=	$db->loadResult();
-		}
+		$db->setQuery( 'SELECT id FROM #__assets WHERE name = "com_cck"' );
+		$assetId	=	$db->loadResult();
 		
 		return $assetId;
 	}
@@ -112,6 +105,10 @@ class CCK_TableType extends JTable
 			if ( is_null( $this->stylesheets ) ) {
 				$this->stylesheets	=	'';
 			}
+		}
+
+		if ( $this->location == 'collection' ) {
+			$this->_trackAssets	=	false;
 		}
 
 		return true;
