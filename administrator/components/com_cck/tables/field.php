@@ -31,6 +31,9 @@ class CCK_TableField extends JTable
 		}
 
 		if ( !$this->id ) {
+			if ( is_null( $this->label ) ) {
+				$this->label	=	'';
+			}
 			if ( is_null( $this->defaultvalue ) ) {
 				$this->defaultvalue	=	'';
 			}
