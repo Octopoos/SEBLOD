@@ -536,7 +536,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		
 		$userfile_more	=	false;
 
-		if ( is_array( $userfile['name'] ) ) {
+		if ( isset( $userfile['name'] ) && is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
 				$userfile		=	self::_getUserFile( false, $userfile, $xk, $name );
 			} else {
