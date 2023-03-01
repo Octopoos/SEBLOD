@@ -8,13 +8,14 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
-	<version>4.0.1</version>
+	<version>4.0.2</version>
 	
 	<scriptfile>script.php</scriptfile>
 	
 	<install>
 		<sql>
 			<file driver="mysql" charset="utf8">install/install.sql</file>
+			<file driver="mysql" charset="utf8">install/install@4x.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/countries.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/integers.sql</file>
 			<file driver="mysql" charset="utf8">install/sql/jobs.sql</file>
@@ -24,6 +25,7 @@
 	</install>
 	
 	<files folder="site">
+		<folder>layouts</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 		
