@@ -269,7 +269,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 					return false;
 				}
 				
-				if ( $config['join'] && $config['pk'] > 0 ) {
+				if ( isset( $config['join'] ) && $config['join'] && $config['pk'] > 0 ) {
 					if ( ! $data[$config['join']] ) {
 						$data[$config['join']]	=	$config['pk'];
 					}
@@ -307,7 +307,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				}
 				$app->triggerEvent( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 				
-				if ( $config['join'] ) {
+				if ( isset( $config['join'] ) && $config['join'] ) {
 					self::_core( $data, $config );
 				} else {
 					if ( ! isset( $config['primary'] ) && self::$pk ) {
