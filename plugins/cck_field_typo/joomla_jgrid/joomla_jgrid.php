@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Component\Users\Administrator\Service\HTML\Users;
+use Joomla\CMS\HTML\HTMLHelper;
+
 // Plugin
 class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 {
@@ -343,7 +346,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$output->loadValue( $process['value'] );
 					$value	=	preg_replace( '#title=".*"#U', 'title="'.$output->getText().'"', $value );
 				}
-				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+				if ( JCck::on( '4' ) ) {
+					// See later for the class
+				} else {
+					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+				}
 			}
 
 			$fields[$name]->typo	=	$value;
@@ -367,7 +374,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
 						$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
 					}
-					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" title#U', 'class="'.$class.'" title', $value );
+					if ( JCck::on( '4' ) ) {
+						// See later for the class
+					} else {
+						$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" title#U', 'class="'.$class.'" title', $value );
+					}
 				}
 				$fields[$name]->typo	=	$value;
 			}
@@ -375,7 +386,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			static $loaded_users	=	0;
 			static $user			=	null;
 			if ( !$loaded_users ) {
-				require_once JPATH_ADMINISTRATOR.'/components/com_users/helpers/html/users.php';
+				HTMLHelper::getServiceRegistry()->register( 'users', new Users() );
+
 				$loaded_users		=	1;
 				$user				=	JFactory::getUser();
 			}
@@ -384,7 +396,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			if ( $type == 'activation' ) {
 				$activated	=	empty( $fields[$name]->value ) ? 0 : 1;
 				$title		=	( $activated == 0 ) ? 'COM_CCK_ACTIVATED' : 'COM_CCK_UNACTIVATED';
-				$value		=	JHtml::_('jgrid.state', JHtmlUsers::activateStates(), $activated, $process['pk_i'], 'users.', false /*(boolean)$activated*/ );
+				$value		=	 HTMLHelper::_( 'jgrid.state', HTMLHelper::_( 'users.activateStates' ), $activated, $process['pk_i'], 'users.', false /*(bool)$activated*/ );
 
 				if ( $fields[$name]->link && $activated ) {
 					$hasLink		=	true;
@@ -410,7 +422,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					} else {
 						$value	=	str_replace( array( 'title=""', 'title="COM_USERS_ACTIVATED"' ), 'title="'.JText::_( $title ).'"', $value );
 					}
-					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					if ( JCck::on( '4' ) ) {
+						// See later for the class
+					} else {
+						$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					}
 				}
 				/*
 				$value		=	str_replace( 'return listItemTask(', 'return JCck.Core.doTask(', $value );
@@ -421,7 +437,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$value		=	$fields[$name]->value;
 				$self		=	$user->id == $process['pk'];
 				$title		=	( $value == 1 ) ? 'COM_CCK_BLOCKED' : 'COM_CCK_ENABLED';
-				$value		=	JHtml::_( 'jgrid.state', JHtmlUsers::blockStates(), $value, $process['pk_i'], 'users.', false /*!$self*/ );
+				$value		=	HTMLHelper::_( 'jgrid.state', HTMLHelper::_( 'users.blockStates', false /* self */ ), $value, $process['pk_i'], 'users.', false );
 
 				if ( $fields[$name]->link ) {
 					$hasLink		=	true;
@@ -444,7 +460,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					} else {
 						$value	=	str_replace( 'title=""', 'title="'.JText::_( $title ).'"', $value );
 					}
-					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					if ( JCck::on( '4' ) ) {
+						// See later for the class
+					} else {
+						$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					}
 				}
 				/*
 				$value		=	str_replace( 'return listItemTask(', 'return JCck.listItemTask(', $value );
