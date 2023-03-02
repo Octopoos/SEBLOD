@@ -38,6 +38,7 @@ $ -> Language fix or change
 
 # App Export issue on PHP 8.x fixed.
 # Back-end/Component Constant name issue on PHP 8.x fixed.
+# Cache method renamed for J! 4.x
 # J! API issues fixed.
 # Site creation on PHP 8.x or J! 4.x fixed.
 # Site parameters ("usergroups" column) fixed.
