@@ -85,7 +85,7 @@ class CCK_Item
 			$cache		=	JFactory::getCache( $prefix.'cck_item@'.$id.$suffix );
 			$cache->setCaching( 1 );
 
-			return $cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$id.'::/cck::' );
+			return $cache->get( array( 'CCK_Item', 'prepare' ), array( '::cck::'.$id.'::/cck::' ) );
 		} else {
 			return self::prepare( '::cck::'.$id.'::/cck::', $params );
 		}

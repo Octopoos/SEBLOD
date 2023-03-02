@@ -601,7 +601,7 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
+				$data		=	$cache->get( array( 'CCK_List', 'render' ), array( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config ) );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( ${$target}->content > 0 ) {

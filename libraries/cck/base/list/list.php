@@ -203,7 +203,7 @@ class CCK_List
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
 			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
-			$data		=	$cache->call( array( $app, 'triggerEvent' ), 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
+			$data		=	$cache->get( array( $app, 'triggerEvent' ), array( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) ) );
 		} else {
 			$isCached	=	' [Cache=OFF]';
 			$data		=	$app->triggerEvent( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
