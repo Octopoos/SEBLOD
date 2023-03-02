@@ -22,14 +22,16 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.23.2 Upgrade Release [18-Feb-2022] --------------
+--------------- 3.23.2 Upgrade Release [2-Mar-2023] --------------
 
 # Field parameters ("json@options2" column) storage issue fixed
   >> read more @SEBLOD/pull/635
 # Site parameters ("usergroups" column) fixed.
 
-# Back-end/Component Constant name issue on PHP 8.x fixed.
 # Additional fixes included for PHP 8.x.
+# App Export issue on PHP 8.x fixed.
+# Back-end/Component Constant name issue on PHP 8.x fixed.
+# Site creation on PHP 8.x or J! 4.x fixed.
 
 --------------- 3.23.1 Upgrade Release [6-Oct-2022] ---------------
 
