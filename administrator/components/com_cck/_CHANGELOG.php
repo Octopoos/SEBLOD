@@ -26,12 +26,22 @@ $ -> Language fix or change
 
 ! NEXT
 
---------------- 4.0.2 Release Preview 8 [01-Mar-2023] ------------
+--------------- 4.0.2 Release Preview 8 [02-Mar-2023] ------------
+
++ Legacy option added.
+  >> for existing sites, you should consider to set [Legacy Mode = 2018]
+- Permissions removed from App Folders
+  >> permissions should be set up at Component-level or per Content Type
 
 ^ Core Update for SEBLOD WebServices add-on.
+^ Email regex changed to allow "+" sign.
 
+# App Export issue on PHP 8.x fixed.
 # Back-end/Component Constant name issue on PHP 8.x fixed.
+# J! API issues fixed.
+# Site creation on PHP 8.x or J! 4.x fixed.
 # Site parameters ("usergroups" column) fixed.
+# Warnings/notices removed on PHP 8.x
 # Workflow support restricted to Joomla! Article.
 
 --------------- 4.0.1 Release Preview 7 [10-Oct-2022] ------------
