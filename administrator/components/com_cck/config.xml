@@ -10,8 +10,14 @@
 		</field>
 		<field name="core_legacy" type="list" default="2012" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2019">2019</option>
+			<option value="2018">2018</option>
 			<option value="2017">2017</option>
 			<option value="2012">2012</option>
+		</field>
+		<field name="core_legacy_routing" type="list" default="2018" label="COM_CCK_CONFIG_CORE_LEGACY_ROUTING" description="COM_CCK_CONFIG_CORE_LEGACY_ROUTING_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2018">2018</option>
 		</field>
 		<field name="sql_legacy" type="list" default="0" label="COM_CCK_CONFIG_SQL_LEGACY_MODE" description="COM_CCK_CONFIG_SQL_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
@@ -213,6 +219,11 @@
 		</field>
 		<field name="sef" type="cck" construction="core_sef" default="2" label="COM_CCK_CONFIG_SEF" description="COM_CCK_CONFIG_SEF_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="sef_canonical_list" type="cck" construction="core_sef_canonical" default="0" label="COM_CCK_CONFIG_SEF_CANONICAL_LIST" description="COM_CCK_CONFIG_SEF_CANONICAL_LIST_DESC" class="inputbox" cck_selectlabel="" />
+		<field name="sef_aliases" type="list" default="0" label="COM_CCK_CONFIG_SEF_ALIASES" description="COM_CCK_CONFIG_SEF_ALIASES_DESC" class="btn-group btn-group-yesno">
+			<option value="2">COM_CCK_ALL_LANGUAGES</option>
+			<option value="1">COM_CCK_ALL_LANGUAGES_BUT_DEFAULT</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="sef_root" type="sql" default="0" label="COM_CCK_CONFIG_SEF_ROOT" description="COM_CCK_CONFIG_SEF_ROOT_DESC" query="SELECT id, title FROM #__menu WHERE published=1 AND client_id=0 AND link LIKE 'index.php?option=com_cck&amp;%' ORDER BY title" key_field="id" value_field="title" class="inputbox">
 			<option value="0">JOPTION_USE_DEFAULT</option>
 			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
@@ -227,6 +238,10 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
+		<field name="raw_rendering" type="radio" default="1" label="COM_CCK_CONFIG_RAW_RENDERING" description="COM_CCK_CONFIG_RAW_RENDERING_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box" type="list" default="0" label="COM_CCK_CONFIG_SITE_MODAL_BOX" description="COM_CCK_CONFIG_SITE_MODAL_BOX_DESC" class="inputbox chzn-color" >
