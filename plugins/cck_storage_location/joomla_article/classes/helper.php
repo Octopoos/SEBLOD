@@ -42,7 +42,7 @@ class plgCCK_Storage_LocationJoomla_Article_Helper extends plgCCK_Storage_Locati
 		if ( $hasForm ) {
 			$form->load( $addform, false );
 
-			$associations	=	JLanguageAssociations::getAssociations( 'com_content', '#__content', 'com_content.item', $config['pk'] );
+			$associations	=	JLanguageAssociations::getAssociations( 'com_content', '#__content', 'com_content.item', $config['pk'], 'id', '' );
 			
 			if ( count( $associations ) ) {
 				foreach ( $associations as $tag=>$association ) {

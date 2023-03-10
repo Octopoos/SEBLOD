@@ -584,10 +584,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$db->setQuery( $query );
 		$db->execute();
 
-		if ( $error = $db->getErrorMsg() ) {
-			$app->enqueueMessage( $error, 'error' );
-			return false;
-		}
+		/**
+		 * getErrorMsg() is deprecated in joomla 4
+		 * 
+		 *	if ( $error = $db->getErrorMsg() ) {
+		 *		$app->enqueueMessage( $error, 'error' );
+		 *		return false;
+		 *	}
+		*/
 
 		if ( !$all_language && count( $associations ) ) {
 			// Adding new association for these items
@@ -599,10 +603,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$db->setQuery( $query );
 			$db->execute();
 
-			if ( $error = $db->getErrorMsg() ) {
-				$app->enqueueMessage( $error, 'error' );
-				return false;
-			}
+			/**
+			 * getErrorMsg() is deprecated in joomla 4
+			 * 
+			 *	if ( $error = $db->getErrorMsg() ) {
+			 *		$app->enqueueMessage( $error, 'error' );
+			 *		return false;
+			 *	}
+			*/
 		}
 	}
 
