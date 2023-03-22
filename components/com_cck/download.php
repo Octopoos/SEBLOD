@@ -11,10 +11,10 @@
 defined( '_JEXEC' ) or die;
 
 if ( !( isset( $name ) && $name != '' && isset( $path ) && $path != '' ) ) {
-	return;
+	die;
 }
 if ( !is_file( $path ) ) {
-	return;
+	die;
 }
 
 $file_size	=	filesize( $path );
@@ -102,7 +102,7 @@ $chunk_size	=	1024 * 1024;
 $handle		=	fopen( $path, 'rb' );
 
 if ( $handle === false ) {
-	return;
+	die;
 }
 while ( !feof( $handle ) ) {
 	echo @fread( $handle, $chunk_size );
