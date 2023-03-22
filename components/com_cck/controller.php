@@ -211,8 +211,10 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 			if ( $path ) {
-				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {
-					$this->setRedirect( JUri::root( true ).'/'.$file );
+				set_time_limit( 0 );
+
+				if ( $task == 'read' || ( isset( $config['task2'] ) && $config['task2'] == 'read' ) ) {
+					include JPATH_ROOT.'/components/com_cck/read.php';
 				} else {
 					if ( $id ) {
 						$event		=	'onCckDownloadSuccess';
@@ -232,7 +234,6 @@ class CCKController extends JControllerLegacy
 
 						JCckDatabase::execute( 'UPDATE #__cck_core SET download_hits = download_hits+1 WHERE id = '.(int)$config['id'] );
 					}
-					set_time_limit( 0 );
 					@ob_end_clean();
 					include JPATH_ROOT.'/components/com_cck/download.php';
 				}

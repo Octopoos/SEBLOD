@@ -87,7 +87,6 @@ if ( !isset( $mime_types[$ext] ) ) {
 	$mime_type	=	$mime_types[$ext];
 }
 
-header( "Pragma: public" );
 header( "Expires: 0" );
 header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 header( "Cache-Control: public" );

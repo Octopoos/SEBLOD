@@ -32,6 +32,7 @@
 		<filename>controller.php</filename>
 		<filename>cck.php</filename>
 		<filename>download.php</filename>
+		<filename>read.php</filename>
 		<filename>router.php</filename>
 		<filename>index.html</filename>
 	</files>
