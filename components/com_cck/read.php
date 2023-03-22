@@ -33,6 +33,7 @@ header( "Expires: 0" );
 header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 header( "Cache-Control: no-store" );
 header( "Content-Type: $mime_type" );
+header( "Content-Disposition: filename=\"$name\"" );
 header( "Content-Length: " . $file_size );
 
 $chunk_size	=	1024 * 1024;
