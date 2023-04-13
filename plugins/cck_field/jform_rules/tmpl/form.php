@@ -69,7 +69,7 @@ $js		=	'
 						var elem = "'.$this->item->id.'";
 						var data = {};
 						var val = key = idx = "";
-						$("#permissions-sliders select, #permissions-sliders input").each(function(i) {
+						$("#myTab select, #myTab input").each(function(i) {
 							var name = $(this).attr("name").split("][");
 							key = name[0].replace(elem+"[","");
 							idx = name[1].replace("]","");
