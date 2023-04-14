@@ -19,9 +19,12 @@ if ( !JFactory::getUser()->authorise( 'core.manage', 'com_cck' )
 	return JError::raiseWarning( 404, JText::_( 'JERROR_ALERTNOAUTHOR' ) );
 }
 
-$lang	=	JFactory::getLanguage();
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->setDefault( 'en-GB' );
+$lang->load( 'com_cck' );
 $lang->load( 'com_cck_default', JPATH_SITE );
 $lang->load( 'com_cck_core' );
+$lang->setDefault( $lang_default );
 
 require_once JPATH_COMPONENT.'/helpers/helper_define.php';
 require_once JPATH_COMPONENT.'/helpers/helper_display.php';

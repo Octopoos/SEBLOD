@@ -156,7 +156,9 @@ abstract class JCckEcommerce
 					if ( !$code ) {
 						$lang	=	JFactory::getLanguage();
 						if ( !$lang->hasKey( 'COM_CCK_CURRENCY_AUTO' ) == 1 ) {
+							$lang_default	=	$lang->setDefault( 'en-GB' );
 							$lang->load( 'com_cck_default', JPATH_SITE );
+							$lang->setDefault( $lang_default );
 						}
 						$code	=	JText::_( 'COM_CCK_CURRENCY_AUTO' );
 					}

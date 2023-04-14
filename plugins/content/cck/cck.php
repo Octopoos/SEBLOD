@@ -503,8 +503,10 @@ class plgContentCCK extends JPlugin
 		$user	=	JFactory::getUser();
 		$params	=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
 		
-		$lang	=	JFactory::getLanguage();
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
+		$lang->setDefault( $lang_default );
 		
 		JPluginHelper::importPlugin( 'cck_field' );
 		JPluginHelper::importPlugin( 'cck_field_link' );

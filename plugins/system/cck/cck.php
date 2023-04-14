@@ -150,7 +150,11 @@ class plgSystemCCK extends JPlugin
 			JCckDevIntegration::addMenuPresets();
 			
 			if ( $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component', '' ), 'com_cck' ) !== false ) {
-				JFactory::getLanguage()->load( 'com_cck_core' );
+				$lang			=	JFactory::getLanguage();
+				$lang_default	=	$lang->setDefault( 'en-GB' );
+				$lang->load( 'com_cck' );
+				$lang->load( 'com_cck_core' );
+				$lang->setDefault( $lang_default );
 			}
 			$group	=	(int)JCck::getConfig_Param( 'development_group' );
 

@@ -33,9 +33,13 @@ class JFormFieldCckPicker extends JFormField
 		$html		=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' );
 		
 		$format		=	(string)$this->element['js_format'];
-		$lang  	 	=	JFactory::getLanguage();
+
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
+		$lang->setDefault( $lang_default );
+		
 		if ( $format != 'raw' ) {
 			JCck::loadjQuery( true, true, true );
 		}

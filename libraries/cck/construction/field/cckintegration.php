@@ -18,13 +18,15 @@ class JFormFieldCckIntegration extends JFormField
 	// getInput
 	protected function getInput()
 	{
-		$app		=	JFactory::getApplication();
-		$doc		=	JFactory::getDocument();
-		$lang		=	JFactory::getLanguage();
-		$component	=	'com_cck_integration';
-		$config		=	JCckDev::init( array(), true );
-		$location	=	(string)$this->element['location'];
+		$app			=	JFactory::getApplication();
+		$doc			=	JFactory::getDocument();
+		$lang			=	JFactory::getLanguage();
+		$component		=	'com_cck_integration';
+		$config			=	JCckDev::init( array(), true );
+		$location		=	(string)$this->element['location'];
+		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
+		$lang->setDefault( $lang_default );
 
 		// Init
 		$actions	=	array(
