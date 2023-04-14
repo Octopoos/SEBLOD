@@ -49,6 +49,12 @@ class pkg_cckInstallerScript
 		$initial_version	=	JCck::getConfig_Param( 'initial_version', '3' );
 		$initial_release	=	(int)$initial_version[0];
 
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->setDefault( 'en-GB' );
+		$lang->load( 'com_cck' );
+		$lang->load( 'com_cck.sys' );
+		$lang->setDefault( $lang_default );
+
 		if ( JCck::on( '3.8' ) ) {
 			if ( $type == 'install' || $type == 'update' && version_compare( $initial_version, '3.13.0', '>=' ) ) {
 				$db			=	JFactory::getDbo();
