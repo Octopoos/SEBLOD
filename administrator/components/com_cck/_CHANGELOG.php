@@ -22,9 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.0.x Release Preview 9 [xx-Mar-2023] ------------
+--------------- 4.0.x Release Preview 9 [14-Apr-2023] ------------
 
-! NEXT
++ Force en-GB as default language (as a fallback) (J! 4.x)
++ Read Task (PDF) refactored without redirection to physical File
++ Task Plug-in implemented for CRON Jobs/Tasks on J! 4.x
+
+# Search Ordering styling fixed
+# Value output ("0") fixed for J! 4.x
 
 --------------- 4.0.2 Release Preview 8 [02-Mar-2023] ------------
 
