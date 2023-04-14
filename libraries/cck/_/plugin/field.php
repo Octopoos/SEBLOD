@@ -92,7 +92,8 @@ class JCckPluginField extends JPlugin
 	public static function getValueFromOptions( $field, $value, $config = array(), $strict = false )
 	{
 		$opts	=	explode( '||', $field->options );
-		
+		$value	=	(string)$value;
+
 		if ( $value == '' ) {
 			return $value;
 		}
