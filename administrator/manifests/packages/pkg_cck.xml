@@ -127,6 +127,8 @@
 			<!-- Plugin // Authentication -->
 			<!-- Plugin // Search -->
 			<file type="plugin" id="cck" group="search">plg_search_cck.zip</file>
+			<!-- Plugin // Task -->
+			<file type="plugin" id="cck" group="task">plg_task_cck.zip</file>
 			<!-- Plugin // User -->
 			<file type="plugin" id="cck" group="user">plg_user_cck.zip</file>
 		<!-- END HERE -->

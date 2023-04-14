@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<extension type="plugin" group="task" method="upgrade">
+	<name>plg_task_cck</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>March 2023</creationDate>
+	<description>SEBLOD 3.x - www.seblod.com // by Octopoos - www.octopoos.com</description>
+	<version>4.0.2</version>
+
+	<namespace path="src">Joomla\Plugin\Task\Cck</namespace>
+
+	<files>
+		<folder plugin="cck">services</folder>
+		<folder>src</folder>
+		<folder>forms</folder>
+	</files>
+
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/plg_task_cck.ini</language>
+	</languages>
+</extension>
