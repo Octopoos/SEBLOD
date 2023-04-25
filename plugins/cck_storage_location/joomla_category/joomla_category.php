@@ -591,7 +591,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
         }
         catch (RuntimeException $e)
         {
-            $app->enqueueMessage($e->getMessage());
+            $app->enqueueMessage( $e->getMessage(), 'error' );
             return false;
         }
 
@@ -610,7 +610,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	        }
 	        catch (RuntimeException $e)
 	        {
-	            $app->enqueueMessage($e->getMessage());
+	            $app->enqueueMessage( $e->getMessage(), 'error' );
 	            return false;
 	        }
 		}
