@@ -33,6 +33,7 @@ $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_f
 											 'core_state_filter', 'core_languages' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
+JPluginHelper::importPlugin( 'cck_storage' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 

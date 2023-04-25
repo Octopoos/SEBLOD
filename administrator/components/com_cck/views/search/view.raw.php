@@ -141,6 +141,12 @@ class CCKViewSearch extends JViewLegacy
 	// prepareDisplay_Ajax
 	protected function prepareDisplay_Ajax()
 	{
+		JPluginHelper::importPlugin( 'cck_field' );
+		JPluginHelper::importPlugin( 'cck_field_link' );
+		JPluginHelper::importPlugin( 'cck_field_live' );
+		JPluginHelper::importPlugin( 'cck_field_restriction' );
+		JPluginHelper::importPlugin( 'cck_field_typo' );
+
 		$folder		=	( $this->item->id > 0 ) ? $this->item->folder : 1;
 
 		// Fields

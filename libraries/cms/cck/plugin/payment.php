@@ -15,6 +15,21 @@ class JCckPluginPayment extends JPlugin
 {
 	protected static $construction	=	'cck_ecommerce_payment';
 	
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+
+		// Fix Language
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
+
+			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
+			$lang->setDefault( $lang_default );
+		}
+	}
+	
 	// g_onCCK_PaymentValidate
 	public static function g_onCCK_PaymentValidate( $data, $success, &$config )
 	{

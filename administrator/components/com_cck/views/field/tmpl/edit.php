@@ -34,6 +34,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout(), $tmpl );
 
 JHtml::_( 'bootstrap.tooltip' );
 
+JPluginHelper::importPlugin( 'cck_storage' );
 JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 ?>
