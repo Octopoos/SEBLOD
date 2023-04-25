@@ -75,11 +75,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         </ul>
         <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
 	</div>
-    
-	<div class="seblod" id="acl" style="display: none;">
-		<div class="legend top left"><?php echo JText::_( 'COM_CCK_PERMISSIONS' ); ?></div>
-		<?php echo $dataTmpl['fields']['permissions']; ?>
-    </div>
     <?php } ?>
 </div>
 
