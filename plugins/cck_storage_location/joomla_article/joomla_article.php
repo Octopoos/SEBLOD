@@ -638,6 +638,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		foreach ( $associations as $tag=>$id ) {
 			if ( empty( $id ) ) {
 				unset( $associations[$tag] );
+			} else {
+				$associations[$tag]	=	(int) $id;
 			}
 		}
 
@@ -655,27 +657,35 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				->where( 'context=' . $db->quote( 'com_content.item' ) )
 				->where( 'id IN (' . implode(',', $associations ) . ')' );
 		$db->setQuery( $query );
-		$db->execute();
-
-		if ( $error = $db->getErrorMsg() ) {
-			$app->enqueueMessage( $error, 'error' );
-			return false;
-		}
+		
+		try
+        {
+            $db->execute();
+        }
+        catch (RuntimeException $e)
+        {
+            $app->enqueueMessage($e->getMessage(), 'error' );
+            return false;
+        }
 
 		if ( !$all_language && count( $associations ) ) {
 			// Adding new association for these items
 			$key	=	md5( json_encode( $associations ) );
 			$query->clear()->insert( '#__associations' );
 			foreach ( $associations as $tag=>$id ) {
-				$query->values( $id . ',' . $db->quote( 'com_content.item' ) . ',' . $db->quote( $key ) );
+				$query->values( (int) $id . ',' . $db->quote( 'com_content.item' ) . ',' . $db->quote( $key ) );
 			}
 			$db->setQuery( $query );
-			$db->execute();
 
-			if ( $error = $db->getErrorMsg() ) {
-				$app->enqueueMessage( $error, 'error' );
-				return false;
-			}
+			try
+	        {
+	            $db->execute();
+	        }
+	        catch (RuntimeException $e)
+	        {
+	            $app->enqueueMessage($e->getMessage(), 'error' );
+	            return false;
+	        }
 		}
 	}
 
