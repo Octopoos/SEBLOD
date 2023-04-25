@@ -565,6 +565,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		foreach ( $associations as $tag=>$id ) {
 			if ( empty( $id ) ) {
 				unset( $associations[$tag] );
+			} else {
+				$associations[$tag]	=	(int) $id;
 			}
 		}
 
@@ -582,27 +584,35 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				->where( 'context=' . $db->quote( 'com_categories.item' ) )
 				->where( 'id IN (' . implode(',', $associations ) . ')' );
 		$db->setQuery( $query );
-		$db->execute();
 
-		if ( $error = $db->getErrorMsg() ) {
-			$app->enqueueMessage( $error, 'error' );
-			return false;
-		}
+        try
+        {
+            $db->execute();
+        }
+        catch (RuntimeException $e)
+        {
+            $app->enqueueMessage($e->getMessage());
+            return false;
+        }
 
 		if ( !$all_language && count( $associations ) ) {
 			// Adding new association for these items
 			$key	=	md5( json_encode( $associations ) );
 			$query->clear()->insert( '#__associations' );
 			foreach ( $associations as $tag=>$id ) {
-				$query->values( $id . ',' . $db->quote( 'com_categories.item' ) . ',' . $db->quote( $key ) );
+				$query->values( (int)$id . ',' . $db->quote( 'com_categories.item' ) . ',' . $db->quote( $key ) );
 			}
 			$db->setQuery( $query );
-			$db->execute();
 
-			if ( $error = $db->getErrorMsg() ) {
-				$app->enqueueMessage( $error, 'error' );
-				return false;
-			}
+	    	try
+	        {
+	            $db->execute();
+	        }
+	        catch (RuntimeException $e)
+	        {
+	            $app->enqueueMessage($e->getMessage());
+	            return false;
+	        }
 		}
 	}
 
@@ -662,8 +672,12 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if (!$assoc || !$extension || !$component ) {
 			$assoc = false;
 		} else {
-			$name	=	$component.'HelperAssociation';
-			JLoader::register( $name, JPATH_SITE.'/components/'.$extension.'/helpers/association.php' );
+			$name		=	'Joomla\\Component\\' . ucfirst( $component ) . '\\Site\\Helper\\AssociationHelper';
+			$class_file	=	JPATH_SITE . '/components/'.$extension.'/src/Helper/AssociationHelper.php';
+
+			if ( file_exists( $class_file ) ) {
+				include $class_file;
+			}
 
 			$assoc	=	class_exists( $name ) && !empty( $name::$category_association );
 		}

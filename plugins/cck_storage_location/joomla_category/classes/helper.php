@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+Use \Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_category.php';
 
 // Class
