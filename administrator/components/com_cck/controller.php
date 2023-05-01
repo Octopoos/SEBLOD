@@ -460,7 +460,7 @@ class CCKController extends JControllerLegacy
 
 		$app		=	JFactory::getApplication();
 		$json		=	$app->input->json->getRaw();
-		$objects	=	json_decode( $json );
+		$objects	=	json_decode( $json, true );
 		
 		if ( count( $objects ) ) {
 			$query	=	'UPDATE #__cck_core_objects SET options = CASE name';
