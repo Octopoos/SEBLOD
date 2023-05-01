@@ -106,7 +106,8 @@ if ( $process['forbidden_ext'] ) {
 
 if ( JFile::upload( $tmp_name, $location, false, $allowUnsafe, $safeFileOptions ) ) {
 	$value					=	$file_location;
-	if( isset( $fields[$name] ) && is_object( $fields[$name] ) ) {
+	
+	if ( isset( $fields[$name] ) && is_object( $fields[$name] ) ) {
 		$fields[$name]->value	=	$value;
 	}
 } else {

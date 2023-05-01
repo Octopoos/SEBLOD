@@ -91,7 +91,10 @@ if ( JFile::upload( $tmp_name, $location ) ) {
 	$src_w						=	$image->getWidth();
 	$src_h						=	$image->getHeight();
 	$value						=	$file_location;
-	$fields[$name]->value		=	$value;
+
+	if ( isset( $fields[$name] ) && is_object( $fields[$name] ) ) {
+		$fields[$name]->value	=	$value;
+	}
 	
 	$options['thumb0_process']	=	$options['image_process'];
 	$options['thumb0_width']	=	$options['image_width'];
