@@ -522,7 +522,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 	
 	// _initTable
-	protected function _initTable( &$table, &$data, &$config, $force = false )
+	protected static function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		$user	=	JFactory::getUser();
 		
@@ -545,7 +545,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 	
 	// _completeTable
-	protected function _completeTable( &$table, &$data, &$config )
+	protected static function _completeTable( &$table, &$data, &$config )
 	{
 		if ( $table->state == 1 && (int)$table->publish_up == 0 ) {
 			$table->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
@@ -690,7 +690,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	}
 
 	// _setFeatured
-	protected function _setFeatured( $table, $isNew )
+	protected static function _setFeatured( $table, $isNew )
 	{
 		JLoader::register( 'ContentTableFeatured', JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php' );
 
