@@ -192,7 +192,9 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 					if ( $hasCustomValue ) {
 						preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $custom_value, $values );
 						
-						$tables[self::$table][$item->pk]->{self::$custom}	=	array();
+						if( isset( $tables[self::$table]) && is_object( $tables[self::$table][$item->pk]) ) {
+							$tables[self::$table][$item->pk]->{self::$custom}	=	array();
+						}
 						$fields[self::$custom]								=	'';
 						
 						if ( count( $values[1] ) ) {
@@ -201,7 +203,9 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 									// DISPATCH --> EXPORT
 									$fields[self::$custom]	=	$values[2][$k];
 								} elseif ( !isset( $excluded2[$v] ) ) {
-									$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
+									if( isset( $tables[self::$table]) && is_object( $tables[self::$table][$item->pk]) ) {
+										$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
+									}
 								}	
 							}
 						}
