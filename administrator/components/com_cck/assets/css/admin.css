@@ -264,7 +264,7 @@ body.com_cck fieldset.checkboxes input,body.com_cck fieldset.radios input{float:
 body.com_cck fieldset.checkboxes label,body.com_cck fieldset.radios label{float:left; box-sizing: border-box;}
 body.com_cck fieldset.checkboxes.vertical input,body.com_cck fieldset.radios.vertical input{float:left; margin-top:0; margin-right:5px; clear:left;}
 .modal-footer .btn + .btn-group {margin-bottom:0; margin-left: 5px;}
-.modal-footer .btn-group .btn + .btn, .btn-group.dropup .btn.dropdown-toggle {padding-top:3px; font-size:0;}
+.modal-footer .btn-group .btn + .btn, .btn-group.dropup .btn.dropdown-toggle {padding-top:3px;}
 
 .modal.modal-small{max-width: 580px; left:50%; margin-left: -280px;}
 .modal.modal-small .modal-body{padding: 15px; width: auto;}

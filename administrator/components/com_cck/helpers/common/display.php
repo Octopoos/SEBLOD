@@ -117,8 +117,8 @@ class CommonHelper_Display
 					.	'mydata2="'.htmlspecialchars( $item->options ).'">' . $item->title . '</a><span class="featured_sessions_del icon-delete" mydata="'.$item->id.'"></span><a href="'.$edit_link.'" class="featured_sessions_edit icon-edit"></a>'
 					.	'</li>';
 		}
-		$html	=	'<button class="btn btn-primary dropdown-toggle cck-float-none" type="button" data-toggle="dropdown"><span class="caret"></span></button>'
-				.	'<ul class="dropdown-menu featured-sessions pull-right">'.$html.'</ul>';
+		$html	=	'<button class="btn btn-primary dropdown-toggle cck-float-none" type="button" data-bs-toggle="dropdown"></button>'
+				.	'<ul class="dropdown-menu dropdown-menu-end featured-sessions">'.$html.'</ul>';
 		$js		=	'jQuery(document).ready(function($){ $("#'.$id.'").after(\''.$html.'\'); });';
 
 		if ( $css ) {
