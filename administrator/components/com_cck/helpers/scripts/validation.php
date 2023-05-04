@@ -145,6 +145,7 @@ $js		=	'
 			';
 $doc->addScriptDeclaration( $js );
 
+JPluginHelper::importPlugin( 'cck_field_validation' );
 JText::script( 'COM_CCK_OPTIONAL' );
 JText::script( 'COM_CCK_REQUIRED' );
 

@@ -219,6 +219,8 @@ $rparams	=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $pa
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
+JPluginHelper::importPlugin( 'cck_field_validation' );
+
 if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );

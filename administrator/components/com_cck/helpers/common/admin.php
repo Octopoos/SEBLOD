@@ -344,6 +344,8 @@ class CommonHelper_Admin
 	// getPluginOptions
 	public static function getPluginOptions( $folder, $prefix = '', $selectlabel = false, $selectnone = false, $language = false, $excluded = array(), $file = '' )
 	{
+		JPluginHelper::importPlugin( $prefix.$folder );
+
 		$base		=	JPATH_SITE.'/plugins/'.$prefix.$folder;
 		$options	=	array();
 		$options2	=	array();
