@@ -462,7 +462,7 @@ class JCckPluginLocation extends JPlugin
 	}
 	
 	// g_doBridge
-	public function g_doBridge( $type, $pk, $location, &$config, $params )
+	public static function g_doBridge( $type, $pk, $location, &$config, $params )
 	{
 		/* TODO#SEBLOD: move to plug-in */
 		if ( $type == 'joomla_category' ) {
@@ -713,7 +713,7 @@ class JCckPluginLocation extends JPlugin
 	}
 	
 	// g_initTable
-	public function g_initTable( &$table, $params = array(), $force = false, $prefix = 'base_' )
+	public static function g_initTable( &$table, $params = array(), $force = false, $prefix = 'base_' )
 	{
 		if ( count( $params ) ) {
 			if ( $force === true ) {
