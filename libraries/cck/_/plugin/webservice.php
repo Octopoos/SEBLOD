@@ -17,6 +17,21 @@ class JCckPluginWebservice extends JPlugin
 	
 	protected $autoloadLanguage		=	true;
 
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+
+		// Fix Language
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
+
+			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
+			$lang->setDefault( $lang_default );
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
 	// g_onCCK_FieldConstruct

@@ -40,6 +40,15 @@ class JCckPluginLocation extends JPlugin
 		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
 			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
 		}
+
+		// Fix Language
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
+			
+			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
+			$lang->setDefault( $lang_default );
+		}
 	}
 	
 	// access
