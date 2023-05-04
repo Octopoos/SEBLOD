@@ -392,7 +392,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	}
 	
 	// _initTable
-	protected function _initTable( &$table, &$data, &$config, $force = false )
+	protected static function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		if ( ! $table->{self::$key} ) {
 			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
@@ -436,7 +436,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	}
 	
 	// _completeTable
-	protected function _completeTable( &$table, &$data, &$config, $parameters = array() )
+	protected static function _completeTable( &$table, &$data, &$config, $parameters = array() )
 	{
 		if ( $table->groups ) {
 			if ( !is_array( $table->groups ) ) {

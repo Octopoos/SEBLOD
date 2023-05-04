@@ -321,7 +321,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 	
 	// _core
-	protected function _core( $data, $config = array() )
+	protected static function _core( $data, $config = array() )
 	{
 		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$core->load( $config['id'] );
@@ -350,7 +350,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 	
 	// _initTable
-	protected function _initTable( &$table, &$data, &$config, $force = false )
+	protected static function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		if ( ! $table->{self::$key} ) {
 			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
@@ -358,7 +358,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 	
 	// _completeTable
-	protected function _completeTable( &$table, &$data, &$config )
+	protected static function _completeTable( &$table, &$data, &$config )
 	{
 	}
 	

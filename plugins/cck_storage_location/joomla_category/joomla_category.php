@@ -500,7 +500,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 	
 	// _initTable
-	protected function _initTable( &$table, &$data, &$config, $force = false )
+	protected static function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		$user	=	JFactory::getUser();
 		
@@ -531,7 +531,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	}
 	
 	// _completeTable
-	protected function _completeTable( &$table, &$data, &$config )
+	protected static function _completeTable( &$table, &$data, &$config )
 	{
 		if ( ! $table->{self::$key} ) {
 			$table->modified_user_id	=	0;
