@@ -161,6 +161,8 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 						';
 			$form	=	JForm::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
+
+			$form	=	str_replace( '<select', '<select class="form-select"', $form );
 		}
 
 		// Set
