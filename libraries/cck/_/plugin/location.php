@@ -730,7 +730,7 @@ class JCckPluginLocation extends JPlugin
 	}
 	
 	// g_completeTable
-	public function g_completeTable( &$table, $custom, $config = array() )
+	public static function g_completeTable( &$table, $custom, $config = array() )
 	{
 		if ( $custom ) {
 			$table->$custom	=	'::cck::'.$config['id'].'::/cck::'.$table->$custom;
