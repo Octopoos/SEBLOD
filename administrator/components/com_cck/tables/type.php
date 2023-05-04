@@ -93,6 +93,9 @@ class CCK_TableType extends JTable
 			if ( is_null( $this->options_site ) ) {
 				$this->options_site	=	'';
 			}
+			if ( is_null( $this->location ) ) {
+				$this->location	=	'';
+			}
 			if ( is_null( $this->parent ) ) {
 				$this->parent	=	'';
 			}
