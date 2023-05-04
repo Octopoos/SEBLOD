@@ -901,6 +901,11 @@ abstract class JCckDev
 		}
 		
 		$config['fields'][]	=	$field->storage_field;
+
+		if ( JCck::on( '4.0' ) ) {
+			$class			=	'control-group'. ( $class ? ' ' . $class : '' );
+		}
+
 		$class				=	( $class ) ? ' class="'.$class.'"' : '';
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
 		$label				=	'';
@@ -914,7 +919,7 @@ abstract class JCckDev
 		}
 
 		if ( JCck::on( '4.0' ) ) {
-			return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
+			return '<div'.$class.'><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
 		} else {
 			return '<li'.$class.'>'.$label.$html.'</li>';
 		}
