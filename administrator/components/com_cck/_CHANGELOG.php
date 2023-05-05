@@ -22,6 +22,32 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.3 Upgrade Release [5-May-2023] ------------
+
+! Joomla! 4.x support
+! STRICT_TRANS_TABLES solution (2/2) implemented.
+  >> no one-click update, but all SQL queries listed (to copy/paste and run on PhpMyAdmin, if needed)
+
++ Force en-GB as default language (as a fallback) (J! 4.x) and for plug-ins as well
++ Legacy option added.
+  >> for existing sites, you should consider to set [Legacy Mode = 2018]
++ Read Task (PDF) refactored without redirection to physical File
++ Task Plug-in implemented for CRON Jobs/Tasks on J! 4.x
+
+^ Core Update for:
+  SEBLOD Exporter add-on
+  SEBLOD Importer add-on
+  SEBLOD WebServices add-on
+^ Email regex changed to allow "+" sign.
+
+- Permissions removed from App Folders
+  >> permissions should be set up at Component-level or per Content Type
+
+# All Joomla! 4.x fixes included.
+  >> several additional ones since the latest Release Preview
+# All PHP 8.x fixes included.
+  >> several additional ones since the latest Release Preview
+
 --------------- 4.0.x Release Preview 9 [14-Apr-2023] ------------
 
 + Force en-GB as default language (as a fallback) (J! 4.x)
