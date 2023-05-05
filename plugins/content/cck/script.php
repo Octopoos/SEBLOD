@@ -108,6 +108,9 @@ class plgContentCCKInstallerScript
 			return;
 		}
 
+		// JCckDev::aa( $app->cck_core_version, 'a1' );
+		// JCckDev::aa( $app->cck_core_version_old, 'a2' );
+
 		// Allow 4-0.RC versions to be tested
 		if ( JCck::on( '4.0' ) && !isset( $app->cck_core_version ) ) {
 			$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
@@ -395,13 +398,18 @@ class plgContentCCKInstallerScript
 									138=>'3.20.0', 139=>'3.20.1', 140=>'3.20.2',
 									141=>'3.21.0', 142=>'3.21.1', 143=>'3.21.2', 144=>'3.21.3', 145=>'3.21.4', 146=>'3.21.5', 147=>'3.21.6', 148=>'3.21.7',
 									149=>'3.22.0', 150=>'3.22.1', 151=>'3.22.2', 152=>'3.22.3',
-									153=>'4.0.0', 154=>'4.0.1', 155=>'4.0.2', 156=>'4.0.3'
+									153=>'3.23.0', 154=>'3.23.1', 155=>'3.23.2',
+									156=>'3.24.0', 157=>'3.24.1',
+									158=>'4.0.0', 159=>'4.0.1', 160=>'4.0.2', 161=>'4.0.3'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
 			$i			=	array_search( $old, $versions );
 			$i2			=	$i;
 			$n			=	array_search( $new, $versions );
+			
+			// JCckDev::aa( $i, 'i' );
+			// JCckDev::aa( $n, 'n' );
 			
 			if ( $i < 7 ) {		// ONLY < 2.0 GA
 				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
