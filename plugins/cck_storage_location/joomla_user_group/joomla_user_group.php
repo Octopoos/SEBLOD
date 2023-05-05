@@ -274,6 +274,9 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		$app	=	JFactory::getApplication();
 		$table	=	self::_getTable( $pk );
 		$isNew	=	( $pk > 0 ) ? false : true;
+
+		$config['params']	=	$this->params->toArray();
+
 		self::_initTable( $table, $data, $config );
 		
 		// Check Error
@@ -330,7 +333,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		if ( ! $table->{self::$key} ) {
-			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
+			parent::g_initTable( $table, $config['params'], $force );
 		}
 	}
 	

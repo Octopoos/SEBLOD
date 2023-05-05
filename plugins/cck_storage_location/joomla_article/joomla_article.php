@@ -359,6 +359,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 			unset( $data['tags'] );
 		}
+
+		$config['params']	=	$this->params->toArray();
+
 		self::_initTable( $table, $data, $config );
 		
 		// Check Error
@@ -526,7 +529,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		if ( ! $table->{self::$key} ) {
 			$table->access	=	'';
-			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
+			parent::g_initTable( $table, $config['params'], $force );
 			$table->{self::$author}		=	$table->{self::$author} ? $table->{self::$author} : JCck::getConfig_Param( 'integration_user_default_author', 42 );
 			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
 				$data[self::$author]	=	$user->id;

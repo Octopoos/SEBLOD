@@ -300,6 +300,9 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			// Init
 			$table	=	self::_getTable_fromSite( $pk );
 			$isNew	=	( $pk > 0 ) ? false : true;
+
+			$config['params']	=	$this->params->toArray();
+			
 			self::_initTable_fromSite( $table, $data, $config );
 			
 			if ( $isNew ) {
@@ -341,6 +344,9 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			// Init
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $pk > 0 ) ? false : true;
+
+			$config['params']	=	$this->params->toArray();
+
 			self::_initTable( $table, $data, $config );
 	
 			// Check Error
@@ -395,7 +401,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static function _initTable( &$table, &$data, &$config, $force = false )
 	{
 		if ( ! $table->{self::$key} ) {
-			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
+			parent::g_initTable( $table, $config['params'], $force );
 		} else {
 			$my	=	JFactory::getUser();
 			
@@ -427,7 +433,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected function _initTable_fromSite( &$table, &$data, &$config, $force = false )
 	{
 		if ( ! $table->{self::$key} ) {
-			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
+			parent::g_initTable( $table, $config['params'], $force );
 		} else {
 			if ( !JFactory::getUser()->authorise( 'core.admin', 'com_users' ) ) {
 				unset( $data['block'] );
