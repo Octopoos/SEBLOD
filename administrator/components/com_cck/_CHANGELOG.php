@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.24.0 Upgrade Release [5-May-2023] --------------
+
+# Additional fixes included for PHP 8.x.
+
 --------------- 3.23.2 Upgrade Release [2-Mar-2023] --------------
 
 # Field parameters ("json@options2" column) storage issue fixed
