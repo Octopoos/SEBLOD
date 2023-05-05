@@ -29,7 +29,7 @@ $displayData	=	array(
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|70%',
 												'html'=>array(
-													JCckDev::getForm( 'core_bool2', $this->item->bool2, $config, array( 'defaultvalue'=>'1', 'options'=>'Hide=>0||Show=1' ) ),
+													JCckDev::getForm( 'core_bool2', $this->item->bool2, $config, array( 'defaultvalue'=>'1', 'options'=>'Hide=0||Show=1' ) ),
 													JCckDev::getForm( 'core_options_class', @$options2['text_label'], $config, array( 'defaultvalue'=>'Text', 'size'=>'18', 'storage_field'=>'json[options2][text_label]' ) )
 												)
 											) )
