@@ -345,6 +345,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			}
 			unset( $data['tags'] );
 		}
+
+		$config['params']	=	$this->params->toArray();
+
 		self::_initTable( $table, $data, $config );
 		
 		// Check Error
@@ -507,19 +510,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$user	=	JFactory::getUser();
 		
 		if ( ! $table->{self::$key} ) {
-			parent::g_initTable( $table, ( ( isset( $config['params'] ) ) ? $config['params'] : $this->params->toArray() ), $force );
+			parent::g_initTable( $table, $config['params'], $force );
 			$table->{self::$author}		=	$table->{self::$author} ? $table->{self::$author} : JCck::getConfig_Param( 'integration_user_default_author', 42 );
-			if ( isset( $config['params'] ) ) {
-				$table->access				=	( isset( $config['params']['base_default-access'] ) ) ? $config['params']['base_default-access'] : 1;
-				if ( ! isset( $data['parent_id'] ) ) {
-					$data['parent_id']		=	( isset( $config['params']['base_default-parent_id'] ) ) ? $config['params']['base_default-parent_id'] : 1;
-				}
-			} else {
-				$table->access				=	$this->params->get( 'base_default-access', 1 );
-				if ( ! isset( $data['parent_id'] ) ) {
-					$data['parent_id']		=	$this->params->get( 'base_default-parent_id', 1 );
-				}
+			$table->access				=	( isset( $config['params']['base_default-access'] ) ) ? $config['params']['base_default-access'] : 1;
+
+			if ( ! isset( $data['parent_id'] ) ) {
+				$data['parent_id']		=	( isset( $config['params']['base_default-parent_id'] ) ) ? $config['params']['base_default-parent_id'] : 1;
 			}
+			
 			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
 				$data[self::$author]	=	$user->id;
 			}
