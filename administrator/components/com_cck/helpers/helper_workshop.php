@@ -614,12 +614,15 @@ class Helper_Workshop
 			return $style;
 		}
 		
-		$lang		=	JFactory::getLanguage();
-		$values		=	JCckDev::fromJSON( $style->params );
-		$style->xml	=	JPath::clean( JPATH_SITE.'/templates/'.$style->template.'/templateDetails.xml' );
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->setDefault( 'en-GB' );
+		$values			=	JCckDev::fromJSON( $style->params );
+		$style->xml		=	JPath::clean( JPATH_SITE.'/templates/'.$style->template.'/templateDetails.xml' );
 		
 		$lang->load( 'tpl_'.$style->template.'.sys', JPATH_SITE, null, false, true );
 		$lang->load( 'tpl_'.$style->template, JPATH_SITE, null, false, true );
+		$lang->setDefault( $lang_default );
+		
 		$style->positions	=	array();
 		
 		if ( file_exists( $style->xml ) ) {
