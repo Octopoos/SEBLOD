@@ -251,10 +251,10 @@ class plgContentCCKInstallerScript
 			
 			$searchs	=	array(
 								'11'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"data-draggable-group=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
 									  ),
 								'15'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"data-draggable-group=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
 									  ),
 								'18'=>array(
 										'list'=>array( 'seb_table', 0, '0', 'seb_table - user_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )

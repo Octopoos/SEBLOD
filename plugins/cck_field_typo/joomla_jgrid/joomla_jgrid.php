@@ -260,11 +260,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 							if ( $task == 'process_ajax' && $task_id ) {
 								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id.'&'.JSession::getFormToken().'=1' );
+							} elseif ( $task == 'none' ) {
+								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1', false );
 							} else {
 								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
 							}
-
-							JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+							if ( JCck::on( '4.0' ) ) {
+								HTMLHelper::_( 'draggablelist.draggable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+							} else {
+								JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+							}
 						}
 					}
 				} else {

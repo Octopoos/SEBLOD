@@ -48,7 +48,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Start', 'defaultvalue'=>'1', 'options'=>'0=0||1=1', 'storage_field'=>'start' ) ),
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'', 'size'=>24, 'storage_field'=>'class1' ) ),
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'defaultvalue'=>'input-small', 'size'=>24, 'storage_field'=>'class2' ) ),
-				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'defaultvalue'=>'', 'selectlabel'=>'', 'options'=>'Use Native=||SEBLOD Toolbox Addon=optgroup||Task Process Ajax=process_ajax', 'storage_field'=>'task' ) ),
+				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'defaultvalue'=>'', 'selectlabel'=>'', 'options'=>'Use Native=||SEBLOD Toolbox Addon=optgroup||Task Process Ajax=process_ajax||None=none', 'storage_field'=>'task' ) ),
 				JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
 				JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'task_id_process' ) ),
 				JCckDev::renderLayoutFile(
