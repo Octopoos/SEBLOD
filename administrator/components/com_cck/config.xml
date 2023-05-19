@@ -133,6 +133,12 @@
 			<option value="2">COM_CCK_YES_BUT_ENGLISH</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="language_default" type="list" default="0" label="COM_CCK_CONFIG_LANGUAGE_DEFAULT" description="COM_CCK_CONFIG_LANGUAGE_DEFAULT_DESC" class="btn-group btn-group-yesno">
+			<option value="0">JNO</option>
+			<option value="1">COM_CCK_ONLY_ON_FRONT_END</option>
+			<option value="2">COM_CCK_ALWAYS</option>
+			
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_TRANSLATIONS" type="spacer" hr="false" />
 		<field name="export" type="cckexport" default="" extension_type="languages" label="COM_CCK_CONFIG_TRANSLATE_SEBLOD" description="COM_CCK_CONFIG_TRANSLATE_SEBLOD_DESC" />
 	</fieldset>

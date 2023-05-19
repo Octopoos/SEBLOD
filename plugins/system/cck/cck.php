@@ -15,15 +15,16 @@ use Joomla\Utilities\ArrayHelper;
 // Plugin
 class plgSystemCCK extends JPlugin
 {
-	protected $content_objects	=	array();
-	protected $current_lang		=	null;
-	protected $default_lang		=	null;
-	protected $filter_lang		=	false;
-	protected $multisite		=	null;
-	protected $rest_api			=	null;
-	protected $site				=	null;
-	protected $site_context		=	null;
-	protected $site_exclusion	=	false;
+	protected $content_objects		=	array();
+	protected $current_lang			=	null;
+	protected $default_lang			=	null;
+	protected $default_lang_mode	=	null;
+	protected $filter_lang			=	false;
+	protected $multisite			=	null;
+	protected $rest_api				=	null;
+	protected $site					=	null;
+	protected $site_context			=	null;
+	protected $site_exclusion		=	false;
 
 	// __construct
 	public function __construct( &$subject, $config )
@@ -43,8 +44,9 @@ class plgSystemCCK extends JPlugin
 
 		$this->_setLegacyMode();
 
-		$this->multisite	=	$this->_isMultiSite();
-		$this->rest_api		=	$this->_isRestApi();
+		$this->default_lang_mode	=	(int)JCck::getConfig_Param( 'language_default', 1 );
+		$this->multisite			=	$this->_isMultiSite();
+		$this->rest_api				=	$this->_isRestApi();
 
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 	}
@@ -199,7 +201,11 @@ class plgSystemCCK extends JPlugin
 			$this->_runMultisite();
 		}
 
-		$this->_setDefaultLanguage();
+		if ( $this->default_lang_mode === 2 ) {
+			$this->_setDefaultLanguage();
+		} elseif ( $this->default_lang_mode === 1 && $app->isClient( 'site' ) ) {
+			$this->_setDefaultLanguage();
+		}
 
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			JCckToolbox::process( 'onAfterRoute' );
