@@ -22,6 +22,16 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.4 Upgrade Release [19-May-2023] -----------
+
+! Joomla! 4.x support
+  >> Drag & Drop (reorder)
+    for lists with 'sortable-group-id', 'sortable-group-id' is replaced automatically during update
+    for lists without 'sortable-group-id', you may need to add 'data-draggable-group="_"' manually
+
+! Language issue ("no translation on back-end") fixed
+  >> parameter added in SEBLOD Options (override disabled by default)
+
 --------------- 4.0.3 Upgrade Release [5-May-2023] ------------
 
 ! Joomla! 4.x support
