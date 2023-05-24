@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.0.4 Upgrade Release [24-May-2023] -----------
+
+# Drag & Drop (reorder) fixed for Articles on J! 4.x
+
 --------------- 4.0.4 Upgrade Release [19-May-2023] -----------
 
 ! Joomla! 4.x support
