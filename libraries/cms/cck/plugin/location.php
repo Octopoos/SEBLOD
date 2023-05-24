@@ -181,7 +181,10 @@ class JCckPluginLocation extends JPlugin
 		$tableClassName	=	get_class( $table );
 		$contentType	=	new JUcmType;
 		$type			=	$contentType->getTypeByTable( $tableClassName );
-		$tagsObserver	=	$table->getObserverOfClass( 'JTableObserverTags' );
+
+		if ( !JCck::on( '4.0' ) ) {
+			$tagsObserver	=	$table->getObserverOfClass( 'JTableObserverTags' );
+		}
 		$conditions		=	array();
 		
 		if ( empty( $pks ) ) {
@@ -197,10 +200,12 @@ class JCckPluginLocation extends JPlugin
 				$table->ordering	=	$order[$i];
 
 				if ( $type ) {
-					if (!empty( $tagsObserver ) && !empty( $type ) ) {
-						$table->tagsHelper				=	new JHelperTags;
-						$table->tagsHelper->typeAlias	=	$type->type_alias;
-						$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
+					if ( !JCck::on( '4.0' ) ) {
+						if (!empty( $tagsObserver ) && !empty( $type ) ) {
+							$table->tagsHelper				=	new JHelperTags;
+							$table->tagsHelper->typeAlias	=	$type->type_alias;
+							$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
+						}
 					}
 				}
 				if ( !$table->store() ) {
