@@ -140,6 +140,18 @@ class plgCCK_FieldGroup extends JCckPluginField
 				if ( is_object( $f ) ) {
 					$f_name		=	$f->name;
 					$f_value	=	'';
+
+					// Variation
+					if ( $f->variation_override ) {
+						$override	=	json_decode( $f->variation_override, true );
+						if ( count( $override ) ) {
+							foreach ( $override as $k=>$v ) {
+								$f->$k	=	$v;
+							}
+						}
+						$f->variation_override	=	null;
+					}
+
 					if ( $config['pk'] ) {
 						$table	=	$f->storage_table;
 						if ( $table && ! isset( $config['storages'][$table] ) ) {
