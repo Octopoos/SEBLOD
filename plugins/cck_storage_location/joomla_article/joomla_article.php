@@ -745,7 +745,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				if ( strpos( $query['id'], ':' ) !== false ) {
 					$idArray	=	explode( ':', $query['id'], 2 );
 
-					if ( self::$sef[$config['doSEF']] == 'alias' ) {
+					if ( self::$sef[$config['doSEF']] == 'alias' || ( $query['view'] == 'categories' && (int)JCck::getConfig_Param( 'sef', '2' ) == 23 ) ) {
 						$id		=	(string)$idArray[1];
 					} else {
 						$id		=	(int)$idArray[0];
