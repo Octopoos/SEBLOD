@@ -549,7 +549,7 @@ abstract class JCckDev
 
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.htmlspecialchars( @$location[$i] ).'" />';
+							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.( isset( $location[$i] ) ? htmlspecialchars( $location[$i] ) : '' ).'" />';
 						}
 						$html		.=	'</div>';
 						
