@@ -326,6 +326,8 @@ class Helper_Workshop
 		$data['label']			=	true;
 		$data['markup_class']	=	true;
 
+		$query_access			=	'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY ordering ASC, title ASC';
+
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
 				$data['link']		=	array_merge(
@@ -354,6 +356,7 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+											'disabled_isfilled'=>JHtml::_( 'select.option', 'disabled_isfilled', JText::_( 'COM_CCK_FORM_DISABLED_IS_FILLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 				$data['live']		=	array_merge(
@@ -390,6 +393,11 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) ),
 											'FIELD'=>JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
+				$data['restriction']=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge(

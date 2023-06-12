@@ -710,6 +710,22 @@ class JCckPluginField extends JPlugin
 							.	'<input type="hidden" id="'.$name.'_match_options" name="ffp['.$name.'][match_options]" value="'.htmlspecialchars( @$field->match_options ).'" />';
 
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
+
+		// 4
+		$hide				=	( @$field->restriction != '' ) ? '' : ' hidden';
+		$value				=	( @$field->access == '' ) ? 1 : ( ( @$field->access ) ? (int)$field->access : 0 );
+		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
+		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
+							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
+		$value				=	@$field->restriction;
+		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
+		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
+		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
+							.	'<span class="text blue sp2se" data-id="'.$name.'_restriction" data-to="'.$to.'">'.$text.'</span>'
+							.	'<input type="hidden" id="'.$name.'_restriction_options" name="ffp['.$name.'][restriction_options]" '
+							.	'value="'.( ( @$field->restriction_options != '' ) ? htmlspecialchars( $field->restriction_options ) : '' ).'" />'
+							.	' <span class="c_res'.$hide.'" name="'.$name.'">+</span>';
+		$field->params[]	=	self::g_getParamsHtml( 2, $style, $column1, $column2 );
 	}
 	
 	// g_onCCK_FieldConstruct_SearchContent

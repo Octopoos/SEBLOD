@@ -612,7 +612,16 @@ class plgSearchCCK extends JPlugin
 				$str		=	(string)$query;
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
+
+				JPluginHelper::importPlugin( 'cck_field_restriction' );
+
 				foreach ( $fields_order as $field ) {
+					if ( isset( $field->restriction ) && $field->restriction ) {
+						if ( !JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) ) ) {
+							continue;
+						}
+					}
+
 					$order		=	'';
 					$modifier	=	'';
 					$modifier2	=	'';
