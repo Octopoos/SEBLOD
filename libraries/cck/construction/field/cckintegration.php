@@ -266,13 +266,15 @@ class JFormFieldCckIntegration extends JFormField
 							apply_toolbar.querySelector("button").removeEventListener("click", apply_toolbar.executeTask);
 							const save_toolbar = document.querySelector("#toolbar-save");
 							save_toolbar.querySelector("button").removeEventListener("click", save_toolbar.executeTask);
-							
 							$("#toolbar-apply button").attr("onclick","JCck.Dev.submit(\'apply\')");
 							$("#toolbar-save button").attr("onclick","JCck.Dev.submit(\'save\')");
 							$("#integration-sliders").on("change", "select.cck-integration,input.cck-integration", function() {
 								JCck.Dev.doIntegration = 1;
 							});
 							$("#integration-sliders .btn-group label:not(.active)").click(function() {
+								JCck.Dev.doIntegration = 1;
+							});
+							$("#integration-sliders .btn-group.btn-group-yesno input").click(function() {
 								JCck.Dev.doIntegration = 1;
 							});
 							$(".cck-integration-add").click(function(e) {
