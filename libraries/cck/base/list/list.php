@@ -212,6 +212,10 @@ class CCK_List
 		if ( isset( $data[0] ) ) {
 			$config		=	$data[0]['config'];
 			$list		=	$data[0]['results'];
+
+			if ( $list === null ) {
+				$list	=	array();
+			}
 		} else {
 			$list		=	array();
 		}
