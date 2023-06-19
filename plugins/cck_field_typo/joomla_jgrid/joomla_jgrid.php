@@ -259,16 +259,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							$task_id		=	$typo->get( 'task_id_process', '' );
 
 							if ( $task == 'process_ajax' && $task_id ) {
-								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id.'&'.JSession::getFormToken().'=1' );
+								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id );
 							} elseif ( $task == 'none' ) {
-								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1', false );
+								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=ajax&format=raw', false );
 							} else {
-								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component&'.JSession::getFormToken().'=1', false );
+								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
 							}
 							if ( JCck::on( '4.0' ) ) {
 								HTMLHelper::_( 'draggablelist.draggable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
 							} else {
-								JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+								JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl.'&'.JSession::getFormToken().'=1', false, true );
 							}
 						}
 					}
