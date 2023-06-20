@@ -33,6 +33,28 @@ class CCK_Form
 		$config['options']			=	$options;
 	}
 	
+	// getField
+	public static function getField( $name, $type )
+	{
+		if ( !$name ) {
+			$name	=	$type.'_pk';
+		} else {
+			$name	=	'o_'.$name;
+		}
+		$item	=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$name.'"' );
+
+		if ( !is_object( $item ) ) {
+			return null;
+		}
+
+		$item->live_value			=	'';
+		$item->position				=	'';
+		$item->variation			=	'';
+		$item->variation_override	=	'';
+
+		return $item;
+	}
+
 	// getFields
 	public static function getFields( $type, $client, $stage, $excluded, $idx, $cck = false )
 	{
