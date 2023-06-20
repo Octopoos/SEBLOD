@@ -727,6 +727,13 @@ class plgContentCCKInstallerScript
 			// Rebuild Folder Tree
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
+
+		$params->set( 'media_version', md5( $app->cck_core_version . JFactory::getConfig()->get( 'secret' ) ) );
+
+		// Update Params
+		$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+		$db->execute();
+		
 		return;
 		// Force Auto Increments
 		self::_forceAutoIncrements();

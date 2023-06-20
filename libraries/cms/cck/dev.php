@@ -270,6 +270,14 @@ abstract class JCckDev
 		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
+	// getMediaVersion
+	public static function getMediaVersion()
+	{
+		/* TODO#SEBLOD4 JDEBUG ?? or ->() */
+
+		return JCck::getConfig_Param( 'media_version', '' );
+	}
+
 	public static function getMergedScript( $url )
 	{
 		$app	=	JFactory::getApplication();

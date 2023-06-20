@@ -189,14 +189,14 @@ abstract class JCck
 
 				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
-			
+
 			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options, parent_id'
 					.	' FROM #__cck_core_sites'
 					.	' WHERE published = 1'
 					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
 
 			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
-			
+
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
 				$context	=	'';
@@ -500,7 +500,13 @@ abstract class JCck
 			if ( JCck::isSite() && JCck::getSite()->context ) {
 				$context	=	'/'.JCck::getSite()->context;
 			}
-			$doc->addScript( $root.'/media/cck/js/cck.core-3.18.2.min.js' );
+
+			if ( is_file( JPATH_SITE.'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js' ) ) {
+				$doc->addScript( $root.'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+			} else {
+				$doc->addScript( $root.'/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+			}
+
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			
