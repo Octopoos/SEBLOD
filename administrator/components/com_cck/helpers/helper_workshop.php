@@ -280,7 +280,7 @@ class Helper_Workshop
 		if ( $and != '' ) {
 			$where	.=	' AND '.$and;
 		}
-		if ( $element == 'type' && $item->storage_location != 'none' && $item->location == 'none' ) {
+		if ( $element == 'type' && $item->storage_location != 'none' && ( $item->location == 'none' || $item->location == 'collection' ) ) {
 			// Should we append something here?
 		} elseif ( $element == 'type' && $item->storage_location != 'none' ) {
 			if ( $or != '' ) {
@@ -288,7 +288,7 @@ class Helper_Workshop
 			}
 			$where	.=	' AND ( (a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'") '.$or.')';			
 		} elseif ( $element == 'search' ) {
-			$select	=	', a.storage_table, a.storage_field';
+			$select	=	', a.storage, a.storage_table, a.storage_field';
 		}
 		if ( $excluded ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
@@ -313,6 +313,56 @@ class Helper_Workshop
 		return $fields;
 	}
 	
+	// getMarkups
+	public static function getLayouts()
+	{
+		jimport( 'joomla.filesystem.file' );
+
+		$folder		=	JPATH_SITE.'/components/com_cck/layouts/cck/markup';
+		$groups		=	array();
+		$items		=	JFolder::files( $folder, '\.php$', true, true );
+		$len		=	strlen( $folder ) + 1;
+		$layouts	=	array();
+		$open		=	false;
+
+		if ( !is_array( $items ) ) {
+			return $layouts;
+		}
+		foreach ( $items as $file ) {
+			$layout		=	substr( $file, $len );
+			$layout		=	substr( $layout, 0, -4 );
+			$pos		=	strpos( $layout, '/' );
+			$value		=	$layout;
+			
+			if ( $pos !== false ) {
+				$group	=	substr( $layout, 0, $pos );
+				$layout	=	substr( $layout, $pos + 1 );
+				$value	=	$group.'.'.$layout;
+
+				if ( !isset( $groups[$group] ) ) {
+					if ( $open ) {
+						$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+					}
+					
+					$groups[$group]	=	true;
+					$layouts[] 		=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'.str_replace( '-', '_', $group ) ) );
+					$open			=	true;
+				}
+			} elseif ( $open ) {
+				$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$open		=	false;
+			}
+			
+			$layouts[$value]	=	JHtml::_( 'select.option', $value, $layout );
+		}
+		
+		if ( $open ) {
+			$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+		}
+
+		return $layouts;
+	}
+
 	// getParams
 	public static function getParams( $element, $master, $client )
 	{
@@ -329,6 +379,8 @@ class Helper_Workshop
 		$data['label']			=	true;
 		$data['markup_class']	=	true;
 
+		$query_access			=	'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY ordering ASC, title ASC';
+
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
 				$data['link']		=	array_merge(
@@ -339,11 +391,20 @@ class Helper_Workshop
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true )
 										);
-				$data['markup']		=	array(
-											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+				$data['markup']		=	array_merge(
+											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ),
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) ),
+												'-1'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_BASE' ) ),
+												'none_postpone'=>JHtml::_( 'select.option', 'none_postpone', JText::_( 'COM_CCK_NONE_POSTPONED_ABOVE' ) ),
+												'none_postpone_after'=>JHtml::_( 'select.option', 'none_postpone_after', JText::_( 'COM_CCK_NONE_POSTPONED_BELOW' ) )
+											),
+											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -357,6 +418,7 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+											'disabled_isfilled'=>JHtml::_( 'select.option', 'disabled_isfilled', JText::_( 'COM_CCK_FORM_DISABLED_IS_FILLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 				$data['live']		=	array_merge(
@@ -374,11 +436,16 @@ class Helper_Workshop
 											'5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
-				$data['markup']		=	array(
-											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+				$data['markup']		=	array_merge(
+											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) )
+											),
+											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -394,6 +461,11 @@ class Helper_Workshop
 											'FIELD'=>JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
+				$data['restriction']=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
+										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -403,11 +475,16 @@ class Helper_Workshop
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_typo', 'cck_', false, false, true )
 										);
-				$data['markup']		=	array(
-											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+				$data['markup']		=	array_merge(
+											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) )
+											),
+											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -420,9 +497,7 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'form_filter'=>JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-											/*
 											'form_filter_ajax'=>JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
-											*/
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['match_mode']	=	array(
@@ -490,11 +565,19 @@ class Helper_Workshop
 											'5'=>JHtml::_( 'select.option', '5', JText::_( 'COM_CCK_STAGE_5TH' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
-				$data['markup']		=	array(
-											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
+				$data['markup']		=	array_merge(
+											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
+												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) ),
+												'-1'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_BASE' ) ),
+												'none_postpone'=>JHtml::_( 'select.option', 'none_postpone', JText::_( 'COM_CCK_NONE_POSTPONED_ABOVE' ) ),
+												'none_postpone_after'=>JHtml::_( 'select.option', 'none_postpone_after', JText::_( 'COM_CCK_NONE_POSTPONED_BELOW' ) )
+											),
+											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
