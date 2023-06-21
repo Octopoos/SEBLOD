@@ -88,6 +88,7 @@ $js		=	'
 					$("#match_options_var_type").isVisibleWhen("match_mode","ASC,DESC");
 					$("#match_options_by_field").isVisibleWhen("match_mode","FIELD");
 					$("#sortable_core_dev_texts").isVisibleWhen("match_options_by_field","1");
+					$("#match_options_by_field_position,#match_options_by_field_value").isVisibleWhen("match_options_by_field","2");
 				});
 			})(jQuery);
 			';
@@ -103,8 +104,10 @@ $options	=	explode( '||', $options );
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Modifier', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Length=0||Numeric=1', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Ordering', 'selectlabel'=>'', 'options'=>'Following Options=0||Custom=1', 'storage_field'=>'match_options[by_field]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Ordering', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Custom Values=2||Field Options=optgroup||Custom Order=1||Following Options=0', 'storage_field'=>'match_options[by_field]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_texts', $options, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'', 'maxlength'=>88, 'storage_field'=>'match_options[by_field_values]' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Values', 'storage_field'=>'match_options[by_field_value]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Position', 'selectlabel'=>'', 'options'=>'Start=desc||End=asc', 'storage_field'=>'match_options[by_field_position]', 'css'=>'match_options' ) );
 		?>
 	</ul>
 </div>

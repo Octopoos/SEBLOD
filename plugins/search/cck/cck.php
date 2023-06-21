@@ -626,7 +626,8 @@ class plgSearchCCK extends JPlugin
 					$modifier	=	'';
 					$modifier2	=	'';
 					$modifier3	=	$field->match_mode; // direction
-					
+					$modifier4	=	'';
+
 					if ( $modifier3 == 'RAND' ) {
 						$ordered	=	true;
 						$query->order( $query->Rand() ); /* OK for 1000- records */
@@ -650,12 +651,21 @@ class plgSearchCCK extends JPlugin
 							$modifier		=	' FIELD(';
 							$modifier2		=	',';
 							$s_opts			=	array();
-							$s_options		=	explode( '||', ( ( $field->match_options->get( 'by_field' ) == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
+
+							if ( $field->match_options->get( 'by_field' ) == '2' ) {
+								$s_options		=	explode( ',', $field->match_options->get( 'by_field_value' ) );
+								$modifier4		=	' '.strtoupper( $field->match_options->get( 'by_field_position' ) );
+							} elseif ( ( $field->match_options->get( 'by_field' ) == '1' ) ) {
+								$s_options		=	explode( '||', $field->match_options->get( 'by_field_values' ) );
+							} else {
+								$s_options		=	explode( '||', $field->options );
+							}
+
 							foreach ( $s_options as $s_o ) {
 								$s_opt		=	explode( '=', $s_o );
-								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
+								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] != '' ) ? $s_opt[1] : $s_opt[0];
 							}
-							$modifier3		=	'"'.implode( '","', $s_opts ).'"'.')';
+							$modifier3		=	'"'.implode( '","', $s_opts ).'"'.')'.$modifier4;
 						} else {
 							$modifier3		=	' '.$modifier3;
 						}
