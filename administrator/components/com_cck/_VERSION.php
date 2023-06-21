@@ -15,7 +15,7 @@ final class JCckVersion extends JCckVersionObject
 {
 	public $RELEASE = '4.0';
 	
-	public $DEV_LEVEL = '5';
+	public $DEV_LEVEL = '6';
 
 	public $DEV_STATUS = '';
 
