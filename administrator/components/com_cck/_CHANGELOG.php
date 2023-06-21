@@ -22,6 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.25.0 Upgrade Release [21-Jun-2023] -------------
+
++ "Disabled when filled" Field Variation added on Forms.
++ ORDER BY FIELD improved.
++ Restriction executed on Ordering.
++ Variation Override (Form) implment on Group.
+
+^ /parent/id behaviour changed (parent is now alias instead of id)
+
+# Minor issues on PHP 8.x fixed. 
+
 --------------- 3.24.0 Upgrade Release [5-May-2023] --------------
 
 # Additional fixes included for PHP 8.x.
