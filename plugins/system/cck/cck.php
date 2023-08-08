@@ -1114,19 +1114,24 @@ class plgSystemCCK extends JPlugin
 		$my		=	$menu->getItem( $id );
 		$path	=	substr( JUri::getInstance()->getPath(), 1 );
 
+		if ( !is_object( $my ) ) {
+			return;
+		}
+
 		/* TODO#SEBLOD: need to be improved! */
-		if ( !( !$path || $path == 'index.php/'.@$my->alias || $path == @$my->alias.'.html' ) ) {
-			$home->title		=	@$my->title;
+		if ( !( !$path || $path == 'index.php/'.$my->alias || $path == $my->alias.'.html' ) ) {
+			$home->title		=	$my->title;
 		} else {
-			$home->id			=	@$my->id;
-			$home->title		=	@$my->title;
-			$home->type			=	@$my->type;
-			$home->access		=	@$my->access;
-			$home->component	=	@$my->component;
-			$home->component_id	=	@$my->component_id;
-			$home->link			=	@$my->link;
-			$home->params		=	@$my->params;
-			$home->query  		=	@$my->query;
+			$home->id			=	$my->id;
+			$home->title		=	$my->title;
+			$home->type			=	$my->type;
+			$home->access		=	$my->access;
+			$home->component	=	$my->component;
+			$home->component_id	=	$my->component_id;
+			$home->link			=	$my->link;
+			$home->query  		=	$my->query;
+
+			$home->setParams( $my->getParams() );
 		}
 	}
 
