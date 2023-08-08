@@ -83,13 +83,14 @@ class CCK_Rendering
         if ( $prefix == 'get' ) {
 			$fieldname	=	$args[0];
 			$count		=	count( $args );
+
 			if ( $count ==  1 ) {
 				if ( empty( $property ) ) {
-					if ( isset ( $this->me[$fieldname] ) ) {
+					if ( isset( $this->me[$fieldname] ) ) {
 						return $this->me[$fieldname];
 					}
 				} else {
-					if ( isset ( $this->me[$fieldname]->$property ) ) {
+					if ( isset( $this->me[$fieldname]->$property ) ) {
 						return $this->me[$fieldname]->$property;
 					}
 				}
@@ -155,11 +156,7 @@ class CCK_Rendering
 		}
 		$me					=	CCK_Document::getInstance( 'html' );
 		$this->me			=	( isset( $me->fields ) ) ? $me->fields : array();
-		$this->config		=	array(
-									'doComputation'=>0,
-									'markup'=>'',
-									'mode'=>$me->cck_mode
-								);
+		$this->config		=	array( 'doComputation'=>0, 'mode'=>$me->cck_mode );
 		
 		$this->id			=	'cck'.( ( (int)$me->pk > 0 ) ? $me->pk : $me->id.'r' );
 		$this->desc			=	'';
@@ -276,34 +273,21 @@ class CCK_Rendering
 				return false;
 				break;
 		}
-		$this->config['cck']			=	$this;
 		$this->config['client']			=	$this->client;
 		$this->config['computation']	=	array();
 		$this->config['rendering_id']	=	$this->id;
 		
-		// Legacy
-		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
-		
-		if ( $legacy && $legacy <= 2018 ) {
-			$file2	=	$this->path.'/fields/'.$this->type.'/markup.php';
-			$file1	=	$this->path.'/fields/markup.php';
-
-			if ( $this->isFile( $file2 ) ) {
-				$this->markup	=	'cckMarkup_'.$this->name.'_'.$this->type;
-				include_once $file2;
-			} elseif ( $this->isFile( $file1 ) ) {
-				$this->markup	=	'cckMarkup_'.$this->name;
-				include_once $file1;
-			} else {
-				$this->markup	=	'legacy';
-			}
-			$this->responsive	=	( $this->location == 'admin' ) ? 1 : JCck::getConfig_Param( 'responsive', 0 );
-		} else {
-			$this->markup		=	'';
-			$this->responsive	=	0;
+		// Markup
+		$file2	=	$this->path.'/fields/'.$this->type.'/markup.php';
+		$file1	=	$this->path.'/fields/markup.php';
+		if ( $this->isFile( $file2 ) ) {
+			$this->markup	=	'cckMarkup_'.$this->name.'_'.$this->type;
+			include_once $file2;
+		} elseif ( $this->isFile( $file1 ) ) {
+			$this->markup	=	'cckMarkup_'.$this->name;
+			include_once $file1;
 		}
-
-		$this->config['legacy']	=	$legacy;
+		$this->responsive	=	( $this->location == 'admin' ) ? 1 : JCck::getConfig_Param( 'responsive', 0 );
 		
 		return true;
 	}
@@ -500,7 +484,7 @@ class CCK_Rendering
 	// getLabel
 	public function getLabel( $fieldname = '', $html = false, $suffix = '' )
 	{
-		if ( ! isset ( $this->me[$fieldname] ) ) {
+		if ( ! isset( $this->me[$fieldname] ) ) {
 			return;
 		}
 		
@@ -517,9 +501,6 @@ class CCK_Rendering
 				}
 			}
 			if ( $label ) {
-				if ( !$this->config['legacy'] ) {
-					$label	=	'<span>'.$label.'</span>';
-				}
 				$label	=	'<label for="'.$this->me[$fieldname]->name.'">'.$label.'</label>';
 			}
 		}
@@ -556,130 +537,91 @@ class CCK_Rendering
 		
 		return $fields;
 	}
+
+	// getOptions
+	public function getOptions( $fieldname = '' )
+	{
+		if ( ! isset( $this->me[$fieldname] ) ) {
+			return;
+		}
+		
+		return ( isset( $this->me[$fieldname]->optionsList ) ) ? $this->me[$fieldname]->optionsList : $this->me[$fieldname]->options;
+	}
 	
 	// renderField
 	public function renderField( $fieldname, $options = null )
 	{
-		static $postpone		=	'';
-		static $postpone_after	=	'';
-
-		$field	=	$this->get( $fieldname );
-		$html	=	'';
-
+		$field		=	$this->get( $fieldname );
+		$html		=	'';
 		if ( !$field ) {
-			$postpone		=	'';
-			$postpone_after	=	'';
-
-			return '';
+			return $html;
 		}
-		if ( $field->display && $field->markup != 'clear' ) {
-			if ( ! $options ) {
-				$options	=	new JRegistry;
-			}
-			$markup						=	$options->get( 'field_markup', '' );
-			$this->config['markup']		=	$markup;
-			$this->config['options']	=	$options;
-
+		
+		if ( $field->display ) {
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
-
+			
 			if ( $field->display > 1 && $html != '' ) {
-				if ( $field->markup == 'none_postpone' ) {
-					$html				=	$postpone.$html;
-					$postpone			=	$html;
+				if ( ! $options ) {
+					$options	= new JRegistry;
+				}
 
-					return '';
-				} elseif ( $field->markup == 'none_postpone_after' ) {
-					$html				=	$html.$postpone_after;
-					$postpone_after		=	$html;
-
-					return '';
-				} else {
-					$html				=	$postpone.$html.$postpone_after;
-					$postpone			=	'';
-					$postpone_after		=	'';
-
-					if ( $field->markup == 'none' || ( $field->markup == '' && $markup == 'none' ) ) {
-						if ( $this->methodRender == 'onCCK_FieldRenderForm' ) {
-							// Conditional
-							if ( $field->conditional ) {
-								$this->setConditionalStates( $field );
-							}
-						}
-
-						// Label
-						$label	=	'';
-						if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
-							$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
-							$html	=	$label.$html;
-						}
-					} elseif ( $this->markup ) {
-						if ( $this->markup == 'legacy' ) {
-							if ( $this->methodRender == 'onCCK_FieldRenderForm' ) {
-								// Computation
-								if ( @$field->computation ) {
-									$this->setComputationRules( $field );
-								}
-								// Conditional
-								if ( @$field->conditional ) {
-									$this->setConditionalStates( $field );
-								}
-							}
-							
-							// Description
-							$desc	=	'';
-							if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) ) {
-								if ( $field->description != '' ) {
-									if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) == 5 ) {
-										JHtml::_( 'bootstrap.popover', '.hasPopover', array( 'container'=>'body', 'html'=>true, 'trigger'=>'hover' ) );
-										$desc	=	'<div class="hasPopover" data-placement="top" data-animation="false" data-content="'.htmlspecialchars( $field->description ).'" title="'.htmlspecialchars( $field->label ).'"><span class="icon-help"></span></div>';
-									} else {
-										$desc	=	$field->description;
-									}
-									$desc	=	 '<div id="'.$this->id.'_desc_'.$fieldname.'" class="cck_desc cck_desc_'.$field->type.'">'.$desc.'</div>';
-								}
-							}
-
-							// Label
-							$label	=	'';
-							if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
-								$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
-								$label	=	( $label != '' ) ? '<div id="'.$this->id.'_label_'.$fieldname.'" class="cck_label cck_label_'.$field->type.'">'.$label.'</div>' : '';
-							}
-							
-							// Markup
-							$html	=	'<div id="'.$this->id.'_'.$this->mode_property.'_'.$fieldname.'" class="cck_'.$this->mode_property.' cck_'.$this->mode_property.'_'.$field->type.@$field->markup_class.'">'.$html.'</div>';
-							$html	=	'<div id="'.$this->id.'_'.$fieldname.'" class="cck_'.$this->mode.'s cck_'.$this->client.' cck_'.$field->type.' cck_'.$fieldname.'">'.$label.$html.$desc.'</div>';
-						} else {
-							$call	=	$this->markup;
-							$html	=	$call( $this, $html, $field, $options );
-						}
-					} else {
-						if ( $field->markup ) {
-							$markup	=	$field->markup;
-						}
-
-						if ( $markup ) {
-							$displayData	=	array(
-													'cck'=>$this,
-													'field'=>$field,
-													'html'=>$html,
-													'options'=>$options
-												);
-
-							$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
-							$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
+				if ( $field->markup == 'none' ) {
+					if ( $this->methodRender == 'onCCK_FieldRenderForm' ) {
+						// Conditional
+						if ( $field->conditional ) {
+							$this->setConditionalStates( $field );
 						}
 					}
-				}
-			} else {
-				$postpone		=	'';
-				$postpone_after	=	'';
-			}
-		} else {
-			$postpone		=	'';
-			$postpone_after	=	'';
-		}
 
+					// Label
+					$label	=	'';
+					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
+						$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
+						$html	=	$label.$html;
+					}
+				} elseif ( $this->markup ) {
+					$call	=	$this->markup;
+					$html	=	$call( $this, $html, $field, $options );
+				} else {
+					if ( $this->methodRender == 'onCCK_FieldRenderForm' ) {
+						// Computation
+						if ( @$field->computation ) {
+							$this->setComputationRules( $field );
+						}
+						// Conditional
+						if ( @$field->conditional ) {
+							$this->setConditionalStates( $field );
+						}
+					}
+					
+					// Description
+					$desc	=	'';
+					if ( $this->getStyleParam( 'field_description', 0 ) ) {
+						if ( $field->description != '' ) {
+							if ( $this->getStyleParam( 'field_description', 0 ) == 5 ) {
+								JHtml::_( 'bootstrap.popover', '.hasPopover', array( 'container'=>'body', 'html'=>true, 'trigger'=>'hover' ) );
+								$desc	=	'<div class="hasPopover" data-placement="top" data-animation="false" data-content="'.htmlspecialchars( $field->description ).'" title="'.htmlspecialchars( $field->label ).'"><span class="icon-help"></span></div>';
+							} else {
+								$desc	=	$field->description;
+							}
+							$desc	=	 '<div id="'.$this->id.'_desc_'.$fieldname.'" class="cck_desc cck_desc_'.$field->type.'">'.$desc.'</div>';
+						}
+					}
+					
+					// Label
+					$label	=	'';
+					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
+						$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
+						$label	=	( $label != '' ) ? '<div id="'.$this->id.'_label_'.$fieldname.'" class="cck_label cck_label_'.$field->type.'">'.$label.'</div>' : '';
+					}
+					
+					// Markup
+					$html	=	'<div id="'.$this->id.'_'.$this->mode_property.'_'.$fieldname.'" class="cck_'.$this->mode_property.' cck_'.$this->mode_property.'_'.$field->type.@$field->markup_class.'">'.$html.'</div>';
+					$html	=	'<div id="'.$this->id.'_'.$fieldname.'" class="cck_'.$this->mode.'s cck_'.$this->client.' cck_'.$field->type.' cck_'.$fieldname.'">'.$label.$html.$desc.'</div>';
+				}
+			}
+		}
+		
 		return $html;
 	}
 	
@@ -870,9 +812,9 @@ class CCK_Rendering
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	$this->loadDefaultOptions( $variation );
+			$options	=	null;
 		}
-
+		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : (( $this->doDebug() ) ? $position : '' );
 		$pos2		=	$this->path.'/positions/'.$this->type.'/'.$this->client.'/'.$position.'.php';
 		$pos1		=	$this->path.'/positions/'.$position.'.php';
@@ -975,52 +917,7 @@ class CCK_Rendering
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variations
-
-	// getVariation
-	public function getVariation( $position )
-	{
-		$variation	=	new stdClass;
-
-		if ( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) {
-			$variation->name	=	$this->positions_m[$position]->variation;
-		} else {
-			$variation->name	=	$this->params['variation_default'];
-		}
-
-		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
-			$variation->options	=	new JRegistry;
-			$variation->options->loadString( $this->positions_m[$position]->variation_options );
-		} else {
-			$variation->options	=	$this->loadDefaultOptions( $variation );
-		}
-
-		return $variation;
-	}
 	
-	// loadVariationOptions
-	protected function loadDefaultOptions( $variation )
-	{
-		if ( !$variation ) {
-			return new JRegistry;
-		}
-		$file		=	'variations/'.$variation.'/default.json';
-		
-		if ( $this->isFile( $this->path.'/'.$file ) ) {
-			$file	=	$this->path.'/'.$file;
-		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
-			$file	=	$this->path_lib.'/'.$file;
-		} else {
-			return new JRegistry;
-		}
-
-		$registry	=	new JRegistry;
-		$registry->loadFile( $file );
-
-		/* TODO#SEBLOD4: cache per variation */
-
-		return $registry;
-	}
-
 	// renderVariation
 	public function renderVariation( $variation, $legend, $content, $options, $position, $height = 0, $markup = true )
 	{
@@ -1099,12 +996,12 @@ class CCK_Rendering
 				$options2	=	$options;
 				$options	=	new JRegistry;
 				$options->loadString( $options2 );
-			} /* else {
+			} else {
 				$options				=	new JRegistry;
 				$orientation			=	'vertical';
 				$hasOptions				=	false;
 				$field_label_width		=	'145px';
-			} */
+			}
 			$field_description	=	$this->getStyleParam( 'field_description', 0 );
 			if ( $field_description == 4 || $field_description == 5 ) {
 				$css	.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$this->mode.'s div.cck_desc{clear:none; float:left;}'."\n";
