@@ -85,10 +85,6 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		if ( $data['context'] != '' ) {
 			$data['name']	.=	'@'.$data['context'];
 		}
-
-		if ( ! $data['id'] ) {
-			// $data	=	$this->preStore( $data );
-		}
 		
 		if ( isset( $data['aliases'] ) && is_array( $data['aliases'] ) && count( $data['aliases'] ) ) {
 			$data['aliases']	=	implode( '||', $data['aliases'] );
@@ -118,114 +114,6 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// preStore
 	public function preStore( $data )
 	{
-		$mode		=	JCck::getConfig_Param( 'multisite_integration', '1' );
-		
-		$groups		=	explode( ',', $data['type'] );
-		$guest_only	=	( count( $groups ) > 1 ) ? 1 : 0;
-		$sitetitle	=	$data['title'];
-		$sitename	=	$data['name'];
-		$sitemail	=	JFactory::getConfig()->get( 'mailfrom' );
-		$sitemail	=	substr( $sitemail, strpos( $sitemail, '@' ) );
-		
-		$users		=	array();
-		$usergroups	=	array();
-		
-		$next_level	=	0;
-		
-		JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
-		
-		// Guest Group
-		$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 ) : CCK_TableSiteHelper::addUserGroup( 'Public' .' - '. $sitetitle, 1 );
-		$parent_id		=	$guest_group;
-		$usergroups[]	=	$guest_group;
-		if ( $guest_only ) {
-			$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, $guest_group ) : CCK_TableSiteHelper::addUserGroup( 'Guest Only' .' - '. $sitetitle, 1 );
-		}
-		
-		// Guest User
-		$data['guest']	=	CCK_TableSiteHelper::addUser( '', $sitetitle, $sitemail, array( 0 => $guest_group ) );
-		
-		// Groups
-		$special		=	0;
-		$root			=	CCK_TableSiteHelper::getRootAsset();
-		$rules			=	array();
-		foreach ( $groups as $k => $g ) {
-			$group		=	JTable::getInstance( 'Usergroup' );
-			$group->load( $g );
-			
-			if ( $mode == 1 ) {
-				$parent_id		=	CCK_TableSiteHelper::addUserGroup( $group->title .' - '. $sitetitle, $parent_id );
-				$usergroups[]	=	$parent_id;
-				if ( $special == 0 ) {
-					CCK_TableSiteHelper::updateViewLevel( 2, $parent_id );					
-					$special++;
-				}
-				if ( ( $g == 6 || $g == 7 ) && $special == 1 ) {
-					CCK_TableSiteHelper::updateViewLevel( 3, $parent_id );
-					$special++;
-					if ( $g == 7 ) {
-						CCK_TableSiteHelper::prepareRules( $root, $rules, 6, $parent_id );
-					}
-				}
-				CCK_TableSiteHelper::prepareRules( $root, $rules, $g, $parent_id );
-			} else {
-				$parent_id		=	$g;
-				$usergroups[]	=	CCK_TableSiteHelper::addUserGroup( $group->title .' - '. $sitetitle, $parent_id );
-			}
-			$users[$k]			=	CCK_TableSiteHelper::addUser( $group->title, $sitetitle, $sitemail );
-			if ( $g < 6 ) {
-				$levels[$k]		=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. $group->title, array(), $next_level );
-			}
-		}
-		$data['usergroups']	=	$usergroups;		
-		if ( $mode == 1 ) {
-			CCK_TableSiteHelper::updateRootAsset( $root, $rules );
-		}
-		
-		// Users
-		krsort( $users );
-		$accounts		=	array();
-		$usergroups[]	=	0;
-		foreach ( $users as $u ) {
-			array_pop( $usergroups );
-			$u->groups	=	$usergroups;
-			$u->save();
-			if ( $u->authorise( 'core.login.admin' ) ) {
-				$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'admin' );
-			} else {
-				$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'site' );
-			}
-		}
-		
-		// Guest Viewlevel
-		$usergroups			=	$data['usergroups'];
-		if ( $guest_only ) {
-			$data['guest_only_group']		=	$guest_group;
-			$usergroups[]					=	$guest_group;
-			$guest_viewlevel				=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );
-			$usergroups						=	$data['usergroups'];
-			$data['guest_only_viewlevel']	=	CCK_TableSiteHelper::addViewLevel( $sitetitle .' - '. 'Guest Only', array( 0 => $guest_group ), $next_level );
-		} else {
-			$guest_viewlevel	=	CCK_TableSiteHelper::addViewLevel( $sitetitle, $usergroups, $next_level );		
-		}
-		
-		// Viewlevels
-		$viewlevels[]	=	$guest_viewlevel;
-		foreach ( $levels as $l ) {
-			array_shift( $usergroups );
-			$levels			=	array( 'title'=>$l->title, 'rules'=>$usergroups );
-			$l->bind( $levels );
-			if ( is_null( $l->ordering ) ) {
-				$l->ordering	=	++$next_level;
-			}
-			$l->store();
-			$viewlevels[]	=	$l->id;
-		}
-		$data['viewlevels']	=	$viewlevels;
-		
-		CCK_TableSiteHelper::sendMails( $data, $accounts );
-		
-		return $data;
 	}
 
 	// postStore
