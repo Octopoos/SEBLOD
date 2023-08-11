@@ -308,8 +308,7 @@ class CCKController extends JControllerLegacy
 				 ( $view == 'site' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.site', $id ) ) ||
 				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ||
 				 ( $view == 'session' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.session', $id ) ) ) {
-				$this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
-				$this->setMessage( $this->getError(), 'error' );
+				$this->setMessage( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ), 'error' );
 				$this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
 				
 				return false;
