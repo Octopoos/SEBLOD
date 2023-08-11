@@ -22,13 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.0.6 Upgrade Release [21-Jun-2023] -----------
+--------------- 4.1.0 Upgrade Release [11-Aug-2023] -----------
 
 ! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
   >> Permissions UI fixed.
 
 ! cck.core.js override allowed.
 
+# Access Level issue fixed on Sites (while saving).
 # Issue for saving Integration Options fixed.
 # Minor issues on PHP 8.x fixed.
 # Token fixed on JGrid reordering.
