@@ -219,6 +219,10 @@ class CCK_Import
 			require_once JPATH_SITE.'/plugins/cck_field/'.$item->type.'/classes/app.php';
 			JCck::callFunc_Array( 'plgCCK_Field'.$item->type.'_App', 'onCCK_FieldImportField', array( &$item, $data ) );
 		}
+
+		$item->id			=	(int)$item->id;
+		$item->published	=	(int)$item->published;
+
 		if ( is_null( $item->storage_key ) ) {
 			$item->storage_key	=	'';
 		}
