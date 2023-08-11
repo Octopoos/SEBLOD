@@ -60,28 +60,6 @@ class CCK_TableSite extends JTable
 
 		return parent::delete();
 	}
-
-	// store
-	public function store( $updateNulls = false )
-	{
-		$result	=	parent::store( $updateNulls );
-
-		if ( $result !== false ) {
-			if ( !(int)$this->access || (int)$this->access == 1 ) {
-				$viewlevels	=	$this->viewlevels;
-
-				if ( is_string( $viewlevels ) ) {
-					$viewlevels	=	explode( ',', $viewlevels );
-				}
-				if ( $viewlevels[0] ) {
-					$this->access	=	$viewlevels[0];
-					$this->store();
-				}
-			}
-		}
-
-		return $result;
-	}
 }
 
 // CCK_TableSiteHelper
