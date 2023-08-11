@@ -99,15 +99,35 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		
 		// Init
 		$table	=	$field->storage_table;
+
 		if ( $table == '#__cck_core' ) {
 			/* TODO#SEBLOD: use API */
-			$pk	=	JCckDatabase::loadResult( 'SELECT a.id FROM #__cck_core AS a'
-											. ' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
-											. ' WHERE a.storage_location = b.storage_location AND a.pk = '.(int)$pk );
+			$pk			=	JCckDatabase::loadResult( 'SELECT a.id FROM #__cck_core AS a'
+													. ' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
+													. ' WHERE a.storage_location = b.storage_location AND a.pk = '.(int)$pk );
+			$storage	=	self::_getTable( $pk, $table );
+		} else {
+			$storage	=	self::_getTable( $pk, $table );
+
+			if ( $config['copyfrom_id'] ) {
+				$empty						=	array( self::$key );
+				$config['language']			=	JFactory::getApplication()->input->get( 'translate' );
+
+				if ( isset( $storage->language ) ) {
+					$config['translate']	=	$storage->language;
+				}
+				$config['copiedfrom_id']	=	$config['copyfrom_id'];
+
+				foreach ( $empty as $k ) {
+					$storage->$k	=	'';
+				}
+			} else {
+				if ( isset( $storage->language ) ) {
+					$config['language']	=	$storage->language;
+				}
+			}
 		}
 
-		// Set
-		$storage			=	self::_getTable( $pk, $table );
 		$config['asset']	=	'';
 		$config['asset_id']	=	0;
 	}
@@ -310,6 +330,11 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				}
 				$app->triggerEvent( 'onContentAfterSave', array( self::$context, &$table, $isNew ) );
 				
+				// Associations
+				if ( JCckDevHelper::hasLanguageAssociations() && isset( $table->language ) ) {
+					self::_setAssociations( $table, $data, $isNew, $config );
+				}
+
 				if ( isset( $config['join'] ) && $config['join'] ) {
 					self::_core( $data, $config );
 				} else {
@@ -363,6 +388,75 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// _completeTable
 	protected static function _completeTable( &$table, &$data, &$config )
 	{
+	}
+
+	// _setAssociations
+	protected static function _setAssociations( $table, $data, $isNew, $config )
+	{
+		if ( !( isset( $data['associations'] ) && is_array( $data['associations'] ) ) ) {
+			return;
+		}
+		$app	=	JFactory::getApplication();
+		$db		=	JFactory::getDbo();
+
+		$associations	=	$data['associations'];
+		foreach ( $associations as $tag=>$id ) {
+			if ( empty( $id ) ) {
+				unset( $associations[$tag] );
+			} else {
+				$associations[$tag]	=	(int) $id;
+			}
+		}
+
+		// Detecting all associations
+		$all_language	=	$table->language == '*';
+		$context		=	self::$context;
+
+		if ( isset( $data['_']->table ) && $data['_']->table ) {
+			$context	.=	'.'.$data['_']->table;
+		}
+
+		if ( $all_language && !empty( $associations ) ) {
+			JError::raiseNotice( 403, JText::_( 'COM_CONTENT_ERROR_ALL_LANGUAGE_ASSOCIATED' ) );
+		}
+		$associations[$table->language]	=	$table->{self::$key};
+
+		// Deleting old association for these items
+		$query	=	$db->getQuery( true )
+				->delete( '#__associations' )
+				->where( 'context=' . $db->quote( $context ) )
+				->where( 'id IN (' . implode(',', $associations ) . ')' );
+		$db->setQuery( $query );
+
+		try
+        {
+            $db->execute();
+        }
+        catch ( RuntimeException $e )
+        {
+            $app->enqueueMessage( $e->getMessage(), 'error' );
+            return false;
+        }
+
+		if ( !$all_language && count( $associations ) ) {
+			// Adding new association for these items
+			$key	=	md5( json_encode( $associations ) );
+			$query->clear()->insert( '#__associations' );
+			foreach ( $associations as $tag=>$id ) {
+				$query->values( (int)$id . ',' . $db->quote( $context ) . ',' . $db->quote( $key ) );
+			}
+			$db->setQuery( $query );
+
+			try
+	        {
+	            $db->execute();
+	        }
+	        catch ( RuntimeException $e )
+	        {
+	            $app->enqueueMessage( $e->getMessage(), 'error' );
+	            return false;
+	        }
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // SEF

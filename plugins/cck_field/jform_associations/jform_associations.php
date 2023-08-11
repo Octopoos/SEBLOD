@@ -81,8 +81,11 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 
 			if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/classes/helper.php' ) ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/classes/helper.php';
-				
-				$form		=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location.'_Helper', 'getAssociationsForm', array( $id, $name, $config ) );
+				$form		=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location.'_Helper', 'getAssociationsForm', array( $id, $name, $field, $config ) );
+
+				if ( $form != '' ) {
+					$form	=	'<div class="o-form">'.$form.'</div>';
+				}
 			}
 		}
 		
