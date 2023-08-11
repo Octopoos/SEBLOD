@@ -41,7 +41,7 @@ class Helper_Admin extends CommonHelper_Admin
 							   array( 'val'=>'3', 'pre'=>'', 'key'=>'' ),
 							   array( 'val'=>'4', 'pre'=>'', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
 							   array( 'val'=>'1', 'pre'=>'', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
-							   // array( 'val'=>'5', 'pre'=>'', 'key'=>'' )
+							   array( 'val'=>'5', 'pre'=>'', 'key'=>'', 'active'=>( $vName == _C5_NAME ) )
 							);
 		}
 		if ( $vName == 'cck' ) {
