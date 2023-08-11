@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
+
 // Plugin
 class JCckPluginLocation extends JPlugin
 {
