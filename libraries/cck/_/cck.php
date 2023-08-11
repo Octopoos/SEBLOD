@@ -432,6 +432,24 @@ abstract class JCck
 		
 		return self::$_user;
 	}
+
+	// isGuest
+	public static function isGuest()
+	{
+		$user	=	JFactory::getUser();
+
+		if ( $user->id && !$user->guest ) {
+			if ( JCck::isSite() ) {
+				if ( (int)$user->id != (int)JCck::getSite()->guest ) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
