@@ -275,7 +275,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					return;
 				}
 			}
-			if ( $task == 'export_ajax' ) {
+			if ( $task == 'export_ajax' || $task == 'list.export_ajax' ) {
 				if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
 					if ( !$user->authorise( 'core.export', 'com_cck.form.'.$config['type_id'] ) ) {
 						$field->form	=	'';

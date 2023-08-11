@@ -451,6 +451,46 @@ class CCKController extends JControllerLegacy
 		}
 	}
 
+	// exportAjax
+	public function exportAjax()
+	{
+		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
+			$this->setRedirect( $this->_getReturnPage(), JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			return;
+		}
+		
+		$app		=	JFactory::getApplication();
+		$config		=	array(
+							'uniqid'=>$app->input->get( 'uniqid', '' )
+						);
+		$ids		=	$app->input->get( 'cid', array(), 'array' );
+		$task_id	=	$app->input->getInt( 'tid', 0 );
+		$ids		=	ArrayHelper::toInteger( $ids );
+		
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php';
+		$model		=	JModelLegacy::getInstance( 'CCK_Exporter', 'CCK_ExporterModel' );
+		$params		=	JComponentHelper::getParams( 'com_cck_exporter' );
+
+		$file 		=	$model->export( $params, $task_id, $ids, $config );
+		$file		=	JCckDevHelper::getRelativePath( $file, false );
+		
+		if ( $file ) {
+			$error			=	0;
+			$output_path	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file );
+		} else {
+			$error			=	1;
+			$output_path	=	'';
+		}
+		$return		=	array(
+							'error'=>$error,
+							'output_path'=>$output_path
+						);
+		
+		echo json_encode( $return );
+	}
+
 	// saveIntegrationAjax
 	public function saveIntegrationAjax()
 	{
