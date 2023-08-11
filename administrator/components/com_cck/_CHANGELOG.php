@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.26.0 Upgrade Release [11-Aug-2023] -------------
+
++ "Export (Ajax)" support added on back-end lists.
+
 --------------- 3.25.0 Upgrade Release [21-Jun-2023] -------------
 
 + "Disabled when filled" Field Variation added on Forms.
