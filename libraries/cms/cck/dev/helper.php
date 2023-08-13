@@ -144,10 +144,13 @@ abstract class JCckDevHelper
 			} else {
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
-				$lang_sef	=	self::getLanguageCode( true );
 
-				if ( $lang_sef ) {
-					$context	.=	$lang_sef.'/';
+				if ( !JFactory::getApplication()->isClient( 'administrator' ) ) {
+					$lang_sef	=	self::getLanguageCode( true );
+
+					if ( $lang_sef ) {
+						$context	.=	$lang_sef.'/';
+					}
 				}
 				if ( JCck::isSite() && JCck::getSite()->context ) {
 					$context	.=	JCck::getSite()->context.'/';
