@@ -356,6 +356,7 @@ fieldset.disabled legend{background-color: transparent; color: var(--template-bg
 	text-align: left;
 }
 .row-pane details{margin: -1rem 0 1rem 0;}
+.control-group .variation_value{line-height: 42px;}
 
 [aria-controls="details"]{margin-right: auto;}
 [role="tab"],
