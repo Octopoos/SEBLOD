@@ -371,6 +371,7 @@ class plgContentCCKInstallerScript
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
+			$params		=	JComponentHelper::getParams( 'com_cck' );
 			$root		=	JPATH_ADMINISTRATOR.'/components/com_cck';
 			require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
