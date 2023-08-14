@@ -47,28 +47,34 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                                                 )
                                             ),
                                 'parent'=>JCckDev::renderForm( $cck['core_parent_site'], $this->item->parent_id, $config ),
-                                'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
-                                'title'=>JCckDev::renderForm( $cck['core_title_site'], $this->item->title, $config ),
-                                'site_name'=>JCckDev::renderForm( $cck['core_site_name'], @$cfg['sitename'], $config ),
-                                'site_pagetitles'=>JCckDev::renderForm( $cck['core_site_pagetitles'], @$cfg['sitename_pagetitles'], $config ),
-                                'site_pagetitle'=>JCckDev::renderForm( 'core_dev_text', @$cfg['pagetitle'], $config, array( 'label'=>'Page Title', 'maxlength'=>70, 'storage_field'=>'json[configuration][pagetitle]' ) ),
-                                'site_offline'=>JCckDev::renderForm( $cck['core_site_offline'], @$cfg['offline'], $config ),
+                                'site_aliases'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( $this->item->aliases ), $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) ),
+                                'site_exclusions'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( @$cfg['exclusions'] ), $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ), array( 'after'=>'<div style="float:left;">'.JText::_( 'COM_CCK_SITE_EXCLUSIONS_DESC' ).'</div>' ) ),
+                                'site_homepage'=>JCckDev::renderForm( $cck['core_site_homepage'], @$cfg['homepage'], $config ),
+                                'site_language'=>JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config ),
                                 'site_metadesc'=>JCckDev::renderForm( $cck['core_site_metadesc'], @$cfg['metadesc'], $config ),
                                 'site_metakeys'=>JCckDev::renderForm( $cck['core_site_metakeys'], @$cfg['metakeys'], $config ),
-                                'site_homepage'=>JCckDev::renderForm( $cck['core_site_homepage'], @$cfg['homepage'], $config ),
-                                'site_language'=>JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config ),            
-                                'site_template_style'=>JCckDev::renderForm( $cck['core_site_template_style'], @$cfg['template_style'], $config )
+                                'site_name'=>JCckDev::renderForm( $cck['core_site_name'], @$cfg['sitename'], $config ),
+                                'site_offline'=>JCckDev::renderForm( $cck['core_site_offline'], @$cfg['offline'], $config ),
+                                'site_pagetitles'=>JCckDev::renderForm( $cck['core_site_pagetitles'], @$cfg['sitename_pagetitles'], $config ),
+                                'site_pagetitle'=>JCckDev::renderForm( 'core_dev_text', @$cfg['pagetitle'], $config, array( 'label'=>'Page Title', 'maxlength'=>70, 'storage_field'=>'json[configuration][pagetitle]' ) ),
+                                'site_template_style'=>JCckDev::renderForm( $cck['core_site_template_style'], @$cfg['template_style'], $config ),
+                                'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
+                                'title'=>JCckDev::renderForm( $cck['core_title_site'], $this->item->title, $config )
                             ),
                             'item'=>$this->item,
                             'params'=>array()
                         );
 
         echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.site.edit_main', $dataTmpl );
-        ?> 
+        ?>
     </div>
     
     <div class="main-card">
         <?php
+        ob_start();
+        include __DIR__.'/edit_fields.php';
+        $dataTmpl['fields']['custom_fields']    =   ob_get_clean();
+
         if ( JCck::on( '4.0' ) ) {
             echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
             echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
