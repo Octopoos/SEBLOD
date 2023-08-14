@@ -19,7 +19,7 @@ if ( version_compare( PHP_VERSION, '5.4', '<=' ) ) {
 // JCckContentTrait
 trait JCckContentTraitAlias
 {
-	// _updateAlias
+	// _tag
 	protected function _updateAlias()
 	{
 		if ( !$this->_pk ) {
