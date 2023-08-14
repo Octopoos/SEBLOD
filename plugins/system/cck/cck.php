@@ -191,8 +191,10 @@ class plgSystemCCK extends JPlugin
 
 		if ( $app->isClient( 'site' ) ) {
 			if ( $option == 'com_content' && $view == 'category' ) {
-				/* TODO#SEBLOD4: We may need another condition but it can't be with $app->getMenu()->getActive()->query['option'] */
-				$app->setUserState( 'com_content.category.list.'.(int)$id.':'.(int)$itemId.'.limit', -1 );
+				if ( JCck::is( '5' ) ) {
+					/* TODO#SEBLOD4: We may need another condition but it can't be with $app->getMenu()->getActive()->query['option'] */
+					$app->setUserState( 'com_content.category.list.'.(int)$id.':'.(int)$itemId.'.limit', -1 );
+				}
 			}
 		}
 
