@@ -103,16 +103,21 @@ class plgContentCCK extends JPlugin
 			return true;
 		}
 		
-		$table_key	=	$item->getKeyName();
-		$table_name	=	$item->getTableName();
-		$pk			= 	$item->$table_key;
-		$base 		= 	str_replace( '#__', '', $table_name );
+		$table_key		=	$item->getKeyName();
+		$table_name		=	$item->getTableName();
+		$pk				= 	$item->$table_key;
+		$base 			= 	str_replace( '#__', '', $table_name );
+		$bridge_object	=	'';
+		$custom			=	'';
+
+		if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php' ) ) {
+			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
+			$properties		= 	array( 'bridge_object', 'custom' );
+			$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+			$bridge_object 	= 	$properties['bridge_object'];
+			$custom 		= 	$properties['custom'];
+		}
 		
-		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-		$properties		= 	array( 'bridge_object', 'custom' );
-		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
-		$bridge_object 	= 	$properties['bridge_object'];
-		$custom 		= 	$properties['custom'];
 		$parent			=	'';
 		$pkb			=	0;
 		$type			=	'';
