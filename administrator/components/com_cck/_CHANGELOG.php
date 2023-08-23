@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.1.1 Upgrade Release [24-Aug-2023] -----------
+
+# Regression fixed on Field (Construct)
+# Quick Fix on Sites (creation).
+
 --------------- 4.1.0 Upgrade Release [14-Aug-2023] -----------
 
 ! Joomla! 4.x support
