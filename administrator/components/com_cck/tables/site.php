@@ -46,6 +46,8 @@ class CCK_TableSite extends JTable
 			}
 		}
 
+		$this->parent_id	=	(int)$this->parent_id;
+
 		return true;
 	}
 	
