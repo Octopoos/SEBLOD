@@ -110,6 +110,8 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 		$app					=	JFactory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
+		$data['json']			=	$app->input->post->get( 'json', '', 'raw' );
+		$data['script']			=	$app->input->post->get( 'script', '', 'raw' );
 		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 
 		if ( is_array( $data['title'] ) ) {

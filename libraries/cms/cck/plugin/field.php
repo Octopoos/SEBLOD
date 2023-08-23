@@ -191,8 +191,6 @@ class JCckPluginField extends JPlugin
 	{
 		$db					=	JFactory::getDbo();
 		$data['display']	=	3;
-		$data['json']		=	JFactory::getApplication()->input->post->get( 'json', '', 'raw' );
-		$data['script']		=	JFactory::getApplication()->input->post->get( 'script', '', 'raw' );
 
 		if ( isset( $data['selectlabel'] ) && $data['selectlabel'] == '' ) {
 			$data['selectlabel']	=	' ';
