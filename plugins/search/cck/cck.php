@@ -54,8 +54,8 @@ class plgSearchCCK extends JPlugin
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doDebug		=	$options->get( 'debug' );
-
 		$doLimit		=	false;
+		$lang_suffix	=	strtolower( str_replace( '-', '_', JFactory::getLanguage()->getTag() ) );
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
 		$hasGroup		=	false;
@@ -90,6 +90,7 @@ class plgSearchCCK extends JPlugin
 			}
 			$t2		=	count( $tables );
 		}
+
 		foreach ( $fields as $field ) {
 			if ( !@$field->state ) {
 				continue;
@@ -116,6 +117,10 @@ class plgSearchCCK extends JPlugin
 			// -
 			$Pf		=	$field->storage_field;
 			$Pt		=	$field->storage_table;
+
+			if ( (int)$field->storage_mode == 2 ) {
+				$Pt	.=	'_'.$lang_suffix;
+			}
 			
 			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
 			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
@@ -215,7 +220,7 @@ class plgSearchCCK extends JPlugin
 										$value2		=	$value;
 									}
 									require_once JPATH_PLUGINS.'/cck_storage/'.$child->storage.'/'.$child->storage.'.php';
-									$v['sql']	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, $fields, &$config ) );
+									$v['sql']	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, '', $fields, &$config ) );
 									$k++;
 								}
 							}
@@ -265,6 +270,11 @@ class plgSearchCCK extends JPlugin
 					// -
 					if ( $Pt && !isset( $tables[$Pt] ) ) {
 						$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+
+						if ( $field->storage_key != '' ) {
+							$tables[$Pt]['key']	=	$field->storage_key;
+						}
+
 						$t++;
 					}
 					$tables[$Pt]['location']	=	$field->storage_location;
@@ -280,7 +290,7 @@ class plgSearchCCK extends JPlugin
 					}
 					
 					require_once JPATH_PLUGINS.'/cck_storage/'.$field->storage.'/'.$field->storage.'.php';
-					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, $fields, &$config ) );
+					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, '', $fields, &$config ) );
 				}
 				if ( $hasSQL === false ) {
 					if ( $glues == 1 ) {
@@ -302,7 +312,7 @@ class plgSearchCCK extends JPlugin
 				// unset( $fields[$field->name] );
 			}
 		}
-		
+
 		// Finalize
 		$where		=	implode( ' ', $where2 );
 
@@ -388,12 +398,13 @@ class plgSearchCCK extends JPlugin
 				}
 				self::_buildQueryOrdering( $order, $ordering, $fields_order, $app, $query, $tables, $t, $config, $current, $inherit, $user );
 				
-				if ( $doLimit && $config['limitstart'] >= 0 ) {
-					$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
-				} else {
-					$db->setQuery( $query, 0, $limit );
-				}
 				if ( $doDebug != -1 ) {
+					if ( $doLimit && $config['limitstart'] >= 0 ) {
+						$db->setQuery( $query, $config['limitstart'], $config['limitend'] );
+					} else {
+						$db->setQuery( $query, 0, $limit );
+					}
+
 					$results	=	$db->loadObjectList();
 				}
 
@@ -410,8 +421,11 @@ class plgSearchCCK extends JPlugin
 							if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
 								$query->clear( 'limit' );
 								$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
-								$db->setQuery( $query );
-								$results2		=	$db->loadObjectList();
+
+								if ( $doDebug != -1 ) {
+									$db->setQuery( $query );
+									$results2		=	$db->loadObjectList();
+								}
 								$query3			=	(string)$query;
 							}
 						} else {
@@ -421,8 +435,11 @@ class plgSearchCCK extends JPlugin
 								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
 									$query->clear( 'limit' );
 									$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
-									$db->setQuery( $query );
-									$results2		=	$db->loadObjectList();
+
+									if ( $doDebug != -1 ) {
+										$db->setQuery( $query );
+										$results2		=	$db->loadObjectList();
+									}
 									$query3			=	(string)$query;
 								}
 								$query->clear( 'order' )->clear( 'limit' );
@@ -430,15 +447,21 @@ class plgSearchCCK extends JPlugin
 								$query2				=	$db->getQuery( true );
 								$query2->select( 'COUNT(*)' );
 								$query2->from( '('.(string)$query.') AS Count' );
-								$db->setQuery( $query2 );
-								$config['total']	=	$db->loadResult();
+
+								if ( $doDebug != -1 ) {
+									$db->setQuery( $query2 );
+									$config['total']	=	$db->loadResult();
+								}
 								$query2				=	(string)$query2;
 							} else {
 								if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
 									$query->clear( 'limit' );
 									$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
-									$db->setQuery( $query );
-									$results2		=	$db->loadObjectList();
+
+									if ( $doDebug != -1 ) {
+										$db->setQuery( $query );
+										$results2		=	$db->loadObjectList();
+									}
 									$query3			=	(string)$query;
 								}
 								$query->clear( 'order' )->clear( 'limit' )->clear( 'select' );
@@ -449,8 +472,11 @@ class plgSearchCCK extends JPlugin
 								} else {
 									$query->select( 'COUNT(t0.id)' );
 								}
-								$db->setQuery( $query );
-								$config['total']	=	$db->loadResult();
+
+								if ( $doDebug != -1 ) {
+									$db->setQuery( $query );
+									$config['total']	=	$db->loadResult();
+								}
 								$query2				=	(string)$query;
 							}
 						}
@@ -559,7 +585,7 @@ class plgSearchCCK extends JPlugin
 				}
 				$key		=	( isset( $tables[$tk]['key'] ) ) ? $tables[$tk]['key'] : 'id';
 				$join_type	=	( isset( $tables[$tk]['join_type'] ) ) ? $tables[$tk]['join_type'] : 'LEFT';
-				$join_table	=	( isset( $tables[$tk]['join_table'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
+				$join_table	=	( isset( $tables[$tk]['join_table'] ) && isset( $tables[$tables[$tk]['join_table']]['_'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
 				$join_key	=	( isset( $tables[$tk]['join_key'] ) ) ? $tables[$tk]['join_key'] : ( ( $tk == $inherit['bridge'] ) ? 'pkb' : 'pk' );
 				$join_and	=	( isset( $tables[$tk]['join_and'] ) ) ? $tables[$tk]['join_and'] : '';
 				$join_mode	=	( isset( $tables[$tk]['join_mode'] ) ) ? $tables[$tk]['join_mode'] : 0;
@@ -606,13 +632,24 @@ class plgSearchCCK extends JPlugin
 				}
 			}
 		} else {
-			$ordered	=	false;
+			$isMultiLanguage	=	JCckDevHelper::isMultilingual();
+			$lang				=	JFactory::getLanguage();
+			$ordered			=	false;
 
 			if ( is_array( $fields_order ) && count( $fields_order ) ) {
 				$str		=	(string)$query;
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
+
+				JPluginHelper::importPlugin( 'cck_field_restriction' );
+
 				foreach ( $fields_order as $field ) {
+					if ( isset( $field->restriction ) && $field->restriction ) {
+						if ( !JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) ) ) {
+							continue;
+						}
+					}
+
 					$order		=	'';
 					$modifier	=	'';
 					$modifier2	=	'';
@@ -642,6 +679,7 @@ class plgSearchCCK extends JPlugin
 							$modifier2		=	',';
 							$s_opts			=	array();
 							$s_options		=	explode( '||', ( ( $field->match_options->get( 'by_field' ) == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
+							
 							foreach ( $s_options as $s_o ) {
 								$s_opt		=	explode( '=', $s_o );
 								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
@@ -661,7 +699,14 @@ class plgSearchCCK extends JPlugin
 						
 						// Set
 						if ( isset( $tables[$s_table]['_'] ) && $tables[$s_table]['_'] != '' && $tables[$s_table]['_'] != '_' ) {
-							$order	.=	$modifier.$tables[$s_table]['_'].'.'.$s_field.$modifier2.$modifier3;
+							$target	=	$tables[$s_table]['_'].'.'.$s_field;
+
+							if ( isset( $field->storage ) && $field->storage == 'json' ) {
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$field->storage_field2.'"').') COLLATE utf8mb4_unicode_ci';
+							} elseif ( $isMultiLanguage && (int)$field->storage_mode == 1 ) {
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$lang->getTag().'"').') COLLATE utf8mb4_unicode_ci';
+							}
+							$order	.=	$modifier.$target.$modifier2.$modifier3;
 						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
 							$order	.=	$modifier.$s_field.$modifier2.$modifier3;
 						}
