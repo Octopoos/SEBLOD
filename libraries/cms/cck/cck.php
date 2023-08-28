@@ -20,6 +20,7 @@ abstract class JCck
 	public static $_user			=	null;
 	
 	protected static $_host			=	null;
+	protected static $_pk			=	-1;
 	protected static $_site			=	null;
 	protected static $_sites		=	array();
 	protected static $_sites_info	=	array();
@@ -127,7 +128,11 @@ abstract class JCck
 
 				$version	=	new JCckVersion;
 				
-				if ( $version->DEV_STATUS == 'dev-4.0' ) {
+				if ( $version->DEV_STATUS == 'dev-5.5' ) {
+					$current	=	'5.5.0';
+				} elseif ( $version->DEV_STATUS == 'dev-5.0' ) {
+					$current	=	'5.0.0';
+				} elseif ( $version->DEV_STATUS == 'dev-4.0' ) {
 					$current	=	'4.0.0';
 				} else {
 					$current	=	$version->RELEASE.'.'.$version->DEV_LEVEL;
@@ -335,6 +340,48 @@ abstract class JCck
 		return self::$_sites_info[$property];
 	}
 
+	// getPk
+	public static function getPk()
+	{
+		if ( self::$_pk === -1 ) {
+			self::$_pk	=	0;
+
+			$app		=	JFactory::getApplication();
+			$item_id	=	$app->input->getInt( 'Itemid' );
+			$view		=	$app->input->get( 'view' );
+
+			if ( $view == 'article' ) {
+				self::$_pk	=	$app->input->getInt( 'id' );
+
+				try {
+					$query	=	'SELECT a.id2 AS pk'
+						.	' FROM #__cck_store_join_o_nav_item_x_article AS a'
+						.	' LEFT JOIN #__content AS b ON b.id = a.id2'
+						.	' WHERE a.id = '.(int)$item_id
+						.	' AND b.state IN (1,2)'
+						.	' AND b.language IN ("'.JFactory::getLanguage()->getTag().'","*")'
+						.	' AND b.access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')'
+						.	' ORDER BY a.ordering'
+						;
+
+					$items	=	JCckDatabase::loadObjectList( $query );
+
+					foreach ( $items as $item ) {
+						self::$_pk	=	$item->pk;
+
+						break;
+					}
+				} catch ( \RuntimeException $e ) {
+					// OK
+				}
+			} else {
+				self::$_pk	=	$item_id;
+			}
+		}
+
+		return (int)self::$_pk;
+	}
+
 	// getSite
 	public static function getSite()
 	{
@@ -431,6 +478,24 @@ abstract class JCck
 		}
 		
 		return self::$_user;
+	}
+
+	// isGuest
+	public static function isGuest()
+	{
+		$user	=	JFactory::getUser();
+
+		if ( $user->id && !$user->guest ) {
+			if ( JCck::isSite() ) {
+				if ( (int)$user->id != (int)JCck::getSite()->guest ) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
