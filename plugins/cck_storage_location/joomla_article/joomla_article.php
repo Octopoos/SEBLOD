@@ -20,7 +20,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $table			=	'#__content';
 	protected static $table_object	=	array( 'Content', 'JCckTable' );
 	protected static $key			=	'id';
-	
+	protected static $key_field		=	'article_pk';
+
 	protected static $access		=	'access';
 	protected static $author		=	'created_by';
 	protected static $author_object	=	'joomla_user';

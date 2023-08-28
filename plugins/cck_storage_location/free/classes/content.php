@@ -13,6 +13,12 @@ defined( '_JEXEC' ) or die;
 // JCckContent
 class JCckContentFree extends JCckContent
 {
+	// initialize
+	protected function initialize()
+	{
+		$this->extend( JPATH_SITE.'/libraries/cck/_/content/mixin/language.php' );
+	}
+
 	// setInstanceMore
 	protected function setInstanceBase()
 	{
