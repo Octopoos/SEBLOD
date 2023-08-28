@@ -49,9 +49,11 @@ $class			=	$class ? ' class="'.$class.'"' : '';
 if ( $id_class && !$isMore ) {
 ?>
 <div class="<?php echo trim( $cck->id_class ); ?>"><?php }
-if ( !( $isRaw || $isMore ) ) { ?>
+echo $cck->renderPosition( '_above_' );
+if ( !( $isRaw || $isMore ) ) {
+	if ( $tags[0] != '' ) { ?>
 <<?php echo $tags[0]; ?><?php echo $class.$custom_attr; ?>>
-<?php }
+<?php } }
 	if ( $count ) {
 		if ( $display_mode == 2 ) {
 			foreach ( $items as $item ) {
@@ -91,10 +93,12 @@ if ( !( $isRaw || $isMore ) ) { ?>
 		echo $html;
 	}
 if ( !( $isRaw || $isMore ) ) {
+	if ( $tags[0] != '' ) {
 ?>
 </<?php echo $tags[0]; ?>>
 <?php
-}
+} }
+echo $cck->renderPosition( '_below_' );
 if ( $id_class && !$isMore ) { ?>
 </div>
 <?php } ?>
