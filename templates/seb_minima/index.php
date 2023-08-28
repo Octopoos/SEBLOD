@@ -34,8 +34,12 @@ for ( $i = 1; $i <= 5; $i++ ) {
 		$class = $cck->getPosition( 'modal'.$suffix )->css;
 		$class = ( $class ) ? ' ' . $class : '';
 		?>
-		<div class="modal hide fade<?php echo $class; ?>" id="collapseModal<?php echo $suffix; ?>">
-			<?php echo $cck->renderPosition( 'modal'.$suffix ); ?>
+		<div class="modal hide fade<?php echo $class; ?>" id="collapseModal<?php echo $suffix; ?>" tabindex="-1" aria-labelledby="Modal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<?php echo $cck->renderPosition( 'modal'.$suffix ); ?>
+				</div>
+			</div>
 		</div>
 	<?php }
 }
