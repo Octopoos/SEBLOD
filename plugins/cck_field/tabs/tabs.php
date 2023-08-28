@@ -87,7 +87,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$html		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'extended'=>$field->extended, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set
@@ -118,7 +118,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 		// Prepare
 		$form		=	'';
 		if ( $field->state ) {
-			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'group_id'=>$group_id, 'id'=>$id, 'identifier'=>$field->bool3, 'label'=>$field->label, 'extended'=>$field->extended, 'url_actions'=>$field->bool2, 'value'=>$value ), 5 );
 		}
 
 		// Set
@@ -205,16 +205,30 @@ class plgCCK_FieldTabs extends JCckPluginField
 	{
 		$id				=	$process['id'];
 		$label			=	$process['label'];
+		$layout			=	JFactory::getApplication()->input->get( 'tmpl' );
 		$name			=	$process['name'];
 		$group_id		=	$process['group_id'];
 		$value			=	$process['value'];
 
+		if ( $process['extended'] && isset( $fields[$process['extended']] ) && $fields[$process['extended']]->value ) {
+			$label		=	$fields[$process['extended']]->value;
+		}
+
 		static $groups	=	array();
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$group_id	.=	'_raw';
+		}
+
 		if ( !isset( $groups[$group_id] ) ) {
 			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0, 'identifier'=>$process['identifier'], 'url_actions'=>$process['url_actions'] );
 		}
 		if ( $groups[$group_id]['identifier'] ) {
 			$id			=	JCckDev::toSafeID( $label );
+		}
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$id		.=	'_raw';
 		}
 		
 		if ( $fields[$name]->bool == 2 ) {
