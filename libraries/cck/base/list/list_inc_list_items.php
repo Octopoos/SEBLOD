@@ -123,7 +123,7 @@ if ( $count ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
 								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
-								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
+								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : new stdClass;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 								}
@@ -133,7 +133,7 @@ if ( $count ) {
 								$config['storages'][$Pt]	=	$items[$i];						
 							} else {
 								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
-								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
+								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : new stdClass;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 								}
@@ -278,7 +278,7 @@ if ( $count ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
 								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
-								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
+								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : new stdClass;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 								}
@@ -288,7 +288,7 @@ if ( $count ) {
 								$config['storages'][$Pt]	=	$items[$i];
 							} else {
 								$app->triggerEvent( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
-								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
+								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : new stdClass;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
 									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
 								}
