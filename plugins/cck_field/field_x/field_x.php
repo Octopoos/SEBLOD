@@ -205,7 +205,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$store	=	'';
 		$xk		=	0;
 		$xi		=	0;
-		if ( count( $value ) ) {
+		if ( is_array( $value ) && count( $value ) ) {
 			$store		=	'<br />';	//begin?
 			$f			=	self::_getChild( $field, $config );
 			$f_name		=	$f->name;
