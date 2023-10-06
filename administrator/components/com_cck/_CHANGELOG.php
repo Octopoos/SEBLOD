@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.26.1 Upgrade Release [6-Oct-2023] -------------
+
+# Additional fixes included for PHP 8.x.
+
 --------------- 3.26.0 Upgrade Release [11-Aug-2023] -------------
 
 + "Export (Ajax)" support added on back-end lists.
@@ -35,7 +39,7 @@ $ -> Language fix or change
 
 ^ /parent/id behaviour changed (parent is now alias instead of id)
 
-# Minor issues on PHP 8.x fixed. 
+# Minor issues on PHP 8.x fixed.
 
 --------------- 3.24.0 Upgrade Release [5-May-2023] --------------
 
