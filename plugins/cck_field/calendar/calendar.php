@@ -307,11 +307,15 @@ class plgCCK_FieldCalendar extends JCckPluginField
 			$locale	=	$this->setLocale();
 
 			// If data was created by script we have in fixed format, else we need to parse string
-			if ( $datasource == "computed" ) {
-				$date	=	JDate::createFromFormat( 'Y-m-d H:i:s', $value, $this->userTimeZone );
-			} else {
-				$date	=	JDate::createFromFormat( $options2['format'], $value, $this->userTimeZone );
-			}
+			// if ( $datasource == "computed" ) {
+			// 	$date	=	JDate::createFromFormat( 'Y-m-d H:i:s', $value, $this->userTimeZone );
+			// } else {
+			// 	$date	=	JDate::createFromFormat( $options2['format'], $value, $this->userTimeZone );
+			// }
+
+			//OCTOPOOS : Bloc if..then..else ci-dessus commenté et remplacé par celle ci-dessous suite passage à PHP8 et mauvais format de date (timezone non pris en compte)
+			//Cette modification n'impacte pas les sites encore en 7.4 qui continue à fonctionner de la même manière
+			$date	=	DateTime::createFromFormat( $datasource == "computed" ? 'Y-m-d H:i:s' : $options2['format'], $value, $this->userTimeZone );
 
 			if ( $date == false ) {
 				throw new OutOfBoundsException( 'You either used wrong format or locale set by language file is not supported on your server - ' .$locale );
