@@ -22,7 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.26.1 Upgrade Release [6-Oct-2023] -------------
+--------------- 3.26.2 Upgrade Release [13-Oct-2023] -------------
+
+# Additional fixes included for PHP 8.x.
+
+--------------- 3.26.1 Upgrade Release [6-Oct-2023] --------------
 
 # Additional fixes included for PHP 8.x.
 
