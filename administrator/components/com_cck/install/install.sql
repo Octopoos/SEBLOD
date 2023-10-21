@@ -557,7 +557,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_sites` (
   `context` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `aliases` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   `guest` int(10) UNSIGNED NOT NULL,
-  `guest_only_group` int(10) UNSIGNED NOT NULL,
+  `guest_only_group` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `guest_only_viewlevel` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `usergroups` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `users` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
