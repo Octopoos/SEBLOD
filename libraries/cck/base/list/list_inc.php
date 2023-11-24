@@ -132,6 +132,7 @@ if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) 
 }
 
 // Variations
+$variation	=	'';
 $variation	=	explode( '||', $variation );
 $variations	=	array();
 
