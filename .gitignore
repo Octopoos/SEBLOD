@@ -351,6 +351,10 @@ sftp-config.json
 /administrator/language/en-GB/plg_authentication_joomla.sys.ini
 /administrator/language/en-GB/plg_authentication_ldap.ini
 /administrator/language/en-GB/plg_authentication_ldap.sys.ini
+/administrator/language/en-GB/plg_behaviour_compat.ini
+/administrator/language/en-GB/plg_behaviour_compat.sys.ini
+/administrator/language/en-GB/plg_quickicon_eos.ini
+/administrator/language/en-GB/plg_quickicon_eos.sys.ini
 /administrator/language/en-GB/plg_behaviour_taggable.ini
 /administrator/language/en-GB/plg_behaviour_taggable.sys.ini
 /administrator/language/en-GB/plg_behaviour_versionable.ini
@@ -1300,6 +1304,7 @@ cli/joomla.php
 /media/plg_multifactorauth_webauthn/*
 /media/plg_multifactorauth_yubikey/*
 /media/plg_quickicon_eos310/*
+/media/plg_quickicon_eos/*
 /media/plg_quickicon_extensionupdate/*
 /media/plg_quickicon_joomlaupdate/*
 /media/plg_quickicon_overridecheck/*
@@ -1406,8 +1411,8 @@ cli/joomla.php
 /plugins/multifactorauth/*
 /plugins/privacy/*
 /plugins/quickicon/downloadkey/*
+/plugins/quickicon/eos/*
 /plugins/quickicon/eos310/*
-/plugins/quickicon/extensionupdate/*
 /plugins/quickicon/extensionupdate/*
 /plugins/quickicon/index.html
 /plugins/quickicon/joomlaupdate/*
@@ -1445,8 +1450,10 @@ cli/joomla.php
 /plugins/system/schedulerunner/*
 /plugins/system/sef/*
 /plugins/system/sessiongc/*
+/plugins/system/skipto/services/*
 /plugins/system/skipto/skipto.php
 /plugins/system/skipto/skipto.xml
+/plugins/system/skipto/src/*
 /plugins/system/shortcut/*
 /plugins/system/stats/*
 /plugins/system/tasknotification/*
