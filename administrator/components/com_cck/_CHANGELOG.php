@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.2.0 Upgrade Release [xx-Dec-2023] -----------
+
+! Joomla! 5.x support
+  >> Bringing UI tweaks and fixes for Dark Mode
+  >> Issues fixed
+
+# Additional fixes included for PHP 8.x.
+
 --------------- 4.1.1 Upgrade Release [24-Aug-2023] -----------
 
 # Regression fixed on Field (Construct)
