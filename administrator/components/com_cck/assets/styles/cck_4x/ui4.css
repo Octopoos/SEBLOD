@@ -347,7 +347,7 @@ fieldset.disabled legend{background-color: transparent; color: var(--template-bg
 .row.row-grid > *:not(:first-child).col-12{padding-top: calc(var(--gutter-x)*.5);}
 .row-pane {
 	--gutter-x: 2rem;
-	background-color: #fff;
+	background-color: var(--body-bg);
 	border: 0;
 	border-radius: 0.25rem;
 	box-shadow: none;

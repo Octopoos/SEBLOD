@@ -52,10 +52,10 @@ class CommonHelper_Include
 			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css' );
 		}
 		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css' );
-		$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v4' );
+		$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v5' );
 
 		if ( JCck::on( '4.0' ) ) {
-			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css' );
+			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
 		}
 		
 		if ( count( $paths ) ) {

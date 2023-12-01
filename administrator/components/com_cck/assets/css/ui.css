@@ -561,7 +561,7 @@ body:not(.admin):not(.component) ul.spe_description:not(.spe_latest) li {width: 
 ui-from-style
 */
 
-div.seblod{background-color: #FFFFFF;border: 1px solid #dedede; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
+div.seblod{background-color: var(--body-bg);border: 1px solid #dedede; -moz-border-radius: 2px 2px 2px 2px;-webkit-border-radius: 2px 2px 2px 2px;border-radius:2px;}
 div.seblod input.inputbox:focus, div.seblod select.inputbox:focus, div.seblod textarea.inputbox:focus {background-color: #ffffdd;}
 div.seblod .inputbutton:hover {background-color: #ffffdd;}
 .bg-dark {background:#f4f4f4; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;}
