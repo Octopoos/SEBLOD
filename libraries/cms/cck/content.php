@@ -2104,6 +2104,27 @@ class JCckContent
 						$where	=	' IN (' .$v. ')';
 					}
 					break;
+				case 'like':
+					$where	=	' LIKE ' . $db->quote( '%'.$db->escape( $v, true ).'%', false );
+					break;
+				case 'likes':
+					$where	=	array();
+					$values	=	explode( ' ', $v );
+
+					foreach ( $values as $value ) {
+						if ( strlen( $value ) > 0 ) {
+							$where[] 	=	$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$db->escape( $value, true ).'%', false );
+						}
+					}
+					break;
+				case 'up_since':
+					$where		=	array();
+					$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' <= '.$db->quote( $v ).' )';
+					break;
+				case 'up_until':
+					$where		=	array();
+					$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' >= '.$db->quote( $v ).' )';
+					break;
 				case 'within':
 					$glue		=	',';
 					$where		=	array();
