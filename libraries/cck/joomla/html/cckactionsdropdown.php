@@ -10,10 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JHtmlActionsDropdown', JPATH_SITE.'/libraries/cms/html/actionsdropdown.php' );
+use Joomla\CMS\HTML\Helpers\ActionsDropdown;
 
 // JHtmlCckActionsDropdown
-abstract class JHtmlCckActionsDropdown extends JHtmlActionsDropdown
+abstract class Cckactionsdropdown extends ActionsDropdown
 {
 	// addCustomLinkItem
 	public static function addCustomLinkItem( $label, $icon = '', $id = '', $link = '', $class = '', $attr = '' )

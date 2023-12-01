@@ -76,9 +76,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone dropdown-col">
 				<?php
-				JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
+				JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_PREVIEW_THIS_TEMPLATE' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
 
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				echo JHtml::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
             	?>
 			</td>
 			<td>

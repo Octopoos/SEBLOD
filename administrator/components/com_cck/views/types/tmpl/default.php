@@ -100,15 +100,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
 			<td width="30px" class="center hidden-phone dropdown-col">
 				<?php
-				JHtml::_( 'cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
+				JHtml::_( '.cckactionsdropdown.addCustomItem', JText::_( 'JTOOLBAR_ARCHIVE' ), 'archive', 'cb'.$i, 'types.version' );
 
 				if ( $item->published && ( $item->adminFields || $item->parent && $item->parent_inherit ) && $item->location != 'collection' && $item->location != 'hidden' && $item->location != 'none' && $item->location != 'site' && $canCreateItem ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
+					JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_CREATE_ITEM_USING_THIS_FORM' ), 'plus', 'cb_link'.$i, $link2 );
 				}
 				if ( $item->versions ) {
-					JHtml::_( 'cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
+					JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_VIEW_VERSIONS' ), 'archive', $i, $linkVersion );
 				}
-				echo JHtml::_( 'cckactionsdropdown.render', $this->escape( $item->title ) );
+				echo JHtml::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
 				?>
 			</td>
 			<td>
