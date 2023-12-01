@@ -79,8 +79,7 @@ class CCKViewType extends JViewLegacy
 	
 	// prepareDelete
 	protected function prepareDelete()
-	{		
-		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
+	{
 	}
 	
 	// prepareDisplay
@@ -118,8 +117,6 @@ class CCKViewType extends JViewLegacy
 		$P						=	'template_'.$this->item->client;
 		$this->style			=	Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, Helper_Workshop::getDefaultTemplate() ) );
 		$this->item->template	=	$this->style->template;
-		
-		Helper_Admin::addToolbarEdit( $this->vName, 'COM_CCK_'._C2_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ), array( 'template' => $this->style->template ) );
 	}
 	
 	// prepareDisplay_Ajax

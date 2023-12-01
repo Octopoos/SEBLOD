@@ -80,8 +80,7 @@ class CCKViewSearch extends JViewLegacy
 	
 	// prepareDelete
 	protected function prepareDelete()
-	{		
-		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
+	{
 	}
 	
 	// prepareDisplay
@@ -134,8 +133,6 @@ class CCKViewSearch extends JViewLegacy
 		}
 		$this->style			=	( $this->item->client != 'order' ) ? Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, $force_template ) ) : '';
 		$this->item->template	=	( isset( $this->style->template ) ) ? $this->style->template : '';
-		
-		Helper_Admin::addToolbarEdit( $this->vName, 'COM_CCK_'._C4_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ), array( 'template' => $this->item->template ) );
 	}
 	
 	// prepareDisplay_Ajax
