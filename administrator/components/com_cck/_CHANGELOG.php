@@ -22,9 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.26.2 Upgrade Release [13-Oct-2023] -------------
+--------------- 3.27.0 Upgrade Release [8-Dec-2023] --------------
 
 # Additional fixes included for PHP 8.x.
+# User Bridge fixed.
 
 --------------- 3.26.1 Upgrade Release [6-Oct-2023] --------------
 
