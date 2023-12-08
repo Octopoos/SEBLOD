@@ -54,7 +54,7 @@ class CCKViewList extends JViewLegacy
 		$limitstart		=	$this->state->get( 'limitstart' );
 		$live			=	urldecode( $params->get( 'live', '' ) );
 		$order_by		=	$params->get( 'order_by', '' );
-		$variation		=	$params->get( 'variation' );
+		$variation		=	$params->get( 'variation', '' );
 		
 		if ( $params->get( 'show_list', '' ) != '' ) {
 			$preconfig['show_list']			=	(int)$params->get( 'show_list' );
