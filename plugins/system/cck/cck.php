@@ -455,7 +455,7 @@ class plgSystemCCK extends JPlugin
 								$item		=	$app->getMenu()->getItem( $itemId2 );
 								$urlvars	=	'';
 								if ( is_object( $item ) ) {
-									$urlvars	=	$item->params->get( 'urlvars' );
+									$urlvars	=	$item->getParams()->get( 'urlvars' );
 
 									if ( $urlvars != '' ) {
 										$urlvars	=	'&'.$urlvars;
