@@ -104,10 +104,10 @@ class JCckPluginLocation extends JPlugin
 	{
 		static $params	=	null;
 		
-		if ( !is_object( $params ) ) {
+		//if ( !is_object( $params ) ) {
 			$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', static::$type );
 			$params		=	new JRegistry( $plg->params );
-		}
+		//}
 		
 		return $params;
 	}
