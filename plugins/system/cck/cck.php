@@ -71,7 +71,7 @@ class plgSystemCCK extends JPlugin
 				$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
 				
 				if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
-					$urlvars	=	$item->params->get( 'urlvars' );
+					$urlvars	=	$item->getParams()->get( 'urlvars' );
 					
 					if ( $urlvars ) {
 						$vars		=	explode( '&', $urlvars );
