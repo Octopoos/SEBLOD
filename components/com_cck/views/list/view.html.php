@@ -52,7 +52,7 @@ class CCKViewList extends JViewLegacy
 		$view			=	$this->getName();
 		
 		$limitstart		=	$this->state->get( 'limitstart' );
-		$live			=	urldecode( $params->get( 'live' ) );
+		$live			=	urldecode( $params->get( 'live', '' ) );
 		$order_by		=	$params->get( 'order_by', '' );
 		$variation		=	$params->get( 'variation' );
 		
@@ -100,10 +100,10 @@ class CCKViewList extends JViewLegacy
 		if ( $params->get( 'menu-meta_keywords' ) ) {
 			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
 		}
-		if ( $params->get( 'robots' ) ) {
-			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
+		if ( strlen(trim($params->get( 'robots', '' ))) > 0 ) {
+			$this->document->setMetadata( 'robots', $params->get( 'robots', '' ) );
 		}
-		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
+		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx', '' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
 
 		// Pagination
