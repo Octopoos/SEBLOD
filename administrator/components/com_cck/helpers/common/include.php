@@ -55,7 +55,7 @@ class CommonHelper_Include
 		$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v5' );
 
 		if ( JCck::on( '4.0' ) ) {
-			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
+			$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
 		}
 		
 		if ( count( $paths ) ) {
