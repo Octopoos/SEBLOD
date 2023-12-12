@@ -80,7 +80,7 @@ class JCckDevImage
 	// isResource
 	public function isResource()
 	{
-		return is_resource( $this->_resource );
+		return is_resource( $this->_resource ) || $this->_resource instanceof \GdImage;
 	}
 
 	// getThumb
