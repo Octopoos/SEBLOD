@@ -22,13 +22,23 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.2.0 Upgrade Release [xx-Dec-2023] -----------
+--------------- 4.2.0 Upgrade Release [12-Dec-2023] -----------
 
 ! Joomla! 5.x support
   >> Bringing UI tweaks and fixes for Dark Mode
   >> Issues fixed
 
++ JCckContent class updated & improved! :)
+  >> "like", "likes" operators support added on find/search methods.
+  >> "up_since", "up_until" operators support added on find/search methods.
+
+^ Modal position updated on Minima Template.
+
 # Additional fixes included for PHP 8.x.
+# User Bridge fixed.
+# Validation issue fixed for Joomla! 4.4.1
+  >> COM_CCK_PLEASE_CHECK_REQUIRED_TABS updated with class=\\"red\\"
+  >> other languages should be changed as well...!
 
 --------------- 4.1.1 Upgrade Release [24-Aug-2023] -----------
 
