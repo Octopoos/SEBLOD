@@ -227,8 +227,10 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				} elseif ( $field1->link ) {
 					if ( isset( $field1->link_target ) && $field1->link_target == '_blank' ) {
 						$onclick	=	'var otherWindow = window.open(); otherWindow.opener = null; otherWindow.location = \''.$field1->link.'\';';					
-					} else {
+					} elseif ( strpos( $field1->link, 'javascript:' ) === false ) {
 						$onclick	=	'document.location.href=\''.$field1->link.'\'';
+					} else {
+						$onclick	=	$field1->link;
 					}
 				} else {
 					$canDo		=	false;
