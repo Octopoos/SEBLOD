@@ -360,3 +360,12 @@ input[value="clear"] {
 		display: none;
 	}
 }
+
+@media (prefers-color-scheme:dark) {
+	body[data-color-scheme-os] #seblod-main > fieldset,
+	body[data-color-scheme-os] #seblod-sidebar > fieldset {
+		background-color: inherit;
+	}
+	body[data-color-scheme-os] ul.sortable li span.c_live, body[data-color-scheme-os] ul.sortable li span.c_mat, body[data-color-scheme-os] ul.sortable li span.c_link, body[data-color-scheme-os] ul.sortable li span.c_typo, body[data-color-scheme-os] ul.sortable li span.c_res{color: #fff;}
+	ul.sortable .thin.blue{color: #fff;}
+}

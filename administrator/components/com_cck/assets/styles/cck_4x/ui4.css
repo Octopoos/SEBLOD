@@ -75,7 +75,7 @@ body.layout-default main form{
 	margin-top: 12px;
 }
 body.layout-default.view- main form {
-	background: #fff;
+	background: var(--body-bg);
 }
 body.layout-default div.copyright {
 	/*background: #fff;	*/
@@ -212,7 +212,7 @@ div.seblod-manager .table .btn-outline-secondary.show {
 }
 
 body.layout-default main #j-sidebar-container {
-	background: #fff;
+	background: var(--body-bg);
 }
 body.layout-default main #j-main-container {
 	display: grid;
@@ -467,7 +467,7 @@ body.contentpane .subhead{
 }
 body.contentpane #layout,/*{background: #fff; padding: 30px 2vw;}*/
 body.contentpane .main-card{
-	background: #fff;
+	background: var(--body-bg);
 	border-radius: 0.25rem;
 }
 body.contentpane .modal-large .main-card{min-height: 477px;}
@@ -568,5 +568,20 @@ body.widescreen main {
 @media (max-width:1240px){
 	#j-main-container .filter-search input {
 		width: 195px;
+	}
+}
+
+@media (prefers-color-scheme:dark) {
+	body[data-color-scheme-os] div.seblod-manager .table th {
+		background: var(--table-bg);
+	}
+	body[data-color-scheme-os].layout-default main #j-sidebar-container,
+	body[data-color-scheme-os] #wrapper .top-bar .sidebar-nav li:not(.active),
+	body[data-color-scheme-os] body.contentpane
+	{
+		background: inherit;
+	}
+	body[data-color-scheme-os] #wrapper .top-bar .sidebar-nav li:hover a {
+		color: #fff;
 	}
 }

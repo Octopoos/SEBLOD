@@ -736,7 +736,12 @@ class plgSystemCCK extends JPlugin
 						break;
 				}
 				if ( $option == 'com_cck' ) {
-					$buffer	=	str_replace( '<body class="', '<body class="widescreen ', $buffer );
+					$body_class	=	'';
+
+					if ( JCck::on( '5' ) ) {
+						$body_class	.=	'is-dark';
+					}
+					$buffer		=	str_replace( '<body class="', '<body class="widescreen '.$body_class, $buffer );
 				} elseif ( isset( $app->cck_integration_modal ) && $app->cck_integration_modal != '' ) {
 					$buffer	=	self::_updateBuffer( $buffer, $app->cck_integration_modal['path'], $app->cck_integration_modal['options'], $app->cck_integration_modal['params'], $app->cck_integration_modal['variables'] );
 				}
