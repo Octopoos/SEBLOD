@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.2.1 Upgrade Release [26-Dec-2023] -----------
+
+! Joomla! 5.x support
+  >> Bringing UI tweaks and fixes for Dark Mode
+  >> Issues fixed
+
 --------------- 4.2.0 Upgrade Release [12-Dec-2023] -----------
 
 ! Joomla! 5.x support
