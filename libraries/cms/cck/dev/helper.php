@@ -876,10 +876,11 @@ abstract class JCckDevHelper
 										}
 									}
 
-									$str	=	str_replace( $matches[0][$k], $var, $str );
+										$str	=	str_replace( $matches[0][$k], $var, $str );
 								} else {
 									$str	=	str_replace( $matches[0][$k], (int)$app->input->$request( $variable, '' ), $str );
-								}							} else {
+								}
+							} else {
 								$str		=	str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $str );
 							}
 						}
