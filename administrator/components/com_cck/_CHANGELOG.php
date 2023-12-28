@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.27.1 Upgrade Release [28-Dec-2023] --------------
+
+# ROOT/URI paths fixed on CRON Jobs.
+# Routing issue fixed.
+
 --------------- 3.27.0 Upgrade Release [8-Dec-2023] --------------
 
 # Additional fixes included for PHP 8.x.
