@@ -16,7 +16,7 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 class plgCCK_Storage_LocationJoomla_Article_Helper extends plgCCK_Storage_LocationJoomla_Article
 {
 	// getForm
-	public static function getAssociationsForm( $id, $name, $config = array() )
+	public static function getAssociationsForm( $id, $name, $field, $config = array() )
 	{
 		$addform	=	new SimpleXMLElement( '<form />' );
 		$fields		=	$addform->addChild( 'fields' );

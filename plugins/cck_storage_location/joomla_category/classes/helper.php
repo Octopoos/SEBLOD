@@ -18,7 +18,7 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_ca
 class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_LocationJoomla_Category
 {
 	// getForm
-	public static function getAssociationsForm( $id, $name, $config = array() )
+	public static function getAssociationsForm( $id, $name, $field, $config = array() )
 	{
 		if ( !self::hasAssociations() ) {
 			return '';
