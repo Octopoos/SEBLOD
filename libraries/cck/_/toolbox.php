@@ -175,37 +175,18 @@ abstract class JCckToolbox
 			} else {
 				$url	=	JCckDatabase::loadResult( 'SELECT name FROM #__cck_core_sites WHERE id = '.(int)$job->run_url );
 			}
+			
+			$host	=	$url;
 
-			$pos	=	strpos( $url, '/' );
-
-			if ( $pos !== false ) {
-				$host	=	substr( $url, 0, $pos );
-				$url	=	substr( $url, $pos );
-			} else {
-				$host	=	$url;
-				$url	=	'';
-			}
-
-			if ( $url != '' ) {
-				if ( $url[0] != '/' ) {
-					$url	=	'/'.$url;
-				}
-				$length		=	strlen( $url );
-
-				if ( $url[$length - 1] != '/' ) {
-					$url	.=	'/';
-				}
-
-				$url	.=	'index.php';
-
-				$_SERVER['PHP_SELF']	=	$url;
-				$_SERVER['REQUEST_URI']	=	$url;
-				$_SERVER['SCRIPT_NAME']	=	$url;
-			}
+			// Fool the system into thinking we are running as JSite, from the front-end.
+			$_SERVER['DOCUMENT_ROOT']	=	'';
+			$_SERVER['HTTP_HOST']		=	$host;
+			$_SERVER['REQUEST_SCHEME']	=	'https';
+			$_SERVER['REQUEST_URI']		=	'';
+			$_SERVER['SCRIPT_NAME']		=	'';
+	    	$_SERVER['SCRIPT_URI']		=	'https://'.$host.'/';
+	    	$_SERVER['SCRIPT_URL']		=	'';
 		}
-		
-		// Fool the system into thinking we are running as JSite, from the front-end.
-		$_SERVER['HTTP_HOST']	=	$host;
 		
 		JFactory::getApplication( 'site' );
 		
