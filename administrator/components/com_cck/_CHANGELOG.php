@@ -22,6 +22,14 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.3.0 Upgrade Release [25-Jan-2024] -----------
+
+! cck.core.js override allowed on back-end.
+
+# Associations fixed on Articles & Categories.
+# ROOT/URI paths fixed on CRON Jobs.
+# Routing issue fixed.
+
 --------------- 4.2.1 Upgrade Release [26-Dec-2023] -----------
 
 ! Joomla! 5.x support
