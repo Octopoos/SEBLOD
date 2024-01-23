@@ -566,8 +566,8 @@ abstract class JCck
 				$context	=	'/'.JCck::getSite()->context;
 			}
 
-			if ( is_file( JPATH_SITE.'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js' ) ) {
-				$doc->addScript( $root.'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+			if ( is_file( ( $app->isClient( 'administrator' ) ? JPATH_ADMINISTRATOR : JPATH_SITE ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js' ) ) {
+				$doc->addScript( JUri::base( true ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
 			} else {
 				$doc->addScript( $root.'/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
 			}
