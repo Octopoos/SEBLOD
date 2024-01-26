@@ -367,5 +367,5 @@ input[value="clear"] {
 		background-color: inherit;
 	}
 	body[data-color-scheme-os] ul.sortable li span.c_live, body[data-color-scheme-os] ul.sortable li span.c_mat, body[data-color-scheme-os] ul.sortable li span.c_link, body[data-color-scheme-os] ul.sortable li span.c_typo, body[data-color-scheme-os] ul.sortable li span.c_res{color: #fff;}
-	ul.sortable .thin.blue{color: #fff;}
+	body[data-color-scheme-os] ul.sortable .thin.blue{color: #fff;}
 }
