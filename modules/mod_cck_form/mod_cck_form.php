@@ -40,7 +40,7 @@ $preconfig['type']		=	$params->get( 'type', '' );
 $preconfig['url']		=	'';
 
 $live		=	urldecode( $params->get( 'live', '' ) );
-$variation	=	$params->get( 'variation' );
+$variation	=	$params->get( 'variation', '' );
 
 jimport( 'cck.base.form.form' );
 include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
