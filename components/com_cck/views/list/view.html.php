@@ -100,7 +100,7 @@ class CCKViewList extends JViewLegacy
 		if ( $params->get( 'menu-meta_keywords' ) ) {
 			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
 		}
-		if ( strlen(trim($params->get( 'robots', '' ))) > 0 ) {
+		if ( strlen( trim( $params->get( 'robots', '' ) ) ) > 0 ) {
 			$this->document->setMetadata( 'robots', $params->get( 'robots', '' ) );
 		}
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx', '' ) );
