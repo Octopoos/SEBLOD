@@ -22,11 +22,23 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.3.0 Upgrade Release [25-Jan-2024] -----------
+--------------- 4.3.0 Upgrade Release [26-Jan-2024] -----------
+
+! Joomla! 5 support
+  >> Bringing UI tweaks and fixes for Dark Mode
+
+! Joomla! 4+ support
+  >> Bringing UI tweaks and fixes for Dark Mode
+  >> Modal changes for Bootstrap 5 support
+
++ JSON support added on Ordering.
++ Restrictions applied on Ordering.
 
 ! cck.core.js override allowed on back-end.
+! Empty values allowed on AJAX Availability.
+! Suffix Tabs ID for tmpl=raw
 
-# Associations fixed on Articles & Categories.
+# Regression fixed on Associations for Articles & Categories.
 # ROOT/URI paths fixed on CRON Jobs.
 # Routing issue fixed.
 
