@@ -55,7 +55,7 @@ class CCKViewForm extends JViewLegacy
 		$view				=	$this->getName();
 		
 		$live				=	urldecode( $params->get( 'live', '' ) );
-		$variation			=	$params->get( 'variation' );
+		$variation			=	$params->get( 'variation', '' );
 		
 		// Page
 		$menus	=	$app->getMenu();
