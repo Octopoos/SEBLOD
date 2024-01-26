@@ -51,13 +51,13 @@ if("undefined"===typeof JCck)var JCck={};
                             
                             ("" != s.settings.message.selector ? '<div class="modal-message"></div>' : "") +
                             (s.settings.body ? '<div class="modal-body"></div>' : "") +
-                            "</div></div></div>"
+                            "</div></div></div></div>"
                     ),
                     "" != s.settings.message.selector && $("body " + s.settings.message.selector).length && $("body " + s.settings.message.selector).appendTo(".modal-message"),
                     (s.modal = $("#" + s.settings.id)),
                     (s.container = s.modal.find(s.settings.body ? ".modal-body" : ".modal-content")),
                     s.settings.close && $(s.settings.html.close).prependTo(s.settings.header ? s.modal.find(".modal-header") : s.modal.find(".modal-content")),
-                    (s.bs_modal = new bootstrap.Modal( s.modal, { backdrop: s.settings.backdrop, keyboard: s.settings.keyboard })),
+                    (s.bs_modal = new bootstrap.Modal( s.modal, { backdrop: 0 != s.settings.backdrop && (0 != s.settings.backclose || "static"), keyboard: s.settings.keyboard })),
                     (bs_modal_ev = document.getElementById(s.settings.id)),
                     bs_modal_ev.addEventListener('show.bs.modal', function (e) {
                         e.stopPropagation(), $("html").css("overflow", "hidden"), s.callbacks.show(e);
