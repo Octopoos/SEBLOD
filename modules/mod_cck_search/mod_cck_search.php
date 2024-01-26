@@ -55,7 +55,7 @@ if ( $itemId == '-1' ) {
 	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
 }
 $limitstart			=	-1;
-$live				=	urldecode( $params->get( 'live' ) );
+$live				=	urldecode( $params->get( 'live', '' ) );
 $order_by			=	'';
 $target				=	$params->get( 'menu_item_search', 0 );
 $variation			=	$params->get( 'variation', '' );

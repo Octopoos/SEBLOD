@@ -43,7 +43,7 @@ class CCKViewList extends JViewLegacy
 		$view			=	$this->getName();
 
 		$limitstart		=	$this->state->get( 'limitstart' );
-		$live			=	urldecode( $params->get( 'live' ) );
+		$live			=	urldecode( $params->get( 'live', '' ) );
 		$variation		=	$params->get( 'variation', '' );
 		
 		$preconfig['show_form']		=	$params->get( 'show_form', '' );

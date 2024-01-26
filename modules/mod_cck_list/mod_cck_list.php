@@ -52,7 +52,7 @@ $limitstart	=	( $limitstart >= 1 ) ? ( $limitstart - 1 ) : -1;
 if ( $limitstart == -1 && (int)$preconfig['limit2'] > 0 ) {
 	$limitstart	=	0;
 }
-$live		=	urldecode( $params->get( 'live' ) );
+$live		=	urldecode( $params->get( 'live', '' ) );
 $order_by	=	$params->get( 'order_by', '' );
 $pagination	=	-2;
 $variation	=	$params->get( 'variation', '' );
