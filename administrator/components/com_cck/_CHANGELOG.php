@@ -38,6 +38,7 @@ $ -> Language fix or change
 ! Empty values allowed on AJAX Availability.
 ! Suffix Tabs ID for tmpl=raw
 
+# "onCCK_StoragePrepareSearch" arguments fixed.
 # Regression fixed on Associations for Articles & Categories.
 # ROOT/URI paths fixed on CRON Jobs.
 # Routing issue fixed.
