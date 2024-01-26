@@ -30,6 +30,7 @@ $ -> Language fix or change
 ! Joomla! 4+ support
   >> Bringing UI tweaks and fixes for Dark Mode
   >> Modal changes for Bootstrap 5 support
+  >> addScriptDeclaration, addStyleSheet fixed
 
 + JSON support added on Ordering.
 + Restrictions applied on Ordering.
