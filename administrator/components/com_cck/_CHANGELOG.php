@@ -38,6 +38,9 @@ $ -> Language fix or change
 ! Empty values allowed on AJAX Availability.
 ! Suffix Tabs ID for tmpl=raw
 
+- "Quick Add" module removed.
+
+# Additional fixes included for PHP 8.x.
 # "onCCK_StoragePrepareSearch" arguments fixed.
 # Regression fixed on Associations for Articles & Categories.
 # ROOT/URI paths fixed on CRON Jobs.
