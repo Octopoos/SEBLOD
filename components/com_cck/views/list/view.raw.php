@@ -45,7 +45,7 @@ class CCKViewList extends JViewLegacy
 
 		$limitstart		=	$this->state->get( 'limitstart' );
 		$live			=	urldecode( $params->get( 'live' ) );
-		$variation		=	$params->get( 'variation' );
+		$variation		=	$params->get( 'variation', '' );
 		
 		$preconfig['show_form']		=	$params->get( 'show_form', '' );
 		$preconfig['auto_redirect']	=	$params->get( 'auto_redirect', '' );

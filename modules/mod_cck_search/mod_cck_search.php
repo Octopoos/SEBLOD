@@ -58,7 +58,7 @@ $limitstart			=	-1;
 $live				=	urldecode( $params->get( 'live' ) );
 $order_by			=	'';
 $target				=	$params->get( 'menu_item_search', 0 );
-$variation			=	$params->get( 'variation' );
+$variation			=	$params->get( 'variation', '' );
 
 jimport( 'cck.base.list.list' );
 include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
