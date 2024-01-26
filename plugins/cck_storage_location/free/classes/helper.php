@@ -70,13 +70,7 @@ class plgCCK_Storage_LocationFree_Helper extends plgCCK_Storage_LocationFree
 		}
 		
 		// Render Form
-		$fields	=	$form->getFieldset( 'item_associations' );
-		$form	=	'';
-		foreach ( $fields as $f ) {
-			$form	.=	'<div class="control-group"><div class="control-label">'.$f->label.'</div><div class="controls">'.$f->input.'</div></div>';
-		}
-		
-		return $form;
+		return $form->renderFieldset( 'item_associations' );
 	}
 }
 ?>
