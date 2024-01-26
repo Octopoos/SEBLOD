@@ -22,7 +22,16 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.27.1 Upgrade Release [28-Dec-2023] --------------
+--------------- 3.28.0 Upgrade Release [26-Jan-2024] -------------
+
+! Empty values allowed on AJAX Availability.
+
+# Additional fixes included for PHP 8.x.
+# Validation issue fixed
+  >> COM_CCK_PLEASE_CHECK_REQUIRED_TABS updated with class=\\"red\\"
+  >> other languages should be changed as well...!
+
+--------------- 3.27.1 Upgrade Release [28-Dec-2023] -------------
 
 # ROOT/URI paths fixed on CRON Jobs.
 # Routing issue fixed.
