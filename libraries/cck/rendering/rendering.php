@@ -1191,7 +1191,14 @@ class CCK_Rendering
 	// addScript
 	public function addScript( $url, $type = 'text/javascript', $defer = false, $async = false )
 	{
-		JFactory::getDocument()->addScript( $url, $type, $defer, $async );
+		$attribs	=	array(
+							'async'=>$async,
+							'defer'=>$defer,
+							'type'=>$type
+						);
+		$options	=	array();
+
+		JFactory::getDocument()->addScript( $url, $options, $attribs );
 	}
 
 	// addScriptDeclaration
@@ -1210,7 +1217,16 @@ class CCK_Rendering
 	// addStyleSheet
 	public function addStyleSheet( $url, $type = 'text/css', $media = null, $attribs = array() )
 	{
-		JFactory::getDocument()->addStyleSheet( $url, $type, $media, $attribs );
+		$options	=	array();
+
+		if ( !isset( $attribs['media'] ) ) {
+			$attribs['media']	=	$media;
+		}
+		if ( !isset( $attribs['type'] ) ) {
+			$attribs['type']	=	$type;
+		}
+
+		JFactory::getDocument()->addStyleSheet( $url, $options, $attribs );
 	}
 
 	// addStyleDeclaration
