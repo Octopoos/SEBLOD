@@ -39,7 +39,7 @@ $preconfig['task']		=	$app->input->get( 'task', '' );
 $preconfig['type']		=	$params->get( 'type', '' );
 $preconfig['url']		=	'';
 
-$live		=	urldecode( $params->get( 'live' ) );
+$live		=	urldecode( $params->get( 'live', '' ) );
 $variation	=	$params->get( 'variation' );
 
 jimport( 'cck.base.form.form' );

@@ -54,7 +54,7 @@ class CCKViewForm extends JViewLegacy
 		$session			=	JFactory::getSession();
 		$view				=	$this->getName();
 		
-		$live				=	urldecode( $params->get( 'live' ) );
+		$live				=	urldecode( $params->get( 'live', '' ) );
 		$variation			=	$params->get( 'variation' );
 		
 		// Page
@@ -90,7 +90,7 @@ class CCKViewForm extends JViewLegacy
 		if ( $params->get( 'robots' ) ) {
 			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
 		}
-		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
+		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx', '' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
 
 		// Prepare
