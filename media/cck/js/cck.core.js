@@ -17,10 +17,11 @@ if("undefined"===typeof JCck)var JCck={};
                 group: "ajax",
                 header: !0,
                 html: {
-                    close: '<button type="button" class="close" data-dismiss="modal"><span>×</span></button>',
+                    close: '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>',
                     loading: '<div class="loading"></div>',
                     navigation: '<a class="prev" href="javascript:void(0);"><span><</span></a><a class="next" href="javascript:void(0);"><span>></span></a>',
                 },
+                id: "modal-cck",
                 keyboard: !0,
                 loading: !0,
                 loop: !1,
@@ -28,8 +29,8 @@ if("undefined"===typeof JCck)var JCck={};
                 mode: "ajax",
                 navigation: !1,
                 title: !0,
-                url: { tmpl: "" },
-            },
+                url: { tmpl: "" }
+            }
         };
         return (
             (s.settings = $.extend(s.defaults, e || {})),
@@ -40,32 +41,34 @@ if("undefined"===typeof JCck)var JCck={};
                 return (
                     s.remove(),
                     $("body").append(
-                        '<div id="modal-cck" class="modal fade modal-' +
+                        '<div id="' + s.settings.id + '" class="modal fade modal-' +
                             s.settings.mode +
                             ("" != s.settings.class ? " " + s.settings.class : "") +
-                            '">' +
+                            '" aria-hidden="true"><div class="modal-dialog">' +
                             (s.settings.navigation ? '<div class="modal-navigation">' + s.settings.html.navigation + "</div>" : "") +
-                            (s.settings.header ? '<div class="modal-header">' + (s.settings.title ? "<h3>" + (!0 !== s.settings.title ? s.settings.title : "") + "</h3>" : "") + "</div>" : "") +
                             '<div class="modal-content">' +
+                            (s.settings.header ? '<div class="modal-header">' + (s.settings.title ? "<h3>" + (!0 !== s.settings.title ? s.settings.title : "") + "</h3>" : "") + "</div>" : "") +
+                            
                             ("" != s.settings.message.selector ? '<div class="modal-message"></div>' : "") +
                             (s.settings.body ? '<div class="modal-body"></div>' : "") +
                             "</div></div></div>"
                     ),
                     "" != s.settings.message.selector && $("body " + s.settings.message.selector).length && $("body " + s.settings.message.selector).appendTo(".modal-message"),
-                    (s.modal = $("#modal-cck")),
+                    (s.modal = $("#" + s.settings.id)),
                     (s.container = s.modal.find(s.settings.body ? ".modal-body" : ".modal-content")),
-                    s.settings.close && $(s.settings.html.close).prependTo(s.settings.header ? s.modal.find(".modal-header") : s.modal),
-                    s.modal.modal({ show: !1, backdrop: 0 != s.settings.backdrop && (0 != s.settings.backclose || "static"), keyboard: s.settings.keyboard }),
-                    s.modal.on("show", function (e) {
+                    s.settings.close && $(s.settings.html.close).prependTo(s.settings.header ? s.modal.find(".modal-header") : s.modal.find(".modal-content")),
+                    (s.bs_modal = new bootstrap.Modal( s.modal, { backdrop: s.settings.backdrop, keyboard: s.settings.keyboard })),
+                    (bs_modal_ev = document.getElementById(s.settings.id)),
+                    bs_modal_ev.addEventListener('show.bs.modal', function (e) {
                         e.stopPropagation(), $("html").css("overflow", "hidden"), s.callbacks.show(e);
                     }),
-                    s.modal.on("shown", function (e) {
+                    bs_modal_ev.addEventListener("shown.bs.modal", function (e) {
                         e.stopPropagation(), s.callbacks.shown(e);
                     }),
-                    s.modal.on("hide", function (e) {
+                    bs_modal_ev.addEventListener("hide.bs.modal", function (e) {
                         e.stopPropagation(), s.callbacks.hide(e);
                     }),
-                    s.modal.on("hidden", function (e) {
+                    bs_modal_ev.addEventListener("hidden.bs.modal", function (e) {
                         e.stopPropagation(), $("html").css("overflow", "auto"), s.callbacks.hidden(e);
                     }),
                     s
@@ -115,7 +118,7 @@ if("undefined"===typeof JCck)var JCck={};
                     void 0 !== s.settings.callbacks.hide && s.settings.callbacks.hide(e);
                 },
                 hidden: function (e) {
-                    $(window).off("scroll"), history.replaceState("", document.title, window.location.pathname + window.location.search), s.remove(), void 0 !== s.settings.callbacks.hidden && s.settings.callbacks.hidden(e);
+                    $(window).off("scroll"), history.replaceState("", document.title, window.location.pathname + window.location.search), s.bs_modal.dispose(), s.remove(), void 0 !== s.settings.callbacks.hidden && s.settings.callbacks.hidden(e);
                 },
                 destroy: function () {
                     void 0 !== s.settings.callbacks.destroy && s.settings.callbacks.destroy(), s.remove(), void 0 !== (s = {}).settings.callbacks.destroyed && s.settings.callbacks.destroyed();
@@ -128,7 +131,7 @@ if("undefined"===typeof JCck)var JCck={};
                 return s.callbacks.destroy(), this;
             }),
             (s.hide = function () {
-                return s.modal.modal("hide"), this;
+                return s.bs_modal.hide(), this;
             }),
             (s.init = function () {
                 return (
@@ -239,10 +242,10 @@ if("undefined"===typeof JCck)var JCck={};
                     s.build().load(a, !0);
             }),
             (s.remove = function () {
-                return $("body").find("#modal-cck").remove(), s.settings.keyboard && $(document.documentElement).off("keyup", s.keyboardHandler), this;
+                return $("#" + s.settings.id).remove(), s.settings.keyboard && $(document.documentElement).off("keyup", s.keyboardHandler), this;
             }),
             (s.show = function () {
-                return s.modal.modal("show"), this;
+                return s.bs_modal.show(), this;
             }),
             s
         );
