@@ -1219,7 +1219,7 @@ class CCK_Rendering
 	{
 		$options	=	array();
 
-		if ( !isset( $attribs['media'] ) ) {
+		if ( !isset( $attribs['media'] ) && $media !== null  ) {
 			$attribs['media']	=	$media;
 		}
 		if ( !isset( $attribs['type'] ) ) {
