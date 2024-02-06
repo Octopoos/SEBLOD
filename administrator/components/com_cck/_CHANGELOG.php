@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.3.1 Upgrade Release [6-Feb-2024] ------------
+
+! Joomla! 4+ support
+  >> Multi-sites session fixed.
+  >> addScriptDeclaration, addStyleSheet fixed
+
 --------------- 4.3.0 Upgrade Release [26-Jan-2024] -----------
 
 ! Joomla! 5 support
