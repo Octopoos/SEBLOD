@@ -1069,6 +1069,10 @@ class plgSystemCCK extends JPlugin
 
 			$session->set( 'user', $user );
 
+			if ( JCck::on( 4.2 ) ) {
+				$app->loadIdentity( $session->get('user') );
+			}
+
 			if ( JCck::on( '3.5' ) ) {
 				jimport( 'cck.joomla.menu.menu' );
 				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
