@@ -129,7 +129,7 @@ class plgCCK_FieldLink extends JCckPluginField
 		$value			=	( $value != '' ) ? $value : $field->defaultvalue;
 		$value			=	( $value != ' ' ) ? $value : '';
 		$value			=	JCckDev::fromJSON( $value );
-		$value['text']	=	htmlspecialchars( @$value['text'], ENT_QUOTES );
+		$value['text']	=	htmlspecialchars( @$value['text'] ?? '', ENT_QUOTES );
 		$preview		=	'';
 		
 		// Validate
