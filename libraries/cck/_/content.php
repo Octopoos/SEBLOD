@@ -598,12 +598,6 @@ class JCckContent
 		$this->setInstance( 'more_parent' );
 		$this->setInstance( 'more2' );
 
-		static $names	=	array(
-								'more'=>'',
-								'more_parent'=>'',
-								'more2'=>''
-							);
-
 		if ( is_bool( $data_more ) ) {
 			$data		=	$this->_getDataDispatch( $content_type, $data );
 
@@ -622,6 +616,12 @@ class JCckContent
 											'parent_id'=>$data['core']['parent_id'],
 											'date_time'=>$data['core']['date_time']
 						   				 ) );
+
+					static $names	=	array(
+											'more'=>'',
+											'more_parent'=>'',
+											'more2'=>''
+										);
 
 					foreach ( $names as $table_instance_name=>$null ) {
 						if ( count( $data[$table_instance_name] ) ) {
@@ -680,6 +680,12 @@ class JCckContent
 		}
 
 		// More
+		static $names	=	array(
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>''
+							);
+
 		foreach ( $names as $table_instance_name=>$null ) {
 			if ( count( $data[$table_instance_name] ) ) {
 				$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
