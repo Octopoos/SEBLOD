@@ -61,8 +61,8 @@ div.cck_page_desc{padding:0; margin:15px 0; text-align:justify;}
 #modal-cck.modal .btn-close {height: 18px;display: block;right: 5px;width: 18px;position: absolute;left:auto;z-index:100;}
 #modal-cck .loading {background: url(../images/spinner.gif) 50% 50% no-repeat;width:48px;height:48px;margin:0 auto;background-size:48px;}
 #modal-cck .modal-header {min-height:31px;}
-#modal-cck .modal-content {width:100%;}
-#modal-cck .modal-body {background: #fff;min-height:200px}
+#modal-cck > .modal-content {width:100%;}
+#modal-cck > .modal-content .modal-body {background: #fff;min-height:200px}
 #modal-cck .modal-navigation {position: relative;margin: 0 auto;height: 100%;width: 100%;display:contents}
 #modal-cck .modal-navigation > a {position: absolute;top: 50%;font-size: 40px;line-height: 40px;height: 40px;margin-top: -20px;display: block;}
 #modal-cck .modal-navigation > a, #modal-cck .modal-navigation > a:link, #modal-cck .modal-navigation > a:visited {color: #fff;text-decoration:none;}
