@@ -836,7 +836,7 @@ class JCckPluginField extends JPlugin
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
-			if ( trim( $field->description ) ) {
+			if ( $field->description ) {
 				$desc	=	trim( strip_tags( $field->description ) );
 				if ( $desc ) {
 					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
@@ -872,7 +872,7 @@ class JCckPluginField extends JPlugin
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
-			if ( trim( $field->description ) ) {
+			if ( $field->description ) {
 				$desc	=	trim( strip_tags( $field->description ) );
 				if ( $desc ) {
 					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
@@ -990,7 +990,7 @@ class JCckPluginField extends JPlugin
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
-			if ( trim( $field->description ) ) {
+			if ( $field->description ) {
 				$desc	=	trim( strip_tags( $field->description ) );
 				if ( $desc ) {
 					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
@@ -1030,7 +1030,7 @@ class JCckPluginField extends JPlugin
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
-			if ( trim( $field->description ) ) {
+			if ( $field->description ) {
 				$desc	=	trim( strip_tags( $field->description ) );
 				if ( $desc ) {
 					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
