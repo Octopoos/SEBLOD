@@ -650,7 +650,7 @@ class JCckPluginField extends JPlugin
 								.	'<span class="text blue sp2se" data-id="'.$name.'_match_mode" data-to="'.$to.'">'.$text.'</span>'
 								.	'<input type="hidden" id="'.$name.'_match_value" name="ffp['.$name.'][match_value]" value="'.@$field->match_value.'" />'
 								.	'<input type="hidden" id="'.$name.'_match_collection" name="ffp['.$name.'][match_collection]" value="'.@$field->match_collection.'" />'
-								.	'<input type="hidden" id="'.$name.'_match_options" name="ffp['.$name.'][match_options]" value="'.htmlspecialchars( @$field->match_options ).'" />'
+								.	'<input type="hidden" id="'.$name.'_match_options" name="ffp['.$name.'][match_options]" value="'.htmlspecialchars( @$field->match_options ?? '' ).'" />'
 								.	' <span class="c_mat'.$hide.'" name="'.$name.'">+</span>';
 		}
 		$value				=	@(int)$field->stage;
