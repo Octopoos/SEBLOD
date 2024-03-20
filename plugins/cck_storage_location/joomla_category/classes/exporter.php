@@ -163,7 +163,10 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				// Core > Custom
 				if ( self::$custom && isset( $fields[self::$custom] ) ) {
 					preg_match_all( '#::(.*?)::(.*?)::/(.*?)::#s', $fields[self::$custom], $values );
-					$tables[self::$table][$item->pk]->{self::$custom}	=	array();
+
+					if( isset( $tables[self::$table]) && is_object( $tables[self::$table][$item->pk]) ) {
+						$tables[self::$table][$item->pk]->{self::$custom}	=	array();
+					}
 					$fields[self::$custom]								=	'';
 					if ( count( $values[1] ) ) {
 						foreach ( $values[1] as $k=>$v ) {
@@ -171,7 +174,9 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 								// DISPATCH --> EXPORT
 								$fields[self::$custom]	=	$values[2][$k];
 							} elseif ( !isset( $excluded2[$v] ) ) {
-								$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
+								if( isset( $tables[self::$table]) && is_object( $tables[self::$table][$item->pk]) ) {
+									$tables[self::$table][$item->pk]->{self::$custom}[$v]	=	$values[2][$k];
+								}
 							}	
 						}
 					}
