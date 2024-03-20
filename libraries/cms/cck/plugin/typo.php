@@ -42,7 +42,7 @@ class JCckPluginTypo extends JPlugin
 		if ( isset( $field->link ) && $field->link != '' ) {
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 
-			if ( $applyLink && strpos( $value, '<a href' ) === false ) {
+			if ( $applyLink && is_string( $value ) && strpos( $value, '<a href' ) === false ) {
 				return '<a href="'.$field->link.'"'.JCckPluginLink::getLinkAttr( $field ).'>'.$value.'</a>';
 			}
 		}
