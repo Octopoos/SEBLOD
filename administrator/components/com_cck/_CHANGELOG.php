@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.28.1 Upgrade Release [21-Mar-2024] -------------
+
+! _QQ_ removed from languages files.
+
+# Various issues/notices fixed.
+
 --------------- 3.28.0 Upgrade Release [26-Jan-2024] -------------
 
 ! Empty values allowed on AJAX Availability.
