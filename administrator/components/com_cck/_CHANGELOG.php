@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.28.2 Upgrade Release [2-May-2024] --------------
+
+* jQuery UI updated to 1.13.x
+* jQuery UI Effect updated to 1.13.x
+
 --------------- 3.28.1 Upgrade Release [5-Apr-2024] --------------
 
 ! _QQ_ removed from languages files.
