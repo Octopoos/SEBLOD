@@ -80,7 +80,7 @@ class plgSystemCCK extends JPlugin
 							foreach ( $vars as $var ) {
 								$v	=	explode( '=', $var );
 								
-								if ( $v[0] && $v[1] ) {
+								if ( $v[0] && $v[1] != '' ) {
 									$uri->setVar( $v[0], $v[1] );
 								}
 							}
