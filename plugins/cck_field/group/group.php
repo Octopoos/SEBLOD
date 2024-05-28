@@ -679,6 +679,16 @@ class plgCCK_FieldGroup extends JCckPluginField
 				$inherit					=	array( 'caller'=>$field->extended );
 				$clone						=	clone $f;
 
+				// Variation
+				if ( $clone->variation_override ) {
+					$override	=	json_decode( $clone->variation_override, true );
+					if ( count( $override ) ) {
+						foreach ( $override as $k=>$v ) {
+							$clone->$k	=	$v;
+						}
+					}
+					$clone->variation_override	=	null;
+				}
 				if ( $field->variation != '' && $clone->variation == '' ) {
 					$clone->variation		=	$field->variation;
 				}
@@ -730,6 +740,35 @@ class plgCCK_FieldGroup extends JCckPluginField
 				$config['fields'][$name]	=	$f;
 			}
 		}
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_FieldBeforeRenderContent
+	public static function onCCK_FieldBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$content	=	array();
+		$name		=	$process['name'];
+
+		if ( !$fields[$name]->state ) {
+			return;
+		}
+
+		// Prepare
+		if ( $fields[$name]->bool == 2 ) {
+			$lang_current				=	JFactory::getLanguage()->getTag();
+			$lang_current				=	substr( $lang_current, 0, 2 );
+			$fields[$name]->extended	=	$fields[$name]->location.$lang_current;
+
+			self::_prepareContentFields( $fields[$name], $content, $name, $config );
+		} elseif ( $fields[$name]->bool ) {
+			/* TODO */
+		} else {
+			self::_prepareContentFields( $fields[$name], $content, $name, $config );
+		}
+
+		// Set
+		$fields[$name]->value	=	$content;
 	}
 }
 ?>
