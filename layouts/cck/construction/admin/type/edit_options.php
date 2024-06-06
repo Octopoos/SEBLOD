@@ -8,6 +8,7 @@ defined( '_JEXEC' ) or die;
 				<?php echo JText::_( 'COM_CCK_OPTIONS' ); ?>
 			</legend>
 			<?php
+			echo $displayData['fields']['admin_form'];
 			echo $displayData['fields']['location'];
 			echo $displayData['fields']['parent'];
 			echo $displayData['fields']['permissions'];
