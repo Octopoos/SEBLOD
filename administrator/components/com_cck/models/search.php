@@ -181,6 +181,10 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( isset( $raw_data['ffp'] ) ) {
 				$data['ffp']	=	$raw_data['ffp'];
 			}
+			
+            		if (!isset($data['ff'])) {
+             		   $data['ff'] = [];
+          		}
 				
 			$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
 
