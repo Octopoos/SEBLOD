@@ -740,6 +740,6 @@ if ( $preconfig['show_form'] > 0 ) {
 }
 
 // Validation
-$config['validation']			=	( count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
+$config['validation']			=	( is_array( $config['validation'] ) && count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
 $config['validation_options']	=&	$options;
 ?>
