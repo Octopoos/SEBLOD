@@ -15,16 +15,17 @@ jimport( 'joomla.filesystem.file' );
 // JCckDevImage
 class JCckDevImage
 {
-	protected $_exif 		=	array();
-	protected $_extension 	=	'';
-	protected $_height 		=	0;
-	protected $_pathinfo 	=	null;
-	protected $_quality_jpg	=	90;
-	protected $_quality_png	=	3;
-	protected $_ratio 		=	0;
-	protected $_resource 	=	null;
-	protected $_width 		=	0;
-	protected $_error 		=	false;
+	protected $_exif 			=	array();
+	protected $_extension 		=	'';
+	protected $_height 			=	0;
+	protected $_pathinfo 		=	null;
+	protected $_quality_jpg		=	90;
+	protected $_quality_png		=	3;
+	protected $_quality_webp	=	85;
+	protected $_ratio 			=	0;
+	protected $_resource	 	=	null;
+	protected $_width 			=	0;
+	protected $_error 			=	false;
 
 	// __construct
 	public function __construct( $path )
@@ -116,6 +117,10 @@ class JCckDevImage
 
 		if ( $this->_extension == 'png' ) {
 			imagealphablending( $thumbImage, false );
+		} elseif ( $this->_extension == 'webp' ) {
+			imagealphablending( $thumbImage, false );
+			imagesavealpha( $thumbImage, true );
+    		imagefill( $thumbImage, 0, 0, imagecolorallocatealpha( $thumbImage, 0, 0, 0, 127 ) );
 		}
 
 		// Generate thumb ressource
@@ -152,9 +157,9 @@ class JCckDevImage
 				}
 
 				if ( $tres ) {
-					imagewebp( $tres, $path, 70 );
+					imagewebp( $tres, $path, $this->_quality_webp );
 				} else {
-					imagewebp( $this->_resource, $path, 70 );
+					imagewebp( $this->_resource, $path, $this->_quality_webp );
 				}
 			}
 		}
@@ -198,11 +203,13 @@ class JCckDevImage
 	protected function _createResource( $ext, $path )
 	{
 		if ( $ext == 'gif' ) {
-			$res	=	@ImageCreateFromGIF( $path );
+			$res	=	@imagecreatefromgif( $path );
 		} elseif( $ext == 'jpg' || $ext == 'jpeg' ) {
-			$res	=	@ImageCreateFromJPEG( $path );
+			$res	=	@imagecreatefromjpeg( $path );
 		} elseif( $ext == 'png' ) {
-			$res	=	@ImageCreateFromPNG( $path );
+			$res	=	@imagecreatefrompng( $path );
+		} elseif( $ext == 'webp' ) {
+			$res	=	@imagecreatefromwebp( $path );
 		} else {
 			$res 	= 	false;
 		}
@@ -221,6 +228,8 @@ class JCckDevImage
 		} elseif ( $ext == 'png' ) {
 			imagesavealpha( $resource, true );
 			imagepng( $resource, null, $this->_quality_png );
+		} elseif ( $ext == 'webp' ) {
+			imagewebp( $resource, null, $this->_quality_webp );
 		} else {
 			// Bad extension !
 		}
