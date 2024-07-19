@@ -128,21 +128,30 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
-		$P						=	'template_'.$client;
-		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
 
-		if ( !isset( $data['options'] ) ) {
-			$data['options']	=	array();
+		if ( $data['location'] != 'collection' ) {
+			$P						=	'template_'.$client;
+			$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
+
+			if ( !isset( $data['options'] ) ) {
+				$data['options']	=	array();
+			}
+			$data['options']		=	JCckDev::toJSON( $data['options'] );
+		} else {
+			$P						=	'template_'.$client;
+			$data[$P]				=	0;
+			$data['options']		=	'';
 		}
-		$data['options']		=	JCckDev::toJSON( $data['options'] );
-		
+
 		if ( ! $data['id'] ) {
-			$clients			=	array( 'search', 'filter', 'item' );
-			foreach ( $clients as $c ) {
-				$P				=	'template_'.$c;
-				if ( ! $data[$P] ) {
-					$default	=	Helper_Workshop::getDefaultStyle();
-					$data[$P]	=	$default->id;
+			if ( $data['location'] != 'collection' ) {
+				$clients			=	array( 'search', 'filter', 'item' );
+				foreach ( $clients as $c ) {
+					$P				=	'template_'.$c;
+					if ( ! $data[$P] ) {
+						$default	=	Helper_Workshop::getDefaultStyle();
+						$data[$P]	=	$default->id;
+					}
 				}
 			}
 			if ( isset( $data['tpl_list'] ) && $data['tpl_list'] ) {
@@ -279,18 +288,26 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			$positions	=	'';
 			foreach ( $fields as $k => $v ) {
 				$next	=	next( $fields );
+
 				if ( $v == 'position' ) {
-					$legend				=	( @$params[$k]['legend'] != '' ) ? $db->escape( $params[$k]['legend'] ) : '';
-					$variation			=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
-					$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
-					$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
-					$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
-					$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
-					$position			=	substr( $k, 4 );
-					if ( $next != 'position' ) {
-						$positions	.=	', ( '.(int)$searchId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
+					if ( $location != 'collection' ) {
+						$legend				=	( @$params[$k]['legend'] != '' ) ? $db->escape( $params[$k]['legend'] ) : '';
+						$variation			=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
+						$variation_options	=	( @$params[$k]['variation_options'] != '' ) ? $db->escape( $params[$k]['variation_options'] ) : '';
+						$width				=	( @$params[$k]['width'] != '' ) ? $params[$k]['width'] : '';
+						$height				=	( @$params[$k]['height'] != '' ) ? $params[$k]['height'] : '';
+						$css				=	( @$params[$k]['css'] != '' ) ? $params[$k]['css'] : '';
+						$position			=	substr( $k, 4 );
+
+						if ( $next != 'position' ) {
+							$positions	.=	', ( '.(int)$searchId.', "'.(string)$position.'", "'.$client.'", "'.$legend.'", "'.$variation.'", "'.$variation_options.'", "'.$width.'", "'.$height.'", "'.$css.'" )';
+						}
 					}
 				} else {
+					if ( $location == 'collection' ) {
+						$position	=	'_main_';
+					}
+
 					$assigned	.= ', ( '.(int)$searchId.', '.(int)$v.', "'.$client.'", '.$ordering.', '.plgCCK_FieldGeneric_More::$method( $k, $params, $position, $client ).' )';
 					$ordering++;
 				}

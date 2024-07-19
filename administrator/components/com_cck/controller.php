@@ -26,10 +26,17 @@ class CCKController extends JControllerLegacy
 		$lang		=	JFactory::getLanguage();
 
 		if ( is_object( $field ) ) {
-			$element		=	'type';
-			$field->markup	=	'none';
-			$master			=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
-			$return			=	true;
+			if ( $client == 'search' ) {
+				$element		=	'search';
+				$field->markup	=	'none';
+				$master			=	'search';
+				$return			=	true;
+			} else {
+				$element		=	'type';
+				$field->markup	=	'none';
+				$master			=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+				$return			=	true;
+			}
 			
 			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
 		} else {
@@ -134,43 +141,63 @@ class CCKController extends JControllerLegacy
 			return;
 		}
 
-		// -- Type
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
-		
-		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		$type						=	JCckDatabase::loadObject( 'SELECT name, parent, location, storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
 
-		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
+		$prefix	=	JCck::getConfig_Param( 'development_prefix', '' );
+		$table2	=	JTable::getInstance( 'Field', 'CCK_Table' );
+
+		// -- Content/Search Type
+		if ( $client == 'search' ) {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/search.php';
+
+			$type	=	JCckDatabase::loadObject( 'SELECT name, location, storage_location FROM #__cck_core_searchs WHERE id = '.(int)$type_id );
+
+			$table						=	JTable::getInstance( 'Search', 'CCK_Table' );
+			$table->template_search		=	0;
+			$table->template_filter		=	0;
+			$table->template_list		=	0;
+			$table->template_item		=	0;
+
+			$table2->bool				=	5;
+		} else {
+			require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
+
+			$type	=	JCckDatabase::loadObject( 'SELECT name, parent, location, storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+
+			$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
+			$table->indexed				=	'none';
+			$table->parent				=	( $type->location == 'collection' && $type->parent ) ? $type->parent : $type->name;
+			$table->template_admin		=	0;
+			$table->template_site		=	0;
+			$table->template_content	=	0;
+			$table->template_intro		=	0;
+
+			$rules	=	array( 'core.create'=>array(),
+							   'core.create.max.parent'=>array( '8'=>"0" ),
+							   'core.create.max.parent.author'=>array( '8'=>"0" ),
+							   'core.create.max.author'=>array( '8'=>"0" ),
+							   'core.delete'=>array(),
+							   'core.delete.own'=>array(),
+							   'core.edit'=>array(),
+							   'core.edit.own'=>array() );
+			$rules	=	new JAccessRules( $rules );
+			$table->setRules( $rules );
+		}
+
 		$table->title				=	$title;
-        $table->folder				=	$folder;
-		$table->template_admin		=	0;
-		$table->template_site		=	0;
-		$table->template_content	=	0;
-		$table->template_intro		=	0;
+		$table->folder				=	$folder;
 		$table->published			=	1;
 		$table->access				=	3;
-		$table->indexed				=	'none';
 		$table->location			=	'collection';
-		$table->parent				=	( $type->location == 'collection' && $type->parent ) ? $type->parent : $type->name;
 		$table->storage_location	=	$type->storage_location;
-		
+
 		if ( !$table->storage_location ) {
 			$table->storage_location	=	'';
 		}
 
-		$rules	=	array( 'core.create'=>array(),
-						   'core.create.max.parent'=>array( '8'=>"0" ),
-						   'core.create.max.parent.author'=>array( '8'=>"0" ),
-						   'core.create.max.author'=>array( '8'=>"0" ),
-						   'core.delete'=>array(),
-						   'core.delete.own'=>array(),
-						   'core.edit'=>array(),
-						   'core.edit.own'=>array() );
-		$rules	=	new JAccessRules( $rules );
-		$table->setRules( $rules );
 		$table->check();
-		
+			
 		if ( $prefix ) {
 			$table->name			=	$prefix.'_'.$table->name;
 		}
@@ -179,8 +206,6 @@ class CCKController extends JControllerLegacy
 		// --
 
 		// -- Field
-		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$table2						=	JTable::getInstance( 'Field', 'CCK_Table' );
 		$table2->title				=	$title;
 		$table2->name				=	$table->name;
 		$table2->folder				=	$folder;
@@ -201,6 +226,11 @@ class CCKController extends JControllerLegacy
 				$client	=	'intro';
 				/* TODO#SEBLOD: */
 				return;
+			} elseif ( $client == 'search' ) {
+				$query	=	'UPDATE #__cck_core_search_field'
+						.	' SET searchid = '.(int)$table->id.', position = "_main_", computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' WHERE searchid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
+				JCckDatabase::execute( $query );
 			} else {
 				$query	=	'UPDATE #__cck_core_type_field'
 						.	' SET typeid = '.(int)$table->id.', position = "_main_", computation = "", computation_options = "", conditional = "", conditional_options = ""'
@@ -459,7 +489,12 @@ class CCKController extends JControllerLegacy
 
 		$app		=	JFactory::getApplication();
 		$json		=	$app->input->json->getRaw();
-		$objects	=	json_decode( $json, true );
+		
+		if ( JCck::on( '4.0' ) ) {
+			$objects	=	json_decode( $json, true );
+		} else {
+			$objects	=	json_decode( $json );
+		}
 		
 		if ( count( $objects ) ) {
 			$query	=	'UPDATE #__cck_core_objects SET options = CASE name';

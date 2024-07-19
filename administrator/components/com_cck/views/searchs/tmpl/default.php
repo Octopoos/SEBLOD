@@ -125,8 +125,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->searchTemplate.')';
-                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
+				$class	=	' no-template';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
+
+				if ( $item->searchTemplate ) {
+					$class	=	'';
+					$client	.=	' ('.$item->searchTemplate.')';
+				}
+                echo ( ! $item->searchFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].$class.'" data-edit-trigger="1" href="'.$link.'&client=search" title="'.htmlspecialchars( $client ).'">'.$item->searchFields.'</a>' : $item->searchFields ); ?></td>
 			<td class="center hidden-phone"><?php
 				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' );
                 echo ( ! $item->orderFields ) ? '-' : ( ( $canEdit && ! $checkedOut ) ? '<a class="'.$this->css['btn-count'].'" data-edit-trigger="2" href="'.$link.'&client=order" title="'.htmlspecialchars( $client ).'">'.$item->orderFields.'</a>' : $item->orderFields ); ?></td>
@@ -169,7 +175,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <?php
 JFactory::getDocument()->addStyleDeclaration('.sly > ul{position:relative; left:274px;}');
-Helper_Include::addStyleDeclaration( implode( '', $css ) );
+Helper_Include::addStyleDeclaration( implode( '', $css ).'.no-template{border-style:dashed;}' );
 
 $js	=	'
 		(function ($){

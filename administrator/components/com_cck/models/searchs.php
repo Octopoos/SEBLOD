@@ -25,6 +25,7 @@ class CCKModelSearchs extends JModelList
 				'name', 'a.name',
 				'folder', 'a.folder', 'folder_title',
 				'published', 'a.published',
+				'location', 'a.location',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 			);
