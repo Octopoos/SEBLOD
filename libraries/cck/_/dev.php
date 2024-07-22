@@ -196,7 +196,7 @@ abstract class JCckDev
 			$message	=	JText::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
 		}		
 
-		$rules	.=	',"_tabs":{"regex":"","alertText":"'.$message.'"}';
+		$rules	.=	',"_tabs":{"regex":"","alertText":"'.addslashes( $message ).'"}';
 
 		if ( is_object( $options ) ) {
 			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
@@ -226,6 +226,10 @@ abstract class JCckDev
 			if ( $options->def( 'useSuffix' ) ) {
 				$more	.=	',useSuffix:"'.$options->get( 'useSuffix' ).'"';
 			}
+			if ( JCck::is( '4.0' ) ) {
+				$more	.=	',isOverflown:true';
+			}
+
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"'.$more.'}';
 		} else {
 			$options	=	'{}';
@@ -233,13 +237,14 @@ abstract class JCckDev
 		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
+		$vv		=	'.min';
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.18.3.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.18.4.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation.css?'.self::getMediaVersion().'" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation'.$vv.'.js?'.self::getMediaVersion().'" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
-			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.18.3.css' );
-			$doc->addScript( $root.'/media/cck/js/cck.validation-3.18.4.min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation.css', array( 'version'=>self::getMediaVersion() ) );
+			$doc->addScript( $root.'/media/cck/js/cck.validation'.$vv.'.js', array( 'version'=>self::getMediaVersion() ) );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
