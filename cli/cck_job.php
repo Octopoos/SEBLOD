@@ -12,6 +12,8 @@
 const _JEXEC = 1;
 const _DISPLAY_ERRORS = 0;
 
+define( 'JDEBUG', 0 );
+
 if ( defined( '_DISPLAY_ERRORS' ) && constant( '_DISPLAY_ERRORS' ) ) {
 	error_reporting( E_ALL | E_NOTICE );
 	ini_set( 'display_errors', 1 );
