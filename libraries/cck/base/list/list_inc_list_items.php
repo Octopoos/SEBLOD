@@ -79,6 +79,7 @@ if ( $count ) {
 		// --
 		if ( $count2 ) {
 			$config		=	array(
+								'app'=>null,
 								'author'=>$items[$i]->author,
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
@@ -103,6 +104,9 @@ if ( $count ) {
 								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
+			
+			$config['app']	=	new JCckApp;
+			$config['app']->loadDefault();
 
 			foreach ( $fields as $field ) {
 				if ( $field->position == '_above_' || $field->position == '_below_' ) {
@@ -235,6 +239,7 @@ if ( $count ) {
 		
 		if ( $count3 ) {
 			$config		=	array(
+								'app'=>null,
 								'author'=>$items[$i]->author,
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
@@ -260,6 +265,8 @@ if ( $count ) {
 							);
 			$fieldsI	=	array();
 			
+			$config['app']	=	new JCckApp;
+			$config['app']->loadDefault();
 			foreach ( $fields2 as $field ) {
 				if ( $field->position == '_above_' || $field->position == '_below_' ) {
 					continue;

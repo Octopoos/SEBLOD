@@ -81,32 +81,36 @@ if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 }
 $storages	=	array();
-$config		=	array( 'author'=>( is_object( $author ) ? $author->id : 0 ),
-					   'author_session'=>( is_object( $author ) ? $author->session : '' ),
-					   'client'=>$client,
-					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
-					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
-					   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
-					   'error'=>false,
-					   'fields'=>array(),
-					   'id'=>$preconfig['id'],
-					   'isNew'=>$isNew,
-					   'Itemid'=>$preconfig['itemId'],
-					   'location'=>$type->storage_location,
-					   'message'=>$preconfig['message'],
-					   'message_style'=>'',
-					   'options'=>'',
-					   'pk'=>$id,
-					   'post' => $post,
-					   'process'=>array(),
-					   'stage'=>-1,
-					   'storages'=>array(),
-					   'task'=>$task,
-					   'tmp'=>array(),
-					   'type'=>$preconfig['type'],
-					   'type_id'=>(int)$type->id,
-					   'url'=>$preconfig['url'],
-					   'validate'=>''
+$config		=	array(
+						'app'=>null,
+						'author'=>( is_object( $author ) ? $author->id : 0 ),
+						'author_session'=>( is_object( $author ) ? $author->session : '' ),
+						'client'=>$client,
+						'client_form'=>$preconfig['client'],
+						'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
+						'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
+						'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
+						'error'=>false,
+						'fields'=>array(),
+						'id'=>$preconfig['id'],
+						'isNew'=>$isNew,
+						'Itemid'=>$preconfig['itemId'],
+						'location'=>$type->storage_location,
+						'message'=>$preconfig['message'],
+						'message_style'=>'',
+						'options'=>'',
+						'pk'=>$id,
+						'post' => $post,
+						'process'=>array(),
+						'stage'=>-1,
+						'storages'=>array(),
+						'task'=>$task,
+						'tmp'=>array(),
+						'type'=>$preconfig['type'],
+						'type_parent'=>'',
+						'type_id'=>(int)$type->id,
+						'url'=>$preconfig['url'],
+						'validate'=>''
 					);
 CCK_Form::applyTypeOptions( $config, $preconfig['client'] );
 
@@ -115,6 +119,9 @@ if ( $preconfig['client'] ) {
 		$config['options']['redirection']	=	'';
 	}
 }
+
+$config['app']	=	new JCckApp;
+$config['app']->loadDefault();
 
 // ACL
 $can	=	CCK_Form::getPermissions( $type, $config );

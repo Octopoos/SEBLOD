@@ -93,38 +93,44 @@ if ( !$isNew ) {
 
 $retry	=	$app->input->get( 'retry', '' );
 $post	=	( $retry && $retry == $type->name ) ? $app->input->post->getArray() : array();
-$config	=	array( 'action'=>$preconfig['action'],
-				   'asset'=>'com_content',
-				   'asset_id'=>0,
-				   'author'=>( is_object( $author ) ? $author->id : 0 ),
-				   'author_session'=>( is_object( $author ) ? $author->session : '' ),
-				   'client'=>$client,
-				   'client_form'=>$preconfig['client'],
-				   'context'=>array(),
-				   'copyfrom_id'=>$copyfrom_id,
-				   'core'=>true,
-				   'custom'=>'',
-				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
-				   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
-   				   'error'=>0,
-				   'fields'=>array(),
-				   'formId'=>$preconfig['formId'],
-				   'isNew'=>$isNew,
-				   'javascript'=>'',
-				   'pk'=>$id,
-   				   'submit'=>$preconfig['submit'],
-				   'storages'=>array(),
-				   'type'=>$type->name,
-				   'type_id'=>$type->id,
-				   'url'=>( ( @$preconfig['url'] ) ? $preconfig['url'] : $current ),
-				   'validate'=>array(),
-				   'validation'=>array(),
-				   'validation_options'=>array()
+$config	=	array(
+					'app'=>null,
+					'action'=>$preconfig['action'],
+					'asset'=>'com_content',
+					'asset_id'=>0,
+					'author'=>( is_object( $author ) ? $author->id : 0 ),
+					'author_session'=>( is_object( $author ) ? $author->session : '' ),
+					'client'=>$client,
+					'client_form'=>$preconfig['client'],
+					'context'=>array(),
+					'copyfrom_id'=>$copyfrom_id,
+					'core'=>true,
+					'custom'=>'',
+					'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
+					'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
+					'error'=>0,
+					'fields'=>array(),
+					'formId'=>$preconfig['formId'],
+					'isNew'=>$isNew,
+					'javascript'=>'',
+					'pk'=>$id,
+					'submit'=>$preconfig['submit'],
+					'storages'=>array(),
+					'type'=>$type->name,
+					'type_id'=>$type->id,
+					'type_parent'=>( $type->parent_inherit && $type->parent ? $type->parent : '' ),
+					'url'=>( ( @$preconfig['url'] ) ? $preconfig['url'] : $current ),
+					'validate'=>array(),
+					'validation'=>array(),
+					'validation_options'=>array()
 				);
 
 // ACL
 $can	=	CCK_Form::getPermissions( $type, $config );
 $cannot	=	CCK_Form::getNoAccessParams( $options );
+
+$config['app']	=	new JCckApp;
+$config['app']->loadDefault();
 
 if ( $can === false ) {	
 	CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
