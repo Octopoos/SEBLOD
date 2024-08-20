@@ -41,6 +41,7 @@ class JCckList
 	protected $_object					=	'';
 	protected $_pk						=	0;
 	protected $_search_query			=	null; /* TODO#SEBLOD: reset? */
+	protected $_search_queries			=	null; /* TODO#SEBLOD: reset? */
 	protected $_search_results			=	null;
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
@@ -79,6 +80,14 @@ class JCckList
 		$this->_setDataMap( 'base' );
 
 		return true;
+	}
+
+	// setOptions
+	public function setOptions( $options )
+	{
+		$this->_options	=	new Registry( $options );
+
+		return $this;
 	}
 
 	// unsetInstance
@@ -452,6 +461,12 @@ class JCckList
 		return (int)$config['total'];
 	}
 
+	// getPks
+	public function getPks()
+	{
+		// or findPks()
+	}
+
 	// limit
 	public function limit( $limit = 0, $limit2 = 0 )
 	{
@@ -485,25 +500,26 @@ class JCckList
 		}
 		// --
 
-		$preconfig	=	array(
-							'action'=>'',
-							'auto_redirect'=>0,
-							'caller'=>$this->_name.'.'.$this->_pk,
-							'client'=>'search',
-							'formId'=>$formId,
-							'idx'=>$this->_pk,
-							'itemId'=>JFactory::getApplication()->input->getInt( 'Itemid', 0 ),
-							'limitend'=>'0',
-							'limit'=>(int)$this->_search_query['limit'],
-							'limit2'=>(int)$this->_search_query['limit2'],
-							'ordering'=>'',
-							'ordering2'=>'',
-							'search'=>$this->getName(),
-							'search2'=>$alternative_list,
-							'show_form'=>'-1',
-							'submit'=>'JCck.Core.submit_'.$uniqId,
-							'task'=>'search',
-						);
+		$data_script	=	'';
+		$preconfig		=	array(
+								'action'=>'',
+								'auto_redirect'=>0,
+								'caller'=>$this->_name.'.'.$this->_pk,
+								'client'=>'search',
+								'formId'=>$formId,
+								'idx'=>$this->_pk,
+								'itemId'=>JFactory::getApplication()->input->getInt( 'Itemid', 0 ),
+								'limitend'=>$this->_options->get( 'limitend', '0' ),
+								'limit'=>(int)$this->_search_query['limit'],
+								'limit2'=>(int)$this->_search_query['limit2'],
+								'ordering'=>'',
+								'ordering2'=>'',
+								'search'=>$this->getName(),
+								'search2'=>$alternative_list,
+								'show_form'=>$this->_options->get( 'show_form', '-1' ),
+								'submit'=>'JCck.Core.submit_'.$uniqId,
+								'task'=>'search',
+							);
 
 		// Preset
 		if ( !is_null( $this->_search_results ) ) {
@@ -522,9 +538,9 @@ class JCckList
 		
 		$live			=	'';
 		$order_by		=	'';
-		$pagination		=	-2;
+		$pagination		=	$this->_options->get( 'show_pagination', -2 );
 		$variation		=	'';
-		
+
 		// Check
 		if ( $limitstart == -1 && (int)$count > 0 ) {
 			$limitstart	=	0;
@@ -532,19 +548,33 @@ class JCckList
 		if ( $limitstart == -1 && ( $pagination == 2 || $pagination == 8 ) ) {
 			$limitstart	=	0;
 		}
-// dump($preconfig);
+
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
-		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
+		if ( $preconfig['show_form'] == '1' ) {
+			if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
+				$data	=	'<form action="" method="post" id="'.$config['formId'].'">'.$form.$data.'</form>';
+			} else {
+				$data	=	'<form action="" method="post" id="'.$config['formId'].'">'.$form.'</form>'.$data;
+			}
+		} elseif ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
 			$data	=	'<form action="" method="post" id="'.$config['formId'].'">'.$data.'</form>';
 		}
 
 		// Clear
 		$this->_search_results	=	null;
+		$this->_search_queries	=	$config['query'];
 
-		return $data;
+		if ( $pagination == 2 ) {
+			$class_pagination	=	'o-center';
+			$data				.=	'<div class="'.$class_pagination.'"'.( $pagination == 8 ? ' style="display:none;"' : '' ).'><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><button class="o-btn-outlined" id="seblod_form_load_more" data-start="'.$offset.'" data-step="'.$config['limitend'].'" data-end="'.( $total_items + $offset ).'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'<i></i></button></div>';
+
+			$data_script		=	$this->_getOutputScript( $config, $preconfig, $pagination );
+		}
+
+		return $data.$data_script;
 	}
 
 	// with
@@ -750,6 +780,7 @@ class JCckList
 				dump( $this->_instance_base, 'base' );
 			}
 
+			dump( $this->_search_queries );
 			/* TODO#SEBLOD4 */
 		}
 
@@ -836,6 +867,96 @@ class JCckList
 
 		return $data;
 	}
+
+	// _getOutputScript
+	private function _getOutputScript( $config, $preconfig, $show_pagination )
+	{
+		$callback_pagination	=	'';
+		$context				=	array();
+
+		if ( isset( $config['context'] ) ) {
+			$context	=	$config['context'];
+		}
+		$context['Itemid']		=	$preconfig['itemId'];
+		$context['view']		=	JFactory::getApplication()->input->get( 'view' );
+		$context['referrer']	=	$preconfig['caller'];
+
+		ob_start();
+		?>
+		<script type="text/javascript">
+		(function ($){
+			JCck.Core.loadmore = function(query_params,has_more,replace_html) {
+				var data_type    = 'html';
+				var elem_target = ".cck-loading-more";
+				var replace_html = replace_html || 0;
+				$("form#<?php echo $config['formId']; ?> [data-cck-ajax=\'\']").each(function(i) {
+					var name = $(this).attr("name");
+					query_params += "&"+(name !== undefined ? name : $(this).attr("id"))+"="+$(this).myVal().replace("&", "%26");
+				});
+				if (has_more < 0) {
+					data_type = 'json';
+					query_params += "&wrapper=1";
+				}
+				$.ajax({
+					cache: false,
+					data: "format=raw&infinite=1<?php echo ( $preconfig['limitend'] ? '&end='.$preconfig['limitend'] : '' );?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+query_params,
+					dataType: data_type,
+					type: "GET",
+					url: '<?php echo JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$config['type'].( $preconfig['search2'] ? '|'.$preconfig['search2'] : '' ).'&context='.json_encode( $context ) ); ?>',
+					beforeSend:function(){ $("#seblod_form_load_more").hide(); $("#seblod_form_loading_more").show(); },
+					success: function(response){
+						if (has_more < 0) {
+							var $el = $("#seblod_form_load_more");
+							$($el).attr("data-start",0).attr("data-end",response.total);
+							if (response.total > response.count) {
+								$("#seblod_form_load_more, [data-cck-loadmore-pagination]").show();
+							} else {
+								$("[data-cck-loadmore-pagination]").hide();
+							}
+		 					if ($("[data-cck-total]").length) {
+		 						$("[data-cck-total]").text(response.total);
+		 					}
+							response = response.html;
+						} else {
+							if (has_more != 1) {
+								$("#seblod_form_load_more").show()<?php echo ( $show_pagination == 8 ) ? '.click()' : ''; ?>;
+							} else {
+								$(".cck_module_list .pagination").hide();
+							}
+						}
+						$("#seblod_form_loading_more").hide();
+						if (replace_html==1) { $(elem_target).html(response); } else { $(elem_target).append(response); }
+						<?php
+						if ( $callback_pagination != '' ) {
+							$pos	=	strpos( $callback_pagination, '$(' );
+
+							if ( $pos !== false && $pos == 0 ) {
+								echo $callback_pagination;
+							} else {
+								echo $callback_pagination.'(response);';
+							}
+						}
+						?>
+					},
+					error:function(){}
+				});
+			};
+			$(document).ready(function() {
+				$("#seblod_form_load_more").on("click", function() {
+					var start = parseInt($(this).attr("data-start"));
+					var step = parseInt($(this).attr("data-step"));
+					start = start+step;
+					var stop = (start+step>=parseInt($(this).attr("data-end"))) ? 1 : 0;
+					$(this).attr("data-start",start);
+					JCck.Core.loadmore("&start="+start,stop);
+				})<?php echo ( $show_pagination == 8 ) ? '.click()' : ''; ?>;
+			});
+		})(jQuery);
+		</script>
+		<?php
+		return ob_get_clean();
+	}
+
 	// _setCallable
 	protected function _setCallable( $name, $callable, $scope )
 	{
