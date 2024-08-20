@@ -25,6 +25,7 @@ class JCckType
 												'_setCallable'=>'',
 												'_setMixin'=>'',
 											);
+	protected static $instances			=	array();
 
 	protected $_options					=	null;
 
@@ -39,7 +40,9 @@ class JCckType
 	protected $_logs					=	array(); /* TODO#SEBLOD: reset? */
 	protected $_name					=	'';
 	protected $_object					=	'';
+	protected $_parent					=	'';
 	protected $_pk						=	0;
+	protected $_relationships			=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -52,6 +55,20 @@ class JCckType
 	// getInstance
 	public static function getInstance( $identifier = '' )
 	{
+		if ( !$identifier ) {
+			return new JCckType;
+		}
+
+		$key	=	$identifier;
+
+		if ( !isset( self::$instances[$key] ) ) {
+			self::$instances[$key]	=	new JCckType;
+
+			self::$instances[$key]->load( $identifier );
+		}
+
+		return self::$instances[$key];
+
 	}
 
 	// setInstance
@@ -92,6 +109,75 @@ class JCckType
 	{
 		$this->_error	=	false;
 
+		return $this;
+	}
+
+	// create (^)
+	public function create( $content_type, $data )
+	{
+		$this->reset();
+
+		// if ( !$this->_setContentByType( $content_type ) ) {
+		// 	$this->reset();
+
+		// 	$this->_error	=	true;
+
+		// 	return $this;
+		// }
+
+		// if ( !$this->can( 'create' ) ) {
+		// 	$this->log( 'error', 'Permissions denied.' );
+		// 	$this->reset();
+
+		// 	$this->_error	=	true;
+
+		// 	return $this;
+		// }
+		
+		$this->setInstance( 'base' );
+
+		$data	=	$this->_getDataDispatch( $content_type, $data );
+
+		// Preset may set an error
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		$this->_is_new	=	true;
+
+		// Base
+		if ( !( $this->save( 'base', $data['base'] ) ) ) {
+			$this->_error	=	true;
+			$this->_is_new	=	false;
+
+			return $this;
+		}
+
+		// Core
+		// $data_core	=	array(
+		// 					'cck'=>$this->_type,
+		// 					'pk'=>$this->_pk,
+		// 					'storage_location'=>$this->_object,
+		// 					'author_id'=>$this->getAuthor(),
+		// 					'parent_id'=>$data['core']['parent_id'],
+		// 					'date_time'=>$data['core']['date_time']
+		// 				);
+		// if ( !$data_core['author_id'] ) {
+		// 	$data_core['author_id']	=	JFactory::getUser()->id;
+		// }
+		// if ( !( $this->save( 'core', $data_core ) ) ) {
+		// 	$this->_error	=	true;
+		// 	$this->_is_new	=	false;
+
+		// 	return $this;
+		// }
+		
+		$this->_is_new	=	false;
+
+		// Keep it for later
+		// self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
+		// self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
+		
 		return $this;
 	}
 
@@ -186,6 +272,22 @@ class JCckType
 		return $items;
 	}
 
+	// getContentInstance
+	public function getContentInstance()
+	{
+		$content_object		=	$this->getContentObject();
+
+		$content_instance	=	new $content_object;
+
+		if ( $this->_object == 'free' ) {
+			$content_instance->setTable( '#__cck_store_form_'.( $this->_parent ? $this->_parent : $this->_name ) );
+		}
+
+		// TODO: extend mixin(s)
+
+		return $content_instance;
+	}
+
 	// getContentObject
 	public function getContentObject()
 	{
@@ -263,6 +365,16 @@ class JCckType
 		return $default;
 	}
 
+	// getRelationship
+	public function getRelationship( $name )
+	{
+		if ( isset( $this->_relationships[$name] ) ) {
+			return $this->_relationships[$name];
+		}
+
+		return null;
+	}
+
 	// hasCallable
 	public function hasCallable( $name )
 	{
@@ -293,6 +405,176 @@ class JCckType
 		return $this->_is_new;
 	}
 
+	// loadContentItem
+	public function loadContentItem( $pk )
+	{
+
+	}
+
+	// loadItem
+	public function loadItem( $pk )
+	{
+
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
+
+	// bind
+	public function bind( $table_instance_name, $data )
+	{
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		$result	=	$this->{'_instance_'.$table_instance_name}->bind( $data );
+
+		if ( !$result ) {
+			$this->_error	=	true;
+		}
+
+		return $this;
+	}
+
+	// check
+	public function check( $table_instance_name )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		return $this->{'_instance_'.$table_instance_name}->check();
+	}
+
+	// postSave
+	protected function postSave( $table_instance_name, $data ) {}
+	
+	// preSave
+	protected function preSave( $table_instance_name, &$data ) {}
+	
+	// save ($)
+	public function save( $table_instance_name, $data = array() )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		if ( !$this->isNew() ) {
+			// if ( !$this->can( 'save' ) ) {
+			// 	$this->log( 'error', 'Permissions denied.' );
+
+			// 	return false;
+			// }
+		}
+
+		$this->preSave( $table_instance_name, $data );
+
+		$this->bind( $table_instance_name, $data );
+		$this->check( $table_instance_name );
+
+		if ( $table_instance_name == 'base' ) {
+			$result	=	$this->trigger( 'save', 'before' );
+
+			if ( is_array( $result ) && in_array( false, $result, true ) ) {
+				return false;
+			}
+		}
+
+		// Let's make sure we have a valid instance		/* TODO#SEBLOD: should we move this check to the suitable function(s) */
+		if ( !( $table_instance_name == 'base' || $table_instance_name == 'core' ) && empty( $this->{'_instance_'.$table_instance_name}->id ) ) {
+			// $this->_fixDatabase( $table_instance_name );
+		}
+
+		$method	=	'save'.ucfirst( $table_instance_name );
+		$status	=	$this->$method();
+
+		if ( !$status ) {
+			return $status;
+		}
+
+		switch ( $table_instance_name ) {
+			case 'base':
+				$this->_pk	=	$this->{'_instance_'.$table_instance_name}->id;
+				
+				// if ( $this->_instance_core->id ) {
+				// 	$data_core	=	array();
+
+				// 	if ( self::$objects[$this->_object]['properties']['author'] == self::$objects[$this->_object]['properties']['key'] ) {
+				// 		$data_core['author_id']	=	$this->{'_instance_'.$table_instance_name}->get( self::$objects[$this->_object]['properties']['key'], 0 );
+				// 	} elseif ( isset( $data[self::$objects[$this->_object]['properties']['author']] ) ) {
+				// 		$data_core['author_id']	=	$data[self::$objects[$this->_object]['properties']['author']];
+				// 	}
+				// 	if ( isset( $data[self::$objects[$this->_object]['properties']['parent']] ) ) {
+				// 		$data_core['parent_id']	=	$data[self::$objects[$this->_object]['properties']['parent']];
+				// 	}
+				// 	if ( count( $data_core ) ) {
+				// 		$this->save( 'core', $data_core );
+				// 	}
+				// }
+				break;
+			case 'core':
+				// $this->_id	=	$this->{'_instance_'.$table_instance_name}->id;
+				
+				// if ( property_exists( $this->_instance_base, self::$objects[$this->_object]['properties']['custom'] ) ) {
+				// 	$this->_instance_base->{self::$objects[$this->_object]['properties']['custom']}	=	'::cck::'.$this->_id.'::/cck::';
+				// 	$this->store( 'base' );
+				// }
+				break;
+			default:
+				break;
+		}
+
+		$this->postSave( $table_instance_name, $data );
+		
+		if ( $table_instance_name == 'base' ) {
+			$this->trigger( 'save', 'after' );
+		}
+
+		return $status;
+	}
+
+	// saveBase
+	protected function saveBase()
+	{
+		return $this->_instance_base->store();
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
+
+	// trigger
+	public function trigger( $task, $event )
+	{
+		/* TODO#SEBLOD4 */
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Do More
+
+	// assign
+	public function assign( $field_identifier, $client, $params = array() )
+	{
+		if ( !is_numeric( $field_identifier ) ) {
+			$field_identifier	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$field_identifier.'"' );
+		}
+		
+		if ( $field_identifier ) {
+			$table	=	JCckTableBatch::getInstance( '#__cck_core_type_field' );
+
+			$count				=	$table->count( 'typeid = '.$this->getPk().' AND client = "'.$client.'"' );
+			$params['client']	=	$client;
+			$params['fieldid']	=	(string)$field_identifier;
+			$params['ordering']	=	(string)( $count + 1 );
+
+			$table->bind( array(
+							$count=>(object)$params
+						  ) );
+			$table->check( array(
+							'typeid'=>(string)$this->getPk()
+						   ) );
+			$table->store();
+		}
+
+		return $this;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
 
 	// __call
@@ -320,29 +602,36 @@ class JCckType
 	// dump
 	public function dump( $scope = 'this' )
 	{
-		if ( !function_exists( 'dump' ) ) {
-			$this->log( 'notice', 'Function not found.' );
+		$dump	=	JCck::on( '4.0' ) ? 'dumpVar' : 'dump';
 
-			return false;
+		if ( !function_exists( $dump ) ) {
+			if ( $dump == 'dumpVar' ) {
+				$dump	=	'dump';
+			} else {
+				$this->log( 'notice', 'Function not found.' );
+
+				return false;	
+			}
 		}
 
 		if ( $scope == 'self' ) {
 			/* TODO#SEBLOD4 */
 		} elseif ( $scope == 'callable' ) {
-			dump( $this->getCallable() );
+			$dump( $this->getCallable() );
 		} elseif ( $scope == 'log' ) {
-			dump( $this->getLog() );
+			$dump( $this->getLog() );
 		} else {
-			dump( $this->_callables, 'callables' );
-			dump( $this->_error, 'error' );
-			dump( $this->_id, 'id' );
-			dump( $this->_logs, 'logs' );
-			dump( $this->_name, 'name' );
-			dump( $this->_object, 'object' );
-			dump( $this->_pk, 'pk' );
+			$dump( $this->_callables, 'callables' );
+			$dump( $this->_error, 'error' );
+			$dump( $this->_id, 'id' );
+			$dump( $this->_logs, 'logs' );
+			$dump( $this->_name, 'name' );
+			$dump( $this->_object, 'object' );
+			$dump( $this->_parent, 'parent' );
+			$dump( $this->_pk, 'pk' );
 
 			if ( $this->_instance_base ) {
-				dump( $this->_instance_base, 'base' );
+				$dump( $this->_instance_base, 'base' );
 			}
 
 			/* TODO#SEBLOD4 */
@@ -478,9 +767,9 @@ class JCckType
 	// _setTypeByName
 	protected function _setTypeByName( $identifier )
 	{
-		$query	=	'SELECT a.id AS pk, a.storage_location AS storage_location'
-				.	' FROM #__cck_core_types AS a'
-				.	' WHERE a.name = "'.$identifier.'"';
+		$query	=	'SELECT id AS pk, parent, storage_location, relationships'
+				.	' FROM #__cck_core_types'
+				.	' WHERE name = "'.$identifier.'"';
 
 		$core	=	JCckDatabase::loadObject( $query );
 
@@ -495,8 +784,19 @@ class JCckType
 		/* TODO#SEBLOD4 */
 
 		$this->_id					=	0;
+		$this->_parent				=	$core->parent;
 		$this->_pk					=	$core->pk;
 		$this->_name				=	$identifier;
+
+		// Prepare Relationships
+		if ( $core->relationships == '' ) {
+			$core->relationships	=	'[]';
+		}
+		$core->relationships		=	json_decode( $core->relationships );
+
+		foreach ( $core->relationships as $relationship ) {
+			$this->_relationships[$relationship->name]	=	$relationship;
+		}
 
 		/* TODO#SEBLOD4 */
 
