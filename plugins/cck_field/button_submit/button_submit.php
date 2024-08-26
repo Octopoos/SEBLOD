@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
+
 // Plugin
 class plgCCK_FieldButton_Submit extends JCckPluginField
 {
@@ -168,7 +170,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			return;
 		}
 		self::$path		=	parent::g_getPath( self::$type.'/' );
-		$field->label2	=	trim( @$field->label2 );
+		$field->label2	=	isset( $field->label2 ) ? trim( $field->label2 ) : '';
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 		
 		// Init
@@ -515,7 +517,10 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					$step	=	(int)JComponentHelper::getParams( 'com_cck_exporter' )->get( 'mode_ajax_count', 25 );
 					$vars	=	'&search='.$config['type'];
 				} elseif ( $process['task'] == 'process_ajax' ) {
-					$step	=	(int)JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 );
+					$processing_opts	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_more_processings WHERE id = '.(int)$process['task_id'] );
+					$processing_opts	=	new Registry( $processing_opts );
+
+					$step	=	(int)$processing_opts->get( 'ajax_count', JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 ) );
 				}
 
 				if ( !$loaded ) {
@@ -535,7 +540,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										width:0,
 										ajaxLoopRequest: function(el) {
 											var start = ( JCck.More.ButtonSubmit.batch.length == JCck.More.ButtonSubmit.instances[el].total ) ? 1 : 0;
-											var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].step).join("&cid[]=");											
+											if (JCck.More.ButtonSubmit.instances[el].step) {
+												var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].step).join("&cid[]=");
+											} else {
+												var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].total).join("&cid[]=");
+											}
 											var end = ( JCck.More.ButtonSubmit.batch.length > 0 ) ? 0 : 1;
 											$.ajax({
 												cache: false,
@@ -543,40 +552,51 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												type: "POST",
 												url:  JCck.More.ButtonSubmit.instances[el].url+"&"+JCck.More.ButtonSubmit.token,
 												complete: function(jqXHR) {
-													var w = parseInt($(el+" .bar")[0].style.width);
-													$(el+" .bar").css("width",parseInt(w+JCck.More.ButtonSubmit.width)+"%");
-													
+													var w = parseFloat(parseFloat($(el+" .bar")[0].style.width).toFixed(2));
+													$(el+" .bar").css("width",parseFloat((w+JCck.More.ButtonSubmit.width).toFixed(2))+"%");
+
 													if (JCck.More.ButtonSubmit.batch.length) {
 														JCck.More.ButtonSubmit.ajaxLoopRequest(el);
 													} else {
 														$(el+" .bar").css("width","100%");
-														var resp = JSON.parse(jqXHR.responseText);
+														
+														try {
+															var resp = JSON.parse(jqXHR.responseText);
 
-														if (typeof resp == "object") {
-															if (!resp.error) {
-																JCck.More.ButtonSubmit.count++;
-															}
-															if (resp.output_path !== undefined) {
-																window.setTimeout(function(){
-																	$(el+" .bar").css("font-size","inherit").css("padding",JCck.More.ButtonSubmit.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
-																},500);
-																
-																document.location.href = resp.output_path;
-															} else {
-																var type = "message";
-
-																if (!JCck.More.ButtonSubmit.count) {
-																	type = "error";
+															if (typeof resp == "object") {
+																if (!resp.error) {
+																	JCck.More.ButtonSubmit.count++;
 																}
-																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+																if (resp.url !== undefined && resp.url) {
+																	document.location.href = resp.url;
+																} else if (resp.output_path !== undefined) {
+																	window.setTimeout(function(){
+																		$(el+" .bar").css("font-size","inherit").css("padding",JCck.More.ButtonSubmit.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
+																	},500);
+																	window.setTimeout(function(){
+																		JCck.More.ButtonSubmit.resetState(el);
+																	},2000);
+
+																	document.location.href = resp.output_path;
+																} else {
+																	var type = "message";
+
+																	if (!JCck.More.ButtonSubmit.count) {
+																		type = "error";
+																	}
+																	document.location.href = "/index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+																}
 															}
-														}
+														} catch (e) {
+															document.location.href = "/index.php?option=com_cck&task=outputMessage&type=error&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+														}														
 													}
 												}
 											});
 										},
 										initProcess: function(el, data) {
 											JCck.More.ButtonSubmit.instances[el] = data;
+											JCck.More.ButtonSubmit.instances[el].label = $(el).html();
 
 											var w = parseFloat($(el)[0].getBoundingClientRect().width);
 											var h = $(el).css("height");
@@ -596,8 +616,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												JCck.More.ButtonSubmit.batch = JCck.More.ButtonSubmit.instances[el].items;
 											}
 											JCck.More.ButtonSubmit.instances[el].total = JCck.More.ButtonSubmit.batch.length;
-											JCck.More.ButtonSubmit.width = parseInt(JCck.More.ButtonSubmit.instances[el].step/JCck.More.ButtonSubmit.instances[el].total*100);
-
+											
+											if (JCck.More.ButtonSubmit.instances[el].step) {
+												JCck.More.ButtonSubmit.width = parseFloat((JCck.More.ButtonSubmit.instances[el].step/JCck.More.ButtonSubmit.instances[el].total*100).toFixed(2));
+											} else {
+												JCck.More.ButtonSubmit.width = 100;
+											}
 											JCck.More.ButtonSubmit.kvp = "";
 											$.each(JCck.More.ButtonSubmit.instances[el].fields, function(k,v) {
 												var vs = $("#"+v).myVal();
@@ -619,6 +643,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												}
 											}
 											return true;
+										},
+										resetState: function(el)
+										{
+											$(el).prop("disabled",false).removeClass("btn-progress").removeAttr("style");
+											$(el).html(JCck.More.ButtonSubmit.instances[el].label);
 										}
 									};
 								})(jQuery);
@@ -640,6 +669,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										var data = {
 											"fields":'.json_encode( $fieldnames ).',
 											"items":['.$config[$target].'],
+											"label":"",
 											"step":'.(int)$step.',
 											"task_id":'.(int)$process['task_id'].',
 											"total":'.( substr_count( $config[$target], ',' ) + 1 ).',
