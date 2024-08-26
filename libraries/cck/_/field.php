@@ -81,8 +81,12 @@ class JCckField
 	// render
 	public function render()
 	{
+		$type	=	str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $this->_params->type ) ) );
+
 		if ( isset( $this->_params->type ) ) {
-			return JCck::callFunc_Array( 'plgCCK_Field'.$this->_params->type, 'onCCK_FieldRender'.$this->_config['mode'], array( $this->_params, &$this->_config ) );
+			JPluginHelper::importPlugin( 'cck_field', $this->_params->type );
+
+			return JCck::callFunc_Array( 'plgCCK_Field'.$type, 'onCCK_FieldRender'.ucfirst( $this->_config['mode'] ), array( $this->_params, &$this->_config ) );
 		}
 	}
 }
