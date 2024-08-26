@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.28.3 Upgrade Release [26-Aug-2024] -------------
+
+# Additional fixes included for PHP 8.x.
+
+! JCckDevImage class updated for WebP format.
+
 --------------- 3.28.2 Upgrade Release [2-May-2024] --------------
 
 * jQuery UI updated to 1.13.x
