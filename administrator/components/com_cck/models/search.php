@@ -181,7 +181,13 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( isset( $raw_data['ffp'] ) ) {
 				$data['ffp']	=	$raw_data['ffp'];
 			}
-				
+			if ( !isset( $data['ff'] ) ) {
+				$data['ff']		=	array();
+			}
+			if ( !isset( $data['ffp'] ) ) {
+				$data['ffp']	=	array();
+			}
+			
 			$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
 
 			if ( isset( $data['cck_type'] ) && $data['cck_type'] != '' ) {
@@ -249,6 +255,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		$method	=	'gm_getConstruction_Values_Search';
 		
 		JCckDatabase::execute( 'DELETE FROM #__cck_core_'.$table.' WHERE searchid = '.(int)$searchId . ' AND client = "'.$client.'"' );
+		
 		if ( count( $fields ) ) {
 			$assigned	=	'';
 			$ordering	=	1;
