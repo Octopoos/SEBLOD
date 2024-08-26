@@ -437,6 +437,7 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 	
 	$countStages		=	count( $stages );
+	$items				=	array();
 
 	if ( $countStages ) {		
 		for( $stage =  1; $stage <= $countStages; $stage++ ) {
