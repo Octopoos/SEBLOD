@@ -541,6 +541,10 @@ class CCKController extends JControllerLegacy
 							'pk'=>@$config['pk']
 						);
 
+		if ( isset( $config['url'] ) && $config['url'] ) {
+			$return['url']	=	$config['url'];
+		}
+
 		if ( $result === false ) {
 			$return['error']	=	1;
 		} elseif ( !$return['pk'] ) { /* TODO#SEBLOD: this shouldn't be executed for standalones */
@@ -624,6 +628,7 @@ class CCKController extends JControllerLegacy
 				}
 			}
 		}
+		
 		if ( (int)$id > 0 || $id === -1 ) {
 			if ( $config['message_style'] ) {
 				if ( isset( $config['message'] ) && $config['message'] != '' ) {
