@@ -27,6 +27,7 @@ $ -> Language fix or change
 # Additional fixes included for PHP 8.x.
 
 ! JCckDevImage class updated for WebP format.
+! Submit Button plug-in improved.
 
 --------------- 3.28.2 Upgrade Release [2-May-2024] --------------
 
