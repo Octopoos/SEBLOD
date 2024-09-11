@@ -135,7 +135,7 @@ if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && 
 	}
 }
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
-$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
+$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ), '' );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_list', $params->get( 'layout', 'default' ) );
 ?>
