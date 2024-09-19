@@ -24,7 +24,7 @@ $ -> Language fix or change
 
 --------------- 4.4.1 Upgrade Release [19-Sep-2024] -------------
 
-# Pagination fixed on J! 5.4.1
+# Pagination fixed on J! 5.1.4
   >> setAdditionalUrlParam added on default_list.php
      (if overridden this will need to be added manually)
 
