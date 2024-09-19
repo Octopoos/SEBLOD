@@ -22,6 +22,27 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.4.1 Upgrade Release [19-Sep-2024] -------------
+
+# Pagination fixed on J! 5.4.1
+  >> setAdditionalUrlParam added on default_list.php
+     (if overridden this will need to be added manually)
+
+# Various notices fixed.
+
+--------------- 4.4.0 Upgrade Release [27-Aug-2024] -------------
+
++ Additional fixes included for PHP 8.x.
+
+* jQuery UI updated to 1.13.x
+* jQuery UI Effect updated to 1.13.x
+
+! JCckDevImage class updated for WebP format.
+! Submit Button plug-in improved.
+
+# Router issues fixed (J! 5.x)
+# Various issues/notices fixed.
+
 --------------- 4.3.1 Upgrade Release [6-Feb-2024] ------------
 
 ! Joomla! 4+ support
