@@ -18,12 +18,16 @@ if ( !$this->raw_rendering ) { ?>
 	
 	if ( $this->show_pagination > -2 && $this->pages_total > 1 ) {
 		$url			=	JUri::getInstance()->toString().'&';
-		if ( strpos( $url, '=&' ) !== false ) {
+		
+		if ( strpos( $url, '&' ) !== false ) {
 			$vars		=	JUri::getInstance()->getQuery( true );
+			
 			if ( count( $vars ) ) {
 				foreach ( $vars as $k=>$v ) {
 					if ( $v == '' && isset( $this->config['pagination_vars'][$k] ) ) {
 						$pagination_replace	.=	$k.'=&';
+					} else {
+						$this->pagination->setAdditionalUrlParam( $k, $v );
 					}
 				}
 			}
