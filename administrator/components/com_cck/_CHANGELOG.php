@@ -22,6 +22,11 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.4.2 Upgrade Release [27-Sep-2024] -------------
+
+# Pagination fixed on J! 5.1.4
+  >> one additional fix
+
 --------------- 4.4.1 Upgrade Release [19-Sep-2024] -------------
 
 # Pagination fixed on J! 5.1.4
