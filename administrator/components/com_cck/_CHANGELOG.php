@@ -22,6 +22,20 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.5.0 Upgrade Release [20-Nov-2024] -------------
+
++ Additional fixes included for PHP 8.2 and PHP 8.3
++ Canonical added on Download/Read Tasks
+  >> choose from Download or Read from Options
++ "Export (Ajax)" task support on Joomla! 5
++ "for" attribute improved for Checkbox or Group.
++ "onUserAfterLogin" event support added.
+
+# MySQL "default value" issue for TEXT (Joomla! 5 SQL strict mode) fixed.
+# "hits" set as 0 on Upload File (when no file/value)
+# Read Task (PDF) issue fixed.
+# Various issues/notices fixed.
+
 --------------- 4.4.2 Upgrade Release [27-Sep-2024] -------------
 
 # Pagination fixed on J! 5.1.4
