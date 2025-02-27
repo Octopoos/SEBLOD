@@ -22,7 +22,18 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.5.0 Upgrade Release [20-Nov-2024] -------------
+--------------- 4.5.2 Upgrade Release [27-Feb-2025] -------------
+
++ Metadesc/title support via Code Field
++ X-Robots-Tag applied on task=download and task=read
+
+--------------- 4.5.1 Upgrade Release [13-Dec-2024] -------------
+
+# Additional fixes included for PHP 8.2 and PHP 8.3
+# CSS fix for Validation Popups
+# Pagination fixed (?start for the 1st page) (J! 5.x)
+
+--------------- 4.5.0 Upgrade Release [25-Nov-2024] -------------
 
 + Additional fixes included for PHP 8.2 and PHP 8.3
 + Canonical added on Download/Read Tasks
