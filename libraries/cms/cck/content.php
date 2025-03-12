@@ -592,7 +592,13 @@ class JCckContent
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
-		
+
+		static $names	=	array(
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>''
+							);
+
 		$this->setInstance( 'base' );
 		$this->setInstance( 'more' );
 		$this->setInstance( 'more_parent' );
@@ -616,12 +622,6 @@ class JCckContent
 											'parent_id'=>$data['core']['parent_id'],
 											'date_time'=>$data['core']['date_time']
 						   				 ) );
-
-					static $names	=	array(
-											'more'=>'',
-											'more_parent'=>'',
-											'more2'=>''
-										);
 
 					foreach ( $names as $table_instance_name=>$null ) {
 						if ( count( $data[$table_instance_name] ) ) {
@@ -680,12 +680,6 @@ class JCckContent
 		}
 
 		// More
-		static $names	=	array(
-								'more'=>'',
-								'more_parent'=>'',
-								'more2'=>''
-							);
-
 		foreach ( $names as $table_instance_name=>$null ) {
 			if ( count( $data[$table_instance_name] ) ) {
 				$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
