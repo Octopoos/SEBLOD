@@ -22,6 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.28.4 Upgrade Release [12-Mar-2025] -------------
+
++ Issues fixed for PHP 8.3 and PHP 8.4
+
+# Priority issue fixed on afterStore/Email.
+
 --------------- 3.28.3 Upgrade Release [27-Aug-2024] -------------
 
 + Additional fixes included for PHP 8.x.
