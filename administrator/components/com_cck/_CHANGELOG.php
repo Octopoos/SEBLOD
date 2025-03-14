@@ -22,7 +22,13 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.5.2 Upgrade Release [27-Feb-2025] -------------
+--------------- 4.5.2 Upgrade Release [14-Mar-2025] -------------
+
+! MySQL "default value" issue for TEXT (Joomla! 5 SQL strict mode) fixed.
+  >> regression since 4.5.0 on MySQL 8.0.13+ when it was removed for TEXT.
+  >> a default value is supported (required with strict mode) for MySQL 8.0.13+
+  >> a default value is supported (required with strict mode) for MariaDB 10.2.1+
+  >> if your site runs a prior version < 8.0.13, please use SEBLOD 4.5.1
 
 + Metadesc/title support via Code Field
 + X-Robots-Tag applied on task=download and task=read
