@@ -844,7 +844,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if ( $vars['id'] == 0 ) {
 			throw new Exception( JText::_( 'JGLOBAL_CATEGORY_NOT_FOUND' ), 404 );
 		} else {
-			if ( ( JCck::on( '4.0' ) || !JCck::on( '4.0' ) && JComponentHelper::getParams( 'com_content' )->get( 'sef_advanced', 0 ) ) && ( $n == 1 || $n == 2 ) ) {
+			if ( ( JCck::on( '4.0' ) || !JCck::on( '4.0' ) && JComponentHelper::getParams( 'com_content' )->get( 'sef_advanced', 0 ) ) && ( $n == 1 || $n == 2 || $n == 3 ) ) {
 				$segments	=	array();
 			}
 		}
