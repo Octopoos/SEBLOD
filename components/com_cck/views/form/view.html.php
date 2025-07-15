@@ -145,6 +145,8 @@ class CCKViewForm extends JViewLegacy
 			} else {
 				$this->description		=	str_replace( '[note]', '', $this->description );
 			}
+
+			$this->description	=	JCckDevHelper::replaceLive( $this->description );
 		}
 
 		// Force Titles to be hidden

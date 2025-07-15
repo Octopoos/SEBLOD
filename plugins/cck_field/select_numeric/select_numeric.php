@@ -183,7 +183,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		$opts		=	array();
 		$options	=	array();
 		
-		if ( trim( $field->selectlabel ) ) {
+		if ( trim( @$field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
 				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
