@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 4.6.0 Upgrade Release [15-Jul-2025] -------------
+
+
+
 --------------- 4.5.2 Upgrade Release [14-Mar-2025] -------------
 
 ! MySQL "default value" issue for TEXT (Joomla! 5 SQL strict mode) fixed.

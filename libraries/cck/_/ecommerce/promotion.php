@@ -204,6 +204,23 @@ abstract class JCckEcommercePromotion
 																'type'=>$p->type
 															);
 							break;
+						case 'prorata':
+							$promotion					=	$total - self::getProrata( $total, $p->discount_amount, ( isset( $params['target_id'] ) ? $params['target_id'] : '0' ) );
+							$res						=	$promotion;
+							$text						=	'- '.(string)JCckEcommerceCurrency::format( $promotion );
+							$total						=	$total - $promotion;
+							$total						=	( $total < 0 ) ? 0 : $total;
+							$results['items'][$p->id]	=	array(
+																'code'=>@(string)$params['code'],
+																'id'=>$p->id,
+																'promotion'=>$p->discount,
+																'promotion_amount'=>(string)$promotion,
+																'target'=>@$params['target'],
+																'text'=>$text,
+																'title'=>$p->title,
+																'type'=>$p->type
+															);
+							break;
 						case 'set':
 							$promotion					=	$total - $p->discount_amount;
 							$res						=	$promotion;
@@ -275,6 +292,20 @@ abstract class JCckEcommercePromotion
 				$discount	=	$total * $promotion->discount_amount / 100;
 				$total		=	$total - $promotion;
 				break;
+			case 'prorata':
+				if ( !$promotion->discount_amount ) {
+					return false;
+				}
+
+				$total		=	$total - $promotion->discount_amount;
+
+				if ( $total < 0 ) {
+					$balance	=	abs( $total );
+					$total		=	0;
+				} else {
+					$balance	=	0;
+				}
+				break;
 			case 'set':
 				$total		=	$promotion->discount_amount;
 				break;
@@ -319,6 +350,41 @@ abstract class JCckEcommercePromotion
 		}
 
 		return $coupon;
+	}
+
+	// getProrata
+	public static function getProrata( $pricing, $ref_ids, $target_id = 0 )
+	{
+		$prorata	=	$pricing;
+		$ref_ids	=	$ref_ids != '' ? $ref_ids : '0';
+
+		$query		=	'SELECT b.price, a.end_date, c.renew_time'
+					.	' FROM #__cck_more_ecommerce_subscriptions AS a'
+					.	' LEFT JOIN #__cck_more_ecommerce_order_product AS b ON b.order_id = a.order_id'
+					.	' LEFT JOIN #__cck_more_ecommerce_subscription_definitions AS c ON c.name = a.type'
+					.	' WHERE a.state = 1'
+					.	' AND a.user_id = '.JFactory::getUser()->id
+					.	' AND b.product_id IN ('.$ref_ids.')'
+					.	' AND b.product_id NOT IN('.(int)$target_id.')'
+					.	' ORDER BY a.id DESC, price DESC'
+					;
+
+		$promo		=	JCckDatabase::loadObject( $query );
+
+		if ( $promo !== null && $promo->end_date ) {
+			$date1		=	JFactory::getDate()->modify( 'first day of this month' )->setTime( 0, 0, 0 );
+			$date2		=	JFactory::getDate( $promo->end_date )->setTime( 0, 0, 0 );
+
+			if ( $date2 <= JFactory::getDate()->modify( '+'.$promo->renew_time.' days' )->setTime( 0, 0, 0 ) ) { // Renew
+				return $prorata;
+			}
+
+			$diff		=	$date1->diff( $date2 );
+			$months		=	$diff->y * 12 + $diff->m;
+			$prorata	=	( ( $pricing / 12 ) - ( $promo->price / 12 ) ) * $months;
+		}
+
+		return $prorata;
 	}
 
 	// getTargets
