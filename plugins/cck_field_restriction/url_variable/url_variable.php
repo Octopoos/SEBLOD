@@ -102,7 +102,7 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 					}
 				} else {
 					foreach ( $condition_values as $v ) {
-						if ( $variable == $v ) {
+						if ( $variable == $v && strlen( $variable ) == strlen( $v ) ) {
 							$state		=	1;
 							break;
 						}
