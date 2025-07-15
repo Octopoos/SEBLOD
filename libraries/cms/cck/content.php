@@ -2082,12 +2082,19 @@ class JCckContent
 					$where	=	' ' . $operator . ' ' . $db->quote( $v );
 					break;
 				case 'between':
+				case 'between<':
+				case '>between':
+				case '>between<':
+					$last	=	strlen( $operator ) - 1;
+					$x		=	$operator[0] == '>' ? '>' : '>=';
+					$y		=	$operator[$last] == '<' ? '<' : '<=';
+
 					if ( strpos( $v, '|' ) !== false ) {
 						$parts	=	explode( '|', $v );
-						$where	=	' >= '.$db->quote( $parts[0] ).' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $db->quote( $parts[1] );
+						$where	=	' '.$x.' '.$db->quote( $parts[0] ).' AND '.$db->quoteName( $index.'.'.$k ) .' '.$y.' '. $db->quote( $parts[1] );
 					} else {
 						$parts	=	explode( ',', $v );
-						$where	=	' >= '.$parts[0].' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $parts[1];
+						$where	=	' '.$x.' '.$parts[0].' AND '.$db->quoteName( $index.'.'.$k ) .' '.$y.' '. $parts[1];
 					}
 					break;
 				case 'in':
@@ -2097,6 +2104,10 @@ class JCckContent
 					} else {
 						$where	=	' IN (' .$v. ')';
 					}
+					break;
+				case 'like%':
+				case 'alpha':
+					$where	=	' LIKE ' . $db->quote( $db->escape( $v, true ).'%', false );
 					break;
 				case 'within':
 					$glue		=	',';
