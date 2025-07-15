@@ -22,6 +22,17 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.29.0 Upgrade Release [15-Jul-2025] -------------
+
++ "between" operator updated on JCckContent find/search methods.
+
+! "+0" allowed as an field option (different than "0")
+! dataLayer output updated, and mtm added.
+
+^ Core Update for SEBLOD Ecommerce add-on.
+
+# Minor issues fixed.
+
 --------------- 3.28.4 Upgrade Release [12-Mar-2025] -------------
 
 + Issues fixed for PHP 8.3 and PHP 8.4
