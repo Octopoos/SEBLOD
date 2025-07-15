@@ -74,7 +74,7 @@ class plgSystemCCK extends JPlugin
 					$urlvars	=	$item->getParams()->get( 'urlvars' );
 					
 					if ( $urlvars ) {
-						$vars		=	explode( '&', $urlvars );
+						$vars		=	explode( '&', JCckDevHelper::replaceLive( $urlvars ) );
 						
 						if ( count( $vars ) ) {
 							foreach ( $vars as $var ) {
