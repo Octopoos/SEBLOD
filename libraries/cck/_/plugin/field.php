@@ -1219,7 +1219,7 @@ class JCckPluginField extends JPlugin
 					$attribute	=	@$attributes[$k];
 					$o			=	explode( '=', $opt );
 					$class		=	'';
-					if ( @$o[1] == $value ) {
+					if ( @$o[1] == $value && strlen( $o[1] ) == strlen( $value ) ) {
 						$class		=	' class="active"';
 					} 
 					if ( $o[0] != '' ) {
