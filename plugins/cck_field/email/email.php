@@ -222,7 +222,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Add Process
 		if ( ( $sender || $send_field ) && $valid ) {
-			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'isNew'=>$isNew, 'sender'=>$sender, 'send_field'=>$send_field, 'name'=>$name, 'valid'=>$valid, 'subject'=>$subject, 'message'=>$message, 'new_message'=>$new_message, 'dest'=>$dest, 'from'=>(int)$from, 'from_param'=>$from_param, 'from_name'=>(int)$from_name, 'from_name_param'=>$from_name_param, 'reply_to'=>(int)$reply_to, 'reply_to_param'=>$reply_to_param, 'reply_to_name'=>(int)$reply_to_name, 'reply_to_name_param'=>$reply_to_name_param, 'cc'=>(int)$cc, 'cc_param'=>$cc_param, 'bcc'=>(int)$bcc, 'bcc_param'=>$bcc_param, 'moredest'=>$moredest, 'send_attach'=>$send_attach, 'moreattach'=>$moreattach, 'format'=>@(string)$options2['format'] ) );
+			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'isNew'=>$isNew, 'sender'=>$sender, 'send_field'=>$send_field, 'name'=>$name, 'valid'=>$valid, 'subject'=>$subject, 'message'=>$message, 'new_message'=>$new_message, 'dest'=>$dest, 'from'=>(int)$from, 'from_param'=>$from_param, 'from_name'=>(int)$from_name, 'from_name_param'=>$from_name_param, 'reply_to'=>(int)$reply_to, 'reply_to_param'=>$reply_to_param, 'reply_to_name'=>(int)$reply_to_name, 'reply_to_name_param'=>$reply_to_name_param, 'cc'=>(int)$cc, 'cc_param'=>$cc_param, 'bcc'=>(int)$bcc, 'bcc_param'=>$bcc_param, 'moredest'=>$moredest, 'send_attach'=>$send_attach, 'moreattach'=>$moreattach, 'format'=>@(string)$options2['format'] ), 5 );
 		}
 		
 		// Set or Return
@@ -542,7 +542,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 				foreach ( $more as $mor ) {
 					if ( isset( $fields[$mor]->attachment ) && $fields[$mor]->attachment != '' ) {
 						$attach[]	=	JPATH_SITE.'/'.$fields[$mor]->attachment;
-					} else if ( isset( $fields[$mor]->value ) && $fields[$mor]->value ) {
+					} elseif ( isset( $fields[$mor]->filename ) && $fields[$mor]->filename != '' ) {
+						$attach[]	=	$fields[$mor]->filename;
+					} elseif ( isset( $fields[$mor]->value ) && $fields[$mor]->value ) {
 						$attach[]	=	JPATH_SITE.'/'.$fields[$mor]->value;
 					}
 				}
