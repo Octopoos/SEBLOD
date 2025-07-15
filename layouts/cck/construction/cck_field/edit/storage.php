@@ -32,6 +32,9 @@ if ( isset( $displayData['html']['append'] ) ) {
 if ( $displayData['script'] ) {
 	echo '<script>'.$displayData['script'].'</script>';
 }
+if ( $displayData['style'] ) {
+	echo '<style>'.$displayData['style'].'</style>';
+}
 
 echo '</div>';
 ?>

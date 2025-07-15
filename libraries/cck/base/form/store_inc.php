@@ -233,7 +233,7 @@ if ( count( $fields ) ) {
 		$app->triggerEvent( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
 
 		if ( !$config['copyfrom_id'] ) {
-			if ( !$id && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
+			if ( !$id && isset( $field->live ) && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
 				$toBeChecked	=	true;
 			}
 		}

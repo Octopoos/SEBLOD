@@ -71,8 +71,8 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Init
-		$doTranslation				=	$config['doTranslation'];
-		if ( $config['doTranslation'] ) {
+		$doTranslation				=	@$config['doTranslation'];
+		if ( @$config['doTranslation'] ) {
 			$config['doTranslation']=	$field->bool8;
 		}
 

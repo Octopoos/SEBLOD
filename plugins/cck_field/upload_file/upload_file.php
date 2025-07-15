@@ -160,7 +160,10 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$field->typo_target	=	'text';
 
 			JCckPluginLink::setLinkAttr( $field );
+		} else {
+			$field->hits		=	0;
 		}
+
 		$field->value			=	$value;
 	}
 	
@@ -701,6 +704,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		if ( isset( $field->error ) && $field->error === true ) {
 			return;
 		}
+		
+		$item_custom_title	=	preg_replace( '/[^\P{C}]/u', '', $item_custom_title );
 		$item_custom_title	=	addcslashes( $item_custom_title, '"' );
 		
 		// Add Process
@@ -757,6 +762,11 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$pow	=	floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
 		$pow	=	min( $pow, count( $units ) - 1 );
 		$bytes	/=	pow( 1024, $pow );
+		
+		if ( $bytes >= 1000 && $bytes < 1024 ) {
+            $bytes  =   1;
+            $pow++;
+        }
 		
 		return round( $bytes, $precision ) .' '. $units[$pow];
 	}

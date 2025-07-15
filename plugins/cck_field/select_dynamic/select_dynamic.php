@@ -323,6 +323,10 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				if ( $opt_name && $opt_value && $opt_table ) {
 					$query			=	'SELECT '.$opt_name.','.$opt_value.$opt_attr.$opt_table.$opt_where.$opt_orderby.$opt_limit;
 					$query			=	JCckDevHelper::replaceLive( $query, '', $config );
+
+					if ( !isset( $config['client'] ) ) {
+						$config['client']	=	'';
+					}
 					if ( $config['client'] == '' || $config['client'] == 'dev' ) {
 						$tables		=	JCckDatabaseCache::getTableList();
 						$prefix		=	JFactory::getDbo()->getPrefix();
@@ -664,7 +668,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		}
 		
 		$value			=	str_replace( '[lang]', $lang_code, $value );
-		$languages		=	explode( ',', @$options2['language_codes'] );
+		$languages		=	isset( $options2['language_codes'] ) && is_array( $options2['language_codes'] ) ? explode( ',', @$options2['language_codes'] ) : array();
 		
 		if ( ! in_array( $lang_code, $languages ) ) {
 			$lang_code	=	@$options2['language_default'] ? $options2['language_default'] : '';
