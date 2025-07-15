@@ -225,6 +225,10 @@ class plgCCK_FieldTabs extends JCckPluginField
 		}
 		if ( $groups[$group_id]['identifier'] ) {
 			$id			=	JCckDev::toSafeID( $label );
+
+			if ( empty( $id ) ) {
+				$id		=	$process['id'];
+			}
 		}
 
 		if ( $layout == 'component' || $layout == 'raw' ) {
