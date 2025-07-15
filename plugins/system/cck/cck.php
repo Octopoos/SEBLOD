@@ -592,7 +592,8 @@ class plgSystemCCK extends JPlugin
 			$page_data	=	$session->get( 'cck.data_layer', null );
 
 			if ( $page_data ) {
-				$doc->addScriptDeclaration( 'window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).');' );
+				$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).'); });' );
+				$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window._mtm = window._mtm || []; window._mtm.push('.json_encode( $page_data ).'); });' );
 				$session->clear( 'cck.data_layer' );
 			}
 		}
