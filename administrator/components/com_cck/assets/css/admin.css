@@ -142,8 +142,13 @@ div.toggle-selection a:not(.btn);{color:#eb8207;font-size:10px;font-weight:bold;
 .toggle_more.open{background-position:0 -10px;}
 #toggle_adv{float:left; position:relative; top:14px; left:-4px;}
 #storage_advanced{float:left; clear:both;}
-#storage_alter > input{margin-top:13px;}
+#storage_alter > input{margin:8px;}
 #storage_alter > label{line-height: 30px;}
+#storage_alter.checkboxes{padding: 0}
+.storage_stuff{display: grid; row-gap: 12px;}
+#layer details[open]{padding: 0.5rem 1rem 1rem 1rem;}
+.storage_stuff hr{margin: 0.5rem 0; border-color:var(--form-select-border);}
+details.success .storage_stuff hr{}
 
 #featured_session{position:relative; top:10px; cursor:pointer;}
 body.com_cck #cboxLoadedContent,

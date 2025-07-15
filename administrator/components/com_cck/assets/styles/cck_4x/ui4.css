@@ -457,6 +457,7 @@ body.contentpane{background-color: var(--template-bg-dark-5); padding: 0;}
 body.contentpane .span12{padding: 0 20px;}
 body.contentpane .span12:not(.subhead){padding-top: 20px;}
 body.contentpane form.modal-large .span12:not(.subhead){padding-top: 18px;}
+body.contentpane form.modal-large .row.title-alias{justify-self: center;width: 100%;}
 
 body.contentpane .subhead{
 	background-image: linear-gradient(var(--toolbar-bg),var(--template-bg-dark-3));
