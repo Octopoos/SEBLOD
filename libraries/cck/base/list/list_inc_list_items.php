@@ -39,8 +39,12 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 } else {
 	for ( $i = 0; $i < $count; $i++ ) {
-		if ( isset( $items[$i]->id ) && is_string( $items[$i]->id ) ) {
-			$ids	.=	$items[$i]->id.',';
+		if ( isset( $items[$i]->id ) && is_string( $items[$i]->id ) ) {			
+			if ( isset( $items[$i]->id2_key ) ) {
+				$ids	.=	$items[$i]->id.'_'.$items[$i]->id2_key.',';
+			} else {
+				$ids	.=	$items[$i]->id.',';	
+			}
 		}
 	}
 	if ( $ids != '' ) {
@@ -145,7 +149,8 @@ if ( $count ) {
 						}
 					}
 					
-					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt], $config ) );
+					
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}
@@ -303,7 +308,8 @@ if ( $count ) {
 						}
 					}
 					
-					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt], $config ) );
+					
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
 					}

@@ -51,8 +51,10 @@ $preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfi
 $preconfig['auto_redirect']	=	( $preconfig['auto_redirect'] != '' ) ? $preconfig['auto_redirect'] : $options->get( 'auto_redirect', 0 );
 
 $doDebug					=	(int)$options->get( 'debug', JCck::getConfig_Param( 'debug', 0 ) );
+$doDebugGroup				=	JCck::getConfig_Param( 'development_group_debug', 0 );
+$doDebugGroup				=	$doDebugGroup && isset( $user->groups[$doDebugGroup] ) ? true : false;
 
-if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
+if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) || ( $doDebug == 3 && $doDebugGroup ) ) {
 	$doDebug				=	 1;
 } elseif ( $doDebug == 11 || ( $doDebug == 12 && $user->authorise( 'core.admin' ) ) ) {
 	$doDebug				=	 10;
@@ -113,17 +115,13 @@ if ( ! $count ) {
 }
 
 // Init
-$hasAjax		=	false;
-$limitend		=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$limitend		=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 48 ) );
 $list_context	=	'com_cck.'.$search->name;
 $pagination		=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 
 $isAltered		=	false;
-$isInfinite		=	( $pagination == 2 || $pagination == 8 ) ? true : false;
 $isPersistent	=	(int)$options->get( 'persistent_query', '0' );
-$isSearch		=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($post[...]) */
-$session		=	JFactory::getSession();
-$registry		=	$session->get( 'registry' );
+$isSearch		=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($config['post'][...]) */
 
 if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) {
 	$isPersistent	=	true;
@@ -150,34 +148,51 @@ $active			=	array();
 $active[0]		=	'cck';
 $areas['active']=	$active;
 
-if ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
-	$post		=	( $method ) ? $app->input->post->getArray() : $app->input->get->getArray();
+$config			=	array(
+						'app'=>null,
+						'action'=>$preconfig['action'],
+						'client'=>$preconfig['client'],
+						'context'=>array(),
+						'core'=>true,
+						'doAjax'=>false,
+						'doPagination'=>true,
+						'doPersistent'=>$isPersistent,
+						'doQuery'=>true,
+						'doRecording'=>false,
+						'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) ),
+						'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
+						'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
+						'fields'=>array(),
+						'formFilters'=>array(),
+						'formId'=>$preconfig['formId'],
+						'formWrapper'=>0,
+						'Itemid'=>$itemId,
+						'infinite'=>( ( $pagination == 2 || $pagination == 8 ) ? true : false ),
+						'limitend'=>0,
+						'location'=>'',
+						'pagination_vars'=>array(),
+						'pk'=>$id,
+						'registry'=>JFactory::getSession()->get( 'registry' ),
+						'sef_aliases'=>(int)( (int)$search->sef_route_aliases != -1 ? $search->sef_route_aliases : JCck::getConfig_Param( 'sef_aliases', '0' ) ),
+						'show_form'=>$preconfig['show_form'],
+						'stages'=>array(),
+						'submit'=>$preconfig['submit'],
+						'type'=>$search->name,
+						'type_id'=>$search->id,
+						'validate'=>array(),
+						'validation'=>array(),
+						'validation_options'=>array(),
+						'variations'=>$variations
+					);
+
+if ( $preconfig['task'] == 'no' ) {
+	$config['task']	=	'no';
+} elseif ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {
+	$config['post']	=	( $method ) ? $app->input->post->getArray() : $app->input->get->getArray();
 }
-$config			=	array( 'action'=>$preconfig['action'],
-						   'client'=>$preconfig['client'],
-						   'context'=>array(),
-						   'core'=>true,
-						   'doPagination'=>true,
-						   'doQuery'=>true,
-						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
-						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
-						   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
-						   'formId'=>$preconfig['formId'],
-						   'formWrapper'=>false,
-						   'Itemid'=>$itemId,
-						   'limitend'=>0,
-						   'location'=>'',
-						   'pagination_vars'=>array(),
-						   'pk'=>$id,
-						   'sef_aliases'=>$search->sef_route_aliases,
-						   'submit'=>$preconfig['submit'],
-						   'type'=>$search->name,
-						   'type_id'=>$search->id,
-						   'type_alias'=>( $search->alias ? $search->alias : $search->name ),
-						   'validate'=>array(),
-						   'validation'=>array(),
-						   'validation_options'=>array()
-						);
+
+$config['app']	=	new JCckApp;
+$config['app']->loadDefault();
 
 jimport( 'cck.rendering.document.document' );
 JPluginHelper::importPlugin( 'cck_field' );
@@ -259,7 +274,7 @@ if ( $context != '' ) {
 if ( !isset( $lives ) ) {
 	$lives		=	array();
 
-	if ( isset( $live ) && $live ) {
+	if ( isset( $live ) && $live && !$isRaw ) {
 		$live		=	explode( '||', $live );
 		
 		foreach ( $live as $liv ) {
@@ -269,15 +284,17 @@ if ( !isset( $lives ) ) {
 			}
 		}
 	} elseif ( isset( $context['referrer'] ) && $context['referrer'] ) {
-		if ( $registry->exists( $list_context.'.lives.'.$context['referrer'] ) ) {
+		if ( $config['registry']->exists( $list_context.'.lives.'.$context['referrer'] ) ) {
 			$lives	=	$app->getUserState( $list_context.'.lives.'.$context['referrer'], array(), array() );
 		}
 	}
-} elseif ( count( $lives ) && $isInfinite ) {
+} elseif ( count( $lives ) && $config['infinite'] ) {
 	if ( isset( $preconfig['caller'] ) && $preconfig['caller'] ) {
 		$app->setUserState( $list_context.'.lives.'.$preconfig['caller'], $lives );
 	}
 }
+
+$config['lives']	=	$lives;
 
 // We need to override form stuff based on the tmpl found within the context
 if ( $isRaw ) {
@@ -285,7 +302,7 @@ if ( $isRaw ) {
 	$config['submit']	.=	'_raw';
 }
 
-if ( $isInfinite && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
+if ( $config['infinite'] && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {
 	$menu				=	$app->getMenu()->getItem( $app->input->getInt( 'Itemid' ) );
 
 	if ( is_object( $menu ) ) {
@@ -308,72 +325,18 @@ if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
 $preconfig['client']	=	'list';
 $error					=	'';
 $current				=	array( 'stage'=>0, 'stages'=>array(), 'order_by'=>@$order_by );
-$stages					=	array();
 
-// Process
-foreach ( $fields['search'] as $field ) {
-	$name	=	$field->name;
-	$value	=	'';
-	
-	// Variation
-	if ( $field->variation_override ) {
-		$override	=	json_decode( $field->variation_override, true );
-		if ( count( $override ) ) {
-			foreach ( $override as $k=>$v ) {
-				$field->$k	=	$v;
-			}
-		}
-		$field->variation_override	=	null;
-	}
-	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
+CCK_List::prepareSearch( $fields['search'], $config, 'positions', $positions );
 
-	if ( $field->variation == 'form_filter_ajax' || $field->variation == 'list_filter_ajax' ) {
-		$hasAjax	=	true;
-		$isInfinite	=	true;
-	}
-
-	// Value
-	if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $post[$name] ) ) {
-		$value	=	$post[$name];
-		
-		// Set Persistent Values
-		if ( $isPersistent ) {
-			$app->setUserState( $list_context.'.filter.'.$name, $value );
-		}
-	} else {
-		if ( isset( $lives[$name] ) ) {
-			$value		=	$lives[$name];
-		} else {
-			if ( $field->live && $field->variation != 'clear' ) {
-				$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
-			} else {
-				$value	=	$field->live_value;
-			}
-		}
-
-		// Get Persistent Values
-		if ( $isPersistent && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
-			if ( $registry->exists( $list_context.'.filter.'.$name ) ) {
-				$value	=	$app->getUserState( $list_context.'.filter.'.$name, '' );
-			}
+// Merge
+if ( count( $config['fields'] ) ) {
+	foreach ( $config['fields'] as $k=>$v ) {
+		if ( isset( $v->restriction ) &&  $v->restriction != 'unset' ) {
+			$fields['search'][$k]	=	$v;
 		}
 	}
-
-	// Prepare
-	if ( !$preconfig['show_form'] && $field->variation != 'clear' ) {
-		$field->variation	=	'hidden';
-	}
-	$app->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
-
-	// Stage
-	if ( (int)$field->stage > 0 ) {
-		$stages[$field->stage]	=	0;
-	}
-
-	if ( $preconfig['show_form'] ) {
-		$position				=	$field->position;
-		$positions[$position][]	=	$field->name;
-	}
+	$config['fields']	=	null;
+	unset( $config['fields'] );
 }
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Do Search
@@ -401,7 +364,10 @@ if ( $limitstart != -1 ) {
 		if ( $limitend != -1 ) {
 			$this->state->set( 'limit', (int)$limitend );
 		}
+
 		$limitend	=	(int)$this->state->get( 'limit' );
+
+		$app->cck_pagination	=	$limitend;
 	}
 }
 if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
@@ -436,28 +402,38 @@ if ( $preconfig['task'] == 'search' ) {
 		$error	=	1;
 	}
 	
-	$countStages		=	count( $stages );
+	if ( isset( $preconfig['items'] ) ) {
+		$config['doQuery']	=	false;
+		$items				=	$preconfig['items'];
+	} else {
+		$countStages		=	count( $config['stages'] );
+		$items				=	array();
 
-	if ( $countStages ) {		
-		for( $stage =  1; $stage <= $countStages; $stage++ ) {
-			if ( ! $error ) {
-				// Search
-				$current['stage']	=	$stage;
-				$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
-				if ( ! $items && $stages[$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
-					$error			=	1;
-					break;
+		if ( $countStages ) {		
+			for( $stage =  1; $stage <= $countStages; $stage++ ) {
+				if ( ! $error ) {
+					// Search
+					$current['stage']	=	$stage;
+					$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+					if ( ! $items && $config['stages'][$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
+						$error			=	1;
+						break;
+					}
+					$current['stages'][$stage]	=	implode( ',', $items );
 				}
-				$current['stages'][$stage]	=	implode( ',', $items );
 			}
 		}
+		if ( ! $error ) {
+			$current['stage']	=	0;
+			$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+		}
 	}
-	if ( ! $error ) {
-		$current['stage']	=	0;
-		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
+	if ( is_array( $items ) ) {
+		$total	=	count( $items );
+	} else {
+		$items	=	array();
 	}
-	$total					=	count( $items );
-	
+
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
 		$ids	=	'';
@@ -498,7 +474,6 @@ if ( $preconfig['task'] == 'search' ) {
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do List
 
 	if ( $preconfig['show_list'] ) {
-		$config['infinite']		=	$isInfinite;
 		$target					=	'search';
 		if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
 			$target				=	'search2';
@@ -510,6 +485,9 @@ if ( $preconfig['task'] == 'search' ) {
 				$config['doSEF']	=	$options2->get( 'sef' );
 			}
 			$search->content		=	$search2->content;
+		}
+		if ( isset( $config['language'] ) && $config['language'] ) {
+			${$target}->lang_tag	=	$config['language'];
 		}
 		if ( (int)$options->get( 'mode_no_result', '0' ) && (int)$total > 1 ) {
 			$total 	=	0;
@@ -588,7 +566,10 @@ if ( $preconfig['task'] == 'search' ) {
 							}
 						}
 					}
-					$return			.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
+					if ( strpos( $return, '&return=' ) === false ) {
+						$return		.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
+					}
+					
 					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return, false );
 					$app->redirect( $redirect_url );
 					return;
@@ -596,21 +577,28 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 
 			// Render
-			$doCache2		=	$options->get( 'cache2' );
+			$doCache2		=	isset( $options2 ) && is_object( $options2 ) ? $options2->get( 'cache2', $options->get( 'cache2' ) ) : $options->get( 'cache2' );
+			$siteId			=	JCck::getSite()->id;
+
 			if ( $doCache2 ) {
-				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
+				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
 				$data		=	$cache->get( array( 'CCK_List', 'render' ), array( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config ) );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( ${$target}->content > 0 ) {
-					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
+					$data	=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $siteId, $options, $config );
 				}
 				$isCached	=	' [Cache=OFF]';
 			}
 			if ( is_array( $data ) ) {
 				if ( count( $data['config'] ) ) {
+					if ( isset( $data['config']['formValidation'] ) ) {
+						$formValidation	=	$data['config']['formValidation'];
+
+						unset( $data['config']['formValidation'] );
+					}
 					foreach ( $data['config'] as $k=>$v ) {
 						$config[$k]	=	$v;
 					}
@@ -619,6 +607,13 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 		} else {
 			$no_action	=	$options->get( 'action', '' );
+
+			// --
+			if ( isset( $options2 ) && is_object( $options2 ) && $options2->get( 'action', '' ) == '0' && $options2->get( 'action', '' ) != $no_action ) {
+				$no_action	=	$options2->get( 'action', '' );
+			}
+			// --
+
 			$no_message	=	$options->get( 'message', '' );
 			$no_style	=	$options->get( 'message_style', 'message' );
 			
@@ -659,7 +654,6 @@ if ( $preconfig['task'] == 'search' ) {
 	}
 }
 if ( $no_action ) {
-	$config['infinite']		=	$isInfinite;
 	$target					=	'search';
 	if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
 		$target				=	'search2';
@@ -698,9 +692,15 @@ if ( $no_action ) {
 			$data	=	ob_get_clean();
 		}
 	} else {
-		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
+		$siteId		=	JCck::getSite()->id;
+		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $siteId, $options, $config );
 
 		if ( count( $data['config'] ) ) {
+			if ( isset( $data['config']['formValidation'] ) ) {
+				$formValidation	=	$data['config']['formValidation'];
+
+				unset( $data['config']['formValidation'] );
+			}
 			foreach ( $data['config'] as $k=>$v ) {
 				$config[$k]	=	$v;
 			}
@@ -712,13 +712,15 @@ if ( $doDebug > 0 && ( $preconfig['task'] == 'search' || $no_action ) ) {
 	echo $profiler->mark( 'afterRender'.$isCached ).'<br /><br />';
 }
 
-// Ajax Wrapper
-if ( $isInfinite && $app->input->get( 'wrapper' ) ) {
-	$data	=	json_encode( array(
-								'count'=>(int)$total,
-								'html'=>$data,
-								'total'=>(int)$config['total']
-							 ), JSON_HEX_QUOT | JSON_HEX_TAG );
+// Dynamic Filter
+if ( $config['doRecording'] ) {
+	if ( !$isSearch ) {
+		$app->setUserState( $list_context.'.'.$config['Itemid'].'.recording.ids', isset( $config['ids2'] ) ? $config['ids2'] : $config['ids'] );
+		$app->setUserState( $list_context.'.'.$config['Itemid'].'.recording.pks', isset( $config['pks'] ) ? $config['pks2'] : $config['pks'] );
+	} else {
+		$config['ids_all']	=	$app->getUserState( $list_context.'.'.$config['Itemid'].'.recording.ids', '' );
+		$config['pks_all']	=	$app->getUserState( $list_context.'.'.$config['Itemid'].'.recording.pks', '' );
+	}
 }
 
 if ( $preconfig['show_form'] > 0 ) {
@@ -735,11 +737,48 @@ if ( $preconfig['show_form'] > 0 ) {
 	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
-} elseif ( $preconfig['show_form'] && $preconfig['task'] != 'search' ) {
-	$doc->fields	=	&$fields['search'];
+} elseif ( $preconfig['show_form'] ) {
+	// BeforeRender
+	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
+		foreach ( $config['process']['beforeRenderForm'] as $process ) {
+			if ( $process->type ) {
+				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields['search'], &$config['storages'], &$config ) );
+			}
+		}
+	}
+
+	if ( $preconfig['task'] != 'search' ) {
+		$doc->fields	=	&$fields['search'];
+	}
 }
 
+// Ajax Wrapper
+if ( $config['infinite'] && $app->input->get( 'wrapper' ) ) {
+	$data_form			=	array();
+
+	foreach ( $config['formFilters'] as $dynamic_filter ) {
+		$data_form[$dynamic_filter]	=	'';
+
+		if ( isset( $fields['search'][$dynamic_filter] ) ) {
+			$data_form[$dynamic_filter]	=	$fields['search'][$dynamic_filter]->form;
+		}
+	}
+
+	$data		=	json_encode( array(
+									'count'=>(int)$total,
+									'html'=>$data,
+									'html_form'=>$data_form,
+									'total'=>(int)$config['total']
+							 	), JSON_HEX_QUOT | JSON_HEX_TAG );
+}
+
+// Unset
+unset( $config['post'], $config['registry'], $config['stages'] );
+
 // Validation
-$config['validation']			=	( count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
+$config['validation']			=	( is_array( $config['validation'] ) && count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
 $config['validation_options']	=&	$options;
+
+// WIP Stuff
+$hasAjax	=	$config['doAjax'];
 ?>

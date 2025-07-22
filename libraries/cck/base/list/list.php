@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Http\HttpFactory;
+
 // List
 class CCK_List
 {
@@ -63,6 +65,27 @@ class CCK_List
 		return join( '|', $pattern );
 	}
 
+	// getCountFromRoute
+	public static function getCountFromRoute( $route )
+	{
+		$uri		=	JUri::getInstance();
+
+		if ( $uri->getScheme() === 'https' ) {
+			$headers	=	array(
+								'Host'=>$uri->getHost(),
+								'X-Forwarded-Proto'=>'https'
+							);
+			$page_url	=	'127.0.0.1'.$route;
+		} else {
+			$headers	=	array();
+			$page_url	=	$uri->getHost().$route;
+		}
+		
+		$resp	=	HttpFactory::getHttp()->get( $page_url.'?format=total', $headers, 10 );
+
+		return is_object( $resp ) && isset( $resp->body ) ? (int)$resp->body : 0;
+	}
+
 	// getFieldColumns_asString
 	public static function getFieldColumns_asString( $t )
 	{
@@ -105,10 +128,13 @@ class CCK_List
 							'attributes',
 							'storage',
 							'storage_cck',
+							'storage_crypt',
 							'storage_location',
 							'storage_table',
 							'storage_field',
-							'storage_field2'
+							'storage_field2',
+							'storage_key',
+							'storage_mode'
 						);
 
 		return $t.'.'.implode( ', '.$t.'.', $columns );
@@ -165,6 +191,9 @@ class CCK_List
 				}
 			}
 		}
+		if ( !isset( $fields['order'] ) ) {
+			$fields['order']	=	array();
+		}
 		
 		return $fields;
 	}
@@ -173,7 +202,7 @@ class CCK_List
 	public static function getFields_Items( $search_name, $client, $access )
 	{
 		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.ordering,'
-					.	' c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+					.	' c.label as label2, c.variation, c.variation_override, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 					.	' FROM #__cck_core_search_field AS c'
 					.	' LEFT JOIN #__cck_core_searchs AS sc ON sc.id = c.searchid'
 					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -196,7 +225,6 @@ class CCK_List
 		if ( $doDebug ) {
 			$profiler	=	JProfiler::getInstance();
 		}
-
 		if ( $doCache ) {
 			$group		=	( $doCache == '2' ) ? 'com_cck_'.$config['type_alias'] : 'com_cck';
 			$cache		=	JFactory::getCache( $group );
@@ -268,10 +296,13 @@ class CCK_List
 							'restriction_options',
 							'storage',
 							'storage_cck',
+							'storage_crypt',
 							'storage_location',
 							'storage_table',
 							'storage_field',
 							'storage_field2',
+							'storage_filter',
+							'storage_mode',
 							'typo_label',
 							'typo_options',
 							'validation',
@@ -351,33 +382,135 @@ class CCK_List
 		
 		return $cache[$id];
 	}
-	
-	// render
-	public static function render( $items, $search, $path, $client, $itemId, $options, $config_list )
+
+	// prepareSearch
+	public static function prepareSearch( &$fields, &$config, $target_name, &$target )
 	{
-		$access	=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
 		$app	=	JFactory::getApplication();
-		$data	=	array(
-						'buffer'=>'',
-						'config'=>array()
-					);
-		$list	=	array(
-						'doSEF'=>$config_list['doSEF'],
-						'formId'=>$config_list['formId'],
-						'isCore'=>$config_list['doQuery'],
-						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
-						'location'=>$config_list['location'],
-						'sef_aliases'=>$config_list['sef_aliases']
-					);
+		
+		foreach ( $fields as $field ) {
+			$name	=	$field->name;
+			$value	=	'';
+			
+			// Variation
+			if ( $field->variation_override ) {
+				$override	=	json_decode( $field->variation_override, true );
+				if ( count( $override ) ) {
+					foreach ( $override as $k=>$v ) {
+						$field->$k	=	$v;
+					}
+				}
+				$field->variation_override	=	null;
+			}
+			$field->variation	=	( isset( $config['variations'][$name] ) ) ? ( $config['variations'][$name] == 'form' ? '' : $config['variations'][$name] ) : $field->variation;
+
+			if ( $field->variation == 'form_filter_ajax' || $field->variation == 'list_filter_ajax' ) {
+				$config['doAjax']	=	true;
+				$config['infinite']	=	true;
+			}
+
+			// Value
+			if ( ( !$field->variation || $field->variation == 'form_filter' || $field->variation == 'form_filter_ajax' || $field->variation == 'list' || $field->variation == 'list_filter' || $field->variation == 'list_filter_ajax' || strpos( $field->variation, 'custom_' ) !== false ) && isset( $config['post'][$name] ) ) {
+				$value	=	$config['post'][$name];
+				
+				// Set Persistent Values
+				if ( $config['doPersistent'] ) {
+					$app->setUserState( $list_context.'.filter.'.$name, $value );
+				}
+			} else {
+				if ( isset( $config['lives'][$name] ) ) {
+					$value		=	$config['lives'][$name];
+				} else {
+					if ( $field->live && $field->variation != 'clear' ) {
+						$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
+					} else {
+						$value	=	$field->live_value;
+					}
+				}
+
+				// Get Persistent Values
+				if ( $config['doPersistent'] && !( $field->variation == 'clear' || $field->variation == 'disabled' || $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'value' ) ) {
+					if ( $config['registry']->exists( $list_context.'.filter.'.$name ) ) {
+						$value	=	$app->getUserState( $list_context.'.filter.'.$name, '' );
+					}
+				}
+			}
+
+			// Prepare
+			if ( !$config['show_form'] && $field->variation != 'clear' ) {
+				$field->variation	=	'hidden';
+			}
+
+			if ( $target_name == 'form' ) {
+				$inherit	=	array( 'caller'=>$field->extended );
+				$results	=	$app->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, $inherit, true ) );
+				
+				if ( !isset( $results[0] ) ) {
+					continue;
+				}
+				
+				$target[$name]				=	$results[0];
+				$target[$name]->name		=	$field->name;
+				
+				$config['fields'][$name]	=	$target[$name];
+			} elseif ( $target_name == 'positions' ) {
+				$app->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array() ) );
+
+				if ( $config['show_form'] ) {
+					$position				=	$field->position;
+					$target[$position][]	=	$field->name;
+				}
+			}
+
+			// Stage
+			if ( (int)$field->stage > 0 ) {
+				$config['stages'][$field->stage]	=	0;
+			}
+		}
+	}
+
+	// render
+	public static function render( $items, $search, $path, $client, $itemId, $siteId, $options, $config_list )
+	{
+		if ( isset( $search->lang_tag ) && $search->lang_tag ) {
+			if ( self::_language() != $search->lang_tag ) {
+				JCckDevHelper::setLanguage( $search->lang_tag );
+			}
+		}
+
+		$app			=	JFactory::getApplication();
+		$access			=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
+		$data			=	array(
+								'buffer'=>'',
+								'config'=>array()
+							);
+		$form_wrapper	=	0;
+		$list			=	array(
+								'doSEF'=>$config_list['doSEF'],
+								'formId'=>$config_list['formId'],
+								'isCore'=>$config_list['doQuery'],
+								'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
+								'location'=>$config_list['location'],
+								'sef_aliases'=>$config_list['sef_aliases']
+							);
 		
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
-
-		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
-			$data['config']['formWrapper']	=	$config['formWrapper'];
+		
+		if ( $validation ) {
+			$data['config']['formValidation']	=	$validation;
 		}
-		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
+		if ( $form_wrapper ) {
+			$data['config']['formWrapper']	=	$form_wrapper;
+		}
+		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 0 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );
 			$data['buffer']	=	JHtml::_( 'content.prepare', $data['buffer'] );
+		}
+
+		if ( isset( $search->lang_tag ) && $search->lang_tag ) {
+			if ( self::_language() != $search->lang_tag ) {
+				JCckDevHelper::setLanguage( self::_language() );
+			}
 		}
 
 		return $data;
@@ -415,6 +548,18 @@ class CCK_List
 			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
+	}
+
+	// _language
+	protected static function _language()
+	{
+		static $lang_tag	=	null;
+
+		if ( !$lang_tag ) {
+			$lang_tag	=	JFactory::getLanguage()->getTag();
+		}
+
+		return $lang_tag;
 	}
 }
 ?>
