@@ -190,7 +190,13 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 			if ( isset( $raw_data['ffp'] ) ) {
 				$data['ffp']	=	$raw_data['ffp'];
 			}
-				
+			if ( !isset( $data['ff'] ) ) {
+				$data['ff']		=	array();
+			}
+			if ( !isset( $data['ffp'] ) ) {
+				$data['ffp']	=	array();
+			}
+			
 			$this->storeMore( $pk, $data['client'], $data['ff'], $data['ffp'] );
 
 			if ( isset( $data['cck_type'] ) && $data['cck_type'] != '' ) {
