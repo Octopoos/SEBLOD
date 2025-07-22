@@ -99,6 +99,18 @@ class JCckPluginLocation extends JPlugin
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.static::$type.'" AND pk='.(int)$config['pk'] );
 	}
 
+	// getRouteById
+	public static function getRouteById( $pk )
+	{
+		return '';
+	}
+
+	// getRouteLink
+	public static function getRouteLink( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
+	{
+		return '';
+	}
+
 	// getStaticParams
 	public static function getStaticParams()
 	{
@@ -107,6 +119,22 @@ class JCckPluginLocation extends JPlugin
 		
 		return $params;
 	}
+
+	// getStaticParams
+	/*
+	public static function getStaticParams()
+	{
+		static $params	=	array();
+		$type			=	static::$type;
+		
+		if ( !is_object( $params[$type] ) ) {
+			$plg			=	JPluginHelper::getPlugin( 'cck_storage_location', $type );
+			$params[$type]	=	new JRegistry( $plg->params );
+		}
+		
+		return $params[$type];
+	}
+	*/
 
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
@@ -124,6 +152,7 @@ class JCckPluginLocation extends JPlugin
 									'custom'=>'',
 									'events'=>'',
 									'key'=>'',
+									'key_field'=>'',
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',

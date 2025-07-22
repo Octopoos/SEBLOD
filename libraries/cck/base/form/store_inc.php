@@ -387,6 +387,8 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 if ( isset( $config['process']['afterStore'] ) && count( $config['process']['afterStore'] ) ) {
+	JCckDevHelper::sortObjectsByProperty( $config['process']['afterStore'], 'priority' );
+	
 	foreach ( $config['process']['afterStore'] as $process ) {
 		if ( $process->type ) {
 			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'AfterStore', array( $process->params, &$fields, &$config['storages'], &$config ) );

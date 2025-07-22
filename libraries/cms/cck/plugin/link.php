@@ -72,7 +72,7 @@ class JCckPluginLink extends JPlugin
 			$matches	=	'';
 			$search		=	'#\*([a-zA-Z0-9_]*)\*#U';
 			preg_match_all( $search, $custom, $matches );
-			if ( count( $matches[1] ) ) {
+			if ( is_array( $matches[1] ) && count( $matches[1] ) ) {
 				foreach ( $matches[1] as $target ) {
 					$custom	=	str_replace( '*'.$target.'*', $field->$target, $custom );
 				}
@@ -91,7 +91,7 @@ class JCckPluginLink extends JPlugin
 			$matches	=	'';
 			$search		=	'#\*([a-zA-Z0-9_]*)\*#U';
 			preg_match_all( $search, $custom, $matches );
-			if ( count( $matches[1] ) ) {
+			if ( is_array( $matches[1] ) && count( $matches[1] ) ) {
 				foreach ( $matches[1] as $target ) {
 					$custom	=	str_replace( '*'.$target.'*', $field->$target, $custom );
 				}
@@ -101,7 +101,7 @@ class JCckPluginLink extends JPlugin
 			$matches	=	'';
 			$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
 			preg_match_all( $search, $custom, $matches );
-			if ( count( $matches[1] ) ) {
+			if ( is_array( $matches[1] ) && count( $matches[1] ) ) {
 				self::g_addProcess( $event, $type, $config, array( 'name'=>$field->name, 'fieldname'=>'', 'location'=>'', 'matches'=>$matches ) );
 			}
 		}
@@ -110,7 +110,7 @@ class JCckPluginLink extends JPlugin
 			$search		=	'#([a-zA-Z0-9_]*)=\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
 			preg_match_all( $search, $custom, $matches );
 			
-			if ( count( $matches[2] ) ) {
+			if ( is_array( $matches[2] ) && count( $matches[2] ) ) {
 				foreach ( $matches[2] as $k=>$v ) {
 					$variable	=	$matches[3][$k];
 					
@@ -126,7 +126,7 @@ class JCckPluginLink extends JPlugin
 						if ( !isset( $custom_vars[$name] ) ) {
 							$custom_vars[$name]	=	explode( '&', $custom );
 						}
-						if ( count( $custom_vars[$name] ) ) {
+						if ( is_array( $custom_vars[$name] ) && count( $custom_vars[$name] ) ) {
 							foreach ( $custom_vars[$name] as $custom_var ) {
 								if ( strpos( $custom_var, $matches[0][$k] ) !== false ) {
 									$custom_v	=	substr( $custom_var, 0, strpos( $custom_var, '=' ) );
@@ -242,7 +242,7 @@ class JCckPluginLink extends JPlugin
 					}
 				}
 			}
-		} elseif ( isset( $field->values ) && count( $field->values ) ) {
+		} elseif ( isset( $field->values ) && is_array( $field->values ) && count( $field->values ) ) {
 			$html	=	'';
 			foreach ( $field->values as $f ) {
 				if ( is_object( $f ) ) {

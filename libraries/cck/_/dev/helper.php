@@ -155,8 +155,11 @@ abstract class JCckDevHelper
 				if ( JCck::isSite() && JCck::getSite()->context ) {
 					$context	.=	JCck::getSite()->context.'/';
 				}
-
-				return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;
+				if ( is_string( $method ) ) {
+					return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;	
+				} else {
+					return JUri::root( true ).$context.'index.php?option=com_cck'.$glue.$query;
+				}
 			}
 		} else {
 			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
@@ -282,7 +285,7 @@ abstract class JCckDevHelper
 		$core		=	JCckDatabase::loadObject( $query );
 
 		if ( !is_object( $core ) ) {
-			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+			return array( 'error'=>true, 'error_code'=>404, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
 		}
 		JPluginHelper::importPlugin( 'cck_storage_location' );
 
@@ -298,7 +301,7 @@ abstract class JCckDevHelper
 			if ( !( $canEdit && $canEditOwn
 				|| ( $canEdit && !$canEditOwn && ( $core->author_id != $user->id ) )
 				|| ( $canEditOwn && ( $core->author_id == $user->id ) ) ) ) {
-				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+				return array( 'error'=>true, 'error_code'=>404, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
 			}
 		}
 
@@ -321,7 +324,8 @@ abstract class JCckDevHelper
 							'task'=>'download',
 							'type'=>$core->type,
 							'type_id'=>$core->type_id,
-							'xi'=>$xi
+							'xi'=>$xi,
+							'x_robots'=>''
 						);
 
 		$field->value	=	$core->value;
@@ -336,80 +340,123 @@ abstract class JCckDevHelper
 		$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
 		$autorised	=	$user->getAuthorisedViewLevels();
 		$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
-		if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
-			return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
-		}
 
-		if ( $restricted ) {
-			JPluginHelper::importPlugin( 'cck_field_restriction' );
-			$field->restriction			=	$restricted;
-			$field->restriction_options	=	$clients[$client]->restriction_options;
-			$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
-			
-			if ( $allowed ) {
-				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+		if ( (int)$app->input->getInt( 'allow_permissions' ) === 1 ) {
+			jimport( 'cck.joomla.access.access' );
 
-				$name		=	$field->name;
-				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
-				$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
-				
-				if ( count( $fields ) ) {
-					foreach ( $fields as $field2 ) {
-						$value2	=	'';
+			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
+			$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$core->type_id );
+			$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$core->type_id );
 
-						if ( $field2->name ) {
-							$Pt	=	$field2->storage_table;
-							if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
-								$config['storages'][$Pt]	=	'';
-								$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
-							}
-							
-							$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
-							if ( is_string( $value2 ) ) {
-								$value2		=	trim( $value2 );
-							}
-							
-							$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+			if ( $canEditOwnContent ) {
+				$parts				=	explode( '@', $canEditOwnContent );
+				$remote_field		=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
+				$canEditOwnContent	=	false;
 
-							// Was it the last one?
-							// if ( $config['error'] ) {
-								// break;
-							// }
-						}
+				if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
+					$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$pk );
+					$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
+
+					if ( $related_content->author_id == $user->id ) {
+						$canEditOwnContent	=	true;
 					}
 				}
-				
-				// Merge
-				if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
-					foreach ( $config['fields'] as $k=>$v ) {
-						if ( $v->restriction != 'unset' ) {
-							$fields[$k]	=	$v;
-						}
-					}
-					$config['fields']	=	null;
-					unset( $config['fields'] );
-				}
-
-				if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-					JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-
-					foreach ( $config['process']['beforeRenderContent'] as $process ) {
-						if ( $process->type ) {
-							JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
-						}
-					}
-				}
-
-				$allowed	=	(bool)$fields[$name]->state;
 			}
 
-			// Prevent PrepareContent & beforeRenderContent to alter $config['error']
-			$config['error']	=	false;
-
-			if ( $allowed !== true ) {
+			if ( !( $canEdit && $canEditOwn
+				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
+				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
+				|| ( $canEditOwnContent ) ) ) {
 				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 			}
+		} else {
+			if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
+				return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+			}
+
+			if ( $config['location'] === 'joomla_article' ) {
+				$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__content WHERE id = '.(int)$config['pk'] );
+			} elseif ( $config['location'] === 'joomla_category' ) {
+				$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__categories WHERE id = '.(int)$config['pk'] );
+			}
+			if ( isset( $robots ) && $robots ) {
+				$robots	=	new Registry( $robots );
+
+				$config['x_robots']	=	$robots->get( 'robots' );
+			}
+
+			if ( $restricted ) {
+				JPluginHelper::importPlugin( 'cck_field_restriction' );
+				$field->restriction			=	$restricted;
+				$field->restriction_options	=	$clients[$client]->restriction_options;
+				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+				
+				if ( $allowed ) {
+					require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+					$name		=	$field->name;
+					$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
+					$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
+					
+					if ( count( $fields ) ) {
+						foreach ( $fields as $field2 ) {
+							$value2	=	'';
+
+							if ( $field2->name ) {
+								$Pt	=	$field2->storage_table;
+								if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+									$config['storages'][$Pt]	=	'';
+									$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+								}
+								
+								$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+								if ( is_string( $value2 ) ) {
+									$value2		=	trim( $value2 );
+								}
+								
+								$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+
+								// Was it the last one?
+								// if ( $config['error'] ) {
+									// break;
+								// }
+							}
+						}
+					}
+					
+					// Merge
+					if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
+						foreach ( $config['fields'] as $k=>$v ) {
+							if ( $v->restriction != 'unset' ) {
+								$fields[$k]	=	$v;
+							}
+						}
+						$config['fields']	=	null;
+						unset( $config['fields'] );
+					}
+
+					if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+						JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+						foreach ( $config['process']['beforeRenderContent'] as $process ) {
+							if ( $process->type ) {
+								JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
+							}
+						}
+					}
+
+					$allowed	=	(bool)$fields[$name]->state;
+				}
+
+				// Prevent PrepareContent & beforeRenderContent to alter $config['error']
+				$config['error']	=	false;
+
+				if ( $allowed !== true ) {
+					return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+				}
+			}
 		}
+
 		$field			=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( $fieldname ).'"' ); //#
 
 		$app->triggerEvent( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
@@ -418,6 +465,10 @@ abstract class JCckDevHelper
 
 		if ( isset( $field->task ) ) {
 			$config['task2']	=	$field->task;
+		}
+		if ( abs( $field->storage_crypt ) ) {
+			$config['app']	=	new JCckApp;
+			$config['app']->loadDefault();
 		}
 
 		return $config;
@@ -436,12 +487,16 @@ abstract class JCckDevHelper
 
 			$active			=	$itemId ? $menu->getItem( $itemId ) : $menu->getActive();
 			$associations	=	MenusHelper::getAssociations( $active->id );
+			$do_canonical	=	false;
+			$do_hreflang	=	true;
+			$lang_sef		=	JCckDevHelper::getLanguageCode();
+			$lang_tag		=	JFactory::getLanguage()->getTag();
 			$languages		=	JLanguageHelper::getLanguages();
 			$levels			=	JFactory::getUser()->getAuthorisedViewLevels();
 			$levels			=	array_flip( $levels );
 			$path			=	JUri::getInstance()->getPath();
 			$route			=	JRoute::_( 'index.php?Itemid='.$active->id );
-			$view			=	null;
+			$view			=	$app->input->get( 'view', '' );
 
 			if ( $length = strlen( $route ) ) {
 				if ( $route[$length - 1] == '/' ) {
@@ -457,12 +512,15 @@ abstract class JCckDevHelper
 			}
 
 			foreach ( $languages as $language ) {
-				$lang_route	=	'';
+				$itemId_assoc	=	0;
+				$lang_query		=	'';
+				$lang_route		=	'';
 
 				if ( $active->language == '*' ) {
 					$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$active->id );
 				} elseif ( isset( $associations[$language->lang_code] ) && $associations[$language->lang_code] ) {
-					$item	=	$menu->getItem( $associations[$language->lang_code] );
+					$item			=	$menu->getItem( $associations[$language->lang_code] );
+					$itemId_assoc	=	$item->id;
 
 					if ( is_object( $item ) && isset( $levels[$item->access] ) ) {
 						$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
@@ -475,29 +533,84 @@ abstract class JCckDevHelper
 					}
 				}
 
-				if ( is_array( $view ) ) {
-					if ( $view['name'] == 'article' ) {
-						if ( $view['id'] ) {
-							/*
-							$content_article	=	new JCckContentArticle;
+				if ( is_array( $view ) && $active->query['view'] == 'list' && $view['id'] ) {
+					if ( $view['name'] == 'article' || $view['name'] == 'category' ) {
+						$content_instance	=	JCckContent::getInstance( array( 'joomla_'.$view['name'], $view['id'] ) );
 
-							if ( $content_article->load( $view['id'] )->isSuccessful() ) {
-								if ( $content_article->getProperty( 'language' ) == '*' ) {
-									// dump( $content_article->getPk(), '@yes' );
+						if ( $content_instance->isSuccessful() ) {
+							$content_instance->extend( JPATH_SITE.'/libraries/cms/cck/content/mixin/router.php' );
+
+							if ( $route = $content_instance->_getActiveRoute( $language->lang_code ) ) {
+								$lang_route		=	$route;
+							} else {
+								$content_nav	=	new JCckContentMenuItem;
+
+								if ( $content_nav->load( $itemId_assoc ? $itemId_assoc : $active->id )->isSuccessful() ) {
+									if ( (int)$content_nav->getProperty( 'redirect' ) === 1 ) {
+										$lang_route	=	substr( $lang_route, 0, strrpos( $lang_route, '/' ) );
+									}
 								}
+
+								$do_hreflang	=	false;
 							}
-							*/
+
+							$do_canonical	=	true;
 						}
 					}
-					$lang_route	=	'';
+				} elseif ( $view === 'article' || $view === 'processing' ) {
+					$do_canonical	=	true;
+				} elseif ( $view === 'list' && $itemId_assoc ) {
+					if ( $lang_tag != $language->lang_code ) {
+						if ( isset( $app->cck_canonical_vars ) && is_array( $app->cck_canonical_vars ) && count( $app->cck_canonical_vars ) ) {
+							/*
+							TODO?
+							*/
+
+							if ( isset( $app->cck_canonical_vars['start'] ) ) {
+								$assocItem		=	$menu->getItem( $itemId_assoc );
+								$do_hreflang	=	false;
+
+								if ( $assocItem->query['view'] === 'list' && $active->query['search'] == $assocItem->query['search'] ) {
+									jimport( 'cck.base.list.list' );
+									$count		=	CCK_List::getCountFromRoute( JRoute::_( 'index.php?Itemid='.$itemId_assoc.'&lang='.$language->lang_code ) );
+									$do_query	=	false;
+
+									if ( $count ) {
+										$limitend	=	(string)$assocItem->getParams()->get( 'pagination2', '' );
+
+										if ( is_object( $item ) && (string)$item->getParams()->get( 'pagination2', '' ) === $limitend ) {
+											$do_query	=	true;
+										} else {
+											/*
+											TODO
+											*/
+										}
+										if ( $do_query ) {
+											if ( (int)$app->cck_canonical_vars['start'] < $count ) {
+												$do_hreflang	=	true;
+												$lang_query		=	'start='.$app->cck_canonical_vars['start'];
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 				if ( $lang_route ) {
 					$routes[$language->sef]	=	(object)array(
+													'canonical'=>$do_canonical,
+													'has_hreflang'=>true,
 													'home'=>(bool)$active->home,
 													'href'=>$lang_route,
-													'hreflang'=>strtolower( $language->lang_code ),
+													'href_query'=>$lang_query,
+													'hreflang'=>strtolower( $language->sef ),
 												);
 				}
+			}
+
+			if ( is_object( $routes[$lang_sef] ) ) {
+				$routes[$lang_sef]->has_hreflang	=	$do_hreflang;
 			}
 		}
 
@@ -515,15 +628,17 @@ abstract class JCckDevHelper
 
 		jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
 
+		$lang		=	JFactory::getLanguage();
 		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-		$lang_tag	=	JFactory::getLanguage()->getTag();
+
+		$lang_tag	=	$lang->getTag();
 
 		if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
 			if ( $strictly && self::isMultilingual( true ) ) {
 				$plugin			=	JPluginHelper::getPlugin( 'system', 'languagefilter' );
 				$plugin_params	=	new JRegistry( $plugin->params );
 
-				if ( $plugin_params->get( 'remove_default_prefix', 0 ) ) {
+				if ( $lang->getDefault() == $lang_tag && $plugin_params->get( 'remove_default_prefix', 0 ) ) {
 					return '';
 				}
 			}
@@ -614,6 +729,11 @@ abstract class JCckDevHelper
 
 			if ( !( is_object( $item ) && isset( $item->params ) ) ) {
 				$item 			=	JCckDatabase::loadObject( 'SELECT link, params FROM #__menu WHERE id = '.(int)$itemId );
+
+				if ( !is_object( $item ) ) {
+					return $sef;
+				}
+
 				$item->query	=	self::getUrlVars( $item->link, true, false );
 			}
 			if ( isset( $item->params ) ) {
@@ -694,7 +814,7 @@ abstract class JCckDevHelper
 			if ( $sef != '' ) {
 				$params[$name]['doSEF']		=	$sef;
 			} else {
-				$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+				$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '23' );
 			}
 
 			$params[$name]['join_key']		=	'pk';

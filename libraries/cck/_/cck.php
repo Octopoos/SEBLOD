@@ -178,7 +178,7 @@ abstract class JCck
 			$path_base		=	$path;
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
-				$lang_sef	=	JCckDevHelper::getLanguageCode();
+				$lang_sef	=	JCckDevHelper::getLanguageCode( true );
 				
 				if ( $lang_sef != '' ) {
 					$lang_sef	=	'/'.$lang_sef;
@@ -194,14 +194,14 @@ abstract class JCck
 
 				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
-
+			
 			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options, parent_id'
 					.	' FROM #__cck_core_sites'
 					.	' WHERE published = 1'
 					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
 
 			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
-
+			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
 				$context	=	'';
@@ -265,11 +265,14 @@ abstract class JCck
 			self::$_host	=	$host;
 
 			if ( isset( self::$_sites[$host] ) ) {
+				$parent								=	null;
 				self::$_sites[$host]->environment	=	1;
 				self::$_sites[$host]->host			=	( $alias ) ? $alias : self::$_sites[$host]->name;
 
 				if ( self::$_sites[$host]->parent_id ) {
 					$parent		=	self::getSiteById( self::$_sites[$host]->parent_id );
+				}
+				if ( is_object( $parent ) && $parent->id ) {					
 					$properties	=	array(
 										'guest_only_viewlevel',
 										'usergroups',
@@ -317,7 +320,6 @@ abstract class JCck
 						self::$_sites[$host]->public_viewlevel	=	ArrayHelper::toInteger( self::$_sites[$host]->public_viewlevel );	
 					}
 				}
-
 			}
 
 			return true;
@@ -326,6 +328,12 @@ abstract class JCck
 		}
 	}
 	
+	// getCdn
+	public static function getCdn()
+	{
+		return JCck::getConfig_Param( 'media_cdn', '' );
+	}
+
 	// getMultisiteInfo
 	public static function getMultisiteInfo( $property = '' )
 	{
@@ -417,7 +425,13 @@ abstract class JCck
 			}
 		}
 		if ( !isset( $sites[$id] ) ) {
-			return null;
+			return (object)array(
+							'context'=>'',
+							'id'=>0,
+							'name'=>'',
+							'parent_id'=>0,
+							'title'=>''
+						   );
 		}
 
 		return $sites[$id];
@@ -427,8 +441,14 @@ abstract class JCck
 	public static function isSite( $master = false, $status = '' )
 	{
 		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
-			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
-				return false;
+			if ( is_integer( $master ) ) {
+				if ( (int)JCck::getSite()->id !== $master ) {
+					return false;
+				}
+			} else {
+				if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+					return false;
+				}
 			}
 			if ( $status ) {
 				if ( $status == 'production' || $status == 'prod' ) {
@@ -543,8 +563,12 @@ abstract class JCck
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( $root.'/media/cck/js/cck.dev-3.22.0.min.js' );
-				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.min.js' );
+				if ( JCck::on( '4.0' ) ) {
+					$doc->addScript( $root.'/media/cck/js/cck.dev-3.22.0.min.js' );
+				} else {
+					$doc->addScript( $root.'/media/cck/js/cck.dev-3.18.1.min.js' );
+				}
+				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.1.13.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
@@ -585,7 +609,7 @@ abstract class JCck
 		$app	=	JFactory::getApplication();
 		if ( !( isset( $app->cck_jquery_ui ) && $app->cck_jquery_ui === true ) ) {
 			$doc	=	JFactory::getDocument();
-			$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.min.js' );
+			$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js' );
 			$app->cck_jquery_ui	=	true;
 		}
 	}
