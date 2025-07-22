@@ -26,8 +26,16 @@ class CCK_TableSite extends JTable
 		if ( empty( $this->title ) ) {
 			return false;
 		}
+
+		if ( $this->context != '' ) {
+			if ( strpos( $this->name, '@'.$this->context ) === false ) {
+				$this->name	.=	'@'.$this->context;
+			}
+		}
+
 		$this->name	=	str_replace( 'http://', '', $this->name );
 		$this->name	=	( $this->name[strlen( $this->name )-1] == '/' ) ? substr( $this->name, 0, -1 ) : $this->name;
+		
 		if ( empty( $this->name ) ) {
 			return false;
 		}
