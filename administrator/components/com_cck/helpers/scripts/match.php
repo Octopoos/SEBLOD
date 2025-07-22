@@ -60,13 +60,13 @@ $js		=	'
 						});
 					}
 					$("#match_options_table").isVisibleWhen("match_mode","nested_exact");
-					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,not_any_exact");
-					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact");
+					$("#match_options_var_type").isVisibleWhen("match_mode","exact,not_equal,any_exact,any_exact_isset,not_any_exact");
+					$("#match_options_var_mode").isVisibleWhen("match_mode","any_exact,not_any_exact");
 					$("#match_options_var_case,#match_options_var_collate").isVisibleWhen("match_mode","each,n");
 					$("#match_options_var_count").isVisibleWhen("match_mode","any_exact,each_exact");
 					$("#match_options_var_count_offset").isVisibleWhen("match_options_var_count","1");
 					$("#match_options_var_num").isVisibleWhen("match_mode","n,n_exact");
-					$("#match_value").isVisibleWhen("match_mode","any,any_exact,each,each_exact,n,n_exact,not_any_exact");
+					$("#match_value").isVisibleWhen("match_mode","any,any_exact,any_exact_isset,each,each_exact,n,n_exact,not_any_exact,nested_exact");
 					$("#match_options_distance_aka,#match_options_fieldname1,#match_options_fieldname2,#match_options_fieldname3,#match_options_var_unit").isVisibleWhen("match_mode","radius_higher,radius_lower");
 				});
 			})(jQuery);
@@ -112,5 +112,14 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Longitude Field', 'storage_field'=>'match_options[fieldname2]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Unit', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Kilometers=0||Miles=1', 'storage_field'=>'match_options[var_unit]', 'css'=>'match_options' ) );
         ?>
+    </ul>
+</div>
+<div class="seblod">
+	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONFIG_FILTERING' ) ); ?>
+    <ul class="adminformlist adminformlist-2cols">
+    	<?php
+    	echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Data Cleaning', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Integer=integer', 'storage_field'=>'match_options[filter]', 'css'=>'match_options' ) );
+    	echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Excluded Values', 'defaultvalue'=>'', 'storage_field'=>'match_options[values]', 'css'=>'match_options' ) );
+    	?>
     </ul>
 </div>

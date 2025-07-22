@@ -192,9 +192,13 @@ class plgSearchCCK extends JPlugin
 									$v['sql']	.=	' OR ';
 								}
 
-								$child->match_mode		=	$field->match_mode;
+								if ( !( isset( $child->match_mode ) && $child->match_mode ) ) {
+									$child->match_mode		=	$field->match_mode;
+								}
+								
 								$child->match_options	=	$field->match_options;
 								$child->match_value		=	$field->match_value;
+								
 								if ( $child->storage && $child->storage != 'none' ) {
 									$Pf		=	$child->storage_field;
 									$Pt		=	$child->storage_table;
@@ -343,6 +347,7 @@ class plgSearchCCK extends JPlugin
 		$inherit	=	array( 'bridge'=>'', 'query'=>'' );
 		$query		=	null;
 		$query2		=	'';
+		$query3		=	'';
 		$results	=	array();
 		self::_setStorage( $tables, $config, $inherit );
 		JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -436,9 +441,23 @@ class plgSearchCCK extends JPlugin
 									$query->clear( 'limit' );
 									$query->clear( 'select' )->select( 't0.id AS pid,t0.pk AS pk' );
 
+									if ( isset( $config['query_parts']['having'] ) ) {
+										foreach ( $config['query_parts']['having'] as $having ) {
+											$having_alias	=	substr( $having, 0, strpos( $having, ' ' ) );
+
+											if ( isset( $config['query_parts']['select'] ) ) {
+												foreach ( $config['query_parts']['select'] as $select ) {
+													if ( strpos( $select, $having_alias ) !== false ) {
+														$query->select( $select );
+													}
+												}
+											}
+										}
+									}
+
 									if ( $doDebug != -1 ) {
 										$db->setQuery( $query );
-										$results2		=	$db->loadObjectList();
+										$results2	=	$db->loadObjectList();
 									}
 									$query3			=	(string)$query;
 								}
@@ -512,7 +531,13 @@ class plgSearchCCK extends JPlugin
 
 			foreach ( $results as $k=>$v ) {
 				if ( isset( $results[$k]->id ) && is_string( $results[$k]->id ) ) {
-					$config['ids2'][]	=	$results[$k]->id;
+					$ID	=	$results[$k]->id;
+
+					if ( isset( $results[$k]->id2_key ) ) {
+						$ID	.=	'_'.$results[$k]->id2_key;
+					}
+
+					$config['ids2'][]	=	$ID;
 				}
 			}
 			$config['ids2']		=	'"'.implode( '","', $config['ids2'] ).'"';
@@ -526,10 +551,13 @@ class plgSearchCCK extends JPlugin
 			if ( $query2 ) {
 				$query2	.=	'<br />';
 			}
-			if ( isset( $query3 ) ) {
-				$query2	.=	$query3.'<br />';
-			}
+
 			$output	=	$query1.'<br />'.$query2;
+
+			if ( $query3 ) {
+				$output	.=	$query3.'<br />';
+			}
+
 			$output	=	str_replace( 'RAND()', 'R@ND()', $output );
 			$output	=	str_replace( array( 'SELECT', 'FROM', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'WHERE', 'AND', 'HAVING', 'ORDER BY', 'GROUP BY', 'LIMIT', 'UNION', ') AS Count' ),
 									 array( '<br />SELECT', '<br />FROM', '<br />LEFT JOIN', '<br />RIGHT JOIN', '<br />INNER JOIN', '<br />WHERE', '<br />&nbsp;&nbsp;AND', '<br />HAVING', '<br />ORDER BY', '<br />GROUP BY', '<br />LIMIT', '<br />UNION', '<br />) AS Count' ),
@@ -537,6 +565,10 @@ class plgSearchCCK extends JPlugin
 			$output	=	str_replace( 'R@ND()', 'RAND()', $output );
 
 			echo $output.'<br />';
+		} else {
+			if ( !isset( $query1 ) ) {
+				$query1	=	(string)$query;
+			}
 		}
 		
 		unset( $fields );
@@ -549,6 +581,7 @@ class plgSearchCCK extends JPlugin
 
 		$data	=	array(
 						'config'=>$config,
+						'query'=>array( $query1, $query2, $query3 ),
 						'results'=>$results
 					);
 
@@ -707,7 +740,7 @@ class plgSearchCCK extends JPlugin
 								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$lang->getTag().'"').') COLLATE utf8mb4_unicode_ci';
 							}
 							$order	.=	$modifier.$target.$modifier2.$modifier3;
-						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
+						} elseif ( strpos( $str, '.'.$s_field ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
 							$order	.=	$modifier.$s_field.$modifier2.$modifier3;
 						}
 						if ( $order != '' ) {
@@ -717,7 +750,7 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 			}
-			if ( !$ordered ) {
+			if ( !$ordered ) {				
 				if ( @$config['location'] ) {
 					$ordering	=	'alpha';
 
