@@ -58,13 +58,17 @@ class JCckContent
 	protected $_logs					=	array(); /* TODO#SEBLOD: reset? */
 	protected $_object					=	'';
 	protected $_pk						=	0;
+	protected $_relationship_nav		=	null; /* TODO#SEBLOD: reset? */
 	protected $_search_query			=	null; /* TODO#SEBLOD: reset? */
+	protected $_search_relationship		=	null; /* TODO#SEBLOD: reset? */
 	protected $_search_results			=	array(); /* TODO#SEBLOD: reset? */
 	protected $_table 					=	'';
 	protected $_type					=	'';
 	protected $_type_id					=	0;
 	protected $_type_parent				=	'';
 	protected $_type_permissions		=	'';
+	protected $_type_properties			=	null;
+	protected $_type_relationships		=	null;
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -252,6 +256,69 @@ class JCckContent
 		return true;
 	}
 
+	// setRelationship
+	public function setRelationship( $mode, $alias, $data = array(), $scope = 'type' )
+	{
+		if ( $scope == 'object' ) {
+			/* TODO */
+		} elseif ( $scope == 'type' ) {
+			if ( !isset( self::$types[$this->_type]['relationships'][$mode][$alias] ) ) {
+				self::$types[$this->_type]['relationships'][$mode][$alias]	=	$data;
+			}
+		}
+
+		// if ( !isset( self::$types[$this->_type]['relationships'][$mode][$alias] ) ) {
+			// self::$types[$this->_type]['relationships'][$mode][$alias]	=	$data;
+
+			// if ( !isset( self::$objects[$object]['relations']['many'][$relation] ) ) {
+			// 	self::$objects[$object]['relations']['many'][$root_object][$relation]		=	array(
+			// 																						'property'=>$property
+			// 																					);
+			// }
+		// }
+
+		return $this;
+	}
+
+	// setRelation
+	// protected function setRelation( $relation, $object, $property, $root_object = '' )
+	// {
+	// 	if ( !$root_object ) {
+	// 		$root_object	=	$this->_object;
+	// 	}
+	// 	if ( !$relation || !$object || !$property ) {
+	// 		return false;
+	// 	}
+
+/*
+ARTICLE
+{"mode":"one","name":"author","object":"joomla_user","column":"created"}
+{"mode":"one","name":"parent","object":"joomla_category","column":"catid"}
+
+{"mode":"many","name":"bottles","object":"joomla_article","column":"id2","table":"#__cck_store_join_o_wine_bottles"}
+VV
+{"mode":"many","name":"bottles","object":"","type":"o_year","column":"id2","table":"#__cck_store_join_o_wine_bottles"}
+
+USER
+{"mode":"many","name":"author","object":"joomla_article","column":"created"}
+*/
+
+	// 	if ( !isset( self::$objects[$root_object]['relations']['one'][$relation] ) ) {
+	// 		self::$objects[$root_object]['relations']['one'][$relation]	=	array(
+	// 																				'object'=>$object,
+	// 																				'property'=>$property
+	// 																			);
+
+	// 		if ( !isset( self::$objects[$object]['relations']['many'][$relation] ) ) {
+	// 			self::$objects[$object]['relations']['many'][$root_object][$relation]		=	array(
+	// 																								'property'=>$property
+	// 																							);
+	// 		}
+	// 	}
+
+	// 	return true;
+	// }
+
 	// unsetInstance
 	protected function unsetInstance( $table_instance_name )
 	{
@@ -423,11 +490,138 @@ class JCckContent
 			return false;
 		}
 
+		if ( !(int)$this->_deleteRelationships( 'before' ) ) {
+			return false;
+		}
+
 		if ( !$this->remove() ) {
 			return false;
 		}
 
+		$this->_deleteRelationships();
+
 		$this->trigger( 'delete', 'after' );
+
+		return true;
+	}
+
+	// _deleteRelationships
+	protected function _deleteRelationships( $event = 'after' )
+	{
+		if ( !$this->_type_relationships ) {
+			return true;
+		}
+
+		$do		=	true;
+
+		foreach ( $this->_type_relationships as $relationship ) {
+			if ( !isset( $relationship['params']['delete'] ) ) {
+				$relationship['params']['delete']	=	true;
+			}
+
+			if ( $relationship['params']['delete'] === true ) {
+				// OK
+			} elseif ( $relationship['params']['delete'] === false ) {
+				if ( $event !== 'after' ) {
+					if ( $relationship['mode'] === 'many2one' ) {
+						$key	=	isset( $relationship['params']['property'] ) && $relationship['params']['property'] ? '"'.$this->getProperty( $relationship['params']['property'] ).'"' : (int)$this->_pk;
+
+						if ( (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM '.$relationship['params']['table'].' WHERE '.$relationship['params']['column'].' = '.$key ) > 0 ) {
+							return false;
+						}
+					} else {
+						if ( (int)JCckDatabase::loadResult( 'SELECT COUNT(id2) FROM '.$relationship['params']['table'].' WHERE id = '.(int)$this->_pk ) > 0 ) {
+							return false;
+						}
+					}
+				}
+			} else {
+				if ( $event === 'after' ) {
+					$pks	=	array();
+
+					if ( $relationship['mode'] === 'many2one' ) {
+						if ( is_array( $relationship['params']['delete'] ) ) {
+							$key	=	isset( $relationship['params']['property'] ) && $relationship['params']['property'] ? '"'.$this->getProperty( $relationship['params']['property'] ).'"' : (int)$this->_pk;
+							$pks	=	(array)JCckDatabase::loadColumn( 'SELECT id FROM '.$relationship['params']['table'].' WHERE '.$relationship['params']['column'].' = '.$key );
+						}
+					} else {
+						if ( is_array( $relationship['params']['delete'] ) ) {
+							if ( $relationship['params']['delete']['children'] === true ) {
+								$query	=	'SELECT id2'
+										.	' FROM '.$relationship['params']['table']
+										.	' GROUP BY id2'
+										.	' HAVING COUNT(CASE WHEN id = '.(int)$this->_pk.' THEN 1 END) = 1'
+										.	' AND COUNT(CASE WHEN id != '.(int)$this->_pk.' THEN 1 END) = 0'
+										;
+
+								$pks	=	(array)JCckDatabase::loadColumn( $query );
+							}
+						}
+					}
+
+					if ( count( $pks ) ) {
+						if ( isset( $relationship['params']['delete']['do'] ) && $relationship['params']['delete']['do'] != 'delete' ) {
+							foreach ( $relationship['params']['delete']['do'] as $do_tasks ) {
+								foreach ( $do_tasks as $do_task=>$do_params ) {
+									$task	=	'_'.$do_task.'RelationshipsItems';
+
+									$this->$task( $pks, $relationship, $do_params );
+								}
+							}
+						} else {
+							$this->_deleteRelationshipsItems( $pks, $relationship );
+						}
+					}
+				}
+			}
+		}
+
+		return $do;
+	}
+
+	// _deleteRelationshipsItems
+	protected function _deleteRelationshipsItems( $pks, $relationship, $params = null )
+	{
+		$content_instance	=	JCckType::getInstance( $relationship['params']['type'] )->getContentInstance();
+		$do_children		=	true;
+
+		if ( isset( $relationship['params']['delete']['with'] ) && is_array( $relationship['params']['delete']['with'] ) ) {
+			$do_children	=	array(
+									'key'=>$relationship['params']['delete']['with'][0],
+									'match'=>$relationship['params']['delete']['with'][1],
+									'value'=>$relationship['params']['delete']['with'][2],
+								);
+		}
+
+		foreach ( $pks as $pk ) {
+			if ( $do_children === true ) {
+				$content_instance->delete( $pk );
+			} else {
+				if ( $content_instance->load( $pk )->isSuccessful() ) {
+					if ( $content->hasProperty( $do_children['key'], $do_children['match'], $do_children['value'] ) ) {
+						$content_instance->delete();
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	// _updatePropertyRelationshipsItems
+	protected function _updatePropertyRelationshipsItems( $pks, $relationship, $params = null )
+	{
+		$content_instance	=	JCckType::getInstance( $relationship['params']['type'] )->getContentInstance();
+		$do_params			=	array(
+									'key'=>$params[0],
+									'value'=>$params[1]
+								);
+
+		foreach ( $pks as $pk ) {
+			if ( $content_instance->load( $pk )->isSuccessful() ) {
+				$content_instance->updateProperty( $do_params['key'], $do_params['value'] );				
+			}
+		}
 
 		return true;
 	}
@@ -592,7 +786,13 @@ class JCckContent
 
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
-		
+
+		static $names	=	array(
+								'more'=>'',
+								'more_parent'=>'',
+								'more2'=>''
+							);
+
 		$this->setInstance( 'base' );
 		$this->setInstance( 'more' );
 		$this->setInstance( 'more_parent' );
@@ -616,12 +816,6 @@ class JCckContent
 											'parent_id'=>$data['core']['parent_id'],
 											'date_time'=>$data['core']['date_time']
 						   				 ) );
-
-					static $names	=	array(
-											'more'=>'',
-											'more_parent'=>'',
-											'more2'=>''
-										);
 
 					foreach ( $names as $table_instance_name=>$null ) {
 						if ( count( $data[$table_instance_name] ) ) {
@@ -652,6 +846,14 @@ class JCckContent
 
 		$this->_is_new	=	true;
 
+		// Trigger BeforeStore
+		if ( !$this->triggerMore( 'save', 'before_store', $data ) ) {
+			$this->_error	=	true;
+			$this->_is_new	=	false;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
 		// Base
 		if ( !( $this->save( 'base', $data['base'] ) ) ) {
 			$this->_error	=	true;
@@ -680,24 +882,44 @@ class JCckContent
 		}
 
 		// More
-		static $names	=	array(
-								'more'=>'',
-								'more_parent'=>'',
-								'more2'=>''
-							);
-
 		foreach ( $names as $table_instance_name=>$null ) {
 			if ( count( $data[$table_instance_name] ) ) {
-				$this->{'_instance_'.$table_instance_name}->load( $this->_pk, true );
-			
-				if ( !( $this->save( $table_instance_name, $data[$table_instance_name] ) ) ) {
-					$this->_error	=	true;
-					$this->_is_new	=	false;
+				if ( $this->{'_instance_'.$table_instance_name}->load( $this->_pk, true ) ) {
+					$names[$table_instance_name]	=	$this->_pk;
+				}
 
+				$r	=	false;
+			
+				try {
+					if ( !( $this->save( $table_instance_name, $data[$table_instance_name] ) ) ) {
+						$r	=	true;
+					}	
+				} catch ( Exception $e ) {
+					if ( $e->getCode() == 1062 ) {
+						$this->log( 'error', 'Duplicate entry.' );
+					}
+
+					$r	=	true;
+				}
+
+				if ( $r === true ) {
+					// Rollback
+					if ( $this->_pk ) {
+						$this->delete( $this->_pk );
+					}
+
+					$this->_error	=	true;
+					$this->_id		=	0;
+					$this->_is_new	=	false;
+					$this->_pk		=	0;
+					
 					return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 				}
 			}
 		}
+
+		// Trigger AfterStore
+		$this->triggerMore( 'save', 'after_store' );
 		
 		$this->_is_new	=	false;
 
@@ -705,6 +927,25 @@ class JCckContent
 		self::$instances_map[$this->_id]				=	$this->_object.'_'.$this->_pk;
 		self::$instances[$this->_object.'_'.$this->_pk]	=	$this;
 		
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
+	}
+
+	// createFromFile (^)
+	public function createFromFile( $content_type, $path )
+	{
+		if ( !is_file( $path ) ) {
+			$this->reset();
+
+			$this->_error	=	true;
+
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$data	=	file_get_contents( $path );
+		$data	=	json_decode( $data, true );
+
+		$this->create( $content_type, $data );
+
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : $this->_pk;
 	}
 
@@ -818,6 +1059,8 @@ class JCckContent
 		$this->setInstance( 'more_parent', true );
 		$this->setInstance( 'more2', true );
 
+		$this->_decrypt();
+
 		if ( !isset( self::$instances_map[$this->_id] ) ) {
 			self::$instances_map[$this->_id]	=	$this->_object.'_'.$this->_pk;
 		}
@@ -862,6 +1105,28 @@ class JCckContent
 
 		$this->_data_preset			=	$data;
 		$this->_data_preset_null	=	$check_null;
+
+		return $this;
+	}
+
+	// relate
+	public function relate( $relationship )
+	{
+		if ( !$this->isSuccessful() ) {
+			return $this;
+		}
+
+		if ( isset( self::$objects[$this->_object]['relationships']['one'][$relationship] ) ) {
+			if ( isset( self::$objects[$this->_object]['relationships']['one'][$relationship]['object'] )
+			  && isset( self::$objects[$this->_object]['relationships']['one'][$relationship]['property'] ) ) {
+				return JCckContent::getInstance( array( self::$objects[$this->_object]['relationships']['one'][$relationship]['object'], $this->getProperty( self::$objects[$this->_object]['relationships']['one'][$relationship]['property'] ) ) );
+			} else {
+				return new JCckContent; /* TODO#SEBLOD */
+			}
+		// } elseif () {
+		} else {
+			$this->_relationship_nav	=	$relationship;
+		}
 
 		return $this;
 	}
@@ -960,6 +1225,12 @@ class JCckContent
 		return $this;
 	}
 
+	// setRegistry
+	// public function setRegistry( $property )
+	// {
+		
+	// }
+
 	// setType
 	public function setType( $content_type, $reload = true )
 	{
@@ -1037,6 +1308,29 @@ class JCckContent
 		return (int)$db->loadResult();
 	}
 
+	// countRelations
+	// public function countRelations( $relation, $content_type )
+	// {
+	// 	if ( !$this->_pk ) {
+	// 		return; /* TODO#SEBLOD */
+	// 	}
+
+	// 	$object			=	$this->_getObjectByType( $content_type );
+
+	// 	if ( !( isset( self::$objects[$this->_object]['relations']['many'][$object][$relation] )
+	// 		 && isset( self::$objects[$this->_object]['relations']['many'][$object][$relation]['property'] ) ) ) {
+	// 		return 0; /* TODO#SEBLOD */
+	// 	}
+
+	// 	$classname		=	'JCckContent'.ucwords( $object, '_' );
+	// 	$content_item	=	new $classname;
+	// 	$data			=	array(
+	// 							self::$objects[$this->_object]['relations']['many'][$object][$relation]['property']=>$this->_pk
+	// 						);
+
+	// 	return $content_item->count( $content_type, $data );
+	// }
+
 	// find (^)
 	public function find( $content_type = '', $data = array() )
 	{
@@ -1078,6 +1372,27 @@ class JCckContent
 		return $this;
 	}
 
+	// findPk (^$)
+	public function findPk( $content_type = '', $data = array() )
+	{
+		if ( $content_type != '' ) {
+			$this->search( $content_type, $data )->limit( 1 );
+			$this->_findResults( 'find', true );
+
+			if ( !count( $this->_search_results ) ) {
+				$this->_error	=	true;
+
+				return 0;
+			} else {
+				return (int)$this->_search_results[0];
+			}
+		} else {
+			// TODO
+		}
+
+		return $this;
+	}
+
 	// findPks ($)
 	public function findPks()
 	{
@@ -1101,11 +1416,12 @@ class JCckContent
 	public function search( $content_type, $data = array() )
 	{
 		$this->_search_query	=	array(
-										'content_type'=>$content_type,
-										'data'=>$data,
-										'limit'=>0,
-										'match'=>array(),
-										'order'=>array()
+										'content_type'	=> $content_type,
+										'data'			=> $data,
+										'limit'			=> 0,
+										'match'			=> array(),
+										'match_each'	=> array(),
+										'order'			=> array()
 									);
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
@@ -1121,9 +1437,54 @@ class JCckContent
 
 		$this->_search_query['match'][$key]	=	$match;
 
+		if ( $match == 'empty' ) {
+			$value	=	'';
+		}
 		if ( isset( $value ) ) {
 			$this->_search_query['data'][$key]	=	$value;
 		}
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// withEach
+	public function withEach( $key, $match, $value = null )
+	{
+		if ( !isset( $this->_search_query ) ) {
+			/* TODO#SEBLOD: error? */
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
+		$this->_search_query['match'][$key]			=	$match;
+		$this->_search_query['match_each'][$key]	=	true;
+
+		if ( $match == 'empty' ) {
+			$value	=	'';
+		}
+		if ( isset( $value ) ) {
+			$this->_search_query['data'][$key]	=	$value;
+		}
+
+		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
+	}
+
+	// withRelationship
+	public function withRelationship( $relationship, $value = null )
+	{
+		if ( is_bool( $value ) || is_string( $value ) ) {
+			// OK
+		} elseif ( is_array( $value ) ) {
+			// ...
+		}
+
+		if ( !is_array( $this->_search_relationship ) ) {
+			$this->_search_relationship	=	array();
+		}
+
+		$this->_search_relationship[]	=	array(
+												'data'=>$value,
+												'name'=>$relationship
+											);
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
 	}
@@ -1291,6 +1652,36 @@ class JCckContent
 		return $default;
 	}
 
+	// hasProperty
+	public function hasProperty( $property, $match = null, $value = null )
+	{
+		if ( $match === null ) {
+			if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+				return true;
+			}
+		} else {
+			switch ( $match ) {
+				case 'in':
+					$parts	=	explode( ',', $value );
+
+					foreach ( $parts as $part ) {
+						if ( $this->getProperty( $property ) == $part ) {
+							return true;
+						}
+					}
+					break;
+				case '=':
+				default:
+					if ( $this->getProperty( $property ) == $value ) {
+						return true;
+					}
+					break;
+			}
+		}
+
+		return false;
+	}
+
 	// getRegistry
 	public function getRegistry( $property )
 	{
@@ -1370,6 +1761,148 @@ class JCckContent
 		return $this->_is_new;
 	}
 
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Relate
+
+	// getAll
+	public function getAll()
+	{
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$pks	=	array();
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		$table->load( $this->_pk );
+
+		return $table->getRows();
+	}
+
+	// listAll
+	public function listAll( $search_type )
+	{
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$pks	=	array();
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		$table->load( $this->_pk );
+
+		foreach ( $table->getRows() as $pk=>$rows ) {
+			$pks[]	=	$pk;
+		}
+		if ( count( $pks ) ) {
+			$list	=	new JCckList();
+
+			return $list->load( $search_type, $pks )->output();
+		}
+
+		return '';
+	}
+
+	// tie
+	public function tie( $id, $data = array() )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		$table->load( $this->_pk );
+
+		if ( $this->_getRelationshipDefinition( 'multiple' ) ) {
+			$table->insertRow( $id, $data );
+		} else {
+			$table->setRow( $id, $data );
+		}
+
+		return $table->store();
+	}
+
+	// tieAll
+	public function tieAll( $data = array() )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		$table->load( $this->_pk );
+		$table->setRows( $data );
+
+		return $table->store();
+	}
+
+	// untie
+	public function untie( $id )
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		$table->load( $this->_pk, false );
+
+		return $table->deleteRow( $id );
+	}
+
+	// untieAll
+	public function untieAll()
+	{
+		if ( !$this->isSuccessful() ) {
+			return false;
+		}
+
+		$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+		if ( !$table_name ) {
+			$this->_error	=	true;
+
+			return false;
+		}
+
+		$table	=	JCckTableRelationship::getInstance( $table_name );
+
+		return $table->delete( $this->_pk );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Save
 
 	// change ($)
@@ -1439,6 +1972,11 @@ class JCckContent
 		$this->preSave( $table_instance_name, $data );
 
 		$this->bind( $table_instance_name, $data );
+
+		if ( $table_instance_name != 'core' ) {
+			$this->_encrypt( $table_instance_name );
+		}
+
 		$this->check( $table_instance_name );
 
 		if ( $table_instance_name == 'base' ) {
@@ -1565,6 +2103,9 @@ class JCckContent
 						$this->_fixDatabase( $table_instance_name );
 					}
 				}
+
+				$this->_encrypt( $table_instance_name );
+
 				if ( $table_instance_name == 'base' ) {
 					$successful	=	$this->storeBase();
 				} else {
@@ -1586,6 +2127,8 @@ class JCckContent
 				$this->_fixDatabase( $table_instance_name );
 			}
 		}
+
+		$this->_encrypt( $table_instance_name );
 
 		if ( $table_instance_name == 'base' ) {
 			return $this->storeBase();
@@ -1626,6 +2169,14 @@ class JCckContent
 			return false;
 		}
 
+		// Trigger BeforeStore
+		if ( !$this->triggerMore( 'save', 'before_store', $data ) ) {
+			$this->_error	=	true;
+			$this->_is_new	=	false;
+
+			return false;
+		}
+
 		$successful	=	true;
 
 		foreach ( $this->_data_update as $table_instance_name=>$null ) {
@@ -1646,6 +2197,9 @@ class JCckContent
 				unset( $this->_data_update[$table_instance_name] );
 			}
 		}
+
+		// Trigger AfterStore
+		$this->triggerMore( 'save', 'after_store' );
 
 		return $successful;
 	}
@@ -1767,6 +2321,49 @@ class JCckContent
 		return $this->_triggerEvent( self::$objects[$this->_object]['properties']['events'][$event], array( self::$objects[$this->_object]['properties']['context'], $this->_instance_base ) );
 	}
 
+	// triggerMore
+	protected function triggerMore( $task, $event, &$data = array() )
+	{
+		return true; /* PENDING HERE */
+
+		$check	=	$this->_options->get( 'trigger_events', 1 );
+
+		if ( !( ( is_array( $check ) && in_array( $task, $check ) ) || $check == 1 ) ) {
+			return true;
+		}
+
+		if ( !JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			return true;
+		}
+
+		$events		=	array(
+							'after_store'=>'onCckPostAfterStore',
+							'before_store'=>'onCckPostBeforeStore'
+						);
+
+		if ( isset( $events[$event] ) ) {
+			$event			=	$events[$event];
+			$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND type IN ("onCckPreBeforeStore","onCckPostBeforeStore","onCckPreAfterStore","onCckPostAfterStore") ORDER BY ordering', 'type' );
+
+			if ( isset( $processings[$event] ) ) {
+				if ( $event === 'onCckPostAfterStore' ) {
+					$this->_options->set( 'encrypt_data', 0 );
+				}
+
+				foreach ( $processings[$event] as $p ) {
+					$process	=	new JCckProcessingContent( $event, JPATH_SITE.$p->scriptfile, $p->options, true );
+					$result		=	call_user_func_array( array( $process, 'execute' ), array( &$this, &$data ) );
+
+					if ( !$result ) {
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
 	// triggerSave
 	public function triggerSave( $event )
 	{
@@ -1804,49 +2401,56 @@ class JCckContent
 	// dump
 	public function dump( $scope = 'this' )
 	{
-		if ( !function_exists( 'dump' ) ) {
-			$this->log( 'notice', 'Function not found.' );
+		$dump	=	JCck::on( '4.0' ) ? 'dumpVar' : 'dump';
 
-			return false;
+		if ( !function_exists( $dump ) ) {
+			if ( $dump == 'dumpVar' ) {
+				$dump	=	'dump';
+			} else {
+				$this->log( 'notice', 'Function not found.' );
+
+				return false;	
+			}
 		}
 
 		if ( $scope == 'self' ) {
-			dump( self::$objects, 'objects' );
-			dump( self::$types, 'types' );
+			$dump( self::$objects, 'objects' );
+			$dump( self::$types, 'types' );
 		} elseif ( $scope == 'callable' ) {
-			dump( $this->getCallable() );
+			$dump( $this->getCallable() );
 		} elseif ( $scope == 'log' ) {
-			dump( $this->getLog() );
+			$dump( $this->getLog() );
 		} else {
-			dump( $this->_callables, 'callables' );
-			dump( $this->_data, 'data' );
-			dump( $this->_error, 'error' );
-			dump( $this->_id, 'id' );
-			dump( $this->_is_new, 'isnew' );
-			dump( $this->_logs, 'logs' );
-			dump( $this->_object, 'object' );
-			dump( $this->_pk, 'pk' );
-			dump( $this->_search_results, 'results' );
-			dump( $this->_table, 'table' );
-			dump( $this->_type, 'type' );
-			dump( $this->_type_id, 'type_id' );
-			dump( $this->_type_parent, 'type_parent' );
-			dump( $this->_type_permissions, 'type_permissions' );
+			$dump( $this->_callables, 'callables' );
+			$dump( $this->_data, 'data' );
+			$dump( $this->_error, 'error' );
+			$dump( $this->_id, 'id' );
+			$dump( $this->_is_new, 'isnew' );
+			$dump( $this->_logs, 'logs' );
+			$dump( $this->_object, 'object' );
+			$dump( $this->_pk, 'pk' );
+			$dump( $this->_search_results, 'results' );
+			$dump( $this->_table, 'table' );
+			$dump( $this->_type, 'type' );
+			$dump( $this->_type_id, 'type_id' );
+			$dump( $this->_type_parent, 'type_parent' );
+			$dump( $this->_type_permissions, 'type_permissions' );
+			$dump( $this->_type_relationships, 'type_relationships' );
 
 			if ( $this->_instance_base ) {
-				dump( $this->_instance_base, 'base' );
+				$dump( $this->_instance_base, 'base' );
 			}
 			if ( $this->_instance_core ) {
-				dump( $this->_instance_core, 'core' );
+				$dump( $this->_instance_core, 'core' );
 			}
 			if ( $this->_instance_more ) {
-				dump( $this->_instance_more, 'more' );
+				$dump( $this->_instance_more, 'more' );
 			}
 			if ( $this->_instance_more_parent ) {
-				dump( $this->_instance_more_parent, 'more_parent' );
+				$dump( $this->_instance_more_parent, 'more_parent' );
 			}
 			if ( $this->_instance_more2 ) {
-				dump( $this->_instance_more2, 'more2' );
+				$dump( $this->_instance_more2, 'more2' );
 			}
 		}
 
@@ -1867,6 +2471,65 @@ class JCckContent
 		ob_get_clean();
 
 		$this->_setMixin( $mixin, $scope, $scope_target );
+	}
+
+	// _decrypt
+	protected function _decrypt()
+	{
+		if ( $this->_type_properties ) {
+			$my_app	=	JCckApp::getInstance();
+			$my_app->loadDefault();
+
+			foreach ( $this->_type_properties as $property=>$data ) {
+				if ( isset( self::$types[$this->_type]['data_map'][$property] ) && self::$types[$this->_type]['data_map'][$property] ) {
+					if ( isset( $data['crypt'] ) ) {
+						if ( $data['crypt'] === true ) {
+							$table_instance_name	=	self::$types[$this->_type]['data_map'][$property];
+
+							if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
+								$value	=	$this->{'_instance_'.$table_instance_name}->$property;
+
+								if ( isset( $value ) && $value !== '' ) {
+									$this->{'_instance_'.$table_instance_name}->$property	=	$my_app->decrypt( $value );
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// _encrypt
+	protected function _encrypt( $table_instance_name = '' )
+	{
+		if ( !$this->_options->get( 'encrypt_data', 1 ) ) {
+			return;
+		}
+
+		if ( $this->_type_properties ) {
+			$my_app	=	JCckApp::getInstance();
+			$my_app->loadDefault();
+
+			foreach ( $this->_type_properties as $property=>$data ) {
+				if ( isset( self::$types[$this->_type]['data_map'][$property] ) && self::$types[$this->_type]['data_map'][$property]
+				&& ( $table_instance_name === '' || $table_instance_name == self::$types[$this->_type]['data_map'][$property] ) ) {
+					if ( isset( $data['crypt'] ) ) {
+						if ( $data['crypt'] === true ) {
+							$table_instance_name	=	self::$types[$this->_type]['data_map'][$property];
+
+							if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
+								$value	=	$this->{'_instance_'.$table_instance_name}->$property;
+
+								if ( isset( $value ) && $value !== '' ) {
+									$this->{'_instance_'.$table_instance_name}->$property	=	$my_app->encrypt( $value );
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// _findResults
@@ -2003,15 +2666,22 @@ class JCckContent
 						continue;
 					}
 
-					$table_instance_name				=	self::$types[$this->_type]['data_map'][$k];
+					$table_instance_name			=	self::$types[$this->_type]['data_map'][$k];
+
+					if ( is_array( $v ) ) {
+						$v	=	json_encode( $v );
+					}
+
 					$data[$table_instance_name][$k]	=	$v;
 				}
 			}
 		}
 
-		if ( count( $data['more2'] ) ) {
-			if ( !isset( $data['more2']['cck'] ) ) { /* TODO#SEBLOD: remove "cck" column */
-				$data['more2']['cck']	=	$this->_type;
+		if ( !JCck::is( '5.0' ) ) {
+			if ( count( $data['more2'] ) ) {
+				if ( !isset( $data['more2']['cck'] ) ) { /* TODO#SEBLOD: remove "cck" column */
+					$data['more2']['cck']	=	$this->_type;
+				}
 			}
 		}
 
@@ -2040,6 +2710,28 @@ class JCckContent
 		return $data;
 	}
 
+	// _getDataMapInstance
+	public function _getDataMapInstance( $property )
+	{
+		if ( isset( self::$types[$this->_type]['data_map'][$property] ) ) {
+			return self::$types[$this->_type]['data_map'][$property];
+		}
+
+		return '';
+	}
+
+	// _getRelationshipDefinition
+	protected function _getRelationshipDefinition( $property )
+	{
+		if ( isset( self::$objects[$this->_object]['relationships']['many'][$this->_relationship_nav] ) ) {
+			return self::$objects[$this->_object]['relationships']['many'][$this->_relationship_nav][$property];
+		} elseif ( isset( self::$types[$this->_type]['relationships']['many'][$this->_relationship_nav] ) ) {
+			return self::$types[$this->_type]['relationships']['many'][$this->_relationship_nav][$property];
+		} else {
+			return '';
+		}
+	}
+
 	// _getSearchQuery
 	protected function _getSearchQuery( $content_type, $data, $order = array() )
 	{
@@ -2052,98 +2744,87 @@ class JCckContent
 
 		$query->from( $db->quoteName( '#__cck_core', 'a' ) );
 		$query->join( 'left', $db->quoteName( $this->_table, 'b' ).' ON '.$db->quoteName( 'b.'.self::$objects[$this->_object]['properties']['key'] ).' = '.$db->quoteName( 'a.pk' ) );
-		$query->where( $db->quoteName( 'a.cck' ).' = '.$db->quote( $content_type ) );
 
-		if ( $data === true ) {
-			$data	=	$this->_search_query['data'];
-			$limit	=	(int)$this->_search_query['limit'];
-			$match	=	$this->_search_query['match'];
-			$order	=	$this->_search_query['order'];
+		if ( strpos( $content_type, '|' ) !== false ) {
+			$parts		=	explode( '|', $content_type );
+			$where_type	=	array();
+			
+			foreach ( $parts as $part ) {
+				$where_type[] 	=	JCckDatabase::quote( $part );
+			}
+
+			$where_type	=	' IN ('.implode( ',', $where_type ).')';
 		} else {
-			$limit	=	0;
-			$match	=	array();
+			$where_type	=	' = '.$db->quote( $content_type );
 		}
 
+		$query->where( $db->quoteName( 'a.cck' ).$where_type );
+
+		if ( $data === true ) {
+			$data		=	$this->_search_query['data'];
+			$limit		=	(int)$this->_search_query['limit'];
+			$match		=	$this->_search_query['match'];
+			$match_each	=	$this->_search_query['match_each'];
+			$order		=	$this->_search_query['order'];
+		} else {
+			$limit		=	0;
+			$match		=	array();
+			$match_each	=	array();
+		}
+
+		// Where @ data
 		foreach ( $data as $k=>$v ) {
-			$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
-			$operator	=	'';
-			$where		=	'';
+			$indexes	=	explode( '|', $k );
+			$operator	=	isset( $match[$k] ) ? $match[$k] : '';
+			$where		=	array();
 
-			if ( $index === false ) {
-				return false;
-			} elseif ( $index === '' ) {
-				continue;
-			}
+			if ( isset( $match_each[$k] ) && ( strpos( $v, ' ' ) !== false ) ) {
+				$behavior	=	'AND';
+				$values		=	explode( ' ', $v );
 
-			if ( isset( $match[$k] ) ) {
-				$operator	=	$match[$k];
-			}
+				foreach ( $values as $value ) {
+					$w	=	array();
 
-			switch ( $operator ) {
-				case '<':
-				case '<=':
-				case '!=':
-				case '>=':
-				case '>':
-					$where	=	' ' . $operator . ' ' . $db->quote( $v );
-					break;
-				case 'between':
-					if ( strpos( $v, '|' ) !== false ) {
-						$parts	=	explode( '|', $v );
-						$where	=	' >= '.$db->quote( $parts[0] ).' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $db->quote( $parts[1] );
-					} else {
-						$parts	=	explode( ',', $v );
-						$where	=	' >= '.$parts[0].' AND '.$db->quoteName( $index.'.'.$k ) .' <= '. $parts[1];
-					}
-					break;
-				case 'in':
-					if ( strpos( $v, '|' ) !== false ) {
-						$parts	=	explode( '|', $v );
-						$where	=	' IN ("' .implode( '","', $parts ). '")';
-					} else {
-						$where	=	' IN (' .$v. ')';
-					}
-					break;
-				case 'like':
-					$where	=	' LIKE ' . $db->quote( '%'.$db->escape( $v, true ).'%', false );
-					break;
-				case 'likes':
-					$where	=	array();
-					$values	=	explode( ' ', $v );
+					foreach ( $indexes as $k ) {
+						$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
 
-					foreach ( $values as $value ) {
-						if ( strlen( $value ) > 0 ) {
-							$where[] 	=	$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$db->escape( $value, true ).'%', false );
+						if ( $index === false ) {
+							return false;
+						} elseif ( $index === '' ) {
+							continue;
 						}
+
+						$w[]		=	$this->_getSearchQueryWhere( $index, $k, $operator, $value );
 					}
-					break;
-				case 'up_since':
-					$where		=	array();
-					$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' <= '.$db->quote( $v ).' )';
-					break;
-				case 'up_until':
-					$where		=	array();
-					$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' >= '.$db->quote( $v ).' )';
-					break;
-				case 'within':
-					$glue		=	',';
-					$where		=	array();
-					$where[] 	=	$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $v )
-								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( $db->escape( $v, true ).$glue.'%', false )
-								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $v, true ).$glue.'%', false )
-								.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $v, true ), false );
-					break;
-				case '=':
-				default:
-					$where	=	' = ' . $db->quote( $v );
-					break;
+
+					$where[]	=	'((' . implode( ') OR (', $w ) . '))';
+				}
+			} else {
+				$behavior	=	'OR';
+
+				foreach ( $indexes as $k ) {
+					$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
+
+					if ( $index === false ) {
+						return false;
+					} elseif ( $index === '' ) {
+						continue;
+					}
+
+					$where[]		=	$this->_getSearchQueryWhere( $index, $k, $operator, $v );
+				}
 			}
 
-			if ( is_array( $where ) ) {
-				$query->where( '((' . implode( ') OR (', $where ) . '))' );
-			} else {
-				$query->where( $db->quoteName( $index.'.'.$k ) . $where );
+			if ( ( $count = count( $where ) ) === 1 ) {
+				$query->where( $where[0] );
+			} elseif ( $count > 1 ) {
+				$query->where( '((' . implode( ') '.$behavior.' (', $where ) . '))' );
 			}
+		}
+
+		// Where @ relationship
+		if ( $this->_search_relationship ) {
+			$this->_getSearchQueryJoin( $query, $tables );
 		}
 
 		// Order
@@ -2151,6 +2832,16 @@ class JCckContent
 
 		if ( is_array( $order ) ) {
 			foreach ( $order as $k=>$v ) {
+				$k2	=	'';
+
+				if ( strpos( $k, '.' ) !== false ) {
+					$parts	=	explode( '.', $k );
+					$k		=	$parts[0];
+
+					if ( isset( $parts[1] ) && $parts[1] ) {
+						$k2	=	$parts[1];
+					}
+				}
 				$index	=	$this->_getSearchQueryIndex( $query, $tables, $k );
 
 				if ( $index === false ) {
@@ -2159,7 +2850,11 @@ class JCckContent
 					continue;
 				}
 
-				$query->order( $db->quoteName( $index.'.'.$k ) . ' ' . strtoupper( trim( $v ) ) );
+				if ( $k2 ) {
+					$query->order( 'JSON_EXTRACT('.$db->quoteName( $index.'.'.$k ) . ', '.$db->quote( '$."'.$k2.'"' ).') ' . strtoupper( trim( $v ) ) );
+				} else {
+					$query->order( $db->quoteName( $index.'.'.$k ) . ' ' . strtoupper( trim( $v ) ) );
+				}
 
 				$isOrdered	=	true;
 			}
@@ -2210,10 +2905,161 @@ class JCckContent
 		return isset( $tables[$table_instance_name] ) ? $tables[$table_instance_name] : '';
 	}
 
+	// _getSearchQueryJoin
+	protected function _getSearchQueryJoin( &$query, &$tables )
+	{
+		$db	=	JFactory::getDbo();
+
+		foreach ( $this->_search_relationship as $k=>$relationship ) {
+			$this->_relationship_nav	=	$relationship['name'];
+
+			$table_name	=	$this->_getRelationshipDefinition( 'table' );
+
+			if ( !isset( $tables[$table_name] ) ) {
+				$tables[$table_name]	=	'j'.$k;
+
+				$query->join( 'left', $db->quoteName( $table_name, $tables[$table_name] ).' ON '.$db->quoteName( $tables[$table_name].'.id' ).' = '.$db->quoteName( 'a.pk' ) );
+				$query->group( 'a.pk' ); // TODO: make sure we have it only one time
+			}
+
+			if ( is_string( $relationship['data'] ) ) {
+				if ( strpos( $relationship['data'], 'false' ) !== false ) {
+					$where	=	array(
+									0=>$this->_getSearchQueryWhere( $tables[$table_name], 'id2', 'in', str_replace( array( '|false', 'false|' ), '', $relationship['data'] ) ),
+									1=>$this->_getSearchQueryWhere( $tables[$table_name], 'id', 'is_null' )
+								);
+
+					$query->where( '((' . implode( ') OR (', $where ) . '))' );
+				} else {
+					$query->where( $this->_getSearchQueryWhere( $tables[$table_name], 'id2', 'in', $relationship['data'] ) );
+				}
+			} elseif ( $relationship['data'] === true ) {
+				$query->where( $this->_getSearchQueryWhere( $tables[$table_name], 'id', 'is_not_null' ) );
+			} elseif ( $relationship['data'] === false ) {
+				$query->where( $this->_getSearchQueryWhere( $tables[$table_name], 'id', 'is_null' ) );
+			}
+			
+		}
+	}
+
+	// _getSearchQueryWhere
+	protected function _getSearchQueryWhere( $index, $k, $operator, $v = null )
+	{
+		$db		=	JFactory::getDbo();
+		$where	=	'';
+		$wrap	=	false;
+
+		switch ( $operator ) {
+			case '<':
+			case '<=':
+			case '!=':
+			case '>=':
+			case '>':
+				$where	=	' ' . $operator . ' ' . $db->quote( $v );
+				break;
+			case 'between':
+			case 'between<':
+			case '>between':
+			case '>between<':
+				$last	=	strlen( $operator ) - 1;
+				$x		=	$operator[0] == '>' ? '>' : '>=';
+				$y		=	$operator[$last] == '<' ? '<' : '<=';
+
+				if ( strpos( $v, '|' ) !== false ) {
+					$parts	=	explode( '|', $v );
+					$where	=	' '.$x.' '.$db->quote( $parts[0] ).' AND '.$db->quoteName( $index.'.'.$k ) .' '.$y.' '. $db->quote( $parts[1] );
+				} else {
+					$parts	=	explode( ',', $v );
+					$where	=	' '.$x.' '.$parts[0].' AND '.$db->quoteName( $index.'.'.$k ) .' '.$y.' '. $parts[1];
+				}
+				break;
+			case 'empty':
+				$where	=	' = ""';
+				break;
+			case 'in':
+				if ( strpos( $v, '|' ) !== false ) {
+					$parts	=	explode( '|', $v );
+					$where	=	' IN ("' .implode( '","', $parts ). '")';
+				} else {
+					$where	=	' IN (' .$v. ')';
+				}
+				break;
+			case 'is_null':
+				$where	=	' IS NULL';
+				break;
+			case 'is_not_null':
+				$where	=	' IS NOT NULL';
+				break;
+			case 'like%':
+			case 'alpha':
+				$where	=	' LIKE ' . $db->quote( $db->escape( $v, true ).'%', false );
+				break;
+			case 'like':
+				$where	=	' LIKE ' . $db->quote( '%'.$db->escape( $v, true ).'%', false );
+				break;
+			case 'likes':
+				$where	=	array();
+				$values	=	explode( ' ', $v );
+
+				foreach ( $values as $value ) {
+					if ( strlen( $value ) > 0 ) {
+						$where[] 	=	$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$db->escape( $value, true ).'%', false );
+					}
+				}
+				break;
+			case '%like':
+			case 'zeta':
+				$where	=	' LIKE ' . $db->quote( '%'.$db->escape( $v, true ), false );
+				break;
+			case 'not_like':
+				$where	=	' NOT LIKE ' . $db->quote( '%'.$db->escape( $v, true ).'%', false );
+				break;
+			case 'up_since':
+				$where		=	array();
+				$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' <= '.$db->quote( $v ).' )';
+				break;
+			case 'up_until':
+				$where		=	array();
+				$where[] 	=	'( '.$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $db->getNullDate() ).' OR '.$db->quoteName( $index.'.'.$k ).' >= '.$db->quote( $v ).' )';
+				break;
+			case 'within':
+				$glue	=	',';
+				$values	=	explode( ',', $v );
+				$where	=	array();
+				
+				foreach ( $values as $value ) {
+					if ( strlen( $value ) > 0 ) {
+						$where[] 	=	$db->quoteName( $index.'.'.$k ).' = '.$db->quote( $value )
+									.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( $db->escape( $value, true ).$glue.'%', false )
+									.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $value, true ).$glue.'%', false )
+									.	' OR '.$db->quoteName( $index.'.'.$k ).' LIKE '.$db->quote( '%'.$glue.$db->escape( $value, true ), false );
+						$wrap		=	true;
+					}
+				}
+				break;
+			case '=':
+			default:
+				$where	=	' = ' . $db->quote( $v );
+				break;
+		}
+
+		if ( is_array( $where ) ) {
+			if ( count( $where ) === 1 && $wrap === false ) {
+				$where	=	implode( '', $where );
+			} else{
+				$where	=	'((' . implode( ') OR (', $where ) . '))';
+			}
+		} else {
+			$where	=	$db->quoteName( $index.'.'.$k ) . $where;
+		}
+
+		return $where;
+	}
+
 	// _setContentById
 	protected function _setContentById( $identifier )
 	{
-		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, a.storage_table as storage_table, b.id AS type_id, b.parent AS parent, b.permissions AS permissions'
+		$query	=	'SELECT a.id AS id, a.cck AS cck, a.pk AS pk, a.storage_location as storage_location, a.storage_table as storage_table, b.id AS type_id, b.parent AS parent, b.permissions AS permissions, b.relationships AS relationships'
 				.	' FROM #__cck_core AS a'
 				.	' JOIN #__cck_core_types AS b ON b.name = a.cck';
 
@@ -2225,7 +3071,7 @@ class JCckContent
 				return false;
 			}
 
-			$and					=	( (string)$identifier[0] == 'free' && $this->_table ) ? ' AND storage_table = "'.$this->_table.'"' : '';
+			$and					=	( (string)$identifier[0] == 'free' ) ? ' AND storage_table = "'.$this->_table.'"' : '';
 			$core					=	JCckDatabase::loadObject( $query.' WHERE a.storage_location = "'.(string)$identifier[0].'"'.$and.' AND a.pk = '.(int)$identifier[1] );
 
 			$this->_object			=	$identifier[0];
@@ -2252,12 +3098,22 @@ class JCckContent
 			return false;
 		}
 
+		$settings					=	json_decode( $core->relationships, true );
 		$this->_id					=	$core->id;
 		$this->_pk					=	$core->pk;
 		$this->_type				=	$core->cck;
 		$this->_type_id				=	$core->type_id;
 		$this->_type_parent			=	$core->parent;
 		$this->_type_permissions	=	$core->permissions;
+
+		if ( isset( $settings['properties'] ) ) {
+			$this->_type_properties	=	$settings['properties'];
+		}
+		if ( isset( $settings['relationships'] ) ) {
+			$this->_type_relationships	=	$settings['relationships'];
+		} else {
+			$this->_type_relationships	=	$settings;
+		}
 
 		$this->_setTypeMap();
 
@@ -2267,10 +3123,14 @@ class JCckContent
 	// _setContentByType
 	protected function _setContentByType( $content_type )
 	{
+		if ( strpos( $content_type, '|' ) !== false ) {
+			$parts			=	explode( '|', $content_type );
+			$content_type	=	$parts[0];
+		}
 		$this->_type	=	$content_type;
 
 		if ( !$this->_object || !$this->_table ) {
-			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, storage_location, parent, permissions, relationships FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 			
 			if ( !is_object( $type ) ) {
 				$this->log( 'error', 'Content Type not found.' );
@@ -2280,7 +3140,7 @@ class JCckContent
 
 			$this->_object		=	$type->storage_location;
 
-			if ( !$this->_object ) {
+			if ( !$this->_object || $this->_object == 'none' ) {
 				return false;
 			}
 
@@ -2288,9 +3148,13 @@ class JCckContent
 
 			if ( self::$objects[$this->_object]['properties']['table'] != '' ) {
 				$this->_table	=	self::$objects[$this->_object]['properties']['table'];	
+			} else {
+				if ( $this->_table == '' ) {
+					$this->_table	=	'#__cck_store_form_'.( $type->parent ? $type->parent : $content_type );
+				}
 			}
 		} else {
-			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
+			$type		=	JCckDatabaseCache::loadObject( 'SELECT id, parent, permissions, relationships FROM #__cck_core_types WHERE name = "'.$this->_type.'"' );
 
 			if ( !is_object( $type ) ) {
 				$this->log( 'error', 'Content Type not found.' );
@@ -2299,9 +3163,19 @@ class JCckContent
 			}
 		}
 
+		$settings					=	json_decode( $type->relationships, true );
 		$this->_type_id				=	$type->id;
 		$this->_type_parent			=	$type->parent;
 		$this->_type_permissions	=	$type->permissions;
+
+		if ( isset( $settings['properties'] ) ) {
+			$this->_type_properties	=	$settings['properties'];
+		}
+		if ( isset( $settings['relationships'] ) ) {
+			$this->_type_relationships	=	$settings['relationships'];
+		} else {
+			$this->_type_relationships	=	$settings;
+		}
 
 		$this->_setTypeMap();
 
@@ -2401,6 +3275,22 @@ class JCckContent
 			self::$objects[$object]['properties']['context2']	=	self::$objects[$object]['properties']['context'];
 		}
 
+		// Core Relationships
+
+		// self::$objects[$object]['relations']	=	array( 'one'=>array(), 'many'=>array() );
+
+		// if ( $columns['author_object'] ) {
+		// 	$this->setRelation( 'author', $columns['author_object'], $columns['author'], $object );
+		// }
+
+		// if ( $columns['parent_object'] ) {
+		// 	$this->setRelation( 'parent', $columns['parent_object'], $columns['parent'], $object );
+		// }
+
+		// if ( $columns['child_object'] ) {
+		// 	$this->_setObjectMap( $columns['child_object'] );
+		// }
+
 		return true;
 	}
 
@@ -2420,9 +3310,18 @@ class JCckContent
 											'data_map'=>array()
 										);
 
+		// More Relationships
+		if ( $this->_type_relationships ) {
+			foreach ( $this->_type_relationships as $relationship ) {
+				if ( isset( $relationship['mode'] ) && isset( $relationship['name'] ) ) {
+					$this->setRelationship( $relationship['mode'], $relationship['name'], $relationship['params'] );
+				}
+			}
+		}
+
 		return true;
 	}
-
+	
 	// _triggerEvent
 	protected function _triggerEvent( $event, array $args = null )
 	{
@@ -2483,4 +3382,10 @@ class JCckContent
 		return $status;
 	}
 }
+
+// JCckContentUnknown
+// class JCckContentUnknown
+// {
+// 	protected $_error	=	true;
+// }
 ?>
