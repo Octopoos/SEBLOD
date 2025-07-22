@@ -21,7 +21,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_StoragePrepareContent
-	public function onCCK_StoragePrepareContent( &$field, &$value, &$storage )
+	public function onCCK_StoragePrepareContent( &$field, &$value, &$storage, $config = array() )
 	{
 		if ( self::$type != $field->storage ) {
 			return;
@@ -33,6 +33,10 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		// Set
 		if ( isset( $storage->$P ) ) {
 			$value	=	$storage->$P;
+
+			if ( (int)$field->storage_crypt > 0 && $value !== '' ) {
+				$value	=	$config['app']->decrypt( $value );
+			}
 		}
 	}
 	
@@ -85,16 +89,20 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		// Set
 		if ( isset( $storage->$P ) ) {
 			$value	=	$storage->$P;
+
+			if ( (int)$field->storage_crypt > 0 && $value !== '' ) {
+				$value	=	$config['app']->decrypt( $value );
+			}
 		}
 	}
 	
 	// onCCK_StoragePrepareForm_Xi
-	public function onCCK_StoragePrepareForm_Xi( &$field, &$value, &$storage, $x = '', $xi = 0 )
+	public function onCCK_StoragePrepareForm_Xi( &$field, &$value, &$storage, $x = '', $xi = 0, $config = array() )
 	{
 		if ( self::$type != $field->storage ) {
 			return;
 		}
-		self::onCCK_StoragePrepareForm( $field, $value, $storage );
+		self::onCCK_StoragePrepareForm( $field, $value, $storage, $config );
 	}
 
 	// onCCK_StoragePrepareResource
@@ -103,17 +111,46 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		if ( self::$type != $field->storage ) {
 			return;
 		}
+
+		if ( (int)$field->storage_crypt > 0 && $value !== '' ) {
+			$value	=	$config['app']->decrypt( $value );
+		}
 	}
 	
 	// onCCK_StoragePrepareSearch
 	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $suffix, $fields = array(), &$config = array() )
 	{
-		$sql	=	'';
-		
+		$decrypt	=	(int)$field->storage_crypt > 0 ? true : false;
+		$sql		=	'';
+
+		if ( (int)$field->storage_mode == 1 && $field->storage != 'json' ) {
+			$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.JFactory::getLanguage()->getTag().'"').')'; /* TODO#SEBLOD4 */
+		}
+
 		switch ( $match ) {
 			case 'exact':
 				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
-				
+				$excluded	=	( $field->match_options ) ? $field->match_options->get( 'values', '' ) : '';
+				$filter		=	( $field->match_options ) ? $field->match_options->get( 'filter', '' ) : '';
+
+				if ( $excluded != '' ) {
+					$excluded_values	=	explode( ',', $excluded );
+
+					if ( in_array( $value, $excluded_values ) ) {
+						if ( strpos( $target, 'JSON_EXTRACT' ) !== false ) {
+							$value	=	'';
+						} else {
+							$sql	=	'()'; /* TODO#SEBLOD: */
+							break;
+						}
+					}
+				}
+				if ( $filter != '' ) {
+					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+				}
+				if ( $decrypt && $value !== '' ) {
+					$value	=	$config['app']->encrypt( $value );
+				}
 				if ( !$var_type ) {
 					$sql	=	$target.' = '.JCckDatabase::clean( $value );
 				} else {
@@ -146,10 +183,33 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				}
 				break;
 			case 'any_exact':
+				$excluded	=	( $field->match_options ) ? $field->match_options->get( 'values', '' ) : '';
 				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$values		=	explode( $separator, $value );
+
 				$count		=	count( $values );
-				
+
+				if ( $count ) {
+					if ( $excluded != '' ) {
+						$excluded_values	=	explode( ',', $excluded );
+
+						foreach ( $values as $k=>$v ) {
+							if ( strlen( $v ) > 0 ) {
+								if ( in_array( $v, $excluded_values ) ) {
+									unset( $values[$k] );
+								}
+							}
+						}
+
+						$count	=	count( $values );
+
+						if ( !$count ) {
+							$sql	=	'()'; /* TODO#SEBLOD: */
+							break;
+						}
+					}
+				}
+
 				if ( $count ) {
 					$fragments	=	array();
 					$var_count	=	( $field->match_options ) ? $field->match_options->get( 'var_count', '' ) : '';
@@ -206,6 +266,37 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					}
 				}
 				break;
+			case 'any_exact_isset':
+				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
+				$values		=	!is_array( $value ) ? explode( $separator, $value ) : $value;
+				$count		=	count( $values );
+				
+				if ( $count ) {
+					$fragments	=	array();
+					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
+
+					if ( !$var_type ) {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[] 	=	JCckDatabase::clean( $v );
+							}
+						}
+					} else {
+						foreach ( $values as $v ) {
+							if ( strlen( $v ) > 0 ) {
+								$fragments[] 	=	JCckDatabase::quote( $v );
+							}
+						}
+					}
+					if ( count( $fragments ) ) {
+						$sql	=	'('.$target.' IN ('.implode( ',', $fragments ).') OR '.$target.' IS NULL)';
+					} else {
+						$sql	=	$target.' IS NULL';
+					}
+				} else {
+					$sql	=	$target.' IS NULL';
+				}
+				break;
 			case 'each':
 			case 'each_exact':
 			case 'n':
@@ -218,15 +309,15 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					$fragments	=	array();
 					$operator	=	'AND';
 					$var_count	=	( $field->match_options ) ? $field->match_options->get( 'var_count', '' ) : '';
-
+					
 					if ( $match == 'each_exact' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
 								$fragment		=	'';
 
-								if ( $count == 1 ) {
-									$fragment 	.=	$target.' = '.JCckDatabase::quote( $v ).' OR ';
-								}
+								// if ( $count == 1 ) {
+								$fragment 	.=	$target.' = '.JCckDatabase::quote( $v ).' OR ';
+								// }
 								$fragment		.=	$target.' LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
 												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
 												.	' OR '.$target.' LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
@@ -262,8 +353,8 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					} else {
 						$case		=	( $field->match_options ) ? $field->match_options->get( 'var_case', '' ) : '';
 						$collate	=	( $field->match_options ) ? $field->match_options->get( 'var_collate', '' ) : '';
-						$collate	=	$collate ? ' COLLATE '.$collate : '';
-						
+						$collate	=	$collate ? ' COLLATE '.$collate : $suffix;
+
 						if ( $case ) {	
 							$target		=	'LOWER('.$target.')';
 						}
@@ -292,8 +383,12 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 						} else {
 							foreach ( $values as $v ) {
 								if ( strlen( $v ) > 0 ) {
-									if ( $case ) {
-										$v	=	StringHelper::strtolower( $v );
+									if ( $decrypt ) {
+										$v	=	$config['app']->encrypt( $v );
+									} else {
+										if ( $case ) {
+											$v	=	StringHelper::strtolower( $v );
+										}
 									}
 									$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$collate;
 								}
@@ -339,42 +434,60 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$sql	=	$target.' > '.JCckDatabase::quote( $value );
 				break;
 			case 'nested_exact':
+				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
 				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
-				$column		=	'id';
-				$values		=	JCckDevHelper::getBranch( $table, $value );
+				$parents	=	explode( $separator, $value );
+				$values		=	array();
 				
-				if ( $column != 'id' ) {
-					if ( count( $values ) ) {
-						$fragments	=	array();
-						foreach ( $values as $v ) {
-							if ( $v != '' ) {
-								$fragments[] 	=	JCckDatabase::quote( $v );
-							}
-						}
-						if ( count( $fragments ) ) {
-							$sql	=	$target.' IN (' . implode( ',', $fragments ) . ')';
-						}
+				foreach ( $parents as $parent ) {
+					$ids	=	JCckDevHelper::getBranch( $table, $parent );
+
+					if ( count( $ids ) ) {
+						$values	=	array_merge( $values, $ids );
 					}
-				} else {
-					if ( count( $values ) ) {
-						$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
-					}
+				}
+				if ( count( $values ) ) {
+					$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
 				}
 				if ( $sql == '' ) {
 					$sql	=	$target.' IN (0)';
 				}
 				break;
 			case 'num_higher':
-				$sql	=	$target.' >= '.JCckDatabase::quote( $value );
+				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
+
+				if ( $filter != '' ) {
+					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+				}
+
+				$sql	=	$target.' >= '.$value;
 				break;
 			case 'num_higher_only':
-				$sql	=	$target.' > '.JCckDatabase::quote( $value );
+				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
+
+				if ( $filter != '' ) {
+					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+				}
+
+				$sql	=	$target.' > '.$value;
 				break;
 			case 'num_lower':
-				$sql	=	$target.' <= '.JCckDatabase::quote( $value );
+				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
+
+				if ( $filter != '' ) {
+					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+				}
+
+				$sql	=	$target.' <= '.$value;
 				break;
 			case 'num_lower_only':
-				$sql	=	$target.' < '.JCckDatabase::quote( $value );
+				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
+
+				if ( $filter != '' ) {
+					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+				}
+
+				$sql	=	$target.' < '.$value;
 				break;
 			case 'not_alpha':
 				$sql	=	$target.' NOT LIKE '.JCckDatabase::quote( JCckDatabase::escape( $value, true ).'%', false );
@@ -385,23 +498,38 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				
 				if ( count( $values ) ) {
 					$fragments	=	array();
+					$var_mode	=	( $field->match_options ) ? $field->match_options->get( 'var_mode', '0' ) : '0';
 					$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
 					
-					if ( !$var_type ) {
+					if ( $var_mode == '1' ) {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	JCckDatabase::clean( $v );
+								$fragments[] 	=	$target.' != '.JCckDatabase::quote( $v )
+												.	' AND '.$target.' NOT LIKE '.JCckDatabase::quote( JCckDatabase::escape( $v, true ).$separator.'%', false )
+												.	' AND '.$target.' NOT LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ).$separator.'%', false )
+												.	' AND '.$target.' NOT LIKE '.JCckDatabase::quote( '%'.$separator.JCckDatabase::escape( $v, true ), false );
 							}
+						}
+						if ( count( $fragments ) ) {
+							$sql	=	'((' . implode( ') AND (', $fragments ) . '))';
 						}
 					} else {
-						foreach ( $values as $v ) {
-							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	JCckDatabase::quote( $v );
+						if ( !$var_type ) {
+							foreach ( $values as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									$fragments[] 	=	JCckDatabase::clean( $v );
+								}
+							}
+						} else {
+							foreach ( $values as $v ) {
+								if ( strlen( $v ) > 0 ) {
+									$fragments[] 	=	JCckDatabase::quote( $v );
+								}
 							}
 						}
-					}
-					if ( count( $fragments ) ) {
-						$sql	=	$target.' NOT IN (' . implode( ',', $fragments ) . ')';
+						if ( count( $fragments ) ) {
+							$sql	=	$target.' NOT IN (' . implode( ',', $fragments ) . ')';
+						}
 					}
 				}
 				break;
@@ -467,6 +595,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				return;
 				break;
 			default:
+				if ( $decrypt && $value !== '' ) {
+					$value	=	$config['app']->encrypt( $value );
+				}
 				$sql	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $value, true ).'%', false );
 				break;
 		}
@@ -481,7 +612,11 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		if ( is_array( $value ) ) {
 			$store	=	$value;
 		} else {
-			$store	=	' '.$value;
+			$store	=	$value;
+
+			if ( (int)$field->storage_crypt > 0 && isset( $store ) && $store !== '' ) {
+				$store	=	$config['app']->encrypt( trim( $store ) );
+			}
 		}
 		
 		parent::g_onCCK_StoragePrepareStore( $field, $store, $config );
@@ -515,7 +650,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
-
+	
 	// _format
 	public static function _format( $name, $value, &$config = array() )
 	{

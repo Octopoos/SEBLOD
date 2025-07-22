@@ -33,22 +33,54 @@ header( "Expires: 0" );
 header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 header( "Cache-Control: no-store" );
 header( "Content-Type: $mime_type" );
-header( "Content-Disposition: filename=\"$name\"" );
+header( "Content-Disposition: inline; filename=\"$name\"" );
 header( "Content-Length: " . $file_size );
 
-$chunk_size	=	1024 * 1024;
-$handle		=	fopen( $path, 'rb' );
-
-if ( $handle === false ) {
-	die;
+if ( isset( $x_robots ) && $x_robots ) {
+	switch ( $x_robots ) {
+		case 'index, nofollow':
+			header( "X-Robots-Tag: nofollow" );
+			break;
+		case 'noindex, follow':
+			header( "X-Robots-Tag: noindex" );
+			break;
+		case 'noindex, nofollow':
+			header( "X-Robots-Tag: noindex, nofollow" );
+			break;
+		default:
+			break;
+	}
 }
-while ( !feof( $handle ) ) {
-	echo @fread( $handle, $chunk_size );
-	ob_flush();
-	flush();
+
+if ( !JCck::getConfig_Param( 'media_canonical', 0 ) ) {
+	$uri_link	=	JUri::current().'?task=download&file='.$fieldname.'&id='.$id;
+
+	header( "Link: <$uri_link>; rel=\"canonical\"" );
+} else {
+	$uri_link	=	JUri::current().'?task=read&file='.$fieldname.'&id='.$id;
+
+	header( "Link: <$uri_link>; rel=\"canonical\"" );
 }
 
-fclose( $handle );
+if ( isset( $config['app'] ) ) {
+	$buffer	=	file_get_contents( $path );
+
+	echo $config['app']->decrypt( $buffer );
+} else {
+	$chunk_size	=	1024 * 1024;
+	$handle		=	fopen( $path, 'rb' );
+
+	if ( $handle === false ) {
+		die;
+	}
+	while ( !feof( $handle ) ) {
+		echo @fread( $handle, $chunk_size );
+		ob_flush();
+		flush();
+	}
+
+	fclose( $handle );
+}
 
 exit();
 ?>

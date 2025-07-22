@@ -218,14 +218,15 @@ $js		=	'
 			;
 
 $prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
+
+if ( strpos( (string)$config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
 } else {
 	$linked	=	'';
 }
-$table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
+$table	=	str_replace( '#__', $prefix, (string)$config['item']->storage_table );
 $cck	=	JCckDev::preload( array( 'core_storage_table', 'core_storage_field',
-									 'core_storage_alter', 'core_storage_alter_type', 'core_storage_alter_table', 'core_required', 'core_script', 'core_attributes', 'core_dev_text' ) );
+									 'core_storage_alter', 'core_storage_alter_type', 'core_storage_alter_table', 'core_required', 'core_script', 'core_attributes', 'core_dev_text', 'core_storage_encryption' ) );
 
 if ( $config['item']->storage_field2 ) {
 	$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
@@ -273,7 +274,8 @@ $html	=	'';
 							'storage'=>array(
 								'alter'=>JCckDev::getForm( $cck['core_storage_alter'], '', $config ),
 								'alter_table'=>JCckDev::getForm( $cck['core_storage_alter_table'], '', $config ),
-								'alter_type'=>JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config )
+								'alter_type'=>JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config ),
+								'encryption'=>JCckDev::getForm( $cck['core_storage_encryption'], $encryption, $config )
 							),
 							'type'=>$linked
 						) );
@@ -290,15 +292,17 @@ $displayData	=	array(
 						),
 						'html'=>array(
 							'append'=>$html,
-							'prepend'=>'<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />'
-									 . '<input type="hidden" id="storage_cck" name="storage_cck" value="'.$linked.'" />'
+							'prepend'=>'<input type="hidden" id="storage_cck" name="storage_cck" value="'.$linked.'" />'
 									 . '<input type="hidden" id="force_storage" name="force_storage" value="0" />'
+									 . '<input type="hidden" id="storage_crypt_prev" name="storage_crypt_prev" value="'.$config['item']->storage_crypt.'" />'
+									 . '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />'
 						),
 						'params'=>array(
 							'linked'=>$linked,
 							'value'=>$value
 						),
 						'script'=>$js,
+						'style'=>'#storage_field_prev + div > div[style="order:4"] > div:not([style="display:none;"]){padding-bottom:1rem;}',
 						'type'=>$config['item']->type
 					);
 

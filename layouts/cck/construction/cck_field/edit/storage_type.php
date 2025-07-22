@@ -13,22 +13,26 @@ if ( $displayData['type'] ) {
 <details<?php echo $class; ?> style="order:4">
 	<summary class="rule-notes"><?php echo $text; ?></summary>
 	<div class="rule-notes">If you need to change this setting...</div>
-	<div>
+	<div class="storage_stuff">
 		<?php
 		echo $displayData['storage']['alter'];
 		echo $displayData['storage']['alter_table'];
 		echo $displayData['storage']['alter_type'];
+		echo '<hr>';
+		echo $displayData['storage']['encryption'];
 		?>
 	</div>
 </details>
 <?php } else { ?>
 <details<?php echo $class; ?> style="order:6; margin-top:0; margin-bottom:8px;">
 	<summary class="rule-notes"><?php echo '...'; ?></summary>
-	<div>
+	<div class="storage_stuff">
 		<?php
 		echo $displayData['storage']['alter'];
 		echo $displayData['storage']['alter_table'];
 		echo $displayData['storage']['alter_type'];
+		echo '<hr>';
+		echo $displayData['storage']['encryption'];
 		?>
 	</div>
 </details>

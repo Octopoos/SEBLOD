@@ -161,6 +161,11 @@ class plgCCK_FieldText extends JCckPluginField
 		if ( strpos( $field->value, '&' ) !== false ) {
 			$field->value	=	str_replace( array( '&amp;', '&quot;' ), array( '&', '\"' ), $field->value );
 		}
+		/*
+		if ( $field->storage_filter ) {
+			$field->value	=	JFilterInput::getInstance()->clean( $field->value, $field->storage_filter );
+		}
+		*/
 		
 		// Return
 		if ( $return === true ) {

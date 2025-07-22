@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\Registry\Registry;
 
-// JCckList
+// JCckApp
 class JCckApp
 {
 	protected static $callables			=	array();
@@ -25,6 +25,7 @@ class JCckApp
 												'_setCallable'=>'',
 												'_setMixin'=>'',
 											);
+	protected static $instances			=	array();
 
 	protected $_options					=	null;
 
@@ -56,8 +57,21 @@ class JCckApp
 	}
 
 	// getInstance
-	public static function getInstance( $identifier = '' )
+	public static function getInstance( $identifier = 'default' )
 	{
+		if ( $identifier == 'default' ) {
+			$key	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+		} else {
+			$key	=	$identifier;
+		}
+
+		if ( !isset( self::$instances[$key] ) ) {
+			self::$instances[$key]	=	new JCckApp;
+
+			self::$instances[$key]->load( $key );
+		}
+
+		return self::$instances[$key];
 	}
 
 	// setOptions
@@ -332,8 +346,8 @@ class JCckApp
 			$this->_crypt->setNonce( $core->nonce );
 
 			$this->_crypt_key	=	$this->_crypt->getkey(
-										base64_decode( $this->_getKey( $options['key_private'] ) ),
-										base64_decode( $this->_getKey( $options['key_public'] ) )
+										hex2bin( $this->_getKey( $options['key_private'] ) ),
+										hex2bin( $this->_getKey( $options['key_public'] ) )
 									);
 		}
 
@@ -366,7 +380,7 @@ class JCckApp
 			}
 
 			if ( is_file( $dir.$path ) ) {
-				$key	=	file_get_contents( $dir.$path );
+				$key	=	trim( file_get_contents( $dir.$path ) );
 			}
 
 			return $key;

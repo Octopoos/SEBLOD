@@ -32,8 +32,8 @@ class JCckAppCrypt extends SodiumCipher
 						);
 
 		if ( $base64 ) {
-			$data['public']		=	base64_encode( $data['public'] );
-			$data['private']	=	base64_encode( $data['private'] );
+			$data['public']		=	bin2hex( $data['public'] );
+			$data['private']	=	bin2hex( $data['private'] );
 		}
 
 		return $data;

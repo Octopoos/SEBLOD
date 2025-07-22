@@ -40,6 +40,7 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		} else {
 			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 				$value	=	$storage->values[$P][$field->storage_field2];
+
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
 					if ( is_array( $value ) && isset( $field->storage_field4 ) ) {
@@ -186,7 +187,7 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		$sql		=	'';
 		$sql_fix	=	$target.' = '.JCckDatabase::quote( '{}' );
 		$target		=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')'; /* TODO#SEBLOD4: 'LOWER(JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').'))'; */
-		
+
 		switch ( $match ) { /* TODO#SEBLOD4: a few match modes may need to be overriden */
 			case 'none':
 				return '';

@@ -172,7 +172,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 
 				$query				=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
-									.	' FROM '.$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+									.	' FROM '.$table.' AS a'
+									.	' LEFT JOIN #__categories AS b ON b.id = a.catid';
 				
 				if ( $config['doSEF'][0] == '5' ) {
 					$query			.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'

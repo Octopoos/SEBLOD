@@ -51,17 +51,22 @@ class plgCCK_FieldStorage extends JCckPluginField
 
 		// Prepare
 		$app	=	JFactory::getApplication();
+
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			$form		=	'';
 			$value		=	'';
 		} else {
 			$alter				=	true;
 			$alter_type_default	=	( isset( $inherit['alter_type_value'] ) ) ? $inherit['alter_type_value'] : '';
+			$encryption			=	'';
+
 			if ( isset( $config['item']->id ) && $config['item']->id && isset( $config['item']->storage_table ) && $config['item']->storage_table != '' ) {
-				$db		=	JFactory::getDbo();
-				$prefix	=	$db->getPrefix();
-				$table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
-				$tables	=	$db->getTableList();
+				$db			=	JFactory::getDbo();
+				$encryption	=	abs( $config['item']->storage_crypt );
+				$prefix		=	$db->getPrefix();
+				$table		=	str_replace( '#__', $prefix, $config['item']->storage_table );
+				$tables		=	$db->getTableList();
+
 				if ( in_array( $table, $tables ) ) {
 					$column				=	JCckDatabase::loadObject( 'SHOW COLUMNS FROM '.$table.' WHERE field = "'.$config['item']->storage_field.'"' );
 					$alter_type_value	=	( isset( $column->Type ) ) ? strtoupper( $column->Type ) : $alter_type_default;

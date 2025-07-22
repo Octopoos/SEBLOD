@@ -80,7 +80,11 @@ class JCckPluginStorage extends JPlugin
 		if ( is_array( $store ) ) {
 			@$config['storages'][$Pt][$Pf]	=	$store;
 		} else {
-			@$config['storages'][$Pt][$Pf]	.=	trim( $store );
+			if ( (int)$field->storage_crypt > 0 ) {
+				@$config['storages'][$Pt][$Pf]	.=	$store;	
+			} else {
+				@$config['storages'][$Pt][$Pf]	.=	trim( $store );
+			}
 		}
 	}
 	

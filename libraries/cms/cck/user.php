@@ -88,6 +88,21 @@ abstract class JCckUser
 					}
 				}
 			}
+
+			if ( $content_type ) {
+				$content_type_infos	=	json_decode( JCckDatabase::loadResult( 'SELECT relationships FROM #__cck_core_types WHERE name="'.$content_type.'"' ), true );
+
+				if ( isset( $content_type_infos['properties'] ) && count( $content_type_infos['properties'] ) ) {
+					$my_app = new JCckApp;
+					$my_app->loadDefault();
+
+					foreach( $content_type_infos['properties'] as $property => $infos ) {
+						if ( isset( $infos['crypt'] ) && $infos['crypt'] === true && isset( $user->$property ) && $user->$property !== '' ) {
+							$user->$property	=	$my_app->decrypt( $user->$property );
+						}
+					}
+				}
+			}
 		}
 		
 		return $user;

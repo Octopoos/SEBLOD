@@ -95,8 +95,9 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$config['n']	=	1;
-				$config['pk']	=	0;
+				$config['error']	=	false;
+				$config['n']		=	1;
+				$config['pk']		=	0;
 
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
@@ -196,13 +197,17 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 							$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
 						}
 						if ( $field->storage == 'standard' ) {
+							$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+
+							if ( (int)$field->storage_crypt > 0 && $val !== '' ) {
+								$val	=	$config['app']->decrypt( $val );
+							}
+							
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
-								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$app->triggerEvent( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
 								$fields[$key]	=	$field->output;
 							} else {
-								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$fields[$key]	=	$val;
 							}
 						} elseif ( $field->storage != 'none' ) {
@@ -248,6 +253,10 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
 					}
+				}
+
+				if ( $config['error'] ) {
+					continue;
 				}
 
 				// Export

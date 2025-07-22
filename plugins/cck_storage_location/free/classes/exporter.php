@@ -15,8 +15,8 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/free/free.php';
 // Class
 class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 {
-	protected static $columns_excluded	=	array();
-	protected static $columns_ignored	=	array( 'id', 'checked_out', 'checked_out_time' );
+	protected static $columns_excluded	=	array( 'typeAlias' );
+	protected static $columns_ignored	=	array( 'id', 'checked_out', 'checked_out_time', 'typeAlias' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -85,10 +85,22 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 		if ( $config['prepare_output'] ) {
 			JPluginHelper::importPlugin( 'cck_field' );
 		}
+
 		if ( count( $items ) ) {
+			$settings	=	(string)JCckDatabaseCache::loadResult( 'SELECT relationships FROM #__cck_core_types WHERE name = "'.$config['content_type'].'"' );
+
+			if ( $settings !== '' ) {
+				$settings	=	json_decode( $settings, true );
+
+				if ( !isset( $settings['properties'] ) ) {
+					$settings['properties']	=	array();
+				}
+			}
+
 			foreach ( $items as $item ) {
-				$config['n']	=	1;
-				$config['pk']	=	0;
+				$config['error']	=	false;
+				$config['n']		=	1;
+				$config['pk']		=	0;
 
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
@@ -134,6 +146,19 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 							unset( $fields[$exclude] );
 						}
 					}
+					foreach ( $settings['properties'] as $property=>$data ) {
+						if ( isset( $fields[$property] ) ) {
+							if ( isset( $data['crypt'] ) ) {
+								if ( $data['crypt'] === true ) {
+									$value	=	$fields[$property];
+
+									if ( $value !== '' ) {
+										$fields[$property]	=	$config['app']->decrypt( $value );
+									}
+								}
+							}
+						}
+					}
 				}
 
 				// Core > Custom
@@ -167,13 +192,17 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 							$key		=	( $field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->name );
 						}
 						if ( $field->storage == 'standard' ) {
+							$val		=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
+
+							if ( (int)$field->storage_crypt > 0 && $val !== '' ) {
+								$val	=	$config['app']->decrypt( $val );
+							}
+
 							// DISPATCH --> EXPORT
 							if ( $config['prepare_output'] ) {
-								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$app->triggerEvent( 'onCCK_FieldPrepareExport', array( &$field, $val, &$config ) );
 								$fields[$key]	=	$field->output;
 							} else {
-								$val			=	@$tables[$field->storage_table][$item->pk]->{$field->storage_field};
 								$fields[$key]	=	$val;
 							}
 						} elseif ( $field->storage != 'none' ) {
@@ -219,6 +248,10 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
 					}
+				}
+
+				if ( $config['error'] ) {
+					continue;
 				}
 
 				// Export
