@@ -267,6 +267,15 @@ body.layout-default main #j-main-container {
 #j-main-container .pull-right.duo {
 	grid-template-columns: repeat(2,auto);
 }
+#j-main-container .pull-right.solo > div {
+	position: relative;
+}
+#j-main-container .pull-right.solo > div input[type="checkbox"] {
+	position: absolute;
+	left: -24px;
+	top: 14px;
+	width: auto;
+}
 
 #j-main-container .js-stools-container-filters-visible {
 	display: grid;
@@ -453,13 +462,19 @@ span.star{font-size: 16px!important; font-weight: bold;}
     color: var(--focus);
 }
 
-body.contentpane{background-color: var(--template-bg-dark-5); padding: 0;}
-body.contentpane .span12{padding: 0 20px;}
-body.contentpane .span12:not(.subhead){padding-top: 20px;}
-body.contentpane form.modal-large .span12:not(.subhead){padding-top: 18px;}
-body.contentpane form.modal-large .row.title-alias{justify-self: center;width: 100%;}
+body.contentpane,
+body.is-darkcontentpane{background-color: var(--template-bg-dark-5); padding: 0;}
+body.contentpane .span12,
+body.is-darkcontentpane .span12{padding: 0 20px;}
+body.contentpane .span12:not(.subhead),
+body.is-darkcontentpane .span12:not(.subhead){padding-top: 20px;}
+body.contentpane form.modal-large .span12:not(.subhead),
+body.is-darkcontentpane form.modal-large .span12:not(.subhead){padding-top: 18px;}
+body.contentpane form.modal-large .row.title-alias,
+body.is-darkcontentpane form.modal-large .row.title-alias{justify-self: center;width: 100%;}
 
-body.contentpane .subhead{
+body.contentpane .subhead,
+body.is-darkcontentpane .subhead{
 	background-image: linear-gradient(var(--toolbar-bg),var(--template-bg-dark-3));
 	border-bottom: 0;
 	margin: 0;
@@ -467,17 +482,24 @@ body.contentpane .subhead{
 	padding: 1px 10px 6px 20px!important;
 }
 body.contentpane #layout,/*{background: #fff; padding: 30px 2vw;}*/
-body.contentpane .main-card{
+body.is-darkcontentpane #layout
+body.contentpane .main-card,
+body.is-darkcontentpane .main-card{
 	background: var(--body-bg);
 	border-radius: 0.25rem;
 }
-body.contentpane .modal-large .main-card{min-height: 477px;}
-body.contentpane #layout:not(.modal-small){min-height: 530px;}
-body.contentpane #layout.modal-small {
+body.contentpane .modal-large .main-card,
+body.is-darkcontentpane .modal-large .main-card{min-height: 477px;}
+body.contentpane #layout:not(.modal-small),
+body.is-darkcontentpane #layout:not(.modal-small){min-height: 530px;}
+body.contentpane #layout.modal-small,
+body.is-darkcontentpane #layout.modal-small {
 	padding: 28px 28px 12px 28px;
 }
-body.contentpane #layout.modal-small .form-select[multiple]{padding-right: 0;}
+body.contentpane #layout.modal-small .form-select[multiple],
+body.is-darkcontentpane #layout.modal-small .form-select[multiple]{padding-right: 0;}
 
+body.contentpane .abs,
 body.contentpane .abs{position: absolute; bottom: 0; width: 100%;}
 
 body #colorbox{box-shadow: 0 1px 3px rgb(0 0 0 / 40%);}

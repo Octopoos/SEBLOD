@@ -34,7 +34,11 @@ a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right,
 	margin: 0!important;
 }
 #seblod-sidebar #scroll {
-	padding: 0 0 0 1vw;
+    padding: 0 0 0 1vw;
+    overflow-x: hidden;
+    height: calc( 100vh - 340px );
+    overflow-y: auto;
+    min-height: 416px;
 }
 #seblod-sidebar #scroll .row {
 	--gutter-x: 1rem;
@@ -131,9 +135,13 @@ ul.sortable .form-select.xs {
 	margin-left: auto;
 	margin-right: auto;
 }
+.form-control.xs::selection {
+	background-color: rgb(51 153 255 / 25%) !important;
+}
 ul.sortable li.t-div,
 ul.sortable li.t-search_operator,
-ul.sortable li.t-tabs {
+ul.sortable li.t-tabs,
+ul.sortable li.tg {
 	background-color: var(--template-bg-dark-10)!important;
 }
 ul.sortable li.position {
