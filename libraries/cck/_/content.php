@@ -1421,6 +1421,7 @@ USER
 										'limit'			=> 0,
 										'match'			=> array(),
 										'match_each'	=> array(),
+										'match_or'		=> array(),
 										'order'			=> array()
 									);
 
@@ -1428,14 +1429,15 @@ USER
 	}
 
 	// with
-	public function with( $key, $match, $value = null )
+	public function with( $key, $match, $value = null, $or_with = null )
 	{
 		if ( !isset( $this->_search_query ) ) {
 			/* TODO#SEBLOD: error? */
 			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
 		}
 
-		$this->_search_query['match'][$key]	=	$match;
+		$this->_search_query['match'][$key]		=	$match;
+		$this->_search_query['match_or'][$key]	=	$or_with;
 
 		if ( $match == 'empty' ) {
 			$value	=	'';
@@ -1448,22 +1450,11 @@ USER
 	}
 
 	// withEach
-	public function withEach( $key, $match, $value = null )
+	public function withEach( $key, $match, $value = null, $or_with = null )
 	{
-		if ( !isset( $this->_search_query ) ) {
-			/* TODO#SEBLOD: error? */
-			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
-		}
+		$this->with( $key, $match, $value, $or_with );
 
-		$this->_search_query['match'][$key]			=	$match;
 		$this->_search_query['match_each'][$key]	=	true;
-
-		if ( $match == 'empty' ) {
-			$value	=	'';
-		}
-		if ( isset( $value ) ) {
-			$this->_search_query['data'][$key]	=	$value;
-		}
 
 		return $this->_options->get( 'chain_methods', 1 ) ? $this : true;
 	}
@@ -2765,60 +2756,80 @@ USER
 			$limit		=	(int)$this->_search_query['limit'];
 			$match		=	$this->_search_query['match'];
 			$match_each	=	$this->_search_query['match_each'];
+			$match_or	=	$this->_search_query['match_or'];
 			$order		=	$this->_search_query['order'];
 		} else {
 			$limit		=	0;
 			$match		=	array();
 			$match_each	=	array();
+			$match_or	=	array();
 		}
 
 		// Where @ data
 		foreach ( $data as $k=>$v ) {
 			$indexes	=	explode( '|', $k );
 			$operator	=	isset( $match[$k] ) ? $match[$k] : '';
-			$where		=	array();
 
 			if ( isset( $match_each[$k] ) && ( strpos( $v, ' ' ) !== false ) ) {
 				$behavior	=	'AND';
 				$values		=	explode( ' ', $v );
+				$where		=	array();
 
 				foreach ( $values as $value ) {
-					$w	=	array();
+					$w		=	$this->_getSearchQueryWhereClause( $query, $tables, $indexes, $operator, $value );
 
-					foreach ( $indexes as $k ) {
-						$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
-
-						if ( $index === false ) {
-							return false;
-						} elseif ( $index === '' ) {
-							continue;
-						}
-
-						$w[]		=	$this->_getSearchQueryWhere( $index, $k, $operator, $value );
+					if ( $w === false ) {
+						return false;
 					}
 
 					$where[]	=	'((' . implode( ') OR (', $w ) . '))';
 				}
 			} else {
 				$behavior	=	'OR';
+				$where		=	$this->_getSearchQueryWhereClause( $query, $tables, $indexes, $operator, $v );
 
-				foreach ( $indexes as $k ) {
-					$index		=	$this->_getSearchQueryIndex( $query, $tables, $k );
-
-					if ( $index === false ) {
-						return false;
-					} elseif ( $index === '' ) {
-						continue;
-					}
-
-					$where[]		=	$this->_getSearchQueryWhere( $index, $k, $operator, $v );
+				if ( $where === false ) {
+					return false;
 				}
 			}
 
 			if ( ( $count = count( $where ) ) === 1 ) {
-				$query->where( $where[0] );
+				$where	=	$where[0];
 			} elseif ( $count > 1 ) {
-				$query->where( '((' . implode( ') '.$behavior.' (', $where ) . '))' );
+				$where	=	'((' . implode( ') '.$behavior.' (', $where ) . '))';
+			} else {
+				$where	=	null;
+			}
+
+			if ( $where ) {
+				if ( isset( $match_or[$k] ) && isset( $match_or[$k]['key'] ) && $match_or[$k]['key'] ) {
+					$indexes	=	explode( '|', $match_or[$k]['key'] );
+					$operator	=	$match_or[$k]['match'] ?? '';
+					$value		=	$match_or[$k]['value'] ?? '';
+
+					if ( $operator == 'empty' ) {
+						$value	=	'';
+					}
+
+					$w		=	$this->_getSearchQueryWhereClause( $query, $tables, $indexes, $operator, $value );
+
+					if ( $w === false ) {
+						return false;
+					}
+					if ( ( $count = count( $w ) ) === 1 ) {
+						$w	=	$w[0];
+					} elseif ( $count > 1 ) {
+						$w	=	'((' . implode( ') OR (', $w ) . '))';
+					} else {
+						$w	=	null;
+					}
+					if ( $w ) {
+						$w		=	array( $where, $w );
+						$where	=	'((' . implode( ') OR (', $w ) . '))';
+					}
+				}
+
+				$query->where( $where );
 			}
 		}
 
@@ -3054,6 +3065,26 @@ USER
 		}
 
 		return $where;
+	}
+
+	// _getSearchQueryWhereClause
+	protected function _getSearchQueryWhereClause( &$query, &$tables, $indexes, $operator, $value )
+	{
+		$w	=	array();
+
+		foreach ( $indexes as $k ) {
+			$index	=	$this->_getSearchQueryIndex( $query, $tables, $k );
+
+			if ( $index === false ) {
+				return false;
+			} elseif ( $index === '' ) {
+				continue;
+			}
+
+			$w[]	=	$this->_getSearchQueryWhere( $index, $k, $operator, $value );
+		}
+
+		return $w;
 	}
 
 	// _setContentById
