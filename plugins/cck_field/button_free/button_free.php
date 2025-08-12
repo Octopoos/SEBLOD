@@ -133,13 +133,19 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			if ( $field->bool ) {
 				$label		=	$value;
 				
+				if ( !( isset( $options2['tag'] ) && $options2['tag'] ) ) {
+					$options2['tag']	=	'span';
+				}
+				if ( !JCck::is( '5.0' ) ) {
+					$options2['icon']	=	'icon-'.$options2['icon'];
+				}
 				if ( $field->bool6 == 3 ) {
-					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$label		=	'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>';
 					$attr		.=	' title="'.$value.'"';
 				} elseif ( $field->bool6 == 2 ) {
-					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+					$label		=	$value."\n".'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>';
 				} elseif ( $field->bool6 == 1 ) {
-					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+					$label		=	'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>'."\n".$value;
 				}
 				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
 				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
@@ -243,15 +249,21 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			if ( $field->bool ) {
 				$label		=	$value;
 				
+				if ( !( isset( $options2['tag'] ) && $options2['tag'] ) ) {
+					$options2['tag']	=	'span';
+				}
+				if ( !JCck::is( '5.0' ) ) {
+					$options2['icon']	=	'icon-'.$options2['icon'];
+				}
 				if ( $field->bool6 == 3 ) {
-					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$label		=	'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>';
 					if ( !$title ) {
 						$title	=	' title="'.$value.'"';
 					}
 				} elseif ( $field->bool6 == 2 ) {
-					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+					$label		=	$value."\n".'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>';
 				} elseif ( $field->bool6 == 1 ) {
-					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+					$label		=	'<'.$options2['tag'].' class="'.$options2['icon'].'"></'.$options2['tag'].'>'."\n".$value;
 				}
 				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
 				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.$title.'>'.$label.'</button>';
@@ -308,9 +320,18 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 					$options2	=	JCckDev::fromJSON( $field->options2 );
 				}
 				$field->form	=	'';
-				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
-				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.'><span class="'.$icon.'"></span> '.$value.'</button>';
-				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, @$options2['icon'] );
+				if ( isset( $options2['icon'] ) && $options2['icon'] ) {
+					$icon	=	$options2['icon'];
+
+					if ( !JCck::is( '5.0' ) ) {
+						$icon	=	'icon-'.$icon;
+					}
+				} else {
+					$icon	=	'';
+				}
+				$icon_tag		=	( isset( $options2['tag'] ) && $options2['tag'] ) ? $options2['tag'] : 'span';
+				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.'><'.$icon_tag.' class="'.$icon.'"></'.$icon_tag.'> '.$value.'</button>';
+				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, $icon );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );
 			}

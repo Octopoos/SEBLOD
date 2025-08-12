@@ -17,7 +17,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 
 // JS
 $js =	'jQuery(document).ready(function($) {
-			$("#json_options2_icon").isVisibleWhen("bool6","1,2,3",false);
+			$("#json_options2_icon,#json_options2_tag").isVisibleWhen("bool6","1,2,3",false);
 			$("#bool3").isVisibleWhen("bool2","1,2");
 			$("#json_options2_alt_link_text, #blank_li").isVisibleWhen("bool2","2");
 			$("#bool5").isVisibleWhen("bool4","1,2");
@@ -75,10 +75,11 @@ $displayData	=	array(
 										'cck'.JCck::v().'.form.field', array(
 											'label'=>JText::_( 'COM_CCK_LABEL_ICON' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
-												'grid'=>'|50%',
+												'grid'=>'||20%',
 												'html'=>array(
 													JCckDev::getForm( 'core_dev_select', $this->item->bool6, $config, array( 'label'=>'Label Icon', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Hide=0||Show=optgroup||Prepend=1||Append=2||Replace=3', 'storage_field'=>'bool6' ) ),
-													JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) )
+													JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) ),
+													JCckDev::getForm( 'core_dev_text', @$options2['tag'], $config, array( 'label'=>'Tag', 'attributes'=>'placeholder="Html Tag"', 'defaultvalue'=>'span', 'storage_field'=>'json[options2][tag]' ) )
 												)
 											) )
 										)

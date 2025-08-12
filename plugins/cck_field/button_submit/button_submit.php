@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
+
 // Plugin
 class plgCCK_FieldButton_Submit extends JCckPluginField
 {
@@ -146,14 +148,21 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 
 		if ( $form != '' ) {
-			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'
-					.	$form
-					.	'<input type="hidden" name="task" value="'.$task.'" />'
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
+				$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'.$form;
+			}
+			
+			$return	=	JFactory::getApplication()->input->getString( 'return', base64_encode( JUri::getInstance()->toString() ) );
+
+			$form	.=	'<input type="hidden" name="task" value="'.$task.'" />'
 					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
-					.	'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">'
-					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
-					.	JHtml::_( 'form.token' )
-					.	'</form>';
+					.	'<input type="hidden" name="return" value="'.$return.'">'
+					.	'<input type="hidden" name="tid" value="'.$task_id.'">';
+			$form	.=	JHtml::_( 'form.token' );
+
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
+				$form	.=	'</form>';
+			}
 		}
 
 		// Set
@@ -183,24 +192,36 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$field->label	=	'';
 
 		// Prepare
-		$pre_task	=	'';
+		$canDo		=	true;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
+		$pre_task	=	'';
 		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
 
 		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$task	=	( $config['client'] == 'admin' ) ? 'form.'.$task : 'list.'.$task;
+			if ( $config['client'] == 'admin' ) {
+				$task	=	'form.'.$task;
+			} else {
+				if ( strpos( $task, 'ajax' ) === false ) {
+					$task	=	'list.'.$task;
+				}
+			}
 		}
+
 		if ( $task_id ) {
 			$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="tid" value="'.$task_id.'">\');' );
 		}
 		$class		=	'button btn' . ( $field->css ? ' '.$field->css : '' );
+
 		if ( $task == 'cancel' ) {
 			$click	=	' onclick="JCck.Core.submitForm(\''.$task.'\', document.getElementById(\'seblod_form\'));"';
 		} elseif ( $task == 'reset' ) {
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.'"' : '';
+		} elseif ( $task == 'reset_ajax' ) {
+			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
+			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.'JCck.Core.loadmore(\'&start=0\',-1,1);return false;"' : '';
 		} elseif ( $task == 'reset2save' ) {
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
@@ -275,6 +296,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					return;
 				}
 			}
+			
 			if ( $task == 'export_ajax' ) {
 				if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
 					if ( !$user->authorise( 'core.export', 'com_cck.form.'.$config['type_id'] ) ) {
@@ -353,69 +375,159 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$click.'"' : '';
 			} elseif ( $task == 'save2redirect' ) {
 				$custom		=	'';
+				$submit		=	$config['submit'];
+
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
-					$custom	=	JCckDevHelper::replaceLive( $options2['custom'] );
+					$custom	=	JCckDevHelper::replaceLive( $options2['custom'], '', $config );
 					$custom	=	$custom ? '&'.$custom : '';
 				}
+				if ( (int)$options2['itemid'] == -2 ) {
+					$options2['itemid']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__menu WHERE parent_id = '.(int)JFactory::getApplication()->input->getInt( 'Itemid', 0 ).' ORDER BY lft ASC' );
+
+					if ( !$options2['itemid'] ) {
+						return;
+					}
+				} elseif ( (int)$options2['itemid'] == -3 ) {
+					$options2['itemid']	=	JFactory::getApplication()->input->getInt( 'Itemid' );
+				}
 				if ( $config['client'] == 'search' ) {
-					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					if ( strpos( $config['submit'], 'JCck.Core.submit_f' ) !== false ) {
+						$submit		=	'JCck.Core.submit';
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					} else {
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					}					
 				} else {
 					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 				}
-				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$submit.'(\''.$task.'\');return false;"' : '';			
 			} else {
-				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
-			}
-		}
-		if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
-			$matches	=	array();
-			$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
-			preg_match( $search, $field->attributes, $matches );
-			if ( count( $matches ) && $matches[0] ) {
-				if ( $matches[0] == $field->attributes ) {
-					$field->attributes	=	substr( trim( $field->attributes ), 0, -1 );
-					$click				=	' '.$field->attributes.'"';
-					$field->attributes	=	'';
+				if ( $task == 'save_ajax' ) {
+					$click	=	'';			
+					$js 	=	'
+								(function ($){
+									if("undefined"===typeof JCck.More){JCck.More={}};
+									JCck.More.AjaxSubmit = {
+										form_id:"'.$config['formId'].'",
+										save: function()
+										{
+											if ($("#"+JCck.More.AjaxSubmit.form_id).validationEngine("validate","JCck.More.AjaxSubmit.save") === true) {
+												$("#"+JCck.More.AjaxSubmit.form_id+" #task").remove();
+												$("#"+JCck.More.AjaxSubmit.form_id+" input[name=\'config[unique]\']").val(JCck.More.AjaxSubmit.form_id);
+
+												if (window.File && window.FileList && window.Blob && window.FileReader && window.FormData) {
+													$("#"+JCck.More.AjaxSubmit.form_id).slideUp().after("<p class=\"o-text-center o-mt-12 activity-progress\">"+Joomla.JText._("COM_CCK_TICKET_ACTIVITY_PROGRESS")+"</p>");
+													
+													var $formElem = $("#"+JCck.More.AjaxSubmit.form_id);
+													var formData = new FormData($formElem[0]);
+													var xhr = new XMLHttpRequest();
+													xhr.open("POST", "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.( JFactory::getApplication()->isClient( 'administrator' ) ? 'form.saveAjax' : 'saveAjax' ) ).'", true);
+													xhr.onload = function(e) {
+														var resp = JSON.parse(this.response);
+														if(typeof resp == "object") {
+															if (resp.data_layer !== undefined) {
+																window.dataLayer = window.dataLayer || []; window.dataLayer.push(resp.data_layer);
+															}
+															if (resp.html !== undefined) {
+																if ($("#o_ticket_activity_ordering").myVal()=="newest") {
+																	$(".ticket-filter li:first-child").removeClass("first");
+																	$(resp.html).find("li").addClass("first is-new-activity").attr("order","1").prependTo( ".ticket-filter" );
+																} else {
+																	var len = parseInt($(".ticket-filter").children().length);
+																	if (len) {
+																		$(".ticket-filter li:last-child").removeClass("last");
+																		$(resp.html).find("li").addClass("last is-new-activity").attr("order",(len+2)).appendTo( ".ticket-filter" );
+																	} else {
+																		$(".no-result.no-activity").hide();
+																		$(resp.html).find("li").addClass("first last is-new-activity").attr("order",(len+2)).appendTo( ".ticket-filter" );
+																	}
+																}
+															}
+														}
+														$(".activity-progress").text(Joomla.JText._("COM_CCK_TICKET_ACTIVITY_MESSAGE"));
+													};
+													xhr.send(formData);
+												} else {
+													alert("An error occured");
+												}
+											}
+										}
+									};
+									$(document).ready(function() {
+										$("#'.$id.'").on("click", function() {
+											JCck.More.AjaxSubmit.save();
+										});
+									});
+								})(jQuery);
+								';
+					JFactory::getDocument()->addScriptDeclaration( $js );
 				} else {
-					$click				=	' onclick="'.$matches[1].'"';
-					$field->attributes	=	trim( str_replace( $matches[0], '', $field->attributes ) );
+					$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
+				}				
+
+				if ( $task == 'save2new' ) {
+					$user	=	JCck::getUser();
+					
+					if ( !$user->authorise( 'core.create', 'com_cck.form.'.$config['type_id'] ) ) {
+						$canDo	=	false;	
+					}
 				}
 			}
 		}
-		$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
-		if ( $field->bool ) {
-			$label	=	$value;
-			
-			if ( $field->bool6 == 3 ) {
-				$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
-				$attr		.=	' title="'.$value.'"';
-			} elseif ( $field->bool6 == 2 ) {
-				$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
-			} elseif ( $field->bool6 == 1 ) {
-				$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+
+		if ( $canDo ) {
+			if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
+				$matches	=	array();
+				$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
+				preg_match( $search, $field->attributes, $matches );
+				if ( count( $matches ) && $matches[0] ) {
+					if ( $matches[0] == $field->attributes ) {
+						$field->attributes	=	substr( trim( $field->attributes ), 0, -1 );
+						$click				=	' '.$field->attributes.'"';
+						$field->attributes	=	'';
+					} else {
+						$click				=	' onclick="'.$matches[1].'"';
+						$field->attributes	=	trim( str_replace( $matches[0], '', $field->attributes ) );
+					}
+				}
 			}
-			$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
-			$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
-			$tag	=	'button';
-		} else {
-			$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
-			$tag	=	'input';
-		}
-		if ( $field->bool2 == 1 ) {
-			$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
-			if ( $config['client'] == 'search' ) {
-				$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+			$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
+			if ( $field->bool ) {
+				$label	=	$value;
+				
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$attr		.=	' title="'.$value.'"';
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+				}
+				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
+				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
+				$tag	=	'button';
 			} else {
-				$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+				$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+				$tag	=	'input';
 			}
-		} elseif ( $field->bool2 == 2 ) {
-			$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
-			$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
-			JCckPluginLink::g_setLink( $field2, $config );
-			JCckPluginLink::g_setHtml( $field2, 'text' );
-			$form		.=	$alt.$field2->html;
+			if ( $field->bool2 == 1 ) {
+				$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				if ( $config['client'] == 'search' ) {
+					$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+				} else {
+					$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+				}
+			} elseif ( $field->bool2 == 2 ) {
+				$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
+				JCckPluginLink::g_setLink( $field2, $config );
+				JCckPluginLink::g_setHtml( $field2, 'text' );
+				$form		.=	$alt.$field2->html;
+			}
+		} else {
+			$form	=	'';
 		}
 		
 		// Set
@@ -515,7 +627,10 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					$step	=	(int)JComponentHelper::getParams( 'com_cck_exporter' )->get( 'mode_ajax_count', 25 );
 					$vars	=	'&search='.$config['type'];
 				} elseif ( $process['task'] == 'process_ajax' ) {
-					$step	=	(int)JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 );
+					$processing_opts	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_more_processings WHERE id = '.(int)$process['task_id'] );
+					$processing_opts	=	new Registry( $processing_opts );
+
+					$step	=	(int)$processing_opts->get( 'ajax_count', JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 ) );
 				}
 
 				if ( !$loaded ) {
@@ -535,7 +650,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										width:0,
 										ajaxLoopRequest: function(el) {
 											var start = ( JCck.More.ButtonSubmit.batch.length == JCck.More.ButtonSubmit.instances[el].total ) ? 1 : 0;
-											var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].step).join("&cid[]=");											
+											if (JCck.More.ButtonSubmit.instances[el].step) {
+												var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].step).join("&cid[]=");
+											} else {
+												var values = JCck.More.ButtonSubmit.batch.splice(0, JCck.More.ButtonSubmit.instances[el].total).join("&cid[]=");
+											}
 											var end = ( JCck.More.ButtonSubmit.batch.length > 0 ) ? 0 : 1;
 											$.ajax({
 												cache: false,
@@ -543,40 +662,51 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												type: "POST",
 												url:  JCck.More.ButtonSubmit.instances[el].url+"&"+JCck.More.ButtonSubmit.token,
 												complete: function(jqXHR) {
-													var w = parseInt($(el+" .bar")[0].style.width);
-													$(el+" .bar").css("width",parseInt(w+JCck.More.ButtonSubmit.width)+"%");
-													
+													var w = parseFloat(parseFloat($(el+" .bar")[0].style.width).toFixed(2));
+													$(el+" .bar").css("width",parseFloat((w+JCck.More.ButtonSubmit.width).toFixed(2))+"%");
+
 													if (JCck.More.ButtonSubmit.batch.length) {
 														JCck.More.ButtonSubmit.ajaxLoopRequest(el);
 													} else {
 														$(el+" .bar").css("width","100%");
-														var resp = JSON.parse(jqXHR.responseText);
+														
+														try {
+															var resp = JSON.parse(jqXHR.responseText);
 
-														if (typeof resp == "object") {
-															if (!resp.error) {
-																JCck.More.ButtonSubmit.count++;
-															}
-															if (resp.output_path !== undefined) {
-																window.setTimeout(function(){
-																	$(el+" .bar").css("font-size","inherit").css("padding",JCck.More.ButtonSubmit.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
-																},500);
-																
-																document.location.href = resp.output_path;
-															} else {
-																var type = "message";
-
-																if (!JCck.More.ButtonSubmit.count) {
-																	type = "error";
+															if (typeof resp == "object") {
+																if (!resp.error) {
+																	JCck.More.ButtonSubmit.count++;
 																}
-																document.location.href = "index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+																if (resp.url !== undefined && resp.url) {
+																	document.location.href = resp.url;
+																} else if (resp.output_path !== undefined) {
+																	window.setTimeout(function(){
+																		$(el+" .bar").css("font-size","inherit").css("padding",JCck.More.ButtonSubmit.css).text(Joomla.JText._("COM_CCK_COMPLETED"));
+																	},500);
+																	window.setTimeout(function(){
+																		JCck.More.ButtonSubmit.resetState(el);
+																	},2000);
+
+																	document.location.href = resp.output_path;
+																} else {
+																	var type = "message";
+
+																	if (!JCck.More.ButtonSubmit.count) {
+																		type = "error";
+																	}
+																	document.location.href = "/index.php?option=com_cck&task=outputMessage&type="+type+"&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+																}
 															}
-														}
+														} catch (e) {
+															document.location.href = "/index.php?option=com_cck&task=outputMessage&type=error&return="+JCck.More.ButtonSubmit.return+"&"+JCck.More.ButtonSubmit.token;
+														}														
 													}
 												}
 											});
 										},
 										initProcess: function(el, data) {
 											JCck.More.ButtonSubmit.instances[el] = data;
+											JCck.More.ButtonSubmit.instances[el].label = $(el).html();
 
 											var w = parseFloat($(el)[0].getBoundingClientRect().width);
 											var h = $(el).css("height");
@@ -596,18 +726,37 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												JCck.More.ButtonSubmit.batch = JCck.More.ButtonSubmit.instances[el].items;
 											}
 											JCck.More.ButtonSubmit.instances[el].total = JCck.More.ButtonSubmit.batch.length;
-											JCck.More.ButtonSubmit.width = parseInt(JCck.More.ButtonSubmit.instances[el].step/JCck.More.ButtonSubmit.instances[el].total*100);
-
+											
+											if (JCck.More.ButtonSubmit.instances[el].step) {
+												JCck.More.ButtonSubmit.width = parseFloat((JCck.More.ButtonSubmit.instances[el].step/JCck.More.ButtonSubmit.instances[el].total*100).toFixed(2));
+											} else {
+												JCck.More.ButtonSubmit.width = 100;
+											}
 											JCck.More.ButtonSubmit.kvp = "";
 											$.each(JCck.More.ButtonSubmit.instances[el].fields, function(k,v) {
-												var vs = $("#"+v).myVal();
+												if (v.indexOf("[") !== -1) {
+													$(v).each(function(i,el){
+														var vs = $(el).myVal();
+														var vn = $(el).attr("id");
 
-												if (Array.isArray(vs)) {
-													$.each(vs, function(k2,v2) {
-														JCck.More.ButtonSubmit.kvp	+=	"&"+v+"[]="+v2;	
+														if (Array.isArray(vs)) {
+															$.each(vs, function(k2,v2) {
+																JCck.More.ButtonSubmit.kvp	+=	"&"+vn+"[]="+v2;	
+															});
+														} else {
+															JCck.More.ButtonSubmit.kvp	+=	"&"+vn+"="+vs;
+														}
 													});
 												} else {
-													JCck.More.ButtonSubmit.kvp	+=	"&"+v+"="+vs;
+													var vs = $("#"+v).myVal();	
+
+													if (Array.isArray(vs)) {
+														$.each(vs, function(k2,v2) {
+															JCck.More.ButtonSubmit.kvp	+=	"&"+v+"[]="+v2;	
+														});
+													} else {
+														JCck.More.ButtonSubmit.kvp	+=	"&"+v+"="+vs;
+													}
 												}
   											});
 										},
@@ -619,6 +768,11 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 												}
 											}
 											return true;
+										},
+										resetState: function(el)
+										{
+											$(el).prop("disabled",false).removeClass("btn-progress").removeAttr("style");
+											$(el).html(JCck.More.ButtonSubmit.instances[el].label);
 										}
 									};
 								})(jQuery);
@@ -640,6 +794,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										var data = {
 											"fields":'.json_encode( $fieldnames ).',
 											"items":['.$config[$target].'],
+											"label":"",
 											"step":'.(int)$step.',
 											"task_id":'.(int)$process['task_id'].',
 											"total":'.( substr_count( $config[$target], ',' ) + 1 ).',

@@ -96,16 +96,17 @@ $displayData	=	array(
 										'cck'.JCck::v().'.form.field', array(
 											'label'=>JText::_( 'COM_CCK_TEXT_LINK' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
-												'grid'=>'|50%',
+												'grid'=>'||2',
 												'html'=>array(
 													JCckDev::getForm( 'core_dev_text', @$options2['alt_link_text'], $config, array( 'label'=>'Text', 'required'=>'required', 'size'=>14, 'storage_field'=>'json[options2][alt_link_text]' ) ),
-													JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required', 'storage_field'=>'json[options2][alt_link]', 'max-width-100' ) )
+													JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getPlugins', 'name'=>'core_plugins' ), @$options2['alt_link'], $config, array( 'selectlabel'=>'Select', 'location'=>'field_link', 'required'=>'required', 'storage_field'=>'json[options2][alt_link]', 'max-width-100' ) ),
+													'<input type="hidden" id="json_options2_alt_link_options" name="json[options2][alt_link_options]" value="'.htmlspecialchars( @$options2['alt_link_options'] ).'" /><span class="c_link" id="json_options2_alt" name="json_options2_alt">+</span>'
 												)
 											) ),
 											'class'=>'alt-button'
 										)
 									),
-									JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'label'=>'Redirection', 'selectlabel'=>'None', 'storage_field'=>'json[options2][itemid]' ) ),
+									JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'label'=>'Redirection', 'selectlabel'=>'None', 'options'=>'Inherited=-3||Own Child=-2', 'storage_field'=>'json[options2][itemid]' ) ),
 									JCckDev::renderForm( 'core_dev_textarea', @$options2['custom'], $config, array( 'label'=>'Custom variables', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][custom]' ), array(), 'w100' ),
 									JCckDev::renderBlank( '<input type="hidden" id="blank_li4" value="" />' ),
 									JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( $this->item->options ), $config, array( 'label'=>'Fields', 'rows'=>1 ), array( 'after'=>$this->item->init['fieldPicker'] ) )
