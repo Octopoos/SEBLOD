@@ -204,10 +204,10 @@ class plgSearchCCK extends JPlugin
 									$Pt		=	$child->storage_table;
 									// -
 									if ( $Pt && !isset( $tables[$Pt] ) ) {
-										$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+										$tables[$Pt]				=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+										$tables[$Pt]['location']	=	$child->storage_location;
 										$t++;
 									}
-									$tables[$Pt]['location']	=	$child->storage_location;
 									// -
 									$name	=	$child->storage_field2 ? $child->storage_field2 : $child->name;
 									if ( $Pt != '' ) {
@@ -273,7 +273,8 @@ class plgSearchCCK extends JPlugin
 				} else {
 					// -
 					if ( $Pt && !isset( $tables[$Pt] ) ) {
-						$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+						$tables[$Pt]				=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+						$tables[$Pt]['location']	=	$field->storage_location;
 
 						if ( $field->storage_key != '' ) {
 							$tables[$Pt]['key']	=	$field->storage_key;
@@ -281,7 +282,6 @@ class plgSearchCCK extends JPlugin
 
 						$t++;
 					}
-					$tables[$Pt]['location']	=	$field->storage_location;
 					// -
 					
 					$name	=	$field->storage_field2 ? $field->storage_field2 : $field->name;
