@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class JCckTableBatch extends JObject
 {
 	protected $_tbl				=	'';
+	protected $_tbl_colums_sql	=	'';
 	protected $_tbl_rows		=	array();
 	protected $_tbl_rows_sql	=	'';
 	protected $_db;
@@ -64,6 +65,12 @@ class JCckTableBatch extends JObject
 		return $cache[$name];
 	}
 	
+	// getRows
+	public function getRows()
+	{
+		return $this->_tbl_rows;
+	}
+
 	// bind
 	public function bind( $rows )
 	{
@@ -104,6 +111,7 @@ class JCckTableBatch extends JObject
 		$str	=	'';
 		
 		if ( count( $this->_tbl_rows ) ) {
+			$i	=	0;
 			foreach ( $this->_tbl_rows as $row ) {
 				$str2	=	'';
 				if ( count( $force ) ) {
@@ -121,7 +129,15 @@ class JCckTableBatch extends JObject
 				foreach ( $this->getProperties() as $k=>$v ) {
 					if ( !in_array($k, $ignore ) ) {
 						if ( property_exists( $row, $k ) ) {
+							if ( is_array( $row->$k ) ) {
+								$row->$k	=	json_encode( $row->$k );
+							}
+
 							$str2	.=	'"'.$this->_db->escape( $row->$k ).'", ';
+
+							if ( $i == 0 ) {
+								$this->_tbl_colums_sql	.=	$this->_db->quoteName( $k ).',';
+							}
 						}
 					}
 				}
@@ -129,6 +145,11 @@ class JCckTableBatch extends JObject
 					$str2	=	substr( trim( $str2 ), 0, -1 );
 					$str	.=	'(' . $str2 . '), ';
 				}
+
+				$i++;
+			}
+			if ( $this->_tbl_colums_sql != '' ) {
+				$this->_tbl_colums_sql	=	'('.substr( trim( $this->_tbl_colums_sql ), 0, -1 ).')';
 			}
 		}
 		
@@ -162,6 +183,16 @@ class JCckTableBatch extends JObject
 		$this->_db->setQuery( $query );
 		if ( ! $this->_db->execute() ) {
 			return false;
+		}
+	}
+
+	// count
+	public function count( $where_clause = '' )
+	{
+		if ( $where_clause != '' ) {
+			return (int)JCckDatabase::loadResult( 'SELECT COUNT(*) FROM '.$this->_tbl.' WHERE '.$where_clause );
+		} else {
+			return is_array( $this->_tbl_rows ) ? count( $this->_tbl_rows )	: 0;
 		}
 	}
 	
@@ -254,8 +285,10 @@ class JCckTableBatch extends JObject
 			return false;
 		}
 		
-		$query	=	'INSERT IGNORE INTO '.$this->_tbl.' VALUES '.$this->_tbl_rows_sql;
+		$query	=	'INSERT IGNORE INTO '.$this->_tbl.$this->_tbl_colums_sql.' VALUES '.$this->_tbl_rows_sql;
+		
 		$this->_db->setQuery( $query );
+		
 		if ( ! $this->_db->execute() ) {
 			return false;
 		}

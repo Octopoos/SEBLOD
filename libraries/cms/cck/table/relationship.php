@@ -225,6 +225,10 @@ class JCckTableRelationship extends JObject
 						}
 					}
 					if ( property_exists( $row, $k ) ) {
+						if ( is_array( $row->$k ) ) {
+							$row->$k	=	json_encode( $row->$k );
+						}
+
 						$v	=	$this->_db->escape( $row->$k );
 					}
 					
