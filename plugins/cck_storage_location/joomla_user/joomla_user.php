@@ -20,6 +20,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	protected static $table			=	'#__users';
 	protected static $table_object	=	array( 'User', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'user_pk';
 	
 	protected static $access		=	'';
 	protected static $author		=	'id';

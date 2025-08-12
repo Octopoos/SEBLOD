@@ -18,6 +18,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected static $table			=	'';
 	protected static $table_object	=	array();
 	protected static $key			=	'id';
+	protected static $key_field		=	'';
 	
 	protected static $access		=	'';
 	protected static $author		=	'';
