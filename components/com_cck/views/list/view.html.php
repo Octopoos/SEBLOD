@@ -57,7 +57,7 @@ class CCKViewList extends JViewLegacy
 		$variation		=	$params->get( 'variation', '' );
 		
 		if ( $params->get( 'show_list', '' ) != '' ) {
-			$preconfig['show_list']			=	(int)$params->get( 'show_list' );
+			$preconfig['show_list']			=	(int)$params->get( 'show_list', '' );
 		}
 		$preconfig['search2']				=	$params->get( 'search2', '' );
 		$preconfig['show_form']				=	$params->get( 'show_form', '' );
@@ -76,13 +76,15 @@ class CCKViewList extends JViewLegacy
 		if ( is_object( $menu ) ) {
 			$menu_params	=	new JRegistry;
 			$menu_params->loadString( $menu->getParams() );
-			if ( ! $menu_params->get( 'page_title' ) ) {
+			if ( ! $menu_params->get( 'page_title', '' ) ) {
 				$params->set( 'page_title', $menu->title );
 			}
 		} else {
 			$params->set( 'page_title', 'List' );
 		}
-		$title	=	$params->get( 'page_title' );
+
+		// Set Title
+		$title	=	$params->get( 'page_title', '' );
 		
 		if ( empty( $title ) ) {
 			$title	=	$config->get( 'sitename' );
@@ -93,18 +95,9 @@ class CCKViewList extends JViewLegacy
 		}
 		$config		=	null;
 		$this->document->setTitle( $title );
-		
-		if ( $params->get( 'menu-meta_description' ) ) {
-			$this->document->setDescription( $params->get( 'menu-meta_description' ) );
-		}
-		if ( $params->get( 'menu-meta_keywords' ) ) {
-			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
-		}
-		if ( strlen( trim( $params->get( 'robots', '' ) ) ) > 0 ) {
-			$this->document->setMetadata( 'robots', $params->get( 'robots', '' ) );
-		}
+
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx', '' ) );
-		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
+		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 
 		// Pagination
 		$pagination	=	$params->get( 'show_pagination' );
@@ -112,10 +105,26 @@ class CCKViewList extends JViewLegacy
 		// Prepare
 		jimport( 'cck.base.list.list' );
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
-		$pagination	=	$this->getModel()->_getPagination( $total_items );
+		$pagination							=	$this->getModel()->_getPagination( $total_items );
+		$pagination->hideEmptyLimitstart	=	true;
 
-		if ( JCck::on( '3.9' ) ) {
-			$pagination->hideEmptyLimitstart	=	true;
+		// Set Meta
+		$description	=	$params->get( 'menu-meta_description' );
+		
+		if ( $description == '' ) {
+			$description	=	$params->get( 'list_desc', @$search->description );
+			$description	=	strip_tags( $description );
+			$description	=	JCckDevHelper::truncate( $description, 200 );
+		}
+
+		if ( $description ) {
+			$this->document->setDescription( $description );
+		}
+		if ( $params->get( 'menu-meta_keywords', '' ) ) {
+			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords', '' ) );
+		}
+		if ( $params->get( 'robots' ) ) {
+			$this->document->setMetadata( 'robots', $params->get( 'robots', '' ) );
 		}
 
 		// Set
@@ -148,11 +157,8 @@ class CCKViewList extends JViewLegacy
 			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 		}
 
-		$this->show_list_desc			=	$params->get( 'show_list_desc' );
-		if ( $this->show_list_desc == '' ) {
-			$this->show_list_desc		=	$options->get( 'show_list_desc', '1' );
-			$this->description			=	@$search->description;
-		} elseif ( $this->show_list_desc ) {
+		$this->show_list_desc			=	$params->get( 'show_list_desc', $options->get( 'show_list_desc', '1' ) );
+		if ( $this->show_list_desc ) {
 			$this->description			=	$params->get( 'list_desc', @$search->description );
 		} else {
 			$this->description			=	'';
@@ -197,7 +203,7 @@ class CCKViewList extends JViewLegacy
 			$this->label_items_number	=	$params->get( 'show_items_number_label', 'Results' );
 			$this->class_items_number	=	$params->get( 'class_items_number', 'total' );
 		}
-		$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', 1 ) );
+		$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', JCck::getConfig_Param( 'pagination_show_pages_number', 1 ) ) );
 		$this->show_pagination			=	$params->get( 'show_pagination' );
 		$this->class_pagination			=	$params->get( 'class_pagination', 'pagination' );
 		$this->label_pagination			=	$options->get( 'label_pagination', '' );
@@ -221,16 +227,28 @@ class CCKViewList extends JViewLegacy
 		
 		$this->load_resource			=	$options->get( 'load_resource', 0 );
 		if ( $this->load_resource ) {
+			$this->autoid_resource		=	$options->get( 'autoid_resource', 0 );
 			$this->json_resource		=	$options->get( 'json_resource', '{}' );
 			$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
 		}
 
 		// Canonical
-		if ( $sef_canonical = $options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 0 ) ) ) {
-			$current	=	JUri::getInstance()->current();
+		if ( $sef_canonical	= (int)$options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 3 ) ) ) {
+			$current			=	JUri::getInstance()->current();
+			$glue				=	'?';
+			$sef_canonical_vars	=	explode( ',', $options->get( 'sef_canonical_vars', '' ) );
 
+			if ( is_array( $sef_canonical_vars ) ) {
+				foreach ( $sef_canonical_vars as $sef_canonical_var ) {
+					if ( ( $sef_var = $app->input->getCmd( $sef_canonical_var, '' ) ) != '' ) {
+						$current	.=	$glue.$sef_canonical_var.'='.$sef_var;
+						$glue		=	'&';
+						break;
+					}
+				}
+			}
 			if ( ( $sef_canonical == 2 || $sef_canonical == 3 ) && $start ) {
-				$url	=	$current.'?start='.$start;	
+				$url	=	$current.$glue.'start='.$start;	
 			} else {
 				$url	=	$current;
 			}
@@ -242,18 +260,30 @@ class CCKViewList extends JViewLegacy
 
 				if ( isset( $pages['previous']['active'] ) && $pages['previous']['active'] ) {
 					if ( !empty( $pages['previous']['data']->base ) ) {
-						$url	=	$current.'?start='.$pages['previous']['data']->base;
+						$url	=	$current.$glue.'start='.$pages['previous']['data']->base;
 					} else {
 						$url	=	$current;
 					}
 					$this->document->addHeadLink( $url, 'prev' );
+
+					// Meta
+					$suffix	=	$pagination->pagesCurrent.'/'.$pagination->pagesTotal;
+
+					$this->document->setDescription( $this->document->getDescription().' '.$suffix );
+					$this->document->setTitle( $this->document->getTitle().' '.$suffix );
 				}
 				if ( isset( $pages['next']['active'] ) && $pages['next']['active'] ) {
-					$this->document->addHeadLink( $current.'?start='.$pages['next']['data']->base, 'next' );
+					$this->document->addHeadLink( $current.$glue.'start='.$pages['next']['data']->base, 'next' );
 				}
 			}
 
-			$app->cck_canonical	=	true;
+			$app->cck_canonical			=	true;
+
+			if ( (int)$start ) {
+				$app->cck_canonical_vars	=	array(
+													'start'=>$start
+												);	
+			}
 		}
 
 		// Force Titles to be hidden
@@ -280,6 +310,7 @@ class CCKViewList extends JViewLegacy
 			JHtml::_( 'behavior.core' );
 		}
 
+		$this->class_desc				=	$params->get( 'class_list_desc', '' );
 		$this->config					=	&$config;
 		$this->context					=	$config['context'];
 		$this->data						=	&$data;
@@ -297,9 +328,13 @@ class CCKViewList extends JViewLegacy
 		$this->tag_desc					=	$params->get( 'tag_list_desc', 'div' );
 		$this->total					=	&$total_items;
 
-		// This may be a temporary fix but we need it for now
+		
 		if ( $this->load_ajax && $app->input->get( 'tmpl' ) == 'raw' ) {
-			$this->form_wrapper	=	true;
+			if ( (int)$preconfig['limit'] === 1 ) {
+				$this->load_ajax	=	false; // We do not need JCck.Core.loadmore when this is a list of one on tmpl=raw
+			} else {
+				$this->form_wrapper	=	1; // This may be a temporary fix but we need it for now
+			}
 		}
 	}
 }

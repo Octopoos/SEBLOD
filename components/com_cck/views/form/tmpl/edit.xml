@@ -28,15 +28,25 @@
 				   label="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION" description="COM_CCK_CONFIG_SHOW_FORM_DESCRIPTION_DESC" class="inputbox" />
 			<field name="form_desc" type="cck" construction="core_description" default="" label="" description="..." class="inputbox" cck_selectlabel="Edit"
 				   js_appendto="jform_params_show_form_desc=a.wysiwyg_editor_box"
-				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc','1,2',false" js_format="html" hidden="true" filter="raw" />
+				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc',',1,2',false" js_format="html" hidden="true" filter="raw" />
+			<field name="tag_form_desc" type="list" default="div" label="COM_CCK_CONFIG_DESCRIPTION_TAG" description="COM_CCK_CONFIG_DESCRIPTION_TAG_DESC" class="inputbox">
+				<option value="div">div</option>
+				<option value="div_div">div + div</option>
+				<option value="p">p</option>
+			</field>
+			<field name="class_form_desc" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Class)'" />
 		</fieldset>
 		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
 			<field name="live" type="cckhidden" label="" description="" />
 			<field name="variation" type="cckhidden" label="" description="" />
 		</fieldset>
 		<fieldset name="advanced">
-			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
-			<option value="0">JNO</option>
+			<field name="menu_item"	type="menuitem"	label="COM_CCK_FORM_CONFIG_MENU_ITEM" description="COM_CCK_FORM_CONFIG_MENU_ITEM_DESC" class="inputbox">
+				<option value="">COM_CCK_INHERITED</option>
+			</field>
+			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
+				<option value="">COM_CCK_INHERITED_SL</option>
+				<option value="0">JNO</option>
 				<option	value="1">JYES</option>
 			</field>
 			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />

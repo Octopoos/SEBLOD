@@ -63,13 +63,15 @@ class CCKViewForm extends JViewLegacy
 		if ( is_object( $menu ) ) {
 			$menu_params	=	new JRegistry;
 			$menu_params->loadString( $menu->getParams() );
-			if ( ! $menu_params->get( 'page_title' ) ) {
+			if ( ! $menu_params->get( 'page_title', '' ) ) {
 				$params->set( 'page_title', $menu->title );
 			}
 		} else {
 			$params->set( 'page_title', 'Form' );
 		}
-		$title	=	$params->get( 'page_title' );
+
+		// Set Title
+		$title	=	$params->get( 'page_title', '' );
 		
 		if ( empty( $title ) ) {
 			$title	=	$config->get( 'sitename' );
@@ -80,18 +82,9 @@ class CCKViewForm extends JViewLegacy
 		}
 		$config		=	null;
 		$this->document->setTitle( $title );
-		
-		if ( $params->get( 'menu-meta_description' ) ) {
-			$this->document->setDescription( $params->get( 'menu-meta_description' ) );
-		}
-		if ( $params->get( 'menu-meta_keywords' ) ) {
-			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
-		}
-		if ( $params->get( 'robots' ) ) {
-			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
-		}
+
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx', '' ) );
-		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
+		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 
 		// Prepare
 		jimport( 'cck.base.form.form' );
@@ -101,6 +94,25 @@ class CCKViewForm extends JViewLegacy
 		$session->set( 'cck_hash_'.$unique, JApplicationHelper::getHash( (int)$id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
 		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
 		$session->set( 'cck_task', 'form' );
+
+		// Set Meta
+		$description	=	$params->get( 'menu-meta_description', '' );
+		
+		if ( $description == '' ) {
+			$description	=	$params->get( 'form_desc', @$type->description );
+			$description	=	strip_tags( $description );
+			$description	=	JCckDevHelper::truncate( $description, 200 );
+		}
+		
+		if ( $description ) {
+			$this->document->setDescription( $description );
+		}
+		if ( $params->get( 'menu-meta_keywords', '' ) ) {
+			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords', '' ) );
+		}
+		if ( $params->get( 'robots' ) ) {
+			$this->document->setMetadata( 'robots', $params->get( 'robots', '' ) );
+		}
 
 		// Set
 		if ( !is_object( @$options ) ) {
@@ -130,11 +142,8 @@ class CCKViewForm extends JViewLegacy
 			$this->tag_form_title	=	$params->get( 'tag_form_title', 'h1' );
 			$this->class_form_title	=	$params->get( 'class_form_title', JCck::getConfig_Param( 'title_class', '' ) );
 		}
-		$this->show_form_desc		=	$params->get( 'show_form_desc' );
-		if ( $this->show_form_desc == '' ) {
-			$this->show_form_desc	=	$options->get( 'show_form_desc', '1' );
-			$this->description		=	@$type->description;
-		} elseif ( $this->show_form_desc ) {
+		$this->show_form_desc		=	$params->get( 'show_form_desc', $options->get( 'show_form_desc', '1' ) );
+		if ( $this->show_form_desc ) {
 			$this->description		=	$params->get( 'form_desc', @$type->description );
 		} else {
 			$this->description		=	'';
@@ -145,6 +154,8 @@ class CCKViewForm extends JViewLegacy
 			} else {
 				$this->description		=	str_replace( '[note]', '', $this->description );
 			}
+
+			$this->description	=	JCckDevHelper::replaceLive( $this->description );
 		}
 
 		// Force Titles to be hidden
@@ -153,6 +164,7 @@ class CCKViewForm extends JViewLegacy
 			$this->show_form_title	=	false;
 		}
 		
+		$this->class_desc			=	$params->get( 'class_form_desc', '' );
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form_id				=	$preconfig['formId'];
@@ -160,6 +172,7 @@ class CCKViewForm extends JViewLegacy
 		$this->params				=	&$params;
 		$this->skip					=	( $app->input->get( 'skip' ) ) ? '1' : '0';
 		$this->stage				=	&$stage;
+		$this->tag_desc				=	$params->get( 'tag_form_desc', 'div' );
 		$this->type					=	&$type;
 		$this->unique				=	&$unique;
 	}

@@ -38,6 +38,8 @@ $doc->addScriptDeclaration( $js );
 } ?>
 <?php if ( !$this->raw_rendering ) { ?>
 <div <?php echo $id; ?>class="cck_page cck-clrfix"><div>
+<?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
+<div class="<?php echo trim( $this->pageclass_sfx ); ?>">
 <?php }
 if ( $this->params->get( 'show_page_heading' ) ) {
 	echo '<h1>' . ( ( $this->escape( $this->params->get( 'page_heading' ) ) ) ? $this->escape( $this->params->get( 'page_heading' ) ) : $this->escape( $this->params->get( 'page_title' ) ) ) . '</h1>';
@@ -48,18 +50,33 @@ if ( $this->show_list_title ) {
 	$class		=	$class ? ' class="'.$class.'"' : '';
 	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
-if ( $this->show_list_desc && $this->description != '' ) {
+if ( $this->show_list_desc && $this->description != '' && $app->input->get( 'tmpl' ) != 'raw' ) {
 	$description	=	JHtml::_( 'content.prepare', $this->description );
-	
+	$tag_desc		=	'';
+
+	if ( $this->tag_desc == 'div_div' ) {
+		$tag_desc	=	'div';
+	}
 	if ( !( $this->tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
 		$this->tag_desc	=	'div';
 	}
 	if ( !$this->raw_rendering ) {
 		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
+
+		if ( $this->tag_desc == 'div' ) {
+			$description	.=	'<div class="clr"></div>';
+		}
+	} else {
+		$class			=	trim( $this->class_desc );
+		$class			=	$class ? ' class="'.$class.'"' : '';
+
+		if ( $tag_desc == 'div' ) {
+			$description	=	'<div>'.$description.'</div>';
+		}
+		$description	=	'<'.$this->tag_desc.$class.'>' . $description . '</'.$this->tag_desc.'>';
 	}
-	if ( $this->tag_desc == 'div' ) {
-		$description	.=	'<div class="clr"></div>';
-	}
+} else {
+	$description	=	'';
 }
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
 	echo $description;
@@ -105,8 +122,10 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
-<?php } ?>
-<?php if ( $this->load_ajax ) {
+<?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
+</div>
+<?php }
+if ( $this->load_ajax ) {
 $pre		=	'';
 $url		=	JUri::current();
 
@@ -145,16 +164,32 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					var $el = $("#seblod_form_load_more");
 					$($el).attr("data-start",0).attr("data-end",response.total);
 					if (response.total > response.count) {
-						$("#seblod_form_load_more, .cck_page_list .pagination").show();
+						$("#seblod_form_load_more, [data-cck-loadmore-pagination]").show();
 					} else {
-						$(".cck_page_list .pagination").hide();
+						$("[data-cck-loadmore-pagination]").hide();
+					}
+					if ($("[data-cck-total]").length) {
+ 						$("[data-cck-total]").text(response.total);
+ 					}
+ 					if (response.html_form !== undefined) {
+						for (const [key, value] of Object.entries(response.html_form)) {
+							if (!$("#"+`${key}`).length) {
+								continue;
+							}
+							if ($("#"+`${key}`+"_").length) {
+								$("#"+`${key}`).remove();
+								$("#"+`${key}`+"_").replaceWith(`${value}`);
+							} else {
+								$("#"+`${key}`).replaceWith(`${value}`);
+							}
+						}
 					}
 					response = response.html;
 				} else {
 					if (has_more != 1) {
 						$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 					} else {
-						$(".cck_page_list .pagination").hide();
+						$("[data-cck-loadmore-pagination]").hide();
 					}	
 				}
 				$("#seblod_form_loading_more").hide();
@@ -188,7 +223,11 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 </script>
 <?php } ?>
 <?php if ( $this->load_resource && $this->total ) {
-	$url	=	JRoute::_( 'index.php?Itemid='.$app->input->getInt( 'Itemid', 0 ) );
+	$auto_id	=	$this->autoid_resource;
+	if ( !$auto_id ) {
+		$auto_id	=	$app->input->getInt( 'Itemid', 0 );
+	}
+	$url		=	JRoute::_( 'index.php?Itemid='.$auto_id );
 	
 	if ( $url == '/' ) {
 		$url	=	'';
@@ -200,7 +239,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	JCck.Core.loadfragment = JCck.Core.getModal(<?php echo $this->json_resource ? $this->json_resource : '{}'; ?>);
 	$(document).ready(function() {
 		var fragment = window.location.hash;
-		if (fragment != "") {
+		if (fragment != "" && !$("form"+fragment).length) {
 			fragment = fragment.substring(1);
 			setTimeout(function() {
 				JCck.Core.loadfragment.loadUrl("<?php echo $url; ?>/"+fragment+"<?php echo ( $this->tmpl_resource ? '?tmpl='.$this->tmpl_resource : '' )?>");

@@ -29,7 +29,33 @@ if ( $this->show_form_title ) {
 	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
-	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	$description	=	JHtml::_( 'content.prepare', $this->description );
+	$tag_desc		=	'';
+
+	if ( $this->tag_desc == 'div_div' ) {
+		$tag_desc	=	'div';
+	}
+	if ( !( $this->tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
+		$this->tag_desc	=	'div';
+	}
+	if ( !$this->raw_rendering ) {
+		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
+
+		if ( $this->tag_desc == 'div' ) {
+			$description	.=	'<div class="clr"></div>';
+		}
+	} else {
+		$class			=	trim( $this->class_desc );
+		$class			=	$class ? ' class="'.$class.'"' : '';
+
+		if ( $tag_desc == 'div' ) {
+			$description	=	'<div>'.$description.'</div>';
+		}
+		$description	=	'<'.$this->tag_desc.$class.'>' . $description . '</'.$this->tag_desc.'>';
+	}
+}
+if ( $this->show_form_desc == 1 && $this->description != '' ) {
+	echo $description;
 }
 if ( isset( $this->config['error'] ) && (int)$this->config['error'] == 1 ) { ?>
 	<?php if ( !$this->raw_rendering ) { ?>
@@ -68,7 +94,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[url]" value="<?php echo $this->config['url']; ?>" />
 <input type="hidden" name="config[copyfrom_id]" value="<?php echo @$this->config['copyfrom_id']; ?>" />
 <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
-<input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="config[itemId]" value="<?php echo (int)$this->params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) ); ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php } ?>
@@ -85,4 +111,13 @@ if ( $this->show_form_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
+<?php }
+if ( $app->input->get( 'tmpl', '' ) == 'raw' ) { ?>
+<script>
+	jQuery(function ($) {
+		$(".hasPopover").popover({"html": true,"trigger": "hover","container": "body"}).on("hidden", function (e) {
+		   e.stopPropagation();
+		});
+	});
+</script>
 <?php } ?>

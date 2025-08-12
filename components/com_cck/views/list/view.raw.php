@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Filter\InputFilter;
+
 // View
 class CCKViewList extends JViewLegacy
 {
@@ -20,16 +22,26 @@ class CCKViewList extends JViewLegacy
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
-		$preconfig['search']		=	$app->input->get( 'search', '' );
+		$preconfig['search']		=	$app->input->getString( 'search', '' );
+
+		if ( strpos( $preconfig['search'], '|' ) !== false ) {
+			$parts					=	explode( '|', $preconfig['search'] );
+
+			$preconfig['search']	=	InputFilter::getInstance()->clean( $parts[0], 'cmd' );
+			$preconfig['search2']	=	InputFilter::getInstance()->clean( $parts[1], 'cmd' );
+		} else {
+			$preconfig['search']	=	InputFilter::getInstance()->clean( $preconfig['search'], 'cmd' );
+		}
+
 		$preconfig['itemId']		=	'';
 		$preconfig['task']			=	$app->input->get( 'task', 'search' );
 		$preconfig['doPagination']	=	1;
 		$preconfig['formId']		=	'seblod_form';
 		$preconfig['submit']		=	'JCck.Core.submit';
-		
+
 		JCck::loadjQuery();
 		$this->prepareDisplay( $preconfig );
-		
+
 		parent::display( $tpl );
 	}
 	
