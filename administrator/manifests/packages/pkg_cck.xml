@@ -115,6 +115,7 @@
 			<file type="plugin" id="joomla_article" group="cck_storage_location">plg_cck_storage_location_joomla_article.zip</file>
 			<file type="plugin" id="joomla_category" group="cck_storage_location">plg_cck_storage_location_joomla_category.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_storage_location">plg_cck_storage_location_joomla_user.zip</file>
+			<file type="plugin" id="joomla_menu_item" group="cck_storage_location">plg_cck_storage_location_joomla_menu_item.zip</file>
 			<file type="plugin" id="joomla_user_group" group="cck_storage_location">plg_cck_storage_location_joomla_user_group.zip</file>
 			<!-- Plugin // CCK Validation -->
 			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
