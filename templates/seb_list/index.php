@@ -24,6 +24,8 @@ $display_mode	=	(int)$cck->getStyleParam( 'list_display', '0' );
 $tags			=	$cck->getStyleParam( 'tag', 'ul_li' );
 $tags			=	explode( '_', $tags );
 $html			=	'';
+$id_attributes	=	$cck->id_attributes;
+$id_attributes	=	$id_attributes ? ' '.$id_attributes : '';
 $id_class		=	$cck->id_class;
 $items			=	$cck->getItems();
 $fieldnames		=	$cck->getFields( 'element', '', false );
@@ -46,9 +48,9 @@ $class			=	str_replace( '$total', $count, $class );
 $class			=	$class ? ' class="'.$class.'"' : '';
 
 // -- Render
-if ( $id_class && !$isMore ) {
+if ( ( $id_class || $id_attributes ) && !$isMore ) {
 ?>
-<div class="<?php echo trim( $cck->id_class ); ?>"><?php }
+<div<?php echo $id_attributes; ?> class="<?php echo trim( $cck->id_class ); ?>"><?php }
 echo $cck->renderPosition( '_above_' );
 if ( !( $isRaw || $isMore ) ) {
 	if ( $tags[0] != '' ) { ?>
@@ -59,7 +61,9 @@ if ( !( $isRaw || $isMore ) ) {
 			foreach ( $items as $item ) {
 				$row	=	$item->renderPosition( 'element' );
 				if ( $row && !$isRaw ) {
-					$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					if ( $tags[1] ) {
+						$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					}
 				}
 				$html	.=	$row;
 			}
@@ -67,7 +71,9 @@ if ( !( $isRaw || $isMore ) ) {
 			foreach ( $items as $pk=>$item ) {
 				$row	=	$cck->renderItem( $pk );
 				if ( $row && !$isRaw ) {
-					$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					if ( $tags[1] ) {
+						$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					}
 				}
 				$html	.=	$row;
 			}
@@ -85,7 +91,9 @@ if ( !( $isRaw || $isMore ) ) {
 					}
 				}
 				if ( $row && !$isRaw ) {
-					$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					if ( $tags[1] ) {
+						$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
+					}
 				}
 	            $html	.=	$row;
 			}
@@ -99,7 +107,7 @@ if ( !( $isRaw || $isMore ) ) {
 <?php
 } }
 echo $cck->renderPosition( '_below_' );
-if ( $id_class && !$isMore ) { ?>
+if ( ( $id_class || $id_attributes ) && !$isMore ) { ?>
 </div>
 <?php } ?>
 <?php
