@@ -169,7 +169,8 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		}
 		
 		// Prepare
-		$link_attr		=	$link->get( 'attributes', '' );
+		$lang_tag		=	$link->get( 'language', '' );
+		$link_attr		=	JCckDevHelper::replaceLive( $link->get( 'attributes', '' ), '', $config );
 		$link_class		=	$link->get( 'class', '' );
 		$link_rel		=	$link->get( 'rel', '' );
 		$link_target	=	$link->get( 'target', '' );
@@ -220,7 +221,8 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			if ( $form[0] == '#' ) {
 				$field->link	=	'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId;
 			} else {
-				$field->link	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId );
+				$lang_target	=	$lang_tag ? '&lang='.$lang_tag : '';
+				$field->link	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId.$lang_target );
 			}
 			$separator			=	( strpos( $field->link, '?' ) !== false ) ? '&' : '?';
 			if ( $custom ) {
