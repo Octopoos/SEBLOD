@@ -225,7 +225,9 @@ class CommonHelper_Admin
 	// getFolderOptions
 	public static function getFolderOptions( $selectlabel = false, $quickfolder = true, $top = false, $published = true, $element = '', $featured = false, $more = '' )
 	{
-		$component	=	JFactory::getApplication()->input->getCmd( 'option' );
+		$app		=	JFactory::getApplication();
+		$component	=	$app->input->getCmd( 'option' );
+		$view		=	$app->input->getCmd( 'view' );
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
@@ -249,6 +251,9 @@ class CommonHelper_Admin
 		$where		=	( $top ) ? ' WHERE s.lft > 0 AND s.lft BETWEEN parent.lft AND parent.rgt' : ' WHERE s.lft > 1 AND s.lft BETWEEN parent.lft AND parent.rgt';
 		$where		=	( $published ) ? $where . ' AND s.published = 1' : $where;
 		
+		if ( $view == 'types' ) {
+			$where	.=	' AND s.depth <= 3';
+		}
 		if ( $featured ) {
 			$options	=	array();
 			$where		.=	' AND s.featured = 1';
@@ -283,6 +288,21 @@ class CommonHelper_Admin
 		return $options;
 	}
 	
+	// getLanguageOptions
+	public static function getLanguageOptions()
+	{
+		$options	=	array();
+		
+		if ( $selectlabel !== false ) {
+			$options[]	=	JHtml::_( 'select.option', '', '&nbsp;'.JText::_( 'COM_CCK_ALL_LANG' ), 'value', 'text' );
+		}
+
+		$options[]	= 	JHtml::_( 'select.option', 'en-GB', 'EN' );
+		$options[]	= 	JHtml::_( 'select.option', 'fr-FR', 'FR' );
+
+		return $options;
+	}
+
 	// getLocationOptions
 	public static function getLocationOptions( $folder = false )
 	{

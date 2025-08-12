@@ -23,12 +23,15 @@ class CCK_TableSearch extends JTable
 	public function check()
 	{
 		$this->title	=	trim( $this->title );
+		
 		if ( empty( $this->title ) ) {
 			return false;
 		}
 		if( empty( $this->name ) ) {
-			$this->name	=	$this->title;
-			$this->name =	JCckDev::toSafeSTRING( $this->name );
+			$this->name		=	$this->title;
+			$this->name 	=	JCckDev::toSafeSTRING( $this->name );
+			$this->name		=	str_replace( array( '___', '__' ), '_', $this->name );
+
 			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
 				$datenow	=	JFactory::getDate();
 				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );

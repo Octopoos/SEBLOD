@@ -23,5 +23,34 @@ class CCKModelForm extends JModelLegacy
 		
 		return $config;
 	}
+
+	// storeField
+	public function storeField( $preconfig )
+	{
+		// $preconfig['client']	=	'content|intro';
+		
+		$config	=	array(
+						'id'=>$preconfig['id'],
+						'pk'=>0
+					);
+
+		$content	=	JCckContent::getInstance( $preconfig['id'] );
+
+		if ( $content->isSuccessful() ) {
+			$field	=	JCckDatabase::loadObject( 'SELECT id, storage, storage_field, storage_field2 FROM #__cck_core_fields WHERE name = "'.$preconfig['target'].'"' );
+
+			if ( $field->storage != 'standard' ) {
+				return $config;
+			}
+
+			$content->setProperty( $field->storage_field, $preconfig['value'] );
+
+			if ( $content->store() ) {
+				$config['pk']	=	$content->getPk();
+			}
+		}
+		
+		return $config;
+	}
 }
 ?>

@@ -65,7 +65,20 @@ $js		=	'
 						if ( $("#adminForm").validationEngine("validate") === true ) {
 							var eid = "'.$id.'";
 							var data = $("#required").val();
-							var text = data ? "'.JText::_( 'COM_CCK_REQUIRED' ).'" : "'.JText::_( 'COM_CCK_OPTIONAL' ).'";
+							var text = "'.JText::_( 'COM_CCK_OPTIONAL' ).'";
+
+							if (data) {
+								if (data == "required") {
+									text = "'.JText::_( 'COM_CCK_REQUIRED' ).'";
+								} else if (data == "condrequired") {
+									text = "'.JText::_( 'COM_CCK_REQUIRED_WHEN' ).'";
+								} else if (data == "langrequired") {
+									text = "'.JText::_( 'COM_CCK_REQUIRED_LANG' ).'";
+								} else {
+									text = "'.JText::_( 'COM_CCK_REQUIRED_GROUP' ).'";
+								}
+							}
+
 							if (data == "grouprequired") {
 								data	=	"required["+$("#required2").val()+"]";
 							} else if (data == "condrequired") {

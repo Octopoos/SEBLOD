@@ -23,20 +23,21 @@ class Helper_Workshop
 		if ( $hasMb < 0 ) {
 			$hasMb	=	( function_exists( 'mb_convert_case' ) ) ? 1 : 0;
 		}
-		$class		=	'';
-		$f_lang		=	$field->language != '' && $field->language != '*' ? ' l-'.$field->language : '';
-		$f_tabgroup	=	'';
-		$link		=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		$title		=	str_replace( '⇒', '', $field->title );
+		$class			=	'';
+		$f_lang			=	$field->language != '' && $field->language != '*' ? ' l-'.$field->language : '';
+		$f_tabgroup		=	'';
+		$link			=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
+		$no				=	'';
+		$title			=	str_replace( '⇒', '', $field->title );
+		$type_suffix	=	'';
 		
 		if ( $field->checked_out ) {
 			$class	=	isset( $attr['user_id'] ) && $field->checked_out == $attr['user_id'] ? ' zz2' : ' zz';
 		}
-
-		if ( isset( $field->storage ) ) {
+		if ( $field->type == 'group' ) {
+			$type_suffix	.=	' <span class="to">&#8689;</span>';
+		} elseif ( isset( $field->storage ) ) {
 			$no	=	$field->storage == 'none' ? '<span class="no">&times;</span>' : '';
-		} else {
-			$no	=	'';
 		}
 		if ( $title !== $field->title ) {
 			$f_tabgroup	.=	' tg';
@@ -59,7 +60,7 @@ class Helper_Workshop
 			}
 		}
 
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field.$f_lang.$f_tabgroup; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $no; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field.$f_lang.$f_tabgroup; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $type_suffix.$no; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -411,8 +412,17 @@ class Helper_Workshop
 	public static function getParams( $element, $master, $client )
 	{
 		$data					=	array();
-		$data['_']				=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
-										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>'<span class="icon-menu-2"></span>' );
+		$data['_']				=	array(
+										'add'=>JText::_( 'COM_CCK_ADD' ),
+										'configure'=>JText::_( 'COM_CCK_CONFIGURE' ),
+										'edit'=>JText::_( 'COM_CCK_EDIT' ),
+										'icon-friendly'=>'<span class="icon-menu-2"></span>',
+										'optional'=>JText::_( 'COM_CCK_OPTIONAL' ),
+										'required'=>JText::_( 'COM_CCK_REQUIRED' ),
+										'required_group'=>JText::_( 'COM_CCK_REQUIRED_GROUP' ),
+										'required_lang'=>JText::_( 'COM_CCK_REQUIRED_LANG' ),
+										'required_when'=>JText::_( 'COM_CCK_REQUIRED_WHEN' )
+									);
 		
 		if ( JCck::on( '4.0' ) ) {
 			$data['_']['icon-friendly']	=	'<span class="icon-expand"></span>';

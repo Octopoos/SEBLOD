@@ -272,7 +272,7 @@ Helper_Display::quickCopyright();
 				$("#label").val(str);	
 			}
 			if ($("#storage_field").length) {
-				$("#storage_field").val( str.toLowerCase().replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "") );	
+				$("#storage_field").val( str.replace(" | ","_").toLowerCase().replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "") );	
 			}
 		},
 		transliterateName: function() {
@@ -287,7 +287,7 @@ Helper_Display::quickCopyright();
 				}
 			}
 			var str = JCck.transliterate(p+title,JCck.Dev.transliteration);
-			$("#name").val( str.toLowerCase().replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "") );
+			$("#name").val( str.toLowerCase().replace(" | ","_").replace(/^\s+|\s+$/g,"").replace(/\s/g, "_").replace(/[^a-z0-9_]/gi, "").replace("___","_").replace("__","_") );
 		},
 		toggleTranslation: function() {
 			if (JCck.Dev.doTranslation == "0") {

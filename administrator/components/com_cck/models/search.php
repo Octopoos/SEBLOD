@@ -450,9 +450,9 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 		}
 		if ( $str != '' ) {
 			$str	=	substr( trim( $str ), 0, -1 );
+
+			JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 		}
-		
-		JCckDatabase::execute( 'INSERT INTO '.$table.' VALUES '.$str );
 	}
 }
 ?>
