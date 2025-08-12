@@ -54,7 +54,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		}
 		
 		// Prepare
-		$divider					=	( $field->divider != '' ) ? $field->divider : ',';
+		$divider					=	( isset( $field->divider ) && $field->divider != '' ) ? $field->divider : ',';
 		if ( is_array( $value ) ) {
 			$value					=	implode( $divider, $value );
 		}
@@ -81,7 +81,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		if ( static::$type != $field->type ) {
 			return;
 		}
-		
+
 		self::onCCK_FieldPrepareContent( $field, $value, $config );
 		
 		$field->output	=	$field->text;
@@ -142,7 +142,8 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 		} else {
 			$optionsSorted	=	$options;
 		}
-		$opts	=	array();
+		$opts		=	array();
+		$options	=	array();
 		if ( count( $optionsSorted ) ) {
 			foreach ( $optionsSorted as $i=>$val ) {
 				if ( trim( $val ) != '' ) {
@@ -164,6 +165,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 					} else {
 						$opts[]	=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
 					}
+					$options[]			=	$text.'='.$val;
 				}
 			}
 		}
@@ -274,11 +276,14 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			if ( $config['doTranslation'] ) {
 				$config['doTranslation']=	$field->bool8;
 			}
+			$field->optionsList			=	( count( $options ) ) ? implode( '||', $options ) : '';
 			$field->text				=	parent::g_getOptionText( $value, $field->options, $divider, $config );
 			$config['doTranslation']	=	$doTranslation;
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		}
-		$field->value	=	$value;
+
+		$field->label_for	=	$id.'0';
+		$field->value		=	$value;
 
 		$texts						=	( isset( $field->text ) ) ? explode( $divider, $field->text ) : array();
 		$values						=	( is_string( $field->value ) ) ? explode( $divider, $field->value ) : $field->value;
