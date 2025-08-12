@@ -470,7 +470,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		JCck::loadjQuery();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
 			echo '<script src="'.self::$path.'assets/js/script-3.22.0.min.js'.'" type="text/javascript"></script>';
 		} else {
 			JCck::loadjQueryUI();

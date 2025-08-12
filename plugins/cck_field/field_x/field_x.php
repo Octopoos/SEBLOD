@@ -361,7 +361,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.min.js" type="text/javascript"></script>';
+			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			JCck::loadjQuery();
