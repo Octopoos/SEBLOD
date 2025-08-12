@@ -144,6 +144,7 @@
 	</fieldset>
 
 	<fieldset name="fs_media" label="COM_CCK_CONFIG_FIELDSET_MEDIA" description="COM_CCK_CONFIG_FIELDSET_MEDIA_DESC">
+		<field name="media_cdn" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_CDN" description="COM_CCK_CONFIG_MEDIA_CDN_DESC" class="inputbox input-small" />
 		<field name="media_case" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_LEGAL_CASE" description="COM_CCK_CONFIG_MEDIA_LEGAL_CASE_DESC" class="btn-group btn-group-yesno">
 			<option value="0">COM_CCK_LOWERCASE</option>
 			<option value="1">COM_CCK_UPPERCASE</option>
@@ -152,6 +153,10 @@
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
+		<field name="media_canonical" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_CANONICAL" description="COM_CCK_CONFIG_MEDIA_CANONICAL_DESC" class="btn-group btn-group-yesno">
+			<option value="0">COM_CCK_DOWNLOAD</option>
+			<option value="1">COM_CCK_READ</option>
+		</field>
 		<field name="media_quality_jpeg" type="text" default="90" label="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG_DESC" class="inputbox input-small" />
 		<field name="media_quality_png" type="text" default="3" label="COM_CCK_CONFIG_MEDIA_QUALITY_PNG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_PNG_DESC" class="inputbox input-small" />
 		<field name="media_image_webp" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_IMAGE_WEBP" description="COM_CCK_CONFIG_MEDIA_IMAGE_WEBP_DESC" class="btn-group btn-group-yesno">
