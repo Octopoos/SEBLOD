@@ -205,7 +205,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			return $field;
 		}
 	}
-	
+
 	// onCCK_FieldPrepareSearch
 	public function onCCK_FieldPrepareSearch( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
 	{
@@ -214,19 +214,28 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		$value	=	trim( $value );
 
-		if ( (int)$value > 0 ) {
-			$date		=	JFactory::getDate( $value, $this->userTimeZone );
+		if ((int)$value > 0) {
+			$options2 = JCckDev::fromJSON($field->options2);
+			$modify = (isset($options2['modify']) && $options2['modify']) ? $options2['modify'] : '';
 
-			$options2	=	JCckDev::fromJSON( $field->options2 );
-			$modify		=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
+		// Detect if the value includes a time
+		$hasTime = strpos($value, ':') !== false;
 
-			if ( $modify ) {
-				$date->modify( $modify );
-			}
-			$timezone	=	new DateTimeZone( 'UTC' );
-			$date->setTimezone( $timezone );
-			$value		=	$date->toSql();
+		// Prevent timezone shift to previous day
+		if (!$hasTime) {
+			$value .= ' 12:00:00';
 		}
+
+		$date = JFactory::getDate($value, $this->userTimeZone);
+
+		if ($modify) {
+			$date->modify($modify);
+		}
+
+		$timezone = new DateTimeZone('UTC');
+		$date->setTimezone($timezone);
+		$value = $date->toSql();
+	}
 
 		// Prepare
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
