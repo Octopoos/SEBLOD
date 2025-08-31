@@ -54,7 +54,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 											1=>'categories',
 											2=>'category'
 										);
-	protected static $sef			=	array( '1'=>'full',
+	protected static $sef			=	array( '0'=>'native',
+											   '1'=>'full',
 											   '2'=>'full', '22'=>'id', '23'=>'alias', '24'=>'alias',
 											   '3'=>'full', '32'=>'id', '33'=>'alias',
 											   '4'=>'full', '42'=>'id', '43'=>'alias'
