@@ -933,7 +933,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		// Retrieve Content Type(s)
 		if ( isset( $config['sef_types'] ) && $config['sef_types'] != '' ) {
 			if ( $config['doSEF'][0] != '3' ) {
-				$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = a.id';
+				$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = b.id';
 				$where	.=	( strpos( $config['sef_types'], ',' ) !== false ) ? ' AND e.cck IN ("'.str_replace( ',', '","', $config['sef_types'] ).'")' : ' AND e.cck = "'.$config['sef_types'].'"';
 			}
 		}
