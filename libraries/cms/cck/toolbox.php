@@ -234,24 +234,22 @@ abstract class JCckToolbox
 	// process
 	public static function process( $event, $config = array() )
 	{
+		$legacy		=	1;	/* TODO#SEBLOD4 */
 		$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
 
 		if ( isset( $processing[$event] ) ) {
 			foreach ( $processing[$event] as $p ) {
-				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-					$options	=	new JRegistry( $p->options );
 
-					/*
-					$trigger	=	new JCckProcessing;
+				if ( $legacy ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
 
-					$trigger->set( 'event', $event );
-					$trigger->set( 'options', $options );
-					$trigger->set( 'script', JPATH_SITE.$p->scriptfile );
+						include JPATH_SITE.$p->scriptfile;
+					}
+				} else {
+					$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
 
-					$trigger->execute( $config );
-					*/
-
-					include JPATH_SITE.$p->scriptfile;
+					call_user_func_array( array( $process, 'execute' ), array( &$config ) ); /* ! &$fields */
 				}
 			}
 		}
