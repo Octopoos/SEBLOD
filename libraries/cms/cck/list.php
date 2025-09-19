@@ -206,6 +206,18 @@ class JCckList
 		// }
 
 		if ( !is_null( $items ) ) {
+			$items	=	array_values( $items );
+			
+			foreach ( $items as $i=>$item ) {
+				$items[$i]->author			=	$items[$i]->author ?? 0;
+				$items[$i]->author_session	=	$items[$i]->author_session ?? '';
+				$items[$i]->cck				=	$items[$i]->cck ?? '';
+				$items[$i]->parent			=	$items[$i]->parent ?? '';
+				$items[$i]->pid				=	$items[$i]->pid ?? 0;
+				$items[$i]->pkb				=	$items[$i]->pkb ?? 0;
+				$items[$i]->type_id			=	$items[$i]->type_id ?? 0;
+			}
+
 			$this->_search_results	=	$items;
 		}
 

@@ -81,7 +81,9 @@ abstract class JCckWebservice
 
 		if ( $fallback ) {
 			if ( isset( $webservice->response_format ) && $webservice->response_format == 'json' ) {
-				if ( isset( $webservice->response->status ) && $webservice->response->status != 'error' ) {
+				if ( !(int)$webservice->response_check && isset( $webservice->response->status ) && $webservice->response->status != 'error' ) {
+					// OK
+				} elseif ( (int)$webservice->response_check == 1 && is_object( $webservice->response ) ) {
 					// OK
 				} else {
 					$webservice->response	=	$resp_key;
@@ -99,7 +101,7 @@ abstract class JCckWebservice
 	// getCall
 	public static function getCall( $name )
 	{
-		return JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_method, a.request_object, a.request_options, a.response, a.response_format, a.response_identifier'
+		return JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_method, a.request_object, a.request_options, a.response, a.response_check, a.response_format, a.response_identifier'
 									   . ' FROM #__cck_more_webservices_calls AS a'
 									   . ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
 									   . ' WHERE a.name = "'.$name.'" AND a.published = 1' );
