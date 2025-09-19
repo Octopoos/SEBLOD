@@ -27,6 +27,18 @@ class JCckDevImage
 	protected $_width 			=	0;
 	protected $_error 			=	false;
 
+	// getName
+	static function getName( $file_name )
+	{
+		if ( strpos( $file_name, '?' ) ) {
+			$parts	=	explode( '?', $file_name );
+
+			return $parts[0];
+		}
+
+		return $file_name;
+	}
+
 	// __construct
 	public function __construct( $path )
 	{
@@ -53,10 +65,14 @@ class JCckDevImage
 				$this->_exif 	=	@exif_read_data( $path, 0, true );
 			}
 		}
-		
+
 		$this->_resource 	= 	$this->_createResource( $this->_extension, $path );
+
 		list( $this->_width, $this->_height )	=	getimagesize( $path );
-		$this->_ratio 		= 	$this->_width / $this->_height;
+
+		if ( $this->_height ) {
+			$this->_ratio 		= 	$this->_width / $this->_height;
+		}
 	}
 
 	// __call
@@ -76,6 +92,16 @@ class JCckDevImage
         		return $this->$target;
         	}
 		}
+	}
+
+	// destroy
+	public function destroy()
+	{
+		if ( $this->isResource( $this->_resource ) ) {
+			return imagedestroy( $this->_resource );
+		}
+
+		return true;
 	}
 
 	// isResource
@@ -157,10 +183,40 @@ class JCckDevImage
 				}
 
 				if ( $tres ) {
-					imagewebp( $tres, $path, $this->_quality_webp );
+					$res	=	imagewebp( $tres, $path, $this->_quality_webp );
 				} else {
-					imagewebp( $this->_resource, $path, $this->_quality_webp );
+					$res	=	imagewebp( $this->_resource, $path, $this->_quality_webp );
 				}
+				if ( $res && filesize( $path ) > 0 ) {
+					return true;
+				} elseif ( $this->_extension == 'png' ) {
+					if ( class_exists( 'Imagick' ) ) {
+						$resource	=	$tres ? $tres : $this->_resource;
+
+						try {
+							ob_start();
+							imagepng( $resource );
+							$blob		=	ob_get_clean();
+							$imagick	=	new Imagick;
+
+							$imagick->readImageBlob( $blob );
+							$imagick->setImageFormat( 'webp' );
+							$imagick->setImageCompressionQuality( $this->_quality_webp );
+							$imagick->setOption( 'webp:lossless', 'false' );
+							$imagick->writeImage( $path );
+							$imagick->clear();
+							$imagick->destroy();
+
+							if ( filesize( $path ) > 0 ) {
+								return true;
+							}
+						} catch ( Exception $e ) {
+							return false;
+						}
+					}
+				}
+			} else {
+				return false;
 			}
 		}
 
