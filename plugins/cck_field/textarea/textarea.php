@@ -59,7 +59,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 
 		if ( $value ) {
 			if ( (int)$field->bool2 != -1 ) {
-				$value		=	( $field->bool2 ) ? ( ( $field->bool2 == 2 ) ? self::_bn2br_in_p( $value ) : self::_bn2p( $value ) ) : self::_bn2br( $value );
+				$value		=	( $field->bool2 ) ? ( ( $field->bool2 == 2 ) ? self::_bn2br_in_p( $value ) : self::_bn2p( $value ) ) : self::_bn2br( $value, true );
 			}
 		}
 		
@@ -234,8 +234,12 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	}
 
 	// _bn2br
-	protected static function _bn2br( $text )
+	protected static function _bn2br( $text, $clean = false )
 	{
+		if ( $clean ) {
+			$text	=	preg_replace('/>\s+</', '><', $text );
+		}
+
 		return preg_replace( '/\\n/i', "<br />", $text );
 	}
 
