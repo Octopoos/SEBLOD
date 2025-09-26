@@ -217,7 +217,7 @@ if ( count( $fields ) ) {
 			}
 			*/
 		}
-		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled' || $field->variation == 'value' ) && !$field->live && $field->live_value != '' ) {
+		if ( $task != 'save2copy' && ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled' || $field->variation == 'disabled_isfilled' || $field->variation == 'value' ) && !$field->live && $field->live_value != '' ) {
 			$value	=	$field->live_value;
 		} else {
 			if ( isset( $post[$field->name] ) ) {
@@ -226,14 +226,14 @@ if ( count( $fields ) ) {
 				$value			=	null;
 				$field->state	=	'disabled';
 			}
-			if ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && !$field->live && $session->has( 'cck_hash_live_'.$field->name ) ) {
+			if ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) && !$field->live && $session->has( 'cck_hash_live_'.$field->name ) ) {
 				$toBeChecked	=	true;
 			}
 		}
 		$app->triggerEvent( 'onCCK_FieldPrepareStore', array( &$field, $value, &$config ) );
 
 		if ( !$config['copyfrom_id'] ) {
-			if ( !$id && isset( $field->live ) && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
+			if ( !$id && isset( $field->live ) && $field->live && ( ( $field->variation == 'hidden' || $field->variation == 'hidden_anonymous' || $field->variation == 'disabled' || $field->variation == 'value' ) || ( ( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) && $session->has( 'cck_hash_live_'.$field->name ) ) ) ) {
 				$toBeChecked	=	true;
 			}
 		}

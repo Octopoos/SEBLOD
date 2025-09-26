@@ -304,9 +304,9 @@ foreach ( $fields as $field ) {
 	}
 	$field->value	=	$value;
 	
-	if ( $field->variation == 'hidden_isfilled' ) {
+	if ( $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) {
 		if ( $value != '' ) {
-			$field->variation	=	'hidden';
+			$field->variation	=	str_replace( '_isfilled', '', $field->variation );
 
 			if ( !$id ) {
 				JCckDevHelper::secureField( $field, $value );
