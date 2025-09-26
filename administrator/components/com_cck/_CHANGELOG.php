@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.29.0 Upgrade Release [15-Jul-2025] -------------
+--------------- 3.29.0 Upgrade Release [25-Sep-2025] -------------
 
 + "between" operator updated on JCckContent find/search methods.
 
