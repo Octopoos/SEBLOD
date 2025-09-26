@@ -17,9 +17,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 {
 	protected static $type		=	'upload_image';
 	protected static $path;
-	
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
-	
+
 	// onCCK_FieldConstruct
 	public function onCCK_FieldConstruct( $type, &$data = array() )
 	{
@@ -30,12 +30,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$data['json']['options2']['path']	.=	'/';
 		}
 		$data['json']['options2']['path']		=	trim( $data['json']['options2']['path'] );
-		
-		JCckDevHelper::createFolder( JPATH_SITE.'/'.$data['json']['options2']['path'] );
-		
+
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$data['json']['options2']['path_type'] == 1 ) );
+
+		JCckDevHelper::createFolder( $root_folder.'/'.$data['json']['options2']['path'] );
+
 		parent::g_onCCK_FieldConstruct( $data );
 	}
-	
+
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
@@ -81,23 +83,25 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
 		}
 
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
+
 		// Process
-		if ( $value != '' && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+		if ( $value != '' && JFile::exists( $root_folder.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 
 			if ( $options2['path_content'] ) {
 				jimport( 'joomla.filesystem.folder' );
-				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
-					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( $root_folder.'/'.$path ) ) {
+					if ( JFolder::delete( $root_folder.'/'.$path ) ) {
 						return true;
 					}
 				}
 			} else {
-				JFile::delete( JPATH_SITE.'/'.$value );
+				JFile::delete( $root_folder.'/'.$value );
 				
 				for ( $i = 1; $i <= 10; $i++ ) {
-					if ( JFile::exists( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
-						JFile::delete( JPATH_SITE.'/'.$path.'_thumb'.$i.'/'.$file_name );
+					if ( JFile::exists( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						JFile::delete( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name );
 					}
 				}
 			}
@@ -148,11 +152,14 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$value	=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
 			}
 		}
-		if ( $value && JFile::exists( JPATH_SITE.'/'.$value ) ) {
+
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
+
+		if ( $value && JFile::exists( $root_folder.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {
 				$thumb					=	$path.'_thumb'.$i.'/'.substr( strrchr( $value, '/' ), 1 );
-				$field->{'thumb'.$i}	=	( JFile::exists( JPATH_SITE.'/'.$thumb ) ) ? $thumb : '';
+				$field->{'thumb'.$i}	=	( JFile::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
 			}
 			
 			self::_addThumbs( $field, $options2, $value, $path );
@@ -196,6 +203,10 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
 		}
 		$file		.=	$field->value;
+		
+		if ( isset( $f_opt2['path_type'] ) && (int)$f_opt2['path_type'] == 1 ) {
+			$field->filepath	=	JCckDevHelper::getRootFolder( 'resources' );
+		}
 		
 		$field->filename	=	$file;
 	}
@@ -273,6 +284,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$lock			=	'';
 		$params			=	array();
 		$legal_ext		=	isset( $options2['media_extensions'] ) ? $options2['media_extensions'] : 'custom';
+
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
@@ -293,11 +305,13 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 		}
 
-		if ( $value['image_location'] && JFile::exists( JPATH_ROOT.'/'.$value['image_location'] ) ) {
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
+
+		if ( $value['image_location'] && JFile::exists( $root_folder.'/'.$value['image_location'] ) ) {
 			$path	=	substr( $value['image_location'], 0, strrpos( $value['image_location'], '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {
 				$thumb	=	$path.'_thumb'.$i.'/'.substr( strrchr( $value['image_location'], '/' ), 1 );
-				$field->{'thumb'.$i}	=	( JFile::exists( JPATH_ROOT.'/'.$thumb ) ) ? $thumb : '';
+				$field->{'thumb'.$i}	=	( JFile::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
 			}
 			self::_addThumbs( $field, $options2, $value['image_location'], $path );
 		}
@@ -386,7 +400,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
 									</a>';
 				} else {
-					$thumb_location	=	str_replace( $title,'_thumb'.( $options2['form_preview'] - 2 ).'/'.$title,$value['image_location'] );
+					$thumb_location	=	str_replace( '/'.$title.'.','/_thumb'.( $options2['form_preview'] - 2 ).'/'.$title.'.',$value['image_location'] );
 					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
 									</a>';
@@ -529,6 +543,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			}
 		}
 		$legal_ext		=	explode( ',', $legal_ext );
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 		$userfile 		=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
 		$userfile_more	=	false;
 
@@ -585,16 +600,16 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					$title_webp 		=	str_replace( '.'.$extention, '.webp', $title );
 
 					for ( $i = 1; $i < 11; $i++ ) {
-						if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title ) ) {
-							JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title );
+						if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title ) ) {
+							JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title );
 						}
-						if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp ) ) {
-							JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp );
+						if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp ) ) {
+							JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp );
 						}
 					}
 
-					if ( JFile::exists( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.$title ) ) {	
-						JFile::delete( JPATH_SITE.'/'.$options2['path'].$user_folder.$content_folder.$title );
+					if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title ) ) {	
+						JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title );
 					}
 				}
 				$itemPath	=	'';
@@ -656,7 +671,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					$imageTitle	=	'';
 					$imageDesc	=	'';
 				}
-				if ( $imageCustomDir != '' && strrpos( $imageCustomDir, '.') > 0 && JFile::exists( JPATH_SITE.'/'.$imageCustomDir ) ) {
+				if ( $imageCustomDir != '' && strrpos( $imageCustomDir, '.') > 0 && JFile::exists( $root_folder.'/'.$imageCustomDir ) ) {
 					if ( count( $legal_ext ) ) {
 						$legal		=	( strrpos( $imageCustomDir, '.' ) ) ? substr( $imageCustomDir, strrpos( $imageCustomDir, '.' ) + 1 ) : '';
 						if ( $legal && array_search( $legal, $legal_ext ) === false ) {
@@ -697,7 +712,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path,
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'file_path_type'=>( isset( $options2['path_type'] ) ? (int)$options2['path_type'] : 0 ),
 									   'file_name'=>$ImageCustomName, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, //'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field' => $field->storage_field, 'storage_field2'=>( $field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$imageTitle, 'file_descr'=>$imageDesc );
@@ -778,11 +793,13 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// _addThumbs
 	protected static function _addThumbs( &$field, $options2, $value, $path )
 	{
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
+
 		switch ( @$options2['force_thumb_creation'] ) {
 			case '0':
 				break;
 			case '1':
-				$image	=	new JCckDevImage( JPATH_SITE.'/'.$value );
+				$image	=	new JCckDevImage( $root_folder.'/'.$value );
 				for ( $i = 1; $i < 11; $i++ ) {
 					if ( ! $field->{'thumb'.$i} || $field->{'thumb'.$i} == '' ) {
 						$thumb_result			=	self::_addThumb( $image, $options2, $i );
@@ -791,7 +808,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				}
 				break;
 			case '2' :
-				$image	=	new JCckDevImage( JPATH_SITE.'/'.$value );
+				$image	=	new JCckDevImage( $root_folder.'/'.$value );
 				for ( $i = 1; $i < 11; $i++ ) {
 					$thumb_result			=	self::_addThumb( $image, $options2, $i );
 					$field->{'thumb'.$i}	=	( $thumb_result ) ? $path.'_thumb'.$i.'/'.substr( strrchr( $value, '/' ), 1 ) : '';

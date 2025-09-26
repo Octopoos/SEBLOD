@@ -40,7 +40,18 @@ $displayData	=	array(
 								'fields'=>array(
 											JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 											JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
-											JCckDev::renderForm( 'core_options_path', @$options2['path'], $config, array( 'required'=> 'required' ) ),
+											JCckDev::renderLayoutFile(
+												'cck'.JCck::v().'.form.field', array(
+													'label'=>JText::_( 'COM_CCK_FOLDER' ),
+													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
+														'grid'=>'auto|',
+														'html'=>array(
+															JCckDev::getForm( 'core_dev_bool', @$options2['path_type'], $config, array( 'defaultvalue'=>'0', 'options'=>'Root=0||Target=optgroup||Resources=1', 'storage_field'=>'json[options2][path_type]' ) ),
+															JCckDev::getForm( 'core_options_path', @$options2['path'], $config, array( 'required'=> 'required' ) )
+														)
+													) )
+												)
+											),
 											JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(

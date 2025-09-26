@@ -22,6 +22,7 @@ $array_x		=	$process['array_x'];
 $true_name		=	$process['true_name'];
 $options		=	$process['options2'];
 $permissions	=	( isset( $options['folder_permissions'] ) && $options['folder_permissions'] ) ? octdec( $options['folder_permissions'] ) : 0755;
+$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$process['file_path_type'] == 1 ) );
 
 if ( !(bool) ini_get( 'file_uploads' ) ) {
 	JError::raiseWarning( '', JText::_( 'WARNINSTALLFILE' ) );
@@ -32,7 +33,7 @@ $old_path		=	$file_path;
 if ( $content_folder && $config['isNew'] ) {
 	$file_path		.=	$config['pk'].'/';
 	$file_location	=	$file_path.$file_name;
-	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+	$location		=	$root_folder.'/'.$file_path.$file_name;
 	if ( $file_title == '' ) {
 		if ( $x2k > -1 ) {
 			if ( $array_x ) { //GroupX (custom!)
@@ -63,13 +64,13 @@ if ( $content_folder && $config['isNew'] ) {
 	$doSave	=	1;
 } else {
 	$file_location	=	$file_path.$file_name;
-	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+	$location		=	$root_folder.'/'.$file_path.$file_name;
 }
 
-if ( ! JFolder::exists( JPATH_SITE.'/'.$file_path ) ) {
-	JFolder::create( JPATH_SITE.'/'.$file_path, $permissions );
+if ( ! JFolder::exists( $root_folder.'/'.$file_path ) ) {
+	JFolder::create( $root_folder.'/'.$file_path, $permissions );
 	$file_body	=	'<!DOCTYPE html><title></title>';
-	JFile::write( JPATH_SITE.'/'.$file_path.'/index.html', $file_body );
+	JFile::write( $root_folder.'/'.$file_path.'/index.html', $file_body );
 }
 $allowUnsafe		=	false;
 $safeFileOptions	=	array();

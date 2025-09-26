@@ -24,7 +24,8 @@ $array_x		=	$process['array_x'];
 $true_name		=	$process['true_name'];
 $options		=	$process['options2'];
 $color			=	( @$options['image_color'] != '' ) ? $options['image_color'] : '#ffffff';
-$permissions		=	( isset( $options['folder_permissions'] ) && $options['folder_permissions'] ) ? octdec( $options['folder_permissions'] ) : 0755;
+$permissions	=	( isset( $options['folder_permissions'] ) && $options['folder_permissions'] ) ? octdec( $options['folder_permissions'] ) : 0755;
+$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$process['file_path_type'] == 1 ) );
 
 if ( !(bool) ini_get( 'file_uploads' ) ) {
 	JError::raiseWarning( '', JText::_( 'WARNINSTALLFILE' ) );
@@ -36,7 +37,7 @@ $old_path		=	$file_path;
 if ( $content_folder && $config['isNew'] ) {
 	$file_path		.=	$config['pk'].'/';
 	$file_location	=	$file_path.$file_name;
-	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+	$location		=	$root_folder.'/'.$file_path.$file_name;
 
 	// Disallow Uppercase extension
 	$extension		=	strtolower( JFile::getExt( $file_name ) );
@@ -75,7 +76,7 @@ if ( $content_folder && $config['isNew'] ) {
 	$doSave	=	1;
 } else {
 	$file_location	=	$file_path.$file_name;
-	$location		=	JPATH_SITE.'/'.$file_path.$file_name;
+	$location		=	$root_folder.'/'.$file_path.$file_name;
 
 	// Disallow Uppercase extension
 	$extension		=	strtolower( JFile::getExt( $file_name ) );
@@ -83,7 +84,7 @@ if ( $content_folder && $config['isNew'] ) {
 	$location		=	substr( $location, 0, strlen( $extension ) * -1 ).$extension;
 }
 
-JCckDevHelper::createFolder( JPATH_SITE.'/'.$file_path, $permissions );
+JCckDevHelper::createFolder( $root_folder.'/'.$file_path, $permissions );
 
 if ( JFile::upload( $tmp_name, $location ) ) {
 	$thumb_count				=	11;

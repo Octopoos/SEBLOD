@@ -151,6 +151,7 @@
 			<option value="2">COM_CCK_BOTH</option>
 		</field>
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
+		<field name="media_root_resources" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES" description="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES_DESC" class="inputbox input-xxlarge" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
 		<field name="media_canonical" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_CANONICAL" description="COM_CCK_CONFIG_MEDIA_CANONICAL_DESC" class="btn-group btn-group-yesno">

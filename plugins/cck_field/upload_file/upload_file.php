@@ -19,7 +19,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	protected static $path;
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
-	
+
 	// onCCK_FieldConstruct
 	public function onCCK_FieldConstruct( $type, &$data = array() )
 	{
@@ -31,11 +31,13 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		}
 		$data['json']['options2']['path']		=	trim( $data['json']['options2']['path'] );
 		
-		JCckDevHelper::createFolder( JPATH_SITE.'/'.$data['json']['options2']['path'] );
-		
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$data['json']['options2']['path_type'] == 1 ) );
+
+		JCckDevHelper::createFolder( $root_folder.'/'.$data['json']['options2']['path'] );
+
 		parent::g_onCCK_FieldConstruct( $data );
 	}
-	
+
 	// onCCK_FieldConstruct_SearchSearch
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
@@ -49,7 +51,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		} else {
 			$data['match_mode']									=	$config['construction']['match_mode'][self::$type];
 		}
-		
+
 		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
 
@@ -83,20 +85,22 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$path	.=	( @$options2['path_content'] ) ? $config['pk'].'/' : '';
 			$file	=	$path.$value;
 		}
+
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 		
 		// Process
-		if ( $file != '' && JFile::exists( JPATH_SITE.'/'.$file ) ) {
+		if ( $file != '' && JFile::exists( $root_folder.'/'.$file ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 
 			if ( $options2['path_content'] ) {
 				jimport( 'joomla.filesystem.folder' );
-				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( JPATH_SITE.'/'.$path ) ) {
-					if ( JFolder::delete( JPATH_SITE.'/'.$path ) ) {
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( $root_folder.'/'.$path ) ) {
+					if ( JFolder::delete( $root_folder.'/'.$path ) ) {
 						return true;
 					}
 				}
 			} else {
-				if ( JFile::delete( JPATH_SITE.'/'.$file ) ) {
+				if ( JFile::delete( $root_folder.'/'.$file ) ) {
 					return true;
 				}
 			}
@@ -180,15 +184,21 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Path Folder
 		$f_opt2		=	JCckDev::fromJSON( $field->options2 );
 		$file		=	'';
-		
+
 		if ( isset( $f_opt2['storage_format'] ) && $f_opt2['storage_format'] ) {
 			$file	.=	$f_opt2['path'];
 			$file	.=	( isset( $f_opt2['path_user'] ) && $f_opt2['path_user'] ) ? $config['author'].'/' : '';
 			$file	.=	( isset( $f_opt2['path_content'] ) && $f_opt2['path_content'] ) ? $config['pk'].'/' : '';
 		}
-		
-		$file			.=	$field->value;
-		
+
+		$file	.=	$field->value;
+
+		if ( isset( $f_opt2['path_type'] ) && (int)$f_opt2['path_type'] == 1 ) {
+			$field->filepath	=	JCckDevHelper::getRootFolder( 'resources' );
+			$root_folder		=	$field->filepath;
+		} else {
+			$root_folder		=	JPATH_SITE;
+		}
 		if ( JFactory::getSession()->get( 'cck_task' ) == 'form' ) {
 			$permissions	=	( isset( $f_opt2['folder_permissions'] ) && $f_opt2['folder_permissions'] ) ? octdec( $f_opt2['folder_permissions'] ) : 0755;
 			$preview_ext	=	JCck::getConfig_Param( 'media_preview_extensions', '' );		
@@ -196,8 +206,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			if ( $preview_ext ) {
 				$preview_ext	=	explode( ',', $preview_ext );
 
-				if ( $file && is_file( JPATH_SITE.'/'.$file ) && $permissions === 493 ) {
-					$ext	=	JFile::getExt( JPATH_SITE.'/'.$file );
+				if ( $file && is_file( $root_folder.'/'.$file ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( $root_folder.'/'.$file );
 
 					if ( in_array( $ext, $preview_ext ) ) {
 						$field->task	=	'read';
@@ -205,7 +215,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				}
 			}
 		}
-
+			
 		$field->filename	=	$file;
 	}
 
@@ -293,6 +303,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$file_title		=	htmlspecialchars( $file_title, ENT_QUOTES );
 		$params			=	array();
 		$legal_ext		=	isset( $options2['media_extensions'] ) ? $options2['media_extensions'] : 'custom';
+
 		if ( $legal_ext == 'custom' ) {
 			$legal_ext	=	$options2['legal_extensions'];
 		} else {
@@ -312,6 +323,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$legal_ext	=	$options2['legal_extensions'];
 			}
 		}
+
+		$root_folder		=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 
 		$class				=	'inputbox file'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$attr_input_text	=	'class="inputbox text" size="'.$field->size.'"';
@@ -387,8 +400,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$permissions	=	( isset( $options2['folder_permissions'] ) && $options2['folder_permissions'] ) ? octdec( $options2['folder_permissions'] ) : 0755;
 				$preview_ext	=	explode( ',', $preview_ext );
 
-				if ( $value2 && is_file( JPATH_SITE.'/'.$value2 ) && $permissions === 493 ) {
-					$ext	=	JFile::getExt( JPATH_SITE.'/'.$value2 );
+				if ( $value2 && is_file( $root_folder.'/'.$value2 ) && $permissions === 493 ) {
+					$ext	=	JFile::getExt( $root_folder.'/'.$value2 );
 
 					if ( in_array( $ext, $preview_ext ) ) {
 						$target	=	' target="_blank"';
@@ -537,6 +550,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 			$userfile 	=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
 		}
 		
+		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 		$userfile_more	=	false;
 
 		if ( isset( $userfile['name'] ) && is_array( $userfile['name'] ) ) {
@@ -601,8 +615,8 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					}
 					$content_folder		=	( $options2['path_content'] ) ? $config['pk'].'/' : '';
 	
-					if ( JFile::exists( JPATH_SITE.'/'.$itemPath ) ) {	
-						JFile::delete( JPATH_SITE.'/'.$itemPath );
+					if ( JFile::exists( $root_folder.'/'.$itemPath ) ) {	
+						JFile::delete( $root_folder.'/'.$itemPath );
 					}
 				}
 				$itemPath	=	'';
@@ -662,7 +676,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				if ( $deleteBox == 1 ) {
 					$item_custom_title	=	'';
 				}
-				if ( $item_custom_dir != '' && strrpos( $item_custom_dir, '.' ) > 0 && JFile::exists( JPATH_SITE.'/'.$item_custom_dir ) ) {
+				if ( $item_custom_dir != '' && strrpos( $item_custom_dir, '.' ) > 0 && JFile::exists( $root_folder.'/'.$item_custom_dir ) ) {
 					if ( count( $legal_ext ) ) {
 						$legal		=	( strrpos( $item_custom_dir, '.' ) ) ? substr( $item_custom_dir, strrpos( $item_custom_dir, '.' ) + 1 ) : '';
 						if ( $legal && array_search( $legal, $legal_ext ) === false ) {
@@ -679,7 +693,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					if ( $options2['path'] == $itemPath ) {
 						$value	=	'';
 					} else {
-						if ( strrpos( $itemPath, '.') > 0 && JFile::exists( JPATH_SITE.'/'.$itemPath ) ) {
+						if ( strrpos( $itemPath, '.') > 0 && JFile::exists( $root_folder.'/'.$itemPath ) ) {
 							$value	=	$itemPath;
 						} else {
 							$value	=	'';
@@ -711,7 +725,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		// Add Process
 		if ( $process === true ) {
 			$content_folder	=	( $options2['path_content'] ) ? $options2['path_content'] : 0;
-			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'forbidden_ext'=>(int)$forbidden_ext,
+			$process_params	=	array( 'field_name'=>$name, 'true_name'=>$field->name, 'array_x'=>$array_x, 'parent_name'=>$parent, 'field_type'=>$field->type, 'file_path'=>$file_path, 'file_path_type'=>( isset( $options2['path_type'] ) ? (int)$options2['path_type'] : 0 ), 'forbidden_ext'=>(int)$forbidden_ext,
 									   'file_name'=>$item_custom_name, 'tmp_name'=>$userfile['tmp_name'], 'xi'=>$xi, 'content_folder'=>$content_folder, 'options2'=>$options2, 'value'=>$field->value,
 									   'storage'=>$field->storage, 'storage_field'=>$field->storage_field, 'storage_field2'=>($field->storage_field2 ? $field->storage_field2 : $field->name ), 
 									   'storage_table'=>$field->storage_table, 'file_title'=>$item_custom_title );

@@ -213,8 +213,14 @@ class CCKController extends JControllerLegacy
 			$x_robots	=	( isset( $config['x_robots'] ) && $config['x_robots'] ) ? $config['x_robots'] : '';
 		}
 
-		$path	=	JPATH_ROOT.'/'.$file;
-		
+		if ( isset( $config['file_path'] ) && $config['file_path'] ) {
+			$root_folder	=	$config['file_path'];
+		} else {
+			$root_folder	=	JPATH_ROOT;
+		}
+
+		$path	=	$root_folder.'/'.$file;
+
 		if ( is_file( $path ) && $file ) {
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
 			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
