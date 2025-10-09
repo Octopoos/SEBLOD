@@ -35,7 +35,7 @@ class CCKController extends JControllerLegacy
 	// ajax
 	public function ajax()
 	{
-		JSession::checkToken( 'get' ) or jexit( '<html><head><meta name="robots" content="noindex, nofollow"></head><body>'.JText::_( 'JINVALID_TOKEN' ).'</body></html>' );
+		JSession::checkToken( 'get' ) or jexit( '<!DOCTYPE html><html><head><meta name="robots" content="noindex, nofollow"></head><body>'.JText::_( 'JINVALID_TOKEN' ).'</body></html>' );
 
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
@@ -357,7 +357,7 @@ class CCKController extends JControllerLegacy
 			jimport( 'cck.joomla.user.user' );
 			
 			// Go Back
-			if ( $user->from_id && $user->from_id != $user->from_id_session ) {
+			if ( isset( $user->from_id ) && $user->from_id && $user->from_id != $user->from_id_session ) {
 				$from_user	=	JFactory::getUser( $user->from_id_session );
 
 				if ( $from_user->authorise( 'core.admin', 'com_users' ) ) {
@@ -689,7 +689,7 @@ class CCKController extends JControllerLegacy
 				}
 			}
 		} else {
-			if ( $config['message_style'] === 0 ) {
+			if ( isset( $config['message_style'] ) && $config['message_style'] === 0 ) {
 				$msg		=	'';
 			} else {
 				$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
