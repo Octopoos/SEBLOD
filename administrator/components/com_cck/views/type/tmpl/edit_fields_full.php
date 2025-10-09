@@ -51,7 +51,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>
                 <div class="fltlft seblod-toolbar"><?php Helper_Workshop::displayToolbar( 'type', $this->item->master, $this->item->client, $this->uix, $clone ); ?></div>
                 <div id="scroll">
                     <div>
-                        <?php echo '<div class="row"><div class="col">'.$this->lists['af_f'].'</div><div class="col-auto">'.$this->lists['af_a'].'</div></div>'.$this->lists['af_c'].$this->lists['af_t']; ?>
+                        <?php echo '<div class="row"><div class="col">'.$this->lists['af_f'].'</div><div class="col-auto">'.$this->lists['af_a'].'</div></div>'./*$this->lists['af_c'].*/'<div class="row"><div class="col">'.$this->lists['af_t'].'</div><div class="col-auto">'.$this->lists['af_l'].'</div></div>'; ?>
                     </div>
                     <hr>
                     <ul class="sortable connected" id="sortable2" myid="2">

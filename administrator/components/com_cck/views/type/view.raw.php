@@ -174,11 +174,13 @@ class CCKViewType extends JViewLegacy
 		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', JText::_( 'COM_CCK_ALL_FIELD_TYPES_SL' ), false, true );
 		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="t-"', 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
-		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium form-select md" prefix="a-"', 'value', 'text', '', 'filter3' );
+		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium width-103px form-select md" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
 		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="c-"', 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
 		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium form-select md" prefix="f-"', 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
+		$options				=	Helper_Admin::getLanguageOptions( true, true, false, true, 'field' );
+		$this->lists['af_l']	=	JHtml::_( 'select.genericlist', $options, 'filter_language', 'class="inputbox filter input-medium width-103px form-select md" prefix="l-"', 'value', 'text', '', 'filter5' );
 	}
 
 	// prepareDisplay_Ajax2

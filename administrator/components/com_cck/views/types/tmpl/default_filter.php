@@ -38,7 +38,38 @@ $status_filter	=	JCckDev::getForm( $cck['core_state_filter'], $this->state->get(
 		echo JCckDev::getForm( $cck['core_languages'], $this->state->get( 'filter.language' ), $config, array( 'selectlabel'=>'Any Language', 'options'=>'All=*', 'bool4'=>'1', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_language', 'css'=>'span12' ) );
 		echo $this->html['filter_select_separator'];
 		echo $this->html['filter_select_divider'];
+
+		if ( JCck::on( 5 ) ) {
+			echo '<div>';
+
+			if ( $this->state->get( 'filter.folder' ) ) {
+				echo '<input type="checkbox" id="app_type_only" name="app_type_only" value="1"'.( $this->state->get( 'filter.client' ) == 'no_collection' ? ' checked="checked"' : '' ).' />';
+
+				JFactory::getDocument()->addScriptDeclaration(
+					'
+					(function ($){
+						$(document).ready(function() {
+							$("#collapseModal2").on("hidden", function () {
+								$("#toolbar-new > button").blur();
+							});
+							$("#app_type_only").on("change", function() {
+								if ($(this).prop("checked")) {
+									$("#filter_client").myVal("no_collection").trigger("change");
+								} else {
+									$("#filter_client").myVal("").trigger("change");
+								}
+							});
+						});
+					})(jQuery);
+					'
+				);
+			}
+		}
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolderFilter', 'name'=>'core_folder_filter' ), $this->state->get( 'filter.folder' ), $config, array( 'storage_field'=>'filter_folder' ) );
+
+		if ( JCck::on( 5 ) ) {
+			echo '</div>';
+		}
 		echo $this->html['filter_select_separator'];
 		echo $status_filter;	
 		echo $this->html['filter_select_separator'];
