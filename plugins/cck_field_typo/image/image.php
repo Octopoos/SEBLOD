@@ -44,8 +44,16 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 								'base'=>JUri::root( true ).'/',
 								'attributes'=>$typo->get( 'attributes', '' ),
 								'class'=>$typo->get( 'class', '' ),
-								'root'=>( $typo->get( 'path_type', 0 ) ? JUri::root() : '' )
+								'root'=>''
 							);
+		$path_type		=	(int)$typo->get( 'path_type', 0 );
+
+		if ( $path_type == -1 ) {
+			$options['root']	=	JCck::getCdn().'/';
+		} elseif ( $path_type ) {
+			$options['root']	=	JUri::root();
+		}
+
 		$thumb_array	=	array(
 								'state'=>$typo->get( 'state', 1 ),
 								'thumb'=>$typo->get( 'thumb', 'thumb1' ),
@@ -134,30 +142,44 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 
 		$attr				=	( $options['attributes'] != '' ) ? ' '.$options['attributes'] : '';
 		$class				=	( $options['class'] != '' ) ? ' class="'.$options['class'].'"' : '';
-		$height				=	'';
-		$srcset				=	'';
+		$height				=	'';		
 		$width				=	'';
 
 		if ( (int)$params['image_tag'] == 1 ) {
-			$img_src	=	'srcset';
-			$img_tag	=	'source';
+			$img_src	= '';
+			$srcset		= ' srcset="'.self::_availableThumb( $field, $params['thumb'], $options, $params );
+			$img_tag	= 'source';
+			if ( $params['thumb_2x'] ) {
+				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options, $params ).' 2x';
+				if ( $params['thumb_3x'] ) {
+					$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options, $params ).' 3x';
+				}				
+			}
+			if ( (int)$params['image_extension'] == 1 ) {
+				$srcset	.=	'" type="image/webp"';
+			}else{
+				$srcset	.=	'"';
+			}			
 		} else {
-			$img_src	=	'src';
-			$img_tag	=	'img';
+			$img_src	= ' src="'.( !$options['root'] ? $options['base'] : '' ).self::_availableThumb( $field, $params['thumb'], $options, $params ).'"';
+			$srcset		= '';
+			$img_tag	= 'img';
+			if ( $params['thumb_2x'] ) {
+				$srcset		= ' srcset="';
+				$srcset	.=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options, $params ).' 2x';
+				if ( $params['thumb_3x'] ) {
+					$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options, $params ).' 3x';
+				}
+				$srcset	.=	'"';
+			}			
 		}
 
 		if ( $params['thumb_custom'] == 1 ) {
 			$width	=	' width="'.$params['thumb_width'].'"';
 			$height	=	' height="'.$params['thumb_height'].'"';
-		}
-		if ( $params['thumb_2x'] ) {
-			$srcset	=	( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_2x'], $options, $params ).' 2x';
-			if ( $params['thumb_3x'] ) {
-				$srcset	.=	', '.( $options['root'] ? '' : $options['base'] ).self::_availableThumb( $field, $params['thumb_3x'], $options, $params ).' 3x';
-			}
-			$srcset	=	' srcset="'.$srcset.'"';
-		}
-		$attr		=	$title.$alt.' '.$img_src.'="'.self::_availableThumb( $field, $params['thumb'], $options, $params ).'"'.$srcset.$class.$attr.$width.$height;
+		}		
+		
+		$attr =	$title.$alt.$img_src.$srcset.$class.$attr.$width.$height;
 		
 		if ( !$params['state'] ) {
 			$attr			=	trim( $attr );
@@ -186,21 +208,25 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 			}
 		}
 
-		$img	=	'<'.$img_tag.$attr.' />';
+		if ( (int)$params['image_tag'] == 2 ) {
+			$img	=	self::_availableThumb( $field, $params['thumb'], $options, $params );
+		}else{
+			$img	=	'<'.$img_tag.$attr.' />';
+		}
 
 		if ( isset( $field->link ) && $field->link ) {
 			$typo	=	parent::g_hasLink( $field, new stdClass, $img );
 		} elseif ( $params['image'] == 'none' ) {
 			$typo	=	$img;
 		} else {
-			if ( (int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+			if ( (int)JCck::getConfig_Param( 'site_modal_box', '1' ) ) {
 				$typo	=	'<a href="'.self::_availableValue( $field, $params['image'], $options ).'" title="'.$field->image_alt.'" data-cck-modal=\'{"mode":"image","body":false,"header":false}\'>'.$img.'</a>';
 			} else {
 				$typo	=	'<a id="colorBox'.$field->id.'" href="'.self::_availableValue( $field, $params['image'], $options ).'" rel="colorBox'.$field->id.'" title="'.$field->image_alt.'">'.$img.'</a>';
 			}
 		}
 		if ( $params['image'] != 'none' ) {
-			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '1' ) ) {
 				self::_addScripts( array( 'id'=>$field->id ), $params );
 			}
 		}

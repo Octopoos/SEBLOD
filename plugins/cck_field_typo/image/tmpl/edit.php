@@ -81,9 +81,9 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Image Alt', 'defaultvalue'=>'1', 'selectlabel'=>'', 'options'=>'No=0||Yes=1', 'storage_field'=>'image_alt' ) ),
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Image Alt Field',  'defaultvalue'=>'', 'storage_field'=>'image_alt_fieldname' ) ),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Image Title', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'None=0||Auto=1', 'storage_field'=>'image_title' ) ),
-				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>0, 'options'=>'Absolute=1||Relative=0', 'storage_field'=>'path_type' ) ),
+				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>0, 'options'=>'Absolute=1||Absolute CDN=-1||Relative=0', 'storage_field'=>'path_type' ) ),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Extension', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Native=0||Webp=1', 'storage_field'=>'image_extension' ) ),
-				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Tag', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Image=0||Source=1', 'storage_field'=>'image_tag' ) )
+				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Tag', 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'Image=0||Source=1||Src Path=2', 'storage_field'=>'image_tag' ) )
 			)
 		),
 		array(
