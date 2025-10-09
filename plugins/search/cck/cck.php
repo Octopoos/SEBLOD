@@ -674,6 +674,7 @@ class plgSearchCCK extends JPlugin
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
 
+				JPluginHelper::importPlugin( 'cck_field_live' );
 				JPluginHelper::importPlugin( 'cck_field_restriction' );
 
 				foreach ( $fields_order as $field ) {
@@ -710,13 +711,34 @@ class plgSearchCCK extends JPlugin
 						if ( $modifier3 == 'FIELD' ) {
 							$modifier		=	' FIELD(';
 							$modifier2		=	',';
+							$s_mode			=	$field->match_options->get( 'by_field' );
 							$s_opts			=	array();
-							$s_options		=	explode( '||', ( ( $field->match_options->get( 'by_field' ) == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
-							
-							foreach ( $s_options as $s_o ) {
-								$s_opt		=	explode( '=', $s_o );
-								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
+
+							if ( $s_mode != '' && !is_numeric( $s_mode ) ) {
+								$s_live			=	$field->live;
+								$s_live_options	=	$field->live_options;
+								$s_val			=	'';
+
+								$field->live			=	$s_mode;
+								$field->live_options	=	$field->match_options->get( 'by_live_params', '{}' );
+
+								$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$s_val, &$config ) );
+
+								$field->live			=	$s_live;
+								$field->live_options	=	$s_live_options;
+
+								if ( $s_val ) {
+									$s_opts	=	explode( ',', $s_val );
+								}
+							} else {
+								$s_options		=	explode( '||', ( ( $s_mode == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
+								
+								foreach ( $s_options as $s_o ) {
+									$s_opt		=	explode( '=', $s_o );
+									$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
+								}
 							}
+							
 							$modifier3		=	'"'.implode( '","', $s_opts ).'"'.')';
 						} else {
 							$modifier3		=	' '.$modifier3;
