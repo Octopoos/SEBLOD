@@ -298,8 +298,10 @@ $config['lives']	=	$lives;
 
 // We need to override form stuff based on the tmpl found within the context
 if ( $isRaw ) {
-	$config['formId']	.=	'_raw';
-	$config['submit']	.=	'_raw';
+	if ( strpos( $config['formId'], '_raw' ) === false ) {
+		$config['formId']	.=	'_raw';
+		$config['submit']	.=	'_raw';
+	}
 }
 
 if ( $config['infinite'] && $app->input->get( 'view' ) == 'list' && !isset( $menu )  ) {

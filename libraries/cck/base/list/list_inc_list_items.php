@@ -25,11 +25,15 @@ if ( !isset( $doc->list ) ) {
 }
 $doc->list[$idx]		=	array();
 
-$debug		=	JCck::getConfig_Param( 'debug', 0 );
-$ids		=	'';
-$optimize	=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
-$properties	=	CCK_List::getPropertyColumns_asString( $optimize );
-$pks		=	'';
+$debug			=	JCck::getConfig_Param( 'debug', 0 );
+$ids			=	'';
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->getDefault();
+$lang_tag		=	$lang->getTag();
+$optimize		=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
+$properties		=	CCK_List::getPropertyColumns_asString( $optimize );
+$pks			=	'';
+
 if ( $list['isCore'] ) {
 	for ( $i = 0; $i < $count; $i++ ) {
 		$ids	.=	(int)$items[$i]->pid.',';
@@ -60,11 +64,18 @@ if ( $debug == -1 ) {
 		$field->storage	=	'lipsum';
 	}
 }
-
 if ( $count ) {
 	for ( $i = 0; $i < $count; $i++ ) {
 		if ( isset( $items[$i]->pk ) ) {
 			$PK							=	$items[$i]->pk;
+
+			if ( isset( $items[$i]->id2_key ) ) {
+				$PK	.=	'_'.$items[$i]->id2_key;
+			}
+
+			if ( !isset( $items[$i]->loc ) ) {
+				$items[$i]->loc			=	$list['location'];
+			}
 		} else {
 			$PK							=	isset( $config_list['identifier'] ) && $config_list['identifier'] ? $items[$i]->{$config_list['identifier']} : $i;
 
@@ -92,7 +103,7 @@ if ( $count ) {
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
-								'formWrapper'=>false,
+								'formWrapper'=>0,
 								'id'=>$items[$i]->pid,
 								'ids'=>$ids,
 								'Itemid'=>$list['itemId'],
@@ -108,10 +119,14 @@ if ( $count ) {
 								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
+			$unset		=	array();
 			
 			$config['app']	=	new JCckApp;
 			$config['app']->loadDefault();
 
+			if ( $PK != $config['pk'] ) {
+				$config['pkey']	=	$PK;
+			}
 			foreach ( $fields as $field ) {
 				if ( $field->position == '_above_' || $field->position == '_below_' ) {
 					continue;
@@ -120,8 +135,19 @@ if ( $count ) {
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 
+				if ( $field->variation_override ) {
+					$override	=	json_decode( $field->variation_override, true );
+
+					if ( count( $override ) ) {
+						foreach ( $override as $k=>$v ) {
+							$field->$k	=	$v;
+						}
+					}
+
+					$field->variation_override	=	null;
+				}
+				
 				if ( $fieldName ) {
 					$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -152,8 +178,20 @@ if ( $count ) {
 					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt], $config ) );
 					
 					if ( is_string( $value ) ) {
-						$value		=	trim( $value );
+						$storage_mode	=	(int)$field->storage_mode;
+						$value			=	trim( $value );
+
+						if ( $storage_mode && $value != '' ) {
+							if ( $storage_mode == -1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+							} else {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+							}
+						}
 					}
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$app->triggerEvent( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -186,14 +224,34 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( $v->restriction != 'unset' ) {
+					if ( $v->markup == 'unset' && isset( $fieldsI[$k] ) ) {
+						$unset[$k]		=	$fieldsI[$k];
+					}
+					if ( !( $v->restriction == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
 				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
-			
+
+			// BeforeRender
+			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+				
+				foreach ( $config['process']['beforeRenderContent'] as $process ) {
+					if ( $process->type ) {
+						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
+					}
+				}
+			}
+			if ( count( $unset ) ) {
+				foreach ( $unset as $k=>$v ) {
+					$fieldsI[$k]	=	$v;
+				}
+				unset( $unset );
+			}
+
 			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions as $p_key=>$p_fields ) {
@@ -207,17 +265,6 @@ if ( $count ) {
 
 					if ( isset( $positions_p[$p_key] ) ) {
 						$positions_p[$p_key]->legend2	=	$legend2;
-					}
-				}
-			}
-
-			// BeforeRender
-			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-				
-				foreach ( $config['process']['beforeRenderContent'] as $process ) {
-					if ( $process->type ) {
-						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
 					}
 				}
 			}
@@ -240,8 +287,15 @@ if ( $count ) {
 			}
 			
 			$item->$target_f	=	$fieldsI;
+
+			if ( isset( $config['validation'] ) ) {
+				$validation	=	$config['validation'];
+			}
+			if ( $config['formWrapper'] ) {
+				$form_wrapper	=	$config['formWrapper'];
+			}
 		}
-		
+
 		if ( $count3 ) {
 			$config		=	array(
 								'app'=>null,
@@ -253,7 +307,7 @@ if ( $count ) {
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
-								'formWrapper'=>false,
+								'formWrapper'=>0,
 								'id'=>$items[$i]->pid,
 								'ids'=>$ids,
 								'Itemid'=>$list['itemId'],
@@ -269,9 +323,14 @@ if ( $count ) {
 								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
+			$unset		=	array();
 			
 			$config['app']	=	new JCckApp;
 			$config['app']->loadDefault();
+
+			if ( $PK != $config['pk'] ) {
+				$config['pkey']	=	$PK;
+			}
 			foreach ( $fields2 as $field ) {
 				if ( $field->position == '_above_' || $field->position == '_below_' ) {
 					continue;
@@ -280,7 +339,19 @@ if ( $count ) {
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
+
+				if ( $field->variation_override ) {
+					$override	=	json_decode( $field->variation_override, true );
+
+					if ( count( $override ) ) {
+						foreach ( $override as $k=>$v ) {
+							$field->$k	=	$v;
+						}
+					}
+
+					$field->variation_override	=	null;
+				}
+
 				if ( $fieldName ) {
 					$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -311,8 +382,20 @@ if ( $count ) {
 					$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt], $config ) );
 					
 					if ( is_string( $value ) ) {
-						$value		=	trim( $value );
+						$storage_mode	=	(int)$field->storage_mode;
+						$value			=	trim( $value );
+
+						if ( $storage_mode && $value != '' ) {
+							if ( $storage_mode == -1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+							} else {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+							}
+						}
 					}
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -351,14 +434,34 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( $v->restriction != 'unset' ) {
+					if ( $v->markup == 'unset' && isset( $fieldsI[$k] ) ) {
+						$unset[$k]		=	$fieldsI[$k];
+					}
+					if ( !( $v->restriction == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
 				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
-			
+
+			// BeforeRender
+			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+				foreach ( $config['process']['beforeRenderContent'] as $process ) {
+					if ( $process->type ) {
+						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
+					}
+				}
+			}
+			if ( count( $unset ) ) {
+				foreach ( $unset as $k=>$v ) {
+					$fieldsI[$k]	=	$v;
+				}
+				unset( $unset );
+			}
+
 			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions2 as $p_key=>$p_fields ) {
@@ -376,17 +479,11 @@ if ( $count ) {
 				}
 			}
 
-			// BeforeRender
-			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-
-				foreach ( $config['process']['beforeRenderContent'] as $process ) {
-					if ( $process->type ) {
-						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
-					}
-				}
-			}
 			$item->fields_list		=	$fieldsI;
+
+			if ( $config['formWrapper'] ) {
+				$form_wrapper		=	$config['formWrapper'];
+			}
 		}
 		
 		// --
