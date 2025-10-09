@@ -121,6 +121,28 @@ class CCK_Rendering_Item
 	{
 		$this->me			=	( isset( $this->fields_list ) && $this->fields_list ) ? $this->fields_list : ( ( isset( $this->fields ) ) ? $this->fields : new stdClass );
 		$this->methodRender	=	'onCCK_FieldRenderContent';
+
+		// Legacy
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		
+		if ( $legacy && $legacy <= 2018 ) {
+			$this->markup	=	'legacy';
+		} else {
+			$this->markup	=	'';
+		}
+
+		$this->config		=	array(
+									'cck'=>$this,
+									'client'=>'list',
+									'legacy'=>$legacy,
+									'markup'=>'',
+									'mode'=>$this->mode,
+									'rendering_id'=>$this->id
+								);
+
+		if ( ! @$this->params['variation_default'] ) {
+			$this->params['variation_default']	=	JCck::getConfig_Param( 'site_variation', '' );
+		}
 	}
 
 	// finalize
@@ -204,32 +226,42 @@ class CCK_Rendering_Item
 
 	// renderField
 	public function getField( $fieldname ) { return $this->renderField( $fieldname ); } // (deprecated)
-	public function renderField( $fieldname, $options = null )
+	public function renderField( $fieldname, $options = null, $parent = null )
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
+
 		if ( !$field ) {
 			return $html;
 		}
 		
-		if ( $field->display ) {
+		if ( $field->display && $field->markup != 'clear' ) {
+			if ( ! $options ) {
+				$hasOptions	=	false;
+				$options	=	new JRegistry;
+			} else {
+				$hasOptions	=	true;
+			}
+			$markup						=	$options->get( 'field_markup', '' );
+
+			$this->config['markup']		=	$markup;
+			$this->config['options']	=	$options;
+
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
-			
+
 			if ( $field->display > 1 && $html != '' ) {
-				if ( ! $options ) {
+				if ( ! $hasOptions ) {
 					return $html;
 				}
 
-				if ( $field->markup == 'none' ) {
+				if ( $field->markup == 'none' || ( $field->markup == '' && $markup == 'none' ) ) {
 					// Label
 					$label	=	'';
-					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
+					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 0 ) ) ) {
 						$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
 						$html	=	$label.$html;
 					}
-				} elseif ( $this->markup ) {
-					/* TODO#SEBLOD: */
-				} else {					
+				} elseif ( $this->markup ) { /* Legacy */
 					// Description
 					$desc	=	'';
 					if ( $this->getStyleParam( 'field_description', 0 ) ) {
@@ -246,6 +278,23 @@ class CCK_Rendering_Item
 					// Markup
 					$html	=	'<div id="'.$this->id.'_value_'.$fieldname.'" class="cck_value cck_value_'.$field->type.@$field->markup_class.'">'.$html.'</div>';
 					$html	=	'<div id="'.$this->id.'_'.$fieldname.'" class="cck_'.$this->mode.'s cck_list cck_'.$field->type.' cck_'.$fieldname.'">'.$label.$html.$desc.'</div>';
+				} else {
+					if ( $field->markup ) {
+						$markup	=	$field->markup;
+					}
+
+					if ( $markup ) {
+						$displayData	=	array(
+												'cck'=>$this,
+												'field'=>$field,
+												'html'=>$html,
+												'options'=>$options,
+												'parent'=>$parent
+											);
+
+						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
+						$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
+					}
 				}
 			}
 		}
@@ -295,7 +344,7 @@ class CCK_Rendering_Item
 	}
 
 	// renderPosition
-	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false )
+	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false, $parent = null )
 	{
 		$html		=	'';		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : '';
@@ -303,7 +352,7 @@ class CCK_Rendering_Item
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	null;
+			$options	=	$this->loadDefaultOptions( $variation );
 		}
 		if ( ! $variation ) {
 			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
@@ -325,14 +374,17 @@ class CCK_Rendering_Item
 				if ( count( $excluded ) ) {
 					$names	=	array_diff( $names, $excluded );
 				}
+				if ( $n > 1 ) {
+					$options->set( 'markup', 1 );
+				}
 				foreach ( $names as $name ) {
-					$html	.=	$this->renderField( $name, $options );
+					$html	.=	$this->renderField( $name, $options, $parent );
 				}
 			} else {
 				$legend	=	'';
 			}
 		}
-		
+
 		if ( $html != '' && trim( $variation ) ) {
 			$html	=	$this->renderVariation( $variation, $legend, $html, $options, $position, $height );
 		}
@@ -364,6 +416,30 @@ class CCK_Rendering_Item
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variations
 	
+	// loadVariationOptions
+	protected function loadDefaultOptions( $variation )
+	{
+		if ( !$variation ) {
+			return new JRegistry;
+		}
+		$file		=	'variations/'.$variation.'/default.json';
+		
+		if ( $this->isFile( $this->path.'/'.$file ) ) {
+			$file	=	$this->path.'/'.$file;
+		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
+			$file	=	$this->path_lib.'/'.$file;
+		} else {
+			return new JRegistry;
+		}
+
+		$registry	=	new JRegistry;
+		$registry->loadFile( $file );
+
+		/* TODO#SEBLOD4: cache per variation */
+
+		return $registry;
+	}
+
 	// renderVariation
 	public function renderVariation( $variation, $legend, $content, $options, $position, $height = 0, $markup = true )
 	{

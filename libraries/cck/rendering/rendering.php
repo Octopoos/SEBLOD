@@ -136,7 +136,21 @@ class CCK_Rendering
 		
 		return $desc;
 	}
-	
+
+	// setValue
+	public function setValue( $fieldname, $value, $pk = 0 )
+	{
+		if ( $pk ) {
+			if ( isset ( $this->list[$pk]->fields_list[$fieldname] ) ) {
+				$this->list[$pk]->fields_list[$fieldname]->value	=	$value;
+			}
+		} else {
+			if ( isset ( $this->me[$fieldname] ) ) {
+				$this->me[$fieldname]->value	=	$value;
+			}	
+		}
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Init
 	
 	// initialize
