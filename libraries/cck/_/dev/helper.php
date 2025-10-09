@@ -461,6 +461,10 @@ abstract class JCckDevHelper
 
 		$app->triggerEvent( 'onCCK_FieldPrepareDownload', array( &$field, $value, &$config ) );
 
+		if ( isset( $field->filepath ) ) {
+			$config['file_path']	=	$field->filepath;
+		}
+
 		$config['file']	=	$field->filename;
 
 		if ( isset( $field->task ) ) {
@@ -705,6 +709,26 @@ abstract class JCckDevHelper
 		}
 		
 		return $path;
+	}
+
+	// getRootFolder
+	public static function getRootFolder( $type = 'resources', $custom = null )
+	{
+		if ( $custom === false ) {
+			return JPATH_SITE;
+		}
+
+		$dest	=	JCck::getConfig_Param( 'media_root_'.$type, '' );
+
+		if ( $dest != '' ) {
+			$len	=	strlen( $dest );
+
+			if ( $dest[($len - 1)] == '/' ) {
+				$dest	=	substr( $dest, 0, - 1 );
+			}
+		}
+
+		return $dest ? $dest : JPATH_SITE;
 	}
 
 	// getRouteSef

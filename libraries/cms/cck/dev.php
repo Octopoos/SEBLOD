@@ -126,7 +126,24 @@ abstract class JCckDev
 			$note	=	JFactory::getDate()->toSql();
 		}
 
-		JCckTable::getInstance( '#__aa' )->save( array( 'data'=>$data, 'note'=>$note ) );
+		/*
+		#0  JCckDev::aa('123') called at [/.../components/com_cck/views/list/tmpl/default.php:xx]
+		#0 /.../components/com_cck/views/list/tmpl/default.php(xx): JCckDev::aa('123')
+		*/
+
+		ob_start();
+		debug_print_backtrace( 0, 1 );
+		$path	=	ob_get_clean();
+		$path	=	str_replace( array( '#0  ', '#0 ', JPATH_SITE ), '', $path );
+		
+		if ( ( $pos = strpos( $path, '[' ) ) !== false ) {
+			$path	=	substr( $path, $pos + 1, -2 );
+			$path	=	str_replace( ':', '(', $path ).')';
+		} else {
+			$path	=	substr( $path, 0, strpos( $path, ':' ) );
+		}
+
+		JCckTable::getInstance( '#__aa' )->save( array( 'data'=>$data, 'note'=>$note, 'path'=>$path ) );
 	}
 	
 	// addField

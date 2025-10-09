@@ -24,6 +24,7 @@ class JCckDevImage
 	protected $_quality_webp	=	85;
 	protected $_ratio 			=	0;
 	protected $_resource	 	=	null;
+	protected $_root_folder		=	'';
 	protected $_width 			=	0;
 	protected $_error 			=	false;
 
@@ -42,11 +43,20 @@ class JCckDevImage
 	// __construct
 	public function __construct( $path )
 	{
-		if ( strpos( $path, JPATH_SITE ) === false ) {
-			if ( $path[0] == '/' ) {
-				$path 	=	substr( $path, 1 ); 	
+		$root_folder	=	JCck::getConfig_Param( 'media_root_resources', '' );
+
+		if ( $root_folder && strpos( $path, $root_folder ) !== false ) {
+			// OK
+			$this->_root_folder	=	$root_folder;
+		} else {
+			$this->_root_folder	=	JPATH_SITE;
+
+			if ( strpos( $path, JPATH_SITE ) === false ) {
+				if ( $path[0] == '/' ) {
+					$path 	=	substr( $path, 1 ); 	
+				}
+				$path 	=	JPATH_SITE.'/'.$path;
 			}
-			$path 	=	JPATH_SITE.'/'.$path;
 		}
 
 		if ( !is_file( $path ) ) {
@@ -117,10 +127,10 @@ class JCckDevImage
 			return '';
 		}
 
-		$path 	=	str_replace( JPATH_SITE.'/', '', $this->_pathinfo['dirname'] );
+		$path 	=	str_replace( $this->_root_folder.'/', '', $this->_pathinfo['dirname'] );
 		$path 	.=	'/_thumb'.$tnumber.'/'. $this->_pathinfo['basename'];
 
-		return ( is_file( JPATH_SITE.'/'.$path ) ) ? $path : '';
+		return ( is_file( $this->_root_folder.'/'.$path ) ) ? $path : '';
 	}
 
 	// createThumb

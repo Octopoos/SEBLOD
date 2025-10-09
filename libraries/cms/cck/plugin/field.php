@@ -475,8 +475,21 @@ class JCckPluginField extends JPlugin
 		if ( !$data['validation'] ) {
 			$column1		=	'';
 		} else {
-			$required			=	@$field->required ? $data['_']['required'] : $data['_']['optional'];
-			if ( @$field->validation ) {
+			$required		=	$data['_']['optional'];
+
+			if ( isset( $field->required ) && $field->required ) {
+				if ( $field->required == 'required' ) {
+					$required	=	$data['_']['required'];
+				} elseif ( strpos( $field->required, 'cond:' ) !== false ) {
+					$required	=	$data['_']['required_when'];
+				} elseif ( strpos( $field->required, 'lang:default' ) !== false ) {
+					$required	=	$data['_']['required_lang'];
+				} else {
+					$required	=	$data['_']['required_group'];
+				}
+			}
+			
+			if ( isset( $field->validation ) && $field->validation ) {
 				$required		.=	' + 1';
 			}
 			$column1			=	'<input type="hidden" id="'.$name.'_required" name="ffp['.$name.'][required]" value="'.@$field->required.'" />'
@@ -764,8 +777,21 @@ class JCckPluginField extends JPlugin
 		if ( !$data['validation'] ) {
 			$column1		=	'';
 		} else {
-			$required		=	@$field->required ? $data['_']['required'] : $data['_']['optional'];
-			if ( @$field->validation ) {
+			$required		=	$data['_']['optional'];
+
+			if ( isset( $field->required ) && $field->required ) {
+				if ( $field->required == 'required' ) {
+					$required	=	$data['_']['required'];
+				} elseif ( strpos( $field->required, 'cond:' ) !== false ) {
+					$required	=	$data['_']['required_when'];
+				} elseif ( strpos( $field->required, 'lang:default' ) !== false ) {
+					$required	=	$data['_']['required_lang'];
+				} else {
+					$required	=	$data['_']['required_group'];
+				}
+			}
+			
+			if ( isset( $field->validation ) && $field->validation ) {
 				$required	.=	' + 1';
 			}
 			$column1		=	'<input type="hidden" id="'.$name.'_required" name="ffp['.$name.'][required]" value="'.@$field->required.'" />'
