@@ -24,7 +24,7 @@ class plgContentCCK extends JPlugin
 	{
 		parent::__construct( $subject, $config );
 
-		$this->legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		$this->legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 	}
 	
 	// onContentAfterSave

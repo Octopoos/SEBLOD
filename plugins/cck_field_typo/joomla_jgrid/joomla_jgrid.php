@@ -299,8 +299,8 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
 							$app			=	JFactory::getApplication();
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
-							$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
-							$legacy		=	$legacy && $legacy <= 2019 ? true : false;
+							$legacy			=	(int)JCck::getConfig_Param( 'core_legacy', '' );
+							$legacy			=	$legacy && $legacy <= 2024 ? true : false;
 
 							$listDir		=	'asc';
 							$loaded			= 	true;

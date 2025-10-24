@@ -8,8 +8,9 @@
 			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
 			<option value="1">COM_CCK_CONFIG_SQL_LEGACY_J3</option>
 		</field>
-		<field name="core_legacy" type="list" default="2012" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
+		<field name="core_legacy" type="list" default="" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2024">2024</option>
 			<option value="2019">2019</option>
 			<option value="2018">2018</option>
 			<option value="2017">2017</option>

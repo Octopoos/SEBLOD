@@ -1179,7 +1179,7 @@ class plgSystemCCK extends JPlugin
 		}
 
 		// SEBLOD
-		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 
 		if ( !$legacy ) {
 			return;
