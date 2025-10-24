@@ -13,6 +13,21 @@ defined( '_JEXEC' ) or die;
 // JCckDevXml
 class JCckDevXml extends SimpleXMLElement
 {
+	// asHtml
+	public function asHtml()
+	{
+		return html_entity_decode( $this->asIndentedXML( false, '', 0, -1 ), ENT_NOQUOTES, 'UTF-8' );
+	}
+
+	// asHtmlIndentedXML
+	public function asHtmlIndentedXML()
+	{
+		$out	=	html_entity_decode( $this->asIndentedXML( false, "\t", 0, 1 ), ENT_NOQUOTES, 'UTF-8' );
+		$out	=	str_replace( '&', '&amp;', $out );
+
+		return $out;
+	}
+
 	// asIndentedXML
 	public function asIndentedXML($compressed = false, $indent = "\t", $level = 0)
 	{

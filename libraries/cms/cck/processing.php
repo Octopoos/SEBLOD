@@ -52,7 +52,11 @@ class JCckProcessing
 		$this->_data['config']	=	$config;
 		$this->_data['fields']	=	$fields;
 
-		$this->_pk				=	$this->_data['config']['pk'];
+		if ( !isset( $this->_data['config']['tmp'] ) ) {
+			$this->_data['config']['tmp']	=	array();
+		}
+
+		$this->_pk				=	isset( $this->_data['config']['pk'] ) ? $this->_data['config']['pk'] : 0;
 		$this->_type			=	isset( $this->_data['config']['content_type'] ) ? $this->_data['config']['content_type'] : $this->_data['config']['type'];
 
 		$this->run();
@@ -63,6 +67,23 @@ class JCckProcessing
 		unset( $this->_data );
 		
 		return $this->_error ? false : true;
+	}
+
+	// loadPropertyByKey
+	protected function loadPropertyByKey( $key, $name, $table )
+	{
+		static $loaded	=	array();
+		
+		$idx		=	base64_encode( $name.'|'.$table );
+
+		if ( !isset( $loaded[$idx] ) ) {
+			$loaded[$idx]	=	array(
+									'items'=>JCckDatabase::loadObjectList( 'SELECT id, '.JCckDatabase::quoteName( $name ).' FROM '.JCckDatabase::quoteName( $table ), 'id' ),
+									'name'=>$name
+								);
+		}
+
+		return isset( $loaded[$idx]['items'][$key] ) ? $loaded[$idx]['items'][$key]->{$loaded[$idx]['name']} : '';
 	}
 
 	// loadField
@@ -82,6 +103,20 @@ class JCckProcessing
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Check
+
+	// outProperty
+	public function outProperty( $name )
+	{
+		if ( $this->_data['config']['output_attributes'] === null ) {
+			return true;
+		} elseif ( $this->_data['config']['output_attributes']['_'] === 1 && isset( $this->_data['config']['output_attributes'][$name] ) ) {
+			return true;
+		} elseif ( $this->_data['config']['output_attributes']['_'] === -1 && !isset( $this->_data['config']['output_attributes'][$name] ) ) {
+			return true;
+		}
+
+		return false;
+	}
 
 	// isApi
 	public function isApi()
@@ -129,6 +164,12 @@ class JCckProcessing
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do
 
+	// continue
+	public function continue()
+	{
+		$this->_error	=	true;
+	}	
+
 	// sendMail
 	// public function sendMail() {}
 
@@ -151,15 +192,23 @@ class JCckProcessing
 	// setOutput
 	public function setOutput( $output = array() )
 	{
-		$this->_data['config']['error_output']	=	$output;
-		$this->_error							=	true;
+		if ( $output === 0 ) {
+			$this->_data['config']['message_style']	=	0;
+		} else {
+			$this->_data['config']['error_output']	=	$output;
+			$this->_error							=	true;
+		}
 	}
 
 	// setProperty
 	public function setProperty( $name, $value )
 	{
 		if ( is_array( $this->_data['fields'] ) ) {
-			$this->_data['fields'][$name]	=	$value;
+			if ( is_array( $name ) ) {
+				$this->_data['fields'][$name[0]]->{$name[1]}	=	$value;
+			} else {
+				$this->_data['fields'][$name]	=	$value;
+			}
 		} else {
 			$this->_data['fields']->$name	=	$value;
 		}
@@ -239,6 +288,12 @@ class JCckProcessing
 		return self::$apps[self::$apps_map[$this->_type]];
 	}
 
+	// getData
+	public function getData()
+	{
+		return $this->_data['fields'];
+	}
+
 	// getMethod
 	public function getMethod()
 	{
@@ -254,6 +309,16 @@ class JCckProcessing
 	{
 		if ( isset( $this->_data['config']['id'] ) ) {
 			return (int)$this->_data['config']['id'];
+		}
+
+		return 0;
+	}
+
+	// getIdentifier
+	public function getIdentifier()
+	{
+		if ( isset( $this->_data['config']['resource_id'] ) && $this->_data['config']['resource_id'] ) {
+			return $this->_data['config']['resource_id'];
 		}
 
 		return 0;
@@ -307,6 +372,16 @@ class JCckProcessing
 		return '';
 	}
 
+	// getStage
+	public function getStage()
+	{
+		if ( isset( $this->_data['config']['stage'] ) ) {
+			return $this->_data['config']['stage'];
+		}
+
+		return -1;
+	}
+
 	// getTask
 	public function getTask()
 	{
@@ -315,6 +390,24 @@ class JCckProcessing
 		}
 
 		return '';
+	}
+
+	// getTmp
+	public function getTmp( $key = '' )
+	{
+		if ( $key ) {
+			if ( isset( $this->_data['config']['tmp'][$key] ) ) {
+				return $this->_data['config']['tmp'][$key];
+			} else {
+				return null;
+			}
+		} else {
+			if ( isset( $this->_data['config']['tmp'] ) ) {
+				return $this->_data['config']['tmp'];
+			} else {
+				return array();
+			}
+		}
 	}
 
 	// getType
@@ -327,7 +420,7 @@ class JCckProcessing
 	public function getValue( $name )
 	{
 		if ( isset( $this->_data['fields'][$name] ) ) {
-			return $this->_data['fields'][$name]->value;
+			return isset( $this->_data['fields'][$name]->value ) ? $this->_data['fields'][$name]->value : '';
 		}
 
 		return '';
@@ -341,6 +434,18 @@ class JCckProcessing
 		// if ( isset( $this->_data['config']['stage'] ) && (int)$this->_data['config']['stage'] == -1 ) {
 		// JCckDev::aa( $this->_data['config'], '@'.$this->getType().' '.$this->getPk() );
 		JFactory::getSession()->set( 'cck.data_layer', $data );
+	}
+
+	// setTmp
+	public function setTmp( $key, $data )
+	{
+		if ( isset( $this->_data['config']['tmp'] ) ) {
+			$this->_data['config']['tmp'][$key]	=	$data;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// setRedirectionUrl

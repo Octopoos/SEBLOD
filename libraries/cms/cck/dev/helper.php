@@ -154,6 +154,20 @@ abstract class JCckDevHelper
 				}
 				if ( JCck::isSite() && JCck::getSite()->context ) {
 					$context	.=	JCck::getSite()->context.'/';
+				} else {
+					$path		=	JUri::getInstance()->getPath();
+
+					if ( isset( $path[0] ) && $path[0] === '/' ) {
+						$path	=	substr( $path, 1 );
+					}
+					if ( $path ) {
+						$path	=	explode( '/', $path );
+						
+						if ( ( isset( $path[0] ) && $path[0] === 'admin' )
+							|| isset( $path[0] ) && $path[0] == $lang_sef && isset( $path[1] ) && $path[1] === 'admin' ) {
+							$context	.=	'admin/';
+						}
+					}
 				}
 				if ( is_string( $method ) ) {
 					return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;	
@@ -272,16 +286,24 @@ abstract class JCckDevHelper
 		$app		=	JFactory::getApplication();
 		$client		=	$app->input->get( 'client', 'content' );
 		$collection	=	$app->input->get( 'collection', '' );
+		$join_id	=	$app->input->getInt( 'join_id', 0 );
 		$restricted	=	'';
 		$user		=	JFactory::getUser();
 		$xi			=	$app->input->getInt( 'xi', 0 );
 
 		$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
 		$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
-					.	' FROM #__cck_core AS a'
-					.	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk'
-					.	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
+					.	' FROM #__cck_core AS a';
+
+		if ( $join_id ) {
+			$query	.=	' LEFT JOIN '.$field->storage_table.' AS b on (b.id2 = a.pk AND b.id = '.$join_id.')';
+		} else {
+			$query	.=	' LEFT JOIN '.$field->storage_table.' AS b on b.id = a.pk';
+		}
+
+		$query		.=	' LEFT JOIN #__cck_core_types AS c on c.name = a.cck'
 					.	' WHERE a.id ='.(int)$id;
+
 		$core		=	JCckDatabase::loadObject( $query );
 
 		if ( !is_object( $core ) ) {
@@ -523,11 +545,14 @@ abstract class JCckDevHelper
 				if ( $active->language == '*' ) {
 					$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$active->id );
 				} elseif ( isset( $associations[$language->lang_code] ) && $associations[$language->lang_code] ) {
-					$item			=	$menu->getItem( $associations[$language->lang_code] );
-					$itemId_assoc	=	$item->id;
+					$item		=	$menu->getItem( $associations[$language->lang_code] );
 
-					if ( is_object( $item ) && isset( $levels[$item->access] ) ) {
-						$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
+					if ( is_object( $item ) ) {
+						$itemId_assoc	=	$item->id;
+
+						if ( isset( $levels[$item->access] ) ) {
+							$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
+						}
 					}
 				}
 
@@ -613,7 +638,7 @@ abstract class JCckDevHelper
 				}
 			}
 
-			if ( is_object( $routes[$lang_sef] ) ) {
+			if ( isset( $routes[$lang_sef] ) && is_object( $routes[$lang_sef] ) ) {
 				$routes[$lang_sef]->has_hreflang	=	$do_hreflang;
 			}
 		}
