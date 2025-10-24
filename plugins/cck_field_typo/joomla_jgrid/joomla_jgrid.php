@@ -61,27 +61,32 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			case 'block':
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$value, 'class'=>$class, 'pk'=>$pk, 'pk_i'=>$pks[$pk] ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'dropdown':
 				static $dropdown		=	array();
 				static $dropdown_css	=	false;
 
+				$class	=	$typo->get( 'class1', '' );
+
 				if ( !isset( $dropdown[$pk] ) ) {
-					$class	=	$typo->get( 'class1', '' );
 					$class	=	$class ? ' '.$class : '';
 					$value	=	'<button type="button" data-toggle="dropdown" class="dropdown-toggle btn'.$class.'"><span class="caret"></span></button>'
 							.	'<ul class="dropdown-menu flex-column-reverse"></ul>';
-
+					
 					$dropdown[$pk]		=	array( 'parent'=>$field->name, 'html'=>'' );
-
+					
 					if ( !$dropdown_css ) {
 						$dropdown_css	=	true;
 
 						JFactory::getDocument()->addStyleDeclaration( '.btn-group.open > .dropdown-menu{display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient:vertical; -webkit-box-direction:reverse; -ms-flex-direction:column-reverse; flex-direction:column-reverse;}' );
 					}
+					
+					$class	=	'';
+				} else {
+					$class	=	$class ? ' class="'.$class.'"' : '';
 				}
-				$dropdown[$pk]['html']	=	'<li>'.( ( isset( $field->html ) && $field->html ) ? $field->html : $value ).'</li>';
+				$dropdown[$pk]['html']	=	'<li'.$class.'>'.( ( isset( $field->html ) && $field->html ) ? $field->html : $value ).'</li>';
 
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$dropdown[$pk]['parent'], 'target'=>$field->name, 'type'=>$type, 'html'=>$dropdown[$pk]['html'] ) );
 				break;
@@ -103,11 +108,19 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$value, 'class'=>$class, 'pk'=>$pks[$pk] ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'form':
+			case 'form_custom_number':
 			case 'form_disabled':
 			case 'form_hidden':
+				if ( $type == 'form_custom_number' ) {
+					$type	=	'form';
+					$type2	=	'custom_number';
+				} else {
+					$type2	=	'';
+				}
+
 				$class				=	$typo->get( 'class2', '' );
 				$unset_validation	=	false;
 
@@ -117,7 +130,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {
 					$doValidation	=	$config['doValidation'];
 				}
-				$hasIdentifier		=	$typo->get( 'use_identifier', '1' );
+				$hasIdentifier		=	(int)$typo->get( 'use_identifier', '1' );
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
 				$identifier_name	=	( $identifier_name != '' ) ? $identifier_name : $field->name;
@@ -125,7 +138,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$inherit			=	array( 'id'=>$identifier.'_', 'name'=>'' );
 				
 				if ( $identifier_suffix ) {
-					if ( $hasIdentifier ) {
+					if ( $hasIdentifier == 2 ) {
+						$inherit['name']	=	$identifier_suffix.'['.$identifier.']'.'['.$identifier_name.']';
+					} else if ( $hasIdentifier ) {
 						$inherit['name']	=	$identifier.'['.$identifier_suffix.']'.'['.$identifier_name.']';
 					} else {
 						$inherit['name']	=	$identifier_suffix.'['.$identifier_name.'][]';
@@ -152,6 +167,13 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} elseif ( $type == 'form_hidden' ) {
 					$field->variation	=	'hidden';
 				} else {
+					if ( $typo->get( 'validation', '' ) != '' ) {
+						$field->validation			=	$typo->get( 'validation', '' );
+						$field->validation_options	=	'{}';
+
+						require_once JPATH_PLUGINS.'/cck_field_validation/'.$field->validation.'/'.$field->validation.'.php';
+						JCck::callFunc_Array( 'plgCCK_Field_Validation'.$field->validation, 'onCCK_Field_ValidationPrepareForm', array( &$field, $inherit['id'], &$config ) );
+					}
 					if ( $typo->get( 'required' ) == 'required' ) {
 						// JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR );
 
@@ -160,22 +182,40 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						$config['doValidation']	=	2;
 						$field->required		=	'required';
 						$field->required_alert	=	'';
+					} elseif ( $typo->get( 'required' ) == 'grouprequired' ) {
+						$config['doValidation']	=	2;
+						$field->required		=	'grouprequired['.$typo->get( 'required2' ).']';
+						$field->required_alert	=	'';
+
+						$config['validation']	=	array();
 					}
 				}
+				
+				if ( $type2 ) {
+					$field->variation	=	$type2;
+				}
+
+				/* TODO#SEBLOD4 temporary fix */
+				$field->options			=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_fields WHERE name = "'.$field->name.'"' );
+				/* TODO#SEBLOD4 */
+
 				JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
+				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
 				$value					=	$field->form;
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 
 				if ( $config['doValidation'] ) {
-					// static $validation_loaded	=	0;
+					static $validation_loaded	=	0;
 					
-					// if ( !$validation_loaded )	{
-					// 	$validation_loaded		=	1;
-						
-					// 	JCckDev::addValidation( ( count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '' ), '', '_' );
-					// }
+					if ( !$validation_loaded )	{
+						$validation_loaded		=	1;
+					} else {
+						if ( $i > 1 ) {
+							$config['validation']	=	null;
+						}
+					}
 				}
 
 				if ( $unset_validation ) {
@@ -183,6 +223,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {
 					$config['doValidation']	=	$doValidation;
 				}
+				
 				break;
 			case 'increment':
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
@@ -190,13 +231,20 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				if ( $identifier_name != '' ) {
 					if ( !isset( self::$increment[$identifier_name] ) ) {
 						self::$increment[$identifier_name]	=	array( 'i'=>0, 'pks'=>array() );
+
+						if ( $start ) {
+							self::$increment[$identifier_name]++;
+						}
 					}
 					if ( !isset( self::$increment[$identifier_name]['pks'][$config['pk']] ) ) {
 						self::$increment[$identifier_name]['pks'][$config['pk']]	=	self::$increment[$identifier_name]['i'];
 						self::$increment[$identifier_name]['i']++;
 					}
+
+					$value		=	self::$increment[$identifier_name]['i'];
+				} else {
+					$value		=	( !$start ) ? $i - 1 : $i;
 				}
-				$value		=	( !$start ) ? $i - 1 : $i;
 				break;
 			case 'selection':
 				if ( !$formId ) {
@@ -212,7 +260,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\'));"' . $class, $value );
 				}
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'selection_label':
 				$value		=	'<label for="cb'.$pks[$pk].'">'.$value.'</label>';
@@ -251,9 +299,17 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
 							$app			=	JFactory::getApplication();
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+							$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+							$legacy		=	$legacy && $legacy <= 2019 ? true : false;
+
 							$listDir		=	'asc';
 							$loaded			= 	true;
-							$tableWrapper	=	$formId . ' table.table';
+
+							if ( $legacy ) {
+								$tableWrapper	=	$formId . ' table.table';
+							} else {
+								$tableWrapper	=	$formId . ' table.o-table-manager';
+							}
 							
 							$task			=	$typo->get( 'task', '' );
 							$task_id		=	$typo->get( 'task_id_process', '' );
@@ -285,12 +341,12 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$value	=	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />';
 				}
 				
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'state':
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$field->value, 'class'=>$class, 'pk'=>$pks[$pk], 'title'=>$typo->get( 'state_title', '' ), 'fieldname_up'=>$typo->get( 'state_up', '' ), 'fieldname_down'=>$typo->get( 'state_down', '' ) ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			default:
 				break;

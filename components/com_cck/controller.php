@@ -533,7 +533,8 @@ class CCKController extends JControllerLegacy
 		
 		$app		=	JFactory::getApplication();
 		$config		=	array(
-							'uniqid'=>$app->input->get( 'uniqid', '' )
+							'uniqid'	=>	$app->input->get( 'uniqid', '' ),
+							'url'		=> ''
 						);
 		$ids		=	$app->input->get( 'cid', array(), 'array' );
 		$task_cid	=	'int';
@@ -570,6 +571,7 @@ class CCKController extends JControllerLegacy
 
 		if ( $result === false ) {
 			$return['error']	=	1;
+			$return['message']	=	$processing->options->get( 'message_error', '' );
 		} elseif ( !$return['pk'] ) { /* TODO#SEBLOD: this shouldn't be executed for standalones */
 			$task_input	=	0;
 
@@ -594,6 +596,8 @@ class CCKController extends JControllerLegacy
 			} else {
 				$return['output_path']	=	'';
 			}
+		} elseif ( isset( $config['url'] ) && $config['url'] ) {
+			$return['return']		=	base64_encode( JUri::getInstance()->toString( array( 'scheme', 'host' ) ).$config['url'] );
 		}
 		
 		echo json_encode( $return );

@@ -45,6 +45,16 @@ class JCckPluginField extends JPlugin
 		// Set
 		$field->value	=	$value;
 	}
+
+	// onCCK_FieldDelete
+	public function onCCK_FieldDelete( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+		
+		$field->value	=	$value;
+	}
 	
 	// onCCK_FieldPrepareDownload
 	public function onCCK_FieldPrepareDownload( &$field, $value = '', &$config = array() )
@@ -360,47 +370,90 @@ class JCckPluginField extends JPlugin
 			// Encrypt
 			if ( $data['storage'] !== 'none' && $data['storage_table'] !== '' ) {
 				if ( ( (int)$data['storage_crypt'] === 0 || (int)$data['storage_crypt'] > 0 ) && (int)$data['storage_crypt'] != $data['storage_crypt_prev'] ) {
+					$app	=	JFactory::getApplication();
 					$my_app	=	new JCckApp;
 
-					if ( (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' ) > 200 ) {
-						// TODO: message
-					} else {
-						// TODO JSON	
-						if ( $data['storage'] == 'standard' ) {
-							$columns	=	$db->getTableColumns( $data['storage_table'], false );
-							$items		=	(array)JCckDatabase::loadObjectList( 'SELECT id, '.$data['storage_field'].' AS f_data FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' );
+					if ( $data['storage'] == 'standard' ) {
+						$columns	=	$db->getTableColumns( $data['storage_table'], false );						
 
-							if ( (int)$data['storage_crypt'] ) {
-								if ( isset( $columns[$data['storage_field']] ) ) {
-									if ( strpos( $columns[$data['storage_field']]->Type, 'varchar' ) !== false ) {
-										JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.str_replace( 'varchar', 'varbinary', $columns[$data['storage_field']]->Type ).' NOT NULL DEFAULT ""' );
+						if ( (int)$data['storage_crypt'] ) {
+							if ( isset( $columns[$data['storage_field']] ) ) {
+								if ( strpos( $columns[$data['storage_field']]->Type, 'varbinary' ) === false ) {
+									$size	=	138;
+
+									if ( strpos( $columns[$data['storage_field']]->Type, 'varchar' ) !== false ) {	
+										$parts	=	explode( '(', $columns[$data['storage_field']]->Type );
+
+										if ( isset( $parts[1] ) && $parts[1] ) {
+											$size	=	(int)( substr( $parts[1], 0, -1 ) ) + 128;
+										}
+									}
+
+									if ( $count = (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' ) > 100 ) {
+										$app->enqueueMessage(
+											'Before any other action you should:<br>1. run the folllowing SQL query:<br>'
+										.	'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' varbinary('.$size.') NOT NULL DEFAULT "";'
+										.	'<br>2. encrypt '.$count.' rows using the following code<br><code>// Sample to encrypt<br>$my_app = new JCckApp;<br>$my_app->loadDefault();<br>$my_app->encrypt("[STRING]");</code>'
+										.	'<br>3. run the following SQL query:<br>'
+										.	'UPDATE `#__cck_core_fields` SET `storage_crypt` = '.$data['storage_crypt'].' WHERE storage_table = "'.$data['storage_table'].'" AND storage_field = "'.$data['storage_field'].'";'
+										, 'warning' );
+
+										$data['storage_crypt']	=	$data['storage_crypt_prev'];
+									} else {
+										if ( (bool)JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' varbinary('.$size.') NOT NULL DEFAULT ""' ) ) {
+											$items		=	(array)JCckDatabase::loadObjectList( 'SELECT id, '.$data['storage_field'].' AS f_data FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' );
+
+											if ( count( $items ) ) {
+												$my_app->load( $data['storage_crypt'] );
+
+												foreach ( $items as $item ) {
+													JCckDatabase::execute( 'UPDATE '.$data['storage_table'].' SET '.$data['storage_field'].' = '.JCckDatabase::quote( $my_app->encrypt( $item->f_data ) ).' WHERE id = '.(int)$item->id );
+												}
+											}
+										} else {
+											$app->enqueueMessage( 'An error occurred' );
+										}
 									}
 								}
+							}
+						} else {
+							if ( isset( $columns[$data['storage_field']] ) ) {
+								if ( strpos( $columns[$data['storage_field']]->Type, 'varbinary' ) !== false ) {
+									$parts	=	explode( '(', $columns[$data['storage_field']]->Type );
+									$size	=	10;
 
-								if ( count( $items ) ) {
-									$my_app->load( $data['storage_crypt'] );
-
-									foreach ( $items as $item ) {
-										JCckDatabase::execute( 'UPDATE '.$data['storage_table'].' SET '.$data['storage_field'].' = '.JCckDatabase::quote( $my_app->encrypt( $item->f_data ) ).' WHERE id = '.(int)$item->id );
+									if ( isset( $parts[1] ) && $parts[1] ) {
+										$size	=	(int)( substr( $parts[1], 0, -1 ) ) - 128;
 									}
-								}
-							} else {
-								if ( isset( $columns[$data['storage_field']] ) ) {
-									if ( strpos( $columns[$data['storage_field']]->Type, 'varbinary' ) !== false ) {
-										JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' '.str_replace( 'varbinary', 'varchar', $columns[$data['storage_field']]->Type ).' NOT NULL DEFAULT ""' );
-									}
-								}
 
-								if ( count( $items ) ) {
-									$my_app->load( $data['storage_crypt_prev'] );
-									
-									foreach ( $items as $item ) {
-										JCckDatabase::execute( 'UPDATE '.$data['storage_table'].' SET '.$data['storage_field'].' = '.JCckDatabase::quote( $my_app->decrypt( $item->f_data ) ).' WHERE id = '.(int)$item->id );
+									// Alter + Update or Message
+									if ( $count = (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' ) > 100 ) {
+										$app->enqueueMessage(
+											'Before any other action you should:<br>1. decrypt '.$count.' rows using the following code<br><code>// Sample to decrypt<br>$my_app = new JCckApp;<br>$my_app->loadDefault();<br>$my_app->decrypt("[BINARY]");</code><br>2. run the following SQL queries:<br>'
+										.	'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' varchar('.$size.') NOT NULL DEFAULT "";<br>'
+										.	'UPDATE `#__cck_core_fields` SET `storage_crypt` = 0 WHERE storage_table = "'.$data['storage_table'].'" AND storage_field = "'.$data['storage_field'].'";'
+										, 'warning' );
+
+										$data['storage_crypt']	=	$data['storage_crypt_prev'];
+									} else {
+										$items		=	(array)JCckDatabase::loadObjectList( 'SELECT id, '.$data['storage_field'].' AS f_data FROM '.$data['storage_table'].' WHERE '.$data['storage_field'].' != ""' );
+
+										if ( count( $items ) ) {
+											$my_app->load( $data['storage_crypt_prev'] );
+											
+											foreach ( $items as $item ) {
+												JCckDatabase::execute( 'UPDATE '.$data['storage_table'].' SET '.$data['storage_field'].' = '.JCckDatabase::quote( $my_app->decrypt( $item->f_data ) ).' WHERE id = '.(int)$item->id );
+											}
+										}
+
+										JCckDatabase::execute( 'ALTER TABLE '.JCckDatabase::quoteName( $data['storage_table'] ).' CHANGE '.JCckDatabase::quoteName( $data['storage_field'] ).' '.JCckDatabase::quoteName( $data['storage_field'] ).' varchar('.$size.') NOT NULL DEFAULT ""' );
 									}
 								}
 							}
 						}
 					}
+
+					// TODO JSON
 				}
 			}
 		}
@@ -507,12 +560,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$hide				=	( isset( $field->restriction ) && $field->restriction != '' ) ? '' : ' hidden';
 		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	$field->restriction;
+		$value				=	@$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -583,7 +636,8 @@ class JCckPluginField extends JPlugin
 		$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
 							.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
-		$column2			=	'';
+		$column2			=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
 		// 2
@@ -627,12 +681,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$hide				=	( isset( $field->restriction ) && $field->restriction != '' ) ? '' : ' hidden';
 		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	$field->restriction;
+		$value				=	@$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -728,12 +782,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$hide				=	( isset( $field->restriction ) && $field->restriction != '' ) ? '' : ' hidden';
 		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	( isset( $data['access'][$value] ) ) ? $data['access'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	$field->restriction;
+		$value				=	@$field->restriction;
 		$text				=	( isset( $data['restriction'][$value] ) ) ? $data['restriction'][$value]->text : JText::_( 'COM_CCK_UNKNOWN_SETUP' );
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -856,7 +910,8 @@ class JCckPluginField extends JPlugin
 		$column1			=	'<input class="'.$css.'" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
 							.	'<input type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
-		$column2			=	'';
+		$column2			=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
 		// 2
@@ -900,12 +955,12 @@ class JCckPluginField extends JPlugin
 		$field->params[]	=	self::g_getParamsHtml( 3, $style, $column1, $column2 );
 		
 		// 4
-		$hide				=	$field->restriction !== '' ? '' : ' hidden';
+		$hide				=	( isset( $field->restriction ) && $field->restriction != '' ) ? '' : ' hidden';
 		$value				=	!isset( $field->access ) ? 1 : (int)$field->access;
 		$text				=	$data['access'][$value]->text;
 		$column1			=	'<input type="hidden" id="ffp'.$name.'_access" name="ffp['.$name.'][access]" value="'.$value.'" />'
 							.	'<span class="text blue sp2se" data-id="ffp'.$name.'_access" data-to="access">'.$text.'</span>';
-		$value				=	$field->restriction;
+		$value				=	@$field->restriction;
 		$text				=	$data['restriction'][$value]->text;
 		$to					=	( isset( $config['construction']['restriction'][$field->type] ) ) ? 'restriction-'.$field->type : 'restriction';
 		$column2			=	'<input type="hidden" id="'.$name.'_restriction" name="ffp['.$name.'][restriction]" value="'.$value.'" />'
@@ -973,25 +1028,43 @@ class JCckPluginField extends JPlugin
 	// g_onCCK_FieldPrepareForm
 	public static function g_onCCK_FieldPrepareForm( &$field, &$config = array() )
 	{
-		$field->label		=	( @$field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->title );
-		if ( $field->label == 'clear' || $field->label == 'none' ) {
-			$field->label	=	'';
-		}
-		if ( $config['doTranslation'] ) {
-			if ( $field->label == '&nbsp;' ) {
-				$field->label	=	'Nbsp';
+		if ( !isset( $field->typo_target ) ) {
+			$field->label		=	( @$field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->title );
+			if ( $field->label == 'clear' || $field->label == 'none' ) {
+				$field->label	=	'';
 			}
-			if ( trim( $field->label ) ) {
-				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
-			}
-			if ( trim( $field->description ) ) {
-				$desc	=	trim( strip_tags( $field->description ) );
+			$pos	=	strpos( $field->description, 'J(' );
+
+			if ( trim( $field->description ) && $pos !== false ) {
+				$desc		=	trim( $field->description );
 				if ( $desc ) {
-					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
+					$matches	=	'';
+					$search		=	'#J\((.*)\)#U';
+					preg_match_all( $search, $desc, $matches );
+					if ( count( $matches[1] ) ) {
+						foreach ( $matches[1] as $text ) {
+							$desc	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $desc );
+						}
+						$field->description	=	$desc;
+					}
+				}
+			}
+			if ( $config['doTranslation'] ) {
+				if ( $field->label == '&nbsp;' ) {
+					$field->label	=	'Nbsp';
+				}
+				if ( trim( $field->label ) ) {
+					$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
+				}
+				if ( $pos === false && trim( $field->description ) ) {
+					$desc	=	trim( strip_tags( $field->description ) );
+					if ( $desc ) {
+						$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
+					}
 				}
 			}
 		}
-		
+
 		$field->link		=	'';
 		$field->state		=	1;
 		$field->typo_target	=	'value';
@@ -1007,12 +1080,12 @@ class JCckPluginField extends JPlugin
 		}
 
 		// Allowed Query Vars
-		if ( $config['client'] == 'search' && $field->state ) {
+		if ( isset( $config['client'] ) && $config['client'] == 'search' && $field->state ) {
 			$config['pagination_vars'][$field->name]	=	true;
 		}
 
 		// Css
-		if ( $field->variation ) {
+		if ( isset( $field->variation ) && $field->variation ) {
 			$css	=	'';
 
 			switch ( $field->variation ) {
@@ -1052,7 +1125,7 @@ class JCckPluginField extends JPlugin
 				
 				preg_match( $search, $field->attributes, $matches );
 
-				if ( count( $matches[1] ) ) {
+				if ( isset( $matches[1] ) && is_array( $matches[1] ) && count( $matches[1] ) ) {
 					$field->label_for	=	$matches[1];
 
 					$field->attributes	=	str_replace( $matches[0], '', $field->attributes );
@@ -1245,7 +1318,7 @@ class JCckPluginField extends JPlugin
 			}
 		}
 
-		return $field->$target;
+		return isset( $field->$target ) ? $field->$target : '';
 	}
 	
 	// g_onCCK_FieldRenderForm
@@ -1447,21 +1520,28 @@ class JCckPluginField extends JPlugin
 		$value	=	array();
 		if ( count( $opts ) ) {
 			foreach ( $values as $i=>$val ) {
-				if ( $val != '' ) {
-					$exist	=	false;
-					foreach ( $opts as $opt ) {
-						if ( strpos( '='.$opt.'||', '='.$val.'||' ) !== false ) {
-							$texts	=	explode( '=', $opt );
-							if ( isset( $config['doTranslation'] ) && $config['doTranslation'] && trim( $texts[0] ) != '' ) {
-								$texts[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $texts[0] ) ) );
+				if ( !is_array( $val ) ) {
+					$vals	=	array( $val );
+				} else {
+					$vals	=	$val;
+				}
+				foreach ( $vals as $val ) {
+					if ( $val != '' ) {
+						$exist	=	false;
+						foreach ( $opts as $opt ) {
+							if ( strpos( '='.$opt.'||', '='.$val.'||' ) !== false ) {
+								$texts	=	explode( '=', $opt );
+								if ( isset( $config['doTranslation'] ) && $config['doTranslation'] && trim( $texts[0] ) != '' ) {
+									$texts[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $texts[0] ) ) );
+								}
+								$exist	=	true;
+								$text	.=	$texts[0].$separator;
+								break;
 							}
-							$exist	=	true;
-							$text	.=	$texts[0].$separator;
-							break;
 						}
-					}
-					if ( $exist === true ) {
-						$value[]	=	$val;
+						if ( $exist === true ) {
+							$value[]	=	$val;
+						}
 					}
 				}
 			}
