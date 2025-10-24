@@ -24,8 +24,40 @@ class plgCCK_FieldGroup extends JCckPluginField
 		if ( self::$type != $type ) {
 			return;
 		}
+		
 		$data['rows']	=	1;
+
+		if ( isset( $data['bool'] ) ) {
+			if ( (int)$data['bool'] === 5 ) {
+				$data['extended']	=	$data['extended2'];
+			} else {
+				$data['extended']	=	$data['extended1'];
+			}
+		}
+
 		parent::g_onCCK_FieldConstruct( $data );
+	}
+
+	// onCCK_FieldConstruct_SearchSearch
+	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
+	{
+		$data['label']			=	null;
+		$data['live']			=	null;
+		$data['validation']		=	null;
+		$data['variation']		=	null;
+		
+		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
+			$data['match_mode']	=	array(
+										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_DISABLED' ) ),
+										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ENABLED' ) )
+									);
+
+			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
+		} else {
+			$data['match_mode']									=	$config['construction']['match_mode'][self::$type];
+		}
+
+		parent::onCCK_FieldConstruct_SearchSearch( $field, $style, $data, $config );
 	}
 	
 	// onCCK_FieldConstruct_TypeForm
@@ -69,7 +101,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		if ( $field->bool == 2 ) {
 			$lang_current		=	JFactory::getLanguage()->getTag();
 			$lang_current		=	substr( $lang_current, 0, 2 );
-			$field->extended	=	$field->location.$lang_current;
+			$field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_current, $field->location ) : $field->location.$lang_current;
+
+			self::_prepareContentFields( $field, $content, $name, $config );
+		} elseif ( $field->bool == -1 ) {
+			$field->extended	=	'CT';
 
 			self::_prepareContentFields( $field, $content, $name, $config );
 		} elseif ( $field->bool ) {
@@ -107,7 +143,13 @@ class plgCCK_FieldGroup extends JCckPluginField
 		// Prepare
 		$form		=	array();
 
-		if ( $field->bool ) {
+		if ( $field->bool == -1 ) {
+			$field->extended	=	'CT';
+
+			self::_prepareFormFields( $field, $form, $name, $config );
+		} elseif ( $field->bool == 5 ) {
+			self::_prepareSearchFields( $field, $form, $name, $config );
+		} elseif ( $field->bool ) {
 			$lang			=	JFactory::getLanguage();
 			$lang_codes		=	JCckDevHelper::getLanguageCodes();
 			$lang_default	=	$lang->getDefault();
@@ -116,7 +158,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 			$variation		=	$field->variation;
 
 			// Default Language
-			$field->extended	=	$field->location.$lang_default;
+			$field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_default, $field->location ) : $field->location.$lang_default;
 
 			// if ( isset( $user_groups[15] ) ) {
 			// 	$field->variation	=	'disabled';
@@ -131,7 +173,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 				if ( $lang_code == $lang_default ) {
 					continue;
 				}
-				$field->extended	=	$field->location.$lang_code;
+				$field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_code, $field->location ) : $field->location.$lang_code;
 
 				self::_prepareFormFields( $field, $form, $name, $config );
 			}
@@ -157,7 +199,14 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		// Prepare
-		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+		if ( $field->variation == 'clear' ) {
+			parent::g_onCCK_FieldPrepareSearch( $field, $config );
+
+			$field->form	=	array();
+			$field->value	=	'';
+		} else {
+			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+		}
 		
 		// Return
 		if ( $return === true ) {
@@ -177,11 +226,27 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$value		=	'';
 		
 		// Prepare
-		if ( $field->bool ) {
-			$lang_codes		=	JCckDevHelper::getLanguageCodes();
+		if ( $field->bool == -1 ) {
+			$field->extended	=	'CT';
 
+			self::_prepareStoreFields( $field, $value, $data, $config );
+		} elseif ( $field->bool && $field->bool != 5 ) {
+			$lang_codes		=	JCckDevHelper::getLanguageCodes();
+			
+			// -- IS THIS NEEDED?
+			// $variation		=	$field->variation;
+
+			// Default Language
+			// $field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_default, $field->location ) : $field->location.$lang_default;
+
+			// self::_prepareStoreFields( $dispatcher, $field, $value, $data, $config );
+
+			// Other Languages
+			// $field->variation		=	$variation;
+			// -- IS THIS NEEDED?
+			
 			foreach ( $lang_codes as $lang_code ) {
-				$field->extended	=	$field->location.$lang_code;
+				$field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_code, $field->location ) : $field->location.$lang_code;
 
 				self::_prepareStoreFields( $field, $value, $data, $config );
 			}
@@ -327,7 +392,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$postpone			=	'';
 					$postpone_after		=	'';
 
-					if ( $elem->markup == 'none' ) {
+					if ( $elem->markup == 'none' || ( $elem->markup == '' && $markup == 'none' ) ) {
 						if ( $elem->label != '' ) {
 							$suffix	=	'';
 							if ( $elem->label != '&nbsp;' ) {
@@ -393,7 +458,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 			}
 		
 			if ( $js ) {
-				if ( JFactory::gsetApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 					echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 				} else {
 					JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
@@ -526,32 +591,63 @@ class plgCCK_FieldGroup extends JCckPluginField
 	}
 	
 	// _getChildren
-	protected static function _getChildren( $parent, $config = array() )
+	protected static function _getChildren( $parent, $config = array(), $duo = true )
 	{
 		$db		=	JFactory::getDbo();
 		$user	=	JFactory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
+		$isCT	=	false;
+		$redo	=	false;
 
 		if ( isset( $config['client_form'] ) && $config['client_form'] ) {
 			$client	=	$config['client_form'];
 		}
+		if ( $parent->extended == 'CT' ) {
+			$isCT	=	true;
+
+			if ( strpos( $parent->location, 'CT' ) !== false ) {
+				if ( $duo && isset( $config['type_parent'] ) && $config['type_parent'] ) {
+					$parent->extended	=	str_replace( 'CT', $config['type_parent'], $parent->location );
+					$redo				=	true;
+				} else {
+					$parent->extended	=	str_replace( 'CT', $config['type'], $parent->location );
+				}
+			} else {
+				$parent->extended	=	$parent->location;
+			}
+		}
 
 		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
 				.	' AND c.access IN ('.$access.')';
-		$order	=	' ORDER BY c.ordering ASC';
+
+		if ( $isCT ) {
+			$parent->extended	=	'CT';
+		}
+		if ( $parent->bool ) {
+			$where	.=	' AND b.published = 1';
+		}
+
+		$client_table	=	'type';
+		$order			=	' ORDER BY c.ordering ASC';
 		
+
 		if ( $client == 'intro' || $client == 'content' ) {
 			$cc	=	'';
 		} else {
 			$cc	=	'c.required, c.required_alert, ';
+
+			if ( $client == 'search' ) {
+				$client_table	=	'search';
+				$cc				.=	'c.match_mode, c.match_options, c.match_value, c.match_collection, ';
+			}
 		}
 		$query	= ' SELECT DISTINCT a.*, c.client,'
 		        . 	' c.label as label2, c.variation, c.variation_override, '.$cc.'c.validation, c.validation_options, c.live, c.live_options, c.live_value, c.link, c.link_options, c.typo, c.typo_label, c.typo_options, c.markup, c.markup_class, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position'
 				.	' FROM #__cck_core_fields AS a'
-				.	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
-				.	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
+				.	' LEFT JOIN #__cck_core_'.$client_table.'_field AS c ON c.fieldid = a.id'
+				.	' LEFT JOIN #__cck_core_'.$client_table.'s AS b ON b.id = c.'.$client_table.'id'
 				.	$where
 				.	$order
 				;
@@ -561,9 +657,13 @@ class plgCCK_FieldGroup extends JCckPluginField
 			$db->setQuery( $query );
 			$fields	=	$db->loadObjectList( 'name' ); //#
 		}
-		
 		if ( ! count( $fields ) ) {
-			return array();
+			if ( $redo ) {
+				$fields	=	self::_getChildren( $parent, $config, false );
+			}
+			if ( ! count( $fields ) ) {
+				return array();
+			}
 		}
 		
 		return $fields;
@@ -657,7 +757,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 							$config['storages'][$table]	=	'';
 							$app->triggerEvent( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 						}
-						$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, 0 ) );
+						$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, 0, $config ) );
 					}
 				} elseif ( $f->live ) {
 					$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
@@ -693,7 +793,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$clone->variation		=	$field->variation;
 				}
 
-				$results				=	$app->triggerEvent( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
+				$clone->value	=	$f_value;
+				$results		=	$app->triggerEvent( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
 
 				if ( !isset( $results[0] ) ) {
 					continue;
@@ -706,6 +807,21 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 	}
 
+	// _prepareSearchFields
+	protected static function _prepareSearchFields( $field, &$form, $name, &$config )
+	{
+		$fields	=	self::_getChildren( $field, $config );
+
+		jimport( 'cck.base.list.list' );
+
+		/*
+		TODO
+		match_mode => none to force none to all fields
+		*/
+
+		CCK_List::prepareSearch( $fields, $config, 'form', $form );
+	}
+
 	// _prepareStoreFields
 	protected static function _prepareStoreFields( $field, &$value, $data, &$config )
 	{
@@ -715,7 +831,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		if ( count( $fields ) ) {
 			foreach ( $fields as $f ) {
 				$name		=	$f->name;
-				$f->state	=	'';
+				$f->state	=	1;
 				
 				// Restriction
 				if ( isset( $f->restriction ) && $f->restriction ) {
@@ -760,6 +876,9 @@ class plgCCK_FieldGroup extends JCckPluginField
 			$lang_current				=	substr( $lang_current, 0, 2 );
 			$fields[$name]->extended	=	$fields[$name]->location.$lang_current;
 
+			self::_prepareContentFields( $fields[$name], $content, $name, $config );
+		} elseif ( $fields[$name]->bool == -1 ) {
+			/* TODO */
 			self::_prepareContentFields( $fields[$name], $content, $name, $config );
 		} elseif ( $fields[$name]->bool ) {
 			/* TODO */
