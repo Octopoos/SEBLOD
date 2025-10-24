@@ -170,7 +170,7 @@ abstract class JCckWebservice
 	}
 
 	// _call
-	protected function _call( &$webservice, $config, $data, $fields )
+	protected static function _call( &$webservice, $config, $data, $fields )
 	{
 		$allowed	=	array(
 							'request'=>'',
@@ -203,7 +203,7 @@ abstract class JCckWebservice
 	}
 
 	// _stack
-	protected function _stack( $webservice )
+	protected static function _stack( $webservice )
 	{
 		JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
 
