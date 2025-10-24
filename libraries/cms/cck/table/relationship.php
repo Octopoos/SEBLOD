@@ -118,7 +118,15 @@ class JCckTableRelationship extends JObject
 	// insertRow
 	public function insertRow( $relation_id, $data = array() )
 	{
-		/* TODO */
+		// Check
+		if ( !isset( $data['id2'] ) ) {
+			$data['id2']	=	(string)$relation_id;
+		}
+		if ( !isset( $data['ordering'] ) ) {
+			$data['ordering']	=	(string)count( $this->_tbl_rows );
+		}
+
+		$this->_tbl_rows[]	=	(object)$data;
 	}
 
 	// setRow

@@ -645,9 +645,9 @@ class plgContentCCK extends JPlugin
 	{
 		if ( $name != '' ) {
 			if ( isset( $target[$name] ) ) {
-				return $target[$name]->value;
+				return $target[$name]->value ?? '';
 			} elseif ( isset( $target2[$name] ) ) {
-				return $target2[$name]->value;
+				return $target2[$name]->value ?? '';
 			}
 		}
 
@@ -1026,7 +1026,6 @@ class plgContentCCK extends JPlugin
 					}
 				}
 				$config['fields']	=	null;
-				unset( $config['fields'] );
 			}
 
 			// BeforeRender
@@ -1045,6 +1044,8 @@ class plgContentCCK extends JPlugin
 
 				$v_metadesc		=	$this->_getValue( $p_metadesc, $fields, $config['fields'] );
 				$v_metatitle	=	$this->_getValue( $p_metatitle, $fields, $config['fields'] );
+
+				unset( $config['fields'] );
 			}
 			if ( count( $unset ) ) {
 				foreach ( $unset as $k=>$v ) {
@@ -1189,7 +1190,7 @@ class plgContentCCK extends JPlugin
 			$val	=	explode( '=', $part );
 
 			if ( $val[0] ) {
-				$v					=	$val[1];
+				$v					=	$val[1] ?? '';
 
 				if ( $v != '' ) {
 					$len	=	strlen( $v );

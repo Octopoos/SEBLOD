@@ -179,7 +179,7 @@ class CCKViewType extends JViewLegacy
 		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="c-"', 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
 		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium form-select md" prefix="f-"', 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
-		$options				=	Helper_Admin::getLanguageOptions( true, true, false, true, 'field' );
+		$options				=	Helper_Admin::getLanguageOptions( true );
 		$this->lists['af_l']	=	JHtml::_( 'select.genericlist', $options, 'filter_language', 'class="inputbox filter input-medium width-103px form-select md" prefix="l-"', 'value', 'text', '', 'filter5' );
 	}
 

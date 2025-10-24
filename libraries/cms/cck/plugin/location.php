@@ -405,7 +405,7 @@ class JCckPluginLocation extends JPlugin
 			$more->check();
 
 			/* TODO#SEBLOD4: extend or so */
-			if ( JCck::is( '5.5' ) ) {
+			if ( JCck::is( '7' ) ) {
 				if ( $table == '#__cck_store_item_content' || $table == '#__cck_store_item_categories' ) {
 					if ( isset( $more->titles ) && isset( $more->aliases ) ) {
 						$aliases		=	json_decode( $more->aliases );

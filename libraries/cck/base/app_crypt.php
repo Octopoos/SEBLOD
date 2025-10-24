@@ -32,8 +32,8 @@ class JCckAppCrypt extends Sodium
 						);
 
 		if ( $base64 ) {
-			$data['public']		=	bin2hex( $data['public'] );
-			$data['private']	=	bin2hex( $data['private'] );
+			$data['public']		=	$this->_convertKey( $data['public'] );
+			$data['private']	=	$this->_convertKey( $data['private'] );
 		}
 
 		return $data;
@@ -43,6 +43,16 @@ class JCckAppCrypt extends Sodium
 	public function getKey( $private_key, $public_key )
 	{
 		return new Key( 'sodium', $private_key, $public_key );
+	}
+
+	// _convertKey
+	protected function _convertKey( $data )
+	{
+		if ( JCck::is( '7.0' ) ) { // UpSideDown
+			return base64_decode( $data );
+		} else {
+			return bin2hex( $data );
+		}
 	}
 }
 ?>

@@ -166,7 +166,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 						$value					=	$fields[$fieldname]->$target;
 						$value					=	JCckDev::toSafeID( $value );
 					} else {
-						$value					=	$fields[$fieldname]->$target;
+						$value					=	$fields[$fieldname]->$target ?? '';
 					}
 				}
 				if ( $idx != '' && $search != '' ) {

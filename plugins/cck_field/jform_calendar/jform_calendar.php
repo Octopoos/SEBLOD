@@ -140,13 +140,13 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$attr		=	'';
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$desc		=	$field->description;
-		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
+		$readonly	=	( @$field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
 
 		if ( $field->attributes != '' ) {
 			$attr	.=	' '.$field->attributes;
 		}
 
-		if ( parent::g_isStaticVariation( $field, $field->variation ) ) {
+		if ( parent::g_isStaticVariation( $field, @$field->variation ) ) {
 			$attr	=	'class="'.$class.'"'.$attr;
 			$form	=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
 		} else {
@@ -189,7 +189,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		
 		// Set
-		if ( ! $field->variation ) {
+		if ( ! @$field->variation ) {
 			$field->form	=	$form;
 
 			JCck::loadjQuery();

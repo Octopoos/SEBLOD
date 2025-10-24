@@ -128,10 +128,8 @@ abstract class JCck
 
 				$version	=	new JCckVersion;
 				
-				if ( $version->DEV_STATUS == 'dev-5.5' ) {
-					$current	=	'5.5.0';
-				} elseif ( $version->DEV_STATUS == 'dev-5.0' ) {
-					$current	=	'5.0.0';
+				if ( $version->DEV_STATUS == 'next' ) {
+					$current	=	'7.0.0';
 				} elseif ( $version->DEV_STATUS == 'dev-4.0' ) {
 					$current	=	'4.0.0';
 				} else {
@@ -272,6 +270,7 @@ abstract class JCck
 				if ( self::$_sites[$host]->parent_id ) {
 					$parent		=	self::getSiteById( self::$_sites[$host]->parent_id );
 				}
+
 				if ( is_object( $parent ) && $parent->id ) {					
 					$properties	=	array(
 										'guest_only_viewlevel',
@@ -281,11 +280,12 @@ abstract class JCck
 									);
 
 					if ( self::$_sites[$host]->guest ) {
-						if ( !( self::$_sites[$host]->name.'@$' == $parent->name ) ) {
-							self::$_sites[$host]->environment	=	0;
-						}
+						// OK
 					} else {
 						$properties[]	=	'guest';
+					}
+					if ( !( self::$_sites[$host]->name.'@$' == $parent->name ) ) {
+						self::$_sites[$host]->environment	=	0;
 					}
 
 					/*

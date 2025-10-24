@@ -346,18 +346,28 @@ class JCckApp
 			$this->_crypt->setNonce( $core->nonce );
 
 			$this->_crypt_key	=	$this->_crypt->getkey(
-										hex2bin( $this->_getKey( $options['key_private'] ) ),
-										hex2bin( $this->_getKey( $options['key_public'] ) )
+										$this->_convertKey( $this->_getKey( $options['key_private'] ?? '' ) ),
+										$this->_convertKey( $this->_getKey( $options['key_public'] ?? '' ) )
 									);
 		}
 
 		return true;
 	}
 
+	// _convertKey
+	protected function _convertKey( $data )
+	{
+		if ( JCck::is( '7.0' ) ) { // UpSideDown
+			return base64_encode( $data );
+		} else {
+			return hex2bin( strlen( $data ) % 2 === 0 ? $data : "0$data" );
+		}
+	}
+
 	// _getKey
 	protected function _getKey( $key )
 	{
-		if ( $key[0] === '@' ) {
+		if ( isset( $key[0] ) && $key[0] === '@' ) {
 			$key	=	getenv( substr( $key, 1 ) );
 		} elseif ( strpos( $key, '/' ) !== false && strpos( $key, '.' ) !== false ) {
 			$dir	=	JPATH_SITE;
@@ -384,6 +394,8 @@ class JCckApp
 			}
 
 			return $key;
+		} else {
+			return '';
 		}
 
 		return $key;

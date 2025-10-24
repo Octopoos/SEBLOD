@@ -83,7 +83,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 		// Set
 		if ( $table == self::$table ) {
 			$storage			=	self::_getTable( $pk );
-			$storage->slug		=	( $storage->alias ) ? $storage->id.':'.$storage->alias : $storage->id;
+			$storage->slug		=	( isset( $storage->alias ) && $storage->alias ) ? $storage->id.':'.$storage->alias : $storage->id;
 		} else {
 			$storage	=	parent::g_onCCK_Storage_LocationPrepareContent( $table, $pk );
 			if ( ! isset( $config['storages'][self::$table] ) ) {
@@ -414,7 +414,11 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JTable::getInstance( 'Menu', 'MenusTable' );
+		if ( Jcck::on( '5' ) ) {
+			$table	=	new \Joomla\Component\Menus\Administrator\Table\MenuTypeTable( JFactory::getDbo() );
+		} else {
+			$table	=	JTable::getInstance( 'Menu', 'MenusTable' );
+		}
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );

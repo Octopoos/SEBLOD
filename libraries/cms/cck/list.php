@@ -577,7 +577,7 @@ class JCckList
 
 		// Clear
 		$this->_search_results	=	null;
-		$this->_search_queries	=	$config['query'];
+		$this->_search_queries	=	$config['query'] ?? '';
 
 		if ( $pagination == 2 ) {
 			$class_pagination	=	'o-center';

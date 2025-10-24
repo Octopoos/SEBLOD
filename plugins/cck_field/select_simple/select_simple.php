@@ -288,7 +288,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		}
 		
 		// Set
-		if ( ! $field->variation ) {
+		if ( !( isset( $field->variation ) && $field->variation ) ) {
 			$field->form	=	$form;
 			$field->text	=	parent::g_getOptionText( $value, $field->options, ( $config['client'] == 'search' ? ',' : '' ), $config );
 			

@@ -289,7 +289,7 @@ class CommonHelper_Admin
 	}
 	
 	// getLanguageOptions
-	public static function getLanguageOptions()
+	public static function getLanguageOptions( $selectlabel )
 	{
 		$options	=	array();
 		

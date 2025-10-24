@@ -68,9 +68,11 @@ class CckRouter extends JComponentRouterView
 
 				unset( $query['type'] );
 			}
-			
+
 			if ( JCck::on( '4.0' ) ) {
-				if ( $menuItem->query['view'] == 'form' ) {
+				if ( $menuItem === null ) {
+					$segments	=	array();
+				} elseif ( $menuItem->query['view'] == 'form' ) {
 					$segments	=	array();
 				}
 			}

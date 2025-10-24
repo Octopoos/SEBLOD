@@ -2668,7 +2668,7 @@ USER
 			}
 		}
 
-		if ( !JCck::is( '5.0' ) ) {
+		if ( !JCck::is( '7' ) ) {
 			if ( count( $data['more2'] ) ) {
 				if ( !isset( $data['more2']['cck'] ) ) { /* TODO#SEBLOD: remove "cck" column */
 					$data['more2']['cck']	=	$this->_type;
@@ -2715,9 +2715,9 @@ USER
 	protected function _getRelationshipDefinition( $property )
 	{
 		if ( isset( self::$objects[$this->_object]['relationships']['many'][$this->_relationship_nav] ) ) {
-			return self::$objects[$this->_object]['relationships']['many'][$this->_relationship_nav][$property];
+			return self::$objects[$this->_object]['relationships']['many'][$this->_relationship_nav][$property] ?? '';
 		} elseif ( isset( self::$types[$this->_type]['relationships']['many'][$this->_relationship_nav] ) ) {
-			return self::$types[$this->_type]['relationships']['many'][$this->_relationship_nav][$property];
+			return self::$types[$this->_type]['relationships']['many'][$this->_relationship_nav][$property] ?? '';
 		} else {
 			return '';
 		}

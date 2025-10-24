@@ -377,7 +377,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		}
 		
 		// Manifest
-		if ( !JCck::is( '5.5' ) ) {
+		if ( !JCck::is( '7' ) ) {
 			JFile::copy( JPATH_LIBRARIES.'/cck/base/install/_plg_system_blank.zip', $path.'/extensions/plg_system_blank.zip' );
 		}
 		if ( is_object( $manifest ) && isset( $manifest->updateservers ) ) {

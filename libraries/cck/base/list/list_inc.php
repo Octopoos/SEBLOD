@@ -416,7 +416,7 @@ if ( $preconfig['task'] == 'search' ) {
 				if ( ! $error ) {
 					// Search
 					$current['stage']	=	$stage;
-					$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+					$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 					if ( ! $items && $config['stages'][$stage] == 0 && in_array( $stage, $excluded_stages ) === false ) {
 						$error			=	1;
 						break;
@@ -427,7 +427,7 @@ if ( $preconfig['task'] == 'search' ) {
 		}
 		if ( ! $error ) {
 			$current['stage']	=	0;
-			$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], $fields['order'], $config, $current, $options, $user );
+			$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 		}
 	}
 	if ( is_array( $items ) ) {
@@ -718,7 +718,7 @@ if ( $doDebug > 0 && ( $preconfig['task'] == 'search' || $no_action ) ) {
 if ( $config['doRecording'] ) {
 	if ( !$isSearch ) {
 		$app->setUserState( $list_context.'.'.$config['Itemid'].'.recording.ids', isset( $config['ids2'] ) ? $config['ids2'] : $config['ids'] );
-		$app->setUserState( $list_context.'.'.$config['Itemid'].'.recording.pks', isset( $config['pks'] ) ? $config['pks2'] : $config['pks'] );
+		$app->setUserState( $list_context.'.'.$config['Itemid'].'.recording.pks', isset( $config['pks2'] ) ? $config['pks2'] : $config['pks'] );
 	} else {
 		$config['ids_all']	=	$app->getUserState( $list_context.'.'.$config['Itemid'].'.recording.ids', '' );
 		$config['pks_all']	=	$app->getUserState( $list_context.'.'.$config['Itemid'].'.recording.pks', '' );

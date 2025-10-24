@@ -236,7 +236,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 			}
 			$quick_item					=	explode( '.', $data['quick_menuitem'] );
 
-			if ( JCck::is( '5' ) ) {
+			if ( JCck::is( '7' ) ) {
 				$content_item	=	new JCckContentMenuItem;
 				$item_data		=	array(
 										'access'=>$data['access'],

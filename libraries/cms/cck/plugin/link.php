@@ -182,7 +182,7 @@ class JCckPluginLink extends JPlugin
 				$replace				=	$fields[$fieldname]->$target;
 				$replace				=	JCckDev::toSafeID( $replace );
 			} else {
-				$replace				=	urlencode( $fields[$fieldname]->$target );
+				$replace				=	isset( $fields[$fieldname]->$target ) ? urlencode( $fields[$fieldname]->$target ) : '';
 			}
 			$fields[$name]->link        =	str_replace( $process['matches'][0][$k], $replace, $fields[$name]->link );
 			if ( isset( $fields[$name]->form ) ) {
