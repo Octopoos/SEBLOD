@@ -236,12 +236,20 @@ class plgCCK_FieldTabs extends JCckPluginField
 		}
 		
 		if ( $fields[$name]->bool == 2 ) {
-			$html	=	JCckDevTabs::end();
+			$html	=	'</div>'.JCckDevTabs::end().'</div>';
 		} elseif ( $fields[$name]->bool == 1 ) {
-			$html	=	JCckDevTabs::open( $group_id, $id, $label );
+			$html	=	'</div>'.JCckDevTabs::open( $group_id, $id, $label );
+			
 			if ( $target == 'form' ) {
-				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+				$css	=	$fields[$name]->css;
+				
+				if ( strpos( $css, 'o-form' ) === false ) {
+					$css	=	'o-form';
+				}
 			}
+			$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+			$html	.=	'<div class="'.$css.'">';
+
 			$js		=	'';
 			if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
 				$js	=	'$("#'.$group_id.'Tabs > li,#'.$group_id.'Content > div").removeClass("active"); $("#'.$group_id.'Tabs > li:eq('.(int)$groups[$group_id]['active'].'),#'.$id.'").addClass("active");';
@@ -257,11 +265,34 @@ class plgCCK_FieldTabs extends JCckPluginField
 				JFactory::getDocument()->addScriptDeclaration( $js );
 			}
 		} else {
-			$html	=	JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
+			$class	=	'';
+			if ( $fields[$name]->bool4 ) {
+				$class	.=	'-left';
+			}
+			$html	=	'<div class="o-tabs'.$class.'">'.JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
+			
 			if ( $target == 'form' ) {
+				$css	=	$fields[$name]->css;
+				
+				if ( strpos( $css, 'o-form' ) === false ) {
+					$css	=	'o-form';
+				}
+			}
+
+			if ( JCck::on( '4.0' ) ) {
+				$html	=	str_replace( 'class="joomla-tabs nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $html );
+				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+			}else{
 				$html	=	str_replace( 'class="nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $html );
 				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
 			}
+
+
+			
+
+			
+
+			$html	.=	'<div class="'.$css.'">';
 		}
 		$groups[$group_id]['current']++;
 
