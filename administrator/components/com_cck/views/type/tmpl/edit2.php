@@ -38,5 +38,110 @@ if($("#quick_menuitem").length>0){if($("#quick_menuitem").val()){$("#quick_menui
 if($("div#more").is(":visible") && $("#jform_id").val()){ if ($("#toggle_more").hasClass("open")){ $("#toggle_more").removeClass("open").addClass("closed"); } else { $("#toggle_more").removeClass("closed").addClass("open"); } $("#more").slideToggle("slow"); }
 <?php echo $this->js['tooltip']; ?>
 <?php if ($this->item->locked == 0) { ?>$("#linkage").click();<?php } ?>
+function sanitizeAndReplaceNotes(str) {
+    let processedText = str.replace(/\n/g, '<br />');
+    processedText = processedText
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    return processedText;
+}
+$(document).ready(function() {
+	$("#sortable1").on("click", ".f-nt", function() {
+		if ($(this).hasClass("f-nt-1")) {
+			var href = $(this).attr("data-href");
+
+			if (href) {
+				var otherWindow = window.open();
+				otherWindow.opener = null;
+				otherWindow.location = href;
+			}
+		} else {
+			var initiatorElement	=	$(this);
+			$('#collapseModal_note').data('initiator', initiatorElement).modal('show');	
+		}
+	});
+	$('#collapseModal_note').on("click", "#resetNote", function() {
+		var $el = $('#collapseModal_note');
+		var el_id = $el.attr('data-note');
+
+		if (el_id) {
+			var n = $("#collapseModal_note").attr("data-n");
+			var nn = n.indexOf("textarea") == -1 ? "1" : "0";
+
+			if ( $("#"+el_id+" "+n).length ) {
+				$("#"+el_id+" "+n).myVal("").remove();
+			}
+			$("#"+el_id+" .f-nt"+nn).attr("data-original-title","");
+		}
+		$el.modal('hide');
+	});
+	$('#collapseModal_note').on("click", "#submitNote", function() {
+		var $el = $('#collapseModal_note');
+		var el_id = $el.attr('data-note');
+
+		if (el_id) {
+			var n = $("#collapseModal_note").attr("data-n");
+			var nn = n.indexOf("textarea") == -1 ? "1" : "0";
+
+			if ( !$("#"+el_id+" "+n).length ) {
+				if (nn == "1") {
+					var $ta = $( '<input data-n type="hidden" name="'+$("#k"+el_id).attr("name").replace("ff[", "ffp[")+'[notes][-1]" />' );
+
+					if ( !$("#"+el_id+" textarea").length ) {
+						$("#"+el_id+" > a.cbox.b").after($ta);
+					} else {
+						$("#"+el_id+" textarea").after($ta);
+					}	
+				} else {
+					var $ta = $( '<textarea data-n class="hidden" name="'+$("#k"+el_id).attr("name").replace("ff[", "ffp[")+'[notes][0]"></textarea>' );
+					$("#"+el_id+" > a.cbox.b").after($ta);
+				}
+			}
+			
+			var v = $("#collapseModal_note "+n).myVal();
+			$("#"+el_id+" "+n).myVal(v);
+			$("#"+el_id+" .f-nt"+nn).attr("data-original-title",sanitizeAndReplaceNotes(v));
+			if (!$("#"+el_id+" .f-nt").hasClass("hasTooltip")) {
+				$("#"+el_id+" .f-nt").addClass("hasTooltip");
+				$("#"+el_id+" .f-nt").tooltip({"html": true,"placement": "right"});
+			}
+		}
+		$el.modal('hide');
+	});
+	$('#collapseModal_note').on('show', function (event) {
+		var initiatorElement = $(this).data('initiator');
+
+		if (initiatorElement !== undefined) {
+			var $el = initiatorElement.parent().parent().parent();
+			var el_id = $el[0].id;
+			var n = "";
+			var v = "";
+			
+			n = initiatorElement.hasClass("f-nt1") ? "input[data-n]" : "textarea[data-n]";
+			if ( $("#"+el_id+" "+n).length ) {
+				v = $("#"+el_id+" "+n).myVal();
+			}
+			$("#collapseModal_note "+n).myVal(v);
+			$("#collapseModal_note").attr("data-n", n);
+			$("#collapseModal_note").attr("data-note", el_id);
+		}
+	});
+	$('#collapseModal_note').on('hidden', function () {
+		$("#collapseModal_note").attr("data-note", "0");
+	});
+});
 })(jQuery);
 </script>
+<style>body .modal-backdrop{background:none!important;}</style>
+<div class="modal modal-small hide fade" id="collapseModal_note" data-note="0" data-n="">
+	<div class="modal-header" id="toolbarBox">
+		<a href="javascript:void(0);" id="closeNote" class="btn btn-small" data-dismiss="modal" aria-hidden="true"><span class="icon-unpublish"></span>Cancel</a>
+		<a href="javascript:void(0);" id="resetNote" class="btn btn-small"><span class="icon-refresh"></span>Reset</a>
+		<a href="javascript:void(0);" id="submitNote" class="btn btn-small"><span class="icon-save"></span>Save &amp; Close</a>
+    </div>
+	<div class="modal-body">
+		<textarea data-n class="input-xxlarge" id="f_note_textarea" cols="100" rows="3" maxlength="512"></textarea>
+		<input data-n class="input-small" type="text" id="f_note_input" value="" placeholder="#0" />
+	</div>
+</div>

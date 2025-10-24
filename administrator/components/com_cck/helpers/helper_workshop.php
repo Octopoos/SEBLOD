@@ -18,8 +18,29 @@ class Helper_Workshop
 	// displayField
 	public static function displayField( &$field, $type_field = '', $attr = array() )
 	{
-		static $hasMb = -1;
+		static $hasMb		=	-1;
+		static $project		=	null;
+		static $user_names	=	null;
 
+		if ( $project === null ) {
+			$project	=	JCck::getConfig_Param( 'integration_issue_tracker_url', '' );
+
+			$length		=	strlen( $project );
+
+			if ( $length && $project[($length - 1)] !== '/' ) {
+				$project	.=	'/';
+			}
+		}
+		if ( $user_names === null ) {
+			$users		=	JCckDatabaseCache::loadObjectList( 'SELECT a.id, a.first_name, a.last_name FROM #__cck_store_item_users AS a LEFT JOIN #__user_usergroup_map AS b ON b.user_id = a.id WHERE b.group_id = 8', 'id' );
+			$user_names	=	array();
+
+			foreach ( $users as $user ) {
+				if ( $user->first_name && $user->last_name ) {
+					$user_names[$user->id]	=	$user->first_name[0].$user->last_name[0];
+				}
+			}
+		}
 		if ( $hasMb < 0 ) {
 			$hasMb	=	( function_exists( 'mb_convert_case' ) ) ? 1 : 0;
 		}
@@ -28,14 +49,30 @@ class Helper_Workshop
 		$f_tabgroup		=	'';
 		$link			=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
 		$no				=	'';
+		$note	=	'';
 		$title			=	str_replace( '⇒', '', $field->title );
 		$type_suffix	=	'';
+		$user	=	JFactory::getUser();
 		
 		if ( $field->checked_out ) {
 			$class	=	isset( $attr['user_id'] ) && $field->checked_out == $attr['user_id'] ? ' zz2' : ' zz';
 		}
 		if ( $field->type == 'group' ) {
-			$type_suffix	.=	' <span class="to">&#8689;</span>';
+			static $groups	=	null;
+
+			if ( $groups === null ) {
+				$groups	=	JCckDatabase::loadObjectList( 'SELECT id, location, extended FROM #__cck_core_fields WHERE type = "group"', 'id' );
+			}
+
+			$link	=	'';
+
+			if ( isset( $groups[$field->id] ) ) {
+				$link	=	$groups[$field->id]->extended ? $groups[$field->id]->extended : str_replace ( '_XX', '', $groups[$field->id]->location );
+
+				if ( $link ) {
+					$type_suffix	.=	' <span class="f-nt to" data-go="qg='.$link.'">&#8689;</span>';	
+				}
+			}
 		} elseif ( isset( $field->storage ) ) {
 			$no	=	$field->storage == 'none' ? '<span class="no">&times;</span>' : '';
 		}
@@ -59,8 +96,38 @@ class Helper_Workshop
 				break;
 			}
 		}
+		
+		if ( empty( $field->notes ) ) {
+			$note_icon	=	'<span class="f-nt f-nt0 icon-info-2 ui-state-disabled" data-placement="right"></span>';
+			$note_icon	.=	'<span class="icon-shuffle f-nt f-nt1 ui-state-disabled" data-placement="right"></span>';
+		} else {
+			$notes		=	json_decode( $field->notes, true );
+			$note_icon	=	'<span class="f-nt f-nt0 icon-info-2 ui-state-disabled hasTooltip" data-html="true" data-placement="right" title="'.htmlspecialchars( preg_replace( '/\\n/i', "<br />", $notes[0] ) ).'"></span>';
+			$note_icon	.=	'<span class="icon-shuffle f-nt f-nt1 ui-state-disabled hasTooltip" data-placement="right" title="'.( $notes[$user->id] ?? '' ).'"></span>';
 
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field.$f_lang.$f_tabgroup; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $type_suffix.$no; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+			if ( isset( $notes[0] ) ) {
+				$note	.=	'<textarea data-n class="hidden" name="ffp['.$field->name.'][notes][0]">'.$notes[0].'</textarea>';
+
+				unset( $notes[0] );
+			}
+			if ( isset( $notes[$user->id] ) ) {
+				$note	.=	'<input data-n type="hidden" name="ffp['.$field->name.'][notes]['.$user->id.']" value="'.$notes[$user->id].'" />';
+
+				unset( $notes[$user->id] );
+			}
+
+			foreach ( $notes as $k=>$n ) {
+				$note_attr	=	$project ? ' data-href="'.$project.(int)str_replace( '#', '', $n ).'"' : '';
+				$note_icon	.=	'<input type="hidden" name="ffp['.$field->name.'][notes]['.$k.']" value="'.$n.'" />';
+
+				if ( isset( $user_names[$k] ) ) {
+					$n	.=	' '.$user_names[$k];
+				}
+
+				$note_icon	.=	'<span class="icon-shuffle f-nt f-nt-1 ui-state-disabled hasTooltip qtip_cck" data-placement="right" title="'.$n.'"'.$note_attr.'></span>';
+			}
+		}
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field.$f_lang.$f_tabgroup; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><?php echo $note; ?><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $no.$note_icon.$type_suffix; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader

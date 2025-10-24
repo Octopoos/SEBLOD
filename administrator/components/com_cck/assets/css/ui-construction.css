@@ -182,7 +182,7 @@ ul.sortable li.position.p-yes{
 ul.sortable li.position.p-yes .no,
 ul.sortable li.field .no{color:#286ace; margin-left: 5px; font-size: 14px;}
 body.view-type ul.sortable li .no{display: none;}
-ul.sortable li.field .to {font-size: 23px; position: absolute; right: -16px; transform: scaleX(-1); top: 8px;}
+ul.sortable li.field .to {font-size: 23px; position: absolute; transform: scaleX(-1); top: 8px;}
 #sortable2 li.field .to{display: none;}
 
 ul.sortable .selector{background-color: #16396f !important;border-color: #16396f !important;}
