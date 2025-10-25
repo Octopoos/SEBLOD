@@ -13,10 +13,10 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class plgCCK_FieldGeneric_More
 {
-	protected static $type_field				=	'label, variation, variation_override, required, required_alert, validation, validation_options, link, link_options, live, live_options, live_value, markup, markup_class, typo, typo_label, typo_options, stage, access, restriction, restriction_options, computation, computation_options, conditional, conditional_options, position';
-	protected static $type_field_get			=	'c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.link, c.link_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position';
-	protected static $search_field				=	'label, variation, variation_override, required, required_alert, validation, validation_options, link, link_options, live, live_options, live_value, markup, markup_class, match_collection, match_mode, match_options, match_value, typo, typo_label, typo_options, stage, access, restriction, restriction_options, computation, computation_options, conditional, conditional_options, position';
-	protected static $search_field_get			=	'c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.link, c.link_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.typo, c.typo_label, c.typo_options, c.stage, c.access, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position';
+	protected static $type_field				=	'label, variation, variation_override, required, required_alert, validation, validation_options, link, link_options, live, live_options, live_value, markup, markup_class, typo, typo_label, typo_options, stage, access, notes, restriction, restriction_options, computation, computation_options, conditional, conditional_options, position';
+	protected static $type_field_get			=	'c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.link, c.link_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.stage, c.access, c.notes, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position';
+	protected static $search_field				=	'label, variation, variation_override, required, required_alert, validation, validation_options, link, link_options, live, live_options, live_value, markup, markup_class, match_collection, match_mode, match_options, match_value, typo, typo_label, typo_options, stage, access, notes, restriction, restriction_options, computation, computation_options, conditional, conditional_options, position';
+	protected static $search_field_get			=	'c.label as label2, c.variation, c.variation_override, c.required, c.required_alert, c.validation, c.validation_options, c.link, c.link_options, c.live, c.live_options, c.live_value, c.markup, c.markup_class, c.match_collection, c.match_mode, c.match_options, c.match_value, c.typo, c.typo_label, c.typo_options, c.stage, c.access, c.notes, c.restriction, c.restriction_options, c.computation, c.computation_options, c.conditional, c.conditional_options, c.position';
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 	
@@ -30,7 +30,16 @@ class plgCCK_FieldGeneric_More
 	public static function gm_getConstruction_Values_Type( $k, $params, $position, $client )
 	{
 		$db						=	JFactory::getDbo();
-		
+
+		if ( !isset( $params[$k]['notes'] ) ) {
+			$params[$k]['notes']	=	[];
+		}
+		if ( isset( $params[$k]['notes']['-1'] ) ) {
+			$params[$k]['notes'][JFactory::getUser()->id]	=	$params[$k]['notes']['-1'];
+
+			unset( $params[$k]['notes']['-1'] );
+		}
+
 		$label					=	( @$params[$k]['label'] != '' && ( $params[$k]['label'] != $params[$k]['label2'] ) ) ? $db->escape( $params[$k]['label'] ) : '';
 		$variation				=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
 		$variation_override		=	( @$params[$k]['variation_override'] != '' ) ? $db->escape( $params[$k]['variation_override'] ) : '';
@@ -50,6 +59,7 @@ class plgCCK_FieldGeneric_More
 		$typo_options			=	( @$params[$k]['typo_options'] != '' ) ? $db->escape( $params[$k]['typo_options'] ) : '';
 		$stage					=	( @$params[$k]['stage'] ) ? $params[$k]['stage'] : 0;
 		$access					=	( @$params[$k]['access'] != '' ) ? $params[$k]['access'] : 1;
+		$notes					=	( !empty( $params[$k]['notes'] ) ) ? $db->escape( json_encode( $params[$k]['notes'], JSON_FORCE_OBJECT ) ) : '';
 		$restriction			=	( @$params[$k]['restriction'] != '' ) ? $params[$k]['restriction'] : '';
 		$restriction_options	=	( @$params[$k]['restriction_options'] != '' ) ? $db->escape( $params[$k]['restriction_options'] ) : '';
 		$computation			=	( @$params[$k]['computation'] != '' ) ? $params[$k]['computation'] : '';
@@ -59,8 +69,8 @@ class plgCCK_FieldGeneric_More
 		
 		$values					=	'"'.$label.'", "'.$variation.'", "'.$variation_override.'", "'.$required.'", "'.$required_alert.'", "'.$validation.'", "'.$validation_options.'", '
 								.	'"'.$link.'", "'.$link_options.'", "'.$live.'", "'.$live_options.'", "'.$live_value.'", "'.$markup.'", "'.$markup_class.'", "'.$typo.'", "'.$typo_label.'", "'.$typo_options.'", '.$stage.', '
-								.	'"'.$access.'", "'.$restriction.'", "'.$restriction_options.'", "'.$computation.'", "'.$computation_options.'", "'.$conditional.'", "'.$conditional_options.'", "'.$position.'"';
-		
+								.	'"'.$access.'", "'.$notes.'", "'.$restriction.'", "'.$restriction_options.'", "'.$computation.'", "'.$computation_options.'", "'.$conditional.'", "'.$conditional_options.'", "'.$position.'"';
+
 		return $values;
 	}
 	
@@ -68,7 +78,16 @@ class plgCCK_FieldGeneric_More
 	public static function gm_getConstruction_Values_Search( $k, $params, $position )
 	{
 		$db						=	JFactory::getDbo();
-		
+
+		if ( !isset( $params[$k]['notes'] ) ) {
+			$params[$k]['notes']	=	[];
+		}
+		if ( isset( $params[$k]['notes']['-1'] ) ) {
+			$params[$k]['notes'][JFactory::getUser()->id]	=	$params[$k]['notes']['-1'];
+
+			unset( $params[$k]['notes']['-1'] );
+		}
+
 		$label					=	( @$params[$k]['label'] != '' && ( $params[$k]['label'] != $params[$k]['label2'] ) ) ? $db->escape( $params[$k]['label'] ) : '';
 		$variation				=	( @$params[$k]['variation'] != '' ) ? $params[$k]['variation'] : '';
 		$variation_override		=	( @$params[$k]['variation_override'] != '' ) ? $db->escape( $params[$k]['variation_override'] ) : '';
@@ -92,6 +111,7 @@ class plgCCK_FieldGeneric_More
 		$typo_options			=	( @$params[$k]['typo_options'] != '' ) ? $db->escape( $params[$k]['typo_options'] ) : '';
 		$stage					=	( @$params[$k]['stage'] ) ? $params[$k]['stage'] : 0;
 		$access					=	( @$params[$k]['access'] != '' ) ? $params[$k]['access'] : 1;
+		$notes					=	( !empty( $params[$k]['notes'] ) ) ? $db->escape( json_encode( $params[$k]['notes'], JSON_FORCE_OBJECT ) ) : '';
 		$restriction			=	( @$params[$k]['restriction'] != '' ) ? $params[$k]['restriction'] : '';
 		$restriction_options	=	( @$params[$k]['restriction_options'] != '' ) ? $db->escape( $params[$k]['restriction_options'] ) : '';
 		$computation			=	( @$params[$k]['computation'] != '' ) ? $params[$k]['computation'] : '';
@@ -101,7 +121,7 @@ class plgCCK_FieldGeneric_More
 		
 		$values					=	'"'.$label.'", "'.$variation.'", "'.$variation_override.'", "'.$required.'", "'.$required_alert.'", "'.$validation.'", "'.$validation_options.'", '
 								.	'"'.$link.'", "'.$link_options.'", "'.$live.'", "'.$live_options.'", "'.$live_value.'", "'.$markup.'", "'.$markup_class.'", "'.$match_collection.'", "'.$match_mode.'", "'.$match_options.'", ' 	
-								.	'"'.$match_value.'", "'.$typo.'", "'.$typo_label.'", "'.$typo_options.'", '.$stage.', "'.$access.'", "'.$restriction.'", "'.$restriction_options.'", "'.$computation.'", '
+								.	'"'.$match_value.'", "'.$typo.'", "'.$typo_label.'", "'.$typo_options.'", '.$stage.', "'.$access.'", "'.$notes.'", "'.$restriction.'", "'.$restriction_options.'", "'.$computation.'", '
 								.	'"'.$computation_options.'", "'.$conditional.'", "'.$conditional_options.'", "'.$position.'"';
 		
 		return $values;

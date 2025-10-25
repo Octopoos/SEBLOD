@@ -102,7 +102,7 @@ class Helper_Workshop
 			$note_icon	.=	'<span class="icon-shuffle f-nt f-nt1 ui-state-disabled" data-placement="right"></span>';
 		} else {
 			$notes		=	json_decode( $field->notes, true );
-			$note_icon	=	'<span class="f-nt f-nt0 icon-info-2 ui-state-disabled hasTooltip" data-html="true" data-placement="right" title="'.htmlspecialchars( preg_replace( '/\\n/i', "<br />", $notes[0] ) ).'"></span>';
+			$note_icon	=	'<span class="f-nt f-nt0 icon-info-2 ui-state-disabled hasTooltip" data-html="true" data-placement="right" title="'.( isset( $notes[0] ) && $notes[0] != '' ? htmlspecialchars( preg_replace( '/\\n/i', "<br />", $notes[0] ) ) : '' ).'"></span>';
 			$note_icon	.=	'<span class="icon-shuffle f-nt f-nt1 ui-state-disabled hasTooltip" data-placement="right" title="'.( $notes[$user->id] ?? '' ).'"></span>';
 
 			if ( isset( $notes[0] ) ) {

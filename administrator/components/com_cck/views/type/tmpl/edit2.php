@@ -57,8 +57,11 @@ $(document).ready(function() {
 				otherWindow.location = href;
 			}
 		} else {
-			var initiatorElement	=	$(this);
-			$('#collapseModal_note').data('initiator', initiatorElement).modal('show');	
+			var initiatorElement	=	this;
+            var modalElement = $('#collapseModal_note')[0];
+            var modal = new bootstrap.Modal(modalElement, { backdrop: true });
+			$(modalElement).data('initiator', initiatorElement);
+			if (modal) modal.show();	
 		}
 	});
 	$('#collapseModal_note').on("click", "#resetNote", function() {
@@ -74,7 +77,8 @@ $(document).ready(function() {
 			}
 			$("#"+el_id+" .f-nt"+nn).attr("data-original-title","");
 		}
-		$el.modal('hide');
+		var modal = bootstrap.Modal.getInstance($el[0]);
+		if (modal) modal.hide();
 	});
 	$('#collapseModal_note').on("click", "#submitNote", function() {
 		var $el = $('#collapseModal_note');
@@ -107,18 +111,19 @@ $(document).ready(function() {
 				$("#"+el_id+" .f-nt").tooltip({"html": true,"placement": "right"});
 			}
 		}
-		$el.modal('hide');
+		var modal = bootstrap.Modal.getInstance($el[0]);
+		if (modal) modal.hide();
 	});
-	$('#collapseModal_note').on('show', function (event) {
+	$('#collapseModal_note').on('show.bs.modal', function (event) {
 		var initiatorElement = $(this).data('initiator');
 
 		if (initiatorElement !== undefined) {
-			var $el = initiatorElement.parent().parent().parent();
+			var $el = $(initiatorElement).parent().parent().parent();
 			var el_id = $el[0].id;
 			var n = "";
 			var v = "";
 			
-			n = initiatorElement.hasClass("f-nt1") ? "input[data-n]" : "textarea[data-n]";
+			n = $(initiatorElement).hasClass("f-nt1") ? "input[data-n]" : "textarea[data-n]";
 			if ( $("#"+el_id+" "+n).length ) {
 				v = $("#"+el_id+" "+n).myVal();
 			}
@@ -127,21 +132,25 @@ $(document).ready(function() {
 			$("#collapseModal_note").attr("data-note", el_id);
 		}
 	});
-	$('#collapseModal_note').on('hidden', function () {
+	$('#collapseModal_note').on('hidden.bs.modal', function () {
 		$("#collapseModal_note").attr("data-note", "0");
 	});
 });
 })(jQuery);
 </script>
-<style>body .modal-backdrop{background:none!important;}</style>
+<style>body .modal-backdrop{background:none!important;} body .subhead .btn{box-shadow:none;} body .subhead a:not(:hover).btn > span {color: var(--subhead-btn-icon)!important} body .subhead a.btn > span {line-height: 22px!important;}</style>
 <div class="modal modal-small hide fade" id="collapseModal_note" data-note="0" data-n="">
-	<div class="modal-header" id="toolbarBox">
-		<a href="javascript:void(0);" id="closeNote" class="btn btn-small" data-dismiss="modal" aria-hidden="true"><span class="icon-unpublish"></span>Cancel</a>
-		<a href="javascript:void(0);" id="resetNote" class="btn btn-small"><span class="icon-refresh"></span>Reset</a>
-		<a href="javascript:void(0);" id="submitNote" class="btn btn-small"><span class="icon-save"></span>Save &amp; Close</a>
-    </div>
-	<div class="modal-body">
-		<textarea data-n class="input-xxlarge" id="f_note_textarea" cols="100" rows="3" maxlength="512"></textarea>
-		<input data-n class="input-small" type="text" id="f_note_input" value="" placeholder="#0" />
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header subhead" id="toolbarBox">
+				<a href="javascript:void(0);" id="submitNote" class="btn btn-small btn-success"><span class="icon-save"></span><?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?></a>
+				<a href="javascript:void(0);" id="resetNote" class="btn btn-small"><span class="icon-refresh"></span><?php echo JText::_( 'COM_CCK_RESET' ); ?></a>
+				<a href="javascript:void(0);" id="closeNote" class="btn btn-small btn-danger" data-bs-dismiss="modal" aria-hidden="true"><span class="icon-unpublish"></span><?php echo JText::_( 'COM_CCK_CANCEL' ); ?></a>
+		    </div>
+			<div class="modal-body">
+				<textarea data-n class="input-xxlarge" id="f_note_textarea" cols="100" rows="3" maxlength="512"></textarea>
+				<input data-n class="input-small" type="text" id="f_note_input" value="" placeholder="#0" />
+			</div>
+		</div>
 	</div>
 </div>
