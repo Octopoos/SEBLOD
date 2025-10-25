@@ -360,7 +360,7 @@ class JCckApp
 		if ( JCck::is( '7.0' ) ) { // UpSideDown
 			return base64_encode( $data );
 		} else {
-			return hex2bin( strlen( $data ) % 2 === 0 ? $data : "0$data" );
+			return strlen( $data ) % 2 === 0 ? hex2bin( $data ) : '';
 		}
 	}
 

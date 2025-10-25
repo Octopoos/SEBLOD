@@ -296,9 +296,9 @@ class CCK_Rendering
 		$this->config['rendering_id']	=	$this->id;
 		
 		// Legacy
-		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 		
-		if ( $legacy && $legacy <= 2018 ) {
+		if ( $legacy && $legacy <= 2024 ) {
 			$file2	=	$this->path.'/fields/'.$this->type.'/markup.php';
 			$file1	=	$this->path.'/fields/markup.php';
 

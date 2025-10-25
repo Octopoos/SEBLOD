@@ -123,9 +123,9 @@ class CCK_Rendering_Item
 		$this->methodRender	=	'onCCK_FieldRenderContent';
 
 		// Legacy
-		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 		
-		if ( $legacy && $legacy <= 2018 ) {
+		if ( $legacy && $legacy <= 2024 ) {
 			$this->markup	=	'legacy';
 		} else {
 			$this->markup	=	'';

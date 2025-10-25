@@ -144,6 +144,7 @@ abstract class JCckDevHelper
 			} else {
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
+				$lang_sef	=	'';
 
 				if ( !JFactory::getApplication()->isClient( 'administrator' ) ) {
 					$lang_sef	=	self::getLanguageCode( true );
