@@ -1683,3 +1683,5 @@ administrator/modules/mod_loginsupport/tmpl/default.php
 administrator/modules/mod_loginsupport/src/Dispatcher/Dispatcher.php
 administrator/modules/mod_loginsupport/services/provider.php
 administrator/modules/mod_loginsupport/mod_loginsupport.xml
+LICENSE
+README.md
