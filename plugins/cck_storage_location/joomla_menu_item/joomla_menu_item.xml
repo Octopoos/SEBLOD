@@ -22,8 +22,8 @@
 	</files>
 
 	<languages folder="languages">
-		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.sys.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_storage_location_joomla_menu_item.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_storage_location_joomla_menu_item.sys.ini</language>
 	</languages>
 
 	<config>

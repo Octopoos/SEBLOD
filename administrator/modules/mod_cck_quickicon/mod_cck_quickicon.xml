@@ -19,10 +19,10 @@
 	</files>
 	
 	<languages folder="languages">
-			<language tag="en-GB">en-GB/en-GB.mod_cck_quickicon.ini</language>
-			<language tag="en-GB">en-GB/en-GB.mod_cck_quickicon.sys.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.mod_cck_quickicon.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.mod_cck_quickicon.sys.ini</language>
+			<language tag="en-GB">en-GB/mod_cck_quickicon.ini</language>
+			<language tag="en-GB">en-GB/mod_cck_quickicon.sys.ini</language>
+			<language tag="fr-FR">fr-FR/mod_cck_quickicon.ini</language>
+			<language tag="fr-FR">fr-FR/mod_cck_quickicon.sys.ini</language>
 	</languages>
 	
 	<config />
