@@ -22,9 +22,12 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 4.6.0 Upgrade Release [25-Jul-2025] -------------
+--------------- 5.0.0 Release Candidate [30-Oct-2025] -------------
 
-
+^ "Legacy Mode" may be set to 2024 if needed:
+  >> For existing projects without any "Legacy Mode" until now, you may need to select "2024".
+  >> For existing projects using a "Legacy Mode" selected, you should keep it.
+^ "Legacy Mode" is no more 2012 by default within config.xml
 
 --------------- 4.5.2 Upgrade Release [14-Mar-2025] -------------
 
