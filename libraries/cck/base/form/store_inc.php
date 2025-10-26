@@ -23,6 +23,8 @@ $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
 $hash		=	JApplicationHelper::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
+$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '' );
+$legacy		=	$legacy && $legacy <= 2024 ? true : false;
 
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
@@ -78,7 +80,7 @@ if ( !$isNew ) {
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND type IN ("onCckPreBeforeStore","onCckPostBeforeStore","onCckPreAfterStore","onCckPostAfterStore") ORDER BY ordering', 'type' );
 }
 $storages	=	array();
 $config		=	array(
@@ -158,6 +160,10 @@ $parent		=	JCckDatabase::loadObject( 'SELECT parent as name, parent_inherit as i
 $target		=	$parent->inherit ? array( $preconfig['type'], $parent->name ) : $preconfig['type'];
 $fields		=	CCK_Form::getFields( $target, $preconfig['client'], $stage, '', true );
 
+if ( $parent->inherit && $parent->name ) {
+	$config['type_parent']	=	$parent->name;
+}
+
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Context
 
 if ( isset( $config['Itemid'] ) && $config['Itemid'] ) {
@@ -200,6 +206,16 @@ $session->clear( 'cck_hash_'.$unique.'_context' );
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Store
 
 if ( count( $fields ) ) {
+	// if ( $type->storage_location && $type->storage_location != 'none' ) {
+	// 	$properties					=	array( 'key_field' );
+	// 	$properties					=	JCck::callFunc( 'plgCCK_Storage_Location'.$type->storage_location, 'getStaticProperties', $properties );
+	// 	$properties['key_field']	=	CCK_Form::getField( $properties['key_field'], $type->name );
+
+	// 	if ( is_object( $properties['key_field'] ) ) {
+	// 		array_unshift( $fields, $properties['key_field'] );
+	// 	}
+	// }
+
 	foreach ( $fields as $field ) {
 		$field->state	=	'';
 		$toBeChecked	=	false;
@@ -317,10 +333,16 @@ if ( $config['validate'] ) {
 $event	=	'onCckPreBeforeStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
-			
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
+
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
@@ -347,12 +369,23 @@ if ( $config['validate'] ) {
 $event	=	'onCckPostBeforeStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
+}
+
+// Stop here if an error occurred
+if ( $config['error'] !== false ) {
+	return $config;
 }
 
 // Store
@@ -379,10 +412,16 @@ if ( (int)$config['pk'] > 0 ) {
 $event	=	'onCckPreAfterStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
@@ -398,10 +437,16 @@ if ( isset( $config['process']['afterStore'] ) && count( $config['process']['aft
 $event	=	'onCckPostAfterStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
