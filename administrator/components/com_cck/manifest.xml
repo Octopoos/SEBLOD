@@ -38,18 +38,18 @@
 	</files>
 	
 	<languages folder="site/languages">
-		<language tag="en-GB">en-GB/en-GB.com_cck.ini</language>
-		<language tag="en-GB">en-GB/en-GB.com_cck_default.ini</language>
-		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_article.ini</language>
-		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_category.ini</language>
-		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_user.ini</language>
-		<language tag="en-GB">en-GB/en-GB.pkg_app_cck_joomla_user_group.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.com_cck.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.com_cck_default.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_article.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_category.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_user.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.pkg_app_cck_joomla_user_group.ini</language>
+		<language tag="en-GB">en-GB/com_cck.ini</language>
+		<language tag="en-GB">en-GB/com_cck_default.ini</language>
+		<language tag="en-GB">en-GB/pkg_app_cck_joomla_article.ini</language>
+		<language tag="en-GB">en-GB/pkg_app_cck_joomla_category.ini</language>
+		<language tag="en-GB">en-GB/pkg_app_cck_joomla_user.ini</language>
+		<language tag="en-GB">en-GB/pkg_app_cck_joomla_user_group.ini</language>
+		<language tag="fr-FR">fr-FR/com_cck.ini</language>
+		<language tag="fr-FR">fr-FR/com_cck_default.ini</language>
+		<language tag="fr-FR">fr-FR/pkg_app_cck_joomla_article.ini</language>
+		<language tag="fr-FR">fr-FR/pkg_app_cck_joomla_category.ini</language>
+		<language tag="fr-FR">fr-FR/pkg_app_cck_joomla_user.ini</language>
+		<language tag="fr-FR">fr-FR/pkg_app_cck_joomla_user_group.ini</language>
 	</languages>
 	
 	<administration>
@@ -74,12 +74,12 @@
 		</files>
 		
 		<languages folder="admin/languages">
-			<language tag="en-GB">en-GB/en-GB.com_cck.ini</language>
-			<language tag="en-GB">en-GB/en-GB.com_cck.sys.ini</language>
-			<language tag="en-GB">en-GB/en-GB.com_cck_core.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.com_cck.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.com_cck.sys.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.com_cck_core.ini</language>
+			<language tag="en-GB">en-GB/com_cck.ini</language>
+			<language tag="en-GB">en-GB/com_cck.sys.ini</language>
+			<language tag="en-GB">en-GB/com_cck_core.ini</language>
+			<language tag="fr-FR">fr-FR/com_cck.ini</language>
+			<language tag="fr-FR">fr-FR/com_cck.sys.ini</language>
+			<language tag="fr-FR">fr-FR/com_cck_core.ini</language>
 		</languages>
 	</administration>	
 	

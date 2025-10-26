@@ -24,10 +24,10 @@
 	</files>
 	
 	<languages folder="languages">
-		<language tag="en-GB">en-GB/en-GB.plg_cck_field_upload_file.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_cck_field_upload_file.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_upload_file.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_upload_file.sys.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_field_upload_file.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_field_upload_file.sys.ini</language>
+		<language tag="fr-FR">fr-FR/plg_cck_field_upload_file.ini</language>
+		<language tag="fr-FR">fr-FR/plg_cck_field_upload_file.sys.ini</language>
 	</languages>
 	
 	<config>

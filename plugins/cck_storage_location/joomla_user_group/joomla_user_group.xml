@@ -22,10 +22,10 @@
 	</files>
 	
 	<languages folder="languages">
-		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_user_group.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_cck_storage_location_joomla_user_group.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_storage_location_joomla_user_group.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_storage_location_joomla_user_group.sys.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_storage_location_joomla_user_group.ini</language>
+		<language tag="en-GB">en-GB/plg_cck_storage_location_joomla_user_group.sys.ini</language>
+		<language tag="fr-FR">fr-FR/plg_cck_storage_location_joomla_user_group.ini</language>
+		<language tag="fr-FR">fr-FR/plg_cck_storage_location_joomla_user_group.sys.ini</language>
 	</languages>
 	
 	<config>

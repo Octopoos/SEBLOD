@@ -19,10 +19,10 @@
 	</files>
 	
 	<languages folder="languages">
-		<language tag="en-GB">en-GB/en-GB.mod_cck_breadcrumbs.ini</language>
-		<language tag="en-GB">en-GB/en-GB.mod_cck_breadcrumbs.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.mod_cck_breadcrumbs.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.mod_cck_breadcrumbs.sys.ini</language>
+		<language tag="en-GB">en-GB/mod_cck_breadcrumbs.ini</language>
+		<language tag="en-GB">en-GB/mod_cck_breadcrumbs.sys.ini</language>
+		<language tag="fr-FR">fr-FR/mod_cck_breadcrumbs.ini</language>
+		<language tag="fr-FR">fr-FR/mod_cck_breadcrumbs.sys.ini</language>
 	</languages>
 	
 	<config>
