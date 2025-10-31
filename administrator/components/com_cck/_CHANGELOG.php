@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Release Candidate [30-Oct-2025] -------------
+
+
+
 --------------- 5.0.0 Release Candidate [30-Oct-2025] -------------
 
 ^ "Legacy Mode" may be set to 2024 if needed:
