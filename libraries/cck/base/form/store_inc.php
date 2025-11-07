@@ -206,15 +206,15 @@ $session->clear( 'cck_hash_'.$unique.'_context' );
 // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare Store
 
 if ( count( $fields ) ) {
-	// if ( $type->storage_location && $type->storage_location != 'none' ) {
-	// 	$properties					=	array( 'key_field' );
-	// 	$properties					=	JCck::callFunc( 'plgCCK_Storage_Location'.$type->storage_location, 'getStaticProperties', $properties );
-	// 	$properties['key_field']	=	CCK_Form::getField( $properties['key_field'], $type->name );
+	if ( $type->storage_location && $type->storage_location != 'none' ) {
+		$properties					=	array( 'key_field' );
+		$properties					=	JCck::callFunc( 'plgCCK_Storage_Location'.$type->storage_location, 'getStaticProperties', $properties );
+		$properties['key_field']	=	CCK_Form::getField( $properties['key_field'], $type->name );
 
-	// 	if ( is_object( $properties['key_field'] ) ) {
-	// 		array_unshift( $fields, $properties['key_field'] );
-	// 	}
-	// }
+		if ( is_object( $properties['key_field'] ) ) {
+			array_unshift( $fields, $properties['key_field'] );
+		}
+	}
 
 	foreach ( $fields as $field ) {
 		$field->state	=	'';

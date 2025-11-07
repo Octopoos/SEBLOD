@@ -113,6 +113,7 @@ $config	=	array(
 					'formId'=>$preconfig['formId'],
 					'isNew'=>$isNew,
 					'javascript'=>'',
+				   	'id'=>0,
 					'pk'=>$id,
 					'submit'=>$preconfig['submit'],
 					'storages'=>array(),
@@ -230,6 +231,16 @@ JPluginHelper::importPlugin( 'cck_field_validation' );
 if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );
+
+	if ( $id && $type->storage_location ) {
+		$properties					=	array( 'key_field' );
+		$properties					=	JCck::callFunc( 'plgCCK_Storage_Location'.$type->storage_location, 'getStaticProperties', $properties );
+		$properties['key_field']	=	CCK_Form::getField( $properties['key_field'], $type->name );
+
+		if ( is_object( $properties['key_field'] ) ) {
+			array_unshift( $fields, $properties['key_field'] );
+		}
+	}
 }
 
 // Validation
@@ -324,6 +335,11 @@ foreach ( $fields as $field ) {
 	if ( $config['error'] ) {
 		break;
 	}
+}
+
+// Fix
+if ( isset( $properties['key_field'] ) && $properties['key_field'] ) {
+	unset( $fields[0] );
 }
 
 // Merge
