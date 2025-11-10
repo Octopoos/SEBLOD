@@ -880,7 +880,7 @@ class plgSystemCCK extends JPlugin
 				}
 			}
 
-			if ( count( $language_codes ) ) {
+			if ( count( $language_codes ) && JCckDevHelper::getLanguageCode( true ) !== '' ) {
 				foreach ( $api_paths as $api_path ) {
 					foreach ( $language_codes as $sef ) {
 						$path	=	$sef.'/'.$api_path->path.'/';
@@ -891,14 +891,13 @@ class plgSystemCCK extends JPlugin
 						}
 					}
 				}	
-			} else {
-				foreach ( $api_paths as $api_path ) {
-					$path	=	$prefix.'/'.$api_path->path.'/';
-					$pos	=	strpos( $base_path, $path );
+			}
+			foreach ( $api_paths as $api_path ) {
+				$path	=	$prefix.'/'.$api_path->path.'/';
+				$pos	=	strpos( $base_path, $path );
 
-					if ( $pos !== false && $pos == 0 ) {
-						return true;
-					}
+				if ( $pos !== false && $pos == 0 ) {
+					return true;
 				}
 			}
 		}
