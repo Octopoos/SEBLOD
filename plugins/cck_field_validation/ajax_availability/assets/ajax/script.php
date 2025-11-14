@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Init
-$app		=	JFactory::getApplication();
+$app		=	Factory::getApplication();
 $res		=	array( 0=>$app->input->get( 'fieldId', '' ) );
 $value		=	$app->input->getString( 'fieldValue', '' );
 $value		=	str_replace( array( '%26lt;', '%26gt;', '%27' ), array( '<', '>', "'" ), $value );

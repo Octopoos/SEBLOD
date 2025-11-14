@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Rendering
 class CCK_Rendering
 {
@@ -19,12 +26,12 @@ class CCK_Rendering
 	// getInstance
 	public static function getInstance( $template = '' )
 	{
-		if ( $template == JFactory::getApplication()->getTemplate() ) {
+		if ( $template == Factory::getApplication()->getTemplate() ) {
 			print( 'You should NOT set "'.$template.'" as Default Template.' );
 			die;
 		}
 
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$instance	=	'instance';
 
     	if ( isset( $app->cck_idx ) && $app->cck_idx[0] !== false ) {
@@ -130,8 +137,8 @@ class CCK_Rendering
 		$desc	=	'';
 		
 		if ( $desc != '' ) {
-			JPluginHelper::importPlugin( 'content' );	
-			$desc	=	JHtml::_( 'content.prepare', $desc );
+			PluginHelper::importPlugin( 'content' );	
+			$desc	=	HTMLHelper::_( 'content.prepare', $desc );
 		}
 		
 		return $desc;
@@ -157,7 +164,7 @@ class CCK_Rendering
 	public function init() { $this->initialize(); }
 	public function initialize()
 	{	
-		$app				=	JFactory::getApplication();
+		$app				=	Factory::getApplication();
 		
 		$idx				=	'_';
 		if ( isset( $app->cck_idx ) ) {
@@ -194,7 +201,7 @@ class CCK_Rendering
 		$this->positions2	=	array();
 		$this->positions_m	=	$me->positions_more;
 		
-		$this->base			=	JUri::root( true );
+		$this->base			=	Uri::root( true );
 		$this->css			=	'';
 		$this->js			=	'';
 		$this->profiler		=	@$me->profiler;
@@ -234,7 +241,7 @@ class CCK_Rendering
 		$this->item_attributes	=	( isset( $this->params['rendering_item_attributes'] ) && $this->params['rendering_item_attributes'] ) ? ' '.$this->params['rendering_item_attributes'].' ' : '';
 
 		if ( $this->initRendering() === false ) {
-			$app	=	JFactory::getApplication();
+			$app	=	Factory::getApplication();
 			$app->enqueueMessage( 'Oops! Template Init. failed.. ; (', 'error' );
 			return false;
 		}
@@ -248,7 +255,7 @@ class CCK_Rendering
 		$base	=	true;
 		$css	=	$this->getStyleParam( 'rendering_css_core' );
 		$css	=	(int)( ( $css != '' ) ? $css : JCck::getConfig_Param( 'css_core', '1' ) );
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		if ( !$css ) {
 			return;
 		} elseif ( $css < 0 ) {
@@ -355,8 +362,8 @@ class CCK_Rendering
 	// finalize
 	public function finalize()
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		$js		=	'';
 		$tmpl	=	$app->input->get( 'tmpl' );
 
@@ -364,7 +371,7 @@ class CCK_Rendering
 		if ( $this->mode == 'form' && $this->config['doComputation'] ) {
 			$format	=	JCck::getConfig_Param( 'computation_format', 0 );
 			if ( !$format  ) {
-				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
+				$format	=	Text::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
 			$doc->addScript( $this->base.'/media/cck/js/cck.calculation-3.20.0.min.js' );
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
@@ -591,7 +598,7 @@ class CCK_Rendering
 		}
 		if ( $field->display && $field->markup != 'clear' ) {
 			if ( ! $options ) {
-				$options	=	new JRegistry;
+				$options	=	new Registry;
 			}
 			$markup						=	$options->get( 'field_markup', '' );
 			$this->config['markup']		=	$markup;
@@ -647,7 +654,7 @@ class CCK_Rendering
 							if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) ) {
 								if ( $field->description != '' ) {
 									if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) == 5 ) {
-										JHtml::_( 'bootstrap.popover', '.hasPopover', array( 'container'=>'body', 'html'=>true, 'trigger'=>'hover' ) );
+										HTMLHelper::_( 'bootstrap.popover', '.hasPopover', array( 'container'=>'body', 'html'=>true, 'trigger'=>'hover' ) );
 										$desc	=	'<div class="hasPopover" data-placement="top" data-animation="false" data-content="'.htmlspecialchars( $field->description ).'" title="'.htmlspecialchars( $field->label ).'"><span class="icon-help"></span></div>';
 									} else {
 										$desc	=	$field->description;
@@ -715,7 +722,7 @@ class CCK_Rendering
 	// setComputationRules
 	public function setComputationRules( &$field )
 	{
-		$computation			=	new JRegistry;
+		$computation			=	new Registry;
 		$computation->loadString( $field->computation_options );
 		$computation_options	=	$computation->toObject();
 		
@@ -884,7 +891,7 @@ class CCK_Rendering
 		}
 		
 		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
 			$options	=	$this->loadDefaultOptions( $variation );
@@ -925,7 +932,7 @@ class CCK_Rendering
 	// renderPositions
 	public function renderPositions( $position = '', $variation = '', $n = 0, $w = '', $h = '' )
 	{
-		$doc		=	JFactory::getDocument();
+		$doc		=	Factory::getDocument();
 		$html		=	'';
 		$positions	=	array();
 
@@ -971,7 +978,7 @@ class CCK_Rendering
 		}
 		if ( $variation ) {
 			$legend		=	'';	/* TODO#SEBLOD: */
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 			$html		=	$this->renderVariation( $variation, $legend, $html, $options, $position.'_line', '', false );
 		}
 		if ( $html != '' ) {
@@ -1005,7 +1012,7 @@ class CCK_Rendering
 		}
 
 		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
-			$variation->options	=	new JRegistry;
+			$variation->options	=	new Registry;
 			$variation->options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
 			$variation->options	=	$this->loadDefaultOptions( $variation );
@@ -1018,7 +1025,7 @@ class CCK_Rendering
 	protected function loadDefaultOptions( $variation )
 	{
 		if ( !$variation ) {
-			return new JRegistry;
+			return new Registry;
 		}
 		$file		=	'variations/'.$variation.'/default.json';
 		
@@ -1027,10 +1034,10 @@ class CCK_Rendering
 		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
 			$file	=	$this->path_lib.'/'.$file;
 		} else {
-			return new JRegistry;
+			return new Registry;
 		}
 
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadFile( $file );
 
 		/* TODO#SEBLOD4: cache per variation */
@@ -1053,10 +1060,10 @@ class CCK_Rendering
 			global $user;
 			static $loaded	=	array();
 			$id				=	$this->id.'_'.$position;
-			$app			=	JFactory::getApplication();
+			$app			=	Factory::getApplication();
 			$cck			=	&$this;
 			$css			=	'';
-			$doc			=	JFactory::getDocument();
+			$doc			=	Factory::getDocument();
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
@@ -1064,8 +1071,8 @@ class CCK_Rendering
 					$legend	=	trim( $legend );
 					$key	=	'COM_CCK_' . str_replace( ' ', '_', $legend );
 
-					if ( JFactory::getLanguage()->hasKey( $key ) ) {
-						$legend	=	JText::_( $key );
+					if ( Factory::getLanguage()->hasKey( $key ) ) {
+						$legend	=	Text::_( $key );
 					}
 				}
 			}
@@ -1114,10 +1121,10 @@ class CCK_Rendering
 				}
 			} elseif ( is_string( $options ) ) {
 				$options2	=	$options;
-				$options	=	new JRegistry;
+				$options	=	new Registry;
 				$options->loadString( $options2 );
 			} /* else {
-				$options				=	new JRegistry;
+				$options				=	new Registry;
 				$orientation			=	'vertical';
 				$hasOptions				=	false;
 				$field_label_width		=	'145px';
@@ -1254,7 +1261,7 @@ class CCK_Rendering
 	// isLoadingMore
 	public function isLoadingMore()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $app->input->get( 'format' ) == 'raw' ) {
 			$infinite	=	$app->input->getInt( 'infinite' );
@@ -1310,7 +1317,7 @@ class CCK_Rendering
 	{
 		if ( $height ) {
 			$class	=	( $class ) ? ' .'.$class : '';
-			JFactory::getDocument()->addStyleDeclaration( '#'.$id.$class.' '.$markup.'{height:'.$height.';}' );
+			Factory::getDocument()->addStyleDeclaration( '#'.$id.$class.' '.$markup.'{height:'.$height.';}' );
 		}
 	}
 	
@@ -1324,7 +1331,7 @@ class CCK_Rendering
 						);
 		$options	=	array();
 
-		JFactory::getDocument()->addScript( $url, $options, $attribs );
+		Factory::getDocument()->addScript( $url, $options, $attribs );
 	}
 
 	// addScriptDeclaration
@@ -1336,7 +1343,7 @@ class CCK_Rendering
 			} elseif ( $event == 'load' ) {
 				$js	=	'(function ($){$(window).load(function(){'.$js.'});})(jQuery);';
 			}
-			JFactory::getDocument()->addScriptDeclaration( $js );
+			Factory::getDocument()->addScriptDeclaration( $js );
 		}
 	}
 
@@ -1352,14 +1359,14 @@ class CCK_Rendering
 			$attribs['type']	=	$type;
 		}
 
-		JFactory::getDocument()->addStyleSheet( $url, $options, $attribs );
+		Factory::getDocument()->addStyleSheet( $url, $options, $attribs );
 	}
 
 	// addStyleDeclaration
 	public function addStyleDeclaration( $css )
 	{
 		if ( $css ) {
-			JFactory::getDocument()->addStyleDeclaration( $css );
+			Factory::getDocument()->addStyleDeclaration( $css );
 		}
 	}
 

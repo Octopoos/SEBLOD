@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 // JCckProcessing
@@ -121,13 +122,13 @@ class JCckProcessing
 	// isApi
 	public function isApi()
 	{
-		return (bool)JFactory::getApplication()->input->getInt( 'cck_is_api', 0 );
+		return (bool)Factory::getApplication()->input->getInt( 'cck_is_api', 0 );
 	}
 
 	// isJob
 	public function isJob()
 	{
-		return (bool)JFactory::getApplication()->input->getInt( 'cck_is_job', 0 );
+		return (bool)Factory::getApplication()->input->getInt( 'cck_is_job', 0 );
 	}
 
 	// isNew
@@ -433,7 +434,7 @@ class JCckProcessing
 	{
 		// if ( isset( $this->_data['config']['stage'] ) && (int)$this->_data['config']['stage'] == -1 ) {
 		// JCckDev::aa( $this->_data['config'], '@'.$this->getType().' '.$this->getPk() );
-		JFactory::getSession()->set( 'cck.data_layer', $data );
+		Factory::getSession()->set( 'cck.data_layer', $data );
 	}
 
 	// setTmp

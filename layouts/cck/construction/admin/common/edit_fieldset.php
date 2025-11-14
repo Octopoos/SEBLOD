@@ -1,6 +1,8 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 echo '<div class="row-pane"><div class="row">';
 echo '<div class="col-12">';
 
@@ -8,7 +10,7 @@ foreach ( $displayData['form'] as $k=>$form ) {
 	if ( isset( $form['legend'] ) && $form['legend'] ) {
 		$legend	=	$form['legend'];
 	} else {
-		$legend	=	JText::_( 'COM_CCK_SETTINGS' );
+		$legend	=	Text::_( 'COM_CCK_SETTINGS' );
 	}
 
 	$legend	=	'<legend>'.$legend.'</legend>';

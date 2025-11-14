@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -154,16 +156,16 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 						$val	=	$opt[1];
 					}
 					if ( $field->bool8 && trim( $text ) != '' ) {
-						$text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					if ( $attrib ) {
 						$attr['attr']	=	'';
 						foreach ( $attribs as $k=>$a ) {
 							$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 						}
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, $attr );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, $attr );
 					} else {
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 					}
 					$options[]			=	$text.'='.$val;
 				}
@@ -246,7 +248,7 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 			$checked	=	( $count == $count2 ? '1' : '' ) ? 'checked="checked" ' : '';
 			$attr		=	'onclick="Joomla.checkAll(this,\''.$id.'\');"';
 			$check_all	=	'<input type="checkbox" id="'.$id.'_toggle'.'" name="'.$name.'_toggle" value="" '.$checked.$attr.' />'
-						.	'<label for="'.$id.'_toggle">'.JText::_( 'COM_CCK_CHECK_ALL' ).'</label>';
+						.	'<label for="'.$id.'_toggle">'.Text::_( 'COM_CCK_CHECK_ALL' ).'</label>';
 			if ( $field->bool && $field->bool2 > 1 && $count > 1 ) {
 				$check_all	=	'<div class="cck-clrfix">'.$check_all.'</div>';
 			}

@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+
 if ( $show_list_title ) {
 	$tag		=	$tag_list_title;
 	$class		=	trim( $class_list_title );
@@ -17,7 +21,7 @@ if ( $show_list_title ) {
 	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
 }
 if ( $description != '' ) {
-	$description	=	JHtml::_( 'content.prepare', $description );
+	$description	=	HTMLHelper::_( 'content.prepare', $description );
 
 	if ( !( $tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
 		$tag_desc	=	'div';
@@ -42,7 +46,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $config['validat
 <?php echo $config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $config['action'] ) ? $config['action'] : '<form action="'.( $action_url ? $action_url : JRoute::_( 'index.php?option=com_cck'.$action_vars ) ).'" autocomplete="off" method="get" id="'.$formId.'" name="'.$formId.'">';
+echo ( $config['action'] ) ? $config['action'] : '<form action="'.( $action_url ? $action_url : Route::_( 'index.php?option=com_cck'.$action_vars ) ).'" autocomplete="off" method="get" id="'.$formId.'" name="'.$formId.'">';
 echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">' . $form . '</div>';
 ?>
 <?php if ( !$raw_rendering ) { ?>
@@ -51,7 +55,7 @@ echo ( $raw_rendering ) ? $form : '<div class="cck_module_search'.$class_sfx.'">
 <?php } ?>
 <input type="hidden" name="search" value="<?php echo $preconfig['search']; ?>" data-cck-keep-for-search="" />
 <input type="hidden" name="task" value="search" />
-<?php if ( !JFactory::getConfig()->get( 'sef' ) ) { ?>
+<?php if ( !Factory::getConfig()->get( 'sef' ) ) { ?>
 <input type="hidden" name="option" value="com_cck" />
 <input type="hidden" name="view" value="list" />
 <?php if ( $params->get( 'menu_item', '' ) ) { ?>

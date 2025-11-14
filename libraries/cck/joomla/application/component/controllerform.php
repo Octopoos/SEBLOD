@@ -9,10 +9,13 @@
 
 defined('JPATH_PLATFORM') or die;
 
-jimport( 'joomla.application.component.controllerform' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
 
 // CCK_ControllerForm
-class CCK_ControllerForm extends JControllerForm
+class CCK_ControllerForm extends FormController
 {
 	/**
 	 * Method to save a record.
@@ -26,7 +29,7 @@ class CCK_ControllerForm extends JControllerForm
 	 */
 	public function save($key = null, $urlVar = null)
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$brb	=	$app->input->post->get( 'brb' );
 		
 		if ( $brb ) {
@@ -48,11 +51,11 @@ class CCK_ControllerForm extends JControllerForm
 	 */
 	public function save2($key = null, $urlVar = null, $brb = '')
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		// Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 
 		// Initialise variables.
-		$app = JFactory::getApplication();
-		$lang = JFactory::getLanguage();
+		$app = Factory::getApplication();
+		$lang = Factory::getLanguage();
 		$model = $this->getModel();
 		$table = $model->getTable();
 		$data  = $app->input->post->get('jform', array(), 'array');
@@ -77,11 +80,11 @@ class CCK_ControllerForm extends JControllerForm
 		if (!$this->checkEditId($context, $recordId))
 		{
 			// Somehow the person just went to the form and tried to save it. We don't allow that.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $recordId));
+			$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $recordId));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -96,11 +99,11 @@ class CCK_ControllerForm extends JControllerForm
 		// Access check.
 		if (!$this->allowSave($data, $key))
 		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -147,7 +150,7 @@ class CCK_ControllerForm extends JControllerForm
 
 			// Redirect back to the edit screen.
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -163,11 +166,11 @@ class CCK_ControllerForm extends JControllerForm
 			$app->setUserState($context . '.data', $validData);
 
 			// Redirect back to the edit screen.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
+			$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -183,11 +186,11 @@ class CCK_ControllerForm extends JControllerForm
 			$app->setUserState($context . '.data', $validData);
 
 			// Check-in failed, so go back to the record and display a notice.
-			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+			$this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
 			$this->setMessage($this->getError(), 'error');
 
 			$this->setRedirect(
-				JRoute::_(
+				Route::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -213,7 +216,7 @@ class CCK_ControllerForm extends JControllerForm
 
 		// Redirect back to the edit screen.
 		$this->setRedirect(
-			JRoute::_(
+			Route::_(
 				'index.php?option=' . $this->option . '&view=' . $this->view_item
 				. $this->getRedirectToItemAppend($recordId, $key), false
 				)
@@ -237,7 +240,7 @@ class CCK_ControllerForm extends JControllerForm
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$tmpl = $app->input->get('tmpl');
 		$layout = $app->input->get('layout', 'edit');
 		$append = '';

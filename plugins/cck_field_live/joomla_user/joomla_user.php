@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\User\User;
+
 // Plugin
 class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 {
@@ -36,13 +39,13 @@ class plgCCK_Field_LiveJoomla_User extends JCckPluginLive
 
 		if ( $property ) {
 			if ( $mode == 'session' ) {
-				$live	=	JFactory::getApplication()->getUserState( $property, $default );
+				$live	=	Factory::getApplication()->getUserState( $property, $default );
 			} else {
 				$user	=	JCck::getUser();
 				
 				if ( $user->id > 0 && $user->guest == 1 ) {
 					if ( !( $property == 'ip' || $property == 'session_id' || $property == 'access' ) ) {
-						$user	=	new JUser( 0 );
+						$user	=	new User( 0 );
 					}
 				}
 				if ( $property == 'access' ) {

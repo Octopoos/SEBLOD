@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $data2      =   array(
                     'construction'=>array(
@@ -33,7 +35,7 @@ if ( isset( $data2['construction'] ) && count( $data2['construction'] ) ) {
             foreach ( $v as $k2=>$v2 ) {
                 if ( $k2 != '_' ) {
                     if ( is_array( $v2 ) && count( $v2 ) ) {
-                        echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide form-select md" data-type="'.$k.'"', 'value', 'text', '' );
+                        echo HTMLHelper::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin hide form-select md" data-type="'.$k.'"', 'value', 'text', '' );
                     }
                 }
             }

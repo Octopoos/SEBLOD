@@ -10,14 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Joomla\String\StringHelper;
 
-$app		=	JFactory::getApplication();
+$app		=	Factory::getApplication();
 $base		=	'index.php?option=com_cck&view=form';
-$doc		=	JFactory::getDocument();
-$lang		=	JFactory::getLanguage();
+$doc		=	Factory::getDocument();
+$lang		=	Factory::getLanguage();
 $type		=	'';
-$user		=	JFactory::getUser();
+$user		=	Factory::getUser();
 if ( isset( $params['quickadd'] ) && $params['quickadd'] == 1 ) {
 	$legacy	=	0;
 	$url	=	'none';
@@ -26,19 +30,19 @@ if ( isset( $params['quickadd'] ) && $params['quickadd'] == 1 ) {
 	$url	=	'';
 }
 $items		=	JCckDevIntegration::getForms( $url, $type );
-$doc->addStyleSheet( JUri::root( true ).'/administrator/components/com_cck/assets/css/cpanel.css' );
+$doc->addStyleSheet( Uri::root( true ).'/administrator/components/com_cck/assets/css/cpanel.css' );
 $target_id	=	( isset( $target_id ) ) ? $target_id : 'collapseModal2';
 
 if ( $legacy == 1 ) {
 	$legend		=	'';
-	$legend		=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND1',
-									'<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ).'</a>' );
+	$legend		=	Text::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND1',
+									'<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.Text::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ).'</a>' );
 	$legend2	=	'';
 } elseif ( $legacy == 2 ) {
-	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
-	$legend2	=	JText::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND2', '<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.StringHelper::strtolower( JText::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
+	$legend		=	Text::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
+	$legend2	=	Text::sprintf( 'LIB_CCK_INTEGRATION_MODAL_BOX_LEGEND2', '<a id="joomla-standard-content" href="'.$options->get( 'add_alt_link' ).'">'.StringHelper::strtolower( Text::_( 'LIB_CCK_INTEGRATION_CLICK_HERE' ) ).'</a>' );
 } else {
-	$legend		=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
+	$legend		=	Text::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
 	$legend2	=	'';
 }
 $doc->addStyleDeclaration( 'div.modal-footer a.pull-left{position:relative; top:8px;}' );
@@ -59,7 +63,7 @@ $doc->addStyleDeclaration( 'div.modal-footer a.pull-left{position:relative; top:
 					$lang->load( 'pkg_app_cck_'.$item->folder_app, JPATH_SITE, null, false, false );
 					$link	=	$base.'&type='.$item->name.$variables;
 					if ( $lang->hasKey( $key ) == 1 ) {
-						$text	=	JText::_( $key );
+						$text	=	Text::_( $key );
 					} else {
 						$text	=	$item->title;
 					}
@@ -68,7 +72,7 @@ $doc->addStyleDeclaration( 'div.modal-footer a.pull-left{position:relative; top:
 		            <div class="icon">
 		                <a href="<?php echo $link; ?>" target="_parent">
 		                    <?php
-		                    $img	=	JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+		                    $img	=	HTMLHelper::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
 		                    
 							echo str_replace( '<img ', '<img width="32" height="32" ', $img );
 		                    ?>
@@ -84,10 +88,10 @@ $doc->addStyleDeclaration( 'div.modal-footer a.pull-left{position:relative; top:
 	</div>
 	<div class="modal-footer">
 		<a href="javascript:void(0);" class="btn btn-mini btn-success pull-left" onclick="window.open('https://www.seblod.com/store/extensions/applications/', '_blank'); return false;" rel="noopener noreferrer">
-			<?php echo JText::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
+			<?php echo Text::_( 'LIB_CCK_INTEGRATION_GET_MORE_APPS' ); ?>
 		</a>
 		<button class="btn" type="button" data-dismiss="modal">
-			<?php echo JText::_( 'JCANCEL' ); ?>
+			<?php echo Text::_( 'JCANCEL' ); ?>
 		</button>
 	</div>
 </div>

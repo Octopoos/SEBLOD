@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
+
 // Init
 if ( isset( $this ) && isset( $this->config ) ) {
 	$config		=	&$this->config;
@@ -17,7 +20,7 @@ if ( isset( $this ) && isset( $this->config ) ) {
 
 // Prepare
 $item->password	=	'';
-$item->params	=	is_object( $params ) ? clone $params : new JRegistry;
+$item->params	=	is_object( $params ) ? clone $params : new Registry;
 if ( !$loaded ) {
 	if ( $item->params->get( 'link_titles' ) ) {
 	 	$items	=	JCckDatabase::loadObjectList( 'SELECT a.id, a.language, b.title AS category_title, b.alias AS category_alias'
@@ -49,7 +52,7 @@ if ( $plg_params->get( 'bridge' ) ) {
 			$class	=	$class ? ' class="'.$class.'"' : '';
 			echo '<'.$tag.$class.'>'. ( ( $item->params->get( 'link_titles' ) ) ? '<a href="'.$link.'">'.$item->title.'</a>' : $item->title ) .'</'.$tag.'>';
 		}
-		echo JHtml::_( 'content.prepare', $item->introtext );
+		echo HTMLHelper::_( 'content.prepare', $item->introtext );
 		?>
 	</div>
 <?php } else { ?>

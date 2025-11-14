@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JCckEcommerceProduct
 abstract class JCckEcommerceProduct
 {
@@ -82,9 +85,9 @@ abstract class JCckEcommerceProduct
 					}
 				}
 				if ( count( $definitions ) ) {
-					JPluginHelper::importPlugin( 'cck_field_live' );
+					PluginHelper::importPlugin( 'cck_field_live' );
 					
-					$app	=	JFactory::getApplication();
+					$app	=	Factory::getApplication();
 					$config	=	array();
 					$keys	=	array( 'payment', 'tax' );
 					

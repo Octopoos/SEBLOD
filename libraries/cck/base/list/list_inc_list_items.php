@@ -10,11 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // Prepare
-JPluginHelper::importPlugin( 'cck_field_link' );
-JPluginHelper::importPlugin( 'cck_field_typo' );
-JPluginHelper::importPlugin( 'cck_storage' );
-JPluginHelper::importPlugin( 'cck_storage_location' );
+PluginHelper::importPlugin( 'cck_field_link' );
+PluginHelper::importPlugin( 'cck_field_typo' );
+PluginHelper::importPlugin( 'cck_storage' );
+PluginHelper::importPlugin( 'cck_storage_location' );
 
 require_once JPATH_SITE.'/libraries/cck/rendering/rendering_item.php';
 $count		=	count( $items );
@@ -27,7 +30,7 @@ $doc->list[$idx]		=	array();
 
 $debug			=	JCck::getConfig_Param( 'debug', 0 );
 $ids			=	'';
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->getDefault();
 $lang_tag		=	$lang->getTag();
 $optimize		=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );

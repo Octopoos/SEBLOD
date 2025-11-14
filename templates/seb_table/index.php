@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // -- Initialize
 require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
@@ -33,11 +37,11 @@ $class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i'
 $class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
 $translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
-$doc			=	JFactory::getDocument();
-$doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
+$doc			=	Factory::getDocument();
+$doc->addStyleSheet( Uri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
 
 if ( $translate ) {
-	$lang	=	JFactory::getLanguage();
+	$lang	=	Factory::getLanguage();
 }
 
 // Set
@@ -88,7 +92,7 @@ if ( !$isMore ) {
 					$key				=	'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) );
 					
 					if ( $lang->hasKey( $key ) ) {
-						$legend			=	JText::_( $key );
+						$legend			=	Text::_( $key );
 					}
 				}
 				if ( $isResponsive ) {

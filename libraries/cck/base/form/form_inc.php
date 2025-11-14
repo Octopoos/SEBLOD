@@ -10,9 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.core' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
-$app			=	JFactory::getApplication();
+HTMLHelper::_( 'behavior.core' );
+
+$app			=	Factory::getApplication();
 $copyfrom_id	=	0;
 $data			=	'';
 $id				=	0;
@@ -26,7 +34,7 @@ if ( $option == 'com_cck' && $view == 'form' ) {
 	}
 }
 $client			=	$preconfig['client'];
-$lang   		=	JFactory::getLanguage();
+$lang   		=	Factory::getLanguage();
 $stage			=	-1;
 $user 			=	JCck::getUser();
 
@@ -47,7 +55,7 @@ if ( ! $type ) {
 }
 $lang->load( 'pkg_app_cck_'.$type->folder_app, JPATH_SITE, null, false, false );
 
-$options	=	new JRegistry;
+$options	=	new Registry;
 $options->loadString( $type->{'options_'.$client} );
 
 if ( $id > 0 ) {
@@ -69,7 +77,7 @@ if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.ad
 }
 
 $author			=	null;
-$current		=	( $options->get( 'redirection' ) == 'current_full' ) ? JUri::getInstance()->toString() : JUri::current();
+$current		=	( $options->get( 'redirection' ) == 'current_full' ) ? Uri::getInstance()->toString() : Uri::current();
 $doDebug		=	(int)JCck::getConfig_Param( 'debug', 0 );
 $doDebug		=	( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) ? 1 : 0;
 $stages			=	$options->get( 'stages', 1 );
@@ -150,7 +158,7 @@ if ( $can['guest.edit'] ) {
 	}
 }
 if ( $type->storage_location == 'joomla_user' && $config['isNew'] ) {
-	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+	if ( !( $user->id && !$user->guest ) && ComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
 		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
 }
@@ -222,14 +230,14 @@ jimport( 'cck.rendering.document.document' );
 $doc		=	CCK_Document::getInstance( 'html' );
 $rparams	=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $path_root );
 
-JPluginHelper::importPlugin( 'cck_field' );
-JPluginHelper::importPlugin( 'cck_field_live' );
-JPluginHelper::importPlugin( 'cck_field_restriction' );
-JPluginHelper::importPlugin( 'cck_field_validation' );
+PluginHelper::importPlugin( 'cck_field' );
+PluginHelper::importPlugin( 'cck_field_live' );
+PluginHelper::importPlugin( 'cck_field_restriction' );
+PluginHelper::importPlugin( 'cck_field_validation' );
 
 if ( $id ) {
-	JPluginHelper::importPlugin( 'cck_storage' );
-	JPluginHelper::importPlugin( 'cck_storage_location' );
+	PluginHelper::importPlugin( 'cck_storage' );
+	PluginHelper::importPlugin( 'cck_storage_location' );
 }
 
 // Validation
@@ -365,7 +373,7 @@ if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process'
 
 // Finalize
 $doc->fields	=	&$fields;
-$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>Uri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'form', $type->name, $config['client'], $positions, $positions_more, $infos ); 
 
 // Validation
@@ -416,10 +424,10 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 // Versions
 if ( $app->isClient( 'administrator' ) ) {
 	if ( @$config['base']->location == 'joomla_article' ) { /* TODO#SEBLOD: getContext / params from any object */
-		$object_params	=	JComponentHelper::getParams( 'com_content' );
+		$object_params	=	ComponentHelper::getParams( 'com_content' );
 
 		if ( $object_params->get( 'save_history', 0 ) ) {
-			JToolbarHelper::versions( 'com_content.article', $config['pk'] );
+			ToolbarHelper::versions( 'com_content.article', $config['pk'] );
 		}
 	}
 }

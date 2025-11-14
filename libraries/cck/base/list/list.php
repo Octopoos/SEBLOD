@@ -10,7 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
-use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 // List
 class CCK_List
@@ -68,7 +73,7 @@ class CCK_List
 	// getCountFromRoute
 	public static function getCountFromRoute( $route )
 	{
-		$uri		=	JUri::getInstance();
+		$uri		=	Uri::getInstance();
 
 		if ( $uri->getScheme() === 'https' ) {
 			$headers	=	array(
@@ -167,7 +172,7 @@ class CCK_List
 		}
 		
 		// Access
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
@@ -216,8 +221,8 @@ class CCK_List
 	// getList
 	public static function getList( $ordering, $areas, $fields, $fields_order, &$config, $current, $options, $user )
 	{
-		JPluginHelper::importPlugin( 'search', 'cck' );
-		$app		=	JFactory::getApplication();
+		PluginHelper::importPlugin( 'search', 'cck' );
+		$app		=	Factory::getApplication();
 		$doCache	=	$options->get( 'cache' );
 		$doDebug	=	(int)$options->get( 'debug' );
 
@@ -227,7 +232,7 @@ class CCK_List
 		}
 		if ( $doCache ) {
 			$group		=	( $doCache == '2' ) ? 'com_cck_'.$config['type_alias'] : 'com_cck';
-			$cache		=	JFactory::getCache( $group );
+			$cache		=	Factory::getCache( $group );
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
 			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
@@ -252,7 +257,7 @@ class CCK_List
 				echo '<br />';
 			}
 		} elseif ( $doDebug == -1 ) {
-			echo JText::_( 'COM_CCK_DEBUG_OUTPUT_NO_SEARCH' );
+			echo Text::_( 'COM_CCK_DEBUG_OUTPUT_NO_SEARCH' );
 		}
 		
 		return $list;
@@ -386,7 +391,7 @@ class CCK_List
 	// prepareSearch
 	public static function prepareSearch( &$fields, &$config, $target_name, &$target )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		foreach ( $fields as $field ) {
 			$name	=	$field->name;
@@ -478,8 +483,8 @@ class CCK_List
 			}
 		}
 
-		$app			=	JFactory::getApplication();
-		$access			=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
+		$app			=	Factory::getApplication();
+		$access			=	implode( ',', Factory::getUser()->getAuthorisedViewLevels() );
 		$data			=	array(
 								'buffer'=>'',
 								'config'=>array()
@@ -503,8 +508,8 @@ class CCK_List
 			$data['config']['formWrapper']	=	$form_wrapper;
 		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 0 ) ) ) {
-			JPluginHelper::importPlugin( 'content' );
-			$data['buffer']	=	JHtml::_( 'content.prepare', $data['buffer'] );
+			PluginHelper::importPlugin( 'content' );
+			$data['buffer']	=	HTMLHelper::_( 'content.prepare', $data['buffer'] );
 		}
 
 		if ( isset( $search->lang_tag ) && $search->lang_tag ) {
@@ -519,18 +524,18 @@ class CCK_List
 	// redirect
 	public static function redirect( $action, $url, $message, $type, &$config, $debug = 0 )
 	{
-		$app				=	JFactory::getApplication();
+		$app				=	Factory::getApplication();
 		$config['error']	=	true;
 
 		if ( ! $message ) {
 			if ( $debug ) {
-				$message	=	JText::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
+				$message	=	Text::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
 			} else {
-				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+				$message	=	Text::_( 'COM_CCK_NO_ACCESS' );
 			}
 		} else {
 			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
-				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
+				$message	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
 			}
 			if ( $debug ) {
 				$message	.=	' '.$config['type'].'@'.$config['formId'];
@@ -545,7 +550,7 @@ class CCK_List
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
+			$url	=	( $url != 'index.php' ) ? Route::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}
@@ -556,7 +561,7 @@ class CCK_List
 		static $lang_tag	=	null;
 
 		if ( !$lang_tag ) {
-			$lang_tag	=	JFactory::getLanguage()->getTag();
+			$lang_tag	=	Factory::getLanguage()->getTag();
 		}
 
 		return $lang_tag;

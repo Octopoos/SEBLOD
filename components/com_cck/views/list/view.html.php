@@ -10,13 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // View
-class CCKViewList extends JViewLegacy
+class CCKViewList extends HtmlView
 {
 	// display
 	public function display( $tpl = null )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );
 		$uniqId						=	'';
 
@@ -43,8 +50,8 @@ class CCKViewList extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay( $preconfig )
 	{
-		$app			=	JFactory::getApplication();
-		$config			=	JFactory::getConfig();
+		$app			=	Factory::getApplication();
+		$config			=	Factory::getConfig();
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
@@ -74,7 +81,7 @@ class CCKViewList extends JViewLegacy
 		$menu	=	$menus->getActive();
 		$home	=	( isset( $menu->home ) && $menu->home ) ? true : false;
 		if ( is_object( $menu ) ) {
-			$menu_params	=	new JRegistry;
+			$menu_params	=	new Registry;
 			$menu_params->loadString( $menu->getParams() );
 			if ( ! $menu_params->get( 'page_title', '' ) ) {
 				$params->set( 'page_title', $menu->title );
@@ -89,9 +96,9 @@ class CCKViewList extends JViewLegacy
 		if ( empty( $title ) ) {
 			$title	=	$config->get( 'sitename' );
 		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+			$title	=	Text::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
 		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
+			$title	=	Text::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
 		$config		=	null;
 		$this->document->setTitle( $title );
@@ -129,7 +136,7 @@ class CCKViewList extends JViewLegacy
 
 		// Set
 		if ( !is_object( @$options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 		$this->show_form				=	$preconfig['show_form'];
 		$this->show_list_title			=	$params->get( 'show_list_title' );
@@ -145,10 +152,10 @@ class CCKViewList extends JViewLegacy
 			$this->title				=	'';
 
 			if ( is_object( $search ) ) {
-				$this->title			=	JText::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+				$this->title			=	Text::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
 			}
 		} elseif ( $params->get( 'display_list_title', '' ) == '3' ) {
-			$this->title				=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_list_title', '' ) ) ) );
+			$this->title				=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_list_title', '' ) ) ) );
 		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
 			$this->title				=	$params->get( 'title_list_title', '' );
 		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
@@ -214,11 +221,11 @@ class CCKViewList extends JViewLegacy
 
 			if ( $this->label_pagination != '' ) {
 				if ( $config['doTranslation'] ) {
-					$this->label_pagination	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
+					$this->label_pagination	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
 				}
 			}
 			if ( $this->label_pagination == '' ) {
-				$this->label_pagination	=	JText::_( 'COM_CCK_LOAD_MORE' );
+				$this->label_pagination	=	Text::_( 'COM_CCK_LOAD_MORE' );
 			}
 		} else {
 			$this->callback_pagination	=	'';
@@ -234,7 +241,7 @@ class CCKViewList extends JViewLegacy
 
 		// Canonical
 		if ( $sef_canonical	= (int)$options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 3 ) ) ) {
-			$current			=	JUri::getInstance()->current();
+			$current			=	Uri::getInstance()->current();
 			$glue				=	'?';
 			$sef_canonical_vars	=	explode( ',', $options->get( 'sef_canonical_vars', '' ) );
 
@@ -307,7 +314,7 @@ class CCKViewList extends JViewLegacy
 		$config['context']['view']		=	'list';
 
 		if ( !$this->show_form && $config['formWrapper'] ) {
-			JHtml::_( 'behavior.core' );
+			HTMLHelper::_( 'behavior.core' );
 		}
 
 		$this->class_desc				=	$params->get( 'class_list_desc', '' );

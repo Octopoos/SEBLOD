@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+use Joomla\CMS\Table\Table;
 
 // CCK_Article (deprecated)
 class CCK_Article
@@ -21,7 +21,7 @@ class CCK_Article
 		$row	=	'';
 		
 		if ( $id ) {
-			$row	=	JTable::getInstance( 'Content' );
+			$row	=	Table::getInstance( 'Content' );
 			$row->load( $id );
 		}
 		

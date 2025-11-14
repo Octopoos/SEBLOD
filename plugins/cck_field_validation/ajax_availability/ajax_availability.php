@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+
 // Plugin
 class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 {
@@ -50,7 +54,7 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 		
 		$rule		=	'
 					"'.$name.'":{
-						"url": "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
+						"url": "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'task=ajax&format=raw&'.Session::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php' ).'",
 						"extraData": "'.$extraData.'",
 						'.$extraData2.'
 						"alertText": "'.$prefix.$alert.'",
@@ -99,16 +103,16 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 			$alert	=	$validation->$target;
 			if ( $config['doTranslation'] ) {
 				if ( trim( $alert ) ) {
-					$alert	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
+					$alert	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
 				}
 			}
 		} else {
 			static $already	=	0;
 			if ( !$already ) {
-				JFactory::getLanguage()->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
+				Factory::getLanguage()->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
 				$already	=	1;
 			}
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_'.$target );
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_'.$target );
 		}
 		
 		return $alert;
@@ -139,11 +143,11 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 	// _setError
 	protected static function _setError( $name, &$config )
 	{
-		$app	=	JFactory::getApplication();
-		$lang	=	JFactory::getLanguage();
+		$app	=	Factory::getApplication();
+		$lang	=	Factory::getLanguage();
 		$lang->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
 		
-		$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name ;
+		$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name ;
 		
 		$app->enqueueMessage( $alert, 'error' );
 		$config['validate']	=	'error';

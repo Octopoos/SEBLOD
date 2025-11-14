@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Table\Table;
+
 // Table
-class CCK_TableSession extends JTable
+class CCK_TableSession extends Table
 {	
 	// __construct
 	public function __construct( &$db )

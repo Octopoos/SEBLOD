@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Helper\ModuleHelper;
+
 require_once __DIR__.'/helper.php';
 
 $list				=	modCCKBreadCrumbsHelper::getList( $params );
@@ -18,5 +20,5 @@ $separator			=	modCCKBreadCrumbsHelper::setSeparator( $params->get( 'separator' 
 $separator_class	=	$params->get( 'separator_class', 'separator' );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
-require JModuleHelper::getLayoutPath( 'mod_cck_breadcrumbs', $params->get( 'layout', 'default' ) );
+require ModuleHelper::getLayoutPath( 'mod_cck_breadcrumbs', $params->get( 'layout', 'default' ) );
 ?>

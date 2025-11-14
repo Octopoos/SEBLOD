@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\MVC\View\HtmlView;
+
 // View
-class CCKViewCck extends JViewLegacy
+class CCKViewCck extends HtmlView
 {
 }
 ?>

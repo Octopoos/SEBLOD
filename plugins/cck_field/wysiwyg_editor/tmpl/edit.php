@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $parent		=	JCck::on( '4.0' ) ? '.parent()' : '';
@@ -41,7 +43,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_options_editor', @$options2['editor'], $config ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_WIDTH_HEIGHT' ),
+											'label'=>Text::_( 'COM_CCK_WIDTH_HEIGHT' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'40%|10%|40%|10%',
 												'html'=>array(
@@ -62,7 +64,7 @@ $displayData	=	array(
 								'fields'=>array(
 									JCckDev::renderForm( 'core_options_import', @$options2['import'], $config )
 								),
-								'legend'=>JText::_( 'COM_CCK_PROCESSING' )
+								'legend'=>Text::_( 'COM_CCK_PROCESSING' )
 							),
 							array(
 								'fields'=>array(

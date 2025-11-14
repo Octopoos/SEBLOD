@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Module\Helper;
+use Joomla\CMS\Router\Route;
+
 // Helper
 abstract class modCCKQuickIconHelper
 {
@@ -25,7 +30,7 @@ abstract class modCCKQuickIconHelper
 			
 			// Take each pair of permission, context values.
 			for ( $i = 0, $n = count( $button['access'] ); $i < $n; $i += 2 ) {
-				if ( !JFactory::getUser()->authorise( $button['access'][$i], $button['access'][$i+1] ) ) {
+				if ( !Factory::getUser()->authorise( $button['access'][$i], $button['access'][$i+1] ) ) {
 					return '';
 				}
 			}
@@ -34,7 +39,7 @@ abstract class modCCKQuickIconHelper
 		}
 		
 		ob_start();
-		require JModuleHelper::getLayoutPath( 'mod_cck_quickicon', 'default_button' );
+		require Helper::getLayoutPath( 'mod_cck_quickicon', 'default_button' );
 		$html	=	ob_get_clean();
 		
 		return $html;
@@ -49,30 +54,30 @@ abstract class modCCKQuickIconHelper
 			if ( $uix == 'compact' ) {
 				self::$buttons	=	array(
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=types' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=types' ),
 											'icon'	=>	'icon-48-types.png',
 											'image'	=>	'cck-form',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_FORM_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=folders' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=folders' ),
 											'icon'	=>	'icon-48-folders.png',
 											'image'	=>	'cck-application',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_APP_FOLDER_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
+											'link'	=>	Route::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_SEBLOD_MARKET'
 										)
@@ -80,49 +85,49 @@ abstract class modCCKQuickIconHelper
 			} else {
 				self::$buttons	=	array(
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=types' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=types' ),
 											'icon'	=>	'icon-48-types.png',
 											'image'	=>	'cck-form',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_CONTENT_TYPE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 											),
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=fields' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=fields' ),
 											'icon'	=>	'icon-48-fields.png',
 											'image'	=>	'cck-plugin',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_FIELD_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=searchs' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=searchs' ),
 											'icon'	=>	'icon-48-searchs.png',
 											'image'	=>	'cck-search',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_SEARCH_TYPE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										),
 										array(
-											'link'	=>	JRoute::_( 'index.php?option=com_cck&view=templates' ),
+											'link'	=>	Route::_( 'index.php?option=com_cck&view=templates' ),
 											'icon'	=>	'icon-48-templates.png',
 											'image'	=>	'cck-template',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_TEMPLATE_MANAGER' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_CONSTRUCTION'
 										)
 									);
 				self::$buttons[]	=	array(
-											'link'	=>	JRoute::_( 'https://www.seblod.com/products' ),
+											'link'	=>	Route::_( 'https://www.seblod.com/products' ),
 											'target'=>	'_blank',
 											'icon'	=>	'icon-48-seblod.png',
 											'image'	=>	'cck-products',
-											'label' =>	JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
-											'text' 	=>	str_replace( '<br />', ' ', JText::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
+											'label' =>	Text::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET' ),
+											'text' 	=>	str_replace( '<br />', ' ', Text::_( 'MOD_CCK_QUICKICON_SEBLOD_MARKET_EXTEND' ) ),
 											'access'=>	array( 'core.manage', 'com_cck' ),
 											'group'	=>	'MOD_CCK_QUICKICON_SEBLOD_MARKET'
 										);

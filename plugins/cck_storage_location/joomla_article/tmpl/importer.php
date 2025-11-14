@@ -9,15 +9,17 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 
 <div class="seblod cck-padding-top-0 cck-padding-bottom-0">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
     <div class="form-grid">
 		<?php echo JCckDev::renderForm( 'core_joomla_article_created_by', '', $config ); ?>
 		<div class="control-group">
 			<div class="control-label">
-				<label><?php echo JText::_( 'COM_CCK_CATEGORY' ); ?></label>
+				<label><?php echo Text::_( 'COM_CCK_CATEGORY' ); ?></label>
 			</div>
 			<div class="controls">
 		 	<?php
@@ -29,7 +31,7 @@ defined( '_JEXEC' ) or die;
 		<?php echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'&nbsp;', 'type'=>'checkbox', 'options'=>'Allow New Categories=1', 'storage_field'=>'params[unknown_categories]' ) ); ?>
 		<div class="control-group">
 			<div class="control-label">
-				<label><?php echo JText::_( 'COM_CCK_TAGS' ); ?></label>
+				<label><?php echo Text::_( 'COM_CCK_TAGS' ); ?></label>
 			</div>
 			<div class="controls">
 		 		<?php
@@ -43,14 +45,14 @@ defined( '_JEXEC' ) or die;
 		?>
 	</div>
 	<div class="clr"></div>
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<div class="control-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_bool', 0, $config, array( 'label'=>'Reordering', 'storage_field'=>'options[reordering]' ) );
 		?>
 	</div>
 	<div class="clr"></div>
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_UPDATE' ) ); ?>
 	<div class="control-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Update By Key', 'defaultvalue'=>'', 'selectlabel'=>'None',

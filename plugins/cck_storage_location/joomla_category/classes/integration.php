@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_category.php';
 
 // Class
@@ -18,7 +20,7 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 	// onCCK_Storage_LocationAfterDispatch
 	public static function onCCK_Storage_LocationAfterDispatch( &$data, $uri = array() )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$ext		=	$app->input->get( 'extension', '' );
 		$exclude	=	$data['options']->get( 'exclude', '' );
 		$extensions	=	explode( ',', str_replace( ' ', '', $exclude ) );
@@ -45,7 +47,7 @@ class plgCCK_Storage_LocationJoomla_Category_Integration extends plgCCK_Storage_
 	// onCCK_Storage_LocationAfterRender
 	public static function onCCK_Storage_LocationAfterRender( &$buffer, &$data, $uri = array() )
 	{
-		$app		=	JFactory::getApplication();		
+		$app		=	Factory::getApplication();		
 		$ext		=	$app->input->get( 'extension', '' );
 		$exclude	=	$data['options']->get( 'exclude', '' );
 		$extensions	=	explode( ',', str_replace( ' ', '', $exclude ) );

@@ -10,6 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // Plugin
@@ -48,15 +56,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
-										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										'hidden'=>HTMLHelper::_( 'select.option', 'hidden', Text::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>HTMLHelper::_( 'select.option', 'value', Text::_( 'COM_CCK_VALUE' ) ),
+										'100'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FORM' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>HTMLHelper::_( 'select.option', 'disabled', Text::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>HTMLHelper::_( 'select.option', 'toolbar_button', Text::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' )
 									);
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -74,15 +82,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
-										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										'hidden'=>HTMLHelper::_( 'select.option', 'hidden', Text::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>HTMLHelper::_( 'select.option', 'value', Text::_( 'COM_CCK_VALUE' ) ),
+										'100'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FORM' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>HTMLHelper::_( 'select.option', 'disabled', Text::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>HTMLHelper::_( 'select.option', 'toolbar_button', Text::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' )
 									);
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -149,16 +157,16 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 
 		if ( $form != '' ) {
 			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
-				$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'.$form;
+				$form	=	'<form action="'.Route::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'.$form;
 			}
 			
-			$return	=	JFactory::getApplication()->input->getString( 'return', base64_encode( JUri::getInstance()->toString() ) );
+			$return	=	Factory::getApplication()->input->getString( 'return', base64_encode( Uri::getInstance()->toString() ) );
 
 			$form	.=	'<input type="hidden" name="task" value="'.$task.'" />'
 					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
 					.	'<input type="hidden" name="return" value="'.$return.'">'
 					.	'<input type="hidden" name="tid" value="'.$task_id.'">';
-			$form	.=	JHtml::_( 'form.token' );
+			$form	.=	HTMLHelper::_( 'form.token' );
 
 			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
 				$form	.=	'</form>';
@@ -199,7 +207,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
 
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
 			if ( $config['client'] == 'admin' ) {
 				$task	=	'form.'.$task;
 			} else {
@@ -226,7 +234,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			$pre_task	=	'jQuery(\'#'.$config['formId'].'\').clearForm();';
 			$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\'save\');return false;"' : '';
 		} else {
-			$user	=	JFactory::getUser();
+			$user	=	Factory::getUser();
 
 			if ( ( $config['client'] == 'admin' || $config['client'] == 'site' ) && ( $task == 'apply' || strpos( $task, 'save' ) === 0 ) ) {
 				$canDo	=	true;
@@ -245,7 +253,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 						$canEditOwn			=	false;
 
 						if ( $config['author_session']
-						  && $config['author_session'] == JFactory::getSession()->getId() ) {
+						  && $config['author_session'] == Session::getInstance()->getId() ) {
 							if ( $user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] ) ) {
 								$canEditOwnGuest	=	true;
 							}
@@ -360,15 +368,15 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					}
 				}
 
-				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">\');' )
-							.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.JHtml::_( 'form.token' ).'\');' );
+				$pre_task	.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.base64_encode( Uri::getInstance()->toString() ).'">\');' )
+							.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.HTMLHelper::_( 'form.token' ).'\');' );
 
 				$click		=	$pre_task.$config['submit'].'(\''.$task.'\');return false;';
 				if ( $field->variation != 'toolbar_button' ) {
 					parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'task'=>$task, 'task_auto'=>$task_auto, 'task_id'=>$task_id ) );					
 				}
 				if ( !$task_auto ) {
-					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$click.'}';
+					$click	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$click.'}';
 				} else {
 					$config['doQuery2']	=	true;
 				}
@@ -382,23 +390,23 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					$custom	=	$custom ? '&'.$custom : '';
 				}
 				if ( (int)$options2['itemid'] == -2 ) {
-					$options2['itemid']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__menu WHERE parent_id = '.(int)JFactory::getApplication()->input->getInt( 'Itemid', 0 ).' ORDER BY lft ASC' );
+					$options2['itemid']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__menu WHERE parent_id = '.(int)Factory::getApplication()->input->getInt( 'Itemid', 0 ).' ORDER BY lft ASC' );
 
 					if ( !$options2['itemid'] ) {
 						return;
 					}
 				} elseif ( (int)$options2['itemid'] == -3 ) {
-					$options2['itemid']	=	JFactory::getApplication()->input->getInt( 'Itemid' );
+					$options2['itemid']	=	Factory::getApplication()->input->getInt( 'Itemid' );
 				}
 				if ( $config['client'] == 'search' ) {
 					if ( strpos( $config['submit'], 'JCck.Core.submit_f' ) !== false ) {
 						$submit		=	'JCck.Core.submit';
-						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.Route::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 					} else {
-						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.Route::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 					}					
 				} else {
-					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.Route::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 				}
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$submit.'(\''.$task.'\');return false;"' : '';			
 			} else {
@@ -421,7 +429,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 													var $formElem = $("#"+JCck.More.AjaxSubmit.form_id);
 													var formData = new FormData($formElem[0]);
 													var xhr = new XMLHttpRequest();
-													xhr.open("POST", "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.( JFactory::getApplication()->isClient( 'administrator' ) ? 'form.saveAjax' : 'saveAjax' ) ).'", true);
+													xhr.open("POST", "'.JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.( Factory::getApplication()->isClient( 'administrator' ) ? 'form.saveAjax' : 'saveAjax' ) ).'", true);
 													xhr.onload = function(e) {
 														var resp = JSON.parse(this.response);
 														if(typeof resp == "object") {
@@ -460,7 +468,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 									});
 								})(jQuery);
 								';
-					JFactory::getDocument()->addScriptDeclaration( $js );
+					Factory::getDocument()->addScriptDeclaration( $js );
 				} else {
 					$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
 				}				
@@ -511,16 +519,16 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$tag	=	'input';
 			}
 			if ( $field->bool2 == 1 ) {
-				$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$alt	=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 				if ( $config['client'] == 'search' ) {
 					$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
-					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_RESET' ).'">'.Text::_( 'COM_CCK_RESET' ).'</a>';				
 				} else {
 					$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
-					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_CANCEL' ).'">'.Text::_( 'COM_CCK_CANCEL' ).'</a>';
 				}
 			} elseif ( $field->bool2 == 2 ) {
-				$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$alt		=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 				$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
 				JCckPluginLink::g_setLink( $field2, $config );
 				JCckPluginLink::g_setHtml( $field2, 'text' );
@@ -542,7 +550,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$icon			=	( isset( $options2['icon'] ) && $options2['icon'] ) ? 'icon-'.$options2['icon'] : '';
 				$onclick		=	$pre_task.'JCck.Core.submit(\''.$task.'\')';
 				if ( !$task_auto ) {
-					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$onclick.'}';
+					$onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$onclick.'}';
 				}
 				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" onclick="'.$onclick.'"><span class="'.$icon.'"></span> '.$value.'</button>';
 				
@@ -621,16 +629,16 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					$fieldnames	=	explode( '||', $process['fieldnames'] );
 				}
 
-				JText::script( 'COM_CCK_COMPLETED' );
+				Text::script( 'COM_CCK_COMPLETED' );
 
 				if ( $process['task'] == 'export_ajax' ) {
-					$step	=	(int)JComponentHelper::getParams( 'com_cck_exporter' )->get( 'mode_ajax_count', 25 );
+					$step	=	(int)ComponentHelper::getParams( 'com_cck_exporter' )->get( 'mode_ajax_count', 25 );
 					$vars	=	'&search='.$config['type'];
 				} elseif ( $process['task'] == 'process_ajax' ) {
 					$processing_opts	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_more_processings WHERE id = '.(int)$process['task_id'] );
 					$processing_opts	=	new Registry( $processing_opts );
 
-					$step	=	(int)$processing_opts->get( 'ajax_count', JComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 ) );
+					$step	=	(int)$processing_opts->get( 'ajax_count', ComponentHelper::getParams( 'com_cck_toolbox' )->get( 'mode_ajax_count', 25 ) );
 				}
 
 				if ( !$loaded ) {
@@ -644,7 +652,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 										formId:"'.$config['formId'].'",
 										instances: [],
 										kvp: "",
-										return: "'.base64_encode( JUri::getInstance()->toString() ).'",
+										return: "'.base64_encode( Uri::getInstance()->toString() ).'",
 										token:Joomla.getOptions("csrf.token")+"=1",
 										uniq_id:"'.uniqid().'",
 										width:0,
@@ -778,12 +786,12 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 								})(jQuery);
 								';
 					$loaded	=	1;
-					JFactory::getDocument()->addScriptDeclaration( $js );
+					Factory::getDocument()->addScriptDeclaration( $js );
 				}
 				$js		=	'';
 
 				if ( !$process['task_auto'] ) {
-					$js	=	'if (document[JCck.More.ButtonSubmit.formId].boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\'); return false;}';
+					$js	=	'if (document[JCck.More.ButtonSubmit.formId].boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\'); return false;}';
 				}
 
 				$js 	=	'
@@ -806,7 +814,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 								});
 							})(jQuery);
 							';
-				JFactory::getDocument()->addScriptDeclaration( $js );
+				Factory::getDocument()->addScriptDeclaration( $js );
 			}
 		}
 		if ( $process['task_auto'] && ( $process['task'] == 'export' || $process['task'] == 'process' ) ) {
@@ -823,7 +831,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			if ( isset( $search ) && isset( $replace ) ) {
 				$process['button']['html']	=	str_replace( $search, $replace, $process['button']['html'] );
 			}
-			JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $process['button']['html'], $process['button']['icon'] );
+			Toolbar::getInstance( 'toolbar' )->appendButton( 'Custom', $process['button']['html'], $process['button']['icon'] );
 		}
 	}
 }

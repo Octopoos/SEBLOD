@@ -10,13 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
-$lang	=	JFactory::getLanguage();
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+
+$lang	=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'com_cck' );
 $lang->load( 'com_cck_default', JPATH_SITE );
 $lang->setDefault( $lang_default );
 
-$controller	=	JControllerLegacy::getInstance( 'CCK' );
-$controller->execute( JFactory::getApplication()->input->get( 'task' ) );
+$controller	=	BaseController::getInstance( 'CCK' );
+$controller->execute( Factory::getApplication()->input->get( 'task' ) );
 $controller->redirect();
 ?>

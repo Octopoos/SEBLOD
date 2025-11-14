@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+
 // Form
 class CCK_Form
 {
@@ -85,7 +90,7 @@ class CCK_Form
 		// $where	.=	' AND c.variation != "none"';
 		
 		// Access
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$where	.=	' AND c.access IN ('.$access.')';
 		
@@ -127,7 +132,7 @@ class CCK_Form
 	// getPermissions
 	public static function getPermissions( $type, $config )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$can	=	array(
 						'do'=>false,
 						'edit.own'=>false,
@@ -135,7 +140,7 @@ class CCK_Form
 						'guest.edit'=>false,
 						'preview'=>false
 					);
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( !$config['isNew'] ) {
 			$can['do']		=	$user->authorise( 'core.edit', 'com_cck.form.'.$type->id );
@@ -147,7 +152,7 @@ class CCK_Form
 				$can['edit.own']	=	false;
 
 				if ( $config['author_session']
-				  && $config['author_session'] == JFactory::getSession()->getId() ) {
+				  && $config['author_session'] == Factory::getSession()->getId() ) {
 					$can['edit.own']	=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$type->id );
 					$can['guest.edit']	=	true;
 				}
@@ -229,18 +234,18 @@ class CCK_Form
 	// redirect
 	public static function redirect( $action, $url, $message, $type, &$config, $debug = 0 )
 	{
-		$app				=	JFactory::getApplication();
+		$app				=	Factory::getApplication();
 		$config['error']	=	true;		
 		
 		if ( ! $message ) {
 			if ( $debug ) {
-				$message	=	JText::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
+				$message	=	Text::sprintf( 'COM_CCK_NO_ACCESS_DEBUG', $config['type'].'@'.$config['formId'] );
 			} else {
-				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
+				$message	=	Text::_( 'COM_CCK_NO_ACCESS' );
 			}
 		} else {
 			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
-				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
+				$message	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
 			}
 			if ( $debug ) {
 				$message	.=	' '.$config['type'].'@'.$config['formId'];
@@ -255,7 +260,7 @@ class CCK_Form
 		}
 		
 		if ( $action == 'redirection' ) {
-			$url	=	( $url != 'index.php' ) ? JRoute::_( $url, false ) : $url;
+			$url	=	( $url != 'index.php' ) ? Route::_( $url, false ) : $url;
 			$app->redirect( $url );
 		}
 	}

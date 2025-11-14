@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 // Helper
 class Helper_Version
 {
@@ -22,7 +25,7 @@ class Helper_Version
 			return true;
 		}
 		
-		$current	=	JFactory::getDate()->toSql();
+		$current	=	Factory::getDate()->toSql();
 		$diff		=	round( abs( strtotime( $current ) - strtotime( $latest ) ) / 60, 2 );
 		
 		$time		=	(int)JCck::getConfig_Param( 'version_auto_time', 180 );
@@ -43,7 +46,7 @@ class Helper_Version
 	// createVersion
 	public static function createVersion( $type, $pk, $note = '', $update = false )
 	{
-		$table	=	JTable::getInstance( ucfirst( $type ), 'CCK_Table' );
+		$table	=	Table::getInstance( ucfirst( $type ), 'CCK_Table' );
 		$table->load( $pk );
 		
 		// Core
@@ -58,7 +61,7 @@ class Helper_Version
 		}
 
 		// Version
-		$version				=	JTable::getInstance( 'Version', 'CCK_Table' );
+		$version				=	Table::getInstance( 'Version', 'CCK_Table' );
 		$version->e_id			=	$table->id;
 		$version->e_title		=	$table->title;
 		$version->e_name		=	$table->name;

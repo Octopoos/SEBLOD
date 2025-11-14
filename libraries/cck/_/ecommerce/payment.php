@@ -10,18 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // JCckEcommercePayment
 abstract class JCckEcommercePayment
 {
 	// getGateway
 	public static function getGateway( $name = '' )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		$and	=	'';
 
 		if ( $name != '' ) {
-			$and	=	' AND type = '.JFactory::getDbo()->quote( $name );
+			$and	=	' AND type = '.Factory::getDbo()->quote( $name );
 		}
 		$name	=	JCckDatabase::loadResult( 'SELECT type'
 											. ' FROM #__cck_more_ecommerce_gateways'
@@ -35,7 +38,7 @@ abstract class JCckEcommercePayment
 	// getGateways
 	public static function getGateways()
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 
 		$items	=	JCckDatabase::loadObjectList( 'SELECT title, type'
@@ -49,10 +52,10 @@ abstract class JCckEcommercePayment
 	// getListenUrl
 	public static function getListenUrl( $gateway )
 	{
-		$url	=	JUri::root();
+		$url	=	Uri::root();
 		$url	.=	( $url[strlen($url)-1] == '/' ? '' : '/' );
 
-		if ( !JFactory::getApplication()->get( 'sef_rewrite' ) ) {
+		if ( !Factory::getApplication()->get( 'sef_rewrite' ) ) {
 			$url	.=	'index.php/';
 		} 
 

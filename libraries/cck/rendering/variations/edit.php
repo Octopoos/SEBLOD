@@ -10,7 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
+
+$doc	=	Factory::getDocument();
 $js		=	'
 			(function ($){
 				JCck.Dev = {
@@ -44,7 +47,7 @@ $doc->addScriptDeclaration( $js );
 
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
 
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'files_var_cck_'.$this->item->name.'.sys', JPATH_SITE );
 $lang->load( 'files_var_cck_seb_css3.sys', JPATH_SITE );
@@ -55,9 +58,9 @@ $path		=	JPATH_SITE.'/templates/'.$template.'/variations/'.$this->item->name.'/o
 if ( ! file_exists( $path ) ) {
 	$path	=	JPATH_SITE.'/libraries/cck/rendering/variations/'.$this->item->name.'/options.xml';
 } else {
-	JFactory::getLanguage()->load( 'tpl_'.$template, JPATH_SITE );
+	Factory::getLanguage()->load( 'tpl_'.$template, JPATH_SITE );
 }
-$xml		=	JPath::clean( $path );
+$xml		=	Path::clean( $path );
 
 Helper_Workshop::getTemplateParams( $xml, '//form' );
 ?>

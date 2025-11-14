@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+
 // Model
-class CCKModelForm extends JModelLegacy
+class CCKModelForm extends BaseDatabaseModel
 {
 	// store
 	public function store( $preconfig, $task = '' )

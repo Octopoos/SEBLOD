@@ -10,10 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerForm extends JControllerForm
+class CCKControllerForm extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
@@ -30,7 +35,7 @@ class CCKControllerForm extends JControllerForm
 	// cancel
 	public function cancel( $key = null )
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		/* TODO#SEBLOD: checkin, etc.. */
 		
@@ -42,9 +47,9 @@ class CCKControllerForm extends JControllerForm
 	// save
 	public function save( $key = null, $urlVar = null, $isAjax = false )
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$model		=	$this->getModel( 'form' );
 		$preconfig	=	$this->_getPreconfig();
 		$task		=	$this->getTask();
@@ -74,9 +79,9 @@ class CCKControllerForm extends JControllerForm
 			}
 			if ( $config['message_style'] ) {
 				if ( isset( $config['message'] ) && $config['message'] ) {
-					$msg	=	( $config['doTranslation'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
+					$msg	=	( $config['doTranslation'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $config['message'] ) ) ) : $config['message'];
 				} else {
-					$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
+					$msg	=	Text::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
 				}
 				$msgType	=	$config['message_style'];
 			} else {
@@ -84,7 +89,7 @@ class CCKControllerForm extends JControllerForm
 				$msgType	=	'';
 			}
 		} else {
-			$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+			$msg		=	Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
 			$msgType	= 'error';
 		}
 		
@@ -117,7 +122,7 @@ class CCKControllerForm extends JControllerForm
 	// saveAjax
 	public function saveAjax()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$config		=	$this->save( null, null, true );
 		$return		=	array(
@@ -137,7 +142,7 @@ class CCKControllerForm extends JControllerForm
 	// _getPreconfig
 	protected function _getPreconfig()
 	{
-		$data	=	JFactory::getApplication()->input->post->get( 'config', array(), 'array' );
+		$data	=	Factory::getApplication()->input->post->get( 'config', array(), 'array' );
 
 		$data['copyfrom_id']	=	( !isset( $data['copyfrom_id'] ) ) ? 0 : $data['copyfrom_id'];
 		$data['id']				=	( !isset( $data['id'] ) ) ? 0 : $data['id'];
@@ -153,7 +158,7 @@ class CCKControllerForm extends JControllerForm
 	// _getRedirectQuery
 	protected function _getRedirectQuery( $full = false )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $full ) {
 			$return	=	$app->input->getBase64( 'return' );
@@ -187,7 +192,7 @@ class CCKControllerForm extends JControllerForm
 	// _getRedirectQuery_More
 	protected function _getRedirectQuery_More( $request, $var, $name )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$query	=	'';
 		
 		$value	=	(string)$app->input->$request( $name, '' );

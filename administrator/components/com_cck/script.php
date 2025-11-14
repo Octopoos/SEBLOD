@@ -10,6 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
 
@@ -27,8 +35,8 @@ class com_cckInstallerScript
 		// Post Install Log
 		self::_postInstallMessage( 'uninstall', $parent );
 
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "package" AND element = "pkg_cck"' );
 		$eid	=	$db->loadResult();
 		
@@ -69,8 +77,8 @@ class com_cckInstallerScript
 		// Uninstall FULL PACKAGE only if package exists && system plugin exists..
 		if ( $eid && $cck ) {
 			$manifest	=	JPATH_ADMINISTRATOR.'/manifests/packages/pkg_cck.xml';
-			if ( JFile::exists( $manifest ) ) {
-				$xml	=	JFactory::getXML( $manifest ); // Keep it this way until platform 13.x
+			if ( File::exists( $manifest ) ) {
+				$xml	=	Factory::getXML( $manifest ); // Keep it this way until platform 13.x
 			}
 			if ( isset( $xml->files ) ) {
 				unset( $xml->files->file[3] );
@@ -78,7 +86,7 @@ class com_cckInstallerScript
 			}
 			
 			jimport( 'joomla.installer.installer' );
-			$installer	=	JInstaller::getInstance();
+			$installer	=	Installer::getInstance();
 			$installer->uninstall( 'package', $eid );
 		}
 	}
@@ -90,21 +98,21 @@ class com_cckInstallerScript
 		self::_postInstallMessage( 'update', $parent );
 
 		// WAITING FOR JOOMLA 1.7.x FIX
-		$app		=	JFactory::getApplication();
-		$config		=	JFactory::getConfig();
+		$app		=	Factory::getApplication();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_var_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
 		$src		=	JPATH_SITE.'/libraries/cck/rendering/variations';
-		if ( JFolder::exists( $src ) ) {
-			JFolder::copy( $src, $path );
+		if ( Folder::exists( $src ) ) {
+			Folder::copy( $src, $path );
 			$app->cck_core_temp_var	=	$tmp_dir;
 		}
 		// WAITING FOR JOOMLA 1.7.x FIX
 
 		// -- Patch for websites started with SEBLOD 2.x 
 		if ( version_compare( $app->cck_core_version_old, '3.2', '<' ) ) {
-			$db		=	JFactory::getDbo();
+			$db		=	Factory::getDbo();
 			$db->setQuery( 'SELECT id FROM #__cck_core_fields WHERE id >= 500 AND id < 5000' );
 			$fields	=	$db->loadObjectList();
 
@@ -130,7 +138,7 @@ class com_cckInstallerScript
 					}
 				}
 				if ( $errors ) {
-					JFactory::getApplication()->enqueueMessage( 'Patch IDs failed.. while updating to SEBLOD 3.2.0' );
+					Factory::getApplication()->enqueueMessage( 'Patch IDs failed.. while updating to SEBLOD 3.2.0' );
 				}
 			}
 		}
@@ -139,7 +147,7 @@ class com_cckInstallerScript
 		// -- Patch for websites started between SEBLOD 3.6.0+ and 3.8.0-
 		if ( version_compare( $app->cck_core_version_old, '3.6', '>=' )
 		  && version_compare( $app->cck_core_version_old, '3.8', '<' ) ) {
-			$db			=	JFactory::getDbo();
+			$db			=	Factory::getDbo();
 			$db->setQuery( 'SELECT id, name FROM #__cck_core_fields WHERE id >= 533 AND id < 5000' );
 			$fields		=	$db->loadObjectList();
 			$ignore		=	array(
@@ -201,10 +209,10 @@ class com_cckInstallerScript
 							}
 						}
 					}
-					JFactory::getApplication()->enqueueMessage( '<strong>'.$nb.' field(s)</strong> patched (>= 533 and < 5000).' );
+					Factory::getApplication()->enqueueMessage( '<strong>'.$nb.' field(s)</strong> patched (>= 533 and < 5000).' );
 				}
 				if ( $errors ) {
-					JFactory::getApplication()->enqueueMessage( 'Patch IDs failed.. while updating to SEBLOD 3.8.0', 'error' );
+					Factory::getApplication()->enqueueMessage( 'Patch IDs failed.. while updating to SEBLOD 3.8.0', 'error' );
 				}
 			}
 		}
@@ -213,15 +221,15 @@ class com_cckInstallerScript
 	// preflight
 	public function preflight( $type, $parent )
 	{
-		$app		=	JFactory::getApplication();
-		$lang		=	JFactory::getLanguage();
+		$app		=	Factory::getApplication();
+		$lang		=	Factory::getLanguage();
 		
 		$app->cck_core				=	true;
 		$app->cck_core_version_old	=	self::_getVersion();
 
 		// -- Dirty workaround (for websites with corrupted Menu Tree) cleaned on postflight
 		if ( $type == 'update' && version_compare( $app->cck_core_version_old, '3.11.4', '<' ) ) {
-			$db			=	JFactory::getDbo();
+			$db			=	Factory::getDbo();
 			$query		=	'SELECT b.id, b.lft, b.rgt'
 						.	' FROM #__menu AS a'
 						.	' LEFT JOIN #__menu AS b ON b.parent_id = a.id'
@@ -246,17 +254,17 @@ class com_cckInstallerScript
 	// postflight
 	public function postflight( $type, $parent )
 	{
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		
 		$app->cck_core_version		=	self::_getVersion();
 		
 		if ( $type == 'update' ) {
-			$params	=	JComponentHelper::getParams( 'com_cck' );
+			$params	=	ComponentHelper::getParams( 'com_cck' );
 			$uix	=	$params->get( 'uix', '' );
 			if ( $uix == 'nano' ) {
 				$params->set( 'uix', '' );
-				$db	=	JFactory::getDbo();
+				$db	=	Factory::getDbo();
 				$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params->toString() ).'" WHERE element = "com_cck"' );
 				$db->execute();
 			}
@@ -269,17 +277,17 @@ class com_cckInstallerScript
 		
 		// Additional stuff
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
-		if ( JFile::exists( $src ) ) {
-			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
-			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
-			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
+		if ( File::exists( $src ) ) {
+			File::delete( JPATH_SITE.'/cli/cck_job.php' );
+			File::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
+			Folder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
 
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
 		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
-		if ( JFile::exists( $src ) ) {
-			if ( !JFile::exists( $dest ) ) {
-				JFile::copy( $src, $dest );
+		if ( File::exists( $src ) ) {
+			if ( !File::exists( $dest ) ) {
+				File::copy( $src, $dest );
 			}
 			$query	=	$db->getQuery( true );
 			$query->select( $db->quoteName( array( 'template' ) ) )
@@ -290,27 +298,27 @@ class com_cckInstallerScript
 		
 			if ( $site_template = $db->loadResult() ) {
 				$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
-				if ( !JFile::exists( $dest ) ) {
-					JFile::copy( $src, $dest );
+				if ( !File::exists( $dest ) ) {
+					File::copy( $src, $dest );
 				}
 			}
-			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
+			Folder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
 		}
 		
 		if ( $type == 'install' ) {
 			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
-			if ( JFolder::exists( $src ) ) {
-				JFolder::copy( $src, JPATH_SITE.'/libraries/cck/_', '', true );
-				JFolder::delete( $src );
+			if ( Folder::exists( $src ) ) {
+				Folder::copy( $src, JPATH_SITE.'/libraries/cck/_', '', true );
+				Folder::delete( $src );
 			}
 
 			// Post Install Log
 			self::_postInstallMessage( 'install', $parent );
 		} elseif ( !version_compare( JVERSION, '4.0', 'ge' ) ) {
 			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
-			if ( JFolder::exists( $src ) ) {
-				JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
-				JFolder::delete( $src );
+			if ( Folder::exists( $src ) ) {
+				Folder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
+				Folder::delete( $src );
 			}
 		}
 	}
@@ -318,12 +326,12 @@ class com_cckInstallerScript
 	// _getVersion
 	public function _getVersion( $default = '2.0.0' )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		
 		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
 		
 		$res		=	$db->loadResult();
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadString( $res );
 		
 		return $registry->get( 'version', $default );
@@ -335,7 +343,7 @@ class com_cckInstallerScript
 		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
 			return;
 		}
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$title	=	'com_cck';
 		$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$title.'"';
 
@@ -345,12 +353,12 @@ class com_cckInstallerScript
 			return false;
 		}
 		
-		JFactory::getLanguage()->load( $title );
+		Factory::getLanguage()->load( $title );
 		$version	=	(string)$parent->getParent()->getManifest()->version;
 		if ( $event == 'install' ) {
-			$text	=	JText::_( 'LIB_CCK_POSTINSTALL_WELCOME_DESCRIPTION' );
+			$text	=	Text::_( 'LIB_CCK_POSTINSTALL_WELCOME_DESCRIPTION' );
 		} else {
-			$user		=	JFactory::getUser();
+			$user		=	Factory::getUser();
 			$user_id	=	$user->id;
 			$user_type	=	JCckDatabase::loadResult( 'SELECT cck FROM #__cck_core WHERE storage_location = "joomla_user" AND pk = '.$user_id );
 			if ( $user_type ) {
@@ -359,13 +367,13 @@ class com_cckInstallerScript
 				$user_link	=	'index.php?option=com_users&task=user.edit&id='.$user_id;
 			}
 			$user_name	=	'<a href="'.$user_link.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
-			$text		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
+			$text		=	Text::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, Factory::getDate()->format( Text::_( 'DATE_FORMAT_LC2' ) ) );
 		}
 		$title		=	'SEBLOD '.$version;
 		
 		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
-			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
-			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+			\JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 		} else {
 			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';
 			require_once JPATH_SITE.'/libraries/cms/cck/database.php';

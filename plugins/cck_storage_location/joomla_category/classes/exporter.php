@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_category.php';
 
 // Class
@@ -39,10 +43,10 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 	public static function onCCK_Storage_LocationExport( $items, &$config = array() )
 	{
 		// Init
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$excluded2	=	array( 'cck'=>'' );
 		$tables		=	array();
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		
 		// Prepare
 		$table		=	self::_getTable();
@@ -91,7 +95,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		
 		// Set
 		if ( $config['prepare_output'] ) {
-			JPluginHelper::importPlugin( 'cck_field' );
+			PluginHelper::importPlugin( 'cck_field' );
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
@@ -235,7 +239,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				if ( isset( $config['processing'][$event] ) ) {
 					foreach ( $config['processing'][$event] as $p ) {
 						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-							$options	=	new JRegistry( $p->options );
+							$options	=	new Registry( $p->options );
 
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
@@ -248,7 +252,7 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 				if ( isset( $config['processing'][$event] ) ) {
 					foreach ( $config['processing'][$event] as $p ) {
 						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-							$options	=	new JRegistry( $p->options );
+							$options	=	new Registry( $p->options );
 
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}

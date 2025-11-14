@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_TypoImage extends JCckPluginTypo
 {
@@ -25,7 +28,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		if ( self::$type != $field->typo ) {
 			return;
 		}
-		self::$path	=	JUri::root().'plugins/cck_field_typo/'.self::$type.'/';
+		self::$path	=	Uri::root().'plugins/cck_field_typo/'.self::$type.'/';
 		
 		// Prepare
 		if ( $field->value && $field->value != '' ) {
@@ -41,7 +44,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	{
 		// Prepare
 		$options		=	array(
-								'base'=>JUri::root( true ).'/',
+								'base'=>Uri::root( true ).'/',
 								'attributes'=>$typo->get( 'attributes', '' ),
 								'class'=>$typo->get( 'class', '' ),
 								'root'=>''
@@ -51,7 +54,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 		if ( $path_type == -1 ) {
 			$options['root']	=	JCck::getCdn().'/';
 		} elseif ( $path_type ) {
-			$options['root']	=	JUri::root();
+			$options['root']	=	Uri::root();
 		}
 
 		$thumb_array	=	array(
@@ -252,7 +255,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	// _addScripts
 	protected static function _addScripts( $params, $options )
 	{
-		$doc		=	JFactory::getDocument();
+		$doc		=	Factory::getDocument();
 		$height		=	'';
 		$width		=	'';
 		

@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 if ( !$this->raw_rendering ) { ?>
 <div class="cck_page_list<?php echo $this->pageclass_sfx; ?> cck-clrfix" id="system">
 <?php } ?>
@@ -17,7 +21,7 @@ if ( !$this->raw_rendering ) { ?>
 	$pagination_replace	=	'';
 	
 	if ( $this->show_pagination > -2 && $this->pages_total > 1 ) {
-		foreach ( (array)JUri::getInstance()->getQuery( true ) as $k=>$v ) {
+		foreach ( (array)Uri::getInstance()->getQuery( true ) as $k=>$v ) {
 			if ( $v == '' && isset( $this->config['pagination_vars'][$k] ) ) {
 				$pagination_replace	.=	$k.'=&';
 			} elseif ( $k != 'start' ) {
@@ -30,13 +34,13 @@ if ( !$this->raw_rendering ) { ?>
 		if ( $this->config['doTranslation'] ) {
 			$label	=	'COM_CCK_' . str_replace( ' ', '_', trim( $label ) );
 
-			if ( ( $this->total == 0 || $this->total == 1 ) && JFactory::getLanguage()->hasKey( $label.'_1' ) ) {
+			if ( ( $this->total == 0 || $this->total == 1 ) && Factory::getLanguage()->hasKey( $label.'_1' ) ) {
 				$label	.=	'_1';
 			}
-			$label	=	JText::_( $label );
+			$label	=	Text::_( $label );
 		} elseif ( $this->total == 0 || $this->total == 1 ) {
-			if ( JFactory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
-				$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
+			if ( Factory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
+				$label	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
 			}			
 		}
 		echo '<div class="'.$this->class_items_number.'"><span>' . $this->total .'</span> '. $label . '</div>';

@@ -10,19 +10,24 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerTemplate extends JControllerForm
+class CCKControllerTemplate extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 
 	// add
 	public function add()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		// Parent Method
 		$result	=	parent::add();
@@ -38,8 +43,8 @@ class CCKControllerTemplate extends JControllerForm
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$user		=	JFactory::getUser();
+		$app		=	Factory::getApplication();
+		$user		=	Factory::getUser();
 		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
@@ -59,7 +64,7 @@ class CCKControllerTemplate extends JControllerForm
 	// allowEdit
 	protected function allowEdit( $data = array(), $key = 'id' )
 	{
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		$recordId	=	(int)isset( $data[$key] ) ? $data[$key] : 0;
 		$folderId	=	0;
 		
@@ -79,16 +84,16 @@ class CCKControllerTemplate extends JControllerForm
 	// exportVariation
 	public function exportVariation()
 	{
-		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$model	=	$this->getModel();
 		$name	=	$app->input->getString( 'variation', '' );
 		$folder	=	$app->input->getString( 'folder', '' );
 		
 		if ( $file = $model->prepareExport_Variation( $name, $folder ) ) {
 			$file	=	JCckDevHelper::getRelativePath( $file, false );
-			$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+			$this->setRedirect( Uri::base().'index.php?option=com_cck&task=download&file='.$file );
 		} else {
 			$this->setRedirect( 'index.php?option=com_cck&view=variations' );
 		}

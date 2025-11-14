@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 {
@@ -35,7 +41,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$custom			=	$link->get( 'custom', '' );
 		$edit			=	(int)$link->get( 'form_edition', 1 );
 		$form			=	$link->get( 'form', '' );
@@ -55,7 +61,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
-		$uri			=	JUri::getInstance()->toString();
+		$uri			=	Uri::getInstance()->toString();
 
 		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
 			$return		=	$app->input->get( 'return' );
@@ -141,7 +147,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			if ( !( $canEdit && $canEditOwn
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
-				|| ( $canEditOwn && ( isset( $session_id ) && $session_id == JFactory::getSession()->getId() ) )
+				|| ( $canEditOwn && ( isset( $session_id ) && $session_id == Session::getInstance()->getId() ) )
 				|| ( $canEditOwnContent )
 				|| ( $canPreview ) ) ) {
 				if ( !$link->get( 'no_access', 0 ) ) {
@@ -195,7 +201,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				if ( $redirection != '-1' ) {
 					$f->link	.=	'&return='.$return;
 				}
-				$f->link			=	JRoute::_( $f->link );
+				$f->link			=	Route::_( $f->link );
 				$f->link_attributes	=	$link_attr ? $link_attr : ( isset( $f->link_attributes ) ? $f->link_attributes : '' );
 				$f->link_class		=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
 				$f->link_rel		=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
@@ -206,7 +212,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 					if ( $link_title == '2' ) {
 						$f->link_title	=	$link_title2;
 					} elseif ( $link_title == '3' ) {
-						$f->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+						$f->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 					}
 					if ( !isset( $f->link_title ) ) {
 						$f->link_title	=	'';
@@ -222,7 +228,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				$field->link	=	'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId;
 			} else {
 				$lang_target	=	$lang_tag ? '&lang='.$lang_tag : '';
-				$field->link	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId.$lang_target );
+				$field->link	=	Route::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$form.$edit.$vars.'&Itemid='.$itemId.$lang_target );
 			}
 			$separator			=	( strpos( $field->link, '?' ) !== false ) ? '&' : '?';
 			if ( $custom ) {
@@ -242,7 +248,7 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 				if ( $link_title == '2' ) {
 					$field->link_title	=	$link_title2;
 				} elseif ( $link_title == '3' ) {
-					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+					$field->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 				}
 				if ( !isset( $field->link_title ) ) {
 					$field->link_title	=	'';

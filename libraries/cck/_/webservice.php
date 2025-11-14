@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+
 // JCckWebservice
 abstract class JCckWebservice
 {
@@ -27,11 +34,11 @@ abstract class JCckWebservice
 		
 		if ( JCckDatabaseCache::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.'com_'.self::$_me.'"' ) > 0 ) {
 			$config			=	new stdClass;
-			$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+			$config->params =	ComponentHelper::getParams( 'com_'.self::$_me );
 		} else {
 			$config			=	new stdClass;
 			
-			$config->params	=	new JRegistry;
+			$config->params	=	new Registry;
 			$config->params->set( 'KO', true );
 		}
 		
@@ -110,9 +117,9 @@ abstract class JCckWebservice
 	// run
 	public static function run()
 	{
-		JPluginHelper::importPlugin( 'cck_webservice' );
+		PluginHelper::importPlugin( 'cck_webservice' );
 
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$config	=	array();
 		$fields	=	array();
 		$items	=	JCckDatabase::loadObjectList( 'SELECT id, webservice_object'
@@ -120,10 +127,10 @@ abstract class JCckWebservice
 												. ' WHERE published = 1'
 												. ' LIMIT 25' );
 
-		JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
+		\JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
 
 		foreach ( $items as $item ) {
-			$table	=	JTable::getInstance( 'Stack', 'CCK_Table' );
+			$table	=	Table::getInstance( 'Stack', 'CCK_Table' );
 
 			if ( !$table->load( $item->id ) ) {
 				continue;
@@ -208,9 +215,9 @@ abstract class JCckWebservice
 		}
 		$webservice->request	=	str_replace( '{id}', (string)$identifier, $webservice->request );
 		
-		JPluginHelper::importPlugin( 'cck_webservice' );
+		PluginHelper::importPlugin( 'cck_webservice' );
 
-		JFactory::getApplication()->triggerEvent( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
 		return true;
 	}
@@ -223,9 +230,9 @@ abstract class JCckWebservice
 	// _stack
 	protected static function _stack( $webservice, $state = 1, $response = null )
 	{
-		JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
+		\JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
 
-		$table	=	JTable::getInstance( 'Stack', 'CCK_Table' );
+		$table	=	Table::getInstance( 'Stack', 'CCK_Table' );
 
 		if ( is_object( $response ) ) {
 			$response	=	json_encode( $response );
@@ -256,9 +263,9 @@ abstract class JCckWebservice
 			return false;
 		}
 
-		JModelLegacy::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
+		BaseDatabaseModel::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
 
-		$model	=	JModelLegacy::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
+		$model	=	BaseDatabaseModel::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
 		
 		return $model->doInput( $resource_name, $data );
 	}
@@ -273,10 +280,10 @@ abstract class JCckWebservice
 			return false;
 		}
 
-		JModelLegacy::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
+		BaseDatabaseModel::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
 
 		$buffer	=	file_get_contents( $path );
-		$model	=	JModelLegacy::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
+		$model	=	BaseDatabaseModel::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
 		$res	=	$model->doInput( $resource_name, $buffer );
 
 		return true;
@@ -289,9 +296,9 @@ abstract class JCckWebservice
 			return false;
 		}
 
-		JModelLegacy::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
+		BaseDatabaseModel::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
 
-		$model	=	JModelLegacy::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
+		$model	=	BaseDatabaseModel::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
 		$output	=	$model->doOutput( $resource_name, $resource_config );
 
 		if ( $default != 'data' ) {

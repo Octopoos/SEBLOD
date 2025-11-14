@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // JCckEcommerceRule
 abstract class JCckEcommerceRule
 {
@@ -112,7 +114,7 @@ abstract class JCckEcommerceRule
 					case 'free':
 						$cost						=	0;
 						$res						+=	$cost;
-						$text						=	JText::_( 'COM_CCK_FREE_SHIPPING' );
+						$text						=	Text::_( 'COM_CCK_FREE_SHIPPING' );
 						$total						+=	$cost;
 						$results['items'][$r->id]	=	array(
 															'cost'=>$r->cost,

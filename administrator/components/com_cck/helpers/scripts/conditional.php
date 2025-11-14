@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Prepare
 $field			=	JCckDatabase::loadObject( 'SELECT id, title, name FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
 $fields			=	array();
@@ -19,43 +24,43 @@ if ( $this->item->type && $this->item->id ) {
 				.	' WHERE b.'.$this->item->type.'id = '.$this->item->id . ' ORDER BY text' );
 }
 $options		=	array();
-$rules			=	array( 'and'=>JText::_( 'COM_CCK_AND' ), 'or'=>JText::_( 'COM_CCK_OR' ) );
+$rules			=	array( 'and'=>Text::_( 'COM_CCK_AND' ), 'or'=>Text::_( 'COM_CCK_OR' ) );
 $friendly		=	array();
 if ( count( $fields ) ) {
 	foreach ( $fields as $f ) {
-		$options[]	=	JHtml::_( 'select.option', $f->value, $f->text );
+		$options[]	=	HTMLHelper::_( 'select.option', $f->value, $f->text );
 	}
 }
-$options2		=	array_merge( array( JHtml::_( 'select.option', '', '...' ) ), $options );
-$options		=	array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_SELECT' ).' -' ) ), $options );
+$options2		=	array_merge( array( HTMLHelper::_( 'select.option', '', '...' ) ), $options );
+$options		=	array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_SELECT' ).' -' ) ), $options );
 
-$triggerstates_list		=	array( JHtml::_( 'select.option', 'isEqual', JText::_( 'COM_CCK_STATE_IS_EQUAL_IN' ) ),
-								   JHtml::_( 'select.option', 'isDifferent', JText::_( 'COM_CCK_STATE_IS_DIFFERENT' ) ),
-								   JHtml::_( 'select.option', 'isFilled', JText::_( 'COM_CCK_STATE_IS_FILLED' ) ),
-								   JHtml::_( 'select.option', 'isEmpty', JText::_( 'COM_CCK_STATE_IS_EMPTY' ) ),
-								   JHtml::_( 'select.option', 'isChanged', JText::_( 'COM_CCK_STATE_IS_CHANGED' ) ),
-								   JHtml::_( 'select.option', 'isPressed', JText::_( 'COM_CCK_STATE_IS_PRESSED' ) ),
-								   JHtml::_( 'select.option', 'isSubmitted', JText::_( 'COM_CCK_STATE_IS_SUBMITTED' ) ),
-								   JHtml::_( 'select.option', 'callFunction', JText::_( 'COM_CCK_STATE_CALL_FUNCTION' ) ) );
-$triggerstates_list2	=	array_merge( array( JHtml::_( 'select.option', '', '...' ) ), $triggerstates_list );
+$triggerstates_list		=	array( HTMLHelper::_( 'select.option', 'isEqual', Text::_( 'COM_CCK_STATE_IS_EQUAL_IN' ) ),
+								   HTMLHelper::_( 'select.option', 'isDifferent', Text::_( 'COM_CCK_STATE_IS_DIFFERENT' ) ),
+								   HTMLHelper::_( 'select.option', 'isFilled', Text::_( 'COM_CCK_STATE_IS_FILLED' ) ),
+								   HTMLHelper::_( 'select.option', 'isEmpty', Text::_( 'COM_CCK_STATE_IS_EMPTY' ) ),
+								   HTMLHelper::_( 'select.option', 'isChanged', Text::_( 'COM_CCK_STATE_IS_CHANGED' ) ),
+								   HTMLHelper::_( 'select.option', 'isPressed', Text::_( 'COM_CCK_STATE_IS_PRESSED' ) ),
+								   HTMLHelper::_( 'select.option', 'isSubmitted', Text::_( 'COM_CCK_STATE_IS_SUBMITTED' ) ),
+								   HTMLHelper::_( 'select.option', 'callFunction', Text::_( 'COM_CCK_STATE_CALL_FUNCTION' ) ) );
+$triggerstates_list2	=	array_merge( array( HTMLHelper::_( 'select.option', '', '...' ) ), $triggerstates_list );
 
-$states_list	=	array( JHtml::_( 'select.option', 'isVisible', JText::_( 'COM_CCK_STATE_IS_VISIBLE' ) ),
-						   JHtml::_( 'select.option', 'isHidden', JText::_( 'COM_CCK_STATE_IS_HIDDEN' ) ),
-					 	   /*JHtml::_( 'select.option', 'isComputed', JText::_( 'COM_CCK_STATE_IS_COMPUTED' ) ),*/
-						   JHtml::_( 'select.option', 'isFilled', JText::_( 'COM_CCK_STATE_IS_FILLED' ) ),
-						   JHtml::_( 'select.option', 'isFilledBy', JText::_( 'COM_CCK_STATE_IS_FILLED_BY' ) ),
-						   JHtml::_( 'select.option', 'isEmpty', JText::_( 'COM_CCK_STATE_IS_EMPTY' ) ),
-						   JHtml::_( 'select.option', 'isEnabled', JText::_( 'COM_CCK_STATE_IS_ENABLED' ) ),
-						   JHtml::_( 'select.option', 'isDisabled', JText::_( 'COM_CCK_STATE_IS_DISABLED' ) ),
-						   JHtml::_( 'select.option', 'hasClass', JText::_( 'COM_CCK_STATE_HAS_CLASS' ) ),
-						   JHtml::_( 'select.option', 'hasNotClass', JText::_( 'COM_CCK_STATE_HASNT_CLASS' ) ),
-						   JHtml::_( 'select.option', 'triggers', JText::_( 'COM_CCK_STATE_TRIGGERS' ) ) );
-$states_list2	=	array_merge( array( JHtml::_( 'select.option', '', '...' ) ), $states_list );
-$states_list	=	array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_SELECT' ).' -' ) ), $states_list );
+$states_list	=	array( HTMLHelper::_( 'select.option', 'isVisible', Text::_( 'COM_CCK_STATE_IS_VISIBLE' ) ),
+						   HTMLHelper::_( 'select.option', 'isHidden', Text::_( 'COM_CCK_STATE_IS_HIDDEN' ) ),
+					 	   /*HTMLHelper::_( 'select.option', 'isComputed', Text::_( 'COM_CCK_STATE_IS_COMPUTED' ) ),*/
+						   HTMLHelper::_( 'select.option', 'isFilled', Text::_( 'COM_CCK_STATE_IS_FILLED' ) ),
+						   HTMLHelper::_( 'select.option', 'isFilledBy', Text::_( 'COM_CCK_STATE_IS_FILLED_BY' ) ),
+						   HTMLHelper::_( 'select.option', 'isEmpty', Text::_( 'COM_CCK_STATE_IS_EMPTY' ) ),
+						   HTMLHelper::_( 'select.option', 'isEnabled', Text::_( 'COM_CCK_STATE_IS_ENABLED' ) ),
+						   HTMLHelper::_( 'select.option', 'isDisabled', Text::_( 'COM_CCK_STATE_IS_DISABLED' ) ),
+						   HTMLHelper::_( 'select.option', 'hasClass', Text::_( 'COM_CCK_STATE_HAS_CLASS' ) ),
+						   HTMLHelper::_( 'select.option', 'hasNotClass', Text::_( 'COM_CCK_STATE_HASNT_CLASS' ) ),
+						   HTMLHelper::_( 'select.option', 'triggers', Text::_( 'COM_CCK_STATE_TRIGGERS' ) ) );
+$states_list2	=	array_merge( array( HTMLHelper::_( 'select.option', '', '...' ) ), $states_list );
+$states_list	=	array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_SELECT' ).' -' ) ), $states_list );
 
 // Set
-$doc	=	JFactory::getDocument();
-$root	=	JUri::root( true );
+$doc	=	Factory::getDocument();
+$root	=	Uri::root( true );
 $doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 $doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
@@ -70,7 +75,7 @@ $js		=	'
 					reset: function() {
 						var elem = "ffp_'.$this->item->name.'_conditional";
 						parent.jQuery("#"+elem).val("");
-						var text = "'.JText::_( 'COM_CCK_ADD' ).'";
+						var text = "'.Text::_( 'COM_CCK_ADD' ).'";
 						parent.jQuery("#"+elem).next("span").html(text);
 						var elem = "ffp_'.$this->item->name.'_conditional_options";
 						parent.jQuery("#"+elem).val("");
@@ -130,7 +135,7 @@ $js		=	'
 						}
 						var elem = "ffp_'.$this->item->name.'_conditional";
 						parent.jQuery("#"+elem).val(conditionals);
-						var text = "&lt; '.JText::_( 'COM_CCK_EDIT' ).' /&gt;";
+						var text = "&lt; '.Text::_( 'COM_CCK_EDIT' ).' /&gt;";
 						parent.jQuery("#"+elem).next("span").html(text);
 						var elem = "ffp_'.$this->item->name.'_conditional_options";
 						parent.jQuery("#"+elem).val(encoded);
@@ -262,79 +267,79 @@ $fill	=	'<span class="icon-menu-2"></span>';
 
 for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	$condition		=	'cds'.$i;
-	$legend			=	( $i == 0 ) ? '<div class="legend top left">'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).'<span class="add icon-plus"></span></div>' : '';
+	$legend			=	( $i == 0 ) ? '<div class="legend top left">'.Text::_( 'COM_CCK_CONDITIONAL_STATES' ).'<span class="add icon-plus"></span></div>' : '';
 	
-	$states0		=	JHtml::_( 'select.genericlist', $states_list, 'states0', 'class="form-select inputbox input-medium blue state_kk"', 'value', 'text', '', $condition.'_states0' );
+	$states0		=	HTMLHelper::_( 'select.genericlist', $states_list, 'states0', 'class="form-select inputbox input-medium blue state_kk"', 'value', 'text', '', $condition.'_states0' );
 	$s_value0		=	'<input type="text" id="'.$condition.'_states0_'.'value" name="value" value="" class="form-control inputbox input-mini states0" size="8" />';
 	$s_selector0	=	'<input type="text" id="'.$condition.'_states0_'.'selector" name="selector" value="" class="form-control inputbox input-mini states0" size="12" />';
 	$s_revert0		=	'<input type="checkbox" id="'.$condition.'_states0_'.'revert" name="revert" value="1" class="inputbox states0" checked="checked" />';
 	
-	$states1		=	JHtml::_( 'select.genericlist', $states_list2, 'states1', 'class="form-select inputbox input-medium blue state_kk" trigger_kk', 'value', 'text', '', $condition.'_states1' );
+	$states1		=	HTMLHelper::_( 'select.genericlist', $states_list2, 'states1', 'class="form-select inputbox input-medium blue state_kk" trigger_kk', 'value', 'text', '', $condition.'_states1' );
 	$s_value1		=	'<input type="text" id="'.$condition.'_states1_'.'value" name="value" value="" class="form-control inputbox input-mini states1" size="8" />';
 	$s_selector1	=	'<input type="text" id="'.$condition.'_states1_'.'selector" name="selector" value="" class="form-control inputbox input-mini states1" size="12" />';
 	$s_revert1		=	'<input type="checkbox" id="'.$condition.'_states1_'.'revert" name="revert" value="1" class="inputbox states1" checked="checked" />';
 	
-	$states2		=	JHtml::_( 'select.genericlist', $states_list2, 'states2', 'class="form-select inputbox input-medium blue state_kk"', 'value', 'text', '', $condition.'_states2' );
+	$states2		=	HTMLHelper::_( 'select.genericlist', $states_list2, 'states2', 'class="form-select inputbox input-medium blue state_kk"', 'value', 'text', '', $condition.'_states2' );
 	$s_value2		=	'<input type="text" id="'.$condition.'_states2_'.'value" name="value" value="" class="form-control inputbox input-mini states2" size="8" />';
 	$s_selector2	=	'<input type="text" id="'.$condition.'_states2_'.'selector" name="selector" value="" class="form-control inputbox input-mini states2" size="12" />';
 	$s_revert2		=	'<input type="checkbox" id="'.$condition.'_states2_'.'revert" name="revert" value="1" class="inputbox states2" checked="checked" />';
 	
-	$t_rule			=	JHtml::_( 'select.genericlist', $rules, 'rule', 'class="form-select inputbox blue"', 'value', 'text', 'and', $condition.'_rule' );
+	$t_rule			=	HTMLHelper::_( 'select.genericlist', $rules, 'rule', 'class="form-select inputbox blue"', 'value', 'text', 'and', $condition.'_rule' );
 	
-	$t_value0		=	JHtml::_( 'select.genericlist', $triggerstates_list, 'conditions0', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', 
+	$t_value0		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list, 'conditions0', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', 
 						'isEqual', $condition.'_conditions0' )
 					.	'<div><input type="text" id="'.$condition.'_conditions0_value" name="value" value="" class="form-control inputbox input-mini triggers0" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition0">'.$fill.'</span></div>';
-	$t_trigger0		=	JHtml::_( 'select.genericlist', $options, 'trigger', 'class="form-select inputbox input-medium blue triggers0" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger0		=	HTMLHelper::_( 'select.genericlist', $options, 'trigger', 'class="form-select inputbox input-medium blue triggers0" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions0_trigger' );
 	
-	$t_value1		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions1', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value1		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions1', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions1' )
 					.	'<div><input type="text" id="'.$condition.'_conditions1_value" name="value" value="" class="form-control inputbox input-mini triggers1" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition1">'.$fill.'</span></div>';
-	$t_trigger1		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers1 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger1		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers1 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions1_trigger' );
 	
-	$t_value2		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions2', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value2		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions2', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions2' )
 					.	'<div><input type="text" id="'.$condition.'_conditions2_value" name="value" value="" class="form-control inputbox input-mini triggers2" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition2">'.$fill.'</span></div>';
-	$t_trigger2		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers2 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger2		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers2 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions2_trigger' );
 	
-	$t_value3		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions3', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value3		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions3', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions3' )
 					.	'<div><input type="text" id="'.$condition.'_conditions3_value" name="value" value="" class="form-control inputbox input-mini triggers3" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition3">'.$fill.'</span></div>';
-	$t_trigger3		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers3 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger3		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers3 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions3_trigger' );
 						
-	$t_value4		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions4', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value4		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions4', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions4' )
 					.	'<div><input type="text" id="'.$condition.'_conditions4_value" name="value" value="" class="form-control inputbox input-mini triggers4" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition4">'.$fill.'</span></div>';
-	$t_trigger4		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers4 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger4		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers4 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions4_trigger' );
 
-	$t_value5		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions5', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value5		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions5', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions5' )
 					.	'<div><input type="text" id="'.$condition.'_conditions5_value" name="value" value="" class="form-control inputbox input-mini triggers5" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition5">'.$fill.'</span></div>';
-	$t_trigger5		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers5 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger5		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers5 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions5_trigger' );
 
-	$t_value6		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions6', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value6		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions6', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions6' )
 					.	'<div><input type="text" id="'.$condition.'_conditions6_value" name="value" value="" class="form-control inputbox input-mini triggers6" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition6">'.$fill.'</span></div>';
-	$t_trigger6		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers6 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger6		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers6 trigger_kk" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions6_trigger' );
 
-	$t_value7		=	JHtml::_( 'select.genericlist', $triggerstates_list2, 'conditions7', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
+	$t_value7		=	HTMLHelper::_( 'select.genericlist', $triggerstates_list2, 'conditions7', 'class="form-select inputbox blue triggers0" style="max-width:98px;"', 'value', 'text', '',
 						$condition.'_conditions7' )
 					.	'<div><input type="text" id="'.$condition.'_conditions7_value" name="value" value="" class="form-control inputbox input-mini triggers7" size="8" />'
 					.	'&nbsp;<span class="fill" name="condition7">'.$fill.'</span></div>';
-	$t_trigger7		=	JHtml::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers7" style="max-width:150px;"', 'value', 'text', '',
+	$t_trigger7		=	HTMLHelper::_( 'select.genericlist', $options2, 'trigger', 'class="form-select inputbox input-medium blue triggers7" style="max-width:150px;"', 'value', 'text', '',
 						$condition.'_conditions7_trigger' );
 	
 	$remove		=	( $i > 0 ) ? '<span class="'.$del.'"></span>' : '<span class="'.$del.'" style="visibility: hidden;"></span>';
@@ -343,11 +348,11 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	 .	 '<div class="legend top left">'.'# '.($i + 1).'.</div>'
 	 .	 '<table class="adminlist cck_radius2">'
 	 .	 '<tr class="half">'
-	 .	 '<th width="400px" align="center">'.JText::_( 'COM_CCK_STATES' ).'</th>'
+	 .	 '<th width="400px" align="center">'.Text::_( 'COM_CCK_STATES' ).'</th>'
 	 .	 '<th align="center"></td>'
-	 .	 '<th width="380px" align="center">'.JText::_( 'COM_CCK_TRIGGERS' ).'</td>'
+	 .	 '<th width="380px" align="center">'.Text::_( 'COM_CCK_TRIGGERS' ).'</td>'
 	 .	 '</tr>'
-	 .	 '<tr class="row0" height="145px"><td colspan="3">'.	 '<div class="begin">'.JText::_( 'COM_CCK_THIS_FIELD' ).'</div>'.'</td></tr>'
+	 .	 '<tr class="row0" height="145px"><td colspan="3">'.	 '<div class="begin">'.Text::_( 'COM_CCK_THIS_FIELD' ).'</div>'.'</td></tr>'
 	 .	 '<tr class="row0" height="145px">'
 	 .	 '<td width="400px" align="center" class="states">'
 	 .	 '<div class="conditional_states">'
@@ -357,7 +362,7 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 	 .	 '<div class="clr"></div><div class="conditional_states">'
 	 .	 '<div class="selector">'.$s_selector2.'<span class="star"> &sup1;</span>'.$s_revert2.'<span class="star">&sup2;</span></div><div class="define">'.$states2.'<span>'.$s_value2.'</span></div></div>'
 	 .	 '</td>'
-	 .	 '<td class="ope" align="center">'.JText::_( 'COM_CCK_WHEN' ).$t_rule.'</td>'
+	 .	 '<td class="ope" align="center">'.Text::_( 'COM_CCK_WHEN' ).$t_rule.'</td>'
 	 .	 '<td width="380px" align="center" class="triggers">'
 	 .	 '<div class="conditional_conditions">'.$t_trigger0.$t_value0.'</div>'
 	 .	 '<div class="clr"></div><div class="conditional_conditions">'.$t_trigger1.$t_value1.'</div>'
@@ -375,9 +380,9 @@ for ( $i = 0, $n = (int)$this->item->title; $i < $n; $i++ ) {
 }
 ?>
 <div class="seblod inverted">
-	<?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC' ); ?><br /><br />
-	<span class="star">&sup1; </span><span class="star2"><?php echo JText::_( 'COM_CCK_JQUERY_SELECTOR' ); ?></span><?php echo ' '.JText::_( 'COM_CCK_JQUERY_SELECTOR_DESC' ); ?>
+	<?php echo Text::_( 'COM_CCK_CONDITIONAL_STATES_DESC' ); ?><br /><br />
+	<span class="star">&sup1; </span><span class="star2"><?php echo Text::_( 'COM_CCK_JQUERY_SELECTOR' ); ?></span><?php echo ' '.Text::_( 'COM_CCK_JQUERY_SELECTOR_DESC' ); ?>
     <br /><br />
-    <span class="star">&sup2; </span><span class="star2"><?php echo JText::_( 'COM_CCK_STATE_AUTOREVERT' ); ?></span><?php echo ' '.JText::_( 'COM_CCK_STATE_AUTOREVERT_DESC' ); ?>
-	<br /><br /><?php echo JText::_( 'COM_CCK_CONDITIONAL_STATES_DESC2' ); ?>
+    <span class="star">&sup2; </span><span class="star2"><?php echo Text::_( 'COM_CCK_STATE_AUTOREVERT' ); ?></span><?php echo ' '.Text::_( 'COM_CCK_STATE_AUTOREVERT_DESC' ); ?>
+	<br /><br /><?php echo Text::_( 'COM_CCK_CONDITIONAL_STATES_DESC2' ); ?>
 </div>

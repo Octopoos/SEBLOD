@@ -10,17 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
 // View
-class CCKViewList extends JViewLegacy
+class CCKViewList extends HtmlView
 {
 	protected $vName	=	'list';
 	
 	// display
 	public function display( $tpl = null )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );
 		$uniqId						=	'';
 
@@ -47,11 +55,11 @@ class CCKViewList extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay( $preconfig )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$this->option				=	$app->input->get( 'option', '' );
 		$this->state				=	$this->get( 'State' );
 		$option						=	$this->option;
-		$params						=	new JRegistry;
+		$params						=	new Registry;
 		$view						=	$this->getName();
 		
 		$limitstart					=	$this->state->get( 'limitstart' );
@@ -72,7 +80,7 @@ class CCKViewList extends JViewLegacy
 		
 		// Set
 		if ( !is_object( @$options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 		$this->show_list_title		=	$options->get( 'show_list_title', '1' );
 		$this->tag_list_title		=	$options->get( 'tag_list_title', 'h2' );
@@ -103,16 +111,16 @@ class CCKViewList extends JViewLegacy
 	// addToolbar
 	protected function addToolbar( $search )
 	{
-		$bar		=	JToolBar::getInstance( 'toolbar' );
+		$bar		=	Toolbar::getInstance( 'toolbar' );
 		$canDo		=	Helper_Admin::getActions();
 		$separator	=	false;
 		$title		=	empty( $search->title ) ? 'List' : $search->title;
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		
 		require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
-		JToolBarHelper::title( $title, 'stack' );
+		ToolbarHelper::title( $title, 'stack' );
 		
 		if ( !( is_object( $search ) && $search->id ) ) {
 			return;
@@ -128,8 +136,8 @@ class CCKViewList extends JViewLegacy
 				$creation	=	false;
 			}
 			if ( $canCreate && $creation ) {
-				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( JUri::getInstance()->toString() );
-				$bar->prependButton( 'CckLink', 'new', JText::_( 'JTOOLBAR_NEW' ), $link, '_self' );
+				$link		=	'index.php?option=com_cck&view=form&type='.$form->name.'&return_o=cck&return_v=list&return='.base64_encode( Uri::getInstance()->toString() );
+				$bar->prependButton( 'CckLink', 'new', Text::_( 'JTOOLBAR_NEW' ), $link, '_self' );
 			}
 		}
 	}

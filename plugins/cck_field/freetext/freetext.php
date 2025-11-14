@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldFreeText extends JCckPluginField
 {
@@ -28,7 +31,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		if ( !isset( $config['inherit'] ) ) {
-			$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
+			$data['defaultvalue']	=	Factory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 		}
 	}
 
@@ -64,7 +67,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		if ( $field->bool8 ) {
 			$value		=	trim( preg_replace( '/[^A-Za-z0-9_ ]/', '', strip_tags( $value ) ) );
 			if ( $value ) {
-				$value	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
+				$value	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
 			}
 		}
 		
@@ -100,7 +103,7 @@ class plgCCK_FieldFreeText extends JCckPluginField
 		if ( $field->bool8 ) {
 			$value		=	trim( preg_replace( '/[^A-Za-z0-9_ ]/', '', strip_tags( $value ) ) );
 			if ( $value ) {
-				$value	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
+				$value	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
 			}
 		}
 		$form	=	$value;

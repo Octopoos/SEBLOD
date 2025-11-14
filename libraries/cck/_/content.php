@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
 // JCckContent
@@ -148,7 +151,7 @@ class JCckContent
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'content' );
+		PluginHelper::importPlugin( 'content' );
 	}
 
 	// reloadInstance
@@ -202,7 +205,7 @@ class JCckContent
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		$this->_instance_base	=	JTable::getInstance( self::$objects[$this->_object]['properties']['table_object'][0], self::$objects[$this->_object]['properties']['table_object'][1] );
+		$this->_instance_base	=	Table::getInstance( self::$objects[$this->_object]['properties']['table_object'][0], self::$objects[$this->_object]['properties']['table_object'][1] );
 		$this->_setDataMap( 'base' );
 
 		return true;
@@ -342,7 +345,7 @@ USER
 	// canCreate
 	public function canCreate()
 	{
-		if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
+		if ( !Factory::getUser()->authorise( 'core.create', 'com_cck.form.'.$this->_type_id ) ) {
 			return false;
 		}
 
@@ -358,7 +361,7 @@ USER
 			$author_id	=	-1;
 		}
 		
-		$user			=	JFactory::getUser();
+		$user			=	Factory::getUser();
 		$canDelete		=	$user->authorise( 'core.delete', 'com_cck.form.'.$this->_type_id );
 		$canDeleteOwn	=	$user->authorise( 'core.delete.own', 'com_cck.form.'.$this->_type_id );
 
@@ -380,7 +383,7 @@ USER
 			$author_id	=	-1;
 		}
 
-		$user				=	JFactory::getUser();
+		$user				=	Factory::getUser();
 		$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$this->_type_id );
 		$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$this->_type_id );
 		$canEditOwnContent	=	'';
@@ -433,7 +436,7 @@ USER
 		}
 		$property	=	$types[$this->_type][$property];
 		
-		if ( !JFactory::getUser()->authorise( 'core.edit.'.$property, 'com_cck.form.'.$this->_type_id ) ) {
+		if ( !Factory::getUser()->authorise( 'core.edit.'.$property, 'com_cck.form.'.$this->_type_id ) ) {
 			return false;
 		}
 
@@ -872,7 +875,7 @@ USER
 							'date_time'=>$data['core']['date_time']
 						);
 		if ( !$data_core['author_id'] ) {
-			$data_core['author_id']	=	JFactory::getUser()->id;
+			$data_core['author_id']	=	Factory::getUser()->id;
 		}
 		if ( !( $this->save( 'core', $data_core ) ) ) {
 			$this->_error	=	true;
@@ -1000,7 +1003,7 @@ USER
 										'storage_location'=>$this->_object,
 										'author_id'=>$this->getAuthor(),
 										'parent_id'=>$this->getParent(),
-										'date_time'=>JFactory::getDate()->toSql()
+										'date_time'=>Factory::getDate()->toSql()
 						   ) ) ) ) {
 			$this->_error	=	true;
 			$this->_is_new	=	false;
@@ -1294,7 +1297,7 @@ USER
 		$this->setInstance( 'more_parent' );
 		$this->setInstance( 'more2' );
 
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$query	=	$this->_getSearchQuery( $content_type, $data, false );
 
 		if ( $query === false ) {
@@ -1730,7 +1733,7 @@ USER
 	// hasTable
 	protected function hasTable( $table )
 	{
-		$db_prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+		$db_prefix	=	Factory::getConfig()->get( 'dbprefix' );
 		$tables		=	JCckDatabaseCache::getTableList( true );
 
 		if ( !isset( $tables[$db_prefix.$table] ) ) {
@@ -2563,7 +2566,7 @@ USER
 		$this->setInstance( 'more_parent' );
 		$this->setInstance( 'more2' );
 
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$query	=	$this->_getSearchQuery( $content_type, $data );
 
 		if ( $query === false ) {
@@ -2679,7 +2682,7 @@ USER
 		// Core
 		$data['core']	=	array(
 								'author_id'=>0,
-								'date_time'=>JFactory::getDate()->toSql(),
+								'date_time'=>Factory::getDate()->toSql(),
 								'parent_id'=>0
 							);
 
@@ -2688,7 +2691,7 @@ USER
 			$data['core']['author_id']	=	$data['base'][self::$objects[$this->_object]['properties']['author']];
 		}
 		if ( !$data['core']['author_id'] ) {
-			$data['core']['author_id']	=	JFactory::getUser()->id;
+			$data['core']['author_id']	=	Factory::getUser()->id;
 		}
 		if ( isset( self::$objects[$this->_object]['properties']['parent'] ) && self::$objects[$this->_object]['properties']['parent']
 		  && isset( $data['base'][self::$objects[$this->_object]['properties']['parent']] ) ) {
@@ -2726,7 +2729,7 @@ USER
 	// _getSearchQuery
 	protected function _getSearchQuery( $content_type, $data, $order = array() )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$query	=	$db->getQuery( true );
 		
 		$tables	=	array(
@@ -2883,7 +2886,7 @@ USER
 	// _getSearchQueryIndex
 	protected function _getSearchQueryIndex( &$query, &$tables, $key )
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 
 		if ( $key == self::$objects[$this->_object]['properties']['key'] ) {
 			$table_instance_name	=	'base';
@@ -2919,7 +2922,7 @@ USER
 	// _getSearchQueryJoin
 	protected function _getSearchQueryJoin( &$query, &$tables )
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 
 		foreach ( $this->_search_relationship as $k=>$relationship ) {
 			$this->_relationship_nav	=	$relationship['name'];
@@ -2956,7 +2959,7 @@ USER
 	// _getSearchQueryWhere
 	protected function _getSearchQueryWhere( $index, $k, $operator, $v = null )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$where	=	'';
 		$wrap	=	false;
 
@@ -3358,7 +3361,7 @@ USER
 	{
 		// Safe call for now
 		try {
-			JFactory::getApplication()->triggerEvent( $event, $args );
+			Factory::getApplication()->triggerEvent( $event, $args );
 		} catch ( Exception $e ) {
 			// Do Nothing
 		}		
@@ -3397,7 +3400,7 @@ USER
 				$i			=	2;
 				$alias		=	$this->{'_instance_'.$table_instance_name}->alias.'-'.$i;
 				$property	=	self::$objects[$this->_object]['properties']['parent'];
-				$test		=	JTable::getInstance( 'Content' );
+				$test		=	Table::getInstance( 'Content' );
 				
 				while ( $test->load( array( 'alias'=>$alias, $property=>$this->{'_instance_'.$table_instance_name}->$property ) ) ) {
 					$alias	=	$this->{'_instance_'.$table_instance_name}->alias.'-'.$i++;

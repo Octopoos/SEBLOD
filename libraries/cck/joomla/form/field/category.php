@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Field\CategoryField;
+
 // Field
-class JFormFieldCckCategory extends JFormFieldCategory
+class JFormFieldCckCategory extends CategoryField
 {
 	// getOptionList
 	public function getOptionList()

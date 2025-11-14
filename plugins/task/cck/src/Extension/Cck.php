@@ -18,6 +18,7 @@ use Joomla\Component\Scheduler\Administrator\Task\Task;
 use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -62,7 +63,7 @@ final class Cck extends CMSPlugin implements SubscriberInterface
 
 		if ( is_object( $processing ) ) {
 			if ( $processing->scriptfile != '' &&  is_file( JPATH_SITE.'/'.$processing->scriptfile ) ) {
-				$options	=	new \JRegistry( $processing->options );
+				$options	=	new Registry( $processing->options );
 
 				ob_start();
 				include_once JPATH_SITE.'/'.$processing->scriptfile;

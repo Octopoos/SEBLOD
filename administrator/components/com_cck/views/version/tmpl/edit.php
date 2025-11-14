@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 $config	=	JCckDev::init( array( '42', 'radio', 'text' ), false, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
@@ -21,18 +25,18 @@ Joomla.submitbutton = function(task)
 }
 </script>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod first">
         <ul class="spe spe_title">
-			<?php echo '<li><label>'.JText::_( 'COM_CCK_TITLE' ).'</label><span class="variation_value"><strong>'.$this->item->title.'</strong></span></li>'; ?>
+			<?php echo '<li><label>'.Text::_( 'COM_CCK_TITLE' ).'</label><span class="variation_value"><strong>'.$this->item->title.'</strong></span></li>'; ?>
         </ul>
         <ul class="spe spe_folder">
-			<?php echo '<li><label>'.JText::_( 'COM_CCK_CREATED_DATE' ).'</label><span class="variation_value">'.JHtml::_( 'date', $this->item->date_time, JText::_( 'DATE_FORMAT_LC4' ).' H:i' ).'</span></li>'; ?>
+			<?php echo '<li><label>'.Text::_( 'COM_CCK_CREATED_DATE' ).'</label><span class="variation_value">'.HTMLHelper::_( 'date', $this->item->date_time, Text::_( 'DATE_FORMAT_LC4' ).' H:i' ).'</span></li>'; ?>
         </ul>
         <ul class="spe spe_description">
-			<?php echo '<li><label>'.JText::_( 'COM_CCK_REVISION' ).'</label><span class="variation_value"><strong>'.$this->item->e_version.'</strong></span></li>'; ?>
+			<?php echo '<li><label>'.Text::_( 'COM_CCK_REVISION' ).'</label><span class="variation_value"><strong>'.$this->item->e_version.'</strong></span></li>'; ?>
         </ul>
         <ul class="spe spe_double">
             <?php echo JCckDev::renderForm( 'core_note', $this->item->note, $config ); ?>
@@ -49,7 +53,7 @@ Joomla.submitbutton = function(task)
     <input type="hidden" name="element_type" value="<?php echo $this->item->e_type; ?>" />
     <input type="hidden" id="myid" name="id" value="<?php echo @$this->item->id; ?>" />
     <?php
-    echo JHtml::_( 'form.token' );
+    echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

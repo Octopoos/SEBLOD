@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'typo', $this->item );
 
@@ -21,7 +23,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 			'fields'=>array(
 				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Always=-2', 'storage_field'=>'typo_label' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		)
 	),
 	'html'=>'',

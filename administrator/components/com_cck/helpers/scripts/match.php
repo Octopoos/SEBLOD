@@ -10,10 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
+$doc	=	Factory::getDocument();
 $name	=	$this->item->name;
-$lang   =	JFactory::getLanguage();
-$root	=	JUri::root( true );
+$lang   =	Factory::getLanguage();
+$root	=	Uri::root( true );
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
@@ -74,28 +79,28 @@ $js		=	'
 $doc->addScriptDeclaration( $js );
 
 $options			=	array();
-$options[] 			=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) );
-$options[] 			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'PLG_CCK_FIELD_FIELD_X_LABEL' ) );
+$options[] 			=	HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_NONE' ) );
+$options[] 			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'PLG_CCK_FIELD_FIELD_X_LABEL' ) );
 $opts				=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_fields AS a WHERE a.type = "field_x" AND a.published = 1 ORDER BY a.title ASC' );
 if ( count( $opts ) ) {
 	$options		=	array_merge( $options, $opts );
 }
-$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-$options[] 			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'PLG_CCK_FIELD_GROUP_X_LABEL' ) );
+$options[]			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+$options[] 			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'PLG_CCK_FIELD_GROUP_X_LABEL' ) );
 $opts				=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_fields AS a WHERE a.type = "group_x" AND a.published = 1 ORDER BY a.title ASC' );
 if ( count( $opts ) ) {
 	$options		=	array_merge( $options, $opts );
 }
-$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-$form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
+$options[]			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+$form				=	HTMLHelper::_( 'select.genericlist', $options, 'ffp['.$name.'][match_collection]', 'class="inputbox adminformlist-maxwidth"', 'value', 'text', '', 'match_collection' )
 ?>
 
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'COM_CCK_SEARCH_OPTIONS' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_CONSTRUCTION' ), Text::_( 'COM_CCK_SEARCH_OPTIONS' ) ); ?>
     <input type="hidden" id="match_mode" name="match_mode" value="" />
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo '<li><label>'.JText::_( 'PLG_CCK_FIELD_GROUP_COLLECTION' ).'</label>'.$form.'</li>';
+		echo '<li><label>'.Text::_( 'PLG_CCK_FIELD_GROUP_COLLECTION' ).'</label>'.$form.'</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Separator', 'size'=>'8', 'storage_field'=>'match_value' ) );
 		echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTables', 'name'=>'core_tables' ), '', $config, array( 'label'=>'Table', 'selectlabel'=>'Inherited', 'storage_field'=>'match_options[table]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Comparison Rule', 'selectlabel'=>'', 'options'=>'Quoted=1||Unquoted=0', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
@@ -115,7 +120,7 @@ $form				=	JHtml::_( 'select.genericlist', $options, 'ffp['.$name.'][match_colle
     </ul>
 </div>
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONFIG_FILTERING' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_CONFIG_FILTERING' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
     	<?php
     	echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Data Cleaning', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Integer=integer', 'storage_field'=>'match_options[filter]', 'css'=>'match_options' ) );

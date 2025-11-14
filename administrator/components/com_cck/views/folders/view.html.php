@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // View
 class CCKViewFolders extends JCckBaseLegacyViewList
 {
@@ -19,17 +21,17 @@ class CCKViewFolders extends JCckBaseLegacyViewList
 	// completeUI
 	public function completeUI()
 	{
-		$this->document->setTitle( JText::_( 'COM_CCK_'.$this->vTitle.'_MANAGER' ) );
+		$this->document->setTitle( Text::_( 'COM_CCK_'.$this->vTitle.'_MANAGER' ) );
 	}
 
 	// getSortFields
 	protected function getSortFields()
 	{
 		return array(
-					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'a.lft'=>JText::_( 'COM_CCK_ORDERING' ),
-					'a.published'=>JText::_( 'COM_CCK_STATUS' ),
-					'a.title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.id'=>Text::_( 'COM_CCK_ID' ),
+					'a.lft'=>Text::_( 'COM_CCK_ORDERING' ),
+					'a.published'=>Text::_( 'COM_CCK_STATUS' ),
+					'a.title'=>Text::_( 'COM_CCK_TITLE' )
 				);
 	}
 

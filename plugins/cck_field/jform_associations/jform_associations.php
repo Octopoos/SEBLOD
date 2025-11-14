@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_FieldJform_Associations extends JCckPluginField
 {
@@ -72,7 +74,7 @@ class plgCCK_FieldJform_Associations extends JCckPluginField
 		$form	=	'';
 
 		if ( JCckDevHelper::hasLanguageAssociations() && $config['pk']
-		&& ( !$config['copyfrom_id'] || ( $config['copyfrom_id'] && JFactory::getApplication()->input->get( 'translate' ) ) ) ) {
+		&& ( !$config['copyfrom_id'] || ( $config['copyfrom_id'] && Factory::getApplication()->input->get( 'translate' ) ) ) ) {
 			if ( isset( $config['base']->location ) && $config['base']->location ) {
 				$location	=	$config['base']->location;
 			} else {

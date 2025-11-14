@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // "No Access" Page.
-echo JText::_( 'COM_CCK_NO_ACCESS' );
+echo Text::_( 'COM_CCK_NO_ACCESS' );
 ?>

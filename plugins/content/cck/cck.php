@@ -10,10 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 
 // Plugin
-class plgContentCCK extends JPlugin
+class plgContentCCK extends CMSPlugin
 {
 	protected $cache	=	false;
 	protected $legacy	=	0;
@@ -59,8 +65,8 @@ class plgContentCCK extends JPlugin
 			return false;
 		}
 
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
 										 ->where( 'context = '. $db->quote( $context ) );
@@ -79,7 +85,7 @@ class plgContentCCK extends JPlugin
 									);
 
 					if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
-						JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+						\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 
 						if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 							$event	=	'onCckConstructionAfterDelete';
@@ -115,9 +121,9 @@ class plgContentCCK extends JPlugin
 			if ( $type != '' ) {
 				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
 
-				JPluginHelper::importPlugin( 'cck_field' );
-				JPluginHelper::importPlugin( 'cck_storage' );
-				JPluginHelper::importPlugin( 'cck_storage_location' );
+				PluginHelper::importPlugin( 'cck_field' );
+				PluginHelper::importPlugin( 'cck_storage' );
+				PluginHelper::importPlugin( 'cck_storage_location' );
 
 				$config		=	array(
 									'pk'=>$table->pk,
@@ -154,7 +160,7 @@ class plgContentCCK extends JPlugin
 		}
 
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onCckConstructionAfterDelete';
 
@@ -162,7 +168,7 @@ class plgContentCCK extends JPlugin
 		}
 
 		$tables	=	JCckDatabase::getTableList();
-		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix	= 	Factory::getConfig()->get( 'dbprefix' );
 		
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
 			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
@@ -234,8 +240,8 @@ class plgContentCCK extends JPlugin
 			return false;
 		}
 
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
 										 ->where( 'context = '. $db->quote( $context ) );
@@ -296,9 +302,9 @@ class plgContentCCK extends JPlugin
 			if ( $type != '' ) {
 				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
 
-				JPluginHelper::importPlugin( 'cck_field' );
-				JPluginHelper::importPlugin( 'cck_storage' );
-				JPluginHelper::importPlugin( 'cck_storage_location' );
+				PluginHelper::importPlugin( 'cck_field' );
+				PluginHelper::importPlugin( 'cck_storage' );
+				PluginHelper::importPlugin( 'cck_storage_location' );
 
 				$config	=	array(
 								'id'=>$table->id,
@@ -337,15 +343,15 @@ class plgContentCCK extends JPlugin
 
 			if ( $pkb > 0 ) {
 				if ( $bridge_object == 'joomla_category' ) {
-					JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+					// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
 
-					$bridge	=	JTable::getInstance( 'Category' );
+					$bridge	=	Table::getInstance( 'Category' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );
 				} elseif ( $bridge_object == 'joomla_article' ) {
-					JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+					// JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' ); // Deprecated in Joomla 6
 
-					$bridge	=	JTable::getInstance( 'Content' );
+					$bridge	=	Table::getInstance( 'Content' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );
 				}
@@ -353,7 +359,7 @@ class plgContentCCK extends JPlugin
 		}
 
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onContentAfterDelete';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -362,7 +368,7 @@ class plgContentCCK extends JPlugin
 
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include JPATH_SITE.$p->scriptfile;	/* Variables: $id, $item, $pk, $type */
 					}
@@ -371,7 +377,7 @@ class plgContentCCK extends JPlugin
 		}
 		
 		$tables	=	JCckDatabase::getTableList();
-		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix	= 	Factory::getConfig()->get( 'dbprefix' );
 		
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
 			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
@@ -425,8 +431,8 @@ class plgContentCCK extends JPlugin
 			return false;
 		}
 
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		$query	=	$db->getQuery( true )->select( 'name AS object' )
 										 ->from( '#__cck_core_objects' )
 										 ->where( 'context = '. $db->quote( $context ) );
@@ -480,9 +486,9 @@ class plgContentCCK extends JPlugin
 			if ( $type != '' ) {
 				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
 
-				JPluginHelper::importPlugin( 'cck_field' );
-				JPluginHelper::importPlugin( 'cck_storage' );
-				JPluginHelper::importPlugin( 'cck_storage_location' );
+				PluginHelper::importPlugin( 'cck_field' );
+				PluginHelper::importPlugin( 'cck_storage' );
+				PluginHelper::importPlugin( 'cck_storage_location' );
 
 				$config		=	array(
 									'id'=>$table->id,
@@ -558,11 +564,11 @@ class plgContentCCK extends JPlugin
 	public function onContentPrepare( $context, &$article, &$params, $limitstart = 0 )
 	{
 		// Leave the J! API alone
-		if ( JFactory::getApplication()->getName() == 'api' ) {
+		if ( Factory::getApplication()->getName() == 'api' ) {
 			return true;
 		}
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( $app->input->get( 'view' ) == 'article'
 		  && isset( $article->id ) && $article->id !== 0 ) {
@@ -608,8 +614,8 @@ class plgContentCCK extends JPlugin
 				.	' LEFT JOIN #__content AS b ON b.id = a.id2'
 				.	' WHERE a.id = '.(int)$item_id
 				.	' AND b.state IN (1,2)'
-				.	' AND b.language IN ("'.JFactory::getLanguage()->getTag().'","*")'
-				.	' AND b.access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')'
+				.	' AND b.language IN ("'.Factory::getLanguage()->getTag().'","*")'
+				.	' AND b.access IN ('.implode( ',', Factory::getUser()->getAuthorisedViewLevels() ).')'
 				.	' ORDER BY a.ordering'
 				;
 
@@ -631,7 +637,7 @@ class plgContentCCK extends JPlugin
 	// _doWorkflow
 	protected function _doWorkflow( $task, $context, $article )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$query	=	$db->getQuery( true );
 				
 		$query->insert( '#__workflow_associations' )->values( (int)$article->id . ', ' . '1' . ', ' . $db->quote( $context ) );
@@ -687,7 +693,7 @@ class plgContentCCK extends JPlugin
 			return;
 		}
 		
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 
 		if ( $context == 'text' ) {
 			$client	=	'intro';
@@ -708,10 +714,10 @@ class plgContentCCK extends JPlugin
 		}
 		
 		// Fields
-		$app 	=	JFactory::getApplication();
+		$app 	=	Factory::getApplication();
 		$fields	=	array();
-		$lang	=	JFactory::getLanguage();
-		$user	=	JFactory::getUser();
+		$lang	=	Factory::getLanguage();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		if ( $client == 'intro' && $this->cache ) {
@@ -782,7 +788,7 @@ class plgContentCCK extends JPlugin
 			$lang->load( 'pkg_app_cck_'.$cck->folder_app, JPATH_SITE, null, false, false );
 
 			$lang_tag	=	$lang->getTag();
-			$registry	=	new JRegistry;
+			$registry	=	new Registry;
 			$registry->loadString( $cck->{'options_'.$client} );
 
 			$this->loaded[$contentType.'_'.$client.'_options']	=	$registry->toArray();
@@ -870,7 +876,7 @@ class plgContentCCK extends JPlugin
 		if ( isset( $processing[$event] ) ) {
 			foreach ( $processing[$event] as $p ) {
 				if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-					$options	=	new JRegistry( $p->options );
+					$options	=	new Registry( $p->options );
 
 					include JPATH_SITE.$p->scriptfile;
 				}
@@ -881,19 +887,19 @@ class plgContentCCK extends JPlugin
 	// _render
 	protected function _render( $context, &$article, &$article_params, $tpl, $contentType, $fields, $property, $client, $cck, $parent_type )
 	{
-		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
+		$app	=	Factory::getApplication();
+		$user	=	Factory::getUser();
 		$params	=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
 		
-		$lang			=	JFactory::getLanguage();
+		$lang			=	Factory::getLanguage();
 		$lang_default	=	$lang->getDefault();
 		$lang_tag		=	$lang->getTag();
 		$lang->load( 'com_cck_default', JPATH_SITE );
 		
-		JPluginHelper::importPlugin( 'cck_field' );
-		JPluginHelper::importPlugin( 'cck_field_link' );
-		JPluginHelper::importPlugin( 'cck_field_restriction' );
-		JPluginHelper::importPlugin( 'cck_field_typo' );
+		PluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field_link' );
+		PluginHelper::importPlugin( 'cck_field_restriction' );
+		PluginHelper::importPlugin( 'cck_field_typo' );
 
 		if ( $context != 'text' ) {
 			$p_desc			=	isset( $this->loaded[$contentType.'_'.$client.'_options']['desc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['desc'] : '';
@@ -923,7 +929,7 @@ class plgContentCCK extends JPlugin
 
 		// Fields
 		if ( count( $fields ) ) {
-			JPluginHelper::importPlugin( 'cck_storage' );
+			PluginHelper::importPlugin( 'cck_storage' );
 
 			$config		=	array(
 								'app'=>null,
@@ -1086,14 +1092,14 @@ class plgContentCCK extends JPlugin
 						$article->metadesc	=	$p_desc;
 					}
 
-					JFactory::getDocument()->setDescription( $p_desc );
+					Factory::getDocument()->setDescription( $p_desc );
 		 		}
 		 	}
 		}
 
 		// Finalize
 		$doc->fields	=	&$fields;
-		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>JUri::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
+		$infos			=	array( 'context'=>$context, 'params'=>$tpl['params'], 'path'=>$tpl['path'], 'root'=>Uri::root( true ), 'template'=>$tpl['folder'], 'theme'=>$tpl['home'] );
 		$doc->finalize( 'content', $contentType, $client, $positions, $positions_more, $infos, $cck->id );
 		
 		$data					=	$doc->render( false, $params );
@@ -1138,7 +1144,7 @@ class plgContentCCK extends JPlugin
 					$params	=	'{}';
 				}
 
-				$params	=	new JRegistry( $params );
+				$params	=	new Registry( $params );
 				$data	=	CCK_Item::render( $id, $params->toArray(), false );
 				$text	=	str_replace( $matches[0][$k], $data, $text );
 			}
@@ -1171,7 +1177,7 @@ class plgContentCCK extends JPlugin
 					$params	=	'{}';
 				}
 
-				$params	=	new JRegistry( $params );
+				$params	=	new Registry( $params );
 				$data	=	CCK_Item::render( $id, $params->toArray(), false );
 				$text	=	str_replace( $matches[0][$k], $data, $text );
 			}
@@ -1221,7 +1227,7 @@ class plgContentCCK extends JPlugin
 					$params	=	'{}';
 				}
 
-				$params	=	new JRegistry( $params );
+				$params	=	new Registry( $params );
 				$data	=	CCK_Item::render( $id, $params->toArray(), false );
 				$text	=	str_replace( $matches[0][$k], $data, $text );
 			}

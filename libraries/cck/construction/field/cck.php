@@ -10,15 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JFormField
-class JFormFieldCCK extends JFormField
+class JFormFieldCCK extends FormField
 {
 	protected $type	=	'CCK';
 	
 	// getInput
 	protected function getInput()
 	{
-		JPluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field' );
 		require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 		
 		$attributes		=	isset( $this->element['cck_attributes'] ) ? (string)$this->element['cck_attributes'] : '';
@@ -36,7 +41,7 @@ class JFormFieldCCK extends JFormField
 		}
 		
 		$format			=	(string)$this->element['js_format'];
-		$lang  	 		=	JFactory::getLanguage();
+		$lang  	 		=	Factory::getLanguage();
 		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
@@ -122,7 +127,7 @@ class JFormFieldCCK extends JFormField
 	// _addScripts
 	protected function _addScripts( $id, $events, $format )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$js		=	'';		
 		$js2	=	'';
 		$js3	=	'';
@@ -144,7 +149,7 @@ class JFormFieldCCK extends JFormField
 							} else {
 								$frag		=	array( 0=>$fragment, 1=>'' );
 							}
-							$frag[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $frag[0] ) );
+							$frag[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $frag[0] ) );
 							$f			=	'<div class=\'textdesc'.$frag[1].'\'>'.$frag[0].'</div>';
 							$js			.=	'.append("'.$f.'")';
 						} else {

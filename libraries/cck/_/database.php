@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckDatabase
 abstract class JCckDatabase
 {
@@ -19,7 +21,7 @@ abstract class JCckDatabase
 	public static function convertUtf8mb4QueryToUtf8( $query )
 	{
 		if ( JCck::on( '3.5' ) ) {
-			return JFactory::getDbo()->convertUtf8mb4QueryToUtf8( $query );
+			return Factory::getDbo()->convertUtf8mb4QueryToUtf8( $query );
 		}
 
 		$beginningOfQuery	=	substr( $query, 0, 12 );
@@ -35,7 +37,7 @@ abstract class JCckDatabase
 	// execute
 	public static function execute( $query )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$utf8mb4	=	false;
 		
 		if ( JCck::on( '3.5' ) ) {
@@ -57,7 +59,7 @@ abstract class JCckDatabase
 	// loadAssocList
 	public static function loadAssocList( $query, $key = null, $column = null )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 	
 		$db->setQuery( $query );
 		$res	=	$db->loadAssocList( $key, $column );
@@ -68,7 +70,7 @@ abstract class JCckDatabase
 	// loadColumn
 	public static function loadColumn( $query )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 	
 		$db->setQuery( $query );
 		$res	=	$db->loadColumn();
@@ -79,7 +81,7 @@ abstract class JCckDatabase
 	// loadObject
 	public static function loadObject( $query )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 	
 		$db->setQuery( $query );
 		$res	=	$db->loadObject();
@@ -90,7 +92,7 @@ abstract class JCckDatabase
 	// loadObjectList
 	public static function loadObjectList( $query, $key = null )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 	
 		$db->setQuery( $query );
 		$res	=	$db->loadObjectList( $key );
@@ -101,7 +103,7 @@ abstract class JCckDatabase
 	// loadObjectListArray
 	public static function loadObjectListArray( $query, $akey, $key = null )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		
 		$db->setQuery( $query );
 
@@ -125,7 +127,7 @@ abstract class JCckDatabase
 	// loadResult
 	public static function loadResult( $query )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 	
 		$db->setQuery( $query );
 		$res	=	$db->loadResult();
@@ -138,21 +140,21 @@ abstract class JCckDatabase
 	// getTableColumns
 	public static function getTableColumns( $table, $flip = false )
 	{
-		return $flip ? array_flip( array_keys( JFactory::getDbo()->getTableColumns( $table ) ) ) : array_keys( JFactory::getDbo()->getTableColumns( $table ) );
+		return $flip ? array_flip( array_keys( Factory::getDbo()->getTableColumns( $table ) ) ) : array_keys( Factory::getDbo()->getTableColumns( $table ) );
 	}
 
 	// getTableFullColumns
 	public static function getTableFullColumns( $table )
 	{
-		return JFactory::getDbo()->getTableColumns( $table, false );
+		return Factory::getDbo()->getTableColumns( $table, false );
 	}
 
 	// getTableCreate
 	public static function getTableCreate( $tables )
 	{
-		$res	=	JFactory::getDbo()->getTableCreate( $tables );
+		$res	=	Factory::getDbo()->getTableCreate( $tables );
 		
-		$res	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $res );
+		$res	=	str_replace( Factory::getConfig()->get( 'dbprefix' ), '#__', $res );
 		$res	=	str_replace( 'CREATE TABLE `#__', 'CREATE TABLE IF NOT EXISTS `#__', $res );
 		
 		return $res;
@@ -161,7 +163,7 @@ abstract class JCckDatabase
 	// getTableList
 	public static function getTableList( $flip = false )
 	{
-		return $flip ? array_flip( JFactory::getDbo()->getTableList() ) : JFactory::getDbo()->getTableList();
+		return $flip ? array_flip( Factory::getDbo()->getTableList() ) : Factory::getDbo()->getTableList();
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
@@ -189,7 +191,7 @@ abstract class JCckDatabase
 	// escape
 	public static function escape( $text, $extra = false )
 	{
-		return JFactory::getDbo()->escape( $text, $extra );
+		return Factory::getDbo()->escape( $text, $extra );
 	}
 
 	// match
@@ -212,7 +214,7 @@ abstract class JCckDatabase
 	// null
 	public static function null()
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 
 		return JCck::on( '4.0' ) ? 'IS NULL' : '= '.$db->quote( $db->getNullDate() );
 	}
@@ -220,13 +222,13 @@ abstract class JCckDatabase
 	// quote
 	public static function quote( $text, $escape = true )
 	{
-		return JFactory::getDbo()->quote( $text, $escape );
+		return Factory::getDbo()->quote( $text, $escape );
 	}
 
 	// quoteName
 	public static function quoteName( $name, $as = null )
 	{
-		return JFactory::getDbo()->quoteName( $name, $as );
+		return Factory::getDbo()->quoteName( $name, $as );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Deprecated

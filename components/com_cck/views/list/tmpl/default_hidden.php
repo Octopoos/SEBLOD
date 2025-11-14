@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-$app	=	JFactory::getApplication();
-$doc	=	JFactory::getDocument();
+use Joomla\CMS\Factory;
+
+$app	=	Factory::getApplication();
+$doc	=	Factory::getDocument();
 
 $js		=	'
 			(function ($){
@@ -63,7 +65,7 @@ $js		=	'
 $doc->addScriptDeclaration( $js );
 ?>
 <input type="hidden" name="boxchecked" id="boxchecked" value="0" data-cck-remove-before-search="" />
-<?php if ( !JFactory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
+<?php if ( !Factory::getConfig()->get( 'sef' ) || !$this->config['Itemid'] ) { ?>
 <input type="hidden" name="option" value="com_cck" data-cck-keep-for-search="" />
 <input type="hidden" name="view" value="list" data-cck-keep-for-search="" />
 <?php if ( $this->home === false ) { ?>

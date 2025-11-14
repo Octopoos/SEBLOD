@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 $show	=	$params->get( 'url_show', '' );
 $hide	=	$params->get( 'url_hide', '' );
 if ( $show && JCckDevHelper::matchUrlVars( $show ) === false ) {
@@ -19,14 +26,14 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 	return;
 }
 
-$app	=	JFactory::getApplication();
+$app	=	Factory::getApplication();
 $form	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(string)$params->get( 'menu_item', '' );
 
 JCck::loadjQuery();
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'mod_cck_search', JPATH_SITE );
 $lang->load( 'com_cck_default', JPATH_SITE );
@@ -50,7 +57,7 @@ $action_url		=	'';
 $action_vars	=	'';
 
 if ( $itemId == '-1' ) {
-	$action_url		=	JUri::getInstance()->toString( array( 'path' ) );
+	$action_url		=	Uri::getInstance()->toString( array( 'path' ) );
 } elseif ( $itemId ) {
 	$action_vars	=	'&Itemid='.$params->get( 'menu_item', '' );
 }
@@ -65,7 +72,7 @@ include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
 // Set
 if ( !is_object( @$options ) ) {
-	$options	=	new JRegistry;
+	$options	=	new Registry;
 }
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
@@ -110,7 +117,7 @@ if ( $description != '' ) {
 		preg_match_all( $regex, $description, $matches );
 		if ( count( $matches[1] ) ) {
 			foreach ( $matches[1] as $text ) {
-				$description	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
+				$description	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
 			}
 		}
 	}
@@ -126,5 +133,5 @@ if ( $target ) {
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
-require JModuleHelper::getLayoutPath( 'mod_cck_search', $params->get( 'layout', 'default' ) );
+require ModuleHelper::getLayoutPath( 'mod_cck_search', $params->get( 'layout', 'default' ) );
 ?>

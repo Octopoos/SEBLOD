@@ -9,17 +9,19 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
 	<div class="modal-header">
-		<?php Helper_Display::quickModalTitle( JText::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
+		<?php Helper_Display::quickModalTitle( Text::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
 	</div>
 	<?php if ( $user->authorise( 'core.edit', 'com_cck' ) ) { ?>
 	<div class="modal-body">
-		<p><?php echo JText::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName ); ?></p>
+		<p><?php echo Text::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName ); ?></p>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_SET_APP_FOLDER' ); ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_SET_APP_FOLDER' ); ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), '', $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'batch_folder', 'css'=>'no-chosen' ) ); ?>
@@ -27,16 +29,16 @@ defined( '_JEXEC' ) or die;
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
-		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
+		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo Text::_( 'JCANCEL' ); ?></button>
+		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo Text::_( 'COM_CCK_GO' ); ?></button>
 	</div>
 	<?php } ?>
 	<?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>
 	<div class="modal-body">
-		<p><?php echo JText::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName.'_2' ); ?></p>
+		<p><?php echo Text::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName.'_2' ); ?></p>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="duplicate_title"><?php echo JText::_( 'COM_CCK_CHOOSE_A_TITLE' ); ?></label>
+				<label for="duplicate_title"><?php echo Text::_( 'COM_CCK_CHOOSE_A_TITLE' ); ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( $cck['core_dev_text'], '', $config, array( 'label'=>'Title', 'storage_field'=>'duplicate_title' ) ); ?>
@@ -44,8 +46,8 @@ defined( '_JEXEC' ) or die;
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
-		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('types.duplicate');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
+		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo Text::_( 'JCANCEL' ); ?></button>
+		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('types.duplicate');"><?php echo Text::_( 'COM_CCK_GO' ); ?></button>
 	</div>
 	<?php } ?>
 </div></div></div>
@@ -54,11 +56,11 @@ defined( '_JEXEC' ) or die;
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal2"><div class="modal-dialog modal-lg"><div class="modal-content">
 	<div class="modal-header">
-		<?php Helper_Display::quickModalTitle( JText::_( 'JTOOLBAR_NEW' ).' '.JText::_( 'COM_CCK_'._C2_TEXT ) ); ?>
+		<?php Helper_Display::quickModalTitle( Text::_( 'JTOOLBAR_NEW' ).' '.Text::_( 'COM_CCK_'._C2_TEXT ) ); ?>
 	</div>
 	<?php if ( $user->authorise( 'core.create', 'com_cck' ) ) { ?>
 	<div class="modal-body">
-		<p><?php echo JText::_( 'COM_CCK_SELECT_WHICH_OBJECT_TYPE' ); ?></p>
+		<p><?php echo Text::_( 'COM_CCK_SELECT_WHICH_OBJECT_TYPE' ); ?></p>
 		<?php if ( JCck::on( '4.0' ) ) { ?>
 			<div class="list-group">
 				<?php
@@ -85,7 +87,7 @@ defined( '_JEXEC' ) or die;
 						<div class="icon">
 							<a href="javascript:void(0);" onclick="JCck.Dev.addNew('<?php echo $item->id; ?>');">
 								<?php
-								$img    =   JHtml::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+								$img    =   \Joomla\CMS\HTML\HTMLHelper::_( 'image', $image, htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
 
 								echo str_replace( '<img ', '<img width="32" height="32" ', $img );
 								?>
@@ -100,8 +102,8 @@ defined( '_JEXEC' ) or die;
 		<?php } ?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>        
-		<button class="btn btn-secondary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE_BLANK' ); ?></button>
+		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo Text::_( 'JCANCEL' ); ?></button>        
+		<button class="btn btn-secondary" type="button" onclick="JCck.Dev.addNew();"><?php echo Text::_( 'COM_CCK_CREATE_BLANK' ); ?></button>
 	</div>
 	<?php } ?>
 </div></div></div>

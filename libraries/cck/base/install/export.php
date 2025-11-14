@@ -10,12 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Table\Table;
 
-JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
-JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
+// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
+// JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' ); // Deprecated in Joomla 6
+// JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' ); // Deprecated in Joomla 6
 
 // Export
 class CCK_Export
@@ -23,20 +25,20 @@ class CCK_Export
 	// clean
 	public static function clean( $path )
 	{
-		$folders	=	JFolder::folders( $path, '.', true, true, array(), array() );
+		$folders	=	Folder::folders( $path, '.', true, true, array(), array() );
 		if ( count( $folders ) ) {
 			foreach ( $folders as $folder ) {
 				if ( strpos( $folder, '__MACOSX' ) !== false ) {
-					JFolder::delete( $file );
+					Folder::delete( $file );
 				}
 			}
 		}
 		
-		$files	=	JFolder::files( $path, '.', true, true, array(), array() );
+		$files	=	Folder::files( $path, '.', true, true, array(), array() );
 		if ( count( $files ) ) {
 			foreach ( $files as $file ) {
 				if ( strpos( $file, '.DS_Store' ) !== false ) {
-					JFile::delete( $file );
+					File::delete( $file );
 				}
 			}
 		}
@@ -47,7 +49,7 @@ class CCK_Export
 	// createFile
 	public static function createFile( $path, $buffer )
 	{
-		JFile::write( $path, $buffer );
+		File::write( $path, $buffer );
 		
 		return $path;
 	}
@@ -55,10 +57,10 @@ class CCK_Export
 	// createDir	
 	public static function createDir( $path )
 	{
-		if ( ! JFolder::exists( $path ) ) {
-			JFolder::create( $path );
+		if ( ! Folder::exists( $path ) ) {
+			Folder::create( $path );
 			$buffer	=	'<!DOCTYPE html><title></title>';
-			JFile::write( $path.'/index.html', $buffer );
+			File::write( $path.'/index.html', $buffer );
 		}
 		
 		return $path;
@@ -82,7 +84,7 @@ class CCK_Export
 		$extensions	=	array();
 
 		if ( is_dir( $path ) ) {
-			$paths	=	JFolder::files( $path, '(.*)\.(css|ini|js|php|xml)$', true, true );
+			$paths	=	Folder::files( $path, '(.*)\.(css|ini|js|php|xml)$', true, true );
 		} elseif ( is_file( $path ) ) {
 			$paths	=	array( 0=>$path );
 		} else {
@@ -99,7 +101,7 @@ class CCK_Export
 					// Copyright
 					if ( $copyright ) {
 						$buffer		=	file_get_contents( $path );
-						$ext		=	JFile::getExt( $path );
+						$ext		=	File::getExt( $path );
 						$replace	=	'Copyright (C) 2009 - '.(string)$copyright.' SEBLOD.';
 
 						if ( strpos( $buffer, $replace ) === false ) {
@@ -132,7 +134,7 @@ class CCK_Export
 					}
 
 					if ( !$isUpToDate ) {
-						JFile::write( $path, $buffer );
+						File::write( $path, $buffer );
 					}
 				}
 			}
@@ -144,20 +146,20 @@ class CCK_Export
 	// zip
 	public static function zip( $path, $path_zip )
 	{
-		$trash	=	JFolder::folders( $path, '.', true, true, array(), array() );
+		$trash	=	Folder::folders( $path, '.', true, true, array(), array() );
 		
 		if ( is_array( $trash ) && count( $trash ) ) {
 			foreach ( $trash as $t ) {
 				if ( strpos( $t, '.svn' ) !== false ) {
-					if ( JFolder::exists( $t ) ) {
-						JFolder::delete( $t );
+					if ( Folder::exists( $t ) ) {
+						Folder::delete( $t );
 					}
 				}
 			}
 		}
 		
-		if ( JFile::exists( $path_zip ) ) {
-			if ( !JFile::delete( $path_zip ) ) {
+		if ( File::exists( $path_zip ) ) {
+			if ( !File::delete( $path_zip ) ) {
 				return false;
 			}
 		}
@@ -169,7 +171,7 @@ class CCK_Export
 		if ( $zip->create( $path, PCLZIP_OPT_REMOVE_PATH, $path ) == 0 ) {
 			return;
 		}
-		JFolder::delete( $path );
+		Folder::delete( $path );
 		
 		return $zip->zipname;
 	}
@@ -181,11 +183,11 @@ class CCK_Export
 	{
 		if ( count( $paths ) ) {
 			foreach ( $paths as $path ) {
-				if ( !JFile::exists( $path ) ) {
+				if ( !File::exists( $path ) ) {
 					continue;
 				}
 				$data	=	file_get_contents( $path );
-				$ext	=	JFile::getExt( $path );
+				$ext	=	File::getExt( $path );
 				$names	=	'';
 				if ( $ext == 'xml' ) {
 					$regex	=	'#construction=\"([a-z0-9_]*)\"#';
@@ -224,7 +226,7 @@ class CCK_Export
 			foreach ( $fields as $field ) {
 				$name		=	$field->name;
 				$field->id	=	0;
-				if ( JFile::exists( $dest.'/field_'.$name.'.xml' ) ) {
+				if ( File::exists( $dest.'/field_'.$name.'.xml' ) ) {
 					continue;
 				}
 				
@@ -252,7 +254,7 @@ class CCK_Export
 				
 				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();	
 				$path	=	$dest.'/field_'.$name.'.xml';			
-				JFile::write( $path, $buffer );
+				File::write( $path, $buffer );
 			}
 		}
 	}
@@ -321,7 +323,7 @@ class CCK_Export
 		// Set
 		$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
 		$path	=	$dest.'/'.$name.'.xml';
-		JFile::write( $path, $buffer );
+		File::write( $path, $buffer );
 	}
 
 	// exportElement
@@ -386,7 +388,7 @@ class CCK_Export
 		// Set
 		$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
 		$path	=	$dest.'/'.$elemtype.'_'.$name.'.xml';
-		JFile::write( $path, $buffer );
+		File::write( $path, $buffer );
 	}
 
 	// beforeExportField
@@ -444,7 +446,7 @@ class CCK_Export
 		if ( !isset( $extensions[$file['src']] ) ) {
 			$extensions[$file['src']]	=	(object)array( 'type'=>'template', 'id'=>'tpl_'.$elem->name, 'client'=>'site', '_file'=>$file['_'] );
 		}
-		if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+		if ( $file['_'] != '' && ! File::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
 			self::exportFile( 'template', $data, $file, array(), $copyright );
 		}
 		CCK_Export::findFields( array( $file['src'].'/templateDetails.xml' ), $data['root_elements'] );
@@ -573,7 +575,7 @@ class CCK_Export
 			$sql_table	=	'#__cck_store_form_'.$elem->name;
 			$sql_path	=	$data['root_sql'].'/'.$sql_table.'.sql';
 			$sql_buffer	=	JCckDatabase::getTableCreate( array( $sql_table ) );
-			JFile::write( $sql_path, $sql_buffer );
+			File::write( $sql_path, $sql_buffer );
 		}
 		*/
 	}
@@ -689,7 +691,7 @@ class CCK_Export
 				if ( !isset( $extensions[$file['src']] ) ) {
 					$extensions[$file['src']]	=	(object)array( 'type'=>'plugin', 'id'=>'plg_'.$type.'_'.$name, 'group'=>$type, '_file'=>$file['_'] );
 				}
-				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+				if ( $file['_'] != '' && ! File::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
 					self::exportFile( 'plugin', $data, $file );
 				}
 			}
@@ -706,7 +708,7 @@ class CCK_Export
 			$file['name']		=	$name;
 			$file['src']		=	JPATH_SITE.'/libraries/cck/rendering/variations/'.$name;
 			if ( !file_exists( $file['src'] ) ) {
-				if ( JFile::exists( $data['root_extensions'].'/tpl_'.$template.'.zip' ) ) {
+				if ( File::exists( $data['root_extensions'].'/tpl_'.$template.'.zip' ) ) {
 					return;
 				}
 				$file['src']	=	JPATH_SITE.'/templates/'.$template.'/variations/'.$name;
@@ -718,7 +720,7 @@ class CCK_Export
 				if ( !isset( $extensions[$file['src']] ) ) {
 					$extensions[$file['src']]	=	(object)array( 'type'=>'file', 'id'=>'var_cck_'.$name, '_file'=>$file['_'] );
 				}
-				if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+				if ( $file['_'] != '' && ! File::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
 					self::exportFile( 'variation', $data, $file );
 				}
 			}
@@ -729,12 +731,12 @@ class CCK_Export
 	public static function exportFile( $type, &$data, $file, $extensions = array(), $copyright = '' )
 	{
 		$path	=	$data['root_extensions'].'/_temp';
-		if ( $file['src'] && JFolder::exists( $file['src'] ) ) {
+		if ( $file['src'] && Folder::exists( $file['src'] ) ) {
 			if ( $type == 'variation' || $type == 'processing' ) {
-				JFolder::copy( $file['src'], $path.'/'.$file['name'] );
+				Folder::copy( $file['src'], $path.'/'.$file['name'] );
 				$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/'.$file['filename'].'.xml';
-				if ( JFile::exists( $manifest ) ) {
-					JFile::copy( $manifest, $path.'/'.$file['filename'].'.xml' );
+				if ( File::exists( $manifest ) ) {
+					File::copy( $manifest, $path.'/'.$file['filename'].'.xml' );
 				} else {
 					$obj		=	(object)array( 'title'=>$file['name'] );
 
@@ -763,7 +765,7 @@ class CCK_Export
 				if ( $copyright ) {
 					CCK_Export::update( $file['src'], $copyright );
 				}
-				JFolder::copy( $file['src'], $path );
+				Folder::copy( $file['src'], $path );
 				if ( $type == 'plugin' ) {
 					CCK_Export::findFields( array( $file['src'].'/tmpl/edit.php', $file['src'].'/tmpl/edit2.php' ), $path.'/install' );
 					CCK_Export::update( $path.'/install', $copyright );
@@ -809,7 +811,7 @@ class CCK_Export
 	// exportMenu
 	public static function exportMenus( $menu_id, &$data, $extensions )
 	{
-		$table	=	JTable::getInstance( 'MenuType' );
+		$table	=	Table::getInstance( 'MenuType' );
 		$table->load( $menu_id );
 
 		self::exportContent( 'joomla_menu', $table, $data, $extensions, 0 );
@@ -817,7 +819,7 @@ class CCK_Export
 		$items	=	JCckDatabase::loadObjectList( 'SELECT id FROM #__menu WHERE menutype = "'.$table->menutype.'"' );
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$t	=	JTable::getInstance( 'Menu' );
+				$t	=	Table::getInstance( 'Menu' );
 				$t->load( $item->id );
 				self::exportContent( 'joomla_menuitem', $t, $data, $extensions, 0 );
 			}
@@ -963,12 +965,12 @@ class CCK_Export
 				// Set
 				$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
 				$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name2 ).$suffix.'.xml';
-				JFile::write( $path, $buffer );
+				File::write( $path, $buffer );
 
 				if ( $folder ) {
 					$path	=	JPATH_SITE.'/'.$folder;
 
-					if ( JFolder::exists( $path ) ) {
+					if ( Folder::exists( $path ) ) {
 						$file				=	array();
 						$file['_']			=	'pro_cck_'.$name2.'.zip';
 						$file['filename']	=	'pro_cck_'.$name2;
@@ -986,7 +988,7 @@ class CCK_Export
 																	'src'=>$folder
 															);
 
-								if ( $file['_'] != '' && ! JFile::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
+								if ( $file['_'] != '' && ! File::exists( $data['root_extensions'].'/'.$file['_'] ) ) {
 									self::exportFile( 'processing', $data, $file, $extensions );
 								}
 							}
@@ -1002,7 +1004,7 @@ class CCK_Export
 	{
 		$pk	=	( @$app->name ) ? JCckDatabase::loadResult( 'SELECT pk FROM #__cck_core WHERE app = "'.$app->name.'"' ) : 0;
 		
-		$table	=	JTable::getInstance( 'Category' );
+		$table	=	Table::getInstance( 'Category' );
 		if ( $pk > 0 ) {
 			$table->load( $pk );
 		} else {
@@ -1014,7 +1016,7 @@ class CCK_Export
 			$table->path			=	$table->alias;
 			$table->extension		=	'com_content';
 			$table->created_user_id	=	JCck::getConfig_Param( 'integration_user_default_author', 42 );
-			$table->created_time	=	JFactory::getDate()->format( 'Y-m-d H:i:s' );
+			$table->created_time	=	Factory::getDate()->format( 'Y-m-d H:i:s' );
 			$table->params			=	'{"category_layout":"","image":""}';
 			$table->metadata		=	'{"author":"","robots":""}';
 			$table->language		=	'*';
@@ -1032,7 +1034,7 @@ class CCK_Export
 	// exportTables
 	public static function exportTables( &$data )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$elemtype	=	'table';
 		$plural		=	$elemtype.'s';
 		$dest		=	CCK_Export::createDir( $data['root_elements'].'/'.$plural );
@@ -1084,7 +1086,7 @@ class CCK_Export
 					// Set
 					$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
 					$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
-					JFile::write( $path, $buffer );
+					File::write( $path, $buffer );
 				}
 			}
 		}
@@ -1111,18 +1113,18 @@ class CCK_Export
 				$tag	=	(string)$lang->attributes()->tag;
 				CCK_Export::createDir( $dest_l.'/'.$tag );
 				$lang	=	(string)$lang;
-				if ( JFile::exists( $root.'/language/'.$lang ) ) {
+				if ( File::exists( $root.'/language/'.$lang ) ) {
 					if ( $copyright ) {
 						CCK_Export::update( $root.'/language/'.$lang, $copyright );
 					}
-					JFile::copy( $root.'/language/'.$lang, $dest_l.'/'.$lang );
+					File::copy( $root.'/language/'.$lang, $dest_l.'/'.$lang );
 				} else {
 					$lang	=	str_replace( '/'.$tag.'.', '/', $lang );
-					if ( JFile::exists( $root.'/language/'.$lang ) ) {
+					if ( File::exists( $root.'/language/'.$lang ) ) {
 						if ( $copyright ) {
 							CCK_Export::update( $root.'/language/'.$lang, $copyright );
 						}
-						JFile::copy( $root.'/language/'.$lang, $dest_l.'/'.str_replace( $tag.'/', $tag.'/'.$tag.'.', $lang ) );
+						File::copy( $root.'/language/'.$lang, $dest_l.'/'.str_replace( $tag.'/', $tag.'/'.$tag.'.', $lang ) );
 					}
 				}
 			}
@@ -1142,18 +1144,18 @@ class CCK_Export
 		$target		=	( $client == 'site' ) ? 'language/'.$lang : 'administrator/language/'.$lang;
 		$list->addAttribute( 'target', $target );
 		
-		$files		=	JFolder::files( $path, $search );
+		$files		=	Folder::files( $path, $search );
 		if ( count( $extensions ) ) {
 			foreach ( $files as $file ) {
 				$id	=	str_replace( array( $lang.'.', '.sys.ini', '.ini' ), array( '', '', '' ), $file );
 				if ( isset( $extensions[$id] ) ) {
-					JFile::copy( $path.'/'.$file, $dest.'/'.$file );
+					File::copy( $path.'/'.$file, $dest.'/'.$file );
 					$list->addChild( 'filename', $file );
 				}
 			}			
 		} else {
 			foreach ( $files as $file ) {
-				JFile::copy( $path.'/'.$file, $dest.'/'.$file );
+				File::copy( $path.'/'.$file, $dest.'/'.$file );
 			}
 		}
 		

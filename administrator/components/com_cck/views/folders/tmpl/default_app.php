@@ -9,32 +9,36 @@
 **/
 
 defined( '_JEXEC' ) or die;
-$params	    =	JComponentHelper::getParams( 'com_cck' );
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Text;
+
+$params	    =	ComponentHelper::getParams( 'com_cck' );
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
 	<div class="modal-header">
-		<?php Helper_Display::quickModalTitle( JText::_( 'COM_CCK_APP_PROCESS' ) ); ?>
+		<?php Helper_Display::quickModalTitle( Text::_( 'COM_CCK_APP_PROCESS' ) ); ?>
 	</div>
 	<div class="modal-body">
-		<p><?php echo JText::_( 'COM_CCK_APP_PROCESS_DESC' ); ?></p>
+		<p><?php echo Text::_( 'COM_CCK_APP_PROCESS_DESC' ); ?></p>
 		<?php
-		echo JCckDevTabs::start( 'batch_tabs', 'bt0', JText::_( 'COM_CCK_ELEMENTS' ), array( 'active'=>'bt0' ) );
+		echo JCckDevTabs::start( 'batch_tabs', 'bt0', Text::_( 'COM_CCK_ELEMENTS' ), array( 'active'=>'bt0' ) );
 		?>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_SELECT_ELEMENTS' ).'<span class="star"> *</span>'; ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_SELECT_ELEMENTS' ).'<span class="star"> *</span>'; ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( 'core_app_elements', '', $config, array( 'bool'=>1, 'storage_field'=>'app_elements' ) ); ?>
 			</div>
 		</div>
 		<?php
-		echo '<small class="pull-right"> * '.JText::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
-		echo JCckDevTabs::open( 'batch_tabs', 'bt1', JText::_( 'COM_CCK_DEPENDENCIES' ) );
+		echo '<small class="pull-right"> * '.Text::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
+		echo JCckDevTabs::open( 'batch_tabs', 'bt1', Text::_( 'COM_CCK_DEPENDENCIES' ) );
 		?>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_ADD_DEPENDENCIES_CATEGORIES' ).'<span class="star"> *</span>'; ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_ADD_DEPENDENCIES_CATEGORIES' ).'<span class="star"> *</span>'; ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( 'core_app_dependencies', '', $config, array() ); ?>
@@ -42,19 +46,19 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_ADD_DEPENDENCIES_MENU' ).'<span class="star"> *</span>'; ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_ADD_DEPENDENCIES_MENU' ).'<span class="star"> *</span>'; ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( 'core_app_dependencies_menu', '', $config, array( 'css'=>'no-chosen' ) ); ?>
 			</div>
 		</div>
 		<?php
-		echo '<small class="pull-right"> * '.JText::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
-		echo JCckDevTabs::open( 'batch_tabs', 'bt2', JText::_( 'COM_CCK_FILENAME' ) );
+		echo '<small class="pull-right"> * '.Text::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
+		echo JCckDevTabs::open( 'batch_tabs', 'bt2', Text::_( 'COM_CCK_FILENAME' ) );
 		?>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_APPEND_DATE' ).'<span class="star"> *</span>'; ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_APPEND_DATE' ).'<span class="star"> *</span>'; ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( 'core_dev_radio', '', $config, array( 'defaultvalue'=>$params->get( 'filename_date', '0' ), 'options'=>'No=0||Yes=1', 'css'=>'btn-group btn-group-yesno app-options', 'storage_field'=>'filename_date' ) ); ?>
@@ -62,19 +66,19 @@ $params	    =	JComponentHelper::getParams( 'com_cck' );
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label for="batch_folder"><?php echo JText::_( 'COM_CCK_APPEND_VERSION_NUMBER' ).'<span class="star"> *</span>'; ?></label>
+				<label for="batch_folder"><?php echo Text::_( 'COM_CCK_APPEND_VERSION_NUMBER' ).'<span class="star"> *</span>'; ?></label>
 			</div>
 			<div class="controls">
 				<?php echo JCckDev::getForm( 'core_dev_radio', '', $config, array( 'defaultvalue'=>$params->get( 'filename_version', '0' ), 'options'=>'No=0||Yes=1', 'css'=>'btn-group btn-group-yesno app-options', 'storage_field'=>'filename_version' ) ); ?>
 			</div>
 		</div>
 		<?php
-		echo '<small class="pull-right"> * '.JText::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
+		echo '<small class="pull-right"> * '.Text::_( 'COM_CCK_NOT_PERMANENTLY_STORED' ).'</small>';
 		echo JCckDevTabs::end();
 		?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'COM_CCK_CLOSE' ); ?></button>
+		<button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo Text::_( 'COM_CCK_CLOSE' ); ?></button>
 	</div>
 </div></div></div>
 

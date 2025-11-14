@@ -10,21 +10,24 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'search', $this->item->master, $this->item->client );
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>JFactory::getUser()->id );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>Factory::getUser()->id );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">
         <div class="seblod">
-            <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+            <div class="legend top left"><?php echo Text::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide' );
             Helper_Workshop::displayHeader( 'search', $this->item->master );
             echo '<ul class="sortable connected" id="sortable1" myid="1">';
             if ( $this->item->client == 'order' ) {
-				Helper_Workshop::displayPositionStatic( 1, 'mainbody', '# '.JText::_( 'COM_CCK_ORDER_BY' ) );
+				Helper_Workshop::displayPositionStatic( 1, 'mainbody', '# '.Text::_( 'COM_CCK_ORDER_BY' ) );
                 if ( isset( $this->fields['mainbody'] ) ) {
                     foreach ( $this->fields['mainbody'] as $field ) {
                         $type_field		=	'';
@@ -38,7 +41,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 				Helper_Workshop::displayPositionEnd();
             } else {
                 if ( $this->item->client == 'list' && ! $this->item->template ) {
-                    echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
+                    echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.Text::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
 					Helper_Workshop::displayPositionEnd();
                 } else {
 					if ( $this->positions_nb ) {
@@ -62,7 +65,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 						}
 						Helper_Workshop::displayPositionEnd( $this->positions_nb );
 					} else {
-						echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
+						echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.Text::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
 						Helper_Workshop::displayPositionEnd();
 					}
                 }

@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 $column	=	'';
 $target	=	(int)$options->get( 'order_by', '' );
 
@@ -51,17 +54,17 @@ if ( $type == 'ordering' ) {
 	}
 	$value		=	$column.':'.( ( $order == $column ) ? ( ( $order_dir == 'asc' ) ? 'desc' : 'asc' ) : $options->get( 'order_dir', 'asc' ) );
 	
-	JHtml::_( 'bootstrap.tooltip' );
+	HTMLHelper::_( 'bootstrap.tooltip' );
 	
 	if ( $column == $order ) {
 		$legend	.=	'<span class="icon-arrow-'.( ( $order_dir == 'asc' ) ? 'up' : 'down' ).'-3"></span>';
 	}
 
-	$tooltip	=	JHtml::tooltipText( '', 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN' );
+	$tooltip	=	HTMLHelper::tooltipText( '', 'JGLOBAL_CLICK_TO_SORT_THIS_COLUMN' );
 	$attr		=	'onclick="jQuery(\'#'.$name.'\').val(\''.$value.'\'); JCck.Core.submit(\'search\'); return false;" class="hasTooltip" title="'.$tooltip.'"';
 	$legend		=	'<a href="javascript:void(0);" '.$attr.'>'.$legend.'</a>';
 } elseif ( $type == 'selection' ) {
-	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.JText::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);" data-cck-remove-before-search="" />';
+	$legend		=	'<input type="checkbox" name="toggle" value="" title="'.Text::_( 'JGLOBAL_CHECK_ALL' ).'" onclick="Joomla.checkAll(this);" data-cck-remove-before-search="" />';
 
 	if ( $options->get( 'selection_label', 0 ) ) {
 		$legend	.=	'<label></label>';

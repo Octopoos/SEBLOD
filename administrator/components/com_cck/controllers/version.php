@@ -10,17 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerVersion extends JControllerForm
+class CCKControllerVersion extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
 	// getRedirectToListAppend
 	protected function getRedirectToListAppend()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$tmpl	=	$app->input->get( 'tmpl', '' );
 		$type	=	$app->input->get( 'element_type', '' );
 		$append	=	'';

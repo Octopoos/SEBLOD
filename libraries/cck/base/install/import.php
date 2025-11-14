@@ -10,13 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
-// jimport( 'joomla.utilities.simplexml' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Table\Table;
 
-JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
-JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' );
+// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
+// JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' ); // Deprecated in Joomla 6
+// JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' ); // Deprecated in Joomla 6
 
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
@@ -75,11 +76,11 @@ class CCK_Import
 				return;
 			}
 			if ( $type == 'joomla_menu' ) {
-				$item	=	JTable::getInstance( 'MenuType' );
+				$item	=	Table::getInstance( 'MenuType' );
 			} elseif ( $type == 'joomla_menuitem' ) {
-				$item	=	JTable::getInstance( 'Menu' );
+				$item	=	Table::getInstance( 'Menu' );
 			} elseif ( $type == 'joomla_category' ) {
-				$item	=	JTable::getInstance( 'Category' );
+				$item	=	Table::getInstance( 'Category' );
 			} else {
 				return;
 			}
@@ -124,7 +125,7 @@ class CCK_Import
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
 			return;
 		}
-		$item	=	JTable::getInstance( ucfirst( $elemtype ), 'CCK_Table' );
+		$item	=	Table::getInstance( ucfirst( $elemtype ), 'CCK_Table' );
 		$root	=	$xml->$elemtype;
 		
 		foreach ( $item as $k => $v ) {
@@ -268,7 +269,7 @@ class CCK_Import
 							 . ' LEFT JOIN #__cck_core_'.$elemtype.'_position AS b ON b.'.$elemtype.'id = a.'.$elemtype.'id'
 							 . ' WHERE a.'.$elemtype.'id = '.(int)$item->id );
 		
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 
 		if ( $item->location == 'collection' ) {
 			JCckDatabase::execute( 'DELETE IGNORE a.* FROM #__assets AS a WHERE a.name = "com_cck.form.'.$item->id.'"' );
@@ -308,7 +309,7 @@ class CCK_Import
 	// afterImportSearch
 	public static function afterImportSearch( &$xml, $elemtype, $item, &$data )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 
 		JCckDatabase::execute( 'DELETE IGNORE a.*, b.* FROM #__cck_core_'.$elemtype.'_field AS a'
 							 . ' LEFT JOIN #__cck_core_'.$elemtype.'_position AS b ON b.'.$elemtype.'id = a.'.$elemtype.'id'
@@ -332,7 +333,7 @@ class CCK_Import
 	// _importJoined
 	protected static function _importJoined( $type, $joined, $elemtype, $item, &$data )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$str	=	'';
 		$table	=	'#__cck_core_'.$elemtype.'_'.$type;
 		
@@ -507,7 +508,7 @@ class CCK_Import
 	// beforeImportCategory
 	public static function beforeImportCategory( $elemtype, &$data )
 	{
-		return JTable::getInstance( 'Category' );
+		return Table::getInstance( 'Category' );
 	}
 	
 	// afterImportCategory
@@ -588,7 +589,7 @@ class CCK_Import
 		$processings	=	JCckDatabaseCache::loadObjectListArray( 'SELECT id, scriptfile, type FROM #__cck_more_processings WHERE published != -44', 'scriptfile', 'type' );
 
 		if ( file_exists( $path ) ) {
-			$files	=	JFolder::files( $path, '\.xml$' );
+			$files	=	Folder::files( $path, '\.xml$' );
 			if ( count( $files ) ) {
 				foreach ( $files as $file ) {
 					$xml	=	JCckDev::fromXML( $path.'/'.$file );
@@ -641,12 +642,12 @@ class CCK_Import
 	// importSQL
 	public static function importSQL( $src )
 	{
-		if ( JFolder::exists( $src ) ) {
-			$db		=	JFactory::getDbo();
-			$files	=	JFolder::files( $src, '\.sql$' );
+		if ( Folder::exists( $src ) ) {
+			$db		=	Factory::getDbo();
+			$files	=	Folder::files( $src, '\.sql$' );
 			foreach ( $files as $file ) {
 				$path	=	$src.'/'.$file;
-				if ( JFile::exists( $path ) ) {
+				if ( File::exists( $path ) ) {
 					$query	=	file_get_contents( $path );
 					$db->setQuery( $query );
 					$db->queryBatch();
@@ -660,14 +661,14 @@ class CCK_Import
 	// importTables
 	public static function importTables( $data )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$path	=	$data['root'].'/tables';
 
 		if ( file_exists( $path ) ) {
-			$items	=	JFolder::files( $path, '\.xml$' );
+			$items	=	Folder::files( $path, '\.xml$' );
 
 			if ( count( $items ) ) {
-				$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
+				$prefix		=	Factory::getConfig()->get( 'dbprefix' );
 				$tables		=	JCckDatabase::getTableList( true );
 
 				foreach ( $items as $item ) {

@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Editor\Editor;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 {
@@ -29,7 +34,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
+		$data['defaultvalue']	=	Factory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -91,9 +96,9 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		}
 		
 		// Prepare
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		if ( $config['pk'] && @$options2['import'] && $field->storage_location ) {
 			if ( ! JCckDatabase::loadResult( 'SELECT pk FROM #__cck_core WHERE pk='.(int)$config['pk'].' AND storage_location="'.(string)$field->storage_location.'"' ) ) {
 				$properties	=	array( 'custom', 'table' );
@@ -116,27 +121,27 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 			if ( $field->bool ) {
 				// Default
 				$buttons		=	( $field->bool4 ) ? array( 'pagebreak', 'readmore' ) : false;
-				$editor			=	isset( $options2['editor'] ) && $options2['editor'] ? $options2['editor'] : JFactory::getConfig()->get( 'editor', 'none' );
-				$editor			=	JEditor::getInstance( $editor );
+				$editor			=	isset( $options2['editor'] ) && $options2['editor'] ? $options2['editor'] : Factory::getConfig()->get( 'editor', 'none' );
+				$editor			=	Editor::getInstance( $editor );
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
 
-				JFactory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
+				Factory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
 			} else {
 				// Modal Box
 				if ( trim( $field->selectlabel ) ) {
 					if ( $config['doTranslation'] ) {
-						$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+						$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 					}
 					$buttonlabel	=	$field->selectlabel;
 				} else {
-					$buttonlabel	=	JText::_( 'COM_CCK_OPEN_EDITOR' );
+					$buttonlabel	=	Text::_( 'COM_CCK_OPEN_EDITOR' );
 				}
 				
 				$e_type					=	( @$options2['editor'] != '' ) ? '&type='.$options2['editor'] : '';
 				$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
 										.	'&id='.$id.'&name='.$name.$e_type.'&params='.urlencode( urlencode( $width ) ).'||'.$height.'||'.$asset.'||'.$field->bool4;
 				
-				$app					=	JFactory::getApplication();
+				$app					=	Factory::getApplication();
 				$class					=	'wysiwyg_editor_box variation_href';
 
 				$component				=	$app->input->get( 'option' );
@@ -184,7 +189,7 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		$field->type	=	'text';
 
 		// Prepare
-		$results		=	JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
+		$results		=	Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareSearch', array( &$field, $value, &$config, array(), true ) );
 		
 		if ( is_array( $results ) && !empty( $results[0] ) ) {
 			$field		=	$results[0];
@@ -208,11 +213,11 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$value	=	JFactory::getApplication()->input->post->get( $name, '', 'raw' );
+			$value	=	Factory::getApplication()->input->post->get( $name, '', 'raw' );
 		}
 		
 		// Make it safe
-		$value		=	JComponentHelper::filterText( $value );
+		$value		=	ComponentHelper::filterText( $value );
 		
 		// Validate
 		parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
@@ -244,13 +249,13 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 	// _addScript
 	protected static function _addScripts( $inline, $params = array(), &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		
 		$doc->addStyleSheet( self::$path.'assets/css/cck_wysiwyg_editor.css' );
 		
 		if ( !$inline ) {
 			static $loaded	=	0;
-			$root			=	JUri::root( true );
+			$root			=	Uri::root( true );
 
 			if ( !$loaded ) {
 				if ( empty( $config['client'] ) ) {

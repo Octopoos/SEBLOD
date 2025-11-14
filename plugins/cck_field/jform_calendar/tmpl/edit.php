@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2   =   JCckDev::fromJSON( $this->item->options2 );
 
@@ -29,7 +31,7 @@ $displayData    =   array(
 
                                             JCckDev::renderLayoutFile(
                                                 'cck'.JCck::v().'.form.field', array(
-                                                    'label'=>JText::_( 'Show Time' ),
+                                                    'label'=>Text::_( 'Show Time' ),
                                                     'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
                                                         'grid'=>'|50%',
                                                         'html'=>array(

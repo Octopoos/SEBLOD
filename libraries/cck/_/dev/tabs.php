@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 // JCckDevTabs
@@ -18,12 +19,12 @@ abstract class JCckDevTabs
 	// end
 	public static function end()
 	{
-		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+		if ( JCck::on( '4.0' ) && Factory::getApplication()->isClient( 'administrator' ) ) {
 			$html	=	HTMLHelper::_( 'uitab.endTab' )
 			 		.	HTMLHelper::_( 'uitab.endTabSet' );
 		} else {
-			$html	=	JHtml::_( 'bootstrap.endTab' )
-				 	.	JHtml::_( 'bootstrap.endTabSet' );
+			$html	=	HTMLHelper::_( 'bootstrap.endTab' )
+				 	.	HTMLHelper::_( 'bootstrap.endTabSet' );
 		}
 
 		return $html;
@@ -32,15 +33,15 @@ abstract class JCckDevTabs
 	// open
 	public static function open( $selector, $id, $text )
 	{
-		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+		if ( JCck::on( '4.0' ) && Factory::getApplication()->isClient( 'administrator' ) ) {
 			$html	=	HTMLHelper::_( 'uitab.endTab' )
 				 	.	HTMLHelper::_( 'uitab.addTab', $selector, $id, $text );
 		} else {
-			$html	=	JHtml::_( 'bootstrap.endTab' )
-				 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+			$html	=	HTMLHelper::_( 'bootstrap.endTab' )
+				 	.	HTMLHelper::_( 'bootstrap.addTab', $selector, $id, $text );
 		}
 
-		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+		if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
         	static $tabScriptLayout	=	null;
         	
         	$active				=	'';
@@ -60,18 +61,18 @@ abstract class JCckDevTabs
 	// start
 	public static function start( $selector, $id, $text, $params )
 	{
-		if ( JCck::on( '4.0' ) && JFactory::getApplication()->isClient( 'administrator' ) ) {
+		if ( JCck::on( '4.0' ) && Factory::getApplication()->isClient( 'administrator' ) ) {
 			$params['breakpoint']	=	768;
 			$params['recall']		=	true;
 
 			$html	=	HTMLHelper::_( 'uitab.startTabSet', $selector, $params )
 	        	 	.	HTMLHelper::_( 'uitab.addTab', $selector, $id, $text );
 		} else {
-			$html	=	JHtml::_( 'bootstrap.startTabSet', $selector, $params )
-	        	 	.	JHtml::_( 'bootstrap.addTab', $selector, $id, $text );
+			$html	=	HTMLHelper::_( 'bootstrap.startTabSet', $selector, $params )
+	        	 	.	HTMLHelper::_( 'bootstrap.addTab', $selector, $id, $text );
 		}
 
-        if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+        if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 			$tabScriptLayout	=	new JLayoutFile( 'libraries.cms.html.bootstrap.addtabscript' );
 			$js					=	$tabScriptLayout->render( array(
 																'selector'=>$selector,

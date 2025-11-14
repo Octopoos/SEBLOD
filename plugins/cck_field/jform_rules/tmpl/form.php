@@ -10,10 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+
 // Init
-$doc		=	JFactory::getDocument();
+$doc		=	Factory::getDocument();
 $reset		=	0;
-$client		=	JFactory::getApplication()->isClient( 'site' ) ? 'site' : 'admin';
+$client		=	Factory::getApplication()->isClient( 'site' ) ? 'site' : 'admin';
 $params		=	explode( '||', $this->item->params );
 $component	=	$params[0];
 $section	=	$params[1];
@@ -51,7 +56,7 @@ $xml	=	'
 				/>
 			</form>
 		';
-$form	=	JForm::getInstance( $this->item->id, $xml );
+$form	=	Form::getInstance( $this->item->id, $xml );
 $form->setValue( 'asset_id', null, (int)$this->item->type );
 $form	=	$form->getInput( $this->item->id );
 $form	=	str_replace( 'onchange="sendPermissions.call(this, event)"', '', $form );
@@ -125,10 +130,10 @@ $js		=	'
 			';
 
 if ( !JCck::on( '4.0' ) ) {
-	JHtml::_( 'behavior.framework' );
+	HTMLHelper::_( 'behavior.framework' );
 }
 $doc->addScriptDeclaration( $js );
-$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$client.'.css' );
+$doc->addStyleSheet( Uri::root( true ).'/media/cck/css/cck.'.$client.'.css' );
 ?>
 
 <form method="post" id="adminForm" name="adminForm">

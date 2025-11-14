@@ -10,7 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'CCK_Content', JPATH_PLATFORM.'/cck/content/content.php' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
+\JLoader::register( 'CCK_Content', JPATH_PLATFORM.'/cck/content/content.php' );
 
 // Plugin
 class plgCCK_StorageCustom extends JCckPluginStorage
@@ -276,7 +279,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 			case 'date_future':
 			case 'date_future_isset':
 			case 'date_future_only':
-				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_DATE_AND_TIME_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
+				Factory::getApplication()->enqueueMessage( Text::_( 'COM_CCK_DATE_AND_TIME_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;
 			case 'nested_exact':
 				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
@@ -364,7 +367,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				break;
 			case 'radius_higher':
 			case 'radius_lower':
-				JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_RADIUS_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
+				Factory::getApplication()->enqueueMessage( Text::_( 'COM_CCK_RADIUS_MATCH_ONLY_WITH_STANDARD' ), 'notice' );
 				break;
 			case 'none':
 				return;

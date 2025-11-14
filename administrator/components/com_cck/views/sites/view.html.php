@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // View
 class CCKViewSites extends JCckBaseLegacyViewList
 {
@@ -20,9 +22,9 @@ class CCKViewSites extends JCckBaseLegacyViewList
 	protected function getSortFields()
 	{
 		return array(
-					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'a.published'=>JText::_( 'COM_CCK_STATUS' ),
-					'a.title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.id'=>Text::_( 'COM_CCK_ID' ),
+					'a.published'=>Text::_( 'COM_CCK_STATUS' ),
+					'a.title'=>Text::_( 'COM_CCK_TITLE' )
 				);
 	}
 }

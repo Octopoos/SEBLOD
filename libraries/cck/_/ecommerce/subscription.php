@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\User\UserHelper;
 use Joomla\Utilities\ArrayHelper;
 
 // JCckEcommerceSubscription
@@ -18,9 +20,9 @@ abstract class JCckEcommerceSubscription
 	// _getItems
 	protected static function _getItems( $user_id, $state, $date_state, $limit = 0 )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$grouped	=	false;
-		$now		=	JFactory::getDate()->toSql();
+		$now		=	Factory::getDate()->toSql();
 		$null		=	$db->getNullDate();
 		$query		=	$db->getQuery( true );
 
@@ -127,7 +129,7 @@ abstract class JCckEcommerceSubscription
 						$k	=	(int)$k;
 
 						if ( $k && !isset( $valid_groups[$k] ) ) {
-							JUserHelper::removeUserFromGroup( $user_id, $k );
+							UserHelper::removeUserFromGroup( $user_id, $k );
 						}
 					}
 				}

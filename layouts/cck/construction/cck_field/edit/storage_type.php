@@ -1,12 +1,14 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 if ( $displayData['type'] ) {
 	$class	=	'';
-	$text	=	JText::_( 'COM_CCK_FIELD_IS_LINKED' ).' <strong>'.$displayData['type'].'</strong>';
+	$text	=	Text::_( 'COM_CCK_FIELD_IS_LINKED' ).' <strong>'.$displayData['type'].'</strong>';
 } else {
 	$class	=	' class="success"';
-	$text	=	JText::_( 'COM_CCK_FIELD_IS_GENERIC' );
+	$text	=	Text::_( 'COM_CCK_FIELD_IS_GENERIC' );
 }
 ?>
 <?php if ( !$displayData['isNew'] ) { ?>

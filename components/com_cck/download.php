@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Uri\Uri;
+
 if ( !( isset( $name ) && $name != '' && isset( $path ) && $path != '' ) ) {
 	die;
 }
@@ -111,11 +113,11 @@ if ( isset( $x_robots ) && $x_robots ) {
 }
 
 if ( $mime_type == 'application/pdf' && JCck::getConfig_Param( 'media_canonical', 0 ) ) {
-	$uri_link	=	JUri::current().'?task=read&file='.$fieldname.'&id='.$id;
+	$uri_link	=	Uri::current().'?task=read&file='.$fieldname.'&id='.$id;
 
 	header( "Link: <$uri_link>; rel=\"canonical\"" );
 } else {
-	$uri_link	=	JUri::current().'?task=download&file='.$fieldname.'&id='.$id;
+	$uri_link	=	Uri::current().'?task=download&file='.$fieldname.'&id='.$id;
 
 	header( "Link: <$uri_link>; rel=\"canonical\"" );
 }

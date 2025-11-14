@@ -2,6 +2,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'tab0', 'recall' => true, 'breakpoint' => 768] );
 
@@ -10,8 +11,8 @@ foreach ( $displayData['form'] as $k=>$form ) {
 		$label	=	$form['legend'];
 		$legend	=	$form['legend'];
 	} else {
-		$label	=	JText::_( 'COM_CCK_'.strtoupper( $displayData['type'] ).'_SETTINGS' );
-		$legend	=	JText::_( 'COM_CCK_SETTINGS' );
+		$label	=	Text::_( 'COM_CCK_'.strtoupper( $displayData['type'] ).'_SETTINGS' );
+		$legend	=	Text::_( 'COM_CCK_SETTINGS' );
 	}
 	
 	echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'tab'.$k, $label );

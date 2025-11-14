@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // CCK_Content (deprecated)
 class CCK_Content
 {
@@ -103,16 +106,16 @@ class CCK_Content
 			return;
 		}
 		if ( $params === null ) {
-			$params	=	new JObject;
+			$params	=	new \stdClass;
 		}
 		
-		JPluginHelper::importPlugin( 'content' );
+		PluginHelper::importPlugin( 'content' );
 		
 		$row->text	=	'';
 		if ( isset( $row->$name ) ) {
 			$row->text	=	$row->$name;
 		}
-		$results	=	JFactory::getApplication()->triggerEvent( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
+		$results	=	Factory::getApplication()->triggerEvent( 'onContentPrepare', array ( 'com_content.category', &$row, &$params, 0 ) );
 		
 		return $row->text;
 	}

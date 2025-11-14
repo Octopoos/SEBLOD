@@ -10,13 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
+
 // Init
 if ( isset( $this ) && isset( $this->config ) ) {
 	$config		=	&$this->config;
 }
 
 // Prepare
-$item->params	=	is_object( $params ) ? clone $params : new JRegistry;
+$item->params	=	is_object( $params ) ? clone $params : new Registry;
 if ( !$loaded ) {
 	if ( $item->params->get( 'link_titles' ) ) {
 	 	$items	=	JCckDatabase::loadObjectList( 'SELECT a.id, a.language, b.title AS category_title, b.alias AS category_alias'
@@ -39,7 +42,7 @@ if ( isset( $items[$item->pk]->category_alias ) ) {
 $link		=	plgCCK_Storage_LocationJoomla_Article::getRoute( $item, $config['doSEF'], $config['Itemid'], $config );
 
 if ( $plg_params->get( 'item_params', 0 ) ) {
-	$attribs	=	new JRegistry( $item->attribs );
+	$attribs	=	new Registry( $item->attribs );
 	$attribs	=	$attribs->toArray();
 	$item->params->merge( $attribs );
 }
@@ -52,7 +55,7 @@ if ( $plg_params->get( 'item_params', 0 ) ) {
 		$class	=	$class ? ' class="'.$class.'"' : '';
 		echo '<'.$tag.$class.'>'. ( ( $item->params->get( 'link_titles' ) ) ? '<a href="'.$link.'">'.$item->title.'</a>' : $item->title ) .'</'.$tag.'>';
 	}
-	echo JHtml::_( 'content.prepare', $item->introtext );
+	echo HTMLHelper::_( 'content.prepare', $item->introtext );
 	?>
 </div>
 <?php if ( $plg_params->get( 'item_separator', 1 ) ) { ?>

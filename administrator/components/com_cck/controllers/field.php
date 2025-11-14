@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'cck.joomla.application.component.controllerform' );
@@ -22,7 +26,7 @@ class CCKControllerField extends CCK_ControllerForm
 	// add
 	public function add()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		// Parent Method
 		$result	=	parent::add();
@@ -39,8 +43,8 @@ class CCKControllerField extends CCK_ControllerForm
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$user		=	JFactory::getUser();
+		$app		=	Factory::getApplication();
+		$user		=	Factory::getUser();
 		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
@@ -60,7 +64,7 @@ class CCKControllerField extends CCK_ControllerForm
 	// allowEdit
 	protected function allowEdit( $data = array(), $key = 'id' )
 	{
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		$recordId	=	(int)isset( $data[$key] ) ? $data[$key] : 0;
 		$folderId	=	0;
 		
@@ -80,9 +84,9 @@ class CCKControllerField extends CCK_ControllerForm
 	// cancel
 	public function cancel( $key = null )
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
-			
-		$app	=	JFactory::getApplication();
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		
+		$app	=	Factory::getApplication();
 
 		parent::cancel();
 		
@@ -93,7 +97,7 @@ class CCKControllerField extends CCK_ControllerForm
 	// edit
 	public function edit( $key = null, $urlVar = null )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		// Parent Method
 		$result	=	parent::edit();
@@ -107,9 +111,9 @@ class CCKControllerField extends CCK_ControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	protected function postSaveHook( BaseDatabaseModel $model, $validData = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$task	=	$this->getTask();
 		
 		switch ( $task )

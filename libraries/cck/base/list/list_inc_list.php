@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Uri\Uri;
+
 // Template
 $idx			=	( isset( $config_list['idx'] ) ) ? $config_list['idx'] : '_';
 $isInfinite		=	$config_list['infinite'];
@@ -89,7 +91,7 @@ if ( $go_for_item || $go_for_both ) {
 	
 	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 	
-	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>JUri::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
+	$infos					=	array( 'context'=>'', 'params'=>$templateStyleItem->params, 'path'=>$pathI, 'root'=>Uri::root( true ), 'template'=>$templateStyleItem->name, 'theme'=>$tpl['home'] );
 	$doc->i_infos			=	$infos;
 	$doc->i_params			=	$rparamsI;
 	$doc->i_positions		=	$positions;
@@ -209,7 +211,7 @@ foreach ( $fields as $field ) {
 }
 
 // Finalize
-$infos				=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+$infos				=	array( 'context'=>'', 'infinite'=>$isInfinite, 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>Uri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 $doc->finalize( 'content', $search->name, 'list', $positions, $positions_p, $infos );
 $data['buffer']		=	$doc->render( false, $rparams );
 ?>

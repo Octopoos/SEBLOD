@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldJform_Calendar extends JCckPluginField
 {
@@ -24,8 +30,8 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 	// __construct
 	public function __construct( &$subject, $config = array() )
 	{
-		$this->serverOffset	=	JFactory::getConfig()->get( 'offset' );
-		$this->userTimeZone	=	new DateTimeZone( JFactory::getUser()->getParam( 'timezone', JFactory::getConfig()->get( 'offset' ) ) );
+		$this->serverOffset	=	Factory::getConfig()->get( 'offset' );
+		$this->userTimeZone	=	new DateTimeZone( Factory::getUser()->getParam( 'timezone', Factory::getConfig()->get( 'offset' ) ) );
 
 		parent::__construct( $subject, $config );
 	}
@@ -58,7 +64,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$field->text	=	'';
 		} else {
 			$field->value	=	$value;
-			$date			=	JFactory::getDate( $value, 'UTC' );
+			$date			=	Factory::getDate( $value, 'UTC' );
 			$date->setTimezone( $this->userTimeZone );
 
 			// Transform the date string.
@@ -78,7 +84,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 		
 		if ( (int)$value > 0 ) {
-			$field->output	=	JHtml::_( 'date', $value, 'Y-m-d H:i:s' );
+			$field->output	=	HTMLHelper::_( 'date', $value, 'Y-m-d H:i:s' );
 		} else {
 			$field->output	=	'';
 		}
@@ -133,7 +139,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$format_time	.=	' timeformat="'.(int)$options2['time'].'"';
 		}
 		if ( (int)$value > 0 && $modify ) {
-			$value	=	JFactory::getDate( $value )->modify( str_replace( '+', '-', $modify ) )->toSql();
+			$value	=	Factory::getDate( $value )->modify( str_replace( '+', '-', $modify ) )->toSql();
 		}
 		
 		// Prepare
@@ -168,14 +174,14 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 							/>
 						</form>
 						';
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
 			$form	=	str_replace( 'btn btn-secondary', 'hasTooltip', $form );
 
 			if ( $desc ) {
-				$form	=	str_replace( 'title="'.JText::_( 'JLIB_HTML_BEHAVIOR_OPEN_CALENDAR' ).'"', 'title="'.$desc.'"', $form );
+				$form	=	str_replace( 'title="'.Text::_( 'JLIB_HTML_BEHAVIOR_OPEN_CALENDAR' ).'"', 'title="'.$desc.'"', $form );
 			}
-			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 				$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
 				$form	.=	self::_addScript();
 
@@ -207,7 +213,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			}
 			if ( (int)$value > 0 ) {
 				if ( !$show_time ) {
-					$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+					$value	=	Factory::getDate( $value )->format( 'Y-m-d' );
 				}
 			}
 
@@ -235,7 +241,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$modify			=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
 
 			if ( $format_filter == 'raw' ) {
-				$date		=	JFactory::getDate( $value, 'GMT' );
+				$date		=	Factory::getDate( $value, 'GMT' );
 
 				if ( $modify ) {
 					$date->modify( $modify );
@@ -243,9 +249,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 				$value		=	$date->toSql();
 			} else {
 				if ( $format_filter == 'server_utc' ) {
-					$date	=	JFactory::getDate( $value, $this->serverOffset );
+					$date	=	Factory::getDate( $value, $this->serverOffset );
 				} else {
-					$date	=	JFactory::getDate( $value, $this->userTimeZone );
+					$date	=	Factory::getDate( $value, $this->userTimeZone );
 				}
 
 				if ( $modify ) {
@@ -261,7 +267,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 
 		if ( (int)$field->value > 0 && isset( $modify ) && $modify ) {
-			$field->value	=	JFactory::getDate( $field->value )->modify( $modify )->toSql();
+			$field->value	=	Factory::getDate( $field->value )->modify( $modify )->toSql();
 		}
 		
 		// Return
@@ -296,16 +302,16 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$modify			=	( isset( $options2['modify'] ) && $options2['modify'] ) ? $options2['modify'] : '';
 			
 			if ( $format_filter == 'raw' ) {
-				$date		=	JFactory::getDate( $value, 'GMT' );
+				$date		=	Factory::getDate( $value, 'GMT' );
 				if ( $modify ) {
 					$date->modify( $modify );
 				}
 				$value		=	$date->toSql();
 			} else {
 				if ( $format_filter == 'server_utc' ) {
-					$date	=	JFactory::getDate( $value, $this->serverOffset );
+					$date	=	Factory::getDate( $value, $this->serverOffset );
 				} else {
-					$date	=	JFactory::getDate( $value, $this->userTimeZone );
+					$date	=	Factory::getDate( $value, $this->userTimeZone );
 				}
 				if ( $modify ) {
 					$date->modify( $modify );
@@ -376,8 +382,8 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		}
 
 		$loaded	=	1;
-		$root	=	JUri::root( true );
-		$lang	=	substr( JFactory::getLanguage()->getTag(), 0, 2 );
+		$root	=	Uri::root( true );
+		$lang	=	substr( Factory::getLanguage()->getTag(), 0, 2 );
 
 		echo '<link rel="stylesheet" href="'.$root.'/media/system/css/fields/calendar.css" type="text/css" />';
 		echo '<script src="'.$root.'/media/system/js/fields/calendar-locales/'.$lang.'.js" type="text/javascript"></script>';
@@ -393,7 +399,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		if ( (int)$value == 0 ) {
 			$value	=	'';
 		} else {
-			$date	=	JFactory::getDate( $value, 'UTC' );
+			$date	=	Factory::getDate( $value, 'UTC' );
 			$date->setTimezone( $timezone );
 
 			$value	=	$date->format( 'Y-m-d H:i:s', true, true );
@@ -409,7 +415,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$options2	=	json_decode( $field->options2 );
 
 		if ( !( isset( $options2->time ) && (int)$options2->time ) ) {
-			$value	=	JFactory::getDate( $value )->format( 'Y-m-d' );
+			$value	=	Factory::getDate( $value )->format( 'Y-m-d' );
 		}
 
 		return $value;

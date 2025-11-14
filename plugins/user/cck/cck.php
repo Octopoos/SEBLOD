@@ -10,10 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
 
 // Plugin
-class plgUserCCK extends JPlugin
+class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 {
 	protected $app;
 
@@ -43,7 +45,7 @@ class plgUserCCK extends JPlugin
 	public function onUserAfterLogin( $login_options )
 	{
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterLogin';
@@ -52,7 +54,7 @@ class plgUserCCK extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -65,7 +67,7 @@ class plgUserCCK extends JPlugin
 	public function onUserAfterSave( $user, $isNew, $user2 )
 	{
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterSave';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -73,7 +75,7 @@ class plgUserCCK extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -86,7 +88,7 @@ class plgUserCCK extends JPlugin
 	public function onUserBeforeSave( $user, $isNew, $user2 )
 	{
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserBeforeSave';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -94,7 +96,7 @@ class plgUserCCK extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -110,7 +112,7 @@ class plgUserCCK extends JPlugin
 	public function onUserLogin( $user, $options = array() )
 	{
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserLogin';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -118,7 +120,7 @@ class plgUserCCK extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -131,7 +133,7 @@ class plgUserCCK extends JPlugin
 	public function onUserLogout( $user, $options = array() )
 	{
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserLogout';
@@ -140,7 +142,7 @@ class plgUserCCK extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -149,7 +151,7 @@ class plgUserCCK extends JPlugin
 		}
 
 		// Logout for Incognito || Impostor
-		$my	=	JFactory::getUser();
+		$my	=	Factory::getUser();
 
 		if ( isset( $my->from_id ) && $my->from_id ) {
 			// Make sure we're a valid user first
@@ -164,7 +166,7 @@ class plgUserCCK extends JPlugin
 			if ($my->id == $user['id'] && ($sharedSessions || (!$sharedSessions && $options['clientid'] == $this->app->getClientId())))
 			{
 				// Destroy the php session for this user WITHOUT changing the user last visit field
-				JFactory::getSession()->destroy();
+				Factory::getSession()->destroy();
 			}
 		}
 
@@ -188,11 +190,11 @@ class plgUserCCK extends JPlugin
 			if ( $type != '' ) {
 				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
 
-				JPluginHelper::importPlugin( 'cck_field' );
-				JPluginHelper::importPlugin( 'cck_storage' );
-				JPluginHelper::importPlugin( 'cck_storage_location' );
+				\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'cck_field' );
+				\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'cck_storage' );
+				\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'cck_storage_location' );
 
-				$app	=	JFactory::getApplication();
+				$app	=	Factory::getApplication();
 				$config	=	array(
 								'pk'=>$table->pk,
 								'storages'=>array(),
@@ -223,13 +225,13 @@ class plgUserCCK extends JPlugin
 			$table->delete();
 
 			if ( $pkb > 0 ) {
-				$table	=	JTable::getInstance( 'Content' );
+				$table	=	Table::getInstance( 'Content' );
 				$table->delete( $pkb );
 			}
 		}
 		
 		// Processing
-		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			if ( $event == 'onUserAfterDelete' ) {
 				$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -244,7 +246,7 @@ class plgUserCCK extends JPlugin
 		}
 
 		$tables	=	JCckDatabase::getTableList();
-		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix	= 	Factory::getConfig()->get( 'dbprefix' );
 		
 		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
 			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );

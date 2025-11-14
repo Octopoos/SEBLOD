@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_FieldColorpicker extends JCckPluginField
 {
@@ -150,8 +152,8 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 	// _addScripts
 	protected static function _addScripts( $id, $params = array(), &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
-		$lang	=	JFactory::getLanguage();
+		$doc	=	Factory::getDocument();
+		$lang	=	Factory::getLanguage();
 		
 		$s_css	=	self::$path.'assets/css/colorpicker_custom.css';
 		$s_js	=	self::$path.'assets/js/colorpicker.js';

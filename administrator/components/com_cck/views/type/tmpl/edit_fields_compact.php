@@ -10,17 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $clone		=	'';
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>JFactory::getUser()->id );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>Factory::getUser()->id );
 ?>
 <div class="seb-wrapper <?php echo $this->uix; ?>">
     <div class="width-70 fltlft" id="seblod-main">
         <div class="seblod">
             <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
-            <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+            <div class="legend top left"><?php echo Text::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide' );
             Helper_Workshop::displayHeader( 'type', $this->item->master );
@@ -53,7 +56,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             ?>
         </div>
         <div class="seblod">
-            <span class="legend top left"><?php echo JText::_( 'COM_CCK_AVAILABLE_FIELDS' ); ?></span><span class="toggle" id="more_fields">Toggle</span>
+            <span class="legend top left"><?php echo Text::_( 'COM_CCK_AVAILABLE_FIELDS' ); ?></span><span class="toggle" id="more_fields">Toggle</span>
             <?php
             if ( count( $this->fieldsAv ) ) {
                 echo '<div class="legend top center">'.$this->lists['af_t'].$this->lists['af_c'].$this->lists['af_f'].$this->lists['af_a'].'</div>';
@@ -72,7 +75,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             ?>
         </div>
         <div class="seblod">
-            <span class="legend top left"><?php echo JText::_( 'COM_CCK_AVAILABLE_POSITIONS' ); ?></span><span class="toggle" id="more_positions">Toggle</span>
+            <span class="legend top left"><?php echo Text::_( 'COM_CCK_AVAILABLE_POSITIONS' ); ?></span><span class="toggle" id="more_positions">Toggle</span>
             <ul class="more_pos">
             <?php 
 			for ( ; $i < $n; $i++ ) {

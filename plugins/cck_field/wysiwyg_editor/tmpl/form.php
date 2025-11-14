@@ -10,9 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.core' );
+use Joomla\CMS\Editor\Editor;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 
-$doc	=	JFactory::getDocument();
+HTMLHelper::_( 'behavior.core' );
+
+$doc	=	Factory::getDocument();
 $js		=	'
 			(function ($){
 				JCck.Dev = {
@@ -75,8 +79,8 @@ $js		=	'
 $doc->addScriptDeclaration( $js );
 
 $value		=	'';
-$editor		=	isset( $this->item->type ) && $this->item->type ? $this->item->type : JFactory::getConfig()->get( 'editor', 'none' );
-$editor		=	JEditor::getInstance( $editor );
+$editor		=	isset( $this->item->type ) && $this->item->type ? $this->item->type : Factory::getConfig()->get( 'editor', 'none' );
+$editor		=	Editor::getInstance( $editor );
 $params		=	explode( '||', $this->item->params );
 $width		=	( @$params[0] ) ? $params[0] : '100%';
 $width		=	urldecode( $width );

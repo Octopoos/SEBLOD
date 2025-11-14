@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Toolbar\ToolbarButton;
+
 // JButton
-class JButtonCckSeparator extends JButton
+class JButtonCckSeparator extends ToolbarButton
 {
 	protected $_name	=	'CckSeparator';
 	protected $tag		=	'li';

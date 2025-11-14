@@ -10,13 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 $desc	=	'';
 
 // Prepare
 if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 	if ( $this->item->id == 'dev_map' ) {
-		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br />'.JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
-		$columns				=	array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -',
+		$desc					=	Text::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' ).'<br />'.Text::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN_CCK_FIELD' );
+		$columns				=	array( ''=>'- '.Text::_( 'COM_CCK_SELECT' ).' -',
 										   'bool'=>'bool',
 										   'bool2'=>'bool2',
 										   'bool3'=>'bool3',
@@ -27,9 +32,9 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 										   'json[options2][...]'=>'options2'
 										);
 	} else {
-		$desc					=	JText::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
+		$desc					=	Text::_( 'COM_CCK_SELECT_TO_MAP_EXISTING_COLUMN' );
 		$pos					=	strpos( $this->item->title, '__' );
-		$prefix					=	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix					=	Factory::getConfig()->get( 'dbprefix' );
 
 		if ( $pos !== false && $pos == 0 ) {
 			$properties			=	array( 'table'=>str_replace( '#__', $prefix, '#'.$this->item->title ) );
@@ -71,14 +76,14 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 					$columns		=	array_combine( $columns, $columns );
 				}
 			}
-			$columns			=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
+			$columns			=	array_merge( array( ''=>'- '.Text::_( 'COM_CCK_SELECT' ).' -' ), $columns );
 		} else {
-			$columns			=	array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' );
+			$columns			=	array( ''=>'- '.Text::_( 'COM_CCK_SELECT' ).' -' );
 		}
 	}
 	$field						=	new stdClass;
 	$field->type				=	'select_simple';
-	$form						=	JHtml::_( 'select.genericlist', $columns, 'map', 'class="form-select inputbox select max-width-180"', 'value', 'text', '', 'map' );
+	$form						=	HTMLHelper::_( 'select.genericlist', $columns, 'map', 'class="form-select inputbox select max-width-180"', 'value', 'text', '', 'map' );
 } elseif ( $this->item->id == 'object_property' ) {
 	$columns					=	array();
 	$field						=	new stdClass;
@@ -95,8 +100,8 @@ if ( $this->item->id == 'content_map' || $this->item->id == 'dev_map' ) {
 		}
 	}
 	
-	$columns					=	array_merge( array( ''=>'- '.JText::_( 'COM_CCK_SELECT' ).' -' ), $columns );
-	$form						=	JHtml::_( 'select.genericlist', $columns, $this->item->name, 'class="form-select inputbox select max-width-180"', 'value', 'text', '', $this->item->name );
+	$columns					=	array_merge( array( ''=>'- '.Text::_( 'COM_CCK_SELECT' ).' -' ), $columns );
+	$form						=	HTMLHelper::_( 'select.genericlist', $columns, $this->item->name, 'class="form-select inputbox select max-width-180"', 'value', 'text', '', $this->item->name );
 } else {
 	$desc						=	'';
 	$field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
@@ -163,7 +168,7 @@ if ( JCck::on( '4.0' ) ) {
 }
 
 // Set
-$doc	=	JFactory::getDocument();
+$doc	=	Factory::getDocument();
 $js		=	'
 			(function($) {
 				$.fn.isMultiple = function() {
@@ -177,7 +182,7 @@ $js		=	'
 				$.fn.toggleMultiple = function(offset) {
 					if (this.is("select")) {
 						if (this.prop("multiple")) {
-							this.prepend(\'<option value="">- '.JText::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).removeAttr("size");
+							this.prepend(\'<option value="">- '.Text::_( 'COM_CCK_SELECT' ).' -</option>\').prop("multiple",false).removeAttr("size");
 						} else {
 							$("#"+this.attr("id")+" option:eq(0)").remove();
 							this.prop("multiple",true).attr("size",15);
@@ -360,14 +365,14 @@ $js		=	'
 			})(jQuery);
 			';
 Helper_Include::addDependencies( 'box', 'edit' );
-$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
+$doc->addStyleSheet( Uri::root( true ).'/media/cck/css/cck.admin.css' );
 $doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}table.DynarchCalendar-topCont{top:0!important;left:16px!important;} form{margin:0!important;}' );
 $doc->addScriptDeclaration( $js );
 
-JText::script( 'COM_CCK_MATCH_ANY_WORDS' );
-JText::script( 'COM_CCK_MATCH_ANY_WORDS_EXACT' );
-JText::script( 'COM_CCK_MATCH_DEFAULT_PHRASE' );
-JText::script( 'COM_CCK_MATCH_EXACT_PHRASE' );
+Text::script( 'COM_CCK_MATCH_ANY_WORDS' );
+Text::script( 'COM_CCK_MATCH_ANY_WORDS_EXACT' );
+Text::script( 'COM_CCK_MATCH_DEFAULT_PHRASE' );
+Text::script( 'COM_CCK_MATCH_EXACT_PHRASE' );
 ?>
 <div class="row"><div class="col-12">
 	<div align="center" style="text-align:center;">

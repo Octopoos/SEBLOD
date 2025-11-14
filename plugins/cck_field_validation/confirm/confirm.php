@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_Field_ValidationConfirm extends JCckPluginValidation
 {
@@ -35,7 +38,7 @@ class plgCCK_Field_ValidationConfirm extends JCckPluginValidation
 			$alert	=	$validation->alert;
 			if ( $config['doTranslation'] ) {
 				if ( trim( $alert ) ) {
-					$alert	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
+					$alert	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
 				}
 			}
 			$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
@@ -49,11 +52,11 @@ class plgCCK_Field_ValidationConfirm extends JCckPluginValidation
 			$config['validation'][$name]	=	$rule;
 			$field->validate[]				=	'confirm['.$name.']';
 		} else {
-			$lang   =	JFactory::getLanguage();
+			$lang   =	Factory::getLanguage();
 			$lang->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
 			
 			$name	=	'confirmed';
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' );
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' );
 			
 			$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
 			$rule	=	'
@@ -74,11 +77,11 @@ class plgCCK_Field_ValidationConfirm extends JCckPluginValidation
 		$base		=	$validation->field;
 		
 		if ( $config['post'][$name] != $config['post'][$base] ) {
-			$app	=	JFactory::getApplication();
-			$lang	=	JFactory::getLanguage();
+			$app	=	Factory::getApplication();
+			$lang	=	Factory::getLanguage();
 			$lang->load( 'plg_cck_field_validation_'.self::$type, JPATH_ADMINISTRATOR, null, false, true );
 			
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name;
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name;
 			
 			$app->enqueueMessage( $alert, 'error' );
 			$config['validate']	=	'error';

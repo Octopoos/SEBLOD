@@ -10,13 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // CckRouter
 class CckRouter extends JComponentRouterView
 {
 	// build
 	public function build( &$query )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$menu		=	$app->getMenu();
 		$segments	=	array();
 
@@ -122,7 +125,7 @@ class CckRouter extends JComponentRouterView
 	// parse
 	public function parse( &$segments )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$count		=	count( $segments );
 		$menu		=	$app->getMenu();
 		$menuItem	=	$menu->getActive();
@@ -212,7 +215,7 @@ class CckRouter extends JComponentRouterView
 				if ( isset( $menuItem->query['option'], $menuItem->query['view'] )
 				  && $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] == 'form' ) {
 				  	if ( $menuItem->id != JCckDevHelper::getApp( 'more' )->params->get( 'menu_item.Admin', 0 ) ) {
-						throw new Exception( JText::_( 'JERROR_PAGE_NOT_FOUND' ), 404 );
+						throw new \Exception( Text::_( 'JERROR_PAGE_NOT_FOUND' ), 404 );
 					}
 				} elseif ( !JCck::on( '4.0' ) ) {
 					if ( $count == 2 ) {
@@ -248,7 +251,7 @@ class CckRouter extends JComponentRouterView
 // CckBuildRoute
 function CckBuildRoute( &$query )
 {
-	$app	=	JFactory::getApplication();
+	$app	=	Factory::getApplication();
 	$router	=	new CckRouter( $app, $app->getMenu() );
 
 	return $router->build( $query );
@@ -257,7 +260,7 @@ function CckBuildRoute( &$query )
 // CckParseRoute
 function CckParseRoute( $segments )
 {
-	$app	=	JFactory::getApplication();
+	$app	=	Factory::getApplication();
 	$router	=	new CckRouter( $app, $app->getMenu() );
 
 	return $router->parse( $segments );

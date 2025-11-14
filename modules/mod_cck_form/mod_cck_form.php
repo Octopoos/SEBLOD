@@ -8,6 +8,10 @@
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
+
 defined( '_JEXEC' ) or die;
 
 $show	=	$params->get( 'url_show', '' );
@@ -19,14 +23,14 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 	return;
 }
 
-$app	=	JFactory::getApplication();
+$app	=	Factory::getApplication();
 $data	=	'';
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(int)$params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) );
 
 JCck::loadjQuery();
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'mod_cck_form', JPATH_SITE );
 $lang->load( 'com_cck_default', JPATH_SITE );
@@ -48,11 +52,11 @@ $variation	=	$params->get( 'variation', '' );
 
 jimport( 'cck.base.form.form' );
 include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
-JFactory::getSession()->set( 'cck_hash_'.$formId, JApplicationHelper::getHash( '0|'.$preconfig['type'].'|0|0' ) );
-JFactory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
+Factory::getSession()->set( 'cck_hash_'.$formId, ApplicationHelper::getHash( '0|'.$preconfig['type'].'|0|0' ) );
+Factory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx', '' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
-require JModuleHelper::getLayoutPath( 'mod_cck_form', $params->get( 'layout', 'default' ) );
+require ModuleHelper::getLayoutPath( 'mod_cck_form', $params->get( 'layout', 'default' ) );
 ?>

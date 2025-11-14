@@ -10,21 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 $config		=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_search', 'core_description', 'core_state',
 										 'core_location2', 'core_alias', 'core_access' ) );
-$lang		=	JFactory::getLanguage();
+$lang		=	Factory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
 if ( $lang->hasKey( $key ) == 1 ) {
-	$transliterate	=	JText::_( $key );
+	$transliterate	=	Text::_( $key );
 	$transliterate	=	'{"'.str_replace( array( ':', '||' ), array( '":"', '","' ), $transliterate ).'"}';
 } else {
 	$transliterate	=	'{}';
 }
-JHtml::_( 'bootstrap.tooltip' );
+HTMLHelper::_( 'bootstrap.tooltip' );
 $sidebar_inner	=	288;
 $sidebar_top	=	93;
 
@@ -43,7 +47,7 @@ if ( $this->item->client == 'list' ) {
 ?>
 
 <div id="seblod-app-builder" class="clearfix">
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?> full">
 	<div class="<?php echo $this->css['wrapper_first']; ?>">
@@ -69,8 +73,8 @@ if ( $this->item->client == 'list' ) {
 		if ( !$this->item->id ) {
 			$dataTmpl['fields']['quick_nav']	=	JCckDev::renderLayoutFile(
 														'cck'.JCck::v().'.form.field', array(
-															'label'=>JText::_( 'COM_CCK_QUICK_MENU_ITEM' ),
-															'html'=>'<select id="quick_menuitem" name="quick_menuitem" class="form-select inputbox max-width-180"><option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'.JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) ).'</select>'
+															'label'=>Text::_( 'COM_CCK_QUICK_MENU_ITEM' ),
+															'html'=>'<select id="quick_menuitem" name="quick_menuitem" class="form-select inputbox max-width-180"><option value="">- '.Text::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'.HTMLHelper::_( 'select.options', HTMLHelper::_( 'menu.menuitems' ) ).'</select>'
 														)
 													);
 		} elseif ( !JCck::on( '4.0' ) ) {
@@ -86,7 +90,7 @@ if ( $this->item->client == 'list' ) {
 	<?php
 	if ( JCck::on( '4.0' ) ) {
 		echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
-		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', Text::_( 'COM_CCK_DETAILS' ) );
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
 	} else {
@@ -105,10 +109,10 @@ if ( $this->item->client == 'list' ) {
 	<?php
 	if ( JCck::on( '4.0' ) ) {
 		echo HTMLHelper::_( 'uitab.endTab' );
-		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', JText::_( 'COM_CCK_OPTIONS' ) );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', Text::_( 'COM_CCK_OPTIONS' ) );
 		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_options', $dataTmpl );
 		echo HTMLHelper::_( 'uitab.endTab' );
-		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_PUBLISHING' ) );
 		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_publishing', $dataTmpl );
 		echo HTMLHelper::_( 'uitab.endTab' );
 		echo HTMLHelper::_( 'uitab.endTabSet' );
@@ -128,10 +132,10 @@ if ( $this->item->client == 'list' ) {
 	}
     echo $this->form->getInput( 'id' );
     if ( !isset( $config['validation']['maxSize'] ) ) {
-    	$config['validation']['maxSize']	=	'"maxSize":{"regex":"none","alertText":"* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT' ).'","alertText2":"'.JText::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT2' ).'"}';
+    	$config['validation']['maxSize']	=	'"maxSize":{"regex":"none","alertText":"* '.Text::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT' ).'","alertText2":"'.Text::_( 'PLG_CCK_FIELD_VALIDATION_MAXLENGTH_ALERT2' ).'"}';
     }
 	JCckDev::validate( $config );
-    echo JHtml::_( 'form.token' );
+    echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>
@@ -139,9 +143,9 @@ if ( $this->item->client == 'list' ) {
 
 <?php
 Helper_Display::quickCopyright();
-JText::script( 'COM_CCK_OPTIONAL' );
-JText::script( 'COM_CCK_REQUIRED' );
-JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
+Text::script( 'COM_CCK_OPTIONAL' );
+Text::script( 'COM_CCK_REQUIRED' );
+Text::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 
 $js4	=	'';
 
@@ -168,8 +172,8 @@ if ( JCck::on( '4.0' ) ) {
 		insidebox:'<?php echo $this->insidebox; ?>',
 		legacy:<?php echo JCck::on( '4' ) ? 0 : 1; ?>,
 		name:"search",
-		prompt_group:"<?php echo str_replace( '<br />', '\n', JText::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
-		root:"<?php echo JUri::root(); ?>",
+		prompt_group:"<?php echo str_replace( '<br />', '\n', Text::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
+		root:"<?php echo Uri::root(); ?>",
 		sb_inner:<?php echo $sidebar_inner; ?>,
 		sb_top:<?php echo $sidebar_top; ?>,
 		skip:"&skip=<?php echo $this->item->skip; ?>",

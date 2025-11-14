@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+
 require_once JPATH_COMPONENT.'/helpers/helper_version.php';
 
 // Model
@@ -21,7 +25,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		$pk		=	$app->input->getInt( 'id', 0 );
 		
 		$this->setState( 'version.id', $pk );
@@ -51,14 +55,14 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Version', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -72,7 +76,7 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data	=	JFactory::getApplication()->input->post->getArray();
+		$data	=	Factory::getApplication()->input->post->getArray();
 		
 		return $data;
 	}
@@ -90,14 +94,14 @@ class CCKModelVersion extends JCckBaseLegacyModelAdmin
 		$table->load( $pk );
 		
 		if ( JCck::getConfig_Param( 'version_revert', 1 ) == 1 ) {
-			Helper_Version::createVersion( $type, $table->e_id, JText::sprintf( 'COM_CCK_VERSION_AUTO_BEFORE_REVERT', $table->e_version ) );
+			Helper_Version::createVersion( $type, $table->e_id, Text::sprintf( 'COM_CCK_VERSION_AUTO_BEFORE_REVERT', $table->e_version ) );
 
 			if ( JCck::getConfig_Param( 'version_remove', 1 ) ) {
 				Helper_Version::removeVersion( $type, $table->e_id );
 			}
 		}
 		
-		$row	=	JTable::getInstance( ucfirst( $type ), 'CCK_Table' );
+		$row	=	Table::getInstance( ucfirst( $type ), 'CCK_Table' );
 		$row->load( $table->e_id );
 		$core	=	JCckDev::fromJSON( $table->e_core );
 		

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckDevField
 abstract class JCckDevField
 {
@@ -69,7 +71,7 @@ abstract class JCckDevField
 			$inherit['id']		=	str_replace( array('[', ']'), array('_', ''), $name );
 		}
 
-		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
 		if ( $field->required ) {
 			if ( trim( $field->label ) == '' ) {
@@ -128,7 +130,7 @@ abstract class JCckDevField
 			}
 		}
 		
-		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, $inherit ) );
 		
 		return JCck::callFunc( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', $field );
 	}
@@ -174,7 +176,7 @@ abstract class JCckDevField
 			}
 		}
 		
-		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 		
 		return JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderContent', array( $field, &$config ) );
 	}

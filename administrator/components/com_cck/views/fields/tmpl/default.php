@@ -10,15 +10,19 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 
-JPluginHelper::importPlugin( 'cck_field' );
+PluginHelper::importPlugin( 'cck_field' );
 
 $action			=	'<span class="icon-eye"></span>';
-$action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"';
+$action_attr	=	' class="cbox btn btn-micro hasTooltip" title="'.Text::_( 'COM_CCK_PREVIEW_THIS_FIELD' ).'"';
 $css			=	array();
-$doc			=	JFactory::getDocument();
-$user			=	JFactory::getUser();
+$doc			=	Factory::getDocument();
+$user			=	Factory::getUser();
 $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
@@ -31,13 +35,13 @@ $top			=	'content';
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_dynamic', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
 											 'core_state_filter', 'core_languages' ) );
-JText::script( 'COM_CCK_CONFIRM_DELETE' );
-JPluginHelper::importPlugin( 'cck_storage_location' );
-JPluginHelper::importPlugin( 'cck_storage' );
+Text::script( 'COM_CCK_CONFIRM_DELETE' );
+PluginHelper::importPlugin( 'cck_storage_location' );
+PluginHelper::importPlugin( 'cck_storage' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( !empty( $this->sidebar ) ) { ?>
 	<div id="j-sidebar-container" class="span2 top-bar">
 		<?php echo $this->sidebar; ?>
@@ -54,25 +58,25 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<tr>
 			<th width="60" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone no-pad"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
-			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
-			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="16%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
-			<th width="16%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
+			<th class="center" colspan="2"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
+			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo Text::_( 'COM_CCK_STORAGE' ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
             <?php if ( $location == 'folder_id' && $search > 0 ) {
 				$canOrder	=	$user->authorise( 'core.edit.state', 'com_cck.folder' );
 				$saveOrder	=	( JCckDatabase::loadResult( 'SELECT featured FROM #__cck_core_folders WHERE id = '.(int)$search ) ); ?>
                 <th width="8%" class="center hidden-phone nowrap">
                     <?php
-                    echo JHtml::_( 'grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDir, $listOrder );
+                    echo HTMLHelper::_( 'grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDir, $listOrder );
 					if ( $canOrder && $saveOrder ) {
-						echo JHtml::_( 'grid.order',  $this->items, 'filesave.png', 'fields.saveorder' );
+						echo HTMLHelper::_( 'grid.order',  $this->items, 'filesave.png', 'fields.saveorder' );
 					}
 					?>
                 </th>
             <?php } else { ?>
-                <th width="8%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+                <th width="8%" class="center nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
             <?php } ?>
-			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
+			<th width="32" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
 	</thead>
     <tbody>
@@ -86,10 +90,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canEditFolder	=	$user->authorise( 'core.edit', CCK_COM.'.folder.'.$item->folder );
 		$canEditOwn		=	'';
 
-		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
-		$link2			=	JRoute::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/preview.php&name='.$item->name );
-		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
-		$linkFolder		=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
+		$link 			=	Route::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='. $item->id );
+		$link2			=	Route::_( 'index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/preview.php&name='.$item->name );
+		$linkFilter		=	Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->folder );
+		$linkFolder		=	Route::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->folder );
 
 		Helper_Admin::addFolderClass( $css, $item->folder, $item->folder_color, $item->folder_colorchar );
 		?>
@@ -99,9 +103,9 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td width="30px" class="center hidden-phone dropdown-col">
             	<?php
             	if ( $item->id != 33 ) {
-					JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
+					HTMLHelper::_( '.cckactionsdropdown.addCustomLinkItem', Text::_( 'COM_CCK_PREVIEW_THIS_FIELD' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
 
-					echo JHtml::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
+					echo HTMLHelper::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
             	}
             	?>
             </td>
@@ -109,7 +113,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
 					<?php
 					if ( $item->checked_out ) {
-						echo JHtml::_( 'jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->vName.'s.', $canCheckin )."\n";
+						echo HTMLHelper::_( 'jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->vName.'s.', $canCheckin )."\n";
 					}
 					if ( ( $canEdit && ! $checkedOut ) && $item->id != 33 ) {
 						echo '<a href="'.$link.'">'.$this->escape( $item->title ).'</a><div class="small">'.$this->escape( $item->name ).'</div>';
@@ -129,10 +133,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 			<td class="center hidden-phone">
             	<?php
                 if ( ! $item->folder_parent ) {
-                    $linkFolderTree	=	JRoute::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder );
+                    $linkFolderTree	=	Route::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder );
                     $folder_parent	=	'';
                 } else {
-                    $linkFolderTree	=	JRoute::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder_parent );
+                    $linkFolderTree	=	Route::_( 'index.php?option='.$this->option.'&view=folders&filter_folder='. $item->folder_parent );
                     $folder_parent	=	'<br /><a class="folder-parent small" href="'.$linkFolderTree.'">'.$item->folder_parent_title.'</a>';
                 }
 				echo ( $canEditFolder ) ? '<a href="'.$linkFolder.'">' . $this->escape( $item->folder_title ) . '</a>' . $folder_parent : '<span>' . $this->escape( $item->folder_title ) . '</span>' . $folder_parent;
@@ -144,7 +148,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage ).'</span>';
 				?>
             </td>
-            <td class="center hidden-phone small"><?php echo JText::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>
+            <td class="center hidden-phone small"><?php echo Text::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>
             <?php if ( $location == 'folder_id' ) { ?>
 				<td class="center order">
 					<?php if ( $canChange ) {
@@ -155,7 +159,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					} ?>
 				</td>
             <?php } else { ?>
-				<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
+				<td class="center"><?php echo HTMLHelper::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
             <?php } ?>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
@@ -182,7 +186,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<input type="hidden" name="return_v" id="return_v" value="fields" />
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDir; ?>" />
-	<?php echo JHtml::_( 'form.token' ); ?>
+	<?php echo HTMLHelper::_( 'form.token' ); ?>
 </div>
 
 <?php

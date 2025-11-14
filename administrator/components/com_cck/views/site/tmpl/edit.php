@@ -11,6 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 $config	=	JCckDev::init( array( '42', 'checkbox', 'field_x', 'jform_menuitem', 'password', 'radio', 'select_dynamic', 'select_numeric', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ),
 						   true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
@@ -25,7 +27,7 @@ if ( ( $pos = strpos( $this->item->name, '@' ) ) !== false ) {
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
     <div class="<?php echo $this->css['wrapper_first']; ?>">  
@@ -48,7 +50,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                                             ),
                                 'parent'=>JCckDev::renderForm( $cck['core_parent_site'], $this->item->parent_id, $config ),
                                 'site_aliases'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( $this->item->aliases ), $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) ),
-                                'site_exclusions'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( @$cfg['exclusions'] ), $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ), array( 'after'=>'<div style="float:left;">'.JText::_( 'COM_CCK_SITE_EXCLUSIONS_DESC' ).'</div>' ) ),
+								'site_exclusions'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( @$cfg['exclusions'] ), $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ), array( 'after'=>'<div style="float:left;">'.Text::_( 'COM_CCK_SITE_EXCLUSIONS_DESC' ).'</div>' ) ),
                                 'site_homepage'=>JCckDev::renderForm( $cck['core_site_homepage'], @$cfg['homepage'], $config ),
                                 'site_language'=>JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config ),
                                 'site_metadesc'=>JCckDev::renderForm( $cck['core_site_metadesc'], @$cfg['metadesc'], $config ),
@@ -77,14 +79,14 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
         if ( JCck::on( '4.0' ) ) {
             echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
-            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', Text::_( 'COM_CCK_DETAILS' ) );
             echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.site.edit_details', $dataTmpl );
             echo HTMLHelper::_( 'uitab.endTab' );
             if ( !$this->isNew ) {
-                echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_CONFIGURATION_LABEL' ) );
+                echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_CONFIGURATION_LABEL' ) );
                 ?>
                 <fieldset class="options-form">
-                <p class="legend-desc"><?php echo JText::_( 'COM_CCK_SITE_SETTINGS_DESC' ); ?></p>
+                <p class="legend-desc"><?php echo Text::_( 'COM_CCK_SITE_SETTINGS_DESC' ); ?></p>
                 <?php
                 echo JCckDev::renderForm( $cck['core_guest'], $this->item->guest, $config );
                 if ( strpos( $this->item->viewlevels, ',' ) !== false ) {
@@ -105,10 +107,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 <?php
                 echo HTMLHelper::_( 'uitab.endTab' );
             }
-            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'url', JText::_( 'COM_CCK_OPTIONS' ) );
+            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'url', Text::_( 'COM_CCK_OPTIONS' ) );
             echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.site.edit_options', $dataTmpl );
             echo HTMLHelper::_( 'uitab.endTab' );
-            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_PUBLISHING' ) );
             echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.site.edit_publishing', $dataTmpl );
             echo HTMLHelper::_( 'uitab.endTab' );
             echo HTMLHelper::_( 'uitab.endTabSet' );
@@ -124,7 +126,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <input type="hidden" id="type" name="type" value="<?php echo $this->item->type; ?>" />
     <?php
 	JCckDev::validate( $config );
-    echo JHtml::_( 'form.token' );
+    echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

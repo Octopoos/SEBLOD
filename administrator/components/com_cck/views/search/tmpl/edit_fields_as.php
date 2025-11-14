@@ -10,12 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 $ijk    =   0;
 $style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
 Helper_Workshop::displayHeader( 'search', $this->item->master );
 echo '<ul class="sortable connected" id="sortable1" myid="1">';
 if ( $this->item->client == 'order' ) {
-	Helper_Workshop::displayPositionStatic( 1, 'mainbody', '# '.JText::_( 'COM_CCK_ORDER_BY' ) );
+	Helper_Workshop::displayPositionStatic( 1, 'mainbody', '# '.Text::_( 'COM_CCK_ORDER_BY' ) );
 	if ( isset( $this->fields['mainbody'] ) ) {
 		foreach ( $this->fields['mainbody'] as $field ) {
 			$type_field		=	'';
@@ -29,7 +31,7 @@ if ( $this->item->client == 'order' ) {
 	Helper_Workshop::displayPositionEnd();
 } else {
 	if ( $this->item->client == 'list' && ! $this->item->template ) {
-		echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
+		echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.Text::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
 		Helper_Workshop::displayPositionEnd();
 	} else {
 		if ( $this->item->location == 'collection' ) {
@@ -137,7 +139,7 @@ if ( $this->item->client == 'order' ) {
 
 				Helper_Workshop::displayPositionEnd( ++$this->positions_nb );
 			} else {
-				echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
+				echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.Text::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
 				Helper_Workshop::displayPositionEnd();
 			}
 		}

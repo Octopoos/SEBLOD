@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // JCckList
@@ -74,9 +78,9 @@ class JCckList
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		JLoader::register( 'CCK_TableSearch', JPATH_ADMINISTRATOR.'/components/com_cck/tables/search.php' );
+		\JLoader::register( 'CCK_TableSearch', JPATH_ADMINISTRATOR.'/components/com_cck/tables/search.php' );
 
-		$this->_instance_base	=	JTable::getInstance( 'Search', 'CCK_Table' );
+		$this->_instance_base	=	Table::getInstance( 'Search', 'CCK_Table' );
 		$this->_setDataMap( 'base' );
 
 		return true;
@@ -422,7 +426,7 @@ class JCckList
 							'client'=>'search',
 							'formId'=>$formId,
 							'idx'=>$this->_pk,
-							'itemId'=>JFactory::getApplication()->input->getInt( 'Itemid', 0 ),
+							'itemId'=>Factory::getApplication()->input->getInt( 'Itemid', 0 ),
 							'limitend'=>'0',
 							'limit2'=>$count,
 							'ordering'=>'',
@@ -520,7 +524,7 @@ class JCckList
 								'client'=>'search',
 								'formId'=>$formId,
 								'idx'=>$this->_pk,
-								'itemId'=>JFactory::getApplication()->input->getInt( 'Itemid', 0 ),
+								'itemId'=>Factory::getApplication()->input->getInt( 'Itemid', 0 ),
 								'limitend'=>$this->_options->get( 'limitend', '0' ),
 								'limit'=>(int)$this->_search_query['limit'],
 								'limit2'=>(int)$this->_search_query['limit2'],
@@ -581,7 +585,7 @@ class JCckList
 
 		if ( $pagination == 2 ) {
 			$class_pagination	=	'o-center';
-			$data				.=	'<div class="'.$class_pagination.'"'.( $pagination == 8 ? ' style="display:none;"' : '' ).'><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><button class="o-btn-outlined" id="seblod_form_load_more" data-start="'.$offset.'" data-step="'.$config['limitend'].'" data-end="'.( $total_items + $offset ).'">'.JText::_( 'COM_CCK_LOAD_MORE' ).'<i></i></button></div>';
+			$data				.=	'<div class="'.$class_pagination.'"'.( $pagination == 8 ? ' style="display:none;"' : '' ).'><img id="seblod_form_loading_more" src="media/cck/images/spinner.gif" alt="" style="display:none;" width="28" height="28" /><button class="o-btn-outlined" id="seblod_form_load_more" data-start="'.$offset.'" data-step="'.$config['limitend'].'" data-end="'.( $total_items + $offset ).'">'.Text::_( 'COM_CCK_LOAD_MORE' ).'<i></i></button></div>';
 
 			$data_script		=	$this->_getOutputScript( $config, $preconfig, $pagination );
 		}
@@ -890,7 +894,7 @@ class JCckList
 			$context	=	$config['context'];
 		}
 		$context['Itemid']		=	$preconfig['itemId'];
-		$context['view']		=	JFactory::getApplication()->input->get( 'view' );
+		$context['view']		=	Factory::getApplication()->input->get( 'view' );
 		$context['referrer']	=	$preconfig['caller'];
 
 		ob_start();
@@ -911,7 +915,7 @@ class JCckList
 				}
 				$.ajax({
 					cache: false,
-					data: "format=raw&infinite=1<?php echo ( $preconfig['limitend'] ? '&end='.$preconfig['limitend'] : '' );?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>"+query_params,
+					data: "format=raw&infinite=1<?php echo ( $preconfig['limitend'] ? '&end='.$preconfig['limitend'] : '' );?>&return=<?php echo base64_encode( Uri::getInstance()->toString() ); ?>"+query_params,
 					dataType: data_type,
 					type: "GET",
 					url: '<?php echo JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$config['type'].( $preconfig['search2'] ? '|'.$preconfig['search2'] : '' ).'&context='.json_encode( $context ) ); ?>',

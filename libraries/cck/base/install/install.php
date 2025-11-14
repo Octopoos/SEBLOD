@@ -11,9 +11,10 @@
 defined( '_JEXEC' ) or die;
 define( 'CCK_COM', 'com_cck' );
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
-
-jimport( 'joomla.filesystem.folder' );
 
 // Install
 class CCK_Install
@@ -48,9 +49,9 @@ class CCK_Install
 	// import
 	public static function import( &$parent, $folder = 'elements', $extension = null )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
-		$folders	=	JFolder::folders( $tmp_path );
+		$folders	=	Folder::folders( $tmp_path );
 		$root		=	$parent->getParent()->getPath( 'source' );
 		if ( $folder == 'elements' && !$extension ) {
 			$root	=	substr( $root, 0, strrpos( $root, DIRECTORY_SEPARATOR ) );
@@ -114,7 +115,7 @@ class CCK_Install
 				$pos	=	strpos( $extension->xml->packagename, 'app_cck_' );
 				if ( $pos !== false && $pos == 0 ) {
 					$name	=	substr( $extension->xml->packagename, 8 );
-					JFolder::copy( $root.'/media', JPATH_SITE.'/media/cck/apps/'.$name, '', true );
+					Folder::copy( $root.'/media', JPATH_SITE.'/media/cck/apps/'.$name, '', true );
 				}
 			}	
 		}
@@ -137,8 +138,8 @@ class CCK_Install
 				} elseif ( $extension->type == 'component' ) {
 					$path	=	JPATH_ADMINISTRATOR.'/components/'.$extension->element.'/install/fields';
 				}
-				if ( $path != '' && JFolder::exists( $path ) ) {
-					JFolder::delete( $path );
+				if ( $path != '' && Folder::exists( $path ) ) {
+					Folder::delete( $path );
 				}
 			}
 		}
@@ -151,12 +152,12 @@ class CCK_Install
 		$root	=	$data['base'].'/'.$folder;
 		
 		if ( file_exists( $root ) ) {
-			$folders	=	JFolder::folders( $root );
+			$folders	=	Folder::folders( $root );
 			
 			if ( count( $folders ) ) {
 				foreach ( $folders as $folder ) {
 					$path	=	$root.'/'.$folder;
-					$items	=	JFolder::files( $path, '\.xml$' );
+					$items	=	Folder::files( $path, '\.xml$' );
 					
 					if ( count( $items ) ) {
 						CCK_Import::$call( $folder, $path.'/', $items, $data, $config );
@@ -170,7 +171,7 @@ class CCK_Install
 	public static function _importElements( $elemtype, &$data, $config = array() )
 	{
 		if ( file_exists( $data['root'].'/'.$data['elements'][$elemtype] ) ) {
-			$items	=	JFolder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
+			$items	=	Folder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
 			
 			if ( count( $items ) ) {
 				CCK_Import::importElements( $elemtype, $data['root'].'/'.$data['elements'][$elemtype].'/', $items, $data, $config );
@@ -182,7 +183,7 @@ class CCK_Install
 	public static function _importMore( $elemtype, &$data, $config = array() )
 	{
 		if ( file_exists( $data['root'].'/'.$data['elements'][$elemtype] ) ) {
-			$items	=	JFolder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
+			$items	=	Folder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
 			
 			if ( count( $items ) ) {
 				CCK_Import::importMore( $elemtype, $data['root'].'/'.$data['elements'][$elemtype].'/', $items, $data );
@@ -195,7 +196,7 @@ class CCK_Install
 	// manageAddon (#JFMTree)
 	public static function manageAddon( $event, $addon )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		
 		if ( $event == 'install' ) {
 			$query	=	'SELECT id FROM #__menu WHERE link = "index.php?option=com_'.$addon['name'].'"';
@@ -203,8 +204,8 @@ class CCK_Install
 			$id		=	$db->loadResult();
 			
 			if ( $id > 0 ) {
-				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
-				$table	=	JTable::getInstance( 'Menu' );
+				\JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
+				$table	=	Table::getInstance( 'Menu' );
 				$table->load( $id );
 				
 				$query		=	'SELECT id FROM #__menu WHERE link = "index.php?option=com_cck"';

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/common/display.php';
 
 // Helper
@@ -20,8 +22,8 @@ class Helper_Display extends CommonHelper_Display
 	{
 		?>
 		<div class="copyright">
-			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::sprintf( 'COM_CCK_COPYRIGHT_SEBLOD', JText::_( 'COM_CCK_'.CCK_BUILDER ) ); ?>
-			<br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2022'; ?>
+			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo Text::sprintf( 'COM_CCK_COPYRIGHT_SEBLOD', Text::_( 'COM_CCK_'.CCK_BUILDER ) ); ?>
+			<br /><?php echo Text::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2022'; ?>
 			<?php
 			if ( $cpanel !== false ) {
 				$info	=	'General Availability | Site runs on PHP '.PHP_VERSION;

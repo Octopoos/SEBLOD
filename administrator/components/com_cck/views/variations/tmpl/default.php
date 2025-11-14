@@ -10,25 +10,29 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 $action			=	'<span class="icon-download"></span>';
-$action_attr	=	' class="btn btn-micro hasTooltip" title="'.JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'"';
-$doc			=	JFactory::getDocument();
-$user			=	JFactory::getUser();
+$action_attr	=	' class="btn btn-micro hasTooltip" title="'.Text::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ).'"';
+$doc			=	Factory::getDocument();
+$user			=	Factory::getUser();
 $userId			=	$user->id;
 $listOrder		=	$this->state->get( 'list.ordering' );
 $listDir		=	$this->state->get( 'list.direction' );
 $top			=	'content';
-$token			=	'&'.JSession::getFormToken().'=1';
+$token			=	'&'.Session::getFormToken().'=1';
 
 $config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear' ) );
-JText::script( 'COM_CCK_CONFIRM_DELETE' );
+Text::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( !empty( $this->sidebar ) ) { ?>
 	<div id="j-sidebar-container" class="span2 top-bar">
 		<?php echo $this->sidebar; ?>
@@ -45,25 +49,25 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<tr class="half">
 			<th width="60" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone no-pad"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
-			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
-            <th width="30%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_FOLDER' ); ?></th>
-            <th width="20%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_LOCATION' ); ?></th>
-			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
+			<th class="center" colspan="2"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
+            <th width="30%" class="center hidden-phone nowrap"><?php echo Text::_( 'COM_CCK_FOLDER' ); ?></th>
+            <th width="20%" class="center hidden-phone nowrap"><?php echo Text::_( 'COM_CCK_LOCATION' ); ?></th>
+			<th width="32" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
 	</thead>
     <tbody>
 	<?php
 	foreach ( $this->items as $i=>$item ) {
-		$link	=	JRoute::_( 'index.php?option='.$this->option.'&task=template.exportVariation&variation='.$item->title.'&folder='.$item->folder.$token );
+		$link	=	Route::_( 'index.php?option='.$this->option.'&task=template.exportVariation&variation='.$item->title.'&folder='.$item->folder.$token );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
 			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
             <td width="30px" class="center hidden-phone dropdown-col">
 				<?php
-				JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ), 'download', 'cb_link'.$i, $link );
+				HTMLHelper::_( '.cckactionsdropdown.addCustomLinkItem', Text::_( 'COM_CCK_DOWNLOAD_THIS_VARIATION' ), 'download', 'cb_link'.$i, $link );
 
-				echo JHtml::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
+				echo HTMLHelper::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
             	?>
 			</td>
 			<td>
@@ -78,7 +82,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				</div>
 			</td>
             <td class="hidden-phone"><?php echo $item->folder; ?></td>
-            <td class="center hidden-phone"><?php echo ( !$item->template ) ? strtolower( JText::_( 'COM_CCK_LIBRARY' ) ) : $item->template; ?></td>
+            <td class="center hidden-phone"><?php echo ( !$item->template ) ? strtolower( Text::_( 'COM_CCK_LIBRARY' ) ) : $item->template; ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
 		<?php
@@ -104,7 +108,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<input type="hidden" name="return_v" id="return_v" value="variations" />
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDir; ?>" />
-	<?php echo JHtml::_( 'form.token' ); ?>
+	<?php echo HTMLHelper::_( 'form.token' ); ?>
 </div>
 
 <?php

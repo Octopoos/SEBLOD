@@ -10,8 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
-class JCckPluginPayment extends JPlugin
+class JCckPluginPayment extends CMSPlugin
 {
 	protected static $construction	=	'cck_ecommerce_payment';
 	
@@ -21,8 +26,8 @@ class JCckPluginPayment extends JPlugin
 		parent::__construct( $subject, $config );
 
 		// Fix Language
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$lang			=	JFactory::getLanguage();
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 
 			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
@@ -46,7 +51,7 @@ class JCckPluginPayment extends JPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -78,7 +83,7 @@ class JCckPluginPayment extends JPlugin
 				ob_start();
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 						
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -106,7 +111,7 @@ class JCckPluginPayment extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return Uri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 }
 ?>

@@ -10,9 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
+$doc	=	Factory::getDocument();
 $name	=	$this->item->id;
-$root	=	JUri::root( true );
+$root	=	Uri::root( true );
 Helper_Include::addDependencies( 'box', 'edit' );
 $doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 $doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
@@ -57,7 +61,7 @@ $doc->addScriptDeclaration( $js );
 ?>
 
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_CONSTRUCTION' ) ); ?>
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Stage', 'selectlabel'=>'', 'options'=>'STAGE_1ST=1||STAGE_2ND=2||STAGE_3RD=3||STAGE_4TH=4||STAGE_5TH=5', 'storage_field'=>'value' ) );

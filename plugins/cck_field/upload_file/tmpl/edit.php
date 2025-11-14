@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) ) ? $options2['media_extensions'] : 'custom' );
@@ -42,7 +44,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_FOLDER' ),
+													'label'=>Text::_( 'COM_CCK_FOLDER' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'auto|',
 														'html'=>array(
@@ -55,7 +57,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_PATH_PER_CONTENT' ),
+													'label'=>Text::_( 'COM_CCK_PATH_PER_CONTENT' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|25%',
 														'html'=>array(
@@ -68,7 +70,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_path_user', @$options2['path_user'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_LEGAL_EXTENSIONS' ),
+													'label'=>Text::_( 'COM_CCK_LEGAL_EXTENSIONS' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|70%',
 														'html'=>array(
@@ -80,7 +82,7 @@ $displayData	=	array(
 											),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_MAXIMUM_SIZE' ),
+													'label'=>Text::_( 'COM_CCK_MAXIMUM_SIZE' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|25%',
 														'html'=>array(
@@ -96,7 +98,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_delete_box', @$options2['delete_box'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_SHOW_CUSTOM_PATH' ),
+													'label'=>Text::_( 'COM_CCK_SHOW_CUSTOM_PATH' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|75%',
 														'html'=>array(
@@ -109,7 +111,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_multivalue_mode', @$options2['multivalue_mode'], $config, array( 'label'=>'MULTIVALUE_MODE' ) ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_SHOW_TITLE' ),
+													'label'=>Text::_( 'COM_CCK_SHOW_TITLE' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|75%',
 														'html'=>array(

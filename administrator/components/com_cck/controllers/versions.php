@@ -10,12 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
-class CCKControllerVersions extends JControllerAdmin
+class CCKControllerVersions extends AdminController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
@@ -28,13 +33,13 @@ class CCKControllerVersions extends JControllerAdmin
 	// delete
 	public function delete()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
 		
 		if ( !is_array( $cid ) || count( $cid ) < 1 ) {
-			JError::raiseWarning( 500, JText::_( $this->text_prefix . '_NO_ITEM_SELECTED' ) );
+			\Joomla\CMS\Factory::getApplication()->enqueueMessage( Text::_( $this->text_prefix . '_NO_ITEM_SELECTED' ), 'warning' );
 		} else {
 			// Get the model.
 			$model	=	$this->getModel();
@@ -44,7 +49,7 @@ class CCKControllerVersions extends JControllerAdmin
 			
 			// Remove the items.
 			if ( $model->delete( $cid ) ) {
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+				$this->setMessage(Text::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
 			} else {
 				$this->setMessage( $model->getError() );
 			}
@@ -56,7 +61,7 @@ class CCKControllerVersions extends JControllerAdmin
 			$vars	=	'&filter_e_type='.$type;
 		}
 		
-		$this->setRedirect( JRoute::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
+		$this->setRedirect( Route::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
 	}
 
 	// getModel
@@ -68,15 +73,15 @@ class CCKControllerVersions extends JControllerAdmin
 	// revert
 	public function revert()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$pks	=	$app->input->post->get( 'cid', array(), 'array' );
 		$pk		=	(int)( count( $pks ) ) ? $pks[0] : 0;
 		$type	=	$app->input->post->getString( 'element_type', 'type' );
 		
 		$model	=	$this->getModel();
-		$user	=	JFactory::getUser();		
+		$user	=	Factory::getUser();		
 		$res	=	( $user->authorise( 'core.edit', CCK_COM ) ) ? $model->revert( $pk, $type ) : false;
 		
 		if ( $res ) {
@@ -85,11 +90,11 @@ class CCKControllerVersions extends JControllerAdmin
 			} elseif ( $type == 'type' ) {
 				$link	=	_C2_LINK;
 			}
-			$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_RESTORED' );
+			$msg	=	Text::_( 'COM_CCK_SUCCESSFULLY_RESTORED' );
 			$type	=	'message';
 		} else {
 			$link	=	_C6_LINK.'&filter_e_type='.$type;
-			$msg	=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+			$msg	=	Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
 			$type	=	'error';
 		}
 		

@@ -1,5 +1,7 @@
 <?php
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 <div class="row title-alias form-vertical mb-3">
 	<div class="col-12 col-md-4">
@@ -7,7 +9,7 @@ defined( '_JEXEC' ) or die;
 		if ( $displayData['params']['title_mode'] ) {
 			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.form.field', array(
 				'html'=>'<div class="input-group left">'.$displayData['fields']['title'].'</div>',
-				'label'=>'<label>'.JText::_( 'COM_CCK_TITLE' ).'<span class="star"> *</span></label>'
+				'label'=>'<label>'.Text::_( 'COM_CCK_TITLE' ).'<span class="star"> *</span></label>'
 			) );
 		} else {
 			echo $displayData['fields']['title'];
@@ -24,7 +26,7 @@ defined( '_JEXEC' ) or die;
 
 		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.form.field', array(
 			'html'=>$html.$displayData['fields']['name'],
-			'label'=>'<label>'.JText::_( 'COM_CCK_NAME' ).'<span class="star"> *</span></label>'
+			'label'=>'<label>'.Text::_( 'COM_CCK_NAME' ).'<span class="star"> *</span></label>'
 		) );
 		?>
 	</div>

@@ -1,10 +1,12 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 $class	=	trim( $displayData['field']->markup_class );
 $class	=	$class ? ' class="'.$class.'"' : '';
 
-if ( JFactory::getApplication()->input->get( 'tmpl' ) === 'raw' ) {
+if ( Factory::getApplication()->input->get( 'tmpl' ) === 'raw' ) {
 	echo '<span class="o-hide" data-cck-modal-title>'.$displayData['html'].'</span>';
 
 	return;

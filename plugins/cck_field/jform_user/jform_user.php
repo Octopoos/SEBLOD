@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldJForm_User extends JCckPluginField
 {
@@ -111,13 +115,13 @@ class plgCCK_FieldJForm_User extends JCckPluginField
 								/>
 							</form>
 						';
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
 
 			$form		=	str_replace( 'value="0"', 'value=""', $form );
 
-			if ( JFactory::getApplication()->isClient( 'site' ) ) {
-				$form		=	str_replace( '="index.php?', '="' . JUri::root() . 'administrator/index.php?', $form );
+			if ( Factory::getApplication()->isClient( 'site' ) ) {
+				$form		=	str_replace( '="index.php?', '="' . Uri::root() . 'administrator/index.php?', $form );
 			}
 
 			// Set

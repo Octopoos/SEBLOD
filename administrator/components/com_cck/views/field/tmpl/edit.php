@@ -10,10 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Router\Route;
 
-$app	=	JFactory::getApplication();
-$lang	=	JFactory::getLanguage();
+$app	=	Factory::getApplication();
+$lang	=	Factory::getLanguage();
 $mode	=	JCck::getConfig_Param( 'storage_dev', '0' );
 $tmpl	=	$app->input->getString( 'tmpl', '' );
 $wrap	=	( $tmpl ) ? $this->css['wrapper_tmpl'] : $this->css['wrapper'];
@@ -25,33 +30,33 @@ $class		=	$tmpl ? ' class="modal-large"' : '';
 $config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'vName'=>$this->vName, 'tmpl'=>'' ) );
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 if ( $lang->hasKey( $key ) == 1 ) {
-	$transliterate	=	JText::_( $key );
+	$transliterate	=	Text::_( $key );
 	$transliterate	=	'{"'.str_replace( array( ':', '||' ), array( '":"', '","' ), $transliterate ).'"}';
 } else {
 	$transliterate	=	'{}';
 }
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), $tmpl );
 
-JHtml::_( 'bootstrap.tooltip' );
+HTMLHelper::_( 'bootstrap.tooltip' );
 
-JPluginHelper::importPlugin( 'cck_storage' );
-JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
-JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
+PluginHelper::importPlugin( 'cck_storage' );
+Text::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
+Text::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm"<?php echo $class;?>>
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm"<?php echo $class;?>>
 
 <?php if ( $tmpl ) { ?>
 	<div id="ajaxToolbar" class="span12 subhead">
 		<div style="float: left;" id="ajaxMessage"></div>
 		<a href="javascript:void(0);" class="<?php echo $this->css['btn-no']; ?>" id="cancel_ajax"><span class="icon-unpublish"></span>
-			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
+			<?php echo Text::_( 'COM_CCK_CLOSE' ); ?>
 		</a>
 		<a href="javascript:void(0);" class="<?php echo $this->css['btn-yes']; ?> submit_ajax" data-task="save2new"><span class="icon-save-new"></span>
-			<?php echo JText::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
+			<?php echo Text::_( 'JTOOLBAR_SAVE_AND_NEW' ); ?>
 		</a>
 		<a href="javascript:void(0);" class="<?php echo $this->css['btn-yes']; ?> submit_ajax" data-task="save"><span class="icon-save"></span>
-			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
+			<?php echo Text::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
 		</a>
 	</div>
 <?php } ?>
@@ -62,7 +67,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 		<?php
 		// Name
 		if ( ! $this->item->id || ( $this->item->id && $mode ) ) {
-			JFactory::getLanguage()->load( 'plg_cck_field_validation_ajax_availability', JPATH_ADMINISTRATOR, null, false, true );
+			Factory::getLanguage()->load( 'plg_cck_field_validation_ajax_availability', JPATH_ADMINISTRATOR, null, false, true );
 
 			$class	=	'form-control inputbox text validate[required,custom[field_name],ajax[availability_name]]';
 			$extra	=	'';
@@ -70,11 +75,11 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 			if ( (int)$this->item->id > 0 ) {
 				$extra	=	'&avKey=id&avPk='.$this->item->id.'&avPv='.htmlspecialchars( $this->item->name );
 			}
-			$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.JSession::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
+			$ajax	=	'"availability_name":{"url": "index.php?option=com_cck&task=ajax&format=raw&'.Session::getFormToken().'=1&referrer=plugin.cck_field_validation.ajax_availability&file=plugins/cck_field_validation/ajax_availability/assets/ajax/script.php"'
 					.	',"extraData": "avTable=cck_core_fields&avColumn=name'.$extra.'"'
-					.	',"alertText": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
-					.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
-					.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
+					.	',"alertText": "* '.Text::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT' ).'"'
+					.	',"alertTextOk": "* '.Text::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
+					.	',"alertTextLoad": "* '.Text::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
 			
 			$dataName	=	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="80" size="28" tabindex="3" />';
 			$modeName	=	true;
@@ -122,7 +127,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 		<?php
 		if ( JCck::on( '4.0' ) ) {
 			echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
-			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', Text::_( 'COM_CCK_DETAILS' ) );
 		}
 		?>
 		<div id="layer" style="text-align: center;">
@@ -137,10 +142,10 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 		<?php
 		if ( JCck::on( '4.0' ) ) {
 			echo HTMLHelper::_( 'uitab.endTab' );
-			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', JText::_( 'COM_CCK_OPTIONS' ) );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', Text::_( 'COM_CCK_OPTIONS' ) );
 			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.field.edit_options', $dataTmpl );
 			echo HTMLHelper::_( 'uitab.endTab' );
-			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_PUBLISHING' ) );
 			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.field.edit_publishing', $dataTmpl );
 			echo HTMLHelper::_( 'uitab.endTab' );
 			echo HTMLHelper::_( 'uitab.endTabSet' );
@@ -159,12 +164,12 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 	<?php } ?>
 	<?php
 	echo $this->form->getInput( 'id' );
-	$config['validation']['field_name']				=	'"field_name":{"regex": /^[a-z0-9_]+$/,"alertText":"* '.JText::_( 'COM_CCK_FIELD_NAME_VALIDATION' ).'"}';
+	$config['validation']['field_name']				=	'"field_name":{"regex": /^[a-z0-9_]+$/,"alertText":"* '.Text::_( 'COM_CCK_FIELD_NAME_VALIDATION' ).'"}';
 	if ( $ajax ) {
 		$config['validation']['availability_name']	=	$ajax;
 	}
 	JCckDev::validate( $config );
-	echo JHtml::_( 'form.token' );
+	echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
 // JCckType
@@ -88,9 +89,9 @@ class JCckType
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		JLoader::register( 'CCK_TableType', JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php' );
+		\JLoader::register( 'CCK_TableType', JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php' );
 
-		$this->_instance_base	=	JTable::getInstance( 'Type', 'CCK_Table' );
+		$this->_instance_base	=	Table::getInstance( 'Type', 'CCK_Table' );
 		$this->_setDataMap( 'base' );
 
 		return true;

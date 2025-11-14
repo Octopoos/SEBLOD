@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
+
 // JCckEcommerce
 abstract class JCckEcommerce
 {
@@ -32,7 +38,7 @@ abstract class JCckEcommerce
 		}
 
 		$config			=	new stdClass;
-		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+		$config->params =	ComponentHelper::getParams( 'com_'.self::$_me );
 		
 		self::$_config	=&	$config;
 	}
@@ -66,7 +72,7 @@ abstract class JCckEcommerce
 	// isOffline
 	public static function isOffline()
 	{
-		return ( ( self::getConfig_Param( 'offline' ) == 1 || ( self::getConfig_Param( 'offline' ) == 2 && !JFactory::getUser()->authorise( 'core.admin' ) ) ) ) ? true : false;
+		return ( ( self::getConfig_Param( 'offline' ) == 1 || ( self::getConfig_Param( 'offline' ) == 2 && !Factory::getUser()->authorise( 'core.admin' ) ) ) ) ? true : false;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Cart
@@ -95,7 +101,7 @@ abstract class JCckEcommerce
 				$definitions[$name]->request_payment_field	=	str_replace( '$', strtolower( JCckEcommerce::getCurrency()->code ), $definitions[$name]->request_payment_field );
 			}
 			if ( $definitions[$name]->request_payment_field_live != '' ) {
-				JPluginHelper::importPlugin( 'cck_field_live' );
+				PluginHelper::importPlugin( 'cck_field_live' );
 
 				$config			=	array();
 				$field			=	(object)array(
@@ -104,7 +110,7 @@ abstract class JCckEcommerce
 									);
 				$suffix			=	'';
 				
-				JFactory::getApplication()->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
+				Factory::getApplication()->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$suffix, &$config ) );
 
 				if ( $suffix != '' ) {
 					if ( $definitions[$name]->request_payment_field != '' ) {
@@ -139,7 +145,7 @@ abstract class JCckEcommerce
 										   . ' FROM #__cck_more_ecommerce_currencies AS a WHERE a.id = "'.$id.'"' );
 		}
 		if ( !is_object( $currency ) ) {
-			$app		=	JFactory::getApplication();
+			$app		=	Factory::getApplication();
 			$user		=	JCck::getUser();
 			
 			$code		=	'';
@@ -154,13 +160,13 @@ abstract class JCckEcommerce
 				if ( !$code ) {
 					$code	=	JCckEcommerce::getConfig_Param( 'currency', 0 );
 					if ( !$code ) {
-						$lang	=	JFactory::getLanguage();
+						$lang	=	Factory::getLanguage();
 						if ( !$lang->hasKey( 'COM_CCK_CURRENCY_AUTO' ) == 1 ) {
 							$lang_default	=	$lang->setDefault( 'en-GB' );
 							$lang->load( 'com_cck_default', JPATH_SITE );
 							$lang->setDefault( $lang_default );
 						}
-						$code	=	JText::_( 'COM_CCK_CURRENCY_AUTO' );
+						$code	=	Text::_( 'COM_CCK_CURRENCY_AUTO' );
 					}
 				}
 			}
@@ -201,7 +207,7 @@ abstract class JCckEcommerce
 	// isCheckout
 	public static function isCheckout( $strict = false )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			if ( $strict ) {
@@ -226,7 +232,7 @@ abstract class JCckEcommerce
 		if ( !isset( $cache[$type] ) ) {
 			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options, token'
 																. ' FROM #__cck_more_ecommerce_gateways WHERE type = "'.$type.'"' );
-			$cache[$type]->options	=	new JRegistry( $cache[$type]->options );
+			$cache[$type]->options	=	new Registry( $cache[$type]->options );
 		}
 		
 		return $cache[$type];
@@ -365,9 +371,9 @@ abstract class JCckEcommerce
 	// _setPromotions
 	protected static function _setPromotions()
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$null	=	$db->getNullDate();
-		$now	=	JFactory::getDate()->toSql();
+		$now	=	Factory::getDate()->toSql();
 
 		$promotions	=	JCckDatabase::loadObjectListArray( 'SELECT a.id, a.title, a.type, a.code, a.discount, a.discount_amount, a.groups, a.target, a.target_attributes, a.target_products, a.target_type, a.usage_limit, a.user_id'
 														.  ' FROM #__cck_more_ecommerce_promotions AS a'
@@ -389,7 +395,7 @@ abstract class JCckEcommerce
 		if ( !isset( $cache[$type] ) ) {
 			$cache[$type]			=	JCckDatabase::loadObject( 'SELECT id, title, options'
 																. ' FROM #__cck_more_ecommerce_shipping_methods WHERE type = "'.$type.'"' );
-			$cache[$type]->options	=	new JRegistry( $cache[$type]->options );
+			$cache[$type]->options	=	new Registry( $cache[$type]->options );
 		}
 		
 		return $cache[$type];
@@ -421,9 +427,9 @@ abstract class JCckEcommerce
 	// _setShippingRules
 	protected static function _setShippingRules( $zones )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$null		=	$db->getNullDate();
-		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		$now		=	substr( Factory::getDate()->toSql(), 0, -3 );
 
 		$zones[]	=	0;
 		
@@ -450,7 +456,7 @@ abstract class JCckEcommerce
 		if ( !isset( $cache[$id] ) ) {
 			$cache[$id]	=	JCckDatabase::loadObject( 'SELECT id, title, home, parent_id, parent_fee, parent_amount, options'
 															. ' FROM #__cck_more_ecommerce_stores WHERE id = '.(int)$id );
-			$cache[$id]->options	=	new JRegistry( $cache[$id]->options );
+			$cache[$id]->options	=	new Registry( $cache[$id]->options );
 		}
 		
 		return $cache[$id];
@@ -484,9 +490,9 @@ abstract class JCckEcommerce
 	// _setTaxes
 	protected static function _setTaxes( $zones )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$null		=	$db->getNullDate();
-		$now		=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		$now		=	substr( Factory::getDate()->toSql(), 0, -3 );
 
 		$zones[]	=	0;
 		
@@ -508,7 +514,7 @@ abstract class JCckEcommerce
 	// getUserZones
 	public static function getUserZones( $context = 'billing' )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$user	=	JCck::getUser();
 		$zones	=	array();
 		

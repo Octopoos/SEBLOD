@@ -1,11 +1,13 @@
 <?php
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 <div class="row-pane"><div class="row">
 	<div class="col-12 col-lg-12">
 		<fieldset class="options-form">
 			<legend>
-				<?php echo JText::_( 'COM_CCK_SETTINGS' ); ?>
+				<?php echo Text::_( 'COM_CCK_SETTINGS' ); ?>
 			</legend>
 			<?php
 			echo $displayData['fields']['site_name'];

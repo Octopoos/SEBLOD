@@ -10,16 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.core' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
-$app			=	JFactory::getApplication();
+HTMLHelper::_( 'behavior.core' );
+
+$app			=	Factory::getApplication();
 $data			=	'';
 $form			=	'';
 $id				=	0;	// $app->input->getInt( 'id', 0 ); Not even sure why it was there.. any regression?
 $isCached		=	'';
 $itemId			=	( $preconfig['itemId'] == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $preconfig['itemId'];
 $items			=	array();
-$lang   		=	JFactory::getLanguage();
+$lang   		=	Factory::getLanguage();
 $path			=	JPATH_SITE.'/templates';
 $total			=	0;
 $total_items	=	0;
@@ -44,7 +51,7 @@ if ( ! $search ) {
 $lang->load( 'pkg_app_cck_'.$search->folder_app, JPATH_SITE, null, false, false );
 
 $no_action					=	'';
-$options					=	new JRegistry;
+$options					=	new Registry;
 $options->loadString( $search->options );
 $preconfig['show_form']		=	( $preconfig['show_form'] != '' ) ? (int)$preconfig['show_form'] : (int)$options->get( 'show_form', 1 );
 $preconfig['show_list']		=	( isset( $preconfig['show_list'] ) ) ? (int)$preconfig['show_list'] : (int)$options->get( 'show_list', 1 );
@@ -121,7 +128,7 @@ $pagination		=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $op
 
 $isAltered		=	false;
 $isPersistent	=	(int)$options->get( 'persistent_query', '0' );
-$isSearch		=	(int)JUri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($config['post'][...]) */
+$isSearch		=	(int)Uri::getInstance()->hasVar( 'task' ); /* TODO#SEBLOD: add "data-cck-remove-before-search" behavior on empty fields/values + test with persistent search + fix checkboxes on persistent search vs isset($config['post'][...]) */
 
 if ( $isPersistent == 1 || ( $isPersistent == 2 && $user->id && !$user->guest ) ) {
 	$isPersistent	=	true;
@@ -172,7 +179,7 @@ $config			=	array(
 						'location'=>'',
 						'pagination_vars'=>array(),
 						'pk'=>$id,
-						'registry'=>JFactory::getSession()->get( 'registry' ),
+						'registry'=>Factory::getSession()->get( 'registry' ),
 						'sef_aliases'=>(int)( (int)$search->sef_route_aliases != -1 ? $search->sef_route_aliases : JCck::getConfig_Param( 'sef_aliases', '0' ) ),
 						'show_form'=>$preconfig['show_form'],
 						'stages'=>array(),
@@ -195,14 +202,14 @@ $config['app']	=	new JCckApp;
 $config['app']->loadDefault();
 
 jimport( 'cck.rendering.document.document' );
-JPluginHelper::importPlugin( 'cck_field' );
-JPluginHelper::importPlugin( 'cck_field_live' );
-JPluginHelper::importPlugin( 'cck_field_restriction' );
+PluginHelper::importPlugin( 'cck_field' );
+PluginHelper::importPlugin( 'cck_field_live' );
+PluginHelper::importPlugin( 'cck_field_restriction' );
 
 // -------- -------- -------- -------- -------- -------- -------- -------- // Show Form
 
 if ( $preconfig['show_form'] ) {
-	JHtml::_( 'behavior.core' );
+	HTMLHelper::_( 'behavior.core' );
 
 	// Template
 	$P				=	'template_'.$preconfig['client'];
@@ -356,7 +363,7 @@ if ( $config['limitend'] > 0 ) {
 }
 
 if ( $limitstart != -1 ) {
-	$start_var		=	( $app->isClient( 'administrator' ) || !JFactory::getConfig()->get( 'sef' ) ) ? 'limitstart' : 'start';
+	$start_var		=	( $app->isClient( 'administrator' ) || !Factory::getConfig()->get( 'sef' ) ) ? 'limitstart' : 'start';
 	$start			=	(int)$app->input->getInt( $start_var );
 
 	if ( $limitstart > 0 && !$start ) {
@@ -480,7 +487,7 @@ if ( $preconfig['task'] == 'search' ) {
 		if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
 			$target				=	'search2';
 			$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
-			$options2			=	new JRegistry;
+			$options2			=	new Registry;
 			$options2->loadString( $search2->options );
 
 			if ( $options2->get( 'sef' ) != '' ) {
@@ -543,7 +550,7 @@ if ( $preconfig['task'] == 'search' ) {
 							$return		=	$preconfig['auto_redirect_vars'].'='.$return;
 						}
 					}
-					$sef			=	( JFactory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
+					$sef			=	( Factory::getConfig()->get( 'sef' ) ) ? $config['doSEF'] : 0;
 					$redirect_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$items[0]->loc, 'getRoute', array( $items[0]->pk, $sef, $config['Itemid'] ) );
 
 					if ( $return != '' ) {
@@ -572,7 +579,7 @@ if ( $preconfig['task'] == 'search' ) {
 						$return		.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
 					}
 					
-					$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return, false );
+					$redirect_url	=	Route::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return, false );
 					$app->redirect( $redirect_url );
 					return;
 				}
@@ -584,7 +591,7 @@ if ( $preconfig['task'] == 'search' ) {
 
 			if ( $doCache2 ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type'].'_list' : 'com_cck';
-				$cache		=	JFactory::getCache( $group );
+				$cache		=	Factory::getCache( $group );
 				$cache->setCaching( 1 );
 				$data		=	$cache->get( array( 'CCK_List', 'render' ), array( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config ) );
 				$isCached	=	' [Cache=ON]';
@@ -620,10 +627,10 @@ if ( $preconfig['task'] == 'search' ) {
 			$no_style	=	$options->get( 'message_style', 'message' );
 			
 			if ( ! $no_message ) {
-				$no_message	=	JText::_( 'COM_CCK_NO_RESULT' );
+				$no_message	=	Text::_( 'COM_CCK_NO_RESULT' );
 			} else {
 				if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
-					$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
+					$no_message	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 				}
 			}
 			if ( $no_style ) {
@@ -641,11 +648,11 @@ if ( $preconfig['task'] == 'search' ) {
 	$no_style	=	$options->get( 'message_style_no_search', '0' );
 
 	if ( ! $no_message ) {
-		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
+		$no_message	=	Text::_( 'COM_CCK_NO_SEARCH' );
 	} else {
-		if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
-			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
-		}
+				if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
+					$no_message	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
+				}
 	}
 	if ( $no_style ) {
 		if ( $no_style == '-1' ) {
@@ -660,7 +667,7 @@ if ( $no_action ) {
 	if ( isset( $preconfig['search2'] ) && $preconfig['search2'] != '' ) {
 		$target				=	'search2';
 		$search2			=	CCK_List::getSearch( $preconfig['search2'], $id );
-		$options2			=	new JRegistry;
+		$options2			=	new Registry;
 		$options2->loadString( $search2->options );
 
 		if ( $options2->get( 'sef' ) != '' ) {
@@ -672,7 +679,7 @@ if ( $no_action ) {
 		/* TODO#SEBLOD: is this even possible? */
 		if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
 			$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
-			$redirect_url	=	JRoute::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
+			$redirect_url	=	Route::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
 			$app->redirect( $redirect_url );
 		}
 		return;
@@ -736,7 +743,7 @@ if ( $preconfig['show_form'] > 0 ) {
 	}
 	
 	$doc->fields	=	&$fields['search'];
-	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
+	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>Uri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
 } elseif ( $preconfig['show_form'] ) {

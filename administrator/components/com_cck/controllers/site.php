@@ -10,17 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerSite extends JControllerForm
+class CCKControllerSite extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
 	// add
 	public function add()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		// Parent Method
 		$result	=	parent::add();
@@ -34,12 +37,12 @@ class CCKControllerSite extends JControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	protected function postSaveHook( \Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		
 		if ( $recordId == 10 || $recordId == 500 || $recordId == 501 ) {
-			$db					=	JFactory::getDbo();
+			$db					=	Factory::getDbo();
 			$params				=	JCckDatabase::loadResult( 'SELECT params FROM #__extensions WHERE element = "com_cck"' );
 			$config				=	JCckDev::fromJSON( $params, 'object' );
 			$config->multisite	=	1;

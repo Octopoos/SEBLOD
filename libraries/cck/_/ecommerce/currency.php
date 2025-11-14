@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // JCckEcommerceCurrency
 abstract class JCckEcommerceCurrency
 {
@@ -17,7 +19,7 @@ abstract class JCckEcommerceCurrency
 	public static function format( $amount, $format = true )
 	{
 		if ( $format ) {
-			$amount	=	number_format( $amount, 2, JText::_( 'DECIMALS_SEPARATOR' ), JText::_( 'THOUSANDS_SEPARATOR' ) );
+			$amount	=	number_format( $amount, 2, Text::_( 'DECIMALS_SEPARATOR' ), Text::_( 'THOUSANDS_SEPARATOR' ) );
 		}
 		$currency	=	JCckEcommerce::getCurrency();
 		

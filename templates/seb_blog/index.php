@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // -- Initialize
 require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
@@ -128,8 +131,8 @@ $css							.=	'#'.$cck->id.' div.cck-odd{border:'.$odd_border_size.'px '.$odd_bo
 //$cck->addStyleDeclaration( $css );
 
 // Add CSS file
-$doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JUri::root( true ).'/templates/'.$this->template.'/css/style.css' );
+$doc	=	Factory::getDocument();
+$doc->addStyleSheet( Uri::root( true ).'/templates/'.$this->template.'/css/style.css' );
 
 $class		=	$cck->id_class.'cck-f100';
 $isMore		=	$cck->isLoadingMore();

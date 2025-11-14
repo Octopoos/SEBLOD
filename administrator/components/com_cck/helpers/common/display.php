@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
@@ -20,7 +22,7 @@ class CommonHelper_Display
 	public static function quickCheckbox( $i, $item )
 	{
 		if ( !JCck::on( '4.0' ) ) {
-			echo JHtml::_( 'grid.id', $i, $item->id );
+			echo HTMLHelper::_( 'grid.id', $i, $item->id );
 		} else {
 			echo '<div class="checkbox">'.HTMLHelper::_( 'grid.id', $i, $item->id, false, 'cid', 'cb' ).'</div>';
 		}
@@ -31,8 +33,8 @@ class CommonHelper_Display
 	{
 		?>
 		<div class="copyright">
-			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo JText::_( 'COM_CCK_COPYRIGHT_SEBLOD_ADDON' ); ?>
-			<br /><?php echo JText::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2017'; ?>
+			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo Text::_( 'COM_CCK_COPYRIGHT_SEBLOD_ADDON' ); ?>
+			<br /><?php echo Text::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2017'; ?>
 		</div>
 		<?php
 	}
@@ -59,9 +61,9 @@ class CommonHelper_Display
 		$html	=	'<span class="icon-'.$state[5].'"></span>';
 
 		if ( $canChange ) {
-			$html	= '<a href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.JText::_( $state[3] ).'">' .$html. '</a>';
+			$html	= '<a href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\''.$state[1].'\')" title="'.Text::_( $state[3] ).'">' .$html. '</a>';
 		} else {
-			$html	= '<a href="javascript:void(0);" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.JText::_( $state[2] ).'">' .$html. '</a>';
+			$html	= '<a href="javascript:void(0);" class="btn btn-micro disabled hasTooltip'.$state[4].'" title="'.Text::_( $state[2] ).'">' .$html. '</a>';
 		}
 
 		echo $html;
@@ -94,10 +96,10 @@ class CommonHelper_Display
 	// quickSession
 	public static function quickSession( $options, $id = 'featured_session' )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$js		=	'';
 		$css	=	'';
-		$title	=	JText::_( 'COM_CCK_SESSIONS_SAVE_SELECT' );
+		$title	=	Text::_( 'COM_CCK_SESSIONS_SAVE_SELECT' );
 		$html	=	'';
 		
 		$where		=	'extension="'.$options['extension'].'"';

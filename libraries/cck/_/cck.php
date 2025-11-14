@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
 // JCck
@@ -55,7 +62,7 @@ abstract class JCck
 		}
 		
 		$config			=	new stdClass;
-		$config->params =	JComponentHelper::getParams( 'com_'.self::$_me );
+		$config->params =	ComponentHelper::getParams( 'com_'.self::$_me );
 		
 		self::$_config	=&	$config;
 	}
@@ -84,9 +91,9 @@ abstract class JCck
 			if ( !$tweaked ) {
 				$isConfigView	=	false;
 				
-				// Protect JFactory::getApplication for CLI
+				// Protect Factory::getApplication for CLI
 				try {
-					$app			=	JFactory::getApplication();
+					$app			=	Factory::getApplication();
 					$isConfigView	=	( ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'field' ) || ( $app->input->get( 'option' ) == 'com_config' ) );
 				} catch ( Exception $e ) {
 					// Do Nothing
@@ -96,7 +103,7 @@ abstract class JCck
 				
 				if ( $translate == 2 ) {
 					if ( !$isConfigView ) {
-						if ( JFactory::getLanguage()->getTag() == 'en-GB' ) {
+						if ( Factory::getLanguage()->getTag() == 'en-GB' ) {
 							self::$_config->params->set( 'language_jtext', 0 );
 						} else {
 							self::$_config->params->set( 'language_jtext', 1 );
@@ -168,11 +175,11 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
-			$base			=	JUri::base( true );
+			$base			=	Uri::base( true );
 			$context		=	'';
-			$host			=	JUri::getInstance()->getHost();
+			$host			=	Uri::getInstance()->getHost();
 			$host2			=	'';
-			$path			=	JUri::getInstance()->getPath();
+			$path			=	Uri::getInstance()->getPath();
 			$path_base		=	$path;
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
@@ -196,7 +203,7 @@ abstract class JCck
 			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options, parent_id'
 					.	' FROM #__cck_core_sites'
 					.	' WHERE published = 1'
-					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+					.	' AND access IN ('.implode( ',', Factory::getUser()->getAuthorisedViewLevels() ).')';
 
 			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
 			
@@ -354,7 +361,7 @@ abstract class JCck
 		if ( self::$_pk === -1 ) {
 			self::$_pk	=	0;
 
-			$app		=	JFactory::getApplication();
+			$app		=	Factory::getApplication();
 			$item_id	=	$app->input->getInt( 'Itemid' );
 			$view		=	$app->input->get( 'view' );
 
@@ -367,8 +374,8 @@ abstract class JCck
 						.	' LEFT JOIN #__content AS b ON b.id = a.id2'
 						.	' WHERE a.id = '.(int)$item_id
 						.	' AND b.state IN (1,2)'
-						.	' AND b.language IN ("'.JFactory::getLanguage()->getTag().'","*")'
-						.	' AND b.access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')'
+						.	' AND b.language IN ("'.Factory::getLanguage()->getTag().'","*")'
+						.	' AND b.access IN ('.implode( ',', Factory::getUser()->getAuthorisedViewLevels() ).')'
 						.	' ORDER BY a.ordering'
 						;
 
@@ -404,7 +411,7 @@ abstract class JCck
 		}
 		
 		if ( is_object( self::$_sites[self::$_host] ) && is_string( self::$_sites[self::$_host]->configuration ) ) {
-			self::$_sites[self::$_host]->configuration	=	new JRegistry( self::$_sites[self::$_host]->configuration );
+			self::$_sites[self::$_host]->configuration	=	new Registry( self::$_sites[self::$_host]->configuration );
 		}
 
 		return self::$_sites[self::$_host];
@@ -503,7 +510,7 @@ abstract class JCck
 	// isGuest
 	public static function isGuest()
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( $user->id && !$user->guest ) {
 			if ( JCck::isSite() ) {
@@ -528,9 +535,9 @@ abstract class JCck
 			return;
 		}
 		
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		if ( $key == 'cck.ecommerce' ) { /* TODO#SEBLOD: explode & dispatch */
-			JHtml::_( 'behavior.core' );
+			HTMLHelper::_( 'behavior.core' );
 
 			$version	=	'2.25.0';
 
@@ -539,7 +546,7 @@ abstract class JCck
 				$version	=	new JCckEcommerceVersion;
 				$version	=	$version->getApiVersion();
 			}
-			$doc->addScript( JUri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version.'.min.js' );
+			$doc->addScript( Uri::root( true ).'/media/cck_ecommerce/js/cck.ecommerce-'.$version.'.min.js' );
 		}
 		
 		$loaded[$key]	=	true;
@@ -548,17 +555,17 @@ abstract class JCck
 	// loadjQuery + noConflit + jQueryMore + jQueryDev
 	public static function loadjQuery( $noconflict = true, $more = true, $dev = false )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
-		$root	=	JUri::root( true );
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
+		$root	=	Uri::root( true );
 
 		if ( JCck::on( '4.0' ) ) {
-			JHtml::_( 'jquery.framework' );
+			HTMLHelper::_( 'jquery.framework' );
 		}
 		if ( (int)JCck::getConfig_Param( 'core_js_bootstrap', '0' ) ) {
 			$doc->addScript( $root.'/media/cck/js/bootstrap.min.js' );
 		} else {
-			JHtml::_( 'bootstrap.framework' );
+			HTMLHelper::_( 'bootstrap.framework' );
 		}
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
@@ -591,13 +598,13 @@ abstract class JCck
 			}
 
 			if ( is_file( ( $app->isClient( 'administrator' ) ? JPATH_ADMINISTRATOR : JPATH_SITE ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js' ) ) {
-				$doc->addScript( JUri::base( true ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+				$doc->addScript( Uri::base( true ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
 			} else {
 				$doc->addScript( $root.'/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
 			}
 
-			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
-			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
+			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.Uri::base( true ).$context.'";' );
+			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( Uri::root(), 0, -1 ).'";' );
 			
 			$app->cck_jquery_more	=	true;
 		}
@@ -606,10 +613,10 @@ abstract class JCck
 	// loadjQueryUI
 	public static function loadjQueryUI()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		if ( !( isset( $app->cck_jquery_ui ) && $app->cck_jquery_ui === true ) ) {
-			$doc	=	JFactory::getDocument();
-			$doc->addScript( JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js' );
+			$doc	=	Factory::getDocument();
+			$doc->addScript( Uri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js' );
 			$app->cck_jquery_ui	=	true;
 		}
 	}
@@ -617,12 +624,12 @@ abstract class JCck
 	// loadModalBox
 	public static function loadModalBox()
 	{
-		$app	=	JFactory::getApplication();
-		$root	=	JUri::root( true );
+		$app	=	Factory::getApplication();
+		$root	=	Uri::root( true );
 
 		if ( !( isset( $app->cck_modal_box ) && $app->cck_modal_box === true ) ) {
 			$style	=	$app->isClient( 'administrator' ) ? 'css/' : 'styles/'.self::getConfig_Param( 'site_modal_box_css', 'style0' ).'/';
-			$doc	=	JFactory::getDocument();
+			$doc	=	Factory::getDocument();
 			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/'.$style.'colorbox.css' );
 			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			$app->cck_modal_box	=	true;

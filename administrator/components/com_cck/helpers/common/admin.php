@@ -10,6 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
+
 // CommonHelper
 class CommonHelper_Admin
 {
@@ -65,10 +77,10 @@ class CommonHelper_Admin
                 <div class="<?php echo $class; ?>">
                     <a href="<?php echo $link; ?>" target="<?php echo $target; ?>">
                         <?php
-                        if ( strpos( $image, 'icon-cck-' ) !== false ) {
+						if ( strpos( $image, 'icon-cck-' ) !== false ) {
                         	echo '<span class="'.$image.'"></span>';
                         } else {
-							$img	=	JHtml::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
+							$img	=	HTMLHelper::_( 'image', 'administrator/components/'.$base.'/assets/images/'.$size.'/icon-'.$size.'-'.$image.'.png', htmlspecialchars( str_replace( '<br />', ' ', $text ) ) );
 
 							echo str_replace( '<img ', '<img width="'.$size.'" height="'.$size.'" ', $img );
                         }
@@ -90,27 +102,27 @@ class CommonHelper_Admin
 	public static function addSubmenuEntries( $option, $vName, $items, $addons = array() )
 	{
 		$root	=	CCK_LABEL;
-		$user	=	JFactory::getUser();
-		JHtmlSidebar::addEntry( $root, CCK_LINK, $vName == CCK_NAME );
+		$user	=	Factory::getUser();
+		HTMLHelper::_( 'sidebar.addEntry', $root, CCK_LINK, $vName == CCK_NAME );
 		
 		if ( count( $items) ) {
 			foreach ( $items as $item ) {
 				if ( isset( $item['link'] ) ) {
-					JHtmlSidebar::addEntry( $item['name'], $item['link'], $item['active'] );
+					HTMLHelper::_( 'sidebar.addEntry', $item['name'], $item['link'], $item['active'] );
 				} else {
 					$active	=	( isset( $item['active'] ) ) ? $item['active'] : $vName == constant( '_C'.$item['val'].'_NAME' );
 					$s	=	( $option == 'cck_ecommerce' && $item['val'] == '3' ) ? '' : 'S'; /* TODO#SEBLOD: I'll see this one later.. */
-					JHtmlSidebar::addEntry( $item['pre'].JText::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
+					HTMLHelper::_( 'sidebar.addEntry', $item['pre'].Text::_( $item['key'].constant( '_C'.$item['val'].'_TEXT' ).$s ),
 											constant( '_C'.$item['val'].'_LINK' ),
 											$active );
 				}
 			}
 		}
 		if ( count( $addons ) ) {
-			JHtmlSidebar::addEntry( '', '#' );
+			HTMLHelper::_( 'sidebar.addEntry', '', '#' );
 			foreach ( $addons as $addon ) {
 				if ( $user->authorise( 'core.manage', $addon->element ) ) {
-					JHtmlSidebar::addEntry( $addon->title, $addon->link, ( 'com_'.$option == $addon->element ) );
+					HTMLHelper::_( 'sidebar.addEntry', $addon->title, $addon->link, ( 'com_'.$option == $addon->element ) );
 				}
 			}
 		}
@@ -120,20 +132,20 @@ class CommonHelper_Admin
 	public static function addToolbar( $vName, $vTitle ) 
 	{
 		if ( $vTitle != '' ) {
-			JToolBarHelper::title( JText::_( $vTitle.'_MANAGER' ), $vName.'s.png' );
+			ToolbarHelper::title( Text::_( $vTitle.'_MANAGER' ), $vName.'s.png' );
 		}
 	}
 
 	// addToolbarDelete
 	public static function addToolbarDelete( $vName, $vTitle ) 
 	{
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 	}
 
 	// addToolbarEdit
 	public static function addToolbarEdit( $vName, $vTitle ) 
 	{
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 	}
 	
 	// addToolbarHistoryButton
@@ -144,7 +156,7 @@ class CommonHelper_Admin
 		
 		if ( $pk > 0 ) {
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
-			JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'notification', 'COM_CCK_POSTINSTALL_HISTORY', JRoute::_( JUri::base().'index.php?option=com_postinstall&eid='.$pk ), '_self' );
+			Toolbar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'notification', 'COM_CCK_POSTINSTALL_HISTORY', Route::_( Uri::base().'index.php?option=com_postinstall&eid='.$pk ), '_self' );
 		}
 	}
 	
@@ -152,14 +164,14 @@ class CommonHelper_Admin
 	public static function addToolbarSupportButton()
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
-		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'star', 'COM_CCK_SUPPORT', JRoute::_( 'http://jed.seblod.com' ), '_blank' );
+		Toolbar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'star', 'COM_CCK_SUPPORT', Route::_( 'http://jed.seblod.com' ), '_blank' );
 	}
 
 	// getActions
 	public static function getActions( $folderId = 0 )
 	{
-		$user	=	JFactory::getUser();
-		$result	=	new JObject;
+		$user	=	Factory::getUser();
+		$result	=	new CMSObject;
 		
 		$assetName	=	'com_'.CCK_NAME;
 		$actions	=	array( 'core.admin', 'core.manage' );
@@ -176,10 +188,10 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_LETTERS' ), 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_ALL_LETTERS' ), 'value', 'text' );
 		}
 		for ( $i = 97; $i < 123; $i++ ) {
-			$options[]	=	JHtml::_( 'select.option', chr( $i ), strtoupper( chr( $i ) ), 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', chr( $i ), strtoupper( chr( $i ) ), 'value', 'text' );
 		}
 		
 		return $options;
@@ -188,36 +200,36 @@ class CommonHelper_Admin
 	// getClientOptions
 	public static function getClientOptions( $selectlabel = false, $selectnone = false, $both = false )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$options	=	array();
 		$view		=	$app->input->get( 'view', '' );
 
 		if ( $selectlabel !== false ) {
-			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : '- '.JText::_( 'COM_CCK_ALL_LOCATIONS' ).' -';
-			$options[]		=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
+			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : '- '.Text::_( 'COM_CCK_ALL_LOCATIONS' ).' -';
+			$options[]		=	HTMLHelper::_( 'select.option', '', $selectlabel, 'value', 'text' );
 		}
 		if ( $view == 'types' ) {
-			$options[]		=	JHtml::_( 'select.option', 'no_collection', JText::_( 'COM_CCK_ALL_BUT_COLLECTIONS' ), 'value', 'text' );
+			$options[]		=	HTMLHelper::_( 'select.option', 'no_collection', Text::_( 'COM_CCK_ALL_BUT_COLLECTIONS' ), 'value', 'text' );
 		}
 		if ( ( $view == 'type' || $view == 'types' ) ) {
-			$options[]		=	JHtml::_( 'select.option', 'collection', JText::_( 'COM_CCK_AS_COLLECTION' ), 'value', 'text' );
+			$options[]		=	HTMLHelper::_( 'select.option', 'collection', Text::_( 'COM_CCK_AS_COLLECTION' ), 'value', 'text' );
 		}
-		$options[]			=	JHtml::_( 'select.option', 'both', JText::_( 'COM_CCK_BOTH' ) );
+		$options[]			=	HTMLHelper::_( 'select.option', 'both', Text::_( 'COM_CCK_BOTH' ) );
 		if ( $selectnone !== false || ( $view == 'type' || $view == 'types' ) ) {
-			$options[]		=	JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ), 'value', 'text' );
+			$options[]		=	HTMLHelper::_( 'select.option', 'none', Text::_( 'COM_CCK_NONE' ), 'value', 'text' );
 		}
 		if ( $both !== false ) {
-			$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LOCATION_PERMISSIVE' ) );
-			$options[]	=	JHtml::_( 'select.option', 'admin_both', JText::_( 'COM_CCK_ADMINISTRATOR' ) );
-			$options[]	=	JHtml::_( 'select.option', 'site_both', JText::_( 'COM_CCK_SITE' ) );
-			$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-			$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LOCATION_EXACT' ) );
+			$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_LOCATION_PERMISSIVE' ) );
+			$options[]	=	HTMLHelper::_( 'select.option', 'admin_both', Text::_( 'COM_CCK_ADMINISTRATOR' ) );
+			$options[]	=	HTMLHelper::_( 'select.option', 'site_both', Text::_( 'COM_CCK_SITE' ) );
+			$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_LOCATION_EXACT' ) );
 		} else {
-			$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LOCATION' ) );
+			$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_LOCATION' ) );
 		}
-		$options[]	=	JHtml::_( 'select.option', 'admin', JText::_( 'COM_CCK_ADMINISTRATOR' ) );
-		$options[]	=	JHtml::_( 'select.option', 'site', JText::_( 'COM_CCK_SITE' ) );
-		$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+		$options[]	=	HTMLHelper::_( 'select.option', 'admin', Text::_( 'COM_CCK_ADMINISTRATOR' ) );
+		$options[]	=	HTMLHelper::_( 'select.option', 'site', Text::_( 'COM_CCK_SITE' ) );
+		$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 		
 		return $options;
 	}
@@ -225,25 +237,25 @@ class CommonHelper_Admin
 	// getFolderOptions
 	public static function getFolderOptions( $selectlabel = false, $quickfolder = true, $top = false, $published = true, $element = '', $featured = false, $more = '' )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$component	=	$app->input->getCmd( 'option' );
 		$view		=	$app->input->getCmd( 'view' );
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
 			if ( is_string( $selectlabel ) ) {
-				$selectlabel	=	JText::_( 'COM_CCK_'.$selectlabel );
+				$selectlabel	=	Text::_( 'COM_CCK_'.$selectlabel );
 
 				if ( $element != 'master' ) {
-					$selectlabel	=	'- '.JText::_( 'COM_CCK_'.$selectlabel ).' -';
+					$selectlabel	=	'- '.Text::_( 'COM_CCK_'.$selectlabel ).' -';
 				}
-				$options[]	=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
+				$options[]	=	HTMLHelper::_( 'select.option', '', $selectlabel, 'value', 'text' );
 			} else {
-				$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
+				$options[]	=	HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
 			}
 		}
 		if ( $quickfolder !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_QUICK_FOLDER' ), 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', '1', Text::_( 'COM_CCK_QUICK_FOLDER' ), 'value', 'text' );
 		}
 		
 		$n			=	( $top ) ? 1 : 2;
@@ -277,12 +289,12 @@ class CommonHelper_Admin
 		
 		if ( count( $options2 ) ) {
 			if ( $top && $options2[0]->value == '2' ) {
-				$options2[0]->text	=	JText::_( 'COM_CCK_'.trim( $options2[0]->text ) );
+				$options2[0]->text	=	Text::_( 'COM_CCK_'.trim( $options2[0]->text ) );
 			}
 			$optgroup			=	( defined( '_C0_TEXT' ) ) ? 'COM_CCK_'._C0_TEXT.'S' : 'COM_CCK_APP_FOLDERS';
-			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $optgroup ) );
+			$options[]		 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( $optgroup ) );
 			$options			=	array_merge( $options, $options2 );
-			$options[]			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$options[]			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 		}
 		
 		return $options;
@@ -294,11 +306,11 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '', '&nbsp;'.JText::_( 'COM_CCK_ALL_LANG' ), 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', '', '&nbsp;'.Text::_( 'COM_CCK_ALL_LANG' ), 'value', 'text' );
 		}
 
-		$options[]	= 	JHtml::_( 'select.option', 'en-GB', 'EN' );
-		$options[]	= 	JHtml::_( 'select.option', 'fr-FR', 'FR' );
+		$options[]	= 	HTMLHelper::_( 'select.option', 'en-GB', 'EN' );
+		$options[]	= 	HTMLHelper::_( 'select.option', 'fr-FR', 'FR' );
 
 		return $options;
 	}
@@ -306,55 +318,55 @@ class CommonHelper_Admin
 	// getLocationOptions
 	public static function getLocationOptions( $folder = false )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$option		=	$app->input->get( 'option', 'com_cck' );
 		$view		=	$app->input->get( 'view', '' );
 		$options	=	array();
 		
-		$options[]	=	JHtml::_( 'select.option', 'title', JText::_( 'COM_CCK_TITLE' ) );
+		$options[]	=	HTMLHelper::_( 'select.option', 'title', Text::_( 'COM_CCK_TITLE' ) );
 		if ( $option == 'com_cck_ecommerce' ) {
 			if ( $view == 'zones' ) {
-				$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', 'name', Text::_( 'COM_CCK_NAME' ) );
 			} elseif ( $view == 'orders' ) {
-				$options[]	=	JHtml::_( 'select.option', 'number', JText::_( 'COM_CCK_INVOICE' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', 'number', Text::_( 'COM_CCK_INVOICE' ) );
 			}
 		} else {
-			$options[]	=	JHtml::_( 'select.option', 'name', JText::_( 'COM_CCK_NAME' ) );
+			$options[]	=	HTMLHelper::_( 'select.option', 'name', Text::_( 'COM_CCK_NAME' ) );
 		}
 		if ( $option == 'com_cck' && $view == 'fields' ) {
-			$options[]	=	JHtml::_( 'select.option', 'label', JText::_( 'COM_CCK_LABEL' ) );	
+			$options[]	=	HTMLHelper::_( 'select.option', 'label', Text::_( 'COM_CCK_LABEL' ) );	
 		}
-		$options[]	=	JHtml::_( 'select.option', 'description', JText::_( 'COM_CCK_DESCRIPTION' ) );
-		$options[]	= 	JHtml::_( 'select.option', 'id', JText::_( 'COM_CCK_IDS' ) );
+		$options[]	=	HTMLHelper::_( 'select.option', 'description', Text::_( 'COM_CCK_DESCRIPTION' ) );
+		$options[]	= 	HTMLHelper::_( 'select.option', 'id', Text::_( 'COM_CCK_IDS' ) );
 		
 		if ( $option == 'com_cck' ) {
 			if ( $view != 'folders' ) {
-				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'._C0_TEXT.'S' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_'._C0_TEXT.'_ID' ) );
-				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_'._C0_TEXT.'S' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'folder_id', Text::_( 'COM_CCK_'._C0_TEXT.'_ID' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 			}
 			if ( $view == 'types' || $view == 'searchs' ) {
-				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FIELDS' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'field_name', JText::_( 'COM_CCK_FIELD_NAME' ) );
-				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TEMPLATES' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'template_name', JText::_( 'COM_CCK_TEMPLATE_NAME' ) );
-				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FIELDS' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'field_name', Text::_( 'COM_CCK_FIELD_NAME' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+				$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_TEMPLATES' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'template_name', Text::_( 'COM_CCK_TEMPLATE_NAME' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_ecommerce' ) {
 			if ( $view == 'carts' || $view == 'orders' || $view == 'stores' || $view == 'subscriptions' ) {
 				$key		=	( $view == 'stores' ) ? 'COM_CCK_OWNERS' : 'COM_CCK_CUSTOMERS';
-				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $key ) );
-				$options[]	= 	JHtml::_( 'select.option', 'user_id', JText::_( 'COM_CCK_USER_IDS' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'user_name', JText::_( 'COM_CCK_USER_NAME' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'user_username', JText::_( 'COM_CCK_USER_USERNAME' ) );
-				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( $key ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'user_id', Text::_( 'COM_CCK_USER_IDS' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'user_name', Text::_( 'COM_CCK_USER_NAME' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'user_username', Text::_( 'COM_CCK_USER_USERNAME' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		} elseif ( $option == 'com_cck_toolbox' ) {
 			if ( $view == 'jobs' || $view == 'processings' ) {
-				$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_APP_FOLDERS' ) );
-				$options[]	= 	JHtml::_( 'select.option', 'folder_id', JText::_( 'COM_CCK_APP_FOLDER_ID' ) );
-				$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_APP_FOLDERS' ) );
+				$options[]	= 	HTMLHelper::_( 'select.option', 'folder_id', Text::_( 'COM_CCK_APP_FOLDER_ID' ) );
+				$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 			}
 		}
 		
@@ -364,19 +376,19 @@ class CommonHelper_Admin
 	// getPluginOptions
 	public static function getPluginOptions( $folder, $prefix = '', $selectlabel = false, $selectnone = false, $language = false, $excluded = array(), $file = '' )
 	{
-		JPluginHelper::importPlugin( $prefix.$folder );
+		PluginHelper::importPlugin( $prefix.$folder );
 
 		$base		=	JPATH_SITE.'/plugins/'.$prefix.$folder;
 		$options	=	array();
 		$options2	=	array();
-		$lang		=	JFactory::getLanguage();
+		$lang		=	Factory::getLanguage();
 		
 		if ( $selectlabel !== false ) {
-			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : JText::_( 'COM_CCK_ALL_TYPES_SL' );
-			$options[]		=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
+			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : Text::_( 'COM_CCK_ALL_TYPES_SL' );
+			$options[]		=	HTMLHelper::_( 'select.option', '', $selectlabel, 'value', 'text' );
 		}
 		if ( $selectnone !== false ) {
-			$options[]		=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ), 'value', 'text' );
+			$options[]		=	HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_NONE' ), 'value', 'text' );
 		}
 
 		$where2	=	'';
@@ -399,9 +411,9 @@ class CommonHelper_Admin
 			if ( $language ) {
 				$lang->load( 'plg_'.$prefix.$folder.'_'.$plugin->value, JPATH_ADMINISTRATOR, null, false, true );
 			}
-			$plugin->text								=	JText::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
+			$plugin->text								=	Text::_( 'plg_'.$prefix.$folder.'_'.$plugin->value.'_LABEL' );
 			$params										=	JCckDev::fromJSON( $plugin->params );
-			$group										=	JText::_( $params['group'] );
+			$group										=	Text::_( $params['group'] );
 
 			if ( $prefix.$folder == 'cck_field_link'
 			  || $prefix.$folder == 'cck_field_live'
@@ -422,20 +434,20 @@ class CommonHelper_Admin
 					$options	=	array_merge( $options, $v );
 				} elseif ( strpos( $k, '#' ) !== false ) {
 					if ( $k == '#' ) {
-						$options2[]	=	JHtml::_( 'select.option', '<OPTGROUP>', $k.' Core' );
+						$options2[]	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', $k.' Core' );
 						$options2	=	array_merge( $options2, $v );
-						$options2[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+						$options2[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 					} else {
-						$options2[] =	JHtml::_( 'select.option', '<OPTGROUP>', $k );
+						$options2[] =	HTMLHelper::_( 'select.option', '<OPTGROUP>', $k );
 						ksort( $v );
 						$options2	=	array_merge( $options2, $v );
-						$options2[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+						$options2[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 					}
 				} else {
-					$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', $k );
+					$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', $k );
 					ksort( $v );
 					$options	=	array_merge( $options, $v );
-					$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+					$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 				}
 			}
 		}
@@ -452,14 +464,14 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_'._C2_TEXT.'S_SL' ), 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_ALL_'._C2_TEXT.'S_SL' ), 'value', 'text' );
 		}
 		$where		=	( $published ) ? ' WHERE a.published = 1 ' : ' WHERE a.published != -44';
 		$options2	=	JCckDatabase::loadObjectList( 'SELECT a.title AS text, a.id AS value FROM #__cck_core_types AS a '.$where.' ORDER BY a.title' );
 		if ( count( $options2 ) ) {
-			$options[] 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'._C2_TEXT.'S' ) );
+			$options[] 	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_'._C2_TEXT.'S' ) );
 			$options	=	array_merge( $options, $options2 );
-			$options[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$options[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 		}
 		
 		return $options;
@@ -468,7 +480,7 @@ class CommonHelper_Admin
 	// getSelected
 	public static function getSelected( $vName, $elem, $selected, $default = '', $null = '' )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $selected != $null ) {
 			return $selected;
@@ -484,9 +496,9 @@ class CommonHelper_Admin
 	// initACL
 	public static function initACL( $options, $pks, $rules = array() )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/'.$options['table'].'.php';
-		$table	=	JTable::getInstance( ucfirst( $options['table'] ), 'CCK_Table' );
+		$table	=	Table::getInstance( ucfirst( $options['table'] ), 'CCK_Table' );
 		
 		foreach ( $pks as $pk ) {
 			$table->load( $pk );

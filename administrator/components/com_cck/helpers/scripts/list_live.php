@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // getOptions
 function getOptions( $string )
 {
@@ -30,7 +34,7 @@ function getOptions( $string )
 }
 
 // Init
-$app	=	JFactory::getApplication();
+$app	=	Factory::getApplication();
 $elem	=	$app->input->getString( 'elem', '' );
 $name	=	$app->input->getString( 'e_name', '' );
 $form	=	'text';
@@ -55,18 +59,18 @@ $variations		=	getOptions( $variat );
 $search			=	'<span class="icon-key"></span>';
 $replace		=	' (*)';
 $opts			=	array(
-						JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_INHERITED' ).' -' ),
-						JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
-						JHtml::_( 'select.option', 'hidden', str_replace( $search, $replace, JText::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ) ),
-						JHtml::_( 'select.option', 'hidden_anonymous', str_replace( $search, $replace, JText::_( 'COM_CCK_HIDDEN_ANONYMOUS_AND_SECURED' ) ) ),
-						JHtml::_( 'select.option', 'value', str_replace( $search, $replace, JText::_( 'COM_CCK_VALUE_AND_SECURED' ) ) ),
-						JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-						JHtml::_( 'select.option', 'form', JText::_( 'COM_CCK_DEFAULT' ) ),
-						JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-						JHtml::_( 'select.option', 'disabled', str_replace( $search, $replace, JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ) ),
-						JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-						JHtml::_( 'select.option', '<OPTGROUP>', str_replace( $search, $replace, JText::_( 'COM_CCK_STAR_IS_SECURED' ) ) ),
-						JHtml::_( 'select.option', '</OPTGROUP>', '' )
+						HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_INHERITED' ).' -' ),
+						HTMLHelper::_( 'select.option', 'clear', Text::_( 'COM_CCK_CLEAR' ) ),
+						HTMLHelper::_( 'select.option', 'hidden', str_replace( $search, $replace, Text::_( 'COM_CCK_HIDDEN_AND_SECURED' ) ) ),
+						HTMLHelper::_( 'select.option', 'hidden_anonymous', str_replace( $search, $replace, Text::_( 'COM_CCK_HIDDEN_ANONYMOUS_AND_SECURED' ) ) ),
+						HTMLHelper::_( 'select.option', 'value', str_replace( $search, $replace, Text::_( 'COM_CCK_VALUE_AND_SECURED' ) ) ),
+						HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FORM' ) ),
+						HTMLHelper::_( 'select.option', 'form', Text::_( 'COM_CCK_DEFAULT' ) ),
+						HTMLHelper::_( 'select.option', 'form_filter', Text::_( 'COM_CCK_FORM_FILTER' ) ),
+						HTMLHelper::_( 'select.option', 'disabled', str_replace( $search, $replace, Text::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ) ),
+						HTMLHelper::_( 'select.option', '</OPTGROUP>', '' ),
+						HTMLHelper::_( 'select.option', '<OPTGROUP>', str_replace( $search, $replace, Text::_( 'COM_CCK_STAR_IS_SECURED' ) ) ),
+						HTMLHelper::_( 'select.option', '</OPTGROUP>', '' )
 					);
 
 // Process

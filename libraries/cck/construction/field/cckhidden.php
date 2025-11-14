@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\FormField;
+
 // JFormField
-class JFormFieldCCKhidden extends JFormField
+class JFormFieldCCKhidden extends FormField
 {
 	protected $type	=	'CCKhidden';
 

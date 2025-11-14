@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Form;
+
 // Plugin
 class plgCCK_FieldJForm_TemplateStyle extends JCckPluginField
 {
@@ -85,7 +87,7 @@ class plgCCK_FieldJForm_TemplateStyle extends JCckPluginField
 						</field>
 					</form>
 				';
-		$form	=	JForm::getInstance( $id, $xml );
+		$form	=	Form::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		$form	=	str_replace( '<select ', '<select style="width: 150px"', $form );
 		

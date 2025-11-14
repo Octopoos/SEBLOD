@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 $extension_short_name	=	Helper_Session::getExtensionShortName( $this->item->extension );
 
 $config		=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );	
@@ -17,7 +21,7 @@ $cck		=	JCckDev::preload( array( 'core_title_field', 'core_session_extension', '
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod first">
@@ -34,7 +38,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	</div>
     
 	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_SETTINGS' ); ?></div>
+        <div class="legend top left"><?php echo Text::_( 'COM_CCK_SETTINGS' ); ?></div>
        	<pre><?php echo htmlspecialchars( json_encode( json_decode( $this->item->options ), JSON_PRETTY_PRINT ) ); ?></pre>
 	</div>
 </div>
@@ -45,7 +49,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <input type="hidden" id="myid" name="id" value="<?php echo @$this->item->id; ?>" />
     <input type="hidden" name="extension" value="<?php echo $this->item->extension; ?>" />
     <?php
-    echo JHtml::_( 'form.token' );
+    echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

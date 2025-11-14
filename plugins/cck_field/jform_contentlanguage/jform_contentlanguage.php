@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+
 // Plugin
 class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 {
@@ -59,7 +62,7 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$auto	=	( isset( $config['copyfrom_id'] ) && $config['copyfrom_id'] && isset( $config['language'] ) && $config['language'] ) ? $config['language'] : '';
 		if ( $auto ) {
 			$value		=	$auto;
@@ -90,7 +93,7 @@ class plgCCK_FieldJForm_ContentLanguage extends JCckPluginField
 						</field>
 					</form>
 				';
-		$form	=	JForm::getInstance( $id, $xml );
+		$form	=	Form::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		
 		// Set

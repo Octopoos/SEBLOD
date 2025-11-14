@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+
 $name			=	$process['field_name'];
 $parent_name	=	$process['parent_name'];
 $file_path		=	$process['file_path'];
@@ -25,7 +30,7 @@ $permissions	=	( isset( $options['folder_permissions'] ) && $options['folder_per
 $root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$process['file_path_type'] == 1 ) );
 
 if ( !(bool) ini_get( 'file_uploads' ) ) {
-	JError::raiseWarning( '', JText::_( 'WARNINSTALLFILE' ) );
+	Factory::getApplication()->enqueueMessage( Text::_( 'WARNINSTALLFILE' ), 'warning' );
 }
 
 $doSave			=	0;
@@ -67,10 +72,10 @@ if ( $content_folder && $config['isNew'] ) {
 	$location		=	$root_folder.'/'.$file_path.$file_name;
 }
 
-if ( ! JFolder::exists( $root_folder.'/'.$file_path ) ) {
-	JFolder::create( $root_folder.'/'.$file_path, $permissions );
+if ( ! Folder::exists( $root_folder.'/'.$file_path ) ) {
+	Folder::create( $root_folder.'/'.$file_path, $permissions );
 	$file_body	=	'<!DOCTYPE html><title></title>';
-	JFile::write( $root_folder.'/'.$file_path.'/index.html', $file_body );
+	File::write( $root_folder.'/'.$file_path.'/index.html', $file_body );
 }
 $allowUnsafe		=	false;
 $safeFileOptions	=	array();
@@ -105,7 +110,7 @@ if ( $process['forbidden_ext'] ) {
 	}
 }
 
-if ( JFile::upload( $tmp_name, $location, false, $allowUnsafe, $safeFileOptions ) ) {
+if ( File::upload( $tmp_name, $location, false, $allowUnsafe, $safeFileOptions ) ) {
 	$value					=	$file_location;
 	
 	if ( isset( $fields[$name] ) && is_object( $fields[$name] ) ) {

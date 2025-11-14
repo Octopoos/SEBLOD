@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+use Joomla\Registry\Registry;
+
 // CCK_User (deprecated)
 class CCK_User
 {	
@@ -41,7 +45,7 @@ class CCK_User
 	// getSession
 	public static function getSession()
 	{
-		$session	=	JFactory::getSession();
+		$session	=	Factory::getSession();
 		$res		=	$session->getId();
 	
 		return $res;
@@ -51,9 +55,9 @@ class CCK_User
 	public static function &getUser( $userid = 0, $profile = true, $preferences = false )
 	{
 		if ( ! $userid ) {
-			$user	=	JFactory::getUser();
+			$user	=	Factory::getUser();
 		} else {
-			$user	=	JFactory::getUser( $userid );
+			$user	=	Factory::getUser( $userid );
 		}
 		
 		// Session
@@ -61,7 +65,7 @@ class CCK_User
 			$user->session_id	=	null;
 			$user->where_clause	=	'user_id='.$user->id;
 		} else {
-			$user->session_id	=	JFactory::getSession()->getId();
+			$user->session_id	=	Factory::getSession()->getId();
 			$user->where_clause	=	'session_id="'.$user->session_id.'"';
 		}
 		
@@ -87,7 +91,7 @@ class CCK_User
 		if ( $user->id && $preferences ) {
 			$preferences	=	JCckDatabase::loadResult( 'SELECT a.options FROM #__cck_core_preferences AS a WHERE a.userid = '.(int)$user->id );
 			if ( $preferences ) {
-				$registry		=	new JRegistry;
+				$registry		=	new Registry;
 				$registry->loadString( $preferences );
 				$preferences	=	$registry->toArray();
 				if ( count( $preferences ) ) {
@@ -110,13 +114,13 @@ class CCK_User
 	// setPreference
 	public static function setPreference( $name, $value )
 	{
-		$user	=	JFactory::getUser();
-		$db		=	JFactory::getDbo();
+		$user	=	Factory::getUser();
+		$db		=	Factory::getDbo();
 		
 		$preferences	=	JCckDatabase::loadResult( 'SELECT a.options FROM #__cck_core_preferences AS a WHERE a.userid = '.(int)$user->id );
 		
 		if ( $preferences ) {
-			$registry			=	new JRegistry;
+			$registry			=	new Registry;
 			$registry->loadString( $preferences );
 			$preferences		=	$registry->toArray();
 			$preferences[$name]	=	$value;
@@ -138,13 +142,13 @@ class CCK_User
 	// setPreferences
 	public static function setPreferences( $name, $value )
 	{
-		$user	=	JFactory::getUser();
-		$db		=	JFactory::getDbo();
+		$user	=	Factory::getUser();
+		$db		=	Factory::getDbo();
 		
 		$preferences	=	JCckDatabase::loadResult( 'SELECT a.options FROM #__cck_core_preferences AS a WHERE a.userid = '.(int)$user->id );
 		
 		if ( $preferences ) {
-			$registry			=	new JRegistry;
+			$registry			=	new Registry;
 			$registry->loadString( $preferences );
 			$preferences		=	$registry->toArray();
 			$preferences[$name]	=	$value;

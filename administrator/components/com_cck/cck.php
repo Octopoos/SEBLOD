@@ -10,16 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
-$app	=	JFactory::getApplication();
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\BaseController;
+
+$app	=	Factory::getApplication();
 $task	=	$app->input->get( 'task' );
 $view	=	$app->input->get( 'view' );
 
-if ( !JFactory::getUser()->authorise( 'core.manage', 'com_cck' )
+if ( !Factory::getUser()->authorise( 'core.manage', 'com_cck' )
   && !( $view == 'form' || $view == 'list' || $task == 'download' || in_array( substr( $task, 0, 5 ), array( 'form.', 'list.' ) ) ) ) {
-	return JError::raiseWarning( 404, JText::_( 'JERROR_ALERTNOAUTHOR' ) );
+	return $app->enqueueMessage( Text::_( 'JERROR_ALERTNOAUTHOR' ), 'error' );
 }
 
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'com_cck' );
 $lang->load( 'com_cck_default', JPATH_SITE );
@@ -30,7 +35,7 @@ require_once JPATH_COMPONENT.'/helpers/helper_define.php';
 require_once JPATH_COMPONENT.'/helpers/helper_display.php';
 require_once JPATH_COMPONENT.'/helpers/helper_include.php';
 
-$controller	=	JControllerLegacy::getInstance( 'CCK' );
+$controller	=	BaseController::getInstance( 'CCK' );
 $controller->execute( $app->input->get( 'task' ) );
 $controller->redirect();
 ?>

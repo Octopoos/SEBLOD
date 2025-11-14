@@ -10,17 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerBox extends JControllerForm
+class CCKControllerBox extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 		
 	// add
 	public function add()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		// Parent Method
 		$result	=	parent::add();
@@ -50,7 +54,7 @@ class CCKControllerBox extends JControllerForm
 	// save
 	public function save( $key = null, $urlVar = null )
 	{
-		jexit( JText::_( 'JINVALID_TOKEN' ) );
+		jexit( Text::_( 'JINVALID_TOKEN' ) );
 	}
 }
 ?>

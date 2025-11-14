@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 {
@@ -82,7 +84,7 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 
 		// Author
 		if ( $author ) {
-			$user	=	JFactory::getUser();
+			$user	=	Factory::getUser();
 			
 			if ( ( $author  == '1' && $config['author'] != $user->id )
 			  || ( $author  == '-1' && $config['author'] == $user->id ) ) {
@@ -139,7 +141,7 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 			if ( $location == 'admin' ) {
 				$location	=	'administrator';
 			}
-			if ( !JFactory::getApplication()->isClient( $location ) ) {
+			if ( !Factory::getApplication()->isClient( $location ) ) {
 				$field->display	=	0;
 				$field->state	=	0;
 				return false;

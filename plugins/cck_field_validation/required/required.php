@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 {
@@ -24,7 +27,7 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 		$regex	=	self::$regex;
 
 		if ( $field->required == 'required[lang:default]' ) {
-			if ( JFactory::getLanguage()->getDefault() == $field->language ) {
+			if ( Factory::getLanguage()->getDefault() == $field->language ) {
 				$field->required	=	'required';
 			} else {
 				$field->required	=	'';
@@ -65,7 +68,7 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 
 			if ( $config['doTranslation'] ) {
 				if ( trim( $alert ) ) {
-					$alert	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
+					$alert	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
 				}
 			}
 			$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
@@ -77,9 +80,9 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 			$config['validation'][$name]	=	$rule;
 			$field->validate[]				=	$required2.'['.$name.']';
 		} else {
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.$name.'_ALERT' );
-			$alert2	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT2' );
-			$alert3	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT3' );
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.$name.'_ALERT' );
+			$alert2	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT2' );
+			$alert3	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT3' );
 			$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
 			
 			if ( $name == 'condRequired' ) {
@@ -101,7 +104,7 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 					$rule	=	'
 						"groupRequired":{
 							"regex":'.$regex.',
-							"alertText":"'.$prefix.JText::_( 'PLG_CCK_FIELD_VALIDATION_GROUPREQUIRED_ALERT' ).'"}
+							"alertText":"'.$prefix.Text::_( 'PLG_CCK_FIELD_VALIDATION_GROUPREQUIRED_ALERT' ).'"}
 							';
 				
 					$config['validation']['groupRequired']	=	$rule;
@@ -117,8 +120,8 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 		if ( $value != '' || $field->state == 'disabled' || strpos( $field->required, '[' ) !== false ) {
 			// OK
 		} else {
-			$app	=	JFactory::getApplication();
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name ;
+			$app	=	Factory::getApplication();
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT' ) .' - '. $name ;
 			
 			/* TODO#SEBLOD: Add support for condRequired && groupRequired */
 

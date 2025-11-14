@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/common/include.php';
 
 // Helper
@@ -18,9 +23,9 @@ class Helper_Include extends CommonHelper_Include
 	// addDependencies
 	public static function addDependencies( $view, $layout, $tmpl = '' )
 	{
-		$doc		=	JFactory::getDocument();
+		$doc		=	Factory::getDocument();
 		$script		=	( $tmpl == 'ajax' ) ? false : true;
-		$root		=	JUri::root( true );
+		$root		=	Uri::root( true );
 		
 		Helper_Include::addStyleSheets( true );
 		
@@ -55,13 +60,13 @@ class Helper_Include extends CommonHelper_Include
 					$doc->addScript( $root.'/media/cck/js/cck.backend-3.22.0.min.js' );
 					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css?v4' );
 					if ( JCck::on( '4.0' ) ) {
-						JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4-construction.css' );
+						HTMLHelper::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4-construction.css' );
 					} else {
 						$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/cck_3x/ui3-construction.css' );
 					}
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
-							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 25%/66px 66px no-repeat;
+							background: rgba(255, 255, 255, .8) url("'.HTMLHelper::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 25%/66px 66px no-repeat;
 							position: fixed;
 							opacity: 0.8;
 							-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);
@@ -98,11 +103,11 @@ class Helper_Include extends CommonHelper_Include
 				} else {
 					JCck::loadjQuery();
 				}
-				JHtml::_( 'bootstrap.tooltip' );
-				JHtml::_( 'behavior.multiselect' );
+				HTMLHelper::_( 'bootstrap.tooltip' );
+				HTMLHelper::_( 'behavior.multiselect' );
 
 				if ( !JCck::on( '4' ) ) {
-					JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+					HTMLHelper::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				}
 				
 				if ( $view == 'fields' ) {
@@ -121,7 +126,7 @@ class Helper_Include extends CommonHelper_Include
 				}
 				break;
 			case 'list':
-				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+				HTMLHelper::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
 				break;
 			case 'cck':
 				$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/cpanel.css' );
@@ -137,7 +142,7 @@ class Helper_Include extends CommonHelper_Include
 	public static function addScriptDeclaration( $js )
 	{
 		if ( $js != '' ) {
-			JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) { '.$js.' });' );
+			Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) { '.$js.' });' );
 		}
 	}
 	
@@ -146,8 +151,8 @@ class Helper_Include extends CommonHelper_Include
 	// addColorbox
 	public static function addColorbox( $width = '900', $height = '550', $script = true, $class = 'cbox', $options = '' )
 	{
-		$doc	=	JFactory::getDocument();
-		$root	=	JUri::root( true );
+		$doc	=	Factory::getDocument();
+		$root	=	Uri::root( true );
 
 		if ( $script === true ) {
 			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
@@ -161,8 +166,8 @@ class Helper_Include extends CommonHelper_Include
 	// addColorbox_Live
 	public static function addColorbox_Live( $width = '900', $height = '550', $script = true, $class = 'cbox', $options = '' )
 	{
-		$doc	=	JFactory::getDocument();
-		$root	=	JUri::root( true );
+		$doc	=	Factory::getDocument();
+		$root	=	Uri::root( true );
 		
 		if ( $script === true ) {
 			$doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
@@ -181,8 +186,8 @@ class Helper_Include extends CommonHelper_Include
 	// addColorpicker
 	public static function addColorpicker( $script = true )
 	{
-		$doc	=	JFactory::getDocument();
-		$root	=	JUri::root( true );
+		$doc	=	Factory::getDocument();
+		$root	=	Uri::root( true );
 		
 		if ( $script === true ) {
 			$doc->addStyleSheet( $root.'/plugins/cck_field/colorpicker/assets/css/colorpicker_custom.css' );
@@ -195,10 +200,10 @@ class Helper_Include extends CommonHelper_Include
 	// autoSave
 	public static function autoSave( $interval = '2' )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$delay	=	(float)$interval * 60000;
 
-		JText::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
+		Text::script( 'JLIB_APPLICATION_SAVE_SUCCESS' );
 
 		$js	=	'
 				(function ($){

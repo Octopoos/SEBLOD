@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // JCckToolbox
 abstract class JCckToolbox
 {
@@ -24,13 +29,13 @@ abstract class JCckToolbox
 	{
 		if ( ! self::$_config ) {
 			if ( JCckDatabaseCache::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.'com_'.self::$_me.'"' ) > 0 ) {
-				self::$_config	=	JComponentHelper::getParams( 'com_'.self::$_me );
+				self::$_config	=	ComponentHelper::getParams( 'com_'.self::$_me );
 
 				if ( self::$_config->get( 'processing' ) != '0' ) {
 					self::$_config->set( 'processing', 1 );
 				}
 			} else {
-				self::$_config	=	new JRegistry;
+				self::$_config	=	new Registry;
 				self::$_config->set( 'KO', true );
 				self::$_config->set( 'processing', 1 );
 			}
@@ -44,8 +49,8 @@ abstract class JCckToolbox
 	// setHead
 	public static function setHead( &$head )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		
 		if ( isset( $app->cck_document ) ) {
 			if ( isset( $app->cck_document['styleSheets'] ) && count( $app->cck_document['styleSheets'] ) ) {
@@ -76,7 +81,7 @@ abstract class JCckToolbox
 	// setHeadAfterRender
 	public static function setHeadAfterRender()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( isset( $app->cck_document ) ) {
 			$countCss	=	0;
@@ -136,7 +141,7 @@ abstract class JCckToolbox
 						if ( $replace != '' ) {
 							$body	=	str_replace( $replace, $html, $body );
 						} else {
-							$cck_js	=	'<script src="'.JUri::base( true ).'/media/cck/js/cck.core-3';
+							$cck_js	=	'<script src="'.Uri::base( true ).'/media/cck/js/cck.core-3';
 
 							if ( strpos( $body, $cck_js ) !== false ) {
 								$search		=	$cck_js;
@@ -208,7 +213,7 @@ abstract class JCckToolbox
 		$_SERVER['HTTP_HOST']	=	$host;
 		$_SERVER['HTTPS']	=	'on';
 		
-		JFactory::getApplication( 'site' );
+		Factory::getApplication( 'site' );
 		
 		// Force identity
 		if ( !$job->run_as ) {
@@ -216,9 +221,9 @@ abstract class JCckToolbox
 		}
 
 		if ( $job->run_as ) {
-			$previous	=	JFactory::getUser()->id;
+			$previous	=	Factory::getUser()->id;
 
-			JFactory::getSession()->set( 'user', JFactory::getUser( $job->run_as ) );
+			Factory::getSession()->set( 'user', Factory::getUser( $job->run_as ) );
 			JCck::getUser( array( $job->run_as, true ) );
 		}
 
@@ -231,12 +236,12 @@ abstract class JCckToolbox
 														. ' ORDER BY b.id' );
 
 		$count	=	count( $processings );
-		$now	=	JFactory::getDate()->toSql();
+		$now	=	Factory::getDate()->toSql();
 
 		if ( $count ) {
 			foreach ( $processings as $p ) {
 				if ( is_object( $p ) && is_file( JPATH_SITE.$p->scriptfile ) ) {
-					$options	=	new JRegistry( $p->options );
+					$options	=	new Registry( $p->options );
 
 					try {
 						include_once JPATH_SITE.$p->scriptfile;
@@ -249,7 +254,7 @@ abstract class JCckToolbox
 		}
 
 		if ( $job->run_as ) {
-			JFactory::getSession()->set( 'user', $previous );
+			Factory::getSession()->set( 'user', $previous );
 			JCck::getUser( array( $previous, true ) );
 		}
 	}
@@ -267,7 +272,7 @@ abstract class JCckToolbox
 
 				if ( $legacy ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new JRegistry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include JPATH_SITE.$p->scriptfile;
 					}
@@ -286,7 +291,7 @@ abstract class JCckToolbox
 		$processing	=	JCckDatabase::loadObject( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$id );
 
 		if ( is_object( $processing ) && is_file( JPATH_SITE.$processing->scriptfile ) ) {
-			$options	=	new JRegistry( $processing->options );
+			$options	=	new Registry( $processing->options );
 
 			include_once JPATH_SITE.$processing->scriptfile;
 		}

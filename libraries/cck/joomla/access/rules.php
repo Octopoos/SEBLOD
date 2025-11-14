@@ -9,6 +9,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Object\CMSObject;
+
 jimport( 'cck.joomla.access.rule' );
 
 // CCKRules
@@ -192,7 +194,7 @@ class CCKRules extends JAccessRules
 	public function getAllowed($identity)
 	{
 		// Sweep for the allowed actions.
-		$allowed = new JObject;
+		$allowed = new CMSObject;
 		foreach ($this->_data as $name => &$action)
 		{
 			if ($action->allow($identity))

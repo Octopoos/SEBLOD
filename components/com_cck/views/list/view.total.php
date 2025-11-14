@@ -10,13 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+
 // View
-class CCKViewList extends JViewLegacy
+class CCKViewList extends HtmlView
 {
 	// display
 	public function display( $tpl = null )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$preconfig					=	array();
 		$preconfig['action']		=	'';
 		$preconfig['client']		=	'search';
@@ -36,7 +39,7 @@ class CCKViewList extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay( $preconfig )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;

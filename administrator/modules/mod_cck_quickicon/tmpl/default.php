@@ -10,7 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-$html	=	JHtml::_( 'links.linksgroups', modCCKQuickIconHelper::groupButtons( $buttons ) );
+use Joomla\CMS\HTML\HTMLHelper;
+
+$html	=	HTMLHelper::_( 'links.linksgroups', modCCKQuickIconHelper::groupButtons( $buttons ) );
 
 if ( !empty( $html ) ) { ?>
     <div class="sidebar-nav quick-icons">

@@ -10,13 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+
 // Model
-class CCKModelCCK extends JModelLegacy
+class CCKModelCCK extends BaseDatabaseModel
 {
 	// batchFolder
 	public function batchFolder( $pks, $type )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$folder	=	$app->input->getInt( 'batch_folder', 0 );
 		if ( !$folder ) {
 			return false;
@@ -28,7 +33,7 @@ class CCKModelCCK extends JModelLegacy
 	// prepareExport
 	public function prepareExport( $id = 0 )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
@@ -50,17 +55,17 @@ class CCKModelCCK extends JModelLegacy
 		}
 		
 		if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_packager"' ) > 0 ) {
-			$params		=	JComponentHelper::getParams( 'com_cck_packager' );
+			$params		=	ComponentHelper::getParams( 'com_cck_packager' );
 			$copyright	=	$params->get( 'copyright' );
 		} else {
 			$copyright	=	'';
 		}
 
-		if ( $src && JFolder::exists( $src ) ) {
+		if ( $src && Folder::exists( $src ) ) {
 			if ( $copyright ) {
 				CCK_Export::update( $src, $copyright );
 			}
-			JFolder::copy( $src, $path );
+			Folder::copy( $src, $path );
 			CCK_Export::clean( $path );
 		}
 		CCK_Export::exportLanguage( $src.'/'.$name.'.xml', JPATH_ADMINISTRATOR, $path, $copyright );
@@ -73,7 +78,7 @@ class CCKModelCCK extends JModelLegacy
 	// prepareLanguages
 	public function prepareLanguages( $lang )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;

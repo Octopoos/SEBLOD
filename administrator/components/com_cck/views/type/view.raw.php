@@ -10,11 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
+
 ini_set( 'memory_limit', '512M' );
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
 
 // View
-class CCKViewType extends JViewLegacy
+class CCKViewType extends HtmlView
 {
 	protected $form;
 	protected $item;
@@ -85,7 +91,7 @@ class CCKViewType extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay()
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->form		=	$this->get( 'Form' );
 		$this->item		=	$this->get( 'Item' );
 		$this->option	=	$app->input->get( 'option', '' );
@@ -122,11 +128,11 @@ class CCKViewType extends JViewLegacy
 	// prepareDisplay_Ajax
 	protected function prepareDisplay_Ajax()
 	{
-		JPluginHelper::importPlugin( 'cck_field' );
-		JPluginHelper::importPlugin( 'cck_field_link' );
-		JPluginHelper::importPlugin( 'cck_field_live' );
-		JPluginHelper::importPlugin( 'cck_field_restriction' );
-		JPluginHelper::importPlugin( 'cck_field_typo' );
+		PluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field_link' );
+		PluginHelper::importPlugin( 'cck_field_live' );
+		PluginHelper::importPlugin( 'cck_field_restriction' );
+		PluginHelper::importPlugin( 'cck_field_typo' );
 
 		$featured	=	(int)$this->state->get( 'skeleton_id', 0 );
 		$folder		=	( $featured ) ? 0 : $this->item->folder;
@@ -171,16 +177,16 @@ class CCKViewType extends JViewLegacy
 		$this->variations	=	Helper_Workshop::getPositionVariations( $this->style->template );
 		
 		// Filters
-		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', JText::_( 'COM_CCK_ALL_FIELD_TYPES_SL' ), false, true );
-		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="t-"', 'value', 'text', '', 'filter1' );
+		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', Text::_( 'COM_CCK_ALL_FIELD_TYPES_SL' ), false, true );
+		$this->lists['af_t']	=	HTMLHelper::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="t-"', 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
-		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium width-103px form-select md" prefix="a-"', 'value', 'text', '', 'filter3' );
+		$this->lists['af_a']	=	HTMLHelper::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium width-103px form-select md" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
-		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="c-"', 'value', 'text', '', 'filter4' );
+		$this->lists['af_c']	=	HTMLHelper::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="c-"', 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium form-select md" prefix="f-"', 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
+		$this->lists['af_f']	=	HTMLHelper::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium form-select md" prefix="f-"', 'value', 'text', ( $this->item->id > 0 ? $this->item->folder : 1 ), 'filter2' );
 		$options				=	Helper_Admin::getLanguageOptions( true );
-		$this->lists['af_l']	=	JHtml::_( 'select.genericlist', $options, 'filter_language', 'class="inputbox filter input-medium width-103px form-select md" prefix="l-"', 'value', 'text', '', 'filter5' );
+		$this->lists['af_l']	=	HTMLHelper::_( 'select.genericlist', $options, 'filter_language', 'class="inputbox filter input-medium width-103px form-select md" prefix="l-"', 'value', 'text', '', 'filter5' );
 	}
 
 	// prepareDisplay_Ajax2
@@ -221,7 +227,7 @@ class CCKViewType extends JViewLegacy
 		
 		// Languages /* TODO#SEBLOD: optimize */
 		Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
-		JPluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field' );
 	}
 	
 	// setPosition

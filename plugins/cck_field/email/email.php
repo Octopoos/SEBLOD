@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\Mail;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldEmail extends JCckPluginField
 {
@@ -25,7 +30,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			return;
 		}
 
-		$raw	=	JFactory::getApplication()->input->post->getArray( array( 'json'=>'raw' ) );
+		$raw	=	Factory::getApplication()->input->post->getArray( array( 'json'=>'raw' ) );
 
 		if ( isset( $raw['json']['options2']['message'] ) ) {
 			$data['json']['options2']['message']	=	$raw['json']['options2']['message'];
@@ -130,7 +135,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$name	=	$field->name;
 		}
 		$options2	=	JCckDev::fromJSON( $field->options2 );
-		$siteName	=	JFactory::getConfig()->get( 'sitename' );
+		$siteName	=	Factory::getConfig()->get( 'sitename' );
 		$valid		=	0;
 		$send		=	( isset( $options2['send'] ) && $field->state != 'disabled' ) ? $options2['send'] : 0;
 		$send_field	=	( isset( $options2['send_field'] ) && strlen( $options2['send_field'] ) > 0 ) ? $options2['send_field'] : 0;
@@ -154,9 +159,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$sender	=	1;
 				break;
 		}
-		$subject	=	( isset( $options2['subject'] ) && $options2['subject'] ) ? $options2['subject'] : $siteName . '::' . JText::_( 'COM_CCK_EMAIL_GENERIC_SUBJECT' );
-		$message	=	( isset( $options2['message'] ) && $options2['message'] ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
-		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : JText::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
+		$subject	=	( isset( $options2['subject'] ) && $options2['subject'] ) ? $options2['subject'] : $siteName . '::' . Text::_( 'COM_CCK_EMAIL_GENERIC_SUBJECT' );
+		$message	=	( isset( $options2['message'] ) && $options2['message'] ) ? htmlspecialchars_decode($options2['message']) : Text::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
+		$message	=	( strlen( $options2['message'] ) > 0 ) ? htmlspecialchars_decode($options2['message']) : Text::sprintf( 'COM_CCK_EMAIL_GENERIC_MESSAGE', $siteName );
 		$new_message	=	( strlen( $options2['message_field'] ) > 0 ) ? $options2['message_field'] : '';
 
 		$dest					=	array();
@@ -295,7 +300,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 		}
 		$n	=	count( array_filter( $dest ) );
 		if ( $n ) {	
-			$config2		=	JFactory::getConfig();
+			$config2		=	Factory::getConfig();
 			$cfg_MailFrom	=	$config2->get( 'mailfrom' );
 			$cfg_FromName	=	$config2->get( 'fromname' );
 			if ( $cfg_MailFrom != '' && $cfg_FromName != '') {
@@ -310,7 +315,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$subject	=	str_replace( '[id]', $config['id'], $subject );
 			$subject	=	str_replace( '[pk]', $config['pk'], $subject );
 			$subject	=	str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
-			$subject	=	str_replace( '[siteurl]', JUri::base(), $subject );
+			$subject	=	str_replace( '[siteurl]', Uri::base(), $subject );
 			
 			// J(translate) for subject
 			if ( $subject != '' && strpos( $subject, 'J(' ) !== false ) {
@@ -319,13 +324,13 @@ class plgCCK_FieldEmail extends JCckPluginField
 				preg_match_all( $search, $subject, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $text ) {
-						$subject	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $subject );
+						$subject	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $subject );
 					}
 				}
 			}
 			
 			if ( isset( $config['registration_activation'] ) ) {
-				$body		=	str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
+				$body		=	str_replace( '[activation]', Uri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
 				$body		=	str_replace( '[username]', $fields['username']->value, $body );
 				$subject	=	str_replace( '[username]', $fields['username']->value, $subject );
 			}
@@ -394,7 +399,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				preg_match_all( $search, $body, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $text ) {
-						$body	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
+						$body	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
 					}
 				}
 			}
@@ -402,7 +407,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 			$body		=	str_replace( '[id]', $config['id'], $body );
 			$body		=	str_replace( '[pk]', $config['pk'], $body );
 			$body		=	str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
-			$body		=	str_replace( '[siteurl]', JUri::base(), $body );
+			$body		=	str_replace( '[siteurl]', Uri::base(), $body );
 
 			if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
 				$user			=	JCck::getUser();
@@ -560,7 +565,7 @@ class plgCCK_FieldEmail extends JCckPluginField
 				$format		=	true;
 			}
 			
-			JFactory::getMailer()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach, $reply_to, $reply_to_name );
+			Mail::getInstance()->sendMail( $from, $fromName, $dest, $subject, $body, $format, $cc, $bcc, $attach, $reply_to, $reply_to_name );
 		}
 	}
 	

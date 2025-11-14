@@ -10,8 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
-class JCckPluginLink extends JPlugin
+class JCckPluginLink extends CMSPlugin
 {
 	protected static $construction	=	'cck_field_link';
 	
@@ -21,8 +27,8 @@ class JCckPluginLink extends JPlugin
 		parent::__construct( $subject, $config );
 
 		// Fix Language
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$lang			=	JFactory::getLanguage();
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 
 			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
@@ -85,7 +91,7 @@ class JCckPluginLink extends JPlugin
 	// g_getCustomVars
 	public static function g_getCustomVars( $type, $field, $custom, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$event	=	( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) ? 'beforeRenderForm' : 'beforeRenderContent';
 		if ( $custom != '' && strpos( $custom, '*' ) !== false ) {
 			$matches	=	'';
@@ -115,7 +121,7 @@ class JCckPluginLink extends JPlugin
 					$variable	=	$matches[3][$k];
 					
 					if ( $v == 'Current' ) {
-						$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
+						$request	=	( $variable == 'true' ) ? Uri::getInstance()->toString() : Uri::current();
 						$custom		=	str_replace( $matches[0][$k], $matches[1][$k].'='.$request, $custom );						
 					} elseif ( $v == 'Array' ) {
 						$name				=	$field->name;
@@ -200,7 +206,7 @@ class JCckPluginLink extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return Uri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 	
 	// g_getLink
@@ -209,7 +215,7 @@ class JCckPluginLink extends JPlugin
 		if ( $format != '' )  {
 			return JCckDev::fromJSON( $params, $format );
 		} else {
-			$reg	=	new JRegistry;
+			$reg	=	new Registry;
 		
 			if ( $params ) {			
 				$reg->loadString( $params );
@@ -316,7 +322,7 @@ class JCckPluginLink extends JPlugin
 			if ( $link_title == '2' ) {
 				$field->link_title	=	$link_title2;
 			} elseif ( $link_title == '3' ) {
-				$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+				$field->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 			}
 			if ( !isset( $field->link_title ) ) {
 				$field->link_title	=	'';

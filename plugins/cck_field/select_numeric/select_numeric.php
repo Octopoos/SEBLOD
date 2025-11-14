@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldSelect_Numeric extends JCckPluginField
 {
@@ -88,7 +91,7 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 			$class	.=	' has-value';
 		}
 		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
-		$form	=	( count( $opts ) ) ? JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id ) : '';
+		$form	=	( count( $opts ) ) ? HTMLHelper::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id ) : '';
 		
 		// Set
 		if ( ! $field->variation ) {
@@ -185,9 +188,9 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 		
 		if ( trim( @$field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
-				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
-			$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
+			$opts[]	=	HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 		}
 		if ( isset( $options2['first'] ) && $options2['first'] != '' ) {
 			if ( strpos( $options2['first'], '=' ) !== false ) {
@@ -196,13 +199,13 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 
 				if ( $opt[0] != '' ) {
 					if ( $config['doTranslation'] ) {
-						$opt[0]		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
+						$opt[0]		=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
 					}
 				}
-				$opts[]		=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
+				$opts[]		=	HTMLHelper::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
 				$options[]	=	$opt[0].'='.$opt[1];
 			} else {
-				$opts[]		=	JHtml::_( 'select.option', $options2['first'], $options2['first'], 'value', 'text' );
+				$opts[]		=	HTMLHelper::_( 'select.option', $options2['first'], $options2['first'], 'value', 'text' );
 				$options[]	=	$options2['first'].'='.$options2['first'];
 			}
 		}
@@ -221,22 +224,22 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 				}
 				if ( $math == 0 && $val <= $limit  ) {
 					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
-					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$opts[]		=	HTMLHelper::_('select.option', $output, $output, 'value', 'text' );
 					$options[]	=	$output.'='.$output;
 					$val		=	$val + $step;
 				} elseif ( $math == 1 && $val <= $limit  ) {
 					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
-					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$opts[]		=	HTMLHelper::_('select.option', $output, $output, 'value', 'text' );
 					$options[]	=	$output.'='.$output;
 					$val		=	$val * $step;
 				} elseif ( $math == 2 && $val >= $limit  ) {
 					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
-					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$opts[]		=	HTMLHelper::_('select.option', $output, $output, 'value', 'text' );
 					$options[]	=	$output.'='.$output;
 					$val		=	$val - $step;
 				} elseif ( $math == 3 && $val > $limit  ) {
 					$output		=	( $force_decimals ) ? number_format( $val, $force_decimals ) : $val;
-					$opts[]		=	JHtml::_('select.option', $output, $output, 'value', 'text' );
+					$opts[]		=	HTMLHelper::_('select.option', $output, $output, 'value', 'text' );
 					$options[]	=	$output.'='.$output;
 					$val		=	floor( $val / $step );
 				} else {
@@ -251,13 +254,13 @@ class plgCCK_FieldSelect_Numeric extends JCckPluginField
 
 				if ( $opt[0] != '' ) {
 					if ( $config['doTranslation'] ) {
-						$opt[0]		=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
+						$opt[0]		=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $opt[0] ) );
 					}
 				}
-				$opts[]		=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
+				$opts[]		=	HTMLHelper::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
 				$options[]	=	$opt[0].'='.$opt[1];
 			} else {
-				$opts[]		=	JHtml::_( 'select.option', $options2['last'], $options2['last'], 'value', 'text' );
+				$opts[]		=	HTMLHelper::_( 'select.option', $options2['last'], $options2['last'], 'value', 'text' );
 				$options[]	=	$options2['last'].'='.$options2['last'];
 			}
 		}

@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
 class plgCCK_Field_LinkContent extends JCckPluginLink
 {
@@ -35,9 +41,9 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$sef		=	$link->get( 'sef', $config['doSEF'] );
-		if ( !JFactory::getConfig()->get( 'sef' ) ) {
+		if ( !Factory::getConfig()->get( 'sef' ) ) {
 			$sef	=	0;
 		}
 		$itemId		=	( $sef ) ? $link->get( 'itemid', '' ) : '';
@@ -125,7 +131,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 					if ( $link_title == '2' ) {
 						$f->link_title	=	$link_title2;
 					} elseif ( $link_title == '3' ) {
-						$f->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+						$f->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 					}
 					if ( !isset( $f->link_title ) ) {
 						$f->link_title	=	'';
@@ -184,7 +190,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 										});
 									});
 								})(jQuery);';
-					JFactory::getDocument()->addScriptDeclaration( $js );
+					Factory::getDocument()->addScriptDeclaration( $js );
 				}
 			}
 			if ( $path_type ) {
@@ -193,18 +199,18 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 					$site		=	JCck::getSiteById( $site_id );
 					
 					if ( is_object( $site ) && $site->name != '' ) {
-						$base	=	JUri::getInstance()->getScheme().'://'.$site->name;
+						$base	=	Uri::getInstance()->getScheme().'://'.$site->name;
 					}
 				} else {
-					$base		=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
+					$base		=	Uri::getInstance()->toString( array( 'scheme', 'host' ) );
 				}
 				if ( $path_type == 2 || $path_type == 3 ) {
 					$field->link	=	$base.$field->link;
 
 					if ( $lang_tag != '' ) {
-						$segment	=	JRoute::_( 'index.php?Itemid='.$itemId.'&lang='.$lang_tag );
+						$segment	=	Route::_( 'index.php?Itemid='.$itemId.'&lang='.$lang_tag );
 					} else {
-						$segment	=	JRoute::_( 'index.php?Itemid='.$itemId );
+						$segment	=	Route::_( 'index.php?Itemid='.$itemId );
 					}
 
 					if ( $segment == '/' ) {
@@ -231,7 +237,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				if ( $link_title == '2' ) {
 					$field->link_title	=	$link_title2;
 				} elseif ( $link_title == '3' ) {
-					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+					$field->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 				}
 				if ( !isset( $field->link_title ) ) {
 					$field->link_title	=	'';
@@ -265,13 +271,13 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		}
 
 		if ( $itemId == '-2' ) {
-			$itemId				=	JFactory::getApplication()->input->getInt( 'Itemid' );
+			$itemId				=	Factory::getApplication()->input->getInt( 'Itemid' );
 			$fieldname2			=	$process['fieldname2'];
 			if ( isset( $fields[$fieldname2] ) ) {
 				$itemId			=	(int)$fields[$fieldname2]->value;
 			}
 		} elseif ( $itemId == '-3' ) {
-			$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
+			$itemId		=	Factory::getApplication()->input->getInt( 'Itemid' );
 			$itemIds	=	$process['fieldnames'];
 			$items		=	explode( '||', $itemIds );
 			if ( count( $items ) ) {
@@ -331,7 +337,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 	// _goto
 	protected static function _goTo( $itemId )
 	{
-		$menu	=	JFactory::getApplication()->getMenu();
+		$menu	=	Factory::getApplication()->getMenu();
 		$item	=	$menu->getItem( $itemId );
 		$search	=	$item->query['search'];
 
@@ -369,7 +375,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			$variation					=	'';
 			$limitstart					=	-1;
 			
-			$params						=	new JRegistry; /* TODO#SEBLOD: remove+inherit? */
+			$params						=	new Registry; /* TODO#SEBLOD: remove+inherit? */
 			$params->set( 'order_by', '' );
 			
 			// Prepare

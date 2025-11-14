@@ -10,21 +10,27 @@
 
 defined( '_JEXEC' ) or die;
 
-JText::script( 'COM_CCK_CONFIRM_DELETE' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
+Text::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
-JHtml::_( 'stylesheet', 'media/cck/css/definitions/all.css' );
+HTMLHelper::_( 'stylesheet', 'media/cck/css/definitions/all.css' );
 if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['validation'] != '' ) {
 	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'] );
 	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';
 } else {
 	$js	=	'JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'"));';
 }
-$app	=	JFactory::getApplication();
+$app	=	Factory::getApplication();
 $css	=	'div.cck_forms.cck_search div.cck_label label{line-height:28px;} div.seblod.pagination{text-align:center;}'
 		.	'form div.pagination div.button2-left,form div.pagination div.button2-right, form div.pagination div.limit{margin-right:10px!important;}'
 		.	'div.cck_page_list div.pagination .total{float:right; line-height:28px;}'
 		.	'div.cck_forms.cck_search div.cck_form span{line-height:inherit;}';
-JFactory::getDocument()->addStyleDeclaration( $css );
+Factory::getDocument()->addStyleDeclaration( $css );
 ?>
 
 <script type="text/javascript">
@@ -36,17 +42,17 @@ Joomla.submitbutton = function(task, cid)
 			return false;
 		}
 	}
-	jQuery("#<?php echo $this->form_id; ?>").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( JUri::getInstance()->toString() ); ?>">');
+	jQuery("#<?php echo $this->form_id; ?>").append('<input type="hidden" id="return" name="return" value="<?php echo base64_encode( Uri::getInstance()->toString() ); ?>">');
 	JCck.Core.submitForm(task);
 }
 </script>
 
 <?php
 if ( $this->show_list_desc == 1 && $this->description != '' ) {
-	echo '<div class="cck_page_desc'.$this->pageclass_sfx.'">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo '<div class="cck_page_desc'.$this->pageclass_sfx.'">' . HTMLHelper::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ).'" autocomplete="off" method="get" id="'.$this->config['formId'].'" name="'.$this->config['formId'].'">';
+echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.Route::_( 'index.php?option='.$this->option.'&view='.$this->getName() ).'" autocomplete="off" method="get" id="'.$this->config['formId'].'" name="'.$this->config['formId'].'">';
 echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 ?>
 
@@ -67,13 +73,13 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 			if ( $this->config['doTranslation'] ) {
 				$label	=	'COM_CCK_' . str_replace( ' ', '_', trim( $label ) );
 
-				if ( ( $this->total == 0 || $this->total == 1 ) && JFactory::getLanguage()->hasKey( $label.'_1' ) ) {
+				if ( ( $this->total == 0 || $this->total == 1 ) && Factory::getLanguage()->hasKey( $label.'_1' ) ) {
 					$label	.=	'_1';
 				}
-				$label	=	JText::_( $label );
+				$label	=	Text::_( $label );
 			} elseif ( $this->total == 0 || $this->total == 1 ) {
-				if ( JFactory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
-					$label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
+				if ( Factory::getLanguage()->hasKey( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) ) ) {
+					$label	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $label ).'_1' ) );	
 				}			
 			}
 			$item_number	=	'<div class="'.$this->class_items_number.'"><span>'.$this->total.'</span>&nbsp;'.$label.'</div>';
@@ -118,7 +124,7 @@ echo '<div class="seblod first container-fluid">' . $this->form . '</div>';
 </form>
 <?php
 if ( $this->show_list_desc == 2 && $this->description != '' ) {
-	echo '<div class="seblod cck_page_desc'.$this->pageclass_sfx.'">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo '<div class="seblod cck_page_desc'.$this->pageclass_sfx.'">' . HTMLHelper::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 Helper_Display::quickCopyright();
 ?>

@@ -10,7 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'MenusTableMenu', JPATH_ADMINISTRATOR . '/components/com_menus/tables/menu.php' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Table\Table;
+
+\JLoader::register( 'MenusTableMenu', JPATH_ADMINISTRATOR . '/components/com_menus/tables/menu.php' );
 
 // Plugin
 class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
@@ -184,8 +189,8 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$dispatcher	=	JEventDispatcher::getInstance();
+		$app		=	Factory::getApplication();
+		$dispatcher	=	$app->getDispatcher();
 		$table		=	self::_getTable( $pk );
 		
 		if ( !$table ) {
@@ -199,7 +204,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
 			( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
 			( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
-			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
 		
@@ -335,7 +340,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 						default:
 							break;
 					}
-					$table->component_id 	= 	(int)JTable::getInstance( 'Extension' )->find( array( 'name'=>$component, 'type'=>'component' ) );
+					$table->component_id 	= 	(int)Table::getInstance( 'Extension' )->find( array( 'name'=>$component, 'type'=>'component' ) );
 					break;
 				case 'alias':
 					$table->component_id	=	0;
@@ -374,16 +379,17 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 		$table->bind( $data );
 		
 		if ( !$table->check() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 		}
 
 		self::_completeTable( $table, $data, $config );
 
 		// Store
-		$dispatcher	=	JEventDispatcher::getInstance();
+		$app		=	Factory::getApplication();
+		$dispatcher	=	$app->getDispatcher();
 		$dispatcher->trigger( 'onContentBeforeSave', array( self::$context, &$table, $isNew ) );
         if ( !$table->store() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 
 			if ( $isNew ) {
 				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
@@ -395,7 +401,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 		
 		// Rebuild the tree path.
 		if ( !$table->rebuildPath( $table->id ) ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 		}
 		
 		// Checkin
@@ -415,9 +421,9 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	protected static function _getTable( $pk = 0 )
 	{
 		if ( Jcck::on( '5' ) ) {
-			$table	=	new \Joomla\Component\Menus\Administrator\Table\MenuTypeTable( JFactory::getDbo() );
+			$table	=	new \Joomla\Component\Menus\Administrator\Table\MenuTypeTable( Factory::getDbo() );
 		} else {
-			$table	=	JTable::getInstance( 'Menu', 'MenusTable' );
+			$table	=	Table::getInstance( 'Menu', 'MenusTable' );
 		}
 		
 		if ( $pk > 0 ) {
@@ -456,14 +462,14 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	{
 		$route		=	'';
 		
-		return JRoute::_( $route );
+		return Route::_( $route );
 	}
 	
 	// getRouteByStorage
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route );
+			return Route::_( $storage[self::$table]->_route );
 		}
 		
 		if ( $sef ) {
@@ -472,7 +478,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 			$storage[self::$table]->_route	=	'';
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route );
+		return Route::_( $storage[self::$table]->_route );
 	}
 	
 	// parseRoute

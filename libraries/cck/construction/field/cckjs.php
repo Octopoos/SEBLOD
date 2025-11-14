@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+
 // JFormField
-class JFormFieldCCKjs extends JFormField
+class JFormFieldCCKjs extends FormField
 {
 	protected $type	=	'CCKjs';
 
@@ -37,8 +41,8 @@ class JFormFieldCCKjs extends JFormField
 	// _addScripts
 	protected function _addScripts( $id, $events, $format )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		$js		=	'';		
 		$js2	=	'';
 		$js3	=	'';
@@ -73,7 +77,7 @@ class JFormFieldCCKjs extends JFormField
 							} else {
 								$frag		=	array( 0=>$fragment, 1=>'' );
 							}
-							$frag[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $frag[0] ) );
+							$frag[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', $frag[0] ) );
 							$f			=	'<div class=\'textdesc'.$frag[1].'\'>'.$frag[0].'</div>';
 							$js			.=	'.append("'.$f.'")';
 						}

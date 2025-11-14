@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+
 if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
 	include_once __DIR__ . '/content_placeholder.php';
 } else {
@@ -22,9 +25,9 @@ class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'content' );
+		PluginHelper::importPlugin( 'content' );
 
-		JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+		// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 	}
 
 	// preSave
@@ -55,7 +58,7 @@ class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
 			$i			=	2;
 			$alias		=	$this->_instance_base->alias.'-'.$i;
 			$property	=	self::$objects[$this->_object]['properties']['parent'];
-			$test		=	JTable::getInstance( 'Category' );
+			$test		=	Table::getInstance( 'Category' );
 			
 			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->$property ) ) ) {
 				$alias	=	$this->_instance_base->alias.'-'.$i++;

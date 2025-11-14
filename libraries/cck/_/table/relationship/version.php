@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckTableRelationship
 class JCckTableRelationshipVersion extends JCckTableRelationship
 {
@@ -20,7 +22,7 @@ class JCckTableRelationshipVersion extends JCckTableRelationship
 	// getInstance
 	public static function getInstance( $table )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$tableClass	=	'JCckTableRelationshipVersion';
 		
 		return new $tableClass( $db, $table );
@@ -73,7 +75,7 @@ class JCckTableRelationshipVersion extends JCckTableRelationship
 						'id2'=>'0',
 						'ordering'=>'0',
 						'version'=>( $this->getVersionNumber() + 1 ),
-						'version_date_time'=>JFactory::getDate()->toSql()
+						'version_date_time'=>Factory::getDate()->toSql()
 					);
 
 		$this->_tbl_rows['0']	=	(object)$data;
@@ -83,7 +85,7 @@ class JCckTableRelationshipVersion extends JCckTableRelationship
 	public function setRows( $rows )
 	{
 		$version			=	$this->getVersionNumber() + 1;
-		$version_date_time	=	JFactory::getDate()->toSql();
+		$version_date_time	=	Factory::getDate()->toSql();
 
 		foreach ( $rows as $k=>$row ) {
 			$rows[$k]['version']			=	$version;

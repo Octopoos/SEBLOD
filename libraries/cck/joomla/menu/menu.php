@@ -10,8 +10,10 @@
 
 defined( 'JPATH_PLATFORM' ) or die;
 
+use Joomla\CMS\Factory;
+
 // CCKMenu
-class CCKMenu extends JMenuSite
+class CCKMenu extends \Joomla\CMS\Menu\SiteMenu
 {
 	protected $user_id	=	0;
 
@@ -31,7 +33,7 @@ class CCKMenu extends JMenuSite
 	public function makeHimLive()
 	{
 		if ( isset( self::$instances['site'] ) ) {
-			self::$instances['site']->user	=	JFactory::getUser( $this->user_id );
+			self::$instances['site']->user	=	Factory::getUser( $this->user_id );
 		}
 	}
 }

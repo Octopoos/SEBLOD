@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldJForm_Rules extends JCckPluginField
 {
@@ -97,20 +102,20 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 							/>
 						</form>
 					';
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 			$form->setValue( 'asset_id', null, $value );
 			$form	=	$form->getInput( $name );
 			$form	=	str_replace( 'onchange="sendPermissions.call(this, event)"', '', $form );
 		} else {
 			// Modal Box
-			$app			=	JFactory::getApplication();
+			$app			=	Factory::getApplication();
 			if ( trim( $field->selectlabel ) ) {
 				if ( $config['doTranslation'] ) {
-					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+					$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 				}
 				$buttonlabel	=	$field->selectlabel;
 			} else {
-				$buttonlabel	=	JText::_( 'COM_CCK_PERMISSIONS' );
+				$buttonlabel	=	Text::_( 'COM_CCK_PERMISSIONS' );
 			}
 			
 			$link					=	'index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field/'.self::$type.'/tmpl/form.php'
@@ -213,8 +218,8 @@ class plgCCK_FieldJForm_Rules extends JCckPluginField
 	protected static function _addScripts( $inline, $params = array(), &$config = array() )
 	{
 		if ( !$inline ) {
-			$doc	=	JFactory::getDocument();
-			$root	=	JUri::root( true );
+			$doc	=	Factory::getDocument();
+			$root	=	Uri::root( true );
 
 			if ( empty( $config['client'] ) ) {
 				$js	=	' $(document).on("click", ".'.self::$type.'_box", function(e) { e.preventDefault();'

@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // Plugin
 class plgCCK_Storage_LocationFree extends JCckPluginLocation
 {
@@ -112,7 +116,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 
 			if ( $config['copyfrom_id'] ) {
 				$empty						=	array( self::$key );
-				$config['language']			=	JFactory::getApplication()->input->get( 'translate' );
+				$config['language']			=	Factory::getApplication()->input->get( 'translate' );
 
 				if ( isset( $storage->language ) ) {
 					$config['translate']	=	$storage->language;
@@ -204,7 +208,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		$item	=	JCckDatabase::loadObject( 'SELECT id, cck as type, pk, storage_table FROM #__cck_core WHERE cck = "'.$config['type'].'" AND pk = '.(int)$pk );		
 		if ( !is_object( $item ) ) {
@@ -227,7 +231,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
 			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
 			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
-			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
 		
@@ -278,7 +282,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		} else {
 			if ( ! self::$pk ) {
 				// Init
-				$app	=	JFactory::getApplication();
+				$app	=	Factory::getApplication();
 				$table	=	self::_getTable( $pk, $data['_']->table, $config );
 				$isNew	=	( $pk > 0 ) ? false : true;
 
@@ -307,15 +311,15 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				self::_completeTable( $table, $data, $config );
 				
 				// Store
-				JPluginHelper::importPlugin( 'content' );
+				PluginHelper::importPlugin( 'content' );
 				$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
-				if ( $isNew === true && parent::g_isMax( JFactory::getUser()->id, 0, $config ) ) {
+				if ( $isNew === true && parent::g_isMax( Factory::getUser()->id, 0, $config ) ) {
 					$config['error']	=	true;
 
 					return false;
 				}
 				if ( !$table->store() ) {
-					JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+					Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 					
 					if ( $isNew ) {
 						parent::g_onCCK_Storage_LocationRollback( $config['id'] );
@@ -356,12 +360,12 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$core->load( $config['id'] );
 		$core->cck				=	$config['type'];
 		if ( ! $core->pk ) {
-			$core->date_time	=	JFactory::getDate()->toSql();
+			$core->date_time	=	Factory::getDate()->toSql();
 		}
 		$core->pk				=	self::$pk ? self::$pk : $config['pk'];
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
-		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->id;
+		$core->author_id		=	( $config['author'] ) ? $config['author'] : Factory::getUser()->id;
 		$core->storeIt();
 	}
 	
@@ -397,8 +401,8 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		if ( !( isset( $data['associations'] ) && is_array( $data['associations'] ) ) ) {
 			return;
 		}
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 
 		$associations	=	$data['associations'];
 		foreach ( $associations as $tag=>$id ) {
@@ -418,7 +422,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		}
 
 		if ( $all_language && !empty( $associations ) ) {
-			JError::raiseNotice( 403, JText::_( 'COM_CONTENT_ERROR_ALL_LANGUAGE_ASSOCIATED' ) );
+			Factory::getApplication()->enqueueMessage( Text::_( 'COM_CONTENT_ERROR_ALL_LANGUAGE_ASSOCIATED' ), 'notice' );
 		}
 		$associations[$table->language]	=	$table->{self::$key};
 

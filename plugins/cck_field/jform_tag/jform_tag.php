@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Table\Table;
+
 // Plugin
 class plgCCK_FieldJform_Tag extends JCckPluginField
 {
@@ -41,7 +47,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
-		JLoader::register( 'TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php' );
+		\JLoader::register( 'TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php' );
 
 		$html	=	'';
 
@@ -58,7 +64,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			}
 			$tags			=	new JHelperTags;
 			$tags->getItemTags( $properties['context'], $config['pk'] );
-			$tagLayout		=	new JLayoutFile( 'joomla.content.tags' );
+			$tagLayout		=	new FileLayout( 'joomla.content.tags' );
 			$html			=	$tagLayout->render( $tags->itemTags );
 		}
 
@@ -121,7 +127,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$field->text	=	'';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
-			JHtml::_( 'formbehavior.chosen', 'select.tag' );
+			HTMLHelper::_( 'formbehavior.chosen', 'select.tag' );
 
 			$options2	=	JCckDev::fromJSON( $field->options2 );
 			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
@@ -135,7 +141,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$options2	=	JCckDev::fromJSON( $field->options2 );
 			if ( trim( $field->selectlabel ) ) {
 				if ( $config['doTranslation'] ) {
-					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+					$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 				}
 				$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
 			}
@@ -159,7 +165,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 								</field>
 							</form>
 						';
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
 
 			$form	=	str_replace( '<select', '<select class="form-select"', $form );
@@ -379,9 +385,9 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 						'title'=>$title
 					);
 
-		JLoader::register( 'TagsTableTag', JPATH_ADMINISTRATOR . '/components/com_tags/tables/tag.php' );
+		\JLoader::register( 'TagsTableTag', JPATH_ADMINISTRATOR . '/components/com_tags/tables/tag.php' );
 
-		$table	=	JTable::getInstance( 'Tag', 'TagsTable' );
+		$table	=	Table::getInstance( 'Tag', 'TagsTable' );
 
 		$table->setLocation( $data['parent_id'], 'last-child' );
 

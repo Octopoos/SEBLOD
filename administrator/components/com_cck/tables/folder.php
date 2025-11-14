@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+
 // Table
-class CCK_TableFolder extends JTable
+class CCK_TableFolder extends Table
 {
 	// __construct
 	public function __construct( &$db )
@@ -30,7 +34,7 @@ class CCK_TableFolder extends JTable
 			$this->name	=	$this->title;
 			$this->name =	JCckDev::toSafeSTRING( $this->name );
 			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
-				$datenow	=	JFactory::getDate();
+				$datenow	=	Factory::getDate();
 				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );
 			}
 		}
@@ -68,7 +72,7 @@ class CCK_TableFolder extends JTable
 			$templates	=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_templates AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
 			$count		=	$types + $fields + $searchs + $templates;
 			if ( (int)$count > 0 ) {
-				JFactory::getApplication()->enqueueMessage( JText::sprintf( 'COM_CCK_DELETE_FOLDER_NOT_ALLOWED', $this->title, $count ), 'error' );
+				Factory::getApplication()->enqueueMessage( Text::sprintf( 'COM_CCK_DELETE_FOLDER_NOT_ALLOWED', $this->title, $count ), 'error' );
 				return false;
 			} else {
 				return parent::delete();

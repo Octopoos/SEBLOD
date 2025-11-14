@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Set
 $displayData	=	array(
 						'config'=>$config,
@@ -31,7 +33,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Clear Blank Lines' ) ),
 									JCckDev::renderForm( 'core_bool2', $this->item->bool7, $config, array( 'type'=>'radio', 'defaultvalue'=>'1', 'label'=>'Form Filter', 'css'=>'btn-group', 'storage_field'=>'bool7' ) )
 								),
-								'legend'=>JText::_( 'COM_CCK_PROCESSING' )
+								'legend'=>Text::_( 'COM_CCK_PROCESSING' )
 							),
 							array(
 								'fields'=>array(

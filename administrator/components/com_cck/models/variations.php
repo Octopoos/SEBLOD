@@ -10,10 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modellist' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Table\Table;
 
 // Model
-class CCKModelVariations extends JModelList
+class CCKModelVariations extends ListModel
 {
 	// __construct
 	public function __construct( $config = array() )
@@ -34,8 +38,7 @@ class CCKModelVariations extends JModelList
 	// getItems
 	public function getItems()
 	{
-		jimport( 'joomla.filesystem.folder' );
-		$folders	=	JFolder::folders( JPATH_LIBRARIES.'/cck/rendering/variations' );
+		$folders	=	Folder::folders( JPATH_LIBRARIES.'/cck/rendering/variations' );
 		$i			=	0;
 		$items		=	array();
 		$variations	=	array(
@@ -74,8 +77,8 @@ class CCKModelVariations extends JModelList
 		if ( count( $templates ) ) {
 			foreach ( $templates as $k=>$template ) {
 				$path	=	'/templates/'.$template.'/variations';
-				if ( JFolder::exists( JPATH_SITE.$path ) ) {
-					$folders	=	JFolder::folders( JPATH_SITE.$path );
+				if ( Folder::exists( JPATH_SITE.$path ) ) {
+					$folders	=	Folder::folders( JPATH_SITE.$path );
 					if ( count( $folders ) ) {
 						foreach ( $folders as $k=>$v ) {
 							if ( $search && strpos( $v, $search ) === false ) {
@@ -118,7 +121,7 @@ class CCKModelVariations extends JModelList
 	// getTable
 	public function getTable( $type = 'Version', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 
 	// getTotal
@@ -130,7 +133,7 @@ class CCKModelVariations extends JModelList
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
-		$app		=	JFactory::getApplication( 'administrator' );
+		$app		=	Factory::getApplication( 'administrator' );
 		
 		$id			=	$app->input->get( 'e_id', '' );
 		if ( $id ) {
@@ -147,7 +150,7 @@ class CCKModelVariations extends JModelList
 		$type	=	$app->getUserStateFromRequest( $this->context.'.filter.e_type', 'filter_e_type', 'type', 'string' );
 		$this->setState( 'filter.e_type', $type );
 		
-		$params		=	JComponentHelper::getParams( CCK_COM );
+		$params		=	ComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
 		parent::populateState( 'b.title', 'asc' );

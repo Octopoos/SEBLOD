@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckEcommerceStore
 abstract class JCckEcommerceStore
 {
@@ -18,7 +20,7 @@ abstract class JCckEcommerceStore
 	{
 		static $cache	=	array();
 		$count	=	0;
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( !isset( $cache[$store_id] ) ) {
 			$cache[$store_id]	=	JCckDatabase::loadResult( 'SELECT COUNT(a.id) FROM #__cck_core AS a'

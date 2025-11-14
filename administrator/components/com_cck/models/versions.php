@@ -10,10 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modellist' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Table\Table;
 
 // Model
-class CCKModelVersions extends JModelList
+class CCKModelVersions extends ListModel
 {
 	// __construct
 	public function __construct( $config = array() )
@@ -134,13 +137,13 @@ class CCKModelVersions extends JModelList
 	// getTable
 	public function getTable( $type = 'Version', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
-		$app		=	JFactory::getApplication( 'administrator' );
+		$app		=	Factory::getApplication( 'administrator' );
 		
 		$id			=	$app->input->get( 'e_id', '' );
 		if ( $id ) {
@@ -156,7 +159,7 @@ class CCKModelVersions extends JModelList
 		$type	=	$app->getUserStateFromRequest( $this->context.'.filter.e_type', 'filter_e_type', 'type', 'string' );
 		$this->setState( 'filter.e_type', $type );
 		
-		$params		=	JComponentHelper::getParams( CCK_COM );
+		$params		=	ComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
 		parent::populateState( 'b.title', 'asc' );

@@ -10,9 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableAsset', JPATH_PLATFORM.'/joomla/database/table/asset.php' );
-JLoader::register( 'JTableUsergroup', JPATH_PLATFORM.'/joomla/database/table/usergroup.php' );
-JLoader::register( 'JTableViewlevel', JPATH_PLATFORM.'/joomla/database/table/viewlevel.php' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
 
 // Model
 class CCKModelSite extends JCckBaseLegacyModelAdmin
@@ -23,7 +22,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		$pk		=	$app->input->getInt( 'id', 0 );
 		
 		if ( ( $type = $app->getUserState( CCK_COM.'.edit.site.type' ) ) != '' ) {
@@ -57,14 +56,14 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Site', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -78,7 +77,7 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		

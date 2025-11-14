@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_FieldStorage extends JCckPluginField
 {
@@ -50,7 +52,7 @@ class plgCCK_FieldStorage extends JCckPluginField
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
 
 		// Prepare
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			$form		=	'';
@@ -61,7 +63,7 @@ class plgCCK_FieldStorage extends JCckPluginField
 			$encryption			=	'';
 
 			if ( isset( $config['item']->id ) && $config['item']->id && isset( $config['item']->storage_table ) && $config['item']->storage_table != '' ) {
-				$db			=	JFactory::getDbo();
+				$db			=	Factory::getDbo();
 				$encryption	=	abs( $config['item']->storage_crypt );
 				$prefix		=	$db->getPrefix();
 				$table		=	str_replace( '#__', $prefix, $config['item']->storage_table );

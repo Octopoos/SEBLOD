@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+
 // Model
 class CCKModelField extends JCckBaseLegacyModelAdmin
 {
@@ -19,7 +24,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// canDelete
 	protected function canDelete( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -33,7 +38,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// canEditState
 	protected function canEditState( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -47,7 +52,7 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		$pk		=	$app->input->getInt( 'id', 0 );
 		
 		if ( $ajaxState	=	(int)$app->getUserState( CCK_COM.'.add.field.ajax_state' ) != '' ) {
@@ -86,14 +91,14 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Field', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -107,20 +112,20 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$data['json']			=	$app->input->post->get( 'json', '', 'raw' );
 		$data['script']			=	$app->input->post->get( 'script', '', 'raw' );
-		$data['storage_table']	=	str_replace( JFactory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
+		$data['storage_table']	=	str_replace( Factory::getConfig()->get( 'dbprefix' ), '#__', $data['storage_table'] );
 
 		if ( is_array( $data['title'] ) ) {
 			$data['title']	=	implode( ' ', $data['title'] );
 		}
 		$data['title']	=	str_replace( '  ', ' ', trim( $data['title'] ) );
 
-		JPluginHelper::importPlugin( 'cck_field' );
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 
 		$app->triggerEvent( 'onCCK_Storage_LocationConstruct', array( @$data['storage_location'], &$data ) );
 		$app->triggerEvent( 'onCCK_FieldConstruct', array( $data['type'], &$data ) );
@@ -135,17 +140,18 @@ class CCKModelField extends JCckBaseLegacyModelAdmin
 	{
 		$orders	=	array();
 		$table	=	$this->getTable();
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( empty( $pks ) ) {
-			return JError::raiseWarning( 500, JText::_($this->text_prefix.'_ERROR_NO_ITEMS_SELECTED' ) );
+			Factory::getApplication()->enqueueMessage( Text::_($this->text_prefix.'_ERROR_NO_ITEMS_SELECTED' ), 'warning' );
+			return false;
 		}
 		
 		foreach ( $pks as $i => $pk ) {
 			$table->load( (int)$pk );
 			if ( ! $this->canEditState( $table ) ) {
 				unset( $pks[$i] );
-				JError::raiseWarning( 403, JText::_( 'JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED' ) );
+				Factory::getApplication()->enqueueMessage( Text::_( 'JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED' ), 'warning' );
 			} elseif ( $table->ordering != $order[$i] || $order[$i] <= 0 || isset( $orders[$order[$i]] ) ) {
 				if ( $order[$i] <= 0 || isset( $orders[$order[$i]] ) ) {
 					$order[$i]		=	$i + 1;

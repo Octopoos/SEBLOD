@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 $config		=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'tmpl' => 'ajax' ) );
 $cck		=	JCckDev::preload( array( 'core_pagination', 'core_cache', 'core_cache2', 'core_dev_text', 'core_limit', 'core_sef', 'core_sef_canonical',
 										 'core_prepare_content', 'core_debug', 'core_auto_redirection', 'core_ordering',
@@ -151,9 +153,9 @@ $(document).ready(function() {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header subhead" id="toolbarBox">
-				<a href="javascript:void(0);" id="submitNote" class="btn btn-small btn-success"><span class="icon-save"></span><?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?></a>
-				<a href="javascript:void(0);" id="resetNote" class="btn btn-small"><span class="icon-refresh"></span><?php echo JText::_( 'COM_CCK_RESET' ); ?></a>
-				<a href="javascript:void(0);" id="closeNote" class="btn btn-small btn-danger" data-bs-dismiss="modal" aria-hidden="true"><span class="icon-unpublish"></span><?php echo JText::_( 'COM_CCK_CANCEL' ); ?></a>
+				<a href="javascript:void(0);" id="submitNote" class="btn btn-small btn-success"><span class="icon-save"></span><?php echo Text::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?></a>
+				<a href="javascript:void(0);" id="resetNote" class="btn btn-small"><span class="icon-refresh"></span><?php echo Text::_( 'COM_CCK_RESET' ); ?></a>
+				<a href="javascript:void(0);" id="closeNote" class="btn btn-small btn-danger" data-bs-dismiss="modal" aria-hidden="true"><span class="icon-unpublish"></span><?php echo Text::_( 'COM_CCK_CANCEL' ); ?></a>
 		    </div>
 			<div class="modal-body">
 				<textarea data-n class="input-xxlarge" id="f_note_textarea" cols="100" rows="3" maxlength="512"></textarea>

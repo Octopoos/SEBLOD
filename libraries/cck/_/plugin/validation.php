@@ -10,8 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
-class JCckPluginValidation extends JPlugin
+class JCckPluginValidation extends CMSPlugin
 {
 	protected static $construction	=	'cck_field_validation';
 	
@@ -21,8 +27,8 @@ class JCckPluginValidation extends JPlugin
 		parent::__construct( $subject, $config );
 
 		// Fix Language
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$lang			=	JFactory::getLanguage();
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 
 			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
@@ -47,7 +53,7 @@ class JCckPluginValidation extends JPlugin
 			$alert				=	$validation->alert;
 			if ( $config['doTranslation'] ) {
 				if ( trim( $alert ) ) {
-					$alert	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
+					$alert	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $alert ) ) );
 				}
 			}
 		} else {
@@ -58,8 +64,8 @@ class JCckPluginValidation extends JPlugin
 				$def				=	$definition;
 				$validation->name	=	$field->validation;
 			}
-			JFactory::getLanguage()->load( 'plg_cck_field_validation_'.$field->validation, JPATH_ADMINISTRATOR, null, false, true );
-			$alert				=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.$field->validation.'_ALERT' );
+			Factory::getLanguage()->load( 'plg_cck_field_validation_'.$field->validation, JPATH_ADMINISTRATOR, null, false, true );
+			$alert				=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.$field->validation.'_ALERT' );
 		}
 		
 		$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
@@ -77,7 +83,7 @@ class JCckPluginValidation extends JPlugin
 	// g_onCCK_Field_ValidationPrepareStore
 	public static function g_onCCK_Field_ValidationPrepareStore( $name, $value, &$config, $type, $rule, $definition )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$error	=	0;
 		
 		if ( $value == '' ) {
@@ -95,8 +101,8 @@ class JCckPluginValidation extends JPlugin
 		}
 		
 		if ( $error == 1 ) {
-			JFactory::getLanguage()->load( 'plg_cck_field_validation_'.$type, JPATH_ADMINISTRATOR, null, false, true );
-			$alert	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.$type.'_ALERT' ) .' - '. $name;
+			Factory::getLanguage()->load( 'plg_cck_field_validation_'.$type, JPATH_ADMINISTRATOR, null, false, true );
+			$alert	=	Text::_( 'PLG_CCK_FIELD_VALIDATION_'.$type.'_ALERT' ) .' - '. $name;
 			$app->enqueueMessage( $alert, 'error' );
 			$config['validate']	=	'error';
 		}
@@ -122,7 +128,7 @@ class JCckPluginValidation extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return Uri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 	
 	// g_getValidation
@@ -135,7 +141,7 @@ class JCckPluginValidation extends JPlugin
 			return $validation;
 		}
 		
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadString( $params );
 
 		if ( !$legacy ) {

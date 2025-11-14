@@ -10,8 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+
 // View
-class JCckBaseLegacyViewList extends JViewLegacy
+class JCckBaseLegacyViewList extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -42,8 +47,8 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'a.title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.id'=>Text::_( 'COM_CCK_ID' ),
+					'a.title'=>Text::_( 'COM_CCK_TITLE' )
 				);
 	}
 	
@@ -55,7 +60,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay()
 	{
-		$app				=	JFactory::getApplication();
+		$app				=	Factory::getApplication();
 		$this->items		=	$this->get( 'Items' );
 		$this->option		=	$app->input->get( 'option', '' );
 		$this->pagination	=	$this->get( 'Pagination' );
@@ -65,7 +70,7 @@ class JCckBaseLegacyViewList extends JViewLegacy
 	// completeUI
 	protected function completeUI()
 	{
-		$this->document->setTitle( JText::_( $this->vTitle.'_MANAGER' ) );
+		$this->document->setTitle( Text::_( $this->vTitle.'_MANAGER' ) );
 	}
 
 	// prepareUI
@@ -87,12 +92,12 @@ class JCckBaseLegacyViewList extends JViewLegacy
 							);
 		$this->html		=	array( 'attr_modal_close'=>'data-dismiss="modal"',
 								   'filter_select_divider'=>'<div class="filter-search pull-right solo">',
-								   'filter_select_header'=>'<h4 class="page-header">'.JText::_( 'JSEARCH_FILTER_LABEL' ).'</h4>',
+								   'filter_select_header'=>'<h4 class="page-header">'.Text::_( 'JSEARCH_FILTER_LABEL' ).'</h4>',
 								   'filter_select_header_custom'=>'<h4 class="page-header">*title*</h4>',
 								   'filter_select_separator'=>'<hr class="hr-condensed" />'
 							);
 		$this->js		=	array( 'filter'=>'' );
-		$this->sidebar	=	JHtmlSidebar::render();
+		$this->sidebar	=	Sidebar::render();
 
 		if ( JCck::on( '4.0' ) ) {
 			$this->css['btn-count']					=	'btn btn-count btn-sm btn-outline-secondary';

@@ -10,11 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 Helper_Include::addDependencies( 'box', 'edit' );
 
 $config	=	JCckDev::init( array( 'select_simple', 'text', 'textarea' ), true, array() );
-$doc	=	JFactory::getDocument();
-$root	=	JUri::root( true );
+$doc	=	Factory::getDocument();
+$root	=	Uri::root( true );
 $doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 $doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $event	=	str_replace( array( "\r", "\n", "\t" ), '', JCckDev::getForm( 'core_computation_event', '', $config, array( 'attributes'=>'style="width:60px; padding:5px 2px;  text-transform:lowercase;"' ) ) );
@@ -26,7 +30,7 @@ $js		=	'
 					reset: function() {
 						var elem = "ffp_'.$this->item->name.'_computation";
 						parent.jQuery("#"+elem).val("");
-						var text = "'.JText::_( 'COM_CCK_ADD' ).'";
+						var text = "'.Text::_( 'COM_CCK_ADD' ).'";
 						parent.jQuery("#"+elem).next("span").html(text);
 						var elem = "ffp_'.$this->item->name.'_computation_options";
 						parent.jQuery("#"+elem).val("");
@@ -78,7 +82,7 @@ $js		=	'
 						encoded	= $.toJSON(computation);
 						var elem = "ffp_'.$this->item->name.'_computation";
 						parent.jQuery("#"+elem).val(data);
-						var text = "&lt; '.JText::_( 'COM_CCK_EDIT' ).' /&gt;";
+						var text = "&lt; '.Text::_( 'COM_CCK_EDIT' ).' /&gt;";
 						parent.jQuery("#"+elem).next("span").html(text);
 						var elem = "ffp_'.$this->item->name.'_computation_options";
 						parent.jQuery("#"+elem).val(encoded);
@@ -183,7 +187,7 @@ if ( (int)$this->item->id > 0 ) {
 	$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 			.	' LEFT JOIN #__cck_core_'.$this->item->type.'_field AS b ON b.fieldid = a.id'
 			.	' WHERE b.'.$this->item->type.'id = '.$this->item->id.' AND a.name != "'.$this->item->name.'" ORDER BY text' );
-	$fields	=	( is_array( $fields ) && count( $fields ) ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
+	$fields	=	( is_array( $fields ) && count( $fields ) ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
 } else {
 	$fields	=	array();
 }
@@ -197,20 +201,20 @@ $selectors	=	explode( ',', $this->item->title );
 ?>
 
 <?php
-echo '<div class="seblod conditional"><div class="legend top left">'.JText::_( 'COM_CCK_COMPUTATION_RULES' ).'</div>'
+echo '<div class="seblod conditional"><div class="legend top left">'.Text::_( 'COM_CCK_COMPUTATION_RULES' ).'</div>'
  .	 '<ul class="adminformlist adminformlist-2cols">'
- .	 '<li class="w100"><label>'.JText::_( 'COM_CCK_COMPUTATION' ).'</label>'
+ .	 '<li class="w100"><label>'.Text::_( 'COM_CCK_COMPUTATION' ).'</label>'
  .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'sum', 'selectlabel'=>'Select', 'required'=>'required', 'storage_field'=>'math',
 					   'options'=>'Custom=custom||Numeric=optgroup||Average=avg||Count=count||Format=format||Max=max||Min=min||Product=product||Sum=sum||String=optgroup||Concatenate=concatenate' ) )
  .	 JCckDev::getForm( 'core_computation_presets', '', $config, array( 'selectlabel'=>'Free' ) )
  .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'size'=>64, 'storage_field'=>'custom' ) )
  .	 '</li>'
- .	 '<li><label>'.JText::_( 'COM_CCK_FIELDS' ).'</label>'
+ .	 '<li><label>'.Text::_( 'COM_CCK_FIELDS' ).'</label>'
  .	 JCckDev::getForm( 'core_options', $selectors, $config, array( 'label'=>'Fields', 'rows'=>1, 'storage_field'=>'fields' ) )
- .	 JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
- .	 '<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" /><label for="toggle_attr" class="toggle_attr">'.JText::_( 'COM_CCK_CUSTOM_ATTRIBUTE_AND_EVENT' ).'</label>'
+ .	 HTMLHelper::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' )
+ .	 '<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" /><label for="toggle_attr" class="toggle_attr">'.Text::_( 'COM_CCK_CUSTOM_ATTRIBUTE_AND_EVENT' ).'</label>'
  .	 '</li>'
- .	 '<li><label>'.JText::_( 'COM_CCK_FORMAT_PRECISION' ).'</label>'
+ .	 '<li><label>'.Text::_( 'COM_CCK_FORMAT_PRECISION' ).'</label>'
  .	 JCckDev::getForm( 'core_computation_format', '', $config )
  .	 JCckDev::getForm( 'core_computation_precision', '', $config )
  .	 '</li>'
@@ -219,5 +223,5 @@ echo '<div class="seblod conditional"><div class="legend top left">'.JText::_( '
  .	 '</ul></div>';
 ?>
 <div class="seblod inverted" style="display:none;">
-	<span class="star">&sup1; </span><span class="star2"><?php echo JText::_( 'COM_CCK_COMPUTATION_CUSTOM_ATTR' ); ?></span><?php echo ' '.JText::_( 'COM_CCK_COMPUTATION_CUSTOM_ATTR_DESC' ); ?>
+	<span class="star">&sup1; </span><span class="star2"><?php echo Text::_( 'COM_CCK_COMPUTATION_CUSTOM_ATTR' ); ?></span><?php echo ' '.Text::_( 'COM_CCK_COMPUTATION_CUSTOM_ATTR_DESC' ); ?>
 </div>

@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+
 require_once JPATH_COMPONENT.'/helpers/helper_version.php';
 require_once JPATH_COMPONENT.'/helpers/helper_workshop.php';
 
@@ -22,7 +26,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// canDelete
 	protected function canDelete( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -36,7 +40,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// canEditState
 	protected function canEditState( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -50,7 +54,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		
 		if ( ! ( $pk = $app->input->getInt( 'id', 0 ) ) ) {
 			if ( $tpl	=	(string)$app->getUserState( CCK_COM.'.add.search.content_type' ) ) {
@@ -103,14 +107,14 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Search', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -124,7 +128,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		$client					=	$data['client'];
@@ -180,7 +184,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// postStore
 	public function postStore( $pk )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$data	=	$app->input->post->getArray();
 		$client	=	$data['client'];
 		
@@ -252,7 +256,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 
 				$content_item->create( 'o_nav_item', $item_data );
 			} else {
-				$item						=	JTable::getInstance( 'Menu' );
+				$item						=	Table::getInstance( 'Menu' );
 				$item->id					=	0;
 				$item->title				=	$data['title'];
 				$item->menutype				=	$quick_item[0];
@@ -281,7 +285,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// storeMore
 	protected function storeMore( $searchId, $client, $fields, $params )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		jimport( 'cck.construction.field.generic_more' );
 		$table	=	'search_field';
 		$method	=	'gm_getConstruction_Values_Search';
@@ -333,13 +337,13 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// duplicate
 	public function duplicate( $pk )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$db		=	$this->getDbo();
 		$title	=	$app->input->getString( 'duplicate_title', '' );
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( ! $user->authorise( 'core.create', CCK_COM ) ) {
-			throw new Exception( JText::_( 'JERROR_CORE_CREATE_NOT_PERMITTED' ) );
+			throw new Exception( Text::_( 'JERROR_CORE_CREATE_NOT_PERMITTED' ) );
 		}
 
 		$table	=	$this->getTable();
@@ -418,7 +422,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 	// _table_no_key_batch
 	protected function _table_no_key_batch( $sql_type, $sql, $table, $key, $val, $excluded = array(), $callback = '' )
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 		
 		if ( $sql_type == 'where' ) {
 			$elems	=	JCckDatabase::loadObjectList( 'SELECT * FROM '.$table.' WHERE '.$sql );

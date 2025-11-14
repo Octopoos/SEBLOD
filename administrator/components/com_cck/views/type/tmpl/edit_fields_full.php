@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 $bar		=	( $this->uix == 'full' ) ? 'on' : 'off';
 $data		=	Helper_Workshop::getParams( 'type', $this->item->master, $this->item->client );
 $data2      =   array(
@@ -25,9 +29,9 @@ $data2      =   array(
                                     )
                 );
 $from_view	=	( $this->item->master == 'content' ) ? ( ( $this->item->client == 'intro' ) ? 'CONTENT' : 'INTRO' ) : ( ( $this->item->client == 'admin' ) ? 'SITE_FORM' : 'ADMIN_FORM' );
-$clone		=	( $this->item->id ) ? JText::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', JText::_( 'COM_CCK_'.$from_view ) ) : '';
+$clone		=	( $this->item->id ) ? Text::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', Text::_( 'COM_CCK_'.$from_view ) ) : '';
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>', 'user_id'=>JFactory::getUser()->id );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>', 'user_id'=>Factory::getUser()->id );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
@@ -39,7 +43,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>
         <?php } else { ?>
             <div class="seblod">
                 <div id="linkage_wrap"><?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLinkage', 'name'=>'core_linkage' ), 1, $config, array( 'storage_field'=>'linkage' ) ); ?></div>
-                <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+                <div class="legend top left"><?php echo Text::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
     			<?php include __DIR__.'/edit_fields_as.php'; ?>
             </div>
         <?php } ?>
@@ -90,14 +94,14 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>
                     if ( $v2 === '_' ) {
                         if ( isset( $data[$k] ) ) {
                             if ( $k == 'variation' ) {
-                                 $data['variation']['300']  =   JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
-                                 $data['variation']['301']  =   JHtml::_( 'select.option', '</OPTGROUP>', '' );
+                                 $data['variation']['300']  =   HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+                                 $data['variation']['301']  =   HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
                             }
-                            echo JHtml::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
+                            echo HTMLHelper::_( 'select.genericlist', $data[$k], '_wk_'.$k, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     } else {
                         if ( is_array( $v2 ) && count( $v2 ) ) {
-                            echo JHtml::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
+                            echo HTMLHelper::_( 'select.genericlist', $v2, '_wk_'.$k.'-'.$k2, 'size="1" class="thin form-select xs hide" data-type="'.$k.'"', 'value', 'text', '' );
                         }
                     }
                 }

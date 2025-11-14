@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarButton;
+
 // JButton
-class JButtonCckScroll extends JButton
+class JButtonCckScroll extends ToolbarButton
 {
 	protected $_name = 'CckScroll';
 	
@@ -20,7 +23,7 @@ class JButtonCckScroll extends JButton
 	{
 		$class	=	$this->fetchIconClass( $name );
 		$doTask	=	$this->_getCommand( $url );
-		$text	=	JText::_( $text );
+		$text	=	Text::_( $text );
 		
 		$html	=	'<a href="'.$doTask.'" class="scroll btn btn-small">'
 				.	'<span class="'.$class.'"></span>'

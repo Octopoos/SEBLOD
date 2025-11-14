@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Form;
+
 // Plugin
 class plgCCK_FieldJForm_GroupParent extends JCckPluginField
 {
@@ -87,7 +89,7 @@ class plgCCK_FieldJForm_GroupParent extends JCckPluginField
 							/>
 						</form>
 					';
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
 		}
 		

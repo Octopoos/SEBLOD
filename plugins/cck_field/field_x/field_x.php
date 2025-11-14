@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldField_X extends JCckPluginField
 {
@@ -39,7 +42,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 		
 		$name		=	$field->name;
 		
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
 		$content	=	array();
@@ -76,7 +79,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			return;
 		}
 
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$name		=	$field->name;
 		$f			=	self::_getChild( $field, $config );
 		$xn			=	$value;
@@ -116,7 +119,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		// Prepare
 		$f		=	self::_getChild( $field, $config );
@@ -191,14 +194,14 @@ class plgCCK_FieldField_X extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$raw	=	JFactory::getApplication()->input->post->getArray( array( $name=>'raw' ) );
+			$raw	=	Factory::getApplication()->input->post->getArray( array( $name=>'raw' ) );
 
 			if ( isset( $raw[$name] ) ) {
 				$value	=	$raw[$name];
 			}
 		}
 
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$value	=	( isset( $config['post'][$name.'_hidden'] ) ) ? $config['post'][$name.'_hidden'] : $value;
 		
 		// Prepare
@@ -279,8 +282,8 @@ class plgCCK_FieldField_X extends JCckPluginField
 	// _addScriptDeclaration
 	protected static function _addScripts( $id, $params = array(), &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		
 		$search					=	array( '.' , '<', '>', '"', '%', ';' );
 		$replace				=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
@@ -361,7 +364,7 @@ class plgCCK_FieldField_X extends JCckPluginField
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} elseif ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.$css_s.'" type="text/css" />';
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
+			echo '<script src="'.Uri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			JCck::loadjQuery();

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $media_ext	=	( $this->isNew ) ? '' : ( ( isset( $options2['media_extensions'] ) ) ? $options2['media_extensions'] : 'custom' );
@@ -22,7 +24,7 @@ for ( $i = 2; $i < 11; $i++ ) {
 	$html	.=	JCckDev::renderForm( 'core_options_thumb_process', @$options2['thumb'.$i.'_process'], $config, array( 'label'=>'Thumb'.$i, 'defaultvalue'=>'', 'storage_field'=>'json[options2][thumb'.$i.'_process]' ) )
 			.	JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_MAXIMUM_SIZE' ),
+													'label'=>Text::_( 'COM_CCK_MAXIMUM_SIZE' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'40%|10%|40%|10%',
 							'html'=>array(
@@ -62,7 +64,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_FOLDER' ),
+													'label'=>Text::_( 'COM_CCK_FOLDER' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'auto|',
 														'html'=>array(
@@ -75,7 +77,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_format_file', @$options2['storage_format'], $config, array( 'options'=>'Full Path=0' ) ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_PATH_PER_CONTENT' ),
+													'label'=>Text::_( 'COM_CCK_PATH_PER_CONTENT' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|50%',
 														'html'=>array(
@@ -88,7 +90,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_path_user', @$options2['path_user'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_LEGAL_EXTENSIONS' ),
+													'label'=>Text::_( 'COM_CCK_LEGAL_EXTENSIONS' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|70%',
 														'html'=>array(
@@ -100,7 +102,7 @@ $displayData	=	array(
 											),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_MAXIMUM_SIZE' ),
+													'label'=>Text::_( 'COM_CCK_MAXIMUM_SIZE' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|25%',
 														'html'=>array(
@@ -114,7 +116,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_delete_box', @$options2['delete_box'], $config ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_SHOW_CUSTOM_PATH' ),
+													'label'=>Text::_( 'COM_CCK_SHOW_CUSTOM_PATH' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|75%',
 														'html'=>array(
@@ -128,7 +130,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_multivalue_mode', @$options2['multivalue_mode'], $config, array( 'label'=>'MULTIVALUE_MODE' ) ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_SHOW_TITLE' ),
+													'label'=>Text::_( 'COM_CCK_SHOW_TITLE' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|75%',
 														'html'=>array(
@@ -141,7 +143,7 @@ $displayData	=	array(
 											JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_SHOW_DESCRIPTION_ALT' ),
+													'label'=>Text::_( 'COM_CCK_SHOW_DESCRIPTION_ALT' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'|75%',
 														'html'=>array(
@@ -161,7 +163,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_image_process', @$options2['image_process'], $config, array( 'label'=>'Image', 'defaultvalue'=>'', 'storage_field'=>'json[options2][image_process]' ) ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_WIDTH_HEIGHT' ),
+													'label'=>Text::_( 'COM_CCK_WIDTH_HEIGHT' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'40%|10%|40%|10%',
 														'html'=>array(
@@ -176,7 +178,7 @@ $displayData	=	array(
 											JCckDev::renderForm( 'core_options_thumb_process', @$options2['thumb1_process'], $config, array( 'label'=>'Thumb1' ) ),
 											JCckDev::renderLayoutFile(
 												'cck'.JCck::v().'.form.field', array(
-													'label'=>JText::_( 'COM_CCK_WIDTH_HEIGHT' ),
+													'label'=>Text::_( 'COM_CCK_WIDTH_HEIGHT' ),
 													'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 														'grid'=>'40%|10%|40%|10%',
 														'html'=>array(
@@ -190,7 +192,7 @@ $displayData	=	array(
 											),
 											$html
 								),
-								'legend'=>JText::_( 'COM_CCK_PROCESSING' )
+								'legend'=>Text::_( 'COM_CCK_PROCESSING' )
 							),
 							array(
 								'fields'=>array(

@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/free/free.php';
 
 // Class
@@ -41,7 +44,7 @@ class plgCCK_Storage_LocationFree_Importer extends plgCCK_Storage_LocationFree
 					$pk		=	( isset( $data[self::$key] ) && (int)$data[self::$key] > 0 ) ? (int)$data[self::$key] : 0;
 				}
 			}
-			$app	=	JFactory::getApplication();
+			$app	=	Factory::getApplication();
 			$table	=	self::_getTable( $pk, $config['table'] );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
@@ -71,7 +74,7 @@ class plgCCK_Storage_LocationFree_Importer extends plgCCK_Storage_LocationFree
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			JPluginHelper::importPlugin( 'content' );
+			PluginHelper::importPlugin( 'content' );
 			$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 			if ( !$table->store() ) {
 				$config['error']	=	true;

@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Tag\TagHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 
 // Class
@@ -50,7 +56,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 				}
 			}
 
-			$app	=	JFactory::getApplication();
+			$app	=	Factory::getApplication();
 			$table	=	self::_getTable( $pk );
 			$isNew	=	( $table->{self::$key} > 0 ) ? false : true;
 			$iPk	=	0;
@@ -74,7 +80,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 				unset( $table->tags );
 			}
 			if ( isset( $data['tags'] ) ) {
-				$table->tags	=	new JHelperTags;
+				$table->tags	=	new TagHelper;
 				$data['tags']	=	explode( ',', $data['tags'] );
 				if ( !empty( $data['tags'] ) && $data['tags'][0] != '' ) {
 					$table->newTags	=	$data['tags'];
@@ -89,11 +95,11 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			}
 			if ( $isNew && !isset( $data['rules'] ) ) {
 				$data['rules']	=	array( 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array() );
-				$rules			=	new JAccessRules( $data['rules'] );
+				$rules			=	new Rules( $data['rules'] );
 				$table->setRules( $rules );
 			}
 			if ( !@$table->title ) {
-				$table->title	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' ) ;
+				$table->title	=	Factory::getDate()->format( 'Y-m-d-H-i-s' ) ;
 				$table->check();
 				$table->alias	.=	'-'.$config['x'];
 			} else {
@@ -102,7 +108,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 			self::_completeTable( $table, $data, $config );
 			
 			// Store
-			JPluginHelper::importPlugin( 'content' );
+			PluginHelper::importPlugin( 'content' );
 			$app->triggerEvent( 'onContentBeforeSave', array( self::$context, &$table, $isNew, $data ) );
 			if ( !$table->store() ) {
 				$error		=	true;
@@ -110,7 +116,7 @@ class plgCCK_Storage_LocationJoomla_Article_Importer extends plgCCK_Storage_Loca
 				if ( $isNew ) {
 					$i		=	2;
 					$alias	=	$table->alias.'-'.$i;
-					$test	=	JTable::getInstance( 'Content' );
+					$test	=	Table::getInstance( 'Content' );
 					
 					while ( $test->load( array( 'alias'=>$alias, 'catid'=>$table->catid ) ) ) {
 						$alias		=	$table->alias.'-'.$i++;

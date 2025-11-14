@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldJForm_AccessLevel extends JCckPluginField
 {
@@ -85,7 +88,7 @@ class plgCCK_FieldJForm_AccessLevel extends JCckPluginField
 		$opt	=	'';
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
-				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
 			$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
 		}
@@ -102,7 +105,7 @@ class plgCCK_FieldJForm_AccessLevel extends JCckPluginField
 						>'.$opt.'</field>
 					</form>
 				';	
-		$form	=	JForm::getInstance( $id, $xml );
+		$form	=	Form::getInstance( $id, $xml );
 		$form	=	$form->getInput( $name, '', $value );
 		
 		// Set

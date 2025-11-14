@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
 // JCckType
@@ -72,9 +75,9 @@ class JCckField2
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		JLoader::register( 'CCK_TableField', JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php' );
+		\JLoader::register( 'CCK_TableField', JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php' );
 
-		$this->_instance_base	=	JTable::getInstance( 'Field', 'CCK_Table' );
+		$this->_instance_base	=	Table::getInstance( 'Field', 'CCK_Table' );
 		$this->_setDataMap( 'base' );
 
 		return true;
@@ -496,7 +499,7 @@ class JCckField2
 	// prepare
 	public function prepare( $mode = 'content', $override = array() )
 	{
-		JPluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field' );
 
 		$config			=	array(
 								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', ( JCck::is( '4' ) ? 1 : 0 ) )
@@ -507,7 +510,7 @@ class JCckField2
 			$data_object->$k	=	$v;
 		}
 
-		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepare'.ucfirst( $mode ), array( &$data_object, $this->_value, &$config ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepare'.ucfirst( $mode ), array( &$data_object, $this->_value, &$config ) );
 
 		$table_instance_name	=	'base';
 

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
+
 jimport( 'cck.construction.field.generic_app' );
 
 // Class
@@ -58,7 +60,7 @@ class plgCCK_Field_LinkCck_Form_App extends plgCCK_FieldGeneric_App
 	// _updateExportItemId
 	protected static function _updateExportItemId( $field, &$field_join, &$data )
 	{
-		$json	=	new JRegistry( (string)$field_join->link_options );
+		$json	=	new Registry( (string)$field_join->link_options );
 		$itemId	=	$json->get( 'itemid', '' );
 
 		if ( $itemId ) {
@@ -74,7 +76,7 @@ class plgCCK_Field_LinkCck_Form_App extends plgCCK_FieldGeneric_App
 	// _updateImportItemId
 	protected static function _updateImportItemId( $field, &$field_join, $data )
 	{
-		$json	=	new JRegistry( (string)$field_join->link_options );
+		$json	=	new Registry( (string)$field_join->link_options );
 		$itemId	=	$json->get( 'itemid', '' );
 
 		if ( $itemId ) {

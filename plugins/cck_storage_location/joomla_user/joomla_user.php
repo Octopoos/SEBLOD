@@ -10,7 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\User;
+use Joomla\CMS\User\UserHelper;
+use Joomla\CMS\Application\ApplicationHelper;
 
 // Plugin
 class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
@@ -169,8 +177,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			require_once JPATH_SITE.'/components/com_content/router.php';
 		}
 		
-		JPluginHelper::importPlugin( 'content' );
-		$params	=	JComponentHelper::getParams( 'com_content' );
+		\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'content' );
+		$params	=	ComponentHelper::getParams( 'com_content' );
 	}
 	
 	// onCCK_Storage_LocationPrepareOrder
@@ -198,8 +206,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		}
 		
 		// Init
-		$db		=	JFactory::getDbo();
-		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		$db		=	Factory::getDbo();
+		$now	=	substr( Factory::getDate()->toSql(), 0, -3 );
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {
@@ -253,7 +261,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$table	=	self::_getTable( $pk );
 		
 		if ( !$table ) {
@@ -267,12 +275,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
 			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
 			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
-			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
 		
 		// Process
-		JPluginHelper::importPlugin( 'user' );
+		\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'user' );
 		
 		$result	=	$app->triggerEvent( 'onUserBeforeDelete', array( $table->getProperties() ) );
 		if ( in_array( false, $result, true ) ) {
@@ -291,8 +299,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// _core
 	protected function _core( $data, &$config = array(), $pk = 0 )
 	{
-		$app			=	JFactory::getApplication();
-		$parameters		=	JComponentHelper::getParams( 'com_users' );
+		$app			=	Factory::getApplication();
+		$parameters		=	ComponentHelper::getParams( 'com_users' );
 		$data['params']	=	( isset( $data['params'] ) ) ? JCckDev::fromJSON( $data['params'] ) : array();	//Fix
 		
 		if ( ! $config['id'] ) {
@@ -312,11 +320,11 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				$activation		=	$parameters->get( 'useractivation' );
 
 				if ( empty( $data['password'] ) ) {
-					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password']	=	UserHelper::genRandomPassword( 20 );
 					$data['password2']	=	$data['password'];
 				}
 				if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
-					$data['activation']					=	JApplicationHelper::getHash( JUserHelper::genRandomPassword() );
+					$data['activation']					=	ApplicationHelper::getHash( UserHelper::genRandomPassword() );
 					$data['block']						=	1;
 					$config['registration_activation']	=	$data['activation'];
 				}
@@ -324,12 +332,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			
 			// Prepare
 			$table->bind( $data );
-			JPluginHelper::importPlugin( 'user' );
+			\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'user' );
 			self::_completeTable_fromSite( $table, $data, $config, $parameters );
 			
 			// Store
 			if ( ! $table->save() ) {
-				$app->enqueueMessage( JText::sprintf( 'COM_CCK_REGISTRATION_SAVE_FAILED', $table->getError() ), 'error' );
+				$app->enqueueMessage( Text::sprintf( 'COM_CCK_REGISTRATION_SAVE_FAILED', $table->getError() ), 'error' );
 				$config['error']	=	true;
 
 				return false;
@@ -362,7 +370,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			// Prepare
 			if ( is_array( $data ) ) {
 				if ( $isNew && empty( $data['password'] ) ) {
-					$data['password']	=	JUserHelper::genRandomPassword( 20 );
+					$data['password']	=	UserHelper::genRandomPassword( 20 );
 					$data['password2']	=	$data['password'];
 				}
 				$table->bind( $data );
@@ -387,7 +395,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JUser::getInstance( $pk );
+		$table	=	User::getInstance( $pk );
 		
 		return $table;
 	}
@@ -395,7 +403,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// _getTable_fromSite
 	protected static function _getTable_fromSite( $pk = 0 )
 	{
-		$table	=	new JUser( $pk );
+		$table	=	User::getInstance( $pk );
 		
 		return $table;
 	}
@@ -406,12 +414,12 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( ! $table->{self::$key} ) {
 			parent::g_initTable( $table, $config['params'], $force );
 		} else {
-			$my	=	JFactory::getUser();
+			$my	=	Factory::getUser();
 			
 			// You cannot block yourself!
 			if ( $data['block'] && $table->{self::$key} == $my->{self::$key} && ! $my->block ) {
-				$app	=	JFactory::getApplication();
-				$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_CANNOT_BLOCK_SELF' ), 'error' );
+				$app	=	Factory::getApplication();
+				$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_CANNOT_BLOCK_SELF' ), 'error' );
 				self::$error	=	true;
 			}
 			
@@ -424,8 +432,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$stillSuperAdmin	=	( $stillSuperAdmin ) ? ( $stillSuperAdmin ) : JAccess::checkGroup( $group, 'core.admin' );
 				}
 				if ( ! $stillSuperAdmin ) {
-					$app	=	JFactory::getApplication();
-					$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_CANNOT_DEMOTE_SELF' ), 'error' );
+					$app	=	Factory::getApplication();
+					$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_CANNOT_DEMOTE_SELF' ), 'error' );
 					self::$error	=	true;
 				}
 			}
@@ -438,7 +446,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		if ( ! $table->{self::$key} ) {
 			parent::g_initTable( $table, $config['params'], $force );
 		} else {
-			if ( !JFactory::getUser()->authorise( 'core.admin', 'com_users' ) ) {
+			if ( !Factory::getUser()->authorise( 'core.admin', 'com_users' ) ) {
 				unset( $data['block'] );
 			}
 		}
@@ -478,7 +486,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				$table->groups	=	array( 0=>$parameters->get( 'new_usertype', 2 ) );
 			}
 		} else {
-			if ( JFactory::getUser()->authorise( 'core.admin', 'com_users' ) ) {
+			if ( Factory::getUser()->authorise( 'core.admin', 'com_users' ) ) {
 				if ( $table->groups ) {
 					if ( !is_array( $table->groups ) ) {
 						if ( strpos( $table->groups, ',' ) !== false ) {
@@ -490,7 +498,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					$table->groups	=	array_unique( $table->groups );
 				}
 			} else {
-				$table->groups	=	JUserHelper::getUserGroups( $table->{self::$key} );
+				$table->groups	=	UserHelper::getUserGroups( $table->{self::$key} );
 			}
 		}
 	}
@@ -498,21 +506,21 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	// _sendMail
 	protected static function _sendMails( $table, $activation, $auto_email, $admin_emails, $sendpassword )
 	{
-		$config				=	JFactory::getConfig();
+		$config				=	Factory::getConfig();
 		$data				=	$table->getProperties();
 		$data['fromname']	=	$config->get( 'fromname' );
 		$data['mailfrom']	=	$config->get( 'mailfrom' );
 		$data['sitename']	=	$config->get( 'sitename' );
-		$data['siteurl']	=	JUri::root();
+		$data['siteurl']	=	Uri::root();
 		
 		if ( $auto_email ) {
 			switch ( $activation ) {
 				case 2:
-					$base				=	JUri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
-					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
-					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
+					$base				=	Uri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
+					$data['activate']	=	$base.Route::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
+					$subject			=	Text::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 					if ( $sendpassword ) {
-						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY',
+						$body			=	Text::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY',
 															$data['name'],
 															$data['sitename'],
 															$data['activate'],
@@ -521,7 +529,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 															$data['password_clear']
 											);
 					} else {
-						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY_NOPW',
+						$body			=	Text::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ADMIN_ACTIVATION_BODY_NOPW',
 															$data['name'],
 															$data['sitename'],
 															$data['activate'],
@@ -531,11 +539,11 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					}
 					break;
 				case 1:
-					$base				=	JUri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
-					$data['activate']	=	$base.JRoute::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
-					$subject			=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
+					$base				=	Uri::getInstance()->toString( array( 'scheme', 'user', 'pass', 'host', 'port' ) );
+					$data['activate']	=	$base.Route::_( 'index.php?option=com_users&task=registration.activate&token='.$data['activation'], false );
+					$subject			=	Text::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 					if ( $sendpassword ) {
-						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY',
+						$body			=	Text::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY',
 															$data['name'],
 															$data['sitename'],
 															$data['activate'],
@@ -544,7 +552,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 															$data['password_clear']
 											);
 					} else {
-						$body			=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY_NOPW',
+						$body			=	Text::sprintf( 'COM_CCK_EMAIL_REGISTERED_WITH_ACTIVATION_BODY_NOPW',
 															$data['name'],
 															$data['sitename'],
 															$data['activate'],
@@ -554,9 +562,9 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					}
 					break;
 				default:
-					$subject	=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
+					$subject	=	Text::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
 					if ( $sendpassword ) {
-						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
+						$body	=	Text::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY',
 													$data['name'],
 													$data['sitename'],
 													$data['siteurl'],
@@ -564,7 +572,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 													$data['password_clear']
 									);
 					} else {
-						$body	=	JText::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY_NOPW',
+						$body	=	Text::sprintf(	'COM_CCK_EMAIL_REGISTERED_BODY_NOPW',
 													$data['name'],
 													$data['sitename'],
 													$data['siteurl']
@@ -572,19 +580,19 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 					}
 					break;
 			}
-			JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $data['email'], $subject, $body );
+			Factory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $data['email'], $subject, $body );
 		}
 		
 		if ( ( $activation < 2 ) && ( $admin_emails == 1 ) ) {
-			$subject	=	JText::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
-			$body 		=	JText::sprintf( 'COM_CCK_EMAIL_REGISTERED_NOTIFICATION_TO_ADMIN_BODY', $data['name'], $data['username'], $data['siteurl'] );
+			$subject	=	Text::sprintf( 'COM_CCK_EMAIL_ACCOUNT_DETAILS', $data['name'], $data['sitename'] );
+			$body 		=	Text::sprintf( 'COM_CCK_EMAIL_REGISTERED_NOTIFICATION_TO_ADMIN_BODY', $data['name'], $data['username'], $data['siteurl'] );
 			$rows		=	JCckDatabase::loadObjectList( 'SELECT name, email, sendEmail FROM #__users WHERE sendEmail = 1' );
 			
 			if ( count( $rows ) ) {
 				foreach ( $rows as $row ) {
-					$return	=	JFactory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
+					$return	=	Factory::getMailer()->sendMail( $data['mailfrom'], $data['fromname'], $row->email, $subject, $body );
 					if ( $return !== true ) {
-						JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_REGISTRATION_ACTIVATION_NOTIFY_SEND_MAIL_FAILED' ), 'error' );
+						Factory::getApplication()->enqueueMessage( Text::_( 'COM_CCK_REGISTRATION_ACTIVATION_NOTIFY_SEND_MAIL_FAILED' ), 'error' );
 						
 						return false;
 					}
@@ -634,7 +642,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route, false );
+			return Route::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -664,7 +672,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route, false );
+		return Route::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute

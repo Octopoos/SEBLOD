@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php'; /* TODO#SEBLOD: >> core_storage_location */
 
@@ -65,7 +67,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Rel', 'size'=>24, 'storage_field'=>'rel' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_TITLE' ),
+						'label'=>Text::_( 'COM_CCK_TITLE' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|50%',
 							'html'=>array(
@@ -81,7 +83,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Absolute=1||Relative=0||Resource as Fragment=optgroup||Absolute Resource=2||Only Fragment=3', 'storage_field'=>'path_type' ) ),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Site', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>$options, 'bool8'=>false, 'storage_field'=>'site' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		)
 	),
 	'html'=>'',

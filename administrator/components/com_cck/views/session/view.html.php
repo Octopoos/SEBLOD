@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 require_once JPATH_COMPONENT.'/helpers/helper_session.php';
 
 // View
@@ -21,7 +23,7 @@ class CCKViewSession extends JCckBaseLegacyViewForm
 	// prepareDisplay
 	protected function prepareDisplay()
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$model 			=	$this->getModel();
 		$this->form		=	$this->get( 'Form' );
 		$this->item		=	$this->get( 'Item' );

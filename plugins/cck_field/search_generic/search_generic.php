@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldSearch_Generic extends JCckPluginField
 {
@@ -84,7 +87,7 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 				preg_match_all( $search, $field->attributes, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $text ) {
-						$field->attributes	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
+						$field->attributes	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $field->attributes );
 					}
 				}
 			}
@@ -136,7 +139,7 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 			$i					=	0;
 			$akas				=	array();
 			$isMultiLanguage	=	JCckDevHelper::isMultilingual();
-			$lang				=	JFactory::getLanguage();
+			$lang				=	Factory::getLanguage();
 			$options2			=	json_decode( $field->options2, true );
 			
 			foreach ( $field->children as $child ) {

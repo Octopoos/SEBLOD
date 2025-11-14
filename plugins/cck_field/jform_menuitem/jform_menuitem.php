@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -46,10 +50,10 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 		$html			=	'';
 		$text			=	'';
 		if ( $value ) {
-			$app		=	JFactory::getApplication();
+			$app		=	Factory::getApplication();
 			$menu		=	$app->getMenu()->getItem( $value );
 			if ( is_object( $menu ) ) {
-				$link		=	JRoute::_( 'index.php?Itemid='.$value );
+				$link		=	Route::_( 'index.php?Itemid='.$value );
 				$text		=	$menu->title;
 				$html		=	'<a href="'.$link.'">'.$text.'</a>';
 			} else {
@@ -98,7 +102,7 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 		$options	=	explode( '||', $field->options );
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
-				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
 			$opt	=	'<option value="">'.'- '.$field->selectlabel.' -'.'</option>';
 		}
@@ -117,7 +121,7 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 						$o		=	array( 0=>$val, 1=>$val );	
 					}
 					if ( $field->bool8 && trim( $o[0] ) ) {
-						$o[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o[0] ) ) );
+						$o[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o[0] ) ) );
 					}
 					if ( $o['1'] == 'optgroup' ) {
 						if ( $group ) {
@@ -146,7 +150,7 @@ class plgCCK_FieldJForm_MenuItem extends JCckPluginField
 							>'.$opt.'</field>
 						</form>
 					';
-		$form		=	JForm::getInstance( $id, $xml );
+		$form		=	Form::getInstance( $id, $xml );
 		$form		=	$form->getInput( $name, '', $value );
 		if ( strpos( $id, '-' ) !== false ) {
 			$id2	=	str_replace( '-', '_', $id );

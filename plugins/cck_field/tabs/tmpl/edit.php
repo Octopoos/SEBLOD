@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::forceStorage();
 
@@ -33,7 +35,7 @@ $displayData	=	array(
 														'grid'=>'|25%',
 														'html'=>array(
 															JCckDev::getForm( 'core_pane_behavior', $this->item->bool, $config ),
-															JCckDev::getForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'variation'=>'custom_number', 'attributes'=>'min="0" placeholder="'.JText::_( 'COM_CCK_0' ).'" style="text-align:center;"' ) )
+															JCckDev::getForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'variation'=>'custom_number', 'attributes'=>'min="0" placeholder="'.Text::_( 'COM_CCK_0' ).'" style="text-align:center;"' ) )
 														)
 													) )
 												)

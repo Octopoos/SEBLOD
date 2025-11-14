@@ -10,25 +10,27 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 if ( is_object( $this->style ) ) {
 	$this->style->params	=	JCckDev::fromJSON( $this->style->params );
 }
 ?>
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
+        <div class="legend top left"><?php echo Text::_( 'COM_CCK_RENDERING' ) . '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( $cck['core_template'], $this->style->template, $config );
 			echo '<input type="hidden" name="template2" value="'.$this->style->template.'" />';
 			$style_title	=	( strlen( $this->style->title ) > 32 ) ? substr( $this->style->title, 0, 32 ).'...' : $this->style->title;
-			echo '<li><label>'.JText::_( 'COM_CCK_STYLE' ).'</label><span class="variation_value adminformlist-maxwidth" title="'.$this->style->title.'">'.$style_title.'</span>'
+			echo '<li><label>'.Text::_( 'COM_CCK_STYLE' ).'</label><span class="variation_value adminformlist-maxwidth" title="'.$this->style->title.'">'.$style_title.'</span>'
 			 .	 '<input class="inputbox" type="hidden" id="template_'.$this->item->client.'" name="template_'.$this->item->client.'" value="'.$this->style->id.'" /></li>';
             ?>
         </ul>
 	</div>
 	<div class="seblod">
-		<div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_GLOBAL' ); ?></div>
+		<div class="legend top left"><?php echo '&rArr; ' . Text::_( 'COM_CCK_GLOBAL' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
 			echo JCckDev::renderForm( 'core_dev_textarea', @$this->style->params['rendering_css_class'], $config, array( 'label'=>'Root Class', 'rows'=>'1', 'cols'=>'88', 'storage_field'=>'params[rendering_css_class]' ), array(), 'w100' );

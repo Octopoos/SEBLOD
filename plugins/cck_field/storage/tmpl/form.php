@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Plugin\PluginHelper;
+
 if ( $config['tmpl'] == 'ajax' ) {
 	$js	=	'';
 } else {
@@ -217,7 +222,7 @@ $js		=	'
 			'
 			;
 
-$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+$prefix	=	Factory::getConfig()->get( 'dbprefix' );
 
 if ( strpos( (string)$config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
@@ -233,7 +238,7 @@ if ( $config['item']->storage_field2 ) {
 }
 
 $dataObj	=	array();
-$objects	=	JPluginHelper::getPlugin( 'cck_storage_location' );
+$objects	=	PluginHelper::getPlugin( 'cck_storage_location' );
 
 foreach ( $objects as $o ) {
 	if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$o->name.'/tmpl/edit.php' ) ) {
@@ -259,7 +264,7 @@ $fields	=	array(
 				JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_mode' ), $value, $config, array( 'storage_field'=>'storage' ) ),
 				JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation', 'name'=>'core_storage_location' ), $config['item']->storage_location, $config, array( 'storage_field'=>'storage_location' ) ),
 				JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.input', array(
-					'input'=>JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config, array( 'css'=>'storage-target', 'attributes'=>'placeholder="'.JText::_( "COM_CCK_STORAGE_COLUMN_NAME" ).'"' ) ),
+					'input'=>JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config, array( 'css'=>'storage-target', 'attributes'=>'placeholder="'.Text::_( "COM_CCK_STORAGE_COLUMN_NAME" ).'"' ) ),
 					'button'=>'<button type="button" id="storage_field_pick" name="storage_field_pick" class="btn btn-secondary"><span class="icon-expand"></span></button>'
 				) ),
 				JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit.storage_objects', array( 'items'=>$dataObj ) )
@@ -306,7 +311,7 @@ $displayData	=	array(
 						'type'=>$config['item']->type
 					);
 
-$layout	=	new JLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit.storage' );
+$layout	=	new FileLayout( 'cck'.JCck::v().'.construction.cck_field.edit.storage' );
 
 echo $layout->render( $displayData );
 

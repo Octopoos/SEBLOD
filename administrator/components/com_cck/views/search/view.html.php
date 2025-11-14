@@ -10,11 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+
 ini_set( 'memory_limit', '512M' );
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_workshop.php';
 
 // View
-class CCKViewSearch extends JViewLegacy
+class CCKViewSearch extends HtmlView
 {
 	protected $form;
 	protected $item;
@@ -84,10 +88,10 @@ class CCKViewSearch extends JViewLegacy
 	{
 		$title	=	'COM_CCK_SEARCH_TYPE';
 
-		if ( JFactory::getLanguage()->hasKey( $title.'2' ) ) {
+		if ( Factory::getLanguage()->hasKey( $title.'2' ) ) {
 			$title	=	$title.'2';
 		}
-		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( $title );
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : Text::_( 'COM_CCK_ADD_NEW' ) ).' '.Text::_( $title );
 
 		$this->document->setTitle( $title );
 	}
@@ -101,7 +105,7 @@ class CCKViewSearch extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay()
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->form		=	$this->get( 'Form' );
 		$this->item		=	$this->get( 'Item' );
 		$this->option	=	$app->input->get( 'option', '' );

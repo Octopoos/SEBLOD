@@ -10,15 +10,18 @@
 
 defined( 'JPATH_PLATFORM' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\FormField;
 
-jimport( 'joomla.html.html' );
-jimport( 'cck.joomla.access.access' );
+// jimport( 'joomla.html.html' );
+// jimport( 'cck.joomla.access.access' );
 
 /* TODO#SEBLOD: compare */
 
 // JFormField
-class JFormFieldCCKRules extends JFormField
+class JFormFieldCCKRules extends FormField
 {
 	/**
 	 * The form field type.
@@ -39,7 +42,7 @@ class JFormFieldCCKRules extends JFormField
 	protected function getInput()
 	{
 		if ( !JCck::on( '4.0' ) ) {
-			JHtml::_('behavior.tooltip');
+			HTMLHelper::_('behavior.tooltip');
 		}
 
 		// Initialise some field attributes.
@@ -65,7 +68,7 @@ class JFormFieldCCKRules extends JFormField
 		// Get the explicit rules for this asset.
 		if ($section == 'component') {
 			// Need to find the asset id by the name of the component.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$db->setQuery('SELECT id FROM #__assets WHERE name = ' . $db->quote($component));
 			$assetId = (int) $db->loadResult();
 		}
@@ -78,7 +81,7 @@ class JFormFieldCCKRules extends JFormField
 		// Use the compact form for the content rules (deprecated).
 		/* @todo remove code:
 		if (!empty($component) && $section != 'component') {
-			return JHtml::_('rules.assetFormWidget', $actions, $assetId, $assetId ? null : $component, $this->name, $this->id);
+			return HTMLHelper::_('rules.assetFormWidget', $actions, $assetId, $assetId ? null : $component, $this->name, $this->id);
 		}
 		*/
 
@@ -98,7 +101,7 @@ class JFormFieldCCKRules extends JFormField
 		$html = array();
 
 		// Description
-		$html[] = '<p class="rule-desc">' . JText::_('JLIB_RULES_SETTINGS_DESC') . '</p>';
+		$html[] = '<p class="rule-desc">' . Text::_('JLIB_RULES_SETTINGS_DESC') . '</p>';
 
 		// Begin tabs
 		if ( JCck::on( '4.0' ) ) {
@@ -152,18 +155,18 @@ class JFormFieldCCKRules extends JFormField
 			$html[] =					'<tr>';
 
 			$html[] =						'<th class="actions" id="actions-th' . $group->value . '">';
-			$html[] =							'<span class="acl-action">' . JText::_('JLIB_RULES_ACTION') . '</span>';
+			$html[] =							'<span class="acl-action">' . Text::_('JLIB_RULES_ACTION') . '</span>';
 			$html[] =						'</th>';
 
 			$html[] =						'<th class="settings" id="settings-th' . $group->value . '">';
-			$html[] =							'<span class="acl-action">' . JText::_('JLIB_RULES_SELECT_SETTING') . '</span>';
+			$html[] =							'<span class="acl-action">' . Text::_('JLIB_RULES_SELECT_SETTING') . '</span>';
 			$html[] =						'</th>';
 
 			// The calculated setting is not shown for the root group of global configuration.
 			$canCalculateSettings = ($group->parent_id || !empty($component));
 			if ($canCalculateSettings) {
 				$html[] =					'<th id="aclactionth' . $group->value . '">';
-				$html[] =						'<span class="acl-action">' . JText::_('JLIB_RULES_CALCULATED_SETTING') . '</span>';
+				$html[] =						'<span class="acl-action">' . Text::_('JLIB_RULES_CALCULATED_SETTING') . '</span>';
 				$html[] =					'</th>';
 			}
 
@@ -175,8 +178,8 @@ class JFormFieldCCKRules extends JFormField
 			{
 				$html[] =				'<tr>';
 				$html[] =					'<td headers="actions-th' . $group->value . '">';
-				$html[] =						'<label class="tip" for="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(JText::_($action->title).' '.JText::_($action->description), ENT_COMPAT, 'UTF-8').'">';
-				$html[] =						JText::_($action->title);
+				$html[] =						'<label class="tip" for="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="'.htmlspecialchars(Text::_($action->title).' '.Text::_($action->description), ENT_COMPAT, 'UTF-8').'">';
+				$html[] =						Text::_($action->title);
 				$html[] =						'</label>';
 				$html[] =					'</td>';
 
@@ -189,17 +192,17 @@ class JFormFieldCCKRules extends JFormField
 						$value	=	0;
 					}
 					if ( $value != '' && $value > 0 ) {
-						$allowed		=	JText::_( 'COM_CCK_RESTRICTED' );
+						$allowed		=	Text::_( 'COM_CCK_RESTRICTED' );
 						$inheritedRule	=	true;
 					} else {
-						$allowed		=	JText::_( 'COM_CCK_UNLIMITED' );
+						$allowed		=	Text::_( 'COM_CCK_UNLIMITED' );
 						$inheritedRule	=	true;
 					}
 					
-					$html[]	=	'<input class="form-control inputbox" type="text" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '" value="'.$value.'" size="8" />';
+					$html[]	=	'<input class="form-control inputbox" type="text" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . Text::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', Text::_($action->title), trim($group->text)) . '" value="'.$value.'" size="8" />';
 				} else {
 				
-					$html[] = '<select class="form-select inputbox" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '">';
+					$html[] = '<select class="form-select inputbox" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . Text::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', Text::_($action->title), trim($group->text)) . '">';
 
 					$inheritedRule	= CCKAccess::checkGroup($group->value, $action->name, $assetId);
 
@@ -210,19 +213,19 @@ class JFormFieldCCKRules extends JFormField
 
 					// The parent group has "Not Set", all children can rightly "Inherit" from that.
 					$html[] = '<option value=""' . ($assetRule === null ? ' selected="selected"' : '') . '>' .
-								JText::_(empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED') . '</option>';
+								Text::_(empty($group->parent_id) && empty($component) ? 'JLIB_RULES_NOT_SET' : 'JLIB_RULES_INHERITED') . '</option>';
 					$html[] = '<option value="1"' . ($assetRule === true ? ' selected="selected"' : '') . '>' .
-								JText::_('JLIB_RULES_ALLOWED') . '</option>';
+								Text::_('JLIB_RULES_ALLOWED') . '</option>';
 					$html[] = '<option value="0"' . ($assetRule === false ? ' selected="selected"' : '') . '>' .
-								JText::_('JLIB_RULES_DENIED') . '</option>';
+								Text::_('JLIB_RULES_DENIED') . '</option>';
 
 					$html[] = '</select>&#160; ';
 					
-					$allowed	=	JText::_( 'JLIB_RULES_ALLOWED' );
+					$allowed	=	Text::_( 'JLIB_RULES_ALLOWED' );
 				}
 				// If this asset's rule is allowed, but the inherited rule is deny, we have a conflict.
 				if (($assetRule === true) && ($inheritedRule === false)) {
-					$html[] = JText::_('JLIB_RULES_CONFLICT');
+					$html[] = Text::_('JLIB_RULES_CONFLICT');
 				}
 
 				$html[] = '</td>';
@@ -238,7 +241,7 @@ class JFormFieldCCKRules extends JFormField
 					if (CCKAccess::checkGroup($group->value, 'core.admin', $assetId) !== true)
 					{
 						if ($inheritedRule === null) {
-							$html[] =	'<span class="label label-important">' . JText::_('JLIB_RULES_NOT_ALLOWED'). '</span>';
+							$html[] =	'<span class="label label-important">' . Text::_('JLIB_RULES_NOT_ALLOWED'). '</span>';
 						}
 						elseif ($inheritedRule === true)
 						{
@@ -247,33 +250,33 @@ class JFormFieldCCKRules extends JFormField
 						elseif ($inheritedRule === false) {
 							if ($assetRule === false) {
 								$html[] = '<span class="label label-important">'.
-											JText::_('JLIB_RULES_NOT_ALLOWED').'</span>';
+											Text::_('JLIB_RULES_NOT_ALLOWED').'</span>';
 							}
 							else {
 								$html[] = '<span class="label"><span class="icon-lock icon-white"></span>'.
-											JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED').'</span>';
+											Text::_('JLIB_RULES_NOT_ALLOWED_LOCKED').'</span>';
 							}
 						}
 					}
 					elseif (!empty($component)) {
 						$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
-									JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
+									Text::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 					}
 					else {
 						// Special handling for  groups that have global admin because they can't  be denied.
 						// The admin rights can be changed.
 						if ($action->name === 'core.admin') {
 							$html[] = '<span class="label label-success">'.
-										JText::_('JLIB_RULES_ALLOWED').'</span>';
+										Text::_('JLIB_RULES_ALLOWED').'</span>';
 						}
 						elseif ($inheritedRule === false) {
 							// Other actions cannot be changed.
 							$html[] = '<span class="label label-important"><span class="icon-lock icon-white"></span>'.
-										JText::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT').'</span>';
+										Text::_('JLIB_RULES_NOT_ALLOWED_ADMIN_CONFLICT').'</span>';
 						}
 						else {
 							$html[] = '<span class="label label-success"><span class="icon-lock icon-white"></span>'.
-										JText::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
+										Text::_('JLIB_RULES_ALLOWED_ADMIN').'</span>';
 						}
 					}
 
@@ -302,17 +305,17 @@ class JFormFieldCCKRules extends JFormField
 
 		$html[] = '<div class="alert">';
 		if ($section == 'component' || $section == null ) {
-			$html[] = JText::_('JLIB_RULES_SETTING_NOTES');
+			$html[] = Text::_('JLIB_RULES_SETTING_NOTES');
 		} else {
-			$html[] = JText::_('JLIB_RULES_SETTING_NOTES_ITEM');
+			$html[] = Text::_('JLIB_RULES_SETTING_NOTES_ITEM');
 		}
 		$html[] = '</div>';
 
 		// Get the JInput object
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		
 		// Get the JInput object
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 
 		return implode("\n", $html);
 	}
@@ -325,7 +328,7 @@ class JFormFieldCCKRules extends JFormField
 	 */
 	protected function getUserGroups()
 	{
-		$db		= JFactory::getDbo();
+		$db		= Factory::getDbo();
 		$query	= $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level, a.parent_id')
 			->from('#__usergroups AS a')

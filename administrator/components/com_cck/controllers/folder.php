@@ -10,19 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerFolder extends JControllerForm
+class CCKControllerFolder extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 		
 	// export
 	public function export()
 	{
-		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$model			=	$this->getModel();
 		$recordId		=	$app->input->getInt( 'id', 0 );
 		$elements		=	$app->input->getString( 'elements', '' );
@@ -38,14 +44,14 @@ class CCKControllerFolder extends JControllerForm
 		}
 		if ( $file = $model->prepareExport( $recordId, $elements, $dependencies, $options ) ) {
 			$file	=	JCckDevHelper::getRelativePath( $file, false );
-			$this->setRedirect( JUri::base().'index.php?option=com_cck&task=download&file='.$file );
+			$this->setRedirect( Uri::base().'index.php?option=com_cck&task=download&file='.$file );
 		} else {
-			$this->setRedirect( _C0_LINK, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			$this->setRedirect( _C0_LINK, Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
 		}
 	}
 
 	// postSaveHook
-	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	protected function postSaveHook( \Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = array() )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 		Helper_Folder::rebuildTree( 2, 1 );

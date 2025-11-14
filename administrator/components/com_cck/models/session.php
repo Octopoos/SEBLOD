@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 // Model
 class CCKModelSession extends JCckBaseLegacyModelAdmin
 {
@@ -19,7 +22,7 @@ class CCKModelSession extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		$pk		=	$app->input->getInt( 'id', 0 );
 		
 		$this->setState( 'session.id', $pk );
@@ -49,14 +52,14 @@ class CCKModelSession extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Session', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -70,7 +73,7 @@ class CCKModelSession extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$data	=	JFactory::getApplication()->input->post->getArray();
+		$data	=	Factory::getApplication()->input->post->getArray();
 		
 		return $data;
 	}

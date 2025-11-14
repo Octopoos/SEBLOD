@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'doTranslation'=>1, 'customAttr'=>JCck::getConfig_Param( 'development_attr', 6 ) ) );
 
@@ -32,7 +34,7 @@ $displayData    =   array(
 
                                     JCckDev::renderLayoutFile(
                                         'cck'.JCck::v().'.form.field', array(
-                                            'label'=>JText::_( 'COM_CCK_ORIENTATION' ),
+                                            'label'=>Text::_( 'COM_CCK_ORIENTATION' ),
                                             'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
                                                 'grid'=>'|50%',
                                                 'html'=>array(

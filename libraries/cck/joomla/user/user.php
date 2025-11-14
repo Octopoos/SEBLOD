@@ -10,8 +10,11 @@
 
 defined( 'JPATH_PLATFORM' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
+
 // CCKUser
-class CCKUser extends JUser
+class CCKUser extends \Joomla\CMS\User\User
 {
 	protected $_user	=	null;
 
@@ -20,12 +23,12 @@ class CCKUser extends JUser
 	{
 		parent::__construct( $identifier );
 		
-		$this->_user	=	JFactory::getUser( $identifier );
+		$this->_user	=	Factory::getUser( $identifier );
 
 		if ( is_object( $from_user ) ) {
 			$params		=	array(
 								'from_id'=>(int)$from_user->id,
-								'from_id_session'=>(int)JCckDatabase::loadResult( 'SELECT userid FROM #__session WHERE session_id = "'.JFactory::getSession()->getId().'"' ),
+								'from_id_session'=>(int)JCckDatabase::loadResult( 'SELECT userid FROM #__session WHERE session_id = "'.Factory::getSession()->getId().'"' ),
 								'groups'=>array(),
 								'levels'=>array()
 							);
@@ -46,7 +49,7 @@ class CCKUser extends JUser
 				}
 			}
 
-			JFactory::getSession()->set( 'cck_login_as', json_encode( $params ) );
+			Factory::getSession()->set( 'cck_login_as', json_encode( $params ) );
 		}
 	}
 
@@ -65,7 +68,7 @@ class CCKUser extends JUser
 	// makeHimLive
 	public function makeHimLive()
 	{
-		$as	=	JFactory::getSession()->get( 'cck_login_as', '' );
+		$as	=	Factory::getSession()->get( 'cck_login_as', '' );
 
 		if ( $as != '' ) {
 			$as	=	json_decode( $as, true );
@@ -91,7 +94,7 @@ class CCKUser extends JUser
 			}
 		}
 
-		JFactory::getSession()->set( 'user', $this->_user );
+		Factory::getSession()->set( 'user', $this->_user );
 	}
 }
 ?>

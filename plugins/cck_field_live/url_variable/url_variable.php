@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 // Plugin
@@ -27,7 +28,7 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 		}
 		
 		// Init
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$live		=	'';
 		$options	=	parent::g_getLive( $field->live_options );
 		

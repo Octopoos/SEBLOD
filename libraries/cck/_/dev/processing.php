@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckDevProcessing
 abstract class JCckDevProcessing
 {
@@ -18,7 +20,7 @@ abstract class JCckDevProcessing
 	{
 		if ( (int)$config['i'] == 0 ) {
 			if ( isset( $config['uniqid'] ) && $config['uniqid'] ) {
-				if ( (int)JFactory::getApplication()->input->getInt( 'start' ) == 1 ) {
+				if ( (int)Factory::getApplication()->input->getInt( 'start' ) == 1 ) {
 					return true;
 				}
 			} else {
@@ -34,7 +36,7 @@ abstract class JCckDevProcessing
 	{
 		if ( (int)$config['i'] == ( (int)$config['count'] - 1 ) ) {
 			if ( isset( $config['uniqid'] ) && $config['uniqid'] ) {
-				if ( (int)JFactory::getApplication()->input->getInt( 'end' ) == 1 ) {
+				if ( (int)Factory::getApplication()->input->getInt( 'end' ) == 1 ) {
 					return true;
 				}
 			} else {

@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // Helper
 class Helper_Folder
 {	
@@ -77,7 +80,7 @@ class Helper_Folder
 	// getRoot
 	public static function getRoot( $id )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$query	= 'SELECT parent.lft, parent.app'
 				. ' FROM #__cck_core_folders AS s, #__cck_core_folders AS parent'
 				. ' WHERE s.lft BETWEEN parent.lft AND parent.rgt AND s.id = '.(int)$id
@@ -121,7 +124,7 @@ class Helper_Folder
 	// getTree
 	public static function getTree( $excluded, $published, $more = '' )
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 		
 		$n			=	( $excluded ) ? 2 : 1;
 		$orderby	=	' GROUP BY s.title ORDER BY s.lft';
@@ -137,7 +140,7 @@ class Helper_Folder
 		$db->setQuery( $query );
 		$categories	=	$db->loadObjectList();
 		if ( count( $categories ) ) {
-			$categories[0]->text	=	( ! $excluded ) ? JText::_( $categories[0]->text ) : $categories[0]->text;
+			$categories[0]->text	=	( ! $excluded ) ? Text::_( $categories[0]->text ) : $categories[0]->text;
 		} else {
 			$categories	=	array();
 		}

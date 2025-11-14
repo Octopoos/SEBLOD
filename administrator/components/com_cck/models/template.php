@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Table\Table;
+
 // Model
 class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 {
@@ -19,7 +24,7 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// canDelete
 	protected function canDelete( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -33,7 +38,7 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// canEditState
 	protected function canEditState( $record )
 	{
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( ! empty( $record->folder ) ) {
 			// Folder Permissions
@@ -47,7 +52,7 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		$pk		=	$app->input->getInt( 'id', 0 );
 		
 		if ( ( $mode = $app->getUserState( CCK_COM.'.edit.template.mode' ) ) != '' ) {
@@ -81,14 +86,14 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Template', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.'.$this->vName.'.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -102,7 +107,7 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 
@@ -133,7 +138,7 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 	// prepareExport_Variation
 	public function prepareExport_Variation( $name, $folder )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
@@ -144,16 +149,15 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		
 		// Variation
 		jimport( 'cck.base.install.export' );
-		if ( JFolder::exists( $src ) ) {
-			JFolder::copy( $src, $path.'/'.$name );
+		if ( Folder::exists( $src ) ) {
+			Folder::copy( $src, $path.'/'.$name );
 		}
 		
 		// Manifest
 		$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/'.$filename.'.xml';
 		
-		jimport( 'joomla.filesystem.file' );
-		if ( JFile::exists( $manifest ) ) {
-			JFile::copy( $manifest, $path.'/'.$filename.'.xml' );
+		if ( File::exists( $manifest ) ) {
+			File::copy( $manifest, $path.'/'.$filename.'.xml' );
 		} else {
 			$xml		=	CCK_Export::prepareFile( (object)array( 'title'=>$filename ) );
 			$fileset	=	$xml->addChild( 'fileset' );

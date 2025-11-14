@@ -10,15 +10,19 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\LanguageAssociations;
+
 // Item
 class CCK_Item
 {
 	// getAssociation
 	public static function getAssociation( $id, $strict = false )
 	{
-		$lang_tag		=	JFactory::getLanguage()->getTag();
+		$lang_tag		=	Factory::getLanguage()->getTag();
 
-		if ( $lang_tag != 'en-GB'/*JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' )*/ ) {
+		if ( $lang_tag != 'en-GB'/*ComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' )*/ ) {
 			$assoc_item		=	JCckDatabase::loadObject( 'SELECT id, pk, storage_location, storage_table FROM #__cck_core WHERE id = '.(int)$id );
 
 			if ( is_object( $assoc_item ) && $assoc_item->pk ) {
@@ -28,7 +32,7 @@ class CCK_Item
 					$context	.=	'.'.$assoc_item->storage_table;
 				}
 
-				$associations	=	JLanguageAssociations::getAssociations( 'com_cck', $assoc_item->storage_table, $context, (int)$assoc_item->pk, 'id', '', '' );
+				$associations	=	LanguageAssociations::getAssociations( 'com_cck', $assoc_item->storage_table, $context, (int)$assoc_item->pk, 'id', '', '' );
 
 				if ( isset( $associations[$lang_tag] ) ) {
 					if ( (int)$associations[$lang_tag]->id ) {
@@ -53,7 +57,7 @@ class CCK_Item
 	// prepare
 	public static function prepare( $str, $params = null )
 	{
-		return JHtml::_( 'content.prepare', $str, $params );
+		return HTMLHelper::_( 'content.prepare', $str, $params );
 	}
 
 	// render
@@ -65,7 +69,7 @@ class CCK_Item
 
 		$prefix	=	'';
 		$suffix	=	'';
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 
 		if ( $user->id && !$user->guest ) {
 			if ( isset( $user->groups[8] ) || isset( $user->groups[22] ) ) {
@@ -82,7 +86,7 @@ class CCK_Item
 			}
 			*/
 
-			$cache		=	JFactory::getCache( $prefix.'cck_item@'.$id.$suffix );
+			$cache		=	Factory::getCache( $prefix.'cck_item@'.$id.$suffix );
 			$cache->setCaching( 1 );
 
 			return $cache->get( array( 'CCK_Item', 'prepare' ), array( '::cck::'.$id.'::/cck::' ) );

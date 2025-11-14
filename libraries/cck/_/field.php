@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JCckField
 class JCckField
 {
@@ -75,7 +78,7 @@ class JCckField
 	// loadValue
 	public function loadValue( $value )
 	{
-		JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
+		Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepare'.$this->_config['mode'], array( &$this->_params, $value, &$this->_config ) );
 	}
 	
 	// render
@@ -84,7 +87,7 @@ class JCckField
 		$type	=	str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $this->_params->type ) ) );
 
 		if ( isset( $this->_params->type ) ) {
-			JPluginHelper::importPlugin( 'cck_field', $this->_params->type );
+			PluginHelper::importPlugin( 'cck_field', $this->_params->type );
 
 			return JCck::callFunc_Array( 'plgCCK_Field'.$type, 'onCCK_FieldRender'.ucfirst( $this->_config['mode'] ), array( $this->_params, &$this->_config ) );
 		}

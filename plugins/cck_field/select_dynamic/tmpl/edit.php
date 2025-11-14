@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $html_attr	=	'';
 $location	=	JCckDev::fromSTRING( $this->item->location );
@@ -24,7 +26,7 @@ if ( $count = JCck::getConfig_Param( 'development_attr', 6 ) ) {
 
 		$html_attr	.=	JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_OPTIONS_ATTR_COLUMN' ),
+							'label'=>Text::_( 'COM_CCK_OPTIONS_ATTR_COLUMN' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 										'grid'=>'|50%',
 										'html'=>array(
@@ -67,7 +69,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_options_value', @$options2['value'], $config ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_ORDER_BY' ),
+											'label'=>Text::_( 'COM_CCK_ORDER_BY' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|50%',
 												'html'=>array(
@@ -79,8 +81,8 @@ $displayData	=	array(
 									),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_OPTIONS_ATTRIBUTES' ),
-											'html'=>'<a href="javascript:void(0);" id="custom_attr_toggle"><span class="variation_value">'.JText::_( 'COM_CCK_TOGGLE' ).'</span></a>'
+											'label'=>Text::_( 'COM_CCK_OPTIONS_ATTRIBUTES' ),
+											'html'=>'<a href="javascript:void(0);" id="custom_attr_toggle"><span class="variation_value">'.Text::_( 'COM_CCK_TOGGLE' ).'</span></a>'
 										)
 									),
 									JCckDev::renderForm( 'core_options_limit', @$options2['limit'], $config ),
@@ -90,7 +92,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_options_language_detection', @$options2['language_detection'], $config ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_LANGUAGE_CODES_DEFAULT' ),
+											'label'=>Text::_( 'COM_CCK_LANGUAGE_CODES_DEFAULT' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|25%',
 												'html'=>array(

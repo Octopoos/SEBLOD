@@ -10,10 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modellist' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Table\Table;
 
 // Model
-class CCKModelSites extends JModelList
+class CCKModelSites extends ListModel
 {
 	// __construct
 	public function __construct( $config = array() )
@@ -146,13 +149,13 @@ class CCKModelSites extends JModelList
 	// getTable
 	public function getTable( $type = 'Site', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
-		$app		=	JFactory::getApplication( 'administrator' );
+		$app		=	Factory::getApplication( 'administrator' );
 		$search		=	$app->getUserStateFromRequest( $this->context.'.filter.search', 'filter_search', '' );
 		$location	=	$app->getUserStateFromRequest( $this->context.'.filter.location', 'filter_location', 'title' );
 			
@@ -165,7 +168,7 @@ class CCKModelSites extends JModelList
 		$mode		=	$app->getUserStateFromRequest( $this->context.'.filter.mode', 'filter_mode', '', 'string' );
 		$this->setState( 'filter.mode', $mode );
 
-		$params		=	JComponentHelper::getParams( CCK_COM );
+		$params		=	ComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
 		parent::populateState( 'a.title', 'asc' );

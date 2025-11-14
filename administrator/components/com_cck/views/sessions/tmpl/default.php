@@ -10,8 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc		=	JFactory::getDocument();
-$user		=	JFactory::getUser();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
+$doc		=	Factory::getDocument();
+$user		=	Factory::getUser();
 $userId		=	$user->id;
 $listOrder	=	$this->state->get( 'list.ordering' );
 $listDir	=	$this->state->get( 'list.direction' );
@@ -20,11 +25,11 @@ $top		=	'content';
 $config		=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
 										 'core_session_location_filter', 'core_state_filter' ) );
-JText::script( 'COM_CCK_CONFIRM_DELETE' );
+Text::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName() ); ?>" method="post" id="adminForm" name="adminForm">
 <div class="span12">
 
 <?php include_once __DIR__.'/default_filter.php'; ?>
@@ -34,11 +39,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<tr class="half">
 			<th width="32" class="center hidden-phone nowrap" rowspan="2"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone" rowspan="2">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
+            	<input type="checkbox" name="toggle" value="" title="<?php echo Text::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
 			</th>
-			<th class="center"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
-			<th width="20%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_CONTENT_OBJECT', 'a.type', $listDir, $listOrder ); ?></th>
-			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
+			<th class="center"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
+			<th width="20%" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_CONTENT_OBJECT', 'a.type', $listDir, $listOrder ); ?></th>
+			<th width="32" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
 	</thead>
     <tbody>
@@ -48,11 +53,11 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		$canChange		=	$user->authorise( 'core.edit.state', CCK_COM );
 		$canEdit		=	$user->authorise( 'core.edit', CCK_COM );
 		$canEditOwn		=	'';	
-		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='.$item->id );
+		$link 			=	Route::_( 'index.php?option='.$this->option.'&task='.$this->vName.'.edit&id='.$item->id );
 		?>
 		<tr class="row<?php echo $i % 2; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
+			<td class="center hidden-phone"><?php echo HTMLHelper::_( 'grid.id', $i, $item->id ); ?></td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
 					<?php
@@ -90,7 +95,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<input type="hidden" name="return_v" id="return_v" value="sessions" />
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDir; ?>" />
-	<?php echo JHtml::_( 'form.token' ); ?>
+	<?php echo HTMLHelper::_( 'form.token' ); ?>
 </div>
 
 <?php

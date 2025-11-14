@@ -10,18 +10,22 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+
 // CommonHelper
 class CommonHelper_Include
 {	
 	// addDependencies
 	public static function addDependencies( $view, $layout, $tmpl = '' )
 	{		
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$script	=	( $tmpl == 'ajax' ) ? false : true;
 		
 		if ( $script !== false ) {
-			JHtml::_( 'bootstrap.framework' );
-			JHtml::_( 'bootstrap.tooltip' );
+			HTMLHelper::_( 'bootstrap.framework' );
+			HTMLHelper::_( 'bootstrap.tooltip' );
 			
 			JCck::loadjQuery( true, true, true );
 		}
@@ -31,7 +35,7 @@ class CommonHelper_Include
 	// addStyleDeclaration
 	public static function addStyleDeclaration( $css, $minify = false )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		
 		if ( $minify === true ) {
 			$css	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
@@ -43,24 +47,24 @@ class CommonHelper_Include
 	// addStyleSheets
 	public static function addStyleSheets( $component, $paths = array() )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		
 		$doc->addStyleDeclaration( 'div.pagetitle {display: block!important;}' );
 		if ( $component ) {
 			$doc->addStyleDeclaration( 'div.seblod {margin: 0 10px 10px 10px!important;}' );
-			$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/admin.css?v4.0' );
-			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css' );
+			$doc->addStyleSheet( Uri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/admin.css?v4.0' );
+			HTMLHelper::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css' );
 		}
-		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css' );
-		$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v5' );
+		HTMLHelper::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css' );
+		$doc->addStyleSheet( Uri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v5' );
 
 		if ( JCck::on( '4.0' ) ) {
-			$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
+			$doc->addStyleSheet( Uri::root( true ).'/administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
 		}
 		
 		if ( count( $paths ) ) {
 			foreach ( $paths as $path ) {
-				JHtml::_( 'stylesheet', $path );
+				HTMLHelper::_( 'stylesheet', $path );
 			}
 		}
 	}

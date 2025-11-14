@@ -10,9 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.keepalive' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
-$app	=	JFactory::getApplication();
+HTMLHelper::_( 'behavior.keepalive' );
+
+$app	=	Factory::getApplication();
 $id		=	str_replace( ' ', '_', trim( $this->pageclass_sfx ) );
 $id		=	( $id ) ? 'id="'.$id.'" ' : '';
 
@@ -29,7 +33,7 @@ if ( $this->show_form_title ) {
 	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_form_desc == 1 && $this->description != '' ) {
-	$description	=	JHtml::_( 'content.prepare', $this->description );
+	$description	=	HTMLHelper::_( 'content.prepare', $this->description );
 	$tag_desc		=	'';
 
 	if ( $this->tag_desc == 'div_div' ) {
@@ -74,7 +78,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['v
 <?php echo $this->config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.htmlspecialchars( JUri::getInstance()->getPath() ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.htmlspecialchars( Uri::getInstance()->getPath() ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this->pageclass_sfx.' cck-clrfix" id="system">' . $this->data . '</div>';
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
@@ -98,7 +102,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php } ?>
-<?php echo JHtml::_( 'form.token' ); ?>
+<?php echo HTMLHelper::_( 'form.token' ); ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div>
 <?php } ?>
@@ -106,7 +110,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 </form>
 <?php
 if ( $this->show_form_desc == 2 && $this->description != '' ) {
-	echo ( $this->raw_rendering ) ? JHtml::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . JHtml::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo ( $this->raw_rendering ) ? HTMLHelper::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . HTMLHelper::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 ?>
 <?php if ( !$this->raw_rendering ) { ?>

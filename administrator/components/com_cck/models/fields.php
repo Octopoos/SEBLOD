@@ -10,10 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modellist' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Table\Table;
 
 // Model
-class CCKModelFields extends JModelList
+class CCKModelFields extends ListModel
 {
 	// __construct
 	public function __construct( $config = array() )
@@ -51,7 +54,7 @@ class CCKModelFields extends JModelList
 	// getListQuery
 	protected function getListQuery()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$db		=	$this->getDbo();
 		$query	=	$db->getQuery( true );	
 		
@@ -176,13 +179,13 @@ class CCKModelFields extends JModelList
 	// getTable
 	public function getTable( $type = 'Field', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 
 	// populateState
 	protected function populateState( $ordering = null, $direction = null )
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 
 		$folder	=	$app->input->getInt( 'folder_id', 0 );
 		if ( $folder > 0 ) {
@@ -210,7 +213,7 @@ class CCKModelFields extends JModelList
 		$storage	=	$app->getUserStateFromRequest( $this->context.'.filter.storage', 'filter_storage', '', 'string' );
 		$this->setState( 'filter.storage', $storage );
 
-		$params		=	JComponentHelper::getParams( CCK_COM );
+		$params		=	ComponentHelper::getParams( CCK_COM );
 		$this->setState( 'params', $params );
 		
 		parent::populateState( 'a.title', 'asc' );

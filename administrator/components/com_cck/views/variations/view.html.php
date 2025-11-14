@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 // View
 class CCKViewVariations extends JCckBaseLegacyViewList
 {
@@ -21,8 +26,8 @@ class CCKViewVariations extends JCckBaseLegacyViewList
 	{	
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
 
-		JToolBarHelper::title( JText::_( _C7_TEXT.'_MANAGER' ), Helper_Admin::getIcon( $this->vName ) );
-		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-template', JText::_( _C1_TEXT.'S' ), JRoute::_( 'index.php?option=com_cck&view=templates' ), '_self' );
+		ToolbarHelper::title( Text::_( _C7_TEXT.'_MANAGER' ), Helper_Admin::getIcon( $this->vName ) );
+		Toolbar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-template', Text::_( _C1_TEXT.'S' ), Route::_( 'index.php?option=com_cck&view=templates' ), '_self' );
 	}
 }
 ?>

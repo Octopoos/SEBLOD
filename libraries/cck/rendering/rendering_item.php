@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Rendering Item
 class CCK_Rendering_Item
 {
@@ -42,7 +47,7 @@ class CCK_Rendering_Item
 		$this->path 		= 	JPATH_SITE.'/templates/'.$template;
 		$this->path_lib		=	__DIR__;
 		$this->template		=	$template;
-		$this->theme		=	JFactory::getApplication()->getTemplate();
+		$this->theme		=	Factory::getApplication()->getTemplate();
 		$this->type			=	$type;
 	}
 
@@ -148,7 +153,7 @@ class CCK_Rendering_Item
 	// finalize
 	public function finalize( $clear = false )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		
 		// Stuff
 		if ( $this->css != '' ) {
@@ -238,7 +243,7 @@ class CCK_Rendering_Item
 		if ( $field->display && $field->markup != 'clear' ) {
 			if ( ! $options ) {
 				$hasOptions	=	false;
-				$options	=	new JRegistry;
+				$options	=	new Registry;
 			} else {
 				$hasOptions	=	true;
 			}
@@ -349,7 +354,7 @@ class CCK_Rendering_Item
 		$html		=	'';		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : '';
 		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
 			$options	=	$this->loadDefaultOptions( $variation );
@@ -400,9 +405,9 @@ class CCK_Rendering_Item
 			}
 			if ( $css == 1 || $css == 2 ) {
 				if ( $this->isFile( $this->path.'/css/list.css' ) ) {
-					JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/templates/'.$this->name.'/css/list.css' );
+					Factory::getDocument()->addStyleSheet( Uri::root( true ).'/templates/'.$this->name.'/css/list.css' );
 				} else {
-					JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.list.css' );
+					Factory::getDocument()->addStyleSheet( Uri::root( true ).'/media/cck/css/cck.list.css' );
 				}
 			}
 			$cache[$this->type]	=	'';
@@ -420,7 +425,7 @@ class CCK_Rendering_Item
 	protected function loadDefaultOptions( $variation )
 	{
 		if ( !$variation ) {
-			return new JRegistry;
+			return new Registry;
 		}
 		$file		=	'variations/'.$variation.'/default.json';
 		
@@ -429,10 +434,10 @@ class CCK_Rendering_Item
 		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
 			$file	=	$this->path_lib.'/'.$file;
 		} else {
-			return new JRegistry;
+			return new Registry;
 		}
 
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadFile( $file );
 
 		/* TODO#SEBLOD4: cache per variation */
@@ -455,18 +460,18 @@ class CCK_Rendering_Item
 			global $user;
 			static $loaded	=	array();
 			$id				=	$this->id.'_'.$position;
-			$app			=	JFactory::getApplication();
+			$app			=	Factory::getApplication();
 			$cck			=	&$this;
 			$css			=	'';
-			$doc			=	JFactory::getDocument();
+			$doc			=	Factory::getDocument();
 
 			// Prepare
 			if ( $this->translate && trim( $legend ) ) {
 				$legend	=	trim( $legend );
 				$key	=	'COM_CCK_' . str_replace( ' ', '_', $legend );
 
-				if ( JFactory::getLanguage()->hasKey( $key ) ) {
-					$legend	=	JText::_( $key );
+				if ( Factory::getLanguage()->hasKey( $key ) ) {
+					$legend	=	Text::_( $key );
 				}
 			}
 			if ( is_object( $options ) ) {
@@ -510,10 +515,10 @@ class CCK_Rendering_Item
 				}
 			} elseif ( is_string( $options ) ) {
 				$options2	=	$options;
-				$options	=	new JRegistry;
+				$options	=	new Registry;
 				$options->loadString( $options2 );
 			} else {
-				$options				=	new JRegistry;
+				$options				=	new Registry;
 				$orientation			=	'vertical';
 				$hasOptions				=	false;
 				$field_label_width		=	'145px';

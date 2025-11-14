@@ -10,19 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 if ( !$user->authorise( 'core.edit', 'com_cck' ) ) {
     return;
 }
 ?>
 <div class="<?php echo $this->css['batch']; ?>" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">
     <div class="modal-header">
-        <?php Helper_Display::quickModalTitle( JText::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
+        <?php Helper_Display::quickModalTitle( Text::_( 'COM_CCK_BATCH_PROCESS' ) ); ?>
     </div>
     <div class="modal-body">
-        <p><?php echo JText::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName ); ?></p>
+        <p><?php echo Text::_( 'COM_CCK_BATCH_PROCESS_'.$this->vName ); ?></p>
         <div class="control-group">
             <div class="control-label">
-                <label for="batch_folder"><?php echo JText::_( 'COM_CCK_SET_APP_FOLDER' ); ?></label>
+                <label for="batch_folder"><?php echo Text::_( 'COM_CCK_SET_APP_FOLDER' ); ?></label>
             </div>
             <div class="controls">
                 <?php echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), '', $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'batch_folder', 'css'=>'no-chosen' ) ); ?>
@@ -30,7 +32,7 @@ if ( !$user->authorise( 'core.edit', 'com_cck' ) ) {
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo JText::_( 'JCANCEL' ); ?></button>
-        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo JText::_( 'COM_CCK_GO' ); ?></button>
+        <button class="btn btn-secondary" type="button" onclick="" <?php echo $this->html['attr_modal_close']; ?>><?php echo Text::_( 'JCANCEL' ); ?></button>
+        <button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('batchFolder');"><?php echo Text::_( 'COM_CCK_GO' ); ?></button>
     </div>
 </div></div></div>

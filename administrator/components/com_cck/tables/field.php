@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 // Table
-class CCK_TableField extends JTable
+class CCK_TableField extends Table
 {
 	// __construct
 	public function __construct( &$db )
@@ -108,7 +111,7 @@ class CCK_TableField extends JTable
 		if ( $this->id ) {
 			if ( strpos( $this->storage_table, '#__cck_store_item_' ) !== false || strpos( $this->storage_table, '#__cck_store_form_' ) !== false ) {
 				if ( !$this->storage_field2 ) {
-					$db			=	JFactory::getDbo();
+					$db			=	Factory::getDbo();
 					$table		=	(string)$this->storage_table;
 					$column		=	( $this->storage_field ) ? $this->storage_field : $this->name;
 					$columns	=	$db->getTableColumns( $table );

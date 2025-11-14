@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarButton;
+use Joomla\CMS\Uri\Uri;
+
 // JButton
-class JButtonCckModalBox extends JButton
+class JButtonCckModalBox extends ToolbarButton
 {
 	protected $_name	=	'CckModalBox';
 	
@@ -22,7 +26,7 @@ class JButtonCckModalBox extends JButton
 		
 		$class	=	$this->fetchIconClass( $name );
 		$class2	=	( $name == 'apply' || $name == 'new' ) ? 'btn btn-small btn-success' : 'btn btn-small';
-		$text	=	JText::_( $text );
+		$text	=	Text::_( $text );
 		$url	=	$this->_getCommand( $name, $url, $width, $height, $top, $left );
 		
 		$html	=	'<a class="cbox_button '.$class2.'" href="'.$url.'">'
@@ -43,7 +47,7 @@ class JButtonCckModalBox extends JButton
 	protected function _getCommand( $name, $url, $width, $height, $top, $left )
 	{
 		if ( substr( $url, 0, 4 ) !== 'http' ) {
-			$url	=	JUri::base().$url;
+			$url	=	Uri::base().$url;
 		}
 		
 		return $url;

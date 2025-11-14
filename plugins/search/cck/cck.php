@@ -10,8 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
-class plgSearchCCK extends JPlugin
+class plgSearchCCK extends CMSPlugin
 {
 	// __construct
 	public function __construct( &$subject, $config )
@@ -46,16 +52,16 @@ class plgSearchCCK extends JPlugin
 			$user	=	JCck::getUser();
 		}
 		if ( !is_object( $options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 
-		$app			=	JFactory::getApplication();
-		$db				=	JFactory::getDbo();
+		$app			=	Factory::getApplication();
+		$db				=	Factory::getDbo();
 		$doClean		=	false;
 		$doCount		=	(int)$options->get( 'count' );
 		$doDebug		=	$options->get( 'debug' );
 		$doLimit		=	false;
-		$lang_suffix	=	strtolower( str_replace( '-', '_', JFactory::getLanguage()->getTag() ) );
+		$lang_suffix	=	strtolower( str_replace( '-', '_', Factory::getLanguage()->getTag() ) );
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
 		$hasGroup		=	false;
@@ -102,7 +108,7 @@ class plgSearchCCK extends JPlugin
 			$name2	=	( $field->match_collection != '' ) ? '\\\|[0-9]+\\\|'.$field->match_collection : '';
 			// -
 			if ( $field->live == 'stage' ) {
-				$live_options	=	new JRegistry;
+				$live_options	=	new Registry;
 				$live_options->loadString( $field->live_options );
 				$live_value		=	$live_options->get( 'value', $field->live_value );
 				$live_value		=	( $live_value ) ? $live_value : 1;
@@ -128,7 +134,7 @@ class plgSearchCCK extends JPlugin
 				$sql	=	'';
 				
 				if ( $field->match_options != '' ) {
-					$field->match_options	=	new JRegistry( $field->match_options );
+					$field->match_options	=	new Registry( $field->match_options );
 				}
 				
 				// Glue
@@ -350,7 +356,7 @@ class plgSearchCCK extends JPlugin
 		$query3		=	'';
 		$results	=	array();
 		self::_setStorage( $tables, $config, $inherit );
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 		if ( isset( $config['location'] ) && $config['location'] ) {
 			$app->triggerEvent( 'onCCK_Storage_LocationSearch', array( $config['location'], $tables, $fields, $fields_order, &$config, &$inherit, &$results ) );
 			$query	=	$inherit['query'];
@@ -419,7 +425,7 @@ class plgSearchCCK extends JPlugin
 					if ( ( $count < $config['limitend'] && !$config['limitstart'] ) || $isLoadingMore ) {
 						$config['total']		=	$count;
 					} else {
-						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
+						if ( $doCount == 1 && strpos( Uri::getInstance()->toString(), 'task=' ) === false ) {
 							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.$tables['#__cck_core']['fields']['cck'].'"';
 							$config['total']	=	JCckDatabaseCache::loadResult( $query2 );
 
@@ -666,7 +672,7 @@ class plgSearchCCK extends JPlugin
 			}
 		} else {
 			$isMultiLanguage	=	JCckDevHelper::isMultilingual();
-			$lang				=	JFactory::getLanguage();
+			$lang				=	Factory::getLanguage();
 			$ordered			=	false;
 
 			if ( is_array( $fields_order ) && count( $fields_order ) ) {
@@ -674,8 +680,8 @@ class plgSearchCCK extends JPlugin
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
 
-				JPluginHelper::importPlugin( 'cck_field_live' );
-				JPluginHelper::importPlugin( 'cck_field_restriction' );
+				PluginHelper::importPlugin( 'cck_field_live' );
+				PluginHelper::importPlugin( 'cck_field_restriction' );
 
 				foreach ( $fields_order as $field ) {
 					if ( isset( $field->restriction ) && $field->restriction ) {
@@ -700,7 +706,7 @@ class plgSearchCCK extends JPlugin
 						if ( empty( $field->match_options ) ) {
 							$field->match_options	=	'{}';
 						}
-						$field->match_options	=	new JRegistry( $field->match_options );	
+						$field->match_options	=	new Registry( $field->match_options );	
 
 						if ( $field->match_options->get( 'var_type' ) == '1' ) {
 							$modifier2		=	'+0';

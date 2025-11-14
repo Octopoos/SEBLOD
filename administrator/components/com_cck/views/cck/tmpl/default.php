@@ -10,7 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
-$app	=	JFactory::getApplication();
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
+$app	=	Factory::getApplication();
 $uix	=	JCck::getUIX();
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
@@ -19,7 +24,7 @@ if ( $this->_showInfo !== '' ) {
 }
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option ); ?>" method="post" id="adminForm" name="adminForm">
 <?php if ( JCck::on( '4.0' ) ) { ?>
 	<div id="j-main-container">
 <?php } ?>
@@ -39,37 +44,37 @@ if ( $this->_showInfo !== '' ) {
 		</div>
 		<?php if ( !JCck::on( '4.0' ) ) { ?>
 		<div class="seblod-less cpanel_news <?php echo $uix; ?>">
-			<?php echo JCckDevAccordion::start( 'cckOptions', 'collapse0', JText::_( 'COM_CCK_PANE_CORE' ), array( 'active'=>'collapse0', 'useCookie'=>'1' ) ); ?>
+			<?php echo JCckDevAccordion::start( 'cckOptions', 'collapse0', Text::_( 'COM_CCK_PANE_CORE' ), array( 'active'=>'collapse0', 'useCookie'=>'1' ) ); ?>
 			<div id="cpanel" class="cpanel <?php echo $uix; ?>">
 				<?php
 				if ( $uix == 'compact' ) {
 					echo '<div class="fltlft">';
-					Helper_Admin::addIcon( CCK_COM, _C2_LINK, _C2_NAME, JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ), 48, 'left', '6' );
-					Helper_Admin::addIcon( CCK_COM, _C0_LINK, _C0_NAME, JText::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ) );
+					Helper_Admin::addIcon( CCK_COM, _C2_LINK, _C2_NAME, Text::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ), 48, 'left', '6' );
+					Helper_Admin::addIcon( CCK_COM, _C0_LINK, _C0_NAME, Text::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ) );
 					echo '</div>';
 				} else {
 					echo '<div class="fltlft">';
-					Helper_Admin::addIcon( CCK_COM, _C2_LINK, array( _C2_NAME, 'icon-cck-form' ), JText::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ) );
-					Helper_Admin::addIcon( CCK_COM, _C3_LINK, array( _C3_NAME, 'icon-cck-plugin' ), JText::_( _C3_TEXT.'_MANAGER'.'_BR' ) );
-					Helper_Admin::addIcon( CCK_COM, _C4_LINK, array( _C4_NAME, 'icon-cck-search' ), JText::_( 'COM_CCK_'._C4_TEXT.'_MANAGER'.'_BR' ) );
-					Helper_Admin::addIcon( CCK_COM, _C1_LINK, array( _C1_NAME, 'icon-cck-template' ), JText::_( _C1_TEXT.'_MANAGER'.'_BR' ) );
+					Helper_Admin::addIcon( CCK_COM, _C2_LINK, array( _C2_NAME, 'icon-cck-form' ), Text::_( 'COM_CCK_'._C2_TEXT.'_MANAGER'.'_BR' ) );
+					Helper_Admin::addIcon( CCK_COM, _C3_LINK, array( _C3_NAME, 'icon-cck-plugin' ), Text::_( _C3_TEXT.'_MANAGER'.'_BR' ) );
+					Helper_Admin::addIcon( CCK_COM, _C4_LINK, array( _C4_NAME, 'icon-cck-search' ), Text::_( 'COM_CCK_'._C4_TEXT.'_MANAGER'.'_BR' ) );
+					Helper_Admin::addIcon( CCK_COM, _C1_LINK, array( _C1_NAME, 'icon-cck-template' ), Text::_( _C1_TEXT.'_MANAGER'.'_BR' ) );
 					echo '</div><div class="clr"></div>'
 					 .   '<div class="fltlft">';
 					Helper_Admin::addIcon( CCK_COM, 'spacer', 'spacer', 'spacer', 24 );
-					Helper_Admin::addIcon( CCK_COM, _C0_LINK, array( _C0_NAME, 'icon-cck-application' ), JText::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ), 24, 'left' );
-					Helper_Admin::addIcon( CCK_COM, _C5_LINK, array( _C5_NAME, 'icon-cck-multisite' ), JText::_( _C5_TEXT.'_MANAGER'.'_BR' ), 24, 'right' );
+					Helper_Admin::addIcon( CCK_COM, _C0_LINK, array( _C0_NAME, 'icon-cck-application' ), Text::_( 'COM_CCK_'._C0_TEXT.'_MANAGER'.'_BR' ), 24, 'left' );
+					Helper_Admin::addIcon( CCK_COM, _C5_LINK, array( _C5_NAME, 'icon-cck-multisite' ), Text::_( _C5_TEXT.'_MANAGER'.'_BR' ), 24, 'right' );
 					echo '</div>';
 				}
 				?>
 			</div>
 			<?php
 			if ( $uix == 'compact' ) {
-				echo JCckDevAccordion::open( 'cckOptions', 'collapse1', JText::_( 'COM_CCK_PANE_NANO' ) );
+				echo JCckDevAccordion::open( 'cckOptions', 'collapse1', Text::_( 'COM_CCK_PANE_NANO' ) );
 				?>
 				<div class="<?php echo $this->css['items']; ?>">
 					<ul class="adminformlist">
 						<li>
-							<span class="variation_value" style="font-size:12px; font-style:italic; text-align:center;"><?php echo JText::_( 'COM_CCK_PANE_NANO_DESC' ); ?></span>
+							<span class="variation_value" style="font-size:12px; font-style:italic; text-align:center;"><?php echo Text::_( 'COM_CCK_PANE_NANO_DESC' ); ?></span>
 						</li>
 					</ul>
 				</div>
@@ -89,7 +94,7 @@ if ( $this->_showInfo !== '' ) {
 <div class="clr"></div>
 <div>
 	<input type="hidden" name="task" value="" />
-	<?php echo JHtml::_( 'form.token' ); ?>
+	<?php echo HTMLHelper::_( 'form.token' ); ?>
 </div>
 
 <?php

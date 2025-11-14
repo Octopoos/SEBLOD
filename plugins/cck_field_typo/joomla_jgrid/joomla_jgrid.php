@@ -10,8 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-use Joomla\Component\Users\Administrator\Service\HTML\Users;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+
+use Joomla\Component\Users\Administrator\Service\HTML\Users;
 
 // Plugin
 class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
@@ -79,7 +84,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( !$dropdown_css ) {
 						$dropdown_css	=	true;
 
-						JFactory::getDocument()->addStyleDeclaration( '.btn-group.open > .dropdown-menu{display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient:vertical; -webkit-box-direction:reverse; -ms-flex-direction:column-reverse; flex-direction:column-reverse;}' );
+						Factory::getDocument()->addStyleDeclaration( '.btn-group.open > .dropdown-menu{display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient:vertical; -webkit-box-direction:reverse; -ms-flex-direction:column-reverse; flex-direction:column-reverse;}' );
 					}
 					
 					$class	=	'';
@@ -93,7 +98,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			case 'featured':
 				static $loaded_featured	=	0;
 				if ( !$loaded_featured ) {
-					JHtml::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
+					HTMLHelper::addIncludePath( JPATH_ADMINISTRATOR.'/components/com_content/helpers/html' );
 					$loaded_featured	=	1;
 				}
 				$value		=	$field->value;
@@ -199,7 +204,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$field->options			=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_fields WHERE name = "'.$field->name.'"' );
 				/* TODO#SEBLOD4 */
 
-				JFactory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
+				Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
@@ -252,7 +257,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				}
 				$class		=	$typo->get( 'class1', '' );
 				$class		=	$class ? ' class="' . $class . '"' : '';
-				$value		=	JHtml::_( 'grid.id', $pks[$pk], $value );
+				$value		=	HTMLHelper::_( 'grid.id', $pks[$pk], $value );
 				$value		=	str_replace( ' />', ' data-cck-remove-before-search="" />', $value );
 				if ( $typo->get( 'trigger' ) ) {
 					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"' . $class, $value );
@@ -283,7 +288,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					static $can		=	array();
 
 					if ( !isset( $can[$config['type_id']] ) ) {
-						$user				=	JFactory::getUser();
+						$user				=	Factory::getUser();
 						$can				=	array( $config['type_id']=>array(
 													'edit'=>$user->authorise( 'core.edit', 'com_cck.form.'.$config['type_id'] ),
 													'edit.own'=>$user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] )
@@ -297,7 +302,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 					if ( !$loaded && $canDo ) {
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
-							$app			=	JFactory::getApplication();
+							$app			=	Factory::getApplication();
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 							$legacy			=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 							$legacy			=	$legacy && $legacy <= 2024 ? true : false;
@@ -317,14 +322,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							if ( $task == 'process_ajax' && $task_id ) {
 								$saveOrderUrl	=	JCckDevHelper::getAbsoluteUrl( 'auto', 'task=processAjax&format=raw&tid='.$task_id );
 							} elseif ( $task == 'none' ) {
-								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=ajax&format=raw', false );
+								$saveOrderUrl	=	Route::_( 'index.php?option=com_cck&task=ajax&format=raw', false );
 							} else {
-								$saveOrderUrl	=	JRoute::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
+								$saveOrderUrl	=	Route::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
 							}
 							if ( JCck::on( '4.0' ) ) {
 								HTMLHelper::_( 'draggablelist.draggable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
 							} else {
-								JHtml::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl.'&'.JSession::getFormToken().'=1', false, true );
+								HTMLHelper::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl.'&'.Session::getFormToken().'=1', false, true );
 							}
 						}
 					}
@@ -386,9 +391,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$state_down		=	( $field_name_down != '' && isset( $fields[$field_name_down] ) ) ? $fields[$field_name_down]->value : '';
 				$state_down		=	( $state_down == '' ) ? '0000-00-00 00:00:00' : $state_down;
 
-				$value			=	JHtml::_( 'jgrid.published', $process['value'], $process['pk'], '', false /*$canChange*/, 'cb', $state_up, $state_down );
+				$value			=	HTMLHelper::_( 'jgrid.published', $process['value'], $process['pk'], '', false /*$canChange*/, 'cb', $state_up, $state_down );
 			} else {
-				$value			=	JHtml::_( 'jgrid.published', $process['value'], $process['pk'], '', false /*$canChange*/, 'cb', '', '' );
+				$value			=	HTMLHelper::_( 'jgrid.published', $process['value'], $process['pk'], '', false /*$canChange*/, 'cb', '', '' );
 			}
 			if ( $fields[$name]->link ) {
 				$hasLink		=	true;
@@ -420,7 +425,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$fields[$name]->typo	=	$fields[$name]->text ? $fields[$name]->text : $process['value'];
 			} else {
 				$class		=	$process['class'];
-				$value		=	JHtml::_( 'contentadministrator.featured', $process['value'], $process['pk'], false /*$canChange*/ );
+				$value		=	HTMLHelper::_( 'contentadministrator.featured', $process['value'], $process['pk'], false /*$canChange*/ );
 
 				if ( $fields[$name]->link ) {
 					$hasLink		=	true;
@@ -450,7 +455,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				HTMLHelper::getServiceRegistry()->register( 'users', new Users() );
 
 				$loaded_users		=	1;
-				$user				=	JFactory::getUser();
+				$user				=	Factory::getUser();
 			}
 			$class		=	$process['class'];
 
@@ -481,7 +486,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
 						$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
 					} else {
-						$value	=	str_replace( array( 'title=""', 'title="COM_USERS_ACTIVATED"' ), 'title="'.JText::_( $title ).'"', $value );
+						$value	=	str_replace( array( 'title=""', 'title="COM_USERS_ACTIVATED"' ), 'title="'.Text::_( $title ).'"', $value );
 					}
 					if ( JCck::on( '4' ) ) {
 						// See later for the class
@@ -519,7 +524,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( $hasLink && isset( $fields[$name]->link_title ) && $fields[$name]->link_title ) {
 						$value	=	preg_replace( '#title=".*"#U', 'title="'.$fields[$name]->link_title.'"', $value );
 					} else {
-						$value	=	str_replace( 'title=""', 'title="'.JText::_( $title ).'"', $value );
+						$value	=	str_replace( 'title=""', 'title="'.Text::_( $title ).'"', $value );
 					}
 					if ( JCck::on( '4' ) ) {
 						// See later for the class

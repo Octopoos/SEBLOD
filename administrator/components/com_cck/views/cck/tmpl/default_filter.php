@@ -27,7 +27,7 @@ if ( JCck::on( '4.0' ) ) {
 	} else {
 		echo $location_filter;
 	}
-	echo JCckDev::getForm( $cck['core_filter_input'], $this->escape( $this->state->get( 'filter.search' ) ), $config, array( 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_ITEMS_SEARCH_FILTER' ).'"' ), array( 'after'=>"\n" ) );
+	echo JCckDev::getForm( $cck['core_filter_input'], $this->escape( $this->state->get( 'filter.search' ) ), $config, array( 'attributes'=>'placeholder="'.\Joomla\CMS\Language\Text::_( 'COM_CCK_ITEMS_SEARCH_FILTER' ).'"' ), array( 'after'=>"\n" ) );
 	echo JCckDev::getForm( $cck['core_filter_go'], '', $config, array( 'css'=>$this->css['filter_search_button'] ), array( 'after'=>"\n" ) );
 	echo JCckDev::getForm( $cck['core_filter_search'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="'.$clear.'this.form.submit();"' ), array( 'after'=>"\n" ) );
 	echo JCckDev::getForm( $cck['core_filter_clear'], '', $config, array( 'css'=>$this->css['filter_search_button'], 'attributes'=>'onclick="document.getElementById(\'filter_search\').value=\'\';document.getElementById(\'filter_location\').value=\'title\';'.$clear.'this.form.submit();"' ) );
@@ -49,14 +49,14 @@ if ( JCck::on( '4.0' ) ) {
 
 		echo '<div class="hidden">';
 	} ?>
-	<label for="limit" class="element-invisible"><?php echo JText::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
+	<label for="limit" class="element-invisible"><?php echo \Joomla\CMS\Language\Text::_( 'JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC' ); ?></label>
 	<select name="sortTable" id="sortTable" class="inputbox select input-medium form-select" onchange="Joomla.orderTable()">
-		<option value=""><?php echo JText::_( 'JGLOBAL_SORT_BY' );?></option>
-		<?php echo JHtml::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
+		<option value=""><?php echo \Joomla\CMS\Language\Text::_( 'JGLOBAL_SORT_BY' );?></option>
+		<?php echo \Joomla\CMS\HTML\HTMLHelper::_( 'select.options', $this->getSortFields(), 'value', 'text', $listOrder ); ?>
 	</select>
 	<select name="directionTable" id="directionTable" class="inputbox select input-medium form-select form-select-auto" onchange="Joomla.orderTable()">
-		<option value="asc"<?php echo $selected_asc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
-		<option value="desc"<?php echo $selected_desc; ?>><?php echo JText::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
+		<option value="asc"<?php echo $selected_asc; ?>><?php echo \Joomla\CMS\Language\Text::_( 'JGLOBAL_ORDER_ASCENDING' ); ?></option>
+		<option value="desc"<?php echo $selected_desc; ?>><?php echo \Joomla\CMS\Language\Text::_( 'JGLOBAL_ORDER_DESCENDING' );  ?></option>
 	</select>
 	<?php
 	echo $this->pagination->getLimitBox();

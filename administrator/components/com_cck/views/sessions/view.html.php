@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 require_once JPATH_COMPONENT.'/helpers/helper_session.php';
 
 // View
@@ -22,8 +27,8 @@ class CCKViewSessions extends JCckBaseLegacyViewList
 	protected function getSortFields()
 	{
 		return array(
-					'a.id'=>JText::_( 'COM_CCK_ID' ),
-					'a.title'=>JText::_( 'COM_CCK_TITLE' )
+					'a.id'=>Text::_( 'COM_CCK_ID' ),
+					'a.title'=>Text::_( 'COM_CCK_TITLE' )
 				);
 	}
 
@@ -34,19 +39,19 @@ class CCKViewSessions extends JCckBaseLegacyViewList
 		$this->extension	=	$this->state->get( 'filter.extension' );
 		
 		if ( $this->extension == 'extension' ) {
-			JToolBarHelper::title( JText::_( 'COM_CCK_SESSION_MANAGER' ), Helper_Admin::getIcon( $this->vName ) );
+			ToolbarHelper::title( Text::_( 'COM_CCK_SESSION_MANAGER' ), Helper_Admin::getIcon( $this->vName ) );
 			return;
 		}
 		
 		Helper_Session::loadExtensionLang( $this->extension );
 		
-		JToolBarHelper::title( JText::_( 'COM_CCK_SESSION_MANAGER' ).' - '.JText::_( $this->extension ), Helper_Admin::getIcon( $this->vName ) );
+		ToolbarHelper::title( Text::_( 'COM_CCK_SESSION_MANAGER' ).' - '.Text::_( $this->extension ), Helper_Admin::getIcon( $this->vName ) );
 		if ( $canDo->get( 'core.delete' ) ) {
-			JToolBarHelper::custom( $this->vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
+			ToolbarHelper::custom( $this->vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
 		}
 
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
-		JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-addon', JText::_( $this->extension ), JRoute::_( 'index.php?option='.$this->extension ), '_self' );
+		Toolbar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'cck-addon', Text::_( $this->extension ), Route::_( 'index.php?option='.$this->extension ), '_self' );
 		
 		$this->sidebar = '';
 	}

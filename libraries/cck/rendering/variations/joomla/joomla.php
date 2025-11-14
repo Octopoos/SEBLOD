@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Prepare Style
 if ( $app->isClient( 'site' ) ) {
 	$border_size	=	'1';
@@ -28,7 +30,7 @@ $cck->setHeight( $height, $id, $cck->id.'-deepest' );
 ?>
 <fieldset id="<?php echo $id; ?>" class="adminform <?php echo $class; ?>">    
 	<?php if ( $legend != '' ) { ?>
-	    <legend><?php echo JText::_( $legend ); ?></legend>
+	    <legend><?php echo Text::_( $legend ); ?></legend>
     <?php } ?>
     <div class="<?php echo $class .' '. $cck->id.'-deepest'; ?>">
     	<div id="<?php echo $id; ?>_content">

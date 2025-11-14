@@ -10,19 +10,27 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Helper
 class modCCKBreadCrumbsHelper
 {
 	// getList
 	public static function getList( &$params )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$pathway_mode	=	$params->get( 'pathway', 0 );
 		$list			=	array();
 
 		if ( $pathway_mode == 2 ) {
 			$Itemid		=	$app->input->getInt( 'Itemid', 0 );
-			$pathway	=	JTable::getInstance( 'Menu' );
+			$pathway	=	Table::getInstance( 'Menu' );
 			$items		=	$pathway->getPath( $Itemid );
 			$count 		=	count( $items );
 			
@@ -32,7 +40,7 @@ class modCCKBreadCrumbsHelper
 				if ( $items[$i]->type == 'alias' ) {
 					$item_id		=	0;
 					if ( isset( $items[$i]->params ) ) {
-						$registry	=	new JRegistry;
+						$registry	=	new Registry;
 						$registry->loadString( $items[$i]->params );
 						$item_id	=	$registry->get( 'aliasoptions' );
 					}
@@ -42,7 +50,7 @@ class modCCKBreadCrumbsHelper
 					$item_id		=	$items[$i]->id;
 				}
 				if ( $item_id ) {
-					$link			=	JRoute::_( 'index.php?Itemid='.$item_id );
+					$link			=	Route::_( 'index.php?Itemid='.$item_id );
 
 					if ( strpos( $link, '?Itemid=' ) !== false ) {
 						unset( $list[$j] );
@@ -76,7 +84,7 @@ class modCCKBreadCrumbsHelper
 				}
 			}
 		} elseif ( $pathway_mode == 1 ) {
-			$base		=	JFactory::getConfig()->get( 'sef_rewrite' ) ? JUri::base( true ).'/' : JUri::base( true ).'/index.php/';
+			$base		=	Factory::getConfig()->get( 'sef_rewrite' ) ? Uri::base( true ).'/' : Uri::base( true ).'/index.php/';
 			$pathway	=	$app->getPathway();
 			$items		=	$pathway->getPathWay();
 			$count 		=	count( $items );
@@ -85,7 +93,7 @@ class modCCKBreadCrumbsHelper
 			for ( $i = 0; $i < $count; $i++ ) {
 				$items[$i]->name		=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
 				$items[$i]->link_nosef	=	$items[$i]->link;
-				$items[$i]->link		=	JRoute::_( $items[$i]->link );
+				$items[$i]->link		=	Route::_( $items[$i]->link );
 
 				if ( ( ( strpos( $items[$i]->link, $base.'component/' ) === false ) && substr_count( $items[$i]->link, '/' ) == $j )
 					 || !$items[$i]->link ) {
@@ -101,7 +109,7 @@ class modCCKBreadCrumbsHelper
 			for ( $i = 0; $i < $count; $i++ ) {
 				$list[$i]				=	new stdClass;
 				$list[$i]->name			=	stripslashes( htmlspecialchars( $items[$i]->name, ENT_COMPAT, 'UTF-8' ) );
-				$list[$i]->link			=	JRoute::_( $items[$i]->link );
+				$list[$i]->link			=	Route::_( $items[$i]->link );
 				$list[$i]->link_nosef	=	$items[$i]->link;
 
 				$parts					=	explode( 'Itemid=', $items[$i]->link );
@@ -115,14 +123,14 @@ class modCCKBreadCrumbsHelper
 	// getItems
 	protected static function _getItems( &$params, $items )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $params->get( 'showHome', 1 ) ) {
 			$item				=	new stdClass;
 			$item->id			=	$app->getMenu()->getDefault()->id;
-			$item->link			=	JRoute::_( 'index.php?Itemid='.$app->getMenu()->getDefault()->id );
+			$item->link			=	Route::_( 'index.php?Itemid='.$app->getMenu()->getDefault()->id );
 			$item->link_nosef	=	'index.php?Itemid='.$app->getMenu()->getDefault()->id;
-			$item->name			=	htmlspecialchars( $params->get( 'homeText', JText::_( 'MOD_CCK_BREADCRUMBS_HOME' ) ) );
+			$item->name			=	htmlspecialchars( $params->get( 'homeText', Text::_( 'MOD_CCK_BREADCRUMBS_HOME' ) ) );
 			
 			array_unshift( $items, $item );
 		}
@@ -133,13 +141,13 @@ class modCCKBreadCrumbsHelper
 	// setSeparator
 	public static function setSeparator( $custom = null )
 	{
-		$lang	=	JFactory::getLanguage();
+		$lang	=	Factory::getLanguage();
 		
 		if ( $custom == null ) {
 			if ( $lang->isRTL() ) {
-				$_separator	=	JHtml::_( 'image', 'system/arrow_rtl.png', null, null, true );
+				$_separator	=	HTMLHelper::_( 'image', 'system/arrow_rtl.png', null, null, true );
 			} else {
-				$_separator	=	JHtml::_( 'image', 'system/arrow.png', null, null, true );
+				$_separator	=	HTMLHelper::_( 'image', 'system/arrow.png', null, null, true );
 			}
 		} else {
 			$_separator	=	htmlspecialchars( $custom );

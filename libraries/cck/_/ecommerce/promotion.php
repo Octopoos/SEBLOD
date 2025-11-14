@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 // JCckEcommercePromotion
 abstract class JCckEcommercePromotion
 {
@@ -158,7 +161,7 @@ abstract class JCckEcommercePromotion
 						case 'free':
 							$promotion					=	0;
 							$res						=	$promotion;
-							$text						=	JText::_( 'COM_CCK_FREE' );
+							$text						=	Text::_( 'COM_CCK_FREE' );
 							$total						=	$promotion;
 							$results['items'][$p->id]	=	array(
 																'code'=>@(string)$params['code'],
@@ -319,7 +322,7 @@ abstract class JCckEcommercePromotion
 	// getCurrentCoupon
 	public static function getCurrentCoupon( $strict = false )
 	{
-		$coupon	=	JFactory::getApplication()->input->getString( 'coupon', '' );
+		$coupon	=	Factory::getApplication()->input->getString( 'coupon', '' );
 
 		if ( $coupon == '' && !$strict ) {
 			if ( $order_id = JCckEcommerce::isCheckout( true ) ) {
@@ -363,7 +366,7 @@ abstract class JCckEcommercePromotion
 					.	' LEFT JOIN #__cck_more_ecommerce_order_product AS b ON b.order_id = a.order_id'
 					.	' LEFT JOIN #__cck_more_ecommerce_subscription_definitions AS c ON c.name = a.type'
 					.	' WHERE a.state = 1'
-					.	' AND a.user_id = '.JFactory::getUser()->id
+					.	' AND a.user_id = '.Factory::getUser()->id
 					.	' AND b.product_id IN ('.$ref_ids.')'
 					.	' AND b.product_id NOT IN('.(int)$target_id.')'
 					.	' ORDER BY a.id DESC, price DESC'
@@ -372,10 +375,10 @@ abstract class JCckEcommercePromotion
 		$promo		=	JCckDatabase::loadObject( $query );
 
 		if ( $promo !== null && $promo->end_date ) {
-			$date1		=	JFactory::getDate()->modify( 'first day of this month' )->setTime( 0, 0, 0 );
-			$date2		=	JFactory::getDate( $promo->end_date )->setTime( 0, 0, 0 );
+			$date1		=	Factory::getDate()->modify( 'first day of this month' )->setTime( 0, 0, 0 );
+			$date2		=	Factory::getDate( $promo->end_date )->setTime( 0, 0, 0 );
 
-			if ( $date2 <= JFactory::getDate()->modify( '+'.$promo->renew_time.' days' )->setTime( 0, 0, 0 ) ) { // Renew
+			if ( $date2 <= Factory::getDate()->modify( '+'.$promo->renew_time.' days' )->setTime( 0, 0, 0 ) ) { // Renew
 				return $prorata;
 			}
 

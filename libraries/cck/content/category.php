@@ -10,7 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+use Joomla\CMS\Table\Table;
+
+// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
 // CCK_Category (deprecated)
 class CCK_Category
@@ -21,7 +23,7 @@ class CCK_Category
 		$row	=	'';
 		
 		if ( $id ) {
-			$row	=	JTable::getInstance( 'Category' );
+			$row	=	Table::getInstance( 'Category' );
 			$row->load( $id );
 		}
 		

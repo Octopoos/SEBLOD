@@ -10,7 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-$app	=	JFactory::getApplication();
-$error	=	JText::_( $app->input->get( 'error', '...' ) ) .'<br />'. '<strong>Oops!</strong> Try to close the page & re-open it properly.';
-echo JText::sprintf( $error, $this->item->id );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
+$app	=	Factory::getApplication();
+$error	=	Text::_( $app->input->get( 'error', '...' ) ) .'<br />'. '<strong>Oops!</strong> Try to close the page & re-open it properly.';
+echo Text::sprintf( $error, $this->item->id );
 ?>

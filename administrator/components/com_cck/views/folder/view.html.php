@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // View
 class CCKViewFolder extends JCckBaseLegacyViewForm
 {
@@ -19,7 +21,7 @@ class CCKViewFolder extends JCckBaseLegacyViewForm
 	// prepareDisplay
 	protected function prepareDisplay()
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->form		=	$this->get( 'Form' );
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->item		=	$this->get( 'Item' );

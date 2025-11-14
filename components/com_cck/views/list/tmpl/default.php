@@ -10,14 +10,19 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
 if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['validation'] != '' ) {
 	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'] );
 	$js	=	'if (jQuery("#'.$this->form_id.'").validationEngine("validate",task) === true) { JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'")); }';
 } else {
 	$js	=	'JCck.Core.submitForm((task=="save"?"search":task), document.getElementById("'.$this->form_id.'"));';
 }
-$app	=	JFactory::getApplication();
-$doc	=	JFactory::getDocument();
+$app	=	Factory::getApplication();
+$doc	=	Factory::getDocument();
 $id		=	str_replace( ' ', '_', trim( $this->pageclass_sfx ) );
 $id		=	( $id ) ? 'id="'.$id.'" ' : '';
 ?>
@@ -30,7 +35,7 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 		.				'return false;'
 		.			'}'
 		.		'}'
-		.		'jQuery("#'.$this->form_id.'").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">\');'
+		.		'jQuery("#'.$this->form_id.'").append(\'<input type="hidden" id="return" name="return" value="'.base64_encode( Uri::getInstance()->toString() ).'">\');'
 		.		'JCck.Core.submitForm(task,document.getElementById(\''.$this->form_id.'\'));'
 		.	'};'
 		.	'';
@@ -51,7 +56,7 @@ if ( $this->show_list_title ) {
 	echo '<'.$tag.$class.'>' . $this->title . '</'.$tag.'>';
 }
 if ( $this->show_list_desc && $this->description != '' && $app->input->get( 'tmpl' ) != 'raw' ) {
-	$description	=	JHtml::_( 'content.prepare', $this->description );
+	$description	=	HTMLHelper::_( 'content.prepare', $this->description );
 	$tag_desc		=	'';
 
 	if ( $this->tag_desc == 'div_div' ) {
@@ -83,7 +88,7 @@ if ( $this->show_list_desc == 1 && $this->description != '' ) {
 }
 if ( $this->show_form ) {
 	if ( $this->show_form == 1 ) {
-		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? Uri::base( true ) : htmlspecialchars( Uri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 
 		if ( $this->raw_rendering ) {
 			echo $this->form.$this->loadTemplate( 'hidden' );
@@ -94,7 +99,7 @@ if ( $this->show_form ) {
 			echo '</form>';
 		}
 	} elseif ( $this->show_form == 2 && $this->form_wrapper ) {
-		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+		echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? Uri::base( true ) : htmlspecialchars( Uri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 	}
 }
 
@@ -103,7 +108,7 @@ echo $this->loadTemplate( 'list' );
 if ( $this->show_form ) {
 	if ( $this->show_form == 2 ) {
 		if ( !$this->form_wrapper ) {
-			echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? JUri::base( true ) : htmlspecialchars( JUri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+			echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.( ( $this->home ) ? Uri::base( true ) : htmlspecialchars( Uri::getInstance()->getPath() ) ).'" autocomplete="off" method="get" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 		}
 		if ( $this->raw_rendering ) { 
 			echo $this->form.$this->loadTemplate( 'hidden' );
@@ -127,7 +132,7 @@ if ( $this->show_list_desc == 2 && $this->description != '' ) {
 <?php }
 if ( $this->load_ajax ) {
 $pre		=	'';
-$url		=	JUri::current();
+$url		=	Uri::current();
 
 if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	$pre					=	'#seblod_form_raw ';
@@ -154,7 +159,7 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 		}
 		$.ajax({
 			cache: false,
-			data: 'format=raw&task=search&infinite=1&context=<?php echo json_encode( $this->context ); ?>&return=<?php echo base64_encode( JUri::getInstance()->toString() ); ?>'+query_params,
+			data: 'format=raw&task=search&infinite=1&context=<?php echo json_encode( $this->context ); ?>&return=<?php echo base64_encode( Uri::getInstance()->toString() ); ?>'+query_params,
 			dataType: data_type,
 			type: "GET",
 			url: "<?php echo $url; ?>",
@@ -227,12 +232,12 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 	if ( !$auto_id ) {
 		$auto_id	=	$app->input->getInt( 'Itemid', 0 );
 	}
-	$url		=	JRoute::_( 'index.php?Itemid='.$auto_id );
+	$url		=	Route::_( 'index.php?Itemid='.$auto_id );
 	
 	if ( $url == '/' ) {
 		$url	=	'';
 	}
-	$url	=	JUri::getInstance()->toString( array( 'scheme', 'host', 'port' ) ).$url;
+	$url	=	Uri::getInstance()->toString( array( 'scheme', 'host', 'port' ) ).$url;
 ?>
 <script type="text/javascript">
 (function ($){

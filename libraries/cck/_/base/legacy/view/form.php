@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+
 // View
-class JCckBaseLegacyViewForm extends JViewLegacy
+class JCckBaseLegacyViewForm extends HtmlView
 {
 	protected $form;
 	protected $item;
@@ -47,7 +50,7 @@ class JCckBaseLegacyViewForm extends JViewLegacy
 	// completeUI
 	protected function completeUI()
 	{
-		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : JText::_( 'COM_CCK_ADD_NEW' ) ).' '.JText::_( 'COM_CCK_'.$this->vName );
+		$title	=	( ( is_object( $this->item ) && $this->item->title != '' ) ? '"'.$this->item->title.'"' : Text::_( 'COM_CCK_ADD_NEW' ) ).' '.Text::_( 'COM_CCK_'.$this->vName );
 		
 		$this->document->setTitle( $title );
 	}

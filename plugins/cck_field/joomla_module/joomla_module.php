@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 // Plugin
 class plgCCK_FieldJoomla_Module extends JCckPluginField
 {
@@ -38,7 +41,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
-		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+		if ( Factory::getApplication()->input->get( 'format' ) == 'raw' ) {
 			$field->value	=	'';
 
 			return;
@@ -51,7 +54,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 			$value	=	'{load'.$mode.' '.$field->defaultvalue.$style.'}';
 
 			if ( $field->bool2 ) {
-				$value	=	JHtml::_( 'content.prepare', $value );
+				$value	=	HTMLHelper::_( 'content.prepare', $value );
 			}
 		}
 		
@@ -73,7 +76,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		$value		=	'';
 
 		// Prevent Joomla! modules to be rendered on format=raw as there is no renderer class
-		if ( JFactory::getApplication()->input->get( 'format' ) == 'raw' ) {
+		if ( Factory::getApplication()->input->get( 'format' ) == 'raw' ) {
 			$field->form	=	$form;
 			$field->value	=	$value;
 
@@ -90,7 +93,7 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 			$value	=	$field->defaultvalue;
 
 			if ( $field->bool2 ) {
-				$form	=	JHtml::_( 'content.prepare', $form );
+				$form	=	HTMLHelper::_( 'content.prepare', $form );
 			}
 		}
 

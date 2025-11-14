@@ -10,15 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JFormField
-class JFormFieldCckPicker extends JFormField
+class JFormFieldCckPicker extends FormField
 {
 	protected $type	=	'CckPicker';
 	
 	// getInput
 	protected function getInput()
 	{
-		JPluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_field' );
 		require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 		
 		
@@ -29,12 +35,12 @@ class JFormFieldCckPicker extends JFormField
 		$and		=	( $storage != '' ) ? ' AND a.storage_field LIKE "'.$storage.'%"' : '';
 		$fields		=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 													. ' WHERE a.storage = "dev" AND a.id > 500'.$and.' ORDER BY text' );
-		$fields		=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-		$html		=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' );
+		$fields		=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
+		$html		=	HTMLHelper::_( 'select.genericlist', $fields, 'fields_list', 'size="1" class="inputbox select" style="max-width:175px;"', 'value', 'text', '', 'fields_list' );
 		
 		$format		=	(string)$this->element['js_format'];
 
-		$lang			=	JFactory::getLanguage();
+		$lang			=	Factory::getLanguage();
 		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
@@ -72,7 +78,7 @@ class JFormFieldCckPicker extends JFormField
 	// _addScripts
 	protected function _addScripts( $id, $params, $format )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$css	=	'';
 		$js		=	'';
 		$js2	=	'';

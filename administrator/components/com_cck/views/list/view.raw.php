@@ -10,19 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\Registry\Registry;
+
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
 //JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php' );
 
 // View
-class CCKViewList extends JViewLegacy
+class CCKViewList extends HtmlView
 {
 	protected $vName	=	'list';
 	
 	// display
 	public function display( $tpl = null )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$layout						=	$app->input->get( 'tmpl' );
 		$uniqId						=	'';
 
@@ -49,11 +53,11 @@ class CCKViewList extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay( $preconfig )
 	{
-		$app						=	JFactory::getApplication();
+		$app						=	Factory::getApplication();
 		$this->option				=	$app->input->get( 'option', '' );
 		$this->state				=	$this->get( 'State' );
 		$option						=	$this->option;
-		$params						=	new JRegistry;
+		$params						=	new Registry;
 		$view						=	$this->getName();
 		
 		$limitstart					=	$this->state->get( 'limitstart' );

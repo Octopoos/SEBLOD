@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // Model
-class CCKModelList extends JModelLegacy
+class CCKModelList extends BaseDatabaseModel
 {
 	var	$_pagination	=	null;
 		
@@ -20,8 +24,8 @@ class CCKModelList extends JModelLegacy
 	{
 		parent::__construct();
 		
-		$app	=	JFactory::getApplication();
-		$config	=	JFactory::getConfig();
+		$app	=	Factory::getApplication();
+		$config	=	Factory::getConfig();
 		
 		$this->setState( 'limitstart', $app->input->getUInt( 'limitstart', 0 ) );
 		$this->setState( 'limit', $app->getUserStateFromRequest( 'com_cck.limit', 'limit', $config->get( 'list_limit' ), 'uint' ) );
@@ -42,8 +46,8 @@ class CCKModelList extends JModelLegacy
 	// delete
 	public function delete( $pks = array() )
 	{
-		JPluginHelper::importPlugin( 'content' );
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'content' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 		
 		$nb		=	0;
 		$pks_in	=	implode( ',', $pks );
@@ -71,13 +75,13 @@ class CCKModelList extends JModelLegacy
 	// saveOrder
 	public function saveOrder( $pks = array(), $lft = array() )
 	{
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 		
 		if ( !count( $pks ) ) {
 			return false;
 		}
 
-		$db 	= 	JFactory::getDbo();
+		$db 	= 	Factory::getDbo();
 		$query	= 	$db->getQuery( true );
 		$query->select( 'a.id, a.pk, a.storage_location, b.id AS type_id' )
 			  ->from( '#__cck_core AS a' )

@@ -8,6 +8,10 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 jimport( 'joomla.application.module.helper' );
 jimport( 'cck.rendering.document.document' );
 
@@ -115,7 +119,7 @@ class CCK_DocumentHTML extends CCK_Document
 
 		$renderer = $this->loadRenderer($type);
 		if ($this->_caching == true && $type == 'modules') {
-			$cache = JFactory::getCache('com_modules', '');
+			$cache = Factory::getCache('com_modules', '');
 			$hash = md5(serialize(array($name, $attribs, $result, $renderer)));
 			$cbuffer = $cache->get('cbuffer_'.$type);
 
@@ -263,7 +267,7 @@ class CCK_DocumentHTML extends CCK_Document
 		}
 
 		// Load the language file for the template
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 
 		// 1.5 or core then 1.6
 		$lang->load('tpl_' . $template, JPATH_BASE, null, false, true)
@@ -271,8 +275,8 @@ class CCK_DocumentHTML extends CCK_Document
 
 		// Assign the variables
 		$this->template = $template;
-		$this->baseurl = JUri::base(true);
-		$this->params = isset($params['params']) ? $params['params'] : new JRegistry;
+		$this->baseurl = Uri::base(true);
+		$this->params = isset($params['params']) ? $params['params'] : new Registry;
 
 		// Load
 		$this->_template = $this->_loadTemplate($directory . '/' . $template, $file);

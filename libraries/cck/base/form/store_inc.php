@@ -10,18 +10,25 @@
 
 defined( '_JEXEC' ) or die;
 
-$app		=	JFactory::getApplication();
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
+
+$app		=	Factory::getApplication();
 $author		=	null;
 $client		=	$preconfig['client'];
 $context	=	'';
-$lang   	=	JFactory::getLanguage();
+$lang   	=	Factory::getLanguage();
 $post		=	$app->input->post->getArray();
-$session	=	JFactory::getSession();
-$user		=	JFactory::getUser();
+$session	=	Factory::getSession();
+$user		=	Factory::getUser();
 $unique		=	( $preconfig['unique'] ) ? $preconfig['unique'] : 'seblod_form';
 $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
-$hash		=	JApplicationHelper::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
+$hash		=	ApplicationHelper::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
 $legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 $legacy		=	$legacy && $legacy <= 2024 ? true : false;
@@ -42,7 +49,7 @@ if ( !$user->authorise( 'core.admin' ) && $hashed !== null && ( $hash != $hashed
 					'validate'=>''
 				);
 
-	$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
+	$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED' ), 'error' );
 	return 0;
 }
 
@@ -52,7 +59,7 @@ if ( ! $type ) {
 	$app->enqueueMessage( 'Oops! Content Type not found.. ; (', 'error' ); return;
 }
 
-$options	=	new JRegistry;
+$options	=	new Registry;
 $options->loadString( $type->{'options_'.$client} );
 
 if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.admin.form', 'com_cck.form.'.$type->id ) ) {
@@ -69,9 +76,9 @@ if ( $type->admin_form && $app->isClient( 'site' ) && $user->authorise( 'core.ad
 require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 $lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
 
-JPluginHelper::importPlugin( 'cck_field' );
-JPluginHelper::importPlugin( 'cck_field_restriction' );
-JPluginHelper::importPlugin( 'cck_storage_location' );
+PluginHelper::importPlugin( 'cck_field' );
+PluginHelper::importPlugin( 'cck_field_restriction' );
+PluginHelper::importPlugin( 'cck_storage_location' );
 
 if ( !$isNew ) {
 	$author	=	JCckDatabase::loadObject( 'SELECT author_id AS id, author_session AS session FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $type->name ).'" AND pk = '.(int)$id );
@@ -145,7 +152,7 @@ if ( $can['guest.edit'] ) {
 	}
 }
 if ( $type->storage_location == 'joomla_user' && $config['isNew'] ) {
-	if ( !( $user->id && !$user->guest ) && JComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
+	if ( !( $user->id && !$user->guest ) && ComponentHelper::getParams( 'com_users' )->get( 'allowUserRegistration' ) == 0 ) {
 		CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
 	}
 }
@@ -254,7 +261,7 @@ if ( count( $fields ) ) {
 			}
 		}
 		if ( $toBeChecked && !in_array( $field->name, $config['options']['data_integrity_excluded'] ) ) {
-			$hash		=	JApplicationHelper::getHash( $value );
+			$hash		=	ApplicationHelper::getHash( $value );
 			$hashed		=	$session->get( 'cck_hash_live_'.$field->name );
 			$session->clear( 'cck_hash_live_'.$field->name );
 			
@@ -322,7 +329,7 @@ if ( $stages > 1 ) {
 // Validate
 if ( $config['validate'] ) {
 	if ( count( $integrity ) ) {
-		$app->enqueueMessage( JText::sprintf( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED_VALUES', implode( ', ', $integrity ) ), 'error' );
+		$app->enqueueMessage( Text::sprintf( 'COM_CCK_ERROR_DATA_INTEGRITY_CHECK_FAILED_VALUES', implode( ', ', $integrity ) ), 'error' );
 	}
 	return 0;
 }
@@ -335,7 +342,7 @@ if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
 		if ( $legacy ) {
 			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-				$options	=	new JRegistry( $p->options );
+				$options	=	new Registry( $p->options );
 
 				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 			}
@@ -371,7 +378,7 @@ if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
 		if ( $legacy ) {
 			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-				$options	=	new JRegistry( $p->options );
+				$options	=	new Registry( $p->options );
 
 				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 			}
@@ -414,7 +421,7 @@ if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
 		if ( $legacy ) {
 			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-				$options	=	new JRegistry( $p->options );
+				$options	=	new Registry( $p->options );
 
 				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 			}
@@ -439,7 +446,7 @@ if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
 		if ( $legacy ) {
 			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-				$options	=	new JRegistry( $p->options );
+				$options	=	new Registry( $p->options );
 
 				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
 			}

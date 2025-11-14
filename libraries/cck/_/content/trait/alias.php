@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
 
 if ( version_compare( PHP_VERSION, '5.4', '<=' ) ) {
 	return;
@@ -38,7 +39,7 @@ trait JCckContentTraitAlias
 		$alias	=	ApplicationHelper::stringURLSafe( $alias, $this->_instance_base->language );
 
 		if ( trim( str_replace( '-', '', $alias ) ) == '' ) {
-			$alias	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+			$alias	=	Factory::getDate()->format( 'Y-m-d-H-i-s' );
 		}
 
 		$this->_instance_base->alias	=	$alias;

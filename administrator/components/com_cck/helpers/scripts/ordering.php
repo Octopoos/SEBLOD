@@ -10,10 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
-$doc	=	JFactory::getDocument();
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
+$doc	=	Factory::getDocument();
 $name	=	$this->item->name;
-$lang   =	JFactory::getLanguage();
-$root	=	JUri::root( true );
+$lang   =	Factory::getLanguage();
+$root	=	Uri::root( true );
 $lang->load( 'plg_cck_field_field_x', JPATH_ADMINISTRATOR, null, false, true );
 $lang->load( 'plg_cck_field_group_x', JPATH_ADMINISTRATOR, null, false, true );
 Helper_Include::addDependencies( 'box', 'edit' );
@@ -98,7 +102,7 @@ $options	=	explode( '||', $options );
 ?>
 
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'COM_CCK_SEARCH_OPTIONS' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_CONSTRUCTION' ), Text::_( 'COM_CCK_SEARCH_OPTIONS' ) ); ?>
 	<input type="hidden" id="match_mode" name="match_mode" value="" />
 	<ul class="adminformlist adminformlist-2cols">
 		<?php

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
 
 // Class
@@ -44,7 +46,7 @@ class plgCCK_Storage_LocationJoomla_Article_Integration extends plgCCK_Storage_L
 	// onCCK_Storage_LocationAfterRender
 	public static function onCCK_Storage_LocationAfterRender( &$buffer, &$data, $uri = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( $uri['layout'] ) {
 			return;

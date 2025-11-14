@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -135,16 +139,16 @@ class plgCCK_FieldRadio extends JCckPluginField
 						$val	=	$opt[1];
 					}
 					if ( $field->bool8 && trim( $text ) != '' ) {
-						$text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					if ( $attrib ) {
 						$attr['attr']	=	'';
 						foreach ( $attribs as $k=>$a ) {
 							$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 						}
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, $attr );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, $attr );
 					} else {
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 					}
 				}
 			}
@@ -225,7 +229,7 @@ class plgCCK_FieldRadio extends JCckPluginField
 		
 		if ( $form != '' ) {
 			if ( JCck::on( '4.0' ) && strpos( $field->css, 'btn-group' ) !== false ) {
-				JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/media/system/css/fields/switcher.min.css' );
+				Factory::getDocument()->addStyleSheet( Uri::root( true ).'/media/system/css/fields/switcher.min.css' );
 
 				$form	=	'<div class="switcher">'.$form.'<span class="toggle-outside"><span class="toggle-inside"></span></span></div>';
 			}

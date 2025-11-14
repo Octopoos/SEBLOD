@@ -10,10 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modeladmin' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 
 // Model
-class CCKModelBox extends JModelAdmin
+class CCKModelBox extends AdminModel
 {
 	protected $text_prefix	=	'COM_CCK';
 	
@@ -26,7 +27,7 @@ class CCKModelBox extends JModelAdmin
 	// populateState
 	protected function populateState()
 	{
-		$app	=	JFactory::getApplication( 'administrator' );
+		$app	=	Factory::getApplication( 'administrator' );
 		
 		if ( $alt = (string)$app->getUserState( CCK_COM.'.add.box.alt' ) ) {
 			$this->setState( 'alt', $alt );

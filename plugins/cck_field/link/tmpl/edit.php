@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 
@@ -21,11 +23,11 @@ $displayData	=	array(
 								'fields'=>array(
 									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 									JCckDev::renderBlank(),
-									JCckDev::renderForm( 'core_options_class', @$options2['link_label'], $config, array( 'label'=>JText::_( 'COM_CCK_SHOW_LINK' ), 'defaultvalue'=>'Link', 'size'=>'32', 'storage_field'=>'json[options2][link_label]' ) ),
+									JCckDev::renderForm( 'core_options_class', @$options2['link_label'], $config, array( 'label'=>Text::_( 'COM_CCK_SHOW_LINK' ), 'defaultvalue'=>'Link', 'size'=>'32', 'storage_field'=>'json[options2][link_label]' ) ),
 									JCckDev::renderForm( 'core_defaultvalue', @$options2['def_link'], $config, array( 'label'=>'Default Link', 'storage_field'=>'json[options2][def_link]' ) ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_SHOW_TEXT' ),
+											'label'=>Text::_( 'COM_CCK_SHOW_TEXT' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|70%',
 												'html'=>array(

@@ -9,6 +9,10 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 ?>
 
 <table class="<?php echo $this->css['table']; ?>">
@@ -16,19 +20,19 @@ defined( '_JEXEC' ) or die;
 		<tr>
 			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
 			<th width="30" class="center hidden-phone">
-				<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
+				<input type="checkbox" name="toggle" value="" title="<?php echo Text::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
 			</th>
 			<th class="center">
 				<?php
-                echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'title', $listDir, $listOrder );
-				echo JHtml::_( 'grid.sort', '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />', 'a.lft', $listDir, $listOrder );				
+                echo HTMLHelper::_( 'grid.sort', 'COM_CCK_TITLE', 'title', $listDir, $listOrder );
+				echo HTMLHelper::_( 'grid.sort', '<img style=\'float:left;padding-left:10px;\' src=\'components/'.CCK_COM.'/assets/images/18/icon-18-folders.png\' border=\'0\' alt=\'\' />', 'a.lft', $listDir, $listOrder );				
 				?>
 			</th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_COLOR', 'color', $listDir, $listOrder ); ?></th>
-			<th width="30%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_ELEMENTS' ); ?></th>
-			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_FEATURED', 'featured', $listDir, $listOrder ); ?></th>
-			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'published', $listDir, $listOrder ); ?></th>
-			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'id', $listDir, $listOrder ); ?></th>
+			<th width="10%" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_COLOR', 'color', $listDir, $listOrder ); ?></th>
+			<th width="30%" class="center hidden-phone nowrap"><?php echo Text::_( 'COM_CCK_ELEMENTS' ); ?></th>
+			<th width="10%" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_FEATURED', 'featured', $listDir, $listOrder ); ?></th>
+			<th width="10%" class="center nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_STATUS', 'published', $listDir, $listOrder ); ?></th>
+			<th width="32" class="center hidden-phone nowrap"><?php echo HTMLHelper::_( 'grid.sort', 'COM_CCK_ID', 'id', $listDir, $listOrder ); ?></th>
 		</tr>	
 	</thead>
     <tbody>
@@ -41,28 +45,28 @@ defined( '_JEXEC' ) or die;
 		$canEditOwn		=	'';
 
 		$last			=	( $item->id == 1 ) ? ' last' : '';
-		$link 			=	JRoute::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->id );
-		$linkTemplate	=	JRoute::_( 'index.php?option='.$this->option.'&view='._C1_NAME.'&folder_id='.$item->id );
-		$linkType		=	JRoute::_( 'index.php?option='.$this->option.'&view='._C2_NAME.'&folder_id='.$item->id );
-		$linkField		=	JRoute::_( 'index.php?option='.$this->option.'&view='._C3_NAME.'&folder_id='.$item->id );
-		$linkSearch		=	JRoute::_( 'index.php?option='.$this->option.'&view='._C4_NAME.'&folder_id='.$item->id );
-		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
+		$link 			=	Route::_( 'index.php?option='.$this->option.'&task=folder.edit&id='. $item->id );
+		$linkTemplate	=	Route::_( 'index.php?option='.$this->option.'&view='._C1_NAME.'&folder_id='.$item->id );
+		$linkType		=	Route::_( 'index.php?option='.$this->option.'&view='._C2_NAME.'&folder_id='.$item->id );
+		$linkField		=	Route::_( 'index.php?option='.$this->option.'&view='._C3_NAME.'&folder_id='.$item->id );
+		$linkSearch		=	Route::_( 'index.php?option='.$this->option.'&view='._C4_NAME.'&folder_id='.$item->id );
+		$linkFilter		=	Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
 		
 		Helper_Admin::addFolderClass( $css, $item->id, $item->color, $item->colorchar, '60' );
 		?>
         <tr class="row<?php echo $i % 2; ?><?php echo $last; ?>" height="64px;">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
+			<td class="center hidden-phone"><?php echo HTMLHelper::_( 'grid.id', $i, $item->id ); ?></td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
 					<?php
 					if ( $item->checked_out ) {
-						echo JHtml::_( 'jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->vName.'s.', $canCheckin )."\n";
+						echo HTMLHelper::_( 'jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->vName.'s.', $canCheckin )."\n";
 					}
 					if ( ( $canEdit && ! $checkedOut ) ) {
                         if ( $item->id == 1 || $item->id == 2 ) { ?>
                             <a href="<?php echo $link; ?>"><?php echo $item->title; ?></a>
-                            <?php echo '<div class="small">'.strtolower( JText::_( $item->name ) ).'</div>'; ?>
+                            <?php echo '<div class="small">'.strtolower( Text::_( $item->name ) ).'</div>'; ?>
                         <?php } else { ?>
                             <?php echo str_repeat( '<span class="gtr">&mdash;</span>', $item->depth ) ?><a href="<?php echo $link; ?>"><?php echo $item->title; ?></a>
                             <?php echo '<div class="small">'.str_repeat( '<span class="gtr">&mdash;</span>', $item->depth ).$item->name.'</div>'; ?>
@@ -70,7 +74,7 @@ defined( '_JEXEC' ) or die;
                     } else {
                         if ( $item->id == 1 || $item->id == 2 ) {
                             echo $item->title;
-                            echo '<div class="small">'.strtolower( JText::_( $item->name ) ).'</div>';
+                            echo '<div class="small">'.strtolower( Text::_( $item->name ) ).'</div>';
                         } else {
                             echo str_repeat( '.'._NBSP2, $item->depth ) . $item->title;
                             echo '<div class="small">'.str_repeat( '.'._NBSP2, $item->depth ).$item->name.'</div>';
@@ -89,11 +93,11 @@ defined( '_JEXEC' ) or die;
 			<td width="6%" class="center hidden-phone">
 				<?php echo ( $item->types_nb ) ? '<a href="'.$linkType.'" style="text-decoration: none;">'
 											   . '<img src="components/'.CCK_COM.'/assets/images/24/icon-24-'._C2_NAME.'.png" alt="" />'
-											   . ' <span class="elements-count">' . $item->types_nb.' '.JText::_( 'COM_CCK_FORMS' ). '</b></span>'
+											   . ' <span class="elements-count">' . $item->types_nb.' '.Text::_( 'COM_CCK_FORMS' ). '</b></span>'
 											   . '</a>' : '-'; ?>
 			</td>
 			<td class="center hidden-phone"><?php Helper_Display::quickJGrid( 'featured', $item->featured, $i, false ); ?></td>
-			<td class="center"><?php echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
+			<td class="center"><?php echo HTMLHelper::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' ); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, $item->id ); ?></td>
 		</tr>
 		<?php

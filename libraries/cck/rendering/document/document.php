@@ -8,12 +8,14 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Language\Text;
+
 //Register the renderer class with the loader
-JLoader::register( 'CCK_DocumentRenderer', __DIR__.'/renderer.php' );
+\JLoader::register( 'CCK_DocumentRenderer', __DIR__.'/renderer.php' );
 jimport('joomla.filter.filteroutput');
 
 // CCK_Document
-class CCK_Document extends JObject
+class CCK_Document extends \Joomla\CMS\Object\CMSObject
 {
 	var $id	=	1;
 	
@@ -93,7 +95,7 @@ class CCK_Document extends JObject
 					require_once $path;
 				}
 				else {
-					throw new RuntimeException(JText::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'), 500);
+					throw new RuntimeException(Text::_('JLIB_DOCUMENT_ERROR_UNABLE_LOAD_DOC_CLASS'), 500);
 				}
 			}
 

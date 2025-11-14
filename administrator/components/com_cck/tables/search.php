@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 // Table
-class CCK_TableSearch extends JTable
+class CCK_TableSearch extends Table
 {
 	// __construct
 	public function __construct( &$db )
@@ -33,7 +36,7 @@ class CCK_TableSearch extends JTable
 			$this->name		=	str_replace( array( '___', '__' ), '_', $this->name );
 
 			if( trim( str_replace( '_', '', $this->name ) ) == '' ) {
-				$datenow	=	JFactory::getDate();
+				$datenow	=	Factory::getDate();
 				$this->name =	$datenow->format( 'Y_m_d_H_i_s' );
 			}
 		}

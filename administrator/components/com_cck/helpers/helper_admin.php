@@ -10,6 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/common/admin.php';
 
 // Helper
@@ -29,8 +37,8 @@ class Helper_Admin extends CommonHelper_Admin
 		$addons		=	array();
 		$items		=	array();
 		$uix		=	JCck::getUIX();
-		$vName2		=	JFactory::getApplication()->input->get( 'filter_e_type', '' );
-		$folder		=	JText::_( 'COM_CCK_'._C0_TEXT.'S' );
+		$vName2		=	Factory::getApplication()->input->get( 'filter_e_type', '' );
+		$folder		=	Text::_( 'COM_CCK_'._C0_TEXT.'S' );
 		
 		if ( $uix == 'compact' ) {
 			$items	=	array( array( 'name'=>$folder, 'link'=>_C0_LINK, 'active'=>( $vName == _C0_NAME ) ),
@@ -81,7 +89,7 @@ class Helper_Admin extends CommonHelper_Admin
 	// addToolbar
 	public static function addToolbar( $vName, $vTitle, $folderId = 0 )
 	{
-		$bar		=	JToolBar::getInstance( 'toolbar' );
+		$bar		=	Toolbar::getInstance( 'toolbar' );
 		$canDo		=	self::getActions( $folderId );
 		$data_bs	=   JCck::on( '4.0' ) ? 'data-bs-' : 'data-';
 		$uix		=	JCck::getUIX();
@@ -89,12 +97,12 @@ class Helper_Admin extends CommonHelper_Admin
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
 		if ( $vTitle != '' ) {
-			JToolBarHelper::title( JText::_( $vTitle.'_MANAGER' ), self::getIcon( $vName ) );
+			ToolbarHelper::title( Text::_( $vTitle.'_MANAGER' ), self::getIcon( $vName ) );
 		}
 		if ( $canDo->get( 'core.create' ) ) {
 			if ( $vName == 'type' || $vName == 'search' || $vName == 'site' ) {
 				$hasModal	=	true;
-				$label	=	JText::_( 'JTOOLBAR_NEW' );
+				$label	=	Text::_( 'JTOOLBAR_NEW' );
 				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal2" class="btn btn-small btn-success">'
 						.	'<span class="icon-new" title="'.$label.'"></span>&nbsp;'.$label.'</button>';
 
@@ -103,7 +111,7 @@ class Helper_Admin extends CommonHelper_Admin
 				}
 				$bar->appendButton( 'Custom', $html, 'new' );
 			} else {
-				JToolBarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
+				ToolbarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
 			}
 		}
 		if ( JCck::on( '4.0' ) && ( $canDo->get( 'core.edit' ) || $canDo->get( 'core.edit.state' ) || $canDo->get( 'core.delete' ) ) ) {
@@ -118,7 +126,7 @@ class Helper_Admin extends CommonHelper_Admin
 		}
 		if ( $canDo->get( 'core.edit' ) ) {
 			if ( !JCck::on( 4.0 ) ) {
-				JToolBarHelper::custom( $vName.'.edit', 'edit', 'edit', 'JTOOLBAR_EDIT', true );
+				ToolbarHelper::custom( $vName.'.edit', 'edit', 'edit', 'JTOOLBAR_EDIT', true );
 			}
 		}		
 		if ( $canDo->get( 'core.edit.state' ) || $canDo->get( 'core.delete' ) ) {
@@ -127,29 +135,29 @@ class Helper_Admin extends CommonHelper_Admin
 					$childBar->standardButton( 'publish' )->text( 'COM_CCK_TURN_ON' )->task( $vName.'s'.'.publish' )->listCheck( true );
 					$childBar->standardButton( 'unpublish' )->text( 'COM_CCK_TURN_OFF' )->task( $vName.'s'.'.unpublish' )->listCheck( true );
 				} else {
-					JToolBarHelper::custom( $vName.'s'.'.publish', 'publish', 'publish', 'COM_CCK_TURN_ON', true );
-					JToolBarHelper::custom( $vName.'s'.'.unpublish', 'unpublish', 'unpublish', 'COM_CCK_TURN_OFF', true );
+					ToolbarHelper::custom( $vName.'s'.'.publish', 'publish', 'publish', 'COM_CCK_TURN_ON', true );
+					ToolbarHelper::custom( $vName.'s'.'.unpublish', 'unpublish', 'unpublish', 'COM_CCK_TURN_OFF', true );
 				}
 			}
 			if ( $canDo->get( 'core.delete' ) ) {
 				if ( JCck::on( '4.0' ) ) {
 					$childBar->standardButton( 'delete' )->text( 'JTOOLBAR_DELETE' )->task( $vName.'s'.'.delete' )->listCheck( true )->buttonClass( 'btn-danger' );
 				} else {
-					JToolBarHelper::custom( $vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
+					ToolbarHelper::custom( $vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
 				}
 			}
 			if ( $canDo->get( 'core.edit.state' ) ) {
 				if ( JCck::on( '4.0' ) ) {
 					$childBar->standardButton( 'checkin' )->text( 'JTOOLBAR_CHECKIN' )->task( $vName.'s'.'.checkin' )->listCheck( true );
 				} else {
-					JToolBarHelper::custom( $vName.'s'.'.checkin', 'checkin', 'checkin', 'JTOOLBAR_CHECKIN', true );
+					ToolbarHelper::custom( $vName.'s'.'.checkin', 'checkin', 'checkin', 'JTOOLBAR_CHECKIN', true );
 				}
 			}
 			if ( $vName == 'type' || $vName == 'search' ) {
 				if ( JCck::on( '4.0' ) ) {
 					$childBar->standardButton( 'archive' )->text( 'JTOOLBAR_ARCHIVE' )->task( $vName.'s'.'.version' )->listCheck( true );
 				} else {
-					JToolBarHelper::custom( $vName.'s'.'.version', 'unarchive', 'archives', 'JTOOLBAR_ARCHIVE', true );
+					ToolbarHelper::custom( $vName.'s'.'.version', 'unarchive', 'archives', 'JTOOLBAR_ARCHIVE', true );
 				}
 			}
 		}
@@ -157,7 +165,7 @@ class Helper_Admin extends CommonHelper_Admin
 			if ( ( ( $vName == 'type' || $vName == 'search' ) && ( $canDo->get('core.create' ) || $canDo->get('core.edit' ) ) )
 				|| $canDo->get('core.edit' ) ) {
 				$hasModal	=	true;
-				$label	=	JText::_( 'JTOOLBAR_BATCH' );
+				$label	=	Text::_( 'JTOOLBAR_BATCH' );
 				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 						.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 
@@ -169,10 +177,10 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 		}
 		if ( $vName == 'folder' ) {
-			JToolBarHelper::custom( 'folders.rebuild', 'refresh', 'refresh', JText::_( 'COM_CCK_REBUILD' ), false );
+			ToolbarHelper::custom( 'folders.rebuild', 'refresh', 'refresh', Text::_( 'COM_CCK_REBUILD' ), false );
 
 			$hasModal	=	true;
-			$label	=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
+			$label	=	Text::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
 			$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 					.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 
@@ -181,29 +189,29 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 			$bar->appendButton( 'Custom', $html, 'batch' );
 		} elseif ( $vName == 'site' ) {
-			// JToolBarHelper::custom( 'sites.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_VISITS' ), true );
+			// ToolbarHelper::custom( 'sites.clear', 'refresh', 'refresh', Text::_( 'COM_CCK_CLEAR_VISITS' ), true );
 		} else {
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
 			if ( $vName == 'type' || $vName == 'search' ) {
 				if ( JCck::on( '4.0' ) ) {
-					$bar->linkButton( 'versions' )->text( 'COM_CCK_VERSIONS' )->url( JRoute::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ) )->icon( 'icon-archive' )->buttonClass( 'btn' );
+					$bar->linkButton( 'versions' )->text( 'COM_CCK_VERSIONS' )->url( Route::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ) )->icon( 'icon-archive' )->buttonClass( 'btn' );
 				} else {
-					$bar->appendButton( 'CckLink', 'archive', 'COM_CCK_VERSIONS', JRoute::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ), '_self' );					
+					$bar->appendButton( 'CckLink', 'archive', 'COM_CCK_VERSIONS', Route::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ), '_self' );					
 				}
 			} elseif ( $vName == 'template' ) {
 				if ( JCck::on( '4.0' ) ) {
-					$bar->linkButton( 'variations' )->text( JText::_( _C7_TEXT.'S' ) )->url( JRoute::_( 'index.php?option=com_cck&view=variations' ) )->icon( 'icon-unarchive' )->buttonClass( 'btn' );
+					$bar->linkButton( 'variations' )->text( Text::_( _C7_TEXT.'S' ) )->url( Route::_( 'index.php?option=com_cck&view=variations' ) )->icon( 'icon-unarchive' )->buttonClass( 'btn' );
 				} else {
-					$bar->appendButton( 'CckLink', 'cck-variation', JText::_( _C7_TEXT.'S' ), JRoute::_( 'index.php?option=com_cck&view=variations' ), '_self' );	
+					$bar->appendButton( 'CckLink', 'cck-variation', Text::_( _C7_TEXT.'S' ), Route::_( 'index.php?option=com_cck&view=variations' ), '_self' );	
 				}			
 			}
 		}
 
 		if ( $hasModal ) {
 			if ( JCck::on( '4.0' ) ) {
-				JHtml::_( 'bootstrap.renderModal', 'collapseModal' );
+				HTMLHelper::_( 'bootstrap.renderModal', 'collapseModal' );
 			} else {
-				JHtml::_( 'bootstrap.modal', 'collapseModal' );
+				HTMLHelper::_( 'bootstrap.modal', 'collapseModal' );
 			}
 		}
 	}
@@ -211,64 +219,64 @@ class Helper_Admin extends CommonHelper_Admin
 	// addToolbarEdit
 	public static function addToolbarEdit( $vName, $vTitle, $vMore = '', $params = array() )
 	{
-		$bar		=	JToolBar::getInstance( 'toolbar' );
-		$user		=	JFactory::getUser();
+		$bar		=	Toolbar::getInstance( 'toolbar' );
+		$user		=	Factory::getUser();
 		$checkedOut	= 	! ( $vMore['checked_out'] == 0 || $vMore['checked_out'] == $user->id );
 		$canDo		=	self::getActions( $vMore['folder'] );
 		$vSubtitle	=	'';
 		
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 		require_once JPATH_COMPONENT.'/helpers/toolbar/separator.php';
 		
 		if ( ( $vName == 'type' || $vName == 'search' ) ) {
-			$vSubtitle	=	' <span class="subtitle">[ '.JText::_( 'COM_CCK_SEBLOD_WORKSHOP' ).' ]</span>';
+			$vSubtitle	=	' <span class="subtitle">[ '.Text::_( 'COM_CCK_SEBLOD_WORKSHOP' ).' ]</span>';
 			require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 		}
 		if ( $vMore['isNew'] )  {
-			JToolBarHelper::title( JText::_( $vTitle ).': <small><small>[ '.JText::_( 'COM_CCK_ADD' ).' ]'.$vSubtitle.'</small></small>', self::getIcon( $vName ) );
+			ToolbarHelper::title( Text::_( $vTitle ).': <small><small>[ '.Text::_( 'COM_CCK_ADD' ).' ]'.$vSubtitle.'</small></small>', self::getIcon( $vName ) );
 			
 			if ( $canDo->get('core.create') ) {
-				JToolBarHelper::custom( $vName.'.apply', 'apply', 'apply', 'JTOOLBAR_APPLY', false );
-				JToolBarHelper::custom( $vName.'.save', 'save', 'save', 'JTOOLBAR_SAVE', false );
-				JToolBarHelper::custom( $vName.'.save2new', 'save-new', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', false );
+				ToolbarHelper::custom( $vName.'.apply', 'apply', 'apply', 'JTOOLBAR_APPLY', false );
+				ToolbarHelper::custom( $vName.'.save', 'save', 'save', 'JTOOLBAR_SAVE', false );
+				ToolbarHelper::custom( $vName.'.save2new', 'save-new', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', false );
 			}
-			JToolBarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CANCEL', false );
+			ToolbarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CANCEL', false );
 		} else {
-			JToolBarHelper::title( JText::_( $vTitle ).': <small><small>[ '.JText::_( 'JTOOLBAR_EDIT' ).' ]'.$vSubtitle.'</small></small>', self::getIcon( $vName ) );
+			ToolbarHelper::title( Text::_( $vTitle ).': <small><small>[ '.Text::_( 'JTOOLBAR_EDIT' ).' ]'.$vSubtitle.'</small></small>', self::getIcon( $vName ) );
 			
 			if ( !$checkedOut ) {
 				if ( $canDo->get('core.edit') ) {
-					JToolBarHelper::custom( $vName.'.apply', 'apply', 'apply', 'JTOOLBAR_APPLY', false );
-					JToolBarHelper::custom( $vName.'.save', 'save', 'save', 'JTOOLBAR_SAVE', false );
+					ToolbarHelper::custom( $vName.'.apply', 'apply', 'apply', 'JTOOLBAR_APPLY', false );
+					ToolbarHelper::custom( $vName.'.save', 'save', 'save', 'JTOOLBAR_SAVE', false );
 					if ( $canDo->get('core.create' ) ) {
-						JToolBarHelper::custom( $vName.'.save2new', 'save-new', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', false );
+						ToolbarHelper::custom( $vName.'.save2new', 'save-new', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', false );
 					}
 				}
 			}
 			if ( ! $vMore['isNew'] && $canDo->get( 'core.create' ) && $vName == 'folder' ) {
-				JToolBarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
+				ToolbarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
 				//if ( @$params['rename'] ) { /* TODO#SEBLOD: */
-				//	JToolBarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
+				//	ToolbarHelper::custom( $vName.'.save2copy', 'save-copy', 'save-copy', 'JTOOLBAR_SAVE_AS_COPY', false );
 				//}
 			}
-			JToolBarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
+			ToolbarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
 		}
 	}
 	
 	// addToolbarDelete
 	public static function addToolbarDelete( $vName, $vTitle )
 	{
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 		
-		JToolBarHelper::title( JText::_( $vTitle ).': <small><small>[ '.JText::_( 'Delete' ).' ]</small></small>', $vName.'s.png' );
-		JToolBarHelper::custom( $vName.'cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
+		ToolbarHelper::title( Text::_( $vTitle ).': <small><small>[ '.Text::_( 'Delete' ).' ]</small></small>', $vName.'s.png' );
+		ToolbarHelper::custom( $vName.'cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
 	}
 	
 	// getActions
 	public static function getActions( $folderId = 0 )
 	{
-		$user	=	JFactory::getUser();
-		$result	=	new JObject;
+		$user	=	Factory::getUser();
+		$result	=	new CMSObject;
 		
 		if ( empty( $folderId ) ) {
 			$assetName	=	'com_'.CCK_NAME;

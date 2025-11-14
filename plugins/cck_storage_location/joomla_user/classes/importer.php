@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_user/joomla_user.php';
 
 // Class
@@ -77,7 +79,7 @@ class plgCCK_Storage_LocationJoomla_User_Importer extends plgCCK_Storage_Locatio
 			if ( isset( $config['params']['force_password'] ) && $config['params']['force_password'] ) {
 				$table->password	=	$table->password_clear;
 			}
-			$parameters		=	JComponentHelper::getParams( 'com_users' );
+			$parameters		=	ComponentHelper::getParams( 'com_users' );
 			self::_completeTable( $table, $data, $config, $parameters );
 			
 			// Store

@@ -10,9 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
-JHtml::_( 'behavior.keepalive' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
-$app	=	JFactory::getApplication();
+HTMLHelper::_( 'behavior.keepalive' );
+
+$app	=	Factory::getApplication();
 Helper_Include::addScriptDeclaration( $this->config['javascript'] );
 if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['validation'] != '' ) {
 	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'], $this->form_id );
@@ -27,7 +31,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['v
 </script>
 
 <?php
-echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
+echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.Route::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
 echo $this->loadTemplate( 'toolbar' );
 echo $this->data;
 ?>
@@ -46,7 +50,7 @@ echo $this->data;
     <input type="hidden" name="config[copyfrom_id]" value="<?php echo @$this->config['copyfrom_id']; ?>" />
     <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
     <input type="hidden" name="config[unique]" value="" />
-	<?php echo JHtml::_( 'form.token' ); ?>
+	<?php echo HTMLHelper::_( 'form.token' ); ?>
 </div>
 </form>
 

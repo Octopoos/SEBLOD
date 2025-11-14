@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Table\Table;
+
 require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
 
 // Model
@@ -40,14 +46,14 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 	// getTable
 	public function getTable( $type = 'Folder', $prefix = CCK_TABLE, $config = array() )
 	{
-		return JTable::getInstance( $type, $prefix, $config );
+		return Table::getInstance( $type, $prefix, $config );
 	}
 	
 	// loadFormData
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data	=	JFactory::getApplication()->getUserState( CCK_COM.'.edit.folder.data', array() );
+		$data	=	Factory::getApplication()->getUserState( CCK_COM.'.edit.folder.data', array() );
 
 		if ( empty( $data ) ) {
 			$data	=	$this->getItem();
@@ -71,7 +77,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 	// prepareData
 	protected function prepareData()
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$data					=	$app->input->post->getArray();
 		$data['description']	=	$app->input->post->get( 'description', '', 'raw' );
 		
@@ -94,7 +100,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 	// prepareExport
 	public function prepareExport( $id = 0, $elements = array(), $dependencies = array(), $options = array() )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
@@ -142,7 +148,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		
 		// Copyright
 		if ( JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck_packager"' ) > 0 ) {
-			$params		=	JComponentHelper::getParams( 'com_cck_packager' );
+			$params		=	ComponentHelper::getParams( 'com_cck_packager' );
 			$copyright	=	$params->get( 'copyright' );
 		} else {
 			$copyright	=	'';
@@ -226,10 +232,10 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 				$filename			=	$name;	
 			}
 			if ( isset( $dependencies['categories'] ) && file_exists( $data['root_content'].'/joomla_category' ) ) {
-				$items	=	JFolder::files( $data['root_content'].'/joomla_category', '\.xml$' );
+				$items	=	Folder::files( $data['root_content'].'/joomla_category', '\.xml$' );
 				if ( count( $items ) == 1 && isset( $items[0] ) && $data['root_category'] != ''
-				&&  JFile::stripExt( $items[0] ) == $data['root_category'] ) {
-					JFolder::delete( $data['root_content'].'/joomla_category' );
+				&&  File::stripExt( $items[0] ) == $data['root_category'] ) {
+					Folder::delete( $data['root_content'].'/joomla_category' );
 				}
 			}
 		}
@@ -279,7 +285,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			$path_zip				.=	'_'.( ( isset( $manifest->version ) ) ? $manifest->version : '1.0.0' );
 		}
 		if ( isset( $options['filename_date'] ) && $options['filename_date'] ) {
-			$path_zip				.=	'_'.JFactory::getDate()->format( 'Y_m_d' );
+			$path_zip				.=	'_'.Factory::getDate()->format( 'Y_m_d' );
 		}
 		$path_zip					.=	'.zip';
 
@@ -288,12 +294,12 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 			if ( $copyright ) {
 				CCK_Export::update( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $copyright );
 			}
-			JFile::copy( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $path.'/pkg_script.php' );
+			File::copy( JPATH_ADMINISTRATOR.'/manifests/packages/'.$name.'/pkg_script.php', $path.'/pkg_script.php' );
 		} else {
-			JFile::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
+			File::copy( JPATH_SITE.'/libraries/cck/development/apps/script.php', $path.'/pkg_script.php' );
 			$buffer					=	file_get_contents( $path.'/pkg_script.php' );
 			$buffer					=	str_replace( '%class%', $filename, $buffer );
-			JFile::write( $path.'/pkg_script.php', $buffer );
+			File::write( $path.'/pkg_script.php', $buffer );
 			if ( $copyright ) {
 				CCK_Export::update( $path.'/pkg_script.php', $copyright );
 			}
@@ -356,7 +362,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 					if ( $copyright ) {
 						CCK_Export::update( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $copyright );
 					}
-					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.ini' );
+					File::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.ini' );
 				}
 				if ( is_file( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' ) ) {
 					$l	=	$lang->addChild( 'language', $language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
@@ -366,19 +372,19 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 					if ( $copyright ) {
 						CCK_Export::update( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $copyright );
 					}
-					JFile::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
+					File::copy( JPATH_SITE.'/language/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini', $dest.'/'.$language.'/'.$language.'.pkg_'.$filename.'.sys.ini' );
 				}
 			}
 		}
 
 		// Media
 		if ( file_exists( JPATH_SITE.'/media/cck/apps/'.$name ) ) {
-			JFolder::copy( JPATH_SITE.'/media/cck/apps/'.$name, $path.'/media' );	
+			Folder::copy( JPATH_SITE.'/media/cck/apps/'.$name, $path.'/media' );	
 		}
 		
 		// Manifest
 		if ( !JCck::is( '7' ) ) {
-			JFile::copy( JPATH_LIBRARIES.'/cck/base/install/_plg_system_blank.zip', $path.'/extensions/plg_system_blank.zip' );
+			File::copy( JPATH_LIBRARIES.'/cck/base/install/_plg_system_blank.zip', $path.'/extensions/plg_system_blank.zip' );
 		}
 		if ( is_object( $manifest ) && isset( $manifest->updateservers ) ) {
 			$servers	=	$xml->addChild( 'updateservers' );

@@ -10,7 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JTableUsergroup', JPATH_PLATFORM.'/joomla/database/table/usergroup.php' );
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Table\Table;
+
+// JLoader::register( 'JTableUsergroup', JPATH_PLATFORM.'/joomla/database/table/usergroup.php' );
 
 // Plugin
 class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
@@ -146,8 +153,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			require_once JPATH_SITE.'/components/com_content/router.php';
 		}
 		
-		JPluginHelper::importPlugin( 'content' );
-		$params	=	JComponentHelper::getParams( 'com_content' );
+		PluginHelper::importPlugin( 'content' );
+		$params	=	ComponentHelper::getParams( 'com_content' );
 	}
 	
 	// onCCK_Storage_LocationPrepareOrder
@@ -175,8 +182,8 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		}
 		
 		// Init
-		$db		=	JFactory::getDbo();
-		$now	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+		$db		=	Factory::getDbo();
+		$now	=	substr( Factory::getDate()->toSql(), 0, -3 );
 		
 		// Prepare
 		if ( !$this->params->get( 'bridge', 0 ) ) {
@@ -230,7 +237,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	// onCCK_Storage_LocationDelete
 	public static function onCCK_Storage_LocationDelete( $pk, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$table	=	self::_getTable( $pk );	
 		
 		if ( !$table ) {
@@ -244,12 +251,12 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		if ( ( !$canDelete && !$canDeleteOwn ) ||
 			 ( !$canDelete && $canDeleteOwn && $config['author'] != $user->id ) ||
 			 ( $canDelete && !$canDeleteOwn && $config['author'] == $user->id ) ) {
-			$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
+			$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_DELETE_NOT_PERMITTED' ), 'error' );
 			return;
 		}
 		
 		// Process
-		JPluginHelper::importPlugin( 'user' );
+		PluginHelper::importPlugin( 'user' );
 
 		$result	=	$app->triggerEvent( 'onUserBeforeDeleteGroup', array( $table->getProperties() ) );
 		if ( in_array( false, $result, true ) ) {
@@ -273,7 +280,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		}
 		
 		// Init
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$table	=	self::_getTable( $pk );
 		$isNew	=	( $pk > 0 ) ? false : true;
 
@@ -296,10 +303,10 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 		self::_completeTable( $table, $data, $config );
 		
 		// Store
-		JPluginHelper::importPlugin( 'user' );
+		PluginHelper::importPlugin( 'user' );
 		$app->triggerEvent( 'onUserBeforeSaveGroup', array( self::$context, &$table, $isNew ) );
 		if ( !$table->store() ) {
-			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+			Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 
 			if ( $isNew ) {
 				parent::g_onCCK_Storage_LocationRollback( $config['id'] );
@@ -315,14 +322,14 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$config['pk']	=	self::$pk;
 		}
 		
-		$config['author']	=	JFactory::getUser()->id;
+		$config['author']	=	Factory::getUser()->id;
 		parent::g_onCCK_Storage_LocationStore( $data, self::$table, self::$pk, $config );
 	}
 	
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JTable::getInstance( 'Usergroup' );
+		$table	=	Table::getInstance( 'Usergroup' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );
@@ -385,7 +392,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
 		if ( isset( $storage[self::$table]->_route ) ) {
-			return JRoute::_( $storage[self::$table]->_route, false );
+			return Route::_( $storage[self::$table]->_route, false );
 		}
 		
 		$bridge			=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.alias, a.catid, b.title AS category_title, b.alias AS category_alias'
@@ -416,7 +423,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 			$storage[self::$table]->_route	=	ContentHelperRoute::getArticleRoute( $bridge->slug, $bridge->catid );
 		}
 		
-		return JRoute::_( $storage[self::$table]->_route, false );
+		return Route::_( $storage[self::$table]->_route, false );
 	}
 	
 	// parseRoute

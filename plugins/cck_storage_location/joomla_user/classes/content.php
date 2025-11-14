@@ -10,13 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JCckContent
 class JCckContentJoomla_User extends JCckContent
 {
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		$this->_instance_base	=	new JUser;
+		$this->_instance_base	=	\Joomla\CMS\Factory::getUser();
 
 		$fields					=	array_keys( $this->_instance_base->getTable()->getFields() );
 		unset( $fields['id'] );
@@ -30,7 +32,7 @@ class JCckContentJoomla_User extends JCckContent
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'user' );
+		PluginHelper::importPlugin( 'user' );
 	}
 
 	// check
@@ -98,7 +100,7 @@ class JCckContentJoomla_User extends JCckContent
 		}
 
 		if ( JCck::getUser()->id == $this->_pk ) {
-			return JUserHelper::addUserToGroup( $this->_pk, $group_id );
+			return \Joomla\CMS\User\UserHelper::addUserToGroup( $this->_pk, $group_id );
 		} else {
 			return JCckDatabase::execute( 'INSERT IGNORE INTO #__user_usergroup_map VALUES ('.(int)$this->_pk.', '.(int)$group_id.')' );
 		}
@@ -117,7 +119,7 @@ class JCckContentJoomla_User extends JCckContent
 		}
 
 		if ( JCck::getUser()->id == $this->_pk ) {
-			return JUserHelper::removeUserFromGroup( $this->_pk, $group_id );
+			return \Joomla\CMS\User\UserHelper::removeUserFromGroup( $this->_pk, $group_id );
 		} else {
 			return JCckDatabase::execute( 'DELETE FROM #__user_usergroup_map WHERE user_id = '.(int)$this->_pk.' AND group_id = '. (int)$group_id );
 		}

@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 // View
 class CCKViewCck extends JCckBaseLegacyView
 {
@@ -18,7 +25,7 @@ class CCKViewCck extends JCckBaseLegacyView
 	// completeUI
 	public function completeUI()
 	{
-		$this->document->setTitle( JText::_( 'LIB_CCK_SEBLOD' ) );
+		$this->document->setTitle( Text::_( 'LIB_CCK_SEBLOD' ) );
 	}
 
 	// prepareSidebar
@@ -46,22 +53,22 @@ class CCKViewCck extends JCckBaseLegacyView
 														. ' AND b.enabled = 1'
 														. ' ORDER BY a.title ASC' );
 		$groupedButtons =   array();
-		$lang           =   JFactory::getLanguage();
+		$lang           =   Factory::getLanguage();
 		$more           =   array(
 								'ADDON'=>'16',
 								'PLUGIN'=>'19,20,21,22,23,24,25,112',
 								'TEMPLATE'=>'27',
 							);
-		$user			=	JFactory::getUser();
+		$user			=	Factory::getUser();
 
 		foreach ( $core as $k=>$v ) {
 			$buttons[]  =   array(
 								'access'=>array( 'core.manage', 'com_cck' ),
 								'group' =>'COM_CCK_SEBLOD_CORE',
 								'image' =>$v['img'],
-								'link'  =>JRoute::_( constant( '_C'.$v['val'].'_LINK' ) ),
+								'link'  =>Route::_( constant( '_C'.$v['val'].'_LINK' ) ),
 								'target'=>'_self',
-								'text'  =>$v['pre'].JText::_( $v['key'].constant( '_C'.$v['val'].'_TEXT' ).'S' )
+								'text'  =>$v['pre'].Text::_( $v['key'].constant( '_C'.$v['val'].'_TEXT' ).'S' )
 							);
 		}
 		foreach ( $components as $k=>$v ) {
@@ -71,9 +78,9 @@ class CCKViewCck extends JCckBaseLegacyView
 								'access'=>array( 'core.manage', $v->element ),
 								'group' =>'COM_CCK_SEBLOD_MORE',
 								'image' =>'cck-addon',
-								'link'  =>JRoute::_( $v->link ),
+								'link'  =>Route::_( $v->link ),
 								'target'=>'_self',
-								'text'  =>JText::_( $v->element )
+								'text'  =>Text::_( $v->element )
 							);
 		}
 		foreach ( $more as $k=>$v ) {
@@ -81,9 +88,9 @@ class CCKViewCck extends JCckBaseLegacyView
 								'access'=>array( 'core.manage', 'com_cck' ),
 								'group' =>'COM_CCK_SEBLOD_STORE',
 								'image' =>'download',
-								'link'  =>JRoute::_( 'https://www.seblod.com/store/extensions?seb_item_category='.$v ),
+								'link'  =>Route::_( 'https://www.seblod.com/store/extensions?seb_item_category='.$v ),
 								'target'=>'_blank',
-								'text'  =>JText::_( 'COM_CCK_PANE_MORE_'.$k )
+								'text'  =>Text::_( 'COM_CCK_PANE_MORE_'.$k )
 							);
 		}
 
@@ -98,7 +105,7 @@ class CCKViewCck extends JCckBaseLegacyView
 					if ( $group ) {
 						$html[]	=	'</ul><ul class="nav flex-column">';
 					}
-					$html[] =   '<li class="nav-header"><span>'.JText::_( $button['group'] ).'</span></li>';
+					$html[] =   '<li class="nav-header"><span>'.Text::_( $button['group'] ).'</span></li>';
 					$group	=	$button['group'];
 				}
 				if ( !$user->authorise( $button['group'][0], $button['group'][1] ) ) {
@@ -116,7 +123,7 @@ class CCKViewCck extends JCckBaseLegacyView
 			}
 
 			$this->sidebar  =	'<div class="sidebar-nav quick-icons">'
-						.	JHtml::_( 'links.linksgroups', $groupedButtons )
+						.	HTMLHelper::_( 'links.linksgroups', $groupedButtons )
 						.	'</div>';
 		}
 	}
@@ -124,13 +131,13 @@ class CCKViewCck extends JCckBaseLegacyView
 	// prepareToolbar
 	protected function prepareToolbar()
 	{
-		$bar	=	JToolBar::getInstance( 'toolbar' );
+		$bar	=	Toolbar::getInstance( 'toolbar' );
 		$canDo	=	Helper_Admin::getActions();
 		
-		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		ToolbarHelper::title( CCK_LABEL, 'cck-seblod' );
 		
 		if ( $canDo->get( 'core.admin' ) ) {
-			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
+			ToolbarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}
 		
 		Helper_Admin::addToolbarHistoryButton();
@@ -140,7 +147,7 @@ class CCKViewCck extends JCckBaseLegacyView
 	// showInfo
 	protected function showInfo()
 	{
-		$info	=	JFactory::getApplication()->input->get( 's' );
+		$info	=	Factory::getApplication()->input->get( 's' );
 
 		if ( $info == 'patchSQL' ) {
 			require_once JPATH_ADMINISTRATOR.'/manifests/packages/cck/pkg_script.php';
@@ -155,7 +162,7 @@ class CCKViewCck extends JCckBaseLegacyView
 				}
 
 				// $this->_showInfo	.=	'<div class="modal modal-small hide fade" id="collapseModal"><div class="modal-dialog modal-lg"><div class="modal-content">'
-				// 					.	'<div class="modal-header"><h3 class="modal-title">'.JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ).'</h3><button type="button" class="btn-close novalidate" onclick="toggleMyModal();" aria-label="Close"></button></div>'
+				// 					.	'<div class="modal-header"><h3 class="modal-title">'.Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ).'</h3><button type="button" class="btn-close novalidate" onclick="toggleMyModal();" aria-label="Close"></button></div>'
 				// 					.	'<div class="modal-body" style="padding:15px">';
 
 				$this->_showInfo	.=	'<h4>SQL Tables:</h4>'

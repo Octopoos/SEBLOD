@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Filesystem\File;
+
 jimport( 'joomla.filesystem.file' );
 
 // JCckDevImage
@@ -303,7 +305,7 @@ class JCckDevImage
 		$output	=	ob_get_contents();
 		ob_end_clean();
 		
-		JFile::write( $file, $output );
+		File::write( $file, $output );
 	}
 
 	// _prepareDimensions

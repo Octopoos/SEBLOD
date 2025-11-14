@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 // Plugin
 class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 {
@@ -35,7 +39,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$list			=	$link->get( 'list', '' );
 		$itemId			=	(int)$link->get( 'itemid', '' );
 		$search_field	=	$link->get( 'search_field', 0 );
@@ -80,7 +84,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				
 				$f->link		=	'index.php?option=com_cck&view=list&search='.$list.$vars.'&Itemid='.$itemId.$search_for.$c;
 				if ( $itemId > 0 ) {
-					$f->link	=	JRoute::_( $f->link );
+					$f->link	=	Route::_( $f->link );
 				}
 				$f->link_class	=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
 				$f->link_rel	=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
@@ -97,7 +101,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				
 				$f->link		=	'index.php?option=com_cck&view=list&search='.$list.$vars.'&Itemid='.$itemId.$search_for.$c;
 				if ( $itemId > 0 ) {
-					$f->link	=	JRoute::_( $f->link );
+					$f->link	=	Route::_( $f->link );
 				}
 				$f->link_class	=	$link_class ? $link_class : ( isset( $f->link_class ) ? $f->link_class : '' );
 				$f->link_rel	=	$link_rel ? $link_rel : ( isset( $f->link_rel ) ? $f->link_rel : '' );
@@ -110,7 +114,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 			$search_for			=	( $search_field > -1 ) ? '&'.$name.'='.$field->value : '';
 			$field->link		=	'index.php?option=com_cck&view=list&search='.$list.$vars.'&Itemid='.$itemId.$search_for;
 			if ( $itemId > 0 ) {
-				$field->link	=	JRoute::_( $field->link );
+				$field->link	=	Route::_( $field->link );
 			}
 			$separator			=	( strpos( $field->link, '?' ) !== false ) ? '&' : '?';
 			if ( $custom ) {
@@ -127,7 +131,7 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 				if ( $link_title == '2' ) {
 					$field->link_title	=	$link_title2;
 				} elseif ( $link_title == '3' ) {
-					$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+					$field->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 				}
 				if ( !isset( $field->link_title ) ) {
 					$field->link_title	=	'';

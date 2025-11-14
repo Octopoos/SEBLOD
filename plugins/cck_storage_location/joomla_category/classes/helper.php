@@ -10,7 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-Use \Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
 
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_category.php';
 
@@ -23,7 +26,7 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		if ( !self::hasAssociations() ) {
 			return '';
 		}
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$addform	=	new SimpleXMLElement( '<form />' );
 		$extension	=	$app->input->get( 'extension', 'com_content' );
 		$fields		=	$addform->addChild( 'fields' );
@@ -39,7 +42,7 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		}
 
 		$hasForm	=	false;
-		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+		$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 		foreach ( $languages as $tag=>$language ) {
 			if ( empty( $config['language'] ) || $tag != $config['language'] ) {
 				$hasForm	=	true;
@@ -52,7 +55,7 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 				$f->addAttribute( 'extension', $extension );
 			}
 		}
-		$form	=		JForm::getInstance( $id, $addform->asXML() );
+		$form	=		Form::getInstance( $id, $addform->asXML() );
 		if ( $hasForm ) {
 			$form->load( $addform, false );
 			

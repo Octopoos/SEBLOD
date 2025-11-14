@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Filesystem\File;
+
 jimport( 'cck.base.install.install' );
 
 // Script
@@ -42,7 +46,7 @@ class JCckInstallerScriptApp
 	// preflight
 	public function preflight( $type, $parent )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$this->core	=	( isset( $app->cck_core ) ) ? $app->cck_core : false;
 		
 		if ( $this->core === true ) {
@@ -90,7 +94,7 @@ class JCckInstallerScriptApp
 			return;
 		}
 		if ( !$pk ) {
-			$db		=	JFactory::getDbo();
+			$db		=	Factory::getDbo();
 			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
 
 			$db->setQuery( $query );
@@ -100,19 +104,19 @@ class JCckInstallerScriptApp
 			}
 		}
 
-		$lang		=	JFactory::getLanguage();
+		$lang		=	Factory::getLanguage();
 		$title		=	(string)$this->cck->xml->name;
 		$lang->load( $title.'.sys', JPATH_SITE, null, false, false );
 		$lang->load( 'lib_cck', JPATH_SITE, 'en-GB', true );
-		$title		=	JText::_( $title );
+		$title		=	Text::_( $title );
 		if ( isset( $this->cck->xml->version ) ) {
 			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
 		}
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 		$version	=	'3.2.0';
 		jimport( 'joomla.filesystem.file' );
-		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
+		if ( File::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
 			if ( class_exists( 'JCckVersion' ) ) {
 				$version	=	new JCckVersion;
@@ -123,8 +127,8 @@ class JCckInstallerScriptApp
 		}
 		
 		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
-			JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
-			JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+			\JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 		} else {
 			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
 			require_once JPATH_SITE.'/libraries/cms/cck/database.php';
@@ -134,7 +138,7 @@ class JCckInstallerScriptApp
 		$table						=	JCckTable::getInstance( '#__postinstall_messages' );
 		$table->extension_id		=	$pk;
 		$table->title_key			=	$title;
-		$table->description_key		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
+		$table->description_key		=	Text::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, Factory::getDate()->format( Text::_( 'DATE_FORMAT_LC2' ) ) );
 		$table->language_extension	=	'lib_cck';
 		$table->type				=	'message';
 		$table->version_introduced	=	$version;

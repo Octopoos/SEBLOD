@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+
 // JCckTableRelationship
-class JCckTableRelationship extends JObject
+class JCckTableRelationship extends CMSObject
 {
 	protected $_db;
 
@@ -39,7 +43,7 @@ class JCckTableRelationship extends JObject
 	// getInstance
 	public static function getInstance( $table )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$tableClass	=	'JCckTableRelationship';
 		
 		return new $tableClass( $db, $table );
@@ -183,7 +187,7 @@ class JCckTableRelationship extends JObject
 			$columns	=	$this->_db->getTableColumns( $name, true );
 			
 			if ( empty( $columns ) ) {
-				$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+				$e	=	new \Exception( Text::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
 
 				$this->setError( $e );
 

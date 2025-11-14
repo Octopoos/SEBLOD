@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+
 // View
-class CCKViewBox extends JViewLegacy
+class CCKViewBox extends HtmlView
 {
 	protected $item;
 	protected $state;
@@ -19,7 +22,7 @@ class CCKViewBox extends JViewLegacy
 	// display
 	public function display( $tpl = null )
 	{
-		$app				=	JFactory::getApplication();
+		$app				=	Factory::getApplication();
 		$this->item			=	new stdClass;
 		$this->state		=	$this->get( 'State' );
 		$this->option		=	$app->input->get( 'option', '' );
@@ -54,7 +57,7 @@ class CCKViewBox extends JViewLegacy
 			$this->css['btn-yes']		=	'btn btn-small';
 		}
 		
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 		
 		parent::display( $tpl );
 	}

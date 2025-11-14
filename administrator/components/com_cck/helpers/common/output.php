@@ -10,8 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 
 // CommonHelper
 class CommonHelper_Output
@@ -21,24 +22,24 @@ class CommonHelper_Output
 	{
 		// Init
 		$name_date	=	$params->get( 'filename_date', '' );
-		$tmp_path	=	JFactory::getConfig()->get( 'tmp_path' );
+		$tmp_path	=	Factory::getConfig()->get( 'tmp_path' );
 		$tmp_dir 	=	uniqid( 'cck_' );
 		
 		// Set
 		$output					=	new stdClass;
 		$output->name			=	$name;
-		$output->suffix			=	( $name_date != '' ) ? '_'.JFactory::getDate()->format( $name_date ) : '';
+		$output->suffix			=	( $name_date != '' ) ? '_'.Factory::getDate()->format( $name_date ) : '';
 		$output->path 			= 	$tmp_path.'/'.$tmp_dir;
 		$output->root			=	$output->path.'/'.$extension;
 		$output->output			=	$params->get( 'output', 0 );
 		$output->output_path	=	$params->get( 'output_path', '' );
 		$output->compression	=	$params->get( 'compression', 'zip' );
 		
-		if ( $output->output == 2 && $output->output_path != '' && JFolder::exists( $output->output_path ) ) {
+		if ( $output->output == 2 && $output->output_path != '' && Folder::exists( $output->output_path ) ) {
 			$output->output_path	=	$output->output_path;
 		} elseif ( $output->output_path != '' && $output->output_path != 'tmp/' ) {
 			$output->output_path	=	JPATH_SITE.'/'.$output->output_path;
-			if ( !JFolder::exists( $output->output_path ) ) {
+			if ( !Folder::exists( $output->output_path ) ) {
 				jimport( 'cck.base.install.export' );
 				CCK_Export::createDir( $output->output_path );
 			}
@@ -64,12 +65,12 @@ class CommonHelper_Output
 			$ext	=	'.'.$extension;
 		}
 		
-		if ( JFile::exists( $tmp ) ) {
+		if ( File::exists( $tmp ) ) {
 			$file	=	$output->output_path.'/'.$output->name.$output->suffix.$ext;
-			JFile::move( $tmp, $file );
+			File::move( $tmp, $file );
 			
-			if ( JFolder::exists( $output->path ) ) {
-				JFolder::delete( $output->path );
+			if ( Folder::exists( $output->path ) ) {
+				Folder::delete( $output->path );
 			}
 			
 			return $file;

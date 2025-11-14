@@ -10,17 +10,21 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+
 // JFormField
-class JFormFieldCckIntegration extends JFormField
+class JFormFieldCckIntegration extends FormField
 {
 	public $type = 'CckIntegration';
 
 	// getInput
 	protected function getInput()
 	{
-		$app			=	JFactory::getApplication();
-		$doc			=	JFactory::getDocument();
-		$lang			=	JFactory::getLanguage();
+		$app			=	Factory::getApplication();
+		$doc			=	Factory::getDocument();
+		$lang			=	Factory::getLanguage();
 		$component		=	'com_cck_integration';
 		$config			=	JCckDev::init( array(), true );
 		$location		=	(string)$this->element['location'];
@@ -87,7 +91,7 @@ class JFormFieldCckIntegration extends JFormField
 
 		// Prepare
 		$html	=	array();
-		$html[]	=	'<p class="rule-desc">' . JText::_( 'COM_CCK_CONFIG_INTEGRATION_CONTENT_OBJECTS_DESC' ) . '</p>';
+		$html[]	=	'<p class="rule-desc">' . Text::_( 'COM_CCK_CONFIG_INTEGRATION_CONTENT_OBJECTS_DESC' ) . '</p>';
 		$html[] =	'<div id="integration-sliders" class="tabbable tabs-left">';
 		$html[]	=	'<ul class="nav nav-tabs">';
 		foreach ( $groups as $i=>$group ) {
@@ -121,11 +125,11 @@ class JFormFieldCckIntegration extends JFormField
 			$html[] =	'<tr>';
 
 			$html[] =	'<th class="actions" id="actions-th' . $group->name . '">';
-			$html[] =	'<span class="acl-action">' . JText::_( 'COM_CCK_SETTINGS' ) . '</span>';
+			$html[] =	'<span class="acl-action">' . Text::_( 'COM_CCK_SETTINGS' ) . '</span>';
 			$html[] =	'</th>';
 
 			$html[] =	'<th class="settings" id="settings-th' . $group->name . '">';
-			$html[] =	'<span class="acl-action">' . JText::_( 'COM_CCK_UPDATE_SETTINGS' ) . '</span>';
+			$html[] =	'<span class="acl-action">' . Text::_( 'COM_CCK_UPDATE_SETTINGS' ) . '</span>';
 			$html[] =	'</th>';
 
 			$html[] =	'</tr>';
@@ -176,8 +180,8 @@ class JFormFieldCckIntegration extends JFormField
 
 				$html[] =	'<tr>';
 				$html[] =	'<td headers="actions-th' . $group->name . '">';
-				$html[] =	'<label class="tip hasTooltip" for="' . $this->id . '_' . $action->name . '_' . $group->name . '" title="'. htmlspecialchars( JText::_( $action->description ), ENT_COMPAT, 'UTF-8' ) . '">';
-				$html[] =	JText::_( $action->title );
+				$html[] =	'<label class="tip hasTooltip" for="' . $this->id . '_' . $action->name . '_' . $group->name . '" title="'. htmlspecialchars( Text::_( $action->description ), ENT_COMPAT, 'UTF-8' ) . '">';
+				$html[] =	Text::_( $action->title );
 				$html[] =	'</label>';
 				$html[] =	'</td>';
 				$html[] =	'<td headers="settings-th' . $group->name . '">';

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 // Plugin
 class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 {
@@ -107,7 +109,7 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		
 		// Prepare
 		$class	=	( $field->css ) ? ' class="'.$field->css.'"' : '';
-		$form	=	JHtml::_( 'access.usergroups', $name, $value );		// JForm UserGroups ?!
+		$form	=	HTMLHelper::_( 'access.usergroups', $name, $value );		// JForm UserGroups ?!
 
 		if ( $field->required && $form != '' ) {
 			$form	=	str_replace( '<input ', '<input class="validate[required]" ', $form );

@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_TypoHtml extends JCckPluginTypo
 {
@@ -42,7 +46,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$html		=	$typo->get( 'html', '' );
 		$postpone	=	false;
 		$priority	=	$typo->get( 'priority', '' );
@@ -88,7 +92,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				foreach ( $matches[1] as $k=>$v ) {
 					$variable	=	$matches[2][$k];
 					if ( $v == 'Current' ) {
-						$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
+						$request	=	( $variable == 'true' ) ? Uri::getInstance()->toString() : Uri::current();
 						$html		=	str_replace( $matches[0][$k], $request, $html );						
 					} else {
 						$request	=	'get'.$v;
@@ -105,7 +109,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				preg_match_all( $search, $html, $matches );
 				if ( count( $matches[1] ) ) {
 					foreach ( $matches[1] as $text ) {
-						$html	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $html );
+						$html	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $html );
 					}
 				}
 			}
@@ -181,7 +185,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 					preg_match_all( $search, $fields[$name]->typo, $matches );
 					if ( count( $matches[1] ) ) {
 						foreach ( $matches[1] as $text ) {
-							$fields[$name]->typo	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $fields[$name]->typo );
+							$fields[$name]->typo	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $fields[$name]->typo );
 						}
 					}
 				}

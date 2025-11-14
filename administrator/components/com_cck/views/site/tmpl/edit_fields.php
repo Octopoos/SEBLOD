@@ -1,6 +1,8 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 if ( count( $this->item->fields ) ) { ?>
 <ul class="adminformlist adminformlist-2cols">
     <?php
@@ -38,5 +40,5 @@ if ( count( $this->item->fields ) ) { ?>
 </ul>
 <?php }
 if ( !$hasOpts ) { ?>
-    <p class="legend-desc"><?php echo JText::_( 'COM_CCK_SITE_OPTIONS_DESC' ); ?></p>
+    <p class="legend-desc"><?php echo Text::_( 'COM_CCK_SITE_OPTIONS_DESC' ); ?></p>
 <?php } ?>

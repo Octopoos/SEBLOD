@@ -10,13 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+
 // Script
 class pkg_cckInstallerScript
 {
 	// install
 	public function install( $parent )
 	{
-		JFactory::getLanguage()->load( 'com_cck.sys', JPATH_ADMINISTRATOR, null, true );
+		Factory::getLanguage()->load( 'com_cck.sys', JPATH_ADMINISTRATOR, null, true );
 	}
 
 	// uninstall
@@ -42,14 +47,14 @@ class pkg_cckInstallerScript
 	public function postflight( $type, $parent )
 	{
 		if ( !class_exists( 'JCck' ) ) {
-			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
+			Factory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
 			return;
 		}
 
 		$initial_version	=	JCck::getConfig_Param( 'initial_version', '3' );
 		$initial_release	=	(int)$initial_version[0];
 
-		$lang			=	JFactory::getLanguage();
+		$lang			=	Factory::getLanguage();
 		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck' );
 		$lang->load( 'com_cck.sys' );
@@ -57,7 +62,7 @@ class pkg_cckInstallerScript
 
 		if ( JCck::on( '3.8' ) ) {
 			if ( $type == 'install' || $type == 'update' && version_compare( $initial_version, '3.13.0', '>=' ) ) {
-				$db			=	JFactory::getDbo();
+				$db			=	Factory::getDbo();
 				$query		=	$db->getQuery( true );
 
 				$query->select( $db->quoteName( array( 'extension_id' ) ) )
@@ -68,16 +73,16 @@ class pkg_cckInstallerScript
 				$module_id	=	(int)$db->loadResult();
 				
 				if ( $module_id ) {
-					$installer  =   JInstaller::getInstance();
+					$installer  =   Installer::getInstance();
 				
-					$module     =   JTable::getInstance( 'Extension' );
+					$module     =   Table::getInstance( 'Extension' );
 					$module->load( $module_id );
 				
 					if ( $module->type == 'module' ) {
 						$installer->uninstall( $module->type, $module_id );
 
 						if ( $type == 'install' ) {
-							$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+							$new_module	=	Table::getInstance( 'Module' );
 						
 							if ( $new_module->save( array(
 														'access'=>3,
@@ -122,40 +127,40 @@ class pkg_cckInstallerScript
 			if ( count( $queries ) ) {
 			?>
 			<hr>
-			<h2 style="color:red;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3' ); ?></h2>
+			<h2 style="color:red;"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3' ); ?></h2>
 			<div style="border: 3px solid red;color: red;padding:12px;">
-			<?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_INFO' ); ?>
-				<br><br><a href="/administrator/index.php?option=com_config&view=component&component=com_cck" class="btn btn-success"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1' ); ?></a>
-				<strong style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_INFO' ); ?></strong>
-				<br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_OR' ); ?></span>
-				<br><a href="/administrator/index.php?option=com_cck&s=patchSQL" onclick="document.getElementById('collapseModal').style.display='block'" class="btn btn-primary"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ); ?></a>
-				<br><br><span style="color:black;"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_SUP' ); ?></span>
+			<?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_INFO' ); ?>
+				<br><br><a href="/administrator/index.php?option=com_config&view=component&component=com_cck" class="btn btn-success"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1' ); ?></a>
+				<strong style="color:black;"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_INFO' ); ?></strong>
+				<br><span style="color:black;"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_OR' ); ?></span>
+				<br><a href="/administrator/index.php?option=com_cck&s=patchSQL" onclick="document.getElementById('collapseModal').style.display='block'" class="btn btn-primary"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_2' ); ?></a>
+				<br><br><span style="color:black;"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_UPDATING_TO_4X_FROM_J3_BTN_1_SUP' ); ?></span>
 			</div>
 			<hr>
 			<?php
 			}
 		}
 		?>
-		<h2><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_GETTING_STARTED' ); ?></h2>
+		<h2><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_GETTING_STARTED' ); ?></h2>
 		<div style="margin-bottom:30px;">
-			<a class="btn btn-info" href="https://www.seblod.com/store" target="_blank" rel="noopener noreferrer"><?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_MARKETPLACE' ); ?></a>
-			<a class="btn btn-info" href="https://www.seblod.com/resources/manuals" target="_blank" rel="noopener noreferrer"><?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_DOCUMENTATION' ); ?></a>
-			<a class="btn btn-info" href="https://www.seblod.com/resources/videos" target="_blank" rel="noopener noreferrer"><?php echo JText::_( 'LIB_CCK_INSTALLATION_SEBLOD_VIDEOS' ); ?></a>
-			<a class="btn" href="https://www.seblod.com/changelogs" target="_blank" rel="noopener noreferrer"><?php echo JText::_( 'LIB_CCK_INSTALLATION_LATEST_CHANGELOG' ); ?></a>
+			<a class="btn btn-info" href="https://www.seblod.com/store" target="_blank" rel="noopener noreferrer"><?php echo Text::_( 'LIB_CCK_INSTALLATION_SEBLOD_MARKETPLACE' ); ?></a>
+			<a class="btn btn-info" href="https://www.seblod.com/resources/manuals" target="_blank" rel="noopener noreferrer"><?php echo Text::_( 'LIB_CCK_INSTALLATION_SEBLOD_DOCUMENTATION' ); ?></a>
+			<a class="btn btn-info" href="https://www.seblod.com/resources/videos" target="_blank" rel="noopener noreferrer"><?php echo Text::_( 'LIB_CCK_INSTALLATION_SEBLOD_VIDEOS' ); ?></a>
+			<a class="btn" href="https://www.seblod.com/changelogs" target="_blank" rel="noopener noreferrer"><?php echo Text::_( 'LIB_CCK_INSTALLATION_LATEST_CHANGELOG' ); ?></a>
 		</div>
-		<h2><?php echo JText::_( 'LIB_CCK_INSTALLATION_LEGEND_RECOMMENDED_SETTINGS' ); ?></h2>
+		<h2><?php echo Text::_( 'LIB_CCK_INSTALLATION_LEGEND_RECOMMENDED_SETTINGS' ); ?></h2>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-			        <th class="span6"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_DIRECTIVE' ); ?></th>
-					<th class="span3 center"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_RECOMMENDED' ); ?></th>
-					<th class="span3 center"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_ACTUAL' ); ?></th>
+			        <th class="span6"><?php echo Text::_( 'LIB_CCK_INSTALLATION_CHECK_DIRECTIVE' ); ?></th>
+					<th class="span3 center"><?php echo Text::_( 'LIB_CCK_INSTALLATION_CHECK_RECOMMENDED' ); ?></th>
+					<th class="span3 center"><?php echo Text::_( 'LIB_CCK_INSTALLATION_CHECK_ACTUAL' ); ?></th>
 			    </tr>
 		    </thead>
 		    <tbody>
 		    	<?php if ( $php == 'warning') { ?>
 				<tr>
-					<td><?php echo JText::_( 'LIB_CCK_INSTALLATION_PHP_VERSION' ); ?></td>
+					<td><?php echo Text::_( 'LIB_CCK_INSTALLATION_PHP_VERSION' ); ?></td>
 					<td class="center"><span>5.3.1+</span></td>
 					<td class="center"><span><?php echo PHP_VERSION; ?></span></td>
 				</tr>
@@ -177,16 +182,16 @@ class pkg_cckInstallerScript
 			    <?php } ?>
 		    </tbody>
 		</table>
-		<h2><?php echo JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD' ); ?></h2>
+		<h2><?php echo Text::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD' ); ?></h2>
 		<?php
 		if ( JCck::getConfig_Param( 'uninstall_sql' ) ) {
 			$badge	=	'warning';
 			$info	=	'';
-			$text	=	JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_DROP' );
+			$text	=	Text::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_DROP' );
 		} else {
 			$badge	=	'success';
-			$info	=	'<br />'.JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO2' );
-			$text	=	JText::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_BACKUP' );
+			$info	=	'<br />'.Text::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_INFO2' );
+			$text	=	Text::_( 'LIB_CCK_INSTALLATION_UNINSTALL_SEBLOD_SQL_BACKUP' );
 		}
 	}
 

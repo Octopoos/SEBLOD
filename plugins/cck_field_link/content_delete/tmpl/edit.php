@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'link', $this->item );
 
@@ -39,7 +41,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'size'=>24, 'storage_field'=>'class' ) ),
 				JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_TITLE' ),
+							'label'=>Text::_( 'COM_CCK_TITLE' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 								'grid'=>'|50%',
 								'html'=>array(
@@ -51,13 +53,13 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 					),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'type'=>'radio', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Prepare=0||Apply=1', 'css'=>'btn-group', 'storage_field'=>'state' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		),
 		array(
 			'fields'=>array(
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Show Value', 'type'=>'radio', 'selectlabel'=>'', 'options'=>'Hide=0||Show=1', 'css'=>'btn-group', 'storage_field'=>'no_access' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_CONFIG_NO_ACCESS' )
+			'legend'=>Text::_( 'COM_CCK_CONFIG_NO_ACCESS' )
 		)
 	),
 	'html'=>'',

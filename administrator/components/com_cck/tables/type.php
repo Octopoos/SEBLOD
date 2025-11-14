@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 // Table
-class CCK_TableType extends JTable
+class CCK_TableType extends Table
 {
 	// __construct
 	public function __construct( &$db )
@@ -27,7 +30,7 @@ class CCK_TableType extends JTable
 	}
 
 	// _getAssetParentId
-	protected function _getAssetParentId( JTable $table = null, $id = null )
+	protected function _getAssetParentId( Table $table = null, $id = null )
 	{
 		return $this->_getAssetParentId2( $table, $id );
 	}
@@ -53,8 +56,8 @@ class CCK_TableType extends JTable
 	// check
 	public function check()
 	{
-		$date	=	JFactory::getDate();
-		$user	=	JFactory::getUser();
+		$date	=	Factory::getDate();
+		$user	=	Factory::getUser();
 
 		$this->title			=	trim( $this->title );
 		

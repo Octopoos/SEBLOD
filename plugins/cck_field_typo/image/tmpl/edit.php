@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'typo', $this->item );
 
@@ -29,7 +31,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 																	   'options'=>'Image=value||Thumb1=thumb1||Thumb2=thumb2||Thumb3=thumb3||Thumb4=thumb4||Thumb5=thumb5||Thumb6=thumb6||Thumb7=thumb7||Thumb8=thumb8||Thumb9=thumb9||Thumb10=thumb10', 'storage_field'=>'thumb' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_WIDTH_HEIGHT' ),
+						'label'=>Text::_( 'COM_CCK_WIDTH_HEIGHT' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|75%',
 							'html'=>array(
@@ -58,7 +60,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 																	   'storage_field'=>'image' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_WIDTH_HEIGHT' ),
+						'label'=>Text::_( 'COM_CCK_WIDTH_HEIGHT' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|75%',
 							'html'=>array(
@@ -92,7 +94,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'size'=>24, 'storage_field'=>'class' ) ),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		)
 	),
 	'html'=>'',

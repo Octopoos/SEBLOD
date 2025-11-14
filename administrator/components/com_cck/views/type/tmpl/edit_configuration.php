@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 $P			=	'options_'.$this->item->client;
 $options	=	JCckDev::fromJSON( $this->item->$P );
 ?>
@@ -27,7 +29,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 						JCckDev::renderForm( 'core_title', @$options['metatitle'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (70)"', 'storage_field'=>'options[metatitle]' ) ),
 						JCckDev::renderForm( $cck['core_metadesc'], @$options['metadesc'], $config, array( 'attributes'=>'placeholder="J(Useful for auto input) (200)"' ) )
 					),
-					'legend'=>JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
+					'legend'=>Text::_( 'COM_CCK_CONFIG' ).Text::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).Text::_( 'COM_CCK_SEO' ). '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
 				)
 			)
 	    ) );
@@ -53,13 +55,13 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 			'form'=>array(
 				array(
 					'fields'=>$dataTmpl1,
-					'legend'=>JText::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
+					'legend'=>Text::_( 'COM_CCK_CONFIG' ) . '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'
 				),
 				array(
 					'fields'=>array(
 						JCckDev::renderForm( $cck['core_dev_text'], @$options['data_integrity_excluded'], $config, array( 'label'=>'Exclude Fields', 'storage_field'=>'options[data_integrity_excluded]' ) )
 					),
-					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_DATA_INTEGRITY' )
+					'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_DATA_INTEGRITY' )
 				)
 			)
 		) );
@@ -71,7 +73,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 							JCckDev::renderForm( $cck['core_show_hide'], @$options['show_form_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_TITLE', 'storage_field'=>'options[show_form_title]' ) ),
 							JCckDev::renderLayoutFile(
 								'cck'.JCck::v().'.form.field', array(
-									'label'=>JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ),
+									'label'=>Text::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ),
 									'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 										'grid'=>'30%|',
 										'html'=>array(
@@ -83,7 +85,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 							),
 							JCckDev::renderForm( $cck['core_show_hide2'], @$options['show_form_desc'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_FORM_DESCRIPTION', 'storage_field'=>'options[show_form_desc]' ) )
 						),
-						'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_GLOBAL_FORM' )
+						'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_GLOBAL_FORM' )
 					)
 				)
 			) );
@@ -97,14 +99,14 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 						JCckDev::renderForm( 'core_message', @$options['message_no_access'], $config, array( 'storage_field'=>'options[message_no_access]' ) ),
 						JCckDev::renderForm( $cck['core_redirection_url_no_access'], @$options['redirection_url_no_access'], $config )
 					),
-					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_ACCESS' )
+					'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_NO_ACCESS' )
 				),
 				array(
 					'fields'=>array(
 						JCckDev::renderForm( $cck['core_stages'], @$options['stages'], $config, array( 'label'=>'Count' ) ),
 						JCckDev::renderBlank()
 					),
-					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_STAGES' )
+					'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_STAGES' )
 				),
 				array(
 					'fields'=>array(
@@ -113,7 +115,7 @@ $options	=	JCckDev::fromJSON( $this->item->$P );
 						JCckDev::renderForm( $cck['core_validation_color'], @$options['validation_color'], $config ),
 						JCckDev::renderForm( $cck['core_validation_background_color'], @$options['validation_background_color'], $config )
 					),
-					'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' )
+					'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_VALIDATION' )
 				)
 			)
 		) );

@@ -10,12 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 $config	=	JCckDev::init( array(), true, array( 'item'=>$this->item, 'tmpl'=>'ajax' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout(), 'ajax' );
 
 $type	=	( $this->item->type ) ? $this->item->type : 'text';
 $layer	=	JPATH_PLUGINS.'/cck_field/'.$type.'/tmpl/edit.php';
-$lang 	=	JFactory::getLanguage();
+$lang 	=	Factory::getLanguage();
 $lang->load( 'plg_cck_field_'.$type, JPATH_ADMINISTRATOR, null, false, true );
 if ( is_file( $layer ) ) {
 	include_once $layer;

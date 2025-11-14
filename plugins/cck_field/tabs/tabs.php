@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_FieldTabs extends JCckPluginField
 {
@@ -205,7 +207,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 	{
 		$id				=	$process['id'];
 		$label			=	$process['label'];
-		$layout			=	JFactory::getApplication()->input->get( 'tmpl' );
+		$layout			=	Factory::getApplication()->input->get( 'tmpl' );
 		$name			=	$process['name'];
 		$group_id		=	$process['group_id'];
 		$value			=	$process['value'];
@@ -262,7 +264,7 @@ class plgCCK_FieldTabs extends JCckPluginField
 			}
 			if ( $js ) {
 				$js	=	'(function($){ $(document).ready(function() { '.$js.' }); })(jQuery);';
-				JFactory::getDocument()->addScriptDeclaration( $js );
+				Factory::getDocument()->addScriptDeclaration( $js );
 			}
 		} else {
 			$class	=	'';

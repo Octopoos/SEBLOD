@@ -10,23 +10,28 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+
 // JFormField
-class JFormFieldCCKexport extends JFormField
+class JFormFieldCCKexport extends FormField
 {
 	protected $type	=	'CCKexport';
 
 	// getInput
 	protected function getInput()
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$type		=	(string)$this->element['extension_type'];
 		$type		=	( $type ) ? $type : 'plugin';
 		
 		$extension	=	'&extension='.$type;
-		$token		=	'&'.JSession::getFormToken().'=1';
+		$token		=	'&'.Session::getFormToken().'=1';
 		
 		if ( $type == 'languages' ) {
-			$lang	=	JFactory::getLanguage()->getTag();			
+			$lang	=	Factory::getLanguage()->getTag();			
 			$url	=	'index.php?option=com_cck&task=export'.$extension.'&lang_tag=en-GB'.$token;
 			$text	=	self::_getHtml( 'en-GB', $url, ' btn-small' );
 			
@@ -37,14 +42,14 @@ class JFormFieldCCKexport extends JFormField
 				$text	.=	self::_getHtml( $lang, $url, ' btn-small' );
 			}
 		} else {
-			$lang			=	JFactory::getLanguage();
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 			$lang->load( 'com_cck_default', JPATH_SITE );
 			$lang->setDefault( $lang_default );
 			$id		=	$app->input->getInt( 'extension_id', 0 );
 			$id		=	'&extension_id='.$id;
 			$url	=	'index.php?option=com_cck&task=export'.$extension.$id.$token;
-			$text	=	self::_getHtml( JText::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
+			$text	=	self::_getHtml( Text::_( 'COM_CCK_DOWNLOAD' ), $url, ' btn-success' );
 		}
 		
 		return $text;

@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
 // Plugin
 class plgCCK_FieldGroup extends JCckPluginField
 {
@@ -48,8 +53,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 		
 		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
 			$data['match_mode']	=	array(
-										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_DISABLED' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ENABLED' ) )
+										'none'=>HTMLHelper::_( 'select.option', 'none', Text::_( 'COM_CCK_DISABLED' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_ENABLED' ) )
 									);
 
 			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
@@ -99,7 +104,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$name		=	$field->name;
 
 		if ( $field->bool == 2 ) {
-			$lang_current		=	JFactory::getLanguage()->getTag();
+			$lang_current		=	Factory::getLanguage()->getTag();
 			$lang_current		=	substr( $lang_current, 0, 2 );
 			$field->extended	=	strpos( $field->location, 'XX' ) !== false ? str_replace( 'XX', $lang_current, $field->location ) : $field->location.$lang_current;
 
@@ -150,11 +155,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		} elseif ( $field->bool == 5 ) {
 			self::_prepareSearchFields( $field, $form, $name, $config );
 		} elseif ( $field->bool ) {
-			$lang			=	JFactory::getLanguage();
+			$lang			=	Factory::getLanguage();
 			$lang_codes		=	JCckDevHelper::getLanguageCodes();
 			$lang_default	=	$lang->getDefault();
 			$lang_default	=	substr( $lang_default, 0, 2 );
-			$user_groups	=	JFactory::getUser()->groups;
+			$user_groups	=	Factory::getUser()->groups;
 			$variation		=	$field->variation;
 
 			// Default Language
@@ -265,7 +270,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		if ( $field->typo ) {
 			return $field->typo;
 		} elseif ( $config['legacy'] && $config['legacy'] <= 2018 ) {
-			$doc	=	JFactory::getDocument();
+			$doc	=	Factory::getDocument();
 			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
 	
 			$count	=	count( $field->value );
@@ -320,7 +325,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
 		if ( $config['legacy'] && $config['legacy'] <= 2018 ) {
-			$doc	=	JFactory::getDocument();
+			$doc	=	Factory::getDocument();
 			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
 
 			$orientation	=	'vertical_gx'; //vertical_gx horizontal_gx
@@ -458,10 +463,10 @@ class plgCCK_FieldGroup extends JCckPluginField
 			}
 		
 			if ( $js ) {
-				if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 					echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 				} else {
-					JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+					Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 				}
 			}
 		}
@@ -518,7 +523,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 			
 			// Computation
 			if ( @$elem->computation ) {
-				$computation			=	new JRegistry;
+				$computation			=	new Registry;
 				$computation->loadString( $elem->computation_options );
 				$computation_options	=	$computation->toObject();
 				
@@ -580,10 +585,10 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		if ( $js ) {
-			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+			if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 				echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 			} else {
-				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+				Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 			}
 		}
 		
@@ -593,8 +598,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// _getChildren
 	protected static function _getChildren( $parent, $config = array(), $duo = true )
 	{
-		$db		=	JFactory::getDbo();
-		$user	=	JFactory::getUser();
+		$db		=	Factory::getDbo();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
@@ -672,9 +677,9 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// _prepareContentFields
 	protected static function _prepareContentFields( $field, &$content, $name, &$config )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$fields			=	self::_getChildren( $field, $config );
-		$lang			=	JFactory::getLanguage();
+		$lang			=	Factory::getLanguage();
 		$lang_default	=	$lang->getDefault();
 		$lang_tag		=	$lang->getTag();
 		$xn				=	1;
@@ -740,7 +745,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// _prepareFormFields
 	protected static function _prepareFormFields( $field, &$form, $name, &$config )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$fields	=	self::_getChildren( $field, $config );
 
 		foreach ( $fields as $f ) {
@@ -825,7 +830,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// _prepareStoreFields
 	protected static function _prepareStoreFields( $field, &$value, $data, &$config )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$fields 	=	self::_getChildren( $field, $config );
 		
 		if ( count( $fields ) ) {
@@ -872,7 +877,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 
 		// Prepare
 		if ( $fields[$name]->bool == 2 ) {
-			$lang_current				=	JFactory::getLanguage()->getTag();
+			$lang_current				=	Factory::getLanguage()->getTag();
 			$lang_current				=	substr( $lang_current, 0, 2 );
 			$fields[$name]->extended	=	$fields[$name]->location.$lang_current;
 

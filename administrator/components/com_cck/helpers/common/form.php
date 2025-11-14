@@ -10,13 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // CommonHelper
 class CommonHelper_Form
 {
 	// getClientFilter
 	public static function getClientFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getClientOptions( true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getConditionalTrigger
@@ -42,7 +46,7 @@ class CommonHelper_Form
 		}
 		$class	=	$field->css ? ' '.$field->css : '';
 
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( false, true, false, true, $config['vName'] ), $name, 'class="form-select inputbox select'.$class.'"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getFolderOptions( false, true, false, true, $config['vName'] ), $name, 'class="form-select inputbox select'.$class.'"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderFilter
@@ -50,13 +54,13 @@ class CommonHelper_Form
 	{
 		$field->label	=	'App Folder';
 
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderFilterApp
 	public static function getFolderFilterApp( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( 'ANY_APP', true, true, true, 'master' ), $name, 'class="form-select inputbox select md form-select-bg" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getFolderOptions( 'ANY_APP', true, true, true, 'master' ), $name, 'class="form-select inputbox select md form-select-bg" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getFolderParent
@@ -66,14 +70,14 @@ class CommonHelper_Form
 		
 		if ( @$config['item']->id == 1 || @$config['item']->id == 2 ) {
 			$options	=	array();
-			$options[]	=	JHtml::_( 'select.option',  0, '#', 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option',  0, '#', 'value', 'text' );
 			$disabled	=	' disabled="disabled" ';
 		} else {
 			$options	=	Helper_Admin::getFolderOptions( false, false, true );
 			$disabled	=	'';
 		}
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$disabled.$field->attributes, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$disabled.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getLayer
@@ -105,16 +109,16 @@ class CommonHelper_Form
 				.	'<input type="radio" id="layer3" name="layer" value="template" '
 				.	'style="display: none" '.$checked3.' />'
 				.	'<label id="layer1_label" for="layer1" class="toggle first '.$selected1.'">'
-				.	JText::_( 'COM_CCK_CONFIG' ).'</label>'
+				.	Text::_( 'COM_CCK_CONFIG' ).'</label>'
 				.	'<label id="layer2_label" for="layer2" class="toggle '.$selected2.'">'
-				.	JText::_( 'COM_CCK_FIELDS' ).'</label>'
+				.	Text::_( 'COM_CCK_FIELDS' ).'</label>'
 				.	'<label id="layer3_label" for="layer3" class="toggle last '.$selected3.'">'
-				.	JText::_( 'COM_CCK_TEMPLATE' ).'</label>';
+				.	Text::_( 'COM_CCK_TEMPLATE' ).'</label>';
 
 		if ( !JCck::on( '4.0' ) ) {	
 			$form	.=	'<div align="center" class="subtabs">'
 					.	'<div id="subtab4"></div>'
-					.	'<div id="subtab5">'.JText::_( 'COM_CCK_OPTIONS' ).'</div>'
+					.	'<div id="subtab5">'.Text::_( 'COM_CCK_OPTIONS' ).'</div>'
 					.	'<div id="subtab6"></div>'
 					.	'</div>';
 		}
@@ -143,7 +147,7 @@ class CommonHelper_Form
 		return	'<input type="radio" id="'.$name.'0" name="'.$name.'" value="0" '.$c0.' style="display:none;" />'
 			.	'<input type="radio" id="'.$name.'1" name="'.$name.'" value="1" '.$c1.' style="display:none;" />'
 			.	'<a href="javascript: void(0);" id="'.$name.'" class="switch hasTooltip" title="'
-			.	JText::_( 'COM_CCK_STORAGE_DESC_SHORT' ).'" data-container="body">'
+			.	Text::_( 'COM_CCK_STORAGE_DESC_SHORT' ).'" data-container="body">'
 			.	'<span class="'.$name.' '.$class.'"></span>'
 			.	'</a>'
 			;
@@ -152,7 +156,7 @@ class CommonHelper_Form
 	// getLocationFilter
 	public static function getLocationFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone md form-select-bg" '.$field->attributes, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getLocationOptions(), $name, 'class="form-select inputbox select hidden-phone md form-select-bg" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getMediaExtensions
@@ -167,28 +171,28 @@ class CommonHelper_Form
 		}
 		
 		$opts  	=	array();
-		$opts[]	=	JHtml::_( 'select.option', 'common', JText::_ ( 'COM_CCK_MEDIA_TYPE_COMMON' ), 'value', 'text' );
-		$opts[]	=	JHtml::_( 'select.option', 'custom', JText::_( 'COM_CCK_CUSTOM' ) );
-		$opts[]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_MEDIA_TYPES' ) );
+		$opts[]	=	HTMLHelper::_( 'select.option', 'common', Text::_ ( 'COM_CCK_MEDIA_TYPE_COMMON' ), 'value', 'text' );
+		$opts[]	=	HTMLHelper::_( 'select.option', 'custom', Text::_( 'COM_CCK_CUSTOM' ) );
+		$opts[]	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_MEDIA_TYPES' ) );
 		
 		foreach ( $options AS $o ) {
-			$opts[]	=	JHtml::_( 'select.option', $o, JText::_ ( 'COM_CCK_MEDIA_TYPE_'.$o ), 'value', 'text' );
+			$opts[]	=	HTMLHelper::_( 'select.option', $o, Text::_ ( 'COM_CCK_MEDIA_TYPE_'.$o ), 'value', 'text' );
 		}
 
-		$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
-		$opts[]	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_PRESETS' ) );
+		$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
+		$opts[]	=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_PRESETS' ) );
 		
 		for ( $i = 1; $i <= 3; $i++ ) {
 			if ( JCck::getConfig_Param( 'media_preset'.$i.'_extensions' ) ) {
 				$label 	=	JCck::getConfig_Param( 'media_preset'.$i.'_extensions_label' );
-				$label 	=	$label ? $label : JText::_( 'COM_CCK_PRESET'.$i );
-				$opts[]	=	JHtml::_( 'select.option', 'preset'.$i, $label );
+				$label 	=	$label ? $label : Text::_( 'COM_CCK_PRESET'.$i );
+				$opts[]	=	HTMLHelper::_( 'select.option', 'preset'.$i, $label );
 			}
 		}
 		
-		$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
+		$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 		
-		return JHtml::_( 'select.genericlist', $opts, $name, 'class="form-select inputbox select max-width-100" '.$field->attributes, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $opts, $name, 'class="form-select inputbox select max-width-100" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getPlugins
@@ -198,13 +202,13 @@ class CommonHelper_Form
 		$options	=	array();
 		
 		if ( trim( $field->selectlabel ) ) {
-			$options[]	=	JHtml::_( 'select.option', '', '- '.$field->selectlabel.' -', 'value', 'text' );
+			$options[]	=	HTMLHelper::_( 'select.option', '', '- '.$field->selectlabel.' -', 'value', 'text' );
 		}
 
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( $type, 'cck_', false, false, true ) );
 		$css		=	( $field->required == 'required' ) ? ' validate[required]' : '';
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$css.'" '.$field->attributes, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$css.'" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getSearchClient
@@ -231,18 +235,18 @@ class CommonHelper_Form
 				.	'<input type="radio" id="client5" name="client" value="item" '
 				.	'style="display: none" '.$checked5.' />'
 				.	'<label id="client1_label" for="client1" class="toggle first '.$selected1.'">'
-				.	JText::_( 'COM_CCK_SEARCH_FORM' ).'</label>'
+				.	Text::_( 'COM_CCK_SEARCH_FORM' ).'</label>'
 				.	'<label id="client3_label" for="client3" class="toggle '.$selected3.'">'
-				.	JText::_( 'COM_CCK_ORDERING' ).'</label>'
+				.	Text::_( 'COM_CCK_ORDERING' ).'</label>'
 				.	'<label id="client4_label" for="client4" class="toggle '.$selected4.'">'
-				.	JText::_( 'COM_CCK_LIST' ).'</label>'
+				.	Text::_( 'COM_CCK_LIST' ).'</label>'
 				.	'<label id="client5_label" for="client5" class="toggle last '.$selected5.'">'
-				.	JText::_( 'COM_CCK_ITEM' ).'</label>';
+				.	Text::_( 'COM_CCK_ITEM' ).'</label>';
 
 		if ( !JCck::on( '4.0' ) ) {
 			$form	.=	'<div align="center" class="subtabs">'
 					.	'<div id="subtab1"></div>'
-					.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
+					.	'<div id="subtab2">'.Text::_( 'COM_CCK_VIEWS' ).'</div>'
 					.	'<div id="subtab3"></div>'
 					.	'</div>';
 		}
@@ -297,7 +301,7 @@ class CommonHelper_Form
 						'option.text'=>'text'
 					);
 
-		return JHtml::_( 'select.genericlist', $options, $name, $attr );
+		return HTMLHelper::_( 'select.genericlist', $options, $name, $attr );
 	}
 
 	// getStorageLocation2
@@ -307,23 +311,23 @@ class CommonHelper_Form
 			$field->label	=	'Content Object';
 		}
 
-		$view		=	JFactory::getApplication()->input->get( 'view', '' );
+		$view		=	Factory::getApplication()->input->get( 'view', '' );
 		$options	=	array();
 		
 		if ( trim( $field->selectlabel ) ) {
-			$options	=	array( JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' ) );
+			$options	=	array( HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -' ) );
 		} else {
 			$value		=	( $value ) ? $value : '';
 			$options	=	array();
 		}
 		
 		if ( $view == 'type' || $view == 'types' ) {
-			$options[] = JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) );
+			$options[] = HTMLHelper::_( 'select.option', 'none', Text::_( 'COM_CCK_NONE' ) );
 		}
 		$class		=	$field->css ? ' '.$field->css : '';
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage_location', 'cck_', false, false, true ) );
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$class.'" '.$field->attributes, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select'.$class.'" '.$field->attributes, 'value', 'text', $value, $id );
 	}
 
 	// getTables
@@ -332,23 +336,23 @@ class CommonHelper_Form
 		$field->label		=	'Table';
 		
 		$opts		=	array();
-		$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix		=	Factory::getConfig()->get( 'dbprefix' );
 		$tables		=	JCckDatabase::getTableList();
 		
 		if ( trim( $field->selectlabel ) ) {
-			$opts[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
+			$opts[]	=	HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
 		}
 		
 		if ( count( $tables ) ) {
 			foreach ( $tables as $table ) {
 				$t		=	str_replace( $prefix, '#__', $table );
-				$opts[]	=	JHtml::_( 'select.option', $t, $t, 'value', 'text' );
+				$opts[]	=	HTMLHelper::_( 'select.option', $t, $t, 'value', 'text' );
 			}
 		}
 		$class	=	$field->css ? ' '.$field->css : '';
 		$attr	=	'class="form-select inputbox select max-width-200'.$class.'" '.$field->attributes;
 		
-		return JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 	}
 
 	// getType
@@ -356,7 +360,7 @@ class CommonHelper_Form
 	{
 		$field->label	=	'Type';
 		
-		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', false, false, true ), $name, 'class="form-select inputbox select" tabindex="3"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', false, false, true ), $name, 'class="form-select inputbox select" tabindex="3"', 'value', 'text', $value, $id );
 	}
 
 	// getTypeClient
@@ -389,21 +393,21 @@ class CommonHelper_Form
 		}
 
 		$form	.=	'<label for="client1" class="toggle first '.$selected1.'">'
-				.	JText::_( 'COM_CCK_ADMIN_FORM' ).'</label>'
+				.	Text::_( 'COM_CCK_ADMIN_FORM' ).'</label>'
 				.	'<label for="client2" class="toggle '.$selected2.'">'
-				.	JText::_( 'COM_CCK_SITE_FORM' ).'</label>';
+				.	Text::_( 'COM_CCK_SITE_FORM' ).'</label>';
 
 		if ( $uix == 'full' ) {
 			$form	.=	'<label for="client3" class="toggle '.$selected3.'">'
-					.	JText::_( 'COM_CCK_INTRO' ).'</label>'
+					.	Text::_( 'COM_CCK_INTRO' ).'</label>'
 					.	'<label for="client4" class="toggle last '.$selected4.'">'
-					.	JText::_( 'COM_CCK_CONTENT' ).'</label>';
+					.	Text::_( 'COM_CCK_CONTENT' ).'</label>';
 		}
 		
 		if ( !JCck::on( '4.0' ) ) {
 			$form	.=	'<div align="center" class="subtabs">'
 					.	'<div id="subtab1"></div>'
-					.	'<div id="subtab2">'.JText::_( 'COM_CCK_VIEWS' ).'</div>'
+					.	'<div id="subtab2">'.Text::_( 'COM_CCK_VIEWS' ).'</div>'
 					.	'<div id="subtab3"></div>'
 					.	'</div>';
 		}
@@ -416,32 +420,32 @@ class CommonHelper_Form
 	// getTypeFilter
 	public static function getTypeFilter( &$field, $value, $name, $id, $config )
 	{
-		return JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true ), $name, 'class="form-select inputbox select span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
 	// getStorageMode
 	public static function getStorageMode( &$field, $value, $name, $id, $config )
 	{
 		$options	=	array();
-		$view		=	JFactory::getApplication()->input->get( 'view', '' );
+		$view		=	Factory::getApplication()->input->get( 'view', '' );
 		
 		if ( $view == 'fields' ) {
 			if ( trim( $field->selectlabel ) ) {
-				$options[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
+				$options[]	=	HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
 			}
 		} else {
 			$value		=	( $value ) ? $value : 'custom';
 		}
 
-		$options[]	=	JHtml::_( 'select.option', 'none', '- '.JText::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
+		$options[]	=	HTMLHelper::_( 'select.option', 'none', '- '.Text::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
 		
 		if ( ( JCck::getConfig_Param( 'storage_dev', '0' ) == 3 ) || ( $value == 'dev' ) ) {
-			$options[] = JHtml::_( 'select.option', 'dev', JText::_ ( 'COM_CCK_DEVELOPMENT' ), 'value', 'text' );
+			$options[] = HTMLHelper::_( 'select.option', 'dev', Text::_ ( 'COM_CCK_DEVELOPMENT' ), 'value', 'text' );
 		}
 
 		$options	=	array_merge( $options, Helper_Admin::getPluginOptions( 'storage', 'cck_', false, false, true ) );
 		
-		return JHtml::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$field->attributes, 'value', 'text', $value );
+		return HTMLHelper::_( 'select.genericlist', $options, $name, 'class="form-select inputbox select" '.$field->attributes, 'value', 'text', $value );
 	}
 
 	// getVariation
@@ -452,13 +456,13 @@ class CommonHelper_Form
 		$opts	=	array();
 		
 		if ( trim( $field->selectlabel ) ) {
-			$opts[]	=	JHtml::_( 'select.option', '', '- '.$field->selectlabel.' -', 'value', 'text' );
+			$opts[]	=	HTMLHelper::_( 'select.option', '', '- '.$field->selectlabel.' -', 'value', 'text' );
 		}
 
 		$opts	=	array_merge( $opts, Helper_Workshop::getPositionVariations( @$config['item']->template, false ) );
 		$attr	=	'class="inputbox"';
 
-		return JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
+		return HTMLHelper::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 	}
 }
 ?>

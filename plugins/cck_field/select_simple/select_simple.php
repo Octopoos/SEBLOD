@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -42,15 +44,15 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 	public static function onCCK_FieldConstruct_SearchSearch( &$field, $style, $data = array(), &$config = array() )
 	{
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
-			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_LIST' ) );
-			$data['variation']['list']			=	JHtml::_( 'select.option', 'list', JText::_( 'COM_CCK_DEFAULT' ) );
-			$data['variation']['list_filter']	=	JHtml::_( 'select.option', 'list_filter', JText::_( 'COM_CCK_FORM_FILTER' ) );
+			$data['variation']['201']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_LIST' ) );
+			$data['variation']['list']			=	HTMLHelper::_( 'select.option', 'list', Text::_( 'COM_CCK_DEFAULT' ) );
+			$data['variation']['list_filter']	=	HTMLHelper::_( 'select.option', 'list_filter', Text::_( 'COM_CCK_FORM_FILTER' ) );
 			/*
-			$data['variation']['list_filter_ajax']	=	JHtml::_( 'select.option', 'list_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+			$data['variation']['list_filter_ajax']	=	HTMLHelper::_( 'select.option', 'list_filter_ajax', Text::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
 			*/
-			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
-			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['202']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -150,7 +152,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 		$options	=	array();
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
-				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
 			if ( $attrib ) {
 				$attr['attr']	=	'';
@@ -158,9 +160,9 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 					$attr['attr']	.=	' '.$a.'=""';
 				}
 				$attributes[]	=	$attr['attr'];
-				$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
+				$opts[]			=	HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -', $attr );
 			} else {
-				$opts[]			=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
+				$opts[]			=	HTMLHelper::_( 'select.option',  '', '- '.$field->selectlabel.' -', 'value', 'text' );
 			}
 			$options[]			=	$field->selectlabel.'=';
 		}
@@ -174,19 +176,19 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 							$opt	=	explode( '=', $val );
 							if ( $opt[1] == 'optgroup' ) {
 								if ( $optgroup == 1 ) {
-									$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
+									$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 								}
 								if ( $field->bool8 && trim( $opt[0] ) ) {
-									$opt[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
+									$opt[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
 								}
-								$opts[]		=	JHtml::_( 'select.option', '<OPTGROUP>', $opt[0] );
+								$opts[]		=	HTMLHelper::_( 'select.option', '<OPTGROUP>', $opt[0] );
 								$optgroup	=	1;
 							} elseif ( $opt[1] == 'endgroup' && $optgroup == 1 ) {
-								$opts[]		=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]		=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 								$optgroup	=	0;
 							} else {
 								if ( $field->bool8 && trim( $opt[0] ) ) {
-									$opt[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
+									$opt[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
 								}
 								if ( $attrib ) {
 									$attr['attr']	=	'';
@@ -194,20 +196,20 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 										$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 									}
 									$attributes[]	=	$attr['attr'];
-									$opts[]			=	JHtml::_( 'select.option', $opt[1], $opt[0], $attr );
+									$opts[]			=	HTMLHelper::_( 'select.option', $opt[1], $opt[0], $attr );
 								} else {
-									$opts[]			=	JHtml::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
+									$opts[]			=	HTMLHelper::_( 'select.option', $opt[1], $opt[0], 'value', 'text' );
 								}
 								$options[]			=	$opt[0].'='.$opt[1];
 							}
 						} else {
 							if ( $val == 'endgroup' && $optgroup == 1 ) {
-								$opts[]		=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]		=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 								$optgroup	=	0;
 							} else {
 								$text		=	$val;
 								if ( $field->bool8 && trim( $text ) != '' ) {
-									$text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+									$text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 								}
 								if ( $attrib ) {
 									$attr['attr']	=	'';
@@ -215,9 +217,9 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 										$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 									}
 									$attributes[]	=	$attr['attr'];
-									$opts[]			=	JHtml::_( 'select.option', $val, $text, $attr );
+									$opts[]			=	HTMLHelper::_( 'select.option', $val, $text, $attr );
 								} else {
-									$opts[]			=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+									$opts[]			=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 								}
 								$options[]			=	$text.'='.$val;
 							}
@@ -225,7 +227,7 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 					}
 				}
 				if ( $optgroup == 1 ) {
-					$opts[]		=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]		=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 				}
 			}
 		} else {
@@ -237,19 +239,19 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 						}
 						if ( $o->value == 'optgroup' ) {
 							if ( $optgroup == 1 ) {
-								$opts[]	=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 							}
 							if ( $field->bool8 && trim( $opt[0] ) ) {
-								$opt[0]	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
+								$opt[0]	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $opt[0] ) ) );
 							}
-							$opts[]		=	JHtml::_( 'select.option', '<OPTGROUP>', $opt[0] );
+							$opts[]		=	HTMLHelper::_( 'select.option', '<OPTGROUP>', $opt[0] );
 							$optgroup	=	1;
 						} elseif ( $o->value == 'endgroup' && $optgroup == 1 ) {
-							$opts[]		=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]		=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 							$optgroup	=	0;
 						} else {
 							if ( $field->bool8 && trim( $o->text ) ) {
-								$o->text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o->text ) ) );
+								$o->text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $o->text ) ) );
 							}
 							if ( $attrib ) {
 								$attr['attr']	=	'';
@@ -257,16 +259,16 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 									$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 								}
 								$attributes[]	=	$attr['attr'];
-								$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, $attr );
+								$opts[]			=	HTMLHelper::_( 'select.option', $o->value, $o->text, $attr );
 							} else {
-								$opts[]			=	JHtml::_( 'select.option', $o->value, $o->text, 'value', 'text' );
+								$opts[]			=	HTMLHelper::_( 'select.option', $o->value, $o->text, 'value', 'text' );
 							}
 							$options[]			=	$o->text.'='.$o->val;
 						}
 					}
 				}
 				if ( $optgroup == 1 ) {
-					$opts[]		=	JHtml::_( 'select.option', '</OPTGROUP>' );
+								$opts[]		=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 				}
 			}
 		}
@@ -281,9 +283,9 @@ class plgCCK_FieldSelect_Simple extends JCckPluginField
 			if ( $attrib ) {
 				$attr	=	array( 'id'=>$id, 'list.attr'=>$attr, 'list.select'=>$value, 'list.translate'=>false,
 								   'option.attr'=>'data-cck', 'option.key'=>'value', 'option.text'=>'text' );
-				$form	=	JHtml::_( 'select.genericlist', $opts, $name, $attr );
+				$form	=	HTMLHelper::_( 'select.genericlist', $opts, $name, $attr );
 			} else {
-				$form	=	JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
+				$form	=	HTMLHelper::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 			}
 		}
 		

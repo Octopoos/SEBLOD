@@ -11,8 +11,14 @@
 defined( '_JEXEC' ) or die;
 defined( 'CCK_COM' ) or define( 'CCK_COM', 'com_cck' );
 
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
+use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
 
 // Script
 class plgContentCCKInstallerScript
@@ -23,18 +29,18 @@ class plgContentCCKInstallerScript
 		$data	=	"<!DOCTYPE html><title></title>";
 		$groups	=	array( 'cck_field', 'cck_field_link', 'cck_field_live', 'cck_field_restriction', 'cck_field_typo', 'cck_field_validation', 'cck_storage', 'cck_storage_location' );
 		foreach ( $groups as $group ) {
-			JFile::write( JPATH_PLUGINS.'/'.$group.'/'.'index.html', $data );	
+			File::write( JPATH_PLUGINS.'/'.$group.'/'.'index.html', $data );	
 		}
 	}
 	
 	// uninstall
 	public function uninstall( $parent )
 	{
-		if ( JFile::exists( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' ) ) {
-			JFile::delete( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' );
+		if ( File::exists( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' ) ) {
+			File::delete( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' );
 		}
-		if ( JFile::exists( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' ) ) {
-			JFile::delete( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' );
+		if ( File::exists( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' ) ) {
+			File::delete( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' );
 		}
 		
 		$groups	=	array(
@@ -49,22 +55,22 @@ class plgContentCCKInstallerScript
 					);
 		
 		foreach ( $groups as $group ) {
-			if ( JFolder::exists( JPATH_PLUGINS.'/'.$group ) ) {
-				JFolder::delete( JPATH_PLUGINS.'/'.$group );
+			if ( Folder::exists( JPATH_PLUGINS.'/'.$group ) ) {
+				Folder::delete( JPATH_PLUGINS.'/'.$group );
 			}
 		}
 
 		// Additional stuff
 		$path	=	JPATH_SITE.'/cli/cck_job.php';
 
-		if ( JFile::exists( $path ) ) {
-			JFile::delete( $path );
+		if ( File::exists( $path ) ) {
+			File::delete( $path );
 		}
 
 		$path	=	JPATH_SITE.'/libraries/cms/cck';
 
-		if ( JFolder::exists( $path ) ) {
-			JFolder::delete( $path );
+		if ( Folder::exists( $path ) ) {
+			Folder::delete( $path );
 		}
 	}
 	
@@ -77,22 +83,22 @@ class plgContentCCKInstallerScript
 	public function preflight( $type, $parent )
 	{
 		// WAITING FOR JOOMLA 1.7.x FIX
-		$app		=	JFactory::getApplication();
-		$config		=	JFactory::getConfig();
+		$app		=	Factory::getApplication();
+		$config		=	Factory::getConfig();
 		$tmp_path	=	$config->get( 'tmp_path' );
 		$tmp_dir 	=	$app->cck_core_temp_var;
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
 		$dest		=	JPATH_SITE.'/libraries/cck/rendering/variations';
 		$protected	=	array( 'empty' );
 
-		if ( $tmp_dir && JFolder::exists( $path ) ) {
-			$vars		=	JFolder::folders( $path );
+		if ( $tmp_dir && Folder::exists( $path ) ) {
+			$vars		=	Folder::folders( $path );
 			foreach ( $vars as $var ) {
 				if ( ! in_array( $var, $protected ) ) {
-					JFolder::move( $path.'/'.$var, $dest.'/'.$var );
+					Folder::move( $path.'/'.$var, $dest.'/'.$var );
 				}
 			}
-			JFolder::delete( $path );
+			Folder::delete( $path );
 		}
 		// WAITING FOR JOOMLA 1.7.x FIX
 	}
@@ -100,11 +106,11 @@ class plgContentCCKInstallerScript
 	// postflight
 	public function postflight( $type, $parent )
 	{
-		$app	=	JFactory::getApplication();
-		$db		=	JFactory::getDbo();
+		$app	=	Factory::getApplication();
+		$db		=	Factory::getDbo();
 		
 		if ( !class_exists( 'JCck' ) ) {
-			JFactory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
+			Factory::getApplication()->enqueueMessage( 'This SEBLOD 4.0-rc should NOT be installed directly, please read the suitable blog post on SEBLOD.com', 'error' );
 			return;
 		}
 
@@ -116,13 +122,13 @@ class plgContentCCKInstallerScript
 			$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
 			
 			$res		=	$db->loadResult();
-			$registry	=	new JRegistry;
+			$registry	=	new Registry;
 			$registry->loadString( $res );
 			
 			$app->cck_core_version		=	'4.0.0';
 			$app->cck_core_version_old	=	$registry->get( 'version', '3.21.0' );
 
-			JFactory::getLanguage()->load( 'lib_cck', JPATH_SITE );
+			Factory::getLanguage()->load( 'lib_cck', JPATH_SITE );
 		}
 
 		// Force { CCK } Plugins + { CCK } Library to be published
@@ -147,7 +153,7 @@ class plgContentCCKInstallerScript
 			$addons	=	$db->loadObjectList();
 			
 			if ( count( $addons ) ) {			
-				JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
+				// JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
 				$titles	=	array(
 								'com_cck_builder'=>'Builder',
 								'com_cck_developer'=>'Developer',
@@ -288,18 +294,18 @@ class plgContentCCKInstallerScript
 			}
 
 			// Add Categories
-			JPluginHelper::importPlugin( 'content' );
-			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+			PluginHelper::importPlugin( 'content' );
+			// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 			
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
 			
 			foreach ( $categories as $category ) {
-				$table	=	JTable::getInstance( 'Category' );
+				$table	=	Table::getInstance( 'Category' );
 				$table->access	=	2;
 				$table->setLocation( 1, 'last-child' );	
 				$table->bind( $category );
-				$rules	=	new JAccessRules( '{"core.create":{"1":0}}' );
+				$rules	=	new Rules( '{"core.create":{"1":0}}' );
 				$table->setRules( $rules );
 				$table->check();
 				$table->extension	=	'com_content';
@@ -322,7 +328,7 @@ class plgContentCCKInstallerScript
 			
 			// Init Default Author
 			$res	=	JCckDatabase::loadResult( 'SELECT id FROM #__users ORDER BY id ASC' );
-			$params =	JComponentHelper::getParams( 'com_cck' );
+			$params =	ComponentHelper::getParams( 'com_cck' );
 			$params->set( 'integration_user_default_author', (int)$res );
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
@@ -371,7 +377,7 @@ class plgContentCCKInstallerScript
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
-			$params		=	JComponentHelper::getParams( 'com_cck' );
+			$params		=	ComponentHelper::getParams( 'com_cck' );
 			$root		=	JPATH_ADMINISTRATOR.'/components/com_cck';
 			require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
@@ -427,7 +433,7 @@ class plgContentCCKInstallerScript
 			// JCckDev::aa( $n, 'n' );
 			
 			if ( $i < 7 ) {		// ONLY < 2.0 GA
-				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+				$prefix	=	Factory::getConfig()->get( 'dbprefix' );
 				$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
 				
 				if ( count( $tables ) ) {
@@ -499,11 +505,11 @@ class plgContentCCKInstallerScript
 				if ( JCckDatabase::doQuery( 'INSERT IGNORE #__cck_core_folders (id) VALUES (29)' ) ) {
 					require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/tables/folder.php';
 					
-					$folder			=	JTable::getInstance( 'Folder', 'CCK_Table' );
+					$folder			=	Table::getInstance( 'Folder', 'CCK_Table' );
 					$folder->load( 29 );
 					$folder_data	=	array( 'parent_id'=>13, 'path'=>'joomla/user/profile', 'title'=>'Profile', 'name'=>'profile', 'color'=>'#0090d1',
 											   'introchar'=>'U.', 'colorchar'=>'#ffffff', 'elements'=>'field', 'featured'=>0, 'published'=>1 );
-					$rules			=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
+					$rules			=	new Rules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
 					$folder->setRules( $rules );
 					$folder->bind( $folder_data );
 					$folder->store();
@@ -513,7 +519,7 @@ class plgContentCCKInstallerScript
 			for ( $i = $i + 1; $i <= $n; $i++ ) {
 				$file		=	$root.'/install/upgrades/'.strtolower( $versions[$i] ).'.sql';
 				
-				if ( JFile::exists( $file ) ) {
+				if ( File::exists( $file ) ) {
 					$buffer		=	file_get_contents( $file );
 					$queries	=	$db->splitSql( $buffer );
 					
@@ -573,7 +579,7 @@ class plgContentCCKInstallerScript
 				}
 			}
 			if ( $i2 < 25 ) {
-				$table	=	JTable::getInstance( 'Asset' );
+				$table	=	Table::getInstance( 'Asset' );
 				$table->loadByName( 'com_cck' );
 				
 				if ( $table->rules ) {
@@ -625,16 +631,16 @@ class plgContentCCKInstallerScript
 			if ( $i2 < 66 ) {
 				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
 				
-				if ( JFile::exists( $path ) ) {
-					JFile::delete( $path );
+				if ( File::exists( $path ) ) {
+					File::delete( $path );
 				}
 			}
 			
 			if ( $i2 < 70 ) {
-				$plg_image	=	JPluginHelper::getPlugin( 'cck_field', 'upload_image' );
-				$plg_params	=	new JRegistry( $plg_image->params );
+				$plg_image	=	PluginHelper::getPlugin( 'cck_field', 'upload_image' );
+				$plg_params	=	new Registry( $plg_image->params );
 
-				$com_cck	=	JComponentHelper::getComponent( 'com_cck' );
+				$com_cck	=	ComponentHelper::getComponent( 'com_cck' );
 				$com_cck->params->set( 'media_quality_jpeg', $plg_params->get( 'quality_jpeg', '90' ) );
 				$com_cck->params->set( 'media_quality_png', $plg_params->get( 'quality_png', '3' ) );
 				
@@ -642,37 +648,37 @@ class plgContentCCKInstallerScript
 			}
 			
 			if ( $i2 < 105 ) {
-				$config		=	JFactory::getConfig();
+				$config		=	Factory::getConfig();
 				$tmp_path	=	$config->get( 'tmp_path' );
 
 				if ( is_file( JPATH_SITE.'/components/com_cck/models/box.php' ) ) {
-					JFile::delete( JPATH_SITE.'/components/com_cck/models/box.php', $tmp_path.'/box.php' );
+					File::delete( JPATH_SITE.'/components/com_cck/models/box.php', $tmp_path.'/box.php' );
 				}
 				if ( is_dir( JPATH_SITE.'/components/com_cck/views/box' ) ) {
-					JFolder::delete( JPATH_SITE.'/components/com_cck/views/box', $tmp_path.'/box' );
+					Folder::delete( JPATH_SITE.'/components/com_cck/views/box', $tmp_path.'/box' );
 				}
 			}
 
 			if ( $i2 < 120 ) {
 				$path	=	JPATH_SITE.'/libraries/cms/cck/content';
 
-				if ( JFolder::exists( $path ) ) {
+				if ( Folder::exists( $path ) ) {
 					$path2	=	JPATH_SITE.'/libraries/cms/cck/content/trait';
 					$path3	=	JPATH_SITE.'/libraries/cms/cck/trait';
 
-					if ( JFolder::exists( $path2 ) ) {
-						JFolder::move( $path2, $path3 );
+					if ( Folder::exists( $path2 ) ) {
+						Folder::move( $path2, $path3 );
 					}
 
-					JFolder::delete( $path );
+					Folder::delete( $path );
 
-					if ( JFolder::exists( $path3 ) ) {
-						JFolder::create( $path );
-						JFolder::move( $path3, $path2 );
+					if ( Folder::exists( $path3 ) ) {
+						Folder::create( $path );
+						Folder::move( $path3, $path2 );
 					}
 				}
 
-				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+				$prefix	=	Factory::getConfig()->get( 'dbprefix' );
 				$tables	=	$db->getTableList();
 				$tables	=	array_flip( $tables );
 				$names	=	array(
@@ -743,7 +749,7 @@ class plgContentCCKInstallerScript
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
 
-		$params->set( 'media_version', md5( $app->cck_core_version . JFactory::getConfig()->get( 'secret' ) ) );
+		$params->set( 'media_version', md5( $app->cck_core_version . Factory::getConfig()->get( 'secret' ) ) );
 
 		// Update Params
 		$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
@@ -757,12 +763,12 @@ class plgContentCCKInstallerScript
 	// _addAddon (#JFMTree)
 	protected function _addAddon( $addon, $parent, $type )
 	{
-		$db		=	JFactory::getDbo();
+		$db		=	Factory::getDbo();
 		$exists	=	0;
 		$name	=	str_replace( 'com_cck_', '', $addon->element );
 
 		// -- Dirty workaround cleanup
-		if ( $type == 'update' && version_compare( JFactory::getApplication()->cck_core_version_old, '3.11.4', '<' ) && $name != '' ) {
+		if ( $type == 'update' && version_compare( Factory::getApplication()->cck_core_version_old, '3.11.4', '<' ) && $name != '' ) {
 			$db->setQuery( 'DELETE FROM #__menu WHERE link = "index.php?option=com_cck_'.$name.'" AND client_id = 1 AND parent_id IN (0,1)' );
 			$db->execute();
 		} elseif ( $type == 'update' ) {
@@ -787,14 +793,14 @@ class plgContentCCKInstallerScript
 			}
 		}
 		if ( $exists ) {
-			$table  =   JTable::getInstance( 'Menu' );
+			$table  =   Table::getInstance( 'Menu' );
 			$table->load( $exists );
 			$table->setLocation( $parent->id, 'last-child' );
 			$table->check();
 			$table->store();
 			$table->rebuildPath( $table->id );
 		} else {
-			$table	=	JTable::getInstance( 'Menu' );
+			$table	=	Table::getInstance( 'Menu' );
 			$data	=	array( 'menutype'=>'main', 'title'=>$addon->element.'_title', 'alias'=>$addon->title, 'path'=>'SEBLOD/'.$addon->title,
 							   'link'=>'index.php?option=com_cck_'.$name, 'type'=>'component', 'published'=>1, 'parent_id'=>$parent->id,
 							   'level'=>2, 'component_id'=>$addon->id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
@@ -814,10 +820,10 @@ class plgContentCCKInstallerScript
 	// _convertTablesToUtf8mb4
 	protected function _convertTablesToUtf8mb4()
 	{
-		$app		=	JFactory::getApplication();
-		$db			=	JFactory::getDbo();
+		$app		=	Factory::getApplication();
+		$db			=	Factory::getDbo();
 		$name		=	$db->getName();
-		$params		=	JComponentHelper::getParams( 'com_cck' );
+		$params		=	ComponentHelper::getParams( 'com_cck' );
 		$status		=	(int)$params->get( 'utf8_conversion', '' );
 		$utf8mb4	=	false;
 
@@ -838,7 +844,7 @@ class plgContentCCKInstallerScript
 		}
 
 		$i			=	0;
-		$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
+		$prefix		=	Factory::getConfig()->get( 'dbprefix' );
 		$tables		=	$db->getTableList();
 
 		if ( count( $tables ) ) {
@@ -980,7 +986,7 @@ class plgContentCCKInstallerScript
 	// _insertNavItem
 	protected function _insertNavItem( $parent_id, $component_id )
 	{
-		$table	=	JTable::getInstance( 'Menu' );
+		$table	=	Table::getInstance( 'Menu' );
 		$data	=	array( 'menutype'=>'main', 'title'=>'com_cck_core_title', 'alias'=>'core', 'path'=>'SEBLOD/core',
 						   'link'=>'index.php?option=com_cck', 'type'=>'component', 'published'=>1, 'parent_id'=>$parent_id,
 						   'level'=>2, 'component_id'=>$component_id, 'access'=>1, 'img'=>'class:component', 'client_id'=>1 );
@@ -997,7 +1003,7 @@ class plgContentCCKInstallerScript
 	// _renameLanguageFiles
 	protected function _renameLanguageFiles( $folder )
 	{
-		$items	=	JFolder::files( $folder, '^en-GB' );
+		$items	=	Folder::files( $folder, '^en-GB' );
 
 		if ( count( $items ) ) {
 			foreach ( $items as $path ) {
@@ -1014,9 +1020,9 @@ class plgContentCCKInstallerScript
 					$new_path   =   substr( $path, 6 );
 
 					if ( is_file( $folder.'/'.$new_path ) ) {
-						JFile::delete( $folder.'/'.$new_path );
+						File::delete( $folder.'/'.$new_path );
 					}
-					JFile::move( $folder.'/'.$path, $folder.'/'.$new_path );
+					File::move( $folder.'/'.$path, $folder.'/'.$new_path );
 				}
 			}
 		}
@@ -1025,8 +1031,8 @@ class plgContentCCKInstallerScript
 	// _setUserActionsLog
 	protected function _setUserActionsLog()
 	{
-		$db			=	JFactory::getDbo();
-		$db_prefix	=	JFactory::getConfig()->get( 'dbprefix' );
+		$db			=	Factory::getDbo();
+		$db_prefix	=	Factory::getConfig()->get( 'dbprefix' );
 		$table_name	=	$db_prefix.'action_logs_extensions';
 		$tables		=	$db->getTableList();
 		$tables		=	array_flip( $tables );
@@ -1044,7 +1050,7 @@ class plgContentCCKInstallerScript
 	// _setUtf8mb4
 	protected function _setUtf8mb4( $params )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$name		=	$db->getName();
 		$status		=	(int)$params->get( 'utf8_conversion', '' );
 		$utf8mb4	=	false;

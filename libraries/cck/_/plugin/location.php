@@ -11,9 +11,16 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
 
 // Plugin
-class JCckPluginLocation extends JPlugin
+class JCckPluginLocation extends CMSPlugin
 {
 	protected static $construction	=	'cck_storage_location';
 	protected static $sef_aliases	=	0;
@@ -37,15 +44,15 @@ class JCckPluginLocation extends JPlugin
 		$properties	=	array( 'type_alias' );
 		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 
-		JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+		// JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
 
 		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
-			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
+			// JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
 		}
 
 		// Fix Language
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$lang			=	JFactory::getLanguage();
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 			
 			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
@@ -72,13 +79,13 @@ class JCckPluginLocation extends JPlugin
 			return false;
 		}
 
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$table	=	static::_getTable( $pk );
-		$user	=	JFactory::getUser();
+		$user	=	Factory::getUser();
 		
 		if ( $table->checked_out > 0 ) {
 			if ( $table->checked_out != $user->id && !$user->authorise( 'core.admin', 'com_checkin' ) ) {
-				$app->enqueueMessage( JText::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
+				$app->enqueueMessage( Text::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
 				return false;
 			}
 			
@@ -114,8 +121,8 @@ class JCckPluginLocation extends JPlugin
 	// getStaticParams
 	public static function getStaticParams()
 	{
-		$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', static::$type );
-		$params		=	new JRegistry( $plg->params );
+		$plg		=	PluginHelper::getPlugin( 'cck_storage_location', static::$type );
+		$params		=	new Registry( $plg->params );
 		
 		return $params;
 	}
@@ -128,8 +135,8 @@ class JCckPluginLocation extends JPlugin
 		$type			=	static::$type;
 		
 		if ( !is_object( $params[$type] ) ) {
-			$plg			=	JPluginHelper::getPlugin( 'cck_storage_location', $type );
-			$params[$type]	=	new JRegistry( $plg->params );
+			$plg			=	PluginHelper::getPlugin( 'cck_storage_location', $type );
+			$params[$type]	=	new Registry( $plg->params );
 		}
 		
 		return $params[$type];
@@ -236,7 +243,7 @@ class JCckPluginLocation extends JPlugin
 					}
 				}
 				if ( !$table->store() ) {
-					JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+					Factory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 
 					return false;
 				}
@@ -370,16 +377,16 @@ class JCckPluginLocation extends JPlugin
 				$core->load( $config['id'] );
 				$core->cck				=	$config['type'];
 				if ( ! $core->pk ) {
-					$core->date_time	=	JFactory::getDate()->toSql();
+					$core->date_time	=	Factory::getDate()->toSql();
 				}
 				$core->pk				=	$pk;
 				$core->storage_location	=	( isset( $location['_']->location ) ) ? $location['_']->location : JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE name = "'.$config['type'].'"' );
 				$core->author_id		=	$config['author'];
-				$user					=	JFactory::getUser();
+				$user					=	Factory::getUser();
 
 				if ( !( $user->id && !$user->guest ) ) {
 					if ( $user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] ) ) {
-						$core->author_session	=	JFactory::getSession()->getId();
+						$core->author_session	=	Factory::getSession()->getId();
 					}
 				}
 
@@ -415,7 +422,7 @@ class JCckPluginLocation extends JPlugin
 						}
 						$titles			=	json_decode( $more->titles );
 
-						$db				=	JFactory::getDbo();
+						$db				=	Factory::getDbo();
 						$query			=	$db->getQuery( true );
 						$updateAliases	=	false;
 
@@ -442,7 +449,7 @@ class JCckPluginLocation extends JPlugin
 								$alias	=	ApplicationHelper::stringURLSafe( $alias, $k );
 
 								if ( trim( str_replace( '-', '', $alias ) ) == '' ) {
-									$alias	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+									$alias	=	Factory::getDate()->format( 'Y-m-d-H-i-s' );
 								}
 
 								$aliases->$k	=	$alias;
@@ -498,12 +505,12 @@ class JCckPluginLocation extends JPlugin
 	// g_checkIn (deprecated)
 	public static function g_checkIn( $table )
 	{
-		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
+		$app	=	Factory::getApplication();
+		$user	=	Factory::getUser();
 		
 		if ( $table->checked_out > 0 ) {
 			if ( $table->checked_out != $user->id && !$user->authorise( 'core.admin', 'com_checkin' ) ) {
-				$app->enqueueMessage( JText::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
+				$app->enqueueMessage( Text::_( 'JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH' ), 'error' );
 				return false;
 			}
 			
@@ -521,8 +528,8 @@ class JCckPluginLocation extends JPlugin
 	// g_isMax
 	public function g_isMax( $author_id, $parent_id, $config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$user	=	JFactory::getUser();
+		$app	=	Factory::getApplication();
+		$user	=	Factory::getUser();
 		$typeId	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name ="'.$config['type'].'"' );
 		
 		jimport('cck.joomla.access.access');
@@ -534,7 +541,7 @@ class JCckPluginLocation extends JPlugin
 			$count	=	JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core WHERE cck="'.$config['type'].'" AND parent_id = '.$parent_id.' AND author_id = '.$author_id );
 			if ( $count >= $max_parent_author ) {
 				JCckDatabase::execute( 'DELETE FROM #__cck_core WHERE id = '.(int)$config['id'] );
-				$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_MAX_PARENT_AUTHOR' ), 'error' );
+				$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_MAX_PARENT_AUTHOR' ), 'error' );
 				$config['error']	=	true;
 				return 1;
 			}
@@ -543,7 +550,7 @@ class JCckPluginLocation extends JPlugin
 			$count	=	JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core WHERE cck="'.$config['type'].'" AND parent_id = '.$parent_id );
 			if ( $count >= $max_parent ) {
 				JCckDatabase::execute( 'DELETE FROM #__cck_core WHERE id = '.(int)$config['id'] );
-				$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_MAX_PARENT' ), 'error' );
+				$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_MAX_PARENT' ), 'error' );
 				$config['error']	=	true;
 				return 1;
 			}
@@ -552,7 +559,7 @@ class JCckPluginLocation extends JPlugin
 			$count	=	JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core WHERE cck="'.$config['type'].'" AND author_id = '.$author_id );
 			if ( $count >= $max_author ) {
 				JCckDatabase::execute( 'DELETE FROM #__cck_core WHERE id = '.(int)$config['id'] );
-				$app->enqueueMessage( JText::_( 'COM_CCK_ERROR_MAX_AUTHOR' ), 'error' );
+				$app->enqueueMessage( Text::_( 'COM_CCK_ERROR_MAX_AUTHOR' ), 'error' );
 				$config['error']	=	true;
 				return 1;
 			}
@@ -569,10 +576,10 @@ class JCckPluginLocation extends JPlugin
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
-			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+			// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 
-			$app	=	JFactory::getApplication();
-			$bridge	=	JTable::getInstance( 'Category' );
+			$app	=	Factory::getApplication();
+			$bridge	=	Table::getInstance( 'Category' );
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -634,7 +641,7 @@ class JCckPluginLocation extends JPlugin
 			$bridge->check();
 			$bridge->extension		=	'com_content';
 			if ( $bridge->parent_id > 1 ) {
-				$bridgeParent		=	JTable::getInstance( 'Category' );
+				$bridgeParent		=	Table::getInstance( 'Category' );
 				$bridgeParent->load( $bridge->parent_id );
 				$bridge->path		=	$bridgeParent->path.'/';
 			} else {
@@ -644,11 +651,11 @@ class JCckPluginLocation extends JPlugin
 			if ( empty( $bridge->language ) ) {
 				$bridge->language	=	'*';
 			}
-			JPluginHelper::importPlugin( 'content' );
+			PluginHelper::importPlugin( 'content' );
 			$app->triggerEvent( 'onContentBeforeSave', array( 'com_categories.category', &$bridge, $isNew, array() ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
-					$test	=	JTable::getInstance( 'Category' );
+					$test	=	Table::getInstance( 'Category' );
 					for ( $i = 2; $i < 69; $i++ ) {
 						$alias	=	$bridge->alias.'-'.$i;
 						if ( !$test->load( array( 'alias'=>$alias, 'parent_id'=>$bridge->parent_id, 'extension'=>$bridge->extension ) ) ) {
@@ -668,7 +675,7 @@ class JCckPluginLocation extends JPlugin
 			
 			if ( ! $core->pk ) {
 				$core->author_id	=	$config['author'];
-				$core->date_time	=	JFactory::getDate()->toSql();
+				$core->date_time	=	Factory::getDate()->toSql();
 			}
 			$core->pk	=	$pk;
 			$core->storage_location	=	$location['_']->location;
@@ -688,10 +695,10 @@ class JCckPluginLocation extends JPlugin
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
-			JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
+			// JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
 
-			$app	=	JFactory::getApplication();
-			$bridge	=	JTable::getInstance( 'Content' );
+			$app	=	Factory::getApplication();
+			$bridge	=	Table::getInstance( 'Content' );
 			
 			if ( $core->pkb > 0 ) {
 				$bridge->load( $core->pkb );
@@ -745,7 +752,7 @@ class JCckPluginLocation extends JPlugin
 			$bridge->version++;
 			
 			if ( $bridge->state == 1 && intval( $bridge->publish_up ) == 0 ) {
-				$bridge->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+				$bridge->publish_up	=	substr( Factory::getDate()->toSql(), 0, -3 );
 			}
 			if ( !$core->pkb ) {
 				if ( $params['bridge_ordering'] ) {
@@ -761,11 +768,11 @@ class JCckPluginLocation extends JPlugin
 				$bridge->language	=	'*';
 			}
 			
-			JPluginHelper::importPlugin( 'content' );
+			PluginHelper::importPlugin( 'content' );
 			$app->triggerEvent( 'onContentBeforeSave', array( 'com_content.article', &$bridge, $isNew, array() ) );
 			if ( !$bridge->store() ) {
 				if ( $isNew ) {
-					$test	=	JTable::getInstance( 'Content' );
+					$test	=	Table::getInstance( 'Content' );
 					for ( $i = 2; $i < 69; $i++ ) {
 						$alias	=	$bridge->alias.'-'.$i;
 						if ( !$test->load( array( 'alias'=>$alias, 'catid'=>$bridge->catid ) ) ) {
@@ -784,7 +791,7 @@ class JCckPluginLocation extends JPlugin
 			$core->cck	=	$config['type'];
 			if ( ! $core->pk ) {
 				$core->author_id	=	$config['author'];
-				$core->date_time	=	JFactory::getDate()->toSql();
+				$core->date_time	=	Factory::getDate()->toSql();
 			}
 			$core->pk	=	$pk;
 			$core->storage_location	=	$location['_']->location;
@@ -849,7 +856,7 @@ class JCckPluginLocation extends JPlugin
 	// _checkAlias
 	protected static function _checkAlias( $query, $where, $lang_tag, $alias )
 	{
-		$db	=	JFactory::getDbo();
+		$db	=	Factory::getDbo();
 
 		$query->clear( 'where' )
 			  ->where( $where )

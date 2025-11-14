@@ -10,10 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\MVC\Controller\AdminController;
+
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
-class CCKControllerSites extends JControllerAdmin
+class CCKControllerSites extends AdminController
 {
 	protected $text_prefix	=	'COM_CCK';
 	

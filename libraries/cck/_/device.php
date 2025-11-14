@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Environment\Browser;
 
-JLoader::register( 'Mobile_Detect', JPATH_PLATFORM.'/cck/misc/Mobile_Detect.php' );
+\JLoader::register( 'Mobile_Detect', JPATH_PLATFORM.'/cck/misc/Mobile_Detect.php' );
 
 // JCckBrowser
 class JCckBrowser extends Browser

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 $mixin	=	new class() {
 	// _getLanguageAssociation
 	protected function _getLanguageAssociation()
@@ -64,7 +66,7 @@ $mixin	=	new class() {
 				$associations[$tag] 	=	(int)$associations[$tag];
 			}
 			
-			$db			=	JFactory::getDbo();
+			$db			=	Factory::getDbo();
 			$lang_tag	=	$this->getProperty( 'language' );
 
 			if ( !isset( $associations[$lang_tag] ) ) {

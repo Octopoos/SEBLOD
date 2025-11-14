@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_TypoDate extends JCckPluginTypo
 {
@@ -24,7 +29,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		if ( self::$type != $field->typo ) {
 			return;
 		}
-		self::$path	=	JUri::root().'plugins/cck_field_typo/'.self::$type.'/';
+		self::$path	=	Uri::root().'plugins/cck_field_typo/'.self::$type.'/';
 		
 		// Prepare
 		if ( $field->value && $field->value != '' && $field->value != '0000-00-00 00:00:00' ) {
@@ -47,7 +52,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		$value		=	trim( $field->value );
 		
 		if ( $language ) {
-			$tag	=	JFactory::getLanguage()->getTag();
+			$tag	=	Factory::getLanguage()->getTag();
 
 			if ( $tag != $language ) {
 				JCckDevHelper::setLanguage( $language );
@@ -62,11 +67,11 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 				$format	=	trim( $typo->get( 'format_custom', @$options2['format'] ) );
 			}
 			if ( strpos( $format, 'COM_CCK_' ) !== false || strpos( $format, 'DATE_FORMAT_' ) !== false ) {
-				$format	=	JText::_( $format );
+				$format	=	Text::_( $format );
 			}
 			if ( $timezone ) {
 				if ( !( isset( $options2['storage_format'] ) && $options2['storage_format'] ) ) {
-					$value	=	JHtml::_( 'date', $value, 'Y-m-d H:i:s' );
+					$value	=	HTMLHelper::_( 'date', $value, 'Y-m-d H:i:s' );
 				}
 			}
 			$value		=	self::_getValueWithFormatStorage( $value, @$options2['storage_format'] );
@@ -104,7 +109,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 			$value		=	self::_getValueWithFormatStorage( $value );
 
 			if ( strpos( $alt_format, 'COM_CCK_' ) !== false || strpos( $alt_format, 'DATE_FORMAT_' ) !== false ) {
-				$alt_format	=	JText::_( $alt_format );
+				$alt_format	=	Text::_( $alt_format );
 			}
 
 			$date_eng	=	$alt_format ? date( $alt_format, $value ) : $value;
@@ -112,25 +117,25 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		} else {
 			// Prepare
 			if ( $years != 0 ) {
-				$text_years		=	strtolower( JText::_( 'COM_CCK_YEARS' ) );
-				$text_year		=	strtolower( JText::_( 'COM_CCK_YEAR' ) );
+				$text_years		=	strtolower( Text::_( 'COM_CCK_YEARS' ) );
+				$text_year		=	strtolower( Text::_( 'COM_CCK_YEAR' ) );
 
 				$interval		=	( $years > 1 ) ? $years.' '.$text_years : $years.' '.$text_year;
-				$interval		=	JText::sprintf( $state, $interval );
+				$interval		=	Text::sprintf( $state, $interval );
 			} elseif ( $months != 0 && $days_total >= $limit ) {
-				$text_months	=	strtolower( JText::_( 'COM_CCK_MONTHS' ) );
-				$text_month		=	strtolower( JText::_( 'COM_CCK_MONTH' ) );
+				$text_months	=	strtolower( Text::_( 'COM_CCK_MONTHS' ) );
+				$text_month		=	strtolower( Text::_( 'COM_CCK_MONTH' ) );
 
 				$interval		=	( $months > 1 ) ? $months.' '.$text_months : $months.' '.$text_month;
-				$interval		=	JText::sprintf( $state, $interval );
+				$interval		=	Text::sprintf( $state, $interval );
 			} else {
 				if ( $days_total > 1 ) {
-					$interval	=	JText::sprintf( $state, $days_total.' '.strtolower( JText::_( 'COM_CCK_DAYS' ) ) );
+					$interval	=	Text::sprintf( $state, $days_total.' '.strtolower( Text::_( 'COM_CCK_DAYS' ) ) );
 				} elseif ( $days > 0 ) {
-					$interval	=	JText::_( 'COM_CCK_YESTERDAY' );
+					$interval	=	Text::_( 'COM_CCK_YESTERDAY' );
 				} else {
 					if ( !$unit ) {
-						$interval		=	JText::_( 'COM_CCK_TODAY' );
+						$interval		=	Text::_( 'COM_CCK_TODAY' );
 					} else {
 						$date1			=	new DateTime( $value, new DateTimeZone('UTC') );
 						$now			=	new DateTime( 'now', new DateTimeZone('UTC') );
@@ -139,27 +144,27 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 						$minutes		=	$interval->format( '%i' );
 						if ( $unit == 2 ) {
 							$minutes		+=	( $hours * 60 );
-							$text_minutes	=	strtolower( JText::_( 'COM_CCK_MINUTES' ) );
-							$text_minute	=	strtolower( JText::_( 'COM_CCK_MINUTE' ) );
+							$text_minutes	=	strtolower( Text::_( 'COM_CCK_MINUTES' ) );
+							$text_minute	=	strtolower( Text::_( 'COM_CCK_MINUTE' ) );
 
 							if ( $minutes == 0 ) {
-								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
+								$interval	=	Text::_( 'COM_CCK_JUST_NOW' );
 							} elseif ( $minutes < 60 ) {
 								$interval	=	( $minutes > 1 ) ? $minutes.' '.$text_minutes : $minutes.' '.$text_minute;
-								$interval	=	JText::sprintf( $state, $interval );
+								$interval	=	Text::sprintf( $state, $interval );
 							} else {
 								$unit		=	1;
 							}
 						}
 						if ( $unit == 1 ) {
-							$text_hours		=	strtolower( JText::_( 'COM_CCK_HOURS' ) );
-							$text_hour		=	strtolower( JText::_( 'COM_CCK_HOUR' ) );
+							$text_hours		=	strtolower( Text::_( 'COM_CCK_HOURS' ) );
+							$text_hour		=	strtolower( Text::_( 'COM_CCK_HOUR' ) );
 
 							if ( $hours == 0 ) {
-								$interval	=	JText::_( 'COM_CCK_JUST_NOW' );
+								$interval	=	Text::_( 'COM_CCK_JUST_NOW' );
 							} else {
 								$interval	=	( $hours > 1 ) ? $hours.' '.$text_hours : $hours.' '.$text_hour;
-								$interval	=	JText::sprintf( $state, $interval );
+								$interval	=	Text::sprintf( $state, $interval );
 							}
 						}
 					}
@@ -183,15 +188,15 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 	{
 		$day		=	date( 'l', $date_n );
 		$month		=	date( 'F', $date_n );
-		$t_day		=	JText::_( strtoupper( $day ) );
-		$t_month	=	JText::_( strtoupper( $month ) );
+		$t_day		=	Text::_( strtoupper( $day ) );
+		$t_month	=	Text::_( strtoupper( $month ) );
 		
 		$date		=	str_replace( array( $month, $day ), array( $t_month, $t_day ), $date_eng );
 		
 		// Short Day
 		if ( strpos( $format, 'D' ) !== false ) {
 			$day_short		=	date( 'D', $date_n );
-			$t_day_short	=	JText::_( strtoupper( $day_short ) );
+			$t_day_short	=	Text::_( strtoupper( $day_short ) );
 
 			$date			=	str_replace( $day_short, $t_day_short, $date );
 		}
@@ -199,7 +204,7 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		// Short Month
 		if ( strpos( $format, 'M' ) !== false ) {
 			$month_short	=	date( 'M', $date_n );
-			$t_month_short	=	JText::_( strtoupper( $month ).'_SHORT' );
+			$t_month_short	=	Text::_( strtoupper( $month ).'_SHORT' );
 
 			$date			=	str_replace( $month_short, $t_month_short, $date );
 		}

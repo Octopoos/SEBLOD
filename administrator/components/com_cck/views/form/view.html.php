@@ -10,13 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // View
-class CCKViewForm extends JViewLegacy
+class CCKViewForm extends HtmlView
 {
 	// display
 	public function display( $tpl = null )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $this->getlayout() != 'select' ) {
 			$layout					=	$app->input->get( 'tmpl' );
@@ -33,7 +43,7 @@ class CCKViewForm extends JViewLegacy
 			$preconfig['submit']	=	'JCck.Core.submit'.$uniqId;
 			$preconfig['task']		=	$app->input->get( 'task', '' );
 			$preconfig['type']		=	$app->input->get( 'type', '' );
-			$preconfig['url']		=	JUri::getInstance()->toString();
+			$preconfig['url']		=	Uri::getInstance()->toString();
 			
 			JCck::loadjQuery();
 			Helper_Include::addStyleSheets( false );
@@ -51,14 +61,14 @@ class CCKViewForm extends JViewLegacy
 			$profiler	=	new JProfiler();
 		}
 		
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->form		=	$this->get( 'Form' );
 		$this->option	=	$app->input->get( 'option', '' );
 		$this->item		=	$this->get( 'Item' );
 		$this->state	=	$this->get( 'State' );
 		$option			=	$this->option;
-		$params			=	new JRegistry;
-		$session		=	JFactory::getSession();
+		$params			=	new Registry;
+		$session		=	Factory::getSession();
 		$view			=	$this->getName();
 		
 		$isNew			=	1;
@@ -70,7 +80,7 @@ class CCKViewForm extends JViewLegacy
 		include_once JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
-		$session->set( 'cck_hash_seblod_form', JApplicationHelper::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_seblod_form', ApplicationHelper::getHash( $id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
 		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
 		$session->set( 'cck_task', 'form' );
 		
@@ -91,32 +101,32 @@ class CCKViewForm extends JViewLegacy
 	// addToolbar
 	protected function addToolbar( $title = '', $name = '' )
 	{
-		JFactory::getApplication()->input->set( 'hidemainmenu', true );
+		Factory::getApplication()->input->set( 'hidemainmenu', true );
 		
-		$bar	=	JToolBar::getInstance( 'toolbar' );
-		$lang	=	JFactory::getLanguage();
+		$bar	=	Toolbar::getInstance( 'toolbar' );
+		$lang	=	Factory::getLanguage();
 		
 		require_once JPATH_COMPONENT.'/helpers/toolbar/link.php';
 		
 		if ( $this->isNew )  {
 			$key	=	'APP_CCK_FORM_'.$name.'_TITLE_ADD';
 			if ( $lang->hasKey( $key ) == 1 ) {
-				$title	=	JText::_( $key );
+				$title	=	Text::_( $key );
 			} else {
 				$key	=	'COM_CCK_TITLE_FORM_ADD_'.str_replace( ' ', '_', $title );
-				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_ADD' ).' '.$title;
+				$title	=	( $lang->hasKey( $key ) == 1 ) ? Text::_( $key ) : Text::_( 'COM_CCK_TITLE_ADD' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'pencil-2' );
+			ToolbarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CANCEL', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		} else {
 			$key	=	'APP_CCK_FORM_'.$name.'_TITLE_EDIT';
 			if ( $lang->hasKey( $key ) == 1 ) {
-				$title	=	JText::_( $key );
+				$title	=	Text::_( $key );
 			} else {
 				$key	=	'COM_CCK_TITLE_FORM_EDIT_'.str_replace( ' ', '_', $title );
-				$title	=	( $lang->hasKey( $key ) == 1 ) ? JText::_( $key ) : JText::_( 'COM_CCK_TITLE_EDIT' ).' '.$title;
+				$title	=	( $lang->hasKey( $key ) == 1 ) ? Text::_( $key ) : Text::_( 'COM_CCK_TITLE_EDIT' ).' '.$title;
 			}
-			JToolBarHelper::title( $title, 'pencil-2' );
+			ToolbarHelper::title( $title, 'pencil-2' );
 			$bar->prependButton( 'CckLink', 'cancel', 'JTOOLBAR_CLOSE', 'javascript:JCck.Core.submit(\'form.cancel\');' );
 		}
 		$bar->prependButton( 'CckLink', 'save-new', 'JTOOLBAR_SAVE_AND_NEW', 'javascript:JCck.Core.submit(\'form.save2new\');' );

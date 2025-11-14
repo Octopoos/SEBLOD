@@ -10,10 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.application.component.modeladmin' );
+use Joomla\CMS\MVC\Model\AdminModel;
 
 // Model
-class JCckBaseLegacyModelAdmin extends JModelAdmin
+class JCckBaseLegacyModelAdmin extends AdminModel
 {
 	// __construct
 	public function __construct( $config = array() )

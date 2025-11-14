@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 $options2	=	JCckDev::fromJSON( $this->item->options2 );
 $to_admin	=	( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2['to_admin'] ) : ( ( @$options2['to_admin'] ) ? $options2['to_admin'] : '' );
@@ -38,7 +40,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_SEND_EMAIL' ),
+											'label'=>Text::_( 'COM_CCK_SEND_EMAIL' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|50%',
 												'html'=>array(

@@ -10,8 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 if ( count( $this->fieldsAv ) ) {
-	$db         	=   JFactory::getDbo();
+	$db         	=   Factory::getDbo();
     $data['tables'] =   array();
     $prefix         =   $db->getPrefix();
     $tables         =   $db->getTableList();

@@ -1,6 +1,9 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\User\UserHelper;
+
 if ( !isset( $options ) ) {
 	return;	
 }
@@ -31,9 +34,9 @@ if ( !count( $groups ) ) {
 	return;
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
+// JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' ); // Deprecated in Joomla 6
 
-JFactory::getApplication()->input->set( 'type', $type );
+Factory::getApplication()->input->set( 'type', $type );
 
 foreach ( $groups as $i=>$g ) {
 	$account	=	$types[$g];
@@ -59,7 +62,7 @@ foreach ( $groups as $i=>$g ) {
 			}
 		}
 		if ( $opts[$account]['password'] == '' ) {
-			$opts[$account]['password']	=	JUserHelper::genRandomPassword( 20 );
+			$opts[$account]['password']	=	UserHelper::genRandomPassword( 20 );
 		}
 		$opts[$account]['password2']	=	$opts[$account]['password'];
 

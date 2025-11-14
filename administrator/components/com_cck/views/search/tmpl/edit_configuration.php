@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 $options	=	JCckDev::fromJSON( $this->item->options );
 ?>
 <div class="<?php echo $this->css['wrapper']; ?>">
@@ -20,7 +22,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 				'fields'=>array(
 					JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_LIMIT' ).' / '.JText::_( 'COM_CCK_COUNT' ),
+							'label'=>Text::_( 'COM_CCK_LIMIT' ).' / '.Text::_( 'COM_CCK_COUNT' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 								'grid'=>'30%|',
 								'html'=>array(
@@ -32,7 +34,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					),
 					JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_CACHE_SEARCH' ),
+							'label'=>Text::_( 'COM_CCK_CACHE_SEARCH' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 								'grid'=>'30%|',
 								'html'=>array(
@@ -44,7 +46,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					),
 					JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_OPTIONAL_STAGES' ),
+							'label'=>Text::_( 'COM_CCK_OPTIONAL_STAGES' ),
 							'html'=>JCckDev::getForm( 'core_dev_text', @$options['stages_optional'], $config, array( 'label'=>'', 'size'=>8, 'storage_field'=>'options[stages_optional]' ) )
 						)
 					),
@@ -54,7 +56,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_dev_select', @$options['persistent_query'], $config, array( 'label'=>'Persistent Search', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'No=0||Yes=optgroup||Yes for Everyone=1||Registered=2', 'storage_field'=>'options[persistent_query]' ) ),
 					JCckDev::renderForm( $cck['core_prepare_content'], @$options['prepare_content'], $config )
 				),
-				'legend'=>JText::_( 'COM_CCK_CONFIG' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'
+				'legend'=>Text::_( 'COM_CCK_CONFIG' ). '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'
 			),
 			array(
 				'fields'=>array(
@@ -63,7 +65,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( $cck['core_sef_canonical'], @$options['sef_canonical'], $config ),
 					JCckDev::renderForm( 'core_dev_select', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'selectlabel'=>'', 'defaultvalue'=>'-1', 'options'=>'Use Global SL=-1||No=0||Yes=optgroup||All languages=2||All languages but default=1', 'storage_field'=>'sef_route_aliases' ) )
 				),
-				'legend'=>JText::_( 'COM_CCK_CONFIG' ).JText::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).JText::_( 'COM_CCK_SEO' ). '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'
+				'legend'=>Text::_( 'COM_CCK_CONFIG' ).Text::_( 'COM_CCK_PAIR_KEY_VALUE_SEPARATOR' ).Text::_( 'COM_CCK_SEO' ). '<span class="mini">('.Text::_( 'COM_CCK_FOR_VIEW_ALL' ).')</span>'
 			),
 			array(
 				'fields'=>array(
@@ -72,7 +74,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_show_hide', @$options['show_list_title'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_TITLE', 'storage_field'=>'options[show_list_title]' ) ),
 					JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ),
+							'label'=>Text::_( 'COM_CCK_CONFIG_TITLE_TAG_CLASS' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 								'grid'=>'30%|',
 								'html'=>array(
@@ -89,7 +91,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_show_hide', @$options['show_items_number'], $config, array( 'defaultvalue'=>0, 'label'=>'CONFIG_SHOW_ITEMS_NUMBER', 'storage_field'=>'options[show_items_number]' ) ),
 					JCckDev::renderLayoutFile(
 						'cck'.JCck::v().'.form.field', array(
-							'label'=>JText::_( 'COM_CCK_CONFIG_ITEMS_NUMBER_LABEL_CLASS' ),
+							'label'=>Text::_( 'COM_CCK_CONFIG_ITEMS_NUMBER_LABEL_CLASS' ),
 							'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 								'grid'=>'30%|',
 								'html'=>array(
@@ -105,7 +107,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_dev_text', @$options['label_pagination'], $config, array( 'label'=>'Config Pagination Label', 'size'=>32, 'storage_field'=>'options[label_pagination]' ) ),
 					JCckDev::renderForm( 'core_dev_text', @$options['callback_pagination'], $config, array( 'label'=>'Config Pagination Callback', 'storage_field'=>'options[callback_pagination]' ) )
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_GLOBAL_LIST' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_GLOBAL_LIST' )
 			),
 			array(
 				'fields'=>array(
@@ -114,7 +116,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_message', @$options['message_no_access'], $config, array( 'storage_field'=>'options[message_no_access]' ) ),
 					JCckDev::renderForm( $cck['core_redirection_url_no_access'], @$options['redirection_url_no_access'], $config )
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_ACCESS' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_NO_ACCESS' )
 			),
 			array(
 				'fields'=>array(
@@ -124,7 +126,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_show_hide', @$options['show_list_desc_no_result'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc_no_result]' ) ),
 					JCckDev::renderForm( 'core_dev_bool', @$options['mode_no_result'], $config, array( 'label'=>'Trigger', 'defaultvalue'=>'0', 'options'=>'Config No Result=0||Config No Unique Result=1', 'storage_field'=>'options[mode_no_result]' ) )
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_RESULT' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_NO_RESULT' )
 			),
 			array(
 				'fields'=>array(
@@ -133,7 +135,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_message', @$options['message_no_search'], $config, array( 'storage_field'=>'options[message_no_search]' ) ),
 					JCckDev::renderBlank()
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_SEARCH' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_NO_SEARCH' )
 			),
 			array(
 				'fields'=>array(
@@ -143,7 +145,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( 'core_dev_textarea', @$options['json_resource'], $config, array( 'label'=>'Parameters', 'cols'=>80, 'rows'=>1, 'storage_field'=>'options[json_resource]' ), array(), 'w100' ),
 					JCckDev::renderForm( 'core_dev_text', @$options['autoid_resource'], $config, array( 'defaultvalue'=>'', 'label'=>'Auto ItemId', 'storage_field'=>'options[autoid_resource]' ) )
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_RESOURCE_AS_FRAGMENT_LEGEND' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_RESOURCE_AS_FRAGMENT_LEGEND' )
 			),
 			array(
 				'fields'=>array(
@@ -152,7 +154,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 					JCckDev::renderForm( $cck['core_validation_color'], @$options['validation_color'], $config ),
 					JCckDev::renderForm( $cck['core_validation_background_color'], @$options['validation_background_color'], $config )
 				),
-				'legend'=>'&rArr; ' . JText::_( 'COM_CCK_CONFIG_VALIDATION' )
+				'legend'=>'&rArr; ' . Text::_( 'COM_CCK_CONFIG_VALIDATION' )
 			)
 		)
 	) );

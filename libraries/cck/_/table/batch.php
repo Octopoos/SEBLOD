@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+
 // JCckTableBatch
-class JCckTableBatch extends JObject
+class JCckTableBatch extends CMSObject
 {
 	protected $_tbl				=	'';
 	protected $_tbl_colums_sql	=	'';
@@ -37,7 +41,7 @@ class JCckTableBatch extends JObject
 	// getInstance
 	public static function getInstance( $table )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$tableClass	=	'JCckTableBatch';
 		
 		// Instantiate
@@ -55,7 +59,7 @@ class JCckTableBatch extends JObject
 		if ( ! isset( $cache[$name] ) ) {
 			$fields	=	$this->_db->getTableColumns( $name, false );
 			if ( empty( $fields ) ) {
-				$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+				$e	=	new \Exception( Text::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
 				$this->setError( $e );
 				return false;
 			}

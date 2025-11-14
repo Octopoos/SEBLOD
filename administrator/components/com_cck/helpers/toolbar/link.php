@@ -10,8 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarButton;
+
 // JButton
-class JButtonCckLink extends JButton
+class JButtonCckLink extends ToolbarButton
 {
 	protected $_name	=	'CckLink';
 	protected $tag		=	'a';
@@ -32,7 +35,7 @@ class JButtonCckLink extends JButton
 		}
 
 		$target	=	$target ? ' target="'.$target.'"' : '';
-		$text	=	JText::_( $text );
+		$text	=	Text::_( $text );
 		
 		if ( $target ) {
 			$html	=	'<a href="'.$url.'"'.$target.' class="'.$class2.'">'

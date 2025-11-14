@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
+
 // JCck
 abstract class JCckLegacy extends JCck
 {
@@ -56,7 +59,7 @@ abstract class JCckLegacy extends JCck
 			return;
 		}
 		
-		$registry		=	new JRegistry;
+		$registry		=	new Registry;
 		$registry->loadString( $preferences );				
 		$preferences	=	$registry->toArray();
 		if ( count( $preferences ) ) {
@@ -70,7 +73,7 @@ abstract class JCckLegacy extends JCck
 	// googleAnalytics
 	public static function googleAnalytics( $url, $account )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$js	=	"
 				var _gaq = _gaq || [];
 				_gaq.push(['_setAccount', '".$account."']);

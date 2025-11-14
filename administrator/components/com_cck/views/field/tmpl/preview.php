@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // Prepare
 $field						=	JCckDatabase::loadObject( 'SELECT * FROM #__cck_core_fields WHERE name = "'.$this->item->name.'"' );
 $field->required_alert		=	'';
@@ -22,8 +25,8 @@ if ( $field->type == 'checkbox' || $field->type == 'radio' ) {
 }
 
 // Set
-$doc	=	JFactory::getDocument();
-$doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.admin.css' );
+$doc	=	Factory::getDocument();
+$doc->addStyleSheet( Uri::root( true ).'/media/cck/css/cck.admin.css' );
 $doc->addStyleDeclaration( 'div.cck_forms.cck_admin div.cck_form {float:none;}' );
 $doc->addScriptDeclaration( 'jQuery(document).ready(function($){ $("#submitBox,#resetBox").hide(); });' );
 Helper_Include::addDependencies( 'box', 'edit' );

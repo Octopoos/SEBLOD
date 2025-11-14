@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+
 if ( (int)$config['error'] == 1 ) {
 	return;
 }
@@ -24,7 +27,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $config['validat
 <?php echo $config['submit']; ?> = function(task) { <?php echo $js; ?> }
 </script>
 <?php
-echo ( $config['action'] ) ? $config['action'] : '<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$formId.'" name="'.$formId.'">';
+echo ( $config['action'] ) ? $config['action'] : '<form action="'.Route::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$formId.'" name="'.$formId.'">';
 echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' . $data . '</div>';
 ?>
 <?php if ( !$raw_rendering ) { ?>
@@ -41,7 +44,7 @@ echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' 
 <input type="hidden" name="config[itemId]" value="<?php echo $itemId; ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
-<?php echo JHtml::_( 'form.token' ); ?>
+<?php echo HTMLHelper::_( 'form.token' ); ?>
 <?php if ( !$raw_rendering ) { ?>
 </div>
 <?php } ?>

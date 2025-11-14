@@ -10,12 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
-class CCKControllerTypes extends JControllerAdmin
+class CCKControllerTypes extends AdminController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
@@ -28,19 +33,19 @@ class CCKControllerTypes extends JControllerAdmin
 	// duplicate
 	public function duplicate()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$pks	=	$app->input->post->get( 'cid', array(), 'array' );
 		$pk		=	(int)( count( $pks ) ) ? $pks[0] : 0;
 		
 		if ( !$pk ) {
-			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
+			$msg	=	Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
 			$model	=	$this->getModel();
 			$model->duplicate( $pk );
-			$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
+			$msg	=	Text::_( 'COM_CCK_SUCCESSFULLY_SAVED' );
 			$type	=	'message';
 		}
 		
@@ -56,24 +61,24 @@ class CCKControllerTypes extends JControllerAdmin
 	// version
 	public function version()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
 		$n		=	count( $cid );
 		
 		if ( !is_array( $cid ) || $n < 1 ) {
-			$msg	=	JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
+			$msg	=	Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ).'.';
 			$type	=	'error';
 		} else {
 			$cid	=	ArrayHelper::toInteger( $cid );
 			$model	=	$this->getModel();
 
 			if ( $model->version( $cid ) ) {
-				$msg	=	JText::sprintf( 'COM_CCK_SUCCESSFULLY_ARCHIVED', $n );
+				$msg	=	Text::sprintf( 'COM_CCK_SUCCESSFULLY_ARCHIVED', $n );
 				$type	=	'message';
 			} else {
-				$msg	=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+				$msg	=	Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
 				$type	=	'error';
 			}
 		}

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 if ( $show_list_title ) {
 	$tag		=	$tag_list_title;
 	$class		=	trim( $class_list_title );
@@ -17,7 +19,7 @@ if ( $show_list_title ) {
 	echo '<'.$tag.$class.'>' . @$search->title . '</'.$tag.'>';
 }
 if ( $show_list_desc && $description != '' ) {
-	$description	=	JHtml::_( 'content.prepare', $description );
+	$description	=	HTMLHelper::_( 'content.prepare', $description );
 	
 	if ( !( $tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
 		$tag_desc	=	'div';

@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 // Plugin
 class plgCCK_FieldButton_Free extends JCckPluginField
 {
@@ -36,15 +42,15 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
-										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										'hidden'=>HTMLHelper::_( 'select.option', 'hidden', Text::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>HTMLHelper::_( 'select.option', 'value', Text::_( 'COM_CCK_VALUE' ) ),
+										'100'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FORM' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>HTMLHelper::_( 'select.option', 'disabled', Text::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>HTMLHelper::_( 'select.option', 'toolbar_button', Text::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' )
 									);
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -63,15 +69,15 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			$data['variation']	=	array(
-										'hidden'=>JHtml::_( 'select.option', 'hidden', JText::_( 'COM_CCK_HIDDEN' ) ),
-										'value'=>JHtml::_( 'select.option', 'value', JText::_( 'COM_CCK_VALUE' ) ),
-										'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
-										'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED2' ) ),
-										'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ),
-										'102'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_TOOLBAR' ) ),
-										'toolbar_button'=>JHtml::_( 'select.option', 'toolbar_button', JText::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
-										'103'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										'hidden'=>HTMLHelper::_( 'select.option', 'hidden', Text::_( 'COM_CCK_HIDDEN' ) ),
+										'value'=>HTMLHelper::_( 'select.option', 'value', Text::_( 'COM_CCK_VALUE' ) ),
+										'100'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_FORM' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_DEFAULT' ) ),
+										'disabled'=>HTMLHelper::_( 'select.option', 'disabled', Text::_( 'COM_CCK_FORM_DISABLED2' ) ),
+										'101'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' ),
+										'102'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_TOOLBAR' ) ),
+										'toolbar_button'=>HTMLHelper::_( 'select.option', 'toolbar_button', Text::_( 'COM_CCK_TOOLBAR_BUTTON' ) ),
+										'103'=>HTMLHelper::_( 'select.option', '</OPTGROUP>', '' )
 									);
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -157,16 +163,16 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			}
 		}
 		if ( $field->bool2 == 1 ) {
-			$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+			$alt	=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 			if ( $config['client'] == 'search' ) {
 				$onclick	=	'onclick="return;"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_RESET' ).'">'.Text::_( 'COM_CCK_RESET' ).'</a>';				
 			} else {
 				$onclick	=	'onclick="return;"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_CANCEL' ).'">'.Text::_( 'COM_CCK_CANCEL' ).'</a>';
 			}
 		} elseif ( $field->bool2 == 2 ) {
-			$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+			$alt		=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 			$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
 			JCckPluginLink::g_setLink( $field2, $config );
 			JCckPluginLink::g_setHtml( $field2, 'text' );
@@ -176,7 +182,7 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			$form		.=	$field2->html;
 		}
  		if ( $field->bool4 == 2 ) {
-			$alt		=	$field->bool5 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+			$alt		=	$field->bool5 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 			$field2		=	(object)array( 'link'=>$options2['alt2_link'], 'link_options'=>$options2['alt2_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt2_link_text'] ), 'value'=>'' );
 			JCckPluginLink::g_setLink( $field2, $config );
 			JCckPluginLink::g_setHtml( $field2, 'text' );
@@ -278,16 +284,16 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 			$form	=	'';
 		} else {
 			if ( $field->bool2 == 1 ) {
-				$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$alt	=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 				if ( $config['client'] == 'search' ) {
 					$onclick	=	'onclick="return;"';
-					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_RESET' ).'">'.Text::_( 'COM_CCK_RESET' ).'</a>';				
 				} else {
 					$onclick	=	'onclick="return;"';
-					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.Text::_( 'COM_CCK_CANCEL' ).'">'.Text::_( 'COM_CCK_CANCEL' ).'</a>';
 				}
 			} elseif ( $field->bool2 == 2 ) {
-				$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$alt		=	$field->bool3 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 				$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
 				JCckPluginLink::g_setLink( $field2, $config );
 				JCckPluginLink::g_setHtml( $field2, 'text' );
@@ -297,7 +303,7 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				$form		.=	$field2->html;
 			}
 	 		if ( $field->bool4 == 2 ) {
-				$alt		=	$field->bool5 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$alt		=	$field->bool5 ? ' '.Text::_( 'COM_CCK_OR' ).' ' : "\n";
 				$field2		=	(object)array( 'link'=>$options2['alt2_link'], 'link_options'=>$options2['alt2_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt2_link_text'] ), 'value'=>'' );
 				JCckPluginLink::g_setLink( $field2, $config );
 				JCckPluginLink::g_setHtml( $field2, 'text' );
@@ -331,7 +337,7 @@ class plgCCK_FieldButton_Free extends JCckPluginField
 				}
 				$icon_tag		=	( isset( $options2['tag'] ) && $options2['tag'] ) ? $options2['tag'] : 'span';
 				$html			=	'<button class="btn btn-small'.( $field->css ? ' '.$field->css : '' ).'" '.$onclick.'><'.$icon_tag.' class="'.$icon.'"></'.$icon_tag.'> '.$value.'</button>';
-				JToolBar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, $icon );
+				Toolbar::getInstance( 'toolbar' )->appendButton( 'Custom', $html, $icon );
 			} else {
 				parent::g_getDisplayVariation( $field, $field->variation, $value, $value, $form, $id, $name, '<'.$tag, ' ', '', $config );
 			}

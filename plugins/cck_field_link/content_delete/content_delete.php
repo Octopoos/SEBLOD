@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 {
@@ -35,33 +42,33 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$form			=	$config['type'];
 		$id				=	( isset( $config['id'] ) ) ? $config['id'] : 0;
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );
 		$return			=	'';
-		$task			=	( JFactory::getApplication()->isClient( 'administrator' ) ) ? 'list.delete' : 'delete';
-		$uri			=	JUri::getInstance()->toString();
+		$task			=	( Factory::getApplication()->isClient( 'administrator' ) ) ? 'list.delete' : 'delete';
+		$uri			=	Uri::getInstance()->toString();
 		
 		// Return
 		if ( $redirection == 'url' ) {
 			$url		=	$link->get( 'redirection_url', '' );
 			if ( strpos( $url, 'Itemid=' ) !== false ) {
-				$url	=	JRoute::_( $url );
+				$url	=	Route::_( $url );
 			} elseif ( $url && ( strpos( $url, 'http' ) === false ) ) {
-				$url	=	JUri::base().( ( $url[0] == '/' ) ? substr( $url, 1 ) : $url );
+				$url	=	Uri::base().( ( $url[0] == '/' ) ? substr( $url, 1 ) : $url );
 			}
 			$return		=	base64_encode( $url );
 		} elseif ( $config['client'] == 'content' ) {
-			$menu		=	JFactory::getApplication()->getMenu(); /* JMenu::getInstance( 'site' ); */
+			$menu		=	Factory::getApplication()->getMenu(); /* JMenu::getInstance( 'site' ); */
 			$item		=	$menu->getItem( $itemId );
 
 			if ( $item->query['view'] == 'article' ) {
 				$return	=	'';
 			} else {
-				$return	=	JRoute::_( 'index.php?Itemid='.$itemId );
-				$return	=	base64_encode( JUri::base().( ( $return[0] == '/' ) ? substr( $return, 1 ) : $return ) );
+				$return	=	Route::_( 'index.php?Itemid='.$itemId );
+				$return	=	base64_encode( Uri::base().( ( $return[0] == '/' ) ? substr( $return, 1 ) : $return ) );
 			}
 		} else {
 			$return2	=	$link->get( 'redirection_custom', '' );
@@ -93,11 +100,11 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 		$link_title		=	$link->get( 'title', '' );
 		$link_title2	=	$link->get( 'title_custom', '' );
 		
-		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.( $return ? '&return='.$return : '' ).'&'.JSession::getFormToken().'=1';
-		$field->link		=	JRoute::_( $field->link );
+		$field->link		=	'index.php?option=com_cck&task='.$task.'&cid='.$id.'&Itemid='.$itemId.( $return ? '&return='.$return : '' ).'&'.Session::getFormToken().'=1';
+		$field->link		=	Route::_( $field->link );
 		$field->link_class	=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		if ( $link->get( 'confirm', 1 ) ) {
-			$field->link_onclick	=	'if(!confirm(\''.addslashes( JText::_( 'COM_CCK_CONFIRM_DELETE' ) ).'\')){return false;}';
+			$field->link_onclick	=	'if(!confirm(\''.addslashes( Text::_( 'COM_CCK_CONFIRM_DELETE' ) ).'\')){return false;}';
 		}
 		if ( $config['client'] == 'search' ) {
 			$field->link	=	'';
@@ -109,13 +116,13 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 				$field->link_onclick	=	'';
 			}
 			$field->link_onclick		.=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\'<input type="hidden" name="return" value="'.$return.'">\');' )
-										.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.JHtml::_( 'form.token' ).'\');' )
+										.	htmlspecialchars( 'jQuery("#'.$config['formId'].'").append(\''.HTMLHelper::_( 'form.token' ).'\');' )
 										.	'JCck.Core.submitForm(\'delete\', document.getElementById(\''.$config['formId'].'\'));';
 			if ( $hasConfirm ) {
 				$field->link_onclick	.=	'}';
 			}
 
-			$field->link_onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$field->link_onclick.'}';
+			$field->link_onclick	=	'if (document.'.$config['formId'].'.boxchecked.value==0){alert(\''.htmlspecialchars( addslashes( Text::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ) ).'\');}else{'.$field->link_onclick.'}';
 		}
 		$field->link_state	=	$link->get( 'state', 1 );
 		
@@ -123,7 +130,7 @@ class plgCCK_Field_LinkContent_Delete extends JCckPluginLink
 			if ( $link_title == '2' ) {
 				$field->link_title	=	$link_title2;
 			} elseif ( $link_title == '3' ) {
-				$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+				$field->link_title	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
 			}
 			if ( !isset( $field->link_title ) ) {
 				$field->link_title	=	'';

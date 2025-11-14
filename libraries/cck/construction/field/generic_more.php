@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Plugin
 class plgCCK_FieldGeneric_More
 {
@@ -29,13 +31,13 @@ class plgCCK_FieldGeneric_More
 	// gm_getConstruction_Values_Type
 	public static function gm_getConstruction_Values_Type( $k, $params, $position, $client )
 	{
-		$db						=	JFactory::getDbo();
+		$db						=	Factory::getDbo();
 
 		if ( !isset( $params[$k]['notes'] ) ) {
 			$params[$k]['notes']	=	[];
 		}
 		if ( isset( $params[$k]['notes']['-1'] ) ) {
-			$params[$k]['notes'][JFactory::getUser()->id]	=	$params[$k]['notes']['-1'];
+			$params[$k]['notes'][Factory::getUser()->id]	=	$params[$k]['notes']['-1'];
 
 			unset( $params[$k]['notes']['-1'] );
 		}
@@ -77,13 +79,13 @@ class plgCCK_FieldGeneric_More
 	// gm_getConstruction_Values_Search
 	public static function gm_getConstruction_Values_Search( $k, $params, $position )
 	{
-		$db						=	JFactory::getDbo();
+		$db						=	Factory::getDbo();
 
 		if ( !isset( $params[$k]['notes'] ) ) {
 			$params[$k]['notes']	=	[];
 		}
 		if ( isset( $params[$k]['notes']['-1'] ) ) {
-			$params[$k]['notes'][JFactory::getUser()->id]	=	$params[$k]['notes']['-1'];
+			$params[$k]['notes'][Factory::getUser()->id]	=	$params[$k]['notes']['-1'];
 
 			unset( $params[$k]['notes']['-1'] );
 		}

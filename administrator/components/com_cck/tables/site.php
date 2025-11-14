@@ -10,8 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\User\User;
+
 // Table
-class CCK_TableSite extends JTable
+class CCK_TableSite extends Table
 {	
 	// __construct
 	public function __construct( &$db )
@@ -44,10 +50,10 @@ class CCK_TableSite extends JTable
 			//
 		} else {
 			if ( !(int)$this->created_date ) {
-				$this->created_date		=	JFactory::getDate()->toSql();
+				$this->created_date		=	Factory::getDate()->toSql();
 			}
 			if ( empty( $this->created_user_id ) ) {
-				$this->created_user_id	=	JFactory::getUser()->id;
+				$this->created_user_id	=	Factory::getUser()->id;
 			}
 			if ( is_null( $this->options ) ) {
 				$this->options	=	'';
@@ -105,7 +111,7 @@ abstract class CCK_TableSiteHelper
 		if ( is_array( $grouptitle ) ) {
 			$data		=	$grouptitle;
 		} else {
-			$sitetitle2 =	JFactory::getLanguage()->transliterate( $sitetitle );
+			$sitetitle2 =	Factory::getLanguage()->transliterate( $sitetitle );
 			$sitetitle2	=	trim( strtolower( $sitetitle2 ) );
 			$sitetitle2	=	preg_replace( '/(\s|[^a-z0-9_])+/', '_', $sitetitle2 );
 			$sitetitle2	=	trim( $sitetitle2, '_' );
@@ -123,7 +129,7 @@ abstract class CCK_TableSiteHelper
 			$data['email']		=	$data['username'] . $sitemail;
 		}
 		
-		$table				=	new JUser;
+		$table				=	new User;
 		$table->bind( $data );
 		
 		if ( count( $groups ) ) {
@@ -142,7 +148,7 @@ abstract class CCK_TableSiteHelper
 		$data['parent_id']	=	$parent_id;
 		$data['title']		=	$title;
 		
-		$table				=	JTable::getInstance( 'Usergroup' );
+		$table				=	Table::getInstance( 'Usergroup' );
 		$table->bind( $data );
 		$table->store();
 		
@@ -152,7 +158,7 @@ abstract class CCK_TableSiteHelper
 	// addViewLevel
 	public static function addViewLevel( $title, $groups = array(), &$next = 0 )
 	{
-		$table			=	JTable::getInstance( 'Viewlevel' );
+		$table			=	Table::getInstance( 'Viewlevel' );
 		$table->title	=	$title;
 		
 		if ( count( $groups ) ) {
@@ -176,10 +182,10 @@ abstract class CCK_TableSiteHelper
 	// getRootAsset
 	public static function getRootAsset()
 	{
-		$table	=	JTable::getInstance( 'Asset' );
+		$table	=	Table::getInstance( 'Asset' );
 		$table->load( 1 );
 		
-		$rules				=	new JAccessRules( $table->rules );
+		$rules				=	new Rules( $table->rules );
 		$table->rules2		=	$rules;
 		$table->rules2_data	=	$table->rules2->getData();
 		
@@ -203,7 +209,7 @@ abstract class CCK_TableSiteHelper
 	// sendMails
 	public static function sendMails( $site, $accounts )
 	{
-		$config		=	JFactory::getConfig();
+		$config		=	Factory::getConfig();
 		
 		$email		=	$config->get( 'mailfrom' );
 		$fromname	=	$config->get( 'fromname' );
@@ -216,17 +222,17 @@ abstract class CCK_TableSiteHelper
 		if ( count( $accounts ) ) {
 			foreach ( $accounts as $a ) {
 				if ( $a->location == 'admin' ) {
-					$acc_admin	.=	"\n".JText::_( 'COM_CCK_USERNAME' ).": ".$a->username."\n".JText::_( 'COM_CCK_PASSWORD' ).": ".$a->password."\n";
+					$acc_admin	.=	"\n".Text::_( 'COM_CCK_USERNAME' ).": ".$a->username."\n".Text::_( 'COM_CCK_PASSWORD' ).": ".$a->password."\n";
 				} else {
-					$acc_site	.=	"\n".JText::_( 'COM_CCK_USERNAME' ).": ".$a->username."\n".JText::_( 'COM_CCK_PASSWORD' ).": ".$a->password."\n";
+					$acc_site	.=	"\n".Text::_( 'COM_CCK_USERNAME' ).": ".$a->username."\n".Text::_( 'COM_CCK_PASSWORD' ).": ".$a->password."\n";
 				}
 			}
 		}
 		
-		$subject	=	JText::sprintf( 'COM_CCK_SITE_CREATION_SUBJECT', $sitename );
-		$body		=	JText::sprintf( 'COM_CCK_SITE_CREATION_BODY', $sitename, $url, $acc_site, $url.'/administrator/', $acc_admin );
+		$subject	=	Text::sprintf( 'COM_CCK_SITE_CREATION_SUBJECT', $sitename );
+		$body		=	Text::sprintf( 'COM_CCK_SITE_CREATION_BODY', $sitename, $url, $acc_site, $url.'/administrator/', $acc_admin );
 		
-		JFactory::getMailer()->sendMail( $email, $fromname, $email, $subject, $body );
+		Factory::getMailer()->sendMail( $email, $fromname, $email, $subject, $body );
 	}
 
 	// updateRootAsset
@@ -244,7 +250,7 @@ abstract class CCK_TableSiteHelper
 	// updateViewLevel
 	public static function updateViewLevel( $id, $group_id )
 	{
-		$table			=	JTable::getInstance( 'Viewlevel' );
+		$table			=	Table::getInstance( 'Viewlevel' );
 		$table->load( $id );
 		$table->rules	=	str_replace( ']', ','.$group_id.']', $table->rules );
 		$table->store();

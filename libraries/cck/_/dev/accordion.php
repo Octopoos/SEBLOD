@@ -10,21 +10,23 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 // JCckDevAccordion
 abstract class JCckDevAccordion
 {
 	// end
 	public static function end()
 	{
-		return JHtml::_( 'bootstrap.endSlide' )
-			 . JHtml::_( 'bootstrap.endAccordion' );
+		return HTMLHelper::_( 'bootstrap.endSlide' )
+			 . HTMLHelper::_( 'bootstrap.endAccordion' );
 	}
 	
 	// open
 	public static function open( $selector, $id, $text, $class = '' )
 	{
-		return JHtml::_( 'bootstrap.endSlide' )
-			 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id, $class );
+		return HTMLHelper::_( 'bootstrap.endSlide' )
+			 . HTMLHelper::_( 'bootstrap.addSlide', $selector, $text, $id, $class );
 	}
 	
 	// start
@@ -32,8 +34,8 @@ abstract class JCckDevAccordion
 	{
 		unset( $params['useCookie'] );
 		
-        return JHtml::_( 'bootstrap.startAccordion', $selector, $params )
-        	 . JHtml::_( 'bootstrap.addSlide', $selector, $text, $id );
+        return HTMLHelper::_( 'bootstrap.startAccordion', $selector, $params )
+        	 . HTMLHelper::_( 'bootstrap.addSlide', $selector, $text, $id );
 	}
 }
 ?>

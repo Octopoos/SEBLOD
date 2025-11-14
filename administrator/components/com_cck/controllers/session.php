@@ -10,17 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+
 jimport( 'joomla.application.component.controllerform' );
 
 // Controller
-class CCKControllerSession extends JControllerForm
+class CCKControllerSession extends FormController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
 	// getRedirectToListAppend
 	protected function getRedirectToItemAppend( $recordId = null, $urlVar = 'id' )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$tmpl		=	$app->input->get( 'tmpl' );
 		$layout		=	$app->input->get( 'layout', 'edit', 'string' );
 		$extension	=	$app->input->get( 'extension', '' );
@@ -46,7 +49,7 @@ class CCKControllerSession extends JControllerForm
 	// getRedirectToListAppend
 	protected function getRedirectToListAppend()
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$tmpl		=	$app->input->get( 'tmpl', '' );
 		$extension	=	$app->input->get( 'extension', '' );
 		$append		=	'';

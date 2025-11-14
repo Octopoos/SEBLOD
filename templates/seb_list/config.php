@@ -10,9 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 global $user;
 
-$app		=	JFactory::getApplication();
+$app		=	Factory::getApplication();
 $path_lib	=	JPATH_SITE.'/libraries/cck/rendering/rendering.php';
 $user		=	JCck::getUser();
 

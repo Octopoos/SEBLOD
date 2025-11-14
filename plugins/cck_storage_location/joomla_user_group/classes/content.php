@@ -10,13 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Plugin\PluginHelper;
+
 // JCckContent
 class JCckContentJoomla_User_Group extends JCckContent
 {
 	// initialize
 	protected function initialize()
 	{
-		JPluginHelper::importPlugin( 'user' );
+		PluginHelper::importPlugin( 'user' );
 	}
 
 	// triggerDelete

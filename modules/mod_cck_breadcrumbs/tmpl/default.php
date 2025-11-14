@@ -9,12 +9,14 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 <div class="cck_module_breadcrumbs<?php echo $class_sfx; ?>">
 <?php
 $show_last	=	$params->get( 'showLast', 1 );
 if ( $params->get( 'showHere', 1 ) ) {
-		echo '<span class="showHere">'.JText::_( 'MOD_CCK_BREADCRUMBS_HERE' ).'</span>';
+		echo '<span class="showHere">'.Text::_( 'MOD_CCK_BREADCRUMBS_HERE' ).'</span>';
 }
 for ( $i = 0; $i < $count; $i++ ) {
 	if ( $i < $count -1 ) { // If not the last item in the breadcrumbs add the separator

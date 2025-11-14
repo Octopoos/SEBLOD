@@ -9,6 +9,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'cck.joomla.access.rules' );
@@ -165,7 +167,7 @@ class CCKAccess
 		// Preload all groups
 		if (empty($groups))
 		{
-			$db		= JFactory::getDbo();
+			$db		= Factory::getDbo();
 			$query	= $db->getQuery(true)
 				->select('parent.id, parent.lft, parent.rgt')
 				->from('#__usergroups AS parent')
@@ -211,7 +213,7 @@ class CCKAccess
 	public static function getAssetRules($asset, $recursive = false, $component = '', $section = '')
 	{
 		// Get the database connection object.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		// Build the database query to get the rules for the asset.
 		$query = $db->getQuery(true);
@@ -288,12 +290,12 @@ class CCKAccess
 			// Guest user
 			if (empty($userId))
 			{
-				$result = array(JComponentHelper::getParams('com_users')->get('guest_usergroup', 1));
+				$result = array(ComponentHelper::getParams('com_users')->get('guest_usergroup', 1));
 			}
 			// Registered user
 			else
 			{
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 
 				// Build the database query to get the rules for the asset.
 				$query	= $db->getQuery(true);
@@ -345,7 +347,7 @@ class CCKAccess
 	public static function getUsersByGroup($groupId, $recursive = false)
 	{
 		// Get a database object.
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 
 		$test = $recursive ? '>=' : '=';
 
@@ -385,7 +387,7 @@ class CCKAccess
 		if (empty(self::$viewLevels))
 		{
 			// Get a database object.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 
 			// Build the base query.
 			$query = $db->getQuery(true);

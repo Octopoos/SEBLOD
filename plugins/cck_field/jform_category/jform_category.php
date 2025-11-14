@@ -10,7 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
-JLoader::register( 'JFormFieldCckCategory', JPATH_PLATFORM.'/cck/joomla/form/field/category.php' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+
+\JLoader::register( 'JFormFieldCckCategory', JPATH_PLATFORM.'/cck/joomla/form/field/category.php' );
 
 // Plugin
 class plgCCK_FieldJForm_Category extends JCckPluginField
@@ -97,7 +101,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$value		=	( $value != '' ) ? $value : $field->defaultvalue;
 		$value		=	( $value != ' ' ) ? $value : '';
 		
@@ -122,7 +126,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 			$options2	=	JCckDev::fromJSON( $field->options2 );
 			if ( trim( $field->selectlabel ) ) {
 				if ( $config['doTranslation'] ) {
-					$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+					$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 				}
 				$opt	=	'<option value="'.( ( $field->storage_field == 'parent_id' && $config['client'] != 'search' ) ? 1 : '' ).'">'.'- '.$field->selectlabel.' -'.'</option>';
 			}
@@ -146,7 +150,7 @@ class plgCCK_FieldJForm_Category extends JCckPluginField
 							>'.$opt.'</field>
 						</form>
 					';			
-			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	Form::getInstance( $id, $xml );
 
 			if ( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) {
 				if ( $config['pk'] ) {

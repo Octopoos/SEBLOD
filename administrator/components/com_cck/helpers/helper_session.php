@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // Helper
 class Helper_Session
 {
@@ -22,7 +24,7 @@ class Helper_Session
 	// loadExtensionLang
 	public static function loadExtensionLang( $extension )
 	{
-		$lang	=	JFactory::getLanguage();
+		$lang	=	Factory::getLanguage();
 		
 		$lang->load( $extension.'.sys', JPATH_ADMINISTRATOR, $lang->getTag(), true );
 	}

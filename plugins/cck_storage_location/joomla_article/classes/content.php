@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+
 if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
 	include_once __DIR__ . '/content_placeholder.php';
 } else {
@@ -30,7 +33,7 @@ class JCckContentJoomla_Article extends JCckContentJoomla_ArticlePlaceholder
 				$this->_instance_base->language		=	'*';
 			}
 			if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
-				$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
+				$this->_instance_base->publish_up	=	substr( Factory::getDate()->toSql(), 0, -3 );
 			}
 		}
 
@@ -40,7 +43,7 @@ class JCckContentJoomla_Article extends JCckContentJoomla_ArticlePlaceholder
 			$i			=	2;
 			$alias		=	$this->_instance_base->alias.'-'.$i;
 			$property	=	self::$objects[$this->_object]['properties']['parent'];
-			$test		=	JTable::getInstance( 'Content' );
+			$test		=	Table::getInstance( 'Content' );
 			
 			while ( $test->load( array( 'alias'=>$alias, $property=>$this->_instance_base->$property ) ) ) {
 				$alias	=	$this->_instance_base->alias.'-'.$i++;

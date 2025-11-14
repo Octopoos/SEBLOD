@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\IpHelper;
 
 // JCckUser
@@ -34,9 +36,9 @@ abstract class JCckUser
 	public static function &getUser( $userid = 0, $content_type = '', $profile = true )
 	{
 		if ( ! $userid ) {
-			$user	=	JFactory::getUser();
+			$user	=	Factory::getUser();
 		} else {
-			$user	=	JFactory::getUser( $userid );
+			$user	=	Factory::getUser( $userid );
 		}
 		
 		// Core
@@ -44,7 +46,7 @@ abstract class JCckUser
 			$user->session_id	=	null;
 			$user->where_clause	=	'user_id='.$user->id;
 		} else {
-			$user->session_id	=	JFactory::getSession()->getId();
+			$user->session_id	=	Factory::getSession()->getId();
 
 			if ( empty( $user->session_id ) ) {
 				$user->session_id	=	uniqid(); /* Not good, but better than empty */
@@ -65,7 +67,7 @@ abstract class JCckUser
 				}
 			}
 
-			$db		=	JFactory::getDbo();
+			$db		=	Factory::getDbo();
 			$prefix	=	$db->getPrefix();
 			$tables	=	$db->getTableList();
 			$tables	=	array_flip( $tables );

@@ -10,12 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
-class CCKControllerSessions extends JControllerAdmin
+class CCKControllerSessions extends AdminController
 {
 	protected $text_prefix	=	'COM_CCK';
 	
@@ -28,13 +33,13 @@ class CCKControllerSessions extends JControllerAdmin
 	// delete
 	public function delete()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
 		
 		if ( !is_array( $cid ) || count( $cid ) < 1 ) {
-			JError::raiseWarning( 500, JText::_( $this->text_prefix . '_NO_ITEM_SELECTED' ) );
+			Factory::getApplication()->enqueueMessage( Text::_( $this->text_prefix . '_NO_ITEM_SELECTED' ), 'warning' );
 		} else {
 			// Get the model.
 			$model	=	$this->getModel();
@@ -44,7 +49,7 @@ class CCKControllerSessions extends JControllerAdmin
 			
 			// Remove the items.
 			if ( $model->delete( $cid ) ) {
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+				$this->setMessage(Text::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
 			} else {
 				$this->setMessage( $model->getError() );
 			}
@@ -56,7 +61,7 @@ class CCKControllerSessions extends JControllerAdmin
 			$vars	=	'&extension='.$extension;
 		}
 		
-		$this->setRedirect( JRoute::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
+		$this->setRedirect( Route::_( 'index.php?option=' . $this->option . '&view=' . $this->view_list . $vars, false ) );
 	}
 
 	// getModel

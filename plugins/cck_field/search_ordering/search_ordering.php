@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldSearch_Ordering extends JCckPluginField
 {
@@ -33,8 +37,8 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 	{
 		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
 			$data['match_mode']	=	array(
-										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_DISABLED' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ENABLED' ) )
+										'none'=>HTMLHelper::_( 'select.option', 'none', Text::_( 'COM_CCK_DISABLED' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_ENABLED' ) )
 									);
 
 			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
@@ -98,14 +102,14 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 				foreach ( $field->children as $k=>$child ) {
 					$text		=	$child->label;
 					if ( $config['doTranslation'] && trim( $text ) ) {
-						$text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					if ( $field->bool ) {
 						$val	=	(string)$k;
 					} else {
 						$val	=	(int)$k;
 					}
-					$opts[]		=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+					$opts[]		=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 				}
 			}
 		}
@@ -116,7 +120,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 		$attr	=	'class="'.$class.'"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'';
 		if ( count( $opts ) ) {
-			$form	=	JHtml::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
+			$form	=	HTMLHelper::_( 'select.genericlist', $opts, $name, $attr, 'value', 'text', $value, $id );
 		}
 		
 		// Set
@@ -152,7 +156,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 				foreach ( $field->children as $k=>$child ) {
 					$text				=	$child->label;
 					if ( $config['doTranslation'] && trim( $text ) ) {
-						$text			=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text			=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					$opts[]				=	$text.'='.(string)$k;
 				}
@@ -181,14 +185,14 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			if ( count( $field->children ) ) {
 				$i						=	0;
 				$isMultiLanguage		=	JCckDevHelper::isMultilingual();
-				$lang					=	JFactory::getLanguage();
+				$lang					=	Factory::getLanguage();
 				$options2				=	json_decode( $field->options2, true );
 
 				foreach ( $field->children as $k=>$child ) {
 					$text				=	$child->label;
 					
 					if ( $config['doTranslation'] && trim( $text ) ) {
-						$text			=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text			=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					if ( $field->bool ) {
 						$val	=	(string)$k;
@@ -196,7 +200,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 						$val	=	(int)$k;
 					}
 
-					$opts[]				=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+					$opts[]				=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 
 					if ( $isMultiLanguage && (int)$child->storage_mode == 1 ) {
 						$child->storage			=	'json';

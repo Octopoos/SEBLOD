@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
-class JCckPluginWebservice extends JPlugin
+class JCckPluginWebservice extends CMSPlugin
 {
 	protected static $construction	=	'cck_webservice';
 	
@@ -23,8 +27,8 @@ class JCckPluginWebservice extends JPlugin
 		parent::__construct( $subject, $config );
 
 		// Fix Language
-		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
-			$lang			=	JFactory::getLanguage();
+		if ( Factory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	Factory::getLanguage();
 			$lang_default	=	$lang->setDefault( 'en-GB' );
 
 			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
@@ -69,7 +73,7 @@ class JCckPluginWebservice extends JPlugin
 	// g_getPath
 	public static function g_getPath( $type = '' )
 	{
-		return JUri::root( true ).'/plugins/'.self::$construction.'/'.$type;
+		return Uri::root( true ).'/plugins/'.self::$construction.'/'.$type;
 	}
 }
 ?>

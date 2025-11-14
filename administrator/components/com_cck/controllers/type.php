@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'cck.joomla.application.component.controllerform' );
@@ -22,7 +24,7 @@ class CCKControllerType extends CCK_ControllerForm
 	// add
 	public function add()
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		// Parent Method
 		$result	=	parent::add();
@@ -42,8 +44,8 @@ class CCKControllerType extends CCK_ControllerForm
 	// allowAdd
 	protected function allowAdd( $data = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$user		=	JFactory::getUser();
+		$app		=	Factory::getApplication();
+		$user		=	Factory::getUser();
 		$folderId	=	ArrayHelper::getValue( $data, 'folder', $app->input->getInt( 'filter_folder_id' ), 'int' );
 		$allow		=	null;
 		
@@ -63,7 +65,7 @@ class CCKControllerType extends CCK_ControllerForm
 	// allowEdit
 	protected function allowEdit( $data = array(), $key = 'id' )
 	{
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		$recordId	=	(int)isset( $data[$key] ) ? $data[$key] : 0;
 		$folderId	=	0;
 		
@@ -83,7 +85,7 @@ class CCKControllerType extends CCK_ControllerForm
 	// edit
 	public function edit( $key = null, $urlVar = null )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		// Parent Method
 		$result	=	parent::edit();
@@ -97,7 +99,7 @@ class CCKControllerType extends CCK_ControllerForm
 	}
 	
 	// postSaveHook
-	protected function postSaveHook( JModelLegacy $model, $validData = array() )
+	protected function postSaveHook( BaseDatabaseModel $model, $validData = array() )
 	{
 		$recordId	=	$model->getState( $this->context.'.id' );
 		

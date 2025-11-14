@@ -10,13 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Registry\Registry;
+
 // Init
 if ( isset( $this ) && isset( $this->config ) ) {
 	$config		=	&$this->config;
 }
 
 // Prepare
-$item->params	=	is_object( $params ) ? clone $params : new JRegistry;
+$item->params	=	is_object( $params ) ? clone $params : new Registry;
 if ( !$loaded ) {
  	$items		=	JCckDatabase::loadObjectList( 'SELECT a.id, b.title AS parent_title, b.alias AS parent_alias'
 												. ' FROM #__categories AS a LEFT JOIN #__categories AS b ON b.id = a.parent_id'
@@ -39,7 +42,7 @@ $link		=	plgCCK_Storage_LocationJoomla_Category::getRoute( $item, $config['doSEF
 		$class	=	$class ? ' class="'.$class.'"' : '';
 		echo '<'.$tag.$class.'>'.'<a href="'.$link.'">'.$item->title.'</a>'.'</'.$tag.'>';
 	}
-	echo JHtml::_( 'content.prepare', $item->description );
+	echo HTMLHelper::_( 'content.prepare', $item->description );
 	?>
 </div>
 <?php if ( $plg_params->get( 'item_separator', 1 ) ) { ?>

@@ -10,32 +10,37 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
 // JCckDevIntegration
 abstract class JCckDevIntegration
 {
 	// addDropdown
 	public static function addDropdown( $view, $variables = '', $options = null )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$html	=	'';
-		$lang	=	JFactory::getLanguage();
+		$lang	=	Factory::getLanguage();
 		if ( is_null( $options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 
 		if ( $view == 'form' ) {
 			$id		=	'toolbar-new';
 			$items	=	self::getForms();
 			$link	=	'index.php?option=com_cck&view=form';
-			$title	=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
-			$user	=	JFactory::getUser();
+			$title	=	Text::_( 'LIB_CCK_INTEGRATION_SELECT_A_FORM' );
+			$user	=	Factory::getUser();
 			$var	=	'&type=';
 			foreach ( $items as $item ) {
 				if ( $user->authorise( 'core.create', 'com_cck.form.'.$item->id ) ) {
 					$key	=	'APP_CCK_FORM_'.$item->name;
 					$lang->load( 'pkg_app_cck_'.$item->folder_app, JPATH_SITE, null, false, false );
 					if ( $lang->hasKey( $key ) == 1 ) {
-						$text	=	JText::_( $key );
+						$text	=	Text::_( $key );
 					} else {
 						$text	=	$item->title;
 					}
@@ -46,10 +51,10 @@ abstract class JCckDevIntegration
 			$id		=	'toolbar-popup-new';
 			$items	=	JCckDatabase::loadObjectList( 'SELECT name as text, extension_id as value FROM #__extensions WHERE element LIKE "mod_cck_%" AND client_id = 0 ORDER BY text' );
 			$link	=	'index.php?option=com_modules&task=module.add';
-			$title	=	JText::_( 'LIB_CCK_INTEGRATION_SELECT_A_MODULE_TYPE' );
+			$title	=	Text::_( 'LIB_CCK_INTEGRATION_SELECT_A_MODULE_TYPE' );
 			$var	=	'&eid=';
 			foreach ( $items as $item ) {
-				$text	=	JText::_( $item->text );
+				$text	=	Text::_( $item->text );
 				$html	.=	'<li><a href="'.$link.$var.$item->value.$variables.'">' . $text . '</a></li>';
 			}
 		} else {
@@ -59,33 +64,33 @@ abstract class JCckDevIntegration
 					$items	=	JCckDatabase::loadObjectList( 'SELECT CONCAT(a.title, " (", LCASE(p.title), ")") as text, a.id as value FROM #__cck_core_folders AS a LEFT JOIN #__cck_core_folders AS p ON p.id = a.parent_id WHERE a.featured = 1 ORDER BY text' );
 					$link	=	'index.php?option=com_cck&task=type.add';
 					$var	=	'&skeleton_id=';
-					$title	=	JText::_( 'COM_CCK_TIP_NEW_TYPE' );
+					$title	=	Text::_( 'COM_CCK_TIP_NEW_TYPE' );
 					break;
 				case 'fields':
 					$items	=	JCckDatabase::loadObjectList( 'SELECT name as text, element as value FROM #__extensions WHERE folder = "cck_field" AND enabled = 1 ANd element != "storage" ORDER BY text' );
 					$link	=	'index.php?option=com_cck&task=field.add';
 					$var	=	'&ajax_type=';
-					$title	=	JText::_( 'COM_CCK_TIP_NEW_FIELD' );
+					$title	=	Text::_( 'COM_CCK_TIP_NEW_FIELD' );
 					break;
 				case 'searchs':
 					$items	=	JCckDatabase::loadObjectList( 'SELECT title as text, name as value FROM #__cck_core_types WHERE published = 1 ORDER BY text' );
 					$link	=	'index.php?option=com_cck&task=search.add';
 					$var	=	'&content_type=';
-					$title	=	JText::_( 'COM_CCK_TIP_NEW_SEARCH' );
+					$title	=	Text::_( 'COM_CCK_TIP_NEW_SEARCH' );
 					break;
 				case 'templates':
-					$items	=	array( (object)array( 'text'=>JText::_( 'COM_CCK_CONTENT_FORM' ), 'value'=>0 ), (object)array( 'text'=>JText::_( 'COM_CCK_LIST' ), 'value'=>2 ) );
+					$items	=	array( (object)array( 'text'=>Text::_( 'COM_CCK_CONTENT_FORM' ), 'value'=>0 ), (object)array( 'text'=>Text::_( 'COM_CCK_LIST' ), 'value'=>2 ) );
 					$link	=	'index.php?option=com_cck&task=template.add';
 					$var	=	'&mode=';
-					$title	=	JText::_( 'COM_CCK_TIP_NEW_TEMPLATE' );
+					$title	=	Text::_( 'COM_CCK_TIP_NEW_TEMPLATE' );
 					break;
 				case 'sites':
-					$items	=	array( (object)array( 'text'=>JText::_( 'COM_CCK_BASIC' ), 'value'=>'7' ),
-									   (object)array( 'text'=>JText::_( 'COM_CCK_STANDARD' ), 'value'=>'2,7' ),
-									   (object)array( 'text'=>JText::_( 'COM_CCK_ADVANCED' ), 'value'=>'2,3,6,7' ) );
+					$items	=	array( (object)array( 'text'=>Text::_( 'COM_CCK_BASIC' ), 'value'=>'7' ),
+									   (object)array( 'text'=>Text::_( 'COM_CCK_STANDARD' ), 'value'=>'2,7' ),
+									   (object)array( 'text'=>Text::_( 'COM_CCK_ADVANCED' ), 'value'=>'2,3,6,7' ) );
 					$link	=	'index.php?option=com_cck&task=site.add';
 					$var	=	'&type=';
-					$title	=	JText::_( 'COM_CCK_TIP_NEW_SITE' );
+					$title	=	Text::_( 'COM_CCK_TIP_NEW_SITE' );
 					break;
 				default:
 					break;
@@ -98,11 +103,11 @@ abstract class JCckDevIntegration
 		if ( count( $items ) && $html != '' ) {
 			$legacy	=	$options->get( 'add_alt' );
 			if ( $legacy == 1 ) {
-				$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_JOOMLA' ).'</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li><li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
+				$above	=	'<li class="nav-header">'.Text::_( 'LIB_CCK_JOOMLA' ).'</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.Text::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li><li class="nav-header">'.Text::_( 'LIB_CCK_SEBLOD' ).'</li>';
 				$below	=	'';
 			} elseif ( $legacy == 2 ) {
-				$above	=	'<li class="nav-header">'.JText::_( 'LIB_CCK_SEBLOD' ).'</li>';
-				$below	=	'<li class="nav-header">Joomla!</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.JText::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li>';
+				$above	=	'<li class="nav-header">'.Text::_( 'LIB_CCK_SEBLOD' ).'</li>';
+				$below	=	'<li class="nav-header">Joomla!</li><li><a href="'.$options->get( 'add_alt_link', '#' ).'" id="joomla-standard-content">'.Text::_( 'LIB_CCK_INTEGRATION_STANDARD_CONTENT' ).'</a></li>';
 			} else {
 				$above	=	'';
 				$below	=	'';
@@ -127,10 +132,7 @@ abstract class JCckDevIntegration
 			return;
 		}
 
-		jimport( 'joomla.filesystem.file' );
-		jimport( 'joomla.filesystem.folder' );
-
-		$presets	=	JFolder::files( JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu', '\.xml$' );
+		$presets	=	Folder::files( JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu', '\.xml$' );
 
 		if ( count( $presets ) ) {
 			foreach ( $presets as $preset ) {
@@ -156,8 +158,8 @@ abstract class JCckDevIntegration
 	// addWarning
 	public static function addWarning( $type )
 	{
-		$doc	=	JFactory::getDocument();
-		$text	=	JText::_( 'LIB_CCK_INTEGRATION_WARNING_COPY' );
+		$doc	=	Factory::getDocument();
+		$text	=	Text::_( 'LIB_CCK_INTEGRATION_WARNING_COPY' );
 		$js		=	'jQuery(document).ready(function(){ if(jQuery("#batch-category-id")) {jQuery("#batch-category-id").parent().after("'.addslashes( '<em>'.$text.'</em>' ).'"); }});';
 
 		JCck::loadjQuery();
@@ -167,10 +169,10 @@ abstract class JCckDevIntegration
 	// appendModal
 	public static function appendModal( $layout, $target_id, $trigger, $params = array(), $variables = '', $options = null )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 
 		if ( is_null( $options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 		if ( is_file( $layout ) ) {
 			if ( JCck::on( '4.0' ) ) {
@@ -179,7 +181,7 @@ abstract class JCckDevIntegration
 				
 				$js		=	'$("'.$trigger.'").attr("data-bs-toggle","modal").attr("data-bs-target","#'.$target_id.'").removeAttr("type").parent().removeAttr("id").removeAttr("task");';
 
-				JFactory::getApplication()->cck_integration_modal	=	array(
+				Factory::getApplication()->cck_integration_modal	=	array(
 																			'options'=>$options,
 																			'path'=>$layout,
 																			'params'=>$params,
@@ -204,7 +206,7 @@ abstract class JCckDevIntegration
 	// getForms
 	public static function getForms( $url = '', &$type = '', $grouping = '' )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$items	=	array();
 
 		if ( is_object( $url ) ) {
@@ -263,17 +265,17 @@ abstract class JCckDevIntegration
 	// redirect
 	public static function redirect( $type, $more = '' )
 	{
-		$ignore	=	JFactory::getApplication()->input->get( 'cck', '0' );
+		$ignore	=	Factory::getApplication()->input->get( 'cck', '0' );
 
 		if ( !$type || $type == '-1' || $ignore ) {
 			return;
 		}
 		$id	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type.'"' );
-		if ( !JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$id ) ) {
+		if ( !Factory::getUser()->authorise( 'core.create', 'com_cck.form.'.$id ) ) {
 			return;
 		}
 		
-		JFactory::getApplication()->redirect( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.$more );
+		Factory::getApplication()->redirect( 'index.php?option=com_cck&view=form&layout=edit&type='.$type.$more );
 	}
 
 	// rewriteBuffer
@@ -345,7 +347,7 @@ abstract class JCckDevIntegration
 			preg_match_all( $search, $buffer, $matches2 );
 			if ( count( $matches2[0] ) ) {
 				if ( $multilanguage ) {
-					$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+					$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 				}
 				foreach ( $matches2[0] as $k=>$m ) {
 					$pk			=	$matches[$idx2][$k];
@@ -358,11 +360,11 @@ abstract class JCckDevIntegration
 					if ( isset( $matches[$idx][$k] ) ) {
 						if ( $opt_edit_alt ) {
 							if ( isset( $list2[$pk] ) ) {
-								$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_LEGACY' ).')';
+								$text		=	'<span class="icon-pencil"></span> '.Text::_( 'JTOOLBAR_EDIT' ).' ('.Text::_( 'LIB_CCK_LEGACY' ).')';
 								$pre		=	$matches[$idx][$k].$markup_end.$text.'</a></li>';
 							} else {
 								$link		=	'index.php?option=com_cck&amp;view=form'.$return.'&type='.$opt_default_type.'&id='.$pk.$data['replace_end'];
-								$text		=	'<span class="icon-pencil"></span> '.JText::_( 'JTOOLBAR_EDIT' ).' ('.JText::_( 'LIB_CCK_SEBLOD' ).')';
+								$text		=	'<span class="icon-pencil"></span> '.Text::_( 'JTOOLBAR_EDIT' ).' ('.Text::_( 'LIB_CCK_SEBLOD' ).')';
 								$pre		=	'<a href="'.$link.'">'.$text.'</a></li>';
 							}
 						}
@@ -385,10 +387,10 @@ abstract class JCckDevIntegration
 								if ( $t_edit || $t_add ) {
 									$pre		.=	'<li class="divider"></li>';
 									if ( $t_edit ) {
-										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE_EDIT' ).'</a></li>'.$t_edit;
+										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.Text::_( 'LIB_CCK_TRANSLATE_EDIT' ).'</a></li>'.$t_edit;
 									}
 									if ( $t_add ) {
-										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.JText::_( 'LIB_CCK_TRANSLATE' ).'</a></li>'.$t_add;
+										$pre	.=	'<li><a href="javascript:void(0);"><span class="icon-comments-2"></span> '.Text::_( 'LIB_CCK_TRANSLATE' ).'</a></li>'.$t_add;
 									}
 								}
 							}

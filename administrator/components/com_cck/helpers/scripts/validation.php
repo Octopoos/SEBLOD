@@ -10,16 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Uri\Uri;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
 $ajax_load	=	'components/com_cck/assets/styles/seblod/images/ajax.gif';
-$doc		=	JFactory::getDocument();
+$doc		=	Factory::getDocument();
 $id			=	$this->item->id;
 $name		=	$this->item->name;
-$lang   	=	JFactory::getLanguage();
-$root		=	JUri::root( true );
+$lang   	=	Factory::getLanguage();
+$root		=	Uri::root( true );
 $doc->addStyleSheet( $root.'/media/cck/scripts/jquery-colorbox/css/colorbox.css' );
 $doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 $js		=	'
@@ -65,17 +69,17 @@ $js		=	'
 						if ( $("#adminForm").validationEngine("validate") === true ) {
 							var eid = "'.$id.'";
 							var data = $("#required").val();
-							var text = "'.JText::_( 'COM_CCK_OPTIONAL' ).'";
+							var text = "'.Text::_( 'COM_CCK_OPTIONAL' ).'";
 
 							if (data) {
 								if (data == "required") {
-									text = "'.JText::_( 'COM_CCK_REQUIRED' ).'";
+									text = "'.Text::_( 'COM_CCK_REQUIRED' ).'";
 								} else if (data == "condrequired") {
-									text = "'.JText::_( 'COM_CCK_REQUIRED_WHEN' ).'";
+									text = "'.Text::_( 'COM_CCK_REQUIRED_WHEN' ).'";
 								} else if (data == "langrequired") {
-									text = "'.JText::_( 'COM_CCK_REQUIRED_LANG' ).'";
+									text = "'.Text::_( 'COM_CCK_REQUIRED_LANG' ).'";
 								} else {
-									text = "'.JText::_( 'COM_CCK_REQUIRED_GROUP' ).'";
+									text = "'.Text::_( 'COM_CCK_REQUIRED_GROUP' ).'";
 								}
 							}
 
@@ -158,9 +162,9 @@ $js		=	'
 			';
 $doc->addScriptDeclaration( $js );
 
-JPluginHelper::importPlugin( 'cck_field_validation' );
-JText::script( 'COM_CCK_OPTIONAL' );
-JText::script( 'COM_CCK_REQUIRED' );
+PluginHelper::importPlugin( 'cck_field_validation' );
+Text::script( 'COM_CCK_OPTIONAL' );
+Text::script( 'COM_CCK_REQUIRED' );
 
 $dataTmpl	=	array(
 					'form'=>array(
@@ -181,8 +185,8 @@ $dataTmpl2	=	array(
 							'fields'=>array(
 								JCckDev::renderLayoutFile(
 									'cck'.JCck::v().'.form.field', array(
-										'label'=>JText::_( 'COM_CCK_VALIDATION' ),
-										'html'=>JHtml::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field_validation', 'cck_', false, true, true, array( 'required' ) ), 'validation', 'class="form-select inputbox select max-width-180"', 'value', 'text', $name, 'validation' )
+										'label'=>Text::_( 'COM_CCK_VALIDATION' ),
+										'html'=>HTMLHelper::_( 'select.genericlist', Helper_Admin::getPluginOptions( 'field_validation', 'cck_', false, true, true, array( 'required' ) ), 'validation', 'class="form-select inputbox select max-width-180"', 'value', 'text', $name, 'validation' )
 									)
 								),
 								JCckDev::renderForm( 'core_validation_alert', '', $config )
@@ -194,11 +198,11 @@ $dataTmpl2	=	array(
 <?php
 if ( JCck::on( '4.0' ) ) {
 	echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'tab0', 'recall' => true, 'breakpoint' => 768] );
-	echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'tab0', JText::_( 'COM_CCK_REQUIRED' ) );
+	echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'tab0', Text::_( 'COM_CCK_REQUIRED' ) );
 	echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', $dataTmpl );
 	echo HTMLHelper::_( 'uitab.endTab' );
 
-	echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'tab1', JText::_( 'COM_CCK_VALIDATION' ) );
+	echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'tab1', Text::_( 'COM_CCK_VALIDATION' ) );
 
 	echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', $dataTmpl2 );
 	?>	
@@ -221,7 +225,7 @@ if ( JCck::on( '4.0' ) ) {
 }
 ?>
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_REQUIRED' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_REQUIRED' ) ); ?>
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		foreach ( $dataTmpl['fields'] as $field ) {
@@ -231,13 +235,13 @@ if ( JCck::on( '4.0' ) ) {
 	</ul>
 </div>
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_VALIDATION' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_VALIDATION' ) ); ?>
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		$options	=	Helper_Admin::getPluginOptions( 'field_validation', 'cck_', false, true, true, array( 'required' ) );
-		$validation	=	JHtml::_( 'select.genericlist', $options, 'validation', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', $name, 'validation' );
+		$validation	=	HTMLHelper::_( 'select.genericlist', $options, 'validation', 'class="inputbox select" style="max-width:175px;"', 'value', 'text', $name, 'validation' );
 		?>
-		<li><label><?php echo JText::_( 'COM_CCK_VALIDATION' ); ?></label><?php echo $validation; ?></li>
+		<li><label><?php echo Text::_( 'COM_CCK_VALIDATION' ); ?></label><?php echo $validation; ?></li>
 		<?php echo JCckDev::renderForm( 'core_validation_alert', '', $config ); ?>
 	</ul>
 	<ul id="layer" class="adminformlist adminformlist-2cols">

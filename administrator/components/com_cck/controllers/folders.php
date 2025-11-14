@@ -10,12 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
 // Controller
-class CCKControllerFolders extends JControllerAdmin
+class CCKControllerFolders extends AdminController
 {
 	protected $text_prefix	=	'COM_CCK';
 			
@@ -34,19 +38,19 @@ class CCKControllerFolders extends JControllerAdmin
 	// rebuild
 	public function rebuild()
 	{
-		JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
 		
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$cid		=	$app->input->get( 'cid', array(), 'array' );
 		$cid		=	ArrayHelper::toInteger( $cid );
 
 		$recordId	= (int) (count($cid) ? $cid[0] : 2 );
 		$model		=	$this->getModel();
 		if ( $model->rebuild( $recordId ) ) {
-			$msg	=	JText::_( 'COM_CCK_SUCCESSFULLY_REBUILT' );
+			$msg	=	Text::_( 'COM_CCK_SUCCESSFULLY_REBUILT' );
 			$type	=	'message';
 		} else {
-			$msg	=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+			$msg	=	Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
 			$type	=	'error';
 		}
 		

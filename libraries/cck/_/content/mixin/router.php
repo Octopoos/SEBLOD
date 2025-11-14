@@ -10,13 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 $mixin	=	new class() {
 	// _getActiveRoute
 	protected function _getActiveRoute()
 	{
 		return function( $lang_code = '' ) {
-			$app			=	JFactory::getApplication();
-			$lang_tag		=	JFactory::getLanguage()->getTag();
+			$app			=	Factory::getApplication();
+			$lang_tag		=	Factory::getLanguage()->getTag();
 			$menu_item		=	$app->getMenu()->getActive();
 			$route			=	'';
 			$route_params	=	JCckDevHelper::getRouteParams( $menu_item->query['search'] );
@@ -46,7 +48,7 @@ $mixin	=	new class() {
 	protected function _getMenuAssociation()
 	{
 		return function( $item_id, $lang_code ) {
-			JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
+			\JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
 
 			$associations	=	MenusHelper::getAssociations( $item_id );
 

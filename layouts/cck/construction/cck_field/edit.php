@@ -1,6 +1,8 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 echo '<div class="row-pane"><div class="row">';
 
 foreach ( $displayData['form'] as $form ) {
@@ -16,11 +18,11 @@ foreach ( $displayData['form'] as $form ) {
 		$class	=	' minus-1';
 		$class2	=	' is-sticky';
 		$col	=	'4';
-		$legend	=	JText::_( 'COM_CCK_'.$form['mode'] );
+		$legend	=	Text::_( 'COM_CCK_'.$form['mode'] );
 	} else {
 		$class	=	' minus-2';
 		$col	=	'8';
-		$legend	=	JText::_( 'COM_CCK_SETTINGS' );
+		$legend	=	Text::_( 'COM_CCK_SETTINGS' );
 	}
 	if ( $legend ) {
 		$legend	=	'<legend>'.$legend.'</legend>';

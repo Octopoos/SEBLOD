@@ -10,6 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // JCckDev
 abstract class JCckDev
 {
@@ -93,7 +102,7 @@ abstract class JCckDev
 		// Prepare
 		if ( trim( $field->selectlabel ) ) {
 			if ( $config['doTranslation'] ) {
-				$field->selectlabel	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
+				$field->selectlabel	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->selectlabel ) ) );
 			}
 		}
 
@@ -123,7 +132,7 @@ abstract class JCckDev
 			$data	=	json_encode( $data );
 		}
 		if ( $note == '' ) {
-			$note	=	JFactory::getDate()->toSql();
+			$note	=	Factory::getDate()->toSql();
 		}
 
 		/*
@@ -155,7 +164,7 @@ abstract class JCckDev
 	// addScript
 	public static function addScript( $url, $type = "text/javascript", $defer = false, $async = false )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( !isset( $app->cck_document ) ) {
 			$app->cck_document	=	array();
@@ -177,7 +186,7 @@ abstract class JCckDev
 	// addStyleSheet
 	public static function addStyleSheet( $url, $type = 'text/css', $media = null, $attribs = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( !isset( $app->cck_document ) ) {
 			$app->cck_document	=	array();
@@ -194,9 +203,9 @@ abstract class JCckDev
 	// addValidation
 	public static function addValidation( $rules, $options, $id = '', &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
-		$lang	=	JFactory::getLanguage();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
+		$lang	=	Factory::getLanguage();
 
 		if ( !$id ) {
 			$id	=	'seblod_form';
@@ -206,11 +215,11 @@ abstract class JCckDev
 		}
 
 		$message	=	'';
-		$root		=	JUri::root( true );
+		$root		=	Uri::root( true );
 		$rules		=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
 
 		if ( $lang->hasKey( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' ) ) {
-			$message	=	JText::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
+			$message	=	Text::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
 		}		
 
 		$rules	.=	',"_tabs":{"regex":"","alertText":"'.addslashes( $message ).'"}';
@@ -269,7 +278,7 @@ abstract class JCckDev
 	// forceStorage
 	public static function forceStorage( $value = 'none', $allowed = '' )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		$js		=	'';
 		
 		if ( $value == 'none' ) {
@@ -302,7 +311,7 @@ abstract class JCckDev
 
 	public static function getMergedScript( $url )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$base	=	'';
 		$index	=	'';
 		$pos	=	strpos( $url, '?' );
@@ -361,10 +370,10 @@ abstract class JCckDev
 	{
 		if ( count( $plugins ) > 0 ) {
 			foreach ( $plugins as $plugin ) {
-				JPluginHelper::importPlugin( $type, $plugin );	/* TODO#SEBLOD: improve */
+				PluginHelper::importPlugin( $type, $plugin );	/* TODO#SEBLOD: improve */
 			}
 		} else {
-			JPluginHelper::importPlugin( $type );
+			PluginHelper::importPlugin( $type );
 		}
 	}
 	
@@ -384,7 +393,7 @@ abstract class JCckDev
 						);
 		
 		if ( $core === true ) {
-			JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
+			Factory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
 
 			$config['doValidation']	=	2;
 			require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
@@ -404,8 +413,8 @@ abstract class JCckDev
 	// initScript
 	public static function initScript( $type, &$elem, $options = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		$css	=	'';
 		$js		=	'';
 		$js2	=	'';
@@ -451,7 +460,7 @@ abstract class JCckDev
 					$c1 	=	'';
 					$class	=	'unpublish icon-flag';
 				}
-				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="btn btn-micro jgrid"><span class="hasTooltip state '.$class.'" title="'.JText::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
+				$flag	.=	'<a href="javascript: void(0);" id="bool8" class="btn btn-micro jgrid"><span class="hasTooltip state '.$class.'" title="'.Text::_( 'COM_CCK_TRANSLATE_OPTIONS' ).'"></span></a>'
 						.	'<input type="radio" id="bool80" name="bool8" value="0" '.$c0.' style="display:none;" />'
 						.	'<input type="radio" id="bool81" name="bool8" value="1" '.$c1. ' style="display:none;" />';
 				$js2	.=	'$("#'.$selector.'").'.$function.'("'.addslashes( $flag ).'");'
@@ -482,7 +491,7 @@ abstract class JCckDev
 					$attribs	=	'';
 					
 					if ( $options['toggleAttr'] ) {
-						$label		=	isset( $options['customAttrLabel'] ) ? $options['customAttrLabel'] : JText::_( 'COM_CCK_CUSTOM_ATTRIBUTES' );
+						$label		=	isset( $options['customAttrLabel'] ) ? $options['customAttrLabel'] : Text::_( 'COM_CCK_CUSTOM_ATTRIBUTES' );
 						$html		.=	'<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" />'
 									.	'<label for="toggle_attr" class="toggle_attr inline">'.$label.'</label>';
 						$js3		=	'var disp = ($("#toggle_attr").prop("checked") !== false) ? \'style="display: block"\' : "";';
@@ -524,7 +533,7 @@ abstract class JCckDev
 									if ( isset( $customAttr['placeholder'] ) && $customAttr['placeholder'] ) {
 										$placeholder	=	$customAttr['placeholder'];
 									} else {
-										$placeholder	=	JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id );
+										$placeholder	=	Text::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id );
 									}
 									if ( isset( $customAttr['size'] ) && $customAttr['size'] ) {
 										$size	=	$customAttr['size'];
@@ -539,7 +548,7 @@ abstract class JCckDev
 								$attr_id	=	$customAttr;
 
 								$attribs	.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-											.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
+											.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( Text::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
 							}
 
 							$attribs		.=	'</div>';
@@ -656,8 +665,8 @@ abstract class JCckDev
 				if ( isset( $options['fieldPicker'] ) && $options['fieldPicker'] ) {
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
-					$fields	=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select max-width-175"',
+					$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
+					$elem->init['fieldPicker']	=	HTMLHelper::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select max-width-175"',
 															  'value', 'text', '', $options['picker'] );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
@@ -714,10 +723,10 @@ abstract class JCckDev
 			$path	=	substr( $path, $offset, $pos );
 			$path	=	str_replace( '/', '_', $path );
 
-			JFactory::getLanguage()->load( 'files_pro_cck_'.$path.'.sys', JPATH_SITE, null, false, true );
+			Factory::getLanguage()->load( 'files_pro_cck_'.$path.'.sys', JPATH_SITE, null, false, true );
 		} else {
 			if ( $elem->name ) {
-				JFactory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
+				Factory::getLanguage()->load( 'plg_cck_field_'.$type.'_'.$elem->name, JPATH_ADMINISTRATOR, null, false, true );
 			}
 		}
 		
@@ -839,12 +848,12 @@ abstract class JCckDev
 	public static function validate( $config, $id = 'adminForm' )
 	{
 		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
-		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
+		$config['validation_options']	=	new Registry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
 		self::addValidation( $config['validation'], $config['validation_options'], $id );
 		
 		if ( isset( $config['fields'] ) && count( $config['fields'] ) ) {
-			JFactory::getDocument()->addScriptDeclaration( 'var cck_dev = '.json_encode( $config['fields'] ).';' );
+			Factory::getDocument()->addScriptDeclaration( 'var cck_dev = '.json_encode( $config['fields'] ).';' );
 		}
 	}
 	
@@ -860,7 +869,7 @@ abstract class JCckDev
 	public static function getEmpty( $properties )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
-		$field	=	JTable::getInstance( 'Field', 'CCK_Table' );
+		$field	=	Table::getInstance( 'Field', 'CCK_Table' );
 		
 		if ( is_array( $properties ) ) {
 			foreach ( $properties as $k => $v ) {
@@ -985,7 +994,7 @@ abstract class JCckDev
 	// renderBlank
 	public static function renderBlank( $html = '', $label = '' )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			return;
@@ -1003,7 +1012,7 @@ abstract class JCckDev
 			return;
 		}
 		
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$raw	=	false;
 
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
@@ -1032,7 +1041,7 @@ abstract class JCckDev
 		$link	=	'https://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
 		$help	=	'<div class="clr"></div><div class="how-to-setup">'
-				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;" rel="noopener noreferrer">' . JText::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
+				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;" rel="noopener noreferrer">' . Text::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
 				.	'</div>';
 		
 		return ( $raw !== false ) ? $help : '</ul>'.$help.'</div>';
@@ -1041,7 +1050,7 @@ abstract class JCckDev
 	// renderLayoutFile
 	public static function renderLayoutFile( $path, $displayData = array() )
 	{
-		$layout	=	new JLayoutFile( $path );
+		$layout	=	new FileLayout( $path );
 
 		return $layout->render( $displayData );
 	}
@@ -1049,7 +1058,7 @@ abstract class JCckDev
 	// renderLegend
 	public static function renderLegend( $legend, $tooltip = '', $tag = '1' )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			return;
@@ -1074,7 +1083,7 @@ abstract class JCckDev
 	// renderSpacer
 	public static function renderSpacer( $legend, $tooltip = '', $tag = '2', $options = array( 'class_sfx'=>'-2cols' ) )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 			return;
@@ -1089,9 +1098,9 @@ abstract class JCckDev
 
 		$note	=	'';
 
-		if ( $legend == JText::_( 'COM_CCK_STORAGE' ) ) {
-			$note	=	'<span class="storage-desc content-type">'.JText::_( 'COM_CCK_STORAGE_CONTENT_TYPE_FIELD_DESC' ).'</span>'
-					.	'<span class="storage-desc search-type">'.JText::_( 'COM_CCK_STORAGE_SEARCH_TYPE_FIELD_DESC' ).'</span>';
+		if ( $legend == Text::_( 'COM_CCK_STORAGE' ) ) {
+			$note	=	'<span class="storage-desc content-type">'.Text::_( 'COM_CCK_STORAGE_CONTENT_TYPE_FIELD_DESC' ).'</span>'
+					.	'<span class="storage-desc search-type">'.Text::_( 'COM_CCK_STORAGE_SEARCH_TYPE_FIELD_DESC' ).'</span>';
 		}
 		if ( $tooltip ) {
 			$legend	=	'<span class="hasTooltip qtip_cck" title="'.$tooltip.'">'.$legend.'<span class="star"> &sup'.$tag.';</span></span>';
@@ -1110,7 +1119,7 @@ abstract class JCckDev
 		}
 		
 		$method		=	'to'.ucfirst( $format );
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadString( $data, 'JSON' );
 		
 		return $registry->$method();
@@ -1119,7 +1128,7 @@ abstract class JCckDev
 	// toJSON
 	public static function toJSON( $data = '' )
 	{
-		$registry	=	new JRegistry;
+		$registry	=	new Registry;
 		$registry->loadArray( (array)$data );
 
 		return $registry->toString();
@@ -1151,7 +1160,7 @@ abstract class JCckDev
 	public static function toSafeID( $string )
 	{
 		$string	=	str_replace( array( '&', '"', '<', '>', '-' ), array( 'a', 'q', 'l', 'g', '_' ), $string );
-		$str	=	JFactory::getLanguage()->transliterate( $string );
+		$str	=	Factory::getLanguage()->transliterate( $string );
 		$length	=	strlen( $str );
 
 		if ( $length ) {
@@ -1181,13 +1190,13 @@ abstract class JCckDev
 			$char	=	$chars[1];
 			$str	=	str_replace( $char, ' ', $string );
 			if ( $case != 2 ) {
-				$str	=	JFactory::getLanguage()->transliterate( $str );	
+				$str	=	Factory::getLanguage()->transliterate( $str );	
 			}
 			$str	=	preg_replace( array( '/\s+/', '/[^A-Za-z0-9'.$chars.']/' ), array( $char, '' ), $str );
 		} else {
 			$str	=	str_replace( $char, ' ', $string );
 			if ( $case != 2 ) {
-				$str	=	JFactory::getLanguage()->transliterate( $str );
+				$str	=	Factory::getLanguage()->transliterate( $str );
 			}
 			$str	=	preg_replace( array( '/\s+/', '/[^A-Za-z0-9'.$char.']/' ), array( $char, '' ), $str );
 		}
@@ -1213,13 +1222,13 @@ abstract class JCckDev
 		}
 		
 		if ( empty( $xml ) ) {
-			JError::raiseWarning( 100, JText::_( 'JLIB_UTIL_ERROR_XML_LOAD' ) );
+			Factory::getApplication()->enqueueMessage( Text::_( 'JLIB_UTIL_ERROR_XML_LOAD' ), 'warning' );
 			
 			if ( $isFile ) {
-				JError::raiseWarning( 100, $data );
+				Factory::getApplication()->enqueueMessage( $data, 'warning' );
 			}
 			foreach ( libxml_get_errors() as $error ) {
-				JError::raiseWarning( 100, 'XML: ' . $error->message );
+				Factory::getApplication()->enqueueMessage( 'XML: ' . $error->message, 'warning' );
 			}
 		}
 		

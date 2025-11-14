@@ -10,16 +10,22 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 // View
-class JCckBaseLegacyView extends JViewLegacy
+class JCckBaseLegacyView extends HtmlView
 {
 	// display
 	public function display( $tpl = null )
 	{
-		$app			=	JFactory::getApplication();
+		$app			=	Factory::getApplication();
 		$this->option	=	$app->input->get( 'option', '' );
 		if ( defined( 'CCK_ADDON' ) ) {
-			$this->params	=	JComponentHelper::getParams( CCK_ADDON );
+			$this->params	=	ComponentHelper::getParams( CCK_ADDON );
 		}
 		
 		$this->prepareSidebar();
@@ -33,7 +39,7 @@ class JCckBaseLegacyView extends JViewLegacy
 	// prepareSidebar
 	protected function prepareSidebar()
 	{
-		$this->sidebar	=	JHtmlSidebar::render();
+		$this->sidebar	=	Sidebar::render();
 
 		if ( strlen( $this->sidebar ) < 100 ) {
 			$sidebar    =   str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $this->sidebar );
@@ -48,10 +54,10 @@ class JCckBaseLegacyView extends JViewLegacy
 	{
 		$canDo	=	Helper_Admin::getActions();
 		
-		JToolBarHelper::title( CCK_LABEL, 'cck-seblod' );
+		ToolbarHelper::title( CCK_LABEL, 'cck-seblod' );
 		
 		if ( $canDo->get( 'core.admin' ) ) {
-			JToolBarHelper::preferences( CCK_ADDON, 560, 840, 'JTOOLBAR_OPTIONS' );
+			ToolbarHelper::preferences( CCK_ADDON, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}
 		
 		Helper_Admin::addToolbarSupportButton();

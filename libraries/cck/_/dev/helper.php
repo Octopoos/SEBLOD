@@ -10,6 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 
@@ -19,7 +28,7 @@ abstract class JCckDevHelper
 	// alterTableAddColumn
 	public static function alterTableAddColumn( $table, $column, $column_prev = '', $type = 'VARCHAR(50)' )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$columns	=	$db->getTableColumns( $table );
 
 		if ( $column_prev != '' && $column != $column_prev ) {
@@ -34,7 +43,7 @@ abstract class JCckDevHelper
 	// checkAjaxScript
 	public static function checkAjaxScript( $file )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$allowed	=	false;
 		$referrer	=	$app->input->getCmd( 'referrer', '' );
 
@@ -87,12 +96,12 @@ abstract class JCckDevHelper
 	// createFolder
 	public static function createFolder( $path, $mode = 0755 )
 	{
-		jimport( 'joomla.filesystem.folder' );
+		// jimport( 'joomla.filesystem.folder' );
 		
-		if ( ! JFolder::exists( $path ) ) {
-			JFolder::create( $path, $mode );
+		if ( ! Folder::exists( $path ) ) {
+			Folder::create( $path, $mode );
 			$buffer	=	'<!DOCTYPE html><title></title>';
-			JFile::write( $path.'/index.html', $buffer );
+			File::write( $path.'/index.html', $buffer );
 		}
 		
 		return $path;
@@ -137,16 +146,16 @@ abstract class JCckDevHelper
 		if ( $itemId == '' || $itemId == 'auto' ) {
 			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
 
-			if ( $itemId > 0 && JFactory::getApplication()->isClient( 'site' ) ) {
-				return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
+			if ( $itemId > 0 && Factory::getApplication()->isClient( 'site' ) ) {
+				return Route::_( 'index.php?Itemid='.$itemId, true, ( Uri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
 			} elseif ( $itemId == -1 ) {
-				return JUri::root().'component/cck'.$glue.$query;
+				return Uri::root().'component/cck'.$glue.$query;
 			} else {
 				$context	=	'';
 				$glue		=	( $query != '' ) ? '&' : '';
 				$lang_sef	=	'';
 
-				if ( !JFactory::getApplication()->isClient( 'administrator' ) ) {
+				if ( !Factory::getApplication()->isClient( 'administrator' ) ) {
 					$lang_sef	=	self::getLanguageCode( true );
 
 					if ( $lang_sef ) {
@@ -156,7 +165,7 @@ abstract class JCckDevHelper
 				if ( JCck::isSite() && JCck::getSite()->context ) {
 					$context	.=	JCck::getSite()->context.'/';
 				} else {
-					$path		=	JUri::getInstance()->getPath();
+					$path		=	Uri::getInstance()->getPath();
 
 					if ( isset( $path[0] ) && $path[0] === '/' ) {
 						$path	=	substr( $path, 1 );
@@ -171,13 +180,13 @@ abstract class JCckDevHelper
 					}
 				}
 				if ( is_string( $method ) ) {
-					return JUri::$method().$context.'index.php?option=com_cck'.$glue.$query;	
+					return Uri::$method().$context.'index.php?option=com_cck'.$glue.$query;	
 				} else {
-					return JUri::root( true ).$context.'index.php?option=com_cck'.$glue.$query;
+					return Uri::root( true ).$context.'index.php?option=com_cck'.$glue.$query;
 				}
 			}
 		} else {
-			return JRoute::_( 'index.php?Itemid='.$itemId, true, ( JUri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
+			return Route::_( 'index.php?Itemid='.$itemId, true, ( Uri::getInstance()->isSSL() ? 1 : 2 ) ).$glue.$query;
 		}
 	}
 	
@@ -230,7 +239,7 @@ abstract class JCckDevHelper
 	// getCombinations
 	public static function getCombinations( $array, $length )
 	{
-		JLoader::register( 'Combinations', JPATH_PLATFORM.'/cck/misc/Combinations.php' );
+		// JLoader::register( 'Combinations', JPATH_PLATFORM.'/cck/misc/Combinations.php' );
 
 		$combinations	=	new Combinations( $array );
 
@@ -245,7 +254,7 @@ abstract class JCckDevHelper
 		$code2	=	strtoupper( $code2 );
 
 		if ( !is_array( $items ) ) {
-			$lang	=	JFactory::getLanguage();
+			$lang	=	Factory::getLanguage();
 			$code	=	'en';
 			$codes	=	array(
 							'de'=>'',
@@ -257,9 +266,9 @@ abstract class JCckDevHelper
 							'uk'=>''
 						);
 
-			jimport( 'joomla.language.helper' );
-			$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-			$lang_tag	=	JFactory::getLanguage()->getTag();
+			// jimport( 'joomla.language.helper' );
+			$languages	=	LanguageHelper::getLanguages( 'lang_code' );
+			$lang_tag	=	Factory::getLanguage()->getTag();
 			$lang_code	=	( isset( $languages[$lang_tag] ) ) ? strtoupper( $languages[$lang_tag]->sef ) : '';
 			$lang_code	=	strtolower( $lang_code );
 
@@ -284,12 +293,12 @@ abstract class JCckDevHelper
 	// getDownloadInfo
 	public static function getDownloadInfo( $id, $fieldname )
 	{
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$client		=	$app->input->get( 'client', 'content' );
 		$collection	=	$app->input->get( 'collection', '' );
 		$join_id	=	$app->input->getInt( 'join_id', 0 );
 		$restricted	=	'';
-		$user		=	JFactory::getUser();
+		$user		=	Factory::getUser();
 		$xi			=	$app->input->getInt( 'xi', 0 );
 
 		$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
@@ -308,9 +317,9 @@ abstract class JCckDevHelper
 		$core		=	JCckDatabase::loadObject( $query );
 
 		if ( !is_object( $core ) ) {
-			return array( 'error'=>true, 'error_code'=>404, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+			return array( 'error'=>true, 'error_code'=>404, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
 		}
-		JPluginHelper::importPlugin( 'cck_storage_location' );
+		PluginHelper::importPlugin( 'cck_storage_location' );
 
 		if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
 			$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
@@ -324,12 +333,12 @@ abstract class JCckDevHelper
 			if ( !( $canEdit && $canEditOwn
 				|| ( $canEdit && !$canEditOwn && ( $core->author_id != $user->id ) )
 				|| ( $canEditOwn && ( $core->author_id == $user->id ) ) ) ) {
-				return array( 'error'=>true, 'error_code'=>404, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+				return array( 'error'=>true, 'error_code'=>404, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
 			}
 		}
 
-		JPluginHelper::importPlugin( 'cck_storage' );
-		JPluginHelper::importPlugin( 'cck_field' );
+		PluginHelper::importPlugin( 'cck_storage' );
+		PluginHelper::importPlugin( 'cck_field' );
 
 		$config		=	array(
 							'author'=>$core->author_id,
@@ -390,11 +399,11 @@ abstract class JCckDevHelper
 				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
 				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
 				|| ( $canEditOwnContent ) ) ) {
-				return array( 'error'=>true, 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+				return array( 'error'=>true, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 			}
 		} else {
 			if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
-				return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+				return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 			}
 
 			if ( $config['location'] === 'joomla_article' ) {
@@ -409,7 +418,7 @@ abstract class JCckDevHelper
 			}
 
 			if ( $restricted ) {
-				JPluginHelper::importPlugin( 'cck_field_restriction' );
+				PluginHelper::importPlugin( 'cck_field_restriction' );
 				$field->restriction			=	$restricted;
 				$field->restriction_options	=	$clients[$client]->restriction_options;
 				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
@@ -475,7 +484,7 @@ abstract class JCckDevHelper
 				$config['error']	=	false;
 
 				if ( $allowed !== true ) {
-					return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+					return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 				}
 			}
 		}
@@ -507,22 +516,22 @@ abstract class JCckDevHelper
 		static $routes = array();
 
 		if ( empty( $routes ) ) {
-			$app		=	JFactory::getApplication();
+			$app		=	Factory::getApplication();
 			$menu		=	$app->getMenu();
 
-			JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
+			// JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
 
 			$active			=	$itemId ? $menu->getItem( $itemId ) : $menu->getActive();
 			$associations	=	MenusHelper::getAssociations( $active->id );
 			$do_canonical	=	false;
 			$do_hreflang	=	true;
 			$lang_sef		=	JCckDevHelper::getLanguageCode();
-			$lang_tag		=	JFactory::getLanguage()->getTag();
-			$languages		=	JLanguageHelper::getLanguages();
-			$levels			=	JFactory::getUser()->getAuthorisedViewLevels();
+			$lang_tag		=	Factory::getLanguage()->getTag();
+			$languages		=	LanguageHelper::getLanguages();
+			$levels			=	Factory::getUser()->getAuthorisedViewLevels();
 			$levels			=	array_flip( $levels );
-			$path			=	JUri::getInstance()->getPath();
-			$route			=	JRoute::_( 'index.php?Itemid='.$active->id );
+			$path			=	Uri::getInstance()->getPath();
+			$route			=	Route::_( 'index.php?Itemid='.$active->id );
 			$view			=	$app->input->get( 'view', '' );
 
 			if ( $length = strlen( $route ) ) {
@@ -544,7 +553,7 @@ abstract class JCckDevHelper
 				$lang_route		=	'';
 
 				if ( $active->language == '*' ) {
-					$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$active->id );
+					$lang_route	=	Route::_( 'index.php?lang='.$language->sef.'&Itemid='.$active->id );
 				} elseif ( isset( $associations[$language->lang_code] ) && $associations[$language->lang_code] ) {
 					$item		=	$menu->getItem( $associations[$language->lang_code] );
 
@@ -552,7 +561,7 @@ abstract class JCckDevHelper
 						$itemId_assoc	=	$item->id;
 
 						if ( isset( $levels[$item->access] ) ) {
-							$lang_route	=	JRoute::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
+							$lang_route	=	Route::_( 'index.php?lang='.$language->sef.'&Itemid='.$associations[$language->lang_code] );
 						}
 					}
 				}
@@ -602,7 +611,7 @@ abstract class JCckDevHelper
 
 								if ( $assocItem->query['view'] === 'list' && $active->query['search'] == $assocItem->query['search'] ) {
 									jimport( 'cck.base.list.list' );
-									$count		=	CCK_List::getCountFromRoute( JRoute::_( 'index.php?Itemid='.$itemId_assoc.'&lang='.$language->lang_code ) );
+									$count		=	CCK_List::getCountFromRoute( Route::_( 'index.php?Itemid='.$itemId_assoc.'&lang='.$language->lang_code ) );
 									$do_query	=	false;
 
 									if ( $count ) {
@@ -656,17 +665,17 @@ abstract class JCckDevHelper
 			}
 		}
 
-		jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
+		// jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
 
-		$lang		=	JFactory::getLanguage();
-		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+		$lang		=	Factory::getLanguage();
+		$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 
 		$lang_tag	=	$lang->getTag();
 
 		if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
 			if ( $strictly && self::isMultilingual( true ) ) {
-				$plugin			=	JPluginHelper::getPlugin( 'system', 'languagefilter' );
-				$plugin_params	=	new JRegistry( $plugin->params );
+				$plugin			=	PluginHelper::getPlugin( 'system', 'languagefilter' );
+				$plugin_params	=	new Registry( $plugin->params );
 
 				if ( $lang->getDefault() == $lang_tag && $plugin_params->get( 'remove_default_prefix', 0 ) ) {
 					return '';
@@ -688,9 +697,9 @@ abstract class JCckDevHelper
 	// getPermalink()
 	public static function getPermalink( $types = 'canonical', $object = 'joomla_article' )
 	{
-		$lang_code		=	JFactory::getLanguage()->getTag();
+		$lang_code		=	Factory::getLanguage()->getTag();
 		$permalink		=	'';
-		$root			=	substr( JUri::root(), 0, -1 );
+		$root			=	substr( Uri::root(), 0, -1 );
 
 		if ( !is_array( $types ) ) {
 			$types		=	array( 0=>$types );
@@ -701,15 +710,15 @@ abstract class JCckDevHelper
 					break;
 				}
 				if ( $type == 'canonical' ) {
-					if ( isset( JFactory::getApplication()->cck_canonical_url ) ) {
-						$permalink	=	$root.JFactory::getApplication()->cck_canonical_url;
+					if ( isset( Factory::getApplication()->cck_canonical_url ) ) {
+						$permalink	=	$root.Factory::getApplication()->cck_canonical_url;
 					}
 				} elseif ( $type == 'current' ) {
 					$properties	=	array( 'routes' );
 					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
 					$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 					if ( isset( $properties['routes'][$lang_code] ) && $properties['routes'][$lang_code] != '' ) {
-						$permalink	=	$root.JRoute::_( $properties['routes'][$lang_code] );
+						$permalink	=	$root.Route::_( $properties['routes'][$lang_code] );
 					}
 				}
 			}
@@ -766,7 +775,7 @@ abstract class JCckDevHelper
 			return $sef;
 		}
 		/*
-		if ( $itemId == JFactory::getApplication()->input->getInt( 'Itemid', 0 ) ) {
+		if ( $itemId == Factory::getApplication()->input->getInt( 'Itemid', 0 ) ) {
 			return $sef;
 		}
 		*/
@@ -774,7 +783,7 @@ abstract class JCckDevHelper
 		$idx	=	$itemId.'_'.$type;
 
 		if ( !isset( $cache[$idx] ) ) {
-			$item			=	JFactory::getApplication()->getMenu()->getItem( $itemId );
+			$item			=	Factory::getApplication()->getMenu()->getItem( $itemId );
 			$cache[$idx]	=	'';
 
 			if ( !( is_object( $item ) && isset( $item->params ) ) ) {
@@ -788,7 +797,7 @@ abstract class JCckDevHelper
 			}
 			if ( isset( $item->params ) ) {
 				if ( is_string( $item->params ) ) {
-					$item->params		=	new JRegistry( $item->params );
+					$item->params		=	new Registry( $item->params );
 				}
 
 				$cache[$idx]	=	$item->params->get( 'sef', '' );
@@ -802,7 +811,7 @@ abstract class JCckDevHelper
 				$list 			=	JCckDatabaseCache::loadObject( 'SELECT options, sef_route FROM #__cck_core_searchs WHERE name = "'.$item->query['search'].'"' );
 
 				if ( !$cache[$idx] ) {
-					$list->options	=	new JRegistry( $list->options );
+					$list->options	=	new Registry( $list->options );
 					$cache[$idx]	=	$list->options->get( 'sef', '' );	
 				}
 				if ( $list->sef_route && $type ) {
@@ -898,7 +907,7 @@ abstract class JCckDevHelper
 		}
 
 		if ( $registry ) {
-			$url	=	new JRegistry( $url );
+			$url	=	new Registry( $url );
 		}
 		
 		return $url;
@@ -910,7 +919,7 @@ abstract class JCckDevHelper
 		if ( class_exists( 'JLanguageAssociations' ) ) {
 			return JLanguageAssociations::isEnabled();
 		} else {
-			$app	=	JFactory::getApplication();
+			$app	=	Factory::getApplication();
 			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );
 		}
 	}
@@ -918,7 +927,7 @@ abstract class JCckDevHelper
 	// isMultilingual
 	public static function isMultilingual( $strictly = false )
 	{
-		if ( is_object( JPluginHelper::getPlugin( 'system', 'languagefilter' ) ) ) {
+		if ( is_object( PluginHelper::getPlugin( 'system', 'languagefilter' ) ) ) {
 			return true;
 		} elseif ( !$strictly && JCck::isSite() ) {
 			$site	=	JCck::getSite();
@@ -934,14 +943,14 @@ abstract class JCckDevHelper
 	// matchUrlVars
 	public static function matchUrlVars( $vars, $url = null )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$custom	=	( is_object( $url ) ) ? true : false;
 		$vars	=	explode( '&', $vars );
 		$count	=	count( $vars );
 
 		if ( $count ) {
 			if ( $custom === false ) {
-				$url	=	JUri::getInstance();
+				$url	=	Uri::getInstance();
 			}
 			$query		=	self::getUrlVars( $url->toString(), true );
 
@@ -971,7 +980,7 @@ abstract class JCckDevHelper
 	// replaceLive
 	public static function replaceLive( $str, $name = '', $config = array() )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		if ( !$name ) {
 			$name	=	uniqid();
 		}
@@ -988,7 +997,7 @@ abstract class JCckDevHelper
 						$variable	=	$matches[2][$k];
 						
 						if ( $v == 'Current' ) {
-							$request	=	( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
+							$request	=	( $variable == 'true' ) ? Uri::getInstance()->toString() : Uri::current();
 							$str		=	str_replace( $matches[0][$k], $request, $str );
 						} elseif ( $v == 'Array' ) {
 							$value				=	'';
@@ -1099,14 +1108,14 @@ abstract class JCckDevHelper
 					$author	=	$config['author'];
 				}
 				if ( !$author ) {
-					$author	=	JFactory::getUser()->id;
+					$author	=	Factory::getUser()->id;
 				}
 
 				$str		=	str_replace( '$context->getAuthor()', $author, $str );
 			}
 		}
 		if ( $str != '' && strpos( $str, '$lang->' ) !== false ) {
-			$lang	=	JFactory::getLanguage();
+			$lang	=	Factory::getLanguage();
 			if ( strpos( $str, '$lang->getTag()' ) !== false ) {
 				$str		=	str_replace( '$lang->getTag()', $lang->getTag(), $str );
 			}
@@ -1151,7 +1160,7 @@ abstract class JCckDevHelper
 			preg_match_all( $search, $str, $matches );
 			if ( count( $matches[1] ) ) {
 				foreach ( $matches[1] as $text ) {
-					$str	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $str );
+					$str	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $str );
 				}
 			}
 		}
@@ -1162,13 +1171,13 @@ abstract class JCckDevHelper
 	// secureField
 	public static function secureField( $field, $value )
 	{
-		JFactory::getSession()->set( 'cck_hash_live_'.$field->name, JApplicationHelper::getHash( $value ) );
+		Factory::getSession()->set( 'cck_hash_live_'.$field->name, ApplicationHelper::getHash( $value ) );
 	}
 
 	// setDynamicVars
 	public static function setDynamicVars( &$vars, $format, $parameters, $fields )
 	{
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 
 		if ( is_array( $format ) ) {
 			$format_params	=	$format['options'];
@@ -1195,9 +1204,9 @@ abstract class JCckDevHelper
 		}
 		if ( $app->isClient( 'site' ) && JCck::isSite() ) {
 			$site			=	JCck::getSite();
-			$site_options	=	( is_object( $site ) ) ? new JRegistry( $site->options ) : new JRegistry;
+			$site_options	=	( is_object( $site ) ) ? new Registry( $site->options ) : new Registry;
 		} else {
-			$site_options	=	new JRegistry;
+			$site_options	=	new Registry;
 		}
 
 		foreach ( $parameters as $k=>$p ) {
@@ -1235,16 +1244,16 @@ abstract class JCckDevHelper
 	// setLanguage
 	public static function setLanguage( $tag )
 	{
-		$app	=	JFactory::getApplication();
-		$lang	=	JLanguage::getInstance( $tag );
+		$app	=	Factory::getApplication();
+		$lang	=	Language::getInstance( $tag );
 		
 		$app->loadLanguage( $lang );
-		JFactory::$language	=	$app->getLanguage();
+		// Factory::$language	=	$app->getLanguage();
 		
-		JFactory::getConfig()->set( 'language', $tag );
+		Factory::getConfig()->set( 'language', $tag );
 
 		if ( !JCck::on( '4' ) ) {
-			JFactory::getLanguage()->setLanguage( $tag );
+			Factory::getLanguage()->setLanguage( $tag );
 		}
 	}
 

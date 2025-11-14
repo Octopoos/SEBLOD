@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 jimport( 'joomla.application.component.controllerform' );
 
-JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php' );
+\JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php' );
 
 // Controller
 class CCKControllerFormRaw extends CCKControllerForm

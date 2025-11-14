@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
+
 $show	=	$params->get( 'url_show', '' );
 $hide	=	$params->get( 'url_hide', '' );
 if ( $show && JCckDevHelper::matchUrlVars( $show ) === false ) {
@@ -19,12 +25,12 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 	return;
 }
 
-$app	=	JFactory::getApplication();
+$app	=	Factory::getApplication();
 $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 
 JCck::loadjQuery();
-$lang			=	JFactory::getLanguage();
+$lang			=	Factory::getLanguage();
 $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'mod_cck_list', JPATH_SITE );
 $lang->load( 'com_cck_default', JPATH_SITE );
@@ -62,7 +68,7 @@ include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 
 // Set
 if ( !is_object( @$options ) ) {
-	$options	=	new JRegistry;
+	$options	=	new Registry;
 }
 $description		=	'';
 $show_list_desc		=	$params->get( 'show_list_desc' );
@@ -111,7 +117,7 @@ if ( $description != '' ) {
 		preg_match_all( $regex, $description, $matches );
 		if ( count( $matches[1] ) ) {
 			foreach ( $matches[1] as $text ) {
-				$description	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
+				$description	=	str_replace( 'J('.$text.')', Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $description );
 			}
 		}
 	}
@@ -122,14 +128,14 @@ $show_more_class	=	$params->get( 'link_more_class', '' );
 $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
 $show_more_text		=	$params->get( 'link_more_text', '' );
 if ( $show_more_text == '' ) {
-	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
+	$show_more_text	=	Text::_( 'MOD_CCK_LIST_VIEW_ALL' );
 } elseif ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
-	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
+	$show_more_text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
 }
 $show_more_link		=	'';
 if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && $total_items > $preconfig['limit2'] ) ) && $show_link_more ) {
 	$show_more_link	=	'index.php?Itemid='.$show_link_more;
-	$show_more_link	=	JRoute::_( $show_more_link );
+	$show_more_link	=	Route::_( $show_more_link );
 	$show_more_vars	=	$params->get( 'link_more_variables', '' );
 	if ( $show_more_vars ) {
 		$show_more_vars	=	JCckDevHelper::replaceLive( $show_more_vars );
@@ -141,5 +147,5 @@ if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx', '' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
-require JModuleHelper::getLayoutPath( 'mod_cck_list', $params->get( 'layout', 'default' ) );
+require ModuleHelper::getLayoutPath( 'mod_cck_list', $params->get( 'layout', 'default' ) );
 ?>

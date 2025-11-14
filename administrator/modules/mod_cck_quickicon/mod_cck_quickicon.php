@@ -10,10 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Module\Helper;
+
 require_once dirname( __FILE__ ).'/helper.php';
 $buttons	=	modCCKQuickIconHelper::getButtons();
 
-JHtml::_( 'stylesheet', 'administrator/components/com_cck/assets/css/font.css' );
+HTMLHelper::_( 'stylesheet', 'administrator/components/com_cck/assets/css/font.css' );
 
-require JModuleHelper::getLayoutPath( 'mod_cck_quickicon', $params->get( 'layout', 'default' ) );
+require Helper::getLayoutPath( 'mod_cck_quickicon', $params->get( 'layout', 'default' ) );
 ?>

@@ -1,6 +1,10 @@
 <?php
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
 if ( $context != 'com_cck.site' ) {
@@ -10,7 +14,7 @@ if ( !$isNew ) {
 	return;
 }
 
-$app			=	JFactory::getApplication();
+$app			=	Factory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
 $mode_addition	=	(int)JCck::getConfig_Param( 'multisite_addition', '1' );
 
@@ -27,7 +31,7 @@ $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
 $levels			=	array();
 $sitetitle		=	$item->title;
 $sitename		=	$item->name;
-$sitemail		=	JFactory::getConfig()->get( 'mailfrom' );
+$sitemail		=	Factory::getConfig()->get( 'mailfrom' );
 $sitemail		=	substr( $sitemail, strpos( $sitemail, '@' ) );
 
 $existing_users	=	array();
@@ -62,7 +66,7 @@ if ( isset( $item->usergroups ) && $item->usergroups != '' ) {
 	unset( $item->usergroups );
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
+// JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' ); // Deprecated in Joomla 6
 
 // Guest Group
 $guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 )
@@ -97,7 +101,7 @@ if ( $mode_addition ) {
 }
 
 foreach ( $groups as $i=>$g ) {
-	$group		=	JTable::getInstance( 'Usergroup' );
+	$group		=	Table::getInstance( 'Usergroup' );
 	$group->load( $g );
 	
 	// Usergroup
@@ -209,12 +213,12 @@ $integration	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_core_object
 $item->users	=	array();
 
 if ( is_object( $integration ) ) {
-	$integration->options	=	new JRegistry( $integration->options );	
+	$integration->options	=	new Registry( $integration->options );	
 	$content_type			=	$integration->options->get( 'default_type', 'user' );
 }
 
-$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', 'joomla_user' );
-$plg_params	=	new JRegistry( $plg->params );
+$plg		=	PluginHelper::getPlugin( 'cck_storage_location', 'joomla_user' );
+$plg_params	=	new Registry( $plg->params );
 $plg_params	=	$plg_params->toArray();
 
 if ( isset( $plg_params['bridge_default-access'] ) ) {
@@ -258,7 +262,7 @@ foreach ( $users as $k=>$u ) {
 		$core->storage_table	=	'';
 		$core->author_id 		=	$u->id;
 		$core->parent_id 		=	0;
-		$core->date_time 		=	JFactory::getDate()->toSql();
+		$core->date_time 		=	Factory::getDate()->toSql();
 		$core->check();
 		$core->store();
 		$id						=	(int)$core->id;

@@ -10,7 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-$app	=	JFactory::getApplication();
+use Joomla\CMS\Factory;
+
+$app	=	Factory::getApplication();
 if ( $app->input->get( 'tmpl', '' ) == 'component' ) {
 	// Add Toolbar (Html)
 }

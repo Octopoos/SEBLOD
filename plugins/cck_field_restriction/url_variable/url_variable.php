@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 {
@@ -62,7 +65,7 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 		$condition_field	=	$restriction->get( 'trigger' );
 		$condition_match	=	$restriction->get( 'match' );
 		$condition_values	=	$restriction->get( 'values' );
-		$variable			=	JFactory::getApplication()->input->get( $condition_field, null, null );
+		$variable			=	Factory::getApplication()->input->get( $condition_field, null, null );
 		
 		// Keep Context
 		if ( $config['client'] == 'site' || $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
@@ -110,7 +113,7 @@ class plgCCK_Field_RestrictionUrl_Variable extends JCckPluginRestriction
 				}	
 			}
 		} elseif ( $condition_match == 'isVisible' ) {
-			if ( JUri::getInstance()->hasVar( $condition_field ) ) {
+			if ( Uri::getInstance()->hasVar( $condition_field ) ) {
 				$state	=	1;
 			}
 		}

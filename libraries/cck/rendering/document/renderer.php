@@ -8,8 +8,10 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Object\CMSObject;
+
 // CCK_DocumentRenderer
-class CCK_DocumentRenderer extends JObject
+class CCK_DocumentRenderer extends CMSObject
 {
 	/**
 	 * Reference to the CCK_Document object that instantiated the renderer

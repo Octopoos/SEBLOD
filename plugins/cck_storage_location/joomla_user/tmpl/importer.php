@@ -9,23 +9,25 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 
 <div class="seblod cck-padding-top-0 cck-padding-bottom-0">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
     <div class="form-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_joomla_user_groups', '', $config, array( 'label'=>'User Groups', 'storage_field'=>'values[groups]' ) );
 		?>
 	<div class="clr"></div>
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<div class="form-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_bool', 0, $config, array( 'label'=>'Password', 'options'=>'Password Clear=0||MD5=1', 'storage_field'=>'options[force_password]' ) );
 		?>
 	</div>
 	<div class="clr"></div>
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_UPDATE' ) ); ?>
 	<div class="form-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Update By Key', 'defaultvalue'=>'email', 'selectlabel'=>'',

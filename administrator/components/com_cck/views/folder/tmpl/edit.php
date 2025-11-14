@@ -11,13 +11,15 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 $uix		=	JCck::getUIX();
 $config		=	JCckDev::init( array( '42', 'checkbox', 'colorpicker', 'radio', 'text', 'wysiwyg_editor' ), true, array( 'item' => $this->item ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="<?php echo $this->css['wrapper_first']; ?>">
@@ -48,10 +50,10 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <?php
         if ( JCck::on( '4.0' ) ) {
             echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
-            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', Text::_( 'COM_CCK_DETAILS' ) );
             echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.folder.edit_details', $dataTmpl );
             echo HTMLHelper::_( 'uitab.endTab' );
-            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+            echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_PUBLISHING' ) );
             echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.folder.edit_publishing', $dataTmpl );
             echo HTMLHelper::_( 'uitab.endTab' );
             echo HTMLHelper::_( 'uitab.endTabSet' );
@@ -61,7 +63,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
     <?php if ( !JCck::on( '4.0' ) ) { ?>
 	<div class="seblod">
-        <div class="legend top left"><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div>
+        <div class="legend top left"><?php echo Text::_( 'COM_CCK_OPTIONS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
 			<?php
             echo $dataTmpl['fields']['home'];
@@ -85,7 +87,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
     <?php
 	echo $this->form->getInput( 'id' );
 	JCckDev::validate( $config );
-    echo JHtml::_( 'form.token' );
+    echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

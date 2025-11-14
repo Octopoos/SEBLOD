@@ -10,6 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Language\Text;
+
 $name			=	$process['field_name'];
 $parent_name	=	$process['parent_name'];
 $type			=	$process['field_type'];
@@ -28,7 +32,7 @@ $permissions	=	( isset( $options['folder_permissions'] ) && $options['folder_per
 $root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( (int)$process['file_path_type'] == 1 ) );
 
 if ( !(bool) ini_get( 'file_uploads' ) ) {
-	JError::raiseWarning( '', JText::_( 'WARNINSTALLFILE' ) );
+	Factory::getApplication()->enqueueMessage( Text::_( 'WARNINSTALLFILE' ), 'warning' );
 }
 
 $doSave			=	0;
@@ -40,7 +44,7 @@ if ( $content_folder && $config['isNew'] ) {
 	$location		=	$root_folder.'/'.$file_path.$file_name;
 
 	// Disallow Uppercase extension
-	$extension		=	strtolower( JFile::getExt( $file_name ) );
+	$extension		=	strtolower( File::getExt( $file_name ) );
 	$file_location	=	substr( $file_location, 0, strlen( $extension ) * -1 ).$extension;
 	$location		=	substr( $location, 0, strlen( $extension ) * -1 ).$extension;
 
@@ -79,14 +83,14 @@ if ( $content_folder && $config['isNew'] ) {
 	$location		=	$root_folder.'/'.$file_path.$file_name;
 
 	// Disallow Uppercase extension
-	$extension		=	strtolower( JFile::getExt( $file_name ) );
+	$extension		=	strtolower( File::getExt( $file_name ) );
 	$file_location	=	substr( $file_location, 0, strlen( $extension ) * -1 ).$extension;
 	$location		=	substr( $location, 0, strlen( $extension ) * -1 ).$extension;
 }
 
 JCckDevHelper::createFolder( $root_folder.'/'.$file_path, $permissions );
 
-if ( JFile::upload( $tmp_name, $location ) ) {
+if ( File::upload( $tmp_name, $location ) ) {
 	$thumb_count				=	11;
 	$image 						=	new JCckDevImage( $location );
 	$src_w						=	$image->getWidth();

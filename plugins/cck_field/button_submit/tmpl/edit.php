@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true, 'fieldPicker'=>true ) );
 JCckDev::forceStorage();
@@ -72,7 +74,7 @@ $displayData	=	array(
 									JCckDev::renderForm( 'core_label', $this->item->label, $config ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_LABEL_ICON' ),
+											'label'=>Text::_( 'COM_CCK_LABEL_ICON' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'|50%',
 												'html'=>array(
@@ -94,7 +96,7 @@ $displayData	=	array(
 									JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
 									JCckDev::renderLayoutFile(
 										'cck'.JCck::v().'.form.field', array(
-											'label'=>JText::_( 'COM_CCK_TEXT_LINK' ),
+											'label'=>Text::_( 'COM_CCK_TEXT_LINK' ),
 											'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 												'grid'=>'||2',
 												'html'=>array(

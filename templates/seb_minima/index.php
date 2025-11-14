@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 // -- Initialize
 require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
@@ -29,7 +31,7 @@ if ( $cck->id_class != '' ) {
 for ( $i = 1; $i <= 5; $i++ ) {
 	$suffix	=	( $i == 1 ) ? '' : $i;
 	if ( $cck->countFields( 'modal'.$suffix ) ) {
-		JHtml::_( 'bootstrap.modal', 'collapseModal'.$suffix );
+		HTMLHelper::_( 'bootstrap.modal', 'collapseModal'.$suffix );
 
 		$class = $cck->getPosition( 'modal'.$suffix )->css;
 		$class = ( $class ) ? ' ' . $class : '';

@@ -45,7 +45,7 @@ $status_filter	=	JCckDev::getForm( $cck['core_state_filter'], $this->state->get(
 			if ( $this->state->get( 'filter.folder' ) ) {
 				echo '<input type="checkbox" id="app_type_only" name="app_type_only" value="1"'.( $this->state->get( 'filter.client' ) == 'no_collection' ? ' checked="checked"' : '' ).' />';
 
-				JFactory::getDocument()->addScriptDeclaration(
+				\Joomla\CMS\Factory::getDocument()->addScriptDeclaration(
 					'
 					(function ($){
 						$(document).ready(function() {

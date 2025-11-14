@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldText extends JCckPluginField
 {
@@ -31,12 +34,12 @@ class plgCCK_FieldText extends JCckPluginField
 	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
 	{
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
-			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) );
-			$data['variation']['custom_number']	=	JHtml::_( 'select.option', 'custom_number', JText::_( 'COM_CCK_NUMBER' ) );
-			$data['variation']['custom_url']	=	JHtml::_( 'select.option', 'custom_url', JText::_( 'COM_CCK_URL' ) );
-			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
-			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['201']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_CUSTOM' ) );
+			$data['variation']['custom_number']	=	HTMLHelper::_( 'select.option', 'custom_number', Text::_( 'COM_CCK_NUMBER' ) );
+			$data['variation']['custom_url']	=	HTMLHelper::_( 'select.option', 'custom_url', Text::_( 'COM_CCK_URL' ) );
+			$data['variation']['202']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {
@@ -51,14 +54,14 @@ class plgCCK_FieldText extends JCckPluginField
 	{
 		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
 			/*
-			$data['variation']['form_filter_ajax']	=	JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
+			$data['variation']['form_filter_ajax']	=	HTMLHelper::_( 'select.option', 'form_filter_ajax', Text::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
 			*/
-			$data['variation']['201']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) );
-			$data['variation']['custom_number']	=	JHtml::_( 'select.option', 'custom_number', JText::_( 'COM_CCK_NUMBER' ) );
-			$data['variation']['custom_url']	=	JHtml::_( 'select.option', 'custom_url', JText::_( 'COM_CCK_URL' ) );
-			$data['variation']['202']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
-			$data['variation']['203']			=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_STAR_IS_SECURED' ) );
-			$data['variation']['204']			=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['201']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_CUSTOM' ) );
+			$data['variation']['custom_number']	=	HTMLHelper::_( 'select.option', 'custom_number', Text::_( 'COM_CCK_NUMBER' ) );
+			$data['variation']['custom_url']	=	HTMLHelper::_( 'select.option', 'custom_url', Text::_( 'COM_CCK_URL' ) );
+			$data['variation']['202']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 
 			$config['construction']['variation'][self::$type]	=	$data['variation'];
 		} else {

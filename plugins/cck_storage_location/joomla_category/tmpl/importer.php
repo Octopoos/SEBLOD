@@ -9,10 +9,12 @@
 **/
 
 defined( '_JEXEC' ) or die;
+
+use Joomla\CMS\Language\Text;
 ?>
 
 <div class="seblod cck-padding-top-0 cck-padding-bottom-0">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_DEFAULT_VALUES' ) ); ?>
     <div class="form-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_joomla_category_created_by', '', $config );
@@ -21,7 +23,7 @@ defined( '_JEXEC' ) or die;
 		?>
 	</div>
 	<div class="clr"></div>
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_UPDATE' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_UPDATE' ) ); ?>
 	<div class="form-grid">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Update By Key', 'defaultvalue'=>'', 'selectlabel'=>'None',

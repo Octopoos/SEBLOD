@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -139,16 +141,16 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 						$val	=	$opt[1];
 					}
 					if ( $field->bool8 && trim( $text ) != '' ) {
-						$text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
+						$text	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
 					if ( $attrib ) {
 						$attr['attr']	=	'';
 						foreach ( $attribs as $k=>$a ) {
 							$attr['attr']	.=	' '.$a.'="'.$options2->options[$i]->attr[$k].'"';
 						}
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, $attr );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, $attr );
 					} else {
-						$opts[]	=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+						$opts[]	=	HTMLHelper::_( 'select.option', $val, $text, 'value', 'text' );
 					}
 				}
 			}
@@ -166,9 +168,9 @@ class plgCCK_FieldSelect_Multiple extends JCckPluginField
 			if ( $attrib ) {
 				$attr	=	array( 'id'=>$id, 'list.attr'=>$attr, 'list.select'=>$value, 'list.translate'=>false,
 								   'option.attr'=>'data-cck', 'option.key'=>'value', 'option.text'=>'text' );
-				$form	=	JHtml::_( 'select.genericlist', $opts, $name.'[]', $attr );			
+				$form	=	HTMLHelper::_( 'select.genericlist', $opts, $name.'[]', $attr );			
 			} else {
-				$form	=	JHtml::_( 'select.genericlist', $opts, $name.'[]', $attr, 'value', 'text', $value, $id );
+				$form	=	HTMLHelper::_( 'select.genericlist', $opts, $name.'[]', $attr, 'value', 'text', $value, $id );
 			}
 		}
 		

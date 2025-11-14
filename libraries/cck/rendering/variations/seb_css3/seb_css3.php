@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 if ( $app->isClient( 'administrator' ) ) {
 	$background_color	=	'#ffffff';
@@ -53,7 +55,7 @@ $cck->setHeight( $height, $id );
 ?>
 <div id="<?php echo $id; ?>" class="<?php echo $class .' '. $cck->id.'-deepest'; ?>">
 	<?php if ( $legend != '' ) { ?>
-	    <div class="legend top <?php echo $options->get( 'legend_align', 'left' ); ?>"><?php echo JText::_( $legend ); ?></div>
+	    <div class="legend top <?php echo $options->get( 'legend_align', 'left' ); ?>"><?php echo Text::_( $legend ); ?></div>
     <?php } ?>
 	<?php echo $content; ?>    
 </div>

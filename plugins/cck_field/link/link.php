@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 // Plugin
 class plgCCK_FieldLink extends JCckPluginField
 {
@@ -65,7 +68,7 @@ class plgCCK_FieldLink extends JCckPluginField
 			$extension	=	array( '.png', '.PNG', '.jpg', '.JPG', '.gif', '.GIF' );
 
 			foreach ( $extension as $ext ){
-				$text	=	( strpos($text, $ext ) !== false ) ? '<img src="'.JUri::base().$text.'" title="'.$link.'" />' : $text;
+				$text	=	( strpos($text, $ext ) !== false ) ? '<img src="'.Uri::base().$text.'" title="'.$link.'" />' : $text;
 			}
 
 			$field->text		=	$text;
@@ -149,8 +152,8 @@ class plgCCK_FieldLink extends JCckPluginField
 		
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		if ( $config['doTranslation'] ) {
-			$link_label		=	trim( @$options2['link_label'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['link_label'] ) ) ) : '';
-			$text_label		=	trim( @$options2['text_label'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['text_label'] ) ) ) : '';
+			$link_label		=	trim( @$options2['link_label'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['link_label'] ) ) ) : '';
+			$text_label		=	trim( @$options2['text_label'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['text_label'] ) ) ) : '';
 		} else {
 			$link_label		=	( @$options2['link_label'] != '' ) ? trim( $options2['link_label'] ) : '';
 			$text_label		=	( @$options2['text_label'] != '' ) ? $options2['text_label'] : '';
@@ -183,11 +186,11 @@ class plgCCK_FieldLink extends JCckPluginField
 		}
 
 		if ( $field->bool3 == 1 ) {
-			$form	.=	self::_addInput( $id.'_class', $nameClass, $attr2, JText::_( 'COM_CCK_CLASS' ), @$value['class'], 'class' );
+			$form	.=	self::_addInput( $id.'_class', $nameClass, $attr2, Text::_( 'COM_CCK_CLASS' ), @$value['class'], 'class' );
 		}
 
 		if ( $field->bool4 == 1 ) {
-			$form	.=	self::_addSelect( $id.'_target', JText::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'client'=>$config['client'], 'doTranslation'=>1, 'doValidation'=>2 ), array( 'storage_field'=>$nameTarget ) );
+			$form	.=	self::_addSelect( $id.'_target', Text::_( 'COM_CCK_TARGET' ), 'target', 'core_options_target', @$value['target'], array( 'client'=>$config['client'], 'doTranslation'=>1, 'doValidation'=>2 ), array( 'storage_field'=>$nameTarget ) );
 		}
 
 		if ( $field->bool5 == 1 && $config['pk'] && @$value['link'] != '' ) {
@@ -197,7 +200,7 @@ class plgCCK_FieldLink extends JCckPluginField
 
 			$preview	=	'<a href="'.$p_link.'" class="cck_preview" target="_blank">'.$p_text.'</a>';
 			
-			$preview	=	self::_addPreview( $id.'_preview', JText::_( 'COM_CCK_PREVIEW' ), $preview, 'preview' );
+			$preview	=	self::_addPreview( $id.'_preview', Text::_( 'COM_CCK_PREVIEW' ), $preview, 'preview' );
 		}
 
 		// Set

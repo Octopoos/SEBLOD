@@ -10,13 +10,20 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Session\Session;
+use Joomla\Registry\Registry;
+
 // View
-class CCKViewForm extends JViewLegacy
+class CCKViewForm extends HtmlView
 {
 	// display
 	public function display( $tpl = null )
 	{
-		$app					=	JFactory::getApplication();
+		$app					=	Factory::getApplication();
 		$layout					=	$app->input->get( 'tmpl' );
 		$uniqId					=	'';
 
@@ -42,8 +49,8 @@ class CCKViewForm extends JViewLegacy
 	// prepareDisplay
 	protected function prepareDisplay( $preconfig )
 	{
-		$app				=	JFactory::getApplication();
-		$config				=	JFactory::getConfig();
+		$app				=	Factory::getApplication();
+		$config				=	Factory::getConfig();
 		$this->form			=	$this->get( 'Form' );
 		$this->option		=	$app->input->get( 'option', '' );
 		$this->item			=	$this->get( 'Item' );
@@ -51,7 +58,7 @@ class CCKViewForm extends JViewLegacy
 		$this->return_page	=	$app->input->getBase64( 'return' );
 		$option				=	$this->option;
 		$params				=	$app->getParams();
-		$session			=	JFactory::getSession();
+		$session			=	Factory::getSession();
 		$view				=	$this->getName();
 		
 		$live				=	urldecode( $params->get( 'live', '' ) );
@@ -61,7 +68,7 @@ class CCKViewForm extends JViewLegacy
 		$menus	=	$app->getMenu();
 		$menu	=	$menus->getActive();
 		if ( is_object( $menu ) ) {
-			$menu_params	=	new JRegistry;
+			$menu_params	=	new Registry;
 			$menu_params->loadString( $menu->getParams() );
 			if ( ! $menu_params->get( 'page_title', '' ) ) {
 				$params->set( 'page_title', $menu->title );
@@ -76,9 +83,9 @@ class CCKViewForm extends JViewLegacy
 		if ( empty( $title ) ) {
 			$title	=	$config->get( 'sitename' );
 		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 1 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
+			$title	=	Text::sprintf( 'JPAGETITLE', $config->get( 'sitename' ), $title );
 		} elseif ( $config->get( 'sitename_pagetitles', 0 ) == 2 ) {
-			$title	=	JText::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
+			$title	=	Text::sprintf( 'JPAGETITLE', $title, $config->get( 'sitename' ) );
 		}
 		$config		=	null;
 		$this->document->setTitle( $title );
@@ -91,7 +98,7 @@ class CCKViewForm extends JViewLegacy
 		include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 		$unique	=	$preconfig['formId'].'_'.@$type->name;
 		
-		$session->set( 'cck_hash_'.$unique, JApplicationHelper::getHash( (int)$id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
+		$session->set( 'cck_hash_'.$unique, ApplicationHelper::getHash( (int)$id.'|'.@$type->name.'|'.@(int)$config['id'].'|'.@(int)$config['copyfrom_id'] ) );
 		$session->set( 'cck_hash_'.$unique.'_context', json_encode( $config['context'] ) );
 		$session->set( 'cck_task', 'form' );
 
@@ -116,16 +123,16 @@ class CCKViewForm extends JViewLegacy
 
 		// Set
 		if ( !is_object( @$options ) ) {
-			$options	=	new JRegistry;
+			$options	=	new Registry;
 		}
 		if ( $params->get( 'display_form_title', '' ) == '2' ) {
 			$this->title			=	'';
 
 			if ( is_object( $type ) ) {
-				$this->title		=	JText::_( 'APP_CCK_FORM_'.$type->name.'_TITLE_'.( ( isset( $config['isNew'] ) && $config['isNew'] ) ? 'ADD' : 'EDIT' ) );
+				$this->title		=	Text::_( 'APP_CCK_FORM_'.$type->name.'_TITLE_'.( ( isset( $config['isNew'] ) && $config['isNew'] ) ? 'ADD' : 'EDIT' ) );
 			}
 		} elseif ( $params->get( 'display_form_title', '' ) == '3' ) {
-			$this->title				=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_form_title', '' ) ) ) );
+			$this->title				=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_form_title', '' ) ) ) );
 		} elseif ( $params->get( 'display_form_title', '' ) == '1' ) {
 			$this->title			=	$params->get( 'title_form_title', '' );
 		} elseif ( $params->get( 'display_form_title', '' ) == '0' ) {

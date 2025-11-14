@@ -10,8 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
+
 if ( JCck::on( '3.7' ) ) {
-	class JCckTablePlaceholder extends JTable
+	class JCckTablePlaceholder extends Table
 	{
 		// getFields
 		public function getFields( $reload = false )
@@ -22,7 +26,7 @@ if ( JCck::on( '3.7' ) ) {
 			if ( ! isset( $cache[$name] ) ) {
 				$fields	=	$this->_db->getTableColumns( $name, false );
 				if ( empty( $fields ) ) {
-					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$e	=	new Exception( Text::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
 					$this->setError( $e );
 					return false;
 				}
@@ -33,7 +37,7 @@ if ( JCck::on( '3.7' ) ) {
 		}
 	}
 } else {
-	class JCckTablePlaceholder extends JTable
+	class JCckTablePlaceholder extends Table
 	{
 		// getFields
 		public function getFields()
@@ -44,7 +48,7 @@ if ( JCck::on( '3.7' ) ) {
 			if ( ! isset( $cache[$name] ) ) {
 				$fields	=	$this->_db->getTableColumns( $name, false );
 				if ( empty( $fields ) ) {
-					$e	=	new JException( JText::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
+					$e	=	new Exception( Text::_( 'JLIB_DATABASE_ERROR_COLUMNS_NOT_FOUND' ) );
 					$this->setError( $e );
 					return false;
 				}
@@ -72,7 +76,7 @@ class JCckTable extends JCckTablePlaceholder
 	// getInstance
 	public static function getInstance( $table, $key = 'id', $pk = 0, $force = false )
 	{
-		$db			=	JFactory::getDbo();
+		$db			=	Factory::getDbo();
 		$tableClass	=	'JCckTable';
 		
 		// Instantiate

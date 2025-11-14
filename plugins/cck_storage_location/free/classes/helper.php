@@ -10,6 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\LanguageHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/free/free.php';
 
 // Class
@@ -32,7 +35,7 @@ class plgCCK_Storage_LocationFree_Helper extends plgCCK_Storage_LocationFree
 		}
 
 		$hasForm	=	false;
-		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+		$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 		
 		foreach ( $languages as $tag=>$language ) {
 			if ( empty( $config['language'] ) || $tag != $config['language'] ) {
@@ -52,7 +55,7 @@ class plgCCK_Storage_LocationFree_Helper extends plgCCK_Storage_LocationFree
 			$context	.=	'.'.$field->storage_table;
 		}
 
-		$form		=		JForm::getInstance( $id, $addform->asXML() );
+		$form		=		Form::getInstance( $id, $addform->asXML() );
 
 		if ( $hasForm ) {
 			$form->load( $addform, false );

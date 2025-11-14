@@ -10,6 +10,12 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
+
 // Plugin
 class plgCCK_FieldGroup_X extends JCckPluginField
 {
@@ -53,7 +59,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 
 		// Prepare
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$name	=	$field->name;
 		$fields	=	self::_getChildren( $field, $config, false );
 
@@ -98,7 +104,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
 		
 		// Prepare
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$name	=	$field->name;
 		$fields	=	self::_getChildren( $field, $config );
 		/* TODO#SEBLOD: call storage plugin. */
@@ -163,7 +169,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		}
 		
 		// Prepare
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		$fields	=	self::_getChildren( $field, $config );
 		if ( $value ) {
 			/* TODO#SEBLOD: call storage plugin. */
@@ -200,7 +206,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 						$table				=	$f->storage_table;
 						static $already		=	0;
 						if ( !$already ) {
-							JPluginHelper::importPlugin( 'cck_storage' );
+							PluginHelper::importPlugin( 'cck_storage' );
 							$already	=	1;
 						}
 						$app->triggerEvent( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi, $field ) );
@@ -260,14 +266,14 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$raw	=	JFactory::getApplication()->input->post->getArray( array( $name=>'raw' ) );
+			$raw	=	Factory::getApplication()->input->post->getArray( array( $name=>'raw' ) );
 
 			if ( isset( $raw[$name] ) ) {
 				$value	=	$raw[$name];
 			}
 		}
 
-		$app	=	JFactory::getApplication();
+		$app	=	Factory::getApplication();
 		
 		// Prepare
 		$store	=	'';
@@ -322,7 +328,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		if ( $field->typo ) {
 			return $field->typo;
 		} else {			
-			$doc	=	JFactory::getDocument();
+			$doc	=	Factory::getDocument();
 			$doc->addStyleSheet( self::$path.'assets/css/style2.css' );
 	
 			$count	=	count( $field->value );
@@ -372,8 +378,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 			echo '<link rel="stylesheet" href="'.self::$path.'assets/css/style2.css'.'" type="text/css" />';
@@ -391,7 +397,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 		$rId			=	$config['rendering_id'];
 		
 		if ( $field->bool2 > 1 ) {
-			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>'."\n".JText::_( 'COM_CCK_ADD_NEW' ).'</button>';
+			$external_button 	=	'<button class="button btn btn-success external cck_button_add_'.$field->name.'" type="button"><span class="icon-file-plus"></span>'."\n".Text::_( 'COM_CCK_ADD_NEW' ).'</button>';
 			$external_button 	=	'<div class="btn-toolbar">'.$external_button.'</div>';
 			if ( $field->bool2 == 2 || $field->bool2 == 4 ) {
 				$button_top		=	$external_button;
@@ -463,14 +469,14 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			return;
 		}
 		
-		$app	=	JFactory::getApplication();
-		$doc	=	JFactory::getDocument();
+		$app	=	Factory::getApplication();
+		$doc	=	Factory::getDocument();
 		$loaded	=	1;
 		
 		JCck::loadjQuery();
 
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<script src="'.JUri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
+			echo '<script src="'.Uri::root( true ).'/media/cck/js/jquery.ui.1.13.min.js" type="text/javascript"></script>';
 			echo '<script src="'.self::$path.'assets/js/script-3.22.0.min.js'.'" type="text/javascript"></script>';
 		} else {
 			JCck::loadjQueryUI();
@@ -481,8 +487,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	// _addScript
 	protected static function _addScript( $id, $params = array() )
 	{
-		$app		=	JFactory::getApplication();
-		$doc		=	JFactory::getDocument();
+		$app		=	Factory::getApplication();
+		$doc		=	Factory::getDocument();
 		$search		=	array( '.', '<', '>', '"', '%', ';' );
 		$replace	=	array( '\.', '\<', '\>', '\"', '\%', '\;' );
 		$rId		=	$params['rId'];
@@ -587,7 +593,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 					$html	.=	'</td>';			
 				}
 				if ( @$elem->computation ) {
-					$computation			=	new JRegistry;
+					$computation			=	new Registry;
 					$computation->loadString( $elem->computation_options );
 					$computation_options	=	$computation->toObject();
 					if ( $computation_options->calc == 'custom' ) {
@@ -615,7 +621,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 							if ( $event != 'none' ) {
 								$js		.=	'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'); JCck.Core.recalc_'.$field->name.'_'.$i.'_'.$elem->name.'();';
 							}
-							JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
+							Factory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
 						}
 					} else {
 						$computed	=	str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation );
@@ -639,7 +645,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			if ( $js_format == 'raw' ) {
 				$html	.=	'<script type="text/javascript">(function ($){'.$js.'})(jQuery);</script>';
 			} else {
-				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+				Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 			}
 		}
 
@@ -711,7 +717,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 
 				// Computation & Conditional
 				if ( @$elem->computation ) {			
-					$computation			=	new JRegistry;
+					$computation			=	new Registry;
 					$computation->loadString( $elem->computation_options );
 					$computation_options	=	$computation->toObject();
 					if ( $computation_options->calc == 'custom' ) {
@@ -745,7 +751,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 									$js	.=	$js2.'$("'.str_replace( '#', '#'.$field->name.'_'.$i.'_', $elem->computation ).'").bind("'.$event.'", JCck.Core.recalc);';
 								}
 							} else {
-								JFactory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
+								Factory::getDocument()->addScriptDeclaration( '(function ($){'.$js2.'})(jQuery);' );
 							}
 						}
 					} else {
@@ -788,7 +794,7 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 			if ( $js_format == 'raw' ) {
 				$html	.=	'<script type="text/javascript">(function ($){'.$js.'})(jQuery);</script>';
 			} else {
-				JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+				Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
 			}
 		}
 		
@@ -800,8 +806,8 @@ class plgCCK_FieldGroup_X extends JCckPluginField
 	// _getChildren
 	protected static function _getChildren( $parent, $config = array(), $isClient = true )
 	{
-		$db		=	JFactory::getDbo();
-		$user	=	JFactory::getUser();
+		$db		=	Factory::getDbo();
+		$user	=	Factory::getUser();
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		if ( !$isClient ) {

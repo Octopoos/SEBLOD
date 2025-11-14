@@ -10,8 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+
 
 // JCckDevPdf
 class JCckDevPdf
@@ -48,7 +49,7 @@ class JCckDevPdf
 		if ( $remove_files ) {
 			foreach ( $files as $file ) {
 				if ( $file != '' && is_file( $file ) ) {
-					JFile::delete( $file );
+					File::delete( $file );
 				}
 			}			
 		}
@@ -115,14 +116,14 @@ class JCckDevPdf
 		}
 		
 		$error		=	'';
-		$extension	=	JFile::getExt( $image );
+		$extension	=	File::getExt( $image );
 
 		if ( $extension != 'pdf' ) {
 			$len		=	strlen( $extension );
 			$image_tmp	=	substr( $image, 0, ( $len * -1 ) ).'pdf';
 
 			if ( $image_tmp != '' && is_file( $image_tmp ) ) {
-				JFile::delete( $image_tmp );
+				File::delete( $image_tmp );
 			}
 
 			require_once JPATH_SITE.'/libraries/cck_pdf/tcpdf/config/tcpdf_config.php';
@@ -150,16 +151,16 @@ class JCckDevPdf
 			passthru( 'pdftk '.$file.' stamp '.$image_tmp.' output '.$file_tmp, $error );
 
 			if ( (int)$error == 127 ) {
-				JFactory::getApplication()->enqueueMessage( 'Cannot stamp the image.', 'error' );
+				Factory::getApplication()->enqueueMessage( 'Cannot stamp the image.', 'error' );
 			}
 			if ( is_file( $file_tmp ) ) {
-				JFile::move( $file_tmp, $file );
+				File::move( $file_tmp, $file );
 			}
 			if ( $image_tmp != $image ) {
-				JFile::delete( $image_tmp );
+				File::delete( $image_tmp );
 			}
 			if ( $remove_image ) {
-				JFile::delete( $image );
+				File::delete( $image );
 			}
 		}
 	}

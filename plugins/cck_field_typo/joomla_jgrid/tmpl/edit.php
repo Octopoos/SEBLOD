@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'typo', $this->item );
 
@@ -53,7 +55,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'task_id_process' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_IDENTIFIER' ),
+						'label'=>Text::_( 'COM_CCK_IDENTIFIER' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|50%',
 							'html'=>array(
@@ -67,7 +69,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_CONTAINER_NAME' ),
+						'label'=>Text::_( 'COM_CCK_CONTAINER_NAME' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|50%',
 							'html'=>array(
@@ -80,8 +82,8 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				),
 				JCckDev::renderForm( 'core_required', '', $config, array( 'defaultvalue'=>'0' ) ),
 				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Trigger Change', 'defaultvalue'=>'0', 'storage_field'=>'trigger' ) ),
-				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up', 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_FIELD_NAME' ).'"' ) ),
-				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Down Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_down', 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_FIELD_NAME' ).'"' ) ),
+				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up', 'attributes'=>'placeholder="'.Text::_( 'COM_CCK_FIELD_NAME' ).'"' ) ),
+				JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Down Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_down', 'attributes'=>'placeholder="'.Text::_( 'COM_CCK_FIELD_NAME' ).'"' ) ),
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Status Title Tooltip', 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'Self=0', 'storage_field'=>'state_title' ) )
 			)
 		),
@@ -89,7 +91,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 			'fields'=>array(
 				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Always=-2', 'storage_field'=>'typo_label' ) )
 			),
-			'legend'=>JText::_( 'COM_CCK_OPTIONS' )
+			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		)
 	),
 	'html'=>'',

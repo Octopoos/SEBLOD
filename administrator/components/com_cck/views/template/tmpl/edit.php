@@ -10,14 +10,17 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 $config	=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck	=	JCckDev::preload( array( 'core_title_template', 'core_description', 'core_state', 'core_name_template', 'core_type_template', 'core_featured' ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?php echo Route::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?>">
 	<div class="<?php echo $this->css['wrapper_first']; ?>">  
@@ -44,12 +47,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<?php
 		if ( JCck::on( '4.0' ) ) {
 			echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
-			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', Text::_( 'COM_CCK_DETAILS' ) );
 		}
 		?>
 		<div id="layer" style="text-align: center;">
 			<?php
-			JFactory::getLanguage()->load( 'tpl_'.$this->item->name, JPATH_SITE, null, false, true );
+			Factory::getLanguage()->load( 'tpl_'.$this->item->name, JPATH_SITE, null, false, true );
 			
 			$layer  =   JPATH_SITE.'/templates/'.$this->item->name.'/tmpl/edit.php';
 			if ( is_file( $layer ) ) {
@@ -60,7 +63,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		<?php
 		if ( JCck::on( '4.0' ) ) {
 			echo HTMLHelper::_( 'uitab.endTab' );
-			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+			echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', Text::_( 'COM_CCK_PUBLISHING' ) );
 			echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.template.edit_publishing', $dataTmpl );
 			echo HTMLHelper::_( 'uitab.endTab' );
 			echo HTMLHelper::_( 'uitab.endTabSet' );
@@ -75,7 +78,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<input type="hidden" id="myid" name="id" value="<?php echo @$this->item->id; ?>" />
 	<?php
 	JCckDev::validate( $config );
-	echo JHtml::_( 'form.token' );
+	echo HTMLHelper::_( 'form.token' );
 	?>
 </div>
 </form>

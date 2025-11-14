@@ -10,15 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
+
 $loaded		=	0;
 $location	=	$config['location'];
-$params		=	new JRegistry;
+$params		=	new Registry;
 
 if ( count( $items ) && $location ) {
 	$pks		=	'';
 	$pkbs		=	'';
-	$plg		=	JPluginHelper::getPlugin( 'cck_storage_location', $location );
-	$plg_params	=	new JRegistry( $plg->params );
+	$plg		=	PluginHelper::getPlugin( 'cck_storage_location', $location );
+	$plg_params	=	new Registry( $plg->params );
 	for ( $i = 0; $i < $total; $i++ ) {
 		if ( isset( $items[$i]->pk ) ) {
 			$pks	.=	(int)$items[$i]->pk.',';

@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\String\StringHelper;
 
 // Plugin
@@ -124,7 +126,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 		$sql		=	'';
 
 		if ( (int)$field->storage_mode == 1 && $field->storage != 'json' ) {
-			$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.JFactory::getLanguage()->getTag().'"').')'; /* TODO#SEBLOD4 */
+			$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.Factory::getLanguage()->getTag().'"').')'; /* TODO#SEBLOD4 */
 		}
 
 		switch ( $match ) {
@@ -146,7 +148,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					}
 				}
 				if ( $filter != '' ) {
-					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+					$value	=	InputFilter::getInstance()->clean( $value, $filter );
 				}
 				if ( $decrypt && $value !== '' ) {
 					$value	=	$config['app']->encrypt( $value );
@@ -457,7 +459,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
 
 				if ( $filter != '' ) {
-					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+					$value	=	InputFilter::getInstance()->clean( $value, $filter );
 				}
 
 				$sql	=	$target.' >= '.$value;
@@ -466,7 +468,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
 
 				if ( $filter != '' ) {
-					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+					$value	=	InputFilter::getInstance()->clean( $value, $filter );
 				}
 
 				$sql	=	$target.' > '.$value;
@@ -475,7 +477,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
 
 				if ( $filter != '' ) {
-					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+					$value	=	InputFilter::getInstance()->clean( $value, $filter );
 				}
 
 				$sql	=	$target.' <= '.$value;
@@ -484,7 +486,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$filter	=	( $field->match_options ) ? $field->match_options->get( 'filter', 'float' ) : 'float';
 
 				if ( $filter != '' ) {
-					$value	=	JFilterInput::getInstance()->clean( $value, $filter );
+					$value	=	InputFilter::getInstance()->clean( $value, $filter );
 				}
 
 				$sql	=	$target.' < '.$value;

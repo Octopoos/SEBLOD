@@ -10,6 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+
 jimport( 'joomla.filesystem.file' );
 
 // Plugin
@@ -43,8 +50,8 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	{
 		if ( !isset( $config['construction']['match_mode'][self::$type] ) ) {
 			$data['match_mode']	=	array(
-										'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) ),
-										''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_AUTO' ) )
+										'none'=>HTMLHelper::_( 'select.option', 'none', Text::_( 'COM_CCK_NONE' ) ),
+										''=>HTMLHelper::_( 'select.option', '', Text::_( 'COM_CCK_AUTO' ) )
 									);
 
 			$config['construction']['match_mode'][self::$type]	=	$data['match_mode'];
@@ -86,22 +93,22 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 
 		// Process
-		if ( $value != '' && JFile::exists( $root_folder.'/'.$value ) ) {
+		if ( $value != '' && File::exists( $root_folder.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 
 			if ( $options2['path_content'] ) {
 				jimport( 'joomla.filesystem.folder' );
-				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && JFolder::exists( $root_folder.'/'.$path ) ) {
-					if ( JFolder::delete( $root_folder.'/'.$path ) ) {
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && Folder::exists( $root_folder.'/'.$path ) ) {
+					if ( Folder::delete( $root_folder.'/'.$path ) ) {
 						return true;
 					}
 				}
 			} else {
-				JFile::delete( $root_folder.'/'.$value );
+				File::delete( $root_folder.'/'.$value );
 				
 				for ( $i = 1; $i <= 10; $i++ ) {
-					if ( JFile::exists( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
-						JFile::delete( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name );
+					if ( File::exists( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name ) ) {
+						File::delete( $root_folder.'/'.$path.'_thumb'.$i.'/'.$file_name );
 					}
 				}
 			}
@@ -127,7 +134,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 
 		if ( is_array( $value_json ) && !empty( $value_json ) ) {
 			$value		=	( trim( $value_json['image_location'] ) == '' ) ? trim( $field->defaultvalue ) : trim( $value_json['image_location'] ) ;
-			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( File::stripExt( $value ), '/' ), 1 );
 			$img_title	=	self::_getTitle( trim( $value_json['image_title'] ), $file_name );
 			$img_title	=	htmlspecialchars( $img_title, ENT_QUOTES );
 			$img_desc	=	( isset( $value_json['image_description'] ) ) ? trim($value_json['image_description']) : ( ( isset( $value_json['image_descr'] ) ) ? trim( $value_json['image_descr'] ) : '' ) ;
@@ -141,7 +148,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$value		=	trim( $value );
 			}
 
-			$file_name	=	( $value == '' ) ? '' : substr( strrchr( JFile::stripExt( $value ), '/' ), 1 );
+			$file_name	=	( $value == '' ) ? '' : substr( strrchr( File::stripExt( $value ), '/' ), 1 );
 			$img_title	=	$file_name;
 			$img_desc	=	$file_name;
 		}
@@ -155,11 +162,11 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 
 		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 
-		if ( $value && JFile::exists( $root_folder.'/'.$value ) ) {
+		if ( $value && File::exists( $root_folder.'/'.$value ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {
 				$thumb					=	$path.'_thumb'.$i.'/'.substr( strrchr( $value, '/' ), 1 );
-				$field->{'thumb'.$i}	=	( JFile::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
+				$field->{'thumb'.$i}	=	( File::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
 			}
 			
 			self::_addThumbs( $field, $options2, $value, $path );
@@ -246,9 +253,9 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		// Prepare
 		$options2		=	JCckDev::fromJSON( $field->options2 );
 		if ( $config['doTranslation'] ) {
-			$title_label	=	trim( @$options2['title_label'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['title_label'] ) ) ) : '';
-			$path_label		=	trim( @$options2['path_label'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['path_label'] ) ) ) : '';
-			$desc_label		=	trim( @$options2['desc_label'] ) ? JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['desc_label'] ) ) ) : '';
+			$title_label	=	trim( @$options2['title_label'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['title_label'] ) ) ) : '';
+			$path_label		=	trim( @$options2['path_label'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['path_label'] ) ) ) : '';
+			$desc_label		=	trim( @$options2['desc_label'] ) ? Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( @$options2['desc_label'] ) ) ) : '';
 		} else {
 			$title_label	=	@$options2['title_label'];
 			$path_label		=	@$options2['path_label'];
@@ -270,7 +277,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$save_value		=	$value;
 		$value2			=	( $value['image_location'] != '' ) ? $value['image_location'] : $options2['path'];
 		$value['image_location']	=	( $value['image_location'] != '' ) ? $value['image_location'] : $field->defaultvalue;
-		$title			=	( $value['image_location'] == '' ) ? '' : substr( strrchr( JFile::stripExt( $value['image_location'] ), '/' ), 1 );
+		$title			=	( $value['image_location'] == '' ) ? '' : substr( strrchr( File::stripExt( $value['image_location'] ), '/' ), 1 );
 		$image_title	=	( @$value['image_title'] ) ? trim( $value['image_title'] ) : substr( strrchr( $value['image_location'] , '/' ), 1 );
 		$image_title	=	htmlspecialchars( $image_title, ENT_QUOTES );
 		$image_desc		=	( isset( $value_json['image_description'] ) ) ? trim( $value_json['image_description'] ) : ( ( isset( $value_json['image_descr'] ) ) ? trim( $value_json['image_descr'] ) : '' ) ;
@@ -307,11 +314,11 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 
 		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 
-		if ( $value['image_location'] && JFile::exists( $root_folder.'/'.$value['image_location'] ) ) {
+		if ( $value['image_location'] && File::exists( $root_folder.'/'.$value['image_location'] ) ) {
 			$path	=	substr( $value['image_location'], 0, strrpos( $value['image_location'], '/' ) ).'/';
 			for ( $i = 1; $i < 11; $i++ ) {
 				$thumb	=	$path.'_thumb'.$i.'/'.substr( strrchr( $value['image_location'], '/' ), 1 );
-				$field->{'thumb'.$i}	=	( JFile::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
+				$field->{'thumb'.$i}	=	( File::exists( $root_folder.'/'.$thumb ) ) ? $thumb : '';
 			}
 			self::_addThumbs( $field, $options2, $value['image_location'], $path );
 		}
@@ -377,7 +384,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['custom_path']	=	@$options2['custom_path'];
 		
 		if ( $chkbox != '' ) {
-			$form	.=	'<span class="hasTooltip" title="'.JText::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
+			$form	.=	'<span class="hasTooltip" title="'.Text::_( 'COM_CCK_CHECK_TO_DELETE_FILE' ).'">'.$chkbox.'</span>'; /* TODO#SEBLOD: */
 		}
 		
 		$params['image_colorbox']	=	'0';
@@ -396,23 +403,23 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				if ( $options2['form_preview'] == 2 ) {
 					$width		=	( $options2['image_width'] ) ? 'width="'.$options2['image_width'].'"' : '';
 					$height		=	( $options2['image_height'] ) ? 'height="'.$options2['image_height'].'"' : '';
-					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'" '.$width.' '.$height.'>
-										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
+					$preview	=	'<a href="'.Uri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'" '.$width.' '.$height.'>
+										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.Uri::root().$value['image_location'].'" />
 									</a>';
 				} else {
 					$thumb_location	=	str_replace( '/'.$title.'.','/_thumb'.( $options2['form_preview'] - 2 ).'/'.$title.'.',$value['image_location'] );
-					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
-										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
+					$preview	=	'<a href="'.Uri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
+										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.Uri::root().$thumb_location.'" />
 									</a>';
 				}
 			} elseif ( $options2['form_preview'] == 1 ) {
-				$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
-									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().'media/cck/images/16/icon-16-preview.png" />
+				$preview	=	'<a href="'.Uri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
+									<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.Uri::root().'media/cck/images/16/icon-16-preview.png" />
 								</a>';
 			} else {
-				$preview	=	'<a class="cck_preview" href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">'.$title_image.'</a>';
+				$preview	=	'<a class="cck_preview" href="'.Uri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">'.$title_image.'</a>';
 			}
-			$preview		=	self::_addFormPreview( $id, JText::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
+			$preview		=	self::_addFormPreview( $id, Text::_( 'COM_CCK_PREVIEW' ), $preview, self::$type );
 		}
 		$form	=	$form.$form_more.$lock.$form_more3.$form_more2.$form_more4.$preview;
 
@@ -453,7 +460,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			$value		=	$options2['path'].( ( @$options2['path_content'] ) ? $config['pk'].'/' : '' ).$value;
 		}
 		
-		$field->data	=	JUri::root().$value;
+		$field->data	=	Uri::root().$value;
 	}
 
 	// onCCK_FieldPrepareSearch
@@ -500,7 +507,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 		
 		// Init
-		$app		=	JFactory::getApplication();
+		$app		=	Factory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 
 		if ( count( $inherit ) ) {
@@ -596,20 +603,20 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					}
 
 					$content_folder		=	( $options2['path_content'] ) ? $config['pk'].'/' : '';
-					$extention 			=	JFile::getExt( $title );
+					$extention 			=	File::getExt( $title );
 					$title_webp 		=	str_replace( '.'.$extention, '.webp', $title );
 
 					for ( $i = 1; $i < 11; $i++ ) {
-						if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title ) ) {
-							JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title );
+						if ( File::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title ) ) {
+							File::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title );
 						}
-						if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp ) ) {
-							JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp );
+						if ( File::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp ) ) {
+							File::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.'_thumb'.$i.'/'.$title_webp );
 						}
 					}
 
-					if ( JFile::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title ) ) {	
-						JFile::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title );
+					if ( File::exists( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title ) ) {	
+						File::delete( $root_folder.'/'.$options2['path'].$user_folder.$content_folder.$title );
 					}
 				}
 				$itemPath	=	'';
@@ -625,7 +632,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 			default  : $unit_prod = 1; break;
 		}
 		$maxsize			=	floatval( $options2['max_size'] ) * $unit_prod;
-		$filename			=	JFile::stripExt( $userfile['name'] );
+		$filename			=	File::stripExt( $userfile['name'] );
 		$userfile['name']	=	str_replace( $filename, JCckDev::toSafeSTRING( $filename, JCck::getConfig_Param( 'media_characters', '-' ), JCck::getConfig_Param( 'media_case', 0 ) ), $userfile['name'] );
 		if ( ! $maxsize || ( $maxsize && @$userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
@@ -642,7 +649,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					$old_legal	=	( strrpos( $userfile['name'], '.' ) ) ? substr( $userfile['name'], strrpos( $userfile['name'], '.' ) + 1 ) : '';
 					$legal		=	( $ImageCustomName ==  $userfile['name'] ) ? $old_legal : substr( $ImageCustomName, strrpos( $ImageCustomName, '.' ) + 1 );
 					if ( $old_legal && array_search( $old_legal, $legal_ext ) === false ) {
-						JFactory::getApplication()->enqueueMessage( $ImageCustomName .' - '. JText::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
+						Factory::getApplication()->enqueueMessage( $ImageCustomName .' - '. Text::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
 						$field->error	=	true;
 					} else {
 						if ( trim( $legal ) != trim( $old_legal ) ) {
@@ -651,7 +658,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					}
 				}
 				$file_path			=	$ImageCustomPath ? $ImageCustomPath : $options2['path'];
-				$current_user		=	JFactory::getUser();
+				$current_user		=	Factory::getUser();
 				$current_user_id	=	$current_user->id;
 				if ( strpos( $file_path, '/'.$current_user_id.'/' ) === false ) {
 					$file_path		.=	( $options2['path_user'] && $current_user_id ) ? $current_user_id.'/' : '';
@@ -663,7 +670,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				$process			=	true;
 
 				if ( $value != '' ) {
-					$extension	=	strtolower( JFile::getExt( $value ) );
+					$extension	=	strtolower( File::getExt( $value ) );
 					$value		=	substr( $value, 0, strlen( $extension ) * -1 ).$extension;	
 				}
 			} else {
@@ -671,18 +678,18 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 					$imageTitle	=	'';
 					$imageDesc	=	'';
 				}
-				if ( $imageCustomDir != '' && strrpos( $imageCustomDir, '.') > 0 && JFile::exists( $root_folder.'/'.$imageCustomDir ) ) {
+				if ( $imageCustomDir != '' && strrpos( $imageCustomDir, '.') > 0 && File::exists( $root_folder.'/'.$imageCustomDir ) ) {
 					if ( count( $legal_ext ) ) {
 						$legal		=	( strrpos( $imageCustomDir, '.' ) ) ? substr( $imageCustomDir, strrpos( $imageCustomDir, '.' ) + 1 ) : '';
 						if ( $legal && array_search( $legal, $legal_ext ) === false ) {
-							JFactory::getApplication()->enqueueMessage( $imageCustomDir .' - '. JText::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
+							Factory::getApplication()->enqueueMessage( $imageCustomDir .' - '. Text::_( 'COM_CCK_ERROR_LEGAL_EXTENSIONS' ), 'notice' );
 							$field->error	=	true;
 						}
 					}
 					$value	=	$imageCustomDir;
 				} else {
 					if ( $userfile['name'] ) {
-						JFactory::getApplication()->enqueueMessage( JText::_( 'COM_CCK_ERROR_INVALID_FILE' ), "error" );
+						Factory::getApplication()->enqueueMessage( Text::_( 'COM_CCK_ERROR_INVALID_FILE' ), "error" );
 						$field->error	=	true;
 					}
 					if ( $options2['path'] == $itemPath ) {
@@ -697,7 +704,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 				}
 			}
 		} else {
-			JFactory::getApplication()->enqueueMessage( $userfile['name'] .' - '. JText::_( 'COM_CCK_ERROR_MAX_SIZE' ), 'notice' );
+			Factory::getApplication()->enqueueMessage( $userfile['name'] .' - '. Text::_( 'COM_CCK_ERROR_MAX_SIZE' ), 'notice' );
 			$field->error	=	true;
 		}
 		
@@ -754,7 +761,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 	// _addScripts
 	protected function _addScripts( $id, $params = array() )
 	{
-		$doc	=	JFactory::getDocument();
+		$doc	=	Factory::getDocument();
 		
 		if ( $params['image_colorbox'] ) {
 			JCck::loadjQuery();
@@ -863,7 +870,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		
 		if ( ! $options2['custom_path'] ) {
 			if ( $options2['path_user'] ) {
-				$current_user	=	JFactory::getUser();
+				$current_user	=	Factory::getUser();
 				$default		.=	$current_user->id.'/';
 			}
 			if ( $options2['path_content'] ) {
