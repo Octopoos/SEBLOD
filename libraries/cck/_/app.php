@@ -60,7 +60,7 @@ class JCckApp
 	public static function getInstance( $identifier = 'default' )
 	{
 		if ( $identifier == 'default' ) {
-			$key	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+			$key	=	JCckWebservice::getAppId();
 		} else {
 			$key	=	$identifier;
 		}
@@ -111,7 +111,7 @@ class JCckApp
 	{
 		$this->reset();
 
-		$identifier	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+		$identifier	=	JCckWebservice::getAppId();
 
 		if ( !$this->_setTypeByName( $identifier ) ) {
 			$this->_error	=	true;
@@ -313,17 +313,8 @@ class JCckApp
 	// _setTypeByName
 	protected function _setTypeByName( $identifier )
 	{
-		$query	=	'SELECT a.id AS pk, a.nonce, a.options'
-				.	' FROM #__cck_more_webservices_apps AS a';
+		$core	=	JCckWebservice::getApp( $identifier );
 
-		if ( is_numeric( $identifier) ) {
-			$query	.=	' WHERE a.id = '.(int)$identifier;
-		} else {
-			$query	.=	' WHERE a.name = "'.$identifier.'"';
-		}
-		
-		$core	=	JCckDatabase::loadObject( $query );
-		
 		if ( !( is_object( $core ) && $core->pk ) ) {
 			return false;
 		}
