@@ -22,7 +22,38 @@ abstract class JCckWebservice
 {
 	public static $_me			=	'cck_webservices';
 	public static $_config		=	null;
-	
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // App
+
+	// getApp
+	public static function getApp( $identifier )
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+			return null;
+		}
+
+		$query	=	'SELECT a.id AS pk, a.nonce, a.options'
+				.	' FROM #__cck_more_webservices_apps AS a';
+
+		if ( is_numeric( $identifier ) ) {
+			$query	.=	' WHERE a.id = '.(int)$identifier;
+		} else {
+			$query	.=	' WHERE a.name = "'.$identifier.'"';
+		}
+
+		return JCckDatabase::loadObject( $query );
+	}
+
+	// getAppId
+	public static function getAppId()
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+			return 0;
+		}
+
+		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 	
 	// _setConfig
