@@ -322,7 +322,9 @@ class com_cckInstallerScript
 		
 		$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
 		
-		$res		=	$db->loadResult();
+		$res		=	(string)$db->loadResult();
+		$res		=	$res != '' ? $res : '{}';
+
 		$registry	=	new JRegistry;
 		$registry->loadString( $res );
 		
