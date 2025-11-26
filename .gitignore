@@ -1176,7 +1176,7 @@ sftp-config.json
 ######## SEBLOD CORE
 
 /administrator/components/com_cck/install/cms/*
-/administrator/components/com_cck/install/cli/*
+#/administrator/components/com_cck/install/cli/*
 
 ######## SEBLOD MORE: ADD-ONS >> PACKAGER
 
