@@ -17,7 +17,10 @@
 	<files folder="extensions">
 		<!-- Plugin // System -->
 		<file type="plugin" id="cck" group="system">plg_system_cck.zip</file>
-		
+
+		<!-- Library -->
+		<file type="library" id="cck">lib_cck.zip</file>
+
 		<!-- START HERE -->
 			<!-- Variation -->
 			<file type="file" id="var_cck_joomla" src="libraries/cck/rendering/variations">var_cck_joomla.zip</file>
@@ -133,8 +136,7 @@
 			<file type="plugin" id="cck" group="user">plg_user_cck.zip</file>
 		<!-- END HERE -->
 		
-		<!-- Library -->
-		<file type="library" id="cck">lib_cck.zip</file>
+		<!-- File -->
 		<file type="file" id="cck" src="layouts">lay_cck.zip</file>
 		<file type="file" id="cck_3x" src="layouts">lay_cck_3x.zip</file>
 		

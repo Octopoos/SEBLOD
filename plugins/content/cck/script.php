@@ -101,6 +101,29 @@ class plgContentCCKInstallerScript
 			Folder::delete( $path );
 		}
 		// WAITING FOR JOOMLA 1.7.x FIX
+
+		// Language Constants (SQL)
+		if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.next.php' ) ) {
+			$path	=	JPATH_SITE.'/language';
+
+			if ( Folder::exists( $path ) ) {
+				$lang_tags	=	Folder::folders( $path );
+				$protected	=	array( 'overrides' );
+
+				foreach ( $lang_tags as $lang_tag ) {
+					if ( !in_array( $lang_tag, $protected ) ) {
+						if ( strpos( $lang_tag, '-' ) !== false ) {
+							$filepath	=	$path.'/'.$lang_tag.'/com_cck_default.sql.ini';
+
+							if ( is_file( $filepath ) ) {
+								File::copy( $filepath, $path.'/'.$lang_tag.'/com_cck_default.ini' );
+								File::delete( $filepath );
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	// postflight

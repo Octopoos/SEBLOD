@@ -97,18 +97,7 @@ class com_cckInstallerScript
 		// Post Install Log
 		self::_postInstallMessage( 'update', $parent );
 
-		// WAITING FOR JOOMLA 1.7.x FIX
-		$app		=	Factory::getApplication();
-		$config		=	Factory::getConfig();
-		$tmp_path	=	$config->get( 'tmp_path' );
-		$tmp_dir 	=	uniqid( 'cck_var_' );
-		$path 		= 	$tmp_path.'/'.$tmp_dir;
-		$src		=	JPATH_SITE.'/libraries/cck/rendering/variations';
-		if ( Folder::exists( $src ) ) {
-			Folder::copy( $src, $path );
-			$app->cck_core_temp_var	=	$tmp_dir;
-		}
-		// WAITING FOR JOOMLA 1.7.x FIX
+		$app	=	Factory::getApplication();
 
 		// -- Patch for websites started with SEBLOD 2.x 
 		if ( version_compare( $app->cck_core_version_old, '3.2', '<' ) ) {
@@ -306,20 +295,8 @@ class com_cckInstallerScript
 		}
 		
 		if ( $type == 'install' ) {
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
-			if ( Folder::exists( $src ) ) {
-				Folder::copy( $src, JPATH_SITE.'/libraries/cck/_', '', true );
-				Folder::delete( $src );
-			}
-
 			// Post Install Log
 			self::_postInstallMessage( 'install', $parent );
-		} elseif ( !version_compare( JVERSION, '4.0', 'ge' ) ) {
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
-			if ( Folder::exists( $src ) ) {
-				Folder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
-				Folder::delete( $src );
-			}
 		}
 	}
 	
