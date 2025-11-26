@@ -524,11 +524,15 @@ class plgContentCCKInstallerScript
 					$queries	=	$db->splitSql( $buffer );
 					
 					foreach ( $queries as $query ) {
-						$query	=	trim( $query );
-						
-						if ( $query != '' && $query[0] != '#' ) {
-							$db->setQuery( $query );
-							$db->execute();
+						try {
+							$query	=	trim( $query );
+
+							if ( $query != '' && $query[0] != '#' ) {
+								$db->setQuery( $query );
+								$db->execute();
+							}
+						} catch (Exception $e) {
+							//
 						}
 					}
 				}
