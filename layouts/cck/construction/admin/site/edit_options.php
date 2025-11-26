@@ -11,6 +11,7 @@ use Joomla\CMS\Language\Text;
 			</legend>
 			<?php
 			echo $displayData['fields']['site_aliases'];
+            echo $displayData['fields']['site_context'];
             echo $displayData['fields']['site_exclusions'];
 			?>
 		</fieldset>
