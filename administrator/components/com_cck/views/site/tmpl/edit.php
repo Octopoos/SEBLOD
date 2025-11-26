@@ -48,6 +48,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                                             ),
                                 'parent'=>JCckDev::renderForm( $cck['core_parent_site'], $this->item->parent_id, $config ),
                                 'site_aliases'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( $this->item->aliases ), $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) ),
+                                'site_context'=>JCckDev::renderForm( 'core_dev_select', @$cfg['context'], $config, array( 'label'=>'Config Multisite Context', 'selectlabel'=>'Inherited', 'options'=>'No=0', 'storage_field'=>'json[configuration][context]' ) ),
                                 'site_exclusions'=>JCckDev::renderForm( 'core_options', JCckDev::fromSTRING( @$cfg['exclusions'] ), $config, array( 'label'=>'Site Exclusions', 'rows'=>'1', 'storage_field'=>'exclusions', 'name'=>'core_options_url' ), array( 'after'=>'<div style="float:left;">'.JText::_( 'COM_CCK_SITE_EXCLUSIONS_DESC' ).'</div>' ) ),
                                 'site_homepage'=>JCckDev::renderForm( $cck['core_site_homepage'], @$cfg['homepage'], $config ),
                                 'site_language'=>JCckDev::renderForm( $cck['core_site_language'], @$cfg['language'], $config ),
