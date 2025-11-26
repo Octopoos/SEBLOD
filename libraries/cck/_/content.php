@@ -2316,7 +2316,7 @@ USER
 	}
 
 	// triggerMore
-	protected function triggerMore( $task, $event, &$data = array() )
+	public function triggerMore( $task, $event, &$data = array() )
 	{
 		return true; /* PENDING HERE */
 
