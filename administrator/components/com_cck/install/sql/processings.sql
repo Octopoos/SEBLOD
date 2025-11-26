@@ -3,15 +3,17 @@ CREATE TABLE IF NOT EXISTS `#__cck_more_processings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `folder` int(11) NOT NULL DEFAULT '1',
+  `folder` int(11) NOT NULL DEFAULT 1,
   `type` varchar(50) NOT NULL,
   `description` varchar(5120) NOT NULL,
   `options` text NOT NULL,
-  `ordering` int(11) NOT NULL DEFAULT '0',
-  `published` tinyint(3) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT 0,
+  `published` tinyint(3) NOT NULL DEFAULT 0,
   `scriptfile` text NOT NULL,
-  `checked_out` int(10) UNSIGNED,
-  `checked_out_time` datetime NULL DEFAULT NULL,
+  `checked_out` int(10) unsigned DEFAULT NULL,
+  `checked_out_time` datetime DEFAULT NULL,
+  `cron_task_state` tinyint(3) NOT NULL DEFAULT 0,
+  `cron_task_executed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
