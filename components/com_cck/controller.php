@@ -152,11 +152,18 @@ class CCKController extends JControllerLegacy
 
 				if ( count( $paths ) ) {
 					$paths[]	=	'tmp/';
+
 					foreach ( $paths as $p ) {
 						if ( empty( $p ) ) {
 							continue;
 						}
 						if ( strpos( $path, JPATH_ROOT.'/'.$p ) !== false ) {
+							if ( JPATH_RESOURCES != JPATH_SITE && is_dir( JPATH_RESOURCES.'/'.$p ) && ( strpos( $file, $p ) !== false ) ) {
+								$config		=	array(
+													'file_path'=>JPATH_RESOURCES
+												);
+							}
+
 							$allowed	=	true;
 							break;
 						}
