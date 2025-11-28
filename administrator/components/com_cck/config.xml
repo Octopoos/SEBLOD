@@ -126,6 +126,7 @@
 	
 	<fieldset name="fs_integration" label="COM_CCK_CONFIG_FIELDSET_INTEGRATION" description="COM_CCK_CONFIG_FIELDSET_INTEGRATION_DESC">
 		<field name="integration" type="cckintegration" label="COM_CCK_CONFIG_INTEGRATION_CONTENT_OBJECTS" class="inputbox" validate="rules" filter="rules" component="com_cck" section="component" />
+		<field name="integration_issue_tracker_url" type="text" size="98" default="" label="COM_CCK_CONFIG_INTEGRATION_ISSUE_TRACKER_URL" description="COM_CCK_CONFIG_INTEGRATION_ISSUE_TRACKER_URL_DESC" class="inputbox input-xxlarge" />
 	</fieldset>
 
 	<fieldset name="fs_language" label="COM_CCK_CONFIG_FIELDSET_LANGUAGE" description="COM_CCK_CONFIG_FIELDSET_LANGUAGE_DESC">
