@@ -22,12 +22,30 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 5.0.0 Release Candidate [30-Oct-2025] -------------
+--------------- 5.0.0 Release Candidate [28-Nov-2025] -------------
+
++ Field Rendering improved with Layouts (HTML Markup around fields)
+  >> /components/com_cck/layouts/...
++ Issue Tracker Integration capabilities
+  >> Set IssueID to fields (within Content/Search Types)
+  >> Set Notes to fields (within Content/Search Types)
+
++ Additional "required" modes.
++ JCckContent class updated & improved! :)
++ JCckDevImage class updated (WebP)
++ Plug-ins improved:
+  >> Button(s), Group, JForm Calendar, Textarea Field Plug-ins
+  >> Image Typography Plug-in
 
 ^ "Legacy Mode" may be set to 2024 if needed:
   >> For existing projects without any "Legacy Mode" until now, you may need to select "2024".
   >> For existing projects using a "Legacy Mode" selected, you should keep it.
 ^ "Legacy Mode" is no more 2012 by default within config.xml
+
+# Additional fixes included for PHP 8.x.
+# Filename fixed (Email Field).
+# Multi-sites issues fixed.
+# Various issues fixed and improvements included.
 
 --------------- 4.5.2 Upgrade Release [14-Mar-2025] -------------
 
