@@ -838,7 +838,7 @@ abstract class JCckDev
 	// validate
 	public static function validate( $config, $id = 'adminForm' )
 	{
-		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
+		$config['validation']			=	( isset( $config ) && is_array( $config['validation'] ) && count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
 		self::addValidation( $config['validation'], $config['validation_options'], $id );
