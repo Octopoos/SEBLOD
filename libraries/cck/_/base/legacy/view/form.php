@@ -25,7 +25,7 @@ class JCckBaseLegacyViewForm extends HtmlView
 	{
 		if ( $this->getlayout() == 'delete' ) {
 			$this->prepareDelete();
-		} elseif ( $this->getLayout() == 'edit' || $this->getLayout() == 'edit2' || $this->getLayout() == 'process' ) {
+		} elseif ( $this->getLayout() == 'edit' || $this->getLayout() == 'edit2' || $this->getLayout() == 'call' || $this->getLayout() == 'process' ) {
 			$this->prepareDisplay();
 		}
 
