@@ -230,8 +230,8 @@ abstract class JCckToolbox
 														. ' WHERE c.name = "'.$name.'" AND c.published = 1 AND a.published = 1'
 														. ' ORDER BY b.id' );
 
-		$count	=	count( $processings );
-		$now	=	JFactory::getDate()->toSql();
+		$count		=	count( $processings );
+		$job_now	=	JFactory::getDate()->toSql();
 
 		if ( $count ) {
 			foreach ( $processings as $p ) {
