@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 JCckDev::initScript( 'processing', $this->item );
 
 $count		=	0;
@@ -30,7 +32,7 @@ $types		=	array(
 				);
 ?>
 <div class="seblod">
-	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_SETTINGS' ) ); ?>
+	<?php echo JCckDev::renderLegend( Text::_( 'COM_CCK_SETTINGS' ) ); ?>
 	<?php
 	if ( !JCck::on( '4.0' ) ) {
 		echo '<ul class="adminformlist adminformlist-2cols" style="width:100%">';
@@ -50,7 +52,7 @@ $types		=	array(
 	for ( $i = 0; $i < $count; $i++ ) {
 		$k			=	$users[$i];
 		$account	=	$types[$k];
-		$label		=	'"'.JText::_( 'COM_CCK_'.strtoupper( $account ) ).'"';
+		$label		=	'"'.Text::_( 'COM_CCK_'.strtoupper( $account ) ).'"';
 		
 		if ( $i == 0 ) {
 			echo JCckDevTabs::start( $group_id, 'account'.$i, $label, array( 'active'=>'account'.$i ) );
@@ -73,9 +75,9 @@ $types		=	array(
 
 	// Options
 	if ( !$count ) {
-		echo JCckDevTabs::start( $group_id, 'tabs1', JText::_( 'COM_CCK_OPTIONS' ), array( 'active'=>'tabs1' ) );
+		echo JCckDevTabs::start( $group_id, 'tabs1', Text::_( 'COM_CCK_OPTIONS' ), array( 'active'=>'tabs1' ) );
 	} else {
-		echo JCckDevTabs::open( $group_id, 'tabs2', JText::_( 'COM_CCK_OPTIONS' ) );
+		echo JCckDevTabs::open( $group_id, 'tabs2', Text::_( 'COM_CCK_OPTIONS' ) );
 	}
 	if ( !JCck::on( '4.0' ) ) {
 		echo '<ul class="adminformlist adminformlist-2cols">';

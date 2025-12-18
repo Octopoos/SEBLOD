@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckEcommerceShipping
 abstract class JCckEcommerceShipping
 {
@@ -18,7 +20,7 @@ abstract class JCckEcommerceShipping
 	{
 		$name	=	JCckDatabase::loadResult( 'SELECT type FROM #__cck_more_ecommerce_shipping_methods WHERE published = 1 ORDER BY id DESC' );
 
-		return $name; /* JFactory::getApplication()->input->post->get( 'seb_order_method' ); */
+		return $name; /* Factory::getApplication()->input->post->get( 'seb_order_method' ); */
 	}
 }
 ?>

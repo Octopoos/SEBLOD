@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\FileLayout;
 
 // JCckDevTabs
 abstract class JCckDevTabs
@@ -45,7 +46,7 @@ abstract class JCckDevTabs
         	static $tabScriptLayout	=	null;
         	
         	$active				=	'';
-			$tabScriptLayout	=	is_null( $tabScriptLayout ) ? new JLayoutFile( 'libraries.cms.html.bootstrap.addtabscript' ) : $tabScriptLayout;
+			$tabScriptLayout	=	is_null( $tabScriptLayout ) ? new FileLayout( 'libraries.cms.html.bootstrap.addtabscript' ) : $tabScriptLayout;
 			$js					=	$tabScriptLayout->render( array(
 																'selector'=>$selector,
 																'id'=>$id,
@@ -73,7 +74,7 @@ abstract class JCckDevTabs
 		}
 
         if ( Factory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
-			$tabScriptLayout	=	new JLayoutFile( 'libraries.cms.html.bootstrap.addtabscript' );
+			$tabScriptLayout	=	new FileLayout( 'libraries.cms.html.bootstrap.addtabscript' );
 			$js					=	$tabScriptLayout->render( array(
 																'selector'=>$selector,
 																'id'=>$id,

@@ -10,9 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 
 // JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
@@ -642,12 +642,12 @@ class CCK_Import
 	// importSQL
 	public static function importSQL( $src )
 	{
-		if ( Folder::exists( $src ) ) {
+		if ( is_dir( $src ) ) {
 			$db		=	Factory::getDbo();
 			$files	=	Folder::files( $src, '\.sql$' );
 			foreach ( $files as $file ) {
 				$path	=	$src.'/'.$file;
-				if ( File::exists( $path ) ) {
+				if ( is_file( $path ) ) {
 					$query	=	file_get_contents( $path );
 					$db->setQuery( $query );
 					$db->queryBatch();

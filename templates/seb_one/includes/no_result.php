@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // "No Result" Page.
-echo $no_message;	// echo JText::_( 'COM_CCK_NO_RESULT' );
+echo $no_message;	// echo Text::_( 'COM_CCK_NO_RESULT' );
 ?>

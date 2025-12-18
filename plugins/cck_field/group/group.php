@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\Registry\Registry;
 
 // Plugin
@@ -435,7 +436,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 													'html'=>$elem_html,
 													'options'=>$config['options']
 												);
-							$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
+							$layout 		=	new FileLayout( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
 							$elem_html		=	$layout->render( $displayData );
 						}
 					}

@@ -1,7 +1,7 @@
 <?php
 defined( '_JEXEC' ) or die;
 
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 
 if ( !( $config['id'] && !$config['isNew'] ) ) {
 	return;

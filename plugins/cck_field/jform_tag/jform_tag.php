@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
@@ -62,7 +63,7 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			if ( is_object( $value ) && isset( $value->tags ) ) {
 				$value		=	$value->tags;
 			}
-			$tags			=	new JHelperTags;
+			$tags			=	new TagsHelper;
 			$tags->getItemTags( $properties['context'], $config['pk'] );
 			$tagLayout		=	new FileLayout( 'joomla.content.tags' );
 			$html			=	$tagLayout->render( $tags->itemTags );

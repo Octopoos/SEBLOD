@@ -9,12 +9,13 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Object\CMSObject;
 
 jimport( 'cck.joomla.access.rule' );
 
 // CCKRules
-class CCKRules extends JAccessRules
+class CCKRules extends Rules
 {
 	/**
 	 * A named array.

@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -297,7 +298,7 @@ class CCK_Rendering_Item
 												'parent'=>$parent
 											);
 
-						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
+						$layout 		=	new FileLayout( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
 						$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
 					}
 				}

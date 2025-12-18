@@ -9,6 +9,7 @@
 defined('JPATH_PLATFORM') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -257,7 +258,7 @@ class CCK_DocumentHTML extends CCK_Document
 	{
 		// Check
 		$directory = isset($params['directory']) ? $params['directory'] : 'templates';
-		$filter = JFilterInput::getInstance();
+		$filter = InputFilter::getInstance();
 		$template = $filter->clean($params['template'], 'cmd');
 		$file = $filter->clean($params['file'], 'cmd');
 

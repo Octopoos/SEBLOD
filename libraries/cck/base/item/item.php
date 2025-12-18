@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\LanguageAssociations;
+use Joomla\CMS\Language\Associations;
 
 // Item
 class CCK_Item
@@ -32,7 +32,7 @@ class CCK_Item
 					$context	.=	'.'.$assoc_item->storage_table;
 				}
 
-				$associations	=	LanguageAssociations::getAssociations( 'com_cck', $assoc_item->storage_table, $context, (int)$assoc_item->pk, 'id', '', '' );
+				$associations	=	Associations::getAssociations( 'com_cck', $assoc_item->storage_table, $context, (int)$assoc_item->pk, 'id', '', '' );
 
 				if ( isset( $associations[$lang_tag] ) ) {
 					if ( (int)$associations[$lang_tag]->id ) {

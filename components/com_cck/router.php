@@ -11,10 +11,11 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Component\Router\RouterView;
 use Joomla\CMS\Language\Text;
 
 // CckRouter
-class CckRouter extends JComponentRouterView
+class CckRouter extends RouterView
 {
 	// build
 	public function build( &$query )

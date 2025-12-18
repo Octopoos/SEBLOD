@@ -10,9 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-
 
 // JCckDevPdf
 class JCckDevPdf

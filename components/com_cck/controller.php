@@ -10,10 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -868,7 +868,7 @@ class CCKController extends BaseController
 	// saveFieldAjax
 	public function saveFieldAjax()
 	{
-		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		// Session::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
 		$model		=	$this->getModel( 'form' );

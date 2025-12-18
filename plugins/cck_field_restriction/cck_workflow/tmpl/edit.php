@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'restriction', $this->item );
 
@@ -25,7 +27,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Author', 'selectlabel'=>'Any Author', 'options'=>'Current=1||Someone Else=-1', 'required'=>'', 'storage_field'=>'author' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_VARIABLE_VALUES' ),
+						'label'=>Text::_( 'COM_CCK_VARIABLE_VALUES' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
 							'grid'=>'|auto|100%',
 							'html'=>array(

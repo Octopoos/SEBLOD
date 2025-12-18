@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Helper\TagsHelper;
+
 if ( version_compare( PHP_VERSION, '5.4', '<=' ) ) {
 	return;
 }
@@ -37,7 +39,7 @@ trait JCckContentTraitTag
 		}
 
 		if ( !$replace ) {
-			$tagHelper	=	new JHelperTags;
+			$tagHelper	=	new TagsHelper;
 			$oldTags	=	$tagHelper->getTagIds( $this->_pk, self::$objects[$this->_object]['properties']['context2'] );
 			$oldTags	=	explode( ',', $oldTags );
 			
@@ -70,7 +72,7 @@ trait JCckContentTraitTag
 			$tags[$k]	=	(string)$v;
 		}
 
-		$tagHelper				=	new JHelperTags;
+		$tagHelper				=	new TagsHelper;
 		$tagHelper->typeAlias	=	self::$objects[$this->_object]['properties']['context2'];
 		$tagHelper->unTagItem( 0, $this->_instance_base, $tags );
 	}

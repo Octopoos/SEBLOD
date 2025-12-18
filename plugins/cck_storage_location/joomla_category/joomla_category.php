@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Router\Route;
@@ -527,7 +528,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				}
 
 				// Tags
-				$table->tags	=	new JHelperTags;
+				$table->tags	=	new TagsHelper;
 
 				// if ( (int)JCckDatabaseCache::loadResult( 'SELECT COUNT(id) FROM #__tags' ) > 1 ) {
 				$table->tags->getTagIds( $table->id, 'com_content.category' );	/* TODO#SEBLOD: dynamic context per extension */

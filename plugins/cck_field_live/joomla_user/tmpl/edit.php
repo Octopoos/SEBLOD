@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'live', $this->item );
 JCck::loadModalBox();
@@ -34,7 +36,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'User', 'selectlabel'=>'Current', 'options'=>'Session=session', 'storage_field'=>'content' ) ),
 				JCckDev::renderLayoutFile(
 					'cck'.JCck::v().'.form.field', array(
-						'label'=>JText::_( 'COM_CCK_PROPERTY' ),
+						'label'=>Text::_( 'COM_CCK_PROPERTY' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.input', array(
 							'input'=>JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Property', 'required'=>'required', 'storage_field'=>'property' ) ),
 							'button'=>'<button type="button" id="storage_field_pick_property" name="property" class="value-picker btn btn-secondary"><span class="icon-expand"></span></button>'

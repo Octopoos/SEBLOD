@@ -237,8 +237,8 @@ PluginHelper::importPlugin( 'cck_field_restriction' );
 PluginHelper::importPlugin( 'cck_field_validation' );
 
 if ( $id ) {
-	JPluginHelper::importPlugin( 'cck_storage' );
-	JPluginHelper::importPlugin( 'cck_storage_location' );
+	PluginHelper::importPlugin( 'cck_storage' );
+	PluginHelper::importPlugin( 'cck_storage_location' );
 
 	if ( $id && $type->storage_location ) {
 		$properties					=	array( 'key_field' );

@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -236,7 +237,7 @@ class JCckPluginLocation extends CMSPlugin
 				if ( $type ) {
 					if ( !JCck::on( '4.0' ) ) {
 						if (!empty( $tagsObserver ) && !empty( $type ) ) {
-							$table->tagsHelper				=	new JHelperTags;
+							$table->tagsHelper				=	new TagsHelper;
 							$table->tagsHelper->typeAlias	=	$type->type_alias;
 							$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
 						}

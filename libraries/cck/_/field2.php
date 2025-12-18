@@ -150,7 +150,7 @@ class JCckField2
 		// 					'date_time'=>$data['core']['date_time']
 		// 				);
 		// if ( !$data_core['author_id'] ) {
-		// 	$data_core['author_id']	=	JFactory::getUser()->id;
+		// 	$data_core['author_id']	=	Factory::getUser()->id;
 		// }
 		// if ( !( $this->save( 'core', $data_core ) ) ) {
 		// 	$this->_error	=	true;
@@ -666,7 +666,7 @@ class JCckField2
 		// Core
 		// $data['core']	=	array(
 		// 						'author_id'=>0,
-		// 						'date_time'=>JFactory::getDate()->toSql(),
+		// 						'date_time'=>Factory::getDate()->toSql(),
 		// 						'parent_id'=>0
 		// 					);
 
@@ -675,7 +675,7 @@ class JCckField2
 		// 	$data['core']['author_id']	=	$data['base'][self::$objects[$this->_object]['properties']['author']];
 		// }
 		// if ( !$data['core']['author_id'] ) {
-		// 	$data['core']['author_id']	=	JFactory::getUser()->id;
+		// 	$data['core']['author_id']	=	Factory::getUser()->id;
 		// }
 		// if ( isset( self::$objects[$this->_object]['properties']['parent'] ) && self::$objects[$this->_object]['properties']['parent']
 		//   && isset( $data['base'][self::$objects[$this->_object]['properties']['parent']] ) ) {

@@ -11,14 +11,14 @@
 defined( '_JEXEC' ) or die;
 defined( 'CCK_COM' ) or define( 'CCK_COM', 'com_cck' );
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Registry\Registry;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
-use Joomla\Registry\Registry;
 
 // Script
 class plgContentCCKInstallerScript
@@ -36,10 +36,10 @@ class plgContentCCKInstallerScript
 	// uninstall
 	public function uninstall( $parent )
 	{
-		if ( File::exists( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' ) ) {
+		if ( is_file( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' ) ) {
 			File::delete( JPATH_ADMINISTRATOR.'/language/en-GB/en-GB.lib_cck.ini' );
 		}
-		if ( File::exists( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' ) ) {
+		if ( is_file( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' ) ) {
 			File::delete( JPATH_ADMINISTRATOR.'/language/fr-FR/fr-FR.lib_cck.ini' );
 		}
 		
@@ -55,7 +55,7 @@ class plgContentCCKInstallerScript
 					);
 		
 		foreach ( $groups as $group ) {
-			if ( Folder::exists( JPATH_PLUGINS.'/'.$group ) ) {
+			if ( is_dir( JPATH_PLUGINS.'/'.$group ) ) {
 				Folder::delete( JPATH_PLUGINS.'/'.$group );
 			}
 		}
@@ -63,13 +63,13 @@ class plgContentCCKInstallerScript
 		// Additional stuff
 		$path	=	JPATH_SITE.'/cli/cck_job.php';
 
-		if ( File::exists( $path ) ) {
+		if ( is_file( $path ) ) {
 			File::delete( $path );
 		}
 
 		$path	=	JPATH_SITE.'/libraries/cms/cck';
 
-		if ( Folder::exists( $path ) ) {
+		if ( is_dir( $path ) ) {
 			Folder::delete( $path );
 		}
 	}
@@ -91,7 +91,7 @@ class plgContentCCKInstallerScript
 		$dest		=	JPATH_SITE.'/libraries/cck/rendering/variations';
 		$protected	=	array( 'empty' );
 
-		if ( $tmp_dir && Folder::exists( $path ) ) {
+		if ( $tmp_dir && is_dir( $path ) ) {
 			$vars		=	Folder::folders( $path );
 			foreach ( $vars as $var ) {
 				if ( ! in_array( $var, $protected ) ) {
@@ -106,7 +106,7 @@ class plgContentCCKInstallerScript
 		if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.next.php' ) ) {
 			$path	=	JPATH_SITE.'/language';
 
-			if ( Folder::exists( $path ) ) {
+			if ( is_dir( $path ) ) {
 				$lang_tags	=	Folder::folders( $path );
 				$protected	=	array( 'overrides' );
 
@@ -542,7 +542,7 @@ class plgContentCCKInstallerScript
 			for ( $i = $i + 1; $i <= $n; $i++ ) {
 				$file		=	$root.'/install/upgrades/'.strtolower( $versions[$i] ).'.sql';
 				
-				if ( File::exists( $file ) ) {
+				if ( is_file( $file ) ) {
 					$buffer		=	file_get_contents( $file );
 					$queries	=	$db->splitSql( $buffer );
 					
@@ -658,7 +658,7 @@ class plgContentCCKInstallerScript
 			if ( $i2 < 66 ) {
 				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
 				
-				if ( File::exists( $path ) ) {
+				if ( is_file( $path ) ) {
 					File::delete( $path );
 				}
 			}
@@ -689,17 +689,17 @@ class plgContentCCKInstallerScript
 			if ( $i2 < 120 ) {
 				$path	=	JPATH_SITE.'/libraries/cms/cck/content';
 
-				if ( Folder::exists( $path ) ) {
+				if ( is_dir( $path ) ) {
 					$path2	=	JPATH_SITE.'/libraries/cms/cck/content/trait';
 					$path3	=	JPATH_SITE.'/libraries/cms/cck/trait';
 
-					if ( Folder::exists( $path2 ) ) {
+					if ( is_dir( $path2 ) ) {
 						Folder::move( $path2, $path3 );
 					}
 
 					Folder::delete( $path );
 
-					if ( Folder::exists( $path3 ) ) {
+					if ( is_dir( $path3 ) ) {
 						Folder::create( $path );
 						Folder::move( $path3, $path2 );
 					}

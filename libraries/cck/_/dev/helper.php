@@ -10,9 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -98,7 +99,7 @@ abstract class JCckDevHelper
 	{
 		// jimport( 'joomla.filesystem.folder' );
 		
-		if ( ! Folder::exists( $path ) ) {
+		if ( ! is_dir( $path ) ) {
 			Folder::create( $path, $mode );
 			$buffer	=	'<!DOCTYPE html><title></title>';
 			File::write( $path.'/index.html', $buffer );

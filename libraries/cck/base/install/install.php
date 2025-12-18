@@ -11,8 +11,8 @@
 defined( '_JEXEC' ) or die;
 define( 'CCK_COM', 'com_cck' );
 
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
@@ -138,7 +138,7 @@ class CCK_Install
 				} elseif ( $extension->type == 'component' ) {
 					$path	=	JPATH_ADMINISTRATOR.'/components/'.$extension->element.'/install/fields';
 				}
-				if ( $path != '' && Folder::exists( $path ) ) {
+				if ( $path != '' && is_dir( $path ) ) {
 					Folder::delete( $path );
 				}
 			}
