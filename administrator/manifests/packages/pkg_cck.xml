@@ -93,7 +93,10 @@
 			<file type="plugin" id="content_delete" group="cck_field_link">plg_cck_field_link_content_delete.zip</file>
 			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
 			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
+			<file type="plugin" id="cck_route" group="cck_field_link">plg_cck_field_link_cck_route.zip</file>
+			<file type="plugin" id="download" group="cck_field_link">plg_cck_field_link_download.zip</file>
 			<!-- Plugin // CCK Field Live -->
+			<file type="plugin" id="datetime" group="cck_field_live">plg_cck_field_live_datetime.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_field_live">plg_cck_field_live_joomla_user.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_live">plg_cck_field_live_url_variable.zip</file>
 			<!-- Plugin // CCK Field Restriction -->
@@ -101,6 +104,7 @@
 			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
 			<!-- Plugin // CCK Field Typo -->
 			<file type="plugin" id="bold" group="cck_field_typo">plg_cck_field_typo_bold.zip</file>
+			<file type="plugin" id="cck_item" group="cck_field_typo">plg_cck_field_typo_cck_item.zip</file>
 			<file type="plugin" id="clear" group="cck_field_typo">plg_cck_field_typo_clear.zip</file>
 			<file type="plugin" id="date" group="cck_field_typo">plg_cck_field_typo_date.zip</file>
 			<file type="plugin" id="heading" group="cck_field_typo">plg_cck_field_typo_heading.zip</file>
@@ -123,6 +127,7 @@
 			<!-- Plugin // CCK Validation -->
 			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
 			<file type="plugin" id="confirm" group="cck_field_validation">plg_cck_field_validation_confirm.zip</file>
+			<file type="plugin" id="date" group="cck_field_validation">plg_cck_field_validation_date.zip</file>
 			<file type="plugin" id="email" group="cck_field_validation">plg_cck_field_validation_email.zip</file>
 			<file type="plugin" id="letter_number_only" group="cck_field_validation">plg_cck_field_validation_letter_number_only.zip</file>
 			<file type="plugin" id="required" group="cck_field_validation">plg_cck_field_validation_required.zip</file>
