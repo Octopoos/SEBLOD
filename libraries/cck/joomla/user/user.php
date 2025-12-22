@@ -36,7 +36,11 @@ class CCKUser extends JUser
 			$app_identities_level		=	$app_identities->params->get( '_impersonate.viewing_access_level', 0 );
 
 			if ( $app_identities_group || $app_identities_level ) {
-				if ( !( in_array( '8', $from_user->groups ) || ( $app_identities_group_id && in_array( (string)$app_identities_group_id, $from_user->groups ) ) ) ) {
+				if ( ( in_array( '8', $from_user->groups ) || ( $app_identities_group_id && in_array( (string)$app_identities_group_id, $from_user->groups ) ) ) ) {
+					if ( $app_identities_group_id ) {
+						$params['groups'][]	=	$app_identities_group_id;
+					}
+				} else {
 					if ( $app_identities_group ) {
 						$params['groups'][]	=	$app_identities_group;
 					}
