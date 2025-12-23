@@ -10,9 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Table\Table;
 
@@ -77,7 +77,7 @@ class CCKModelVariations extends ListModel
 		if ( count( $templates ) ) {
 			foreach ( $templates as $k=>$template ) {
 				$path	=	'/templates/'.$template.'/variations';
-				if ( Folder::exists( JPATH_SITE.$path ) ) {
+				if ( is_dir( JPATH_SITE.$path ) ) {
 					$folders	=	Folder::folders( JPATH_SITE.$path );
 					if ( count( $folders ) ) {
 						foreach ( $folders as $k=>$v ) {

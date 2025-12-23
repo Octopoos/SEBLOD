@@ -15,10 +15,6 @@ use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 
-// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
-// JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' ); // Deprecated in Joomla 6
-// JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/legacy/table/menu.php' ); // Deprecated in Joomla 6
-
 // Export
 class CCK_Export
 {

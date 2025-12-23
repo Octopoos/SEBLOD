@@ -14,8 +14,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 
-jimport( 'joomla.application.component.controllerform' );
-
 // Controller
 class CCKControllerBox extends FormController
 {
@@ -54,7 +52,7 @@ class CCKControllerBox extends FormController
 	// save
 	public function save( $key = null, $urlVar = null )
 	{
-		jexit( Text::_( 'JINVALID_TOKEN' ) );
+		exit( Text::_( 'JINVALID_TOKEN' ) );
 	}
 }
 ?>

@@ -51,7 +51,7 @@ class CCK_ControllerForm extends FormController
 	 */
 	public function save2($key = null, $urlVar = null, $brb = '')
 	{
-		// Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		// Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		// Initialise variables.
 		$app = Factory::getApplication();

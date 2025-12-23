@@ -10,9 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 
 // Model
@@ -149,14 +149,14 @@ class CCKModelTemplate extends JCckBaseLegacyModelAdmin
 		
 		// Variation
 		jimport( 'cck.base.install.export' );
-		if ( Folder::exists( $src ) ) {
+		if ( is_dir( $src ) ) {
 			Folder::copy( $src, $path.'/'.$name );
 		}
 		
 		// Manifest
 		$manifest	=	JPATH_ADMINISTRATOR.'/manifests/files/'.$filename.'.xml';
 		
-		if ( File::exists( $manifest ) ) {
+		if ( is_file( $manifest ) ) {
 			File::copy( $manifest, $path.'/'.$filename.'.xml' );
 		} else {
 			$xml		=	CCK_Export::prepareFile( (object)array( 'title'=>$filename ) );

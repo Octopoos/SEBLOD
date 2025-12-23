@@ -12,8 +12,6 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\Filesystem\File;
 
-jimport( 'joomla.filesystem.file' );
-
 // JCckDevImage
 class JCckDevImage
 {

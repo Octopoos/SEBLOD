@@ -13,8 +13,6 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 
-jimport( 'joomla.application.component.controllerform' );
-
 // Controller
 class CCKControllerSite extends FormController
 {

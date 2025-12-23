@@ -176,7 +176,6 @@ class plgContentCCKInstallerScript
 			$addons	=	$db->loadObjectList();
 			
 			if ( count( $addons ) ) {			
-				// JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
 				$titles	=	array(
 								'com_cck_builder'=>'Builder',
 								'com_cck_developer'=>'Developer',
@@ -318,8 +317,7 @@ class plgContentCCKInstallerScript
 
 			// Add Categories
 			PluginHelper::importPlugin( 'content' );
-			// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-			
+
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
 			

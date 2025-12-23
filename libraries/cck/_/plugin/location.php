@@ -45,10 +45,10 @@ class JCckPluginLocation extends CMSPlugin
 		$properties	=	array( 'type_alias' );
 		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 
-		// JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
+		JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
 
 		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
-			// JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
+			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
 		}
 
 		// Fix Language
@@ -577,8 +577,6 @@ class JCckPluginLocation extends CMSPlugin
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
-			// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-
 			$app	=	Factory::getApplication();
 			$bridge	=	Table::getInstance( 'Category' );
 			
@@ -696,8 +694,6 @@ class JCckPluginLocation extends CMSPlugin
 			$core	=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $config['id'] );
 			
-			// JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' );
-
 			$app	=	Factory::getApplication();
 			$bridge	=	Table::getInstance( 'Content' );
 			

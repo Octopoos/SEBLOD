@@ -151,7 +151,7 @@ class JCckInstallerScriptPlugin
 		$user		=	Factory::getUser();
 		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
 		$version	=	'3.2.0';
-		jimport( 'joomla.filesystem.file' );
+
 		if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
 			if ( class_exists( 'JCckVersion' ) ) {

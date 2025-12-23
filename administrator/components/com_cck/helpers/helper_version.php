@@ -68,8 +68,8 @@ class Helper_Version
 		$version->e_type		=	$type;
 		$version->e_core		=	JCckDev::toJSON( $table->getProperties() );
 		$version->e_version		=	$version_num;
-		$version->date_time		=	JFactory::getDate()->toSql();
-		$version->user_id		=	JFactory::getUser()->id;
+		$version->date_time		=	Factory::getDate()->toSql();
+		$version->user_id		=	Factory::getUser()->id;
 		if ( $note ) {
 			$version->note		=	$note;
 		}

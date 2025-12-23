@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\String\StringHelper;
 
@@ -51,7 +52,7 @@ if ( $legacy == 1 ) {
 	</div>
 	<div class="modal-body"><div class="contentpane component">
 	<?php
-		// echo JHtml::_( 'bootstrap.startAccordion', $target_id.'-cckForms', array( 'active'=>'slide1' ) );
+		// echo HTMLHelper::_( 'bootstrap.startAccordion', $target_id.'-cckForms', array( 'active'=>'slide1' ) );
 		$i	=	0;
 		foreach ( $folders as $items ) {
 			if ( isset( $items[0] ) ) {
@@ -65,7 +66,7 @@ if ( $legacy == 1 ) {
 			} else {
 				$name	=	Text::_( 'COM_CCK_FOLDER' );
 			}
-			// echo JHtml::_( 'bootstrap.addSlide', $target_id.'-cckForms', $name, $target_id.'-collapseFolder'.$i++ );
+			// echo HTMLHelper::_( 'bootstrap.addSlide', $target_id.'-cckForms', $name, $target_id.'-collapseFolder'.$i++ );
 			echo '<h4>'.$name.'</h4>';
 		?>
 			<div class="list-group pb-3">
@@ -92,9 +93,9 @@ if ( $legacy == 1 ) {
 			<?php } } ?>
 			</div>
 		<?php
-        	// echo JHtml::_( 'bootstrap.endSlide' );
+        	// echo HTMLHelper::_( 'bootstrap.endSlide' );
 		}
-		// echo JHtml::_( 'bootstrap.endAccordion' );
+		// echo HTMLHelper::_( 'bootstrap.endAccordion' );
 		echo $legend2;
 		?>
 	</div></div>

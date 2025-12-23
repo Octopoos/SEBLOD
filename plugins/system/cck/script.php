@@ -12,8 +12,8 @@ defined( '_JEXEC' ) or die;
 defined( 'CCK_COM' ) or define( 'CCK_COM', 'com_cck' );
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 
 // Script
 class plgSystemCCKInstallerScript
@@ -29,7 +29,7 @@ class plgSystemCCKInstallerScript
 		$tmp_dir 	=	uniqid( 'cck_var_' );
 		$path 		= 	$tmp_path.'/'.$tmp_dir;
 		$src		=	JPATH_SITE.'/libraries/cck/rendering/variations';
-		if ( Folder::exists( $src ) ) {
+		if ( is_dir( $src ) ) {
 			Folder::copy( $src, $path );
 			$app->cck_core_temp_var	=	$tmp_dir;
 		}
@@ -39,7 +39,7 @@ class plgSystemCCKInstallerScript
 		if ( is_file( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.next.php' ) ) {
 			$path	=	JPATH_SITE.'/language';
 
-			if ( Folder::exists( $path ) ) {
+			if ( is_dir( $path ) ) {
 				$lang_tags	=	Folder::folders( $path );
 				$protected	=	array( 'overrides' );
 

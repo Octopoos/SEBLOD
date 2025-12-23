@@ -12,8 +12,6 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Table\Table;
 
-// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-
 // CCK_Category (deprecated)
 class CCK_Category
 {

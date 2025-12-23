@@ -12,8 +12,6 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Table\Content;
 
-// JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' ); // Deprecated in Joomla 6
-
 // JCckTableContent
 class JCckTableContent extends Content
 {

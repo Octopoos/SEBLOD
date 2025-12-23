@@ -10,16 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
-
-jimport( 'joomla.filesystem.file' );
-jimport( 'joomla.filesystem.folder' );
 
 // Script
 class com_cckInstallerScript
@@ -77,7 +74,7 @@ class com_cckInstallerScript
 		// Uninstall FULL PACKAGE only if package exists && system plugin exists..
 		if ( $eid && $cck ) {
 			$manifest	=	JPATH_ADMINISTRATOR.'/manifests/packages/pkg_cck.xml';
-			if ( File::exists( $manifest ) ) {
+			if ( is_file( $manifest ) ) {
 				$xml	=	Factory::getXML( $manifest ); // Keep it this way until platform 13.x
 			}
 			if ( isset( $xml->files ) ) {
@@ -266,7 +263,7 @@ class com_cckInstallerScript
 		
 		// Additional stuff
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
-		if ( File::exists( $src ) ) {
+		if ( is_file( $src ) ) {
 			File::delete( JPATH_SITE.'/cli/cck_job.php' );
 			File::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
 			Folder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
@@ -274,8 +271,8 @@ class com_cckInstallerScript
 
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
 		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
-		if ( File::exists( $src ) ) {
-			if ( !File::exists( $dest ) ) {
+		if ( is_file( $src ) ) {
+			if ( !is_file( $dest ) ) {
 				File::copy( $src, $dest );
 			}
 			$query	=	$db->getQuery( true );
@@ -287,7 +284,7 @@ class com_cckInstallerScript
 		
 			if ( $site_template = $db->loadResult() ) {
 				$dest	=	JPATH_SITE.'/templates/'.$site_template.'/raw.php';
-				if ( !File::exists( $dest ) ) {
+				if ( !is_file( $dest ) ) {
 					File::copy( $src, $dest );
 				}
 			}

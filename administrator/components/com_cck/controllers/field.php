@@ -84,7 +84,7 @@ class CCKControllerField extends CCK_ControllerForm
 	// cancel
 	public function cancel( $key = null )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 

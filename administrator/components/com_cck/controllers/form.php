@@ -15,8 +15,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Session\Session;
 
-jimport( 'joomla.application.component.controllerform' );
-
 // Controller
 class CCKControllerForm extends FormController
 {
@@ -35,7 +33,7 @@ class CCKControllerForm extends FormController
 	// cancel
 	public function cancel( $key = null )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		/* TODO#SEBLOD: checkin, etc.. */
 		
@@ -47,7 +45,7 @@ class CCKControllerForm extends FormController
 	// save
 	public function save( $key = null, $urlVar = null, $isAjax = false )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
 		$model		=	$this->getModel( 'form' );
@@ -122,7 +120,7 @@ class CCKControllerForm extends FormController
 	// saveAjax
 	public function saveAjax()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$config		=	$this->save( null, null, true );
 		$return		=	array(

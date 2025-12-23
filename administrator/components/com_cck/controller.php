@@ -10,10 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -32,7 +32,7 @@ class CCKController extends BaseController
 	// addFieldRowAjax
 	public function addFieldRowAjax( $field = null, $client = '' )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
 		$lang		=	Factory::getLanguage();
@@ -140,7 +140,7 @@ class CCKController extends BaseController
 	// addTypeAjax
 	public function addTypeAjax()
     {
-    	Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+    	Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$app		=	Factory::getApplication();
 		$client		=	$app->input->get( 'client', '' );
@@ -259,7 +259,7 @@ class CCKController extends BaseController
 	// ajax
 	public function ajax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$app	=	Factory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
@@ -267,8 +267,6 @@ class CCKController extends BaseController
 		if ( $file != '' ) {
 			if ( JCckDevHelper::checkAjaxScript( $file ) ) {
 				$file	=	JPATH_ROOT.'/'.$file;
-
-				jimport( 'joomla.filesystem.file' );
 
 				if ( is_file( $file ) && File::getExt( $file ) == 'php' ) {
 					include_once $file;
@@ -280,7 +278,7 @@ class CCKController extends BaseController
 	// batchFolder
 	public function batchFolder()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$app		=	Factory::getApplication();
 		$pks		=	$app->input->post->get( 'cid', array(), 'array' );
@@ -307,7 +305,7 @@ class CCKController extends BaseController
 	// deleteSessionAjax
 	public function deleteSessionAjax()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		if ( !Factory::getUser()->authorise( 'core.admin' ) ) { // TODO#SEBLOD change to ->authorise( 'core.admin', 'com_cck' ) ??
 			return;
@@ -464,7 +462,7 @@ class CCKController extends BaseController
 	// export
 	public function export()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$type	=	$app->input->getString( 'extension', 'plugin' );
@@ -497,7 +495,7 @@ class CCKController extends BaseController
 	// exportAjax
 	public function exportAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -537,7 +535,7 @@ class CCKController extends BaseController
 	// saveIntegrationAjax
 	public function saveIntegrationAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$app		=	Factory::getApplication();
 		$json		=	$app->input->json->getRaw();
@@ -563,7 +561,7 @@ class CCKController extends BaseController
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );
@@ -590,7 +588,7 @@ class CCKController extends BaseController
 	// saveSessionAjax
 	public function saveSessionAjax()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		if ( !Factory::getUser()->authorise( 'core.admin' ) ) { // TODO#SEBLOD change to ->authorise( 'core.admin', 'com_cck' ) ??
 			return;

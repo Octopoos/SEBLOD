@@ -20,8 +20,6 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
-jimport( 'joomla.application.component.controlleradmin' );
-
 // Controller
 class CCKControllerList extends AdminController
 {
@@ -36,7 +34,7 @@ class CCKControllerList extends AdminController
 	// delete
 	public function delete()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$model	=	$this->getModel();
@@ -58,7 +56,7 @@ class CCKControllerList extends AdminController
 	public function export()
 	{
 		if ( !Session::checkToken( 'get' ) ) {
-			Session::checkToken( 'post' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+			Session::checkToken( 'post' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
@@ -98,7 +96,7 @@ class CCKControllerList extends AdminController
 	public function process()
 	{
 		if ( !Session::checkToken( 'get' ) ) {
-			Session::checkToken( 'post' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+			Session::checkToken( 'post' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {

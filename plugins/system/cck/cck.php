@@ -47,8 +47,6 @@ class plgSystemCCK extends CMSPlugin
 				$this->content_objects['joomla_user_note']	=	1;
 			}
 		}
-		jimport( 'joomla.filesystem.file' );
-
 		$this->_setLegacyMode();
 
 		$this->default_lang_mode	=	(int)JCck::getConfig_Param( 'language_default', 1 );

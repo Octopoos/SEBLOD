@@ -10,10 +10,10 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 
 require_once JPATH_COMPONENT.'/helpers/helper_folder.php';
@@ -117,7 +117,6 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		}
 		
 		// Core
-		jimport( 'joomla.filesystem.file' );
 		jimport( 'cck.base.install.export' );
 		
 		$data										=	array( 'root'=>$path,

@@ -45,7 +45,7 @@ class CCKController extends BaseController
 	// ajax
 	public function ajax()
 	{
-		Session::checkToken( 'get' ) or jexit( '<!DOCTYPE html><html><head><meta name="robots" content="noindex, nofollow"></head><body>'.Text::_( 'JINVALID_TOKEN' ).'</body></html>' );
+		Session::checkToken( 'get' ) or exit( '<!DOCTYPE html><html><head><meta name="robots" content="noindex, nofollow"></head><body>'.Text::_( 'JINVALID_TOKEN' ).'</body></html>' );
 
 		$app	=	Factory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
@@ -53,8 +53,6 @@ class CCKController extends BaseController
 		if ( $file != '' ) {
 			if ( JCckDevHelper::checkAjaxScript( $file ) ) {
 				$file	=	JPATH_ROOT.'/'.$file;
-
-				jimport( 'joomla.filesystem.file' );
 
 				if ( is_file( $file ) && File::getExt( $file ) == 'php' ) {
 					include_once $file;
@@ -66,7 +64,7 @@ class CCKController extends BaseController
 	// cancel
 	public function cancel( $key = 'config' )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$config	=	$app->input->post->get( $key, array(), 'array' );
@@ -86,7 +84,7 @@ class CCKController extends BaseController
 	// delete
 	public function delete()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$model	=	$this->getModel( 'list' );
@@ -287,7 +285,7 @@ class CCKController extends BaseController
 	public function export()
 	{
 		if ( !Session::checkToken( 'get' ) ) {
-			Session::checkToken( 'post' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+			Session::checkToken( 'post' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
@@ -320,7 +318,7 @@ class CCKController extends BaseController
 	// exportAjax
 	public function exportAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_exporter/models/cck_exporter.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -405,7 +403,7 @@ class CCKController extends BaseController
 	public function impersonate()
 	{
 		if ( !Session::checkToken( 'get' ) ) {
-			Session::checkToken( 'post' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+			Session::checkToken( 'post' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		}
 
 		$session	=	Factory::getSession();
@@ -440,7 +438,7 @@ class CCKController extends BaseController
 	// outputMessage
 	public function outputMessage()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$app	=	Factory::getApplication();
 		$link	=	$this->_getReturnPage();
@@ -460,7 +458,7 @@ class CCKController extends BaseController
 	public function process()
 	{
 		if ( !Session::checkToken( 'get' ) ) {
-			Session::checkToken( 'post' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+			Session::checkToken( 'post' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		}
 		
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
@@ -541,7 +539,7 @@ class CCKController extends BaseController
 	// processAjax
 	public function processAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_cck_toolbox/models/cck_toolbox.php' ) ) {
 			$this->setRedirect( $this->_getReturnPage(), Text::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
@@ -637,7 +635,7 @@ class CCKController extends BaseController
 	// save	
 	public function save( $isAjax = false )
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
 		$model		=	$this->getModel( 'form' );
@@ -838,7 +836,7 @@ class CCKController extends BaseController
 	// saveAjax
 	public function saveAjax()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 
 		$config		=	$this->save( true );
 		$return		=	array(
@@ -868,7 +866,7 @@ class CCKController extends BaseController
 	// saveFieldAjax
 	public function saveFieldAjax()
 	{
-		// Session::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		// Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
 		$model		=	$this->getModel( 'form' );
@@ -895,7 +893,7 @@ class CCKController extends BaseController
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$pks 	= 	$app->input->post->get( 'cid', array(), 'array' );

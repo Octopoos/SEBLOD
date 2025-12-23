@@ -10,13 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
-jimport( 'joomla.filesystem.file' );
+
 $class		=	strpos( $this->file, '/selection.php' ) !== false ? 'modal-small' : 'modal-default';
 $config		=	JCckDev::init( array(), true );
 $isImage	=	( File::getExt( $this->file ) == 'png' || File::getExt( $this->file ) == 'jpg' ) ? 1 : 0;

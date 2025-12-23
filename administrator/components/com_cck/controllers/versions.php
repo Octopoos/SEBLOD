@@ -17,8 +17,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
-jimport( 'joomla.application.component.controlleradmin' );
-
 // Controller
 class CCKControllerVersions extends AdminController
 {
@@ -33,7 +31,7 @@ class CCKControllerVersions extends AdminController
 	// delete
 	public function delete()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$cid	=	$app->input->get( 'cid', array(), 'array' );
@@ -73,7 +71,7 @@ class CCKControllerVersions extends AdminController
 	// revert
 	public function revert()
 	{
-		Session::checkToken() or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$pks	=	$app->input->post->get( 'cid', array(), 'array' );

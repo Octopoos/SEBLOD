@@ -10,9 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 // Model
@@ -61,7 +61,7 @@ class CCKModelCCK extends BaseDatabaseModel
 			$copyright	=	'';
 		}
 
-		if ( $src && Folder::exists( $src ) ) {
+		if ( $src && is_dir( $src ) ) {
 			if ( $copyright ) {
 				CCK_Export::update( $src, $copyright );
 			}

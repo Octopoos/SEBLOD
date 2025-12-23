@@ -343,14 +343,10 @@ class plgContentCCK extends CMSPlugin
 
 			if ( $pkb > 0 ) {
 				if ( $bridge_object == 'joomla_category' ) {
-					// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
-
 					$bridge	=	Table::getInstance( 'Category' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );
 				} elseif ( $bridge_object == 'joomla_article' ) {
-					// JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/content.php' ); // Deprecated in Joomla 6
-
 					$bridge	=	Table::getInstance( 'Content' );
 					$bridge->load( $pkb );
 					$bridge->delete( $pkb );

@@ -17,8 +17,6 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
-jimport( 'joomla.application.component.controllerform' );
-
 // Controller
 class CCKControllerTemplate extends FormController
 {
@@ -84,7 +82,7 @@ class CCKControllerTemplate extends FormController
 	// exportVariation
 	public function exportVariation()
 	{
-		Session::checkToken( 'get' ) or jexit( Text::_( 'JINVALID_TOKEN' ) );
+		Session::checkToken( 'get' ) or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app	=	Factory::getApplication();
 		$model	=	$this->getModel();

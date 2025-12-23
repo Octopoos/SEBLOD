@@ -97,8 +97,6 @@ abstract class JCckDevHelper
 	// createFolder
 	public static function createFolder( $path, $mode = 0755 )
 	{
-		// jimport( 'joomla.filesystem.folder' );
-		
 		if ( ! is_dir( $path ) ) {
 			Folder::create( $path, $mode );
 			$buffer	=	'<!DOCTYPE html><title></title>';
