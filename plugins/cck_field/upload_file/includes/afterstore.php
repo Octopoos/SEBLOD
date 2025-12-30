@@ -10,9 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 
 $name			=	$process['field_name'];
@@ -72,7 +72,7 @@ if ( $content_folder && $config['isNew'] ) {
 	$location		=	$root_folder.'/'.$file_path.$file_name;
 }
 
-if ( ! Folder::exists( $root_folder.'/'.$file_path ) ) {
+if ( ! is_dir( $root_folder.'/'.$file_path ) ) {
 	Folder::create( $root_folder.'/'.$file_path, $permissions );
 	$file_body	=	'<!DOCTYPE html><title></title>';
 	File::write( $root_folder.'/'.$file_path.'/index.html', $file_body );

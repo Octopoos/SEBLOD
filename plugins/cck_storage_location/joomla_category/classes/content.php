@@ -26,8 +26,6 @@ class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
 	protected function initialize()
 	{
 		PluginHelper::importPlugin( 'content' );
-
-		// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 	}
 
 	// preSave

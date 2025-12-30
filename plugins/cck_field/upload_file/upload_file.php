@@ -10,16 +10,14 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-
-jimport( 'joomla.filesystem.file' );
 
 // Plugin
 class plgCCK_FieldUpload_File extends JCckPluginField
@@ -98,12 +96,11 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 		$root_folder	=	JCckDevHelper::getRootFolder( 'resources', ( isset( $options2['path_type'] ) && (int)$options2['path_type'] == 1 ) );
 		
 		// Process
-		if ( $file != '' && File::exists( $root_folder.'/'.$file ) ) {
+		if ( $file != '' && is_file( $root_folder.'/'.$file ) ) {
 			$path		=	substr( $value, 0, strrpos( $value, '/' ) ).'/';
 
 			if ( $options2['path_content'] ) {
-				jimport( 'joomla.filesystem.folder' );
-				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && Folder::exists( $root_folder.'/'.$path ) ) {
+				if ( $path != '' && strpos( $path, $options2['path'] ) !== false && is_dir( $root_folder.'/'.$path ) ) {
 					if ( Folder::delete( $root_folder.'/'.$path ) ) {
 						return true;
 					}
@@ -624,7 +621,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					}
 					$content_folder		=	( $options2['path_content'] ) ? $config['pk'].'/' : '';
 	
-					if ( File::exists( $root_folder.'/'.$itemPath ) ) {	
+					if ( is_file( $root_folder.'/'.$itemPath ) ) {	
 						File::delete( $root_folder.'/'.$itemPath );
 					}
 				}
@@ -685,7 +682,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				if ( $deleteBox == 1 ) {
 					$item_custom_title	=	'';
 				}
-				if ( $item_custom_dir != '' && strrpos( $item_custom_dir, '.' ) > 0 && File::exists( $root_folder.'/'.$item_custom_dir ) ) {
+				if ( $item_custom_dir != '' && strrpos( $item_custom_dir, '.' ) > 0 && is_file( $root_folder.'/'.$item_custom_dir ) ) {
 					if ( count( $legal_ext ) ) {
 						$legal		=	( strrpos( $item_custom_dir, '.' ) ) ? substr( $item_custom_dir, strrpos( $item_custom_dir, '.' ) + 1 ) : '';
 						if ( $legal && array_search( $legal, $legal_ext ) === false ) {
@@ -702,7 +699,7 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 					if ( $options2['path'] == $itemPath ) {
 						$value	=	'';
 					} else {
-						if ( strrpos( $itemPath, '.') > 0 && File::exists( $root_folder.'/'.$itemPath ) ) {
+						if ( strrpos( $itemPath, '.') > 0 && is_file( $root_folder.'/'.$itemPath ) ) {
 							$value	=	$itemPath;
 						} else {
 							$value	=	'';
@@ -769,8 +766,6 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		jimport( 'joomla.filesystem.folder' );
-		
 		include __DIR__.'/includes/afterstore.php';
 	}
 	

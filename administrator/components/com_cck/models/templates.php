@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Table\Table;
 
@@ -199,11 +200,11 @@ class CCKModelTemplates extends ListModel
 		$template			=	Helper_Workshop::getDefaultTemplate();
 
 		$options			=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_templates AS a WHERE a.mode = 1 AND a.published = 1 ORDER BY a.title asc' );
-		$items['admin']		=	Jhtml::_( 'select.genericlist', $options, 'template_admin', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
-		$items['site']		=	Jhtml::_( 'select.genericlist', $options, 'template_site', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
+		$items['admin']		=	HTMLHelper::_( 'select.genericlist', $options, 'template_admin', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
+		$items['site']		=	HTMLHelper::_( 'select.genericlist', $options, 'template_site', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
 		
 		$options			=	JCckDatabase::loadObjectList( 'SELECT a.name AS value, a.title AS text FROM #__cck_core_templates AS a WHERE a.mode = 0 AND a.published = 1 ORDER BY a.title asc' );
-		$items['content']	=	Jhtml::_( 'select.genericlist', $options, 'template_content', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
+		$items['content']	=	HTMLHelper::_( 'select.genericlist', $options, 'template_content', 'class="inputbox" size="1" style="margin-bottom: 8px;"', 'value', 'text', $template );
 		
 		return $items;
 	}

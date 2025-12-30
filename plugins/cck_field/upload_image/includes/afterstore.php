@@ -10,8 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\File;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 
 $name			=	$process['field_name'];

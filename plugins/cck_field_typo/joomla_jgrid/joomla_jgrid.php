@@ -180,7 +180,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						JCck::callFunc_Array( 'plgCCK_Field_Validation'.$field->validation, 'onCCK_Field_ValidationPrepareForm', array( &$field, $inherit['id'], &$config ) );
 					}
 					if ( $typo->get( 'required' ) == 'required' ) {
-						// JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR );
+						// Factory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR );
 
 						// require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
 
