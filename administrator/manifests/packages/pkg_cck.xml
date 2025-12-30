@@ -77,6 +77,7 @@
 			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
 			<file type="plugin" id="search_generic" group="cck_field">plg_cck_field_search_generic.zip</file>
 			<file type="plugin" id="search_ordering" group="cck_field">plg_cck_field_search_ordering.zip</file>
+			<file type="plugin" id="search_total" group="cck_field">plg_cck_field_search_total.zip</file>
 			<file type="plugin" id="select_dynamic" group="cck_field">plg_cck_field_select_dynamic.zip</file>
 			<file type="plugin" id="select_multiple" group="cck_field">plg_cck_field_select_multiple.zip</file>
 			<file type="plugin" id="select_numeric" group="cck_field">plg_cck_field_select_numeric.zip</file>
@@ -94,13 +95,18 @@
 			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
 			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
 			<file type="plugin" id="cck_route" group="cck_field_link">plg_cck_field_link_cck_route.zip</file>
+			<file type="plugin" id="cck_task" group="cck_field_link">plg_cck_field_link_cck_task.zip</file>
+			<file type="plugin" id="custom" group="cck_field_link">plg_cck_field_link_custom.zip</file>
 			<file type="plugin" id="download" group="cck_field_link">plg_cck_field_link_download.zip</file>
+			<file type="plugin" id="joomla_menuitem" group="cck_field_link">plg_cck_field_link_joomla_menuitem.zip</file>
 			<!-- Plugin // CCK Field Live -->
 			<file type="plugin" id="datetime" group="cck_field_live">plg_cck_field_live_datetime.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_field_live">plg_cck_field_live_joomla_user.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_live">plg_cck_field_live_url_variable.zip</file>
 			<!-- Plugin // CCK Field Restriction -->
+			<file type="plugin" id="cck_fields" group="cck_field_restriction">plg_cck_field_restriction_cck_fields.zip</file>
 			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
+			<file type="plugin" id="search_total" group="cck_field_restriction">plg_cck_field_restriction_search_total.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
 			<!-- Plugin // CCK Field Typo -->
 			<file type="plugin" id="bold" group="cck_field_typo">plg_cck_field_typo_bold.zip</file>
