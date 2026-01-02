@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 6.0.0 Release Candidate [xx-Jan-2026] -------------
+--------------- 6.0.0 Beta2 Release [5-Jan-2026] -------------
 
 ! Joomla! 6 support
 
@@ -34,7 +34,16 @@ $ -> Language fix or change
   >> Item Typography Plug-in
   >> Date Validation Plug-in
 
---------------- 5.0.0 Release Candidate [30-Oct-2025] -------------
+--------------- 5.0.0 Release Candidate2 [5-Jan-2026] -------------
+
++ Download/Read tasks improved.
++ Impersonate capabilites improved.
+
+# Issues fixed for SEBLOD Toolbox Add-on, SEBLOD WebServices Add-on.
+# Upload File issue fixed.
+# Warning fixed.
+
+--------------- 5.0.0 Release Candidate [28-Nov-2025] -------------
 
 + Field Rendering improved with Layouts (HTML Markup around fields)
   >> /components/com_cck/layouts/...
