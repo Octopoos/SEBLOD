@@ -205,7 +205,12 @@ class JCckContent
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		$this->_instance_base	=	Table::getInstance( self::$objects[$this->_object]['properties']['table_object'][0], self::$objects[$this->_object]['properties']['table_object'][1] );
+		if ( isset( self::$objects[$this->_object]['properties']['table_object'][1] ) && self::$objects[$this->_object]['properties']['table_object'][1] ) {
+			$this->_instance_base	=	Table::getInstance( self::$objects[$this->_object]['properties']['table_object'][0], self::$objects[$this->_object]['properties']['table_object'][1] );
+		} else {
+			$this->_instance_base	=	Table::getInstance( self::$objects[$this->_object]['properties']['table_object'][0] );
+		}
+
 		$this->_setDataMap( 'base' );
 
 		return true;

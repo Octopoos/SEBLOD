@@ -28,7 +28,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $type			=	'joomla_category';
 	protected static $type_alias	=	'Category';
 	protected static $table			=	'#__categories';
-	protected static $table_object	=	array( 'Category', 'Table' );
+	protected static $table_object	=	array( 'Category' );
 	protected static $key			=	'id';
 	protected static $key_field		=	'category_pk';
 	
