@@ -36,7 +36,8 @@ $displayData    =   array(
                                     JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Always=0||Only If Different=1' ) ),
                                     JCckDev::renderForm( 'core_dev_select', @$options2['content'], $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Use Value=optgroup||Field=2', 'storage_field'=>'json[options2][content]' ) ),
                                     JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' ),
-                                    JCckDev::renderForm( 'core_dev_text', @$options2['content_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][content_fieldname]' ) )
+                                    JCckDev::renderForm( 'core_dev_text', @$options2['content_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][content_fieldname]' ) ),
+				    JCckDev::renderForm( 'core_dev_text', @$options2['url_fieldname'], $config, array( 'label'=>'Custom URL Field Name', 'storage_field'=>'json[options2][url_fieldname]' ) )
                                 ),
                             ),
                             array(
