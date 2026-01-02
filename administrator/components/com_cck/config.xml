@@ -126,6 +126,7 @@
 	
 	<fieldset name="fs_integration" label="COM_CCK_CONFIG_FIELDSET_INTEGRATION" description="COM_CCK_CONFIG_FIELDSET_INTEGRATION_DESC">
 		<field name="integration" type="cckintegration" label="COM_CCK_CONFIG_INTEGRATION_CONTENT_OBJECTS" class="inputbox" validate="rules" filter="rules" component="com_cck" section="component" />
+		<field name="integration_issue_tracker_url" type="text" size="98" default="" label="COM_CCK_CONFIG_INTEGRATION_ISSUE_TRACKER_URL" description="COM_CCK_CONFIG_INTEGRATION_ISSUE_TRACKER_URL_DESC" class="inputbox input-xxlarge" />
 	</fieldset>
 
 	<fieldset name="fs_language" label="COM_CCK_CONFIG_FIELDSET_LANGUAGE" description="COM_CCK_CONFIG_FIELDSET_LANGUAGE_DESC">
@@ -151,8 +152,12 @@
 			<option value="1">COM_CCK_UPPERCASE</option>
 			<option value="2">COM_CCK_BOTH</option>
 		</field>
-		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
+		<field name="media_characters" type="text" size="98" default="-_" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_root_resources" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES" description="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES_DESC" class="inputbox input-xxlarge" />
+		<field name="media_download_bypass" type="radio" default="1" label="COM_CCK_CONFIG_MEDIA_DOWNLOAD_BYPASS" description="COM_CCK_CONFIG_MEDIA_DOWNLOAD_BYPASS_DESC" class="btn-group btn-group-yesno">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
 		<field name="media_canonical" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_CANONICAL" description="COM_CCK_CONFIG_MEDIA_CANONICAL_DESC" class="btn-group btn-group-yesno">
