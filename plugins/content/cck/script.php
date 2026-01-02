@@ -438,7 +438,8 @@ class plgContentCCKInstallerScript
 									187=>'4.4.0', 188=>'4.4.1', 189=>'4.4.2', 190=>'4.4.3',
 									191=>'4.5.0', 192=>'4.5.1', 193=>'4.5.2',
 									194=>'4.6.0', 195=>'4.6.1', 196=>'4.6.2',
-									200=>'5.0.0', 195=>'5.0.1', 196=>'5.0.2'
+									200=>'5.0.0', 201=>'5.0.1', 202=>'5.0.2',
+									600=>'6.0.0', 601=>'6.0.1', 602=>'6.0.2'
 							);
 			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
 			
@@ -508,7 +509,11 @@ class plgContentCCKInstallerScript
 			}
 			
 			if ( $i < 23 ) {	// ONLY < 2.4.5
-				JCckDatabase::doQuery( 'ALTER TABLE #__cck_core_folders ADD path VARCHAR( 1024 ) NOT NULL AFTER parent_id;' );
+				try {
+					JCckDatabase::doQuery( 'ALTER TABLE #__cck_core_folders ADD path VARCHAR( 1024 ) NOT NULL AFTER parent_id;' );
+				} catch (Exception $e) {
+					//
+				}
 				
 				require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 				
