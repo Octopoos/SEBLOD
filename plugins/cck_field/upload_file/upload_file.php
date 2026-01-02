@@ -591,6 +591,9 @@ class plgCCK_FieldUpload_File extends JCckPluginField
 				$deleteBox	=	$deleteBox[$xk];
 			}
 		}
+		if ( is_array( $itemPath ) ) {
+			$itemPath	=	isset( $itemPath[$xk] ) ? $itemPath[$xk] : $itemPath[0];
+		}
 
 		// Short Format Path
 		if ( @$options2['storage_format'] ) {
