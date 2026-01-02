@@ -44,6 +44,8 @@
 			<!-- Plugin // CCK Field -->
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
+			<file type="plugin" id="cck_break" group="cck_field">plg_cck_field_cck_break.zip</file>
+			<file type="plugin" id="cck_canonical" group="cck_field">plg_cck_field_cck_canonical.zip</file>
 			<file type="plugin" id="checkbox" group="cck_field">plg_cck_field_checkbox.zip</file>
 			<file type="plugin" id="colorpicker" group="cck_field">plg_cck_field_colorpicker.zip</file>
 			<file type="plugin" id="div" group="cck_field">plg_cck_field_div.zip</file>
@@ -73,6 +75,7 @@
 			<file type="plugin" id="jform_usergroups" group="cck_field">plg_cck_field_jform_usergroups.zip</file>
 			<file type="plugin" id="joomla_module" group="cck_field">plg_cck_field_joomla_module.zip</file>
 			<file type="plugin" id="link" group="cck_field">plg_cck_field_link.zip</file>
+			<file type="plugin" id="message_redirection" group="cck_field">plg_cck_field_message_redirection.zip</file>
 			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
 			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
 			<file type="plugin" id="search_generic" group="cck_field">plg_cck_field_search_generic.zip</file>
