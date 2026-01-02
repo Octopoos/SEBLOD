@@ -19,11 +19,16 @@ if ( !is_file( $path ) ) {
 	die;
 }
 
-$file_size	=	filesize( $path );
-$mime_types	=	array(
-					// PDF Documents
-					'pdf' => 'application/pdf',
-				);
+@ob_end_clean();
+header_remove( 'X-Powered-By' );
+set_time_limit( 0 );
+
+$cache_seconds	=	86400;
+$mime_types		=	array(
+						// PDF Documents
+						'pdf' => 'application/pdf',
+					);
+$watermark		=	false;
 
 if ( !isset( $mime_types[$ext] ) ) {
 	die;
@@ -31,13 +36,54 @@ if ( !isset( $mime_types[$ext] ) ) {
 	$mime_type	=	$mime_types[$ext];
 }
 
-header( "Expires: 0" );
-header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
-header( "Cache-Control: no-store" );
+if ( isset( $config['watermark'] ) && is_array( $config['watermark'] ) && !empty( $config['watermark']['texts'] ) ) {
+	$cmd_normalize			=	'gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -dAutoRotatePages=/All -sOutputFile=- -f -';
+	$cmd_watermark			=	'gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile=- '
+							.	'-c "<< /EndPage { exch pop 0 eq { gsave ';
+	$cmd_watermark_end		=	'grestore true } { false } ifelse } >> setpagedevice" -f -';
+	$ps_instructions		=	'';
+	$watermark				=	true;
+
+	foreach ( $config['watermark']['texts'] as $text ) {
+		$color		=	isset( $text['color'] ) && $text['color'] ? $text['color'] : '0.3 setgray';
+		$font_size	=	isset( $text['font_size'] ) && $text['font_size'] ? $text['font_size'] : '12';
+		$imagePath	=	JPATH_SITE.'/media/cck_dev/processings/document/download_tracking/watermark2.png';
+		$safeText	=	addslashes( $text['text'] );
+
+		/*
+		$command	.=	'grestore gsave 1 0 0 setrgbcolor /Helvetica findfont 12 scalefont setfont '
+					.	'50 300 translate 90 rotate 0 0 moveto (Download on xx by xx) show ';
+
+		$command	.=	'grestore gsave 1 0 0 setrgbcolor /Helvetica findfont 12 scalefont setfont '
+					.	'30 230 moveto 90 rotate (Download on xx by xx) show ';
+
+		$command	.=	'grestore gsave 0.3 setgray /Helvetica findfont 50 scalefont setfont '
+					.	( 25 + 30 ).' '.( 25 + 10 ).' moveto 45 rotate (CONFIDENTIAL) show ';
+		*/
+
+		$ps_instructions	.=	'grestore gsave '
+							.	'currentpagedevice /PageSize get aload pop /ph exch def /pw exch def '
+							.	'30 ph 2 div translate 90 rotate ';
+
+		$ps_instructions	.=	$color.' /Arial findfont '.$font_size.' scalefont setfont '
+							.	'(' . $safeText . ') stringwidth pop 2 div neg 0 moveto '
+							.	'(' . $safeText . ') show ';
+	}
+
+	$command	=	$cmd_normalize.' | '.$cmd_watermark.$ps_instructions.$cmd_watermark_end;
+}
+
 header( "Content-Type: $mime_type" );
 header( "Content-Disposition: inline; filename=\"$name\"" );
-header( "Content-Length: " . $file_size );
 
+if ( $watermark ) {
+	header( "Expires: 0" );
+	header( "Cache-Control: no-store, no-cache, must-revalidate, max-age=0" );
+} else {
+	header( "Expires: ".gmdate( "D, d M Y H:i:s", time() + $cache_seconds)." GMT" );
+	header( "Cache-Control: public, max-age=" . $cache_seconds . ", must-revalidate" );
+	header( "Content-Length: ".filesize( $path ) );
+}
 if ( isset( $x_robots ) && $x_robots ) {
 	switch ( $x_robots ) {
 		case 'index, nofollow':
@@ -75,14 +121,47 @@ if ( isset( $config['app'] ) ) {
 	if ( $handle === false ) {
 		die;
 	}
-	while ( !feof( $handle ) ) {
-		echo @fread( $handle, $chunk_size );
-		ob_flush();
-		flush();
-	}
 
-	fclose( $handle );
+	if ( $watermark ) {
+		$descriptors	=	[
+			0 => ['pipe', 'r'],
+			1 => ['pipe', 'w'],
+			2 => ['pipe', 'w']
+		];
+		$process		=	proc_open( $command, $descriptors, $pipes );
+
+		if ( !is_resource( $process ) ) {
+			die;
+		}
+
+		while ( !feof($handle ) ) {
+			$chunk	=	fread( $handle, $chunk_size );
+			fwrite( $pipes[0], $chunk );
+			fflush( $pipes[0] );
+		}
+
+		fclose( $handle );
+		fclose( $pipes[0] );
+
+		while ( !feof( $pipes[1] ) ) {
+			echo @fread( $pipes[1], $chunk_size );
+			ob_flush();
+			flush();
+		}
+
+		fclose( $pipes[1] );
+		fclose( $pipes[2] );
+		proc_close( $process );
+	} else {
+		while ( !feof( $handle ) ) {
+			echo @fread( $handle, $chunk_size );
+			ob_flush();
+			flush();
+		}
+
+		fclose( $handle );
+	}
 }
 
-exit();
+exit;
 ?>

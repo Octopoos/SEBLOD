@@ -263,9 +263,6 @@ class CCKController extends BaseController
 					JCckDatabase::execute( 'UPDATE #__cck_core SET download_hits = download_hits+1 WHERE id = '.(int)$config['id'] );
 				}
 
-				@ob_end_clean();
-				set_time_limit( 0 );
-
 				if ( $task == 'read' || ( isset( $config['task2'] ) && $config['task2'] == 'read' ) ) {
 					include JPATH_ROOT.'/components/com_cck/read.php';
 				} else {
