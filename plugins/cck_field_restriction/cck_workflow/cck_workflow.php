@@ -66,7 +66,15 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 
 		// Action
 		if ( $action ) {
-			if ( ( $action == 'add' && !$config['isNew'] )
+			if ( $action == 'store' ) {
+				if ( isset( $config['task'] ) && $config['task'] != 'download' ) {
+					if ( $do ) {
+						$field->display	=	0;
+						$field->state	=	0;
+						return false;
+					}
+				}
+			} elseif ( ( $action == 'add' && !$config['isNew'] )
 			  || ( $action == 'edit' && $config['isNew'] ) ) {
 			  	if ( !$do ) {
 					$field->display	=	0;
