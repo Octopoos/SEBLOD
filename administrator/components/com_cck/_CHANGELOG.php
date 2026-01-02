@@ -22,6 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 5.0.0 Release Candidate2 [5-Jan-2026] -------------
+
++ Download/Read tasks improved.
++ Impersonate capabilites improved.
+
+# Issues fixed for SEBLOD Toolbox Add-on, SEBLOD WebServices Add-on.
+# Upload File issue fixed.
+# Warning fixed.
+
 --------------- 5.0.0 Release Candidate [28-Nov-2025] -------------
 
 + Field Rendering improved with Layouts (HTML Markup around fields)
