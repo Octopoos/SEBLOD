@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -17,7 +19,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Router\Router;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Utilities\ArrayHelper;
 
 // Plugin
 class plgSystemCCK extends CMSPlugin
@@ -303,7 +304,7 @@ class plgSystemCCK extends CMSPlugin
 							$path	=	JPATH_SITE.'/plugins/cck_storage_location/'.$location->name.'/classes/integration.php';
 							if ( is_file( $path ) ) {
 								$data	=	array(
-												'options'=>new \Joomla\Registry\Registry( $location->options )
+												'options'=>new Registry( $location->options )
 											);
 								require_once $path;
 								JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location->name.'_Integration', 'onCCK_Storage_LocationAfterDispatch', array( &$data, $uri ) );
@@ -351,7 +352,7 @@ class plgSystemCCK extends CMSPlugin
 					if ( $ref == '' || strpos( $ref, '://'.$uri->getHost() ) === false ) {
 						if ( $item->query['search'] ) {
 							$search	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.$item->query['search'].'"' );
-							$search	=	new \Joomla\Registry\Registry( $search );
+							$search	=	new Registry( $search );
 
 							if ( (int)$search->get( 'load_resource', 0 ) ) {
 								$base		=	$uri->toString( array( 'scheme', 'host', 'port' ) );
@@ -413,7 +414,7 @@ class plgSystemCCK extends CMSPlugin
 											   'params'=>$template->params,
 											   'template'=>$template->template
 										);
-						$params['params']	=	new \Joomla\Registry\Registry( $params['params'] );
+						$params['params']	=	new Registry( $params['params'] );
 						
 						$doc->parse( $params );
 						$this->offline_buffer	=	$doc->render( false, $params );
@@ -437,7 +438,7 @@ class plgSystemCCK extends CMSPlugin
 
 			if ( $option == 'com_users' ) {
 				$options	=	JCckDatabase::loadResult( 'SELECT a.options FROM #__cck_core_objects AS a WHERE a.name = "joomla_user"' );
-				$options	=	new \Joomla\Registry\Registry( $options );
+				$options	=	new Registry( $options );
 				$itemId		=	$app->input->getInt( 'Itemid', 0 );
 
 				if ( $options->get( 'registration', 1 ) ) {
@@ -487,7 +488,7 @@ class plgSystemCCK extends CMSPlugin
 									if ( $search != '' ) {
 										$search = '{}';
 									}
-									$search	=	new \Joomla\Registry\Registry( $search );
+									$search	=	new Registry( $search );
 									$sef	=	$search->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
 									if ( $sef ) {
 										$itemId	=	$itemId2;
@@ -726,7 +727,7 @@ class plgSystemCCK extends CMSPlugin
 								if ( is_file( $path ) ) {
 									$data	=	array( 'doIntegration'=>false,
 													   'multilanguage'=>0,
-													   'options'=>new \Joomla\Registry\Registry( $location->options ),
+													   'options'=>new Registry( $location->options ),
 													   'replace_end'=>'"',
 													   'return_option'=>substr( $option, 4 ),
 													   'return_view'=>$view,
@@ -781,7 +782,7 @@ class plgSystemCCK extends CMSPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new \Joomla\Registry\Registry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -800,7 +801,7 @@ class plgSystemCCK extends CMSPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new \Joomla\Registry\Registry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -816,7 +817,7 @@ class plgSystemCCK extends CMSPlugin
 			return;
 		}
 
-		$params	=	new \Joomla\Registry\Registry;
+		$params	=	new Registry;
 		$params->loadString( $table->params );
 
 		if ( $proxy = (int)$params->get( 'proxy', '0' ) ) {
@@ -844,7 +845,7 @@ class plgSystemCCK extends CMSPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						$options	=	new \Joomla\Registry\Registry( $p->options );
+						$options	=	new Registry( $p->options );
 
 						include_once JPATH_SITE.$p->scriptfile;
 					}
@@ -1115,7 +1116,7 @@ class plgSystemCCK extends CMSPlugin
 	{
 		$lang	=	Factory::getLanguage();
 		$params	=	JCckDatabase::loadResult( 'SELECT params FROM #__extensions WHERE type = "component" AND element = "com_languages"' );
-		$params	=	new \Joomla\Registry\Registry( $params );
+		$params	=	new Registry( $params );
 
 		if ( ( $default = $params->get( 'site' ) ) != $lang->getDefault() ) {
 			$lang->setDefault( $default );

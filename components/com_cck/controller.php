@@ -11,6 +11,8 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\Filesystem\File;
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -20,7 +22,6 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Utilities\ArrayHelper;
 
 // Controller
 class CCKController extends BaseController
@@ -251,7 +252,7 @@ class CCKController extends BaseController
 						if ( isset( $processing[$event] ) ) {
 							foreach ( $processing[$event] as $p ) {
 								if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-									$options	=	new \Joomla\Registry\Registry( $p->options );
+									$options	=	new Registry( $p->options );
 									
 									include_once JPATH_SITE.$p->scriptfile;
 								}
@@ -473,7 +474,7 @@ class CCKController extends BaseController
 			$processing	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$task_id );
 			
 			if ( is_object( $processing ) && $processing->options != '' ) {
-				$processing->options	=	new \Joomla\Registry\Registry( $processing->options );
+				$processing->options	=	new Registry( $processing->options );
 				$task_cid				=	$processing->options->get( 'input_cid', 'int' );
 			}
 		}
@@ -556,7 +557,7 @@ class CCKController extends BaseController
 			$processing	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_more_processings WHERE published = 1 AND id = '.(int)$task_id );
 			
 			if ( is_object( $processing ) && $processing->options != '' ) {
-				$processing->options	=	new \Joomla\Registry\Registry( $processing->options );
+				$processing->options	=	new Registry( $processing->options );
 				$task_cid				=	$processing->options->get( 'input_cid', 'int' );
 			}
 		}
@@ -755,7 +756,7 @@ class CCKController extends BaseController
 							}
 							$vars	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.(string)$target.'"' );
 							if ( $vars ) {
-								$vars	=	new \Joomla\Registry\Registry( $vars );
+								$vars	=	new Registry( $vars );
 								$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) );
 							}
 						}
