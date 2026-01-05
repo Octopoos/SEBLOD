@@ -25,6 +25,7 @@ $ -> Language fix or change
 --------------- 6.0.0 Beta2 Release [5-Jan-2026] -------------
 
 ! Joomla! 6 support
+  >> extensive modifications of code for Joomla! 6
 
 + Additional Plug-ins included within Core Package:
   >> Break, Canonical, Message & Redirection, Search Total Field Plug-ins
@@ -33,6 +34,8 @@ $ -> Language fix or change
   >> Fields, Search Total Restriction Plug-ins
   >> Item Typography Plug-in
   >> Date Validation Plug-in
+
+- CCK_XMLElement class
 
 --------------- 5.0.0 Release Candidate2 [5-Jan-2026] -------------
 
