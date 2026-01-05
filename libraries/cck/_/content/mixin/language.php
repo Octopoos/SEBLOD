@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
 
 $mixin	=	new class() {
 	// _getLanguageAssociation
@@ -28,7 +29,7 @@ $mixin	=	new class() {
 	{
 		return function() {
 			$associations	=	array();
-			$items			=	JLanguageAssociations::getAssociations( 'com_cck', $this->getTable(), 'com_cck.free.'.$this->getTable(), $this->getPk(), 'id', '', '' );
+			$items			=	Associations::getAssociations( 'com_cck', $this->getTable(), 'com_cck.free.'.$this->getTable(), $this->getPk(), 'id', '', '' );
 
 			foreach ( $items as $lang_tag=>$item ) {
 				$associations[$lang_tag]	=	$item->id;

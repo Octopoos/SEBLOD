@@ -16,8 +16,6 @@ use Joomla\Registry\Registry;
 
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
 
-//JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php' );
-
 // View
 class CCKViewList extends HtmlView
 {

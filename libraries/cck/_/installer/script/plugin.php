@@ -163,7 +163,7 @@ class JCckInstallerScriptPlugin
 		}
 		
 		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
-			\JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			require_once JPATH_LIBRARIES.'/cck/_/cck.php';
 			\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 		} else {
 			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			

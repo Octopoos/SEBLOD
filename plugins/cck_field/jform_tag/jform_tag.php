@@ -10,12 +10,13 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\CMS\Table\Table;
+use Joomla\Component\Tags\Administrator\Table\TagTable;
 
 // Plugin
 class plgCCK_FieldJform_Tag extends JCckPluginField
@@ -47,8 +48,6 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
-		
-		\JLoader::register( 'TagsHelperRoute', JPATH_SITE . '/components/com_tags/helpers/route.php' );
 
 		$html	=	'';
 
@@ -385,10 +384,9 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 						'published'=>1,
 						'title'=>$title
 					);
+		$db		=	Factory::getDbo();
 
-		\JLoader::register( 'TagsTableTag', JPATH_ADMINISTRATOR . '/components/com_tags/tables/tag.php' );
-
-		$table	=	Table::getInstance( 'Tag', 'TagsTable' );
+		$table	=	new TagTable( $db );
 
 		$table->setLocation( $data['parent_id'], 'last-child' );
 

@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Profiler\Profiler;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -388,9 +389,7 @@ $config['limitend']		=	$limitend;
 $config['limitstart']	=	$limitstart;
 
 if ( $doDebug ) {
-	jimport( 'joomla.error.profiler' );
-	
-	$profiler	=	JProfiler::getInstance();
+	$profiler	=	Profiler::getInstance();
 	echo $profiler->mark( 'beforeSearch'.$isCached ).'<br />';
 }
 

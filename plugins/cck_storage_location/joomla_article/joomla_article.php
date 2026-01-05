@@ -13,11 +13,13 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Component\Menus\Administrator\Helper\MenusHelper;
 
 // Plugin
 class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
@@ -729,7 +731,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _setFeatured
 	protected static function _setFeatured( $table, $isNew )
 	{
-		\JLoader::register( 'ContentTableFeatured', JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php' );
+		if ( !is_file( JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php' ) ) {
+			return;
+		}
+
+		require_once JPATH_ADMINISTRATOR.'/components/com_content/tables/featured.php';
 
 		if ( !class_exists( 'ContentTableFeatured' ) ) {
 			return;
@@ -946,8 +952,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$app		=	Factory::getApplication();
 				$pk			=	$storage[self::$table]->id;
 				if ( $app->input->get( 'view' ) == 'article' && $app->input->get( 'id' ) == $storage[self::$table]->id && !count( self::$routes ) ) {
-					\JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php' );
-					$assoc_c	=	JLanguageAssociations::getAssociations( 'com_content', '#__content', 'com_content.item', $pk );
+
+					$assoc_c	=	Associations::getAssociations( 'com_content', '#__content', 'com_content.item', $pk );
 					$assoc_m	=	MenusHelper::getAssociations( $itemId );
 					$languages	=	LanguageHelper::getLanguages();
 					$lang_code	=	Factory::getLanguage()->getTag();

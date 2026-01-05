@@ -22,6 +22,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
+use Joomla\Component\Menus\Administrator\Helper\MenusHelper;
 
 // JCckDevHelper
 abstract class JCckDevHelper
@@ -238,7 +239,7 @@ abstract class JCckDevHelper
 	// getCombinations
 	public static function getCombinations( $array, $length )
 	{
-		// JLoader::register( 'Combinations', JPATH_PLATFORM.'/cck/misc/Combinations.php' );
+		require_once JPATH_LIBRARIES.'/cck/misc/Combinations.php';
 
 		$combinations	=	new Combinations( $array );
 
@@ -265,7 +266,6 @@ abstract class JCckDevHelper
 							'uk'=>''
 						);
 
-			// jimport( 'joomla.language.helper' );
 			$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 			$lang_tag	=	Factory::getLanguage()->getTag();
 			$lang_code	=	( isset( $languages[$lang_tag] ) ) ? strtoupper( $languages[$lang_tag]->sef ) : '';
@@ -518,8 +518,6 @@ abstract class JCckDevHelper
 			$app		=	Factory::getApplication();
 			$menu		=	$app->getMenu();
 
-			// JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
-
 			$active			=	$itemId ? $menu->getItem( $itemId ) : $menu->getActive();
 			$associations	=	MenusHelper::getAssociations( $active->id );
 			$do_canonical	=	false;
@@ -663,8 +661,6 @@ abstract class JCckDevHelper
 				return '';
 			}
 		}
-
-		// jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
 
 		$lang		=	Factory::getLanguage();
 		$languages	=	LanguageHelper::getLanguages( 'lang_code' );
@@ -915,8 +911,8 @@ abstract class JCckDevHelper
 	// hasLanguageAssociations
 	public static function hasLanguageAssociations()
 	{
-		if ( class_exists( 'JLanguageAssociations' ) ) {
-			return JLanguageAssociations::isEnabled();
+		if ( class_exists( '\Joomla\CMS\Language\Associations' ) ) {
+			return \Joomla\CMS\Language\Associations::isEnabled();
 		} else {
 			$app	=	Factory::getApplication();
 			return ( isset( $app->item_associations ) ? $app->item_associations : 0 );

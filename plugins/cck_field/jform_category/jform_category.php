@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 
-\JLoader::register( 'JFormFieldCckCategory', JPATH_PLATFORM.'/cck/joomla/form/field/category.php' );
+require_once JPATH_LIBRARIES.'/cck/joomla/form/field/category.php';
 
 // Plugin
 class plgCCK_FieldJForm_Category extends JCckPluginField

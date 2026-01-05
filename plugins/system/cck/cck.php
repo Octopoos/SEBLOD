@@ -1161,8 +1161,8 @@ class plgSystemCCK extends CMSPlugin
 	{
 		// Joomla!
 		if ( !class_exists( 'JCck' ) ) {
-		\JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
-		\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
+			require_once JPATH_LIBRARIES.'/cck/_/cck.php';
+			\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 
 			if ( JCck::on( '4.0' ) ) {
 				// 

@@ -35,9 +35,7 @@ class CCKModelList extends BaseDatabaseModel
 	// _getPagination
 	public function _getPagination( $total = 0 )
 	{
-		if ( empty( $this->_pagination ) )
-		{
-			jimport( 'joomla.html.pagination' );
+		if ( empty( $this->_pagination ) ) {
 			$this->_pagination	=	new Pagination( $total, $this->getState( 'limitstart' ), $this->getState( 'limit' ) );
 		}
 

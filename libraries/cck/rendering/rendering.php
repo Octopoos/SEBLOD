@@ -15,6 +15,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Profiler\Profiler;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -351,8 +352,7 @@ class CCK_Rendering
 			if ( @$this->profiler ) {
 				$this->profiler_log	=	'<br />'.$this->profiler_log.'<br />';
 			} else {
-				jimport( 'joomla.error.profiler' );
-				$this->profiler		=	new JProfiler();
+				$this->profiler		=	new Profiler;
 				$this->profiler_log	=	'<br />';
 			}
 		}

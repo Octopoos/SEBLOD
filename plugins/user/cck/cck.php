@@ -45,7 +45,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onUserAfterLogin( $login_options )
 	{
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterLogin';
@@ -67,7 +67,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onUserAfterSave( $user, $isNew, $user2 )
 	{
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserAfterSave';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -88,7 +88,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onUserBeforeSave( $user, $isNew, $user2 )
 	{
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserBeforeSave';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -112,7 +112,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onUserLogin( $user, $options = array() )
 	{
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserLogin';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -133,7 +133,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onUserLogout( $user, $options = array() )
 	{
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserLogout';
@@ -231,7 +231,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 		}
 		
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			if ( $event == 'onUserAfterDelete' ) {
 				$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );

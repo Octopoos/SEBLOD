@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
 
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_article.php';
@@ -51,7 +52,7 @@ class plgCCK_Storage_LocationJoomla_Article_Helper extends plgCCK_Storage_Locati
 		if ( $hasForm ) {
 			$form->load( $addform, false );
 
-			$associations	=	JLanguageAssociations::getAssociations( 'com_content', '#__content', 'com_content.item', $config['pk'] );
+			$associations	=	Associations::getAssociations( 'com_content', '#__content', 'com_content.item', $config['pk'] );
 			
 			if ( count( $associations ) ) {
 				foreach ( $associations as $tag=>$association ) {

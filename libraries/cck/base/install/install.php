@@ -204,10 +204,9 @@ class CCK_Install
 			$id		=	$db->loadResult();
 			
 			if ( $id > 0 ) {
-				\JLoader::register( 'JTableMenu', JPATH_PLATFORM.'/joomla/database/table/menu.php' );
 				$table	=	Table::getInstance( 'Menu' );
 				$table->load( $id );
-				
+
 				$query		=	'SELECT id FROM #__menu WHERE link = "index.php?option=com_cck"';
 				$db->setQuery( $query );
 				$seblod_id		=	$db->loadResult();

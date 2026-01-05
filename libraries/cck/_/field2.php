@@ -75,7 +75,7 @@ class JCckField2
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		\JLoader::register( 'CCK_TableField', JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php' );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php';
 
 		$this->_instance_base	=	Table::getInstance( 'Field', 'CCK_Table' );
 		$this->_setDataMap( 'base' );

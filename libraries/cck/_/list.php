@@ -78,7 +78,7 @@ class JCckList
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		\JLoader::register( 'CCK_TableSearch', JPATH_ADMINISTRATOR.'/components/com_cck/tables/search.php' );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/search.php';
 
 		$this->_instance_base	=	Table::getInstance( 'Search', 'CCK_Table' );
 		$this->_setDataMap( 'base' );

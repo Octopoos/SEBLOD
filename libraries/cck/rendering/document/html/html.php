@@ -6,14 +6,13 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
-defined('JPATH_PLATFORM') or die;
+defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
-jimport( 'joomla.application.module.helper' );
 jimport( 'cck.rendering.document.document' );
 
 // CCK_DocumentHTML
@@ -225,8 +224,6 @@ class CCK_DocumentHTML extends CCK_Document
 	 */
 	protected function _loadTemplate($directory, $filename) // !
 	{
-		//		$component	= JApplicationHelper::getComponentName();
-
 		$contents = '';
 
 		// Check to see if we have a valid template file

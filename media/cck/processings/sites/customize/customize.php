@@ -34,7 +34,6 @@ if ( !count( $groups ) ) {
 	return;
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-// JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' ); // Deprecated in Joomla 6
 
 Factory::getApplication()->input->set( 'type', $type );
 

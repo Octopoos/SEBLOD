@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
-\JLoader::register( 'CCK_Content', JPATH_PLATFORM.'/cck/content/content.php' );
+require_once JPATH_LIBRARIES.'/cck/content/content.php';
 
 // Plugin
 class plgCCK_StorageCustom extends JCckPluginStorage

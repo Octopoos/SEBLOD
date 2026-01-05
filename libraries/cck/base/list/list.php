@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Profiler\Profiler;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
@@ -228,7 +229,7 @@ class CCK_List
 
 		// Debug
 		if ( $doDebug ) {
-			$profiler	=	JProfiler::getInstance();
+			$profiler	=	Profiler::getInstance();
 		}
 		if ( $doCache ) {
 			$group		=	( $doCache == '2' ) ? 'com_cck_'.$config['type_alias'] : 'com_cck';

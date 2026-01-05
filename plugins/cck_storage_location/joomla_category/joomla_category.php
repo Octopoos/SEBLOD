@@ -20,8 +20,6 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
-// JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' ); // Deprecated in Joomla 6
-
 // Plugin
 class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 {

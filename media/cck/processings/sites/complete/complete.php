@@ -66,7 +66,6 @@ if ( isset( $item->usergroups ) && $item->usergroups != '' ) {
 	unset( $item->usergroups );
 }
 require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
-// JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' ); // Deprecated in Joomla 6
 
 // Guest Group
 $guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 )

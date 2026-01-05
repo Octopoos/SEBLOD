@@ -15,8 +15,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 
-\JLoader::register( 'MenusTableMenu', JPATH_ADMINISTRATOR . '/components/com_menus/tables/menu.php' );
-
 // Plugin
 class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 {
@@ -421,11 +419,11 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	protected static function _getTable( $pk = 0 )
 	{
 		if ( Jcck::on( '5' ) ) {
-			$table	=	new \Joomla\Component\Menus\Administrator\Table\MenuTypeTable( Factory::getDbo() );
+			$table	=	Table::getInstance( 'Menu' );
 		} else {
 			$table	=	Table::getInstance( 'Menu', 'MenusTable' );
 		}
-		
+
 		if ( $pk > 0 ) {
 			$table->load( $pk );
 		}

@@ -665,7 +665,6 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		if ( @$options2['geoip'] && function_exists( 'geoip_country_code_by_name' ) ) {
 			$lang_code	=	geoip_country_code_by_name( $_SERVER['REMOTE_ADDR'] );
 		} else {
-			jimport( 'joomla.language.helper' );
 			$languages	=	LanguageHelper::getLanguages( 'lang_code' );
 			$lang_tag	=	Factory::getLanguage()->getTag();
 			$lang_code	=	( isset( $languages[$lang_tag] ) ) ? strtoupper( $languages[$lang_tag]->sef ) : '';

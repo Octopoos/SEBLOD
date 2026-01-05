@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
 
 require_once JPATH_SITE.'/plugins/cck_storage_location/free/free.php';
@@ -60,7 +61,7 @@ class plgCCK_Storage_LocationFree_Helper extends plgCCK_Storage_LocationFree
 		if ( $hasForm ) {
 			$form->load( $addform, false );
 
-			$associations	=	JLanguageAssociations::getAssociations( 'com_cck', $field->storage_table, $context, $config['pk'], 'id', '', '' );
+			$associations	=	Associations::getAssociations( 'com_cck', $field->storage_table, $context, $config['pk'], 'id', '', '' );
 			
 			if ( count( $associations ) ) {
 				foreach ( $associations as $tag=>$association ) {

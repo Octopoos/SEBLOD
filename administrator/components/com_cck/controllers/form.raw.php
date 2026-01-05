@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-\JLoader::register( 'CCKControllerForm', JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php' );
+require_once JPATH_ADMINISTRATOR.'/components/com_cck/controllers/form.php';
 
 // Controller
 class CCKControllerFormRaw extends CCKControllerForm

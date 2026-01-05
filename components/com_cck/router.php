@@ -232,7 +232,7 @@ class CckRouter extends RouterView
 						$idArray			=	explode( ':', $segments[0], 2 );
 						$id					=	(int)$idArray[0];
 						$alias				=	(string)@$idArray[1];
-						$category			=	JCategories::getInstance( 'Content' )->get( $id );
+						$category			=	\Joomla\CMS\Categories\Categories::getInstance( 'Content' )->get( $id );
 
 						if ( $category && $category->id == $id && $category->alias == $alias ) {
 							$vars['view']	=	'categories';

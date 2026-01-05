@@ -90,7 +90,7 @@ class JCckType
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		\JLoader::register( 'CCK_TableType', JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php' );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php';
 
 		$this->_instance_base	=	Table::getInstance( 'Type', 'CCK_Table' );
 		$this->_setDataMap( 'base' );

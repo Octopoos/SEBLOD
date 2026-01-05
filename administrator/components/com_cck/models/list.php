@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Plugin\PluginHelper;
 
 // Model
@@ -34,10 +35,8 @@ class CCKModelList extends BaseDatabaseModel
 	// _getPagination
 	public function _getPagination( $total = 0 )
 	{
-		if ( empty( $this->_pagination ) )
-		{
-			jimport( 'joomla.html.pagination' );
-			$this->_pagination	=	new JPagination( $total, $this->getState( 'limitstart' ), $this->getState( 'limit' ) );
+		if ( empty( $this->_pagination ) ) {
+			$this->_pagination	=	new Pagination( $total, $this->getState( 'limitstart' ), $this->getState( 'limit' ) );
 		}
 
 		return $this->_pagination;

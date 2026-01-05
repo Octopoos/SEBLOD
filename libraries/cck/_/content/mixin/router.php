@@ -11,6 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Component\Menus\Administrator\Helper\MenusHelper;
 
 $mixin	=	new class() {
 	// _getActiveRoute
@@ -48,8 +49,6 @@ $mixin	=	new class() {
 	protected function _getMenuAssociation()
 	{
 		return function( $item_id, $lang_code ) {
-			\JLoader::register( 'MenusHelper', JPATH_ADMINISTRATOR . '/components/com_menus/helpers/menus.php' );
-
 			$associations	=	MenusHelper::getAssociations( $item_id );
 
 			return isset( $associations[$lang_code] ) && $associations[$lang_code] ? $associations[$lang_code] : 0;

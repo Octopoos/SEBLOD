@@ -14,6 +14,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Profiler\Profiler;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -57,8 +58,7 @@ class CCKViewForm extends HtmlView
 	protected function prepareDisplay( $preconfig )
 	{
 		if ( JCck::getConfig_Param( 'debug', 0 ) ) {
-			jimport( 'joomla.error.profiler' );
-			$profiler	=	new JProfiler();
+			$profiler	=	new Profiler;
 		}
 		
 		$app			=	Factory::getApplication();

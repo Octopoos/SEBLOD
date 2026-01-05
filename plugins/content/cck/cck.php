@@ -85,7 +85,7 @@ class plgContentCCK extends CMSPlugin
 									);
 
 					if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
-						\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+						require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 
 						if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 							$event	=	'onCckConstructionAfterDelete';
@@ -160,7 +160,7 @@ class plgContentCCK extends CMSPlugin
 		}
 
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onCckConstructionAfterDelete';
 
@@ -355,7 +355,7 @@ class plgContentCCK extends CMSPlugin
 		}
 
 		// Processing
-		\JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onContentAfterDelete';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );

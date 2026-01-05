@@ -8,15 +8,14 @@
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
-defined( 'JPATH_PLATFORM' ) or die;
+defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Form\FormField;
 
-// jimport( 'joomla.html.html' );
-// jimport( 'cck.joomla.access.access' );
+jimport( 'cck.joomla.access.access' );
 
 /* TODO#SEBLOD: compare */
 

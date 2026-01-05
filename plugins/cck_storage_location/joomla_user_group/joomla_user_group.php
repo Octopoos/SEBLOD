@@ -17,8 +17,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 
-// JLoader::register( 'JTableUsergroup', JPATH_PLATFORM.'/joomla/database/table/usergroup.php' );
-
 // Plugin
 class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 {

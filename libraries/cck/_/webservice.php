@@ -158,7 +158,7 @@ abstract class JCckWebservice
 												. ' WHERE published = 1'
 												. ' LIMIT 25' );
 
-		\JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php';
 
 		foreach ( $items as $item ) {
 			$table	=	Table::getInstance( 'Stack', 'CCK_Table' );
@@ -261,7 +261,7 @@ abstract class JCckWebservice
 	// _stack
 	protected static function _stack( $webservice, $state = 1, $response = null )
 	{
-		\JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
+		require_once JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php';
 
 		$table	=	Table::getInstance( 'Stack', 'CCK_Table' );
 

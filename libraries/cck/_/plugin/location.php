@@ -45,8 +45,9 @@ class JCckPluginLocation extends CMSPlugin
 		$properties	=	array( 'type_alias' );
 		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
 
-		JLoader::register( 'JCckContent'.$object, JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' );
-
+		if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php' ) ) {
+			require_once JPATH_SITE.'/plugins/cck_storage_location/'.static::$type.'/classes/content.php';
+		}
 		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
 			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
 		}

@@ -81,8 +81,7 @@ class com_cckInstallerScript
 				unset( $xml->files->file[3] );
 				$xml->asXML( $manifest );
 			}
-			
-			jimport( 'joomla.installer.installer' );
+
 			$installer	=	Installer::getInstance();
 			$installer->uninstall( 'package', $eid );
 		}
@@ -348,7 +347,7 @@ class com_cckInstallerScript
 		$title		=	'SEBLOD '.$version;
 		
 		if ( version_compare( JVERSION, '4.0', 'ge' ) ) {
-			\JLoader::register( 'JCck', JPATH_LIBRARIES.'/cck/_/cck.php' );
+			require_once JPATH_LIBRARIES.'/cck/_/cck.php';
 			\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 		} else {
 			require_once JPATH_SITE.'/libraries/cms/cck/cck.php';
