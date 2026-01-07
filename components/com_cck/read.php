@@ -80,7 +80,10 @@ if ( $watermark ) {
 } else {
 	header( "Expires: ".gmdate( "D, d M Y H:i:s", time() + $cache_seconds)." GMT" );
 	header( "Cache-Control: public, max-age=" . $cache_seconds . ", must-revalidate" );
-	header( "Content-Length: ".filesize( $path ) );
+
+	if ( !isset( $config['app'] ) ) {
+		header( "Content-Length: ".filesize( $path ) );
+	}
 }
 if ( isset( $x_robots ) && $x_robots ) {
 	switch ( $x_robots ) {
