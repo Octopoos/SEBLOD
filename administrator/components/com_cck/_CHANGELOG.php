@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 6.0.0 Beta2 Release [5-Jan-2026] -------------
+--------------- 6.0.0 Beta4 Release [5-Jan-2026] -------------
 
 ! Joomla! 6 support
   >> extensive modifications of code for Joomla! 6
