@@ -10,8 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Path;
 
 $doc	=	Factory::getDocument();
 $js		=	'

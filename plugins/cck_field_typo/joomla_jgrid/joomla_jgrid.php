@@ -256,15 +256,20 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$formId	=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 				}
 				$class		=	$typo->get( 'class1', '' );
-				$class		=	$class ? ' class="' . $class . '"' : '';
 				$value		=	HTMLHelper::_( 'grid.id', $pks[$pk], $value );
-				$value		=	str_replace( ' />', ' data-cck-remove-before-search="" />', $value );
-				if ( $typo->get( 'trigger' ) ) {
-					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\')); jQuery(\'#boxchecked\').trigger(\'change\');"' . $class, $value );
-				} else {					
-					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\'));"' . $class, $value );
+
+				if ( $class ) {
+					$value	=	str_replace( '<input class="', '<input class="'.$class.' ', $value );
 				}
 
+				$value		=	str_replace( '<input ', '<input data-cck-remove-before-search="" data-item-form-id="'.$formId.'" ', $value );
+
+				if ( $typo->get( 'trigger' ) ) {
+					// J!6 ?
+				}
+				if ( Factory::getApplication()->input->get( 'tmpl' ) != 'raw' ) {
+					Factory::getDocument()->getWebAssetManager()->useScript( 'list-view' );	
+				}
 				$config['formWrapper']	=	1;
 				break;
 			case 'selection_label':
