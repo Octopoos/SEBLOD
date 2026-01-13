@@ -49,7 +49,7 @@ $displayData    =   array(
                             ),
                             array(
                                 'fields'=>array(
-                                    JCckDev::getForm( 'core_storage', $this->item->storage, $config )
+                                    JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value'=>'DATETIME' ) )
                                 ),
                                 'mode'=>'storage'
                             )

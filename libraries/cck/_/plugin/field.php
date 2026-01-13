@@ -317,6 +317,10 @@ class JCckPluginField extends CMSPlugin
 
 				if ( strpos( $data['storage_alter_type'], 'TEXT' ) !== false || strpos( $data['storage_alter_type'], 'BLOB' ) !== false || strpos( $data['storage_alter_type'], 'CHAR' ) !== false ) {
 					//
+				} elseif ( $data['storage_alter_type'] === 'DATE' ) {
+					$default	=	'00-00-00';
+				} elseif ( $data['storage_alter_type'] === 'DATETIME' ) {
+					$default	=	'00-00-00 00:00:00';
 				} else {
 					$default	=	'0';
 				}
