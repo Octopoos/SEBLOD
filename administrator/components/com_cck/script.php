@@ -263,7 +263,9 @@ class com_cckInstallerScript
 		// Additional stuff
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
 		if ( is_file( $src ) ) {
-			File::delete( JPATH_SITE.'/cli/cck_job.php' );
+			if ( is_file( JPATH_SITE.'/cli/cck_job.php' ) ) {
+				File::delete( JPATH_SITE.'/cli/cck_job.php' );
+			}
 			File::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
 			Folder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
