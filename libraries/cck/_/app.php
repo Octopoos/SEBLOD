@@ -348,8 +348,8 @@ class JCckApp
 	// _convertKey
 	protected function _convertKey( $data )
 	{
-		if ( JCck::is( '7.0' ) ) { // UpSideDown
-			return base64_encode( $data );
+		if ( (int)JCck::getConfig_Param( 'app_crypt', '0' ) ) {
+			return base64_decode( $data );
 		} else {
 			return strlen( $data ) % 2 === 0 ? hex2bin( $data ) : '';
 		}

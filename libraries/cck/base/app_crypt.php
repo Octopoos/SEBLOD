@@ -48,8 +48,8 @@ class JCckAppCrypt extends Sodium
 	// _convertKey
 	protected function _convertKey( $data )
 	{
-		if ( JCck::is( '7.0' ) ) { // UpSideDown
-			return base64_decode( $data );
+		if ( (int)JCck::getConfig_Param( 'app_crypt', '0' ) ) {
+			return base64_encode( $data );
 		} else {
 			return bin2hex( $data );
 		}
