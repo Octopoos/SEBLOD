@@ -10,56 +10,58 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::forceStorage();
 
-$options2   =   JCckDev::fromJSON( $this->item->options2 );
-$options    =   JCckDev::fromSTRING( @$options2['itemids'] );
+$options2	=	JCckDev::fromJSON( $this->item->options2 );
+$options	=	JCckDev::fromSTRING( @$options2['itemids'] );
 
 // JS
 $js =   'jQuery(document).ready(function($) {
-            $("#json_options2_itemid_fieldname,#blank_li2").isVisibleWhen("json_options2_itemid","-2");
-            $("#json_options2_content_fieldname,#blank_li").isVisibleWhen("json_options2_content","2");
-            $("#json_options2_string_itemids,#blank_li2").isVisibleWhen("bool2","2");
-        });';
+			$("#json_options2_itemid_fieldname,#blank_li2").isVisibleWhen("json_options2_itemid","-2");
+			$("#json_options2_content_fieldname,#blank_li").isVisibleWhen("json_options2_content","2");
+			$("#json_options2_string_itemids,#blank_li2").isVisibleWhen("bool2","2");
+		});';
 
 // Set
-$displayData    =   array(
-                        'config'=>$config,
-                        'form'=>array(
-                            array(
-                                'fields'=>array(
-                                    JCckDev::renderForm( 'core_sef', @$options2['sef'], $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'json[options2][sef]' ) ),
-                                    JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2', 'storage_field'=>'json[options2][itemid]' ) ),
-                                    JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
-                                    JCckDev::renderForm( 'core_dev_text', @$options2['itemid_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][itemid_fieldname]' ) ),
-                                    JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Always=0||Only If Different=1' ) ),
-                                    JCckDev::renderForm( 'core_dev_select', @$options2['content'], $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Use Value=optgroup||Field=2', 'storage_field'=>'json[options2][content]' ) ),
-                                    JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' ),
-                                    JCckDev::renderForm( 'core_dev_text', @$options2['content_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][content_fieldname]' ) ),
-				    JCckDev::renderForm( 'core_dev_text', @$options2['url_fieldname'], $config, array( 'label'=>'Custom URL Field Name', 'storage_field'=>'json[options2][url_fieldname]' ) )
-                                ),
-                            ),
-                            array(
-                                'fields'=>array(
-                                    JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Alternative Behavior', 'defaultvalue'=>'0', 'options'=>'None=0||Redirection=2' ) ),
-                                    JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
-                                    JCckDev::renderForm( 'core_menuitem', $options, $config, array( 'selectlabel'=>'', 'options'=>'', 'bool3'=>1, 'rows'=>30, 'css'=>'input-xlarge', 'storage_field'=>'json[options2][string][itemids]' ), array(), 'w100' )
-                                ),
-                                'legend'=>JText::_( 'COM_CCK_CONSTRUCTION' )
-                            ),
-                            array(
-                                'fields'=>array(
-                                    JCckDev::getForm( 'core_storage', $this->item->storage, $config )
-                                ),
-                                'mode'=>'storage'
-                            )
-                        ),
-                        'help'=>array(),
-                        'html'=>'',
-                        'item'=>$this->item,
-                        'script'=>$js
-                    );
+$displayData	=	array(
+						'config'=>$config,
+						'form'=>array(
+							array(
+								'fields'=>array(
+									JCckDev::renderForm( 'core_sef', @$options2['sef'], $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'json[options2][sef]' ) ),
+									JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2', 'storage_field'=>'json[options2][itemid]' ) ),
+									JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
+									JCckDev::renderForm( 'core_dev_text', @$options2['itemid_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][itemid_fieldname]' ) ),
+									JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Always=0||Only If Different=1' ) ),
+									JCckDev::renderForm( 'core_dev_select', @$options2['content'], $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Use Value=optgroup||Field=2', 'storage_field'=>'json[options2][content]' ) ),
+									JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' ),
+									JCckDev::renderForm( 'core_dev_text', @$options2['content_fieldname'], $config, array( 'label'=>'Field Name', 'storage_field'=>'json[options2][content_fieldname]' ) ),
+									JCckDev::renderForm( 'core_dev_text', @$options2['url_fieldname'], $config, array( 'label'=>'Custom URL Field Name', 'storage_field'=>'json[options2][url_fieldname]' ) )
+								),
+							),
+							array(
+								'fields'=>array(
+									JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Alternative Behavior', 'defaultvalue'=>'0', 'options'=>'None=0||Redirection=2' ) ),
+									JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' ),
+									JCckDev::renderForm( 'core_menuitem', $options, $config, array( 'selectlabel'=>'', 'options'=>'', 'bool3'=>1, 'rows'=>30, 'css'=>'input-xlarge', 'storage_field'=>'json[options2][string][itemids]' ), array(), 'w100' )
+								),
+								'legend'=>Text::_( 'COM_CCK_CONSTRUCTION' )
+							),
+							array(
+								'fields'=>array(
+									JCckDev::getForm( 'core_storage', $this->item->storage, $config )
+								),
+								'mode'=>'storage'
+							)
+						),
+						'help'=>array(),
+						'html'=>'',
+						'item'=>$this->item,
+						'script'=>$js
+					);
 
 echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit', $displayData );
 ?>

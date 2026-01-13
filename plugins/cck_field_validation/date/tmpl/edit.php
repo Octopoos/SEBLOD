@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // JS
 $js =	'jQuery(document).ready(function($) {
 			$("#alert").parent().find("label").append("<span class=\"star\"> </star>");
@@ -39,7 +41,7 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit
 				JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Restriction', 'selectlabel'=>'None', 'options'=>'State is Future=isFuture', 'storage_field'=>'range' ) ),
 	            JCckDev::renderLayoutFile(
 	                'cck'.JCck::v().'.form.field', array(
-	                    'label'=>JText::_( 'COM_CCK_ALERT' ).' (2)',
+	                    'label'=>Text::_( 'COM_CCK_ALERT' ).' (2)',
 	                    'html'=>JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'storage_field'=>'range_alert' ) )
 	                )
 	            ),
