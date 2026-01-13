@@ -127,6 +127,7 @@
 			<file type="plugin" id="json" group="cck_storage">plg_cck_storage_json.zip</file>
 			<file type="plugin" id="standard" group="cck_storage">plg_cck_storage_standard.zip</file>
 			<!-- Plugin // CCK Storage Location -->
+			<file type="plugin" id="cck_site" group="cck_storage_location">plg_cck_storage_location_cck_site.zip</file>
 			<file type="plugin" id="free" group="cck_storage_location">plg_cck_storage_location_free.zip</file>
 			<file type="plugin" id="joomla_article" group="cck_storage_location">plg_cck_storage_location_joomla_article.zip</file>
 			<file type="plugin" id="joomla_category" group="cck_storage_location">plg_cck_storage_location_joomla_category.zip</file>
