@@ -276,6 +276,7 @@ class plgCCK_StorageCustom extends JCckPluginStorage
 				break;
 			case 'date_past_only':
 			case 'date_past':
+			case 'date_past_isset':
 			case 'date_future':
 			case 'date_future_isset':
 			case 'date_future_only':

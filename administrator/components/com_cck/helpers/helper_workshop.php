@@ -638,6 +638,7 @@ class Helper_Workshop
 											'102'=>HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_MATCH_GROUP_DATE_AND_TIME' ) ),
 											'date_past_only'=>HTMLHelper::_( 'select.option', 'date_past_only', Text::_( 'COM_CCK_MATCH_DATE_PAST_ONLY' ) ),
 											'date_past'=>HTMLHelper::_( 'select.option', 'date_past', Text::_( 'COM_CCK_MATCH_DATE_PAST' ) ),
+											'date_past_isset'=>HTMLHelper::_( 'select.option', 'date_past_isset', Text::_( 'COM_CCK_MATCH_DATE_PAST_IF_ISSET' ) ),
 											'date_future'=>HTMLHelper::_( 'select.option', 'date_future', Text::_( 'COM_CCK_MATCH_DATE_FUTURE' ) ),
 											'date_future_isset'=>HTMLHelper::_( 'select.option', 'date_future_isset', Text::_( 'COM_CCK_MATCH_DATE_FUTURE_IF_ISSET' ) ),
 											'date_future_only'=>HTMLHelper::_( 'select.option', 'date_future_only', Text::_( 'COM_CCK_MATCH_DATE_FUTURE_ONLY' ) ),

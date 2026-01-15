@@ -426,6 +426,9 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 			case 'date_past':
 				$sql	=	$target.' <= '.JCckDatabase::quote( $value );
 				break;
+			case 'date_past_isset':
+				$sql	=	'('.$target.' '.JCckDatabase::null().' OR '.$target.' <= '.JCckDatabase::quote( $value ).')';
+				break;
 			case 'date_future':
 				$sql	=	$target.' >= '.JCckDatabase::quote( $value );
 				break;
