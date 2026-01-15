@@ -22,6 +22,25 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Beta5 Release [15-Jan-2026] ------------
+
+! Joomla! 6 support
+  >> extensive modifications of code for Joomla! 6
+
++ Additional Plug-ins included within Core Package:
+  >> Break, Canonical, Message & Redirection, Search Total Field Plug-ins
+  >> Custom, Download, Joomla! Menu Item, Route, Task Link Plug-ins
+  >> DateTime Live Plug-in
+  >> SEBLOD Site Object Plug-in
+  >> Fields, Search Total Restriction Plug-ins
+  >> Item Typography Plug-in
+  >> Date Validation Plug-in
+
+- CCK_XMLElement class
+
+# DATETIME issue fixed.
+# Installation issue fixed.
+
 --------------- 6.0.0 Beta4 Release [9-Jan-2026] -------------
 
 ! Joomla! 6 support
