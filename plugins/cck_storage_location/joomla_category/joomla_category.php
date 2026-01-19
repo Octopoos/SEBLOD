@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\LanguageHelper;
@@ -402,7 +403,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			if ( !is_array( $data['rules'] ) ) {
 				$data['rules']	=	json_decode( $data['rules'] );
 			}
-			$rules	=	new JAccessRules( JCckDevHelper::getRules( $data['rules'] ) );
+			$rules	=	new Rules( JCckDevHelper::getRules( $data['rules'] ) );
 			$table->setRules( $rules );
 		}
 		$table->check();

@@ -127,8 +127,6 @@ class plgCCK_FieldJform_Tag extends JCckPluginField
 			$field->text	=	'';
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		} else {
-			HTMLHelper::_( 'formbehavior.chosen', 'select.tag' );
-
 			$options2	=	JCckDev::fromJSON( $field->options2 );
 			$class		=	'inputbox tag'.$validate . ( $field->css ? ' '.$field->css : '' );
 			$mode		=	( isset( $options2['mode'] ) && $options2['mode'] ) ? 'mode="'.$options2['mode'].'"' : '';

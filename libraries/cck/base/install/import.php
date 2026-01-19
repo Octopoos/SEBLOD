@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Table;
 
 require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
@@ -527,7 +528,7 @@ class CCK_Import
 		$table->description	=	'::cck::'.$id.'::/cck::<br />::description::::/description::';	/* TODO#SEBLOD: */
 		$table->parent_id	=	( $data['root_category'] > 0 ) ? $data['root_category'] : 1;
 		
-		$rules	=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
+		$rules	=	new Rules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
 		$table->setRules( $rules );
 		$table->setLocation( $table->parent_id, 'last-child' );
 		$table->check();
