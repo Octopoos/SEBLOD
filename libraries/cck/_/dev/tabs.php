@@ -83,7 +83,7 @@ abstract class JCckDevTabs
 																'title' => $text
 															) );
 
-        	$js					.=	LayoutHelper::render( 'libraries.cms.html.bootstrap.starttabsetscript', array( 'selector' => $selector ) );;
+        	$js					.=	LayoutHelper::render( 'libraries.cms.html.bootstrap.starttabsetscript', array( 'selector' => $selector ) );
         	$html				.=	'<script type="text/javascript">'.$js.'</script>';
         }
 
