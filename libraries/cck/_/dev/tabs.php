@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Layout\LayoutHelper;
 
 // JCckDevTabs
 abstract class JCckDevTabs
@@ -82,8 +83,8 @@ abstract class JCckDevTabs
 																'title' => $text
 															) );
 
-        	$js					.=	JLayoutHelper::render( 'libraries.cms.html.bootstrap.starttabsetscript', array( 'selector' => $selector ) );;
-        	$html				.=	 '<script type="text/javascript">'.$js.'</script>';
+        	$js					.=	LayoutHelper::render( 'libraries.cms.html.bootstrap.starttabsetscript', array( 'selector' => $selector ) );;
+        	$html				.=	'<script type="text/javascript">'.$js.'</script>';
         }
 
         return $html;

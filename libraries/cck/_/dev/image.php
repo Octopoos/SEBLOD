@@ -446,14 +446,14 @@ class JCckDevImage
 		}
 
 		return 	array(
-					'thumbX'=>$thumbX,
-					'thumbY'=>$thumbY,
-					'newX'=>$newX,
-					'newY'=>$newY,
-					'thumbWidth'=>$thumbWidth,
-					'thumbHeight'=>$thumbHeight,
-					'newWidth'=>$src_w,
-					'newHeight'=>$src_h,
+					'thumbX'=>(int)$thumbX,
+					'thumbY'=>(int)$thumbY,
+					'newX'=>(int)$newX,
+					'newY'=>(int)$newY,
+					'thumbWidth'=>(int)$thumbWidth,
+					'thumbHeight'=>(int)$thumbHeight,
+					'newWidth'=>(int)$src_w,
+					'newHeight'=>(int)$src_h,
 				);
 	}
 }
