@@ -67,7 +67,7 @@ ul.sortable li.position.p-no .selector { right: -30px; top: 6px; }
 /*ul.sortable li span.title{color: #16396f !important;}*/
 
 /*ul.sortable li span.subtitle{color: #999 !important;}*/
-ul.sortable li span.subtitle .f-nt { margin: 0 0 0 6px; }
+ul.sortable li span.subtitle .f-nt, ul.sortable li span.subtitle .f-ntto { margin: 0 0 0 6px; }
 .f-nt { display: none !important; }
 .f-nt + .tooltip .tooltip-inner { min-width: initial; max-width: 300px; width: max-content; }
 .f-nt1 + .tooltip .tooltip-inner, .f-nt-1 + .tooltip .tooltip-inner { min-width: initial; max-width: 200px; width: max-content; }

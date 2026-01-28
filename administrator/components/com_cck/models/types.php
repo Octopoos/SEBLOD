@@ -156,8 +156,10 @@ class CCKModelTypes extends ListModel
 		
 		// Filter Language
 		$language	=	trim( $this->getState( 'filter.language' ) );
-		if ( is_string( $language ) && $language != '' ) {
-			$query->where( 'a.language = "'.(string)$language.'"' );
+		if ( !str_ends_with( $search, '_XX' ) ) {
+			if ( is_string( $language ) && $language != '' ) {
+				$query->where( 'a.language = "'.(string)$language.'"' );
+			}
 		}
 
 		// Filter Client
@@ -208,7 +210,18 @@ class CCKModelTypes extends ListModel
 					$query->where( $where );
 					break;
 				default:
-					$search	=	$db->quote( '%'.$db->escape( $search, true ).'%' );
+					$a	=	'%';
+					$z	=	'%';
+
+					if ( str_starts_with( $search, 'CT_' ) ) {
+						$search	=	substr( $search, 3 );
+						$z		=	'';
+					} elseif ( str_ends_with( $search, '_XX' ) ) {
+						$query->where( 'a.language != "*"' );
+						$search	=	substr( $search, 0, -3 );
+					}
+
+					$search	=	$db->quote( $a.$db->escape( $search, true ).$z );
 					$query->where( 'a.'.$location.' LIKE '.$search );
 					break;
 			}

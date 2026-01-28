@@ -23,7 +23,7 @@ class Helper_Workshop
 	protected static $template	=	'';
 	
 	// displayField
-	public static function displayField( &$field, $type_field = '', $attr = array() )
+	public static function displayField( &$field, $type_field, $attr, $c_type = '' )
 	{
 		static $hasMb		=	-1;
 		static $project		=	null;
@@ -65,19 +65,34 @@ class Helper_Workshop
 			$class	=	isset( $attr['user_id'] ) && $field->checked_out == $attr['user_id'] ? ' zz2' : ' zz';
 		}
 		if ( $field->type == 'group' ) {
-			static $groups	=	null;
+			static $groups				=	null;
+			static $group_collections	=	null;
 
 			if ( $groups === null ) {
-				$groups	=	JCckDatabase::loadObjectList( 'SELECT id, location, extended FROM #__cck_core_fields WHERE type = "group"', 'id' );
+				$groups				=	JCckDatabase::loadObjectList( 'SELECT id, location, extended, bool FROM #__cck_core_fields WHERE type = "group"', 'id' );
+				$group_collections	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_types', 'name' );
 			}
 
-			$link	=	'';
+			$link_grp	=	'';
 
 			if ( isset( $groups[$field->id] ) ) {
-				$link	=	$groups[$field->id]->extended ? $groups[$field->id]->extended : str_replace ( '_XX', '', $groups[$field->id]->location );
+				if ( (int)$groups[$field->id]->bool === 5 ) {
+					$link_grp	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_searchs WHERE name = "'.$groups[$field->id]->extended.'"' );
 
-				if ( $link ) {
-					$type_suffix	.=	' <span class="f-nt to" data-go="qg='.$link.'">&#8689;</span>';	
+					if ( $link_grp ) {
+						$link_grp	=	'/administrator/index.php?option=com_cck&task=search.edit&id='.$link_grp;
+					}
+				} else {
+					$link_grp	=	$groups[$field->id]->extended ? $groups[$field->id]->extended : $groups[$field->id]->location;
+
+					if ( isset( $group_collections[$link_grp] ) ) {
+						$link_grp	=	'/administrator/index.php?option=com_cck&task=type.edit&id='.$group_collections[$link_grp]->id;
+					} else {
+						$link_grp	=	'/administrator/index.php?option=com_cck&view=types&filter.location=name&filter.search='.$link_grp;
+					}
+				}
+				if ( $link_grp ) {
+					$type_suffix	.=	' <span class="f-ntto to ui-state-disabled" data-go="'.$link_grp.'">&#8689;</span>';	
 				}
 			}
 		} elseif ( isset( $field->storage ) ) {
