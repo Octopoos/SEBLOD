@@ -74,7 +74,7 @@ if ( isset( $config['watermark'] ) && is_array( $config['watermark'] ) && !empty
 header( "Content-Type: $mime_type" );
 header( "Content-Disposition: inline; filename=\"$name\"" );
 
-if ( $watermark ) {
+if ( $watermark || !$id ) {
 	header( "Expires: 0" );
 	header( "Cache-Control: no-store, no-cache, must-revalidate, max-age=0" );
 } else {
