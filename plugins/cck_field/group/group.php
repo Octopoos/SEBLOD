@@ -746,8 +746,9 @@ class plgCCK_FieldGroup extends JCckPluginField
 	// _prepareFormFields
 	protected static function _prepareFormFields( $field, &$form, $name, &$config )
 	{
-		$app	=	Factory::getApplication();
-		$fields	=	self::_getChildren( $field, $config );
+		$app		=	Factory::getApplication();
+		$extended	=	$field->extended === 'CT' && $field->bool == -1 ? $config['type'].'_grp_form' : $field->extended;
+		$fields		=	self::_getChildren( $field, $config );
 
 		foreach ( $fields as $f ) {
 			if ( is_object( $f ) ) {
@@ -782,7 +783,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 				} else {
 					$f_value				=	$f->live_value;
 				}
-				$inherit					=	array( 'caller'=>$field->extended );
+
+				$inherit					=	array( 'caller'=>$extended );
 				$clone						=	clone $f;
 
 				// Variation
