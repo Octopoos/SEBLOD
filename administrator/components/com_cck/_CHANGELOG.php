@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 5.0.0 Release Candidate3 [28-Jan-2026] -------
+
+# Regression fixed on Download/Read tasks.
+
 --------------- 5.0.0 Release Candidate2 [9-Jan-2026] -------------
 
 + Download/Read tasks improved.
