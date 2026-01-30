@@ -146,6 +146,10 @@
 	</fieldset>
 
 	<fieldset name="fs_media" label="COM_CCK_CONFIG_FIELDSET_MEDIA" description="COM_CCK_CONFIG_FIELDSET_MEDIA_DESC">
+		<field name="media_filename" type="list" default="uploaded" label="COM_CCK_CONFIG_MEDIA_FILENAME" description="COM_CCK_CONFIG_MEDIA_FILENAME_DESC" class="btn-group">
+			<option value="existing">COM_CCK_FILENAME_KEEP_EXISTING</option>
+			<option value="uploaded">COM_CCK_FILENAME_USE_UPLOADED</option>
+		</field>
 		<field name="media_cdn" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_CDN" description="COM_CCK_CONFIG_MEDIA_CDN_DESC" class="inputbox input-small" />
 		<field name="media_case" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_LEGAL_CASE" description="COM_CCK_CONFIG_MEDIA_LEGAL_CASE_DESC" class="btn-group btn-group-yesno">
 			<option value="0">COM_CCK_LOWERCASE</option>
