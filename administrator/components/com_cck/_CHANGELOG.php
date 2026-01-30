@@ -22,6 +22,32 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Beta6 Release [30-Jan-2026] ------------
+
+! Joomla! 6 support
+  >> extensive modifications of code for Joomla! 6
+
++ Additional Plug-ins included within Core Package:
+  >> Break, Canonical, Message & Redirection, Search Total Field Plug-ins
+  >> Custom, Download, Joomla! Menu Item, Route, Task Link Plug-ins
+  >> DateTime Live Plug-in
+  >> SEBLOD Site Object Plug-in
+  >> Fields, Search Total Restriction Plug-ins
+  >> Item Typography Plug-in
+  >> Date Validation Plug-in
++ "Past (< or =) or Null" Match mode added on Search Types.
++ Shortcut link (Construction UI) added for Groups.
+
+- CCK_XMLElement class
+
+# DATETIME issue fixed.
+# Installation issue fixed.
+# Regression fixed on Download/Read tasks.
+
+--------------- 5.0.0 Release Candidate3 [30-Jan-2026] -------
+
+# Regression fixed on Download/Read tasks.
+
 --------------- 6.0.0 Beta5 Release [15-Jan-2026] ------------
 
 ! Joomla! 6 support
@@ -56,7 +82,7 @@ $ -> Language fix or change
 
 - CCK_XMLElement class
 
---------------- 5.0.0 Release Candidate2 [5-Jan-2026] -------------
+--------------- 5.0.0 Release Candidate2 [5-Jan-2026] ---------
 
 + Download/Read tasks improved.
 + Impersonate capabilites improved.
@@ -65,7 +91,7 @@ $ -> Language fix or change
 # Upload File issue fixed.
 # Warning fixed.
 
---------------- 5.0.0 Release Candidate [28-Nov-2025] -------------
+--------------- 5.0.0 Release Candidate [28-Nov-2025] ---------
 
 + Field Rendering improved with Layouts (HTML Markup around fields)
   >> /components/com_cck/layouts/...
