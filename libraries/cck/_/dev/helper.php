@@ -141,7 +141,7 @@ abstract class JCckDevHelper
 				$query	=	substr( $query, 1 );
 			}
 		}
-		$glue	=	( $query != '' ) ? '/?' : '';
+		$glue	=	( $query != '' ) ? '?' : '';
 		
 		if ( $itemId == '' || $itemId == 'auto' ) {
 			$itemId	=	(int)JCck::getConfig_Param( 'sef_root', 0 );
