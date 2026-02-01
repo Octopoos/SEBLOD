@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 6.0.0 Beta6 Release [30-Jan-2026] ------------
+--------------- 6.0.0 Beta6 Release [1-Feb-2026] -------------
 
 ! Joomla! 6 support
   >> extensive modifications of code for Joomla! 6
@@ -44,7 +44,7 @@ $ -> Language fix or change
 # Installation issue fixed.
 # Regression fixed on Download/Read tasks.
 
---------------- 5.0.0 Release Candidate3 [30-Jan-2026] -------
+--------------- 5.0.0 Release Candidate3 [1-Feb-2026] --------
 
 # Regression fixed on Download/Read tasks.
 
