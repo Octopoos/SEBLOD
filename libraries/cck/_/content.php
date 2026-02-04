@@ -2323,7 +2323,11 @@ USER
 	// triggerMore
 	public function triggerMore( $task, $event, &$data = array() )
 	{
-		return true; /* PENDING HERE */
+		$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '' );
+
+		if ( $legacy && $legacy <= 2024 ) {
+			return true;
+		}
 
 		$check	=	$this->_options->get( 'trigger_events', 1 );
 
