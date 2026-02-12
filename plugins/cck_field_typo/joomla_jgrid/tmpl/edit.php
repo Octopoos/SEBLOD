@@ -71,10 +71,11 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 					'cck'.JCck::v().'.form.field', array(
 						'label'=>Text::_( 'COM_CCK_CONTAINER_NAME' ),
 						'html'=>JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.grid', array(
-							'grid'=>'|50%',
+							'grid'=>'33%|33%|',
 							'html'=>array(
 								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'identifier_suffix' ) ),
-								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'size'=>13, 'storage_field'=>'identifier_name' ) )
+								JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'size'=>13, 'storage_field'=>'identifier_name' ) ),
+								JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'selectlabel'=>'__', 'options'=>'Html=html||Raw=raw', 'size'=>13, 'storage_field'=>'use_modifier' ) )
 							)
 						) ),
 						'class'=>'identifier_toggle2'

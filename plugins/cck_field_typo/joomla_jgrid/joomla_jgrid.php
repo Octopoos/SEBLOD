@@ -136,12 +136,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$doValidation	=	$config['doValidation'];
 				}
 				$hasIdentifier		=	(int)$typo->get( 'use_identifier', '1' );
+				$hasModifier		=	$typo->get( 'use_modifier', '' );
+				$hasModifier		=	$hasModifier ? '@'.$hasModifier : '';
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
 				$identifier_name	=	( $identifier_name != '' ) ? $identifier_name : $field->name;
 				$identifier_suffix	=	$typo->get( 'identifier_suffix', '' );
 				$inherit			=	array( 'id'=>$identifier.'_', 'name'=>'' );
-				
+
 				if ( $identifier_suffix ) {
 					if ( $hasIdentifier == 2 ) {
 						$inherit['name']	=	$identifier_suffix.'['.$identifier.']'.'['.$identifier_name.']';
@@ -153,13 +155,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$inherit['id']			.=	$identifier_suffix.'_';
 				} else {
 					if ( $hasIdentifier ) {
-						$inherit['name']	=	$identifier.'['.$identifier_name.']';
+						$inherit['name']	=	$identifier.'['.$identifier_name.$hasModifier.']';
 					} else {
 						$inherit['name']	=	$identifier_name.'[]';
 					}
 				}
+
 				$inherit['id']		.=	$identifier_name;
-				
+
 				if ( $typo->get( 'trigger' ) ) {
 					$field->attributes	.=	' onchange="if(!document.getElementById(\'cb'.($i - 1).'\').checked){document.getElementById(\'cb'.($i - 1).'\').checked=true; Joomla.isChecked(document.getElementById(\'cb'.($i - 1).'\').checked, document.getElementById(\''.( @$config['formId'] ? $config['formId'] : 'seblod_form' ).'\'));}"';
 				}
@@ -205,7 +208,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				/* TODO#SEBLOD4 */
 
 				Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
-				
+
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
 				$value					=	$field->form;
