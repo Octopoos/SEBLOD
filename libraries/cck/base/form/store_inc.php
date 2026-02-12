@@ -104,6 +104,7 @@ $config		=	array(
 						'id'=>$preconfig['id'],
 						'isNew'=>$isNew,
 						'Itemid'=>$preconfig['itemId'],
+						'key'=>'id',
 						'location'=>$type->storage_location,
 						'message'=>$preconfig['message'],
 						'message_style'=>'',
@@ -220,6 +221,8 @@ if ( count( $fields ) ) {
 
 		if ( is_object( $properties['key_field'] ) ) {
 			array_unshift( $fields, $properties['key_field'] );
+
+			$config['key']	=	$properties['key_field']->storage_field;
 		}
 	}
 

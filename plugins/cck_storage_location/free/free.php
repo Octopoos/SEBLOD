@@ -281,6 +281,10 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 			// ...
 		} else {
 			if ( ! self::$pk ) {
+				if ( isset( $config['key'] ) && isset( $data[$config['key']] ) ) {
+					unset( $data[$config['key']] );
+				}
+
 				// Init
 				$app	=	Factory::getApplication();
 				$table	=	self::_getTable( $pk, $data['_']->table, $config );
@@ -289,7 +293,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				$config['params']	=	$this->params->toArray();
 
 				self::_initTable( $table, $data, $config );
-				
+
 				// Check Error
 				if ( self::$error === true ) {
 					$config['error']	=	true;
