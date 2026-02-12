@@ -22,6 +22,31 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Beta8 Release [12-Feb-2026] -------------
+
+! Joomla! 6 support
+  >> extensive modifications of code for Joomla! 6
+
++ Additional Plug-ins included within Core Package:
+  >> Break, Canonical, Message & Redirection, Search Total Field Plug-ins
+  >> Custom, Download, Joomla! Menu Item, Route, Task Link Plug-ins
+  >> DateTime Live Plug-in
+  >> SEBLOD Site Object Plug-in
+  >> Fields, Search Total Restriction Plug-ins
+  >> Item Typography Plug-in
+  >> Date Validation Plug-in
++ "HTML/Raw" allowed on JGrid > SEBLOD Form mode.
++ "Past (< or =) or Null" Match mode added on Search Types.
++ Shortcut link (Construction UI) added for Groups.
+
+- CCK_XMLElement class
+
+# DATETIME issue fixed.
+# Installation issue fixed.
+# Regression fixed on Construction UI (since Beta6).
+# Regression fixed on Download/Read tasks (since Beta4).
+# Storage issue on Free Object.
+
 --------------- 6.0.0 Beta7 Release [4-Feb-2026] -------------
 
 ! Joomla! 6 support
