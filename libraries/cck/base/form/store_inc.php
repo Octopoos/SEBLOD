@@ -227,7 +227,7 @@ if ( count( $fields ) ) {
 	}
 
 	foreach ( $fields as $field ) {
-		$field->state	=	'';
+		$field->state	=	1;
 		$toBeChecked	=	false;
 
 		// Restriction
