@@ -31,10 +31,10 @@ $itemId	=	(int)$params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) );
 
 JCck::loadjQuery();
 $lang			=	Factory::getLanguage();
-$lang_default	=	$lang->setDefault( 'en-GB' );
+// $lang_default	=	$lang->setDefault( 'en-GB' );
 $lang->load( 'mod_cck_form', JPATH_SITE );
 $lang->load( 'com_cck_default', JPATH_SITE );
-$lang->setDefault( $lang_default );
+// $lang->setDefault( $lang_default );
 
 $option					=	$app->input->get( 'option', '' );
 $view					=	'';
