@@ -1053,7 +1053,13 @@ class plgSystemCCK extends CMSPlugin
 				$menuShadow->makeHimLive();
 			}
 		} else {
+			$session	=	Factory::getApplication()->getSession();
+
 			if ( $app->isClient( 'administrator' ) ) {
+				if ( (int)$user->id && (int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM #__cck_core_sites WHERE guest = '.(int)$user->id ) ) {
+					$session->set( 'user', Factory::getUser( 0 ) );
+				}
+
 				return;
 			}
 
@@ -1064,7 +1070,6 @@ class plgSystemCCK extends CMSPlugin
 				return;
 			}
 
-			$session	=	Factory::getApplication()->getSession();
 			$session->set( 'user', Factory::getUser( 0 ) );
 
 			if ( strpos( \Joomla\CMS\Uri\Uri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
