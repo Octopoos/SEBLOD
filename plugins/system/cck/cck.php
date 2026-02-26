@@ -42,8 +42,6 @@ class plgSystemCCK extends CMSPlugin
 		$app	=	Factory::getApplication();
 
 		if ( $app->isClient( 'administrator' ) ) {
-			Factory::getLanguage()->load( 'lib_cck', JPATH_SITE );
-
 			if ( file_exists( JPATH_SITE.'/plugins/cck_storage_location/joomla_user_note/joomla_user_note.php' ) ) {
 				$this->content_objects['joomla_user_note']	=	1;
 			}
@@ -157,10 +155,13 @@ class plgSystemCCK extends CMSPlugin
 		$router->attachParseRule( array( $this, 'parseRule' ), Router::PROCESS_DURING );
 
 		if ( $app->isClient( 'administrator' ) ) {
+			$lang	=	Factory::getLanguage();
+
+			$lang->load( 'lib_cck', JPATH_SITE, 'en-GB', true );
+
 			JCckDevIntegration::addMenuPresets();
-			
+
 			if ( $app->input->get( 'option' ) == 'com_config' && strpos( $app->input->get( 'component', '' ), 'com_cck' ) !== false ) {
-				$lang			=	Factory::getLanguage();
 				$lang_default	=	$lang->setDefault( 'en-GB' );
 				$lang->load( 'com_cck' );
 				$lang->load( 'com_cck_core' );
