@@ -63,7 +63,7 @@ if ( isset( $config['watermark'] ) && is_array( $config['watermark'] ) && !empty
 
 		$ps_instructions	.=	'grestore gsave '
 							.	'currentpagedevice /PageSize get aload pop /ph exch def /pw exch def '
-							.	'30 ph 2 div translate 90 rotate ';
+							.	'20 ph 2 div translate 90 rotate ';
 
 		$ps_instructions	.=	$color.' /Arial findfont '.$font_size.' scalefont setfont '
 							.	'(' . $safeText . ') stringwidth pop 2 div neg 0 moveto '
