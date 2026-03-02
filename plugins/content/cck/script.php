@@ -144,7 +144,7 @@ class plgContentCCKInstallerScript
 		if ( JCck::on( '4.0' ) && !isset( $app->cck_core_version ) ) {
 			$db->setQuery( 'SELECT manifest_cache FROM #__extensions WHERE element = "com_cck" AND type = "component"' );
 			
-			$res		=	$db->loadResult();
+			$res		=	(string)$db->loadResult();
 			$registry	=	new Registry;
 			$registry->loadString( $res );
 			
