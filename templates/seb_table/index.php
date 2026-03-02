@@ -20,6 +20,7 @@ $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
 $attributes		=	$cck->item_attributes ? ' '.$cck->item_attributes : '';
+$has_head		=	(int)$cck->getStyleParam( 'table_header_data', 0 );
 $table_columns	=	$cck->getStyleParam( 'table_columns', 0 );
 $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
@@ -29,12 +30,14 @@ $isResponsive	=	( $table_layout == 'responsive' ) ? 1 : 0;
 $class_body		=	'';
 $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' ) );
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
-$class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
+if ( $isResponsive ) {
+	if ( $class_table == 'o-table' ) {
+		$class_table	=	'o-table-responsive';
+	} else {
+		$class_table	=	str_replace( 'o-table ', 'o-table-responsive ', $class_table );
+	}
+}
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
-$class_row0		=	trim( $cck->getStyleParam( 'class_table_tr_even', 'cat-list-row%i' ) );
-$class_row0		=	$class_row0 ? ' class="'.str_replace( '%i', '0', $class_row0 ).'"' : '';
-$class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i' ) );
-$class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
 $translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
 $doc			=	Factory::getDocument();
@@ -50,12 +53,21 @@ if ( $cck->isGoingToLoadMore() ) {
 	$class_body	=	' class="cck-loading-more"';
 }
 
+$html_above		=	$cck->renderPosition( '_above_' );
+$html_above_th	=	substr( $html_above, 0, 3 ) == '<tr' ? true : false;
+$html_below		=	$cck->renderPosition( '_below_' );
+$html_below_tf	=	substr( $html_below, 0, 3 ) == '<tr' ? true : false;
+
 // -- Render
-if ( !$isMore ) {
+if ( $cck->id_class && !$isMore ) {
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
+<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>"<?php echo ( $cck->id_attributes ? ' '.$cck->id_attributes : '' ); ?>>
 	<div>
 	<?php }
+	if ( !$html_above_th ) {
+		echo $html_above;
+	}
+
 	$attr		=	array(
 						'class'=>array(),
 						'width'=>array()
@@ -73,38 +85,54 @@ if ( !$isMore ) {
 	unset( $positions['hidden'] );
 
 	$count		=	count( $items );
+
+	if ( $has_head ) {
+		$count--;
+		$first	=	array_shift( $items );
+	}
 	
 	foreach ( $positions as $name=>$position ) {
 		$class					=	$position->css;
 		$attr['class'][$name]	=	$class ? ' class="'.$class.'"' : '';
+		$attr['data'][$name]	=	'';
 		$attr['label'][$name]	=	'';
 
-		$head[$name]			=	array( 'count'=>$count, 'fields'=>0, 'html'=>'', 'items'=>array() );
-		$legend					=	'';
-		$width					=	$cck->w( $name );
+		$head[$name]	=	array( 'count'=>$count, 'fields'=>0, 'html'=>'', 'items'=>array() );
+		$legend			=	'';
+		$width			=	$cck->w( $name );
 
-		if ( $position->legend ) {
-			$legend						=	trim( $position->legend );
-			$legend2					=	$legend;
+		if ( $has_head ) {
+			$legend		=	$first->renderPosition( $name, 'cell' );
+
+			if ( $has_head === 1 ) {
+				$attr['data'][$name]	=	' scope="col"';
+			}
+			if ( $isResponsive ) {
+				$attr['label'][$name]	=	' data-label="'.strip_tags( $legend ).'"';
+			}
+		} elseif ( $position->legend ) {
+			$legend		=	trim( $position->legend );
+			$legend2	=	$legend;
 
 			if ( $legend != '' && !( $legend[0] == '<' || strpos( $legend, ' / ' ) !== false ) ) {
 				if ( $translate ) {
-					$key				=	'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) );
+					$key	=	'COM_CCK_' . str_replace( ' ', '_', trim( $legend ) );
 					
 					if ( $lang->hasKey( $key ) ) {
-						$legend			=	Text::_( $key );
+						$legend	=	Text::_( $key );
 					}
 				}
 				if ( $isResponsive ) {
-					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+					$attr['label'][$name]	=	' data-label="'.strip_tags( $legend ).'"';
 				}
 			}
 		} else {
 			if ( isset( $position->legend2 ) && $position->legend2 ) {
-				$legend					=	trim( $position->legend2 );
-				$legend2				=	$legend;
+				$legend		=	trim( $position->legend2 );
+				$legend2	=	$legend;
+
 				if ( $isResponsive ) {
-					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+					$attr['label'][$name]	=	' data-label="'.strip_tags( $legend ).'"';
 				}
 			}
 		}
@@ -130,7 +158,7 @@ if ( !$isMore ) {
 				$head[$name]['html']	=	$var;
 			} else {
 				$attr['width'][$name]	=	( $width ) ? ' width="'.$width.'"' : ''; // ( $width ) ? ' style="width:'.$width.'"' : '';
-				$head[$name]['html']	=	'<th'.$attr['class'][$name].$attr['width'][$name].'>'.$legend.'</th>';	
+				$head[$name]['html']	=	'<th'.$attr['class'][$name].$attr['data'][$name].$attr['width'][$name].'>'.$legend.'</th>';	
 			}
 		}
 	}
@@ -138,32 +166,20 @@ if ( !$isMore ) {
 	<?php
 	if ( $count ) {
 		$i	=	0;
+
         foreach ( $items as $item ) {
         	$body[$i]['cols']	=	array();
-			$body[$i]['html']	=	'<tr '.${'class_row'.($i % 2)}.$item->replaceLive( $attributes ).'>';
+			$body[$i]['html']	=	'<tr'.$item->replaceLive( $attributes ).'>';
 
             foreach ( $positions as $name=>$position ) {
-				$fieldnames	=	$cck->getFields( $name, '', false );
-
-				if ( $i == 0 ) {
-					$head[$name]['fields']	=	( count( $fieldnames ) > 1 ) ? true : false;
-				}
 				$col		=	'';
-				$multiple	=	$head[$name]['fields'];
 				$width		=	'';
+
 				if ( $isFixed ) {
 					$width	=	$attr['width'][$name];
 				}
-                foreach ( $fieldnames as $fieldname ) {
-					$content	=	$item->renderField( $fieldname );
-					if ( $content != '' ) {
-						if ( $item->getMarkup( $fieldname ) != 'none' && ( $multiple || $item->getMarkup_Class( $fieldname ) ) ) {
-							$col	.=	'<div class="cck-clrfix'.$item->getMarkup_Class( $fieldname ).'">'.$content.'</div>';
-						} else {
-							$col	.=	$content;
-						}
-					}
-				}
+				$col		=	$item->renderPosition( $name, 'cell' );
+
 				if ( $col == '' ) {
 					if ( !$table_columns ) {
 						$head[$name]['count']--;
@@ -208,19 +224,42 @@ if ( !$isMore ) {
 		$thead	=	'';
 	}
 	if ( $thead && ( $table_header == 0 || $table_header == 1 ) ) {
-		$html	.=	'<thead><tr>'.$thead.'</tr></thead>';
+		$html	.=	'<thead>'
+				.	'<tr>'.$thead.'</tr>';
+
+		if ( $html_above_th ) {
+			$html	.=	$html_above;
+		}
+
+		$html	.=	'</thead>';
+	} elseif ( $html_above_th ) {
+		$html	.=	'<thead>'.$html_above.'</thead>';
 	}
 	$html		.=	$tbody;
 
 	if ( $thead && ( $table_header == -1 || $table_header == 1 ) ) {
-		$html	.=	'<tfoot><tr>'.$thead.'</tr></tfoot>';
+		$html	.=	'<tfoot>';
+
+		if ( $html_below_tf ) {
+			$html	.=	$html_below;
+		}
+
+		$html	.=	'<tr>'.$thead.'</tr>'
+				.	'</tfoot>';
+	} elseif ( $html_below_tf ) {
+		$html	.=	'<tfoot>'.$html_below.'</tfoot>';
 	}
 	if ( !$isMore ) {
 		$html	.=	'</table>';
 	}
+
 	echo $html;
 
-	if ( !$isMore ) { ?>
+	if ( !$html_below_tf ) {
+		echo $html_below;
+	}
+
+	if ( $cck->id_class && !$isMore ) { ?>
     </div>
 </div>
 <?php
