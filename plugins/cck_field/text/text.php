@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -166,7 +167,7 @@ class plgCCK_FieldText extends JCckPluginField
 		}
 		/*
 		if ( $field->storage_filter ) {
-			$field->value	=	JFilterInput::getInstance()->clean( $field->value, $field->storage_filter );
+			$field->value	=	InputFilter::getInstance()->clean( $field->value, $field->storage_filter );
 		}
 		*/
 		

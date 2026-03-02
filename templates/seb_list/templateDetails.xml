@@ -47,6 +47,7 @@
 					<option value="div_">COM_CCK_ONLY_LIST_DIV</option>
 					<option value="div_article">COM_CCK_DIV_ARTICLE</option>
 					<option value="div_div">COM_CCK_DIV_DIV</option>
+					<option value="div_dl">COM_CCK_DIV_DL</option>
 					<option value="_div">COM_CCK_ONLY_ITEM_DIV</option>
 					<option value="ol_li">COM_CCK_OL_LI</option>
 					<option value="section_article">COM_CCK_SECTION_ARTICLE</option>
