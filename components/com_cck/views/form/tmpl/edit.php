@@ -22,6 +22,8 @@ $id		=	( $id ) ? 'id="'.$id.'" ' : '';
 
 if ( !$this->raw_rendering ) { ?>
 <div <?php echo $id; ?>class="cck_page cck-clrfix"><div>
+<?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
+<div class="<?php echo trim( $this->pageclass_sfx ); ?>">
 <?php }
 if ( $this->params->get( 'show_page_heading' ) ) {
 	echo '<h1>' . ( ( $this->escape( $this->params->get( 'page_heading' ) ) ) ? $this->escape( $this->params->get( 'page_heading' ) ) : $this->escape( $this->params->get( 'page_title' ) ) ) . '</h1>';
@@ -115,6 +117,8 @@ if ( $this->show_form_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
+<?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
+</div>
 <?php }
 if ( $app->input->get( 'tmpl', '' ) == 'raw' ) { ?>
 <script>
