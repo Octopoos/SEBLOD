@@ -472,7 +472,12 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 
 	// buildRoute
 	public static function buildRoute( &$query, &$segments, $config, $menuItem = null )
-	{
+	{	
+		if ( isset( $query['id'] ) ) {
+			$segments[]	=	$query['id'];
+
+			unset( $query['id'] );
+		}
 	}
 	
 	// getRoute
@@ -484,7 +489,13 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	// getRouteByStorage
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array() )
 	{
-		return '';
+		$link	=	'index.php?option=com_cck&view=list';
+
+		if ( $itemId ) {
+			$link	.=	'&Itemid='.$itemId;
+		}
+
+		return $link;
 	}
 	
 	// parseRoute

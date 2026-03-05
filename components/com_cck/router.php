@@ -196,6 +196,12 @@ class CckRouter extends RouterView
 							}
 						}
 					}
+				} elseif ( $count === 1 && $params['doSEF'] == '22' ) { /* We need to keep it only as /id even for a non-numeric slug */
+					$vars['id']	=	$segments[0];
+
+					$segments	=	array();
+
+					return $vars;
 				} elseif ( $params['doSEF'][0] == '2' && $count > 1 ) {
 					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 					
