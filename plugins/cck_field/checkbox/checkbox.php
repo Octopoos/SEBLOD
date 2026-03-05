@@ -36,6 +36,9 @@ class plgCCK_FieldCheckbox extends JCckPluginField
 				$data['json']['options2']['options']	=	'';
 			}
 		}
+
+		$data['bool2']	=	(int)$data['bool2'];
+
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	

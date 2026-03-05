@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Language\Text;
+
 // Init
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true,
 												  'customAttr'=>array( 'direction', 'prepend' ), 'customAttrLabel'=>Text::_( 'COM_CCK_DIRECTION_ASC_DESC' ),
