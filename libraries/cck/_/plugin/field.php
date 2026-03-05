@@ -378,9 +378,9 @@ class JCckPluginField extends CMSPlugin
 			}
 
 			// Encrypt
-			if ( $data['storage'] !== 'none' && $data['storage_table'] !== '' ) {
-			if ( ( (int)$data['storage_crypt'] === 0 || (int)$data['storage_crypt'] > 0 ) && (int)$data['storage_crypt'] != $data['storage_crypt_prev'] ) {
-				$app	=	Factory::getApplication();
+			if ( $data['storage'] !== 'none' && $data['storage_table'] !== '' && strpos( $data['storage_location'], 'cck_webservice' ) === false ) {
+				if ( ( (int)$data['storage_crypt'] === 0 || (int)$data['storage_crypt'] > 0 ) && (int)$data['storage_crypt'] != $data['storage_crypt_prev'] ) {
+					$app	=	Factory::getApplication();
 					$my_app	=	new JCckApp;
 
 					if ( $data['storage'] == 'standard' ) {

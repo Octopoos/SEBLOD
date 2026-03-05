@@ -146,6 +146,7 @@ body.com_cck_importer #featured_session, body.com_cck_exporter #featured_session
 div.seblod.preview .inputbox { margin-bottom: 0; }
 div.seblod.preview #alter_match.inputbox { margin-top: 9px; }
 div.seblod.preview div.cck_forms.cck_admin div.cck_desc { padding-bottom: 8px; color: #eb8207; }
+.max-width-attr-list { max-width: 430px!important; }
 .max-width-200 { max-width: 200px; }
 .max-width-190 { max-width: 190px; }
 .max-width-180 { max-width: 180px; }
@@ -233,3 +234,6 @@ body.contentpane.component .span12, body.is-darkcontentpane.component .span12 { 
 body.com_cck:not(.view-list) div.seblod a.btn.btn-micro.jgrid { padding: 2px 4px; position: relative; top: 6px; }
 body.com_cck span.value-picker { color: #3b99fc; top: 9px; }
 body:not(.com_cck) div.alert.alert-info > div { text-align: center; }
+
+fieldset.options-form fieldset.checkboxes.vertical {padding-left: 1rem;}
+fieldset.options-form fieldset.checkboxes.vertical label {color: var(--options-form-legend-color); font-weight: bold; padding-left: 8px;}

@@ -14,7 +14,7 @@ foreach ( $displayData['form'] as $form ) {
 		$col	=	'8';
 		$legend	=	$form['legend'];
 		
-	} elseif ( isset( $form['mode'] ) && $form['mode'] == 'storage' ) {
+	} elseif ( isset( $form['mode'] ) && ( $form['mode'] == 'storage' || $form['mode'] == 'webservice_auth' ) ) {
 		$class	=	' minus-1';
 		$class2	=	' is-sticky';
 		$col	=	'4';
@@ -30,7 +30,6 @@ foreach ( $displayData['form'] as $form ) {
 
 	echo '<div class="col-12 col-lg-'.$col.$class.'">';
 	echo '<fieldset class="options-form'.$class2.'">'.$legend;
-	// echo '<div class="form-grid">';
 
 	if ( isset( $form['fields'] ) ) {
 		foreach ( $form['fields'] as $field ) {
@@ -38,7 +37,6 @@ foreach ( $displayData['form'] as $form ) {
 		}
 	}
 
-	// echo '</div>';
 	echo '</fieldset>';
 	echo '</div>';
 }

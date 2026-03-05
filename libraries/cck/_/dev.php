@@ -492,33 +492,37 @@ abstract class JCckDev
 					
 					if ( $options['toggleAttr'] ) {
 						$label		=	isset( $options['customAttrLabel'] ) ? $options['customAttrLabel'] : Text::_( 'COM_CCK_CUSTOM_ATTRIBUTES' );
-						$html		.=	'<input type="checkbox" id="toggle_attr" name="toggle_attr" value="1" />'
+						$html		.=	'<input type="checkbox" id="toggle_attr" name="toggle_attr" class="accent-checkbox" value="1" />'
 									.	'<label for="toggle_attr" class="toggle_attr inline">'.$label.'</label>';
 						$js3		=	'var disp = ($("#toggle_attr").prop("checked") !== false) ? \'style="display: block"\' : "";';
 					} else {
 						$js3		=	'var disp = "";';
 					}
 
-					if ( JCck::on( '4.0' ) ) {
-						$js_open	=	'<div class="no-no attr-grid-2">';
-						$js_close	=	'</div>';
+					if ( $options['base'] === 'api_input' || $options['base'] === 'api_output' ) {
+						$attr_grid	=	'attr-grid-5';
+						$no_no	=	'';
 					} else {
-						$js_open	=	'<div class="clr"></div>';
-						$js_close	=	'';
+						$attr_grid	=	'attr-grid-2';
+						$no_no		=	' no-no';
 					}
+
+					$js_open	=	'<div class="inj no-no '.$attr_grid.'">';
+					$js_close	=	'</div>';
 
 					// Custom Attr
 					if ( is_array( $options['customAttr'] ) ) {
-						$keys	=	array();
-						$n		=	0;
-						$nb		=	count( $options['customAttr'] );
-						$attribs	.=	'<div class="attr-grid-2">';
+						$js3b		=	'';
+						$keys		=	array();
+						$n			=	0;
+						$nb			=	count( $options['customAttr'] );
+						$attribs	.=	'<div class="'.$attr_grid.'">';
 
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
 							if ( !JCck::on( '4.0' ) ) {
-								$attribs	.=	'<div class="clr"></div>';
+								$attribs	.=	'';
 							}
-							$attribs	.=	'<div class="attr no-no">';
+							$attribs	.=	'<div class="attr'.$no_no.'">';
 
 							if ( is_array( $customAttr ) ) {
 								$attr_id	=	$customAttr['id'];
@@ -528,7 +532,7 @@ abstract class JCckDev
 								}
 								if ( isset( $customAttr['form'] ) && $customAttr['form'] ) {
 									$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
-									$attribs		.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" class="inputbox adminformlist-minwidth'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \''.$default_value.'\' )+\'">'.$customAttr['form']['options'].'</select>';
+									$attribs		.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \''.$default_value.'\' )+\'">'.$customAttr['form']['options'].'</select>';
 								} else {
 									if ( isset( $customAttr['placeholder'] ) && $customAttr['placeholder'] ) {
 										$placeholder	=	$customAttr['placeholder'];
@@ -555,7 +559,7 @@ abstract class JCckDev
 
 							if ( isset( $customAttr['form'] ) ) {
 								$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
-								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" class="inputbox adminformlist-minwidth'.$attr_class.'" data-value="'.$default_value.'">'.$customAttr['form']['options'].'</select>';
+								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="'.$default_value.'">'.$customAttr['form']['options'].'</select>';
 							} else {
 								if ( isset( $customAttr['size'] ) && $customAttr['size'] ) {
 									$size	=	$customAttr['size'];
@@ -565,13 +569,14 @@ abstract class JCckDev
 								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" />';
 							}
 							$keys[]			=	$attr_id;
-							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\''.$js_open.'<div class="attr"\'+disp+\'>'.$attribs_append.$js_close.'</div>\');';
+							$js3b			.=	'$("'.$options['root'].'>div:last .inj").append(\''.'<div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
 						}
+						$js3		.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\''.$js_open.$js_close.'\');'.$js3b;
 						$attribs	.=	'</div>';
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
 						$n			=	(int)$options['customAttr'];
-						$attribs	=	'<div class="clr"></div><div class="attr no-no attr-grid-2">';
+						$attribs	=	'<div class="attr no-no attr-grid-2">';
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css		=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
 							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
@@ -580,7 +585,7 @@ abstract class JCckDev
 						$location	=	( $elem->location ) ? explode( '||', $elem->location ) : array( 0=>'', 1=>'', 2=>'' );
 
 						if ( !JCck::on( '4.0' ) ) {
-							$html	.=	'<div class="clr"></div>';
+							$html	.=	'';
 						} else {
 							$html	.=	'<div class="collection-group-wrap def">';
 						}
@@ -591,10 +596,8 @@ abstract class JCckDev
 							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.( isset( $location[$i] ) ? htmlspecialchars( $location[$i] ) : '' ).'" />';
 						}
 						$html		.=	'</div>';
-						
-						if ( JCck::on( '4.0' ) ) {
-							$html	.=	'</div>';
-						}
+						$html		.=	'</div>';
+
 						$js3		.=	'var content = \''.$js_open.'<div class="attr"\'+disp+\'>';
 						for ( $i = 0; $i < $n; $i++ ) {
 							if ( $i == 0 ) {
@@ -666,7 +669,7 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	HTMLHelper::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select max-width-175"',
+					$elem->init['fieldPicker']	=	HTMLHelper::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select tweak-attr-list"',
 															  'value', 'text', '', $options['picker'] );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
@@ -693,13 +696,12 @@ abstract class JCckDev
 					}
 					$js3	=	'';
 				} else {
-					// $js3	=	'(function($){ var cur = 9999; $.fn.JCckFieldxAddAfter = function() {'.$js3.' $(this).next().find(".collection-group-form").append(content);} })(jQuery);';
 					if ( $type == 'field' ) {
 						$js3	=	'(function($){ /* */ })(jQuery);';
 					}
 				}
 				if ( $html ) {
-					$html	=	'<div class="clr"></div><div>'.$html.'</div>';
+					$html	=	'<div>'.$html.'</div>';
 					$js		=	'if ($("'.$options['root'].'")) { '.$js.' $("'.$options['root'].'").parent().append("'.addslashes( $html ).'"); }';
 				}
 			}
@@ -941,10 +943,7 @@ abstract class JCckDev
 		
 		$config['fields'][]	=	$field->storage_field;
 
-		if ( JCck::on( '4.0' ) ) {
-			$class			=	'control-group'. ( $class ? ' ' . $class : '' );
-		}
-
+		$class				=	'control-group'. ( $class ? ' ' . $class : '' );
 		$class				=	( $class ) ? ' class="'.$class.'"' : '';
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
 		$label				=	'';
@@ -957,11 +956,7 @@ abstract class JCckDev
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
 
-		if ( JCck::on( '4.0' ) ) {
-			return '<div'.$class.'><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
-		} else {
-			return '<li'.$class.'>'.$label.$html.'</li>';
-		}
+		return '<div'.$class.'><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
 	}
 
 	// renderFormFromHelper
@@ -984,11 +979,8 @@ abstract class JCckDev
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
 
-		if ( JCck::on( '4.0' ) ) {
-			return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
-		} else {
-			return '<li'.$class.'>'.$label.$html.'</li>';
-		}
+
+		return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
 	}
 	
 	// renderBlank
@@ -1040,7 +1032,7 @@ abstract class JCckDev
 		
 		$link	=	'https://www.seblod.com/resources/manuals/archives/'.$url.'?tmpl=component';
 		$opts	=	'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=685,height=600';
-		$help	=	'<div class="clr"></div><div class="how-to-setup">'
+		$help	=	'<div class="how-to-setup">'
 				.	'<a href="'.$link.'" onclick="window.open(this.href, \'targetWindow\', \''.$opts.'\'); return false;" rel="noopener noreferrer">' . Text::_( 'COM_CCK_HOW_TO_SETUP_THIS_'.$type ) . '</a>'
 				.	'</div>';
 		
@@ -1072,12 +1064,8 @@ abstract class JCckDev
 			$tag		=	'';
 			$tooltip	=	'';
 		}
-		
-		if ( JCck::on( '4.0' ) ) {
-			return '<legend class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></legend>';
-		} else {
-			return '<div class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></div>';
-		}
+
+		return '<legend class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></legend>';
 	}
 
 	// renderSpacer

@@ -406,16 +406,18 @@ fieldset.unlocked input.storage-target::placeholder {
 fieldset.locked .input-group .btn-secondary{border-color: var(--template-link-color);}
 fieldset.unlocked .input-group .btn-secondary{border-color: var(--success);}
 
-
-.attr > .is-mini{/*display: inline-block; margin: 6px 3px;*/}
-/*.attr > .is-mini:first-child{margin-left: 0;}*/
-/*.attr > .is-mini:last-child{margin-right: 0;}*/
-/*.attr-grid-*/
 .attr.no-no{display: none!important;}
 .attr-grid-2{grid-template-columns: repeat(2,1fr);}
 .attr-grid-4{grid-template-columns: repeat(4,1fr);}
+.attr-grid-5{grid-template-columns: repeat(5,1fr);}
 .attr-grid-6{grid-template-columns: repeat(6,1fr);}
-/*grid-template-columns*/
+.form-control:focus + [class*="attr-grid-"]{
+	border-left-color: var(--template-link-color);
+	border-right-color: var(--template-link-color);
+	border-bottom-color: var(--template-link-color);
+}
+.attr > span{font-size: 14px; font-weight: bold; padding-left: 8px;}
+
 [class*="attr-grid-"] {
 	display: grid;
 	grid-column-gap: 6px;
@@ -553,7 +555,34 @@ body.layout-edit .header{display: none;}
 #bool8 .publish{color: #65ab55;}
 #bool8 .unpublish{color: #e9594d;}
 
+.tweak-attr-list{margin-bottom: 16px; max-width: 430px!important;}
+
+input[type="checkbox"].accent-checkbox {
+	accent-color: var(--switcher-toggle-outside-on-bg, #2f7d32);
+	width: 18px;
+	height: 18px;
+	border: 1px solid var(--switcher-toggle-outside-on-bg, #2f7d32);
+	background-color: #fff;
+	transition: all 0.1s;
+}
+input[type="checkbox"].accent-checkbox:checked {
+	background-color: var(--switcher-toggle-outside-on-bg, #2f7d32);
+	color: #FFFFFF;
+}
+input[type="checkbox"].accent-checkbox + label {
+	line-height: 18px;
+	cursor: pointer;
+}
+input[type="checkbox"].accent-checkbox:hover {
+	accent-color: red;
+}
+
 #toggle_attr{margin-right: 8px;}
+.toggle_attr{top: -3px; position: relative; margin-bottom: 12px;}
+
+.control-group.inline-x .control-label{width: 100%; top: -8px; position: relative;}
+.min-hf-300 > div > fieldset{min-height: 304px;}
+
 .collection-group-wrap.def .attr{border-radius: 0.25rem;}
 ul.sortable li div.pane div.col2 > .g3{display: grid; grid-template-columns: auto auto auto;}
 
