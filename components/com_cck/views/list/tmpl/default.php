@@ -42,7 +42,7 @@ $js		=	$this->config['submit'].' = function(task) {'. $js.' };'
 $doc->addScriptDeclaration( $js );
 } ?>
 <?php if ( !$this->raw_rendering ) { ?>
-<div <?php echo $id; ?>class="cck_page cck-clrfix"><div>
+<div <?php echo $id; ?>class="cck_page"><div>
 <?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
 <div class="<?php echo trim( $this->pageclass_sfx ); ?>">
 <?php }
@@ -66,7 +66,7 @@ if ( $this->show_list_desc && $this->description != '' && $app->input->get( 'tmp
 		$this->tag_desc	=	'div';
 	}
 	if ( !$this->raw_rendering ) {
-		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
+		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.'">' . $description . '</'.$this->tag_desc.'>';
 
 		if ( $this->tag_desc == 'div' ) {
 			$description	.=	'<div class="clr"></div>';
@@ -93,7 +93,7 @@ if ( $this->show_form ) {
 		if ( $this->raw_rendering ) {
 			echo $this->form.$this->loadTemplate( 'hidden' );
 		} else {
-			echo '<div class="cck_page_search'.$this->pageclass_sfx.' cck-clrfix">'.$this->form.$this->loadTemplate( 'hidden' ).'</div><div class="clr"></div>';
+			echo '<div class="cck_page_search'.$this->pageclass_sfx.'">'.$this->form.$this->loadTemplate( 'hidden' ).'</div><div class="clr"></div>';
 		}
 		if ( !$this->form_wrapper ) {
 			echo '</form>';

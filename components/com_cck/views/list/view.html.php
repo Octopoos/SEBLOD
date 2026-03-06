@@ -138,105 +138,118 @@ class CCKViewList extends HtmlView
 		if ( !is_object( @$options ) ) {
 			$options	=	new Registry;
 		}
-		$this->show_form				=	$preconfig['show_form'];
-		$this->show_list_title			=	$params->get( 'show_list_title' );
-		if ( $this->show_list_title == '' ) {
-			$this->show_list_title		=	$options->get( 'show_list_title', '1' );
-			$this->tag_list_title		=	$options->get( 'tag_list_title', 'h1' );
-			$this->class_list_title		=	$options->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
-		} elseif ( $this->show_list_title ) {
-			$this->tag_list_title		=	$params->get( 'tag_list_title', 'h1' );
-			$this->class_list_title		=	$params->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
-		}
-		if ( $params->get( 'display_list_title', '' ) == '2' ) {
-			$this->title				=	'';
+		$is_content_view				=	(int)$app->input->getInt( 'id' );
 
-			if ( is_object( $search ) ) {
-				$this->title			=	Text::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+		if ( $is_content_view ) {
+			$this->load_resource			=	0;
+			$this->show_form				=	-1;
+			$this->show_items_number		=	0;
+			$this->show_list_desc			=	0;
+			$this->show_list_title			=	0;
+			$this->show_pages_number		=	0;
+			$this->show_pagination			=	0;
+		} else {
+			$this->show_form				=	$preconfig['show_form'];
+			$this->show_list_title			=	$params->get( 'show_list_title' );
+			if ( $this->show_list_title == '' ) {
+				$this->show_list_title		=	$options->get( 'show_list_title', '1' );
+				$this->tag_list_title		=	$options->get( 'tag_list_title', 'h1' );
+				$this->class_list_title		=	$options->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
+			} elseif ( $this->show_list_title ) {
+				$this->tag_list_title		=	$params->get( 'tag_list_title', 'h1' );
+				$this->class_list_title		=	$params->get( 'class_list_title', JCck::getConfig_Param( 'title_class', '' ) );
 			}
-		} elseif ( $params->get( 'display_list_title', '' ) == '3' ) {
-			$this->title				=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_list_title', '' ) ) ) );
-		} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
-			$this->title				=	$params->get( 'title_list_title', '' );
-		} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
-			$this->title				=	$menu->title;
-		} else {
-			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
-		}
+			if ( $params->get( 'display_list_title', '' ) == '2' ) {
+				$this->title				=	'';
 
-		$this->show_list_desc			=	$params->get( 'show_list_desc', $options->get( 'show_list_desc', '1' ) );
-		if ( $this->show_list_desc ) {
-			$this->description			=	$params->get( 'list_desc', @$search->description );
-		} else {
-			$this->description			=	'';
-		}
-		if ( !$total_items && !$options->get( 'show_list_desc_no_result', '1' ) ) {
-			$this->show_list_desc		=	0;
-			$this->description			=	'';
-		}
-		if ( $this->description != '' ) {
-			if ( is_object( $menu ) ) {
-				$this->description	=	str_replace( '[title]', $menu->title, $this->description );
-				$this->description	=	str_replace( '[note]', $menu->note, $this->description );
+				if ( is_object( $search ) ) {
+					$this->title			=	Text::_( 'APP_CCK_LIST_'.$search->name.'_TITLE' );
+				}
+			} elseif ( $params->get( 'display_list_title', '' ) == '3' ) {
+				$this->title				=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $params->get( 'title_list_title', '' ) ) ) );
+			} elseif ( $params->get( 'display_list_title', '' ) == '1' ) {
+				$this->title				=	$params->get( 'title_list_title', '' );
+			} elseif ( $params->get( 'display_list_title', '' ) == '0' ) {
+				$this->title				=	$menu->title;
 			} else {
-				$this->description	=	str_replace( array( '[title]', '[note]' ), '', $this->description );
+				$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 			}
-			$this->description	=	str_replace( '$cck->get', '$cck-&gt;get', $this->description );
-			$this->description	=	JCckDevHelper::replaceLive( $this->description );
-			if ( strpos( $this->description, '$cck-&gt;get' ) !== false ) {
-				$matches	=	'';
-				$regex		=	'#\$cck\-\&gt;get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
-				preg_match_all( $regex, $this->description, $matches );
-				if ( count( $matches[1] ) ) {
-					foreach ( $matches[1] as $k=>$v ) {
-						$fieldname			=	$matches[2][$k];
-						$target				=	strtolower( $v );
-						if ( count( @$doc->list ) ) {
-							$this->description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->$target, $this->description );
-						} else {
-							$this->description	=	str_replace( $matches[0][$k], '', $this->description );
+
+			$this->show_list_desc			=	$params->get( 'show_list_desc', $options->get( 'show_list_desc', '1' ) );
+			if ( $this->show_list_desc ) {
+				$this->description			=	$params->get( 'list_desc', @$search->description );
+			} else {
+				$this->description			=	'';
+			}
+			if ( !$total_items && !$options->get( 'show_list_desc_no_result', '1' ) ) {
+				$this->show_list_desc		=	0;
+				$this->description			=	'';
+			}
+			if ( $this->description != '' ) {
+				if ( is_object( $menu ) ) {
+					$this->description	=	str_replace( '[title]', $menu->title, $this->description );
+					$this->description	=	str_replace( '[note]', $menu->note, $this->description );
+				} else {
+					$this->description	=	str_replace( array( '[title]', '[note]' ), '', $this->description );
+				}
+				$this->description	=	str_replace( '$cck->get', '$cck-&gt;get', $this->description );
+				$this->description	=	JCckDevHelper::replaceLive( $this->description );
+				if ( strpos( $this->description, '$cck-&gt;get' ) !== false ) {
+					$matches	=	'';
+					$regex		=	'#\$cck\-\&gt;get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
+					preg_match_all( $regex, $this->description, $matches );
+					if ( count( $matches[1] ) ) {
+						foreach ( $matches[1] as $k=>$v ) {
+							$fieldname			=	$matches[2][$k];
+							$target				=	strtolower( $v );
+							if ( count( @$doc->list ) ) {
+								$this->description	=	str_replace( $matches[0][$k], current( $doc->list )->fields[$fieldname]->$target, $this->description );
+							} else {
+								$this->description	=	str_replace( $matches[0][$k], '', $this->description );
+							}
 						}
 					}
 				}
 			}
-		}
-		
-		$this->show_items_number		=	$params->get( 'show_items_number' );
-		if ( $this->show_items_number == '' ) {
-			$this->show_items_number	=	$options->get( 'show_items_number', 0 );
-			$this->label_items_number	=	$options->get( 'label_items_number', 'Results' );
-			$this->class_items_number	=	$options->get( 'class_items_number', 'total' );
-		} elseif ( $this->show_items_number ) {
-			$this->label_items_number	=	$params->get( 'show_items_number_label', 'Results' );
-			$this->class_items_number	=	$params->get( 'class_items_number', 'total' );
-		}
-		$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', JCck::getConfig_Param( 'pagination_show_pages_number', 1 ) ) );
-		$this->show_pagination			=	$params->get( 'show_pagination' );
-		$this->class_pagination			=	$params->get( 'class_pagination', 'pagination' );
-		$this->label_pagination			=	$options->get( 'label_pagination', '' );
-		if ( $this->show_pagination == '' ) {
-			$this->show_pagination		=	$options->get( 'show_pagination', 0 );
-			$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
-			$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
+			$this->title	=	'';
+			
+			$this->show_items_number		=	$params->get( 'show_items_number' );
+			if ( $this->show_items_number == '' ) {
+				$this->show_items_number	=	$options->get( 'show_items_number', 0 );
+				$this->label_items_number	=	$options->get( 'label_items_number', 'Results' );
+				$this->class_items_number	=	$options->get( 'class_items_number', 'total' );
+			} elseif ( $this->show_items_number ) {
+				$this->label_items_number	=	$params->get( 'show_items_number_label', 'Results' );
+				$this->class_items_number	=	$params->get( 'class_items_number', 'total' );
+			}
+			$this->show_pages_number		=	$params->get( 'show_pages_number', $options->get( 'show_pages_number', JCck::getConfig_Param( 'pagination_show_pages_number', 1 ) ) );
+			$this->show_pagination			=	$params->get( 'show_pagination' );
+			$this->class_pagination			=	$params->get( 'class_pagination', 'pagination' );
+			$this->label_pagination			=	$options->get( 'label_pagination', '' );
+			if ( $this->show_pagination == '' ) {
+				$this->show_pagination		=	$options->get( 'show_pagination', 0 );
+				$this->class_pagination		=	$options->get( 'class_pagination', 'pagination' );
+				$this->callback_pagination	=	$options->get( 'callback_pagination', '' );
 
-			if ( $this->label_pagination != '' ) {
-				if ( $config['doTranslation'] ) {
-					$this->label_pagination	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
+				if ( $this->label_pagination != '' ) {
+					if ( $config['doTranslation'] ) {
+						$this->label_pagination	=	Text::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $this->label_pagination ) ) );
+					}
 				}
+				if ( $this->label_pagination == '' ) {
+					$this->label_pagination	=	Text::_( 'COM_CCK_LOAD_MORE' );
+				}
+			} else {
+				$this->callback_pagination	=	'';
+				$this->label_pagination		=	'';
 			}
-			if ( $this->label_pagination == '' ) {
-				$this->label_pagination	=	Text::_( 'COM_CCK_LOAD_MORE' );
+			
+			$this->load_resource			=	$options->get( 'load_resource', 0 );
+			if ( $this->load_resource ) {
+				$this->autoid_resource		=	$options->get( 'autoid_resource', 0 );
+				$this->json_resource		=	$options->get( 'json_resource', '{}' );
+				$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
 			}
-		} else {
-			$this->callback_pagination	=	'';
-			$this->label_pagination		=	'';
-		}
-		
-		$this->load_resource			=	$options->get( 'load_resource', 0 );
-		if ( $this->load_resource ) {
-			$this->autoid_resource		=	$options->get( 'autoid_resource', 0 );
-			$this->json_resource		=	$options->get( 'json_resource', '{}' );
-			$this->tmpl_resource		=	$options->get( 'tmpl_resource', '' );
 		}
 
 		// Canonical

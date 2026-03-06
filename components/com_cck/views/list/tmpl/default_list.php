@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
 if ( !$this->raw_rendering ) { ?>
-<div class="cck_page_list<?php echo $this->pageclass_sfx; ?> cck-clrfix" id="system">
+<div class="cck_page_list<?php echo $this->pageclass_sfx; ?>" id="system">
 <?php } ?>
 	<?php	
 	$pagination_replace	=	'';

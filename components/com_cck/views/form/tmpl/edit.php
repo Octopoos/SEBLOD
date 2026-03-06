@@ -21,7 +21,7 @@ $id		=	str_replace( ' ', '_', trim( $this->pageclass_sfx ) );
 $id		=	( $id ) ? 'id="'.$id.'" ' : '';
 
 if ( !$this->raw_rendering ) { ?>
-<div <?php echo $id; ?>class="cck_page cck-clrfix"><div>
+<div <?php echo $id; ?>class="cck_page"><div>
 <?php } elseif ( trim( $this->pageclass_sfx ) ) { ?>
 <div class="<?php echo trim( $this->pageclass_sfx ); ?>">
 <?php }
@@ -45,7 +45,7 @@ if ( $this->show_form_desc == 1 && $this->description != '' ) {
 		$this->tag_desc	=	'div';
 	}
 	if ( !$this->raw_rendering ) {
-		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
+		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.'">' . $description . '</'.$this->tag_desc.'>';
 
 		if ( $this->tag_desc == 'div' ) {
 			$description	.=	'<div class="clr"></div>';
@@ -81,7 +81,7 @@ if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['v
 </script>
 <?php
 echo ( $this->config['action'] ) ? $this->config['action'] : '<form action="'.htmlspecialchars( Uri::getInstance()->getPath() ).'" autocomplete="off" enctype="multipart/form-data" method="post" id="'.$this->form_id.'" name="'.$this->form_id.'">';
-echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this->pageclass_sfx.' cck-clrfix" id="system">' . $this->data . '</div>';
+echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this->pageclass_sfx.'" id="system">' . $this->data . '</div>';
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 <div class="clr"></div>
@@ -112,7 +112,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 </form>
 <?php
 if ( $this->show_form_desc == 2 && $this->description != '' ) {
-	echo ( $this->raw_rendering ) ? HTMLHelper::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . HTMLHelper::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
+	echo ( $this->raw_rendering ) ? HTMLHelper::_( 'content.prepare', $this->description ) : '<div class="cck_page_desc'.$this->pageclass_sfx.'">' . HTMLHelper::_( 'content.prepare', $this->description ) . '</div><div class="clr"></div>';
 }
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
