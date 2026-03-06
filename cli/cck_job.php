@@ -8,6 +8,9 @@
 * @license 			GNU General Public License version 2 or later; see _LICENSE.php
 **/
 
+use Joomla\CMS\Application\CliApplication;
+use Joomla\CMS\Plugin\PluginHelper;
+
 // Set flag that this is a parent file.
 const _JEXEC = 1;
 const _DISPLAY_ERRORS = 0;
@@ -42,10 +45,10 @@ require_once JPATH_LIBRARIES.'/joomla/string/string.php';
 // Load the configuration
 require_once JPATH_CONFIGURATION.'/configuration.php';
 
-JPluginHelper::importPlugin( 'cck_storage_location' );
+PluginHelper::importPlugin( 'cck_storage_location' );
 
 // Cli
-class CckJobCli extends JApplicationCli
+class CckJobCli extends CliApplication
 {
 	// _cleanName
 	protected function _cleanName()
