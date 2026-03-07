@@ -748,7 +748,7 @@ abstract class JCckDevHelper
 			return JPATH_SITE;
 		}
 
-		$dest	=	JCck::getConfig_Param( 'media_root_'.$type, '' );
+		$dest	=	self::getRootFolderEnv( $type );
 
 		if ( $dest != '' ) {
 			$len	=	strlen( $dest );
@@ -759,6 +759,22 @@ abstract class JCckDevHelper
 		}
 
 		return $dest ? $dest : JPATH_SITE;
+	}
+
+	// getRootFolderEnv
+	public static function getRootFolderEnv( $type, $default = '' )
+	{
+		$folder	=	JCck::getConfig_Param( 'media_root_'.$type, $default );
+
+		if ( $folder && $folder[0] === '@' ) {
+			$folder	=	(string)getenv( substr( $folder, 1 ) );
+
+			if ( $folder == '' ) {
+				$folder	=	$default;
+			}
+		}
+
+		return $folder;
 	}
 
 	// getRouteSef

@@ -43,7 +43,7 @@ class JCckDevImage
 	// __construct
 	public function __construct( $path )
 	{
-		$root_folder	=	JCck::getConfig_Param( 'media_root_resources', '' );
+		$root_folder	=	JCckDevHelper::getRootFolderEnv( 'resources' );
 
 		if ( $root_folder && strpos( $path, $root_folder ) !== false ) {
 			// OK

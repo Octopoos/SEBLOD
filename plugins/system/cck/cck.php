@@ -136,7 +136,7 @@ class plgSystemCCK extends CMSPlugin
 			return;
 		}
 
-		define( 'JPATH_RESOURCES', JCck::getConfig_Param( 'media_root_resources', JPATH_SITE ) );
+		define( 'JPATH_RESOURCES', JCckDevHelper::getRootFolderEnv( 'resources', JPATH_SITE ) );
 
 		$view	=	$app->input->get( 'view' );
 		$task	=	$app->input->get( 'task' );
