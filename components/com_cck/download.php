@@ -137,6 +137,10 @@ header( "Content-Disposition: attachment; filename=\"$name\"" );
 if ( $watermark || !$id ) {
 	header( "Expires: 0" );
 	header( "Cache-Control: no-store, no-cache, must-revalidate, max-age=0" );
+	
+	if ( !$watermark ) {
+		header( "Content-Length: ".filesize( $path ) );
+	}
 } else {
 	header( "Expires: ".gmdate( "D, d M Y H:i:s", time() + $cache_seconds)." GMT" );
 	header( "Cache-Control: public, max-age=" . $cache_seconds . ", must-revalidate" );

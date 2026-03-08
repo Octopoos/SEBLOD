@@ -211,7 +211,6 @@ class CCKViewList extends HtmlView
 					}
 				}
 			}
-			$this->title	=	'';
 			
 			$this->show_items_number		=	$params->get( 'show_items_number' );
 			if ( $this->show_items_number == '' ) {
