@@ -1689,3 +1689,5 @@ seblod.code-workspace
 /templates/cassiopeia_extended
 administrator/language/en-GB/guidedtours.joomla_whatsnew_6_0.ini
 administrator/language/en-GB/guidedtours.joomla_whatsnew_6_0_steps.ini
+administrator/language/en-GB/com_cck_packager.ini
+administrator/language/en-GB/com_cck_packager.sys.ini
