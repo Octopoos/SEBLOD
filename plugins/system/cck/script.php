@@ -46,7 +46,9 @@ class plgSystemCCKInstallerScript
 				foreach ( $lang_tags as $lang_tag ) {
 					if ( !in_array( $lang_tag, $protected ) ) {
 						if ( strpos( $lang_tag, '-' ) !== false ) {
-							File::copy( $path.'/'.$lang_tag.'/com_cck_default.ini', $path.'/'.$lang_tag.'/com_cck_default.sql.ini' );
+							if ( is_file( $path.'/'.$lang_tag.'/com_cck_default.ini' ) ) {
+								File::copy( $path.'/'.$lang_tag.'/com_cck_default.ini', $path.'/'.$lang_tag.'/com_cck_default.sql.ini' );
+							}
 						}
 					}
 				}
