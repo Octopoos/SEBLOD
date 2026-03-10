@@ -26,6 +26,10 @@
 			<file type="file" id="var_cck_joomla" src="libraries/cck/rendering/variations">var_cck_joomla.zip</file>
 			<file type="file" id="var_cck_seb_css3" src="libraries/cck/rendering/variations">var_cck_seb_css3.zip</file>
 			<file type="file" id="var_cck_seb_css3b" src="libraries/cck/rendering/variations">var_cck_seb_css3b.zip</file>
+			<file type="file" id="var_cck_octo_content" src="libraries/cck/rendering/variations">var_cck_octo_content.zip</file>
+			<file type="file" id="var_cck_octo_form" src="libraries/cck/rendering/variations">var_cck_octo_form.zip</file>
+			<file type="file" id="var_cck_octo_list" src="libraries/cck/rendering/variations">var_cck_octo_list.zip</file>
+			<file type="file" id="var_cck_octo_search" src="libraries/cck/rendering/variations">var_cck_octo_search.zip</file>
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->

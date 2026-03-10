@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="position_style" label="VAR_SEB_CSS3_LEGEND_POSITION_STYLE">
+		<field name="position_markup" type="text" default="" label="Markup" class="inputbox input-xxlarge" />
+	</fieldset>
+</form>

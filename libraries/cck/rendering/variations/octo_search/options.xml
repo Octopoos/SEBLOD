@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldpath="/libraries/cck/construction/field">
+	<fieldset name="position" label="VAR_OCTO_SEARCH_LEGEND_POSITION" class="adminformlist adminformlist-1col">
+		<field name="position_class" type="text" default="" label="VAR_OCTO_SEARCH_CLASS" class="inputbox input-xxlarge" />
+		<field name="position_attributes" type="text" default="has-value" label="VAR_OCTO_SEARCH_ATTRIBUTES" class="inputbox input-xxlarge" />
+	</fieldset>
+	<fieldset name="fields" label="VAR_OCTO_SEARCH_LEGEND_FIELDS">
+		<field name="field_label" type="cck" construction="core_field_label" cck_selectlabel="Inherited" default="0" label="VAR_OCTO_SEARCH_SHOW_LABEL" class="inputbox" />
+		<field name="field_description" type="cck" construction="core_field_description" cck_selectlabel="Inherited" default="0" label="VAR_OCTO_SEARCH_SHOW_DESCRIPTION" class="inputbox" />
+		<field name="field_markup" type="cck" construction="core_dev_text" default="form.o_form" label="VAR_OCTO_SEARCH_MARKUP" class="inputbox" />
+	</fieldset>
+</form>
