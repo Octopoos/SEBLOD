@@ -9,11 +9,14 @@
 **/
 
 defined( '_JEXEC' ) or die;
-define( 'CCK_COM', 'com_cck' );
 
 use Joomla\Registry\Registry;
 
 jimport( 'joomla.filesystem.folder' );
+
+if ( !defined( 'CCK_COM' ) ) {
+	define( 'CCK_COM', 'com_cck' );
+}
 
 // Install
 class CCK_Install
