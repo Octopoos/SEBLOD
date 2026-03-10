@@ -280,8 +280,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				break;
 			case 'sort':
 			case 'sort_grip':
-				$canDo			=	false;
-				$parentId		=	$config['parent_id'];
+				$canDo				=	false;
+				$identifier_name	=	$typo->get( 'identifier_name', '' );
+				$parentId			=	$config['parent_id'];
+
 				static $orders	=	array();
 				static $user	=	null;
 
@@ -311,19 +313,19 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( !$loaded && $canDo ) {
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
 							$app			=	Factory::getApplication();
-							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';	
 							$legacy			=	(int)JCck::getConfig_Param( 'core_legacy', '' );
 							$legacy			=	$legacy && $legacy <= 2024 ? true : false;
-
 							$listDir		=	'asc';
 							$loaded			= 	true;
 
 							if ( $legacy ) {
-								$tableWrapper	=	$formId . ' table.table';
+								$tableWrapper	=	$formId.' table.table';
 							} else {
-								$tableWrapper	=	$formId . ' table.o-table-manager';
+								$tableWrapper	=	$identifier_name ? $identifier_name : $formId;
+								$tableWrapper	.=	' table.o-table-manager';
 							}
-							
+
 							$task			=	$typo->get( 'task', '' );
 							$task_id		=	$typo->get( 'task_id_process', '' );
 
@@ -334,10 +336,47 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 							} else {
 								$saveOrderUrl	=	Route::_( 'index.php?option=com_cck&task=saveOrderAjax&tmpl=component', false );
 							}
-							if ( JCck::on( '4.0' ) ) {
-								HTMLHelper::_( 'draggablelist.draggable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
+
+							if ( $task === 'none' ) {
+								$wa	=	Factory::getApplication()->getDocument()->getWebAssetManager();
+								$wa->useScript( 'dragula' );
+								$wa->useStyle( 'dragula' );
+
+								$js	=	'
+								document.addEventListener("DOMContentLoaded", function() {
+									const containers = document.querySelectorAll("#'.$tableWrapper.' tbody");
+
+									if (containers.length === 0) return;
+
+									containers.forEach(function(container) {
+										if (!container.classList.contains("js-draggable")) {
+											container.classList.add("js-draggable");
+										}
+										const drake = dragula([container], {
+											direction: "vertical",
+											revertOnSpill: true,
+								 			mirrorContainer: container,
+											
+											moves: function (el, source, handle) {
+												return handle.classList.contains("icon-menu") || handle.closest(".sortable-handler");
+											}
+										});
+										drake.on("cloned", function (clone, original, type) {
+											if (type === "mirror") {
+												const originalTds = original.children;
+												const cloneTds = clone.children;
+
+												for (let i = 0; i < originalTds.length; i++) {
+													cloneTds[i].style.width = originalTds[i].offsetWidth + "px";
+												}
+											}
+										});
+									});
+								});
+								';
+								Factory::getDocument()->addScriptDeclaration($js);
 							} else {
-								HTMLHelper::_( 'sortablelist.sortable', $tableWrapper, $formId, $listDir, $saveOrderUrl.'&'.Session::getFormToken().'=1', false, true );
+								HTMLHelper::_( 'draggablelist.draggable', $tableWrapper, $formId, $listDir, $saveOrderUrl, false, true );
 							}
 						}
 					}
