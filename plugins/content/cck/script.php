@@ -745,8 +745,6 @@ class plgContentCCKInstallerScript
 			}
 			
 			if ( $i2 < 200 ) {
-				$params =	ComponentHelper::getParams( 'com_cck' );
-
 				if ( (int)$params->get( 'core_legacy', '' ) === 0 ) {
 					$params->set( 'core_legacy', '2024' );
 					$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
