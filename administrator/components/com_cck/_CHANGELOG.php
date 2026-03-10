@@ -22,6 +22,36 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 5.0.0 Upgrade Release [12-Mar-2026] -------------
+
++ Additional "required" modes.
++ Download/Read tasks improved.
++ Field Rendering improved with Layouts (HTML Markup around fields)
+  >> /components/com_cck/layouts/...
+  >> new variations as well
++ Impersonate capabilites improved.
++ Issue Tracker Integration capabilities
+  >> Set IssueID to fields (within Content/Search Types)
+  >> Set Notes to fields (within Content/Search Types)
++ JCckContent class updated & improved! :)
++ JCckDevImage class updated (WebP)
++ Plug-ins improved:
+  >> Button(s), Group, JForm Calendar, Textarea Field Plug-ins
+  >> Image Typography Plug-in
+
+^ "Legacy Mode" may be set to 2024 if needed:
+  >> For existing projects without any "Legacy Mode" until now, you may need to select "2024".
+  >> For existing projects using a "Legacy Mode" selected, you should keep it.
+^ "Legacy Mode" is no more 2012 by default within config.xml
+
+# Additional fixes included for PHP 8.x.
+# Filename fixed (Email Field).
+# Issues fixed for SEBLOD Toolbox Add-on, SEBLOD WebServices Add-on.
+# Multi-sites issues fixed.
+# Upload File issue fixed.
+# Various issues fixed and improvements included.
+# Warning fixed.
+
 --------------- 5.0.0 Release Candidate3 [1-Feb-2026] -------------
 
 # Regression fixed on Download/Read tasks.
