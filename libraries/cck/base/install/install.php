@@ -9,12 +9,15 @@
 **/
 
 defined( '_JEXEC' ) or die;
-define( 'CCK_COM', 'com_cck' );
 
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
+
+if ( !defined( 'CCK_COM' ) ) {
+	define( 'CCK_COM', 'com_cck' );
+}
 
 // Install
 class CCK_Install
