@@ -345,8 +345,8 @@ fieldset.disabled legend{background-color: transparent; color: var(--template-bg
 	border-color: var(--focus);
 }
 .form-control:disabled,
-.form-control[readonly]{background-color: transparent; color: var(--template-bg-dark-60);}
-.form-select:disabled{background-color: var(--template-bg-dark-5); color: var(--template-bg-dark-60); border: 1px solid var(--template-bg-dark-5);}
+.form-control[readonly]{background-color: var(--template-bg-dark-7); color: var(--template-bg-dark-60);}
+.form-select:disabled{background-color: var(--template-bg-dark-7); color: var(--template-bg-dark-60); border:var(--form-control-border);}
 
 .input-group .btn{padding: 0.5rem 0.9rem;}
 .input-group .btn-secondary{background-color: var(--template-bg-light); border-color: var(--template-bg-dark-20); border-left-color: transparent!important; color: #212529;}
