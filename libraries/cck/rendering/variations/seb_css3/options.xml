@@ -33,5 +33,6 @@
 	</fieldset>
 	
 	<fieldset name="field_value" label="VAR_SEB_CSS3_LEGEND_FIELDS_VALUE">
+		<field name="field_markup" type="cck" construction="core_dev_text" default="form.o_form" label="VAR_OCTO_FORM_MARKUP" class="inputbox" />
 	</fieldset>
 </form>

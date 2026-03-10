@@ -356,8 +356,8 @@ class plgContentCCKInstallerScript
 			
 			// Init Default Config
 			$params->set( 'core_legacy', '0' );
-			$params->set( 'site_variation', 'seb_css3b' );
-			$params->set( 'site_variation_form', 'seb_css3b' );
+			$params->set( 'site_variation', 'octo_content' );
+			$params->set( 'site_variation_form', 'octo_form' );
 			$params->set( 'optimize_memory', '1' );
 			
 			// Init ACL
@@ -741,6 +741,16 @@ class plgContentCCKInstallerScript
 					}
 				} elseif ( !isset( $columns['storage_mode'] ) ) {
 					JCckDatabase::execute( 'ALTER TABLE `#__cck_core_templates` ADD `storage_mode` TINYINT(3) NOT NULL DEFAULT "0" AFTER `storage_field2`' );
+				}
+			}
+			
+			if ( $i2 < 200 ) {
+				$params =	ComponentHelper::getParams( 'com_cck' );
+
+				if ( (int)$params->get( 'core_legacy' ), '0' ) {
+					$params->set( 'core_legacy', '2024' );
+					$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+					$db->execute();
 				}
 			}
 			
