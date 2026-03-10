@@ -22,6 +22,64 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Release Candidate Release [12-Mar-2026] -------------
+
+! Joomla! 6 support
+  >> extensive modifications of code for Joomla! 6
+
++ Additional Plug-ins included within Core Package:
+  >> Break, Canonical, Message & Redirection, Search Total Field Plug-ins
+  >> Custom, Download, Joomla! Menu Item, Route, Task Link Plug-ins
+  >> DateTime Live Plug-in
+  >> SEBLOD Site Object Plug-in
+  >> Fields, Search Total Restriction Plug-ins
+  >> Item Typography Plug-in
+  >> Date Validation Plug-in
++ Additional "required" modes.
++ Download/Read tasks improved.
++ Field Rendering improved with Layouts (HTML Markup around fields)
+  >> /components/com_cck/layouts/...
+  >> new variations as well
++ "HTML/Raw" allowed on JGrid > SEBLOD Form mode.
++ Impersonate capabilites improved.
++ Issue Tracker Integration capabilities
+  >> Set IssueID to fields (within Content/Search Types)
+  >> Set Notes to fields (within Content/Search Types)
++ JCckContent class updated & improved! :)
++ JCckDevImage class updated (WebP)
++ Multiple Draggable Table Rows now allowed (JGrid > Sorting)
++ "Past (< or =) or Null" Match mode added on Search Types.
++ Plug-ins improved:
+  >> Button(s), Group, JForm Calendar, Textarea Field Plug-ins
+  >> Image Typography Plug-in
++ Router updated:
+  >> /id view support added for Free & WebServices Objects
++ Shortcut link (Construction UI) added for Groups.
++ Table Template refactored
+  >> use a template override [TEMPLATE]/html/tpl_seb_table if needed
+
+^ Core Update for:
+  >> SEBLOD WebServices Add-on
+^ "Legacy Mode" may be set to 2024 if needed:
+  >> For existing projects without any "Legacy Mode" until now, you may need to select "2024".
+  >> For existing projects using a "Legacy Mode" selected, you should keep it.
+^ "Legacy Mode" is no more 2012 by default within config.xml
+
+- CCK_XMLElement class
+
+# Additional fixes included for PHP 8.x.
+# DATETIME issue fixed.
+# Filename fixed (Email Field).
+# Installation issues fixed.
+# Issues fixed for SEBLOD Toolbox Add-on, SEBLOD WebServices Add-on.
+# Language issues fixed from modules.
+# Multi-sites issues fixed.
+# Regression fixed on Construction UI (since Beta6).
+# Regression fixed on Download/Read tasks (since Beta4).
+# Storage issue on Free Object.
+# Upload File issue fixed.
+# Various issues fixed and improvements included.
+
 --------------- 6.0.0 Beta8 Release [12-Feb-2026] -------------
 
 ! Joomla! 6 support
