@@ -13,6 +13,16 @@ sftp-config.json
 .AppleDesktop
 .apdisk
 .cursor
+/.history
+/.vscode
+/.vs
+
+######## Virtualmin
+
+/awstats-icon
+/awstatsicons
+/icon
+/stats
 
 ######## JOOMLA
 
