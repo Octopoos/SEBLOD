@@ -22,7 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 5.0.0 Upgrade Release [12-Mar-2026] -------------
+--------------- 5.0.0 Upgrade Release [10-Mar-2026] -------------
 
 + Additional "required" modes.
 + Download/Read tasks improved.
