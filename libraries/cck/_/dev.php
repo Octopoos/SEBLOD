@@ -669,15 +669,29 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	HTMLHelper::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select tweak-attr-list"',
-															  'value', 'text', '', $options['picker'] );
+
+					if ( (int)$options['fieldPicker'] == -1 ) {
+						$elem->init['fieldPicker']	=	'<button type="button" class="btn btn-outline-secondary tweak-attr-list" id="'.$options['picker'].'">'.Text::_( 'COM_CCK_ADD_A_PROPERTY' ).'</button>';
+						$trigger					=	'.on("click", "button#'.$options['picker'].'"';
+						$css						.=	'.collection-group-form > input{display:none;}'
+													.	'.collection-group-form > .attr-grid-5{border-radius:0.25rem;}'
+													;
+					} else {
+						$elem->init['fieldPicker']	=	HTMLHelper::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select tweak-attr-list"', 'value', 'text', '', $options['picker'] );
+						$trigger					=	'.on("change", "select#'.$options['picker'].'"';
+					}
+
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
-								$("#adminForm").on("change", "select#'.$options['picker'].'", function() {
+								$("#adminForm")'.$trigger.', function() {
 									var val = $(this).val();
 									if (val) {
 										$("'.$options['root'].'>div:last .button-add-'.$options['base'].'").click();
 										$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").val(val);
+										'.$js3.'
+									} else {
+										$("'.$options['root'].'>div:last .button-add-'.$options['base'].'").click();
+										$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").val(Date.now());
 										'.$js3.'
 									}
 									if (isNew) {
