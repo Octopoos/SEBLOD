@@ -295,6 +295,12 @@ class JCckProcessing
 		return $this->_data['fields'];
 	}
 
+	// getFields
+	public function getFields()
+	{
+		return $this->_data['fields'];
+	}
+
 	// getMethod
 	public function getMethod()
 	{
