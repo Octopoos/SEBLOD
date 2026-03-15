@@ -358,19 +358,25 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	}
 	
 	// _core
-	protected static function _core( $data, $config = array() )
+	protected static function _core( $data, &$config = array() )
 	{
 		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 		$core->load( $config['id'] );
 		$core->cck				=	$config['type'];
+
 		if ( ! $core->pk ) {
 			$core->date_time	=	Factory::getDate()->toSql();
 		}
+
 		$core->pk				=	self::$pk ? self::$pk : $config['pk'];
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
 		$core->author_id		=	( $config['author'] ) ? $config['author'] : Factory::getUser()->id;
 		$core->storeIt();
+
+		if ( (int)$config['id'] === 0 && (int)$core->id ) {
+			$config['id']	=	(int)$core->id;
+		}
 	}
 	
 	// _getTable
