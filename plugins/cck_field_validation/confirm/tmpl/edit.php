@@ -10,5 +10,18 @@
 
 defined( '_JEXEC' ) or die;
 
-echo JCckDev::renderForm( 'core_validation_field', '', $config );
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.common.edit_fieldset', array(
+	'config'=>$config,
+	'form'=>array(
+		array(
+			'fields'=>array(
+				JCckDev::renderForm( 'core_validation_field', '', $config )
+			)
+		)
+	),
+	'html'=>'',
+	'item'=>$this->item,
+	'script'=>'',
+	'type'=>'validation'
+) );
 ?>

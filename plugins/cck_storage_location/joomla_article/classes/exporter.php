@@ -15,8 +15,8 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_article/joomla_art
 // Class
 class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_LocationJoomla_Article
 {
-	protected static $columns_excluded	=	array( 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'tagsHelper' );
-	protected static $columns_ignored	=	array( 'id', 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'checked_out', 'checked_out_time', 'tagsHelper' );
+	protected static $columns_excluded	=	array( 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'tagsHelper', 'typeAlias' );
+	protected static $columns_ignored	=	array( 'id', 'asset_id', 'title_alias', 'fulltext', 'sectionid', 'checked_out', 'checked_out_time', 'tagsHelper', 'typeAlias' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -105,8 +105,9 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$config['n']	=	1;
-				$config['pk']	=	0;
+				$config['error']	=	false;
+				$config['n']		=	1;
+				$config['pk']		=	0;
 
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
@@ -291,6 +292,10 @@ class plgCCK_Storage_LocationJoomla_Article_Exporter extends plgCCK_Storage_Loca
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
 					}
+				}
+
+				if ( $config['error'] ) {
+					continue;
 				}
 
 				// Export

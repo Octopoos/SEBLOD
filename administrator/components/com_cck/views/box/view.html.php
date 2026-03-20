@@ -39,10 +39,20 @@ class CCKViewBox extends JViewLegacy
 			$this->doValidation	=	$this->state->get( 'validation', 0 );
 		}
 		
-		$this->css		=	array( 'items'=>'seblod-manager',
-								   'table'=>'table table-striped',
-								   'wrapper_tmpl'=>'span12'
-								);
+		$this->css	=	array(
+							'btn'=>'btn',
+							'btn-no'=>'button-cancel btn btn-danger',
+							'btn-yes'=>'button-save btn btn-success',
+							'items'=>'seblod-manager',
+							'table'=>'table table-striped',
+							'wrapper_tmpl'=>'span12'
+						);
+
+		if ( !JCck::on( '4' ) ) {
+			$this->css['btn']			=	'btn btn-small';
+			$this->css['btn-no']		=	'btn btn-small';
+			$this->css['btn-yes']		=	'btn btn-small';
+		}
 		
 		JFactory::getApplication()->input->set( 'hidemainmenu', true );
 		

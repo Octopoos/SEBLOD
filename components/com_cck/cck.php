@@ -10,7 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
-JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
+$lang	=	JFactory::getLanguage();
+$lang_default	=	$lang->setDefault( 'en-GB' );
+$lang->load( 'com_cck' );
+$lang->load( 'com_cck_default', JPATH_SITE );
+$lang->setDefault( $lang_default );
 
 $controller	=	JControllerLegacy::getInstance( 'CCK' );
 $controller->execute( JFactory::getApplication()->input->get( 'task' ) );

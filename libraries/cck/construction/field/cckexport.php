@@ -37,8 +37,10 @@ class JFormFieldCCKexport extends JFormField
 				$text	.=	self::_getHtml( $lang, $url, ' btn-small' );
 			}
 		} else {
-			$lang	=	JFactory::getLanguage();
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
 			$lang->load( 'com_cck_default', JPATH_SITE );
+			$lang->setDefault( $lang_default );
 			$id		=	$app->input->getInt( 'extension_id', 0 );
 			$id		=	'&extension_id='.$id;
 			$url	=	'index.php?option=com_cck&task=export'.$extension.$id.$token;

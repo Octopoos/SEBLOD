@@ -105,13 +105,14 @@ class plgCCK_FieldText extends JCckPluginField
 		// Validate
 		$validate	=	'';
 		if ( $config['doValidation'] > 1 ) {
+			$field->value	=	$value;
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true ) );
 			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
 		}
 		
 		// Prepare
-		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class	=	'form-control inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		if ( $value != '' ) {
 			$class	.=	' has-value';
 		}
@@ -160,6 +161,11 @@ class plgCCK_FieldText extends JCckPluginField
 		if ( strpos( $field->value, '&' ) !== false ) {
 			$field->value	=	str_replace( array( '&amp;', '&quot;' ), array( '&', '\"' ), $field->value );
 		}
+		/*
+		if ( $field->storage_filter ) {
+			$field->value	=	JFilterInput::getInstance()->clean( $field->value, $field->storage_filter );
+		}
+		*/
 		
 		// Return
 		if ( $return === true ) {

@@ -182,7 +182,7 @@ class CCK_Rendering
 		$this->js			=	'';
 		$this->profiler		=	@$me->profiler;
 		$this->profiler_log	=	@$me->profiler_log;
-		$this->translate	=	JCck::getConfig_Param( 'language_jtext', 0 );
+		$this->translate	=	JCck::getConfig_Param( 'language_jtext', 1 );
 
 		// Nested Lists.. yeah!
 		if ( isset( $me->list[$idx] ) ) {
@@ -501,7 +501,8 @@ class CCK_Rendering
 				}
 			}
 			if ( $label ) {
-				$label	=	'<label for="'.$this->me[$fieldname]->name.'">'.$label.'</label>';
+				$for	=	isset( $this->me[$fieldname]->label_for ) ? $this->me[$fieldname]->label_for : $this->me[$fieldname]->name;
+				$label	=	'<label for="'.$for.'">'.$label.'</label>';
 			}
 		}
 		
@@ -1191,7 +1192,14 @@ class CCK_Rendering
 	// addScript
 	public function addScript( $url, $type = 'text/javascript', $defer = false, $async = false )
 	{
-		JFactory::getDocument()->addScript( $url, $type, $defer, $async );
+		$attribs	=	array(
+							'async'=>$async,
+							'defer'=>$defer,
+							'type'=>$type
+						);
+		$options	=	array();
+
+		JFactory::getDocument()->addScript( $url, $options, $attribs );
 	}
 
 	// addScriptDeclaration
@@ -1210,7 +1218,16 @@ class CCK_Rendering
 	// addStyleSheet
 	public function addStyleSheet( $url, $type = 'text/css', $media = null, $attribs = array() )
 	{
-		JFactory::getDocument()->addStyleSheet( $url, $type, $media, $attribs );
+		$options	=	array();
+
+		if ( !isset( $attribs['media'] ) && $media !== null  ) {
+			$attribs['media']	=	$media;
+		}
+		if ( !isset( $attribs['type'] ) ) {
+			$attribs['type']	=	$type;
+		}
+
+		JFactory::getDocument()->addStyleSheet( $url, $options, $attribs );
 	}
 
 	// addStyleDeclaration

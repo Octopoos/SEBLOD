@@ -10,7 +10,9 @@
 
 defined( '_JEXEC' ) or die;
 
-$config		=	JCckDev::init( array( '42', 'jform_accesslevel', 'radio', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
+use Joomla\CMS\HTML\HTMLHelper;
+
+$config		=	JCckDev::init( array( '42', 'radio', 'select_dynamic', 'select_simple', 'text', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_search', 'core_description', 'core_state',
 										 'core_location2', 'core_alias', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
@@ -44,71 +46,75 @@ if ( $this->item->client == 'list' ) {
 <form action="<?php echo JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&layout=edit&id='.(int)$this->item->id ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div class="<?php echo $this->css['wrapper']; ?> full">
-	<div class="seblod first">
-    	<div>
-            <ul class="spe spe_title">
-                <?php
-                echo JCckDev::renderForm( $cck['core_title_search'], $this->item->title, $config );        
-                echo '<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />';
-                ?>
-            </ul>
-            <ul class="spe spe_folder">
-				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ); ?>
-            </ul>
-            <ul class="spe spe_state spe_third">
-                <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
-            </ul>
-            <ul class="spe spe_description">
-                <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>
-            </ul>
-        </div>
-		<div class="clr"></div>
-        <div class="togglebar">
-        	<div>
-			<?php
-			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
-			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
-            ?>
-        	</div>
-        </div>
-        <div id="toggle_more" class="toggle_more <?php echo $this->panel_class; ?>"></div>
-	</div>
-	<div class="seblod first" id="more" style="<?php echo $this->panel_style; ?>height:<?php echo $this->css['panel_height']; ?>;">
-    	<div>
-            <ul class="spe spe_title">
-				<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
-            </ul>
-            <ul class="spe spe_folder">
-				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
-            </ul>
-            <ul class="spe spe_third">
-				<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ); ?>
-            </ul>
-			<ul class="spe spe_name">
-				<?php
-				if ( !$this->item->id ) {
-					echo '<li><label>'.JText::_( 'COM_CCK_QUICK_MENU_ITEM' ).'</label>'
-					 .	 '<select id="quick_menuitem" name="quick_menuitem" class="inputbox" style="max-width:180px;">'
-					 .	 '<option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'
-					 .	 JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) )
-					 .	 '</select></li>';
-				} else {
-					echo '<li>&nbsp;</li>';
-				}
-				?>
-			</ul>
-            <ul class="spe spe_type">
-            	<?php echo JCckDev::renderForm( $cck['core_location2'], $this->item->location, $config, array( 'attributes'=>'style="width:140px;"' ) ); ?>
-            </ul>
-			<ul class="spe spe_sixth">
-				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
-            </ul>
-        </div>
+	<div class="<?php echo $this->css['wrapper_first']; ?>">
+		<?php
+		$dataTmpl	=	array(
+							'fields'=>array(
+								'access'=>JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ),
+								'alias'=>JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ),
+								'css_core'=>JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ),
+								'description'=>JCckDev::getForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ),
+								'folder'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolder', 'name'=>'core_folder' ), $this->item->folder, $config, array( 'label'=>_C0_TEXT, 'storage_field'=>'folder' ) ),
+								'location'=>JCckDev::renderForm( $cck['core_location2'], $this->item->location, $config, array( 'css'=>'max-width-140' ) ),
+								'name'=>'<input type="hidden" id="name" name="name" value="'.$this->item->name.'" />',
+								'quick_nav'=>'',
+								'state'=>JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>( JCck::on( '4.0' ) ? 'Status' : 'clear' ) ) ),
+								'storage_location'=>JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'css'=>'max-width-140', 'required'=>'required', 'storage_field'=>'storage_location' ) ),
+								'title'=>JCckDev::renderForm( $cck['core_title_search'], $this->item->title, $config )
+							),
+							'item'=>$this->item,
+							'params'=>array()
+						);
+
+		if ( !$this->item->id ) {
+			$dataTmpl['fields']['quick_nav']	=	JCckDev::renderLayoutFile(
+														'cck'.JCck::v().'.form.field', array(
+															'label'=>JText::_( 'COM_CCK_QUICK_MENU_ITEM' ),
+															'html'=>'<select id="quick_menuitem" name="quick_menuitem" class="form-select inputbox max-width-180"><option value="">- '.JText::_( 'COM_CCK_SELECT_A_PARENT').' -</option>'.JHtml::_( 'select.options', JHtml::_( 'menu.menuitems' ) ).'</select>'
+														)
+													);
+		} elseif ( !JCck::on( '4.0' ) ) {
+			$dataTmpl['fields']['quick_nav']	=	'<li>&nbsp;</li>';
+		}
+
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_main', $dataTmpl );
+		?>
 	</div>
 </div>
 
-<div class="clr"></div>
-<div align="center" id="layers"></div>
+<div class="main-card">
+	<?php
+	if ( JCck::on( '4.0' ) ) {
+		echo HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768] );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'details', JText::_( 'COM_CCK_DETAILS' ) );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
+	} else {
+	?>
+	<div class="row togglebar">
+		<div>
+		<?php
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getSearchClient', 'name'=>'core_client_search' ), $this->item->client, $config, array( 'storage_field'=>'client' ) );
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getLayer', 'name'=>'core_layer' ), $this->item->layer, $config );
+		?>
+		</div>
+	</div>
+	<div class="clr"></div>
+	<?php } ?>
+	<div align="center" id="layers"></div>
+	<?php
+	if ( JCck::on( '4.0' ) ) {
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'options', JText::_( 'COM_CCK_OPTIONS' ) );
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_options', $dataTmpl );
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.addTab', 'myTab', 'publishing', JText::_( 'COM_CCK_PUBLISHING' ) );
+		echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.search.edit_publishing', $dataTmpl );
+		echo HTMLHelper::_( 'uitab.endTab' );
+		echo HTMLHelper::_( 'uitab.endTabSet' );
+	}
+	?>
+</div>
 
 <div>
 	<input type="hidden" id="task" name="task" value="" />
@@ -136,6 +142,22 @@ Helper_Display::quickCopyright();
 JText::script( 'COM_CCK_OPTIONAL' );
 JText::script( 'COM_CCK_REQUIRED' );
 JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
+
+$js4	=	'';
+
+if ( JCck::on( '4.0' ) ) {
+	$js4	=	'
+				var $b4 = $(\'[aria-controls="details"]\');
+				$b4.html(\'<span class="d">\'+$b4.html()+\'</span>\');
+				$("#client,#layer").appendTo($b4);
+				$("#client").after(\'<span class="i icon-arrow-right"></span>\');
+
+				$(document).ready(function(){
+					$("#adminForm").on( "click", "#seblod-sidebar .expand-main", function() {
+						$("#layer_fields > div").toggleClass("expanded");
+					});
+				});';
+}
 ?>
 
 <script type="text/javascript">
@@ -144,6 +166,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 		block_item:<?php echo $block_item; ?>,
 		count:7,
 		insidebox:'<?php echo $this->insidebox; ?>',
+		legacy:<?php echo JCck::on( '4' ) ? 0 : 1; ?>,
 		name:"search",
 		prompt_group:"<?php echo str_replace( '<br />', '\n', JText::_( 'COM_CCK_MOVE_FIELDS_TO_GROUP' ) ); ?>",
 		root:"<?php echo JUri::root(); ?>",
@@ -175,6 +198,7 @@ JText::script( 'COM_CCK_GET_FIELDS_FROM_VIEW_CONFIRM' );
 			.css("height", "100%")
 			.css("display", "block")
 			.css("margin-top", "-10px");
+		<?php echo $js4; ?>
 	});
 })(jQuery);
 </script>

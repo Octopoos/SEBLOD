@@ -31,6 +31,15 @@ class CCK_TableField extends JTable
 		}
 
 		if ( !$this->id ) {
+			if ( is_null( $this->label ) ) {
+				$this->label	=	'';
+			}
+			if ( is_null( $this->defaultvalue ) ) {
+				$this->defaultvalue	=	'';
+			}
+			if ( is_null( $this->description ) ) {
+				$this->description	=	'';
+			}
 			if ( is_null( $this->selectlabel ) ) {
 				$this->selectlabel	=	'';
 			}
@@ -55,8 +64,35 @@ class CCK_TableField extends JTable
 			if ( is_null( $this->style ) ) {
 				$this->style	=	'';
 			}
+			if ( is_null( $this->required ) ) {
+				$this->required	=	'';
+			}
+			if ( is_null( $this->script ) ) {
+				$this->script	=	'';
+			}
+			if ( is_null( $this->css ) ) {
+				$this->css	=	'';
+			}
+			if ( is_null( $this->attributes ) ) {
+				$this->attributes	=	'';
+			}
+			if ( is_null( $this->storage_cck ) ) {
+				$this->storage_cck	=	'';
+			}
+			if ( is_null( $this->storage_location ) ) {
+				$this->storage_location	=	'';
+			}
+			if ( is_null( $this->storage_table ) ) {
+				$this->storage_table	=	'';
+			}
+			if ( is_null( $this->storage_field ) ) {
+				$this->storage_field	=	'';
+			}
 			if ( is_null( $this->storage_field2 ) ) {
 				$this->storage_field2	=	'';
+			}
+			if ( is_null( $this->storage_key ) ) {
+				$this->storage_key	=	'';
 			}
 			if ( is_null( $this->storages ) ) {
 				$this->storages	=	'';

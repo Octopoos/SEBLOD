@@ -10,13 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
+Use \Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
+
 require_once JPATH_SITE.'/plugins/cck_storage_location/joomla_category/joomla_category.php';
 
 // Class
 class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_LocationJoomla_Category
 {
 	// getForm
-	public static function getAssociationsForm( $id, $name, $config = array() )
+	public static function getAssociationsForm( $id, $name, $field, $config = array() )
 	{
 		if ( !self::hasAssociations() ) {
 			return '';
@@ -29,7 +31,13 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		$fieldset	=	$fields->addChild( 'fieldset' );
 		$fieldset->addAttribute( 'name', 'item_associations' );
 		$fieldset->addAttribute( 'description', 'COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC' );
-		$fieldset->addAttribute( 'addfieldpath', '/administrator/components/com_categories/models/fields' );
+
+		if ( JCck::on( '4.0' ) ) {
+			$fieldset->addAttribute( 'addfieldprefix', 'Joomla\Component\Content\Administrator\Field' );
+		} else {
+			$fieldset->addAttribute( 'addfieldpath', '/administrator/components/com_content/models/fields' );
+		}
+
 		$hasForm	=	false;
 		$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
 		foreach ( $languages as $tag=>$language ) {
@@ -61,13 +69,7 @@ class plgCCK_Storage_LocationJoomla_Category_Helper extends plgCCK_Storage_Locat
 		}
 		
 		// Render Form
-		$fields	=	$form->getFieldset( 'item_associations' );
-		$form	=	'';
-		foreach ( $fields as $f ) {
-			$form	.=	'<div class="control-group"><div class="control-label">'.$f->label.'</div><div class="controls">'.$f->input.'</div></div>';
-		}
-		
-		return $form;
+		return $form->renderFieldset( 'item_associations' );
 	}
 }
 ?>

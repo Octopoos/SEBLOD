@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 JPluginHelper::importPlugin( 'cck_field' );
 
 $action			=	'<span class="icon-eye"></span>';
@@ -26,11 +28,12 @@ $canOrder		=	0;
 $saveOrder		=	0;
 $top			=	'content';
 
-$config			=	JCckDev::init( array( '42', 'button_submit', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
+$config			=	JCckDev::init( array( '42', 'button_submit', 'select_dynamic', 'select_simple', 'text' ), true, array( 'vName'=>$this->vName ) );
 $cck			=	JCckDev::preload( array( 'core_filter_input', 'core_filter_go', 'core_filter_search', 'core_filter_clear',
-											 'core_state_filter' ) );
+											 'core_state_filter', 'core_languages' ) );
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 JPluginHelper::importPlugin( 'cck_storage_location' );
+JPluginHelper::importPlugin( 'cck_storage' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -49,18 +52,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<table class="<?php echo $this->css['table']; ?>">
 	<thead>
 		<tr>
-			<th width="32" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
-			<th width="30" class="center hidden-phone">
-            	<input type="checkbox" name="toggle" value="" title="<?php echo JText::_( 'JGLOBAL_CHECK_ALL' ); ?>" onclick="Joomla.checkAll(this);" />
-			</th>
+			<th width="60" class="center hidden-phone nowrap"><?php Helper_Display::quickSlideTo( 'pagination-bottom', 'down' ); ?></th>
+			<th width="30" class="center hidden-phone no-pad"><?php echo HTMLHelper::_('grid.checkall'); ?></th>
 			<th class="center" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TITLE', 'a.title', $listDir, $listOrder ); ?></th>
 			<th width="20%" class="center hidden-phone nowrap" colspan="2"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_'._C0_TEXT, 'folder_title', $listDir, $listOrder ); ?></th>
-			<th width="15%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
-			<th width="15%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo JText::_( 'COM_CCK_STORAGE' ); ?></th>
+			<th width="16%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_TYPE', 'a.type', $listDir, $listOrder ); ?></th>
             <?php if ( $location == 'folder_id' && $search > 0 ) {
 				$canOrder	=	$user->authorise( 'core.edit.state', 'com_cck.folder' );
 				$saveOrder	=	( JCckDatabase::loadResult( 'SELECT featured FROM #__cck_core_folders WHERE id = '.(int)$search ) ); ?>
-                <th width="10%" class="center hidden-phone nowrap">
+                <th width="8%" class="center hidden-phone nowrap">
                     <?php
                     echo JHtml::_( 'grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDir, $listOrder );
 					if ( $canOrder && $saveOrder ) {
@@ -69,7 +70,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 					?>
                 </th>
             <?php } else { ?>
-                <th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
+                <th width="8%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
             <?php } ?>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -94,13 +95,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( 'pagination-bottom', $i + 1 ); ?></td>
-			<td class="center hidden-phone"><?php echo JHtml::_( 'grid.id', $i, $item->id ); ?></td>
-			<td width="30px" class="center hidden-phone">
-            	<?php if ( $item->id != 33 ) { ?>
-					<a href="<?php echo $link2; ?>"<?php echo $action_attr; ?>>
-						<?php echo $action; ?>
-					</a>
-                <?php } ?>
+			<td class="center hidden-phone no-pad"><?php Helper_Display::quickCheckbox( $i, $item); ?></td>
+			<td width="30px" class="center hidden-phone dropdown-col">
+            	<?php
+            	if ( $item->id != 33 ) {
+					JHtml::_( '.cckactionsdropdown.addCustomLinkItem', JText::_( 'COM_CCK_PREVIEW_THIS_FIELD' ), 'eye', 'cb_link'.$i, $link2, 'cbox' );
+
+					echo JHtml::_( '.cckactionsdropdown.render', $this->escape( $item->title ) );
+            	}
+            	?>
             </td>
 			<td>
 				<div class="title-left" id="title-<?php echo $item->id; ?>">
@@ -160,13 +163,15 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	}
 	?>
     </tbody>
+    <?php if ( (int)$this->pagination->pagesTotal > 1 ) { ?>
 	<tfoot>
 		<tr height="40px;">
-	        <td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
+			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 			<td class="center" colspan="8" id="pagination-bottom"><?php echo $this->pagination->getListFooter(); ?></td>
 			<td class="center hidden-phone"><?php Helper_Display::quickSlideTo( $top, 'up' ); ?></td>
 		</tr>
 	</tfoot>
+	<?php } ?>
 	</table>
 </div>
 <?php include_once __DIR__.'/default_batch.php'; ?>
@@ -182,7 +187,6 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 
 <?php
 Helper_Include::addStyleDeclaration( implode( '', $css ) );
-Helper_Display::quickCopyright();
 
 $js	=	'
 		(function ($){
@@ -239,6 +243,24 @@ $js	=	'
 						}
 					}
 				});
+				$("#filter_search").on("keyup", function() {
+					var $el = $("#filter_location");
+					var str = $(this).val();
+
+					if (str == "") {
+						$el.val("title");
+						$("#filter_state").val("1");
+					} else if (str[0] >= 0 && str[0] <= 9 ) {
+						$el.val("id");
+					} else if ($el.val() != "name") {
+						if (str.indexOf("core_") == 0 || str.indexOf("more_") == 0) {
+							$el.val("name");
+							$("#filter_state").val("0");
+						} else if (str.indexOf("_") != -1) {
+							$el.val("name");
+						}
+					}
+				});
 			});
 		})(jQuery);
 		';
@@ -246,3 +268,4 @@ $doc->addScriptDeclaration( $js );
 ?>
 </div>
 </form>
+<?php Helper_Display::quickCopyright(); ?>

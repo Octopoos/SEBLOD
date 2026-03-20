@@ -490,7 +490,7 @@ class CCK_Export
 				}
 			} else {
 				if ( $s > 0 ) {
-					$t		=	'seb_one';
+					$t		=	'seb_minima';
 				}
 				$tpl[$v]	=	$t;
 			}
@@ -603,7 +603,7 @@ class CCK_Export
 				}
 			} else {
 				if ( $s > 0 ) {
-					$t	=	'seb_one';
+					$t	=	'seb_minima';
 				}
 				$tpl[$v]	=	$t;
 			}
@@ -1116,6 +1116,14 @@ class CCK_Export
 						CCK_Export::update( $root.'/language/'.$lang, $copyright );
 					}
 					JFile::copy( $root.'/language/'.$lang, $dest_l.'/'.$lang );
+				} else {
+					$lang	=	str_replace( '/'.$tag.'.', '/', $lang );
+					if ( JFile::exists( $root.'/language/'.$lang ) ) {
+						if ( $copyright ) {
+							CCK_Export::update( $root.'/language/'.$lang, $copyright );
+						}
+						JFile::copy( $root.'/language/'.$lang, $dest_l.'/'.str_replace( $tag.'/', $tag.'/'.$tag.'.', $lang ) );
+					}
 				}
 			}
 		}

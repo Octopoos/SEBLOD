@@ -41,7 +41,7 @@ $xml	=	'
 					filter="rules"
 					component="'.$component.'"
 					section="'.$section.'"
-					class="inputbox select"
+					class="form-select inputbox select"
 				/>
 				<field
 					type="hidden"
@@ -69,7 +69,7 @@ $js		=	'
 						var elem = "'.$this->item->id.'";
 						var data = {};
 						var val = key = idx = "";
-						$("#permissions-sliders select, #permissions-sliders input").each(function(i) {
+						$("#myTab select, #myTab input").each(function(i) {
 							var name = $(this).attr("name").split("][");
 							key = name[0].replace(elem+"[","");
 							idx = name[1].replace("]","");
@@ -123,7 +123,10 @@ $js		=	'
 				});
 			})(jQuery);
 			';
-JHtml::_( 'behavior.framework' );
+
+if ( !JCck::on( '4.0' ) ) {
+	JHtml::_( 'behavior.framework' );
+}
 $doc->addScriptDeclaration( $js );
 $doc->addStyleSheet( JUri::root( true ).'/media/cck/css/cck.'.$client.'.css' );
 ?>

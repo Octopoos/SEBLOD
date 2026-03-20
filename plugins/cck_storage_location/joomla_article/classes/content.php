@@ -23,8 +23,11 @@ class JCckContentJoomla_Article extends JCckContentJoomla_ArticlePlaceholder
 	protected function saveBase()
 	{
 		if ( !$this->getId() ) {
+			if ( property_exists( $this->_instance_base, 'introtext' ) && $this->_instance_base->introtext == '' ) {
+				$this->_instance_base->introtext	=	'';
+			}
 			if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
-				$this->_instance_base->language	=	'*';
+				$this->_instance_base->language		=	'*';
 			}
 			if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
 				$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );

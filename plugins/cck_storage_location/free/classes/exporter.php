@@ -15,8 +15,8 @@ require_once JPATH_SITE.'/plugins/cck_storage_location/free/free.php';
 // Class
 class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 {
-	protected static $columns_excluded	=	array();
-	protected static $columns_ignored	=	array( 'id', 'checked_out', 'checked_out_time' );
+	protected static $columns_excluded	=	array( 'typeAlias' );
+	protected static $columns_ignored	=	array( 'id', 'checked_out', 'checked_out_time', 'typeAlias' );
 
 	// getColumnsToExport
 	public static function getColumnsToExport()
@@ -85,10 +85,12 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 		if ( $config['prepare_output'] ) {
 			JPluginHelper::importPlugin( 'cck_field' );
 		}
+
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$config['n']	=	1;
-				$config['pk']	=	0;
+				$config['error']	=	false;
+				$config['n']		=	1;
+				$config['pk']		=	0;
 
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
@@ -219,6 +221,10 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
 					}
+				}
+
+				if ( $config['error'] ) {
+					continue;
 				}
 
 				// Export

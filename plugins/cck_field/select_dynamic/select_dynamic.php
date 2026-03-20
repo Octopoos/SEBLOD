@@ -130,6 +130,19 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$field->value		=	$value;
 		$field->typo_target	=	'text';
 
+		/*
+		if ( $field->location ) {
+			$attribs	=	explode( '||', $field->location );
+			$attrib		=	count( $attribs );
+
+			foreach ( $attribs as $k=>$a ) {
+				$ka				=	'attr'.( $k + 1 );
+				
+				$field->attr1	=	'XXX';
+			}			
+		}
+		*/
+
 		/* tmp */
 		$config['doTranslation']	=	$jtext;
 		/* tmp */
@@ -440,7 +453,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					}
 				}
 			}
-			$class	=	'inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
+			$class	=	'form-select inputbox select'.$validate . ( $field->css ? ' '.$field->css : '' );
 			
 			if ( ( is_string( $value ) && $value != '' ) || ( is_array( $value ) && count( $value ) && $value[0] != '' ) ) {
 				$class	.=	' has-value';
@@ -651,7 +664,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		}
 		
 		$value			=	str_replace( '[lang]', $lang_code, $value );
-		$languages		=	explode( ',', @$options2['language_codes'] );
+		$languages		=	isset( $options2['language_codes'] ) && is_array( $options2['language_codes'] ) ? explode( ',', @$options2['language_codes'] ) : array();
 		
 		if ( ! in_array( $lang_code, $languages ) ) {
 			$lang_code	=	@$options2['language_default'] ? $options2['language_default'] : '';
@@ -666,6 +679,12 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$results	=	array();
 		$optgroup	=	0;
 		$options	=	explode( '||', $options );
+
+		/*
+		if ( isset( $field->typo_target ) ) {
+			return $results;
+		}
+		*/
 		if ( $field->bool8 ) {
 			$field->bool8	=	$config['doTranslation'];
 		}

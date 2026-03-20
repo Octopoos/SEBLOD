@@ -44,15 +44,8 @@ class CCK_TableType extends JTable
 		$assetId	=	null;
 		$db			=	$this->getDbo();
 		
-		if ( $this->folder ) {
-			$db->setQuery( 'SELECT asset_id FROM #__cck_core_folders WHERE id = '.(int)$this->folder );
-			$assetId	=	$db->loadResult();
-		}
-		
-		if ( ! $assetId ) {
-			$db->setQuery( 'SELECT id FROM #__assets WHERE name = "com_cck"' );
-			$assetId	=	$db->loadResult();
-		}
+		$db->setQuery( 'SELECT id FROM #__assets WHERE name = "com_cck"' );
+		$assetId	=	$db->loadResult();
 		
 		return $assetId;
 	}
@@ -85,6 +78,9 @@ class CCK_TableType extends JTable
 			if ( empty( $this->created_user_id ) ) {
 				$this->created_user_id	=	$user->id;
 			}
+			if ( is_null( $this->description ) ) {
+				$this->description	=	'';
+			}
 			if ( is_null( $this->options_admin ) ) {
 				$this->options_admin	=	'';
 			}
@@ -97,6 +93,25 @@ class CCK_TableType extends JTable
 			if ( is_null( $this->options_site ) ) {
 				$this->options_site	=	'';
 			}
+			if ( is_null( $this->location ) ) {
+				$this->location	=	'';
+			}
+			if ( is_null( $this->parent ) ) {
+				$this->parent	=	'';
+			}
+			if ( is_null( $this->permissions ) ) {
+				$this->permissions	=	'';
+			}
+			if ( is_null( $this->relationships ) ) {
+				$this->relationships	=	'';
+			}
+			if ( is_null( $this->stylesheets ) ) {
+				$this->stylesheets	=	'';
+			}
+		}
+
+		if ( $this->location == 'collection' ) {
+			$this->_trackAssets	=	false;
 		}
 
 		return true;

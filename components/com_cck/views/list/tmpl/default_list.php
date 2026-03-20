@@ -17,15 +17,11 @@ if ( !$this->raw_rendering ) { ?>
 	$pagination_replace	=	'';
 	
 	if ( $this->show_pagination > -2 && $this->pages_total > 1 ) {
-		$url			=	JUri::getInstance()->toString().'&';
-		if ( strpos( $url, '=&' ) !== false ) {
-			$vars		=	JUri::getInstance()->getQuery( true );
-			if ( count( $vars ) ) {
-				foreach ( $vars as $k=>$v ) {
-					if ( $v == '' && isset( $this->config['pagination_vars'][$k] ) ) {
-						$pagination_replace	.=	$k.'=&';
-					}
-				}
+		foreach ( (array)JUri::getInstance()->getQuery( true ) as $k=>$v ) {
+			if ( $v == '' && isset( $this->config['pagination_vars'][$k] ) ) {
+				$pagination_replace	.=	$k.'=&';
+			} elseif ( $k != 'start' ) {
+				$this->pagination->setAdditionalUrlParam( $k, $v );
 			}
 		}
 	}

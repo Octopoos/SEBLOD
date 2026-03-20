@@ -63,6 +63,27 @@ class CCK_List
 		return join( '|', $pattern );
 	}
 
+	// getCountFromRoute
+	public static function getCountFromRoute( $route )
+	{
+		$uri		=	JUri::getInstance();
+
+		if ( $uri->getScheme() === 'https' ) {
+			$headers	=	array(
+								'Host'=>$uri->getHost(),
+								'X-Forwarded-Proto'=>'https'
+							);
+			$page_url	=	'127.0.0.1'.$route;
+		} else {
+			$headers	=	array();
+			$page_url	=	$uri->getHost().$route;
+		}
+		
+		$resp	=	HttpFactory::getHttp()->get( $page_url.'?format=total', $headers, 10 );
+
+		return is_object( $resp ) && isset( $resp->body ) ? (int)$resp->body : 0;
+	}
+
 	// getFieldColumns_asString
 	public static function getFieldColumns_asString( $t )
 	{
@@ -108,7 +129,9 @@ class CCK_List
 							'storage_location',
 							'storage_table',
 							'storage_field',
-							'storage_field2'
+							'storage_field2',
+							'storage_key',
+							'storage_mode'
 						);
 
 		return $t.'.'.implode( ', '.$t.'.', $columns );
@@ -165,6 +188,9 @@ class CCK_List
 				}
 			}
 		}
+		if ( !isset( $fields['order'] ) ) {
+			$fields['order']	=	array();
+		}
 		
 		return $fields;
 	}
@@ -173,7 +199,7 @@ class CCK_List
 	public static function getFields_Items( $search_name, $client, $access )
 	{
 		$query		=	'SELECT '.self::getFieldColumns_asString( 'cc' ).', c.ordering,'
-					.	' c.label as label2, c.variation, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
+					.	' c.label as label2, c.variation, c.variation_override, c.link, c.link_options, c.markup, c.markup_class, c.typo, c.typo_label, c.typo_options, c.access, c.restriction, c.restriction_options, c.position'
 					.	' FROM #__cck_core_search_field AS c'
 					.	' LEFT JOIN #__cck_core_searchs AS sc ON sc.id = c.searchid'
 					.	' LEFT JOIN #__cck_core_fields AS cc ON cc.id = c.fieldid'
@@ -203,7 +229,7 @@ class CCK_List
 			$cache->setCaching( 1 );
 			$isCached	=	' [Cache=ON]';
 			$user		=	( $options->get( 'cache_per_user' ) && $user->id > 0 ) ? $user : null;
-			$data		=	$cache->call( array( $app, 'triggerEvent' ), 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
+			$data		=	$cache->get( array( $app, 'triggerEvent' ), array( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) ) );
 		} else {
 			$isCached	=	' [Cache=OFF]';
 			$data		=	$app->triggerEvent( 'onContentSearch', array( '', '', $ordering, $areas['active'], $fields, $fields_order, $config, $current, $options, $user ) );
@@ -212,10 +238,6 @@ class CCK_List
 		if ( isset( $data[0] ) ) {
 			$config		=	$data[0]['config'];
 			$list		=	$data[0]['results'];
-
-			if ( $list === null ) {
-				$list	=	array();
-			}
 		} else {
 			$list		=	array();
 		}
@@ -276,6 +298,8 @@ class CCK_List
 							'storage_table',
 							'storage_field',
 							'storage_field2',
+							'storage_filter',
+							'storage_mode',
 							'typo_label',
 							'typo_options',
 							'validation',
@@ -400,7 +424,7 @@ class CCK_List
 				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
 			}
 		} else {
-			if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
 			}
 			if ( $debug ) {

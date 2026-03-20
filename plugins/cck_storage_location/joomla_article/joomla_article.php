@@ -20,7 +20,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	protected static $table			=	'#__content';
 	protected static $table_object	=	array( 'Content', 'JCckTable' );
 	protected static $key			=	'id';
-	
+	protected static $key_field		=	'article_pk';
+
 	protected static $access		=	'access';
 	protected static $author		=	'created_by';
 	protected static $author_object	=	'joomla_user';
@@ -171,7 +172,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 
 				$query				=	'SELECT a.*, b.title AS category_title, b.alias AS category_alias'.$select
-									.	' FROM '.$table.' AS a LEFT JOIN #__categories AS b ON b.id = a.catid';
+									.	' FROM '.$table.' AS a'
+									.	' LEFT JOIN #__categories AS b ON b.id = a.catid';
 				
 				if ( $config['doSEF'][0] == '5' ) {
 					$query			.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
@@ -242,8 +244,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// onCCK_Storage_LocationPrepareList
 	public static function onCCK_Storage_LocationPrepareList( &$params )
 	{
-		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-		require_once JPATH_SITE.'/components/com_content/router.php';
+		if ( !JCck::on( '4.0' ) ) {
+			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			require_once JPATH_SITE.'/components/com_content/router.php';
+		}
 		
 		JPluginHelper::importPlugin( 'content' );
 		$params	=	JComponentHelper::getParams( 'com_content' );
@@ -534,6 +538,13 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			if ( ( $user->id > 0 && @$user->guest != 1 ) && !isset( $data[self::$author] ) && !$force ) {
 				$data[self::$author]	=	$user->id;
 			}
+
+			$table->attribs			=	'';
+			$table->fulltext		=	'';
+			$table->images			=	'';
+			$table->metadata		=	'';
+			$table->metadesc		=	'';
+			$table->urls			=	'';
 		}
 		$table->{self::$custom}	=	'';
 	}
@@ -632,6 +643,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		foreach ( $associations as $tag=>$id ) {
 			if ( empty( $id ) ) {
 				unset( $associations[$tag] );
+			} else {
+				$associations[$tag]	=	(int) $id;
 			}
 		}
 
@@ -649,27 +662,35 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				->where( 'context=' . $db->quote( 'com_content.item' ) )
 				->where( 'id IN (' . implode(',', $associations ) . ')' );
 		$db->setQuery( $query );
-		$db->execute();
-
-		if ( $error = $db->getErrorMsg() ) {
-			$app->enqueueMessage( $error, 'error' );
-			return false;
-		}
+		
+		try
+        {
+            $db->execute();
+        }
+        catch (RuntimeException $e)
+        {
+            $app->enqueueMessage($e->getMessage(), 'error' );
+            return false;
+        }
 
 		if ( !$all_language && count( $associations ) ) {
 			// Adding new association for these items
 			$key	=	md5( json_encode( $associations ) );
 			$query->clear()->insert( '#__associations' );
 			foreach ( $associations as $tag=>$id ) {
-				$query->values( $id . ',' . $db->quote( 'com_content.item' ) . ',' . $db->quote( $key ) );
+				$query->values( (int) $id . ',' . $db->quote( 'com_content.item' ) . ',' . $db->quote( $key ) );
 			}
 			$db->setQuery( $query );
-			$db->execute();
 
-			if ( $error = $db->getErrorMsg() ) {
-				$app->enqueueMessage( $error, 'error' );
-				return false;
-			}
+			try
+	        {
+	            $db->execute();
+	        }
+	        catch (RuntimeException $e)
+	        {
+	            $app->enqueueMessage($e->getMessage(), 'error' );
+	            return false;
+	        }
 		}
 	}
 
@@ -802,7 +823,10 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			}
 			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
+
 			$route		=	ContentHelperRoute::getArticleRoute( $item->slug, $item->catid, $item->language );
 		}
 		
@@ -867,7 +891,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 			}
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
 
 			if ( !isset( $storage[self::$table]->_route ) ) {
 				$storage[self::$table]->_route		=	array();

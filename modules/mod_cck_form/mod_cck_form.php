@@ -26,7 +26,11 @@ $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(int)$params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) );
 
 JCck::loadjQuery();
-JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->setDefault( 'en-GB' );
+$lang->load( 'mod_cck_form', JPATH_SITE );
+$lang->load( 'com_cck_default', JPATH_SITE );
+$lang->setDefault( $lang_default );
 
 $option					=	$app->input->get( 'option', '' );
 $view					=	'';
@@ -48,7 +52,7 @@ JFactory::getSession()->set( 'cck_hash_'.$formId, JApplicationHelper::getHash( '
 JFactory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
-$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
+$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx', '' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_form', $params->get( 'layout', 'default' ) );
 ?>

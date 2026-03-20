@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields name="params">
+		<fieldset name="task_params">
+			<field
+				name="processing"
+				type="sql"
+				default=""
+				label="COM_CCK_TOOLBOX_PROCESSING"
+				description="COM_CCK_TOOLBOX_PROCESSING_DESC"
+				query="SELECT id, title FROM #__cck_more_processings WHERE published=1 AND type=0 ORDER BY title"
+				key_field="id"
+				value_field="title"
+				class="inputbox"
+				required="true"
+				validate="number"
+				filter="int"
+				>
+				<option value="">JGLOBAL_SELECT_AN_OPTION</option>
+			</field>
+		</fieldset>
+	</fields>
+</form>

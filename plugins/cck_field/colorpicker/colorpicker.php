@@ -71,7 +71,7 @@ class plgCCK_FieldColorpicker extends JCckPluginField
 		}
 		
 		// Prepare
-		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$class	=	'form-control inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$attr	=	'class="'.$class.'" size="'.$field->size.'" maxlenght="7"' . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'<input class="'.$class.'" type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
 		

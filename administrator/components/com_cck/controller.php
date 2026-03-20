@@ -26,9 +26,10 @@ class CCKController extends JControllerLegacy
 		$lang		=	JFactory::getLanguage();
 
 		if ( is_object( $field ) ) {
-			$return		=	true;
-			$element	=	'type';
-			$master		=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$element		=	'type';
+			$field->markup	=	'none';
+			$master			=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$return			=	true;
 			
 			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
 		} else {
@@ -44,7 +45,7 @@ class CCKController extends JControllerLegacy
 				$master	=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
 			}
 			
-			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage_table, a.storage_field, a.checked_out FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
+			$field		=	JCckDatabase::loadObject( 'SELECT a.id, a.title, a.name, a.folder, a.type, a.label, a.language, a.storage_table, a.storage_field, a.checked_out FROM #__cck_core_fields AS a WHERE a.name="'.$fieldname.'"' );
 			if ( !is_object( $field ) ) {
 				return;
 			}
@@ -90,7 +91,7 @@ class CCKController extends JControllerLegacy
 		}
 		JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_'.$element.$master, array( &$field, $style, $data, &$data2 ) );
 		
-		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>' );
+		$attr		=	array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>JFactory::getUser()->id );
 		$json		=	array();
 		ob_start();
 		Helper_Workshop::displayField( $field, '', $attr );
@@ -138,20 +139,21 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
 		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		$style						=	Helper_Workshop::getDefaultStyle();
-		
+		$type						=	JCckDatabase::loadObject( 'SELECT name, parent, location, storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+
 		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
 		$table->title				=	$title;
         $table->folder				=	$folder;
-		$table->template_admin		=	$style->id;
-		$table->template_site		=	$style->id;
-		$table->template_content	=	$style->id;
-		$table->template_intro		=	$style->id;
+		$table->template_admin		=	0;
+		$table->template_site		=	0;
+		$table->template_content	=	0;
+		$table->template_intro		=	0;
 		$table->published			=	1;
 		$table->access				=	3;
-		$table->indexed				=	'intro';
-		$table->location			=	'none';
-		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+		$table->indexed				=	'none';
+		$table->location			=	'collection';
+		$table->parent				=	( $type->location == 'collection' && $type->parent ) ? $type->parent : $type->name;
+		$table->storage_location	=	$type->storage_location;
 		
 		if ( !$table->storage_location ) {
 			$table->storage_location	=	'';
@@ -201,7 +203,7 @@ class CCKController extends JControllerLegacy
 				return;
 			} else {
 				$query	=	'UPDATE #__cck_core_type_field'
-						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' SET typeid = '.(int)$table->id.', position = "_main_", computation = "", computation_options = "", conditional = "", conditional_options = ""'
 						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
 				JCckDatabase::execute( $query );
 			}
@@ -306,8 +308,7 @@ class CCKController extends JControllerLegacy
 				 ( $view == 'site' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.site', $id ) ) ||
 				 ( $view == 'version' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.version', $id ) ) ||
 				 ( $view == 'session' && $layout == 'edit' && ! $this->checkEditId( CCK_COM.'.edit.session', $id ) ) ) {
-				$this->setError( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ) );
-				$this->setMessage( $this->getError(), 'error' );
+				$this->setMessage( JText::sprintf( 'JLIB_APPLICATION_ERROR_UNHELD_ID', $id ), 'error' );
 				$this->setRedirect( JRoute::_( CCK_LINK.'&view='.$view.'s', false ) );
 				
 				return false;
@@ -498,7 +499,12 @@ class CCKController extends JControllerLegacy
 
 		$app		=	JFactory::getApplication();
 		$json		=	$app->input->json->getRaw();
-		$objects	=	json_decode( $json );
+		
+		if ( JCck::on( '4.0' ) ) {
+			$objects	=	json_decode( $json, true );
+		} else {
+			$objects	=	json_decode( $json );
+		}
 		
 		if ( count( $objects ) ) {
 			$query	=	'UPDATE #__cck_core_objects SET options = CASE name';
@@ -581,7 +587,7 @@ class CCKController extends JControllerLegacy
 			define( '_C2_TEXT',		'CONTENT_TYPE' );
 			define( '_C4_TEXT',		'SEARCH_TYPE' );
 			define( 'CCK_BUILDER',	'APP_BUILDER' );
-			define( 'CCK_LABEL',	'SEBLOD 3.x' );
+			define( 'CCK_LABEL',	JText::_( 'COM_CCK_SEBLOD_CORE' ) );
 			define( 'CCK_LABEL1',	'SEBLOD' );
 			define( 'CCK_LABEL2',	'' );
 		}

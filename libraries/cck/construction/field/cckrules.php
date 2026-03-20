@@ -10,6 +10,8 @@
 
 defined( 'JPATH_PLATFORM' ) or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 jimport( 'joomla.html.html' );
 jimport( 'cck.joomla.access.access' );
 
@@ -36,7 +38,9 @@ class JFormFieldCCKRules extends JFormField
 	 */
 	protected function getInput()
 	{
-		JHtml::_('behavior.tooltip');
+		if ( !JCck::on( '4.0' ) ) {
+			JHtml::_('behavior.tooltip');
+		}
 
 		// Initialise some field attributes.
 		$section	= $this->element['section'] ? (string) $this->element['section'] : '';
@@ -97,29 +101,33 @@ class JFormFieldCCKRules extends JFormField
 		$html[] = '<p class="rule-desc">' . JText::_('JLIB_RULES_SETTINGS_DESC') . '</p>';
 
 		// Begin tabs
-		$html[] = '<div id="permissions-sliders" class="tabbable tabs-left">';
+		if ( JCck::on( '4.0' ) ) {
+			$html[]	=	HTMLHelper::_( 'uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'orientation'=>'vertical'] );
+		} else {
+			$html[] = '<div id="permissions-sliders" class="tabbable tabs-left">';
 
-		// Building tab nav
-		$html[] = '<ul class="nav nav-tabs">';
+			// Building tab nav
+			$html[] = '<ul class="nav nav-tabs">';
 
-		foreach ($groups as $group)
-		{
-			// Initial Active Tab
-			$active = "";
-			if ($group->value == 1)
+			foreach ($groups as $group)
 			{
-				$active = "active";
+				// Initial Active Tab
+				$active = "";
+				if ($group->value == 1)
+				{
+					$active = "active";
+				}
+
+				$html[] = '<li class="' . $active . '">';
+					$html[] = '<a href="#permission-' . $group->value . '" data-toggle="tab">';
+					$html[] = str_repeat('<span class="level">&ndash; ', $curLevel = $group->level) . $group->text;
+					$html[] = '</a>';
+				$html[] = '</li>';
 			}
+			$html[] = '</ul>';
 
-			$html[] = '<li class="' . $active . '">';
-				$html[] = '<a href="#permission-' . $group->value . '" data-toggle="tab">';
-				$html[] = str_repeat('<span class="level">&ndash; ', $curLevel = $group->level) . $group->text;
-				$html[] = '</a>';
-			$html[] = '</li>';
+			$html[] = '<div class="tab-content">';
 		}
-		$html[] = '</ul>';
-
-		$html[] = '<div class="tab-content">';
 
 		// Start a row for each user group.
 		foreach ($groups as $group)
@@ -133,7 +141,12 @@ class JFormFieldCCKRules extends JFormField
 
 			$difLevel = $group->level - $curLevel;
 
-			$html[] = '<div class="tab-pane' . $active . '" id="permission-' . $group->value . '">';
+			if ( JCck::on( '4.0' ) ) {
+				$html[]	=	HTMLHelper::_( 'uitab.addTab', 'myTab', 'permission-' . $group->value, $group->text );
+			} else {
+				$html[] = '<div class="tab-pane' . $active . '" id="permission-' . $group->value . '">';
+			}
+
 			$html[] = '<table class="table table-striped">';
 			$html[] =				'<thead>';
 			$html[] =					'<tr>';
@@ -183,10 +196,10 @@ class JFormFieldCCKRules extends JFormField
 						$inheritedRule	=	true;
 					}
 					
-					$html[]	=	'<input class="inputbox input-small" type="text" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '" value="'.$value.'" size="8" />';
+					$html[]	=	'<input class="form-control inputbox" type="text" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '" value="'.$value.'" size="8" />';
 				} else {
 				
-					$html[] = '<select class="inputbox input-small" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '">';
+					$html[] = '<select class="form-select inputbox" name="' . $this->name . '[' . $action->name . '][' . $group->value . ']" id="' . $this->id . '_' . $action->name . '_' . $group->value . '" title="' . JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text)) . '">';
 
 					$inheritedRule	= CCKAccess::checkGroup($group->value, $action->name, $assetId);
 
@@ -271,11 +284,22 @@ class JFormFieldCCKRules extends JFormField
 			}
 
 			$html[] = '</tbody>';
-			$html[] = '</table></div>';
+			$html[] = '</table>';
+			
 
+			if ( JCck::on( '4.0' ) ) {
+				$html[]	=	HTMLHelper::_( 'uitab.endTab' );
+			} else {
+				$html[]	= '</div>';
+			}
+		}
+		
+		if ( JCck::on( '4.0' ) ) {
+			$html[]	=	HTMLHelper::_( 'uitab.endTabSet' );
+		} else {
+			$html[] = '</div></div>';
 		}
 
-		$html[] = '</div></div>';
 		$html[] = '<div class="alert">';
 		if ($section == 'component' || $section == null ) {
 			$html[] = JText::_('JLIB_RULES_SETTING_NOTES');

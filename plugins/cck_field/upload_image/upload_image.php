@@ -386,7 +386,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$value['image_location'].'" />
 									</a>';
 				} else {
-					$thumb_location	=	str_replace( '/'.$title.'.','/_thumb'.( $options2['form_preview'] - 2 ).'/'.$title.'.',$value['image_location'] );
+					$thumb_location	=	str_replace( $title,'_thumb'.( $options2['form_preview'] - 2 ).'/'.$title,$value['image_location'] );
 					$preview	=	'<a href="'.JUri::root().$value['image_location'].'" '.$attr_preview.' title="'.$title_colorbox.'">
 										<img title="'.$title_image.'" alt="'.$desc_image.'" src="'.JUri::root().$thumb_location.'" />
 									</a>';
@@ -532,7 +532,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$userfile 		=	( $array_x ) ? $app->input->files->get( $parent, null ) : $app->input->files->get( $name, null );
 		$userfile_more	=	false;
 
-		if ( is_array( $userfile['name'] ) ) {
+		if ( isset( $userfile['name'] ) && is_array( $userfile['name'] ) ) {
 			if ( $array_x ) {
 				$userfile		=	self::_getUserFile( false, $userfile, $xk, $name );
 			} else {

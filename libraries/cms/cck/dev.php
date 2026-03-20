@@ -196,7 +196,7 @@ abstract class JCckDev
 			$message	=	JText::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
 		}		
 
-		$rules	.=	',"_tabs":{"regex":"","alertText":"'.$message.'"}';
+		$rules	.=	',"_tabs":{"regex":"","alertText":"'.addslashes( $message ).'"}';
 
 		if ( is_object( $options ) ) {
 			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
@@ -226,6 +226,10 @@ abstract class JCckDev
 			if ( $options->def( 'useSuffix' ) ) {
 				$more	.=	',useSuffix:"'.$options->get( 'useSuffix' ).'"';
 			}
+			if ( JCck::is( '4.0' ) ) {
+				$more	.=	',isOverflown:true';
+			}
+
 			$options	=	'{'.$scroll.',promptPosition:"'.$position.'"'.$more.'}';
 		} else {
 			$options	=	'{}';
@@ -233,13 +237,14 @@ abstract class JCckDev
 		$js				=	( $id == '_' ) ? '' : '$("#'.$id.'").validationEngine('.$options.');';
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
+		$vv		=	'.min';
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation-3.18.3.css" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation-3.18.4.min.js" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation.css?'.self::getMediaVersion().'" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation'.$vv.'.js?'.self::getMediaVersion().'" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
-			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation-3.18.3.css' );
-			$doc->addScript( $root.'/media/cck/js/cck.validation-3.18.4.min.js' );
+			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation.css', array( 'version'=>self::getMediaVersion() ) );
+			$doc->addScript( $root.'/media/cck/js/cck.validation'.$vv.'.js', array( 'version'=>self::getMediaVersion() ) );
 			$doc->addScriptDeclaration( $js );
 		}
 	}
@@ -261,7 +266,8 @@ abstract class JCckDev
 		}
 
 		if ( !$allowed ) {
-			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );';
+			$js	=	'$("#storage").val( "'.$value.'" ).prop("disabled", true); $("#force_storage").val( "1" );'
+				.	'$("#storage").parents("fieldset").addClass("disabled")';
 		} else {
 			$js	=	'if ( !$("#myid").val() ) { $("#storage").val( "'.$value.'" ); $("#force_storage").val( "1" ); }';
 		}
@@ -269,6 +275,14 @@ abstract class JCckDev
 		echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
 	}
 	
+	// getMediaVersion
+	public static function getMediaVersion()
+	{
+		/* TODO#SEBLOD4 JDEBUG ?? or ->() */
+
+		return JCck::getConfig_Param( 'media_version', '' );
+	}
+
 	public static function getMergedScript( $url )
 	{
 		$app	=	JFactory::getApplication();
@@ -390,6 +404,7 @@ abstract class JCckDev
 				$options['picker']	=	$options['base'].'_fields_list';
 				$options['root']	=	'#sortable_'.$options['base'];
 			}
+
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
 				unset( $options['hasOptions'] );
@@ -458,13 +473,26 @@ abstract class JCckDev
 						$js3		=	'var disp = "";';
 					}
 
+					if ( JCck::on( '4.0' ) ) {
+						$js_open	=	'<div class="no-no attr-grid-2">';
+						$js_close	=	'</div>';
+					} else {
+						$js_open	=	'<div class="clr"></div>';
+						$js_close	=	'';
+					}
+
 					// Custom Attr
 					if ( is_array( $options['customAttr'] ) ) {
 						$keys	=	array();
 						$n		=	0;
 						$nb		=	count( $options['customAttr'] );
+						$attribs	.=	'<div class="attr-grid-2">';
+
 						foreach ( $options['customAttr'] as $i=>$customAttr ) {
-							$attribs	.=	'<div class="clr"></div><div class="attr">';
+							if ( !JCck::on( '4.0' ) ) {
+								$attribs	.=	'<div class="clr"></div>';
+							}
+							$attribs	.=	'<div class="attr no-no">';
 
 							if ( is_array( $customAttr ) ) {
 								$attr_id	=	$customAttr['id'];
@@ -488,13 +516,13 @@ abstract class JCckDev
 									}
 
 									$attribs		.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-													.	' class="inputbox'.$attr_class.'" size="'.$size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
+													.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
 								}
 							} else {
 								$attr_id	=	$customAttr;
 
 								$attribs	.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-											.	' class="inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
+											.	' class="form-control is-mini inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id ) ).'" />';
 							}
 
 							$attribs		.=	'</div>';
@@ -508,37 +536,49 @@ abstract class JCckDev
 								} else {
 									$size	=	$attr_size;
 								}
-								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="inputbox'.$attr_class.'" size="'.$size.'" />';
+								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" />';
 							}
 							$keys[]			=	$attr_id;
-							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
+							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\''.$js_open.'<div class="attr"\'+disp+\'>'.$attribs_append.$js_close.'</div>\');';
 						}
+						$attribs	.=	'</div>';
 						$keys		=	implode( ',', $keys );
 					} elseif ( $options['customAttr'] ) {
 						$n			=	(int)$options['customAttr'];
-						$attribs	=	'<div class="clr"></div><div class="attr">';
+						$attribs	=	'<div class="clr"></div><div class="attr no-no attr-grid-2">';
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css		=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="inputbox input-mini mini2'.$css.'" size="8" />';
+							$attribs	.=	'<input type="text" id="attr__\'+k+\'_'.($i + 1).'" name="'.$attr_name.'[\'+k+\'][attr][]" value="\'+val['.$i.']+\'" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 						}
 						$attribs	.=	'</div>';
 						$location	=	( $elem->location ) ? explode( '||', $elem->location ) : array( 0=>'', 1=>'', 2=>'' );
-						$html		.=	'<div class="clr"></div><div class="attr">';
+
+						if ( !JCck::on( '4.0' ) ) {
+							$html	.=	'<div class="clr"></div>';
+						} else {
+							$html	.=	'<div class="collection-group-wrap def">';
+						}
+						$html		.=	'<div class="attr no-no attr-grid-2">';
+
 						for ( $i = 0; $i < $n; $i++ ) {
 							$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="inputbox input-mini mini2'.$css.'" size="8" value="'.( isset( $location[$i] ) ? htmlspecialchars( $location[$i] ) : '' ).'" />';
+							$html	.=	'<input type="text" id="location'.($i + 1).'" name="string[location][]" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" value="'.( isset( $location[$i] ) ? htmlspecialchars( $location[$i] ) : '' ).'" />';
 						}
 						$html		.=	'</div>';
-						$js3		.=	'var content = \'<div class="clr"></div><div class="attr"\'+disp+\'>';
+						
+						if ( JCck::on( '4.0' ) ) {
+							$html	.=	'</div>';
+						}
+						$js3		.=	'var content = \''.$js_open.'<div class="attr"\'+disp+\'>';
 						for ( $i = 0; $i < $n; $i++ ) {
 							if ( $i == 0 ) {
-								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(++cur)+\'][attr][]" value="" class="inputbox input-mini mini2" size="8" />';
+								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(++cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2" size="8" />';
 							} else {
 								$css	=	( ( $i + 2 ) % 3 == 0 ) ? ' middle' : '';
-								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(cur)+\'][attr][]" value="" class="inputbox input-mini mini2'.$css.'" size="8" />';
+								$js3	.=	'<input type="text" id="attr__0_1" name="'.$attr_name.'[\'+(cur)+\'][attr][]" value="" class="form-control is-mini inputbox input-mini mini2'.$css.'" size="8" />';
 							}
 						}
-						$js3		.=	'</div>\';';
+						$js3		.=	$js_close.'</div>\';';
 						$keys		=	'';
 					} else {
 						$js3		=	'';
@@ -591,7 +631,7 @@ abstract class JCckDev
 								}
 								';
 					if ( $options['toggleAttr'] ) {
-						$js2	.=	'$("div#layer").on("change", "input#toggle_attr", function() { $("div.attr, #location").toggle(); });';
+						$js2	.=	'$("div#layer").on("change", "input#toggle_attr", function() { $("div.attr, #location").toggleClass("no-no"); });';
 					}
 				}
 
@@ -600,11 +640,11 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="inputbox select" style="max-width:175px;"',
+					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="form-select inputbox select max-width-175"',
 															  'value', 'text', '', $options['picker'] );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
 					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
-								$("ul.adminformlist").on("change", "select#'.$options['picker'].'", function() {
+								$("#adminForm").on("change", "select#'.$options['picker'].'", function() {
 									var val = $(this).val();
 									if (val) {
 										$("'.$options['root'].'>div:last .button-add-'.$options['base'].'").click();
@@ -781,7 +821,7 @@ abstract class JCckDev
 	// validate
 	public static function validate( $config, $id = 'adminForm' )
 	{
-		$config['validation']			=	( isset( $config ) && is_array( $config['validation'] ) && count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '"null":{}';
+		$config['validation']			=	count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '"null":{}';
 		$config['validation_options']	=	new JRegistry( array( 'validation_background_color'=>'#242424', 'validation_color'=>'#ffffff', 'validation_position'=>'topRight', 'validation_scroll'=>0 ) );
 		
 		self::addValidation( $config['validation'], $config['validation_options'], $id );
@@ -813,7 +853,7 @@ abstract class JCckDev
 		
 		return $field;
 	}
-	
+
 	// getForm
 	public static function getForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
 	{
@@ -838,13 +878,33 @@ abstract class JCckDev
 		
 		$config['fields'][]	=	$field->storage_field;
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		
 		if ( isset( $inherit['after'] ) ) {
 			$html			.=	$inherit['after'];
 		}
-		
+
 		return $html;
 	}
 	
+	// getLabel
+	public static function getLabel( $field, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array() )
+	{
+		$field	=	JCckDevField::get( $field, '', $config, $inherit, $override );
+		
+		if ( ! $field ) {
+			return '';
+		}
+		
+		$label	=	'';
+		$tag	=	( $field->required ) ? '<span class="star"> *</span>' : '';
+
+		if ( $field->label ) {
+			$label			=	'<label>'.$field->label.$tag.'</label>';
+		}
+
+		return $label;
+	}
+
 	// renderForm
 	public static function renderForm( $field, $value, &$config = array( 'doValidation' => 2 ), $override = array(), $inherit = array(), $class = '' )
 	{	
@@ -854,19 +914,28 @@ abstract class JCckDev
 		}
 		
 		$config['fields'][]	=	$field->storage_field;
-		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
+
+		if ( JCck::on( '4.0' ) ) {
+			$class			=	'control-group'. ( $class ? ' ' . $class : '' );
+		}
+
 		$class				=	( $class ) ? ' class="'.$class.'"' : '';
 		$html				=	( isset( $field->form ) ) ? $field->form : '';
+		$label				=	'';
+		$tag				=	( $field->required ) ? '<span class="star"> *</span>' : '';
+
 		if ( isset( $inherit['after'] ) ) {
 			$html			.=	$inherit['after'];
 		}
-		$label				=	'';
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
-		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
-		
-		return $html;
+
+		if ( JCck::on( '4.0' ) ) {
+			return '<div'.$class.'><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
+		} else {
+			return '<li'.$class.'>'.$label.$html.'</li>';
+		}
 	}
 
 	// renderFormFromHelper
@@ -888,9 +957,12 @@ abstract class JCckDev
 		if ( $field->label ) {
 			$label			=	'<label>'.$field->label.$tag.'</label>';
 		}
-		$html				=	'<li'.$class.'>'.$label.$html.'</li>';
-		
-		return $html;
+
+		if ( JCck::on( '4.0' ) ) {
+			return '<div class="control-group"><div class="control-label">'.$label.'</div><div class="controls">'.$html.'</div></div>';
+		} else {
+			return '<li'.$class.'>'.$label.$html.'</li>';
+		}
 	}
 	
 	// renderBlank
@@ -902,7 +974,9 @@ abstract class JCckDev
 			return;
 		}
 
-		return '<li><label>'.$label.'</label>'.$html.'</li>';
+		if ( !JCck::on( '4.0' ) ) {
+			return '<li><label>'.$label.'</label>'.$html.'</li>';
+		}
 	}
 	
 	// renderHelp
@@ -947,6 +1021,14 @@ abstract class JCckDev
 		return ( $raw !== false ) ? $help : '</ul>'.$help.'</div>';
 	}
 	
+	// renderLayoutFile
+	public static function renderLayoutFile( $path, $displayData = array() )
+	{
+		$layout	=	new JLayoutFile( $path );
+
+		return $layout->render( $displayData );
+	}
+
 	// renderLegend
 	public static function renderLegend( $legend, $tooltip = '', $tag = '1' )
 	{
@@ -965,9 +1047,13 @@ abstract class JCckDev
 			$tooltip	=	'';
 		}
 		
-		return '<div class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></div>';
+		if ( JCck::on( '4.0' ) ) {
+			return '<legend class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></legend>';
+		} else {
+			return '<div class="legend top left"><span'.$tooltip.'>'.$legend.$tag.'</span></div>';
+		}
 	}
-	
+
 	// renderSpacer
 	public static function renderSpacer( $legend, $tooltip = '', $tag = '2', $options = array( 'class_sfx'=>'-2cols' ) )
 	{
@@ -1017,7 +1103,7 @@ abstract class JCckDev
 	public static function toJSON( $data = '' )
 	{
 		$registry	=	new JRegistry;
-		$registry->loadArray( $data );
+		$registry->loadArray( (array)$data );
 
 		return $registry->toString();
 	}

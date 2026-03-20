@@ -86,11 +86,7 @@ class plgCCK_Field_LiveUrl_Variable extends JCckPluginLive
 				// Keep Context
 				if ( /* $config['client'] == 'site' || */ $config['client'] == 'search' /* || $config['client'] == 'admin' */ ) {
 					if ( !isset( $config['context'][$variable] ) ) {
-						if ( is_array( $live ) ) {
-							$config['context'][$variable]	=	implode( ',', $live );
-						} else {
-							$config['context'][$variable]	=	(string)$live;
-						}
+						$config['context'][$variable]	=	(string)$live;
 					}
 				}
 			}

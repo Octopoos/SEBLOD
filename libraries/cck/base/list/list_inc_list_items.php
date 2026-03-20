@@ -39,8 +39,12 @@ if ( $list['isCore'] ) {
 	$pks		=	substr( $pks, 0, -1 );
 } else {
 	for ( $i = 0; $i < $count; $i++ ) {
-		if ( isset( $items[$i]->id ) && is_string( $items[$i]->id ) ) {
-			$ids	.=	$items[$i]->id.',';
+		if ( isset( $items[$i]->id ) && is_string( $items[$i]->id ) ) {			
+			if ( isset( $items[$i]->id2_key ) ) {
+				$ids	.=	$items[$i]->id.'_'.$items[$i]->id2_key.',';
+			} else {
+				$ids	.=	$items[$i]->id.',';	
+			}
 		}
 	}
 	if ( $ids != '' ) {
@@ -73,9 +77,8 @@ if ( $count ) {
 			$items[$i]->pk				=	$PK;
 			$items[$i]->pkb				=	0;
 			$items[$i]->type_id			=	0;
-			$items[$i]->type_alias		=	'';
 		}
-		$item	=	new CCK_Item( $templateStyle->name, $search->name, $items[$i]->pk );
+		$item	=	new CCK_Rendering_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		
 		// --
 		if ( $count2 ) {
@@ -84,7 +87,7 @@ if ( $count ) {
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
-								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -101,12 +104,14 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 
 			foreach ( $fields as $field ) {
+				if ( $field->position == '_above_' || $field->position == '_below_' ) {
+					continue;
+				}
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
@@ -238,7 +243,7 @@ if ( $count ) {
 								'author_session'=>$items[$i]->author_session,
 								'client'=>'item',
 								'doSEF'=>$list['doSEF'],
-								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 								'error'=>0,
 								'fields'=>array(),
 								'formId'=>$list['formId'],
@@ -255,12 +260,14 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 			
 			foreach ( $fields2 as $field ) {
+				if ( $field->position == '_above_' || $field->position == '_below_' ) {
+					continue;
+				}
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;

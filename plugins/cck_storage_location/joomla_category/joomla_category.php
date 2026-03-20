@@ -22,6 +22,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $table			=	'#__categories';
 	protected static $table_object	=	array( 'Category', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'category_pk';
 	
 	protected static $access		=	'access';
 	protected static $author		=	'created_user_id';
@@ -220,9 +221,11 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	// onCCK_Storage_LocationPrepareList
 	public static function onCCK_Storage_LocationPrepareList( &$params )
 	{
-		require_once JPATH_SITE.'/components/com_content/helpers/category.php';
-		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-		require_once JPATH_SITE.'/components/com_content/router.php';
+		if ( !JCck::on( '4.0' ) ) {
+			require_once JPATH_SITE.'/components/com_content/helpers/category.php';
+			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			require_once JPATH_SITE.'/components/com_content/router.php';
+		}
 		
 		JPluginHelper::importPlugin( 'content' );
 		$params	=	JComponentHelper::getParams( 'com_content' );
@@ -535,6 +538,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$table->modified_user_id	=	0;
 			$table->extension			=	( ! $table->extension ) ? 'com_content' : $table->extension;
 		}
+		if ( ! $table->title ) {
+			$table->title	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+			$table->alias	=	$table->title;
+		}
 		$table->path	=	( $table->parent_id > 1 ) ? self::_getTable( $table->parent_id )->path.'/' : '';
 		$table->path	.=	$table->alias;
 		if ( empty( $table->language ) ) {
@@ -557,6 +564,8 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		foreach ( $associations as $tag=>$id ) {
 			if ( empty( $id ) ) {
 				unset( $associations[$tag] );
+			} else {
+				$associations[$tag]	=	(int) $id;
 			}
 		}
 
@@ -574,27 +583,35 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				->where( 'context=' . $db->quote( 'com_categories.item' ) )
 				->where( 'id IN (' . implode(',', $associations ) . ')' );
 		$db->setQuery( $query );
-		$db->execute();
 
-		if ( $error = $db->getErrorMsg() ) {
-			$app->enqueueMessage( $error, 'error' );
-			return false;
-		}
+        try
+        {
+            $db->execute();
+        }
+        catch (RuntimeException $e)
+        {
+            $app->enqueueMessage( $e->getMessage(), 'error' );
+            return false;
+        }
 
 		if ( !$all_language && count( $associations ) ) {
 			// Adding new association for these items
 			$key	=	md5( json_encode( $associations ) );
 			$query->clear()->insert( '#__associations' );
 			foreach ( $associations as $tag=>$id ) {
-				$query->values( $id . ',' . $db->quote( 'com_categories.item' ) . ',' . $db->quote( $key ) );
+				$query->values( (int)$id . ',' . $db->quote( 'com_categories.item' ) . ',' . $db->quote( $key ) );
 			}
 			$db->setQuery( $query );
-			$db->execute();
 
-			if ( $error = $db->getErrorMsg() ) {
-				$app->enqueueMessage( $error, 'error' );
-				return false;
-			}
+	    	try
+	        {
+	            $db->execute();
+	        }
+	        catch (RuntimeException $e)
+	        {
+	            $app->enqueueMessage( $e->getMessage(), 'error' );
+	            return false;
+	        }
 		}
 	}
 
@@ -654,8 +671,12 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		if (!$assoc || !$extension || !$component ) {
 			$assoc = false;
 		} else {
-			$name	=	$component.'HelperAssociation';
-			JLoader::register( $name, JPATH_SITE.'/components/'.$extension.'/helpers/association.php' );
+			$name		=	'Joomla\\Component\\' . ucfirst( $component ) . '\\Site\\Helper\\AssociationHelper';
+			$class_file	=	JPATH_SITE . '/components/'.$extension.'/src/Helper/AssociationHelper.php';
+
+			if ( file_exists( $class_file ) ) {
+				include $class_file;
+			}
 
 			$assoc	=	class_exists( $name ) && !empty( $name::$category_association );
 		}
@@ -694,7 +715,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			}
 			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
 			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
 		}
 		
@@ -735,7 +758,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				/* TODO#SEBLOD: (mod_cck_lang...) */
 			}
 		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			if ( !JCck::on( '4.0' ) ) {
+				require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			}
 
 			if ( !isset( $storage[self::$table]->_route ) ) {
 				$storage[self::$table]->_route		=	array();

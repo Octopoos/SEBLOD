@@ -23,6 +23,7 @@ class CCKController extends JControllerLegacy
 		parent::__construct( $config );
 
 		$this->registerTask( 'apply', 'save' );
+		$this->registerTask( 'read', 'download' );
 		$this->registerTask( 'save2copy', 'save' );
 		$this->registerTask( 'save2new', 'save' );
 		$this->registerTask( 'save2redirect', 'save' );
@@ -34,7 +35,7 @@ class CCKController extends JControllerLegacy
 	// ajax
 	public function ajax()
 	{
-		JSession::checkToken( 'get' ) or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		JSession::checkToken( 'get' ) or jexit( '<html><head><meta name="robots" content="noindex, nofollow"></head><body>'.JText::_( 'JINVALID_TOKEN' ).'</body></html>' );
 
 		$app	=	JFactory::getApplication();
 		$file	=	$app->input->getString( 'file', '' );
@@ -132,7 +133,9 @@ class CCKController extends JControllerLegacy
 		$id				=	$app->input->getInt( 'id', 0 );
 		$fieldname		=	$app->input->getString( 'file', '' );
 		$to_be_erased	=	false;
-		
+		$task			=	$this->getTask();
+		$uri_root		=	JUri::root();
+
 		if ( ! $id ) {
 			$file	=	$fieldname;
 			$path	=	JPATH_ROOT.'/'.$file;
@@ -198,7 +201,8 @@ class CCKController extends JControllerLegacy
 				return;	
 			}
 
-			$file	=	( isset( $config['file'] ) ) ? $config['file'] : '';
+			$file		=	( isset( $config['file'] ) ) ? $config['file'] : '';
+			$x_robots	=	( isset( $config['x_robots'] ) && $config['x_robots'] ) ? $config['x_robots'] : '';
 		}
 
 		$path	=	JPATH_ROOT.'/'.$file;
@@ -211,8 +215,10 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 			if ( $path ) {
-				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {
-					$this->setRedirect( JUri::root( true ).'/'.$file );
+				set_time_limit( 0 );
+
+				if ( $task == 'read' || ( isset( $config['task2'] ) && $config['task2'] == 'read' ) ) {
+					include JPATH_ROOT.'/components/com_cck/read.php';
 				} else {
 					if ( $id ) {
 						$event		=	'onCckDownloadSuccess';
@@ -232,7 +238,6 @@ class CCKController extends JControllerLegacy
 
 						JCckDatabase::execute( 'UPDATE #__cck_core SET download_hits = download_hits+1 WHERE id = '.(int)$config['id'] );
 					}
-					set_time_limit( 0 );
 					@ob_end_clean();
 					include JPATH_ROOT.'/components/com_cck/download.php';
 				}
@@ -367,15 +372,34 @@ class CCKController extends JControllerLegacy
 		$hash		=	JApplicationHelper::getHash( $user->id.'|'.$to_id.'|'.$user->password );
 
 		if ( $to_id && $hash == $session->get( 'cck_impersonate' ) ) {
+			$to_session	=	true;
+
 			jimport( 'cck.joomla.user.user' );
+			
+			// Go Back
+			if ( $user->from_id && $user->from_id != $user->from_id_session ) {
+				$from_user	=	JFactory::getUser( $user->from_id_session );
 
-			$userShadow	=	new CCKUser( $to_id );
+				if ( $from_user->authorise( 'core.admin', 'com_users' ) ) {
+					$to_session	=	false;
+					$userShadow	=	new CCKUser( $user->from_id, $from_user );
 
-			$userShadow->makeHimLive();
+					$userShadow->makeHimLive();
 
-			$session->clear( 'cck_impersonate' );
+					$session->set( 'cck_impersonate', JApplicationHelper::getHash( $user->from_id.'|'.$user->from_id_session.'|'.JFactory::getUser()->password ) );
+				}	
+			}
+
+			// Go Back more..
+			if ( $to_session ) {
+				$userShadow	=	new CCKUser( $to_id );
+
+				$userShadow->makeHimLive();
+
+				$session->clear( 'cck_impersonate' );
+				$session->clear( 'cck_login_as' );
+			}
 		}
-
 
 		$this->setRedirect( JUri::root() );
 	}
@@ -395,14 +419,22 @@ class CCKController extends JControllerLegacy
 		if ( $to_id && $user->authorise( 'core.admin', 'com_users' ) ) {
 			jimport( 'cck.joomla.user.user' );
 
-			$str		=	$to_id.'|'.$user->id;
-			$userShadow	=	new CCKUser( $to_id );
+			$as		=	JFactory::getSession()->get( 'cck_login_as', '' ); /* Keep this line before new CCKUser */
+			$str	=	$to_id.'|'.$user->id;
+
+			if ( $as != '' ) {
+				$as	=	json_decode( $as, true );
+
+				if ( isset( $as['from_id'] ) && $as['from_id'] ) {
+					$str	=	$to_id.'|'.$as['from_id'];
+				}
+			}
+
+			$userShadow	=	new CCKUser( $to_id, $user );
 
 			$userShadow->makeHimLive();
 
-			$hash		=	JApplicationHelper::getHash( $str.'|'.JFactory::getUser()->password );
-
-			$session->set( 'cck_impersonate', $hash );
+			$session->set( 'cck_impersonate', JApplicationHelper::getHash( $str.'|'.JFactory::getUser()->password ) );
 		}
 
 		$this->setRedirect( JUri::root() );
@@ -494,7 +526,18 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( JCckDevHelper::getAbsoluteUrl( 'auto', 'task=download&file='.$file ) );
 			}
 		} else {
-			$this->setRedirect( $link, JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' ), 'error' );
+			if ( $config['message_style'] ) {
+				$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+				$msgType	=	'error';
+			} else {
+				$msg		=	'';
+				$msgType	=	'';
+			}
+			if ( $msg != '' ) {
+				$this->setRedirect( $link, $msg, $msgType );
+			} else {
+				$this->setRedirect( $link );
+			}
 		}
 	}
 
@@ -664,8 +707,12 @@ class CCKController extends JControllerLegacy
 				}
 			}
 		} else {
-			$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
-			$msgType	= 'error';
+			if ( $config['message_style'] === 0 ) {
+				$msg		=	'';
+			} else {
+				$msg		=	JText::_( 'JERROR_AN_ERROR_HAS_OCCURRED' );
+				$msgType	= 'error';
+			}
 		}
 		$link		=	$this->_getReturnPage( false );
 		$redirect	=	( isset( $config['options']['redirection'] ) ) ? $config['options']['redirection'] : '';
@@ -844,6 +891,12 @@ class CCKController extends JControllerLegacy
 		$app->close();
 	}
 	
+	// toggleAjax
+	public function toggleAjax()
+	{
+
+	}
+
 	// _download_hits
 	protected function _download_hits( $id, $fieldname, $collection = '', $x = 0 )
 	{

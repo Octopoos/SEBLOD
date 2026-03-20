@@ -374,6 +374,20 @@ class plgCCK_FieldField_X extends JCckPluginField
 	// _getHtml
 	protected static function _getHtml( $field, $elem, $i )
 	{
+		if ( JCck::on( '4.0' ) ) {
+			$icons	=	array(
+							'add'=>'icon-plus-circle',
+							'del'=>'icon-minus-circle',
+							'drag'=>'icon-circle'
+						);
+		} else {
+			$icons	=	array(
+							'add'=>'icon-plus',
+							'del'=>'icon-minus',
+							'drag'=>'icon-circle'
+						);
+		}
+
 		$html	=	'<div>';
 		$html	.=	'<div id="collection-group-wrap-'.$field->name.'__'.$i.'" class="collection-group-wrap">';
 		$html	.=	'<div id="collection-group-form-'.$field->name.'__'.$i.'" class="collection-group-form">';
@@ -382,17 +396,17 @@ class plgCCK_FieldField_X extends JCckPluginField
 		$html	.=	'<div id="collection-group-button-'.$field->name.'__'.$i.'" class="collection-group-button">';
 		if ( $field->bool3 ) {
 			$html	.=	'<div class="button-del">'
-					.		'<span id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.' icon-minus"></span>'
+					.		'<span id="button_del'.'__'.$field->name.'__'.$i.'" class="button-del-'.$field->name.' '.$icons['del'].'"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool2 ) {
 			$html	.=	'<div class="button-add">'
-					.		'<span id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.' icon-plus"></span>'
+					.		'<span id="button_add'.'__'.$field->name.'__'.$i.'" class="button-add-'.$field->name.' '.$icons['add'].'"></span>'
 					.	'</div> ';
 		}
 		if ( $field->bool4 ) {
 			$html	.=	'<div class="button-drag">'
-					.		'<span id="button_drag'.'" class="icon-circle"></span>'
+					.		'<span id="button_drag'.'" class="'.$icons['drag'].'"></span>'
 					.	'</div> ';
 		}
 		$html	.=	'</div>';

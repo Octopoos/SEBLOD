@@ -23,10 +23,43 @@ class Helper_Workshop
 		if ( $hasMb < 0 ) {
 			$hasMb	=	( function_exists( 'mb_convert_case' ) ) ? 1 : 0;
 		}
-		$name	=	( $hasMb ) ? mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ) : strtolower( substr( $field->title, 0, 1 ) );
-		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
-		$class	=	$field->checked_out ? ' zz' : '';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+		$class		=	'';
+		$f_lang		=	$field->language != '' && $field->language != '*' ? ' l-'.$field->language : '';
+		$f_tabgroup	=	'';
+		$link		=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
+		$title		=	str_replace( '⇒', '', $field->title );
+		
+		if ( $field->checked_out ) {
+			$class	=	$field->checked_out == $attr['user_id'] ? ' zz2' : ' zz';
+		}
+
+		if ( isset( $field->storage ) ) {
+			$no	=	$field->storage == 'none' ? '<span class="no">&times;</span>' : '';
+		} else {
+			$no	=	'';
+		}
+		if ( $title !== $field->title ) {
+			$f_tabgroup	.=	' tg';
+		}
+
+		$type_field	=	''; // Is that really used?!
+
+		if ( $hasMb ) {
+			$title	=	mb_convert_case( $title, MB_CASE_LOWER, 'UTF-8' );	
+		} else {
+			$title	=	strtolower( $title );
+		}
+
+		for ( $i = 0; $i < 3; $i++ ) {
+			$name		=	substr( $title, $i, 1 );
+			$name_ord	=	ord( $name );
+
+			if ( $name_ord >= 97 && $name_ord <= 122 ) {
+				break;
+			}
+		}
+
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field.$f_lang.$f_tabgroup; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $no; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -64,6 +97,7 @@ class Helper_Workshop
                 <?php
 				if ( $master == 'order' ) { ?>
 					<div class="pane ph1"><div><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
+					<div class="pane ph2 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                 <?php } elseif ( $master == 'content' ) { ?>
                     <div class="pane ph4 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                     <div class="pane ph3 hide"><div><?php echo JText::_( 'COM_CCK_MARKUP_CLASS' ); ?></div><div><?php echo JText::_( 'COM_CCK_MARKUP' ); ?></div></div>
@@ -88,13 +122,21 @@ class Helper_Workshop
 	}
 	
 	// displayPosition
-	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css, $info = array() )
+	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css, $info = array(), $no = '' )
 	{
-		$attr	=	'';
-		$class	=	'';
-		$dir	=	'down';
-		$to		=	$p + 1;
-		$hide	=	( $variation_status != '' ) ? '' : ' hidden';
+		$attr		=	'';
+		$class		=	'';
+		$dir		=	'down';
+		$hide		=	( $variation_status != '' ) ? '' : ' hidden';
+		$no_class	=	'';
+		$to			=	$p + 1;
+		
+		if ( $no == 'p-no' ) {
+			$no_class	=	' '.$no;
+			$no			=	'';
+		} elseif ( $no ) {
+			$no_class	=	' p-yes';
+		}
 
 		if ( isset( $info['template'] ) && $info['template'] != '' ) {
 			if ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$name.'.php' ) ) {
@@ -105,16 +147,17 @@ class Helper_Workshop
 				$class	=	' overridden';
 			}
 		}
-		$pos	=	'<li class="position ui-state-disabled" id="pos-'.$p.'">'
+
+		$pos	=	'<li class="position'.$no_class.' ui-state-disabled" id="pos-'.$p.'">'
 				.	'<input class="selector" type="radio" id="position'.$p.'" name="positions" gofirst="#pos-'.($to-1).'" golast="#pos-'.$to.'" />'
-				.	'<span class="title'.$class.'"'.$attr.'>'.$title.'</span>'
+				.	'<span class="title'.$class.'"'.$attr.'>'.$title.$no.'</span>'
 				.	'<input type="hidden" name="ff[pos-'.$name.']" value="position" />'
 				.	'<div class="pane la">'
 				.	'<div class="col1"><div class="colc">'.$legend.'</div></div>'
 				.	'<div class="col2"><div class="colc">'.$variation.'<span class="c_var'.$hide.'" name="'.$name.'">+</span>'.'</div></div></div>'
 				.	'<div class="pane lb" style="display: none;">'
 				.	'<div class="col1"><div class="colc">'.$css.'</div></div>'
-				.	'<div class="col2"><div class="colc">'.$width.$height.'</div></div>'
+				.	'<div class="col2"><div class="colc g3">'.$width.$height.'</div></div>'
 				.	'</div>'
 				.	'</li>';
 		echo $pos;
@@ -136,7 +179,7 @@ class Helper_Workshop
 		$height	=	'<input type="hidden" name="ffp[pos-'.$name.'][height]" value="" />';
 		$css	=	'<input type="hidden" name="ffp[pos-'.$name.'][css]" value="" />';
 		
-		self::displayPosition( $p, $name, $title, $legend, $variat, '', $width, $height, $css );
+		self::displayPosition( $p, $name, $title, $legend, $variat, '', $width, $height, $css, array(), 'p-no' );
 	}
 	
 	// displayToolbar
@@ -155,40 +198,39 @@ class Helper_Workshop
 		
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
-                $bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' <b>+</b> '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
-                			.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
+                $bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' + '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
+                			.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
 			} else {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' <b>+</b> '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).' <b>+</b> '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).' <b>+</b> '.JText::_( 'COM_CCK_COMPUTATION' ).'" href="javascript:void(0);">5</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' + '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).' + '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONALS' ).' + '.JText::_( 'COM_CCK_COMPUTATION' ).'" href="javascript:void(0);">5</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>';
 			}
 		} else {
 			if ( $master == 'content' ) {
-				$bar		.=	'<a class="hasTooltip qtip_cck panel pb1 icons icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' <b>+</b> '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck panel pb1 icons icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LINK' ).' + '.JText::_( 'COM_CCK_TYPO' ).'" href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'"href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>';
 			} elseif ( $master == 'search' ) {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' <b>+</b> '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' <b>+</b> '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MATCH' ).' <b>+</b> '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONAL_STATES' ).'" href="javascript:void(0);">5</a>'
-							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' <b>+</b> '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>'
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel pb1 icon-one first selected" title="'.JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'" href="javascript:void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb2 icon-two" title="'.JText::_( 'COM_CCK_LIVE' ).' + '.JText::_( 'COM_CCK_LIVE_VALUE' ).'"href="javascript:void(0);">2</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb3 icon-three" title="'.JText::_( 'COM_CCK_MATCH' ).' + '.JText::_( 'COM_CCK_STAGE' ).'" href="javascript:void(0);">3</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' + '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">4</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb5 icon-five" title="'.JText::_( 'COM_CCK_CONDITIONALS' ).'" href="javascript:void(0);">5</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_MARKUP' ).' + '.JText::_( 'COM_CCK_MARKUP_CLASS' ).'" href="javascript:void(0);">6</a>'
 							.	'<a class="hasTooltip qtip_cck icons panel pb7 icon-six" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).'" href="javascript:void(0);">7</a>';
 			} else {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel icon-one first selected" title="'.JText::_( 'COM_CCK_DIRECTION' ).'" href="javascript: void(0);">1</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel icon-one first selected" title="'.JText::_( 'COM_CCK_DIRECTION' ).'" href="javascript: void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">2</a>';
 			}
 		}
 		if ( $master != 'order' ) {
-			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="<b>'.JText::_( 'COM_CCK_POSITIONS' ).':</b><br />'
-					.	JText::_( 'COM_CCK_LABEL' ).' + '.JText::_( 'COM_CCK_VARIATION' ).'<br />'
-					.	JText::_( 'COM_CCK_WIDTH' ).' + '.JText::_( 'COM_CCK_HEIGHT' ).'" href="javascript:void(0);">&bull;</a>';
+			$bar	.=	'<a class="hasTooltip qtip_cck icons panel icon-f'.$last.'" title="'.JText::_( 'COM_CCK_POSITIONS_STUFF' ).'" href="javascript:void(0);">&bull;</a>';
 		}
 		if ( $clone ) {
 			$bar	.=	'<a class="hasTooltip qtip_cck icons icon-add2 first" id="initclient" title="'.$clone.'" href="javascript:void(0);"></a>';
@@ -216,8 +258,9 @@ class Helper_Workshop
 	public static function getDefaultTemplate()
 	{
 		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		
 		if ( !$name) {
-			$name	=	'seb_one';
+			$name	=	'seb_minima';
 		}
 
 		return $name;
@@ -232,7 +275,7 @@ class Helper_Workshop
 			$fields	=	array();
 			if ( $featured != '' ) {
 				$where	=	'WHERE '.$featured.' AND a.type != "" AND a.storage != "dev" AND ( a.storage_table NOT LIKE "#__cck_store_form_%" )';
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
+				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.language, a.storage, a.checked_out FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
 				if ( count( $fields ) ) {
 					$list	=	array();
 					foreach ( $fields as $f ) {
@@ -254,7 +297,7 @@ class Helper_Workshop
 			$fields	=	implode( ',', $fields );
 		} else {
 			$and	=	( $force === true ) ? ' '.$featured : '';
-			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
+			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.language, a.storage, a.checked_out, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
 					.	' FROM #__cck_core_fields AS a '
 					. 	' LEFT JOIN #__cck_core_'.$table.' AS c ON c.fieldid = a.id'
 					.	' WHERE c.'.$element.'id = '.(int)$item->id.' AND c.client = "'.$item->client.'"'
@@ -281,7 +324,7 @@ class Helper_Workshop
 		if ( $and != '' ) {
 			$where	.=	' AND '.$and;
 		}
-		if ( $element == 'type' && $item->storage_location != 'none' && $item->location == 'none' ) {
+		if ( $element == 'type' && $item->storage_location != 'none' && ( $item->location == 'none' || $item->location == 'collection' ) ) {
 			// Should we append something here?
 		} elseif ( $element == 'type' && $item->storage_location != 'none' ) {
 			if ( $or != '' ) {
@@ -289,7 +332,7 @@ class Helper_Workshop
 			}
 			$where	.=	' AND ( (a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'") '.$or.')';			
 		} elseif ( $element == 'search' ) {
-			$select	=	', a.storage_table, a.storage_field';
+			$select	=	', a.storage, a.storage_table, a.storage_field';
 		}
 		if ( $excluded ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
@@ -297,7 +340,7 @@ class Helper_Workshop
 		if ( $folder != '' ) {
 			$where	.=	' AND '.$folder;
 		}
-		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out'
+		$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.language, a.checked_out'
 				.	$select
 				.	' FROM #__cck_core_fields AS a '
 				.	' LEFT JOIN #__cck_core_folders AS b ON b.id = a.folder '
@@ -314,6 +357,56 @@ class Helper_Workshop
 		return $fields;
 	}
 	
+	// getMarkups
+	public static function getLayouts()
+	{
+		jimport( 'joomla.filesystem.file' );
+
+		$folder		=	JPATH_SITE.'/components/com_cck/layouts/cck/markup';
+		$groups		=	array();
+		$items		=	JFolder::files( $folder, '\.php$', true, true );
+		$len		=	strlen( $folder ) + 1;
+		$layouts	=	array();
+		$open		=	false;
+
+		if ( !is_array( $items ) ) {
+			return $layouts;
+		}
+		foreach ( $items as $file ) {
+			$layout		=	substr( $file, $len );
+			$layout		=	substr( $layout, 0, -4 );
+			$pos		=	strpos( $layout, '/' );
+			$value		=	$layout;
+			
+			if ( $pos !== false ) {
+				$group	=	substr( $layout, 0, $pos );
+				$layout	=	substr( $layout, $pos + 1 );
+				$value	=	$group.'.'.$layout;
+
+				if ( !isset( $groups[$group] ) ) {
+					if ( $open ) {
+						$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+					}
+					
+					$groups[$group]	=	true;
+					$layouts[] 		=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_'.str_replace( '-', '_', $group ) ) );
+					$open			=	true;
+				}
+			} elseif ( $open ) {
+				$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+				$open		=	false;
+			}
+			
+			$layouts[$value]	=	JHtml::_( 'select.option', $value, $layout );
+		}
+		
+		if ( $open ) {
+			$layouts[]	=	JHtml::_( 'select.option', '</OPTGROUP>', '' );
+		}
+
+		return $layouts;
+	}
+
 	// getParams
 	public static function getParams( $element, $master, $client )
 	{
@@ -321,6 +414,10 @@ class Helper_Workshop
 		$data['_']				=	array( 'add'=>JText::_( 'COM_CCK_ADD' ), 'configure'=>JText::_( 'COM_CCK_CONFIGURE' ), 'edit'=>JText::_( 'COM_CCK_EDIT' ),
 										   'optional'=>JText::_( 'COM_CCK_OPTIONAL' ), 'required'=>JText::_( 'COM_CCK_REQUIRED' ), 'icon-friendly'=>'<span class="icon-menu-2"></span>' );
 		
+		if ( JCck::on( '4.0' ) ) {
+			$data['_']['icon-friendly']	=	'<span class="icon-expand"></span>';
+		}
+
 		$data['computation']	=	true;
 		$data['conditional']	=	true;
 		$data['label']			=	true;
@@ -342,7 +439,7 @@ class Helper_Workshop
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -356,7 +453,6 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
-											'disabled_isfilled'=>JHtml::_( 'select.option', 'disabled_isfilled', JText::_( 'COM_CCK_FORM_DISABLED_IS_FILLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 				$data['live']		=	array_merge(
@@ -378,7 +474,7 @@ class Helper_Workshop
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -394,11 +490,6 @@ class Helper_Workshop
 											'FIELD'=>JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
-				$data['restriction']=	array_merge(
-											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
-											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
-										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -412,7 +503,7 @@ class Helper_Workshop
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -474,6 +565,7 @@ class Helper_Workshop
 											'any_exact'=>JHtml::_( 'select.option', 'any_exact', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT' ) ),
 											'each'=>JHtml::_( 'select.option', 'each', JText::_( 'COM_CCK_MATCH_EACH_WORD' ) ),
 											'each_exact'=>JHtml::_( 'select.option', 'each_exact', JText::_( 'COM_CCK_MATCH_EACH_WORD_EXACT' ) ),
+											'any_exact_isset'=>JHtml::_( 'select.option', 'any_exact_isset', JText::_( 'COM_CCK_MATCH_ANY_WORDS_EXACT_IF_ISSET' ) ),
 											'n'=>JHtml::_( 'select.option', 'n', JText::_( 'COM_CCK_MATCH_N_WORDS' ) ),
 											'n_exact'=>JHtml::_( 'select.option', 'n_exact', JText::_( 'COM_CCK_MATCH_N_WORDS_EXACT' ) ),
 											'nested_exact'=>JHtml::_( 'select.option', 'nested_exact', JText::_( 'COM_CCK_MATCH_NESTED_EXACT' ) ),
@@ -499,7 +591,7 @@ class Helper_Workshop
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_NONE' ) )
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -619,12 +711,15 @@ class Helper_Workshop
 			return $style;
 		}
 		
-		$lang		=	JFactory::getLanguage();
-		$values		=	JCckDev::fromJSON( $style->params );
-		$style->xml	=	JPath::clean( JPATH_SITE.'/templates/'.$style->template.'/templateDetails.xml' );
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->setDefault( 'en-GB' );
+		$values			=	JCckDev::fromJSON( $style->params );
+		$style->xml		=	JPath::clean( JPATH_SITE.'/templates/'.$style->template.'/templateDetails.xml' );
 		
 		$lang->load( 'tpl_'.$style->template.'.sys', JPATH_SITE, null, false, true );
 		$lang->load( 'tpl_'.$style->template, JPATH_SITE, null, false, true );
+		$lang->setDefault( $lang_default );
+		
 		$style->positions	=	array();
 		
 		if ( file_exists( $style->xml ) ) {

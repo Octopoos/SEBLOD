@@ -104,7 +104,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'copyfrom_id'=>$copyfrom_id,
 				   'core'=>true,
 				   'custom'=>'',
-				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+				   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 				   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
    				   'error'=>0,
 				   'fields'=>array(),
@@ -219,6 +219,8 @@ $rparams	=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $pa
 JPluginHelper::importPlugin( 'cck_field' );
 JPluginHelper::importPlugin( 'cck_field_live' );
 JPluginHelper::importPlugin( 'cck_field_restriction' );
+JPluginHelper::importPlugin( 'cck_field_validation' );
+
 if ( $id ) {
 	JPluginHelper::importPlugin( 'cck_storage' );
 	JPluginHelper::importPlugin( 'cck_storage_location' );
@@ -286,7 +288,7 @@ foreach ( $fields as $field ) {
 			if ( $field->live ) {
 				$app->triggerEvent( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 
-				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) ) {
+				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
 					JCckDevHelper::secureField( $field, $value );
 				}
 			} else {
@@ -296,9 +298,9 @@ foreach ( $fields as $field ) {
 	}
 	$field->value	=	$value;
 	
-	if ( $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) {
+	if ( $field->variation == 'hidden_isfilled' ) {
 		if ( $value != '' ) {
-			$field->variation	=	str_replace( '_isfilled', '', $field->variation );
+			$field->variation	=	'hidden';
 
 			if ( !$id ) {
 				JCckDevHelper::secureField( $field, $value );

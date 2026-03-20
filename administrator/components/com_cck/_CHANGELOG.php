@@ -22,106 +22,268 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 3.29.0 Upgrade Release [01-Dec-2025] -------------
+--------------- 4.6.0 Upgrade Release [20-Mar-2026] -------------
 
-+ "between" operator updated on JCckContent find/search methods.
+# JCckApp issue fixed.
+# Minor issue fixed.
 
-! "+0" allowed as an field option (different than "0")
-! dataLayer output updated, and mtm added.
+--------------- 4.5.2 Upgrade Release [14-Mar-2025] -------------
 
-^ Core Update for SEBLOD Ecommerce add-on.
-^ Core Update for SEBLOD WebServices add-on.
+! MySQL "default value" issue for TEXT (Joomla! 5 SQL strict mode) fixed.
+  >> regression since 4.5.0 on MySQL 8.0.13+ when it was removed for TEXT.
+  >> a default value is supported (required with strict mode) for MySQL 8.0.13+
+  >> a default value is supported (required with strict mode) for MariaDB 10.2.1+
+  >> if your site runs a prior version < 8.0.13, please use SEBLOD 4.5.1
 
-# Minor issues fixed.
-# PHP 8 issue fixed.
++ Metadesc/title support via Code Field
++ X-Robots-Tag applied on task=download and task=read
 
---------------- 3.28.4 Upgrade Release [12-Mar-2025] -------------
+--------------- 4.5.1 Upgrade Release [13-Dec-2024] -------------
 
-+ Issues fixed for PHP 8.3 and PHP 8.4
+# Additional fixes included for PHP 8.2 and PHP 8.3
+# CSS fix for Validation Popups
+# Pagination fixed (?start for the 1st page) (J! 5.x)
 
-# Priority issue fixed on afterStore/Email.
+--------------- 4.5.0 Upgrade Release [25-Nov-2024] -------------
 
---------------- 3.28.3 Upgrade Release [27-Aug-2024] -------------
++ Additional fixes included for PHP 8.2 and PHP 8.3
++ Canonical added on Download/Read Tasks
+  >> choose from Download or Read from Options
++ "Export (Ajax)" task support on Joomla! 5
++ "for" attribute improved for Checkbox or Group.
++ "onUserAfterLogin" event support added.
 
-+ Additional fixes included for PHP 8.x.
-
-! JCckDevImage class updated for WebP format.
-! Submit Button plug-in improved.
-
+# MySQL "default value" issue for TEXT (Joomla! 5 SQL strict mode) fixed.
+# "hits" set as 0 on Upload File (when no file/value)
+# Read Task (PDF) issue fixed.
 # Various issues/notices fixed.
 
---------------- 3.28.2 Upgrade Release [2-May-2024] --------------
+--------------- 4.4.2 Upgrade Release [27-Sep-2024] -------------
+
+# Pagination fixed on J! 5.1.4
+  >> one additional fix
+
+--------------- 4.4.1 Upgrade Release [19-Sep-2024] -------------
+
+# Pagination fixed on J! 5.1.4
+  >> setAdditionalUrlParam added on default_list.php
+     (if overridden this will need to be added manually)
+
+# Various notices fixed.
+
+--------------- 4.4.0 Upgrade Release [27-Aug-2024] -------------
+
++ Additional fixes included for PHP 8.x.
 
 * jQuery UI updated to 1.13.x
 * jQuery UI Effect updated to 1.13.x
 
---------------- 3.28.1 Upgrade Release [5-Apr-2024] --------------
+! JCckDevImage class updated for WebP format.
+! Submit Button plug-in improved.
 
-! _QQ_ removed from languages files.
-
+# Router issues fixed (J! 5.x)
 # Various issues/notices fixed.
 
---------------- 3.28.0 Upgrade Release [26-Jan-2024] -------------
+--------------- 4.3.1 Upgrade Release [6-Feb-2024] ------------
 
+! Joomla! 4+ support
+  >> Multi-sites session fixed.
+  >> addScriptDeclaration, addStyleSheet fixed
+
+--------------- 4.3.0 Upgrade Release [26-Jan-2024] -----------
+
+! Joomla! 5 support
+  >> Bringing UI tweaks and fixes for Dark Mode
+
+! Joomla! 4+ support
+  >> Additional UI tweaks and fixes.
+  >> addScriptDeclaration, addStyleSheet fixed
+  >> Association UI fixed
+  >> Modal changes for Bootstrap 5 support
+
++ JSON support added on Ordering.
++ Restrictions applied on Ordering.
+
+! cck.core.js override allowed on back-end.
 ! Empty values allowed on AJAX Availability.
+! Suffix Tabs ID for tmpl=raw
+
+- "Quick Add" module removed.
 
 # Additional fixes included for PHP 8.x.
-# Validation issue fixed
-  >> COM_CCK_PLEASE_CHECK_REQUIRED_TABS updated with class=\\"red\\"
-  >> other languages should be changed as well...!
-
---------------- 3.27.1 Upgrade Release [28-Dec-2023] -------------
-
+# "onCCK_StoragePrepareSearch" arguments fixed.
+# Regression fixed on Associations for Articles & Categories.
 # ROOT/URI paths fixed on CRON Jobs.
 # Routing issue fixed.
 
---------------- 3.27.0 Upgrade Release [8-Dec-2023] --------------
+--------------- 4.2.1 Upgrade Release [26-Dec-2023] -----------
+
+! Joomla! 5.x support
+  >> Bringing UI tweaks and fixes for Dark Mode
+  >> Issues fixed
+
+--------------- 4.2.0 Upgrade Release [12-Dec-2023] -----------
+
+! Joomla! 5.x support
+  >> Bringing UI tweaks and fixes for Dark Mode
+  >> Issues fixed
+
++ JCckContent class updated & improved! :)
+  >> "like", "likes" operators support added on find/search methods.
+  >> "up_since", "up_until" operators support added on find/search methods.
+
+^ Modal position updated on Minima Template.
 
 # Additional fixes included for PHP 8.x.
 # User Bridge fixed.
+# Validation issue fixed for Joomla! 4.4.1
+  >> COM_CCK_PLEASE_CHECK_REQUIRED_TABS updated with class=\\"red\\"
+  >> other languages should be changed as well...!
 
---------------- 3.26.1 Upgrade Release [6-Oct-2023] --------------
+--------------- 4.1.1 Upgrade Release [24-Aug-2023] -----------
 
-# Additional fixes included for PHP 8.x.
+# Regression fixed on Field (Construct)
+# Quick Fix on Sites (creation).
 
---------------- 3.26.0 Upgrade Release [11-Aug-2023] -------------
+--------------- 4.1.0 Upgrade Release [14-Aug-2023] -----------
 
-+ "Export (Ajax)" support added on back-end lists.
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+  >> Permissions UI fixed.
 
---------------- 3.25.0 Upgrade Release [21-Jun-2023] -------------
+! cck.core.js override allowed.
+! UI reworked for Sites
 
-+ "Disabled when filled" Field Variation added on Forms.
-+ ORDER BY FIELD improved.
-+ Restriction executed on Ordering.
-+ Variation Override (Form) implment on Group.
-
-^ /parent/id behaviour changed (parent is now alias instead of id)
-
+# Access Level issue fixed on Sites (while saving).
+# Home page issue fixed on Sites.
+# Issue for saving Integration Options fixed.
 # Minor issues on PHP 8.x fixed.
+# Token fixed on JGrid reordering.
+# Various issues fixed.
 
---------------- 3.24.0 Upgrade Release [5-May-2023] --------------
+--------------- 4.0.5 Upgrade Release [24-May-2023] -----------
 
-# Additional fixes included for PHP 8.x.
+# Drag & Drop (reorder) fixed for Articles on J! 4.x
 
---------------- 3.23.2 Upgrade Release [2-Mar-2023] --------------
+--------------- 4.0.4 Upgrade Release [19-May-2023] -----------
 
-# Field parameters ("json@options2" column) storage issue fixed
-  >> read more @SEBLOD/pull/635
-# Site parameters ("usergroups" column) fixed.
+! Joomla! 4.x support
+  >> Drag & Drop (reorder)
+    for lists with 'sortable-group-id', 'sortable-group-id' is replaced automatically during update
+    for lists without 'sortable-group-id', you may need to add 'data-draggable-group="_"' manually
 
-# Additional fixes included for PHP 8.x.
+! Language issue ("no translation on back-end") fixed
+  >> parameter added in SEBLOD Options (override disabled by default)
+
+--------------- 4.0.3 Upgrade Release [5-May-2023] ------------
+
+! Joomla! 4.x support
+! STRICT_TRANS_TABLES solution (2/2) implemented.
+  >> no one-click update, but all SQL queries listed (to copy/paste and run on PhpMyAdmin, if needed)
+
++ Force en-GB as default language (as a fallback) (J! 4.x) and for plug-ins as well
++ Legacy option added.
+  >> for existing sites, you should consider to set [Legacy Mode = 2018]
++ Read Task (PDF) refactored without redirection to physical File
++ Task Plug-in implemented for CRON Jobs/Tasks on J! 4.x
+
+^ Core Update for:
+  SEBLOD Exporter add-on
+  SEBLOD Importer add-on
+  SEBLOD WebServices add-on
+^ Email regex changed to allow "+" sign.
+
+- Permissions removed from App Folders
+  >> permissions should be set up at Component-level or per Content Type
+
+# All Joomla! 4.x fixes included.
+  >> several additional ones since the latest Release Preview
+# All PHP 8.x fixes included.
+  >> several additional ones since the latest Release Preview
+
+--------------- 4.0.x Release Preview 9 [14-Apr-2023] ------------
+
++ Force en-GB as default language (as a fallback) (J! 4.x)
++ Read Task (PDF) refactored without redirection to physical File
++ Task Plug-in implemented for CRON Jobs/Tasks on J! 4.x
+
+# Search Ordering styling fixed
+# Value output ("0") fixed for J! 4.x
+
+--------------- 4.0.2 Release Preview 8 [02-Mar-2023] ------------
+
++ Legacy option added.
+  >> for existing sites, you should consider to set [Legacy Mode = 2018]
+- Permissions removed from App Folders
+  >> permissions should be set up at Component-level or per Content Type
+
+^ Core Update for SEBLOD WebServices add-on.
+^ Email regex changed to allow "+" sign.
+
 # App Export issue on PHP 8.x fixed.
 # Back-end/Component Constant name issue on PHP 8.x fixed.
+# Cache method renamed for J! 4.x
+# J! API issues fixed.
 # Site creation on PHP 8.x or J! 4.x fixed.
+# Site parameters ("usergroups" column) fixed.
+# Warnings/notices removed on PHP 8.x
+# Workflow support restricted to Joomla! Article.
 
---------------- 3.23.1 Upgrade Release [6-Oct-2022] ---------------
+--------------- 4.0.1 Release Preview 7 [10-Oct-2022] ------------
+
+! Joomla! 4.x support
+  >> Includes UI layouts for SEBLOD Toolbox Add-on.
+
+# Field Import issue fixed.
+
+--------------- 4.0.1 Release Preview 6 [6-Oct-2022] ------------
 
 # Additional back-end (Construction UI) issues on PHP 8.x fixed.
 
---------------- 3.23.0 Upgrade Release [30-Sep-2022] --------------
+--------------- 4.0.1 Release Preview 5 [30-Sep-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
 
 # Back-end (Construction UI) issue on PHP 8.x fixed.
-# Warnings and issues on PHP 8.x fixed.
+# Regression (related to Language Context) fixed.
+
+--------------- 4.0.1 Release Preview 4 [24-Aug-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+
+# Issue with App Folder fixed.
+# Issue with API path (WebServices) fixed.
+
+--------------- 4.0.0 Release Preview 3 [12-Aug-2022] ------------
+
+! Joomla! 4.x support
+  >> Bringing additional UI tweaks and fixes.
+
+! STRICT_TRANS_TABLES solution (2/2) implemented.
+  >> no one-click update, but all SQL queries listed (to copy/paste and run on PhpMyAdmin, if needed)
+
++ Core updates for Multi-sites
+
+--------------- 4.0.0 Release Preview 2 [27-Jul-2022] ------------
+
+! Joomla! 4.x support
+  >> Intended to be installed on a fresh Joomla! 4 for new developments.
+  >> Bringing additional UI tweaks and initial upgrade changes.
+
+! STRICT_TRANS_TABLES solution (1/2) implemented.
+
+# Back-end (Construction UI) issue on PHP 8.x fixed.
+# Warnings on PHP 8.x fixed.
+
+--------------- 4.0.0 Release Preview 1 [19-Jul-2022] ------------
+
+! Joomla! 4.x support
+  >> Intended to be installed on a fresh Joomla! 4 for new developments.
+
++ Minima Template included in Core Package.
++ List Template included in Core Package.
 
 --------------- 3.22.1 Upgrade Release [24-May-2022] --------------
 

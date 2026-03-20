@@ -44,11 +44,24 @@ class JCckInstallerScriptApp
 	{
 		$app		=	JFactory::getApplication();
 		$this->core	=	( isset( $app->cck_core ) ) ? $app->cck_core : false;
+		
 		if ( $this->core === true ) {
 			return;
 		}
-		$this->cck			=	CCK_Install::init( $parent );
-		$this->cck->isApp	=	true;
+		
+		$this->cck				=	CCK_Install::init( $parent );
+		$this->cck->isApp		=	true;
+		$this->cck->appParams	=	array();
+
+		if ( isset( $this->cck->xml->cck_app ) ) {
+			foreach ( $this->cck->xml->cck_app->children() as $k=>$v ) {
+				$this->cck->appParams[$k]	=	(string)$v;
+			}
+		}
+		if ( !isset( $this->cck->appParams['target'] ) ) {
+			$this->cck->appParams['target']	=	'content';
+		}
+		
 		if ( is_file( JPATH_ADMINISTRATOR.'/manifests/packages/'.$this->cck->xml->name.'.xml' ) ) {
 			$this->cck->isUpgrade	=	true;
 		} else {

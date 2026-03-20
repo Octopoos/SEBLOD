@@ -23,6 +23,26 @@ class CckRouter extends JComponentRouterView
 		// Prevent..
 		if ( isset( $query['view'] ) ) {
 			$view	=	$query['view'];
+		/*
+		} elseif ( isset( $query['task'] ) && $query['task'] == 'download' ) {
+			$hash	=	'file='.$query['file'].'&id='.$query['id'].'&collection=';
+
+			if ( isset( $query['collection'] ) ) {
+				$hash	.=	$query['collection'];
+			}
+
+			$hash	.=	'&xi=';
+
+			if ( isset( $query['xi'] ) ) {
+				$hash	.=	$query['xi'];
+			}
+
+			$segments[]	=	base64_encode( $hash );
+
+			unset( $query['file'], $query['id'], $query['collection'], $query['xi'] );
+
+			return $segments;
+		*/
 		} else {
 			return $segments;
 		}
@@ -32,25 +52,33 @@ class CckRouter extends JComponentRouterView
 			return $segments;
 		}
 
-		// SEBLOD => Form
-		if ( $view == 'form' ) {
-			$segments[]	=	'form';
-			if ( isset( $query['type'] ) ) {
-				$segments[]	=	$query['type'];
-				unset( $query['type'] );
-			}
-			
-			unset( $query['view'] );
-			unset( $query['layout'] );
-
-			return $segments;
-		}
-		
 		// SEBLOD => Content Objects
 		if ( empty( $query['Itemid'] ) ) {
 			$menuItem	=	$menu->getActive();
 		} else {
 			$menuItem	=	$menu->getItem( $query['Itemid'] );
+		}
+
+		// SEBLOD => Form
+		if ( $view == 'form' ) {
+			$segments[]	=	'form';
+
+			if ( isset( $query['type'] ) ) {
+				$segments[]	=	$query['type'];
+
+				unset( $query['type'] );
+			}
+			
+			if ( JCck::on( '4.0' ) ) {
+				if ( $menuItem->query['view'] == 'form' ) {
+					$segments	=	array();
+				}
+			}
+
+			unset( $query['view'] );
+			unset( $query['layout'] );
+
+			return $segments;
 		}
 		
 		if ( !isset( $menuItem->query['search'] ) ) {
@@ -99,8 +127,22 @@ class CckRouter extends JComponentRouterView
 		$vars		=	array();
 
 		if ( $app->input->get( 'task' ) == 'ajax' ) {
+			if ( JCck::on( '4.0' ) ) {
+				$segments	=	array();
+			}
+
 			return $vars;
 		}
+		/*
+		elseif ( $app->input->get( 'task' ) == 'download' ) {
+		// 	if ( $segments[0] != '' ) {
+		// 		$vars	=	JCckDevHelper::getUrlVars( base64_decode( $segments[0] ) );
+		// 		$vars	=	$vars->toArray();
+		// 	}
+			
+		// 	return $vars;
+		// }
+		*/
 		if ( $segments[0] == 'form' ) {
 			if ( $count == 2 ) {
 				$menu->setActive( $app->input->getInt( 'Itemid', 0 ) );
@@ -129,7 +171,7 @@ class CckRouter extends JComponentRouterView
 						$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
 
 						if ( $properties[$target] != '' ) {
-							$params['doSEF'][0]	=	'2';
+							$params['doSEF'][0]	=	$count == 2 ? '4' : '2';
 							$isNew				=	true;
 							$parent_id			=	(int)$menuItem->parent_id;
 							
@@ -164,28 +206,35 @@ class CckRouter extends JComponentRouterView
 			if ( isset( $params['location'] ) && $params['location'] && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php' ) ) {
 				require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
 				JCck::callFunc_Array( 'plgCCK_Storage_Location'.$params['location'], 'parseRoute', array( &$vars, &$segments, $count, $params ) );
-			} elseif ( !JCck::on( '4.0' ) ) {
-				if ( $count == 2 ) {
-					$vars['option']		=	'com_content';
-					$vars['view']		=	'article';
-					$vars['catid']		=	$segments[0];
-					$vars['id']			=	$segments[1];
-				} elseif ( $count == 1 ) {
-					$vars['option']		=	'com_content';
-
-					jimport( 'joomla.application.categories' );
-					
-					$idArray			=	explode( ':', $segments[0], 2 );
-					$id					=	(int)$idArray[0];
-					$alias				=	(string)@$idArray[1];
-					$category			=	JCategories::getInstance( 'Content' )->get( $id );
-
-					if ( $category && $category->id == $id && $category->alias == $alias ) {
-						$vars['view']	=	'categories';
-					} else {
-						$vars['view']	=	'article';
+			} else {
+				if ( isset( $menuItem->query['option'], $menuItem->query['view'] )
+				  && $menuItem->query['option'] == 'com_cck' && $menuItem->query['view'] == 'form' ) {
+				  	if ( $menuItem->id != JCckDevHelper::getApp( 'more' )->params->get( 'menu_item.Admin', 0 ) ) {
+						throw new Exception( JText::_( 'JERROR_PAGE_NOT_FOUND' ), 404 );
 					}
-					$vars['id']			=	$segments[0];
+				} elseif ( !JCck::on( '4.0' ) ) {
+					if ( $count == 2 ) {
+						$vars['option']		=	'com_content';
+						$vars['view']		=	'article';
+						$vars['catid']		=	$segments[0];
+						$vars['id']			=	$segments[1];
+					} elseif ( $count == 1 ) {
+						$vars['option']		=	'com_content';
+
+						jimport( 'joomla.application.categories' );
+						
+						$idArray			=	explode( ':', $segments[0], 2 );
+						$id					=	(int)$idArray[0];
+						$alias				=	(string)@$idArray[1];
+						$category			=	JCategories::getInstance( 'Content' )->get( $id );
+
+						if ( $category && $category->id == $id && $category->alias == $alias ) {
+							$vars['view']	=	'categories';
+						} else {
+							$vars['view']	=	'article';
+						}
+						$vars['id']			=	$segments[0];
+					}
 				}
 			}
 		}

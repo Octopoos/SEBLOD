@@ -54,10 +54,17 @@ class CCKViewSearch extends JViewLegacy
 							   'panel_height'=>'80px',
 							   'w30'=>'span4 col-lg-4',
 							   'w70'=>'span8 col-lg-8',
-							   'wrapper'=>'container',
+							   'wrapper'=>'',
 							   'wrapper2'=>'row-fluid',
+							   'wrapper_first'=>'',
 							   'wrapper_tmpl'=>'span'
 						);
+
+		if ( !JCck::on( '4' ) ) {
+			$this->css['wrapper']		=	'container';
+			$this->css['wrapper_first']	=	'seblod first';
+		}
+
 		$this->js	=	array( '_'=>'',
 							   'tooltip'=>'$(".hasTooltip").tooltip({});'
 						);
@@ -73,8 +80,7 @@ class CCKViewSearch extends JViewLegacy
 	
 	// prepareDelete
 	protected function prepareDelete()
-	{		
-		Helper_Admin::addToolbarDelete( $this->vName, 'COM_CCK_'.$this->vTitle );
+	{
 	}
 	
 	// prepareDisplay
@@ -127,18 +133,22 @@ class CCKViewSearch extends JViewLegacy
 		}
 		$this->style			=	( $this->item->client != 'order' ) ? Helper_Workshop::getTemplateStyle( $this->vName, $this->item->$P, $this->state->get( 'tpl.'.$this->item->client, $force_template ) ) : '';
 		$this->item->template	=	( isset( $this->style->template ) ) ? $this->style->template : '';
-		
-		Helper_Admin::addToolbarEdit( $this->vName, 'COM_CCK_'._C4_TEXT, array( 'isNew'=>$this->isNew, 'folder'=>$this->state->get( 'filter.folder' ), 'checked_out'=>$this->item->checked_out ), array( 'template' => $this->item->template ) );
 	}
 	
 	// prepareDisplay_Ajax
 	protected function prepareDisplay_Ajax()
 	{
+		JPluginHelper::importPlugin( 'cck_field' );
+		JPluginHelper::importPlugin( 'cck_field_link' );
+		JPluginHelper::importPlugin( 'cck_field_live' );
+		JPluginHelper::importPlugin( 'cck_field_restriction' );
+		JPluginHelper::importPlugin( 'cck_field_typo' );
+
 		$folder		=	( $this->item->id > 0 ) ? $this->item->folder : 1;
 
 		// Fields
 		if ( $this->item->cck_type != '' && !$this->item->skip ) {
-			$pos								=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
+			$pos								=	'_pre_';
 			$this->fields						=	Helper_Workshop::getFields( 'search', $this->item, 'a.name = "cck"', false, false, $pos );
 			$this->fields[$pos][0]->variation	=	'hidden';
 			$this->fields[$pos][0]->match_mode	=	'exact';
@@ -152,8 +162,15 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Positions
 		$positions				=	Helper_Workshop::getPositions( 'search', $this->item );
-		if ( is_object( $this->style ) && count( $this->style->positions ) ) {
-			$this->positions	=	array();
+		
+		if ( is_object( $this->style ) && ( $count = count( $this->style->positions ) ) ) {
+			$this->positions				=	array();
+
+			if ( $this->item->client == 'list' ) {
+				$this->style->positions[$count]			=	(object)array( 'disable'=>false, 'text'=>'Above', 'value'=>'_above_' );
+				$this->style->positions[($count + 1)]	=	(object)array( 'disable'=>false, 'text'=>'Below', 'value'=>'_below_' );
+			}
+
 			foreach ( $this->style->positions as $p ) {
 				if ( $p->value ) {
 					$this->positions[$p->value]						=	new stdClass;
@@ -166,7 +183,16 @@ class CCKViewSearch extends JViewLegacy
 					$this->positions[$p->value]->width				=	@$positions[$p->value]->width;
 					$this->positions[$p->value]->height				=	@$positions[$p->value]->height;
 					$this->positions[$p->value]->css				=	@$positions[$p->value]->css;
+
+					if ( ( $p->value == '_above_' || $p->value == '_below_' ) && !isset( $positions[$p->value] ) ) {
+						$this->positions[$p->value]->variation	=	'none';
+					}
 				}
+			}
+
+			if ( $this->item->client == 'list' ) {
+				unset( $this->style->positions[$count] );
+				unset( $this->style->positions[($count + 1)] );
 			}
 		} else {
 			$this->positions	=	array( 'mainbody' => (object)array( 'title'=>'(mainbody)', 'name'=>'mainbody', 'disable'=>false, 'legend'=>'',
@@ -176,14 +202,14 @@ class CCKViewSearch extends JViewLegacy
 		$this->variations		=	Helper_Workshop::getPositionVariations( $this->item->template );
 		
 		// Filters
-		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', true, false, true );
-		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="t-"', 'value', 'text', '', 'filter1' );
+		$options				=	Helper_Admin::getPluginOptions( 'field', 'cck_', JText::_( 'COM_CCK_ALL_FIELD_TYPES_SL' ), false, true );
+		$this->lists['af_t']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="t-"', 'value', 'text', '', 'filter1' );
 		$options				=	Helper_Admin::getAlphaOptions( true );
-		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium" prefix="a-"', 'value', 'text', '', 'filter3' );
+		$this->lists['af_a']	=	JHtml::_( 'select.genericlist', $options, 'filter_alpha', 'class="inputbox filter input-medium form-select md" prefix="a-"', 'value', 'text', '', 'filter3' );
 		$options				=	Helper_Admin::getTypeOptions( true, false );
-		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium" prefix="c-"', 'value', 'text', '', 'filter4' );
+		$this->lists['af_c']	=	JHtml::_( 'select.genericlist', $options, 'filter_type', 'class="inputbox filter input-medium form-select md" prefix="c-"', 'value', 'text', '', 'filter4' );
 		$options				=	Helper_Admin::getFolderOptions( true, true, false, true, 'field' );
-		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium" prefix="f-"', 'value', 'text', $folder, 'filter2' );
+		$this->lists['af_f']	=	JHtml::_( 'select.genericlist', $options, 'filter_folder', 'class="inputbox filter input-medium form-select md" prefix="f-"', 'value', 'text', $folder, 'filter2' );
 	}
 	
 	// prepareDisplay_Ajax2
@@ -211,17 +237,19 @@ class CCKViewSearch extends JViewLegacy
 	}
 
 	// setPosition
-	public function setPosition( $name, $title = '' )
+	public function setPosition( $name, $title = '', $no = '' )
 	{
-		$title	=	( !empty( $title ) ) ? $title : $name;
-		$legend	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][legend]" value="'.( isset( $this->positions[$name]->legend ) ? htmlspecialchars( $this->positions[$name]->legend ) : '' ).'" size="22" />';
-		$variat	=	Jhtml::_( 'select.genericlist', $this->variations, 'ffp[pos-'.$name.'][variation]', 'size="1" class="thin blue c_var_ck"', 'value', 'text', @$this->positions[$name]->variation, 'pos-'.$name.'_variation' );
-		$variat	.=	'<input type="hidden" id="pos-'.$name.'_variation_options" name="ffp[pos-'.$name.'][variation_options]" value="'.( isset( $this->positions[$name]->variation_options ) ? htmlspecialchars( $this->positions[$name]->variation_options ) : '' ).'" />';
-		$width	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][width]" value="'.@$this->positions[$name]->width.'" size="8" style="text-align:center;" />&nbsp;×&nbsp;';
-		$height	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
-		$css	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
+		$css	=	JCck::on( '4.0' ) ? 'form-control xs' : 'thin blue';
 		
-		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ) );
+		$title	=	( !empty( $title ) ) ? $title : $name;
+		$legend	=	'<input class="'.$css.'" type="text" name="ffp[pos-'.$name.'][legend]" value="'.( isset( $this->positions[$name]->legend ) ? htmlspecialchars( $this->positions[$name]->legend ) : '' ).'" size="22" />';
+		$variat	=	Jhtml::_( 'select.genericlist', $this->variations, 'ffp[pos-'.$name.'][variation]', 'size="1" class="form-select xs thin blue c_var_ck"', 'value', 'text', @$this->positions[$name]->variation, 'pos-'.$name.'_variation' );
+		$variat	.=	'<input type="hidden" id="pos-'.$name.'_variation_options" name="ffp[pos-'.$name.'][variation_options]" value="'.( isset( $this->positions[$name]->variation_options ) ? htmlspecialchars( $this->positions[$name]->variation_options ) : '' ).'" />';
+		$width	=	'<input class="'.$css.' auto" type="text" name="ffp[pos-'.$name.'][width]" value="'.@$this->positions[$name]->width.'" size="8" style="text-align:center;" />&nbsp;×&nbsp;';
+		$height	=	'<input class="'.$css.' auto" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
+		$css	=	'<input class="'.$css.'" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
+		
+		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ), $no );
 		$this->p++;
 		
 		return $name;

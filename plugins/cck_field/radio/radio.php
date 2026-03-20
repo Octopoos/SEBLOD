@@ -222,8 +222,14 @@ class plgCCK_FieldRadio extends JCckPluginField
 				$indexes[$name]++;
 			}
 		}
-
+		
 		if ( $form != '' ) {
+			if ( JCck::on( '4.0' ) && strpos( $field->css, 'btn-group' ) !== false ) {
+				JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/media/system/css/fields/switcher.min.css' );
+
+				$form	=	'<div class="switcher">'.$form.'<span class="toggle-outside"><span class="toggle-inside"></span></span></div>';
+			}
+
 			$form	=	$form_open.$form.'</fieldset>';
 		}
 		
@@ -243,7 +249,7 @@ class plgCCK_FieldRadio extends JCckPluginField
 			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $form, $id, $name, '<input', '', '', $config );
 		}
 		$field->value	=	$value;
-		
+
 		// Return
 		if ( $return === true ) {
 			return $field;

@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 jimport( 'joomla.filesystem.file' );
+$class		=	strpos( $this->file, '/selection.php' ) !== false ? 'modal-small' : 'modal-default';
 $config		=	JCckDev::init( array(), true );
 $isImage	=	( JFile::getExt( $this->file ) == 'png' || JFile::getExt( $this->file ) == 'jpg' ) ? 1 : 0;
 $doc		=	JFactory::getDocument();
@@ -20,20 +21,20 @@ $doc		=	JFactory::getDocument();
 <form action="<?php echo JRoute::_( 'index.php' ); ?>" method="post" id="adminForm" name="adminForm">
 
 <div id="titlebox" style="float:left; color:#eb8207; font-size:0.90em; font-weight:bold; text-transform:uppercase;"></div>
-<div id="toolbarBox" class="span12" style="float: left;">
+<div id="toolbarBox" class="span12 subhead" style="float: left;">
     <div style="float: left; padding-right: 8px;" id="messageBox"></div>
 	<?php if ( $isImage == 1 ) { ?>
         <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><span class="icon-unpublish"></span>
 			<?php echo JText::_( 'COM_CCK_CLOSE' ); ?>
 		</a>
     <?php } else { ?>
-        <a href="javascript:void(0);" id="closeBox" class="btn btn-small" onclick="JCck.Dev.close();"><span class="icon-unpublish"></span>
+        <a href="javascript:void(0);" id="closeBox" class="<?php echo $this->css['btn-no']; ?>" onclick="JCck.Dev.close();"><span class="icon-unpublish"></span>
 			<?php echo JText::_( 'COM_CCK_CANCEL' ); ?>
 		</a>
         <a href="javascript:void(0);" id="resetBox" class="btn btn-small" onclick="JCck.Dev.reset();"><span class="icon-refresh"></span>
 			<?php echo JText::_( 'COM_CCK_RESET' ); ?>
 		</a>
-        <a href="javascript:void(0);" id="submitBox" class="btn btn-small" onclick="JCck.Dev.submit();"><span class="icon-save"></span>
+        <a href="javascript:void(0);" id="submitBox" class="<?php echo $this->css['btn-yes']; ?>" onclick="JCck.Dev.submit();"><span class="icon-save"></span>
 			<?php echo JText::_( 'COM_CCK_SAVE_AND_CLOSE' ); ?>
 		</a>
     <?php } ?>
@@ -41,7 +42,7 @@ $doc		=	JFactory::getDocument();
 <div class="clearfix"></div>
 
 <div class="<?php echo $this->css['wrapper_tmpl']; ?>">
-    <div id="layout" style="text-align: center;">
+    <div id="layout" class="<?php echo $class; ?>" style="text-align: center;">
 		<?php
 		if ( $this->function ) {
 			$this->onceFile( 'require', $config );

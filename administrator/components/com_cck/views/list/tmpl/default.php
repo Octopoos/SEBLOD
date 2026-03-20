@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 JText::script( 'COM_CCK_CONFIRM_DELETE' );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
-JHtml::_( 'stylesheet', 'media/cck/css/definitions/all.css', array(), false );
+JHtml::_( 'stylesheet', 'media/cck/css/definitions/all.css' );
 if ( ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) && $this->config['validation'] != '' ) {
 	JCckDev::addValidation( $this->config['validation'], $this->config['validation_options'] );
 	$js	=	'if (jQuery("#'.$this->config['formId'].'").validationEngine("validate",task) === true) { JCck.Core.submitForm(((task=="save"||task=="list.save")?"search":task), document.getElementById("'.$this->config['formId'].'")); }';

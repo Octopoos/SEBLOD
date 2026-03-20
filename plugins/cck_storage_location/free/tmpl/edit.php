@@ -10,5 +10,15 @@
 
 defined( '_JEXEC' ) or die;
 
-echo JCckDev::renderForm( $cck['core_storage_table'], $table, $config, array( 'selectlabel'=>'None', 'attributes'=>'style="max-width:260px;"' ) );
+if ( JCck::on( '4.0' ) ) {
+	$attributes		=	'';
+	$selectlabel	=	'Any';
+	$method			=	'getForm';
+} else {
+	$attributes		=	'style="max-width:260px;"';
+	$selectlabel	=	'None';
+	$method			=	'renderForm';
+}
+
+echo JCckDev::$method( $cck['core_storage_table'], $table, $config, array( 'selectlabel'=>$selectlabel, 'attributes'=>$attributes ) );
 ?>

@@ -11,6 +11,8 @@
 defined( '_JEXEC' ) or die;
 define( 'CCK_COM', 'com_cck' );
 
+use Joomla\Registry\Registry;
+
 jimport( 'joomla.filesystem.folder' );
 
 // Install
@@ -58,11 +60,26 @@ class CCK_Install
 		
 		// Core
 		jimport( 'cck.base.install.import' );
-		$config				=	array( 'isApp'=>false, 'isUpgrade'=>false );
+		$config		=	array( 'isApp'=>false, 'isUpgrade'=>false, 'params'=>array( 'core'=>'', 'more'=>'', 'target'=>'content' ) );
+
 		if ( isset( $extension->isApp ) && $extension->isApp ) {
-			$config['isApp']		=	true;
-			$config['isUpgrade']	=	$extension->isUpgrade;
+			$config['isApp']			=	true;
+			$config['isUpgrade']		=	$extension->isUpgrade;
+			$config['params']			=	$extension->appParams;
+			$config['params']['more']	=	(string)JCckDatabase::loadResult( 'SELECT params FROM #__cck_core_folders WHERE parent_id = 60 AND name = "'.$config['params']['target'].'"' );
 		}
+		$config['params']['core']		=	(string)JCckDatabase::loadResult( 'SELECT params FROM #__cck_core_folders WHERE id = 60' );
+
+		if ( !( isset( $config['params']['core'] ) && $config['params']['core'] != '' ) ) {
+			$config['params']['core']	=	'{}';
+		}
+		if ( !( isset( $config['params']['more'] ) && $config['params']['more'] != '' ) ) {
+			$config['params']['more']	=	'{}';
+		}
+		$config['params']['core']	=	new Registry( $config['params']['core'] );
+		$config['params']['core']	=	$config['params']['core']->toArray();
+		$config['params']['more']	=	new Registry( $config['params']['more'] );
+
 		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>array(), 'fields'=>array(), 'styles'=>array() );
 		$data['elements']	=	array( 'folder'=>'folders', 'field'=>'fields', 'type'=>'types', 'search'=>'searchs', 'template'=>'templates', 'template_style'=>'template_styles', 'category'=>'categories' );
 		$data['folders']	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE lft', 'name' );
@@ -99,8 +116,7 @@ class CCK_Install
 					$name	=	substr( $extension->xml->packagename, 8 );
 					JFolder::copy( $root.'/media', JPATH_SITE.'/media/cck/apps/'.$name, '', true );
 				}
-			}
-			
+			}	
 		}
 
 		// Processings
@@ -136,10 +152,12 @@ class CCK_Install
 		
 		if ( file_exists( $root ) ) {
 			$folders	=	JFolder::folders( $root );
+			
 			if ( count( $folders ) ) {
 				foreach ( $folders as $folder ) {
 					$path	=	$root.'/'.$folder;
 					$items	=	JFolder::files( $path, '\.xml$' );
+					
 					if ( count( $items ) ) {
 						CCK_Import::$call( $folder, $path.'/', $items, $data, $config );
 					}
@@ -153,6 +171,7 @@ class CCK_Install
 	{
 		if ( file_exists( $data['root'].'/'.$data['elements'][$elemtype] ) ) {
 			$items	=	JFolder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
+			
 			if ( count( $items ) ) {
 				CCK_Import::importElements( $elemtype, $data['root'].'/'.$data['elements'][$elemtype].'/', $items, $data, $config );
 			}
@@ -164,6 +183,7 @@ class CCK_Install
 	{
 		if ( file_exists( $data['root'].'/'.$data['elements'][$elemtype] ) ) {
 			$items	=	JFolder::files( $data['root'].'/'.$data['elements'][$elemtype], '\.xml$' );
+			
 			if ( count( $items ) ) {
 				CCK_Import::importMore( $elemtype, $data['root'].'/'.$data['elements'][$elemtype].'/', $items, $data );
 			}

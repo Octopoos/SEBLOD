@@ -68,13 +68,19 @@ if ( $config['tmpl'] == 'ajax' ) {
 				});
 				$("#adminForm").on("change", ".storage-cck-more", function() {
 					var $n = $(this).next();
+					var $p = $(this).closest("fieldset");
 					if ($n.length) {
+						var css = "", css2 = "";
 						$n.children().hide();
 						if ($(this).val()) {
-							$n.find(".locked").show();
+							css = "locked"; css2 = "unlocked";
 						} else {
-							$n.find(".unlocked").show();
+							css = "unlocked"; css2 = "locked";
 						}
+						$n.find("."+css).show();
+						if ($p.length && $p.hasClass("options-form")) {
+							$p.addClass(css).removeClass(css2);
+						}	
 					}
 				});
 				$("#adminForm").on("click", "#storage_field_pick", function() {
@@ -97,7 +103,7 @@ if ( $config['tmpl'] == 'ajax' ) {
 						}
 					}
 					var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=administrator/components/com_cck/views/field/tmpl/selection.php&title="+location+"&name="+map+"&type=storage_field&id="+field;
-					$.colorbox({href:url, iframe:true, innerWidth:300, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, onLoad: function(){ $("#cboxClose").remove();}});
+					$.colorbox({href:url, iframe:true, innerWidth:600, innerHeight:200, scrolling:false, overlayClose:false, fixed:true, className:"modal-small", onLoad: function(){ $("#cboxClose").remove();}});
 				});
 			'
 			;
@@ -125,7 +131,7 @@ $js		=	'
 						$(".storage-cck-core").remove();
 					} else if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
 						$(".storage-desc.search-type").remove();
-						if (parent.jQuery("#storage_location").val()!="none" && parent.jQuery("#location").val()=="none") {
+						if (parent.jQuery("#storage_location").val()!="none" && (parent.jQuery("#location").val()=="none" || parent.jQuery("#location").val()=="collection")) {
 							$(".storage-cck-core").remove();
 						} else {
 							$(".storage-cck-more").parents(".object-params").remove();	
@@ -135,17 +141,23 @@ $js		=	'
 						$(".storage-cck-core").remove();
 					}
 				} else {
-					$(".storage-cck-more").parents(".object-params").not("#op-cck_webservice").remove();
+					$(".storage-cck-more").parents(".object-params").remove();
+					/*if ($("#storage_location").val()) {
+						$("#storage_location").prop("disabled",true);
+					}*/
 					$(".storage-desc").remove();
 				}
 				$("#storage_advanced").hide();
 				$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").hide();
-				
+				var cv = false;
 				if (!$("#myid").val()) {
 					if (!parent.jQuery("#element").length || (parent.jQuery("#element").length && parent.jQuery("#name").val())) {
 						if (parent.jQuery("#element").length && parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0) {
-							var t = parent.jQuery("#name").val();
-							$("#storage_cck").val(t);
+							if (parent.jQuery("#location").val()=="collection") {
+								cv = true;
+							} else {
+								$("#storage_cck").val(parent.jQuery("#name").val());
+							}
 						}
 						if ($("#storage").val() == "custom" && !$("#storage_field").val()) {
 							if ( $("#force_storage").val() == "0" ) {
@@ -177,6 +189,12 @@ $js		=	'
 							$("#storage_field").val(custom);
 						}
 					}
+					if (cv) {
+						var pv = parent.jQuery("#parent").val();
+						if (pv) {
+							$("#op-"+storage_location+" #storage_cck").val(pv).trigger("change");
+						}
+					}
 				} else {
 					if (storage_location != "free") {
 						$("#storage_table").hide();
@@ -200,81 +218,94 @@ $js		=	'
 			;
 
 $prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-if ( strpos( $config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
+
+if ( strpos( (string)$config['item']->storage_table, '#__cck_store_form_' ) !== false ) {
 	$linked	=	str_replace( '#__cck_store_form_', '', $config['item']->storage_table );
 } else {
 	$linked	=	'';
 }
-$table	=	str_replace( '#__', $prefix, $config['item']->storage_table );
+$table	=	str_replace( '#__', $prefix, (string)$config['item']->storage_table );
 $cck	=	JCckDev::preload( array( 'core_storage_table', 'core_storage_field',
 									 'core_storage_alter', 'core_storage_alter_type', 'core_storage_alter_table', 'core_required', 'core_script', 'core_attributes', 'core_dev_text' ) );
+
+if ( $config['item']->storage_field2 ) {
+	$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
+}
+
+$dataObj	=	array();
+$objects	=	JPluginHelper::getPlugin( 'cck_storage_location' );
+
+foreach ( $objects as $o ) {
+	if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$o->name.'/tmpl/edit.php' ) ) {
+		$dataObj[$o->name]	=	array(
+									'active'=>$config['item']->storage_location == $o->name,
+									'name'=>$o->name
+								);
+
+		ob_start();
+		include_once JPATH_SITE.'/plugins/cck_storage_location/'.$o->name.'/tmpl/edit.php';
+		$dataObj[$o->name]['html']	=	ob_get_clean();
+	}
+}
+
+// Set HTML
+$attr	=	array(
+				'style="order:1"',
+				'style="order:3"',
+				'style="order:5"',
+				'style="order:4"'
+			);
+$fields	=	array(
+				JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_mode' ), $value, $config, array( 'storage_field'=>'storage' ) ),
+				JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation', 'name'=>'core_storage_location' ), $config['item']->storage_location, $config, array( 'storage_field'=>'storage_location' ) ),
+				JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.input', array(
+					'input'=>JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config, array( 'css'=>'storage-target', 'attributes'=>'placeholder="'.JText::_( "COM_CCK_STORAGE_COLUMN_NAME" ).'"' ) ),
+					'button'=>'<button type="button" id="storage_field_pick" name="storage_field_pick" class="btn btn-secondary"><span class="icon-expand"></span></button>'
+				) ),
+				JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit.storage_objects', array( 'items'=>$dataObj ) )
+			);
+$html	=	'';
+
+// if ( isset( $config['item']->id ) && $config['item']->id ) {
+	$html	.=	JCckDev::renderLayoutFile(
+					'cck'.JCck::v().'.construction.cck_field.edit.storage_type',
+						array(
+							'isNew'=>( isset( $config['item']->id ) && $config['item']->id ) ? false : true,
+							'storage'=>array(
+								'alter'=>JCckDev::getForm( $cck['core_storage_alter'], '', $config ),
+								'alter_table'=>JCckDev::getForm( $cck['core_storage_alter_table'], '', $config ),
+								'alter_type'=>JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config )
+							),
+							'type'=>$linked
+						) );
+// }
+
+// Set
+$displayData	=	array(
+						'config'=>$config,
+						'form'=>array(
+							array(
+								'attributes'=>$attr,
+								'fields'=>$fields
+							)
+						),
+						'html'=>array(
+							'append'=>$html,
+							'prepend'=>'<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />'
+									 . '<input type="hidden" id="storage_cck" name="storage_cck" value="'.$linked.'" />'
+									 . '<input type="hidden" id="force_storage" name="force_storage" value="0" />'
+						),
+						'params'=>array(
+							'linked'=>$linked,
+							'value'=>$value
+						),
+						'script'=>$js,
+						'type'=>$config['item']->type
+					);
+
+$layout	=	new JLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit.storage' );
+
+echo $layout->render( $displayData );
+
+include_once __DIR__.'/form_more.php';
 ?>
-		<li class="w100">
-			<?php
-			echo '<label>' . JText::_( 'COM_CCK_STORAGE_LABEL' ) . '</label>';
-			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_mode' ), $value, $config, array( 'storage_field'=>'storage' ) );
-			echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation', 'name'=>'core_storage_location' ), $config['item']->storage_location, $config, array( 'storage_field'=>'storage_location' ) );
-			// echo JCckDev::getForm( $cck['core_storage_table'], $table, $config );
-			if ( $config['item']->storage_field2 ) {
-				$config['item']->storage_field	.=	'['.$config['item']->storage_field2.']';
-			}
-			echo JCckDev::getForm( $cck['core_storage_field'], $config['item']->storage_field, $config );
-			echo '<input type="hidden" id="storage_field_prev" name="storage_field_prev" value="'.$config['item']->storage_field.'" />';
-			echo '<span id="storage_field_pick" name="storage_field_pick"><span class="icon-menu-2"></span></span>';			
-			echo '<span id="storage_field_type" class="storage_advanced" style="display:none;">'.$alter_type_value.'</span>';
-			echo '<span id="toggle_adv" class="toggle_more closed"></span><div id="storage_advanced"><label>&nbsp;</label>';
-			echo JCckDev::getForm( $cck['core_storage_alter'], '', $config );
-			echo JCckDev::getForm( $cck['core_storage_alter_table'], '', $config );
-			echo JCckDev::getForm( $cck['core_storage_alter_type'], $alter_type_value, $config );
-			echo '<span id="storage_alter_table_notice" class="hasTooltip" title="'.htmlspecialchars( JText::_( 'COM_CCK_ALTER_TABLE_NOTICE' ) ).'"><span class="icon-info"></span></span>';
-			echo '</div>';
-			echo '<input type="hidden" id="storage_cck" name="storage_cck" value="'.$linked.'" />';
-			echo '<input type="hidden" id="force_storage" name="force_storage" value="0" />';
-			?>
-		</li>
-		<?php
-		$objects	=	JPluginHelper::getPlugin( 'cck_storage_location' );
-		foreach ( $objects as $o ) {
-			if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$o->name.'/tmpl/edit.php' ) ) {
-				echo '<li id="op-'.$o->name.'" class="object-params w100"'.( ( $config['item']->storage_location == $o->name ) ? '' : ' style="display:none;"' ).'>';
-				echo '<ul class="ghost">';
-				include_once JPATH_SITE.'/plugins/cck_storage_location/'.$o->name.'/tmpl/edit.php';
-				echo '</ul>';
-				echo '</li>';
-			}
-		}
-		?>
-		<?php
-		if ( $linked ) {
-			echo '<li class="w100 switch"><label></label><span class="variation_value linked notice"><span class="icon-lock"></span>'.JText::_( 'COM_CCK_FIELD_IS_LINKED' ).' <strong>'.$linked.'</strong></span></li>';
-		}
-		?>
-	</ul>
-	<div id="toggle_more2" style="display:none;" class="toggle_more closed" <?php echo ( $value != 'dev' ) ? '' : 'style="display: none;"'?>></div>
-</div>
-
-<script type="text/javascript">
-<?php echo $js; ?>
-</script>
-
-<div class="seblod" id="storage_more" <?php echo ( $value == 'dev' ) ? '' : 'style="display: none;"'?>>
-	<div class="legend top left"><span class="hasTooltip qtip_cck" title="<?php echo htmlspecialchars( JText::_( 'COM_CCK_STUFF_DESC' ) ); ?>"><?php echo JText::_( 'COM_CCK_STUFF' ); ?></span></div>
-	<ul class="adminformlist adminformlist-2cols">
-		<?php
-		$required	=	JCckDev::get( $cck['core_required'], $config['item']->required, $config );
-		$class_css	=	JCckDev::get( $cck['core_dev_text'], $config['item']->css, $config, array( 'label'=>'Class CSS', 'storage_field'=>'css' ) );
-		$attributes	=	JCckDev::get( $cck['core_attributes'], $config['item']->attributes, $config, array( 'label'=>'Custom Attributes' ) );
-		$script		=	JCckDev::get( $cck['core_script'], $config['item']->script, $config );
-		?>
-		<li>
-			<label><?php echo $class_css->label; ?></label><?php echo $class_css->form; ?>
-		</li>
-		<li class="storage_more" <?php echo ( $value == 'dev' ) ? '' : 'style="display: none;"'?>>
-			<label><?php echo $required->label; ?></label><?php echo $required->form; ?>
-		</li>
-		<li class="w100">
-			<label><?php echo $attributes->label; ?></label><?php echo $attributes->form; ?>
-		</li>
-		<li class="w100">
-			<label><?php echo $script->label; ?></label><?php echo $script->form; ?>
-		</li>

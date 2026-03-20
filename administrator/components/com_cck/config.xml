@@ -4,10 +4,24 @@
 		<field name="title_class" type="text" size="32" default="" label="COM_CCK_CONFIG_CLASS_TITLE" description="COM_CCK_CONFIG_CLASS_TITLE_DESC" class="inputbox" />
 		<field name="link_rel_blank" type="text" size="32" default="noopener noreferrer" label="COM_CCK_CONFIG_LINK_REL_BLANK" description="COM_CCK_CONFIG_LINK_REL_BLANK_DESC" class="inputbox" />
 		<field name="COM_CCK_CONFIG_LEGEND_CORE" type="spacer" hr="false" />
+		<field name="core_js_bootstrap" type="list" default="0" label="COM_CCK_CONFIG_CORE_JS_BOOTSTRAP" description="COM_CCK_CONFIG_CORE_JS_BOOTSTRAP_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
+			<option value="1">COM_CCK_CONFIG_SQL_LEGACY_J3</option>
+		</field>
 		<field name="core_legacy" type="list" default="2012" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2019">2019</option>
+			<option value="2018">2018</option>
 			<option value="2017">2017</option>
 			<option value="2012">2012</option>
+		</field>
+		<field name="core_legacy_routing" type="list" default="2018" label="COM_CCK_CONFIG_CORE_LEGACY_ROUTING" description="COM_CCK_CONFIG_CORE_LEGACY_ROUTING_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2018">2018</option>
+		</field>
+		<field name="sql_legacy" type="list" default="0" label="COM_CCK_CONFIG_SQL_LEGACY_MODE" description="COM_CCK_CONFIG_SQL_LEGACY_MODE_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_SQL_LEGACY_AUTO</option>
+			<option value="1">COM_CCK_CONFIG_SQL_LEGACY_J3</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_FORM" type="spacer" hr="false" />
 		<field name="autosave" type="radio" default="0" label="COM_CCK_CONFIG_AUTOSAVE" description="COM_CCK_CONFIG_AUTOSAVE_DESC" class="btn-group btn-group-yesno">
@@ -119,11 +133,18 @@
 			<option value="2">COM_CCK_YES_BUT_ENGLISH</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="language_default" type="list" default="0" label="COM_CCK_CONFIG_LANGUAGE_DEFAULT" description="COM_CCK_CONFIG_LANGUAGE_DEFAULT_DESC" class="btn-group btn-group-yesno">
+			<option value="0">JNO</option>
+			<option value="1">COM_CCK_ONLY_ON_FRONT_END</option>
+			<option value="2">COM_CCK_ALWAYS</option>
+			
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_TRANSLATIONS" type="spacer" hr="false" />
 		<field name="export" type="cckexport" default="" extension_type="languages" label="COM_CCK_CONFIG_TRANSLATE_SEBLOD" description="COM_CCK_CONFIG_TRANSLATE_SEBLOD_DESC" />
 	</fieldset>
 
 	<fieldset name="fs_media" label="COM_CCK_CONFIG_FIELDSET_MEDIA" description="COM_CCK_CONFIG_FIELDSET_MEDIA_DESC">
+		<field name="media_cdn" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_CDN" description="COM_CCK_CONFIG_MEDIA_CDN_DESC" class="inputbox input-small" />
 		<field name="media_case" type="list" default="0" label="COM_CCK_CONFIG_MEDIA_LEGAL_CASE" description="COM_CCK_CONFIG_MEDIA_LEGAL_CASE_DESC" class="btn-group btn-group-yesno">
 			<option value="0">COM_CCK_LOWERCASE</option>
 			<option value="1">COM_CCK_UPPERCASE</option>
@@ -132,6 +153,10 @@
 		<field name="media_characters" type="text" size="98" default="-" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
+		<field name="media_canonical" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_CANONICAL" description="COM_CCK_CONFIG_MEDIA_CANONICAL_DESC" class="btn-group btn-group-yesno">
+			<option value="0">COM_CCK_DOWNLOAD</option>
+			<option value="1">COM_CCK_READ</option>
+		</field>
 		<field name="media_quality_jpeg" type="text" default="90" label="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_JPEG_DESC" class="inputbox input-small" />
 		<field name="media_quality_png" type="text" default="3" label="COM_CCK_CONFIG_MEDIA_QUALITY_PNG" size="8" description="COM_CCK_CONFIG_MEDIA_QUALITY_PNG_DESC" class="inputbox input-small" />
 		<field name="media_image_webp" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_IMAGE_WEBP" description="COM_CCK_CONFIG_MEDIA_IMAGE_WEBP_DESC" class="btn-group btn-group-yesno">
@@ -205,6 +230,11 @@
 		</field>
 		<field name="sef" type="cck" construction="core_sef" default="2" label="COM_CCK_CONFIG_SEF" description="COM_CCK_CONFIG_SEF_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="sef_canonical_list" type="cck" construction="core_sef_canonical" default="0" label="COM_CCK_CONFIG_SEF_CANONICAL_LIST" description="COM_CCK_CONFIG_SEF_CANONICAL_LIST_DESC" class="inputbox" cck_selectlabel="" />
+		<field name="sef_aliases" type="list" default="0" label="COM_CCK_CONFIG_SEF_ALIASES" description="COM_CCK_CONFIG_SEF_ALIASES_DESC" class="btn-group btn-group-yesno">
+			<option value="2">COM_CCK_ALL_LANGUAGES</option>
+			<option value="1">COM_CCK_ALL_LANGUAGES_BUT_DEFAULT</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="sef_root" type="sql" default="0" label="COM_CCK_CONFIG_SEF_ROOT" description="COM_CCK_CONFIG_SEF_ROOT_DESC" query="SELECT id, title FROM #__menu WHERE published=1 AND client_id=0 AND link LIKE 'index.php?option=com_cck&amp;%' ORDER BY title" key_field="id" value_field="title" class="inputbox">
 			<option value="0">JOPTION_USE_DEFAULT</option>
 			<option value="-1">COM_CCK_USE_ALTERNATIVE_SL</option>
@@ -219,6 +249,10 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
+		<field name="raw_rendering" type="radio" default="1" label="COM_CCK_CONFIG_RAW_RENDERING" description="COM_CCK_CONFIG_RAW_RENDERING_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box" type="list" default="0" label="COM_CCK_CONFIG_SITE_MODAL_BOX" description="COM_CCK_CONFIG_SITE_MODAL_BOX_DESC" class="inputbox chzn-color" >
@@ -234,6 +268,7 @@
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
 		<field name="initial_version" type="hidden" default="" />
+		<field name="media_version" type="hidden" default="" />
 		<field name="uix" type="hidden" default="" />
 		<field name="utf8_conversion" type="hidden" default="" />
 	</fieldset>

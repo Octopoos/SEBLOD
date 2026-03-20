@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 // JCck
 abstract class JCck
 {
@@ -18,6 +20,7 @@ abstract class JCck
 	public static $_user			=	null;
 	
 	protected static $_host			=	null;
+	protected static $_pk			=	-1;
 	protected static $_site			=	null;
 	protected static $_sites		=	array();
 	protected static $_sites_info	=	array();
@@ -89,7 +92,7 @@ abstract class JCck
 					// Do Nothing
 				}
 				
-				$translate		=	(int)self::$_config->params->get( 'language_jtext', 0 );
+				$translate		=	(int)self::$_config->params->get( 'language_jtext', 1 );
 				
 				if ( $translate == 2 ) {
 					if ( !$isConfigView ) {
@@ -125,7 +128,11 @@ abstract class JCck
 
 				$version	=	new JCckVersion;
 				
-				if ( $version->DEV_STATUS == 'dev-4.0' ) {
+				if ( $version->DEV_STATUS == 'dev-5.5' ) {
+					$current	=	'5.5.0';
+				} elseif ( $version->DEV_STATUS == 'dev-5.0' ) {
+					$current	=	'5.0.0';
+				} elseif ( $version->DEV_STATUS == 'dev-4.0' ) {
 					$current	=	'4.0.0';
 				} else {
 					$current	=	$version->RELEASE.'.'.$version->DEV_LEVEL;
@@ -149,6 +156,12 @@ abstract class JCck
 		
 		return $versions[$minimum];
 	}
+
+	// v
+	public static function v()
+	{		
+		return JCck::on( '4' ) ? '' : '_3x';
+	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Site
 
@@ -157,18 +170,37 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
+			$base			=	JUri::base( true );
 			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
+			$host2			=	'';
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
-			
-			$host2			=	'';
+
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				$lang_sef	=	JCckDevHelper::getLanguageCode( true );
+				
+				if ( $lang_sef != '' ) {
+					$lang_sef	=	'/'.$lang_sef;
+				}
+			} else {
+				$lang_sef		=	'';
+			}
+
 			if ( $path ) {
 				$path		=	substr( $path, 1 );
 				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
+
+				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			
+			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, usergroups, public_viewlevel, viewlevels, configuration, options, parent_id'
+					.	' FROM #__cck_core_sites'
+					.	' WHERE published = 1'
+					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+
+			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
@@ -187,7 +219,7 @@ abstract class JCck
 
 					if ( $s->context != '' ) {
 						$hasContext	=	true;
-						$pos		=	strpos( $path_base.'/', '/'.$s->context.'/' );
+						$pos		=	strpos( $path_base.'/', $base.$lang_sef.'/'.$s->context.'/' );
 
 						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;
@@ -233,7 +265,61 @@ abstract class JCck
 			self::$_host	=	$host;
 
 			if ( isset( self::$_sites[$host] ) ) {
-				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
+				$parent								=	null;
+				self::$_sites[$host]->environment	=	1;
+				self::$_sites[$host]->host			=	( $alias ) ? $alias : self::$_sites[$host]->name;
+
+				if ( self::$_sites[$host]->parent_id ) {
+					$parent		=	self::getSiteById( self::$_sites[$host]->parent_id );
+				}
+				if ( is_object( $parent ) && $parent->id ) {					
+					$properties	=	array(
+										'guest_only_viewlevel',
+										'usergroups',
+										'public_viewlevel',
+										'viewlevels'
+									);
+
+					if ( self::$_sites[$host]->guest ) {
+						if ( !( self::$_sites[$host]->name.'@$' == $parent->name ) ) {
+							self::$_sites[$host]->environment	=	0;
+						}
+					} else {
+						$properties[]	=	'guest';
+					}
+
+					/*
+					guest: used to load the user in session > should not be overriden as the user (fake) already got the right group assigned
+					guest_only_group: -
+					guest_only_viewlevel: appended on client=administrator
+					public_viewlevel: -
+					*/
+
+					// Keeping own public_viewlevel (for logged-in users)
+					if ( self::$_sites[$host]->public_viewlevel ) {
+						$json						=	json_decode( self::$_sites[$host]->configuration, true );
+						$parent->public_viewlevel	.=	','.self::$_sites[$host]->public_viewlevel;
+
+						if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+							$parent->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						}
+
+						$parent->public_viewlevel	=	explode( ',', $parent->public_viewlevel );
+						$parent->public_viewlevel	=	ArrayHelper::toInteger( $parent->public_viewlevel );
+					}
+
+					foreach ( $properties as $property ) {
+						self::$_sites[$host]->$property	=	$parent->$property;
+					}
+				} else {
+					$json	=	json_decode( self::$_sites[$host]->configuration, true );
+
+					if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+						self::$_sites[$host]->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						self::$_sites[$host]->public_viewlevel	=	explode( ',', self::$_sites[$host]->public_viewlevel );
+						self::$_sites[$host]->public_viewlevel	=	ArrayHelper::toInteger( self::$_sites[$host]->public_viewlevel );	
+					}
+				}
 			}
 
 			return true;
@@ -242,6 +328,12 @@ abstract class JCck
 		}
 	}
 	
+	// getCdn
+	public static function getCdn()
+	{
+		return JCck::getConfig_Param( 'media_cdn', '' );
+	}
+
 	// getMultisiteInfo
 	public static function getMultisiteInfo( $property = '' )
 	{
@@ -254,6 +346,48 @@ abstract class JCck
 		}
 
 		return self::$_sites_info[$property];
+	}
+
+	// getPk
+	public static function getPk()
+	{
+		if ( self::$_pk === -1 ) {
+			self::$_pk	=	0;
+
+			$app		=	JFactory::getApplication();
+			$item_id	=	$app->input->getInt( 'Itemid' );
+			$view		=	$app->input->get( 'view' );
+
+			if ( $view == 'article' ) {
+				self::$_pk	=	$app->input->getInt( 'id' );
+
+				try {
+					$query	=	'SELECT a.id2 AS pk'
+						.	' FROM #__cck_store_join_o_nav_item_x_article AS a'
+						.	' LEFT JOIN #__content AS b ON b.id = a.id2'
+						.	' WHERE a.id = '.(int)$item_id
+						.	' AND b.state IN (1,2)'
+						.	' AND b.language IN ("'.JFactory::getLanguage()->getTag().'","*")'
+						.	' AND b.access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')'
+						.	' ORDER BY a.ordering'
+						;
+
+					$items	=	JCckDatabase::loadObjectList( $query );
+
+					foreach ( $items as $item ) {
+						self::$_pk	=	$item->pk;
+
+						break;
+					}
+				} catch ( \RuntimeException $e ) {
+					// OK
+				}
+			} else {
+				self::$_pk	=	$item_id;
+			}
+		}
+
+		return (int)self::$_pk;
 	}
 
 	// getSite
@@ -291,20 +425,41 @@ abstract class JCck
 			}
 		}
 		if ( !isset( $sites[$id] ) ) {
-			return null;
+			return (object)array(
+							'context'=>'',
+							'id'=>0,
+							'name'=>'',
+							'parent_id'=>0,
+							'title'=>''
+						   );
 		}
 
 		return $sites[$id];
 	}
 
 	// isSite
-	public static function isSite( $master = false )
+	public static function isSite( $master = false, $status = '' )
 	{
 		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
-			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
-				return false;
+			if ( is_integer( $master ) ) {
+				if ( (int)JCck::getSite()->id !== $master ) {
+					return false;
+				}
+			} else {
+				if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
+					return false;
+				}
 			}
-
+			if ( $status ) {
+				if ( $status == 'production' || $status == 'prod' ) {
+					if ( !self::$_sites[self::$_host]->environment ) {
+						return false;
+					}
+				} elseif ( self::$_sites[self::$_host]->environment ) {
+					return false;
+				}
+			}
+			
 			return true;
 		} else {
 			return false;
@@ -344,6 +499,24 @@ abstract class JCck
 		
 		return self::$_user;
 	}
+
+	// isGuest
+	public static function isGuest()
+	{
+		$user	=	JFactory::getUser();
+
+		if ( $user->id && !$user->guest ) {
+			if ( JCck::isSite() ) {
+				if ( (int)$user->id != (int)JCck::getSite()->guest ) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
@@ -382,12 +555,20 @@ abstract class JCck
 		if ( JCck::on( '4.0' ) ) {
 			JHtml::_( 'jquery.framework' );
 		}
-		JHtml::_( 'bootstrap.framework' );
+		if ( (int)JCck::getConfig_Param( 'core_js_bootstrap', '0' ) ) {
+			$doc->addScript( $root.'/media/cck/js/bootstrap.min.js' );
+		} else {
+			JHtml::_( 'bootstrap.framework' );
+		}
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
 			if ( $dev === true ) {
-				$doc->addScript( $root.'/media/cck/js/cck.dev-3.18.1.min.js' );
-				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.1.13.min.js' );
+				if ( JCck::on( '4.0' ) ) {
+					$doc->addScript( $root.'/media/cck/js/cck.dev-3.22.0.min.js' );
+				} else {
+					$doc->addScript( $root.'/media/cck/js/cck.dev-3.18.1.min.js' );
+				}
+				$doc->addScript( $root.'/media/cck/js/jquery.ui.effects.min.js' );
 				$app->cck_jquery_dev	=	true;
 			} elseif ( is_array( $dev ) && count( $dev ) ) {
 				if ( $app->input->get( 'tmpl' ) == 'raw' ) {
@@ -408,7 +589,13 @@ abstract class JCck
 			if ( JCck::isSite() && JCck::getSite()->context ) {
 				$context	=	'/'.JCck::getSite()->context;
 			}
-			$doc->addScript( $root.'/media/cck/js/cck.core-3.18.2.min.js' );
+
+			if ( is_file( ( $app->isClient( 'administrator' ) ? JPATH_ADMINISTRATOR : JPATH_SITE ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js' ) ) {
+				$doc->addScript( JUri::base( true ).'/templates/'.$app->getTemplate().'/html/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+			} else {
+				$doc->addScript( $root.'/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+			}
+
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			

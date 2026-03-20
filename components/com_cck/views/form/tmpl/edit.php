@@ -68,7 +68,7 @@ echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_form'.$this-
 <input type="hidden" name="config[url]" value="<?php echo $this->config['url']; ?>" />
 <input type="hidden" name="config[copyfrom_id]" value="<?php echo @$this->config['copyfrom_id']; ?>" />
 <input type="hidden" name="config[id]" value="<?php echo @$this->config['id']; ?>" />
-<input type="hidden" name="config[itemId]" value="<?php echo $app->input->getInt( 'Itemid', 0 ); ?>" />
+<input type="hidden" name="config[itemId]" value="<?php echo (int)$this->params->get( 'menu_item', $app->input->getInt( 'Itemid', 0 ) ); ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
 <?php } ?>
@@ -85,4 +85,13 @@ if ( $this->show_form_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
+<?php }
+if ( $app->input->get( 'tmpl', '' ) == 'raw' ) { ?>
+<script>
+	jQuery(function ($) {
+		$(".hasPopover").popover({"html": true,"trigger": "hover","container": "body"}).on("hidden", function (e) {
+		   e.stopPropagation();
+		});
+	});
+</script>
 <?php } ?>

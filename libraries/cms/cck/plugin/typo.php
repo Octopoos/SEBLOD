@@ -15,6 +15,21 @@ class JCckPluginTypo extends JPlugin
 {
 	protected static $construction	=	'cck_field_typo';
 	
+	// __construct
+	public function __construct( &$subject, $config = array() )
+	{
+		parent::__construct( $subject, $config );
+
+		// Fix Language
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
+
+			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
+			$lang->setDefault( $lang_default );
+		}
+	}
+	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// g_addProcess
@@ -42,7 +57,7 @@ class JCckPluginTypo extends JPlugin
 		if ( isset( $field->link ) && $field->link != '' ) {
 			$applyLink		=	( isset( $field->link_state ) ) ? $field->link_state : 1;
 
-			if ( $applyLink && is_string( $value ) && strpos( $value, '<a href' ) === false ) {
+			if ( $applyLink && strpos( $value, '<a href' ) === false ) {
 				return '<a href="'.$field->link.'"'.JCckPluginLink::getLinkAttr( $field ).'>'.$value.'</a>';
 			}
 		}

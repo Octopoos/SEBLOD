@@ -18,13 +18,15 @@ class JFormFieldCckIntegration extends JFormField
 	// getInput
 	protected function getInput()
 	{
-		$app		=	JFactory::getApplication();
-		$doc		=	JFactory::getDocument();
-		$lang		=	JFactory::getLanguage();
-		$component	=	'com_cck_integration';
-		$config		=	JCckDev::init( array(), true );
-		$location	=	(string)$this->element['location'];
+		$app			=	JFactory::getApplication();
+		$doc			=	JFactory::getDocument();
+		$lang			=	JFactory::getLanguage();
+		$component		=	'com_cck_integration';
+		$config			=	JCckDev::init( array(), true );
+		$location		=	(string)$this->element['location'];
+		$lang_default	=	$lang->setDefault( 'en-GB' );
 		$lang->load( 'com_cck_default', JPATH_SITE );
+		$lang->setDefault( $lang_default );
 
 		// Init
 		$actions	=	array(
@@ -100,7 +102,10 @@ class JFormFieldCckIntegration extends JFormField
 			$html[] =	'</li>';
 		}
 		$html[]	=	'</ul>';
-		$html[]	=	'<div class="tab-content">';
+
+		$class	=	JCck::on( '4.0' ) ? '' : 'tab-content';
+
+		$html[]	=	'<div class="'.$class.'">';
 
 		foreach ( $groups as $i=>$group ) {
 			$actions2	=	$actions;
@@ -222,8 +227,9 @@ class JFormFieldCckIntegration extends JFormField
 		$html[] =	'</div></div>';
 
 		// Stuff
-		JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
+		JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.json.min.js', 'jquery.ui.effects.min.js' ) );
 		$ajax	=	'../media/system/images/modal/spinner.gif';
+		$pre	=	!JCck::on( '4.0' ) ? 'config.save.' : '';
 		$js		=	'
 					(function ($){
 						JCck.Dev = {
@@ -247,21 +253,28 @@ class JFormFieldCckIntegration extends JFormField
 										type: "POST",
 										url: "index.php?option=com_cck&task=saveIntegrationAjax&"+Joomla.getOptions("csrf.token")+"=1",
 										beforeSend:function(){ $("#toolbar-help").after(\'<div id="toolbar-spinner" class="btn-group">\'+loading+\'</div>\'); },
-										success: function(response){ $("#toolbar-spinner").remove(); Joomla.submitbutton("config.save.component."+task); },
+										success: function(response){ $("#toolbar-spinner").remove(); Joomla.submitbutton("'.$pre.'component."+task); },
 										error:function(){}
 									});
 								} else {
-									Joomla.submitbutton("config.save.component."+task);
+									Joomla.submitbutton("'.$pre.'component."+task);
 								}
 							}
 						};
 						$(document).ready(function() {
+							const apply_toolbar = document.querySelector("#toolbar-apply");
+							apply_toolbar.querySelector("button").removeEventListener("click", apply_toolbar.executeTask);
+							const save_toolbar = document.querySelector("#toolbar-save");
+							save_toolbar.querySelector("button").removeEventListener("click", save_toolbar.executeTask);
 							$("#toolbar-apply button").attr("onclick","JCck.Dev.submit(\'apply\')");
 							$("#toolbar-save button").attr("onclick","JCck.Dev.submit(\'save\')");
 							$("#integration-sliders").on("change", "select.cck-integration,input.cck-integration", function() {
 								JCck.Dev.doIntegration = 1;
 							});
 							$("#integration-sliders .btn-group label:not(.active)").click(function() {
+								JCck.Dev.doIntegration = 1;
+							});
+							$("#integration-sliders .btn-group.btn-group-yesno input").click(function() {
 								JCck.Dev.doIntegration = 1;
 							});
 							$(".cck-integration-add").click(function(e) {

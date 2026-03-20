@@ -11,10 +11,10 @@
 defined( '_JEXEC' ) or die;
 
 if ( !( isset( $name ) && $name != '' && isset( $path ) && $path != '' ) ) {
-	return;
+	die;
 }
 if ( !is_file( $path ) ) {
-	return;
+	die;
 }
 
 $file_size	=	filesize( $path );
@@ -87,13 +87,38 @@ if ( !isset( $mime_types[$ext] ) ) {
 	$mime_type	=	$mime_types[$ext];
 }
 
-header( "Pragma: public" );
 header( "Expires: 0" );
 header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 header( "Cache-Control: public" );
 header( "Content-Type: $mime_type" );
 header( "Content-Disposition: attachment; filename=\"$name\"" );
 header( "Content-Length: " . $file_size );
+
+if ( isset( $x_robots ) && $x_robots ) {
+	switch ( $x_robots ) {
+		case 'index, nofollow':
+			header( "X-Robots-Tag: nofollow" );
+			break;
+		case 'noindex, follow':
+			header( "X-Robots-Tag: noindex" );
+			break;
+		case 'noindex, nofollow':
+			header( "X-Robots-Tag: noindex, nofollow" );
+			break;
+		default:
+			break;
+	}
+}
+
+if ( $mime_type == 'application/pdf' && JCck::getConfig_Param( 'media_canonical', 0 ) ) {
+	$uri_link	=	JUri::current().'?task=read&file='.$fieldname.'&id='.$id;
+
+	header( "Link: <$uri_link>; rel=\"canonical\"" );
+} else {
+	$uri_link	=	JUri::current().'?task=download&file='.$fieldname.'&id='.$id;
+
+	header( "Link: <$uri_link>; rel=\"canonical\"" );
+}
 
 if ( isset( $to_be_erased ) && $to_be_erased ) {
 	@chmod( $path, 0600 );
@@ -103,7 +128,7 @@ $chunk_size	=	1024 * 1024;
 $handle		=	fopen( $path, 'rb' );
 
 if ( $handle === false ) {
-	return;
+	die;
 }
 while ( !feof( $handle ) ) {
 	echo @fread( $handle, $chunk_size );

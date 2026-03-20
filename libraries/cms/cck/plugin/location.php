@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
+
 // Plugin
 class JCckPluginLocation extends JPlugin
 {
@@ -39,6 +41,15 @@ class JCckPluginLocation extends JPlugin
 
 		if ( isset( $properties['type_alias'] ) && $properties['type_alias'] ) {
 			JLoader::registerAlias( 'JCckContent'.$properties['type_alias'], 'JCckContent'.$object );
+		}
+
+		// Fix Language
+		if ( JFactory::getApplication()->isClient( 'administrator' ) ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_default	=	$lang->setDefault( 'en-GB' );
+			
+			$lang->load( 'plg_'.$this->_type.'_'.$this->_name, JPATH_ADMINISTRATOR );
+			$lang->setDefault( $lang_default );
 		}
 	}
 	
@@ -96,6 +107,22 @@ class JCckPluginLocation extends JPlugin
 		
 		return $params;
 	}
+
+	// getStaticParams
+	/*
+	public static function getStaticParams()
+	{
+		static $params	=	array();
+		$type			=	static::$type;
+		
+		if ( !is_object( $params[$type] ) ) {
+			$plg			=	JPluginHelper::getPlugin( 'cck_storage_location', $type );
+			$params[$type]	=	new JRegistry( $plg->params );
+		}
+		
+		return $params[$type];
+	}
+	*/
 
 	// getStaticProperties
 	public static function getStaticProperties( $properties )
@@ -168,7 +195,10 @@ class JCckPluginLocation extends JPlugin
 		$tableClassName	=	get_class( $table );
 		$contentType	=	new JUcmType;
 		$type			=	$contentType->getTypeByTable( $tableClassName );
-		$tagsObserver	=	$table->getObserverOfClass( 'JTableObserverTags' );
+
+		if ( !JCck::on( '4.0' ) ) {
+			$tagsObserver	=	$table->getObserverOfClass( 'JTableObserverTags' );
+		}
 		$conditions		=	array();
 		
 		if ( empty( $pks ) ) {
@@ -184,10 +214,12 @@ class JCckPluginLocation extends JPlugin
 				$table->ordering	=	$order[$i];
 
 				if ( $type ) {
-					if (!empty( $tagsObserver ) && !empty( $type ) ) {
-						$table->tagsHelper				=	new JHelperTags;
-						$table->tagsHelper->typeAlias	=	$type->type_alias;
-						$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
+					if ( !JCck::on( '4.0' ) ) {
+						if (!empty( $tagsObserver ) && !empty( $type ) ) {
+							$table->tagsHelper				=	new JHelperTags;
+							$table->tagsHelper->typeAlias	=	$type->type_alias;
+							$table->tagsHelper->tags		=	explode( ',', $table->tagsHelper->getTagIds( $pk, $type->type_alias ) );
+						}
 					}
 				}
 				if ( !$table->store() ) {
@@ -238,7 +270,10 @@ class JCckPluginLocation extends JPlugin
 				unset( $config['storages'][static::$table][static::$key] );
 			}
 			static::_core( $config['storages'][static::$table], $config, $pk );
-			$config['storages'][static::$table]['_']->pk	=	static::$pk;
+			
+			if ( is_object( $config['storages'][static::$table]['_'] ) ) {
+				$config['storages'][static::$table]['_']->pk	=	static::$pk;
+			}
 		}
 		if ( $data['_']->table != static::$table ) {
 			static::g_onCCK_Storage_LocationStore( $data, static::$table, static::$pk, $config );
@@ -293,7 +328,7 @@ class JCckPluginLocation extends JPlugin
 
 	// g_onCCK_Storage_LocationStore
 	public static function g_onCCK_Storage_LocationStore( $location, $default, $pk, &$config )
-	{		
+	{
 		if ( ! $pk ) {
 			return;
 		}
@@ -358,6 +393,74 @@ class JCckPluginLocation extends JPlugin
 			}
 			$more->bind( $config['storages'][$table] );
 			$more->check();
+
+			/* TODO#SEBLOD4: extend or so */
+			if ( JCck::is( '5.5' ) ) {
+				if ( $table == '#__cck_store_item_content' || $table == '#__cck_store_item_categories' ) {
+					if ( isset( $more->titles ) && isset( $more->aliases ) ) {
+						$aliases		=	json_decode( $more->aliases );
+
+						if ( !is_object( $aliases ) ) {
+							$aliases	=	new stdClass;
+						}
+						$titles			=	json_decode( $more->titles );
+
+						$db				=	JFactory::getDbo();
+						$query			=	$db->getQuery( true );
+						$updateAliases	=	false;
+
+						$query->select( 'COUNT(a.id)' )
+							  ->from( $db->quoteName( $table, 'a' ) );
+
+						$where			=	array(
+												$db->quoteName( 'a.id' ).' != '.(int)$pk
+											);
+
+						if ( $table == '#__cck_store_item_categories' ) {
+							$query->join( 'left', $db->quoteName( '#__categories', 'b' ).' ON '.$db->quoteName( 'b.id' ).' = '.$db->quoteName( 'a.id' ) );
+
+							$where[]	=	$db->quoteName( 'b.parent_id' ).' = '.(int)$config['parent'];
+						} else {
+							$query->join( 'left', $db->quoteName( '#__content', 'b' ).' ON '.$db->quoteName( 'b.id' ).' = '.$db->quoteName( 'a.id' ) );
+
+							$where[]	=	$db->quoteName( 'b.catid' ).' = '.(int)$config['parent'];
+						}
+
+						foreach ( $titles as $k=>$v ) {
+							if ( $v != '' && empty( $aliases->$k ) ) {
+								$alias	=	trim( $v );
+								$alias	=	ApplicationHelper::stringURLSafe( $alias, $k );
+
+								if ( trim( str_replace( '-', '', $alias ) ) == '' ) {
+									$alias	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+								}
+
+								$aliases->$k	=	$alias;
+								$res			=	self::_checkAlias( $query, $where, $k, $alias );
+
+								if ( $res ) {
+									$i		=	2;
+									$alias	=	$aliases->$k.'-'.$i;
+
+									while ( self::_checkAlias( $query, $where, $k, $alias ) ) {
+										$alias		=	$aliases->$k.'-'.$i++;
+									}
+									
+									$aliases->$k	=	$alias;
+								}
+
+								$updateAliases	=	true;
+							}
+						}
+						
+						if ( $updateAliases ) {
+							$more->aliases	=	json_encode( $aliases, JSON_UNESCAPED_UNICODE );
+						}
+					}
+				}
+			}
+			/* TODO#SEBLOD4 */
+
 			$more->store();	
 		}
 		
@@ -731,6 +834,20 @@ class JCckPluginLocation extends JPlugin
 		if ( $custom ) {
 			$table->$custom	=	'::cck::'.$config['id'].'::/cck::'.$table->$custom;
 		}
+	}
+
+	// _checkAlias
+	protected static function _checkAlias( $query, $where, $lang_tag, $alias )
+	{
+		$db	=	JFactory::getDbo();
+
+		$query->clear( 'where' )
+			  ->where( $where )
+			  ->where( 'JSON_EXTRACT(a.aliases, \'$.\"'.$lang_tag.'\"\') = "'.$alias.'"' );
+
+		$db->setQuery( $query );
+
+		return (int)$db->loadResult();
 	}
 }
 ?>

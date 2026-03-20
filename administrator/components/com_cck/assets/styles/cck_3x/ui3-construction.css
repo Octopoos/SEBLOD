@@ -1,0 +1,19 @@
+/**
+* @version 			SEBLOD 3.x Core
+* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
+* @url				https://www.seblod.com
+* @editor			Octopoos - www.octopoos.com
+* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
+**/
+
+ul.sortable li.field div.drag{background: url(images/grip3.png) no-repeat scroll 0 0 transparent; background-size: 10px;}
+ul.sortable li.field div:hover.drag{background: url(images/grip3.png) no-repeat scroll 0 -14px transparent; background-size: 10px;}
+div#seblod-main ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 0 transparent; background-size: cover;}
+div#seblod-main ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -17px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div.move{background: url(images/arrow3.png) no-repeat scroll 0 -34px transparent; background-size: cover;}
+div#seblod-sidebar ul.sortable li.field div:hover.move{background: url(images/arrow3.png) no-repeat scroll 0 -51px transparent; background-size: cover;}
+
+a:link.icons.icon-add, a:link.icons.icon-add2, a:link.icons.icon-right, a:link.icons.icon-left, a:link.icons.icon-up, a:link.icons.icon-down,
+a:visited.icons.icon-add, a:visited.icons.icon-add2, a:visited.icons.icon-right, a:visited.icons.icon-left, a:visited.icons.icon-up, a:visited.icons.icon-down{background: url(images/icons3.png); background-size: cover;}
+
+ul.sortable li.field a.edit{background: url(images/edit.png) no-repeat scroll 0 0 transparent;}

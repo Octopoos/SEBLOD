@@ -85,7 +85,7 @@ $config		=	array( 'author'=>( is_object( $author ) ? $author->id : 0 ),
 					   'author_session'=>( is_object( $author ) ? $author->session : '' ),
 					   'client'=>$client,
 					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
-					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 					   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
 					   'error'=>false,
 					   'fields'=>array(),
@@ -380,8 +380,6 @@ if ( isset( $processing[$event] ) ) {
 	}
 }
 if ( isset( $config['process']['afterStore'] ) && count( $config['process']['afterStore'] ) ) {
-	JCckDevHelper::sortObjectsByProperty( $config['process']['afterStore'], 'priority' );
-	
 	foreach ( $config['process']['afterStore'] as $process ) {
 		if ( $process->type ) {
 			JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'AfterStore', array( $process->params, &$fields, &$config['storages'], &$config ) );

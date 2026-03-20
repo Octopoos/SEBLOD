@@ -27,8 +27,7 @@ class Helper_Include extends CommonHelper_Include
 		// Additional
 		switch ( $view ) {
 			case 'box':
-				JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
-				Helper_Include::addSmoothScrool( 500 );
+				JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.ui.effects.min.js', 'jquery.json.min.js' ) );
 				break;
 			case 'folder':
 				JCck::loadjQuery( true, true, true );
@@ -41,24 +40,28 @@ class Helper_Include extends CommonHelper_Include
 				break;
 			case 'field':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js' ) );
 					JCck::loadjQueryUI();
 				}
 				if ( $tmpl == 'component' ) {
-					$doc->addScript( $root.'/media/cck/js/cck.backend-3.21.0.min.js' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.22.0.min.js' );
 				}
 				break;
 			case 'type':
 			case 'search':
 				if ( $script === true ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js', 'jquery.biscuit.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js', 'jquery.biscuit.min.js' ) );
 					JCck::loadjQueryUI();
-					$doc->addScript( $root.'/media/cck/js/cck.backend-3.21.0.min.js' );
-					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css' );
-					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/seblod/ui-construction.css' );
+					$doc->addScript( $root.'/media/cck/js/cck.backend-3.22.0.min.js' );
+					$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/css/ui-construction.css?v4' );
+					if ( JCck::on( '4.0' ) ) {
+						JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4-construction.css' );
+					} else {
+						$doc->addStyleSheet( $root.'/administrator/components/com_'.CCK_NAME.'/assets/styles/cck_3x/ui3-construction.css' );
+					}
 					$doc->addStyleDeclaration(
 						'#seblod-loading:not(.disabled) {
-							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 15%/66px 66px no-repeat;
+							background: rgba(255, 255, 255, .8) url("'.JHtml::_( 'image', 'cck/seblod-loader.gif', '', null, true, true ).'") 50% 25%/66px 66px no-repeat;
 							position: fixed;
 							opacity: 0.8;
 							-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);
@@ -71,7 +74,7 @@ class Helper_Include extends CommonHelper_Include
 					$js	=	'$(document).on("click",".zz", function(e) { e.preventDefault(); return false;});';
 					$doc->addScriptDeclaration( '(function ($){'.$js.'})(jQuery);' );
 				}
-				Helper_Include::addColorbox_Live( '930', '580', $script, 'cbox:not(.zz)', ', onLoad: function(){ $("#cboxClose").remove();}' );
+				Helper_Include::addColorbox_Live( '"85%"', '646', $script, 'cbox:not(.zz)', ', onLoad: function(){ $("#cboxClose").remove();}' );
 				Helper_Include::addColorpicker( $script );
 				break;
 			case 'session':
@@ -91,15 +94,16 @@ class Helper_Include extends CommonHelper_Include
 				require_once JPATH_LIBRARIES.'/cck/joomla/html/cckactionsdropdown.php';
 
 				if ( $view == 'folders' ) {
-					JCck::loadjQuery( true, true, array( 'cck.dev-3.18.1.min.js' ) );
+					JCck::loadjQuery( true, true, array( 'cck.dev-3.22.0.min.js' ) );
 				} else {
 					JCck::loadjQuery();
 				}
 				JHtml::_( 'bootstrap.tooltip' );
 				JHtml::_( 'behavior.multiselect' );
-				JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
-				
-				Helper_Include::addSmoothScrool();
+
+				if ( !JCck::on( '4' ) ) {
+					JHtml::_( 'formbehavior.chosen', 'select:not(.no-chosen)' );
+				}
 				
 				if ( $view == 'fields' ) {
 					Helper_Include::addColorbox( '500', '300', $script, 'cbox', ', onLoad: function(){ $("#cboxClose").remove();}' );
@@ -165,7 +169,7 @@ class Helper_Include extends CommonHelper_Include
 			$doc->addScript( $root.'/media/cck/scripts/jquery-colorbox/js/jquery.colorbox-min.js' );
 			
 			$js	=	'$(document).on("click",".'.$class.'", function(e) { e.preventDefault();
-						$.colorbox({href:$(this).attr(\'href\'),open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true'.$options.'});
+						$.colorbox({href:$(this).attr(\'href\')+"&modal-style=large",open:true,iframe:true,innerWidth:'.$width.',innerHeight:'.$height.',overlayClose:false,fixed:true,className:"modal-large"'.$options.'});
 						return false;
 					});
 					';

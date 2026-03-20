@@ -24,7 +24,11 @@ $uniqId	=	'm'.$module->id;
 $formId	=	'seblod_form_'.$uniqId;
 
 JCck::loadjQuery();
-JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->setDefault( 'en-GB' );
+$lang->load( 'mod_cck_list', JPATH_SITE );
+$lang->load( 'com_cck_default', JPATH_SITE );
+$lang->setDefault( $lang_default );
 
 $preconfig					=	array();
 $preconfig['action']		=	'';
@@ -119,7 +123,7 @@ $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
 $show_more_text		=	$params->get( 'link_more_text', '' );
 if ( $show_more_text == '' ) {
 	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
-} elseif ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+} elseif ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
 }
 $show_more_link		=	'';
@@ -135,7 +139,7 @@ if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && 
 	}
 }
 $raw_rendering		=	$params->get( 'raw_rendering', 0 );
-$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
+$moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx', '' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_list', $params->get( 'layout', 'default' ) );
 ?>

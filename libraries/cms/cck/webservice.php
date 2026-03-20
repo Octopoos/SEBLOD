@@ -15,7 +15,38 @@ abstract class JCckWebservice
 {
 	public static $_me			=	'cck_webservices';
 	public static $_config		=	null;
-	
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // App
+
+	// getApp
+	public static function getApp( $identifier )
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+			return null;
+		}
+
+		$query	=	'SELECT a.id AS pk, a.nonce, a.options'
+				.	' FROM #__cck_more_webservices_apps AS a';
+
+		if ( is_numeric( $identifier ) ) {
+			$query	.=	' WHERE a.id = '.(int)$identifier;
+		} else {
+			$query	.=	' WHERE a.name = "'.$identifier.'"';
+		}
+
+		return JCckDatabase::loadObject( $query );
+	}
+
+	// getAppId
+	public static function getAppId()
+	{
+		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+			return 0;
+		}
+
+		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config
 	
 	// _setConfig
@@ -81,7 +112,9 @@ abstract class JCckWebservice
 
 		if ( $fallback ) {
 			if ( isset( $webservice->response_format ) && $webservice->response_format == 'json' ) {
-				if ( isset( $webservice->response->status ) && $webservice->response->status != 'error' ) {
+				if ( !(int)$webservice->response_check && isset( $webservice->response->status ) && $webservice->response->status != 'error' ) {
+					// OK
+				} elseif ( (int)$webservice->response_check == 1 && is_object( $webservice->response ) ) {
 					// OK
 				} else {
 					$webservice->response	=	$resp_key;
@@ -99,16 +132,10 @@ abstract class JCckWebservice
 	// getCall
 	public static function getCall( $name )
 	{
-		static $cache	=	array();
-		
-		if ( !isset( $cache[$name] ) ) {
-			$cache[$name]	=	JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_object, a.request_options, a.response, a.response_format, a.response_identifier'
-														. ' FROM #__cck_more_webservices_calls AS a'
-														. ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
-														. ' WHERE a.name = "'.$name.'" AND a.published = 1' );
-		}
-
-		return $cache[$name];
+		return JCckDatabase::loadObject( 'SELECT a.id, b.name, a.name as name2, b.type, b.options, a.options as options2, a.request, a.request_format, a.request_method, a.request_object, a.request_options, a.response, a.response_check, a.response_format, a.response_identifier'
+									   . ' FROM #__cck_more_webservices_calls AS a'
+									   . ' LEFT JOIN #__cck_more_webservices AS b ON b.id = a.webservice'
+									   . ' WHERE a.name = "'.$name.'" AND a.published = 1' );
 	}
 
 	// run
@@ -169,6 +196,23 @@ abstract class JCckWebservice
 		return self::_stack( $webservice );
 	}
 
+	// stash
+	public static function stash( $name, $data = array(), $fields = array(), $state = 0 )
+	{
+		$config		=	array(
+							'task'=>'stack'
+						);
+		$webservice	=	self::getCall( $name );
+
+		if ( !is_object( $webservice ) ) {
+			return false;
+		}
+
+		self::_call( $webservice, $config, $data, $fields );
+
+		return self::_stack( $webservice, $state );
+	}
+
 	// _call
 	protected static function _call( &$webservice, $config, $data, $fields )
 	{
@@ -202,24 +246,36 @@ abstract class JCckWebservice
 		return true;
 	}
 
+	// _check
+	protected static function _check( $webservice )
+	{
+	}
+
 	// _stack
-	protected static function _stack( $webservice )
+	protected static function _stack( $webservice, $state = 1, $response = null )
 	{
 		JLoader::register( 'CCK_TableStack', JPATH_ADMINISTRATOR.'/components/com_cck_webservices/tables/stack.php' );
 
 		$table	=	JTable::getInstance( 'Stack', 'CCK_Table' );
-		
+
+		if ( is_object( $response ) ) {
+			$response	=	json_encode( $response );
+		} elseif ( is_null( $response ) ) {
+		 	$response	=	'';
+		}
+
 		$data	=	array(
 						'webservice'=>$webservice->id,
 						'webservice_object'=>json_encode( $webservice ),
 						'request'=>$webservice->request,
-						'published'=>1
+						'response'=>$response,
+						'published'=>$state
 					);
 
 		$table->bind( $data );
 		$table->check();
 
-		return $table->store();
+		return $table->store() ? $table->id : 0;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Resource
@@ -258,7 +314,7 @@ abstract class JCckWebservice
 	}
 
 	// output
-	public static function output( $resource_name, $resource_config = array() )
+	public static function output( $resource_name, $resource_config = array(), $default = 'data', $limit = 0 )
 	{
 		if ( !is_file( JPATH_SITE.'/components/com_cck_webservices/models/api.php' ) ) {
 			return false;
@@ -267,8 +323,21 @@ abstract class JCckWebservice
 		JModelLegacy::addIncludePath( JPATH_SITE.'/components/com_cck_webservices/models' );
 
 		$model	=	JModelLegacy::getInstance( 'Api', 'CCK_WebservicesModel', array( 'ignore_request'=>true ) );
+		$output	=	$model->doOutput( $resource_name, $resource_config );
 
-		return $model->doOutput( $resource_name, $resource_config );
+		if ( $default != 'data' ) {
+			if ( isset( $output['data']['status'] ) && $output['data']['status'] == 'error' ) {
+				return $default;
+			} else {
+				if ( is_array( $output['data'] ) && $limit == 1 ) {
+					$output	=	current( $output['data'] );
+				} else {
+					$output	=	$output['data'];
+				}
+			}
+		}
+
+		return $output;
 	}
 }
 ?>

@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die;
 
 jimport( 'joomla.filesystem.file' );
 jimport( 'joomla.filesystem.folder' );
+// jimport( 'joomla.utilities.simplexml' );
 
 JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
 JLoader::register( 'JTableMenuType', JPATH_PLATFORM.'/legacy/table/menu/type.php' );
@@ -22,6 +23,48 @@ require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.
 // Import
 class CCK_Import
 {
+	// _fromXML
+	protected static function _fromXML( $path, $config, $data )
+	{
+		$buffer	=	file_get_contents( $path );
+
+		if ( strpos( $buffer, '%core_user_group%' ) !== false ) {
+			$buffer	=	str_replace( '%core_user_group%', $config['params']['more']->get( 'user_group', '-1' ), $buffer );
+		}
+		if ( strpos( $buffer, '%core_viewing_access_level%' ) !== false ) {
+			$buffer	=	str_replace( '%core_viewing_access_level%', $config['params']['more']->get( 'viewing_access_level', '-1' ), $buffer );
+		}
+		if ( strpos( $buffer, '%core_category:' ) !== false ) {
+			if ( isset( $config['params']['core']['category'] )
+			  && is_array( $config['params']['core']['category'] ) ) {
+				foreach ( $config['params']['core']['category'] as $k=>$v ) {
+					$buffer	=	str_replace( '%core_category:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
+
+		if ( strpos( $buffer, '%core_viewing_access_level:' ) !== false ) {
+			if ( isset( $config['params']['core']['viewing_access_level'] )
+			  && is_array( $config['params']['core']['viewing_access_level'] ) ) {
+				foreach ( $config['params']['core']['viewing_access_level'] as $k=>$v ) {
+					$buffer	=	str_replace( '%core_viewing_access_level:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
+
+		if ( strpos( $buffer, '%more_category:' ) !== false ) {
+			$target	=	$data['elements']['category'];
+
+			if ( isset( $data[$target] ) && is_array( $data[$target] ) ) {
+				foreach ( $data[$target] as $k=>$v ) {
+					$buffer	=	str_replace( '%more_category:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
+
+		return $buffer;
+	}
+
 	// importContent
 	public static function importContent( $type, $base, $items, &$data, $config = array() )
 	{
@@ -75,7 +118,9 @@ class CCK_Import
 	// importElement
 	public static function importElement( $elemtype, $path, &$data, $config = array() )
 	{
-		$xml	=	JCckDev::fromXML( $path );
+		$buffer	=	self::_fromXML( $path, $config, $data );
+		$xml	=	JCckDev::fromXML( $buffer, false );
+		
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
 			return;
 		}
@@ -110,7 +155,13 @@ class CCK_Import
 			if ( $pk > 0 ) {
 				$item->id	=	$pk;
 			}
-			$item->store();
+			
+			// TODO later: ->check()
+			$item->check();
+			
+			if ( !$item->store() ) {
+				// var_dump( $item->getError() );
+			}
 			$call	=	'afterImport'.$elemtype;
 			self::$call( $xml, $elemtype, $item, $data );
 		}
@@ -119,6 +170,9 @@ class CCK_Import
 	// beforeImportFolder
 	public static function beforeImportFolder( $elemtype, &$item, $data, $config = array() )
 	{
+		if ( isset( $item->params ) ) {
+			unset( $item->params );
+		}
 		if ( isset( $item->parent_id ) ) {
 			$idx	=	$item->parent_id;
 			if ( isset( $item->path ) && isset( $data['folders2'][$idx] ) ) {
@@ -136,11 +190,6 @@ class CCK_Import
 	// afterImportFolder
 	public static function afterImportFolder( &$xml, $elemtype, $item, &$data )
 	{
-		$acl	=	(string)$xml->acl;
-		if ( $acl ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.JFactory::getDbo()->escape( $acl ).'" WHERE name = "com_cck.folder.'.$item->id.'"' );
-		}
-		
 		Helper_Folder::rebuildTree( 2, 1 );
 		if ( !$item->path ) {
 			Helper_Folder::rebuildBranch( $item->id );
@@ -169,6 +218,13 @@ class CCK_Import
 		if ( file_exists( JPATH_SITE.'/plugins/cck_field/'.$item->type.'/classes/app.php' ) ) {
 			require_once JPATH_SITE.'/plugins/cck_field/'.$item->type.'/classes/app.php';
 			JCck::callFunc_Array( 'plgCCK_Field'.$item->type.'_App', 'onCCK_FieldImportField', array( &$item, $data ) );
+		}
+
+		$item->id			=	(int)$item->id;
+		$item->published	=	(int)$item->published;
+
+		if ( is_null( $item->storage_key ) ) {
+			$item->storage_key	=	'';
 		}
 
 		return $pk;
@@ -213,8 +269,13 @@ class CCK_Import
 							 . ' WHERE a.'.$elemtype.'id = '.(int)$item->id );
 		
 		$db		=	JFactory::getDbo();
-		$acl	=	(string)$xml->acl;
-		JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $acl ).'" WHERE name = "com_cck.form.'.$item->id.'"' );
+
+		if ( $item->location == 'collection' ) {
+			JCckDatabase::execute( 'DELETE IGNORE a.* FROM #__assets AS a WHERE a.name = "com_cck.form.'.$item->id.'"' );
+		} else {
+			$acl	=	(string)$xml->acl;
+			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $acl ).'" WHERE name = "com_cck.form.'.$item->id.'"' );
+		}
 
 		if ( !isset( $data['tables_columns']['#__cck_core_'.$elemtype.'_field'] ) ) {
 			$table	=	'#__cck_core_'.$elemtype.'_field';
@@ -322,10 +383,15 @@ class CCK_Import
 	// _setStyle
 	protected static function _setStyle( $views, &$item, $data )
 	{
+		if ( $item->location == 'collection' ) {
+			return;
+		}
+		
 		foreach ( $views as $v ) {
 			$e	=	'template_'.$v;
 			$t	=	$item->$e;
 			$s	=	0;
+			
 			if ( strpos( $t, '('.$v.')' ) !== false ) {
 				if ( isset( $data['styles']['custom'][$t] ) ) {
 					$s	=	$data['styles']['custom'][$t]->id;
@@ -346,6 +412,22 @@ class CCK_Import
 	{
 		if ( $config['isApp'] && $config['isUpgrade'] ) { /* TODO#SEBLOD: improve (import only new categories) */
 			return -1;
+		}
+
+		if ( is_array( $table ) ) {
+			if ( !is_numeric( $table['parent_id'] ) ) {
+				if ( $table['level'] > 1 ) {
+					$table['parent_id']		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__categories WHERE alias = "'.$table['parent_id'].'"' );
+
+					if ( !$table['parent_id'] ) {
+						$table['parent_id']		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__categories WHERE alias = "project"' );
+
+						if ( !$table['parent_id'] ) {
+							$table['parent_id']	=	2;							
+						}
+					}
+				}
+			}
 		}
 
 		return 0;
@@ -463,7 +545,7 @@ class CCK_Import
 			$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $id );
 			$core->pk				=	$table->id;
-			$core->cck				=	'category';														/* TODO#SEBLOD: */
+			$core->cck				=	isset( $xml->joomla_category->attributes()->type ) && (string)$xml->joomla_category->attributes()->type ? (string)$xml->joomla_category->attributes()->type : 'category';
 			$core->storage_location	=	'joomla_category';
 			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	/* TODO#SEBLOD: */
 			$core->parent_id		=	$table->parent_id;
@@ -561,7 +643,7 @@ class CCK_Import
 	{
 		if ( JFolder::exists( $src ) ) {
 			$db		=	JFactory::getDbo();
-			$files	=	JFolder::files( $src );
+			$files	=	JFolder::files( $src, '\.sql$' );
 			foreach ( $files as $file ) {
 				$path	=	$src.'/'.$file;
 				if ( JFile::exists( $path ) ) {
@@ -580,38 +662,43 @@ class CCK_Import
 	{
 		$db		=	JFactory::getDbo();
 		$path	=	$data['root'].'/tables';
-		
+
 		if ( file_exists( $path ) ) {
 			$items	=	JFolder::files( $path, '\.xml$' );
+
 			if ( count( $items ) ) {
 				$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
 				$tables		=	JCckDatabase::getTableList( true );
-				
+
 				foreach ( $items as $item ) {
 					$xml	=	JCckDev::fromXML( $path.'/'.$item );
+					
 					if ( !$xml || (string)$xml->attributes()->type != 'tables' ) {
 						return;
 					}
 					$name		=	(string)$xml->table->name;
 					$table_key	=	(string)$xml->table->primary_key;
 					$short		=	str_replace( '#__', $prefix, $name );
-					
+
 					if ( isset( $tables[$short] ) ) {
 						$table			=	JCckTable::getInstance( $name );
 						$table_fields	=	$table->getFields();
 						$previous		=	'';
-						
+
 						// Fields
 						$fields		=	$xml->fields->children();
+
 						if ( count( $fields ) ) {
 							foreach ( $fields as $field ) {
 								$column		=	(string)$field;
 								$type		=	(string)$field->attributes()->type;
 								$default	=	(string)$field->attributes()->default;
+
 								if ( !isset( $table_fields[$column] ) ) {
 									$query	=	'ALTER TABLE '.$name.' ADD '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL';
 									$query	.=	( $default != '' ) ? ' DEFAULT "'.$default.'"' : '';
 									$query	.=	( $previous != '' ) ? ' AFTER '.JCckDatabase::quoteName( $previous ) : ' FIRST';
+
 									JCckDatabase::execute( $query );
 								} else {
 									if ( $type != $table_fields[$column]->Type ) {
@@ -647,14 +734,20 @@ class CCK_Import
 						
 						// Fields
 						$fields		=	$xml->fields->children();
+						
 						if ( count( $fields ) ) {
 							foreach ( $fields as $field ) {
 								$type		=	(string)$field->attributes()->type;
 								$default	=	(string)$field->attributes()->default;
 								$sql_query	.=	' '.JCckDatabase::quoteName( (string)$field ).' '.$type.' NOT NULL';
+								
 								if ( $default != '' ) {
 									$sql_query	.=	' DEFAULT "'.$default.'"';
 								}
+								if ( isset( $field->attributes()->auto_increment ) && (bool)$field->attributes()->auto_increment ) {
+									$sql_query	.=	' AUTO_INCREMENT';
+								}
+
 								$sql_query	.=	',';
 							}
 						}

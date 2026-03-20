@@ -12,8 +12,16 @@ if ( !$isNew ) {
 
 $app			=	JFactory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
-$type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,3,6,7 */
-$groups			=	explode( ',', $type );
+$mode_addition	=	(int)JCck::getConfig_Param( 'multisite_addition', '1' );
+
+$type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,6,7 */
+
+if ( $type == '-1' ) {
+	$groups		=	array();
+} else {
+	$groups		=	explode( ',', $type );	
+}
+
 $groups			=	ArrayHelper::toInteger( $groups );
 $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
 $levels			=	array();
@@ -32,7 +40,9 @@ $users_bridge	=	array();
 $users_force	=	array();
 $users_more		=	array();
 
-if ( $item->parent_id ) {
+if ( $type == '-1' ) {
+	return;
+} elseif ( $item->parent_id ) {
 	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, usergroups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
 
 	if ( is_object( $parent ) ) {
@@ -82,6 +92,10 @@ $special		=	0;
 $root			=	CCK_TableSiteHelper::getRootAsset();
 $rules			=	array();
 
+if ( $mode_addition ) {
+	array_pop( $groups );
+}
+
 foreach ( $groups as $i=>$g ) {
 	$group		=	JTable::getInstance( 'Usergroup' );
 	$group->load( $g );
@@ -108,37 +122,39 @@ foreach ( $groups as $i=>$g ) {
 	}
 
 	// User
-	$k	=	(string)$g;
+	if ( !$mode_addition ) {
+		$k	=	(string)$g;
 
-	$users_author[$i]	=	0;
-	$users_bridge[$i]	=	0;
-	$users_force[$i]	=	0;
-	$users_more[$i]		=	array();
+		$users_author[$i]	=	0;
+		$users_bridge[$i]	=	0;
+		$users_force[$i]	=	0;
+		$users_more[$i]		=	array();
 
-	if ( isset( $existing_users[$k] ) ) {
-		if ( isset( $existing_users[$k]['bridge'] ) ) {
-			$users_bridge[$i]	=	(int)$existing_users[$k]['bridge'];
+		if ( isset( $existing_users[$k] ) ) {
+			if ( isset( $existing_users[$k]['bridge'] ) ) {
+				$users_bridge[$i]	=	(int)$existing_users[$k]['bridge'];
 
-			unset( $existing_users[$k]['bridge'] );
+				unset( $existing_users[$k]['bridge'] );
+			}
+			if ( isset( $existing_users[$k]['force_password'] ) ) {
+				$users_force[$i]	=	(int)$existing_users[$k]['force_password'];
+
+				unset( $existing_users[$k]['force_password'] );
+			}
+			if ( isset( $existing_users[$k]['set_author'] ) ) {
+				$users_author[$i]	=	(int)$existing_users[$k]['set_author'];
+
+				unset( $existing_users[$k]['set_author'] );
+			}
+			if ( isset( $existing_users[$k]['more'] ) ) {
+				$users_more[$i]		=	$existing_users[$k]['more'];
+
+				unset( $existing_users[$k]['more'] );
+			}
+			$users[$i]		=	CCK_TableSiteHelper::addUser( $existing_users[$k] );
+		} else {
+			$users[$i]		=	CCK_TableSiteHelper::addUser( $group->title, $sitetitle, $sitemail );
 		}
-		if ( isset( $existing_users[$k]['force_password'] ) ) {
-			$users_force[$i]	=	(int)$existing_users[$k]['force_password'];
-
-			unset( $existing_users[$k]['force_password'] );
-		}
-		if ( isset( $existing_users[$k]['set_author'] ) ) {
-			$users_author[$i]	=	(int)$existing_users[$k]['set_author'];
-
-			unset( $existing_users[$k]['set_author'] );
-		}
-		if ( isset( $existing_users[$k]['more'] ) ) {
-			$users_more[$i]		=	$existing_users[$k]['more'];
-
-			unset( $existing_users[$k]['more'] );
-		}
-		$users[$i]		=	CCK_TableSiteHelper::addUser( $existing_users[$k] );
-	} else {
-		$users[$i]		=	CCK_TableSiteHelper::addUser( $group->title, $sitetitle, $sitemail );
 	}
 	
 	// Viewlevel
@@ -190,6 +206,7 @@ $usergroups[]	=	0;
 
 $content_type	=	'user';
 $integration	=	JCckDatabase::loadObject( 'SELECT options FROM #__cck_core_objects WHERE name = "joomla_user"' );
+$item->users	=	array();
 
 if ( is_object( $integration ) ) {
 	$integration->options	=	new JRegistry( $integration->options );	
@@ -288,15 +305,20 @@ foreach ( $users as $k=>$u ) {
 	} else {
 		$accounts[]	=	(object)array( 'username'=>$u->username, 'password'=>$u->password_clear, 'location'=>'site' );
 	}
+
+	$item->users[]	=	$u->id;
 }
 
-if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '1' ) == 1 ) {
+if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '0' ) == 1 && !empty( $accounts ) ) {
 	CCK_TableSiteHelper::sendMails( $item, $accounts );
 }
 
 // Finalize
 if ( is_array( $item->usergroups ) ) {
 	$item->usergroups		=	implode( ',', $item->usergroups );
+}
+if ( is_array( $item->users ) ) {
+	$item->users		=	implode( ',', $item->users );
 }
 if ( is_array( $item->viewlevels ) ) {
 	$item->public_viewlevel	=	$item->viewlevels[0];

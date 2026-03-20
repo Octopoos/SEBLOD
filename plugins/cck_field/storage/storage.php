@@ -75,7 +75,7 @@ class plgCCK_FieldStorage extends JCckPluginField
 				$alter_type_default	=	'';
 			}
 			ob_start();
-			include_once __DIR__.'/tmpl/form.php';				
+			include_once __DIR__.'/tmpl/form.php';
 			$form	=	ob_get_clean();
 		}
 

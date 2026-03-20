@@ -9,18 +9,29 @@
 **/
 
 defined( '_JEXEC' ) or die;
-?>
 
-<div class="seblod">
-    <?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-        <?php
-        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config );
-        echo JCckDev::renderForm( 'core_size', $this->item->size, $config );
-		
-        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
-        echo JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value' => 'VARCHAR(7)' ) );
-        ?>
-    </ul>
-</div>
+// Set
+$displayData    =   array(
+                        'config'=>$config,
+                        'form'=>array(
+                            array(
+                                'fields'=>array(
+                                    JCckDev::renderForm( 'core_label', $this->item->label, $config ),
+                                    JCckDev::renderForm( 'core_defaultvalue', $this->item->defaultvalue, $config ),
+                                    JCckDev::renderForm( 'core_size', $this->item->size, $config )
+                                )
+                            ),
+                            array(
+                                'fields'=>array(
+                                    JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value'=>'VARCHAR(7)' ) )
+                                ),
+                                'mode'=>'storage'
+                            )
+                        ),
+                        'html'=>'',
+                        'item'=>$this->item,
+                        'script'=>''
+                    );
+
+echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.cck_field.edit', $displayData );
+?>

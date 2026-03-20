@@ -14,7 +14,9 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 
 // Plugin
 class plgUserCCK extends JPlugin
-{	
+{
+	protected $app;
+
 	// onUserBeforeDeleteGroup
 	public function onUserBeforeDeleteGroup( $group )
 	{
@@ -37,6 +39,28 @@ class plgUserCCK extends JPlugin
 		return $this->_delete( $pk, 'joomla_user', 'users', 'onUserAfterDelete' );
 	}
 	
+	// onUserAfterLogin
+	public function onUserAfterLogin( $login_options )
+	{
+		// Processing
+		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onUserAfterLogin';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+						
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+	}
+
 	// onUserAfterSave
 	public function onUserAfterSave( $user, $isNew, $user2 )
 	{
@@ -108,6 +132,7 @@ class plgUserCCK extends JPlugin
 	{
 		// Processing
 		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
+		
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onUserLogout';
 			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
@@ -122,6 +147,28 @@ class plgUserCCK extends JPlugin
 				}
 			}
 		}
+
+		// Logout for Incognito || Impostor
+		$my	=	JFactory::getUser();
+
+		if ( isset( $my->from_id ) && $my->from_id ) {
+			// Make sure we're a valid user first
+			if ($user['id'] == 0 && !$my->get('tmp_user'))
+			{
+				return true;
+			}
+
+			$sharedSessions = $this->app->get('shared_session', '0');
+
+			// Check to see if we're deleting the current session
+			if ($my->id == $user['id'] && ($sharedSessions || (!$sharedSessions && $options['clientid'] == $this->app->getClientId())))
+			{
+				// Destroy the php session for this user WITHOUT changing the user last visit field
+				JFactory::getSession()->destroy();
+			}
+		}
+
+		return true;
 	}
 
 	// _delete

@@ -81,7 +81,9 @@ class plgCCK_FieldJoomla_Module extends JCckPluginField
 		}
 
 		// Prepare
-		if ( $field->defaultvalue ) {
+		if ( $field->variation == 'hidden' ) {
+			// KO
+		} elseif ( $field->defaultvalue ) {
 			$mode	=	$field->bool ? 'module' : 'position';
 			$style	=	$field->style ? ','.$field->style : '';
 			$form	=	'{load'.$mode.' '.$field->defaultvalue.$style.'}';

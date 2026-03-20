@@ -17,14 +17,17 @@ $options	=	implode( '||', $options );
 
 <div class="seblod cck-padding-top-0 cck-padding-bottom-0">
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_FIELDS' ) ); ?>
-    <ul class="adminformlist adminformlist-2cols">
-		<?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Core Table', 'selectlabel'=>'', 'options'=>'Raw Output=optgroup||All Fields=0||Raw Prepared Output=optgroup||No Fields or from List=-1||Only Selected Fields=1', 'storage_field'=>'columns[core]' ) );
-		echo '<li><label></label>'
-		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'', 'selectlabel'=>'', 'type'=>'select_multiple', 'options'=>$options, 'bool8'=>0, 'size'=>0, 'storage_field'=>'columns[core_selected]' ) )
-		 .	 '</li>';
-		?>
-	</ul>
+    <div class="form-grid">
+		<?php echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Core Table', 'selectlabel'=>'', 'options'=>'Raw Output=optgroup||All Fields=0||Raw Prepared Output=optgroup||No Fields or from List=-1||Only Selected Fields=1', 'storage_field'=>'columns[core]' ) ); ?>
+		<div class="control-group">
+			<div class="control-label">
+				<label></label>
+			</div>
+			<div class="controls">
+		 		<?php echo JCckDev::getForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'', 'selectlabel'=>'', 'type'=>'select_multiple', 'options'=>$options, 'bool8'=>0, 'size'=>0, 'storage_field'=>'columns[core_selected]' ) ); ?>
+		 	</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">

@@ -31,7 +31,7 @@ $class_row0		=	trim( $cck->getStyleParam( 'class_table_tr_even', 'cat-list-row%i
 $class_row0		=	$class_row0 ? ' class="'.str_replace( '%i', '0', $class_row0 ).'"' : '';
 $class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i' ) );
 $class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
-$translate		=	JCck::getConfig_Param( 'language_jtext', 0 );
+$translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
 $doc			=	JFactory::getDocument();
 $doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );

@@ -95,8 +95,9 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 		}
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
-				$config['n']	=	1;
-				$config['pk']	=	0;
+				$config['error']	=	false;
+				$config['n']		=	1;
+				$config['pk']		=	0;
 
 				// Check Permissions?
 				if ( $config['authorise'] == 0  ) {
@@ -248,6 +249,10 @@ class plgCCK_Storage_LocationJoomla_Category_Exporter extends plgCCK_Storage_Loc
 							include JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config */
 						}
 					}
+				}
+
+				if ( $config['error'] ) {
+					continue;
 				}
 
 				// Export

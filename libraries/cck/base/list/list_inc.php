@@ -160,7 +160,7 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'doPagination'=>true,
 						   'doQuery'=>true,
 						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
-						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 						   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
 						   'formId'=>$preconfig['formId'],
 						   'formWrapper'=>false,
@@ -401,7 +401,10 @@ if ( $limitstart != -1 ) {
 		if ( $limitend != -1 ) {
 			$this->state->set( 'limit', (int)$limitend );
 		}
+
 		$limitend	=	(int)$this->state->get( 'limit' );
+
+		$app->cck_pagination	=	$limitend;
 	}
 }
 if ( isset( $preconfig['limit'] ) && $preconfig['limit'] ) {
@@ -457,8 +460,12 @@ if ( $preconfig['task'] == 'search' ) {
 		$current['stage']	=	0;
 		$items				=	CCK_List::getList( $ordering, $areas, $fields['search'], @$fields['order'], $config, $current, $options, $user );
 	}
-	$total					=	count( $items );
-	
+	if ( is_array( $items ) ) {
+		$total	=	count( $items );
+	} else {
+		$items	=	array();
+	}
+
 	// IDs & PKs
 	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
 		$ids	=	'';
@@ -602,7 +609,7 @@ if ( $preconfig['task'] == 'search' ) {
 				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
-				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
+				$data		=	$cache->get( array( 'CCK_List', 'render' ), array( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config ) );
 				$isCached	=	' [Cache=ON]';
 			} else {
 				if ( ${$target}->content > 0 ) {
@@ -626,7 +633,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $no_message ) {
 				$no_message	=	JText::_( 'COM_CCK_NO_RESULT' );
 			} else {
-				if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+				if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 					$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 				}
 			}
@@ -647,7 +654,7 @@ if ( $preconfig['task'] == 'search' ) {
 	if ( ! $no_message ) {
 		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
 	} else {
-		if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+		if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 		}
 	}

@@ -37,11 +37,12 @@ class Helper_Admin extends CommonHelper_Admin
 							   array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_' ) );
 		} else {
 			$items	=	array( array( 'name'=>$folder, 'link'=>_C0_LINK, 'active'=>( $vName == _C0_NAME ) ),
-							   array( 'val'=>'2', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C2_NAME || ( $vName == _C6_NAME && $vName2 == 'type' ) ) ),
-							   array( 'val'=>'3', 'pre'=>'&bull;&nbsp;', 'key'=>'' ),
-							   array( 'val'=>'4', 'pre'=>'&bull;&nbsp;', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
-							   array( 'val'=>'1', 'pre'=>'&bull;&nbsp;', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
-							   array( 'val'=>'5', 'pre'=>'', 'key'=>'' ) );
+							   array( 'val'=>'2', 'pre'=>'', 'key'=>'COM_CCK_', 'active'=>( $vName == _C2_NAME || ( $vName == _C6_NAME && $vName2 == 'type' ) ) ),
+							   array( 'val'=>'3', 'pre'=>'', 'key'=>'' ),
+							   array( 'val'=>'4', 'pre'=>'', 'key'=>'COM_CCK_', 'active'=>( $vName == _C4_NAME || ( $vName == _C6_NAME && $vName2 == 'search' ) ) ),
+							   array( 'val'=>'1', 'pre'=>'', 'key'=>'', 'active'=>( $vName == _C1_NAME || $vName == _C7_NAME ) ),
+							   array( 'val'=>'5', 'pre'=>'', 'key'=>'', 'active'=>( $vName == _C5_NAME ) )
+							);
 		}
 		if ( $vName == 'cck' ) {
 			$addons	=	JCckDatabase::loadObjectList( 'SELECT a.title, a.link, b.element FROM #__menu AS a LEFT JOIN #__extensions AS b ON b.extension_id = a.component_id'
@@ -90,70 +91,123 @@ class Helper_Admin extends CommonHelper_Admin
 		if ( $vTitle != '' ) {
 			JToolBarHelper::title( JText::_( $vTitle.'_MANAGER' ), self::getIcon( $vName ) );
 		}
-		if ( $canDo->get( 'core.create' ) || $canDo->get( 'core.edit' ) ) {
-			if ( $canDo->get( 'core.create' ) ) {
-				if ( $vName == 'type' || $vName == 'search' || $vName == 'site' ) {
-					JHtml::_( 'bootstrap.modal', 'collapseModal' );
-					$label	=	JText::_( 'JTOOLBAR_NEW' );
-					$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal2" class="btn btn-small btn-success">'
-							.	'<span class="icon-new" title="'.$label.'"></span> '.$label.'</button>';
-					$bar->appendButton( 'Custom', $html, 'new' );
-				} else {
-					JToolBarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
+		if ( $canDo->get( 'core.create' ) ) {
+			if ( $vName == 'type' || $vName == 'search' || $vName == 'site' ) {
+				$hasModal	=	true;
+				$label	=	JText::_( 'JTOOLBAR_NEW' );
+				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal2" class="btn btn-small btn-success">'
+						.	'<span class="icon-new" title="'.$label.'"></span>&nbsp;'.$label.'</button>';
+
+				if ( JCck::on( '4.0' ) ) {
+					$html	=	'<joomla-toolbar-button>'.$html.'</joomla-toolbar-button>';
 				}
+				$bar->appendButton( 'Custom', $html, 'new' );
+			} else {
+				JToolBarHelper::custom( $vName.'.add', 'new', 'new', 'JTOOLBAR_NEW', false );
 			}
-			if ( $canDo->get( 'core.edit' ) ) {
+		}
+		if ( JCck::on( '4.0' ) && ( $canDo->get( 'core.edit' ) || $canDo->get( 'core.edit.state' ) || $canDo->get( 'core.delete' ) ) ) {
+			$dropdown	=	$bar->dropdownButton( 'status-group' )
+								->text( 'JTOOLBAR_CHANGE_STATUS' )
+								->toggleSplit( false )
+								->icon( 'icon-ellipsis-h' )
+								->buttonClass( 'btn btn-action' )
+								->listCheck( true );
+
+			$childBar	=	$dropdown->getChildToolbar();
+		}
+		if ( $canDo->get( 'core.edit' ) ) {
+			if ( !JCck::on( 4.0 ) ) {
 				JToolBarHelper::custom( $vName.'.edit', 'edit', 'edit', 'JTOOLBAR_EDIT', true );
 			}
-			$bar->appendButton( 'CckSeparator' );
-		}
+		}		
 		if ( $canDo->get( 'core.edit.state' ) || $canDo->get( 'core.delete' ) ) {
 			if ( $canDo->get( 'core.edit.state' ) ) {
-				JToolBarHelper::custom( $vName.'s'.'.publish', 'publish', 'publish', 'COM_CCK_TURN_ON', true );
-				JToolBarHelper::custom( $vName.'s'.'.unpublish', 'unpublish', 'unpublish', 'COM_CCK_TURN_OFF', true );
+				if ( JCck::on( '4.0' ) ) {
+					$childBar->standardButton( 'publish' )->text( 'COM_CCK_TURN_ON' )->task( $vName.'s'.'.publish' )->listCheck( true );
+					$childBar->standardButton( 'unpublish' )->text( 'COM_CCK_TURN_OFF' )->task( $vName.'s'.'.unpublish' )->listCheck( true );
+				} else {
+					JToolBarHelper::custom( $vName.'s'.'.publish', 'publish', 'publish', 'COM_CCK_TURN_ON', true );
+					JToolBarHelper::custom( $vName.'s'.'.unpublish', 'unpublish', 'unpublish', 'COM_CCK_TURN_OFF', true );
+				}
 			}
 			if ( $canDo->get( 'core.delete' ) ) {
-				JToolBarHelper::custom( $vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
+				if ( JCck::on( '4.0' ) ) {
+					$childBar->standardButton( 'delete' )->text( 'JTOOLBAR_DELETE' )->task( $vName.'s'.'.delete' )->listCheck( true )->buttonClass( 'btn-danger' );
+				} else {
+					JToolBarHelper::custom( $vName.'s'.'.delete', 'delete', 'delete', 'JTOOLBAR_DELETE', true );
+				}
 			}
 			if ( $canDo->get( 'core.edit.state' ) ) {
-				JToolBarHelper::custom( $vName.'s'.'.checkin', 'checkin', 'checkin', 'JTOOLBAR_CHECKIN', true );
+				if ( JCck::on( '4.0' ) ) {
+					$childBar->standardButton( 'checkin' )->text( 'JTOOLBAR_CHECKIN' )->task( $vName.'s'.'.checkin' )->listCheck( true );
+				} else {
+					JToolBarHelper::custom( $vName.'s'.'.checkin', 'checkin', 'checkin', 'JTOOLBAR_CHECKIN', true );
+				}
 			}
 			if ( $vName == 'type' || $vName == 'search' ) {
-				JToolBarHelper::custom( $vName.'s'.'.version', 'unarchive', 'archives', 'JTOOLBAR_ARCHIVE', true );
-			}
-			if ( !( $vName == 'folder' || $vName == 'site' ) ) {
-				$bar->appendButton( 'CckSeparator' );
+				if ( JCck::on( '4.0' ) ) {
+					$childBar->standardButton( 'archive' )->text( 'JTOOLBAR_ARCHIVE' )->task( $vName.'s'.'.version' )->listCheck( true );
+				} else {
+					JToolBarHelper::custom( $vName.'s'.'.version', 'unarchive', 'archives', 'JTOOLBAR_ARCHIVE', true );
+				}
 			}
 		}
 		if ( $vName != 'site' && $vName != 'folder' /*&& $canDo->get('core.edit' )*/ ) {
 			if ( ( ( $vName == 'type' || $vName == 'search' ) && ( $canDo->get('core.create' ) || $canDo->get('core.edit' ) ) )
 				|| $canDo->get('core.edit' ) ) {
-				JHtml::_( 'bootstrap.modal', 'collapseModal' );
+				$hasModal	=	true;
 				$label	=	JText::_( 'JTOOLBAR_BATCH' );
 				$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 						.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
+
+				if ( JCck::on( '4.0' ) ) {
+					$html	=	'<joomla-toolbar-button list-selection>'.$html.'</joomla-toolbar-button>';
+				}
+				
 				$bar->appendButton( 'Custom', $html, 'batch' );
 			}
 		}
 		if ( $vName == 'folder' ) {
-			JToolBarHelper::custom( 'folders.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_ACL' ), true );
+			if ( !JCck::is( '5' ) ) {
+				JToolBarHelper::custom( 'folders.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_ACL' ), true );
+			}
 			JToolBarHelper::custom( 'folders.rebuild', 'refresh', 'refresh', JText::_( 'COM_CCK_REBUILD' ), false );
 
-			JHtml::_( 'bootstrap.modal', 'collapseModal' );
+			$hasModal	=	true;
 			$label	=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
 			$html	=	'<button '.$data_bs.'toggle="modal" '.$data_bs.'target="#collapseModal" class="btn btn-small">'
 					.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
+
+			if ( JCck::on( '4.0' ) ) {
+				$html	=	'<joomla-toolbar-button list-selection>'.$html.'</joomla-toolbar-button>';
+			}
 			$bar->appendButton( 'Custom', $html, 'batch' );
 		} elseif ( $vName == 'site' ) {
-			//JToolBarHelper::custom( 'sites.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_VISITS' ), true );
+			// JToolBarHelper::custom( 'sites.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_VISITS' ), true );
 		} else {
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
 			if ( $vName == 'type' || $vName == 'search' ) {
-				$bar->appendButton( 'CckLink', 'archive', 'COM_CCK_VERSIONS', JRoute::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ), '_self' );
+				if ( JCck::on( '4.0' ) ) {
+					$bar->linkButton( 'versions' )->text( 'COM_CCK_VERSIONS' )->url( JRoute::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ) )->icon( 'icon-archive' )->buttonClass( 'btn' );
+				} else {
+					$bar->appendButton( 'CckLink', 'archive', 'COM_CCK_VERSIONS', JRoute::_( 'index.php?option=com_cck&view=versions&filter_e_type='.$vName ), '_self' );					
+				}
 			} elseif ( $vName == 'template' ) {
-				$bar->appendButton( 'CckLink', 'cck-variation', JText::_( _C7_TEXT.'S' ), JRoute::_( 'index.php?option=com_cck&view=variations' ), '_self' );
+				if ( JCck::on( '4.0' ) ) {
+					$bar->linkButton( 'variations' )->text( JText::_( _C7_TEXT.'S' ) )->url( JRoute::_( 'index.php?option=com_cck&view=variations' ) )->icon( 'icon-unarchive' )->buttonClass( 'btn' );
+				} else {
+					$bar->appendButton( 'CckLink', 'cck-variation', JText::_( _C7_TEXT.'S' ), JRoute::_( 'index.php?option=com_cck&view=variations' ), '_self' );	
+				}			
 			}
-			$bar->appendButton( 'CckLink', 'folder', 'COM_CCK_'._C0_TEXT.'S', JRoute::_( 'index.php?option=com_cck&view=folders' ), '_self' );
+		}
+
+		if ( $hasModal ) {
+			if ( JCck::on( '4.0' ) ) {
+				JHtml::_( 'bootstrap.renderModal', 'collapseModal' );
+			} else {
+				JHtml::_( 'bootstrap.modal', 'collapseModal' );
+			}
 		}
 	}
 	
@@ -202,9 +256,6 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 			JToolBarHelper::custom( $vName.'.cancel', 'cancel', 'cancel', 'JTOOLBAR_CLOSE', false );
 		}
-		if ( $vName == 'type' || $vName == 'search' ) {
-			$bar->appendButton( 'CckLink', 'eye-open', JText::_( 'COM_CCK_POSITIONS' ), 'javascript:JCck.DevHelper.previewPositions();' );
-		}
 	}
 	
 	// addToolbarDelete
@@ -240,8 +291,9 @@ class Helper_Admin extends CommonHelper_Admin
 	public static function getDefaultTemplate()
 	{
 		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		
 		if ( !$name) {
-			$name	=	'seb_one';
+			$name	=	'seb_minima';
 		}
 
 		return $name;

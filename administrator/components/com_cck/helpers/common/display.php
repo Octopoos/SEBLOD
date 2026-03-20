@@ -11,10 +11,21 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 // CommonHelper
 class CommonHelper_Display
 {
+	// quickCheckbox
+	public static function quickCheckbox( $i, $item )
+	{
+		if ( !JCck::on( '4.0' ) ) {
+			echo JHtml::_( 'grid.id', $i, $item->id );
+		} else {
+			echo '<div class="checkbox">'.HTMLHelper::_( 'grid.id', $i, $item->id, false, 'cid', 'cb' ).'</div>';
+		}
+	}
+
 	// quickCopyright
 	public static function quickCopyright( $cpanel = false )
 	{
@@ -29,10 +40,21 @@ class CommonHelper_Display
 	// quickJGrid
 	public static function quickJGrid( $type, $value, $i, $canChange = true )
 	{
+		if ( JCck::on( '4.0' ) && $type == 'featured' ) {
+			$html	=	'<a href="javascript:void(0);" class="tbody-icon no-link"><span class="'.( $value ? 'icon-color-featured ' : '' ).'icon-star"></span></a>';
+
+			echo $html; return;
+		}
 		$states	=	array(
 						0=>array( 'disabled.png', 'folders.featured', 'COM_CCK_UNFEATURED', 'COM_CCK_TOGGLE_TO_FEATURE', '', 'unfeatured' ),
 						1=>array( 'featured.png', 'folders.unfeatured', 'COM_CCK_FEATURED', 'COM_CCK_TOGGLE_TO_UNFEATURE', ' active', 'featured' )
 					);
+
+		if ( $type == 'language' ) {
+			$states[0][2]	=	'';
+			$states[1][2]	=	'COM_CCK_MULTILANGUAGE';
+		}
+
 		$state	=	ArrayHelper::getValue( $states, (int) $value, $states[1] );
 		$html	=	'<span class="icon-'.$state[5].'"></span>';
 
@@ -45,17 +67,28 @@ class CommonHelper_Display
 		echo $html;
 	}
 
+	// quickModalTitle
+	public static function quickModalTitle( $text )
+	{
+		if ( JCck::on( '4.0' ) ) {
+			$html	=	'<h3 class="modal-title">'.$text.'</h3>'
+					.	'<button type="button" class="btn-close novalidate" data-bs-dismiss="modal" aria-label="Close"></button>';
+		} else {
+			$html	=	'<button type="button" class="close" data-dismiss="modal">×</button>'
+					.	'<h3 class="modal-title">'.$text.'</h3>';
+		}
+
+		echo $html;
+	}
+
 	// quickSlideTo
 	public static function quickSlideTo( $direction, $text = '', $class = '' )
 	{
-		$direction	=	'#' . $direction;
-		if ( $text == 'up' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<span class="icon-arrow-up-2"></span></a>';
-		} elseif ( $text == 'down' ) {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none;">&nbsp;<span class="icon-arrow-down-2"></span></a>';
-		} else {
-			echo '<a href="'.$direction.'" class="scroll '.$class.'" style="text-decoration: none; color: #666666;">&nbsp;'.$text.'&nbsp;</a>';
+		if ( $text == 'up' || $text == 'down' ) {
+			return;
 		}
+
+		echo $text;
 	}
 	
 	// quickSession
@@ -84,8 +117,8 @@ class CommonHelper_Display
 					.	'mydata2="'.htmlspecialchars( $item->options ).'">' . $item->title . '</a><span class="featured_sessions_del icon-delete" mydata="'.$item->id.'"></span><a href="'.$edit_link.'" class="featured_sessions_edit icon-edit"></a>'
 					.	'</li>';
 		}
-		$html	=	'<button class="btn btn-primary dropdown-toggle cck-float-none" type="button" data-toggle="dropdown"><span class="caret"></span></button>'
-				.	'<ul class="dropdown-menu featured-sessions pull-right">'.$html.'</ul>';
+		$html	=	'<button class="btn btn-primary dropdown-toggle cck-float-none" type="button" data-bs-toggle="dropdown"></button>'
+				.	'<ul class="dropdown-menu dropdown-menu-end featured-sessions">'.$html.'</ul>';
 		$js		=	'jQuery(document).ready(function($){ $("#'.$id.'").after(\''.$html.'\'); });';
 
 		if ( $css ) {

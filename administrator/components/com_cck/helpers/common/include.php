@@ -49,29 +49,20 @@ class CommonHelper_Include
 		if ( $component ) {
 			$doc->addStyleDeclaration( 'div.seblod {margin: 0 10px 10px 10px!important;}' );
 			$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/admin.css?v4.0' );
-			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css', array(), false );
+			JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/font.css' );
 		}
-		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css', array(), false );
-		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/ui.css', array(), false );
-		
-		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/styles/seblod/ui.css', array(), false );
+		JHtml::_( 'stylesheet', 'administrator/components/'.CCK_COM.'/assets/css/icons.css' );
+		$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/css/ui.css?v5' );
+
+		if ( JCck::on( '4.0' ) ) {
+			$doc->addStyleSheet( JUri::root( true ).'/administrator/components/'.CCK_COM.'/assets/styles/cck_4x/ui4.css?v2' );
+		}
 		
 		if ( count( $paths ) ) {
 			foreach ( $paths as $path ) {
-				JHtml::_( 'stylesheet', $path, array(), false );
+				JHtml::_( 'stylesheet', $path );
 			}
 		}
-	}
-	
-	// -------- -------- -------- -------- -------- -------- -------- -------- //
-	
-	// addSmoothScrool
-	public static function addSmoothScrool( $time = 1000 )
-	{
-		$doc	=	JFactory::getDocument();
-		
-		$js		=	'jQuery(document).ready(function($){ $(".scroll").click(function(event){ event.preventDefault(); $("html,body").animate({scrollTop:$(this.hash).offset().top}, '.$time.'); }); });';
-		$doc->addScriptDeclaration( $js );
 	}
 }
 ?>

@@ -11,7 +11,7 @@
 defined( 'JPATH_PLATFORM' ) or die;
 
 // CCKMenu
-class CCKMenu extends JMenu
+class CCKMenu extends JMenuSite
 {
 	protected $user_id	=	0;
 

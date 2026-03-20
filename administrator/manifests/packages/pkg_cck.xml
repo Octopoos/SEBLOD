@@ -9,7 +9,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<creationDate>January 2011</creationDate>
 	<description></description>
-	<version>3.29.0</version>
+	<version>4.6.0</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
 	
@@ -26,7 +26,6 @@
 			<!-- Component -->
 			<file type="component" id="com_cck">com_cck.zip</file>
 			<!-- Module // Admin -->
-			<file type="module" id="mod_cck_quickadd" client="administrator">mod_cck_quickadd.zip</file>
 			<file type="module" id="mod_cck_quickicon" client="administrator">mod_cck_quickicon.zip</file>
 			<!-- Module // Site -->
 			<file type="module" id="mod_cck_breadcrumbs" client="site">mod_cck_breadcrumbs.zip</file>
@@ -37,10 +36,11 @@
 			<file type="template" id="seb_one" client="site">tpl_seb_one.zip</file>
 			<file type="template" id="seb_blog" client="site">tpl_seb_blog.zip</file>
 			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
+			<file type="template" id="seb_minima" client="site">tpl_seb_minima.zip</file>
+			<file type="template" id="seb_list" client="site">tpl_seb_list.zip</file>
 			<!-- Plugin // CCK Field -->
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
-			<file type="plugin" id="calendar" group="cck_field">plg_cck_field_calendar.zip</file>
 			<file type="plugin" id="checkbox" group="cck_field">plg_cck_field_checkbox.zip</file>
 			<file type="plugin" id="colorpicker" group="cck_field">plg_cck_field_colorpicker.zip</file>
 			<file type="plugin" id="div" group="cck_field">plg_cck_field_div.zip</file>
@@ -115,6 +115,7 @@
 			<file type="plugin" id="joomla_article" group="cck_storage_location">plg_cck_storage_location_joomla_article.zip</file>
 			<file type="plugin" id="joomla_category" group="cck_storage_location">plg_cck_storage_location_joomla_category.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_storage_location">plg_cck_storage_location_joomla_user.zip</file>
+			<file type="plugin" id="joomla_menu_item" group="cck_storage_location">plg_cck_storage_location_joomla_menu_item.zip</file>
 			<file type="plugin" id="joomla_user_group" group="cck_storage_location">plg_cck_storage_location_joomla_user_group.zip</file>
 			<!-- Plugin // CCK Validation -->
 			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
@@ -126,12 +127,17 @@
 			<!-- Plugin // Authentication -->
 			<!-- Plugin // Search -->
 			<file type="plugin" id="cck" group="search">plg_search_cck.zip</file>
+			<!-- Plugin // Task -->
+			<file type="plugin" id="cck" group="task">plg_task_cck.zip</file>
 			<!-- Plugin // User -->
 			<file type="plugin" id="cck" group="user">plg_user_cck.zip</file>
 		<!-- END HERE -->
 		
 		<!-- Library -->
 		<file type="library" id="cck">lib_cck.zip</file>
+		<file type="file" id="cck" src="layouts">lay_cck.zip</file>
+		<file type="file" id="cck_3x" src="layouts">lay_cck_3x.zip</file>
+		
 		<!-- Plugin // Content -->
 		<file type="plugin" id="cck" group="content">plg_content_cck.zip</file>
 	</files>

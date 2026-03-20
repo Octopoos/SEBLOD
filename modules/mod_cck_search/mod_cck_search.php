@@ -26,7 +26,11 @@ $formId	=	'seblod_form_'.$uniqId;
 $itemId	=	(string)$params->get( 'menu_item', '' );
 
 JCck::loadjQuery();
-JFactory::getLanguage()->load( 'com_cck_default', JPATH_SITE );
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->setDefault( 'en-GB' );
+$lang->load( 'mod_cck_search', JPATH_SITE );
+$lang->load( 'com_cck_default', JPATH_SITE );
+$lang->setDefault( $lang_default );
 
 $preconfig					=	array();
 $preconfig['action']		=	'';
