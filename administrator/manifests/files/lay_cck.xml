@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="file" version="3.8" method="upgrade">
+	<name>lay_cck</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@octopoos.com</authorEmail>
+	<authorUrl>https://www.octopoos.com</authorUrl>
+	<copyright>Copyright (C) 2019 Octopoos. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>January 2019</creationDate>
+	<description>SEBLOD Layout - www.seblod.com</description>
+	<version>6.0.0</version>
+	<fileset>
+		<files target="layouts">
+			<folder>cck</folder>
+		</files>
+	</fileset>
+</extension>

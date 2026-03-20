@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="file" version="2.5" method="upgrade">
+	<name>var_cck_octo_search</name>
+	<author>Octopoos</author>
+	<authorEmail>contact@seblod.com</authorEmail>
+	<authorUrl>https://www.seblod.com</authorUrl>
+	<copyright>Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<creationDate>December 2011</creationDate>
+	<description>Position Variation for SEBLOD 3.x - www.seblod.com</description>
+	<version>6.0.0</version>
+
+	<fileset>
+		<files target="libraries/cck/rendering/variations">
+			<folder>octo_search</folder>
+
+			<file>octo_search/octo_search.php</file>
+			<file>octo_search/options.xml</file>
+		</files>
+	</fileset>
+	
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/files_var_cck_octo_search.sys.ini</language>
+	</languages>
+</extension>
