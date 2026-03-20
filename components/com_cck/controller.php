@@ -246,15 +246,26 @@ class CCKController extends BaseController
 			}
 			if ( $path ) {
 				if ( $id ) {
-					$event		=	'onCckDownloadSuccess';
+					$event	=	'onCckDownloadSuccess';
+					$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+					$legacy	=	$legacy && $legacy <= 2024 ? true : false;
+
 					if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 						$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
 						if ( isset( $processing[$event] ) ) {
 							foreach ( $processing[$event] as $p ) {
-								if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-									$options	=	new Registry( $p->options );
-									
-									include_once JPATH_SITE.$p->scriptfile;
+								if ( $legacy ) {
+									if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+										$options	=	new Registry( $p->options );
+										
+										include_once JPATH_SITE.$p->scriptfile;
+									}
+								} else {
+									$fields		=	array();
+									$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+									call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );		
 								}
 							}
 						}

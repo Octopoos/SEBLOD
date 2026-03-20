@@ -259,6 +259,12 @@ class JCckProcessing
 		}
 	}
 
+	// setWatermark
+	public function setWatermark( $watermark )
+	{
+		$this->_data['config']['watermark']	=	$watermark;
+	}
+
 	// unset
 	public function unset( $name )
 	{
@@ -439,7 +445,6 @@ class JCckProcessing
 	public function setDataLayer( $data )
 	{
 		// if ( isset( $this->_data['config']['stage'] ) && (int)$this->_data['config']['stage'] == -1 ) {
-		// JCckDev::aa( $this->_data['config'], '@'.$this->getType().' '.$this->getPk() );
 		Factory::getSession()->set( 'cck.data_layer', $data );
 	}
 
