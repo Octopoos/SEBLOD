@@ -107,6 +107,26 @@ abstract class JCckDevHelper
 		return $path;
 	}
 
+	// escapeText
+	public static function escapeText( $str )
+	{
+		$map	=	[
+						'É' => '\311',		'é' => '\351',
+						'È' => '\310',		'è' => '\350',
+						'Ê' => '\312',		'ê' => '\352',
+						'À' => '\300',		'à' => '\340',
+						'Â' => '\302',		'â' => '\342',
+						'Ô' => '\324',		'ô' => '\364',
+						'Ù' => '\331',		'ù' => '\371',
+						'Û' => '\333',		'û' => '\373',
+						'Ç' => '\307',		'ç' => '\347',
+						'Œ' => '\317\356',	'œ' => '\357\356',
+						'Ï' => '\317',		'ï' => '\357',
+					];
+
+		return strtr( $str, $map );
+	}
+
 	// explode
 	public static function explode( $delimiters, $string, $limit = null, $replace = array( 'search'=>array( ' ', "\r" ), 'replace'=>'' ) )
 	{
@@ -924,6 +944,53 @@ abstract class JCckDevHelper
 		return $url;
 	}
 	
+	// getWatermarkCommand
+	public static function getWatermarkCommand( $watermark, $input = '-', $output = '-' )
+	{
+		if ( is_array( $watermark ) && !empty( $watermark['texts'] ) ) {
+			$cmd_normalize			=	'gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -dAutoRotatePages=/All -sOutputFile=- -f '.escapeshellarg( $input );
+			$cmd_watermark			=	'gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -dALLOWPSTRANSPARENCY -sOutputFile='.escapeshellarg( $output )
+									.	' -c "<< /EndPage { exch pop 0 eq { gsave ';
+			$cmd_watermark_end		=	'grestore true } { false } ifelse } >> setpagedevice" -f -';
+			$ps_instructions		=	'';
+
+			foreach ( $watermark['texts'] as $text ) {
+				$alpha		=	isset( $text['alpha'] ) && $text['alpha'] === true ? '0.25 .setfillconstantalpha ' : '';
+				$color		=	isset( $text['color'] ) && $text['color'] ? $text['color'] : '0.3 setgray';
+				$font_size	=	isset( $text['font_size'] ) && $text['font_size'] ? $text['font_size'] : '12';
+				$mode		=	isset( $text['mode'] ) && $text['mode'] ? $text['mode'] : 'vertical_left';
+				$safeText	=	self::escapeText( $text['text'] );
+				$safeText	=	str_replace( ['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $safeText );
+
+				switch ( $mode ) {
+					case 'diagonal':
+						$r	=	isset( $text['rotate'] ) ? $text['rotate'] : '45';
+						$x	=	isset( $text['x'] ) ? $text['x'] : '55';
+						$y	=	isset( $text['y'] ) ? $text['y'] : '35';
+
+						$ps_instructions	.=	'grestore gsave '.$alpha
+											.	$color.' /Arial findfont '.$font_size.' scalefont setfont '
+											.	$x.' '.$y.' moveto '.$r.' rotate ('.$safeText.') show ';
+						break;
+					case 'vertical_left':
+					default:
+						$ps_instructions	.=	'grestore gsave '.$alpha
+											.	'currentpagedevice /PageSize get aload pop /ph exch def /pw exch def '
+											.	'20 ph 2 div translate 90 rotate ';
+
+						$ps_instructions	.=	$color.' /Arial findfont '.$font_size.' scalefont setfont '
+											.	'('.$safeText.') stringwidth pop 2 div neg 0 moveto '
+											.	'('.$safeText.') show ';
+						break;
+				}
+			}
+
+			return $cmd_normalize.' | '.$cmd_watermark.$ps_instructions.$cmd_watermark_end;
+		}
+
+		return '';
+	}
+
 	// hasLanguageAssociations
 	public static function hasLanguageAssociations()
 	{
@@ -1280,6 +1347,104 @@ abstract class JCckDevHelper
 		$array	=	self::_sortHelper( $array, $property, '_index' );
 	}
 
+	// stream
+	public static function stream( $path, $watermark, $config = array() )
+	{
+		$chunk_size		=	1024 * 1024;
+
+		if ( isset( $config['app'] ) ) {
+			$buffer	=	file_get_contents( $path );
+			$buffer	=	$config['app']->decrypt( $buffer );
+
+			if ( $watermark ) {
+				JCckDevHelper::streamWatermark( $watermark, $buffer, $chunk_size );
+			} else {		
+				$len	=	strlen( $buffer );
+				$pos	=	0;
+
+				while ( $pos < $len ) {
+					echo substr( $buffer, $pos, $chunk_size );
+					ob_flush();
+					flush();
+
+					$pos	+=	$chunk_size;
+				}
+			}
+
+			unset( $buffer );
+		} else {
+			if ( ( $handle = fopen( $path, 'rb' ) ) === false ) {
+				die;
+			}
+
+			if ( $watermark ) {
+				JCckDevHelper::streamWatermark( $watermark, $handle, $chunk_size );
+			} else {
+				while ( !feof( $handle ) ) {
+					echo @fread( $handle, $chunk_size );
+					ob_flush();
+					flush();
+				}
+
+				fclose( $handle );
+			}
+		}
+	}
+
+	// streamWatermark
+	public static function streamWatermark( $watermark_cmd, $data, $chunk_size )
+	{
+		if ( is_array( $watermark_cmd ) ) {
+			$watermark_cmd	=	JCckDevHelper::getWatermarkCommand( $watermark_cmd );
+		}
+
+		$descriptors	=	[
+			0 => ['pipe', 'r'],
+			1 => ['pipe', 'w'],
+			2 => ['pipe', 'w']
+		];
+		$process		=	proc_open( $watermark_cmd, $descriptors, $pipes );
+
+		if ( !is_resource( $process ) ) {
+			die;
+		}
+
+		if ( is_resource( $data ) && get_resource_type( $data ) === 'stream' ) {
+			while ( !feof($data ) ) {
+				$chunk	=	fread( $data, $chunk_size );
+
+				fwrite( $pipes[0], $chunk );
+				fflush( $pipes[0] );
+			}
+
+			fclose( $data );
+		} elseif ( is_string( $data ) ) {
+			$len	=	strlen( $data );
+			$pos	=	0;
+
+			while ( $pos < $len ) {
+				$chunk	=	substr( $data, $pos, $chunk_size );
+
+				fwrite( $pipes[0], $chunk );
+				fflush( $pipes[0] );
+
+				$pos	+=	$chunk_size;
+			}
+		}
+
+		fclose( $pipes[0] );
+
+		while ( !feof( $pipes[1] ) ) {
+			echo @fread( $pipes[1], $chunk_size );
+			ob_flush();
+			flush();
+		}
+
+		fclose( $pipes[1] );
+		fclose( $pipes[2] );
+		proc_close( $process );
+	}
+
 	// truncate
 	public static function truncate( $str, $length )
 	{
@@ -1308,6 +1473,12 @@ abstract class JCckDevHelper
 		}
 
 		return $str;
+	}
+
+	// writeWatermark
+	public static function writeWatermark( $command, $filename )
+	{
+		exec( $command . ' 2>&1', $filename, $return );
 	}
 
 	// _sortHelper
