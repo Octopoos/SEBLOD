@@ -22,6 +22,19 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Release Candidate3 Release [20-Mar-2026] ------------
+
++ Download/Read tasks improved.
++ "onCckDownloadSuccess" event refactored (No Legacy)
+  >> set "Legacy Mode" to 2024 for previous behaviour
++ "On-the-fly" watermark implemented (for PDF)
+
+--------------- 6.0.0 Release Candidate2 Release --------------------------
+
+^ Core Update for SEBLOD WebServices Add-on
+
+# Missing ID (afterStore) issue fixed on Free Object.
+
 --------------- 6.0.0 Release Candidate Release [10-Mar-2026] -------------
 
 ! Joomla! 6 support
