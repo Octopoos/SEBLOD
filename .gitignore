@@ -669,7 +669,7 @@ sftp-config.json
 /administrator/language/overrides/*
 /administrator/language/index.html
 /administrator/logs/*
-/administrator/manifests/files/*
+/administrator/manifests/files/joomla.xml
 /administrator/manifests/libraries/fof.xml
 /administrator/manifests/libraries/idna_convert.xml
 /administrator/manifests/libraries/joomla.xml
