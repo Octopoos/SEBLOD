@@ -332,7 +332,7 @@ class JCckApp
 				require_once JPATH_SITE.'/libraries/cck/base/app_crypt3.php';
 			}
 
-			$this->_crypt		=	new JcckAppCrypt;
+			$this->_crypt		=	new JCckAppCrypt;
 
 			$this->_crypt->setNonce( $core->nonce );
 
