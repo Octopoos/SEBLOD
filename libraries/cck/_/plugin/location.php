@@ -292,7 +292,10 @@ class JCckPluginLocation extends CMSPlugin
 				unset( $config['storages'][static::$table][static::$key] );
 			}
 			static::_core( $config['storages'][static::$table], $config, $pk );
-			$config['storages'][static::$table]['_']->pk	=	static::$pk;
+			
+			if ( is_object( $config['storages'][static::$table]['_'] ) ) {
+				$config['storages'][static::$table]['_']->pk	=	static::$pk;
+			}
 		}
 		if ( $data['_']->table != static::$table ) {
 			static::g_onCCK_Storage_LocationStore( $data, static::$table, static::$pk, $config );
