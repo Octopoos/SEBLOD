@@ -104,5 +104,24 @@ class JCckTable extends JCckTablePlaceholder
 		$this->check();
 		$this->store();
 	}
+
+	public function store($updateNulls = false)
+	{
+		$fields = $this->getFields();
+		foreach ($fields as $field => $definition) {
+			if (
+				isset($this->$field) &&
+				$this->$field === '' &&
+				isset($definition->Type) &&
+				stripos($definition->Type, 'date') !== false
+			) {
+				$this->$field = null;
+			}
+		}
+
+		return parent::store($updateNulls);
+	}
+
 }
 ?>
+
