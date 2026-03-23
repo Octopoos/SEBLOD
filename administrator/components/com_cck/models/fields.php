@@ -32,6 +32,7 @@ class CCKModelFields extends ListModel
 				'storage_table', 'a.storage_table',
 				'storage_field', 'a.storage_field',
 				'storage_field2', 'a.storage_field2',
+				'storage_mode', 'a.storage_mode',
 				'published', 'a.published',
 				'ordering', 'a.ordering',
 				'checked_out', 'a.checked_out',
@@ -71,6 +72,7 @@ class CCKModelFields extends ListModel
 				'a.storage_table as storage_table,' .
 				'a.storage_field as storage_field,' .
 				'a.storage_field2 as storage_field2,' .
+				'a.storage_mode as storage_mode,' .
 				'a.published as published,' .
 				'a.ordering as ordering,' .
 				'a.checked_out as checked_out,' .

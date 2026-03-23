@@ -237,3 +237,4 @@ body:not(.com_cck) div.alert.alert-info > div { text-align: center; }
 
 fieldset.options-form fieldset.checkboxes.vertical {padding-left: 1rem;}
 fieldset.options-form fieldset.checkboxes.vertical label {color: var(--options-form-legend-color); font-weight: bold; padding-left: 8px;}
+sup.em{color: var(--template-link-color); font-weight: bold; position:relative;left: 2px;}

@@ -145,7 +145,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <td class="center hidden-phone small">
 				<?php
 				$storage	=	'<strong>'.( $item->storage == 'dev' ? 'dev' : $item->storage_table ) .'</strong><br />'. ( $item->storage_field2 ? $item->storage_field.'['.$item->storage_field2.']' : $item->storage_field );
-                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage ).'</span>';
+                $suffix		=	$item->storage_mode ? '<sup class="em">'.$item->storage_mode.'</sup>' : '';
+                echo ( $item->storage == 'none' ) ? '-' : '<span class="storage-format hasTooltip" title="'.htmlspecialchars( $storage ).'">'.( $item->storage.$suffix ).'</span>';
 				?>
             </td>
             <td class="center hidden-phone small"><?php echo Text::_( 'PLG_CCK_FIELD_'.$item->type.'_LABEL2' ); ?></td>
