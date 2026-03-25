@@ -241,8 +241,8 @@ class CCKController extends BaseController
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
 			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
 
-			if ( $ext == 'php' || $file == '.htaccess' ) {
-				return;
+			if ( $ext == 'php' || $file == '.htaccess' || str_starts_with( basename( $file ), '.' ) ) {
+				die;
 			}
 			if ( $path ) {
 				if ( $id ) {
