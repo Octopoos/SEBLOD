@@ -962,23 +962,25 @@ abstract class JCckDevHelper
 				$safeText	=	self::escapeText( $text['text'] );
 				$safeText	=	str_replace( ['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $safeText );
 
+				$ps_instructions	.=	'grestore gsave '.$alpha.$color.' '
+									.	'/Arial findfont dup length dict begin '
+									.	'{1 index /FID ne {def} {pop pop} ifelse} forall '
+									.	'/Encoding ISOLatin1Encoding def currentdict end '
+									.	'/Arial-ISOLatin1 exch definefont pop '
+									.	'/Arial-ISOLatin1 findfont '.$font_size.' scalefont setfont ';
+
 				switch ( $mode ) {
 					case 'diagonal':
 						$r	=	isset( $text['rotate'] ) ? $text['rotate'] : '45';
 						$x	=	isset( $text['x'] ) ? $text['x'] : '55';
 						$y	=	isset( $text['y'] ) ? $text['y'] : '35';
 
-						$ps_instructions	.=	'grestore gsave '.$alpha
-											.	$color.' /Arial findfont '.$font_size.' scalefont setfont '
-											.	$x.' '.$y.' moveto '.$r.' rotate ('.$safeText.') show ';
+						$ps_instructions	.=	$x.' '.$y.' moveto '.$r.' rotate ('.$safeText.') show ';
 						break;
 					case 'vertical_left':
 					default:
-						$ps_instructions	.=	'grestore gsave '.$alpha
-											.	'currentpagedevice /PageSize get aload pop /ph exch def /pw exch def '
-											.	'20 ph 2 div translate 90 rotate ';
-
-						$ps_instructions	.=	$color.' /Arial findfont '.$font_size.' scalefont setfont '
+						$ps_instructions	.=	'currentpagedevice /PageSize get aload pop /ph exch def /pw exch def '
+											.	'20 ph 2 div translate 90 rotate '
 											.	'('.$safeText.') stringwidth pop 2 div neg 0 moveto '
 											.	'('.$safeText.') show ';
 						break;
