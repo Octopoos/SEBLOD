@@ -499,9 +499,12 @@ abstract class JCckDev
 						$js3		=	'var disp = "";';
 					}
 
-					if ( $options['base'] === 'api_input' || $options['base'] === 'api_output' ) {
+					if ( $options['base'] === 'job_output' ) {
+						$attr_grid	=	'attr-grid-1';
+						$no_no		=	'';
+					} elseif ( $options['base'] === 'api_input' || $options['base'] === 'api_output' ) {
 						$attr_grid	=	'attr-grid-5';
-						$no_no	=	'';
+						$no_no		=	'';
 					} else {
 						$attr_grid	=	'attr-grid-2';
 						$no_no		=	' no-no';
@@ -532,7 +535,8 @@ abstract class JCckDev
 								}
 								if ( isset( $customAttr['form'] ) && $customAttr['form'] ) {
 									$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
-									$attribs		.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \''.$default_value.'\' )+\'">'.$customAttr['form']['options'].'</select>';
+									$disabled		=	isset( $customAttr['disabled'] ) && $customAttr['disabled'] ? ' disabled="disabled"' : '';
+									$attribs		.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']"'.$disabled.' class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \''.$default_value.'\' )+\'">'.$customAttr['form']['options'].'</select>';
 								} else {
 									if ( isset( $customAttr['placeholder'] ) && $customAttr['placeholder'] ) {
 										$placeholder	=	$customAttr['placeholder'];
@@ -559,7 +563,9 @@ abstract class JCckDev
 
 							if ( isset( $customAttr['form'] ) ) {
 								$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
-								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="'.$default_value.'">'.$customAttr['form']['options'].'</select>';
+								$disabled		=	isset( $customAttr['disabled'] ) && $customAttr['disabled'] ? ' disabled="disabled"' : '';
+
+								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']"'.$disabled.' class="form-select is-mini inputbox adminformlist-minwidth'.$attr_class.'" data-value="'.$default_value.'">'.$customAttr['form']['options'].'</select>';
 							} else {
 								if ( isset( $customAttr['size'] ) && $customAttr['size'] ) {
 									$size	=	$customAttr['size'];
@@ -568,8 +574,12 @@ abstract class JCckDev
 								}
 								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="form-control is-mini inputbox'.$attr_class.'" size="'.$size.'" />';
 							}
-							$keys[]			=	$attr_id;
-							$js3b			.=	'$("'.$options['root'].'>div:last .inj").append(\''.'<div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
+							$keys[]		=	$attr_id;
+							$js3b		.=	'$("'.$options['root'].'>div:last .inj").append(\''.'<div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
+
+							if ( $attr_id == '_' ) {
+								$js3b	.=	'$("#attr__"+(cur - 1)).myVal($("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").myVal());';
+							}
 						}
 						$js3		.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\''.$js_open.$js_close.'\');'.$js3b;
 						$attribs	.=	'</div>';
@@ -646,8 +656,6 @@ abstract class JCckDev
 										var $p = $(this).parent();
 										$p.append(\''.$attribs.'\');
 										$("#"+$p.attr("id")+" select").each(function(k, v) {
-											console.log($(this));
-
 											if ($(this).attr("data-value") != "") {
 												$(this).myVal($(this).attr("data-value"));
 											}
@@ -666,9 +674,15 @@ abstract class JCckDev
 
 				// Field Picker
 				if ( isset( $options['fieldPicker'] ) && $options['fieldPicker'] ) {
-					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
-															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
-					$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
+					if ( $options['base'] == 'job_output' ) {
+						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.id as value FROM #__cck_more_processings AS a'
+																. ' WHERE a.published = 1 ORDER BY text' );
+						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_PROCESSING' ).' -' ) ), $fields ) : array();
+					} else {
+						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
+																. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
+						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
+					}
 
 					if ( (int)$options['fieldPicker'] == -1 ) {
 						$elem->init['fieldPicker']	=	'<button type="button" class="btn btn-outline-secondary tweak-attr-list" id="'.$options['picker'].'">'.Text::_( 'COM_CCK_ADD_A_PROPERTY' ).'</button>';
