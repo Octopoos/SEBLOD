@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Release Candidate4 Release [xx-Apr-2026] ------------
+
++ CLI/CRON Jobs refactored for Joomla! 6
+
 --------------- 6.0.0 Release Candidate3 Release [26-Mar-2026] ------------
 
 + Download/Read tasks improved.
