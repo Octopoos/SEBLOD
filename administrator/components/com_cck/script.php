@@ -269,6 +269,16 @@ class com_cckInstallerScript
 			File::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
 			Folder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
+		foreach ( array( 'api_stack', 'git_deploy' ) as $src_name ) {
+			$src	=	JPATH_LIBRARIES.'/cck/development/cli/job/cck_job_'.$src_name.'.php';
+			if ( is_file( $src ) ) {
+				if ( is_dir( JPATH_SITE.'/cli/jobs' ) ) {
+					File::move( $src, JPATH_SITE.'/cli/jobs/cck_job_'.$src_name.'.php' );
+				} else {
+					File::move( $src, JPATH_SITE.'/cli/cck_job_'.$src_name.'.php' );
+				}
+			}			
+		}
 
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
 		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
