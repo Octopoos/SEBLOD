@@ -1,65 +1,60 @@
+#!/usr/bin/env php
 <?php
-/**
-* @version 			SEBLOD 3.x Core
-* @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
-* @url				https://www.seblod.com
-* @editor			Octopoos - www.octopoos.com
-* @copyright		Copyright (C) 2009 - 2018 SEBLOD. All Rights Reserved.
-* @license 			GNU General Public License version 2 or later; see _LICENSE.php
-**/
+defined( '_JEXEC' ) || define( '_JEXEC', 1 );
 
-use Joomla\CMS\Application\CliApplication;
-use Joomla\CMS\Plugin\PluginHelper;
+const JOOMLA_MINIMUM_PHP	=	'8.3.0';
 
-// Set flag that this is a parent file.
-const _JEXEC = 1;
-const _DISPLAY_ERRORS = 0;
-
-define( 'JDEBUG', 0 );
-
-if ( defined( '_DISPLAY_ERRORS' ) && constant( '_DISPLAY_ERRORS' ) ) {
-	error_reporting( E_ALL | E_NOTICE );
-	ini_set( 'display_errors', 1 );
-} else {
-	error_reporting( 0 );
-	ini_set( 'display_errors', 0 );
+if ( version_compare( PHP_VERSION, JOOMLA_MINIMUM_PHP, '<' ) ) {
+	echo 'PHP version too old. Minimum required: '.JOOMLA_MINIMUM_PHP.PHP_EOL;
+	exit;
 }
 
-// Load system defines
-if ( file_exists( dirname(__DIR__) . '/defines.php' ) ) {
-	require_once dirname(__DIR__) . '/defines.php';
+if ( file_exists( dirname( __DIR__ ).'/defines.php' ) ) {
+	require_once dirname( __DIR__ ).'/defines.php';
 }
 if ( !defined( '_JDEFINES' ) ) {
-	define( 'JPATH_BASE', dirname(__DIR__) );
+	define( 'JPATH_BASE', dirname( __DIR__ ) );
 	require_once JPATH_BASE.'/includes/defines.php';
 }
+if ( !file_exists( JPATH_LIBRARIES.'/vendor/autoload.php' ) || !is_dir( JPATH_ROOT.'/media/vendor' ) ) {
+	echo 'Missing vendor dependencies.'.PHP_EOL;
+	exit;
+}
+if ( !file_exists( JPATH_CONFIGURATION.'/configuration.php' ) || filesize( JPATH_CONFIGURATION.'/configuration.php' ) < 10 ) {
+	echo 'Joomla is not installed.'.PHP_EOL;
+	exit;
+}
 
-require_once JPATH_LIBRARIES.'/import.legacy.php';
-require_once JPATH_LIBRARIES.'/cms.php';
-/*
-require_once JPATH_LIBRARIES.'/cms/application/helper.php';
-require_once JPATH_LIBRARIES.'/joomla/filter/output.php';
-require_once JPATH_LIBRARIES.'/joomla/string/string.php';
-*/
+require_once JPATH_BASE.'/includes/framework.php';
 
-// Load the configuration
-require_once JPATH_CONFIGURATION.'/configuration.php';
+// Bootstrap SEBLOD
+require_once JPATH_LIBRARIES.'/cck/_/cck.php';
+\JLoader::registerPrefix( 'JCck', JPATH_LIBRARIES.'/cck/_' );
 
-PluginHelper::importPlugin( 'cck_storage_location' );
+// Bootstrap Joomla!
+$container	=	\Joomla\CMS\Factory::getContainer();
+
+// Joomla! Session Aliases 
+$container->alias( 'session', 'session.cli' )
+		  ->alias( 'JSession', 'session.cli' )
+		  ->alias( \Joomla\CMS\Session\Session::class, 'session.cli' )
+		  ->alias( \Joomla\Session\Session::class, 'session.cli' )
+		  ->alias( \Joomla\Session\SessionInterface::class, 'session.cli' );
+
+// Joomla! Application Console
+$app								=	$container->get(\Joomla\Console\Application::class);
+\Joomla\CMS\Factory::$application	=	$app;
+
+// SEBLOD Stuff
+\Joomla\CMS\Plugin\PluginHelper::importPlugin( 'cck_storage_location' );
 
 // Cli
-class CckJobCli extends CliApplication
+class CckJobCli
 {
-	// _cleanName
-	protected function _cleanName()
-	{
-		return str_replace( 'cck_job_', '', $this->_getName() );
-	}
-
 	// doExecute
 	public function doExecute()
 	{
-		JCckToolbox::run( $this->_cleanName() );
+		JCckToolbox::run( substr( get_called_class(), 10 ) );
 	}
 }
 ?>
