@@ -75,6 +75,10 @@ $mime_types		=	array(
 					);
 $watermark		=	false;
 
+if ( !isset( $config ) ) {
+	$config		=	[];
+}
+
 if ( !isset( $mime_types[$ext] ) ) {
 	$mime_type	=	'';
 
