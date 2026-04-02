@@ -1176,8 +1176,9 @@ abstract class JCckDev
 	public static function toSafeID( $string )
 	{
 		$string	=	str_replace( array( '&', '"', '<', '>', '-' ), array( 'a', 'q', 'l', 'g', '_' ), $string );
-		$str	=	Factory::getLanguage()->transliterate( $string );
-		$length	=	strlen( $str );
+		$string	=	Factory::getLanguage()->transliterate( $string );
+		$length	=	strlen( $string );
+		$str	=	$string;
 
 		if ( $length ) {
 			for ( $i = 0; $i < $length; $i++ ) {
@@ -1190,7 +1191,8 @@ abstract class JCckDev
 		}
 
 		$str	=	trim( preg_replace( array( '/\s+/', '/[^A-Za-z0-9_]/' ), array( '_', '' ), $str ) );
-		
+		$str	=	str_replace( '__', '_', $str );
+
 		return trim( $str, '_' );
 	}
 	
