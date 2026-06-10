@@ -128,7 +128,7 @@ class plgSearchCCK extends CMSPlugin
 				$Pt	.=	'_'.$lang_suffix;
 			}
 			
-			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
+			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' || $field->match_mode == 'is_not_null' || $field->match_mode == 'is_null' )) && $field->storage != 'none' )
 			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
 				$glue	=	'';
 				$sql	=	'';
