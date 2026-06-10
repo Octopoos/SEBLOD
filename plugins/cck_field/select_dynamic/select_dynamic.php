@@ -75,6 +75,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 			/*
 			$data['variation']['list_filter_ajax']	=	HTMLHelper::_( 'select.option', 'list_filter_ajax', Text::_( 'COM_CCK_FORM_FILTER_AJAX' ) );
 			*/
+			$data['variation']['list_router']	=	HTMLHelper::_( 'select.option', 'list_router', Text::_( 'COM_CCK_FORM_ROUTER' ) );
 			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
 			$data['variation']['205']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
 			$data['variation']['206']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
@@ -372,8 +373,12 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 				}
 			} elseif ( count( $items ) ) {
 				if ( $opt_group ) {
-					$group	=	'';
+					$hasFilter	=	false;
+					$group		=	'';
+
 					foreach ( $items as $o ) {
+						$isFilter	=	false;
+
 						if ( isset( $o->optgroup ) && $o->optgroup != $group ) {
 							if ( $group ) {
 								$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
@@ -383,25 +388,42 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 						}
 						if ( $attrib ) {
 							$attr['attr']	=	'';
+
 							foreach ( $attribs as $k=>$a ) {
 								$ka				=	'attr'.( $k + 1 );
+
 								if ( isset( $o->$ka ) ) {
 									$va			=	$o->$ka;
 								} else {
 									$ka			=	( isset( $options2['attr'.( $k + 1 )] ) ) ? $options2['attr'.( $k + 1 )] : '';
 									$va			=	( $ka != '' && isset( $o->$ka ) ) ? $o->$ka : '';
 								}
-								$attr['attr']	.=	' '.$a.'="'.$va.'"';
+								if ( isset( $config['sef_filters'][$a] ) ) {
+									$attr['attr']	.=	$a.'/'.$va; /* ici */
+
+									if ( $va === $config['sef_filter'] ) {
+										$hasFilter	=	true;
+										$isFilter	=	true;
+									}
+								} else {
+									$attr['attr']	.=	' '.$a.'="'.$va.'"';
+								}
 							}
 							$attributes[]	=	$attr['attr'];
 							$opts[]			=	HTMLHelper::_( 'select.option', $o->value, $o->text, $attr );
 						} else {
 							$opts[]			=	HTMLHelper::_( 'select.option', $o->value, $o->text, 'value', 'text' );	
 						}
-						$options[]			=	$o->text.'='.$o->value;
+						if ( $isFilter ) {
+							$value	=	$o->value;
+						}
+						$options[]	=	$o->text.'='.$o->value;
 					}
 					if ( $group ) {
 						$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
+					}
+					if ( $config['sef_filter'] && !$hasFilter ) {
+						throw new Exception( \Joomla\CMS\Language\Text::_( 'JERROR_PAGE_NOT_FOUND' ), 404 );
 					}
 				} else {
 					if ( $attrib ) {
@@ -416,7 +438,11 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 									$ka			=	( isset( $options2['attr'.( $k + 1 )] ) ) ? $options2['attr'.( $k + 1 )] : '';
 									$va			=	( $ka != '' && isset( $o->$ka ) ) ? $o->$ka : '';
 								}
-								$attr['attr']	.=	' '.$a.'="'.$va.'"';
+								if ( isset( $config['sef_filters'][$a] ) ) {
+									$attr['attr']	.=	$a.'/'.$va;
+								} else {
+									$attr['attr']	.=	' '.$a.'="'.$va.'"';
+								}
 							}
 							$attributes[]	=	$attr['attr'];
 							$opts[]			=	HTMLHelper::_( 'select.option', $o->$opt_value, $o->$opt_name, $attr );

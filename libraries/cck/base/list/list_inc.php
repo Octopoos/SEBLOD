@@ -183,6 +183,8 @@ $config			=	array(
 						'pk'=>$id,
 						'registry'=>Factory::getSession()->get( 'registry' ),
 						'sef_aliases'=>(int)( (int)$search->sef_route_aliases != -1 ? $search->sef_route_aliases : JCck::getConfig_Param( 'sef_aliases', '0' ) ),
+						'sef_filter'=>$app->input->get( 'id_router' ),
+						'sef_filters'=>array(),
 						'show_form'=>$preconfig['show_form'],
 						'stages'=>array(),
 						'submit'=>$preconfig['submit'],
@@ -194,6 +196,13 @@ $config			=	array(
 						'variations'=>$variations
 					);
 
+foreach ( explode( '||', $options->get( 'sef_filters', '' ) ) as $filter ) {
+	$parts	=	explode( '=', $filter );
+
+	if ( isset( $parts[1] ) ) {
+		$config['sef_filters'][$parts[0]]	=	$parts[1];
+	}
+}
 if ( $preconfig['task'] == 'no' ) {
 	$config['task']	=	'no';
 } elseif ( $preconfig['task'] == 'search' || $preconfig['task'] == 'search2' ) {

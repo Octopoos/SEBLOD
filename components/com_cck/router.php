@@ -203,15 +203,36 @@ class CckRouter extends RouterView
 
 					return $vars;
 				} elseif ( $params['doSEF'][0] == '2' && $count > 1 ) {
-					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
-					
-					$target				=	'child_object';
-					$properties			=	array( $target );
-					$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+					$do	=	'';
 
-					if ( $properties[$target] != '' ) {
-						$params['doSEF'][0]	=	'4';
-						$params['location']	=	$properties[$target];
+					foreach ( $params['sef_filters'] as $filter ) {
+						$parts	=	explode( '=', $filter );
+
+						if ( $parts[0] == $segments[0] ) {
+							$do	=	$parts[1];
+						}
+					}
+					if ( $do ) {
+						$vars['option']		=	'com_cck';
+						$vars['view']		=	'list';
+						$vars['id_router']	=	$segments[1];
+
+						if ( ( isset( $vars['id_router'] ) && $vars['id_router'] ) ) {
+							$segments	=	array();
+
+							return $vars;
+						}
+					} else {
+						require_once JPATH_SITE.'/plugins/cck_storage_location/'.$params['location'].'/'.$params['location'].'.php';
+
+						$target				=	'child_object';
+						$properties			=	array( $target );
+						$properties			=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
+
+						if ( $properties[$target] != '' ) {
+							$params['doSEF'][0]	=	'4';
+							$params['location']	=	$properties[$target];
+						}
 					}
 				}
 			}

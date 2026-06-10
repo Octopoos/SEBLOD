@@ -11,9 +11,10 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 // Plugin
@@ -1423,15 +1424,17 @@ class JCckPluginField extends CMSPlugin
 					self::g_addScriptDeclaration( '$("form#'.$parent.'").on("change", "#'.$id.'.is-filter", function() { '.$submit.'(\'search\'); });' );
 				}
 			}
-		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' ) {
+		} elseif ( $variation == 'list' || $variation == 'list_filter' || $variation == 'list_filter_ajax' || $variation == 'list_router' ) {
 			$attributes		=	( isset( $field->attributesList ) && $field->attributesList != '' ) ? explode( '||', $field->attributesList ) : array();
 			$base			=	( $hidden != '' ) ? trim( $hidden ) : '<input type="hidden" id="'.$id.'" name="'.$name.'" value="'.htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ).'" class="'.$class.'" />';
 			$field->form	=	'';			
 			$options		=	( isset( $field->optionsList ) ) ? $field->optionsList : $field->options;
 			$options		=	( $options != '' ) ? explode( '||', $options ) : array();
-			
+
 			if ( count( $options ) ) {
 				static $loaded	=	array();
+
+				$app			=	Factory::getApplication();
 				$class_css		=	$field->css;
 
 				if ( strpos( $class_css, '||' ) !== false ) {
@@ -1470,18 +1473,29 @@ class JCckPluginField extends CMSPlugin
 					}
 					$loaded[$id]	=	1;
 				}
+				$uri_route	=	Route::_( 'index.php?Itemid='.$app->input->getInt( 'Itemid' ) );
+
 				foreach ( $options as $k=>$opt ) {
 					$attribute	=	@$attributes[$k];
 					$o			=	explode( '=', $opt );
 					$class		=	array();
 
+					if ( $variation === 'list_router' ) {
+						$route	=	$uri_route.'/'.$attribute;
+					} else {
+						$route	=	'javascript:void(0);';
+					}
 					if ( isset( $o[1] ) && $o[1] == $value && strlen( $o[1] ) == strlen( $value ) ) {
 						$class[]	=	'active';
+
+						if ( $variation === 'list_router' ) {
+							$route	=	$uri_route;
+						}
 					}
 					$class		=	count( $class ) ? ' class="'.implode( ' ', $class ).'"' : '';
 
 					if ( $o[0] != '' ) {
-						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"'.$attribute.'><a class="list-variation-item'.( $class_css[1] ? ' '.$class_css[1] : '' ).'" href="javascript:void(0);"><span>'.$o[0].'</span></a></li>';
+						$field->form	.=	'<li'.$class.' data-value="'.@$o[1].'"'.$attribute.'><a class="list-variation-item'.( $class_css[1] ? ' '.$class_css[1] : '' ).'" href="'.$route.'"><span>'.$o[0].'</span></a></li>';
 					}
 				}
 				if ( $field->form != '' ) {

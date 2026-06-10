@@ -62,6 +62,7 @@ $options	=	JCckDev::fromJSON( $this->item->options );
 				'fields'=>array(
 					JCckDev::renderForm( $cck['core_sef'], @$options['sef'], $config ),
 					JCckDev::renderForm( 'core_dev_text', $this->item->sef_route, $config, array( 'label'=>'SEF Helper', 'storage_field'=>'sef_route' ) ),
+					JCckDev::renderForm( 'core_dev_text', @$options['sef_filters'], $config, array( 'label'=>'SEF Filter', 'storage_field'=>'options[sef_filters]' ) ),
 					JCckDev::renderForm( $cck['core_sef_canonical'], @$options['sef_canonical'], $config ),
 					JCckDev::renderForm( 'core_dev_select', $this->item->sef_route_aliases, $config, array( 'label'=>'SEF Multi Aliases', 'selectlabel'=>'', 'defaultvalue'=>'-1', 'options'=>'Use Global SL=-1||No=0||Yes=optgroup||All languages=2||All languages but default=1', 'storage_field'=>'sef_route_aliases' ) )
 				),
