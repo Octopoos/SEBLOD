@@ -358,9 +358,13 @@ class JCckApp
 	// _getKey
 	protected function _getKey( $key )
 	{
+		// Check for env
 		if ( isset( $key[0] ) && $key[0] === '@' ) {
 			$key	=	getenv( substr( $key, 1 ) );
-		} elseif ( strpos( $key, '/' ) !== false && strpos( $key, '.' ) !== false ) {
+		}
+
+		// Check for path
+		if ( str_starts_with( $key, '/' ) || str_starts_with( $key, './' ) || str_starts_with( $key, '../' ) ) {
 			$dir	=	JPATH_SITE;
 			$path	=	$key;
 
@@ -376,17 +380,18 @@ class JCckApp
 			} elseif ( $path[0] === '.' ) {
 				$path	=	substr( $path, 1 );
 			}
+
 			if ( $path[0] !== '/' ) {
 				$path	=	'/'.$path;
 			}
 
-			if ( is_file( $dir.$path ) ) {
-				$key	=	trim( file_get_contents( $dir.$path ) );
+			if ( !str_starts_with( $key, '/' ) && strpos( $path, $dir ) === false ) {
+				$path	=	$dir.$path;
 			}
 
-			return $key;
-		} else {
-			return '';
+			if ( is_file( $path ) ) {
+				$key	=	trim( file_get_contents( $path ) );
+			}
 		}
 
 		return $key;
