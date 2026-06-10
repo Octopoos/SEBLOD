@@ -29,6 +29,31 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 		
 		return $this->_delete( $pk, 'joomla_user_group', 'usergroups' );
 	}
+
+	// onUserBeforeDelete
+	public function onUserBeforeDelete( $user )
+	{
+		$pk	=	$user['id'];
+		if ( !$pk ) {
+			return true;
+		}
+		
+		require_once JPATH_LIBRARIES.'/cck/_/toolbox.php';
+
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onUserBeforeDelete';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						include_once JPATH_SITE.$p->scriptfile;	/* Variables: $pk, $user */
+					}
+				}
+			}
+		}
+
+		return true;
+	}
 	
 	// onUserAfterDelete
 	public function onUserAfterDelete( $user, $success, $msg )
@@ -38,7 +63,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 			return true;
 		}
 		
-		return $this->_delete( $pk, 'joomla_user', 'users', 'onUserAfterDelete' );
+		return $this->_delete( $pk, 'joomla_user', 'users', 'onUserAfterDelete', $user );
 	}
 	
 	// onUserAfterLogin
@@ -174,7 +199,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 	}
 
 	// _delete
-	protected function _delete( $pk, $location, $base, $event = '' )
+	protected function _delete( $pk, $location, $base, $event = '', $user = array() )
 	{
 		$id		=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location = "'.(string)$location.'" AND pk = '.(int)$pk );
 		if ( ! $id ) {
