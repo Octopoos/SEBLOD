@@ -3,6 +3,9 @@ defined( '_JEXEC' ) or die;
 
 use Joomla\Filesystem\Folder;
 
+if ( !isset( $config ) ) {
+	return;
+}
 if ( !( $config['id'] && !$config['isNew'] ) ) {
 	return;
 }
