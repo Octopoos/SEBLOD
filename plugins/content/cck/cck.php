@@ -439,15 +439,19 @@ class plgContentCCK extends CMSPlugin
 		if ( ! $object ) {
 			return true;
 		}
-		
+
+		$custom		=	'';
 		$table_key	=	$item->getKeyName();
 		$table_name	=	$item->getTableName();
 		$pk			= 	$item->$table_key;
-		
-		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
-		$properties		= 	array( 'bridge_object', 'custom' );
-		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
-		$custom 		= 	$properties['custom'];
+
+		if ( is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php' ) ) {
+			require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
+			$properties		= 	array( 'custom' );
+			$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+			$custom 		= 	$properties['custom'];
+		}
+
 		$parent			=	'';
 		$pkb			=	0;
 		$type			=	'';
