@@ -210,6 +210,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				Factory::getApplication()->triggerEvent( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
+				
+				if ( $field->type == 'checkbox' ) {
+					$field->form		=	'<input type="hidden" name="'.$inherit['name'].'" value="" />'.$field->form;
+				}
+
 				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
 				$value					=	$field->form;
 				$config['formWrapper']	=	1;
@@ -343,6 +348,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 								$wa->useStyle( 'dragula' );
 
 								$js	=	'
+								if (typeof global === "undefined") {
+									global = window;
+								}
 								document.addEventListener("DOMContentLoaded", function() {
 									const containers = document.querySelectorAll("#'.$tableWrapper.' tbody");
 
