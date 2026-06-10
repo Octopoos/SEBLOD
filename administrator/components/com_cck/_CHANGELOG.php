@@ -22,6 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.0 Release Candidate4 Release [10-Jun-2026] ------------
+
++ Router improved:
+  >> SEF Filter (Dynamic Select plug-in) routes
++ "onUserBeforeDelete" event added.
+
+# Multi-sites issue fixed.
+# Various issues fixed.
+
 --------------- 6.0.0 Release Candidate4 Release [2-Apr-2026] -------------
 
 + CLI/CRON Jobs refactored for Joomla! 6
