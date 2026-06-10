@@ -66,6 +66,10 @@ class CCKUser extends \Joomla\CMS\User\User
 	// setAuthorisedViewLevels
 	public function setAuthorisedViewLevels( $viewlevels = array() )
 	{
+		$viewlevels	=	array_filter( $viewlevels, function( $v ) {
+			return (int)$v !== 0;
+		} );
+
 		$this->_user->_authLevels	=	$viewlevels;
 	}
 
