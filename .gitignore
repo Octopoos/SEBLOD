@@ -1712,3 +1712,4 @@ plugins/captcha/powcaptcha/services/provider.php
 plugins/captcha/powcaptcha/src/Extension/POWCaptcha.php
 plugins/captcha/powcaptcha/src/Provider/POWCaptchaProvider.php
 AGENTS.md
+/.audit
