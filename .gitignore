@@ -4622,3 +4622,17 @@ templates/cassiopeia_extended/html/index.html
 templates/cassiopeia_extended/index.php
 templates/cassiopeia_extended/offline.php
 templates/cassiopeia_extended/templateDetails.xml
+/plugins/captcha
+/media/vendor
+/media/templates/site/cassiopeia
+/media/com_workflow
+AGENTS.md
+/components/com_workflow
+/media/com_guidedtours
+/media/plg_editors_tinymce
+/.audit
+/administrator/components/com_workflow
+administrator/language/en-GB/guidedtours.joomla_whatsnew_6_1.ini
+administrator/language/en-GB/guidedtours.joomla_whatsnew_6_1_steps.ini
+administrator/language/en-GB/plg_captcha_powcaptcha.ini
+administrator/language/en-GB/plg_captcha_powcaptcha.sys.ini
