@@ -4631,6 +4631,7 @@ AGENTS.md
 /media/com_guidedtours
 /media/plg_editors_tinymce
 /.audit
+/.cursor
 /administrator/components/com_workflow
 administrator/language/en-GB/guidedtours.joomla_whatsnew_6_1.ini
 administrator/language/en-GB/guidedtours.joomla_whatsnew_6_1_steps.ini
