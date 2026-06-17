@@ -10,6 +10,8 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Factory;
+
 // JCckDev
 abstract class JCckDev
 {
@@ -1110,13 +1112,13 @@ abstract class JCckDev
 		}
 		
 		if ( empty( $xml ) ) {
-			// JError::raiseWarning( 100, JText::_( 'JLIB_UTIL_ERROR_XML_LOAD' ) );
+			Factory::getApplication()->enqueueMessage( Text::_( 'JLIB_UTIL_ERROR_XML_LOAD' ), 'warning' );
 			
 			if ( $isFile ) {
-				// JError::raiseWarning( 100, $data );
+				Factory::getApplication()->enqueueMessage( $data, 'warning' );
 			}
 			foreach ( libxml_get_errors() as $error ) {
-				// JError::raiseWarning( 100, 'XML: ' . $error->message );
+				Factory::getApplication()->enqueueMessage( 'XML: ' . $error->message, 'warning' );
 			}
 		}
 		
