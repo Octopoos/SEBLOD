@@ -1110,13 +1110,13 @@ abstract class JCckDev
 		}
 		
 		if ( empty( $xml ) ) {
-			JError::raiseWarning( 100, JText::_( 'JLIB_UTIL_ERROR_XML_LOAD' ) );
+			// JError::raiseWarning( 100, JText::_( 'JLIB_UTIL_ERROR_XML_LOAD' ) );
 			
 			if ( $isFile ) {
-				JError::raiseWarning( 100, $data );
+				// JError::raiseWarning( 100, $data );
 			}
 			foreach ( libxml_get_errors() as $error ) {
-				JError::raiseWarning( 100, 'XML: ' . $error->message );
+				// JError::raiseWarning( 100, 'XML: ' . $error->message );
 			}
 		}
 		
