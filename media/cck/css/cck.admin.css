@@ -418,4 +418,4 @@ div.horizontal .adminformlist li a:visited.cck_preview{
 }
 
 /* JOOMLA 4.x */
-body.task-display div.vertical div.cck_forms{float:none;}
+body.task-display div.vertical div.cck_forms{float:none; display: inline-block;}
