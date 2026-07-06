@@ -29,10 +29,7 @@ class plgCCK_Field_TypoBold extends JCckPluginTypo
 		$value	=	parent::g_hasLink( $field, $typo, $field->$target );
 		
 		// Set
-		if ( $field->typo_label ) {
-			$field->label	=	self::_typo( $typo, $field, $field->label, $config );
-		}
-		$field->typo		=	self::_typo( $typo, $field, $value, $config );
+		$field->typo	=	self::_typo( $typo, $field, $value, $config );
 	}
 	
 	// _typo
