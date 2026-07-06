@@ -26,8 +26,9 @@ echo JCckDev::renderLayoutFile( 'cck'.JCck::v().'.construction.admin.edit', arra
 		),
 		array(
 			'fields'=>array(
-				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Typo Label=1||Always=-2', 'storage_field'=>'typo_label' ) ),
-				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Priority', 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'4||5', 'storage_field'=>'priority' ) )
+				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Auto=0||Always=-2', 'storage_field'=>'typo_label' ) ),
+				JCckDev::renderForm( 'core_options_html', '', $config, array( 'rows'=>3, 'storage_field'=>'html_empty' ), array(), 'w100' ),
+				JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Priority', 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'4||5', 'storage_field'=>'priority' ) )				
 			),
 			'legend'=>Text::_( 'COM_CCK_OPTIONS' )
 		)

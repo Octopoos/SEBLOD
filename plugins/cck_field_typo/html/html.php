@@ -36,18 +36,18 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			$field->display	=	0;
 			$field->type	=	'';
 		} else {
-			if ( $field->typo_label ) {
-				$field->label	=	self::_typo( $typo, $field, '', $config );
+			if ( $field->$target === '' ) {
+				$field->typo	=	self::_typo( $typo, $field, $typo->get( 'html_empty', '' ), $config );
+			} else {
+				$field->typo	=	self::_typo( $typo, $field, $typo->get( 'html', '' ), $config );
 			}
-			$field->typo		=	self::_typo( $typo, $field, '', $config );
 		}
 	}
 	
 	// _typo
-	protected static function _typo( $typo, $field, $value, &$config = array() )
+	protected static function _typo( $typo, $field, $html, &$config = array() )
 	{
 		$app		=	Factory::getApplication();
-		$html		=	$typo->get( 'html', '' );
 		$postpone	=	false;
 		$priority	=	$typo->get( 'priority', '' );
 
@@ -70,9 +70,9 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				}
 			}
 		}
-		if ( $html != '' && strpos( $html, '$cck->get' ) !== false ) {
+		if ( $html != '' && ( strpos( $html, '$cck->get' ) !== false || strpos( $html, '$cck->retrieve' ) !== false ) ) {
 			$matches	=	'';
-			$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,\[\]]*)\' ?\)(;)?#';
+			$search		=	'#\$cck\->(get|retrieve)([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,\[\]]*)\' ?\)(;)?#';
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
 				$postpone	=	true;
@@ -125,9 +125,10 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	{
 		$name	=	$process['name'];
 
-		if ( count( $process['matches'][1] ) ) {
-			foreach ( $process['matches'][1] as $k=>$v ) {
-				$fieldname		=	$process['matches'][2][$k];
+		if ( count( $process['matches'][2] ) ) {
+			foreach ( $process['matches'][2] as $k=>$v ) {
+				$fieldname		=	$process['matches'][3][$k];
+				$method			=	$process['matches'][1][$k];
 				$idx			=	'';
 				$search			=	'';
 				$target			=	strtolower( $v );
@@ -164,13 +165,22 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 						}
 					}
 				} else {
-					$pos						=	strpos( $target, 'safe' );
-					if ( $pos !== false && $pos == 0 ) {
-						$target					=	substr( $target, 4 );
-						$value					=	$fields[$fieldname]->$target;
-						$value					=	JCckDev::toSafeID( $value );
+					if ( $method == 'retrieve' && !$fields[$fieldname]->state ) {
+						$value	=	'';
 					} else {
-						$value					=	$fields[$fieldname]->$target ?? '';
+						$pos						=	strpos( $target, 'safe' );
+						if ( $pos !== false && $pos == 0 ) {
+							$target					=	substr( $target, 4 );
+
+							if ( isset( $fields[$fieldname]->$target ) ) {
+								$value				=	$fields[$fieldname]->$target;
+								$value				=	JCckDev::toSafeID( $value );
+							} else {
+								$value				=	'';
+							}
+						} else {
+							$value					=	$fields[$fieldname]->$target ?? '';
+						}
 					}
 				}
 				if ( $idx != '' && $search != '' ) {
