@@ -34,7 +34,7 @@ class CommonHelper_Display
 		?>
 		<div class="copyright">
 			<strong><a target="_blank" rel="noopener noreferrer" href="<?php echo CCK_WEBSITE; ?>"><?php echo CCK_LABEL; ?></a></strong>&nbsp;<?php echo Text::_( 'COM_CCK_COPYRIGHT_SEBLOD_ADDON' ); ?>
-			<br /><?php echo Text::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - 2017'; ?>
+			<br /><?php echo Text::_( 'JVERSION' ).' '. CCK_VERSION . ' &copy 2009 - '.date( 'Y' ); ?>
 		</div>
 		<?php
 	}
