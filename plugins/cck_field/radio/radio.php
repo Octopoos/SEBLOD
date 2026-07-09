@@ -238,7 +238,7 @@ class plgCCK_FieldRadio extends JCckPluginField
 		}
 		
 		// Set
-		if ( ! $field->variation ) {
+		if ( !( isset( $field->variation ) && $field->variation ) ) {
 			$field->form	=	$form;
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );

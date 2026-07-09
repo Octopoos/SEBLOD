@@ -34,9 +34,11 @@ class plgCCK_Field_TypoDate extends JCckPluginTypo
 		// Prepare
 		if ( $field->value && $field->value != '' && $field->value != '0000-00-00 00:00:00' ) {
 			$typo			=	parent::g_getTypo( $field->typo_options );
+
 			$field->typo	=	self::_typo( $typo, $field, '', $config );
 		} else {
 			$field->typo	=	'';
+			$typo			=	'';
 		}
 		
 		$field->typo		=	parent::g_hasLink( $field, $typo, $field->typo );
