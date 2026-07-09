@@ -143,7 +143,8 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 			$options2			=	json_decode( $field->options2, true );
 			
 			foreach ( $field->children as $child ) {
-				$child->aka	=	( isset( $options2['options'][$i]['aka'] ) && $options2['options'][$i]['aka'] ) ? $options2['options'][$i]['aka'] : '';
+				$child->aka			=	( isset( $options2['options'][$i]['aka'] ) && $options2['options'][$i]['aka'] ) ? $options2['options'][$i]['aka'] : '';
+				$child->aka_table	=	( isset( $options2['options'][$i]['aka_table'] ) && $options2['options'][$i]['aka_table'] ) ? $options2['options'][$i]['aka_table'] : '';
 
 				if ( $child->aka !='' ) {
 					$akas[$child->aka]	=	true;
