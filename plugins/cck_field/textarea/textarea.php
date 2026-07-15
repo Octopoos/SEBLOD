@@ -60,6 +60,11 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
+
+		if ( $field->bool7 == -1 ) {
+			$value	=	htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' );
+		}
+
 		$value			=	( $field->bool3 ) ? self::_bn2clear( $value ) : $value;
 
 		if ( $value ) {
@@ -104,9 +109,19 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$value		=	( $value != '' ) ? ( ( $field->bool2 ) ? self::_p2nl( $value ) : self::_br2nl( $value ) ) : $field->defaultvalue;
+
+		if ( $value != '' ) {
+			if ( $field->bool2 != -1 ) {
+				$value	=	$field->bool2 ? self::_p2nl( $value ) : self::_br2nl( $value );
+			}
+		} else {
+			$value	=	$field->defaultvalue;
+		}
 		$value		=	( $value != ' ' ) ? $value : '';
-		
+
+		if ( !isset( $field->variation  ) ) {
+			$field->variation	=	'';
+		}
 		if ( $field->variation ==  'custom_code' ) {
 			// $value			=	'1';
 			$field->form	=	'<pre>'.htmlentities( $value ).'</pre>';
@@ -183,7 +198,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		
 		// Make it safe
-		if ( $field->bool7 ) {
+		if ( $field->bool7 == -1 ) {
+			$value	=	strip_tags( $value );
+		} elseif ( $field->bool7 ) {
 			$value	=	ComponentHelper::filterText( $value );
 		}
 

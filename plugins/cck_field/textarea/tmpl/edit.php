@@ -31,7 +31,7 @@ $displayData	=	array(
 								'fields'=>array(
 									JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'New Lines', 'options'=>'Raw=-1||Format=optgroup||tag_br=0||tag_br_in_p=2||tag_p=1' ) ),
 									JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Clear Blank Lines' ) ),
-									JCckDev::renderForm( 'core_bool2', $this->item->bool7, $config, array( 'type'=>'radio', 'defaultvalue'=>'1', 'label'=>'Form Filter', 'css'=>'btn-group', 'storage_field'=>'bool7' ) )
+									JCckDev::renderForm( 'core_bool2', $this->item->bool7, $config, array( 'defaultvalue'=>'1', 'label'=>'Form Filter', 'options'=>'No=0||Yes=1||No HTML=-1', 'storage_field'=>'bool7' ) )
 								),
 								'legend'=>Text::_( 'COM_CCK_PROCESSING' )
 							),
