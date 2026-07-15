@@ -158,6 +158,7 @@
 		</field>
 		<field name="media_characters" type="text" size="98" default="-_" label="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS" description="COM_CCK_CONFIG_MEDIA_LEGAL_CHARACTERS_DESC" class="inputbox input-small" />
 		<field name="media_root_resources" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES" description="COM_CCK_CONFIG_MEDIA_ROOT_RESOURCES_DESC" class="inputbox input-xxlarge" />
+		<field name="media_root_system" type="text" size="98" default="" label="COM_CCK_CONFIG_MEDIA_ROOT_SYSTEM" description="COM_CCK_CONFIG_MEDIA_ROOT_SYSTEM_DESC" class="inputbox input-xxlarge" />
 		<field name="media_download_bypass" type="radio" default="1" label="COM_CCK_CONFIG_MEDIA_DOWNLOAD_BYPASS" description="COM_CCK_CONFIG_MEDIA_DOWNLOAD_BYPASS_DESC" class="btn-group btn-group-yesno">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -278,6 +279,11 @@
 		<field name="css_core" type="cck" construction="core_css_core" default="1" label="COM_CCK_CONFIG_STYLESHEETS" description="COM_CCK_CONFIG_STYLESHEETS_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="site_css" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_CSS" description="COM_CCK_CONFIG_CSS_DESC" class="inputbox input-xxlarge" />
 		<field name="site_js" type="textarea" default="" cols="80" rows="8" label="COM_CCK_CONFIG_JS" description="COM_CCK_CONFIG_JS_DESC" class="inputbox input-xxlarge" />
+		<field name="site_js_data_layer" type="radio" default="datalayer" label="COM_CCK_CONFIG_JS_DATA_LAYER" description="COM_CCK_CONFIG_JS_DATA_LAYER_DESC" class="btn-group btn-group-yesno">
+			<option value="datalayer">COM_CCK_DATALAYER</option>
+			<option value="mtm">COM_CCK_MTM</option>
+		</field>
+
 		<field name="app_crypt" type="hidden" default="0" />
 		<field name="initial_version" type="hidden" default="" />
 		<field name="media_version" type="hidden" default="" />

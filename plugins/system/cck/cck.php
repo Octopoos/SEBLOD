@@ -137,6 +137,7 @@ class plgSystemCCK extends CMSPlugin
 		}
 
 		define( 'JPATH_RESOURCES', JCckDevHelper::getRootFolderEnv( 'resources', JPATH_SITE ) );
+		define( 'JPATH_SYSTEM', JCckDevHelper::getRootFolderEnv( 'system', JPATH_SITE ) );
 
 		$view	=	$app->input->get( 'view' );
 		$task	=	$app->input->get( 'task' );
@@ -603,8 +604,12 @@ class plgSystemCCK extends CMSPlugin
 			$page_data	=	$session->get( 'cck.data_layer', null );
 
 			if ( $page_data ) {
-				$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).'); });' );
-				$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window._mtm = window._mtm || []; window._mtm.push('.json_encode( $page_data ).'); });' );
+				if ( JCck::getConfig_Param( 'site_js_data_layer', 'datalayer' ) == 'mtm' ) {
+					$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window._mtm = window._mtm || []; window._mtm.push('.json_encode( $page_data ).'); });' );
+				} else {
+					$doc->addScriptDeclaration( 'document.addEventListener("DOMContentLoaded", (event) => { window.dataLayer = window.dataLayer || []; window.dataLayer.push('.json_encode( $page_data ).'); });' );
+				}
+				
 				$session->clear( 'cck.data_layer' );
 			}
 		}
