@@ -62,12 +62,6 @@ $displayData	=	array(
 							),
 							array(
 								'fields'=>array(
-									JCckDev::renderForm( 'core_options_import', @$options2['import'], $config )
-								),
-								'legend'=>Text::_( 'COM_CCK_PROCESSING' )
-							),
-							array(
-								'fields'=>array(
 									JCckDev::getForm( 'core_storage', $this->item->storage, $config, array(), array( 'alter_type_value' => 'TEXT' ) )
 								),
 								'mode'=>'storage'

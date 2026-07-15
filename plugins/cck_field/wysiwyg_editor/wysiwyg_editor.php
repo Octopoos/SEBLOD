@@ -13,6 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Editor\Editor;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -36,6 +37,23 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		parent::g_onCCK_FieldConstruct( $data );
 		
 		$data['defaultvalue']	=	Factory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
+	}
+	
+	// onCCK_FieldConstruct_TypeForm
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
+	{
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_VALUE_CUSTOM' ) );
+			$data['variation']['custom_code']	=	HTMLHelper::_( 'select.option', 'custom_code', Text::_( 'COM_CCK_CODE' ) );
+			$data['variation']['202']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -100,14 +118,6 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 		$app		=	Factory::getApplication();
 		$options2	=	JCckDev::fromJSON( $field->options2 );
 		$user		=	Factory::getUser();
-		if ( $config['pk'] && @$options2['import'] && $field->storage_location ) {
-			if ( ! JCckDatabase::loadResult( 'SELECT pk FROM #__cck_core WHERE pk='.(int)$config['pk'].' AND storage_location="'.(string)$field->storage_location.'"' ) ) {
-				$properties	=	array( 'custom', 'table' );
-				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
-				$custom		=	( $options2['import'] == 2 ) ? 'fulltext' : $properties['custom'];
-				$value		=	$config['storages'][$properties['table']]->$custom;
-			}
-		}
 
 		if ( !$user->id && $this->params->get( 'guest_access', 0 ) == 0 ) {
 			$form	=	'';
@@ -126,7 +136,20 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$editor			=	Editor::getInstance( $editor );
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
 
-				Factory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
+				if ( !( $config['client'] == 'admin' || $config['client'] == 'site' ) ) {
+					Factory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
+				}
+
+				// Setup
+				if ( isset( $options2['setup'] ) && $options2['setup'] != '' ) {
+					if ( !isset( $tiny_options['tinyMCE'] ) ) {
+						$tiny_options['tinyMCE']	=	array();
+					}
+
+					$tiny_options['tinyMCE'][$field->name]	=	json_decode( $options2['setup'], true );
+
+					Factory::getDocument()->addScriptOptions( 'plg_editor_tinymce', $tiny_options );
+				}
 			} else {
 				// Modal Box
 				if ( trim( $field->selectlabel ) ) {
