@@ -585,7 +585,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					$config['query_parts']['select'][]	=	'(((acos(sin(('.(float)$lat.'*pi()/180)) * sin(('.$t[0].'.'.$s_lat.'*pi()/180))+cos(('.(float)$lat.'*pi()/180)) * cos(('.$t[0].'.'.$s_lat.'*pi()/180)) * cos((('.(float)$lng.'- '.$t[0].'.'.$s_lng.')*pi()/180))))*180/pi())*60*1.1515'.$mod.') AS '.$alias;						
 					
 					if ( (int)$radius > 0 ) {
-						$config['query_parts']['having'][]	=	$alias.' '.$sign.' '.$radius;
+						$config['query_parts']['having'][]	=	$alias.' '.$sign.' '.(float)$radius;
 						$sql		=	'()'; /* TODO#SEBLOD: */
 					} else {
 						$lat		=	number_format( $lat, 8 );
@@ -600,7 +600,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				return;
 				break;
 			default:
-				if ( $decrypt && $value !== '' ) {
+				if ( $decrypt && isset( $value ) && $value !== '' ) {
 					$value	=	$config['app']->encrypt( $value );
 				}
 				$sql	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $value, true ).'%', false );
