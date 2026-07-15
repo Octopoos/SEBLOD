@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 
 // Init
@@ -24,11 +25,71 @@ $key		=	$app->input->get( 'avKey', '' );
 $where		=	$app->input->getString( 'avWhere', '' );
 $table		=	$app->input->get( 'avTable', '' );
 
+if ( $value != '' && $table != '' && $column != '' ) {
+	$allowed	=	false;
+	$fullTable	=	'#__'.$table;
+
+	// Construction
+	$user	=	Factory::getUser();
+
+	if ( $app->isClient( 'administrator' )
+		&& $user->id && !$user->guest
+		&& $user->authorise( 'core.manage', 'com_cck' ) ) {
+
+		$construction	=	array(
+							'#__cck_core_fields'	=> array( 'name' )
+						);
+
+		if ( isset( $construction[$fullTable] ) && in_array( $column, $construction[$fullTable], true ) ) {
+			$allowed	=	true;
+		}
+	}
+
+	// Content/Data
+	if ( !$allowed ) {
+		$defs	=	JCckDatabase::loadColumn( 'SELECT validation_options FROM #__cck_core_type_field WHERE validation_options != "" AND ( validation = "ajax_availability" OR ( validation = "x" AND validation_options LIKE "%ajax_availability%" ) )' );
+
+		if ( is_array( $defs ) ) {
+			foreach ( $defs as $opts ) {
+				$reg		=	new Registry( $opts );
+				$conditions	=	$reg->get( 'conditions' );
+				$candidates	=	array();
+
+				if ( is_array( $conditions ) ) {
+					foreach ( $conditions as $cond ) {
+						$cond	=	(object)$cond;
+
+						if ( isset( $cond->trigger ) && (string)$cond->trigger === 'ajax_availability' && isset( $cond->options ) ) {
+							$candidates[]	=	new Registry( $cond->options );
+						}
+					}
+				} else {
+					$candidates[]	=	$reg;
+				}
+
+				foreach ( $candidates as $cand ) {
+					if ( (string)$cand->get( 'table', '' ) === $fullTable && (string)$cand->get( 'column', '' ) === $column ) {
+						if ( $key == '' || (string)$cand->get( 'key', '' ) === $key ) {
+							$allowed	=	true;
+							break 2;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if ( !$allowed ) {
+		$value	=	'';
+	}
+}
+
 if ( $value != '' ) {
 	// Process
 	if ( $where ) {
-		$fields	=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ("'.str_replace( ',', '","', $where ).'")', 'name' );
 		$where	=	explode( ',', $where );
+
+		$fields	=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.implode( ',', array_map( array( 'JCckDatabase', 'quote' ), $where ) ).')', 'name' );
 
 		foreach ( $where as $w ) {
 			if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard'  ) {
@@ -48,7 +109,7 @@ if ( $value != '' ) {
 		$count	=	(int)JCckDatabase::loadResult( 'SELECT '.JCckDatabase::quoteName( $key ).' FROM '.JCckDatabase::quoteName( '#__'.$table ).' WHERE '.JCckDatabase::quoteName( $column ).' = "'.JCckDatabase::escape( $value ).'"'.$and );
 		$res[1]	=	( $count > 0 && $count != $pk ) ? false : true;
 	} else {
-		$count	=	(int)JCckDatabase::loadResult( 'SELECT COUNT('.$column.') FROM '.JCckDatabase::quoteName( '#__'.$table ).' WHERE '.JCckDatabase::quoteName( $column ).' = "'.JCckDatabase::escape( $value ).'"'.$and );
+		$count	=	(int)JCckDatabase::loadResult( 'SELECT COUNT('.JCckDatabase::quoteName( $column ).') FROM '.JCckDatabase::quoteName( '#__'.$table ).' WHERE '.JCckDatabase::quoteName( $column ).' = "'.JCckDatabase::escape( $value ).'"'.$and );
 		$res[1]	=	( $count > 0 ) ? false : true;
 	}
 	if ( $invert ) {
