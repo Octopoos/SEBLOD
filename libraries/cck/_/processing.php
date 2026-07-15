@@ -385,6 +385,12 @@ class JCckProcessing
 		return '';
 	}
 
+	// getSafeValue
+	public function getSafeValue( $name )
+	{
+		return $this->safe( $this->getValue( $name ) );
+	}
+
 	// getStage
 	public function getStage()
 	{
@@ -437,6 +443,12 @@ class JCckProcessing
 		}
 
 		return '';
+	}
+
+	// safe
+	public function safe( $str )
+	{
+		return is_scalar( $str ) ? htmlspecialchars( (string)$str, ENT_QUOTES, 'UTF-8' ) : '';
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Set

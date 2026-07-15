@@ -1249,6 +1249,12 @@ abstract class JCckDevHelper
 		return $str;
 	}
 
+	// safe
+	public static function safe( $str )
+	{
+		return is_scalar( $str ) ? htmlspecialchars( (string)$str, ENT_QUOTES, 'UTF-8' ) : '';
+	}
+
 	// secureField
 	public static function secureField( $field, $value )
 	{
