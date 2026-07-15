@@ -208,6 +208,11 @@ class plgSearchCCK extends CMSPlugin
 								if ( $child->storage && $child->storage != 'none' ) {
 									$Pf		=	$child->storage_field;
 									$Pt		=	$child->storage_table;
+
+									if ( isset( $child->aka_table ) && $child->aka_table != '' && isset( $tables[$child->aka_table] ) ) {
+										$Pt	=	$child->aka_table;
+									}
+
 									// -
 									if ( $Pt && !isset( $tables[$Pt] ) ) {
 										$tables[$Pt]				=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
@@ -426,7 +431,7 @@ class plgSearchCCK extends CMSPlugin
 						$config['total']		=	$count;
 					} else {
 						if ( $doCount == 1 && strpos( Uri::getInstance()->toString(), 'task=' ) === false ) {
-							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.$tables['#__cck_core']['fields']['cck'].'"';
+							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $tables['#__cck_core']['fields']['cck'] ).'"';
 							$config['total']	=	JCckDatabaseCache::loadResult( $query2 );
 
 							if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
@@ -803,7 +808,7 @@ class plgSearchCCK extends CMSPlugin
 	{
 		foreach ( $tables as $k=>$v ) {
 			if ( strpos( $part, $k.'.' ) !== false ) {
-				$part	=	str_replace( $k.'.', $v['_'].'.', $part );
+				$part	=	str_replace( $k.'.', @$v['_'].'.', $part );
 			}
 		}
 
@@ -831,7 +836,7 @@ class plgSearchCCK extends CMSPlugin
 			$config['location']	=	$tables['#__cck_core']['fields']['storage_location'];
 			$inherit['table']	=	'';
 		} elseif ( isset( $tables['#__cck_core']['fields']['cck'] ) ) {
-			$cck	=	str_replace( array( ',', ' ' ), array( '","', '","' ), $tables['#__cck_core']['fields']['cck'] );
+			$cck	=	str_replace( array( ',', ' ' ), array( '","', '","' ), JCckDatabase::escape( $tables['#__cck_core']['fields']['cck'] ) );
 			$core	=	JCckDatabaseCache::loadObject( 'SELECT storage_location, storage_table FROM #__cck_core WHERE cck IN ("'.$cck.'") ORDER BY id DESC LIMIT 1' );
 			if ( is_object( $core ) ) {
 				$config['location']	=	$core->storage_location;
