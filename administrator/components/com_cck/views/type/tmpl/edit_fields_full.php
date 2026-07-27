@@ -31,7 +31,7 @@ $data2      =   array(
 $from_view	=	( $this->item->master == 'content' ) ? ( ( $this->item->client == 'intro' ) ? 'CONTENT' : 'INTRO' ) : ( ( $this->item->client == 'admin' ) ? 'SITE_FORM' : 'ADMIN_FORM' );
 $clone		=	( $this->item->id ) ? Text::sprintf( 'COM_CCK_GET_FIELDS_FROM_VIEW', Text::_( 'COM_CCK_'.$from_view ) ) : '';
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>', 'user_id'=>Factory::getUser()->id );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>Factory::getUser()->id );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">

@@ -41,7 +41,7 @@ abstract class JCckWebservice
 			$query	.=	' WHERE a.name = "'.$identifier.'"';
 		}
 
-		return JCckDatabase::loadObject( $query );
+		return JCckDatabaseCache::loadObject( $query );
 	}
 
 	// getAppId
@@ -51,7 +51,7 @@ abstract class JCckWebservice
 			return 0;
 		}
 
-		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
+		return JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_more_webservices_apps WHERE type = "platform" AND featured = 1' );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Config

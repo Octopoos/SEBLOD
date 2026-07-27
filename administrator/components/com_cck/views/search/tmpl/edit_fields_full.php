@@ -30,7 +30,7 @@ $data2      =   array(
                                     )
                 );
 $positions	=	array();
-$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil"></span>', 'user_id'=>Factory::getUser()->id );
+$attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></span>', 'user_id'=>Factory::getUser()->id );
 ?>
 <div class="<?php echo $this->css['wrapper2'].' '.$this->uix; ?>">
     <div class="<?php echo $this->css['w70']; ?>" id="seblod-main">
