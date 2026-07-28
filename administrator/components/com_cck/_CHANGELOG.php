@@ -22,7 +22,26 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
---------------- 6.0.0 Release Candidate4 Release [10-Jun-2026] ------------
+--------------- 6.0.0 Major Release [28-Jul-2026] ------------
+
+! Joomla! 6 support & many improvements
+  >> read changelogs (below) for each RCs
+
+--------------- 6.0.0 Release Candidate9 Release [24-Jul-2026] ------------
+
+* Ajax Availability Validation endpoint hardened.
+* Download/Read Traversal Path fixed (and additional restrictions applied).
+* Possible SQL Injection fixed.
+* Search Radius SQL Injection fixed.
+
++ "getSafeValue", "safe" methods added on Processing class (Triggers & Processing scripts)
+  >> returns the field value HTML-escaped, for safe output.
+  >> returns the HTML-escaped string, for safe output.
++ "No HTML" mode added on Textarea plug-in.
++ Root Folders (Resources & System) parameters added in SEBLOD Options
+  >> store some files outside Root Folder.
+
+--------------- 6.0.0 Release Candidate5 Release [10-Jun-2026] ------------
 
 + Router improved:
   >> SEF Filter (Dynamic Select plug-in) routes
