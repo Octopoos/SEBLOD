@@ -1112,7 +1112,7 @@ abstract class JCckDev
 		}
 		
 		if ( empty( $xml ) ) {
-			Factory::getApplication()->enqueueMessage( Text::_( 'JLIB_UTIL_ERROR_XML_LOAD' ), 'warning' );
+			Factory::getApplication()->enqueueMessage( JText::_( 'JLIB_UTIL_ERROR_XML_LOAD' ), 'warning' );
 			
 			if ( $isFile ) {
 				Factory::getApplication()->enqueueMessage( $data, 'warning' );
