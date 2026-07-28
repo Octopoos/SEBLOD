@@ -676,7 +676,7 @@ abstract class JCckDev
 				if ( isset( $options['fieldPicker'] ) && $options['fieldPicker'] ) {
 					if ( $options['base'] == 'job_output' ) {
 						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.id as value FROM #__cck_more_processings AS a'
-																. ' WHERE a.published = 1 ORDER BY text' );
+																. ' ORDER BY text' );
 						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_PROCESSING' ).' -' ) ), $fields ) : array();
 					} else {
 						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
