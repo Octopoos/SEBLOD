@@ -404,7 +404,7 @@ class plgSearchCCK extends JPlugin
 						$config['total']		=	$count;
 					} else {
 						if ( $doCount == 1 && strpos( JUri::getInstance()->toString(), 'task=' ) === false ) {
-							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.$tables['#__cck_core']['fields']['cck'].'"';
+							$query2				=	'SELECT COUNT(id) FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( $tables['#__cck_core']['fields']['cck'] ).'"';
 							$config['total']	=	JCckDatabaseCache::loadResult( $query2 );
 
 							if ( isset( $config['doQuery2'] ) && $config['doQuery2'] ) {
@@ -742,7 +742,7 @@ class plgSearchCCK extends JPlugin
 			$config['location']	=	$tables['#__cck_core']['fields']['storage_location'];
 			$inherit['table']	=	'';
 		} elseif ( isset( $tables['#__cck_core']['fields']['cck'] ) ) {
-			$cck	=	str_replace( array( ',', ' ' ), array( '","', '","' ), $tables['#__cck_core']['fields']['cck'] );
+			$cck	=	str_replace( array( ',', ' ' ), array( '","', '","' ), JCckDatabase::escape( $tables['#__cck_core']['fields']['cck'] ) );
 			$core	=	JCckDatabaseCache::loadObject( 'SELECT storage_location, storage_table FROM #__cck_core WHERE cck IN ("'.$cck.'") ORDER BY id DESC LIMIT 1' );
 			if ( is_object( $core ) ) {
 				$config['location']	=	$core->storage_location;

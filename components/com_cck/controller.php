@@ -11,6 +11,9 @@
 defined( '_JEXEC' ) or die;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
 // Controller
 class CCKController extends JControllerLegacy
@@ -132,7 +135,12 @@ class CCKController extends JControllerLegacy
 		$id				=	$app->input->getInt( 'id', 0 );
 		$fieldname		=	$app->input->getString( 'file', '' );
 		$to_be_erased	=	false;
-		
+		$uri_root		=	Uri::root();
+
+		if ( $fieldname != '' && ( strpos( $fieldname, '..' ) !== false || strpos( $fieldname, "\0" ) !== false ) ) {
+			throw new Exception( Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), 403 );
+		}
+
 		if ( ! $id ) {
 			$file	=	$fieldname;
 			$path	=	JPATH_ROOT.'/'.$file;
@@ -145,11 +153,22 @@ class CCKController extends JControllerLegacy
 
 				if ( count( $paths ) ) {
 					$paths[]	=	'tmp/';
+
 					foreach ( $paths as $p ) {
 						if ( empty( $p ) ) {
 							continue;
 						}
 						if ( strpos( $path, JPATH_ROOT.'/'.$p ) !== false ) {
+							if ( JPATH_RESOURCES != JPATH_SITE && is_dir( JPATH_RESOURCES.'/'.$p ) && ( strpos( $file, $p ) !== false ) ) {
+								$config		=	array(
+													'file_path'=>JPATH_RESOURCES
+												);
+							} elseif ( JPATH_SYSTEM != JPATH_SITE && is_dir( JPATH_SYSTEM.'/'.$p ) && ( strpos( $file, $p ) !== false ) ) {
+								$config		=	array(
+													'file_path'=>JPATH_SYSTEM
+												);
+							}
+
 							$allowed	=	true;
 							break;
 						}
@@ -165,6 +184,12 @@ class CCKController extends JControllerLegacy
 				$this->setRedirect( JUri::root(), JText::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), "error" );
 				return;
 			} else {
+				if ( JPATH_SYSTEM != JPATH_SITE && is_dir( JPATH_SYSTEM.'/tmp' ) && ( strpos( $file, 'tmp/' ) !== false ) ) {
+					$config		=	array(
+										'file_path'=>JPATH_SYSTEM
+									);
+				}
+
 				$to_be_erased	=	true;
 			}
 			if ( $to_be_erased ) {
@@ -201,14 +226,34 @@ class CCKController extends JControllerLegacy
 			$file	=	( isset( $config['file'] ) ) ? $config['file'] : '';
 		}
 
-		$path	=	JPATH_ROOT.'/'.$file;
-		
+		if ( isset( $config['file_path'] ) && $config['file_path'] ) {
+			$root_folder	=	$config['file_path'];
+		} else {
+			$root_folder	=	JPATH_ROOT;
+		}
+
+		$path	=	$root_folder.'/'.$file;
+
+		if ( $file != '' && ( $path_real = realpath( $path ) ) !== false ) {
+			$root_real	=	realpath( $root_folder );
+
+			if ( $root_real === false || strncmp( $path_real, $root_real.DIRECTORY_SEPARATOR, strlen( $root_real ) + 1 ) !== 0 ) {
+				throw new Exception( Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), 403 );
+			}
+		}
+
 		if ( is_file( $path ) && $file ) {
 			$ext	=	strtolower( substr ( strrchr( $path, '.' ) , 1 ) );
 			$name	=	substr( $path, strrpos( $path, '/' ) + 1, strrpos( $path, '.' ) );
 
-			if ( $ext == 'php' || $file == '.htaccess' ) {
-				return;
+			$forbidden_ext	=	array(
+								'php', 'phps', 'pht', 'phtml', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8', 'phar', 'inc',
+								'sh', 'bash', 'zsh', 'ksh',
+								'key', 'pem', 'crt', 'cer', 'cert', 'csr', 'der', 'p12', 'pfx', 'p7b', 'p7c', 'ca', 'ca-bundle', 'keystore', 'jks', 'asc', 'gpg', 'ppk'
+							);
+
+			if ( in_array( $ext, $forbidden_ext ) || $file == '.htaccess' || basename( $file ) == 'config' || strpos( basename( $file ), '.' ) === 0 || strpos( $file, '/.' ) !== false ) {
+				die;
 			}
 			if ( $path ) {
 				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {

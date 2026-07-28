@@ -202,6 +202,9 @@ class plgSystemCCK extends JPlugin
 		$view	=	$app->input->get( 'view' );
 		$task	=	$app->input->get( 'task' );
 
+		define( 'JPATH_RESOURCES', JCckDevHelper::getRootFolderEnv( 'resources', JPATH_SITE ) );
+		define( 'JPATH_SYSTEM', JCckDevHelper::getRootFolderEnv( 'system', JPATH_SITE ) );
+
 		if ( $view || ( $task && $task != 'download' ) ) {
 			JFactory::getSession()->set( 'cck_task', '' );
 		}

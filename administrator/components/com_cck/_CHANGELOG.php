@@ -22,6 +22,15 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 3.30.0 Upgrade Release [18-Jun-2026] -------------
+
+* Ajax Availability Validation endpoint hardened.
+* Download/Read Traversal Path fixed (and additional restrictions applied).
+* Possible SQL Injection fixed.
+* Search Radius SQL Injection fixed.
+
++ "No HTML" mode added on Textarea plug-in.
+
 --------------- 3.29.0 Upgrade Release [01-Dec-2025] -------------
 
 + "between" operator updated on JCckContent find/search methods.

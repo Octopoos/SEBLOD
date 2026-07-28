@@ -10,6 +10,11 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 // Plugin
 class plgCCK_FieldTextarea extends JCckPluginField
 {
@@ -26,9 +31,26 @@ class plgCCK_FieldTextarea extends JCckPluginField
 		}
 		parent::g_onCCK_FieldConstruct( $data );
 		
-		$data['defaultvalue']	=	JFactory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
+		$data['defaultvalue']	=	Factory::getApplication()->input->post->get( 'defaultvalue', '', 'raw' );
 	}
 	
+	// onCCK_FieldConstruct_TypeForm
+	public static function onCCK_FieldConstruct_TypeForm( &$field, $style, $data = array(), &$config = array() )
+	{
+		if ( !isset( $config['construction']['variation'][self::$type] ) ) {
+			$data['variation']['201']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_VALUE_CUSTOM' ) );
+			$data['variation']['custom_code']	=	HTMLHelper::_( 'select.option', 'custom_code', Text::_( 'COM_CCK_CODE' ) );
+			$data['variation']['202']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+			$data['variation']['203']			=	HTMLHelper::_( 'select.option', '<OPTGROUP>', Text::_( 'COM_CCK_STAR_IS_SECURED' ) );
+			$data['variation']['204']			=	HTMLHelper::_( 'select.option', '</OPTGROUP>', '' );
+
+			$config['construction']['variation'][self::$type]	=	$data['variation'];
+		} else {
+			$data['variation']									=	$config['construction']['variation'][self::$type];
+		}
+		parent::onCCK_FieldConstruct_TypeForm( $field, $style, $data, $config );
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
 	
 	// onCCK_FieldPrepareContent
@@ -38,10 +60,19 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			return;
 		}
 		parent::g_onCCK_FieldPrepareContent( $field, $config );
-		$value			=	( $field->bool3 ) ? self::_bn2clear( $value ) : $value;
-		if ( $value ) {
-			$value		=	( $field->bool2 ) ? ( ( $field->bool2 == 2 ) ? self::_bn2br_in_p( $value ) : self::_bn2p( $value ) ) : self::_bn2br( $value );
+
+		if ( $field->bool7 == -1 ) {
+			$value	=	htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' );
 		}
+
+		$value			=	( $field->bool3 ) ? self::_bn2clear( $value ) : $value;
+
+		if ( $value ) {
+			if ( (int)$field->bool2 != -1 ) {
+				$value		=	( $field->bool2 ) ? ( ( $field->bool2 == 2 ) ? self::_bn2br_in_p( $value ) : self::_bn2p( $value ) ) : self::_bn2br( $value, true );
+			}
+		}
+		
 		$field->value	=	$value;
 	}
 
@@ -78,39 +109,54 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$value		=	( $value != '' ) ? ( ( $field->bool2 ) ? self::_p2nl( $value ) : self::_br2nl( $value ) ) : $field->defaultvalue;
-		$value		=	( $value != ' ' ) ? $value : '';
-		
-		// Validate
-		$validate	=	'';
-		if ( $config['doValidation'] > 1 ) {
-			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
-			parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true, 'maxSize'=>true ) );
-			$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
-		}
-		
-		// Prepare
-		$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
-		$cols	=	( $field->cols ) ? $field->cols : 25;
-		$rows	=	( $field->rows ) ? $field->rows : 3;
-		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
-		$attr	=	'class="'.$class.'"'.$maxlen;
 
-		if ( $field->attributes != '' ) {
-			$attr	.=	' '.$field->attributes;
-		}
-		$form	= 	'<textarea id="'.$id.'" name="'.$name.'" cols="'.$cols.'" rows="'.$rows.'" '.$attr.'>'.$value.'</textarea>';
-		$form 	.=	( $field->bool4 ) ? self::_checkRemaingCharacters( $id, $field->maxlength ) : '';
-		
-		// Set
-		if ( ! $field->variation ) {
-			$field->form	=	$form;
-			if ( $field->script ) {
-				parent::g_addScriptDeclaration( $field->script );
+		if ( $value != '' ) {
+			if ( $field->bool2 != -1 ) {
+				$value	=	$field->bool2 ? self::_p2nl( $value ) : self::_br2nl( $value );
 			}
 		} else {
-			$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
-			parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
+			$value	=	$field->defaultvalue;
+		}
+		$value		=	( $value != ' ' ) ? $value : '';
+
+		if ( !isset( $field->variation  ) ) {
+			$field->variation	=	'';
+		}
+		if ( $field->variation ==  'custom_code' ) {
+			// $value			=	'1';
+			$field->form	=	'<pre>'.htmlentities( $value ).'</pre>';
+		} else {
+			// Validate
+			$validate	=	'';
+			if ( $config['doValidation'] > 1 ) {
+				plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+				parent::g_onCCK_FieldPrepareForm_Validation( $field, $id, $config, array( 'minSize'=>true, 'maxSize'=>true ) );
+				$validate	=	( count( $field->validate ) ) ? ' validate['.implode( ',', $field->validate ).']' : '';
+			}
+			
+			// Prepare
+			$class	=	'inputbox textarea'.$validate . ( $field->css ? ' '.$field->css : '' );
+			$cols	=	( $field->cols ) ? $field->cols : 25;
+			$rows	=	( $field->rows ) ? $field->rows : 3;
+			$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
+			$attr	=	'class="'.$class.'"'.$maxlen;
+
+			if ( $field->attributes != '' ) {
+				$attr	.=	' '.$field->attributes;
+			}
+			$form	= 	'<textarea id="'.$id.'" name="'.$name.'" cols="'.$cols.'" rows="'.$rows.'" '.$attr.'>'.$value.'</textarea>';
+			$form 	.=	( $field->bool4 ) ? self::_checkRemaingCharacters( $id, $field->maxlength ) : '';
+			
+			// Set
+			if ( ! $field->variation ) {
+				$field->form	=	$form;
+				if ( $field->script ) {
+					parent::g_addScriptDeclaration( $field->script );
+				}
+			} else {
+				$hidden	=	'<textarea class="inputbox" style="display: none;" id="_'.$id.'" name="'.$name.'" />'.$value.'</textarea>';
+				parent::g_getDisplayVariation( $field, $field->variation, $value, self::_bn2br( self::_bn2clear( $value ) ), $form, $id, $name, '<textarea', $hidden, '', $config );
+			}
 		}
 		$field->value	=	$value;
 		
@@ -148,12 +194,14 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
 			$name	=	$field->name;
-			$value	=	JFactory::getApplication()->input->post->get( $name, '', 'raw' );
+			$value	=	Factory::getApplication()->input->post->get( $name, '', 'raw' );
 		}
 		
 		// Make it safe
-		if ( $field->bool7 ) {
-			$value	=	JComponentHelper::filterText( $value );
+		if ( $field->bool7 == -1 ) {
+			$value	=	strip_tags( $value );
+		} elseif ( $field->bool7 ) {
+			$value	=	ComponentHelper::filterText( $value );
 		}
 
 		// Validate
@@ -196,9 +244,9 @@ class plgCCK_FieldTextarea extends JCckPluginField
 					}
 				}).trigger("keyup");';
 
-		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) {'.$js.'});' );
+		Factory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) {'.$js.'});' );
 		
-		return '<div id="chars-'.$id.'">'.JText::sprintf( 'COM_CCK_N_CHARACTERS_REMAINING', $length ).'</div>';
+		return '<div id="chars-'.$id.'" class="remaining-chars">'.Text::sprintf( 'COM_CCK_N_CHARACTERS_REMAINING', $length ).'</div>';
 	}
 
 	// _br2nl
@@ -208,8 +256,12 @@ class plgCCK_FieldTextarea extends JCckPluginField
 	}
 
 	// _bn2br
-	protected static function _bn2br( $text )
+	protected static function _bn2br( $text, $clean = false )
 	{
+		if ( $clean ) {
+			$text	=	preg_replace('/>\s+</', '><', $text );
+		}
+
 		return preg_replace( '/\\n/i', "<br />", $text );
 	}
 

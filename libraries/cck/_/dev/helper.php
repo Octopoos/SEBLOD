@@ -483,6 +483,42 @@ abstract class JCckDevHelper
 		return $path;
 	}
 
+	// getRootFolder
+	public static function getRootFolder( $type = 'resources', $custom = null )
+	{
+		if ( $custom === false ) {
+			return JPATH_SITE;
+		}
+
+		$dest	=	self::getRootFolderEnv( $type );
+
+		if ( $dest != '' ) {
+			$len	=	strlen( $dest );
+
+			if ( $dest[($len - 1)] == '/' ) {
+				$dest	=	substr( $dest, 0, - 1 );
+			}
+		}
+
+		return $dest ? $dest : JPATH_SITE;
+	}
+
+	// getRootFolderEnv
+	public static function getRootFolderEnv( $type, $default = '' )
+	{
+		$folder	=	JCck::getConfig_Param( 'media_root_'.$type, $default );
+
+		if ( $folder && $folder[0] === '@' ) {
+			$folder	=	(string)getenv( substr( $folder, 1 ) );
+
+			if ( $folder == '' ) {
+				$folder	=	$default;
+			}
+		}
+
+		return $folder;
+	}
+
 	// getRules
 	public static function getRules( $rules, $default = '{}' )
 	{
