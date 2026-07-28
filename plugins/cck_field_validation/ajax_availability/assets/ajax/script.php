@@ -28,31 +28,51 @@ $table		=	$app->input->get( 'avTable', '' );
 if ( $value != '' && $table != '' && $column != '' ) {
 	$allowed	=	false;
 	$fullTable	=	'#__'.$table;
-	$defs		=	JCckDatabase::loadColumn( 'SELECT validation_options FROM #__cck_core_type_field WHERE validation_options != "" AND ( validation = "ajax_availability" OR ( validation = "x" AND validation_options LIKE "%ajax_availability%" ) )' );
 
-	if ( is_array( $defs ) ) {
-		foreach ( $defs as $opts ) {
-			$reg		=	new Registry( $opts );
-			$conditions	=	$reg->get( 'conditions' );
-			$candidates	=	array();
+	// Construction
+	$user	=	Factory::getUser();
 
-			if ( is_array( $conditions ) ) {
-				foreach ( $conditions as $cond ) {
-					$cond	=	(object)$cond;
+	if ( $app->isClient( 'administrator' )
+		&& $user->id && !$user->guest
+		&& $user->authorise( 'core.manage', 'com_cck' ) ) {
 
-					if ( isset( $cond->trigger ) && (string)$cond->trigger === 'ajax_availability' && isset( $cond->options ) ) {
-						$candidates[]	=	new Registry( $cond->options );
+		$construction	=	array(
+							'#__cck_core_fields'	=> array( 'name' )
+						);
+
+		if ( isset( $construction[$fullTable] ) && in_array( $column, $construction[$fullTable], true ) ) {
+			$allowed	=	true;
+		}
+	}
+
+	// Content/Data
+	if ( !$allowed ) {
+		$defs	=	JCckDatabase::loadColumn( 'SELECT validation_options FROM #__cck_core_type_field WHERE validation_options != "" AND ( validation = "ajax_availability" OR ( validation = "x" AND validation_options LIKE "%ajax_availability%" ) )' );
+
+		if ( is_array( $defs ) ) {
+			foreach ( $defs as $opts ) {
+				$reg		=	new Registry( $opts );
+				$conditions	=	$reg->get( 'conditions' );
+				$candidates	=	array();
+
+				if ( is_array( $conditions ) ) {
+					foreach ( $conditions as $cond ) {
+						$cond	=	(object)$cond;
+
+						if ( isset( $cond->trigger ) && (string)$cond->trigger === 'ajax_availability' && isset( $cond->options ) ) {
+							$candidates[]	=	new Registry( $cond->options );
+						}
 					}
+				} else {
+					$candidates[]	=	$reg;
 				}
-			} else {
-				$candidates[]	=	$reg;
-			}
 
-			foreach ( $candidates as $cand ) {
-				if ( (string)$cand->get( 'table', '' ) === $fullTable && (string)$cand->get( 'column', '' ) === $column ) {
-					if ( $key == '' || (string)$cand->get( 'key', '' ) === $key ) {
-						$allowed	=	true;
-						break 2;
+				foreach ( $candidates as $cand ) {
+					if ( (string)$cand->get( 'table', '' ) === $fullTable && (string)$cand->get( 'column', '' ) === $column ) {
+						if ( $key == '' || (string)$cand->get( 'key', '' ) === $key ) {
+							$allowed	=	true;
+							break 2;
+						}
 					}
 				}
 			}
@@ -67,8 +87,9 @@ if ( $value != '' && $table != '' && $column != '' ) {
 if ( $value != '' ) {
 	// Process
 	if ( $where ) {
-		$fields	=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ("'.str_replace( ',', '","', $where ).'")', 'name' );
 		$where	=	explode( ',', $where );
+
+		$fields	=	JCckDatabase::loadObjectList( 'SELECT name, storage, storage_table, storage_field FROM #__cck_core_fields WHERE name IN ('.implode( ',', array_map( array( 'JCckDatabase', 'quote' ), $where ) ).')', 'name' );
 
 		foreach ( $where as $w ) {
 			if ( isset( $fields[$w] ) && $fields[$w]->storage == 'standard'  ) {
