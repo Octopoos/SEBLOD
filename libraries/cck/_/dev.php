@@ -499,7 +499,7 @@ abstract class JCckDev
 						$js3		=	'var disp = "";';
 					}
 
-					if ( $options['base'] === 'job_output' ) {
+					if ( $options['base'] === 'job_output' || $options['base'] === 'app_resources' ) {
 						$attr_grid	=	'attr-grid-1';
 						$no_no		=	'';
 					} elseif ( $options['base'] === 'api_input' || $options['base'] === 'api_output' ) {
@@ -678,6 +678,10 @@ abstract class JCckDev
 						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.id as value FROM #__cck_more_processings AS a'
 																. ' ORDER BY text' );
 						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_PROCESSING' ).' -' ) ), $fields ) : array();
+					} elseif ( $options['base'] == 'app_resources' ) {
+						$fields	=	JCckDatabase::loadObjectList( 'SELECT CONCAT(a.title, "     ", a.methods, "     /", a.name) as text, a.id as value FROM #__cck_more_webservices_resources AS a'
+																. ' WHERE a.published = 1 ORDER BY a.title' );
+						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_RESOURCE' ).' -' ) ), $fields ) : array();
 					} else {
 						$and	=	strpos( $options['root'], '_api_' ) !== false ? ' AND a.storage != "none"' : '';
 						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
