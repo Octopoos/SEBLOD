@@ -10,6 +10,7 @@ use Joomla\CMS\Language\Text;
 				<?php echo Text::_( 'COM_CCK_SETTINGS' ); ?>
 			</legend>
 			<?php
+			echo $displayData['fields']['_public_info'];
 			echo $displayData['fields']['_key'];
 			echo $displayData['fields']['_value'];
 			echo $displayData['fields']['_mode'];

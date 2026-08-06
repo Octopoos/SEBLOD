@@ -21,7 +21,7 @@ div.seblod-less.cpanel_news.compact { width: 380px; }
 div.seblod-less.cpanel_news.compact div.cpanel.compact { width: 270px; }
 div.seblod.beta { background-image: url("../images/beta.png"); background-position: 0 0; background-repeat: no-repeat; background-size: 42px; }
 div.seblod.first.cpanel_news { margin-top: 0 !important; }
-div.seblod.first.cpanel_news .legend, div.seblod.first.cpanel_news ul.adminformlist { margin: 0; }
+div.seblod.first.cpanel_news .legend, div.seblod.first.cpanel_news ul.adminformlist { margin: 0; padding: 0;}
 div#cckOptions, div.accordion-group { margin-bottom: 10px; }
 div.cpanel_news div.alert.alert-info a.close, div.cpanel_news div.alert a.close span { color: #08c; width: 20px; height: 20px; line-height: 22px; text-shadow: none; opacity: 1; font-weight: normal; }
 div.cpanel_news div.alert.alert-info { color: #08c; }

@@ -679,8 +679,9 @@ abstract class JCckDev
 																. ' ORDER BY text' );
 						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_PROCESSING' ).' -' ) ), $fields ) : array();
 					} else {
+						$and	=	strpos( $options['root'], '_api_' ) !== false ? ' AND a.storage != "none"' : '';
 						$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
-																. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
+																. ' WHERE a.published = 1 AND a.storage !="dev"'.$and.' AND a.name != "'.$elem->name.'" ORDER BY text' );
 						$fields	=	is_array( $fields ) ? array_merge( array( HTMLHelper::_( 'select.option', '', '- '.Text::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
 					}
 
