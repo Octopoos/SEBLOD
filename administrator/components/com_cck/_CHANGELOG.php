@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.0.1 Upgrade Release [7-Aug-2026] -------------
+
+^ Core Update for SEBLOD Tooblox/WebServices Add-ons
+
 --------------- 6.0.0 Major Release [28-Jul-2026] ------------
 
 ! Joomla! 6 support & many improvements
