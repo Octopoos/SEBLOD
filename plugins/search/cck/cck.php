@@ -718,6 +718,13 @@ class plgSearchCCK extends CMSPlugin
 						} elseif ( $field->match_options->get( 'var_type' ) == '0' ) {
 							$modifier		=	' LENGTH(';
 							$modifier2		=	')';
+						} elseif ( $field->match_options->get( 'var_type' ) == '2' ) {
+							$var_value	=	trim( $field->match_options->get( 'var_value', '' ) );
+
+							if ( $var_value != '' ) {
+								$modifier	=	'(';
+								$modifier2	=	' '.$var_value.')';
+							}
 						}
 						if ( $modifier3 == 'FIELD' ) {
 							$modifier		=	' FIELD(';

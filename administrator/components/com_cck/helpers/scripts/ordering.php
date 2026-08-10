@@ -90,6 +90,7 @@ $js		=	'
 						});
 					}
 					$("#match_options_var_type").isVisibleWhen("match_mode","ASC,DESC");
+					$("#match_options_var_value").isVisibleWhen("match_options_var_type","2");
 					$("#match_options_by_field").isVisibleWhen("match_mode","FIELD");
 					$("#sortable_core_dev_texts").isVisibleWhen("match_options_by_field","1");
 				});
@@ -106,7 +107,8 @@ $options	=	explode( '||', $options );
 	<input type="hidden" id="match_mode" name="match_mode" value="" />
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Modifier', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Length=0||Numeric=1', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Modifier', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Expression=2||Length=0||Numeric=1', 'storage_field'=>'match_options[var_type]', 'css'=>'match_options' ) );
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Expression', 'defaultvalue'=>'', 'storage_field'=>'match_options[var_value]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Ordering', 'selectlabel'=>'', 'options'=>'Following Options=0||Custom=1||Live=optgroup||URL Variable=url_variable', 'storage_field'=>'match_options[by_field]', 'css'=>'match_options' ) );
 		echo JCckDev::renderForm( 'core_dev_texts', $options, $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'', 'maxlength'=>88, 'storage_field'=>'match_options[by_field_values]' ) );
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'clear', 'selectlabel'=>'', 'options'=>'', 'maxlength'=>0, 'cols'=>73, 'rows'=>1, 'storage_field'=>'match_options[by_live_params]', 'css'=>'match_options' ), array(), array(), 'w100' );
