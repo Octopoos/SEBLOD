@@ -95,10 +95,12 @@ class plgCCK_Storage_LocationFree_Exporter extends plgCCK_Storage_LocationFree
 
 			if ( $settings !== '' ) {
 				$settings	=	json_decode( $settings, true );
-
-				if ( !isset( $settings['properties'] ) ) {
-					$settings['properties']	=	array();
-				}
+			}
+			if ( !is_array( $settings ) ) {
+				$settings	=	array();
+			}
+			if ( !isset( $settings['properties'] ) ) {
+				$settings['properties']	=	array();
 			}
 
 			foreach ( $items as $item ) {

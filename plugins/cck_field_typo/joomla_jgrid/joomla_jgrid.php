@@ -264,6 +264,10 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$formId	=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
 				}
 				$class		=	$typo->get( 'class1', '' );
+
+				if ( $value === '' || $value === null ) {
+					$value	=	( isset( $config['id'] ) && $config['id'] ) ? $config['id'] : $pk;
+				}
 				$value		=	HTMLHelper::_( 'grid.id', $pks[$pk], $value );
 
 				if ( $class ) {
