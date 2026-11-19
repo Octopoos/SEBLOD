@@ -107,7 +107,7 @@ class JCckDevImage
 	// destroy
 	public function destroy()
 	{
-		if ( $this->isResource( $this->_resource ) ) {
+		if ( $this->isResource() ) {
 			return imagedestroy( $this->_resource );
 		}
 
@@ -231,6 +231,22 @@ class JCckDevImage
 		}
 
 		return true;
+	}
+
+	// setJpegQuality
+	public function setJpegQuality( $quality )
+	{
+		$quality	=	(int)$quality;
+
+		if ( $quality < 0 ) {
+			$quality	=	0;
+		} elseif ( $quality > 100 ) {
+			$quality	=	100;
+		}
+
+		$this->_quality_jpg	=	$quality;
+
+		return $this;
 	}
 
 	// rotate
