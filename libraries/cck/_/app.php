@@ -200,7 +200,7 @@ class JCckApp
 	public function decrypt( $data )
 	{
 		if ( $this->_crypt === null ) {
-			return;
+			throw new \LogicException( 'App "'.$this->_name.'": no encryption key or nonce is configured, so an encrypted value cannot be read. Nothing is returned, and nothing must be written over it.' );
 		}
 
 		return $this->_crypt->decrypt( $data, $this->_crypt_key );
@@ -209,6 +209,10 @@ class JCckApp
 	// encrypt
 	public function encrypt( $data )
 	{
+		if ( $this->_crypt === null ) {
+			throw new \LogicException( 'App "'.$this->_name.'": no encryption key or nonce is configured, so a value cannot be encrypted. Refused rather than stored in the clear.' );
+		}
+
 		return $this->_crypt->encrypt( $data, $this->_crypt_key );
 	}
 
@@ -325,7 +329,7 @@ class JCckApp
 
 		$options    =   json_decode( $core->options, true );
 
-		if ( $core->nonce !== null ) {
+		if ( !empty( $core->nonce ) ) {
 			if ( JCck::on( '4' ) ) {
 				require_once JPATH_SITE.'/libraries/cck/base/app_crypt.php';
 			} else {
@@ -337,12 +341,43 @@ class JCckApp
 			$this->_crypt->setNonce( $core->nonce );
 
 			$this->_crypt_key	=	$this->_crypt->getkey(
-										$this->_convertKey( $this->_getKey( $options['key_private'] ?? '' ) ),
-										$this->_convertKey( $this->_getKey( $options['key_public'] ?? '' ) )
+										$this->_checkKey( 'key_private', $options['key_private'] ?? '' ),
+										$this->_checkKey( 'key_public', $options['key_public'] ?? '' )
 									);
 		}
 
 		return true;
+	}
+
+	// _checkKey
+	protected function _checkKey( $option, $source )
+	{
+		$source	=	(string)$source;
+
+		if ( $source === '' ) {
+			throw new \LogicException( 'App "'.$this->_name.'": '.$option.' is not set. An encrypted field is neither read nor written without it.' );
+		}
+
+		$raw	=	(string)$this->_getKey( $source );
+
+		if ( $raw === '' ) {
+			throw new \LogicException( 'App "'.$this->_name.'": '.$option.' carries nothing — '
+										.( $source[0] === '@'
+											? 'the environment variable '.substr( $source, 1 ).' is unset or empty for this process. A sourced script must export it, not just assign it; mod_php reads SetEnv, PHP-FPM reads env[...], cron reads what its wrapper exports.'
+											: 'the file it names is missing or unreadable' ) );
+		}
+
+		$key	=	(string)$this->_convertKey( $raw );
+
+		if ( $key === '' ) {
+			throw new \LogicException( 'App "'.$this->_name.'": '.$option.' does not decode — '.strlen( $raw ).' characters read, expected hexadecimal'
+										.( (int)JCck::getConfig_Param( 'app_crypt', '0' ) ? ', or base64 since the app_crypt parameter is on' : '' ).'.' );
+		}
+		if ( strlen( $key ) !== SODIUM_CRYPTO_BOX_SECRETKEYBYTES ) {
+			throw new \LogicException( 'App "'.$this->_name.'": '.$option.' decodes to '.strlen( $key ).' bytes instead of '.SODIUM_CRYPTO_BOX_SECRETKEYBYTES.'. Expected hexadecimal, or base64 when the app_crypt parameter is on.' );
+		}
+
+		return $key;
 	}
 
 	// _convertKey
@@ -351,7 +386,7 @@ class JCckApp
 		if ( (int)JCck::getConfig_Param( 'app_crypt', '0' ) ) {
 			return base64_decode( $data );
 		} else {
-			return strlen( $data ) % 2 === 0 ? hex2bin( $data ) : '';
+			return strlen( $data ) % 2 === 0 && ctype_xdigit( $data ) ? hex2bin( $data ) : '';
 		}
 	}
 
