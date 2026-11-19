@@ -309,8 +309,99 @@ abstract class JCckDevHelper
 		return ucfirst( $code2 );
 	}
 
+	// getDownloadToken
+	public static function getDownloadToken( $id, $fieldname, $x, $options2 )
+	{
+		if ( empty( $options2['download_token'] ) ) {
+			return '';
+		}
+
+		$token	=	JCckDatabase::loadResult( 'SELECT token FROM #__cck_core_downloads WHERE id = '.(int)$id.' AND field = "'.JCckDatabase::escape( (string)$fieldname ).'" AND collection = "" AND x = '.(int)$x );
+
+		if ( !$token ) {
+			return '';
+		}
+
+		return '&token='.$token;
+	}
+
+	// syncDownloadTokens
+	public static function syncDownloadTokens( $process, &$fields, &$config )
+	{
+		$field		=	$fields[$process['name']];
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+
+		if ( empty( $options2['download_token'] ) ) {
+			return;
+		}
+
+		$id	=	(int)$config['id'];
+
+		if ( !$id && !empty( $config['pk'] ) ) {
+			$id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE cck = "'.JCckDatabase::escape( (string)$config['type'] ).'" AND pk = '.(int)$config['pk'] );
+		}
+		if ( !$id ) {
+			return;
+		}
+
+		$names	=	( $field->value !== '' && $field->value !== null ) ? explode( ',', (string)$field->value ) : array();
+		$old	=	( isset( $process['old_values'] ) && is_array( $process['old_values'] ) ) ? $process['old_values'] : array();
+		$kept	=	array();
+		$where	=	'id = '.(int)$id.' AND field = "'.JCckDatabase::escape( (string)$field->name ).'" AND collection = ""';
+
+		foreach ( $old as $x => $name ) {
+			$name	=	(string)$name;
+
+			if ( $name === '' || isset( $kept[$name] ) ) {
+				continue;
+			}
+
+			$row	=	JCckDatabase::loadObject( 'SELECT token, upload_date, hits FROM #__cck_core_downloads WHERE '.$where.' AND x = '.(int)$x );
+
+			if ( is_object( $row ) && $row->token !== '' ) {
+				$kept[$name]	=	$row;
+			}
+		}
+
+		$used	=	array();
+
+		foreach ( $names as $x => $name ) {
+			$name	=	trim( (string)$name );
+
+			if ( $name === '' ) {
+				continue;
+			}
+
+			if ( isset( $kept[$name] ) && !isset( $used[$name] ) ) {
+				$token			=	$kept[$name]->token;
+				$upload_date	=	$kept[$name]->upload_date;
+				$hits			=	(int)$kept[$name]->hits;
+				$used[$name]	=	true;
+			} else {
+				$token			=	bin2hex( random_bytes( 16 ) );
+				$upload_date	=	Factory::getDate()->toSql();
+				$hits			=	0;
+			}
+
+			$row_where	=	$where.' AND x = '.(int)$x;
+			$exists		=	JCckDatabase::loadObject( 'SELECT hits FROM #__cck_core_downloads WHERE '.$row_where );
+
+			if ( !is_object( $exists ) ) {
+				JCckDatabase::execute( 'INSERT INTO #__cck_core_downloads (`id`, `field`, `collection`, `x`, `hits`, `token`, `upload_date`) VALUES ('.(int)$id.', "'.JCckDatabase::escape( (string)$field->name ).'", "", '.(int)$x.', '.(int)$hits.', "'.JCckDatabase::escape( $token ).'", "'.JCckDatabase::escape( $upload_date ).'")' );
+			} else {
+				JCckDatabase::execute( 'UPDATE #__cck_core_downloads SET hits = '.(int)$hits.', token = "'.JCckDatabase::escape( $token ).'", upload_date = "'.JCckDatabase::escape( $upload_date ).'" WHERE '.$row_where );
+			}
+		}
+
+		if ( count( $names ) ) {
+			JCckDatabase::execute( 'DELETE FROM #__cck_core_downloads WHERE '.$where.' AND x >= '.count( $names ) );
+		} else {
+			JCckDatabase::execute( 'DELETE FROM #__cck_core_downloads WHERE '.$where );
+		}
+	}
+
 	// getDownloadInfo
-	public static function getDownloadInfo( $id, $fieldname )
+	public static function getDownloadInfo( $id, $fieldname, $by_token = false )
 	{
 		$app		=	Factory::getApplication();
 		$client		=	( $app->input->get( 'client', '' ) == 'intro' ) ? 'intro' : 'content';
@@ -340,7 +431,7 @@ abstract class JCckDevHelper
 		}
 		PluginHelper::importPlugin( 'cck_storage_location' );
 
-		if ( !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
+		if ( !$by_token && !JCck::callFunc_Array( 'plgCCK_Storage_Location'.$core->storage_location, 'access', array( $core->pk, false ) ) ) {
 			$canEdit	=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
 
 			if ( $user->id && !$user->guest ) {
@@ -385,125 +476,127 @@ abstract class JCckDevHelper
 
 		$app->triggerEvent( 'onCCK_StoragePrepareDownload', array( &$field, &$value, &$config ) );
 
-		// Access
-		$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
-													. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
-		$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
-		$autorised	=	$user->getAuthorisedViewLevels();
-		$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
+		if ( !$by_token ) {
+			// Access
+			$clients	=	JCckDatabase::loadObjectList( 'SELECT a.fieldid, a.client, a.access, a.restriction, a.restriction_options FROM #__cck_core_type_field AS a LEFT JOIN #__cck_core_types AS b ON b.id = a.typeid'
+														. ' WHERE a.fieldid = '.(int)$field->id.' AND b.name="'.(string)$config['type'].'"', 'client' );
+			$access		=	( isset( $clients[$client]->access ) ) ? (int)$clients[$client]->access : 0;
+			$autorised	=	$user->getAuthorisedViewLevels();
+			$restricted	=	( isset( $clients[$client]->restriction ) ) ? $clients[$client]->restriction : '';
 
-		if ( (int)$app->input->getInt( 'allow_permissions' ) === 1 ) {
-			jimport( 'cck.joomla.access.access' );
+			if ( (int)$app->input->getInt( 'allow_permissions' ) === 1 ) {
+				jimport( 'cck.joomla.access.access' );
 
-			$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
-			$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$core->type_id );
-			$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$core->type_id );
+				$canEdit			=	$user->authorise( 'core.edit', 'com_cck.form.'.$core->type_id );
+				$canEditOwn			=	$user->authorise( 'core.edit.own', 'com_cck.form.'.$core->type_id );
+				$canEditOwnContent	=	CCKAccess::check( $user->id, 'core.edit.own.content', 'com_cck.form.'.$core->type_id );
 
-			if ( $canEditOwnContent ) {
-				$parts				=	explode( '@', $canEditOwnContent );
-				$remote_field		=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
-				$canEditOwnContent	=	false;
+				if ( $canEditOwnContent ) {
+					$parts				=	explode( '@', $canEditOwnContent );
+					$remote_field		=	JCckDatabaseCache::loadObject( 'SELECT storage, storage_table, storage_field FROM #__cck_core_fields WHERE name = "'.$parts[0].'"' );
+					$canEditOwnContent	=	false;
 
-				if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
-					$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$pk );
-					$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
+					if ( is_object( $remote_field ) && $remote_field->storage == 'standard' ) {
+						$related_content_id		=	JCckDatabase::loadResult( 'SELECT '.$remote_field->storage_field.' FROM '.$remote_field->storage_table.' WHERE id = '.(int)$pk );
+						$related_content		=	JCckDatabase::loadObject( 'SELECT author_id, pk FROM #__cck_core WHERE storage_location = "'.( isset( $parts[1] ) && $parts[1] != '' ? $parts[1] : 'joomla_article' ).'" AND pk = '.(int)$related_content_id );
 
-					if ( $related_content->author_id == $user->id ) {
-						$canEditOwnContent	=	true;
+						if ( $related_content->author_id == $user->id ) {
+							$canEditOwnContent	=	true;
+						}
 					}
 				}
-			}
 
-			if ( !( $canEdit && $canEditOwn
-				|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
-				|| ( $canEditOwn && ( $config['author'] == $user->id ) )
-				|| ( $canEditOwnContent ) ) ) {
-				return array( 'error'=>true, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
-			}
-		} else {
-			if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
-				return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
-			}
-
-			if ( $config['location'] === 'joomla_article' ) {
-				$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__content WHERE id = '.(int)$config['pk'] );
-			} elseif ( $config['location'] === 'joomla_category' ) {
-				$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__categories WHERE id = '.(int)$config['pk'] );
-			}
-			if ( isset( $robots ) && $robots ) {
-				$robots	=	new Registry( $robots );
-
-				$config['x_robots']	=	$robots->get( 'robots' );
-			}
-
-			if ( $restricted ) {
-				PluginHelper::importPlugin( 'cck_field_restriction' );
-				$field->restriction			=	$restricted;
-				$field->restriction_options	=	$clients[$client]->restriction_options;
-				$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
-				
-				if ( $allowed ) {
-					require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
-
-					$name		=	$field->name;
-					$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
-					$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
-					
-					if ( count( $fields ) ) {
-						foreach ( $fields as $field2 ) {
-							$value2	=	'';
-
-							if ( $field2->name ) {
-								$Pt	=	$field2->storage_table;
-								if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
-									$config['storages'][$Pt]	=	'';
-									$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
-								}
-								
-								$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
-								if ( is_string( $value2 ) ) {
-									$value2		=	trim( $value2 );
-								}
-								
-								$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
-
-								// Was it the last one?
-								// if ( $config['error'] ) {
-									// break;
-								// }
-							}
-						}
-					}
-					
-					// Merge
-					if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
-						foreach ( $config['fields'] as $k=>$v ) {
-							if ( $v->restriction != 'unset' ) {
-								$fields[$k]	=	$v;
-							}
-						}
-						$config['fields']	=	null;
-						unset( $config['fields'] );
-					}
-
-					if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-						JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-
-						foreach ( $config['process']['beforeRenderContent'] as $process ) {
-							if ( $process->type ) {
-								JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
-							}
-						}
-					}
-
-					$allowed	=	(bool)$fields[$name]->state;
+				if ( !( $canEdit && $canEditOwn
+					|| ( $canEdit && !$canEditOwn && ( $config['author'] != $user->id ) )
+					|| ( $canEditOwn && ( $config['author'] == $user->id ) )
+					|| ( $canEditOwnContent ) ) ) {
+					return array( 'error'=>true, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
 				}
-
-				// Prevent PrepareContent & beforeRenderContent to alter $config['error']
-				$config['error']	=	false;
-
-				if ( $allowed !== true ) {
+			} else {
+				if ( !( $access > 0 && array_search( $access, $autorised ) !== false ) ) {
 					return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+				}
+
+				if ( $config['location'] === 'joomla_article' ) {
+					$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__content WHERE id = '.(int)$config['pk'] );
+				} elseif ( $config['location'] === 'joomla_category' ) {
+					$robots	=	(string)JCckDatabase::loadResult( 'SELECT metadata FROM #__categories WHERE id = '.(int)$config['pk'] );
+				}
+				if ( isset( $robots ) && $robots ) {
+					$robots	=	new Registry( $robots );
+
+					$config['x_robots']	=	$robots->get( 'robots' );
+				}
+
+				if ( $restricted ) {
+					PluginHelper::importPlugin( 'cck_field_restriction' );
+					$field->restriction			=	$restricted;
+					$field->restriction_options	=	$clients[$client]->restriction_options;
+					$allowed	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$restricted, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+					
+					if ( $allowed ) {
+						require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+						$name		=	$field->name;
+						$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.(string)$config['type'].'"' );
+						$fields		=	CCK_Form::getFields( array( $config['type'], $parent ), $config['client'], -1, '', true );
+						
+						if ( count( $fields ) ) {
+							foreach ( $fields as $field2 ) {
+								$value2	=	'';
+
+								if ( $field2->name ) {
+									$Pt	=	$field2->storage_table;
+									if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+										$config['storages'][$Pt]	=	'';
+										$app->triggerEvent( 'onCCK_Storage_LocationPrepareContent', array( &$field2, &$config['storages'][$Pt], $config['pk'], &$config ) );
+									}
+									
+									$app->triggerEvent( 'onCCK_StoragePrepareContent', array( &$field2, &$value2, &$config['storages'][$Pt] ) );
+									if ( is_string( $value2 ) ) {
+										$value2		=	trim( $value2 );
+									}
+									
+									$app->triggerEvent( 'onCCK_FieldPrepareContent', array( &$field2, $value2, &$config ) );
+
+									// Was it the last one?
+									// if ( $config['error'] ) {
+										// break;
+									// }
+								}
+							}
+						}
+						
+						// Merge
+						if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
+							foreach ( $config['fields'] as $k=>$v ) {
+								if ( $v->restriction != 'unset' ) {
+									$fields[$k]	=	$v;
+								}
+							}
+							$config['fields']	=	null;
+							unset( $config['fields'] );
+						}
+
+						if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+							JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+							foreach ( $config['process']['beforeRenderContent'] as $process ) {
+								if ( $process->type ) {
+									JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
+								}
+							}
+						}
+
+						$allowed	=	(bool)$fields[$name]->state;
+					}
+
+					// Prevent PrepareContent & beforeRenderContent to alter $config['error']
+					$config['error']	=	false;
+
+					if ( $allowed !== true ) {
+						return array( 'error'=>true, 'error_code'=>( JCck::isGuest() ? 401 : 403 ), 'message'=>Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ) );
+					}
 				}
 			}
 		}
