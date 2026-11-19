@@ -903,6 +903,7 @@ class CCKController extends BaseController
 	// saveFieldAjax
 	public function saveFieldAjax()
 	{
+		return;
 		// Session::checkToken() or exit( Text::_( 'JINVALID_TOKEN' ) );
 		
 		$app		=	Factory::getApplication();
