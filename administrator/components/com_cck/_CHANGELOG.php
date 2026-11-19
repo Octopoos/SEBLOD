@@ -30,6 +30,7 @@ $ -> Language fix or change
 ^ Component Views refactored
   >> make sure to align template overrides if needed.
 
++ Download by Token implemented.
 + Order By "expression" implemented.
 + JCckDevImage class updated.
 
