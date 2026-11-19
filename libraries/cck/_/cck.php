@@ -565,7 +565,20 @@ abstract class JCck
 		if ( (int)JCck::getConfig_Param( 'core_js_bootstrap', '0' ) ) {
 			$doc->addScript( $root.'/media/cck/js/bootstrap.min.js' );
 		} else {
-			HTMLHelper::_( 'bootstrap.framework' );
+			$combined	=	false;
+
+			if ( JCck::isGuest() && is_file( __DIR__.'/bootstrap.php' ) ) {
+				require_once __DIR__.'/bootstrap.php';
+
+				try {
+					$combined	=	JCckBootstrap::useScript( $doc );
+				} catch ( \Throwable $e ) {
+					$combined	=	false;
+				}
+			}
+			if ( !$combined ) {
+				HTMLHelper::_( 'bootstrap.framework' );
+			}
 		}
 		
 		if ( $dev !== false && !( isset( $app->cck_jquery_dev ) && $app->cck_jquery_dev === true ) ) {
