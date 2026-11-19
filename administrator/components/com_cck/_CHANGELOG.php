@@ -22,6 +22,21 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.1.0 Upgrade Release [19-Nov-2026] ------------
+
+* Admin/site view removed from download check.
+* "saveFieldAjax" removed
+
+^ Component Views refactored
+  >> make sure to align template overrides if needed.
+
++ Order By "expression" implemented.
++ JCckDevImage class updated.
+
+# Additional fixes included for PHP 8.x or Joomla! 6
+# Page Title and Meta Desc fixed
+# Warning fixed.
+
 --------------- 6.0.1 Upgrade Release [7-Aug-2026] -------------
 
 ^ Core Update for SEBLOD Tooblox/WebServices Add-ons
