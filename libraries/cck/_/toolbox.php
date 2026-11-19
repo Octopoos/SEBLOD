@@ -247,7 +247,9 @@ abstract class JCckToolbox
 						include_once JPATH_SITE.$p->scriptfile;
 
 					} catch ( Exception $e ) {
-						// Do Nothing
+						if ( get_class( $e ) === 'LogicException' ) {
+							throw $e;
+						}
 					}
 				}
 			}
