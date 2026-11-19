@@ -46,7 +46,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 			if ( isset( $processing[$event] ) ) {
 				foreach ( $processing[$event] as $p ) {
 					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-						include_once JPATH_SITE.$p->scriptfile;	/* Variables: $pk, $user */
+						include JPATH_SITE.$p->scriptfile;	/* Variables: $pk, $user */
 					}
 				}
 			}
@@ -263,7 +263,7 @@ class plgUserCCK extends \Joomla\CMS\Plugin\CMSPlugin
 				if ( isset( $processing[$event] ) ) {
 					foreach ( $processing[$event] as $p ) {
 						if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-							include_once JPATH_SITE.$p->scriptfile;	/* Variables: $id, $pk, $type */
+							include JPATH_SITE.$p->scriptfile;	/* Variables: $id, $pk, $type */
 						}
 					}
 				}
