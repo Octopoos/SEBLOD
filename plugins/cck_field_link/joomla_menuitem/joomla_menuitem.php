@@ -88,6 +88,9 @@ class plgCCK_Field_LinkJoomla_Menuitem extends JCckPluginLink
 			if ( $link_link[($len - 1)] == '/' ) {
 				$field->link	=	substr( $link_link, 0, -1 );
 			}
+			if ( !$link->get( 'itemid', '' ) ) {
+				$field->link	=	self::_appendActiveListFilter( $field->link, $app, $itemId );
+			}
 
 			if ( $vars ) {
 				$field->link	.=	( strpos( $field->link, '?' ) !== false ) ? '&'.$vars : '?'.$vars;
@@ -124,6 +127,74 @@ class plgCCK_Field_LinkJoomla_Menuitem extends JCckPluginLink
 		} else {
 			$field->link_title		=	'';
 		}
+	}
+
+	// _appendActiveListFilter
+	protected static function _appendActiveListFilter( $link, $app, $itemId )
+	{
+		if ( $app->input->getCmd( 'option' ) != 'com_cck' || $app->input->getCmd( 'view' ) != 'list' ) {
+			return $link;
+		}
+
+		$slug	=	$app->input->getString( 'id_router', '' );
+
+		if ( $slug === '' ) {
+			return $link;
+		}
+
+		$menuItem	=	$app->getMenu()->getItem( (int)$itemId );
+
+		if ( !is_object( $menuItem ) || empty( $menuItem->query['search'] ) || ( isset( $menuItem->query['view'] ) && $menuItem->query['view'] != 'list' ) ) {
+			return $link;
+		}
+
+		$params	=	JCckDevHelper::getRouteParams( $menuItem->query['search'] );
+
+		if ( empty( $params['sef_filters'] ) || !isset( $params['doSEF'][0] ) || $params['doSEF'][0] != '2' ) {
+			return $link;
+		}
+
+		$names	=	array();
+
+		foreach ( $params['sef_filters'] as $filter ) {
+			$parts	=	explode( '=', $filter );
+
+			if ( isset( $parts[0] ) && $parts[0] !== '' ) {
+				$names[$parts[0]]	=	true;
+			}
+		}
+		if ( !$names ) {
+			return $link;
+		}
+
+		$base	=	$link;
+		$query	=	'';
+
+		if ( ( $pos = strpos( $base, '?' ) ) !== false ) {
+			$query	=	substr( $base, $pos );
+			$base	=	substr( $base, 0, $pos );
+		}
+
+		$basePath	=	$base;
+
+		if ( strpos( $basePath, '://' ) !== false ) {
+			$basePath	=	(string)parse_url( $basePath, PHP_URL_PATH );
+		}
+
+		$basePath	=	rtrim( $basePath, '/' );
+		$uriPath	=	rtrim( Uri::getInstance()->getPath(), '/' );
+
+		if ( $basePath === '' || strpos( $uriPath, $basePath.'/' ) !== 0 ) {
+			return $link;
+		}
+
+		$extra	=	explode( '/', substr( $uriPath, strlen( $basePath ) + 1 ) );
+
+		if ( count( $extra ) < 2 || !isset( $names[$extra[0]] ) || rawurldecode( $extra[1] ) !== $slug ) {
+			return $link;
+		}
+
+		return $base.'/'.$extra[0].'/'.$extra[1].$query;
 	}
 }
 ?>
