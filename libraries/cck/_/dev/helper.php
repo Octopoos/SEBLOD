@@ -313,7 +313,7 @@ abstract class JCckDevHelper
 	public static function getDownloadInfo( $id, $fieldname )
 	{
 		$app		=	Factory::getApplication();
-		$client		=	$app->input->get( 'client', 'content' );
+		$client		=	( $app->input->get( 'client', '' ) == 'intro' ) ? 'intro' : 'content';
 		$collection	=	$app->input->get( 'collection', '' );
 		$join_id	=	$app->input->getInt( 'join_id', 0 );
 		$restricted	=	'';
