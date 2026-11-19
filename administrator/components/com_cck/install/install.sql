@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_downloads` (
   `collection` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `x` int(11) NOT NULL,
   `hits` int(10) UNSIGNED NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `upload_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`,`field`,`collection`,`x`),
   KEY `idx_contentid` (`id`),
   KEY `idx_item` (`field`)
