@@ -585,7 +585,7 @@ if ( $preconfig['task'] == 'search' ) {
 						}
 					}
 					if ( strpos( $return, '&return=' ) === false ) {
-						$return		.=	'&return='.base64_encode( $_SERVER["HTTP_REFERER"] );
+						$return		.=	'&return='.base64_encode( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
 					}
 					
 					$redirect_url	=	Route::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$items[0]->cck.'&id='.$items[0]->pk.'&Itemid='.$config['Itemid'].$return, false );
@@ -687,7 +687,7 @@ if ( $no_action ) {
 	if ( $no_action == 'auto_redirect' ) {
 		/* TODO#SEBLOD: is this even possible? */
 		if ( isset( $fields['search']['cck'] ) && !$fields['search']['cck']->live && $fields['search']['cck']->live_value ) {
-			$return			=	base64_encode( $_SERVER["HTTP_REFERER"] );
+			$return			=	base64_encode( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
 			$redirect_url	=	Route::_( 'index.php?option=com_cck&view=form&layout=edit&type='.$fields['search']['cck']->live_value.'&Itemid='.$config['Itemid'].'&return='.$return );
 			$app->redirect( $redirect_url );
 		}

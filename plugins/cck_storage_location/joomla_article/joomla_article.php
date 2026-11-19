@@ -1245,7 +1245,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( is_numeric( $item ) ) {
 			$join		=	'';
 			$sef_slug	=	false;
-			$select		=	( $sef[0] == '5' ) ? ', a.created_by, dd.alias AS author_alias' : '';
+			$select		=	( @$sef[0] == '5' ) ? ', a.created_by, dd.alias AS author_alias' : '';
 
 			if ( JCckDevHelper::isMultilingual() ) {
 				if ( !$lang_tag ) {
@@ -1261,7 +1261,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 						$config['sef_aliases']	=	$params['sef_aliases'];
 					}
 				}
-				if ( $config['sef_aliases'] == 2 || ( $config['sef_aliases'] == 1 && $lang_tag != ComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
+				if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || ( $config['sef_aliases'] == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) ) {
 					$legacy		=	(int)JCck::getConfig_Param( 'core_legacy_routing', '2018' );
 					$sef_slug	=	true;
 
@@ -1290,7 +1290,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					.	$join
 					;
 
-			if ( $sef[0] == '5' ) {
+			if ( @$sef[0] == '5' ) {
 				$query	.=	' LEFT JOIN #__cck_core AS cc ON (c.storage_location = "joomla_user" AND cc.pk = a.created_by)'
 						.	' LEFT JOIN #__content AS dd ON d.id = cc.pkb';
 			}
