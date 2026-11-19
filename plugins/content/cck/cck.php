@@ -1073,7 +1073,12 @@ class plgContentCCK extends CMSPlugin
 					$p_title		=	JCckDevHelper::truncate( $p_title, 70 );
 		 		}
 		 		if ( $p_title != '' ) {
-		 			$app->cck_page_title	=	str_replace( "\r\n", ' ', $p_title );
+		 			$p_title	=	preg_replace( '/<br\s*\/?>/i', "\n", $p_title );
+		 			$p_title	=	trim( str_replace( array( "\r\n", "\r", "\n" ), ' ', $p_title ) );
+
+		 			if ( $p_title != '' ) {
+		 				$app->cck_page_title	=	$p_title;
+		 			}
 		 		}
 
 		 		// Set Description
@@ -1086,6 +1091,10 @@ class plgContentCCK extends CMSPlugin
 		 			$p_desc			=	$this->_translate( $v_metadesc, $lang_tag );
 		 			$p_desc			=	strip_tags( $p_desc );
 					$p_desc			=	JCckDevHelper::truncate( $p_desc, 160 );
+				}
+				if ( $p_desc != '' ) {
+					$p_desc		=	preg_replace( '/<br\s*\/?>/i', "\n", $p_desc );
+					$p_desc		=	trim( str_replace( array( "\r\n", "\r", "\n" ), ' ', $p_desc ) );
 				}
 				if ( $p_desc != '' ) {
 		 			if ( is_object( $article ) && isset( $article->metadesc ) ) {
