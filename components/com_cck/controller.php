@@ -228,7 +228,21 @@ class CCKController extends BaseController
 				}
 			}
 		} else {
-			$config	=	JCckDevHelper::getDownloadInfo( $id, $fieldname );
+			$token		=	$app->input->getString( 'token', '' );
+			$by_token	=	false;
+
+			if ( $token !== '' ) {
+				$collection	=	$app->input->get( 'collection', '' );
+				$xi			=	$app->input->getInt( 'xi', 0 );
+
+				if ( !$this->_download_by_token( $id, $fieldname, $collection, $xi, $token ) ) {
+					throw new Exception( Text::_( 'COM_CCK_ALERT_FILE_NOT_AUTH' ), 403 );
+				}
+
+				$by_token	=	true;
+			}
+
+			$config	=	JCckDevHelper::getDownloadInfo( $id, $fieldname, $by_token );
 
 			if ( $config === false || isset( $config['error'] ) && $config['error'] ) {
 				if ( 1 == 1 ) {
@@ -961,16 +975,61 @@ class CCKController extends BaseController
 
 	}
 
+	// _download_by_token
+	protected function _download_by_token( $id, $fieldname, $collection, $x, $token )
+	{
+		$token	=	(string)$token;
+
+		if ( !preg_match( '/^[a-f0-9]{32}$/', $token ) ) {
+			return false;
+		}
+
+		$field	=	JCckDatabase::loadObject( 'SELECT options2 FROM #__cck_core_fields WHERE name = "'.JCckDatabase::escape( (string)$fieldname ).'"' );
+
+		if ( !is_object( $field ) ) {
+			return false;
+		}
+
+		$options2	=	JCckDev::fromJSON( $field->options2 );
+
+		if ( empty( $options2['download_token'] ) ) {
+			return false;
+		}
+
+		$row	=	JCckDatabase::loadObject( 'SELECT token, upload_date FROM #__cck_core_downloads WHERE id = '.(int)$id.' AND field = "'.JCckDatabase::escape( (string)$fieldname ).'" AND collection = "'.JCckDatabase::escape( (string)$collection ).'" AND x = '.(int)$x );
+
+		if ( !is_object( $row ) || $row->token === '' || strlen( $row->token ) !== strlen( $token ) || !hash_equals( $row->token, $token ) ) {
+			return false;
+		}
+		if ( !$row->upload_date || $row->upload_date === '0000-00-00 00:00:00' ) {
+			return false;
+		}
+
+		$days	=	(int)JCck::getConfig_Param( 'media_download_token_days', '30' );
+
+		if ( !in_array( $days, array( 7, 14, 30 ), true ) ) {
+			$days	=	30;
+		}
+
+		$expires	=	Factory::getDate( $row->upload_date );
+		$expires->modify( '+'.$days.' days' );
+
+		return Factory::getDate()->toUnix() <= $expires->toUnix();
+	}
+
 	// _download_hits
 	protected function _download_hits( $id, $fieldname, $collection = '', $x = 0 )
 	{
 		$where	=	'a.id = '.(int)$id.' AND a.field = "'.JCckDatabase::escape( (string)$fieldname ).'" AND a.collection = "'.JCckDatabase::escape( (string)$collection ).'" AND a.x = '.(int)$x;
-		$hits	=	JCckDatabase::loadResult( 'SELECT a.hits FROM #__cck_core_downloads AS a WHERE '.$where );
-		
-		if ( !$hits ) {
-			JCckDatabase::execute( 'INSERT INTO #__cck_core_downloads(`id`, `field`, `collection`, `x`, `hits`) VALUES('.(int)$id.', "'.JCckDatabase::escape( (string)$fieldname ).'", "'.JCckDatabase::escape( (string)$collection ).'", '.(int)$x.', 1)' );
+		$row	=	JCckDatabase::loadObject( 'SELECT a.hits FROM #__cck_core_downloads AS a WHERE '.$where );
+
+		if ( !is_object( $row ) ) {
+			$hits	=	1;
+
+			JCckDatabase::execute( 'INSERT INTO #__cck_core_downloads(`id`, `field`, `collection`, `x`, `hits`) VALUES('.(int)$id.', "'.JCckDatabase::escape( (string)$fieldname ).'", "'.JCckDatabase::escape( (string)$collection ).'", '.(int)$x.', '.(int)$hits.')' );
 		} else {
-			$hits++;
+			$hits	=	(int)$row->hits + 1;
+
 			JCckDatabase::execute( 'UPDATE #__cck_core_downloads AS a SET a.hits = '.(int)$hits.' WHERE '.$where.' AND a.id = '.(int)$id );
 		}
 		

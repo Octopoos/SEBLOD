@@ -163,6 +163,11 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+		<field name="media_download_token_days" type="list" default="30" label="COM_CCK_CONFIG_MEDIA_DOWNLOAD_TOKEN_DAYS" description="COM_CCK_CONFIG_MEDIA_DOWNLOAD_TOKEN_DAYS_DESC" class="btn-group">
+			<option value="7">7</option>
+			<option value="14">14</option>
+			<option value="30">30</option>
+		</field>
 		<field name="media_paths" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_DESC" class="inputbox input-xlarge" />
 		<field name="media_paths_tmp" type="textarea" default="" cols="80" rows="3" label="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP" description="COM_CCK_CONFIG_MEDIA_LEGAL_PATHS_TMP_DESC" class="inputbox input-xlarge" />
 		<field name="media_canonical" type="radio" default="0" label="COM_CCK_CONFIG_MEDIA_CANONICAL" description="COM_CCK_CONFIG_MEDIA_CANONICAL_DESC" class="btn-group btn-group-yesno">
