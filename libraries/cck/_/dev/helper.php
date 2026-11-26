@@ -412,6 +412,11 @@ abstract class JCckDevHelper
 		$xi			=	$app->input->getInt( 'xi', 0 );
 
 		$field		=	JCckDatabase::loadObject( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.name="'.JCckDatabase::escape( ( ( $collection != '' ) ? $collection : $fieldname ) ).'"' ); //#
+
+		if ( !is_object( $field ) ) {
+			return array( 'error'=>true, 'error_code'=>404, 'message'=>Text::_( 'COM_CCK_ALERT_FILE_DOESNT_EXIST' ) );
+		}
+
 		$query		=	'SELECT a.id, a.pk, a.author_id, a.cck as type, a.storage_location, b.'.$field->storage_field.' as value, c.id as type_id, a.store_id'
 					.	' FROM #__cck_core AS a';
 

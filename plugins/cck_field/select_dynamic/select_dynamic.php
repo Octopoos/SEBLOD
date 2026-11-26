@@ -422,7 +422,7 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 					if ( $group ) {
 						$opts[]	=	HTMLHelper::_( 'select.option', '</OPTGROUP>' );
 					}
-					if ( $config['sef_filter'] && !$hasFilter ) {
+					if ( isset( $config['sef_filter'] ) && $config['sef_filter'] && !$hasFilter ) {
 						throw new Exception( \Joomla\CMS\Language\Text::_( 'JERROR_PAGE_NOT_FOUND' ), 404 );
 					}
 				} else {

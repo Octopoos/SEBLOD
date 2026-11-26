@@ -266,7 +266,7 @@ class CCKViewList extends HtmlView
 					}
 				}
 			}
-			if ( ( $sef_canonical == 2 || $sef_canonical == 3 ) && $start ) {
+			if ( ( $sef_canonical == 2 || $sef_canonical == 3 ) && isset( $start ) && $start ) {
 				$url	=	$current.$glue.'start='.$start;	
 			} else {
 				$url	=	$current;
@@ -298,7 +298,7 @@ class CCKViewList extends HtmlView
 
 			$app->cck_canonical			=	true;
 
-			if ( (int)$start ) {
+			if ( isset( $start ) && (int)$start ) {
 				$app->cck_canonical_vars	=	array(
 													'start'=>$start
 												);	
@@ -325,7 +325,7 @@ class CCKViewList extends HtmlView
 		$config['context']['Itemid']	=	$app->input->getInt( 'Itemid', 0 );
 		$config['context']['view']		=	'list';
 
-		if ( !$this->show_form && $config['formWrapper'] ) {
+		if ( !$this->show_form && isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
 			HTMLHelper::_( 'behavior.core' );
 		}
 
@@ -336,10 +336,10 @@ class CCKViewList extends HtmlView
 		$this->filter_ajax				=	( isset( $hasAjax ) && $hasAjax ) ? true : false;
 		$this->form						=	&$form;
 		$this->form_id					=	$preconfig['formId'];
-		$this->form_wrapper				=	$config['formWrapper'];
+		$this->form_wrapper				=	isset( $config['formWrapper'] ) ? $config['formWrapper'] : 0;
 		$this->home						=	&$home;
 		$this->items					=	&$items;
-		$this->limitend					=	$config['limitend'];
+		$this->limitend					=	isset( $config['limitend'] ) ? $config['limitend'] : 0;
 		$this->load_ajax				=	( $this->filter_ajax || ( $this->pages_total > 1 && ( $this->show_pagination == 2 || $this->show_pagination == 8 ) ) ) ? true : false;
 		$this->pagination				=	&$pagination;
 		$this->params					=	&$params;

@@ -143,30 +143,31 @@ class plgCCK_FieldSearch_Total extends JCckPluginField
 		$id		=	$process['id'];
 		$name	=	$process['name'];
 		$jtext	=	$process['jtext'];
+		$total	=	isset( $config['total'] ) ? $config['total'] : 0;
 		
-		if ( ( isset( $config['total'] ) && $config['total'] > 0 ) || $fields[$name]->defaultvalue != '' ) {
-			if ( $config['total'] < $config['limitend'] ) {
-				$step				=	$config['total'];
+		if ( $total > 0 || $fields[$name]->defaultvalue != '' ) {
+			if ( $total < $config['limitend'] ) {
+				$step				=	$total;
 			} else {
-				$step				=	( ( $diff = $config['total'] - $config['limitstart'] ) < $config['limitend'] ) ? $diff : $config['limitend'];
+				$step				=	( ( $diff = $total - $config['limitstart'] ) < $config['limitend'] ) ? $diff : $config['limitend'];
 			}
 			$start					=	$config['limitstart'] + 1;
 			$end					=	$config['limitstart'] + $step;
-			$end					=	( $config['total'] < $end ) ? $config['total'] : $end;
+			$end					=	( $total < $end ) ? $total : $end;
 
 			if ( $jtext != '' ) {
 				if ( $alt ) {
-					if ( $config['total'] == 1 && Factory::getLanguage()->hasKey( $jtext.'_1' ) ) {
+					if ( $total == 1 && Factory::getLanguage()->hasKey( $jtext.'_1' ) ) {
 						$jtext	.=	'_1';
-					} elseif ( $config['total'] == 0 && Factory::getLanguage()->hasKey( $jtext.'_0' ) ) {
+					} elseif ( $total == 0 && Factory::getLanguage()->hasKey( $jtext.'_0' ) ) {
 						$jtext	.=	'_0';
 					}
 				}
-				$fields[$name]->form	=	Text::sprintf( $jtext, $config['total'], $step, $start, $end );
+				$fields[$name]->form	=	Text::sprintf( $jtext, $total, $step, $start, $end );
 			} else {
-				$fields[$name]->form	=	$config['total'];
+				$fields[$name]->form	=	$total;
 			}
-			$fields[$name]->value	=	$config['total'];
+			$fields[$name]->value	=	$total;
 		}
 	}
 }
