@@ -22,6 +22,10 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+--------------- 6.1.1 Upgrade Release [26-Nov-2026] ------------
+
+# Download by Token completed/fixed.
+
 --------------- 6.1.0 Upgrade Release [19-Nov-2026] ------------
 
 * Admin/site view removed from download check.
