@@ -274,8 +274,8 @@ foreach ( $fields as $field ) {
 	}
 	$field->variation	=	( isset( $variations[$name] ) ) ? ( $variations[$name] == 'form' ? '' : $variations[$name] ) : $field->variation;
 	
-	// Prepare
-	if ( $retry == $type->name ) {
+	// Prepare: on a retry, a live value the store secures is computed and secured again, as on the first display: the store that asked for the retry cleared its hash
+	if ( $retry == $type->name && !( !$id && $field->live && in_array( $field->variation, array( 'hidden', 'hidden_anonymous', 'disabled', 'value' ) ) ) ) {
 		$value	=	( isset( $post[$name] ) ) ? $post[$name] : '';
 	} else {
 		if ( $id ) {
