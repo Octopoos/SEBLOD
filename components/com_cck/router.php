@@ -196,7 +196,7 @@ class CckRouter extends RouterView
 							}
 						}
 					}
-				} elseif ( $count === 1 && $params['doSEF'] == '22' ) { /* We need to keep it only as /id even for a non-numeric slug */
+				} elseif ( $count === 1 && $params['doSEF'] == '22' && !ctype_digit( $segments[0] ) ) { /* We need to keep it only as /id even for a non-numeric slug */
 					$vars['id']	=	$segments[0];
 
 					$segments	=	array();
